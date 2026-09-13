@@ -519,6 +519,71 @@ impl SchematicDocument {
         Ok(self.wires.remove(index))
     }
 
+    /// Update the one-line title used by document I/O and deck comments.
+    pub fn set_title(&mut self, title: &str) -> Result<(), SchematicError> {
+        if title.trim().is_empty() || title.contains(['\n', '\r']) {
+            return Err(invalid("schematic title must be one non-empty line"));
+        }
+        self.title = title.to_owned();
+        Ok(())
+    }
+
+    /// Rename one component without leaving a DC sweep card behind on its old source.
+    pub fn rename_component(
+        &mut self,
+        current_reference: &str,
+        new_reference: &str,
+    ) -> Result<usize, SchematicError> {
+        let index = self
+            .components
+            .iter()
+            .position(|component| component.reference == current_reference)
+            .ok_or_else(|| invalid("schematic component reference is unknown"))?;
+        let kind = self.components[index].kind;
+        let prefix = kind.reference_prefix();
+        if !new_reference.starts_with(prefix)
+            || new_reference.len() == 1
+            || !new_reference
+                .chars()
+                .all(|character| character.is_ascii_alphanumeric() || character == '_')
+        {
+            return Err(invalid(format!(
+                "{new_reference} reference must begin with {prefix} and use ASCII letters, digits, or _"
+            )));
+        }
+        if self
+            .components
+            .iter()
+            .enumerate()
+            .any(|(other_index, component)| {
+                other_index != index && component.reference == new_reference
+            })
+        {
+            return Err(invalid(format!(
+                "duplicate component reference {new_reference}"
+            )));
+        }
+        let old_reference = std::mem::replace(
+            &mut self.components[index].reference,
+            new_reference.to_owned(),
+        );
+        let mut updated_cards = 0;
+        if self.analysis_cards.is_empty() {
+            if self.analysis_settings.dc_source == old_reference {
+                self.analysis_settings.dc_source = new_reference.to_owned();
+                updated_cards += 1;
+            }
+        } else {
+            for card in &mut self.analysis_cards {
+                if card.settings.dc_source == old_reference {
+                    card.settings.dc_source = new_reference.to_owned();
+                    updated_cards += 1;
+                }
+            }
+        }
+        Ok(updated_cards)
+    }
+
     /// Update the SPICE value of one selected, non-ground component.
     pub fn set_component_value(
         &mut self,
@@ -1249,6 +1314,45 @@ mod tests {
                 .unwrap_err()
                 .to_string(),
             "schematic wire is unavailable"
+        );
+    }
+
+    #[test]
+    fn metadata_edits_keep_titles_valid_and_dc_source_references_current() {
+        let mut document = rc_document();
+        document.set_title("Renamed divider").unwrap();
+        assert_eq!(document.title, "Renamed divider");
+        assert_eq!(
+            document.set_title("\n").unwrap_err().to_string(),
+            "schematic title must be one non-empty line"
+        );
+        assert_eq!(document.rename_component("V1", "VDD").unwrap(), 1);
+        assert_eq!(document.analysis_settings.dc_source, "VDD");
+        document
+            .set_analysis_card_kind(0, SchematicAnalysis::DcSweep)
+            .unwrap();
+        assert_eq!(document.rename_component("VDD", "VBIAS").unwrap(), 1);
+        assert_eq!(
+            document.analysis_card(0).unwrap().settings.dc_source,
+            "VBIAS"
+        );
+        assert!(document
+            .to_berkeley_netlist()
+            .unwrap()
+            .contains(".dc VBIAS 0 5 1"));
+        assert_eq!(
+            document
+                .rename_component("VBIAS", "I1")
+                .unwrap_err()
+                .to_string(),
+            "I1 reference must begin with V and use ASCII letters, digits, or _"
+        );
+        assert_eq!(
+            document
+                .rename_component("VBIAS", "R1")
+                .unwrap_err()
+                .to_string(),
+            "R1 reference must begin with V and use ASCII letters, digits, or _"
         );
     }
 

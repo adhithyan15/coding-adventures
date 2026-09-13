@@ -24,7 +24,12 @@ layout SpiceWorkbench {
     }
     Column [ schematic ] {
       Text [ schematic-label ] ( content : slot: schematic-label )
-      Text [ schematic-title ] ( content : slot: schematic-title )
+      Text [ schematic-title-label ] ( content : slot: schematic-title-label )
+      HostInput [ schematic-title-input ] (
+        value : slot: schematic-title ,
+        disabled : slot: schematic-title-disabled ,
+        onChange : emit: onSchematicTitleChange
+      )
       Row [ schematic-document-actions ] {
         HostButton [ open-schematic ] (
           label : slot: open-schematic-label ,
@@ -147,6 +152,13 @@ layout SpiceWorkbench {
       Column [ schematic-properties ] {
         Text [ schematic-properties-label ] ( content : slot: schematic-properties-label )
         Text [ selected-schematic-kind ] ( content : slot: selected-schematic-kind-label )
+        Text [ schematic-reference-label ] ( content : slot: schematic-reference-label )
+        HostInput [ schematic-reference-input ] (
+          value : slot: schematic-reference ,
+          placeholder : slot: schematic-reference-placeholder ,
+          disabled : slot: schematic-reference-disabled ,
+          onChange : emit: onSchematicReferenceChange
+        )
         Text [ schematic-value-label ] ( content : slot: schematic-value-label )
         HostInput [ schematic-value-input ] (
           value : slot: schematic-value ,

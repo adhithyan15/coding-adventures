@@ -50,6 +50,10 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .slots
         .iter()
+        .any(|slot| slot.name == "schematic-title-disabled"));
+    assert!(component
+        .slots
+        .iter()
         .any(|slot| slot.name == "schematic-wire-rows"));
     assert!(component
         .slots
@@ -78,8 +82,16 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .slots
         .iter()
+        .any(|slot| slot.name == "schematic-reference-disabled"));
+    assert!(component
+        .slots
+        .iter()
         .any(|slot| slot.name == "remove-schematic-component-disabled"));
     assert!(component.emits.iter().any(|emit| emit.name == "onRun"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onSchematicTitleChange"));
     assert!(component
         .emits
         .iter()
@@ -131,6 +143,10 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .emits
         .iter()
+        .any(|emit| emit.name == "onSchematicReferenceChange"));
+    assert!(component
+        .emits
+        .iter()
         .any(|emit| emit.name == "onRemoveSchematicComponent"));
     assert!(component
         .emits
@@ -152,6 +168,7 @@ fn multiline_workbench_compiles_in_both_themes() {
     assert!(source("SpiceWorkbench.mll").contains("Path [ schematic-terminal ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ open-schematic ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ save-schematic ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-title-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-control ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-card ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ remove-schematic-analysis-card ]"));
@@ -161,6 +178,7 @@ fn multiline_workbench_compiles_in_both_themes() {
     assert!(source("SpiceWorkbench.mll")
         .contains("HostInput [ schematic-analysis-parameter-one-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-value-input ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-reference-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-wire-remove ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ remove-schematic-component ]"));
     assert!(source("SpiceWorkbench.mll").contains("segment[0]"));
@@ -200,6 +218,7 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("data-on-click=\"onRun\""));
                 assert!(output.contains("data-on-click=\"onOpenSchematic\""));
                 assert!(output.contains("data-on-click=\"onSaveSchematic\""));
+                assert!(output.contains("data-on-change=\"onSchematicTitleChange\""));
                 assert!(output.contains("data-on-click=\"onPlaceSchematicComponent\""));
                 assert!(output.contains("data-on-click=\"onAddSchematicAnalysis\""));
                 assert!(output.contains("data-on-click=\"onSelectSchematicAnalysisCard\""));
@@ -207,6 +226,7 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("data-on-click=\"onSelectSchematicAnalysisSource\""));
                 assert!(output.contains("data-on-change=\"onSchematicAnalysisParameterOneChange\""));
                 assert!(output.contains("data-on-change=\"onSchematicValueChange\""));
+                assert!(output.contains("data-on-change=\"onSchematicReferenceChange\""));
                 assert!(output.contains("data-on-click=\"onRemoveSchematicComponent\""));
                 assert!(output.contains("data-on-click=\"onRemoveSchematicWire\""));
             }
@@ -217,11 +237,13 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("type: \"run\""));
                 assert!(output.contains("type: \"openSchematic\""));
                 assert!(output.contains("type: \"saveSchematic\""));
+                assert!(output.contains("type: \"schematicTitleChange\""));
                 assert!(output.contains("type: \"placeSchematicComponent\""));
                 assert!(output.contains("type: \"selectSchematicAnalysis\""));
                 assert!(output.contains("type: \"selectSchematicAnalysisSource\""));
                 assert!(output.contains("type: \"schematicAnalysisParameterOneChange\""));
                 assert!(output.contains("type: \"schematicValueChange\""));
+                assert!(output.contains("type: \"schematicReferenceChange\""));
                 assert!(output.contains("type: \"removeSchematicComponent\""));
                 assert!(output.contains("type: \"removeSchematicWire\""));
             }

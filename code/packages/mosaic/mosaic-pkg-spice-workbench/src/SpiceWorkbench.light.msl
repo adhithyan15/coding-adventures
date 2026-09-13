@@ -6,7 +6,7 @@ style SpiceWorkbench {
   part deck-editor { gap : 6 ; }
   part schematic { gap : 6 ; }
   part schematic-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
-  part schematic-title { color : "#0f172a" ; font-weight : bold ; }
+  part schematic-title-input { color : "#0f172a" ; font-weight : bold ; }
   part schematic-document-actions { gap : 6 ; }
   part open-schematic { background : "#e0f2fe" ; color : "#075985" ; border-width : 1 ; border-color : "#7dd3fc" ; border-radius : 3 ; padding : 6 ; }
   part save-schematic { background : "#dcfce7" ; color : "#166534" ; border-width : 1 ; border-color : "#86efac" ; border-radius : 3 ; padding : 6 ; }

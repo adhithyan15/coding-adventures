@@ -518,7 +518,9 @@ impl SpiceMosaicApp {
             "raw-result-label": "Raw result JSON",
             "result-text": self.result_text,
             "schematic-label": "Schematic",
+            "schematic-title-label": "Schematic title",
             "schematic-title": self.schematic.as_ref().map(|document| document.title.as_str()).unwrap_or("No schematic loaded"),
+            "schematic-title-disabled": self.schematic.is_none(),
             "open-schematic-label": "Open schematic",
             "save-schematic-label": "Save schematic",
             "schematic-rows": self.schematic_rows(),
@@ -564,6 +566,10 @@ impl SpiceMosaicApp {
             "selected-schematic-label": self.selected_schematic_component.as_deref().unwrap_or("No component selected"),
             "schematic-properties-label": "Component properties",
             "selected-schematic-kind-label": selected_schematic_component.map(|component| component.kind.palette_label()).unwrap_or("Select a component"),
+            "schematic-reference-label": "Reference",
+            "schematic-reference": selected_schematic_component.map(|component| component.reference.as_str()).unwrap_or(""),
+            "schematic-reference-placeholder": "Select a component",
+            "schematic-reference-disabled": selected_schematic_component.is_none(),
             "schematic-value-label": "SPICE value",
             "schematic-value": selected_schematic_component.map(|component| component.value.as_str()).unwrap_or(""),
             "schematic-value-placeholder": "Select a non-ground component",
@@ -867,6 +873,20 @@ impl MosaicApp for SpiceMosaicApp {
                     })?;
                 self.load_schematic(document)
             }
+            "schematicTitleChange" => {
+                let title = event.payload["value"]
+                    .as_str()
+                    .ok_or_else(|| invalid("schematicTitleChange requires text value"))?;
+                let document = self
+                    .schematic
+                    .as_mut()
+                    .ok_or_else(|| invalid("schematicTitleChange requires a loaded schematic"))?;
+                document
+                    .set_title(title)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.diagnostics = "Updated schematic title. Save or sync when ready.".to_owned();
+                Ok(self.announced(self.diagnostics.clone()))
+            }
             "openSchematic" => self.request_schematic_open(),
             "saveSchematic" => self.request_schematic_save(),
             "placeSchematicComponent" => {
@@ -1076,6 +1096,26 @@ impl MosaicApp for SpiceMosaicApp {
                     .map_err(|error| invalid(error.to_string()))?;
                 self.diagnostics =
                     format!("Updated {reference} value. Sync the netlist when ready.");
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "schematicReferenceChange" => {
+                let new_reference = event.payload["value"]
+                    .as_str()
+                    .ok_or_else(|| invalid("schematicReferenceChange requires text value"))?;
+                let current_reference =
+                    self.selected_schematic_component.clone().ok_or_else(|| {
+                        invalid("schematicReferenceChange requires a selected component")
+                    })?;
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("schematicReferenceChange requires a loaded schematic")
+                })?;
+                let updated_cards = document
+                    .rename_component(&current_reference, new_reference)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.selected_schematic_component = Some(new_reference.to_owned());
+                self.diagnostics = format!(
+                    "Renamed {current_reference} to {new_reference}; updated {updated_cards} DC sweep source binding(s)."
+                );
                 Ok(self.announced(self.diagnostics.clone()))
             }
             "removeSchematicComponent" => {
@@ -1775,6 +1815,54 @@ mod tests {
             missing_selection.to_string(),
             "removeSchematicComponent requires a selected component"
         );
+    }
+
+    #[test]
+    fn schematic_metadata_events_rename_titles_and_preserve_dc_source_bindings() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let document = json!({
+            "title": "Initial title",
+            "components": [
+                {"reference":"V1","kind":"DcVoltage","value":"5","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"R1","kind":"Resistor","value":"1k","terminals":[{"x":0,"y":20},{"x":40,"y":20}]},
+                {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+            ],
+            "wires": [{"start":{"x":40,"y":20},"end":{"x":0,"y":0}}]
+        });
+        dispatch(&mut app, "schematicLoad", json!({"document": document}));
+        let titled = dispatch(
+            &mut app,
+            "onSchematicTitleChange",
+            json!({"value":"Renamed divider"}),
+        );
+        assert_eq!(titled.props["schematic-title"], "Renamed divider");
+        dispatch(
+            &mut app,
+            "onSelectSchematicAnalysis",
+            json!({"analysis":"DC sweep"}),
+        );
+        dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference":"V1"}),
+        );
+        let renamed = dispatch(
+            &mut app,
+            "onSchematicReferenceChange",
+            json!({"value":"VDD"}),
+        );
+        assert_eq!(renamed.props["schematic-reference"], "VDD");
+        assert_eq!(
+            renamed.props["selected-schematic-analysis-source-label"],
+            "VDD"
+        );
+        let synchronized = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
+        assert!(synchronized.props["netlist-text"]
+            .as_str()
+            .unwrap()
+            .contains(".dc VDD 0 5 1"));
     }
 
     #[test]
