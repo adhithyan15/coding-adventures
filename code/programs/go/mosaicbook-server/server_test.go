@@ -305,6 +305,12 @@ func TestApiBackendsHandler(t *testing.T) {
 			t.Errorf("backend %q tier: got %d, want 1", id, b.Tier)
 		}
 	}
+	paint, ok := byID["paint"]
+	if !ok {
+		t.Error("backend \"paint\" missing from response")
+	} else if !paint.Rendered || paint.Analysis || paint.Tier != 2 {
+		t.Errorf("paint backend = %+v, want rendered Tier 2 without native analysis", paint)
+	}
 
 	// Native backends have no render daemon yet, but degradation analysis
 	// works for all of them without one (UI19-mosaicbook.md §13).
