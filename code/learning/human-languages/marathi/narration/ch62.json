@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Reading — Labels, a Message, and a First Paragraph",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:18029aa3b4cbc334",
+  "sourceHash": "fnv1a64:fab4fe2bfa025d17",
   "lessons": [
     {
       "id": "MR-C62-labels",
@@ -390,14 +390,14 @@
       "title": "(reading) (mājhaṁ nāv aruṇ āhe. malā marāṭhī yete.) (namaskār mīrā. mājhaṁ nāv aruṇ āhe.) (nāv · śahar · bhāṣā · ghar · kholī · pāṇī) — the first paragraph",
       "headword": "(reading)",
       "romanization": "mājhaṁ nāv aruṇ āhe. malā marāṭhī yete.",
-      "gloss": "the first passage — eighty-three words of Marathi in a row, and not one of them new",
+      "gloss": "the first passage — ninety-one words of Marathi in a row, and not one of them new",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f29aa48bb93cb64",
+      "sourceHash": "fnv1a64:b2da274d0a7d3a68",
       "notice": null,
       "blocks": [
         {
@@ -423,7 +423,7 @@
             },
             {
               "kind": "speech",
-              "text": "Eighty-three words, and the rule has not changed: not one of them is new."
+              "text": "Ninety-one words, and the rule has not changed: not one of them is new."
             }
           ]
         },
@@ -434,7 +434,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "माझं नाव अरुण आहे. मला मराठी येते. माझं घर मोठं आहे. घरामध्ये एक खोली आहे. खोली लहान आहे पण चांगली आहे. मी चहा पितो. मला दूध सुद्धा आवडतं. मला भाकरी आवडते. माझा भाऊ उंच आहे. माझा मित्र जवळ आहे. मित्राचे नाव मीरा आहे. मीरा हुशार आहे आणि खूप वाचते. मीरा मला मदत करते. मीरा माझ्याबरोबर चालते. मी मराठी वाचतो आणि लिहितो. मीरा म्हणते की मराठी सोपं आहे. मला पण सोपं वाटतं, कारण मी बोलतो. मीरा विचारते, किती? मी म्हणतो, दहा. उद्या भेटू. धन्यवाद."
+              "text": "माझं नाव अरुण आहे. मला मराठी येते. माझं घर मोठं आहे. घरामध्ये एक खोली आहे. खोली लहान आहे पण चांगली आहे. मी चहा पितो. मला दूध सुद्धा आवडतं. मला भाकरी आवडते. माझा भाऊ उंच आहे. माझा मित्र जवळ आहे. मित्राचे नाव मीरा आहे. मीरा हुशार आहे आणि खूप वाचते. माझी बहीण पण हुशार आहे आणि खूप वाचते. मीरा मला मदत करते. मीरा माझ्याबरोबर चालते. मी मराठी वाचतो आणि लिहितो. मीरा म्हणते की मराठी सोपं आहे. मला पण सोपं वाटतं, कारण मी बोलतो. मीरा विचारते, किती? मी म्हणतो, दहा. उद्या भेटू. धन्यवाद."
             },
             {
               "kind": "pause",
