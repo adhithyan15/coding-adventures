@@ -174,12 +174,42 @@ fn manifest_declares_app_package_boundary() {
         "host/compose/MosaicHost.kt",
         "src/main/kotlin/MosaicHost.kt"
     )));
-    assert!(host_assets.contains(&(
-        "flutter",
-        "host/flutter/mosaic_host.dart",
-        "lib/mosaic_host.dart"
-    )));
+    // Flutter no longer declares one either, for the same reason.
+    //
+    // Worth more here than on the other two, because this override was not
+    // merely redundant: `mosaic_host.dart` replaced the generated host without
+    // defining `loadRequired`, which the native-complete `main.dart` calls, so
+    // the emitted project did not compile at all. Restoring the override
+    // restores that.
+    assert!(
+        !host_assets
+            .iter()
+            .any(|(backend, _, _)| *backend == "flutter"),
+        "Flutter must not override a generated file; it reaches the engine \
+         through the standard runtime and answers dialogs through [host_effects]"
+    );
     assert!(host_assets.contains(&("xaml", "host/xaml/MosaicHost.cs", "MosaicHost.cs")));
+
+    // The Flutter handler, which unlike Swift's DOES need an `include`: Dart
+    // resolves nothing across files without an import, so a handler copied in
+    // without one would compile (Flutter builds everything under `lib/`) and
+    // never be reachable.
+    assert!(host_effects.contains(&(
+        "flutter",
+        "host/flutter/engram_effects.dart",
+        "lib/engram_effects.dart"
+    )));
+    let flutter_handler = package
+        .host_effects
+        .handlers
+        .iter()
+        .find(|handler| handler.backend == "flutter")
+        .expect("flutter host-effect handler");
+    assert_eq!(flutter_handler.install, "installEngramEffects");
+    assert_eq!(
+        flutter_handler.include.as_deref(),
+        Some("engram_effects.dart")
+    );
     assert_eq!(package.kernel.version, "1");
 }
 
@@ -670,7 +700,10 @@ fn app_package_emits_native_project_shells() {
                 "pubspec.yaml",
                 "README.md",
                 "lib/main.dart",
+                // `lib/mosaic_host.dart` is still emitted -- but by the
+                // generator now, not copied from this package.
                 "lib/mosaic_host.dart",
+                "lib/engram_effects.dart",
             ],
         ),
         (
@@ -1352,17 +1385,39 @@ fn native_project_shells_expose_engram_host_contract() {
             .join("mosaic_host.dart"),
     )
     .expect("flutter/lib/mosaic_host.dart");
+    // Eleven assertions used to read the hand-written `engram-capi` binding
+    // here -- `eg_engram_app_props`, `eg_merge_anki_apkg`, `jsonEncode(event)`
+    // and the rest. That file is retired, so they were testing text this
+    // package no longer ships, exactly as Qt's sixteen and SwiftUI's
+    // twenty-six were.
+    //
+    // What this reads now is the GENERATED host, so the assertions are about
+    // the standard ABI rather than Engram's bespoke one.
     assert_contains(&flutter_host, "class MosaicHost");
     assert_contains(&flutter_host, "DynamicLibrary.open");
-    assert_contains(&flutter_host, "package:file_selector/file_selector.dart");
-    assert_contains(&flutter_host, "eg_engram_app_props");
-    assert_contains(&flutter_host, "eg_handle_engram_app_event");
-    assert_contains(&flutter_host, "eg_export_anki_apkg");
-    assert_contains(&flutter_host, "eg_merge_anki_apkg");
-    assert_contains(&flutter_host, "jsonEncode(event)");
-    assert_contains(&flutter_host, "openFile");
-    assert_contains(&flutter_host, "getSaveLocation");
-    assert_contains(&flutter_host, "'props': _mosaicMap(decoded['props'])");
+    assert_contains(&flutter_host, "mosaic_app_dispatch");
+    // `loadRequired`, whose ABSENCE from the retired override is why the
+    // native-complete project did not compile: the generated `main.dart` calls
+    // it, and a host that replaced this file without defining it produced
+    // `undefined_method` at `lib/main.dart:9:43`.
+    assert_contains(&flutter_host, "static MosaicHost loadRequired()");
+    // The effect pair, which is what makes a handler possible at all.
+    assert_contains(&flutter_host, "bool deferEffect(int id)");
+    assert_contains(&flutter_host, "completeEffect(int id");
+
+    // And the handler, copied in beside it by `[host_effects]`. The dialogs
+    // moved here; nothing else did.
+    let flutter_handler = fs::read_to_string(
+        tmp.path()
+            .join("flutter")
+            .join("lib")
+            .join("engram_effects.dart"),
+    )
+    .expect("flutter/lib/engram_effects.dart");
+    assert_contains(&flutter_handler, "package:file_selector/file_selector.dart");
+    assert_contains(&flutter_handler, "openFile");
+    assert_contains(&flutter_handler, "getSaveLocation");
+    assert_contains(&flutter_handler, "installEngramEffects");
 
     let compose_app =
         fs::read_to_string(tmp.path().join("compose").join("EngramApp.kt")).expect("EngramApp.kt");
@@ -2708,7 +2763,10 @@ fn source_tree_has_expected_shape() {
         // way and for the same reasons.
         "host/swiftui/EngramEffects.swift",
         "host/compose/MosaicHost.kt",
-        "host/flutter/mosaic_host.dart",
+        // And Flutter's `mosaic_host.dart`, retired the same way -- the only
+        // one of the four whose override broke the build rather than merely
+        // duplicating the runtime.
+        "host/flutter/engram_effects.dart",
         "host/xaml/MosaicHost.cs",
     ] {
         let path = package_root().join(relative);
@@ -2856,6 +2914,122 @@ fn source_tree_has_expected_shape() {
     assert_contains(&swiftui_effects, "maxImportBytes");
     assert_contains(&swiftui_effects, "FileAttributeType");
 
+    // Flutter's `mosaic_host.dart` -- a 730-line dart:ffi binding that opened
+    // the library, marshalled every event and owned snapshot persistence -- is
+    // retired the same way Qt's, SwiftUI's and Compose's were, so asserting on
+    // its `eg_*` lookups here would be testing text this package no longer
+    // ships.
+    //
+    // It is the one of the four whose override was actively breaking the
+    // build rather than merely duplicating the runtime: it did not define
+    // `loadRequired`, which the native-complete `main.dart` calls, so
+    // `flutter analyze` on the emitted project reported
+    // `undefined_method` and nothing compiled.
+    let flutter_effects =
+        fs::read_to_string(package_root().join("host/flutter/engram_effects.dart"))
+            .expect("flutter effect handler");
+    assert_contains(
+        &flutter_effects,
+        "void installEngramEffects(MosaicHost host)",
+    );
+    assert_contains(&flutter_effects, "host.effectHandler =");
+    assert_contains(&flutter_effects, "package:file_selector/file_selector.dart");
+    assert_contains(&flutter_effects, "getSaveLocation(");
+    assert_contains(&flutter_effects, "openFile(");
+    // All three outcomes, because a handler that only ever answers `ok` leaves
+    // a cancelled dialog looking like a hang.
+    assert_contains(&flutter_effects, "completeEffect");
+    assert_contains(&flutter_effects, "_cancelledOutcome");
+    assert_contains(&flutter_effects, "_failedOutcome");
+    // DEFERRED, and here it is not a choice between two workable shapes the way
+    // it is on SwiftUI and Compose. `effectHandler` is a synchronous callback
+    // and the pickers return `Future`s, so there is no inline answer to give.
+    //
+    // And the deferral must happen BEFORE the first `await`: the sweep marks an
+    // effect unanswered immediately after the handler returns, testing
+    // `_deferred` at that moment. An `await host.deferEffect(...)`-shaped
+    // reordering would compile and fail every dialog.
+    assert_contains(&flutter_effects, "if (!host.deferEffect(id)) return;");
+    // Dart has no thread to marshal to -- the generated host says so itself --
+    // so an `invokeLater` equivalent here would be cargo-culted from Compose.
+    assert!(
+        !flutter_effects.contains("invokeLater") && !flutter_effects.contains("runOnUiThread"),
+        "a Dart isolate is single-threaded; a deferred answer has nowhere to \
+         be marshalled to, and a hop here would be copied from a host whose \
+         reasons do not apply"
+    );
+    // `^`/`$` and NOT `\A`/`\z`, which is the reverse of Kotlin and Swift and
+    // the one place carrying the sibling handlers' answer over would have been
+    // silently wrong. Measured on Dart 3.9.4:
+    //
+    //   * `^...$` without `multiLine` refuses a trailing LF, CRLF, CR, NEL,
+    //     U+2028 and U+2029 -- all six, matching Rust.
+    //   * `\A` and `\z` COMPILE, because Dart's RegExp is ECMAScript-derived
+    //     and both are identity escapes: literal `A` and literal `z`. The
+    //     carried-over pattern rejects `"apkg"` and `".apkg"`, accepts
+    //     `"A.apkgz"`, and does not anchor at all.
+    //
+    // So the absence is the assertion, and it is the load-bearing half.
+    assert_contains(&flutter_effects, r"RegExp(r'^\.?[A-Za-z0-9_-]{1,16}$')");
+    // Checked over CODE lines only. A first cut scanned the whole file and
+    // failed on the comment above the pattern -- the one that explains the
+    // trap -- which is the same way the Compose `openCard` gate first went
+    // wrong: banning a token also bans documenting the decision to avoid it.
+    let carried_anchor = flutter_effects
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.starts_with("//"))
+        .find(|line| line.contains(r"\A") || line.contains(r"\z"));
+    assert!(
+        carried_anchor.is_none(),
+        "`\\A` and `\\z` are identity escapes in Dart, not anchors -- the \
+         pattern would reject every real extension and match unanchored: {}",
+        carried_anchor.unwrap_or_default()
+    );
+    // Strict base64: `base64Decode` throws on a character outside the alphabet
+    // rather than skipping it.
+    assert_contains(&flutter_effects, "base64Decode(encoded)");
+    // And the decoded bytes must be a zip, which is what an `.apkg` is. An
+    // is-it-empty check does not cover it: padding-only input decodes
+    // successfully to a byte or two and would be written out as a real `.apkg`.
+    assert_contains(&flutter_effects, "0x50");
+    assert_contains(&flutter_effects, "0x4B");
+    // The read is bounded before the file is opened, matching the other three.
+    assert_contains(&flutter_effects, "_maxImportBytes");
+    assert_contains(&flutter_effects, "FileSystemEntityType.file");
+
+    // And the handler dispatches on EXACTLY the kinds the application mints.
+    //
+    // Read off the guard rather than the file text, and for the reason the
+    // Compose gate records: an earlier Compose handler answered `confirmDelete`,
+    // which `host_intent_for_event` has never emitted, and the test written for
+    // it asserted only that the string appeared in the file -- which the dead
+    // branch satisfied. Banning the word outright is no good either, because
+    // the comment explaining why `openCard` is deliberately unanswered has to
+    // be allowed to say `openCard`.
+    let dispatched: BTreeSet<&str> = flutter_effects
+        .lines()
+        .map(str::trim)
+        // Code, not prose: a line that tests `kind` and is not a comment.
+        .filter(|line| !line.starts_with("//") && line.contains("kind =="))
+        .chain(
+            flutter_effects
+                .lines()
+                .map(str::trim)
+                .filter(|line| !line.starts_with("//") && line.contains("kind !=")),
+        )
+        .flat_map(|line| line.split('\'').skip(1).step_by(2).collect::<Vec<_>>())
+        .collect();
+    assert_eq!(
+        dispatched,
+        BTreeSet::from(["importAnki", "exportAnki"]),
+        "host/flutter/engram_effects.dart dispatches on effect kinds that are \
+         not exactly the two `effect_for_intent` mints as `Await`. `openCard` \
+         is the facade's third intent and is a `Notify`, so answering it would \
+         be refused; anything else is a kind nothing sends, and an unreachable \
+         branch reads to the next person as shipped behaviour."
+    );
+
     // Qt's assertions used to read the 654-line `engram-capi` binding here,
     // checking for `eg_engram_app_props`, `QLibrary`, `mosaicPropName` and the
     // rest. That file is retired (#13728) and none of it ships, so asserting on
@@ -2919,29 +3093,16 @@ fn source_tree_has_expected_shape() {
     assert_contains(&compose_host, "Could not import $file: $error");
     assert_contains(&compose_host, "Could not export Anki package: $error");
 
-    let flutter_host = fs::read_to_string(package_root().join("host/flutter/mosaic_host.dart"))
-        .expect("flutter host template");
-    assert_contains(&flutter_host, "dart:ffi");
-    assert_contains(&flutter_host, "package:ffi/ffi.dart");
-    assert_contains(&flutter_host, "DynamicLibrary.open");
-    assert_contains(&flutter_host, "eg_engram_app_props");
-    assert_contains(&flutter_host, "eg_handle_engram_app_event");
-    assert_contains(&flutter_host, "eg_export_anki_apkg");
-    assert_contains(&flutter_host, "eg_merge_anki_apkg");
-    assert_contains(&flutter_host, "jsonEncode(event)");
-    assert_contains(&flutter_host, "openFile");
-    assert_contains(&flutter_host, "getSaveLocation");
-    assert_contains(&flutter_host, "'hostIntent'");
-    assert_contains(&flutter_host, "'hostResult'");
-    assert_contains(&flutter_host, "'props'");
-    assert_contains(&flutter_host, "ENGRAM_SNAPSHOT_PATH");
-    assert_contains(&flutter_host, "mosaic-snapshot.v1.json");
-    assert_contains(&flutter_host, "_hydrateSession");
-    assert_contains(&flutter_host, "_persistSnapshot");
-    assert_contains(&flutter_host, "eg_snapshot");
-    assert_contains(&flutter_host, "eg_load_snapshot");
-    assert_contains(&flutter_host, "_withHostStatusProps");
-    assert_contains(&flutter_host, "'host-status-visible': true");
+    // Twenty-two assertions on `host/flutter/mosaic_host.dart` stood here --
+    // `dart:ffi`, `eg_engram_app_props`, `ENGRAM_SNAPSHOT_PATH`,
+    // `_withHostStatusProps` and the rest. All of it is retired: the FFI, the
+    // snapshot persistence and the host-status props live in the generated
+    // runtime host and in the application now, so asserting on them here would
+    // be testing text this package no longer ships.
+    //
+    // The replacement is the `flutter_effects` block above, and it is narrower
+    // because the file is -- the handler opens two dialogs and does nothing
+    // else.
 
     let build_script =
         fs::read_to_string(package_root().join("scripts/build-all.ps1")).expect("build-all.ps1");
