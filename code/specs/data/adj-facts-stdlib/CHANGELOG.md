@@ -11,13 +11,24 @@ landed and why, not a semver-tracked API.
   joints."* Each row now carries its own span. One page, so no row restates `locator` or `trust` —
   unlike `biology/hormone-glands.adj`, whose twelve rows sit on seven pages.
 
-  ### The old header had already described the defect, a year before it could be seen
+  ### The old header had already written down the defect — and so had the README
 
   Its `saddle → thumb` entry quoted *"This joint allows the thumb to flex and extend…"* and then
   explained, in a parenthetical underneath, **which joint "This joint" meant**. A quote that needs a
   note to say what it is about is precisely what the README rule ("A citation must name its own
   subject") exists to catch. The row now carries all four sentences — type, example, and the link
   between them — 369 characters, because the page never puts "saddle" and "thumb" in one sentence.
+
+  **[`README.md:556`](README.md) already used this table's own sentence as its worked example of the
+  defect**, under the comment *"WRONG — an example of WHAT?"*: `"One example is the joint formed by
+  the trapezium and 1st metacarpal bone."` That sentence is inside the widened saddle span now, with
+  the two sentences that answer the question. The rule was written against this file; this entry is
+  the file catching up to it.
+
+  (A draft of this section said the header described the defect "a year before it could be seen".
+  Measured: the header landed 2026-07-17, RS-5e shipped **three days later** on 2026-07-20, and the
+  fix is today, 2026-09-13 — 58 days after the mechanism existed. No reading of those dates is a
+  year.)
 
   `hinge` and `planar` are widened for the ordinary reason: both of their sentences open *"Examples
   include…"* and name no joint type.
@@ -45,8 +56,9 @@ landed and why, not a semver-tracked API.
   `shoulder` are two rows sharing one sentence, and the test queried by joint TYPE — which returns
   both rows, so `contains(span)` was satisfied by whichever copy was still intact. Breaking only the
   shoulder row stayed green. Rewritten to bind the EXAMPLE, which returns exactly one answer and makes
-  each needle belong to the row under test. The same shared-sentence shape passed cleanly in
-  `hormone-glands` only because a hormone query returns one row; it was luck, not design.
+  each needle belong to the row under test. The same shared-sentence shape (estrogen and progesterone)
+  passed cleanly in the `hormone-glands` entry below **only because a hormone query returns one row** —
+  luck, not design, and the reason that pattern is now stated rather than repeated.
 
   Controls: unmutated green, and a fabricated envelope green — disclosed, because once every row
   overrides `source` the envelope's wording is unreachable from any answer. The `trust` default
