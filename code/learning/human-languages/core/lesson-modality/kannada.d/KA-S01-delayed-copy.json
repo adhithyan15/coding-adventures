@@ -1,26 +1,26 @@
 {
   "lesson": {
-    "id": "KA-S01-letter-na",
+    "id": "KA-S01-delayed-copy",
     "language": "kannada",
     "chapter": 1,
-    "sequence": 55,
+    "sequence": 57,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
       "writing-block",
-      "script-block"
+      "sight-cue"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:5621eda890cae62d",
+    "sourceHash": "fnv1a64:a3a3300fa536e8ff",
     "detachableSegments": [
-      "Script you'll notice: ನ",
-      "Writing: ನ — copy what you see"
+      "Writing — delayed copy"
     ],
     "delivery": "script"
   },

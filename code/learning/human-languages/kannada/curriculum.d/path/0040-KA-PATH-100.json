@@ -3,6 +3,9 @@
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
     "KA-S01-letter-na",
+    "KA-S01-copy-in-a-word",
+    "KA-S01-delayed-copy",
+    "KA-S01-dictation",
     "KA-S02-vowel-sign-u",
     "KA-S03-sign-virama",
     "KA-S04-vowel-sign-i",

@@ -1,9 +1,12 @@
 {
   "language": "telugu",
   "chapter": 5,
-  "sourceHash": "fnv1a64:fc15f86b3302d6c6",
+  "sourceHash": "fnv1a64:77a047971d2e5fe7",
   "lessonIds": [
     "TE-S01-letter-ta",
+    "TE-S01-copy-in-a-word",
+    "TE-S01-delayed-copy",
+    "TE-S01-dictation",
     "TE-C05-maatlaadu",
     "TE-S147-digit-8",
     "TE-C05-nenu-telugu-maatlaadataanu",
@@ -18,7 +21,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch05.txt",
   "json": "telugu/narration/ch05.json",
-  "textHash": "fnv1a64:00bd9d6a72d9a086",
-  "jsonHash": "fnv1a64:8f2d0770f05f20bb",
+  "textHash": "fnv1a64:7bbb76e54b72f537",
+  "jsonHash": "fnv1a64:2f1ca16aefb4a821",
   "findings": []
 }

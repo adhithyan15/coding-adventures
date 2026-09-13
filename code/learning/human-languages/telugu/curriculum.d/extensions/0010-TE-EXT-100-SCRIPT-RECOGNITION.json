@@ -3,7 +3,7 @@
   "stage": "pre-A1",
   "kind": "required",
   "category": "script",
-  "canDo": "I can pick out each of these Telugu characters inside the words I already say, and copy its shape by tracing.",
+  "canDo": "I can pick out each of these Telugu characters inside the words I already say, copy one beside its neighbour with the model visible, write it once the model is covered, and produce it from the sound alone.",
   "prerequisites": [],
   "lessons": [
     "TE-S03-letter-ka",
@@ -26,6 +26,9 @@
     "TE-S113-letter-pa",
     "TE-S146-digit-7",
     "TE-S01-letter-ta",
+    "TE-S01-copy-in-a-word",
+    "TE-S01-delayed-copy",
+    "TE-S01-dictation",
     "TE-S147-digit-8",
     "TE-S111-letter-sa",
     "TE-S125-letter-ha",
