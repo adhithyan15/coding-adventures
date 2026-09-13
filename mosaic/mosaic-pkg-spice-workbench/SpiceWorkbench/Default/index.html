@@ -154,9 +154,16 @@
           </div>
           <span style="font-size: 12px; font-weight: bold; color: #475569">{{routeSchematicLabel}}</span>
           <div style="display: flex; flex-direction: row; gap: 6px">
-            <!-- mosaic-for each="schematicRows" as="component" index="component-index" -->
-              <!-- emit "onRouteToSchematicComponent" dropped: HTML is static -->
-              <button data-on-click="onRouteToSchematicComponent" style="background: #f0fdfa; color: #115e59; border-width: 1px; border-color: #5eead4; border-radius: 3px; padding: 6px">{{component}}</button>
+            <!-- mosaic-for each="schematicRouteTargets" as="component" index="component-index" -->
+              <!-- emit "onSelectSchematicRouteTarget" dropped: HTML is static -->
+              <button data-on-click="onSelectSchematicRouteTarget" style="background: #f0fdfa; color: #115e59; border-width: 1px; border-color: #5eead4; border-radius: 3px; padding: 6px">{{component}}</button>
+            <!-- /mosaic-for -->
+          </div>
+          <span>{{selectedSchematicRouteTargetLabel}}</span>
+          <div style="display: flex; flex-direction: row">
+            <!-- mosaic-for each="schematicRouteTerminalControls" as="terminal" index="terminal-index" -->
+              <!-- emit "onRouteToSchematicTerminal" dropped: HTML is static -->
+              <button data-disabled="{{schematicRouteTerminalDisabled}}" data-on-click="onRouteToSchematicTerminal">{{terminal}}</button>
             <!-- /mosaic-for -->
           </div>
           <!-- emit "onSynchronizeSchematic" dropped: HTML is static -->

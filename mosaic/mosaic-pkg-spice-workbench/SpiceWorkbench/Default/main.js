@@ -62,6 +62,9 @@ const fallbackProps = {
   "schematicReferenceDisabled": false,
   "schematicReferenceLabel": "Sample SchematicReferenceLabel",
   "schematicReferencePlaceholder": "Sample SchematicReferencePlaceholder",
+  "schematicRouteTargets": [],
+  "schematicRouteTerminalControls": [],
+  "schematicRouteTerminalDisabled": false,
   "schematicRows": [],
   "schematicTerminalControls": [],
   "schematicTerminalDisabled": false,
@@ -82,6 +85,7 @@ const fallbackProps = {
   "selectedSchematicAnalysisSourceLabel": "Sample SelectedSchematicAnalysisSourceLabel",
   "selectedSchematicKindLabel": "Sample SelectedSchematicKindLabel",
   "selectedSchematicLabel": "Sample SelectedSchematicLabel",
+  "selectedSchematicRouteTargetLabel": "Sample SelectedSchematicRouteTargetLabel",
   "selectedSchematicTerminalLabel": "Sample SelectedSchematicTerminalLabel",
   "selectedWaveformLabel": "Sample SelectedWaveformLabel",
   "synchronizeSchematicLabel": "Sample SynchronizeSchematicLabel",
@@ -125,10 +129,10 @@ const emitPayloads = {
       "type": "number"
     }
   ],
-  "onRouteToSchematicComponent": [
+  "onRouteToSchematicTerminal": [
     {
-      "name": "reference",
-      "type": "text"
+      "name": "index",
+      "type": "number"
     }
   ],
   "onRun": [],
@@ -200,6 +204,12 @@ const emitPayloads = {
     }
   ],
   "onSelectSchematicComponent": [
+    {
+      "name": "reference",
+      "type": "text"
+    }
+  ],
+  "onSelectSchematicRouteTarget": [
     {
       "name": "reference",
       "type": "text"
