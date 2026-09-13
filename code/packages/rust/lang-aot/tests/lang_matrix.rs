@@ -6598,7 +6598,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY S.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("ABCDE"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-047c: INSPECT TALLYING FOR ALL ... BEFORE region — the count is bounded to
@@ -6624,7 +6624,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY C.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("001\n003"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-047c: INSPECT TALLYING FOR ALL ... AFTER region — the asymmetric partner of
@@ -6650,7 +6650,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY C.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("001\n001"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-047c: INSPECT REPLACING ALL ... BEFORE region — the rewrite is bounded to
@@ -6676,7 +6676,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" S \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[AB0CD0]\n[AB*CD0]\n[AB*CD*]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-047c: INSPECT REPLACING ALL ... AFTER region — the asymmetric partner of
@@ -6703,7 +6703,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" S \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[AB0CD0]\n[AB0CD*]\n[AB0CD0]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-047c: BEFORE and AFTER together in ONE INSPECT statement — the combined
@@ -6734,7 +6734,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY S.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("002\n0A0B*"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-039a: real stdin and EOF on the shared native/LLVM runtime.
@@ -9368,7 +9368,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::DartmouthBasic, 51, 357),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
-        (Language::Cobol60, 58, 458),
+        (Language::Cobol60, 58, 464),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -15772,4 +15772,35 @@ fn portable_text_stdout_cobol_beam_pointer_overflow() {
     }
     assert_eq!(executed, 8);
     eprintln!("COBOL BEAM pointer/overflow: {executed} programs executed");
+}
+
+// Pin the six final COBOL corpus identities so an insertion cannot silently
+// redirect the proof to a different program. Missing delimiters distinguish
+// whole-source BEFORE from empty AFTER; self-move preserves the original bytes.
+#[test]
+fn portable_text_stdout_cobol_beam_regions_selfmove() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM regions/self-move: erl unavailable");
+        return;
+    }
+    let programs: Vec<_> = PROGRAMS.iter()
+        .filter(|p| p.lang == Language::Cobol60)
+        .skip(52).take(6).collect();
+    assert_eq!(programs.len(), 6);
+    let expected = [
+        ("STRING-SELF-PROOF", "ABCDE"),
+        ("TALLY-BEFORE", "001\n003"),
+        ("TALLY-AFTER", "001\n001"),
+        ("REPLACE-BEFORE", "[AB0CD0]\n[AB*CD0]\n[AB*CD*]"),
+        ("REPLACE-AFTER", "[AB0CD0]\n[AB0CD*]\n[AB0CD0]"),
+        ("COMBINED-REGIONS", "002\n0A0B*"),
+    ];
+    for (program, (id, stdout)) in programs.iter().zip(expected) {
+        assert!(program.src.contains(id), "selected COBOL source changed");
+        assert!(matches!(program.expect, Expect::Stdout(value) if value == stdout),
+            "selected COBOL expectation changed");
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+    }
+    eprintln!("COBOL BEAM regions/self-move: 6 programs executed");
 }
