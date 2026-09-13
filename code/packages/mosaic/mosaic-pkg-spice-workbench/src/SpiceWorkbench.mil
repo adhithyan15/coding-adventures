@@ -15,8 +15,11 @@ component SpiceWorkbench {
   slot schematic-palette : list<text> ;
   slot schematic-analysis-label : text ;
   slot schematic-analysis-controls : list<text> ;
+  slot schematic-analysis-card-label : text ;
+  slot schematic-analysis-card-rows : list<list<text>> ;
   slot selected-schematic-analysis-label : text ;
   slot schematic-analysis-configuration-label : text ;
+  slot remove-schematic-analysis-card-label : text ;
   slot schematic-analysis-source-label : text ;
   slot schematic-analysis-source-options : list<text> ;
   slot selected-schematic-analysis-source-label : text ;
@@ -60,7 +63,10 @@ component SpiceWorkbench {
   emit onInspect ;
   emit onRun ;
   emit onPlaceSchematicComponent ( kind : text ) ;
+  emit onAddSchematicAnalysis ( analysis : text ) ;
   emit onSelectSchematicAnalysis ( analysis : text ) ;
+  emit onSelectSchematicAnalysisCard ( index : number ) ;
+  emit onRemoveSchematicAnalysisCard ;
   emit onSelectSchematicAnalysisSource ( reference : text ) ;
   emit onSchematicAnalysisParameterOneChange ( value : text ) ;
   emit onSchematicAnalysisParameterTwoChange ( value : text ) ;

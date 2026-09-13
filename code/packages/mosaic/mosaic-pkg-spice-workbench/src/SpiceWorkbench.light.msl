@@ -12,9 +12,13 @@ style SpiceWorkbench {
   part schematic-analysis-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
   part schematic-analysis-controls { gap : 6 ; }
   part schematic-analysis-control { background : "#f5f3ff" ; color : "#5b21b6" ; border-width : 1 ; border-color : "#c4b5fd" ; border-radius : 3 ; padding : 6 ; }
+  part schematic-analysis-card-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
+  part schematic-analysis-cards { gap : 6 ; }
+  part schematic-analysis-card { background : "#eef2ff" ; color : "#4338ca" ; border-width : 1 ; border-color : "#a5b4fc" ; border-radius : 3 ; padding : 6 ; }
   part selected-schematic-analysis { color : "#6d28d9" ; font-weight : bold ; }
   part schematic-analysis-configuration { gap : 4 ; }
   part schematic-analysis-configuration-label { font-size : 12 ; font-weight : bold ; color : "#475569" ; }
+  part remove-schematic-analysis-card { background : "#fff1f2" ; color : "#9f1239" ; border-width : 1 ; border-color : "#fda4af" ; border-radius : 3 ; padding : 6 ; }
   part schematic-analysis-source-label { font-size : 12 ; color : "#475569" ; }
   part schematic-analysis-source-options { gap : 6 ; }
   part schematic-analysis-source-option { background : "#eef2ff" ; color : "#4338ca" ; border-width : 1 ; border-color : "#a5b4fc" ; border-radius : 3 ; padding : 6 ; }

@@ -188,7 +188,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      input surface, and synchronization regressions. Keep analysis-card source
      selection and sweep-parameter editing for the following analysis
      configuration phase.
-   - **Mosaic schematic analysis configuration** (current phase): discovery after
+   - **Mosaic schematic analysis configuration** (completed in PR #14935): discovery after
      PR #14929: choosing an analysis still emits fixed `.dc V1 0 5 1`, `.ac dec
      10 10 10k`, or `.tran 1m 10m` cards, so useful sweep setup requires raw
      document injection. Persist a canonical DC source selection across every
@@ -197,6 +197,14 @@ model-card parameter, or a UI artifact is not a completion signal.
      events and Mosaic controls, and synchronize the exact resulting card into
      the existing Berkeley parser flow. Keep multi-card plans, nested sweeps,
      and vendor-analysis controls for later product phases.
+   - **Mosaic schematic multi-analysis plans** (current phase): discovery after
+     PR #14935: a schematic can configure only one card although the frozen
+     parser/workbench plan supports ordered `.op`, `.dc`, `.ac`, and `.tran`
+     records. Replace the single selected analysis/configuration with an
+     ordered canonical card list, migrate legacy single-card state, offer typed
+     add/select/remove events plus selected-card configuration, lower directives
+     in list order, persist the selected card, and add Mosaic contract coverage.
+     Keep nested sweeps and vendor-analysis controls for later product phases.
 
 ### Operating rules
 

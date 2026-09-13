@@ -157,6 +157,23 @@ impl Default for SchematicAnalysisSettings {
     }
 }
 
+/// One ordered Berkeley analysis card owned by a schematic document.
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct SchematicAnalysisCard {
+    pub analysis: SchematicAnalysis,
+    #[serde(default)]
+    pub settings: SchematicAnalysisSettings,
+}
+
+impl SchematicAnalysisCard {
+    fn new(analysis: SchematicAnalysis) -> Self {
+        Self {
+            analysis,
+            settings: SchematicAnalysisSettings::default(),
+        }
+    }
+}
+
 /// A placed symbol whose terminals are connected by exact grid endpoints.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct SchematicComponent {
@@ -183,6 +200,9 @@ pub struct SchematicDocument {
     pub analysis: SchematicAnalysis,
     #[serde(default)]
     pub analysis_settings: SchematicAnalysisSettings,
+    /// Ordered canonical cards. An empty list retains legacy single-card state.
+    #[serde(default)]
+    pub analysis_cards: Vec<SchematicAnalysisCard>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -198,6 +218,26 @@ impl Error for SchematicError {}
 
 fn invalid(message: impl Into<String>) -> SchematicError {
     SchematicError(message.into())
+}
+
+fn analysis_parameter_values(
+    analysis: SchematicAnalysis,
+    settings: &SchematicAnalysisSettings,
+) -> [&str; 3] {
+    match analysis {
+        SchematicAnalysis::OperatingPoint => ["", "", ""],
+        SchematicAnalysis::DcSweep => [&settings.dc_start, &settings.dc_stop, &settings.dc_step],
+        SchematicAnalysis::AcSweep => [
+            &settings.ac_points_per_decade,
+            &settings.ac_start_frequency,
+            &settings.ac_stop_frequency,
+        ],
+        SchematicAnalysis::Transient => [
+            &settings.transient_time_step,
+            &settings.transient_stop_time,
+            "",
+        ],
+    }
 }
 
 #[derive(Default)]
@@ -230,6 +270,91 @@ impl DisjointSet {
 }
 
 impl SchematicDocument {
+    /// Return ordered cards while preserving legacy persisted documents.
+    pub fn analysis_cards(&self) -> Vec<SchematicAnalysisCard> {
+        if self.analysis_cards.is_empty() {
+            vec![SchematicAnalysisCard {
+                analysis: self.analysis,
+                settings: self.analysis_settings.clone(),
+            }]
+        } else {
+            self.analysis_cards.clone()
+        }
+    }
+
+    /// Return the number of cards available to schematic hosts.
+    pub fn analysis_card_count(&self) -> usize {
+        self.analysis_cards.len().max(1)
+    }
+
+    /// Return source-order labels for card-selection controls.
+    pub fn analysis_card_labels(&self) -> Vec<String> {
+        self.analysis_cards()
+            .into_iter()
+            .enumerate()
+            .map(|(index, card)| format!("{}. {}", index + 1, card.analysis.palette_label()))
+            .collect()
+    }
+
+    /// Return one card by its source-order position.
+    pub fn analysis_card(&self, index: usize) -> Option<SchematicAnalysisCard> {
+        self.analysis_cards().into_iter().nth(index)
+    }
+
+    fn materialized_analysis_cards(&mut self) -> &mut Vec<SchematicAnalysisCard> {
+        if self.analysis_cards.is_empty() {
+            self.analysis_cards.push(SchematicAnalysisCard {
+                analysis: self.analysis,
+                settings: self.analysis_settings.clone(),
+            });
+        }
+        &mut self.analysis_cards
+    }
+
+    /// Materialize legacy single-card fields for persisted ordered-plan state.
+    pub fn migrate_legacy_analysis_cards(&mut self) {
+        self.materialized_analysis_cards();
+    }
+
+    fn analysis_card_mut(
+        &mut self,
+        index: usize,
+    ) -> Result<&mut SchematicAnalysisCard, SchematicError> {
+        self.materialized_analysis_cards()
+            .get_mut(index)
+            .ok_or_else(|| invalid("schematic analysis card is unavailable"))
+    }
+
+    /// Append a card and return its source-order index.
+    pub fn add_analysis_card(&mut self, analysis: SchematicAnalysis) -> usize {
+        let cards = self.materialized_analysis_cards();
+        cards.push(SchematicAnalysisCard::new(analysis));
+        cards.len() - 1
+    }
+
+    /// Remove one card while keeping every schematic runnable by default.
+    pub fn remove_analysis_card(&mut self, index: usize) -> Result<(), SchematicError> {
+        let cards = self.materialized_analysis_cards();
+        if cards.len() == 1 {
+            return Err(invalid("schematic requires at least one analysis card"));
+        }
+        if index >= cards.len() {
+            return Err(invalid("schematic analysis card is unavailable"));
+        }
+        cards.remove(index);
+        Ok(())
+    }
+
+    /// Change a card kind without disturbing other source-ordered cards.
+    pub fn set_analysis_card_kind(
+        &mut self,
+        index: usize,
+        analysis: SchematicAnalysis,
+    ) -> Result<(), SchematicError> {
+        self.analysis_card_mut(index)?.analysis = analysis;
+        Ok(())
+    }
+
     /// Place one palette component on the next deterministic grid cell.
     ///
     /// Placement does not require a complete runnable circuit. The document is
@@ -411,9 +536,18 @@ impl SchematicDocument {
             .collect()
     }
 
-    /// Select the independent source controlled by the active DC sweep.
+    /// Select the independent source controlled by the first analysis card.
     pub fn set_dc_sweep_source(&mut self, reference: &str) -> Result<(), SchematicError> {
-        if self.analysis != SchematicAnalysis::DcSweep {
+        self.set_analysis_card_dc_sweep_source(0, reference)
+    }
+
+    /// Select the independent source controlled by one DC-sweep card.
+    pub fn set_analysis_card_dc_sweep_source(
+        &mut self,
+        index: usize,
+        reference: &str,
+    ) -> Result<(), SchematicError> {
+        if self.analysis_card(index).map(|card| card.analysis) != Some(SchematicAnalysis::DcSweep) {
             return Err(invalid(
                 "schematic analysis source applies only to DC sweep",
             ));
@@ -423,35 +557,45 @@ impl SchematicDocument {
                 "{reference} is not an independent voltage or current source"
             )));
         }
-        self.analysis_settings.dc_source = reference.to_owned();
+        self.analysis_card_mut(index)?.settings.dc_source = reference.to_owned();
         Ok(())
     }
 
     /// Read the three visible editor fields for the active analysis card.
     pub fn analysis_parameter_values(&self) -> [&str; 3] {
-        match self.analysis {
-            SchematicAnalysis::OperatingPoint => ["", "", ""],
-            SchematicAnalysis::DcSweep => [
-                &self.analysis_settings.dc_start,
-                &self.analysis_settings.dc_stop,
-                &self.analysis_settings.dc_step,
-            ],
-            SchematicAnalysis::AcSweep => [
-                &self.analysis_settings.ac_points_per_decade,
-                &self.analysis_settings.ac_start_frequency,
-                &self.analysis_settings.ac_stop_frequency,
-            ],
-            SchematicAnalysis::Transient => [
-                &self.analysis_settings.transient_time_step,
-                &self.analysis_settings.transient_stop_time,
-                "",
-            ],
-        }
+        self.analysis_card_parameter_values(0)
+            .unwrap_or(["", "", ""])
+    }
+
+    /// Read the three visible editor fields for one ordered analysis card.
+    pub fn analysis_card_parameter_values(
+        &self,
+        index: usize,
+    ) -> Result<[&str; 3], SchematicError> {
+        let (analysis, settings) = if let Some(card) = self.analysis_cards.get(index) {
+            (card.analysis, &card.settings)
+        } else if self.analysis_cards.is_empty() && index == 0 {
+            (self.analysis, &self.analysis_settings)
+        } else {
+            return Err(invalid("schematic analysis card is unavailable"));
+        };
+        Ok(analysis_parameter_values(analysis, settings))
     }
 
     /// Read the labels paired with the active analysis card's editor fields.
     pub fn analysis_parameter_labels(&self) -> [&'static str; 3] {
-        self.analysis.parameter_labels()
+        self.analysis_card_parameter_labels(0)
+            .unwrap_or(["", "", ""])
+    }
+
+    /// Read the labels paired with one ordered card's editor fields.
+    pub fn analysis_card_parameter_labels(
+        &self,
+        index: usize,
+    ) -> Result<[&'static str; 3], SchematicError> {
+        self.analysis_card(index)
+            .map(|card| card.analysis.parameter_labels())
+            .ok_or_else(|| invalid("schematic analysis card is unavailable"))
     }
 
     /// Update one visible analysis-card parameter through the canonical document.
@@ -460,10 +604,24 @@ impl SchematicDocument {
         index: usize,
         value: &str,
     ) -> Result<(), SchematicError> {
-        if self.analysis == SchematicAnalysis::OperatingPoint {
+        self.set_analysis_card_parameter(0, index, value)
+    }
+
+    /// Update one visible parameter on an ordered analysis card.
+    pub fn set_analysis_card_parameter(
+        &mut self,
+        card_index: usize,
+        index: usize,
+        value: &str,
+    ) -> Result<(), SchematicError> {
+        let analysis = self
+            .analysis_card(card_index)
+            .ok_or_else(|| invalid("schematic analysis card is unavailable"))?
+            .analysis;
+        if analysis == SchematicAnalysis::OperatingPoint {
             return Err(invalid("operating point does not accept sweep parameters"));
         }
-        if index >= 3 || (self.analysis == SchematicAnalysis::Transient && index == 2) {
+        if index >= 3 || (analysis == SchematicAnalysis::Transient && index == 2) {
             return Err(invalid("schematic analysis parameter is unavailable"));
         }
         if value.is_empty() || value.chars().any(char::is_whitespace) {
@@ -471,33 +629,24 @@ impl SchematicDocument {
                 "schematic analysis parameter must be one non-empty SPICE token",
             ));
         }
-        match (self.analysis, index) {
-            (SchematicAnalysis::DcSweep, 0) => self.analysis_settings.dc_start = value.to_owned(),
-            (SchematicAnalysis::DcSweep, 1) => self.analysis_settings.dc_stop = value.to_owned(),
-            (SchematicAnalysis::DcSweep, 2) => self.analysis_settings.dc_step = value.to_owned(),
-            (SchematicAnalysis::AcSweep, 0) => {
-                self.analysis_settings.ac_points_per_decade = value.to_owned()
-            }
-            (SchematicAnalysis::AcSweep, 1) => {
-                self.analysis_settings.ac_start_frequency = value.to_owned()
-            }
-            (SchematicAnalysis::AcSweep, 2) => {
-                self.analysis_settings.ac_stop_frequency = value.to_owned()
-            }
-            (SchematicAnalysis::Transient, 0) => {
-                self.analysis_settings.transient_time_step = value.to_owned()
-            }
-            (SchematicAnalysis::Transient, 1) => {
-                self.analysis_settings.transient_stop_time = value.to_owned()
-            }
+        let settings = &mut self.analysis_card_mut(card_index)?.settings;
+        match (analysis, index) {
+            (SchematicAnalysis::DcSweep, 0) => settings.dc_start = value.to_owned(),
+            (SchematicAnalysis::DcSweep, 1) => settings.dc_stop = value.to_owned(),
+            (SchematicAnalysis::DcSweep, 2) => settings.dc_step = value.to_owned(),
+            (SchematicAnalysis::AcSweep, 0) => settings.ac_points_per_decade = value.to_owned(),
+            (SchematicAnalysis::AcSweep, 1) => settings.ac_start_frequency = value.to_owned(),
+            (SchematicAnalysis::AcSweep, 2) => settings.ac_stop_frequency = value.to_owned(),
+            (SchematicAnalysis::Transient, 0) => settings.transient_time_step = value.to_owned(),
+            (SchematicAnalysis::Transient, 1) => settings.transient_stop_time = value.to_owned(),
             _ => unreachable!("availability was checked before assigning a parameter"),
         }
         Ok(())
     }
 
-    fn analysis_directive(&self) -> Result<String, SchematicError> {
-        let settings = &self.analysis_settings;
-        match self.analysis {
+    fn analysis_directive(&self, card: &SchematicAnalysisCard) -> Result<String, SchematicError> {
+        let settings = &card.settings;
+        match card.analysis {
             SchematicAnalysis::OperatingPoint => Ok(".op".to_owned()),
             SchematicAnalysis::DcSweep => {
                 if !self
@@ -601,18 +750,22 @@ impl SchematicDocument {
         if ground_count == 0 {
             return Err(invalid("schematic requires at least one ground symbol"));
         }
-        for (label, value) in self
-            .analysis_parameter_labels()
-            .into_iter()
-            .zip(self.analysis_parameter_values())
-        {
-            if !label.is_empty() && (value.is_empty() || value.chars().any(char::is_whitespace)) {
-                return Err(invalid(format!(
-                    "{label} must be one non-empty SPICE token"
-                )));
+        for card in self.analysis_cards() {
+            for (label, value) in card
+                .analysis
+                .parameter_labels()
+                .into_iter()
+                .zip(analysis_parameter_values(card.analysis, &card.settings))
+            {
+                if !label.is_empty() && (value.is_empty() || value.chars().any(char::is_whitespace))
+                {
+                    return Err(invalid(format!(
+                        "{label} must be one non-empty SPICE token"
+                    )));
+                }
             }
+            self.analysis_directive(&card)?;
         }
-        self.analysis_directive()?;
         for (index, wire) in self.wires.iter().enumerate() {
             self.validate_wire_endpoints(wire)?;
             if self.wires[..index].iter().any(|existing| {
@@ -717,7 +870,10 @@ impl SchematicDocument {
             };
             lines.push(line);
         }
-        lines.extend([self.analysis_directive()?, ".end".to_owned()]);
+        for card in self.analysis_cards() {
+            lines.push(self.analysis_directive(&card)?);
+        }
+        lines.push(".end".to_owned());
         Ok(lines.join("\n") + "\n")
     }
 }
@@ -780,6 +936,7 @@ mod tests {
             ],
             analysis: SchematicAnalysis::OperatingPoint,
             analysis_settings: SchematicAnalysisSettings::default(),
+            analysis_cards: Vec::new(),
         }
     }
 
@@ -812,6 +969,7 @@ mod tests {
             wires: Vec::new(),
             analysis: SchematicAnalysis::default(),
             analysis_settings: SchematicAnalysisSettings::default(),
+            analysis_cards: Vec::new(),
         };
         assert_eq!(
             document
@@ -897,6 +1055,7 @@ mod tests {
             }],
             analysis: SchematicAnalysis::AcSweep,
             analysis_settings: SchematicAnalysisSettings::default(),
+            analysis_cards: Vec::new(),
         };
         let deck = document.to_berkeley_netlist().unwrap();
         assert_eq!(
@@ -933,7 +1092,9 @@ mod tests {
         parse_netlist(&deck).unwrap();
         assert_eq!(run_netlist(&deck).unwrap().len(), 1);
 
-        document.analysis = SchematicAnalysis::AcSweep;
+        document
+            .set_analysis_card_kind(0, SchematicAnalysis::AcSweep)
+            .unwrap();
         document.set_analysis_parameter(0, "20").unwrap();
         document.set_analysis_parameter(1, "1").unwrap();
         document.set_analysis_parameter(2, "1k").unwrap();
@@ -942,7 +1103,9 @@ mod tests {
             .unwrap()
             .contains(".ac dec 20 1 1k"));
 
-        document.analysis = SchematicAnalysis::Transient;
+        document
+            .set_analysis_card_kind(0, SchematicAnalysis::Transient)
+            .unwrap();
         document.set_analysis_parameter(0, "2m").unwrap();
         document.set_analysis_parameter(1, "20m").unwrap();
         assert!(document
@@ -964,10 +1127,54 @@ mod tests {
                 .to_string(),
             "schematic analysis parameter must be one non-empty SPICE token"
         );
-        document.analysis = SchematicAnalysis::DcSweep;
+        document
+            .set_analysis_card_kind(0, SchematicAnalysis::DcSweep)
+            .unwrap();
         assert_eq!(
             document.set_dc_sweep_source("R1").unwrap_err().to_string(),
             "R1 is not an independent voltage or current source"
+        );
+    }
+
+    #[test]
+    fn ordered_analysis_cards_lower_and_validate_in_source_order() {
+        let mut document = rc_document();
+        document
+            .set_analysis_card_kind(0, SchematicAnalysis::DcSweep)
+            .unwrap();
+        document.set_analysis_card_dc_sweep_source(0, "V1").unwrap();
+        document.set_analysis_card_parameter(0, 0, "-1").unwrap();
+        document.set_analysis_card_parameter(0, 1, "2").unwrap();
+        document.set_analysis_card_parameter(0, 2, "0.5").unwrap();
+        let ac = document.add_analysis_card(SchematicAnalysis::AcSweep);
+        document.set_analysis_card_parameter(ac, 0, "20").unwrap();
+        document.set_analysis_card_parameter(ac, 1, "1").unwrap();
+        document.set_analysis_card_parameter(ac, 2, "1k").unwrap();
+        let transient = document.add_analysis_card(SchematicAnalysis::Transient);
+        document
+            .set_analysis_card_parameter(transient, 0, "2m")
+            .unwrap();
+        document
+            .set_analysis_card_parameter(transient, 1, "20m")
+            .unwrap();
+
+        assert_eq!(
+            document.analysis_card_labels(),
+            ["1. DC sweep", "2. AC sweep", "3. Transient"]
+        );
+        let deck = document.to_berkeley_netlist().unwrap();
+        assert!(deck.contains(".dc V1 -1 2 0.5\n.ac dec 20 1 1k\n.tran 2m 20m\n.end"));
+        parse_netlist(&deck).unwrap();
+        assert_eq!(run_netlist(&deck).unwrap().len(), 3);
+        document.remove_analysis_card(1).unwrap();
+        assert_eq!(
+            document.analysis_card_labels(),
+            ["1. DC sweep", "2. Transient"]
+        );
+        document.remove_analysis_card(1).unwrap();
+        assert_eq!(
+            document.remove_analysis_card(0).unwrap_err().to_string(),
+            "schematic requires at least one analysis card"
         );
     }
 
