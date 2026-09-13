@@ -1764,6 +1764,20 @@ impl EngramSession {
                             materialize_cards_at: Some(now),
                         },
                     );
+                    // Reset, exactly as `NoteTypeEditorSaveNoteType` does above.
+                    //
+                    // Leaving the editor drafting across a save is not a
+                    // harmless difference between the two events. The draft
+                    // keeps a `draft_note_type_id` the selection no longer
+                    // resolves to, so the NEXT edit gets a different id and
+                    // `ensure_selected_draft` clears the draft in response --
+                    // a name typed after saving from the collection went
+                    // nowhere and the editor snapped to the last saved model.
+                    //
+                    // #15093 found and recorded that while closing a different
+                    // bug, and left it: it is an editor-behaviour decision
+                    // rather than part of the collision fix.
+                    self.note_type_editor.reset();
                 }
                 // A delete that cannot identify its note is an ERROR, not a
                 // no-op (#13933). The two halves of this were individually
@@ -11604,34 +11618,99 @@ mod tests {
         assert_eq!(deleted["state"]["noteTypes"][0]["name"], "Real Model");
     }
 
-    /// Saving a draft through the COLLECTION event leaves the editor drafting.
+    /// The two save events leave the editor in the SAME place.
     ///
-    /// `NoteTypeEditorSaveNoteType` resets the editor after saving;
-    /// `SaveNoteType` does not. So `draft_is_new` stays true beside the model
-    /// that was just written, and the selection is resolved fresh.
+    /// This test used to pin the opposite, and said so: `SaveNoteType` did not
+    /// reset the editor where `NoteTypeEditorSaveNoteType` did, so the draft
+    /// survived the save holding a `draft_note_type_id` the selection no longer
+    /// resolved to. Its own doc named the consequence — a name typed afterwards
+    /// was silently dropped — called it "strictly an improvement, and still
+    /// wrong", and filed the fix rather than folding it into #15093's collision
+    /// work.
     ///
-    /// Measured rather than assumed, and NOT fixed here. Before the collision
-    /// fix this left the editor showing the saved model's own id as an unsaved
-    /// blank draft, and a second save would have written that blank over it.
-    /// Now the editor moves to a genuinely new id instead.
+    /// This is that fix, so the assertion inverts. What replaces it is the
+    /// EQUIVALENCE rather than either event's particular landing spot: the two
+    /// are the same operation reached from two places, and pinning where they
+    /// land would make this a tripwire for any later decision to land somewhere
+    /// better (selecting the model just saved, say), which is a product choice
+    /// neither event makes today.
     ///
-    /// **The new outcome is better but not free, and the difference is worth
-    /// stating.** Because the draft's id now moves when the collection moves,
-    /// the next field edit resolves a different id than `draft_note_type_id`
-    /// holds, and `ensure_selected_draft` responds by clearing the draft —
-    /// `draft_is_new = false`, every draft map emptied. So a name typed after
-    /// saving from the collection is silently dropped and the editor snaps to
-    /// the last saved note type.
-    ///
-    /// That is a trade of **data loss for draft loss**: the old path kept the
-    /// draft and would have overwritten a real model with a blank on the next
-    /// save. Strictly an improvement, and still wrong — which is why it is
-    /// pinned here rather than left to be rediscovered. The fix is for
-    /// `SaveNoteType` to reset the editor the way `NoteTypeEditorSaveNoteType`
-    /// does, but that is an editor-behaviour decision rather than part of
-    /// closing the collision, so it is filed instead of folded in.
+    /// Both are still asserted to leave no draft claiming the saved id, which
+    /// is the property that matters: a draft holding an id something has saved
+    /// is a blank waiting to overwrite a real model on the next save.
     #[test]
-    fn saving_from_the_collection_leaves_a_fresh_draft_rather_than_the_saved_id() {
+    fn both_save_events_leave_the_editor_in_the_same_place() {
+        fn save_and_report(editor_level: bool) -> (String, String) {
+            let mut session = EngramSession::new_demo();
+            let drafted: Value = serde_json::from_str(&session.handle_engram_app_event(
+                "onAddNoteType",
+                "deck",
+                NOW,
+            ))
+            .unwrap();
+            let draft_id = drafted["props"]["note-type-editor-note-type-id-value"]
+                .as_str()
+                .expect("draft id")
+                .to_string();
+
+            let event = if editor_level {
+                format!(
+                    r#"{{"event":"onNoteTypeEditorSaveNoteType","name":"Saved Model","noteTypeId":"{draft_id}"}}"#
+                )
+            } else {
+                format!(
+                    r#"{{"event":"onSaveNoteType","noteType":{{"id":"{draft_id}","name":"Saved Model",
+                       "fields":[{{"id":"front","name":"Front","required":true,"ordinal":0}}],
+                       "templates":[{{"id":"forward","name":"Forward","frontTemplate":"{{{{Front}}}}",
+                       "backTemplate":"","requiredFieldNames":["Front"],"ordinal":0}}]}}}}"#
+                )
+            };
+            let saved: Value =
+                serde_json::from_str(&session.handle_engram_app_event(&event, "deck", NOW + 1))
+                    .unwrap();
+            assert_eq!(saved["ok"], true, "{saved}");
+            let after = saved["props"]["note-type-editor-note-type-id-value"]
+                .as_str()
+                .expect("editor id")
+                .to_string();
+            // No draft may claim an id the collection now holds.
+            assert_ne!(
+                after, draft_id,
+                "the editor must not keep claiming an id that is now saved; a \
+                 second save would write a blank model over it"
+            );
+            (draft_id, after)
+        }
+
+        let (editor_draft, editor_after) = save_and_report(true);
+        let (collection_draft, collection_after) = save_and_report(false);
+
+        // The draft ids are minted from the same clock in both runs, so a
+        // difference here would mean the two runs did not start alike and the
+        // comparison below would be of different situations.
+        assert_eq!(editor_draft, collection_draft, "the runs must start alike");
+        assert_eq!(
+            editor_after, collection_after,
+            "saving from the collection must leave the editor where saving from \
+             the editor does; they are one operation reached from two places"
+        );
+    }
+
+    /// A name typed after saving from the collection is kept.
+    ///
+    /// This is the symptom the entry above predicted and left unfixed: because
+    /// `SaveNoteType` did not reset the editor, the draft survived the save
+    /// holding a `draft_note_type_id` the selection no longer resolves to. The
+    /// next edit went through `note_type_editor_selected_id`, got a different
+    /// id, and `ensure_selected_draft` responded by clearing the draft — so the
+    /// name went nowhere and the editor snapped to the last saved model.
+    ///
+    /// Asserted through the PROPS the person is looking at rather than through
+    /// the editor's internals, because "the name I typed is in the box" is the
+    /// claim, and a test on `draft_names` would keep passing if the box stopped
+    /// reading from it.
+    #[test]
+    fn a_name_typed_after_saving_from_the_collection_is_kept() {
         let mut session = EngramSession::new_demo();
         let drafted: Value =
             serde_json::from_str(&session.handle_engram_app_event("onAddNoteType", "deck", NOW))
@@ -11653,39 +11732,33 @@ mod tests {
         ))
         .unwrap();
         assert_eq!(saved["ok"], true, "{saved}");
-        assert!(
-            saved["state"]["noteTypes"]
-                .as_array()
-                .unwrap()
-                .iter()
-                .any(|note_type| note_type["id"] == draft_id.as_str()),
-            "the draft's id must now be a saved note type"
+
+        let typed: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteTypeEditorNameChange","value":"Typed After Saving"}"#,
+            "deck",
+            NOW + 2,
+        ))
+        .unwrap();
+        assert_eq!(typed["ok"], true, "{typed}");
+        assert_eq!(
+            typed["props"]["note-type-editor-name-value"], "Typed After Saving",
+            "the name typed after a collection-level save was dropped"
         );
 
-        // The editor no longer claims the saved model's id.
-        let after = saved["props"]["note-type-editor-note-type-id-value"]
-            .as_str()
-            .expect("editor id")
-            .to_string();
-        assert_ne!(
-            after, draft_id,
-            "the open draft must not keep claiming an id that is now saved; a \
-             second save would write a blank model over it"
-        );
-        // And it holds an id nothing has saved -- which is what makes it a
-        // FRESH DRAFT rather than a selection of some other existing model.
-        //
-        // Asserted because the weaker `after != draft_id` above would also pass
-        // if the editor had closed and landed on an unrelated note type, which
-        // is a different outcome wearing the same assertion.
-        assert!(
-            !saved["state"]["noteTypes"]
-                .as_array()
-                .unwrap()
-                .iter()
-                .any(|note_type| note_type["id"] == after.as_str()),
-            "the editor must hold an unsaved id, got {after}"
-        );
+        // And it survives the next read, rather than appearing once and being
+        // cleared by the following event's `ensure_selected_draft`.
+        let again: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onNoteTypeEditorSelectField",
+            "deck",
+            NOW + 3,
+        ))
+        .unwrap();
+        if again["ok"] == true {
+            assert_eq!(
+                again["props"]["note-type-editor-name-value"], "Typed After Saving",
+                "the name did not survive the next event"
+            );
+        }
     }
 
     /// An explicit id for a note type that does not exist must not report `ok`.

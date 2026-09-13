@@ -2,6 +2,46 @@
 
 ## Unreleased
 
+### Fixed — a name typed after saving from the collection was silently dropped
+
+`SaveNoteType` — the collection actions bar's save — did not reset the note-type
+editor, where `NoteTypeEditorSaveNoteType` did. So the draft survived the save
+holding a `draft_note_type_id` the selection no longer resolved to. The next
+edit went through `note_type_editor_selected_id`, got a different id, and
+`ensure_selected_draft` responded by clearing the draft: name gone, editor
+snapped to the last saved model.
+
+Reproduced before fixing, through the props the person is actually looking at
+rather than the editor's internals — type "Typed After Saving" and
+`note-type-editor-name-value` reads `Saved Model`.
+
+This was **known and deferred**: #15093 found it while closing the draft-id
+collision, recorded it as "strictly an improvement, and still wrong", and filed
+it as an editor-behaviour decision rather than part of that fix. This is the
+deferral being paid off. The entry below is left as written, because it is the
+record of what was known at the time.
+
+`SaveNoteType` resets now, and the test that pinned the old behaviour inverts.
+
+**What replaces it is the equivalence, not either event's landing spot.** The
+two are one operation reached from two places, so the test asserts they agree
+and that neither leaves a draft claiming an id the collection now holds — a
+draft holding a saved id is a blank waiting to overwrite a real model. Where
+they land is deliberately not pinned: selecting the model just saved might well
+be better, and that is a product choice neither event makes today. A test on the
+current spot would be a tripwire for making it.
+
+Mutation-tested two ways, because the two tests make different claims:
+
+| mutation | symptom test | equivalence test |
+| --- | --- | --- |
+| `SaveNoteType` stops resetting | fails | fails |
+| `NoteTypeEditorSaveNoteType` stops resetting | **passes** | fails |
+
+The second row is the point: the symptom is about the collection path, so a
+regression in the editor path must not fail it. A single mutation failing both
+would not have shown the tests are measuring different things.
+
 ### Fixed — two notes could generate the same card id
 
 A generated card's id is `{note_id}::{template_id}`, and the cloze form appends
@@ -123,6 +163,10 @@ test that fails against the pre-fix behaviour. The fix is for `SaveNoteType` to
 reset the editor the way its editor-level twin does, which is an
 editor-behaviour decision rather than part of closing the collision, so it is
 filed rather than folded in.
+
+**Now fixed — see the entry below.** This paragraph is left as written because
+it is the record of what was known and deliberately deferred; the deferral is
+what was paid off, not what was wrong.
 
 ### Fixed — `onDeleteNoteType` reported success having deleted nothing
 
