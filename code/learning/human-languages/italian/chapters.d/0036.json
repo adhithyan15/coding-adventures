@@ -1,0 +1,16 @@
+{
+  "chapter": 36,
+  "title": "Reading — Words, Lines, and a First Passage",
+  "label": "ch:it-prima-lettura",
+  "canDo": "I can read an Italian word cold, follow a line whose subject lives inside the verb, and hold a whole passage without translating it word by word.",
+  "payoff": {
+    "lesson": "IT-C36-prima-lettura",
+    "kind": "four-skill-function-map",
+    "summary": "Forty-seven words of Italian with no new word in them, including the one place a reader has to decide whether perché is asking or answering with nothing on the page to say which.",
+    "assesses": [
+      "IT-SKILL-CONNECTED-READING",
+      "IT-SKILL-READ-LINES",
+      "IT-SKILL-READ-WORDS"
+    ]
+  }
+}

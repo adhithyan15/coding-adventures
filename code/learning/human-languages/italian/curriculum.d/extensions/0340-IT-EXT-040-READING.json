@@ -1,0 +1,15 @@
+{
+  "id": "IT-EXT-040-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read an Italian word cold, follow a line whose subject lives inside the verb, and read a short passage without translating word by word.",
+  "prerequisites": [
+    "IT-EXT-039-SAPERE"
+  ],
+  "lessons": [
+    "IT-C36-parole",
+    "IT-C36-frasi",
+    "IT-C36-prima-lettura"
+  ]
+}

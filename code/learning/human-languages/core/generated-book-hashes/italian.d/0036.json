@@ -1,0 +1,11 @@
+{
+  "language": "italian",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:0f2e19d6d6bb6884",
+  "lessonIds": [
+    "IT-C36-parole",
+    "IT-C36-frasi",
+    "IT-C36-prima-lettura"
+  ],
+  "tex": "italian/book/chapters/ch36-reading-words-lines-and-a-passage.tex"
+}
