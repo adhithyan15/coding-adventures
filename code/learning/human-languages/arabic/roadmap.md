@@ -228,6 +228,22 @@ word lessons — never as a gated reading course.
 - **Ch. 41 — Calling Somebody, and Asking Again**: **يا** → **كرّر من فضلك**.
   The review replays the first meeting of chapters 1–4 and repairs it.
 
+### Chapter 42 — reading words, lines, and a first encounter *(authored)*
+
+- **Words**: six previously taught forms appear without romanization for the
+  first time. Long alif and the shared **ـًا** ending make old script knowledge
+  do new reading work.
+- **Lines**: greetings, names and **شاي أو حليب؟** move from isolated forms to
+  complete right-to-left turns, including the reversed question mark and the
+  zero copula in **اسمي سامي**.
+- **Encounter**: one exchange runs from greeting through a tea-or-milk choice to
+  farewell. Every form and glyph was previously taught; the first draft's
+  familiar-but-not-yet-writable forms were removed after the closure audit.
+
+ALPT does not publish stimulus lengths, so the track keeps its `notPublished`
+evidence and makes no numeric reading-reach claim. The reading itself is no
+longer omitted.
+
 Every headword in these five chapters was tested against the thirty letters the
 script ladder has taught. عندما, الذي, إلا and أعرف were rejected on that test
 and are recorded in the inventory beside the letters that block them; three
