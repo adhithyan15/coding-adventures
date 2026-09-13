@@ -1,5 +1,26 @@
 # Changelog
 
+## Chapter 58 — reading: words, lines, and a first scene
+
+Latin's reading rung moves `pre-A1` from 0/2 to 2/2 and `A1` from 0/3 to
+1/3 in `reading-reach`. Three lessons progress from six familiar words, through
+six familiar lines, to a 42-token meeting scene. No vocabulary or grammar is
+introduced for the sake of the metric: every Latin word in the passage has
+already appeared in the course.
+
+- **Words**: the macrons the spoken course has carried from chapter 1 become
+  visible information rather than decoration.
+- **Lines**: `-o` and `-s` show the reader who acts even when Latin leaves the
+  pronoun unwritten.
+- **Scene**: demonstratives, cases, gender, and verb endings hold a whole
+  meeting together without English articles or repeated subject pronouns.
+
+The 42-token scene deliberately stops below the A1 social-exchange floor of 60
+words. Repetition or undeclared forms could have raised the number, but would
+not have made the reading gentler or more honest. The next Latin reading tranche
+needs a broader stock of connected, previously taught sentences before it can
+reach the 60-90 and 120-160 word task shapes.
+
 ## The ordinals, in the order the language's own construction dictates
 
 Thirteen lessons in three chapters (55-57) close `LA-A1-Q-05`, `LA-A1-NG-15` and

@@ -9,7 +9,9 @@ it("pins Latin continuity", () => expectLanguageContinuity("latin"));
 it("pins Latin modality", () => expectLanguageModality("latin"));
 it("pins Latin lesson-content budgets", () =>
   expectLanguageLessonBudgets("latin", {
-    lessons: 160,
+    // 160 -> 163: chapter 58, Latin's first reading rung -- six familiar
+    // words, six familiar lines, and one 42-word meeting scene.
+    lessons: 163,
     idioms: 16,
     senses: 6,
     cultureClaims: 17,

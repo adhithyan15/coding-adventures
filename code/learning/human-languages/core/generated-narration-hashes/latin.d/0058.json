@@ -1,0 +1,17 @@
+{
+  "language": "latin",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:a9b5a42b11ef18c7",
+  "lessonIds": [
+    "LA-C58-verba",
+    "LA-C58-lineae",
+    "LA-C58-prima-lectio"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "latin/narration/ch58.txt",
+  "json": "latin/narration/ch58.json",
+  "textHash": "fnv1a64:68887a3d1b271fe2",
+  "jsonHash": "fnv1a64:f53f17e799a54957",
+  "findings": []
+}

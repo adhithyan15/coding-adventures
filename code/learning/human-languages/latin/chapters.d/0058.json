@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "Reading — Words, Lines, and a First Scene",
+  "label": "ch:la-prima-lectio",
+  "canDo": "I can read familiar Latin words cold, follow whole lines by their endings, and hold a connected meeting scene without translating word by word.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "LA-C58-prima-lectio",
+    "kind": "four-skill-function-map",
+    "summary": "Forty-two familiar words gathered into one meeting scene, with macrons, cases, demonstratives, and verb endings carrying the information English spreads across more words.",
+    "assesses": [
+      "LA-SKILL-CONNECTED-READING",
+      "LA-SKILL-READ-SENTENCES",
+      "LA-SKILL-READ-WORDS"
+    ]
+  }
+}

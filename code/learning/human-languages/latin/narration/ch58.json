@@ -1,0 +1,518 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 58,
+  "title": "Reading — Words, Lines, and a First Scene",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:a9b5a42b11ef18c7",
+  "lessons": [
+    {
+      "id": "LA-C58-verba",
+      "sequence": 1630,
+      "title": "(reading) — six words, and length made visible",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "six familiar Latin words read cold — and the macrons that the book has been saying aloud",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:808cf221eb8f9bd6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every word below is old. The new work is meeting it first with your eyes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "salvē avē valē grātiās ita nōn."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down once without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again, and let each macron hold its vowel for the length you already know from hearing it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a mark Romans did not need",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The line over a vowel is a macron. Ancient Romans normally did not write one. This book does because vowel length can distinguish words and because a beginning reader deserves to see what a careful speaker says."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So the mark is not decoration and it is not an accent. In salvē and valē, it asks you to hold the final vowel. In grātiās, it does the same job twice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six words in order, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six words in order, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "LA-C58-verba-no",
+              "prompt": "Which of the six words means no?",
+              "assesses": [
+                "LA-SKILL-READ-WORDS"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "nōn",
+                "non"
+              ],
+              "feedback": {
+                "correct": "nōn.",
+                "incorrect": "nōn -- the macron makes its long vowel visible."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a macron tell a reader? (Hold that vowel long.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C58-lineae",
+      "sequence": 1640,
+      "title": "(reading) — six lines, and the person at the end",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "six familiar lines — and the endings that tell a reader who is acting",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd9a679cff091aa3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson gave you isolated words. These are whole lines."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have already said every one of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Salvē! Quid agis? Valeō. Grātiās tibi agō. Mihi nōmen est Mārcus. Valē!"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down once without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again, and this time watch the last letter of agis, valeō and agō."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the person rides on the verb",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin does not need to write ego, “I,” before valeō or agō. The -ō already says who acts. In agis, the -s points to “you.”"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That makes a Latin line short without making it incomplete. A reader looks to the verb's right edge for a person English usually puts at the left."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six lines in order, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six lines in order, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "LA-C58-lineae-name",
+              "prompt": "Which line gives a name?",
+              "assesses": [
+                "LA-SKILL-READ-SENTENCES"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "mihi nōmen est mārcus.",
+                "mihi nomen est marcus",
+                "mihi nomen est marcus."
+              ],
+              "feedback": {
+                "correct": "Mihi nōmen est Mārcus.",
+                "incorrect": "Mihi nōmen est Mārcus -- literally, to me the name is Marcus."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does a Latin reader find the person when there is no written pronoun? (On the verb ending.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C58-prima-lectio",
+      "sequence": 1650,
+      "title": "(reading) — the first connected scene",
+      "headword": "(reading)",
+      "romanization": "(reading)",
+      "gloss": "the first connected scene — forty-two familiar words, with the endings and cases doing the joining",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc71d50c3bf6d1da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six words, then six lines. Now the lines become one meeting."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Forty-two words, and every one has already appeared in an earlier lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Salvē! Mihi nōmen est Mārcus. Quid tibi nōmen est? Mihi nōmen est Iūlia. Quid agis? Valeō, grātiās tibi agō. Et tū? Valeō. Haec est soror mea. Illa est māter mea. Haec aqua est. Ille pānis est. Ante merīdiem est. Post merīdiem, valē!"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read the whole scene once without stopping. Let the endings tell you who acts, and let the cases keep each name and relationship in place."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it again. This time follow the three pointers: haec, illa, ille."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: Latin holds together without articles",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English would keep supplying “the” and written pronouns. Latin does not. Haec aqua est needs no article; valeō needs no ego. Gender, case and verb ending carry the links instead."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is why the scene can look spare while saying everything it needs. Reading Latin is not filling in missing English words. It is learning to trust the information Latin chose to write."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The final pair does the same work with time. Ante and post put the scene on opposite sides of merīdiēs without a longer explanation."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the scene aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the scene aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "LA-C58-prima-lectio-family",
+              "prompt": "Who is nearby, and who is farther away?",
+              "assesses": [
+                "LA-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "the sister is nearby; the mother is farther away.",
+                "soror nearby, mater farther",
+                "haec soror, illa mater"
+              ],
+              "feedback": {
+                "correct": "Haec est soror mea; illa est māter mea.",
+                "incorrect": "Haec points to the nearby sister; illa points to the farther mother."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What holds the Latin scene together without articles and repeated pronouns? (Gender, case, and verb endings.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

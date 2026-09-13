@@ -1,0 +1,11 @@
+{
+  "language": "latin",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:40fea9cc1ccd55fe",
+  "lessonIds": [
+    "LA-C58-verba",
+    "LA-C58-lineae",
+    "LA-C58-prima-lectio"
+  ],
+  "tex": "latin/book/chapters/ch58-reading-words-lines-and-a-first-scene.tex"
+}

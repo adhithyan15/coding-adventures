@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-A1-LECTIO",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read familiar Latin words cold, follow whole lines by their endings, and hold a connected meeting scene without translating word by word.",
+  "prerequisites": [
+    "LA-EXT-057-ORDER"
+  ],
+  "lessons": [
+    "LA-C58-verba",
+    "LA-C58-lineae",
+    "LA-C58-prima-lectio"
+  ]
+}

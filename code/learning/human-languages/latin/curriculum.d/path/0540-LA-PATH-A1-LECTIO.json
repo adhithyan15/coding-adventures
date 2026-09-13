@@ -1,0 +1,14 @@
+{
+  "id": "LA-PATH-A1-LECTIO",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "LA-C58-verba",
+    "LA-C58-lineae",
+    "LA-C58-prima-lectio"
+  ],
+  "before": [],
+  "inline": [
+    "LA-EXT-A1-LECTIO"
+  ],
+  "after": []
+}
