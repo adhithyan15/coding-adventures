@@ -2,7 +2,7 @@
   "schema_version": 1,
   "upstream": "mermaid@11.16.1",
   "family": "block",
-  "supported_subset": "Native grids, composite blocks, named and default class styling, inline node declarations and quoted labels on links, and solid, dotted, thick, tilde, directed, undirected, bidirectional, circle-marker, and cross-marker connections",
+  "supported_subset": "Native grids, composite blocks, named and default class styling, inline node declarations, quoted labels across solid, dotted, and thick links, and tilde, directed, undirected, bidirectional, circle-marker, and cross-marker connections",
   "fixtures": [
     { "id": "basic-grid", "source": "block-beta\ncolumns auto\nA[\"Grammar Parser\"] B(\"Semantic IR\") C((\"Paint Output\"))" },
     { "id": "spaces-and-edges", "source": "block\ncolumns 2\nA[Source] space\nB[Output]\nA --> B\nA-- \"observes\" ---B" },
@@ -19,6 +19,7 @@
     { "id": "circle-and-cross-endpoints", "source": "block\ncolumns 4\nA B C D\nA o--x |handoff| B\nB x==o C\nC o-.-o D\nD --x A" },
     { "id": "compact-terminal-markers", "source": "block\ncolumns 4\nsource-node target-one target-two target-three\nsource-node--otarget-one\ntarget-one==xtarget-two\ntarget-two-.-otarget-three" },
     { "id": "inline-node-connections", "source": "block\ncolumns 4\nid1[\"first\"] --> id2[\"second\"]\nstart(\"Start\")==>stop(\"Stop\")\nsource[\"Labeled source\"] -- \"routes\" --> target[\"Labeled target\"]" },
+    { "id": "labeled-edge-strokes", "source": "block\nA[Source] == \"thick route\" ==> B[Transform]\nB -. \"dotted route\" -.-> C[Output]" },
     { "id": "default-class", "source": "block\nclassDef default fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e\nclassDef accent fill:#fef3c7,stroke:#b45309\nA[Implicit] B[Explicit]:::accent\nblock:G[Implicit group]\nC[Implicit child]\nend\nD[Direct override]\nstyle D fill:#dcfce7" },
     { "id": "tilde-connections", "source": "block\nsource[Start] ~~~ target(Stop)\nleft ~~~~ right" }
   ]

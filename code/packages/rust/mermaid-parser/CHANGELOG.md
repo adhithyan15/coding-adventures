@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.215.0
+
+- Preserve quoted labels on solid, dotted, and thick Block links.
+
 ## 0.214.0
 
 - Lower Block tilde links into open, solid grid connections with inline endpoint nodes.
