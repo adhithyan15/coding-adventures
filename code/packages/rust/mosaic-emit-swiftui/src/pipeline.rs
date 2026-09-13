@@ -1628,7 +1628,18 @@ fn per_edge_border(name: &str) -> Option<(usize, &'static str)> {
     }
 }
 
-fn swiftui_color_value(v: &str) -> String {
+/// A SwiftUI `Color` expression for an authored colour, or `None` when the
+/// value is not one this emitter can resolve.
+///
+/// #15141 -- this used to be total, falling back to `Color.clear`. That
+/// answer compiles, renders, and renders INVISIBLE, so the mistake shows
+/// up as "the text vanished" far from the authored value that caused it.
+/// `color: inherit` -- a CSS-wide keyword, and a reasonable thing to
+/// author -- hit it, and so did every unrecognised colour name.
+///
+/// `None` lets the caller keep what it had, leaving the view unstyled
+/// rather than invisible, matching how `px_or_none` handles lengths here.
+fn swiftui_color_value(v: &str) -> Option<String> {
     let trimmed = v.trim();
 
     // Hex shorthand (`#rgb`) — expand each nibble to a byte (`#a` →
@@ -1654,25 +1665,28 @@ fn swiftui_color_value(v: &str) -> String {
         let rf = round3(f64::from(r) / 255.0);
         let gf = round3(f64::from(g) / 255.0);
         let bf = round3(f64::from(b) / 255.0);
-        return format!("Color(red: {rf}, green: {gf}, blue: {bf})");
+        return Some(format!("Color(red: {rf}, green: {gf}, blue: {bf})"));
     }
 
-    // Named CSS colors that SwiftUI has a direct enum case for.  Unknown
-    // names fall through to `Color.clear` so the generated file still
-    // compiles even if the author wrote something exotic.
+    // Named CSS colors that SwiftUI has a direct enum case for. An
+    // unknown name yields `None` and is dropped -- see the doc comment:
+    // the generated file compiles either way, and not painting is far
+    // safer than painting something invisible.
     match trimmed {
-        "white" => "Color.white".to_string(),
-        "black" => "Color.black".to_string(),
-        "clear" | "transparent" => "Color.clear".to_string(),
-        "red" => "Color.red".to_string(),
-        "green" => "Color.green".to_string(),
-        "blue" => "Color.blue".to_string(),
-        "yellow" => "Color.yellow".to_string(),
-        "orange" => "Color.orange".to_string(),
-        "pink" => "Color.pink".to_string(),
-        "purple" => "Color.purple".to_string(),
-        "gray" | "grey" => "Color.gray".to_string(),
-        _ => "Color.clear".to_string(),
+        "white" => Some("Color.white".to_string()),
+        "black" => Some("Color.black".to_string()),
+        // `transparent` stays a REAL answer: an author asking for nothing
+        // painted gets nothing painted. Only the catch-all goes.
+        "clear" | "transparent" => Some("Color.clear".to_string()),
+        "red" => Some("Color.red".to_string()),
+        "green" => Some("Color.green".to_string()),
+        "blue" => Some("Color.blue".to_string()),
+        "yellow" => Some("Color.yellow".to_string()),
+        "orange" => Some("Color.orange".to_string()),
+        "pink" => Some("Color.pink".to_string()),
+        "purple" => Some("Color.purple".to_string()),
+        "gray" | "grey" => Some("Color.gray".to_string()),
+        _ => None,
     }
 }
 
@@ -2065,9 +2079,15 @@ fn swiftui_modifier_chain_with_drops(
                 }
             }
             "background" | "background-color" => {
-                set(&mut background, swiftui_color_value(&p.value));
+                if let Some(c) = swiftui_color_value(&p.value) {
+                    set(&mut background, c);
+                }
             }
-            "color" => set(&mut foreground, swiftui_color_value(&p.value)),
+            "color" => {
+                if let Some(c) = swiftui_color_value(&p.value) {
+                    set(&mut foreground, c);
+                }
+            }
             "font-size" => {
                 if let Some(v) = px_or_none(&p.value) {
                     set(&mut font_size, v);
@@ -2093,7 +2113,11 @@ fn swiftui_modifier_chain_with_drops(
                     set(&mut border_width, v);
                 }
             }
-            "border-color" => set(&mut border_color, swiftui_color_value(&p.value)),
+            "border-color" => {
+                if let Some(c) = swiftui_color_value(&p.value) {
+                    set(&mut border_color, c);
+                }
+            }
             // UI79 -- `border-{edge}-{width,color}`. `-style` is left to
             // the drop reporter on purpose: only `solid` is drawn.
             name if per_edge_border(name).is_some() => {
@@ -2102,8 +2126,8 @@ fn swiftui_modifier_chain_with_drops(
                     if let Some(v) = px_or_none(&p.value) {
                         set(&mut edge_width[edge], v);
                     }
-                } else {
-                    set(&mut edge_color[edge], swiftui_color_value(&p.value));
+                } else if let Some(c) = swiftui_color_value(&p.value) {
+                    set(&mut edge_color[edge], c);
                 }
             }
             "opacity" => {
@@ -12584,24 +12608,31 @@ mod tests {
     #[test]
     fn part_style_hex_background_converts_to_color_init() {
         assert_eq!(
-            swiftui_color_value("#1e1e1e"),
-            "Color(red: 0.118, green: 0.118, blue: 0.118)"
+            swiftui_color_value("#1e1e1e").as_deref(),
+            Some("Color(red: 0.118, green: 0.118, blue: 0.118)")
         );
-        // 3-char shorthand `#abc` → `#aabbcc`.
+        // 3-char shorthand `#abc` -> `#aabbcc`.
         assert_eq!(
-            swiftui_color_value("#fff"),
-            "Color(red: 1, green: 1, blue: 1)"
+            swiftui_color_value("#fff").as_deref(),
+            Some("Color(red: 1, green: 1, blue: 1)")
         );
         // Pure black / pure white round to integers (the trailing `.0`
         // is dropped by Rust's float formatting).
         assert_eq!(
-            swiftui_color_value("#000000"),
-            "Color(red: 0, green: 0, blue: 0)"
+            swiftui_color_value("#000000").as_deref(),
+            Some("Color(red: 0, green: 0, blue: 0)")
         );
         // Named keyword passes through.
-        assert_eq!(swiftui_color_value("white"), "Color.white");
-        // Unknown name falls back to clear so the file still compiles.
-        assert_eq!(swiftui_color_value("rebeccapurple"), "Color.clear");
+        assert_eq!(swiftui_color_value("white").as_deref(), Some("Color.white"));
+        // #15141 -- an unknown name is DROPPED, not painted `Color.clear`.
+        // This assertion used to pin the opposite, and that fallback is
+        // exactly the bug: a view painted clear is invisible, and nothing
+        // about the generated file says why. Dropping leaves the view
+        // unstyled, which is visible and diagnosable.
+        assert_eq!(swiftui_color_value("rebeccapurple"), None);
+        assert_eq!(swiftui_color_value("inherit"), None);
+        // `transparent` is still a real, authored answer.
+        assert_eq!(swiftui_color_value("transparent").as_deref(), Some("Color.clear"));
 
         // Confirm the .background modifier line is emitted end-to-end.
         let chain = swiftui_modifier_chain(&[sp("background", "#1e1e1e")], &[], 0, None);

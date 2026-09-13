@@ -9,6 +9,56 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed -- an unresolvable colour was painted invisible instead of dropped (#15141)
+
+`compose_color_value` was total, ending in `_ => Color.Transparent`.
+
+That answer compiles, renders, and what it renders is **invisible**, so the
+mistake surfaces as "the text disappeared" a long way from the authored
+value that caused it. Two ways in, both real:
+
+- **`color: inherit`.** A CSS-wide keyword and a reasonable thing to
+  author. It produced `TextStyle(color = Color.Transparent)` on an inline grid editor. Found by reading emitted source while
+  fixing #15048 -- no test failed and no degradation was reported, because
+  as far as the emitter was concerned it had produced a valid colour.
+- **Any unrecognised colour name.** `rebeccapurple`, a typo, a design-token
+  name that did not resolve -- all silently invisible.
+
+`compose_color_value` now returns `None` for a value it cannot resolve, and each caller
+keeps whatever it already had. For text that means the inherited style:
+unstyled rather than invisible. This matches how `px_or_none` has always
+handled lengths in this file. `transparent` stays a real answer -- an author
+asking for nothing painted still gets nothing painted; only the catch-all
+is gone.
+
+### Fixed -- a `sheet` part's `font-size` was a code-injection sink
+
+Found in security review of the change above, in the same `match` block.
+`sheet_text_style` lowered `font-size` through `strip_css_px`, which only
+removes a trailing `px` and validates nothing, and the result is
+interpolated UNQUOTED into generated Kotlin as `fontSize = {sz}.sp`. The
+`.msl` grammar admits a quoted STRING that reaches this verbatim, so a
+part authored as
+
+    font-size: "0.sp, color = Color.Red); mosaicPwn(" ;
+
+emitted exactly those tokens into a Kotlin argument list. Same class as the
+`border-top-color: "#00)+E(/*"` escape previously fixed in the Dart
+emitter.
+
+Every other `font-size` path already went through `px_or_none`, which
+enforces digits, `.` and `-`. That guard was nested inside
+`compose_box_style`, so `sheet_text_style` -- the one other place lowering
+`font-size` -- could not reach it. It is now at module scope with a single
+definition, and this path uses it.
+
+The regression test drives `sheet_text_style` itself rather than the helper:
+an earlier version tested `px_or_none` directly, which passed happily with
+the call site reverted to the unguarded form.
+
+**Product impact, measured by diffing emitted output before and after
+across task-app, visicalc and engram-app.** Only task-app changes, and only by removing `.background(Color.Transparent)` calls that painted nothing. They came from `background: "currentColor"` on the status dot, which Compose has no lowering for -- so that dot rendered invisible before this change and renders invisible after it. Identical output, honest source. The underlying product defect is filed separately.
+
 ### Fixed — the no-starve floor reaches leaf Row children (UI59 §4, #14815)
 
 #15123 put a width floor under every `Row` child, but it lived in

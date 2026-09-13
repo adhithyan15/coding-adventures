@@ -8,6 +8,33 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed -- an unresolvable colour was painted invisible instead of dropped (#15141)
+
+`swiftui_color_value` was total, falling back to `Color.clear`.
+
+That answer compiles, renders, and what it renders is **invisible**, so the
+mistake surfaces as "the text disappeared" a long way from the authored
+value that caused it. Two ways in, both real:
+
+- **`color: inherit`.** A CSS-wide keyword and a reasonable thing to
+  author. It produced a `Color.clear` foreground. Found by reading emitted source while
+  fixing #15048 -- no test failed and no degradation was reported, because
+  as far as the emitter was concerned it had produced a valid colour.
+- **Any unrecognised colour name.** `rebeccapurple`, a typo, a design-token
+  name that did not resolve -- all silently invisible.
+
+`swiftui_color_value` now returns `None` for a value it cannot resolve, and each caller
+keeps whatever it already had. For text that means the inherited style:
+unstyled rather than invisible. This matches how `px_or_none` has always
+handled lengths in this file. `transparent` stays a real answer -- an author
+asking for nothing painted still gets nothing painted; only the catch-all
+is gone.
+
+**Product impact, measured by diffing emitted output before and after
+across task-app, visicalc and engram-app.** Only task-app changes, and only by dropping `_mosaicBackground(.., Color.clear)` calls that painted nothing. They came from `background: "currentColor"` on the status dot, which SwiftUI has no lowering for -- invisible before, invisible after. Identical rendering, honest source. The underlying product defect is filed separately.
+
+A unit test asserted the old behaviour directly (`swiftui_color_value("rebeccapurple") == "Color.clear"`); it now pins the opposite, because that fallback was the bug rather than a feature.
+
 ### Fixed — `gap` was reported as dropped while the container applied it
 
 `dropped_style_properties` derived its answer by running the modifier chain and
