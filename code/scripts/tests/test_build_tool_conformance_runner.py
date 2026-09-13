@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 146)
+        self.assertEqual(summary["case_count"], 149)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -3054,6 +3054,34 @@ class PureDomainValidationTests(unittest.TestCase):
             runner._expected_source_collection(case_variants, registry),
             [],
         )
+
+        for case_name in (
+            "source-collection-typescript-blog-exact-inputs.json",
+            "source-collection-typescript-landing-page-exact-inputs.json",
+            "source-collection-typescript-site-foreign-package.json",
+        ):
+            site_case = load_case(case_name)
+            site_options = site_case["input"]["options"]
+            self.assertEqual(site_options["registry_sha256"], registry_digest)
+            self.assertEqual(
+                runner._expected_source_collection(site_options, registry),
+                site_case["expected"]["result"]["files"],
+            )
+
+        for invalid_root in (
+            "code/sites/unreviewed",
+            "code/sites/blog/nested",
+        ):
+            invalid_site = copy.deepcopy(
+                load_case("source-collection-typescript-blog-exact-inputs.json")[
+                    "input"
+                ]["options"]
+            )
+            invalid_site["package_root"] = invalid_root
+            with self.subTest(package_root=invalid_root), self.assertRaises(
+                runner.ConformanceError
+            ):
+                runner._expected_source_collection(invalid_site, registry)
         other_rust_package = copy.deepcopy(engram_options)
         other_rust_package["package_root"] = "code/packages/rust/task-wasm"
         other_rust_package["candidates"] = [
@@ -3606,7 +3634,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 146)
+        self.assertEqual(summary["case_count"], 149)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"
