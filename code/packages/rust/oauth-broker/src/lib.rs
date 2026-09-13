@@ -768,6 +768,8 @@ pub enum BrokerAuditAction {
     ClientSecretExchangeVerifiedCredentialCreate,
     /// Exchange and persist one private-key-JWT-authenticated credential response.
     PrivateKeyJwtExchangeCredentialCreate,
+    /// Sign, verify exchange identity, and persist under its derived opaque key.
+    PrivateKeyJwtExchangeVerifiedCredentialCreate,
     /// Send one request through the injected token transport.
     TokenTransport,
     /// Send one RFC 7009 request through the injected revocation transport.
@@ -886,6 +888,18 @@ impl<T> OAuthPrivateKeyJwtBrokerAuditSink for T where
 /// Audit sink capable of recording private-key JWT and credential custody effects.
 pub trait OAuthPrivateKeyJwtCredentialBrokerAuditSink:
     OAuthPrivateKeyJwtBrokerAuditSink + CredentialAuditSink
+{
+}
+
+/// Audit sink capable of recording private-key JWT exchange, identity proof,
+/// and credential creation.
+pub trait OAuthPrivateKeyJwtVerifiedIdentityCredentialBrokerAuditSink:
+    OAuthPrivateKeyJwtCredentialBrokerAuditSink + AccountIdentityAuditSink
+{
+}
+
+impl<T> OAuthPrivateKeyJwtVerifiedIdentityCredentialBrokerAuditSink for T where
+    T: OAuthPrivateKeyJwtCredentialBrokerAuditSink + AccountIdentityAuditSink
 {
 }
 
@@ -1052,6 +1066,18 @@ pub struct PrivateKeyJwtExchangeCredentialExecution<'a, S: SigningAuthority, C, 
     transport: &'a mut T,
 }
 
+/// One-use identity inputs wrapped around injected JWT exchange authorities.
+pub struct PrivateKeyJwtVerifiedExchangeCredentialExecution<'a, S, V, C, T>
+where
+    S: SigningAuthority,
+    V: AccountIdentityAuthority,
+{
+    identity_profile: &'a IdTokenIdentityProfile,
+    identity_authority: &'a AuditedAccountIdentityAuthority<V>,
+    nonce: OpenIdAuthorizationNonce,
+    exchange: PrivateKeyJwtExchangeCredentialExecution<'a, S, C, T>,
+}
+
 impl<'a, S: SigningAuthority, C, T> PrivateKeyJwtExchangeCredentialExecution<'a, S, C, T> {
     /// Bind caller-owned signing, time, replay entropy, clock, and transport.
     pub fn new(
@@ -1067,6 +1093,27 @@ impl<'a, S: SigningAuthority, C, T> PrivateKeyJwtExchangeCredentialExecution<'a,
             replay_entropy: Zeroizing::new(replay_entropy),
             clock,
             transport,
+        }
+    }
+}
+
+impl<'a, S, V, C, T> PrivateKeyJwtVerifiedExchangeCredentialExecution<'a, S, V, C, T>
+where
+    S: SigningAuthority,
+    V: AccountIdentityAuthority,
+{
+    /// Bind identity policy/evidence to one existing exchange execution.
+    pub fn new(
+        identity_profile: &'a IdTokenIdentityProfile,
+        identity_authority: &'a AuditedAccountIdentityAuthority<V>,
+        nonce: OpenIdAuthorizationNonce,
+        exchange: PrivateKeyJwtExchangeCredentialExecution<'a, S, C, T>,
+    ) -> Self {
+        Self {
+            identity_profile,
+            identity_authority,
+            nonce,
+            exchange,
         }
     }
 }
@@ -2408,6 +2455,112 @@ impl<S: CredentialStore> OAuthBroker<S> {
             &provider,
             trace,
             BrokerAuditAction::PrivateKeyJwtExchangeCredentialCreate,
+            result,
+        )
+    }
+
+    /// Sign an exchange, verify its account identity, and persist by verified key.
+    ///
+    /// Provider, client, and nonce-trace binding is checked before signer or
+    /// transport access. The decoded credentials remain broker-owned, the
+    /// zeroizing ID token is detached without cloning and consumed by audited
+    /// verification, and custody is selected only by the resulting opaque
+    /// provider-scoped account key. No concrete signing or verification
+    /// algorithm is enabled by this composition.
+    pub fn exchange_private_key_jwt_and_store_verified_credentials<SA, V, C, T, A>(
+        &self,
+        profile: &PrivateKeyJwtProfile,
+        request: TokenExchangeRequest,
+        execution: PrivateKeyJwtVerifiedExchangeCredentialExecution<'_, SA, V, C, T>,
+        audit: &mut A,
+    ) -> Result<CredentialRevision, BrokerError>
+    where
+        SA: SigningAuthority,
+        V: AccountIdentityAuthority,
+        C: BrokerClock,
+        T: OAuthPrivateKeyJwtTokenExchangeTransport,
+        A: OAuthPrivateKeyJwtVerifiedIdentityCredentialBrokerAuditSink,
+    {
+        let PrivateKeyJwtVerifiedExchangeCredentialExecution {
+            identity_profile,
+            identity_authority,
+            nonce,
+            exchange,
+        } = execution;
+        let PrivateKeyJwtExchangeCredentialExecution {
+            signer,
+            issued_at,
+            replay_entropy,
+            clock,
+            transport,
+        } = exchange;
+        let provider = request.provider().clone();
+        let client_id = request.client_id().to_owned();
+        let trace = request.trace();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::PrivateKeyJwtExchangeVerifiedCredentialCreate,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            if identity_profile.provider() != &provider
+                || identity_profile.client_id() != client_id
+                || nonce.provider() != &provider
+                || nonce.client_id() != client_id
+                || nonce.trace() != trace
+            {
+                return Err(BrokerError::BindingMismatch);
+            }
+            let response = self.send_private_key_jwt_exchange(
+                profile,
+                request,
+                PrivateKeyJwtExchangeExecution {
+                    signer,
+                    issued_at,
+                    replay_entropy,
+                    transport,
+                },
+                audit,
+            )?;
+            if response.provider() != &provider || response.trace() != trace {
+                return Err(BrokerError::BindingMismatch);
+            }
+            let now = clock.now_unix_seconds().map_err(|_| BrokerError::Clock)?;
+            let metadata = response_metadata(&response, now, &[])?;
+            let credentials = response
+                .release_credentials()
+                .publish_then_release(audit)
+                .map_err(map_oauth_error)?;
+            let (credentials, id_token) = credentials.detach_id_token();
+            let id_token = id_token.ok_or(BrokerError::AccountIdentity(
+                AccountIdentityError::InvalidInput,
+            ))?;
+            let verified = identity_authority
+                .verify_authorization_id_token(identity_profile, id_token, nonce, now, audit)
+                .map_err(map_account_identity_error)?;
+            if verified.credential_key().provider() != &provider
+                || verified.client_id() != client_id
+                || verified.trace() != trace
+            {
+                return Err(BrokerError::BindingMismatch);
+            }
+            self.custody
+                .create(
+                    &verified.into_credential_key(),
+                    credentials,
+                    metadata,
+                    trace,
+                    audit,
+                )
+                .map_err(map_custody_error)
+        })();
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::PrivateKeyJwtExchangeVerifiedCredentialCreate,
             result,
         )
     }
@@ -7358,6 +7511,131 @@ mod tests {
             )
             .unwrap();
         assert_eq!(access, "initial-access");
+    }
+
+    #[test]
+    fn private_key_jwt_exchange_verifies_identity_before_opaque_key_storage() {
+        let provider_config = config("fixture-confidential");
+        let provider = BrokerProvider::new_confidential(
+            provider_config.clone(),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::PrivateKeyJwt,
+            vec!["EdDSA".to_owned()],
+        )
+        .unwrap();
+        let jwt_profile = provider
+            .bind_private_key_jwt_profile(
+                PrivateKeyId::new(
+                    provider_config.provider().clone(),
+                    PrivateKeyReference::new([0x8b; 32]),
+                ),
+                PrivateKeyJwtAlgorithm::new("EdDSA").unwrap(),
+                Some("key-1".to_owned()),
+                60,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let mut audit = RecordingAudit::default();
+        broker
+            .register_provider(provider, trace(90), &mut audit)
+            .unwrap();
+        let (request, nonce) = prepared_openid_exchange(&provider_config, trace(91), &mut audit);
+        let account = AccountId::new([0x8c; 32]);
+        let identity_authority = RecordingIdentityAuthority::succeeds(account);
+        let identity_inspection = identity_authority.clone();
+        let verifier = AuditedAccountIdentityAuthority::from_audited_authority(identity_authority);
+        let signing_authority = RecordingSigningAuthority::default();
+        let signing_inspection = signing_authority.clone();
+        let signer = AuditedPrivateKeySigner::from_audited_authority(signing_authority);
+        let mut transport = MockPrivateKeyJwtExchangeTransport {
+            response: Some(
+                TokenEndpointResponse::new(
+                    200,
+                    Zeroizing::new(
+                        br#"{"access_token":"verified-private-access","refresh_token":"verified-private-refresh","id_token":"header.payload.signature","token_type":"Bearer","expires_in":3600}"#.to_vec(),
+                    ),
+                )
+                .unwrap(),
+            ),
+            calls: 0,
+            order: Rc::new(RefCell::new(Vec::new())),
+        };
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let identity_policy = identity_profile(&provider_config);
+
+        broker
+            .exchange_private_key_jwt_and_store_verified_credentials(
+                &jwt_profile,
+                request,
+                PrivateKeyJwtVerifiedExchangeCredentialExecution::new(
+                    &identity_policy,
+                    &verifier,
+                    nonce,
+                    PrivateKeyJwtExchangeCredentialExecution::new(
+                        &signer,
+                        1_700_000_000,
+                        [0x8d; 32],
+                        &mut clock,
+                        &mut transport,
+                    ),
+                ),
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_eq!(signing_inspection.calls.load(Ordering::SeqCst), 1);
+        assert_eq!(identity_inspection.calls.load(Ordering::SeqCst), 1);
+        assert_eq!(transport.calls, 1);
+        assert_eq!(clock.calls, 1);
+        let credential_key = CredentialKey::new(provider_config.provider().clone(), account);
+        let access = broker
+            .with_access_token(
+                &credential_key,
+                trace(91),
+                &mut FixedClock(1_001),
+                &mut MockTransport::new("verified-private-refresh", &[]),
+                &mut RecordingAudit::default(),
+                str::to_owned,
+            )
+            .unwrap();
+        assert_eq!(access, "verified-private-access");
+
+        let (request, nonce) = prepared_openid_exchange(&provider_config, trace(92), &mut audit);
+        let mut rejected_transport = MockPrivateKeyJwtExchangeTransport {
+            response: None,
+            calls: 0,
+            order: Rc::new(RefCell::new(Vec::new())),
+        };
+        let mut rejected_clock = CountingClock { now: 0, calls: 0 };
+        let wrong_identity_profile = identity_profile(&config("other-provider"));
+        assert!(matches!(
+            broker.exchange_private_key_jwt_and_store_verified_credentials(
+                &jwt_profile,
+                request,
+                PrivateKeyJwtVerifiedExchangeCredentialExecution::new(
+                    &wrong_identity_profile,
+                    &verifier,
+                    nonce,
+                    PrivateKeyJwtExchangeCredentialExecution::new(
+                        &signer,
+                        1_700_000_001,
+                        [0x8e; 32],
+                        &mut rejected_clock,
+                        &mut rejected_transport,
+                    ),
+                ),
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(signing_inspection.calls.load(Ordering::SeqCst), 1);
+        assert_eq!(identity_inspection.calls.load(Ordering::SeqCst), 1);
+        assert_eq!(rejected_transport.calls, 0);
+        assert_eq!(rejected_clock.calls, 0);
     }
 
     #[test]

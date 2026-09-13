@@ -14058,11 +14058,23 @@ fn doctype_triggers_quirks(
             "-//softquad software//dtd hotmetal pro 6.0::19990601::extensions to html 4.0//",
             "-//softquad//dtd hotmetal pro 4.0::19971010::extensions to html 4.0//",
             "-//spyglass//dtd html 2.0 extended//",
+            "-//sun microsystems corp.//dtd hotjava html//",
+            "-//sun microsystems corp.//dtd hotjava strict html//",
+            "-//w3c//dtd html 3 1995-03-24//",
+            "-//w3c//dtd html 4.0 frameset//",
+            "-//w3c//dtd html 4.0 transitional//",
+            "-//w3c//dtd html experimental 19960712//",
+            "-//w3c//dtd html experimental 970421//",
+            "-//w3c//dtd w3 html//",
+            "-//w3o//dtd w3 html 3.0//",
+            "-//webtechs//dtd mozilla html 2.0//",
+            "-//webtechs//dtd mozilla html//",
         ];
         let is_html_4_frameset_or_transitional = public_identifier
             .starts_with("-//w3c//dtd html 4.01 frameset")
             || public_identifier.starts_with("-//w3c//dtd html 4.01 transitional");
         if public_identifier == "html"
+            || public_identifier == "-//w3o//dtd w3 html strict 3.0//en//"
             || public_identifier.starts_with("-//w3c//dtd html 3.2")
             || legacy_quirks_prefixes
                 .iter()
@@ -35660,6 +35672,17 @@ mod tests {
             "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//",
             "-//SoftQuad//DTD HoTMetaL PRO 4.0::19971010::extensions to HTML 4.0//",
             "-//Spyglass//DTD HTML 2.0 Extended//",
+            "-//Sun Microsystems Corp.//DTD HotJava HTML//",
+            "-//Sun Microsystems Corp.//DTD HotJava Strict HTML//",
+            "-//W3C//DTD HTML 3 1995-03-24//",
+            "-//W3C//DTD HTML 4.0 Frameset//",
+            "-//W3C//DTD HTML 4.0 Transitional//",
+            "-//W3C//DTD HTML Experimental 19960712//",
+            "-//W3C//DTD HTML Experimental 970421//",
+            "-//W3C//DTD W3 HTML//",
+            "-//W3O//DTD W3 HTML 3.0//",
+            "-//WebTechs//DTD Mozilla HTML 2.0//",
+            "-//WebTechs//DTD Mozilla HTML//",
         ];
 
         for public_identifier in public_identifiers {
@@ -35681,6 +35704,24 @@ mod tests {
         )
         .unwrap();
         assert_eq!(element(&body(&no_quirks).children[0]).name, "p");
+        assert_eq!(element(&body(&no_quirks).children[1]).name, "table");
+    }
+
+    #[test]
+    fn legacy_exact_doctype_public_identifier_enables_quirks_only_on_exact_match() {
+        let quirks = parse_html(
+            "<!DOCTYPE html PUBLIC \"-//W3O//DTD W3 HTML Strict 3.0//EN//\"><p><table>",
+        )
+        .unwrap();
+        assert_eq!(
+            element(&element(&body(&quirks).children[0]).children[0]).name,
+            "table"
+        );
+
+        let no_quirks = parse_html(
+            "<!DOCTYPE html PUBLIC \"-//W3O//DTD W3 HTML Strict 3.0//EN// suffix\"><p><table>",
+        )
+        .unwrap();
         assert_eq!(element(&body(&no_quirks).children[1]).name, "table");
     }
 

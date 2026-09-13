@@ -6101,8 +6101,7 @@ impl Compiler {
             ScalarType::Boolean | ScalarType::String => return None,
         };
 
-        let statement = first_direct_node(body, "unlabeled_stmt")?;
-        let assignment = first_direct_node(statement, "assign_stmt")?;
+        let assignment = single_statement_assignment(body)?;
         let left_parts: Vec<&GrammarASTNode> = direct_nodes(assignment)
             .into_iter()
             .filter(|node| node.rule_name == "left_part")
@@ -14437,6 +14436,30 @@ mod tests {
                     && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
             }));
         }
+    }
+
+    #[test]
+    fn al4_finite_step_loop_tracks_single_compound_boolean_recurrence_snapshot() {
+        let module = compile_source(
+            "begin integer i; real r; boolean flag; flag := false; for i := 1 step 1 until 3 do begin flag := not flag end; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect("a bounded one-assignment compound recurrence has an exact final snapshot");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42")
+        }));
+    }
+
+    #[test]
+    fn al4_multi_statement_step_loop_recurrence_remains_conservative() {
+        let err = compile_source(
+            "begin integer i; real r; boolean flag; flag := false; for i := 1 step 1 until 3 do begin flag := not flag; r := r end; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect_err("multiple compound statements remain outside recurrence analysis");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

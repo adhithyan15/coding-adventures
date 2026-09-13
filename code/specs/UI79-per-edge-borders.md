@@ -68,13 +68,28 @@ otherwise pick its own answer — the UI61 failure mode:
 
 **Correction on XAML.** This table first said XAML has native per-edge support.
 It has native per-edge *thickness* — `BorderThickness="left,top,right,bottom"`
-— but only a **single `BorderBrush` for all four edges**. So
-`border-top-color: X; border-bottom-color: Y` cannot both be honoured, and XAML
-needs a decision this spec has not made: honour one colour and report the
-others, or refuse the whole declaration. It is therefore *not* the cheap
-follow-up it was described as. Its thickness aggregation is also not a 1:1
-property mapping — four authored widths collapse into one attribute — which the
-emitter's per-property setter table cannot express as-is.
+— but only a **single `BorderBrush` for all four edges**. Its thickness
+aggregation is also not a 1:1 property mapping: four authored widths collapse
+into one attribute, which the emitter's per-property setter table cannot
+express as-is.
+
+### 4.1 The single-brush decision
+
+**Decided by measuring the corpus rather than by argument.** Across every
+`.msl` in the repo, **44 parts author per-edge colours and all 44 use a single
+colour**; not one authors two different colours on different edges of the same
+part. The impossible case is not a case anyone has.
+
+So:
+
+> XAML honours per-edge **thickness** always. Its `BorderBrush` is the single
+> authored edge colour. If a part authors two edges with **different** colours,
+> the first in CSS order (top, right, bottom, left) wins and **every other
+> authored edge colour is reported as a drop** — never silently repainted.
+
+Honouring what the toolkit can express and reporting exactly what it cannot is
+the same posture as `border-<edge>-style` in §3 rule 2. Refusing the whole
+declaration would discard 44 working cases to guard against zero broken ones.
 
 `drawBehind` is preferred over a sibling `HorizontalDivider` on Compose: a
 divider is a layout child and would take part in the parent's arrangement,
@@ -92,7 +107,16 @@ It also needed the wrapper's implicit size re-derived from a named content
 layout — a strip anchored to `parent` and a parent sized from `childrenRect`
 form a **binding loop**, which only the QML runtime reveals.
 
-**Remaining: XAML**, which needs the single-brush decision above settled first.
+**XAML is done too, so UI79 is complete on all five native backends.** Its
+per-edge widths collapse into one `BorderThickness` via a pre-pass, and §4.1's
+single-brush rule is implemented: one colour paints, a second is reported.
+
+### Verification is not equal across the five
+
+XAML is the weak one and this spec should not pretend otherwise: **WinUI 3 does
+not build on macOS**, so nothing here can be run. It is backed by unit tests and
+by reading the emitted markup. The other four were each checked against a
+rendered or compiled result.
 
 ### A verification gate this spec did not know it had
 

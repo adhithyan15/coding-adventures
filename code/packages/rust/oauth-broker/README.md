@@ -99,6 +99,11 @@ evidence reaches no credential store, the consumed evidence is omitted from the
 stored record, and only the opaque revision is released. Verification, time,
 transport, and storage implementations remain injected.
 
+The same verified-identity custody path is available for retained
+`private_key_jwt` profiles through the existing audited abstract signer. Its
+provider/client/nonce bindings fail before signing, and the composition adds no
+concrete signing or ID-token verification algorithm.
+
 Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
@@ -134,7 +139,7 @@ dependency are sibling packages in this repository.
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
 - concrete account-identity verification/JWKS, identity composition for other
-  authentication or grant paths, account listing, device authorization UI,
+  grant paths, account listing, device authorization UI,
   timing/sleep authority, and full device-flow loops;
 - concrete private-key algorithms, OIDC validation, and DPoP.
 
