@@ -1,6 +1,6 @@
 # Changelog — `lang-aot`
 
-## 0.334.0 — 2026-09-13 — VM-040 COBOL BEAM pointer/overflow probe
+## Unreleased — 2026-09-13 — VM-040 COBOL BEAM pointer/overflow probe
 
 `git fetch origin && git merge origin/main` fast-forwarded cleanly (one
 unrelated SwiftUI border-edges commit, `092349e3ff`); `gh pr list --state
