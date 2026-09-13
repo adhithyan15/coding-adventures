@@ -230,7 +230,7 @@ mod apple {
     #[test]
     fn render_mermaid_block_to_png() {
         let grid = parse_block(
-            "block-beta\ntitle Native block grid\naccTitle: Native block pipeline\naccDescr {\nGrammar through semantic IR\ninto backend-neutral paint\n}\ncolumns 3\nblock:pipeline[\"Processing Pipeline\"]:2\ncolumns 2\nA{{\"Grammar UI\"}} B([\"Semantic IR\"])\nend\nC(((Paint)))\nD[[Metal]] E[(PNG)] F>Backend flag]\nclassDef pipelineNode fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass A,C pipelineNode\nstyle pipeline fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,font-weight:bold\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA-- \"lowers\" -->B\nB --> C\nC --- D\nD --> E\nE --> F",
+            "block-beta\ntitle Native block grid\naccTitle: Native block pipeline\naccDescr {\nGrammar through semantic IR\ninto backend-neutral paint\n}\ncolumns 3\nblock:pipeline[\"Processing Pipeline\"]:2\ncolumns 2\nA{{\"Grammar UI\"}} B([\"Semantic IR\"])\nend\nC(((Paint)))\nD[[Metal]] E[(PNG)] F>Backend flag]\nG<[\"Flow\"]>(right)\nclassDef pipelineNode fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nclass A,C pipelineNode\nstyle pipeline fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,font-weight:bold\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA-- \"lowers\" -->B\nB --> C\nC --- D\nD --> E\nE --> F",
         )
         .expect("block parse failed");
         let layout = layout_grid_diagram(&grid);

@@ -420,6 +420,7 @@ impl ExpectedContentNode {
             role: self.role,
             authored_role: self.authored_role,
             name: self.name,
+            anchor_name: None,
             id: self.id,
             classes: self.classes,
             style: self.style,

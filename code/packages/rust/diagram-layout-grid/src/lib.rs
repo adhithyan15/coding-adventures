@@ -275,11 +275,11 @@ fn group_style() -> DiagramStyle {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use diagram_ir::{DiagramLabel, DiagramShape, EdgeKind, GridCell, GridColumns, GridConnection, GridGroup};
+    use diagram_ir::{BlockArrowDirections, DiagramLabel, DiagramShape, EdgeKind, GridCell, GridColumns, GridConnection, GridGroup};
 
     #[test]
     fn places_cells_in_authored_grid_slots() {
-        let diagram = GridDiagram {
+        let mut diagram = GridDiagram {
             columns: GridColumns::Fixed(2),
             title: None,
             accessibility_title: None,
@@ -301,8 +301,13 @@ mod tests {
             groups: Vec::new(),
             connections: Vec::new(),
         };
+        diagram.cells[0].shape = DiagramShape::BlockArrow(BlockArrowDirections {
+            right: true,
+            ..BlockArrowDirections::default()
+        });
         let layout = layout_grid_diagram(&diagram);
         assert_eq!(layout.nodes.len(), 3);
+        assert_eq!(layout.nodes[0].shape, diagram.cells[0].shape);
         assert!(layout.nodes[0].x < layout.nodes[1].x);
         assert!(layout.nodes[2].y > layout.nodes[0].y);
     }

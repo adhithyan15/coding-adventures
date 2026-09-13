@@ -11,6 +11,14 @@ pub enum DiagramDirection {
     Bt,
 }
 
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct BlockArrowDirections {
+    pub left: bool,
+    pub right: bool,
+    pub up: bool,
+    pub down: bool,
+}
+
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramShape {
     Rect,
@@ -29,6 +37,7 @@ pub enum DiagramShape {
     Cylinder,
     DoubleCircle,
     Asymmetric,
+    BlockArrow(BlockArrowDirections),
     Note,
 }
 

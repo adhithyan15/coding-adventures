@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.122.0
+
+- Lower Block arrows to backend-neutral directional outline paths.
+
 ## 0.121.0
 
 - Validate recursive Block composite backgrounds through shared PaintInstructions and Metal-to-PNG.
