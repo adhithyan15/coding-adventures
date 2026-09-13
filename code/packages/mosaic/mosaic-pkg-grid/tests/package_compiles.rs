@@ -508,3 +508,132 @@ fn source_tree_has_expected_shape() {
         column_msl.display()
     );
 }
+
+// ---------------------------------------------------------------------------
+// 7. #15048 -- the inline editor must not change the row's height
+//
+// Cell swaps a `Text` for a `HostInput` when `is-editing` is set. A native
+// text input is not a neutral box: the user agent gives it padding, a
+// border and a font of its own, none of which a `<span>` carries. Before
+// this part existed the editor was emitted with no geometry at all, so
+// those UA defaults applied in full.
+//
+// That matters because a grid row is only as tall as its tallest cell.
+// Measured in headless Chrome against this package's own dark theme
+// (`part cell`: padding 4px, no pinned height), the editing row came out
+// 6px taller than a display row -- at 100%, 150% AND 200% text scale, so
+// this is not a rounding artifact of one zoom level:
+//
+//     scale   display   editing(bare)   delta
+//     100%      26px        32px         +6
+//     150%      36px        42px         +6
+//     200%      45px        51px         +6
+//
+// A 6px step is far outside the 0.5px tolerance in the React runtime's
+// `table_capacity.ts`, which refuses uniform viewport capacity the moment
+// any row's height differs from the first. So merely focusing a cell
+// silently downgraded the grid's scrolling, which is the defect.
+//
+// Zeroing the box and inheriting the font leaves the input contributing
+// only its line box, exactly as the span does. Re-measured with the part
+// applied: delta 0 at all three scales, guard clean.
+//
+// WHAT THIS TEST DOES NOT CLAIM: it does not re-measure pixels -- there is
+// no browser in this harness. It pins the authored contract that the
+// measurement validated, so that deleting the part fails here rather than
+// silently in a product months later.
+#[test]
+fn ui15048_cell_editor_part_matches_display_row_geometry() {
+    let mll_src = read_source("Cell.mll");
+    let mll_out = moslayout_compiler::compile(&mll_src, None)
+        .unwrap_or_else(|e| panic!("Cell.mll precompile failed: {:#?}", e));
+
+    // 1. The .mll must NAME the editor. Without a part name the style
+    //    below has nothing to attach to and the input goes out bare.
+    assert!(
+        mll_out.part_map_json.contains("cell-editor"),
+        "Cell.mll must give its HostInput the `cell-editor` part so the \
+         editor's geometry can be authored; part map was: {}",
+        mll_out.part_map_json
+    );
+
+    // 2. The theme must author that part.
+    let msl_src = read_source("Cell.dark.msl");
+    let style = mosstyle_compiler::compile(&msl_src, Some(&mll_out.part_map_json))
+        .unwrap_or_else(|e| panic!("Cell.dark.msl failed to compile: {:#?}", e));
+
+    let editor = style
+        .def
+        .parts
+        .iter()
+        .find(|p| p.name == "cell-editor")
+        .expect("Cell.dark.msl must style the `cell-editor` part");
+
+    // 3. Each property here was load-bearing in the measurement: padding
+    //    and border are the UA box that made the row taller, `font`
+    //    stops the input using its own smaller face, and border-box
+    //    keeps `width: 100%` from overflowing the cell's own padding.
+    //
+    //    `color` is deliberately absent -- see the .msl. Every backend
+    //    already colours the editor, and setting one here broke Compose
+    //    (transparent) and Qt (duplicate property, a QML compile error).
+    for (name, value) in [
+        ("padding", "0px"),
+        ("border", "0px"),
+        ("font", "inherit"),
+        ("box-sizing", "border-box"),
+    ] {
+        let prop = editor
+            .base
+            .iter()
+            .find(|p| p.name == name)
+            .unwrap_or_else(|| {
+                panic!(
+                    "`cell-editor` must set `{}` -- without it the editing row \
+                     grows and trips the uniform-capacity guard. Declared: {:?}",
+                    name,
+                    editor.base.iter().map(|p| &p.name).collect::<Vec<_>>()
+                )
+            });
+        assert_eq!(
+            prop.value.trim(),
+            value,
+            "`cell-editor` sets `{}: {}` but the measured geometry needs `{}`",
+            name,
+            prop.value,
+            value
+        );
+    }
+
+    // 4. `color` must stay ABSENT. This is not a style preference -- both
+    //    ways of setting it are build-breaking, and neither shows up in
+    //    this package's own tests, which is exactly why it is pinned here:
+    //
+    //      `color: inherit`  -> Color.Transparent on Compose, Color.clear
+    //                           on SwiftUI, `Foreground="Inherit"` on XAML
+    //      `color: <literal>` -> Qt writes `color` twice on the same
+    //                           TextInput, a hard qmlcachegen error that
+    //                           broke the Trestle task-app build three
+    //                           packages downstream
+    //                           (task-app -> pkg-sheet -> pkg-grid)
+    //
+    //    Every backend already colours the editor from its text context,
+    //    so the correct value here is none at all.
+    assert!(
+        !editor.base.iter().any(|p| p.name == "color"),
+        "`cell-editor` must not set `color`: `inherit` lowers to a \
+         transparent brush on Compose/SwiftUI, and a literal makes Qt emit \
+         `color` twice on one TextInput (a QML compile error that breaks \
+         task-app). Every backend already colours the editor. Declared: {:?}",
+        editor.base.iter().map(|p| &p.name).collect::<Vec<_>>()
+    );
+
+    // 5. Partition guard: the display cell's own part must survive. An
+    //    edit that replaced `cell` with `cell-editor` would satisfy every
+    //    assertion above and still break the grid.
+    assert!(
+        style.def.parts.iter().any(|p| p.name == "cell"),
+        "the display cell's `cell` part must still be styled; parts are {:?}",
+        style.def.parts.iter().map(|p| &p.name).collect::<Vec<_>>()
+    );
+}

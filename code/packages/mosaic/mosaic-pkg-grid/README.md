@@ -118,6 +118,52 @@ already uses. `Cell.mil` gained `row`/`col` slots and `onClick`'s declared
 its own loop bindings. `Grid`'s `onNavigate(row, col)` contract — declared
 since v0.1.0 — reaches a consumer for the first time.
 
+## Unreleased -- the inline editor no longer changes the row height
+
+`Cell` renders a `HostInput` while `is-editing` is set. Until now that input
+had no part name, so a theme could not reach it and the browser's own input
+padding and border applied. Because a row is as tall as its tallest cell,
+focusing a cell made the whole row grow by 6px -- at 100%, 150% and 200%
+text scale alike -- and the React runtime refuses uniform viewport capacity
+when rows are not a uniform height, dropping the grid back to its initial
+row window.
+
+`Cell` now exposes a `cell-editor` part, and the dark theme authors geometry
+that reduces the input to its line box:
+
+```
+part cell-editor {
+  padding:    0px ;
+  border:     0px ;
+  background: transparent ;
+  font:       inherit ;
+  width:      100% ;
+  box-sizing: border-box ;
+}
+```
+
+Override it like any other part if your editor should look different -- but
+note that **a part you declare replaces this one wholesale; it does not
+merge**, exactly as your `part cell` replaces the one above. So an override
+must restate the geometry, not just the property you wanted to change.
+Declaring only one property puts the bare user-agent input straight back,
+and nothing warns you -- the symptom is the grid quietly refusing uniform
+viewport capacity.
+
+Note what the part does **not** set: a colour. Every backend already gives
+the editor one (Compose merges the cell's text style, Qt emits a
+state-aware `color` binding, Flutter a `DefaultTextStyle`), so the editor
+comes out matching its display cell for free. Setting a colour here is
+actively harmful: `inherit` lowers to a transparent brush on Compose and
+SwiftUI, and an explicit literal makes Qt emit `color` twice on the same
+`TextInput`, which is a hard QML compile error that takes down every
+downstream app. Both are filed as emitter defects.
+
+Whatever you set, keep the editor the same height as your `cell` part.
+
+If your theme pins a fixed `height` on `part cell`, your rows could never
+grow and this change is a no-op for you.
+
 ## What's still out of scope (deferred to UI28-2 / v0.3.0)
 
 * **Sticky header.** Authors compose `HostScroll { Grid { ... } }`

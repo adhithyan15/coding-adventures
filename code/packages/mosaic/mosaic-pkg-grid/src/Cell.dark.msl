@@ -37,4 +37,35 @@ style Cell {
       background: #1f4f3f ;
     }
   }
+
+  // #15048 -- match the display row exactly.
+  //
+  // The editing branch swaps a `Text` for a `HostInput`, and a native
+  // input brings UA padding, a border and its own font that a `<span>`
+  // does not. Against this theme's own `part cell` that made the
+  // editing row 6px taller -- at 100%, 150% and 200% alike, measured in
+  // headless Chrome, not inferred -- which trips the 0.5px tolerance in
+  // `table_capacity.ts` and makes the grid refuse uniform viewport
+  // capacity, stranding it on the initial window.
+  //
+  // Zeroing the box and inheriting the font leaves the input
+  // contributing only its line box, exactly as the span does. Measured
+  // delta after: 0 at 100%, 150% and 200%.
+  part cell-editor {
+    padding:    0px ;
+    border:     0px ;
+    background: transparent ;
+    // Deliberately no `color`. This part exists to fix ROW HEIGHT, and a
+    // colour is not needed for that -- every backend already gives the
+    // editor one (Compose merges the cell's text style, Qt emits a
+    // state-aware `color` binding, Flutter a DefaultTextStyle). Setting
+    // one here only caused harm: `inherit` lowers to a transparent brush
+    // on Compose and SwiftUI (invisible text) and to an unconvertible
+    // `Foreground="Inherit"` on XAML, and an explicit literal makes Qt
+    // emit `color` twice on the same TextInput, which is a hard QML
+    // compile error. Both are filed as emitter defects.
+    font:       inherit ;
+    width:      100% ;
+    box-sizing: border-box ;
+  }
 }
