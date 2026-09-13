@@ -2610,6 +2610,27 @@ fn assert_contains(haystack: &str, needle: &str) {
     );
 }
 
+/// The lines of `source` that are not whole-line `//` comments.
+///
+/// For gates that assert something is ABSENT. Three of those in this file were
+/// first written against the whole text and all three failed the same way: on
+/// the comment explaining why the banned thing is banned. Banning a token also
+/// bans documenting the decision to avoid it, which makes the file worse and
+/// the gate no stronger -- what is load-bearing is whether the token reaches
+/// code.
+///
+/// Whole-line only, deliberately. Stripping trailing comments would mean
+/// finding the `//` that starts one, and `//` inside a string literal is a
+/// thing; a half-parsed line is a worse foundation than a simple rule with a
+/// stated limit. A banned token hidden behind code on the same line as its own
+/// trailing comment is not a shape any of these files have.
+fn code_lines(source: &str) -> impl Iterator<Item = &str> {
+    source
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.starts_with("//"))
+}
+
 fn assert_dependency_styles_reach_all_backends(output_root: &Path) {
     let hex_sentinels = [
         ("DeckStatsPanel", "#2563eb"),
@@ -2973,13 +2994,9 @@ fn source_tree_has_expected_shape() {
     assert_contains(&flutter_effects, r"RegExp(r'^\.?[A-Za-z0-9_-]{1,16}$')");
     // Checked over CODE lines only. A first cut scanned the whole file and
     // failed on the comment above the pattern -- the one that explains the
-    // trap -- which is the same way the Compose `openCard` gate first went
-    // wrong: banning a token also bans documenting the decision to avoid it.
-    let carried_anchor = flutter_effects
-        .lines()
-        .map(str::trim)
-        .filter(|line| !line.starts_with("//"))
-        .find(|line| line.contains(r"\A") || line.contains(r"\z"));
+    // trap. See `code_lines`.
+    let carried_anchor =
+        code_lines(&flutter_effects).find(|line| line.contains(r"\A") || line.contains(r"\z"));
     assert!(
         carried_anchor.is_none(),
         "`\\A` and `\\z` are identity escapes in Dart, not anchors -- the \
@@ -2997,6 +3014,26 @@ fn source_tree_has_expected_shape() {
     // The read is bounded before the file is opened, matching the other three.
     assert_contains(&flutter_effects, "_maxImportBytes");
     assert_contains(&flutter_effects, "FileSystemEntityType.file");
+    // The export stages through a FRESH directory, not a predictable sibling.
+    //
+    // `writeAsBytes` follows symlinks, and the first version of this wrote to
+    // `$target.part` -- a name derivable from the one the person picked in the
+    // dialog, so anything able to create a file in that directory first could
+    // point the name elsewhere and take the write with it. Measured on Dart
+    // 3.9.4 with a symlink planted at that name: the old shape overwrote the
+    // link's target, the staged one left it untouched.
+    //
+    // `createTemp` is `mkdtemp` -- random name, exclusive creation, mode 0700 --
+    // so there is no name to pre-empt. A sibling of the target rather than the
+    // system temp directory, because `rename` is atomic only within a
+    // filesystem and the person may have chosen an external disk.
+    assert_contains(&flutter_effects, "createTemp('.engram-export-')");
+    assert!(
+        !code_lines(&flutter_effects).any(|line| line.contains("$target.part")),
+        "the export must not stage through a name derived from the target: \
+         `writeAsBytes` follows symlinks, so a guessable staging name is one \
+         anything able to write to that directory can redirect"
+    );
 
     // And the handler dispatches on EXACTLY the kinds the application mints.
     //
@@ -3007,17 +3044,8 @@ fn source_tree_has_expected_shape() {
     // branch satisfied. Banning the word outright is no good either, because
     // the comment explaining why `openCard` is deliberately unanswered has to
     // be allowed to say `openCard`.
-    let dispatched: BTreeSet<&str> = flutter_effects
-        .lines()
-        .map(str::trim)
-        // Code, not prose: a line that tests `kind` and is not a comment.
-        .filter(|line| !line.starts_with("//") && line.contains("kind =="))
-        .chain(
-            flutter_effects
-                .lines()
-                .map(str::trim)
-                .filter(|line| !line.starts_with("//") && line.contains("kind !=")),
-        )
+    let dispatched: BTreeSet<&str> = code_lines(&flutter_effects)
+        .filter(|line| line.contains("kind ==") || line.contains("kind !="))
         .flat_map(|line| line.split('\'').skip(1).step_by(2).collect::<Vec<_>>())
         .collect();
     assert_eq!(

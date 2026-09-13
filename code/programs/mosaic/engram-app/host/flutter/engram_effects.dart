@@ -192,24 +192,49 @@ Future<Map<String, Object?>> _runExport(Object? payload) async {
     return _failedOutcome('the export package was not a valid Anki package');
   }
 
-  // Written beside the target and renamed into place, so a failure partway
-  // leaves no truncated `.apkg` behind looking like a real one. The temp file
-  // is a sibling rather than one in the system temp directory, because `rename`
-  // is only atomic within a filesystem and the person may well have picked an
-  // external disk.
-  final temp = File('$target.part');
+  // Written elsewhere and renamed into place, so a failure partway leaves no
+  // truncated `.apkg` behind looking like a real one.
+  //
+  // Staged in a SIBLING DIRECTORY, and both halves of that are deliberate.
+  //
+  // Sibling, rather than the system temp directory, because `rename` is only
+  // atomic within a filesystem and the person may well have picked an external
+  // disk -- a cross-device rename fails, and falling back to a copy gives up
+  // the property this is here for.
+  //
+  // A fresh directory, rather than a predictably-named `$target.part` file,
+  // because `writeAsBytes` follows symlinks. A `.part` named after the target
+  // is guessable, so anything that can create a file in the chosen directory
+  // ahead of time can point that name somewhere else and have this write there
+  // instead. `createTemp` is `mkdtemp`: the name is random, creation is
+  // exclusive, and the mode is 0700, so there is no name to pre-empt and
+  // nothing else may enter it.
+  //
+  // The sibling handlers get this for free and by different routes --
+  // `Data.write(options: .atomic)` on SwiftUI stages in a random temp of its
+  // own, and Qt writes the target directly under a `QFile` it owns. Dart has
+  // no atomic-write option, so the staging is explicit here.
+  Directory? staging;
   try {
+    staging = await File(target).parent.createTemp('.engram-export-');
+    final temp = File('${staging.path}/export.apkg');
     await temp.writeAsBytes(decoded, flush: true);
     await temp.rename(target);
   } on Object catch (error) {
-    try {
-      if (await temp.exists()) await temp.delete();
-    } on Object {
-      // The write already failed; the app learns nothing useful from a second
-      // failure cleaning up after it, and swallowing this cannot lose the
-      // original reason, which is reported below.
-    }
     return _failedOutcome(_reason(error, 'the export could not be written'));
+  } finally {
+    // In `finally`, so the staging directory goes on the success path too --
+    // after a successful `rename` it is empty, and leaving one behind per
+    // export would litter the person's folder.
+    if (staging != null) {
+      try {
+        await staging.delete(recursive: true);
+      } on Object {
+        // Cleaning up after a failed write cannot tell the app anything the
+        // original error did not, and swallowing this cannot lose that error:
+        // it has already been turned into the returned outcome.
+      }
+    }
   }
   return _okOutcome();
 }
