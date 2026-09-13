@@ -38,21 +38,45 @@ landed and why, not a semver-tracked API.
 
   ### Pins
 
-  **7 of 7 mutants killed, two controls counted separately.** Pointing a skull row back at the leg
+  **13 of 13 mutants killed, two controls counted separately.** Pointing a skull row back at the leg
   page; un-widening the skull span to its anaphoric sentence; **restoring the comma-welded list quote
-  this entry removed**; rebinding a region; breaking only the tibia copy of the sentence it shares
-  with fibula; dropping a row's locator so it inherits the framing page; deleting a row outright.
+  this entry removed**; rebinding a region; dropping a row's locator so it inherits the framing page;
+  deleting a row outright; and **every shared sentence broken in each direction separately** — tibia
+  and fibula, radius and ulna, clavicle and sternum, parietal.
 
-  Every row is bound by BONE, never by region — `arm` and `leg` have three rows each, and a
-  multi-answer query lets a needle be satisfied by a sibling's intact copy. That is not hypothetical:
-  it is the defect mutation found in `joint-types` below, and the reason it is designed out here
-  rather than discovered again.
+  ### The first version of both the tests and the mutants was drawn around its own gap
+
+  Review found it: `assert_bone` was called for **one bone per shared span** — femur, tibia, humerus,
+  scapula, ribs, patella — so `fibula`, `radius`, `ulna`, `clavicle` and `sternum` were pinned by
+  nothing. `clavicle`'s source could be replaced with *"Made up entirely."* and the suite stayed
+  green. Nine mutants survived a sweep.
+
+  The mutation set did not catch this **because I had written it around the same blind spot**: it
+  broke the tibia copy (covered) and not the fibula copy (not covered), the scapula row and not the
+  clavicle row, ribs and not sternum. "7 of 7 killed" was true, and measured the half I had tested.
+  A harness built by the same hand that wrote the tests inherits its gaps; that is what an
+  adversarial reviewer is for.
+
+  Now every one of the 15 rows is bound by BONE, never by region — `arm` and `leg` have three rows
+  each, and a multi-answer query lets a needle be satisfied by a sibling's intact copy, the defect
+  mutation found in `joint-types` below.
+
+  One assertion was also **incapable of failing**: `!out.contains("\"R\":\"skull\",\"B\"")`, under a
+  comment claiming it guarded the central defect. Bindings serialize `B` before `R`, so that needle
+  could never appear whatever the data said. Replaced with a count — the leg page must warrant
+  exactly the three leg rows (six occurrences, since provenance is emitted under `citations` and
+  again under `steps`).
 
   Controls: unmutated green, and a fabricated envelope green — disclosed, because once every row
   overrides `source` and `locator` the envelope's wording is unreachable from any answer.
 
   `patella → knee` is disclosed as a reading rather than a quote-match: the page says *"Your kneecap
   is called the patella"*, and `knee` is the region that names.
+
+  The skull rows now disclose a step that was easier to miss than that one: their span says the
+  **calvaria**, *"the uppermost part of the skull"*, is composed of those four bones, so
+  `frontal → skull` is part-of-a-part-of. Sound and auditable, but not a bare quote match — and it
+  was going to ship undisclosed while the weaker `patella` reading was spelled out twice.
 
 - **#14986: seven joints, and a header that had written down its own defect.**
   `anatomy/joint-types.adj` warranted all seven rows with the HINGE row's own examples sentence, so a

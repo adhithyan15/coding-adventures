@@ -13,7 +13,8 @@
 %     ? bone_region(femur, $Region)      % leg
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `bone_region(bone, region)` carrying the table's citation, so the
+% relation `bone_region(bone, region)` carrying THAT ROW'S OWN citation
+% (RS-5e -- before #14986 it was the table's single envelope), so the
 % lookup above is the ordinary SLD binding query — the engine returns the region
 % WITH its source, on the CPU, with zero model calls, and abstains on a word
 % that is not one of these bones (it never invents a region).
@@ -145,6 +146,13 @@ table bone_region {
         % are a bulleted LIST and the commas were invented. SEER's axial
         % page lists them too. StatPearls states them in prose, so these
         % four rows cite it, widened to the sentence naming the skull.
+        %
+        % NOTE the step this span asks a reader to take: it says the
+        % CALVARIA -- "the uppermost part of the skull" -- is composed
+        % of these four bones. Reading that as `frontal -> skull` is
+        % part-of-a-part-of, sound and auditable but not a bare quote
+        % match. Disclosed here because the weaker `patella -> knee`
+        % reading is disclosed and this one is easier to miss.
         source "The calvaria, the uppermost part of the skull, protects the cerebral cortex, cerebellum, and orbital contents. It is composed of the frontal bone, parietal bones, temporal bones, and occipital bone."
         locator "https://www.ncbi.nlm.nih.gov/books/NBK499834/"
     }

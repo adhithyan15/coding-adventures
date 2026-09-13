@@ -149,6 +149,38 @@ fn every_bone_row_carries_its_own_span_and_locator() {
         "The ribs connect on the front of the chest with the long flat sternum, or breast bone, and on the back with the vertebral column, creating a cage of protection for the lungs and heart.",
         CHEST,
     );
+    // EVERY row, not one per shared sentence. A first version asserted only
+    // femur/tibia/humerus/scapula/ribs/patella — one bone per span group — and
+    // review showed nine mutants surviving: `clavicle`'s source could be
+    // replaced with "Made up entirely." and the suite stayed green. Worse, the
+    // mutation set I had written tested the COVERED direction of each shared
+    // sentence (tibia, not fibula; scapula, not clavicle; ribs, not sternum),
+    // so "7 of 7 killed" was true and drawn around the gap.
+    assert_bone(
+        "sbfibula", "fibula", "leg",
+        "The lower leg is comprised of two bones, the tibia and the smaller fibula.",
+        LEG,
+    );
+    assert_bone(
+        "sbradius", "radius", "arm",
+        "Of the 206 bones in your body, three of them are in your arm: the humerus, radius, and ulna.",
+        ARM,
+    );
+    assert_bone(
+        "sbulna", "ulna", "arm",
+        "Of the 206 bones in your body, three of them are in your arm: the humerus, radius, and ulna.",
+        ARM,
+    );
+    assert_bone(
+        "sbclavicle", "clavicle", "shoulder",
+        "Your shoulder joint is composed of three bones: the clavicle (collarbone), the scapula (shoulder blade), and the humerus (upper arm bone).",
+        SHOULDER,
+    );
+    assert_bone(
+        "sbsternum", "sternum", "chest",
+        "The ribs connect on the front of the chest with the long flat sternum, or breast bone, and on the back with the vertebral column, creating a cage of protection for the lungs and heart.",
+        CHEST,
+    );
     assert_bone(
         "sbpatella", "patella", "knee",
         "Your kneecap is called the patella.",
@@ -180,9 +212,11 @@ fn the_skull_rows_cite_prose_and_not_a_welded_list() {
 }
 
 /// Every row overrides `locator`, so nothing inherits the envelope's — which
-/// now points at the SEER divisions page, a framing source that states no
-/// bone. A row that lost its own locator would silently cite it, and that is
-/// the regression this conversion could most easily introduce.
+/// now points at the SEER divisions page, whose framing SPAN names no bone.
+/// (The page itself does mention ribs and the sternum elsewhere; the claim is
+/// about the span, not the page.) A row that lost its own locator would
+/// silently cite it, and that is the regression this conversion could most
+/// easily introduce.
 #[test]
 fn no_answer_cites_the_framing_page_or_leaks_the_framing_span() {
     let dir = scratch("sbenvelope");
@@ -211,10 +245,17 @@ fn no_answer_cites_the_framing_page_or_leaks_the_framing_span() {
         !out.contains("training.seer.cancer.gov"),
         "no row inherits the framing locator: {out}"
     );
-    // And the defect itself: the leg image page must no longer warrant
-    // anything outside the leg.
-    assert!(
-        !out.contains("\"R\":\"skull\",\"B\""),
-        "sanity on binding order: {out}"
+    // And the defect itself: the leg image page must warrant ONLY the three
+    // leg rows. Six occurrences — three rows, each emitting its provenance
+    // under `citations` and again under `steps`.
+    //
+    // A first version asserted `!out.contains("\"R\":\"skull\",\"B\"")` with a
+    // comment claiming exactly this. Bindings serialize B before R, so that
+    // needle could never appear whatever the data said: an assertion that
+    // cannot fail, under a comment promising it guards the central defect.
+    assert_eq!(
+        out.matches("imagepages/8844.htm").count(),
+        6,
+        "the leg page warrants the three leg rows and nothing else: {out}"
     );
 }
