@@ -219,6 +219,17 @@ pub fn from_pipeline(
     // `RoundedCornerShape`/`clip` without their imports is Kotlin that does
     // not compile, which is exactly how the XAML `Not()` helper went wrong in
     // #14793. An unused Kotlin import is a warning; a missing one is an error.
+    // UI79 -- only when a per-edge border is authored. `Offset` is already
+    // imported by the drag-and-drop block above, so it is added here only
+    // when that block did not run; a duplicate import is legal Kotlin but
+    // reads like a mistake.
+    if style_has_per_edge_border(style) {
+        writeln!(out, "import androidx.compose.ui.draw.drawBehind").unwrap();
+        writeln!(out, "import androidx.compose.ui.geometry.Size").unwrap();
+        if !uses_drag {
+            writeln!(out, "import androidx.compose.ui.geometry.Offset").unwrap();
+        }
+    }
     writeln!(out, "import androidx.compose.foundation.shape.RoundedCornerShape").unwrap();
     writeln!(out, "import androidx.compose.ui.draw.clip").unwrap();
     writeln!(out, "import androidx.compose.foundation.layout.Arrangement").unwrap();
@@ -1799,6 +1810,13 @@ fn compose_drop_reason(name: &str) -> &'static str {
         "border-style" | "border-collapse" | "outline" => {
             "no Compose equivalent; Modifier.border takes a width, colour and shape only"
         }
+        // UI79 -- be exact about what was and was not honoured. The edge IS
+        // drawn (from its width and colour); only the dash pattern is lost.
+        // The generic "no lowering yet" reason would tell a reader the whole
+        // declaration vanished, which stopped being true when UI79 landed.
+        n if per_edge_border_style(n) => {
+            "the edge is drawn solid from its width and colour; Compose's drawRect has              no dash pattern, so only the style is lost (UI79 §3 rule 2)"
+        }
         _ => "no Compose lowering in this emitter yet",
     }
 }
@@ -1883,6 +1901,65 @@ fn host_scroll_modifier_prefix(node: &LayoutNode, chain_indent: usize) -> Option
 fn layout_scrolls_horizontally(node: &LayoutNode) -> bool {
     (node.tag == "HostScroll" && ScrollAxis::of(node).scrolls_horizontally())
         || node.children.iter().any(layout_scrolls_horizontally)
+}
+
+/// UI79 -- is this `border-<edge>-style`? Kept separate from
+/// [`per_edge_border`], which deliberately does not match `-style` so it
+/// falls through to the drop reporter.
+fn per_edge_border_style(name: &str) -> bool {
+    name.strip_prefix("border-")
+        .and_then(|rest| rest.rsplit_once('-'))
+        .map(|(edge, which)| {
+            which == "style" && matches!(edge, "top" | "right" | "bottom" | "left")
+        })
+        .unwrap_or(false)
+}
+
+/// UI79 -- does any part in this stylesheet author a per-edge border?
+///
+/// Drives the `drawBehind` / geometry imports. Asked of the STYLE rather
+/// than the layout, because this is a style-driven lowering: no tag makes
+/// an edge appear, only an authored declaration does.
+fn style_has_per_edge_border(style: &StyleDef) -> bool {
+    style.parts.iter().any(|part| {
+        let authored = part
+            .base
+            .iter()
+            .map(|p| p.name.as_str())
+            .chain(
+                part.states
+                    .iter()
+                    .flat_map(|st| st.props.iter().map(|p| p.name.as_str())),
+            );
+        authored.into_iter().any(|n| {
+            per_edge_border(n)
+                .map(|(_, which)| which == "width")
+                .unwrap_or(false)
+        })
+    })
+}
+
+/// UI79 -- splits `border-<edge>-<width|color>` into an edge index and which
+/// half it sets. `None` for anything else, including `-style`, which stays
+/// unhandled on purpose so a non-`solid` style is reported rather than drawn
+/// solid.
+///
+/// The index order is CSS's own: top, right, bottom, left.
+fn per_edge_border(name: &str) -> Option<(usize, &'static str)> {
+    let rest = name.strip_prefix("border-")?;
+    let (edge, which) = rest.rsplit_once('-')?;
+    let idx = match edge {
+        "top" => 0,
+        "right" => 1,
+        "bottom" => 2,
+        "left" => 3,
+        _ => return None,
+    };
+    match which {
+        "width" => Some((idx, "width")),
+        "color" => Some((idx, "color")),
+        _ => None,
+    }
 }
 
 fn is_splittable_container(node: &LayoutNode) -> bool {
@@ -3686,6 +3763,11 @@ fn compose_box_style(
     let mut font_family_mono = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
+    // UI79 -- per-edge borders. `Modifier.border` draws all four edges and
+    // has no per-edge form, so each authored edge is DRAWN, not configured.
+    // Indexed [top, right, bottom, left], the CSS order.
+    let mut edge_width: Vec<PropBucket> = (0..4).map(|_| PropBucket::new(layer_count)).collect();
+    let mut edge_color: Vec<PropBucket> = (0..4).map(|_| PropBucket::new(layer_count)).collect();
     let mut opacity = PropBucket::new(layer_count);
 
     // `text-align` is a static layout concern — base-only (a per-state
@@ -3818,6 +3900,23 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
+            // UI79 -- `border-{top,right,bottom,left}-{width,color}`.
+            //
+            // `-style` is deliberately NOT handled here: `solid` is the only
+            // style this draws, so letting a `dashed` fall through to the
+            // catch-all keeps it REPORTED rather than silently drawn solid
+            // (UI79 §3 rule 2).
+            name if per_edge_border(name).is_some() => {
+                let (edge, which) = per_edge_border(name).unwrap();
+                match which {
+                    "width" => {
+                        if let Some(v) = px_or_none(&p.value) {
+                            set(&mut edge_width[edge], v);
+                        }
+                    }
+                    _ => set(&mut edge_color[edge], compose_color_value(&p.value)),
+                }
+            }
             // #14810 — 318 occurrences in TaskApp alone, every one discarded,
             // so every rounded surface rendered square while the strict
             // native-complete profile reported zero degradations.
@@ -4027,6 +4126,48 @@ fn compose_box_style(
             layer_value(&border_color, state_layers, "Color.Gray")
         };
         modifier.push_str(&format!("\n{cpad}.border({w_expr}.dp, {c_expr}{shape_arg})"));
+    }
+
+    // UI79 -- per-edge borders, drawn on the BORDER BOX.
+    //
+    // Emitted after `.border` and before `.padding`, which is what puts the
+    // line outside the padding where CSS puts it. `drawRect` rather than
+    // `drawLine`: a stroked line is centred on its path, so a 1px rule would
+    // straddle the edge and land half outside the box. A rect states the strip
+    // exactly.
+    //
+    // Not a sibling `HorizontalDivider`: a divider is a layout child and would
+    // join the parent's arrangement, moving the content. A border must not
+    // move anything.
+    if edge_width.iter().any(|b| !b.empty()) {
+        let mut body = String::new();
+        for (idx, name) in ["top", "right", "bottom", "left"].iter().enumerate() {
+            if edge_width[idx].empty() {
+                continue;
+            }
+            let w = numeric_layer_value(&edge_width[idx], state_layers, "0");
+            let c = if edge_color[idx].empty() {
+                "Color.Gray".to_string()
+            } else {
+                layer_value(&edge_color[idx], state_layers, "Color.Gray")
+            };
+            let (top_left, rect_size) = match *name {
+                "top" => ("Offset(0f, 0f)", "Size(size.width, mosaicEdge)"),
+                "bottom" => (
+                    "Offset(0f, size.height - mosaicEdge)",
+                    "Size(size.width, mosaicEdge)",
+                ),
+                "left" => ("Offset(0f, 0f)", "Size(mosaicEdge, size.height)"),
+                _ => (
+                    "Offset(size.width - mosaicEdge, 0f)",
+                    "Size(mosaicEdge, size.height)",
+                ),
+            };
+            body.push_str(&format!(
+                "\n{cpad}    run {{ val mosaicEdge = {w}.dp.toPx(); drawRect(color = {c}, topLeft = {top_left}, size = {rect_size}) }}"
+            ));
+        }
+        modifier.push_str(&format!("\n{cpad}.drawBehind {{{body}\n{cpad}}}"));
     }
 
     // .padding — LAST so content insets inside the bordered box.
@@ -11643,6 +11784,106 @@ mod tests {
 
 
     // ---- HostScroll (#14732) -----------------------------------------
+
+    /// UI79 — each authored edge draws on its own edge and nowhere else.
+    ///
+    /// Asserted as a SET. An emitter that drew all four edges for any
+    /// single authored one — which is exactly what `Modifier.border`
+    /// does, and why this had to be drawn rather than configured —
+    /// passes every positive assertion on its own.
+    #[test]
+    fn ui79_each_authored_edge_draws_only_itself() {
+        let render = |props: &[(&str, &str)]| {
+            let style = StyleDef {
+                component_name: "S".to_string(),
+                parts: vec![PartStyle {
+                    name: "row".to_string(),
+                    base: props
+                        .iter()
+                        .map(|(n, v)| StyleProp {
+                            name: n.to_string(),
+                            value: v.to_string(),
+                        })
+                        .collect(),
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+            let mut root = node("Column", vec![], vec![]);
+            root.part_name = Some("row".to_string());
+            from_pipeline(
+                &component("S", vec![], vec![]),
+                &layout("S", root),
+                &style,
+            )
+            .unwrap()
+            .output
+        };
+
+        // The control, rendered through the same path: no authored edge
+        // means no drawBehind at all, not an empty one.
+        let none = render(&[("padding", "8px")]);
+        assert!(
+            !none.contains("drawBehind"),
+            "a part with no authored edge must draw nothing, got:\n{none}"
+        );
+
+        let cases = [
+            ("border-top-width", "Offset(0f, 0f)", "Size(size.width, mosaicEdge)"),
+            (
+                "border-bottom-width",
+                "Offset(0f, size.height - mosaicEdge)",
+                "Size(size.width, mosaicEdge)",
+            ),
+            ("border-left-width", "Offset(0f, 0f)", "Size(mosaicEdge, size.height)"),
+            (
+                "border-right-width",
+                "Offset(size.width - mosaicEdge, 0f)",
+                "Size(mosaicEdge, size.height)",
+            ),
+        ];
+        for (prop, offset, size_expr) in cases {
+            let out = render(&[(prop, "1px")]);
+            assert!(out.contains("drawBehind"), "{prop}: got\n{out}");
+            assert!(out.contains(offset), "{prop} offset — got:\n{out}");
+            assert!(out.contains(size_expr), "{prop} size — got:\n{out}");
+            // Exactly ONE strip: the negative half.
+            assert_eq!(
+                out.matches("drawRect(color =").count(),
+                1,
+                "{prop} must draw one edge, not four — got:\n{out}"
+            );
+        }
+
+        // All four together draw four strips, so the single-strip
+        // assertion above is not passing merely because the emitter can
+        // only ever produce one.
+        let all = render(&[
+            ("border-top-width", "1px"),
+            ("border-right-width", "2px"),
+            ("border-bottom-width", "3px"),
+            ("border-left-width", "4px"),
+        ]);
+        assert_eq!(all.matches("drawRect(color =").count(), 4, "got:\n{all}");
+    }
+
+    /// UI79 — `border-top-left-radius` is a CORNER, not an edge, and must
+    /// not be swallowed by the edge matcher. Its name splits into
+    /// `top-left` + `radius`, which is exactly the shape that would fool
+    /// a looser parse.
+    #[test]
+    fn ui79_a_corner_radius_is_not_an_edge() {
+        assert!(per_edge_border("border-top-left-radius").is_none());
+        assert!(per_edge_border("border-radius").is_none());
+        assert!(per_edge_border("border-width").is_none());
+        assert!(per_edge_border("border-bottom-style").is_none());
+        assert_eq!(per_edge_border("border-bottom-width"), Some((2, "width")));
+        assert_eq!(per_edge_border("border-left-color"), Some((3, "color")));
+        // The style half is reported rather than drawn, so it must be
+        // recognised by the reporter and NOT by the lowering.
+        assert!(per_edge_border_style("border-bottom-style"));
+        assert!(!per_edge_border_style("border-top-left-radius"));
+    }
 
     /// UI61 — the axis reaches the modifier chain, and the
     /// `horizontalScroll` import appears only where it is used.
