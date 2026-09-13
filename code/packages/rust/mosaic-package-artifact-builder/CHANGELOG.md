@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-13
+
+- Recognize validated Compose typography projections while continuing to report unsupported backends, primitives and binding forms explicitly.
+
 ## Unreleased
 
 ### Added — Flutter wires a package's `[host_effects]` handler
