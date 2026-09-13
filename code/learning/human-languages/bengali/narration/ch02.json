@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Hanging From the Head-Line, One Piece at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8dc723b0a144f0f3",
+  "sourceHash": "fnv1a64:ac9b29626701de70",
   "lessons": [
     {
       "id": "BN-W01-na",
@@ -123,6 +123,286 @@
             {
               "kind": "speech",
               "text": "Source: Unicode Bengali chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W01-na-trace",
+      "sequence": 71,
+      "title": "ন (nô) — trace it, with the bar last",
+      "headword": "ন",
+      "romanization": "nô",
+      "gloss": "trace the letter with the model visible, following the bar last",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:92eb5d98e47d4eb0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ন (nô) in front of you. It does not get covered in this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — observe and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Finger-trace ন three times on the page, slowly, then trace it once in the air. Say nô after your finger stops each time — nô, with the rounded open vowel of English awe, not na."
+            },
+            {
+              "kind": "speech",
+              "text": "Leave the bar across the top for last, every time. The body of the letter first, the horizontal line after it."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not tell you where each curve of the body starts or which way it travels. Bengali handwriting is taught with real variation from school to school, and it is not written down here until it can be written down with a source. Tracing what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            },
+            {
+              "kind": "speech",
+              "text": "The bar is the exception, and it is not a stylistic claim: the মাত্রা joins up across a whole word in running text, so it cannot be the first thing drawn on a letter that is about to have neighbours."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which part did you leave until last? (The bar.) And what does this letter say on its own — na or nô? (nô.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W01-na-guided-copy",
+      "sequence": 72,
+      "title": "ন (nô) — copy it twice, and join the bar",
+      "headword": "ন",
+      "romanization": "nô",
+      "gloss": "copy the letter twice with the model visible, and draw one bar across both",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a469fdba6f1cb9e6",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The model stays visible for all of this lesson. Nothing is hidden today."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy ন (nô) once, body first and bar last, as you traced it."
+            },
+            {
+              "kind": "speech",
+              "text": "Then copy it twice side by side — and this time draw the bodies first, both of them, and finish with one single bar running across the top of both."
+            },
+            {
+              "kind": "speech",
+              "text": "That one continuous line is the whole lesson. In Bengali the bar is not a mark belonging to a letter; it is a line belonging to the word, which is why it is drawn last and why it runs on. A reader's eye follows it to find where one word stops and the next starts, so a hand that gives each letter its own short bar has written two words where it meant one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at your pair. Is there one line across the top, or two? One line is a word. Two is a gap you did not mean to leave."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W01-na-delayed-copy",
+      "sequence": 73,
+      "title": "ন (nô) — write it with the model covered",
+      "headword": "ন",
+      "romanization": "nô",
+      "gloss": "write the letter with the model covered, then check the bar before the body",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:474462f5557ae400",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ন once and say nô. Then cover it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With the model covered, wait ten seconds, then write ন (nô) once from memory — body first, bar last."
+            },
+            {
+              "kind": "speech",
+              "text": "Ten seconds is long enough that your hand cannot be tracing a shape it can still see, and short enough that a letter you met a minute ago is still there."
+            },
+            {
+              "kind": "speech",
+              "text": "Only after the letter is finished, uncover the model and compare. Repair one thing, the first that differs, and leave the rest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check the bar's width before you check the body at all."
+            },
+            {
+              "kind": "speech",
+              "text": "A hand writing from memory remembers to put the bar there and draws it only as wide as the body underneath. In running text it has to reach the full width of the letter, because the next letter's bar will meet it — so a short bar is the one mistake that looks completely right on a single letter and falls apart the moment there are two."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W01-na-dictation",
+      "sequence": 74,
+      "title": "ন (nô) — the letter from the sound",
+      "headword": "ন",
+      "romanization": "nô",
+      "gloss": "write the letter from the sound alone, and hear the vowel that is not a",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:f6b65e417f6c57cf",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every ন (nô) on the page. Nothing to copy and nothing to uncover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — dictation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say nô aloud, or play it, and write the letter that carries it. Once."
+            },
+            {
+              "kind": "speech",
+              "text": "A delayed copy asks your hand to remember a shape. Dictation asks it to turn a sound into a shape, which is what writing is actually for, and the two do not always arrive together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover the model and compare — then notice which sound you were given."
+            },
+            {
+              "kind": "speech",
+              "text": "nô, not na. The vowel inside a bare Bengali consonant is the rounded open one, and this is the place that matters: a reader coming from Hindi or Sanskrit hears na, writes the same shape, and has learned the letter with the wrong sound attached to it. The shape is shared across the family. The default vowel is not, and dictation is the only stage that can catch the difference, because it is the only one where the sound comes first."
             }
           ]
         }

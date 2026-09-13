@@ -1,11 +1,14 @@
 {
   "language": "sanskrit",
   "chapter": 1,
-  "sourceHash": "fnv1a64:3d4d42fdf42cebe6",
+  "sourceHash": "fnv1a64:8790ae0e955f641e",
   "lessonIds": [
     "SA-C01-namaste",
     "SA-C01-namaskara",
     "SA-S02-letter-na",
+    "SA-S02-copy-the-three-strokes",
+    "SA-S02-delayed-copy",
+    "SA-S02-dictation",
     "SA-C01-dhanyavada",
     "SA-C01-svagatam",
     "SA-S200-letter-da",
@@ -18,7 +21,7 @@
   "drivablePrefix": 1,
   "text": "sanskrit/narration/ch01.txt",
   "json": "sanskrit/narration/ch01.json",
-  "textHash": "fnv1a64:b7e0759b769d3ede",
-  "jsonHash": "fnv1a64:ad1e3a03c580cb7f",
+  "textHash": "fnv1a64:91c61634f4b379d3",
+  "jsonHash": "fnv1a64:05ca2a48936c9b80",
   "findings": []
 }

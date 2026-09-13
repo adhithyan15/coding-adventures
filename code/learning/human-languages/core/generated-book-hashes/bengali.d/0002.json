@@ -1,9 +1,13 @@
 {
   "language": "bengali",
   "chapter": 2,
-  "sourceHash": "fnv1a64:39b3ff8e07eb7e45",
+  "sourceHash": "fnv1a64:a17aed654b3a639f",
   "lessonIds": [
     "BN-W01-na",
+    "BN-W01-na-trace",
+    "BN-W01-na-guided-copy",
+    "BN-W01-na-delayed-copy",
+    "BN-W01-na-dictation",
     "BN-W01-aa-matra",
     "BN-W01-aa",
     "BN-W01-ha",

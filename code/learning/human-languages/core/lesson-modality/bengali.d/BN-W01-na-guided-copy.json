@@ -1,26 +1,26 @@
 {
   "lesson": {
-    "id": "SA-S02-letter-na",
-    "language": "sanskrit",
-    "chapter": 1,
-    "sequence": 21,
+    "id": "BN-W01-na-guided-copy",
+    "language": "bengali",
+    "chapter": 2,
+    "sequence": 72,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
       "writing-block",
-      "script-block"
+      "sight-cue"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:61cec457891583af",
+    "sourceHash": "fnv1a64:a469fdba6f1cb9e6",
     "detachableSegments": [
-      "Script you'll notice: न",
-      "Writing: न"
+      "Writing — guided copy"
     ],
     "delivery": "script"
   },

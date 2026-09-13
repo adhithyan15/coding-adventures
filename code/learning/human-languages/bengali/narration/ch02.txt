@@ -1,8 +1,8 @@
 Bengali, chapter 2: Hanging From the Head-Line, One Piece at a Time.
-10 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+14 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 10.
+Lesson 1 of 14.
 ন (nô) — the consonant na.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -29,7 +29,77 @@ What vowel does a bare Bengali consonant carry? (ô, the vowel of awe — not a.
 Source: Unicode Bengali chart.
 
 
-Lesson 2 of 10.
+Lesson 2 of 14.
+ন (nô) — trace it, with the bar last.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Keep ন (nô) in front of you. It does not get covered in this lesson.
+
+Writing — observe and trace.
+Finger-trace ন three times on the page, slowly, then trace it once in the air. Say nô after your finger stops each time — nô, with the rounded open vowel of English awe, not na.
+Leave the bar across the top for last, every time. The body of the letter first, the horizontal line after it.
+This book does not tell you where each curve of the body starts or which way it travels. Bengali handwriting is taught with real variation from school to school, and it is not written down here until it can be written down with a source. Tracing what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+The bar is the exception, and it is not a stylistic claim: the মাত্রা joins up across a whole word in running text, so it cannot be the first thing drawn on a letter that is about to have neighbours.
+
+Wrap-up Recall.
+Which part did you leave until last? (The bar.) And what does this letter say on its own — na or nô? (nô.)
+
+
+Lesson 3 of 14.
+ন (nô) — copy it twice, and join the bar.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+The model stays visible for all of this lesson. Nothing is hidden today.
+
+Writing — guided copy.
+Copy ন (nô) once, body first and bar last, as you traced it.
+Then copy it twice side by side — and this time draw the bodies first, both of them, and finish with one single bar running across the top of both.
+That one continuous line is the whole lesson. In Bengali the bar is not a mark belonging to a letter; it is a line belonging to the word, which is why it is drawn last and why it runs on. A reader's eye follows it to find where one word stops and the next starts, so a hand that gives each letter its own short bar has written two words where it meant one.
+
+Wrap-up Recall.
+Look at your pair. Is there one line across the top, or two? One line is a word. Two is a gap you did not mean to leave.
+
+
+Lesson 4 of 14.
+ন (nô) — write it with the model covered.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Look at ন once and say nô. Then cover it.
+
+Writing — delayed copy.
+With the model covered, wait ten seconds, then write ন (nô) once from memory — body first, bar last.
+Ten seconds is long enough that your hand cannot be tracing a shape it can still see, and short enough that a letter you met a minute ago is still there.
+Only after the letter is finished, uncover the model and compare. Repair one thing, the first that differs, and leave the rest.
+
+Wrap-up Recall.
+Check the bar's width before you check the body at all.
+A hand writing from memory remembers to put the bar there and draws it only as wide as the body underneath. In running text it has to reach the full width of the letter, because the next letter's bar will meet it — so a short bar is the one mistake that looks completely right on a single letter and falls apart the moment there are two.
+
+
+Lesson 5 of 14.
+ন (nô) — the letter from the sound.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Cover every ন (nô) on the page. Nothing to copy and nothing to uncover.
+
+Writing — dictation.
+Say nô aloud, or play it, and write the letter that carries it. Once.
+A delayed copy asks your hand to remember a shape. Dictation asks it to turn a sound into a shape, which is what writing is actually for, and the two do not always arrive together.
+
+Wrap-up Recall.
+Uncover the model and compare — then notice which sound you were given.
+nô, not na. The vowel inside a bare Bengali consonant is the rounded open one, and this is the place that matters: a reader coming from Hindi or Sanskrit hears na, writes the same shape, and has learned the letter with the wrong sound attached to it. The shape is shared across the family. The default vowel is not, and dictation is the only stage that can catch the difference, because it is the only one where the sound comes first.
+
+
+Lesson 6 of 14.
 া (-a) — the vowel sign that replaces the inherent vowel.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -57,7 +127,7 @@ What does a mātrā do to the inherent vowel? (Replaces it.) What word did those
 Source: Unicode Bengali chart.
 
 
-Lesson 3 of 10.
+Lesson 7 of 14.
 আ — the same vowel standing alone.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -88,7 +158,7 @@ Which of the two starts a word? (আ.) Which rides on a consonant? (া (-a).) A
 Source: Unicode Bengali chart.
 
 
-Lesson 4 of 10.
+Lesson 8 of 14.
 হ (hô) — the consonant ha.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -114,7 +184,7 @@ What is the inherent vowel in হ (hô)? (ô.) How many new rules did this lesso
 Source: Unicode Bengali chart.
 
 
-Lesson 5 of 10.
+Lesson 9 of 14.
 ম (mô) — the consonant ma.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -141,7 +211,7 @@ Say the three consonants you hold, each with its inherent vowel. (nô, hô, mô.
 Source: Unicode Bengali chart.
 
 
-Lesson 6 of 10.
+Lesson 10 of 14.
 স (shô) — the consonant that is written s and said sh.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -168,7 +238,7 @@ How is স (shô) written in transliteration, and how is it said? (Written s, sa
 Source: Unicode Bengali chart.
 
 
-Lesson 7 of 10.
+Lesson 11 of 14.
 ক (kô) — the consonant ka.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -194,7 +264,7 @@ Is ক (kô) the k of kit or of skip? (Of skip — no puff of air.) Does the scr
 Source: Unicode Bengali chart.
 
 
-Lesson 8 of 10.
+Lesson 12 of 14.
 ্ ((hasanta)) — the mark that DELETES the inherent vowel and fuses two consonants.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -223,7 +293,7 @@ What does the hasanta do? (Removes the inherent vowel.) What is Devanagari's nam
 Source: Unicode Bengali chart.
 
 
-Lesson 9 of 10.
+Lesson 13 of 14.
 র (rô) — the last consonant of the greeting.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -248,7 +318,7 @@ How is র (rô) made? (A light tap, not an English r.)
 Source: Unicode Bengali chart.
 
 
-Lesson 10 of 10.
+Lesson 14 of 14.
 নমস্কার (nomoshkar) — seven pieces, all of them already yours.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.

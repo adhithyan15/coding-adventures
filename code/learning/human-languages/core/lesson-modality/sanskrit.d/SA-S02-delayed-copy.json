@@ -1,26 +1,26 @@
 {
   "lesson": {
-    "id": "SA-S02-letter-na",
+    "id": "SA-S02-delayed-copy",
     "language": "sanskrit",
     "chapter": 1,
-    "sequence": 21,
+    "sequence": 23,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
       "writing-block",
-      "script-block"
+      "sight-cue"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:61cec457891583af",
+    "sourceHash": "fnv1a64:054bdab1deee69d9",
     "detachableSegments": [
-      "Script you'll notice: न",
-      "Writing: न"
+      "Writing — delayed copy"
     ],
     "delivery": "script"
   },
