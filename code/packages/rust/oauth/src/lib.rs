@@ -36,7 +36,7 @@ const MAX_AUTHORIZATION_CODE_BYTES: usize = 4_096;
 const TRACE_BYTES: usize = 16;
 const MAX_JSON_NESTING: usize = 64;
 
-const RESERVED_AUTHORIZATION_PARAMETERS: [&str; 8] = [
+const RESERVED_AUTHORIZATION_PARAMETERS: [&str; 9] = [
     "client_id",
     "redirect_uri",
     "response_type",
@@ -44,6 +44,7 @@ const RESERVED_AUTHORIZATION_PARAMETERS: [&str; 8] = [
     "state",
     "code_challenge",
     "code_challenge_method",
+    "nonce",
     "resource",
 ];
 
@@ -344,6 +345,104 @@ pub struct AuthorizationRequest {
     transaction: AuthorizationTransaction,
 }
 
+/// One transaction-specific OpenID Connect nonce with exact ceremony bindings.
+///
+/// The nonce value remains in wipe-on-drop storage. A later account-identity
+/// boundary must validate the provider, client, and trace before consuming the
+/// value for an ID-token proof.
+#[must_use = "retain this nonce for the later ID-token proof"]
+pub struct OpenIdAuthorizationNonce {
+    provider: ProviderId,
+    trace: OAuthTraceId,
+    client_id: String,
+    value: Zeroizing<String>,
+}
+
+impl OpenIdAuthorizationNonce {
+    /// Return the provider identity bound to this nonce.
+    pub const fn provider(&self) -> &ProviderId {
+        &self.provider
+    }
+
+    /// Return the exact client identity bound to this nonce.
+    pub fn client_id(&self) -> &str {
+        &self.client_id
+    }
+
+    /// Return the authorization ceremony trace bound to this nonce.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.trace
+    }
+
+    /// Consume the binding and transfer the nonce to an authorized verifier.
+    pub fn into_value(self) -> Zeroizing<String> {
+        self.value
+    }
+}
+
+impl Debug for OpenIdAuthorizationNonce {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("OpenIdAuthorizationNonce")
+            .field("provider", &self.provider)
+            .field("trace", &self.trace)
+            .field("client_id", &"<redacted>")
+            .field("value", &"<redacted>")
+            .finish()
+    }
+}
+
+/// Audited browser request plus its opaque, transaction-specific OIDC nonce.
+#[must_use = "publish the audit event and retain the transaction plus nonce"]
+pub struct OpenIdAuthorizationRequest {
+    request: AuthorizationRequest,
+    nonce: OpenIdAuthorizationNonce,
+}
+
+impl OpenIdAuthorizationRequest {
+    /// Return the provider identity bound to this authorization ceremony.
+    pub fn provider(&self) -> &ProviderId {
+        self.request.provider()
+    }
+
+    /// Return the exact trace shared by the browser, callback, and nonce proof.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.request.trace()
+    }
+
+    /// Borrow the exact redirect URI registered in the transaction.
+    pub fn redirect_uri(&self) -> &str {
+        self.request.redirect_uri()
+    }
+
+    /// Borrow the authorization URL before consuming this value into its parts.
+    pub fn url(&self) -> &AuthorizationUrl {
+        self.request.url()
+    }
+
+    /// Split browser output, callback state, and the separately retained nonce.
+    pub fn into_parts(
+        self,
+    ) -> (
+        AuthorizationUrl,
+        AuthorizationTransaction,
+        OpenIdAuthorizationNonce,
+    ) {
+        let (url, transaction) = self.request.into_parts();
+        (url, transaction, self.nonce)
+    }
+}
+
+impl Debug for OpenIdAuthorizationRequest {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("OpenIdAuthorizationRequest")
+            .field("request", &self.request)
+            .field("nonce", &self.nonce)
+            .finish()
+    }
+}
+
 impl AuthorizationRequest {
     /// Return the provider identity bound to this authorization ceremony.
     pub fn provider(&self) -> &ProviderId {
@@ -610,6 +709,23 @@ pub fn begin_authorization<E: EntropySource>(
     audited(config.provider.clone(), trace, action, result)
 }
 
+/// Prepare an OpenID Connect Authorization Code request with a fresh nonce.
+///
+/// The requested scopes must contain the exact case-sensitive `openid` value.
+/// State, PKCE verifier, and nonce each receive independent 256-bit slices from
+/// one caller-injected entropy fill. The returned nonce remains provider,
+/// client, and trace bound for later ID-token verification.
+pub fn begin_openid_authorization<E: EntropySource>(
+    config: &ProviderConfig,
+    requested_scopes: &[&str],
+    trace: OAuthTraceId,
+    entropy: &mut E,
+) -> Audited<OpenIdAuthorizationRequest> {
+    let action = OAuthAuditAction::AuthorizationBegin;
+    let result = prepare_openid_authorization(config, requested_scopes, trace, entropy);
+    audited(config.provider.clone(), trace, action, result)
+}
+
 fn prepare_authorization<E: EntropySource>(
     config: &ProviderConfig,
     requested_scopes: &[&str],
@@ -626,6 +742,62 @@ fn prepare_authorization<E: EntropySource>(
 
     let mut random = Zeroizing::new([0_u8; ENTROPY_BYTES * 2]);
     entropy.fill(random.as_mut_slice())?;
+    prepare_authorization_from_random(
+        config,
+        requested_scopes,
+        trace,
+        mix_up_defense,
+        random.as_slice(),
+        None,
+    )
+}
+
+fn prepare_openid_authorization<E: EntropySource>(
+    config: &ProviderConfig,
+    requested_scopes: &[&str],
+    trace: OAuthTraceId,
+    entropy: &mut E,
+) -> Result<OpenIdAuthorizationRequest, OAuthError> {
+    validate_scopes(requested_scopes)?;
+    if !requested_scopes.contains(&"openid") {
+        return Err(OAuthError::InvalidConfiguration(
+            ConfigurationViolation::Scope,
+        ));
+    }
+    let mix_up_defense = config
+        .mix_up_defense
+        .clone()
+        .ok_or(OAuthError::InvalidConfiguration(
+            ConfigurationViolation::MixUpDefense,
+        ))?;
+    let mut random = Zeroizing::new([0_u8; ENTROPY_BYTES * 3]);
+    entropy.fill(random.as_mut_slice())?;
+    let nonce_value = Zeroizing::new(base64_url_no_pad(&random[ENTROPY_BYTES * 2..]));
+    let request = prepare_authorization_from_random(
+        config,
+        requested_scopes,
+        trace,
+        mix_up_defense,
+        &random[..ENTROPY_BYTES * 2],
+        Some(nonce_value.as_str()),
+    )?;
+    let nonce = OpenIdAuthorizationNonce {
+        provider: config.provider.clone(),
+        trace,
+        client_id: config.client_id.clone(),
+        value: nonce_value,
+    };
+    Ok(OpenIdAuthorizationRequest { request, nonce })
+}
+
+fn prepare_authorization_from_random(
+    config: &ProviderConfig,
+    requested_scopes: &[&str],
+    trace: OAuthTraceId,
+    mix_up_defense: MixUpDefense,
+    random: &[u8],
+    openid_nonce: Option<&str>,
+) -> Result<AuthorizationRequest, OAuthError> {
     let state = Zeroizing::new(base64_url_no_pad(&random[..ENTROPY_BYTES]));
     let pkce_verifier = PkceVerifier::new(base64_url_no_pad(&random[ENTROPY_BYTES..]))?;
     let challenge = pkce_s256_challenge(&pkce_verifier);
@@ -640,6 +812,9 @@ fn prepare_authorization<E: EntropySource>(
         ("code_challenge", challenge.as_str()),
         ("code_challenge_method", "S256"),
     ];
+    if let Some(nonce) = openid_nonce {
+        parameters.push(("nonce", nonce));
+    }
     parameters.extend(
         config
             .authorization_extra_parameters
@@ -1263,6 +1438,29 @@ mod tests {
         }
     }
 
+    struct OpenIdFixedEntropy {
+        bytes: [u8; ENTROPY_BYTES * 3],
+        fills: usize,
+    }
+
+    impl OpenIdFixedEntropy {
+        fn ascending() -> Self {
+            let mut bytes = [0_u8; ENTROPY_BYTES * 3];
+            for (index, byte) in bytes.iter_mut().enumerate() {
+                *byte = index as u8;
+            }
+            Self { bytes, fills: 0 }
+        }
+    }
+
+    impl EntropySource for OpenIdFixedEntropy {
+        fn fill(&mut self, destination: &mut [u8]) -> Result<(), OAuthError> {
+            self.fills += 1;
+            destination.copy_from_slice(&self.bytes[..destination.len()]);
+            Ok(())
+        }
+    }
+
     #[derive(Default)]
     struct RecordingAuditSink {
         events: Vec<OAuthAuditEvent>,
@@ -1351,6 +1549,73 @@ mod tests {
         assert!(url.contains("code_challenge_method=S256"));
         assert!(url.contains("access_type=offline&prompt=consent%20select"));
         assert!(!url.contains("code_verifier"));
+        assert!(!url.contains("nonce="));
+    }
+
+    #[test]
+    fn openid_authorization_generates_and_binds_an_independent_nonce() {
+        let mut entropy = OpenIdFixedEntropy::ascending();
+        let audited =
+            begin_openid_authorization(&config(), &["openid", "profile"], trace(), &mut entropy);
+        assert_eq!(
+            audited.audit().action(),
+            OAuthAuditAction::AuthorizationBegin
+        );
+        assert_eq!(audited.audit().outcome(), OAuthAuditOutcome::Succeeded);
+        assert_eq!(entropy.fills, 1);
+        let request = release(audited).unwrap();
+        let expected_nonce = base64_url_no_pad(&(64_u8..96).collect::<Vec<_>>());
+        assert!(request.url().as_str().contains("scope=openid%20profile"));
+        assert!(request
+            .url()
+            .as_str()
+            .contains(&format!("nonce={expected_nonce}")));
+        let (_, transaction, nonce) = request.into_parts();
+        assert_eq!(transaction.provider().as_str(), "fixture");
+        assert_eq!(nonce.provider().as_str(), "fixture");
+        assert_eq!(nonce.client_id(), "public client/id");
+        assert_eq!(nonce.trace(), trace());
+        assert_eq!(nonce.into_value().as_str(), expected_nonce);
+    }
+
+    #[test]
+    fn openid_authorization_requires_exact_scope_and_reserves_nonce() {
+        let mut entropy = OpenIdFixedEntropy::ascending();
+        let audited =
+            begin_openid_authorization(&config(), &["OpenID", "profile"], trace(), &mut entropy);
+        assert_eq!(
+            audited.audit().outcome(),
+            OAuthAuditOutcome::Failed(OAuthFailureClass::InvalidInput)
+        );
+        assert_eq!(
+            release(audited).unwrap_err(),
+            OAuthError::InvalidConfiguration(ConfigurationViolation::Scope)
+        );
+        assert_eq!(entropy.fills, 0);
+
+        let mut extras = BTreeMap::new();
+        extras.insert("nonce".to_owned(), "caller-override".to_owned());
+        assert_eq!(
+            config().with_authorization_extra_parameters(extras),
+            Err(OAuthError::InvalidConfiguration(
+                ConfigurationViolation::ExtraParameter
+            ))
+        );
+    }
+
+    #[test]
+    fn openid_nonce_debug_redacts_client_and_value() {
+        let request = release(begin_openid_authorization(
+            &config(),
+            &["openid"],
+            trace(),
+            &mut OpenIdFixedEntropy::ascending(),
+        ))
+        .unwrap();
+        let expected_nonce = base64_url_no_pad(&(64_u8..96).collect::<Vec<_>>());
+        let debug = format!("{request:?}");
+        assert!(!debug.contains("public client/id"));
+        assert!(!debug.contains(&expected_nonce));
     }
 
     #[test]

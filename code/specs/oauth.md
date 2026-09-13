@@ -132,8 +132,12 @@ The delivery order is:
    provider/trace audited before the authority effect and result release. The
    boundary exposes no subject claim or token bytes and implements no JWT,
    JOSE, JWKS, discovery, network, clock, storage, or concrete cryptographic
-   authority. Broker composition that replaces caller-selected keys remains a
-   later step.
+   authority. The authorization core now also provides an explicit OIDC begin
+   path: exact `openid` scope is mandatory, caller-injected entropy supplies an
+   independent 256-bit `nonce` beside state and PKCE, provider extras cannot
+   override it, and a non-cloneable zeroizing provider/client/trace-bound nonce
+   is retained for the later proof. Broker composition that consumes that
+   nonce and replaces caller-selected keys remains a later step.
 6. **Confidential-client authentication:** web-service profiles for
    `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
    opaque custody references and audit-before-release rather than secrets in
@@ -746,6 +750,10 @@ avoid refresh storms).
 2. Broker:
    - Generates 32-byte URL-safe random state.
    - Generates 32-byte URL-safe random code_verifier.
+   - For the explicit OpenID Connect path, requires the exact `openid` scope,
+     generates an independent 32-byte URL-safe random nonce, includes it in the
+     browser request, and returns a provider/client/trace-bound zeroizing nonce
+     that the caller retains for the later ID-token proof.
    - Computes code_challenge = base64url(sha256(code_verifier)).
    - Constructs authorization URL with:
        client_id, redirect_uri, response_type=code,
