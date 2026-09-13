@@ -50,7 +50,17 @@ it("pins Sanskrit lesson-content budgets", () =>
     // means "a companion" in Macdonell and the lesson says so on the page, but
     // no SENSE atom is declared for it, because the tranche teaches the numeral
     // and does not drill the second reading.
-    lessons: 347,
+    //
+    // 347 -> 350: the reading rung, chapter 64. Three lessons -- six words, six
+    // lines, one passage -- and NO new atoms at all beyond the three reading
+    // skills themselves, because the rung introduces no vocabulary: every word
+    // on all three pages was paid for by an earlier chapter, and the check that
+    // says so is that no token in them is absent from a lower-sequence lesson.
+    // Idioms, senses and culture claims are unchanged at 11 / 12 / 13. The
+    // passage's closing note about शान्तिः is prose about where the word is
+    // used, not a culture claim the track asserts and drills, so none is
+    // declared. Re-measured against the tree.
+    lessons: 350,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

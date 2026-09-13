@@ -1,0 +1,15 @@
+{
+  "id": "SA-EXT-064-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Sanskrit word by its ending, see one sentence written three ways, and read a short passage without translating word by word.",
+  "prerequisites": [
+    "SA-EXT-063-ORDINAL-OLDER"
+  ],
+  "lessons": [
+    "SA-C64-words",
+    "SA-C64-lines",
+    "SA-C64-prathama-pathanam"
+  ]
+}
