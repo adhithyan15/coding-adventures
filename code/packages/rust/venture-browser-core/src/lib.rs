@@ -54,13 +54,13 @@ use html_to_paint::{
     HtmlPaintOutput, HtmlPaintViewport, LinkRegion, TopLayerRegion,
 };
 use http1_client::HttpClient;
-use layout_ir::TextMeasurer;
+use layout_ir::{ExtValue, PositionedNode, TextMeasurer};
 use paint_instructions::{
     PaintBase, PaintGroup, PaintInstruction, PaintRect, PaintScene, PixelContainer,
 };
 use std::fmt;
 use text_interfaces::{FontMetrics, FontResolver, TextShaper};
-use url_parser::Url;
+use url_parser::{percent_decode, Url};
 
 pub const VERSION: &str = "0.8.0";
 
@@ -268,6 +268,48 @@ fn controls_inside_top_layer(tree: &BrowserRenderTree, target_id: &str) -> Vec<S
     let mut result = Vec::new();
     collect(&tree.children, target_id, false, &mut 0, &mut result);
     result
+}
+
+fn same_document_fragment(current: &str, requested: &str) -> Option<Option<String>> {
+    let mut current = Url::parse(current).ok()?.canonicalize().ok()?;
+    let mut requested = Url::parse(requested).ok()?.canonicalize().ok()?;
+    let has_fragment_transition = current.fragment.is_some() || requested.fragment.is_some();
+    let fragment = requested.fragment.take();
+    current.fragment = None;
+    (has_fragment_transition && current.to_url_string() == requested.to_url_string())
+        .then_some(fragment)
+}
+
+fn fragmentless_request(url: &str) -> (String, Option<String>) {
+    let Ok(mut parsed) = Url::parse(url) else {
+        return (url.to_string(), None);
+    };
+    let fragment = parsed.fragment.take();
+    (parsed.to_url_string(), fragment)
+}
+
+fn navigation_target_offset(node: &PositionedNode, target: &str) -> Option<f64> {
+    fn html_string<'a>(node: &'a PositionedNode, key: &str) -> Option<&'a str> {
+        let ExtValue::Map(values) = node.ext.get("html")? else {
+            return None;
+        };
+        let ExtValue::Str(value) = values.get(key)? else {
+            return None;
+        };
+        Some(value)
+    }
+
+    fn find(node: &PositionedNode, parent_y: f64, target: &str) -> Option<f64> {
+        let y = parent_y + node.y;
+        if node.id.as_deref() == Some(target) || html_string(node, "name") == Some(target) {
+            return Some(y);
+        }
+        node.children
+            .iter()
+            .find_map(|child| find(child, y, target))
+    }
+
+    find(node, 0.0, target)
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
@@ -892,6 +934,15 @@ pub struct BrowserNavigationUpdate {
     pub cancelled: Vec<BrowserSubresourceRequest>,
 }
 
+/// Result of resolving one URL fragment against the retained shared layout.
+#[derive(Clone, Debug, PartialEq)]
+pub struct FragmentNavigationState {
+    pub url: String,
+    pub fragment: Option<String>,
+    pub target_found: bool,
+    pub scroll_offset_y: f64,
+}
+
 /// Reusable host scheduling seam for navigation-owned subresource work.
 ///
 /// Implementations may use threads, an async runtime, browser fetch, or a
@@ -1035,6 +1086,34 @@ impl BrowserViewport {
     pub fn replace_page(&mut self, page: BrowserPage) {
         self.scroll = ScrollState::new(self.scroll.viewport_height, page.paint.scene.height);
         self.page = page;
+    }
+
+    fn navigate_to_fragment(
+        &mut self,
+        url: String,
+        fragment: Option<String>,
+    ) -> FragmentNavigationState {
+        self.page.requested_url = url.clone();
+        self.page.final_url = url.clone();
+        let decoded = fragment
+            .as_deref()
+            .and_then(|value| percent_decode(value).ok())
+            .or_else(|| fragment.clone());
+        let target = decoded.as_deref().filter(|value| !value.is_empty());
+        let target_offset =
+            target.and_then(|target| navigation_target_offset(&self.page.paint.positioned, target));
+        let target_found = target.is_none() || target_offset.is_some();
+        let scroll_offset_y = match (target, target_offset) {
+            (None, _) => self.scroll.set_offset_y(0.0),
+            (Some(_), Some(offset)) => self.scroll.set_offset_y(offset),
+            (Some(_), None) => self.scroll.offset_y(),
+        };
+        FragmentNavigationState {
+            url,
+            fragment: decoded,
+            target_found,
+            scroll_offset_y,
+        }
     }
 
     /// Replace the current page after viewport reflow while preserving the
@@ -1513,6 +1592,7 @@ pub struct BrowserSession {
     form_lifecycle_events: Vec<FormLifecycleEvent>,
     control_mutation_events: Vec<ControlMutationEvent>,
     form_history_states: Vec<(String, ControlStateSnapshot)>,
+    fragment_navigation: Option<FragmentNavigationState>,
     viewport_height: f64,
     navigation_id: u64,
 }
@@ -1533,6 +1613,7 @@ impl BrowserSession {
             form_lifecycle_events: Vec::new(),
             control_mutation_events: Vec::new(),
             form_history_states: Vec::new(),
+            fragment_navigation: None,
             viewport_height: finite_non_negative(viewport_height),
             navigation_id: 0,
         }
@@ -2201,6 +2282,10 @@ impl BrowserSession {
 
     pub fn top_layer_diagnostics(&self) -> &[TopLayerDiagnostic] {
         &self.top_layer_diagnostics
+    }
+
+    pub fn fragment_navigation_state(&self) -> Option<&FragmentNavigationState> {
+        self.fragment_navigation.as_ref()
     }
 
     pub fn take_top_layer_diagnostics(&mut self) -> Vec<TopLayerDiagnostic> {
@@ -3624,6 +3709,7 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        let reloads_document = matches!(&navigation, BrowserNavigation::Reload);
         let restores_form_state = matches!(
             &navigation,
             BrowserNavigation::Back | BrowserNavigation::Forward
@@ -3643,11 +3729,50 @@ impl BrowserSession {
             return Ok(BrowserNavigationUpdate::default());
         };
 
-        let page = pipeline.load_pending_with_visited(
-            &requested_url,
+        if !reloads_document {
+            let same_document = self.viewport.as_ref().and_then(|viewport| {
+                same_document_fragment(&viewport.page().final_url, &requested_url)
+            });
+            if let Some(fragment) = same_document {
+                let _ = self.visited_links.record(&requested_url);
+                let page = pipeline.reflow_retained_with_visited(
+                    self.viewport
+                        .as_ref()
+                        .expect("same-document navigation requires a viewport")
+                        .page(),
+                    &self.visited_links,
+                );
+                let viewport = self
+                    .viewport
+                    .as_mut()
+                    .expect("same-document navigation requires a viewport");
+                viewport.reflow_page(page, self.viewport_height);
+                let state = viewport.navigate_to_fragment(requested_url, fragment);
+                self.history = history;
+                self.fragment_navigation = Some(state);
+                self.form_diagnostics.clear();
+                return Ok(BrowserNavigationUpdate {
+                    viewport_changed: true,
+                    requests: Vec::new(),
+                    cancelled: Vec::new(),
+                });
+            }
+        }
+
+        let (fetch_url, requested_fragment) = fragmentless_request(&requested_url);
+        let mut page = pipeline.load_pending_with_visited(
+            &fetch_url,
             document_fetcher,
             &self.visited_links,
         )?;
+        if let Some(fragment) = requested_fragment.clone() {
+            let mut final_url = Url::parse(&page.final_url).ok();
+            if let Some(final_url) = final_url.as_mut() {
+                final_url.fragment = Some(fragment);
+                page.final_url = final_url.to_url_string();
+            }
+            page.requested_url = requested_url.clone();
+        }
         let cancelled = self.pending_subresource_requests();
         let mut visited_links = self.visited_links.clone();
         let _ = visited_links.record(&page.final_url);
@@ -3680,6 +3805,21 @@ impl BrowserSession {
         self.top_layer_stack = top_layer_stack;
         self.top_layer_invokers.clear();
         self.top_layer_diagnostics.clear();
+        self.fragment_navigation = if let Some(fragment) = requested_fragment {
+            let url = self
+                .history
+                .current_url()
+                .expect("committed navigation must retain history")
+                .to_string();
+            Some(
+                self.viewport
+                    .as_mut()
+                    .expect("committed navigation must retain a viewport")
+                    .navigate_to_fragment(url, Some(fragment)),
+            )
+        } else {
+            None
+        };
         if let Some((url, snapshot)) = departing_state {
             self.remember_form_history_state(url, snapshot);
         }
@@ -5236,7 +5376,7 @@ mod tests {
                     <a href='/next'>Next</a></p>"
                     .to_vec(),
             )),
-            "http://example.test:80/guide/../index.html#intro" => Ok(BrowserFetchResponse::new(
+            "http://example.test:80/guide/../index.html" => Ok(BrowserFetchResponse::new(
                 first,
                 200,
                 Some("text/html".into()),
@@ -7780,5 +7920,79 @@ mod tests {
                 .open
         );
         assert!(session.top_layer_diagnostics().is_empty());
+    }
+
+    #[test]
+    fn fragment_navigation_stays_in_document_and_uses_decoded_id_and_name_targets() {
+        let requests = RefCell::new(Vec::new());
+        let fetcher = |url: &str| {
+            requests.borrow_mut().push(url.to_string());
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<p>Top</p><div style='height:260px'></div>\
+                  <p id='section two'>Decoded target</p><div style='height:180px'></div>\
+                  <a name='legacy'>Legacy target</a>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(320.0, 100.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/page#section%20two", 100.0);
+
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(requests.borrow().as_slice(), ["http://example.test/page"]);
+        let state = session.fragment_navigation_state().unwrap();
+        assert_eq!(state.fragment.as_deref(), Some("section two"));
+        assert!(state.target_found && state.scroll_offset_y > 0.0);
+
+        session
+            .execute(
+                BrowserNavigation::Navigate("http://example.test/page#legacy".into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        assert_eq!(requests.borrow().len(), 1, "same-document links must not fetch");
+        assert!(session.visited_links().contains("http://example.test/page#legacy"));
+        assert!(session.fragment_navigation_state().unwrap().target_found);
+        let legacy_offset = session.scroll_metrics().unwrap().offset_y;
+
+        session
+            .execute(
+                BrowserNavigation::Navigate("http://example.test/page#missing".into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        assert!(!session.fragment_navigation_state().unwrap().target_found);
+        assert_eq!(session.scroll_metrics().unwrap().offset_y, legacy_offset);
+
+        session
+            .execute(
+                BrowserNavigation::Navigate("http://example.test/page#".into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        assert_eq!(session.scroll_metrics().unwrap().offset_y, 0.0);
+
+        session.execute(BrowserNavigation::Back, &pipeline, &fetcher).unwrap();
+        assert!(!session.fragment_navigation_state().unwrap().target_found);
+        session.execute(BrowserNavigation::Back, &pipeline, &fetcher).unwrap();
+        assert!(session.fragment_navigation_state().unwrap().target_found);
+        assert_eq!(session.scroll_metrics().unwrap().offset_y, legacy_offset);
+        session.execute(BrowserNavigation::Forward, &pipeline, &fetcher).unwrap();
+        assert_eq!(requests.borrow().len(), 1, "history traversal must not fetch");
     }
 }

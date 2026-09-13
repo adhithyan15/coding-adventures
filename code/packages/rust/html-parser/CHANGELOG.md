@@ -5,6 +5,9 @@ documented in this file.
 
 ## Unreleased
 
+- Retain legacy `a[name]` fragment targets separately from element tag names in
+  browser content and render nodes.
+
 - Project effective disabled-fieldset state into browser render nodes, including
   the first direct legend exception and nested-fieldset inheritance.
 
