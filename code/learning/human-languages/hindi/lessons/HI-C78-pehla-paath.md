@@ -9,7 +9,7 @@ sequence: 3300
 chapter: 85
 type: reading
 headword: "(reading)"
-gloss: "the first paragraph — seventy-eight words of Hindi in a row, and not one of them new"
+gloss: "the first paragraph — ninety-one words of Hindi in a row, and not one of them new"
 romanization: "merā nām aruṇ hai. maiṁ bhārat meṁ rahtā hūṁ."
 concept_tag: CONNECTED-READING
 prerequisites: [HI-C78-notices, HI-C56-market, HI-C56-shop, HI-C58-window, HI-C37-kitaab, HI-C36-ghar, HI-C39-dost]
@@ -39,7 +39,7 @@ reviews_of: [HI-C78-signs, HI-C78-notices, HI-C36-ghar, HI-C39-dost]
 
 [PAUSE 2s] Six words, then six lines. Now a whole paragraph.
 
-[PAUSE 1s] Seventy-eight words, and the rule has not changed: not one of them
+[PAUSE 1s] Ninety-one words, and the rule has not changed: not one of them
 is new.
 
 ## Reading
@@ -52,10 +52,11 @@ is new.
 > आज मैं बाज़ार जाता हूँ, क्योंकि मुझे फल पसंद हैं।
 > बाज़ार में एक दुकान है। वहाँ एक आदमी काम करता है।
 > वह मेरा दोस्त है। वह हिंदी बोलता है।
+> वह किताब पढ़ता है, लेकिन वह रात में दुकान में काम करता है।
 > फिर मैं घर आता हूँ। रात में मैं किताब पढ़ता हूँ।
 
-[PAUSE 3s] Read it once without stopping. Do not translate as you go — let the
-sentences arrive.
+[PAUSE 3s] Read once without stopping. Let the sentences arrive without
+translation.
 
 [PAUSE 3s] Now read it again, and notice how little work it took.
 

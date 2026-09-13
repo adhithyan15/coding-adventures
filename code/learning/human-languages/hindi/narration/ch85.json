@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Reading — Signs, Notices, and a First Paragraph",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:17ef77670702c027",
+  "sourceHash": "fnv1a64:871fbb318e97e487",
   "lessons": [
     {
       "id": "HI-C78-signs",
@@ -450,14 +450,14 @@
       "title": "(reading) (praveś · nikās · khulā · band · dukān · sṭeśan) (merā nām aruṇ hai. maiṁ bhārat meṁ rahtā hūṁ.) (dukān band hai · sṭeśan khulā hai) — the first paragraph",
       "headword": "(reading)",
       "romanization": "merā nām aruṇ hai. maiṁ bhārat meṁ rahtā hūṁ.",
-      "gloss": "the first paragraph — seventy-eight words of Hindi in a row, and not one of them new",
+      "gloss": "the first paragraph — ninety-one words of Hindi in a row, and not one of them new",
       "script": "devanagari",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:796f40482d346975",
+      "sourceHash": "fnv1a64:87823c9cfa830a11",
       "notice": null,
       "blocks": [
         {
@@ -483,7 +483,7 @@
             },
             {
               "kind": "speech",
-              "text": "Seventy-eight words, and the rule has not changed: not one of them is new."
+              "text": "Ninety-one words, and the rule has not changed: not one of them is new."
             }
           ]
         },
@@ -494,7 +494,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मेरा नाम अरुण है। मैं भारत में रहता हूँ। मेरा घर छोटा है, लेकिन अच्छा है। घर में एक कमरा, एक दरवाज़ा और दो खिड़की हैं। सुबह मैं चाय और दूध पीता हूँ। फिर मैं रोटी खाता हूँ। आज मैं बाज़ार जाता हूँ, क्योंकि मुझे फल पसंद हैं। बाज़ार में एक दुकान है। वहाँ एक आदमी काम करता है। वह मेरा दोस्त है। वह हिंदी बोलता है। फिर मैं घर आता हूँ। रात में मैं किताब पढ़ता हूँ।."
+              "text": "मेरा नाम अरुण है। मैं भारत में रहता हूँ। मेरा घर छोटा है, लेकिन अच्छा है। घर में एक कमरा, एक दरवाज़ा और दो खिड़की हैं। सुबह मैं चाय और दूध पीता हूँ। फिर मैं रोटी खाता हूँ। आज मैं बाज़ार जाता हूँ, क्योंकि मुझे फल पसंद हैं। बाज़ार में एक दुकान है। वहाँ एक आदमी काम करता है। वह मेरा दोस्त है। वह हिंदी बोलता है। वह किताब पढ़ता है, लेकिन वह रात में दुकान में काम करता है। फिर मैं घर आता हूँ। रात में मैं किताब पढ़ता हूँ।."
             },
             {
               "kind": "pause",
@@ -504,7 +504,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "text": "Read once without stopping. Let the sentences arrive without translation."
             },
             {
               "kind": "pause",
