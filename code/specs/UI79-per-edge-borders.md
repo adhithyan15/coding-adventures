@@ -107,7 +107,16 @@ It also needed the wrapper's implicit size re-derived from a named content
 layout — a strip anchored to `parent` and a parent sized from `childrenRect`
 form a **binding loop**, which only the QML runtime reveals.
 
-**Remaining: XAML**, which needs the single-brush decision above settled first.
+**XAML is done too, so UI79 is complete on all five native backends.** Its
+per-edge widths collapse into one `BorderThickness` via a pre-pass, and §4.1's
+single-brush rule is implemented: one colour paints, a second is reported.
+
+### Verification is not equal across the five
+
+XAML is the weak one and this spec should not pretend otherwise: **WinUI 3 does
+not build on macOS**, so nothing here can be run. It is backed by unit tests and
+by reading the emitted markup. The other four were each checked against a
+rendered or compiled result.
 
 ### A verification gate this spec did not know it had
 
