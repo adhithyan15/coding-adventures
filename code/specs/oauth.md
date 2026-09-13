@@ -42,7 +42,10 @@ needs:
   provider's revocation endpoint.
 - **OpenID Connect ID tokens** — when present, retained as opaque OAuth token
   material until a later OIDC layer verifies signature, issuer, audience,
-  expiry, and transaction nonce before exposing `sub`.
+  expiry, and transaction nonce before exposing `sub`. After the decoder's
+  credential-release audit gate, ownership can be split without cloning into
+  zeroizing ID-token evidence and a remaining access/refresh credential bundle
+  for later verified-identity custody composition.
 
 We deliberately exclude:
 

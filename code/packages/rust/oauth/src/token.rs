@@ -611,6 +611,16 @@ impl TokenCredentials {
         self.id_token.as_ref().map(|token| token.as_str())
     }
 
+    /// Detach opaque ID-token evidence without cloning any credential bytes.
+    ///
+    /// The returned credential bundle no longer contains an ID token and can
+    /// remain owned for later custody after the separately returned zeroizing
+    /// evidence has crossed an audited identity-verification boundary.
+    pub fn detach_id_token(mut self) -> (Self, Option<Zeroizing<String>>) {
+        let id_token = self.id_token.take();
+        (self, id_token)
+    }
+
     /// Transfer credential ownership to an opaque custodian without cloning.
     pub fn into_parts(
         self,
@@ -997,6 +1007,43 @@ mod tests {
         assert!(matches!(
             credentials.refresh_token(),
             RefreshTokenUpdate::Rotate(_)
+        ));
+        let (credentials, id_token) = credentials.detach_id_token();
+        assert_eq!(
+            id_token.as_ref().map(|token| token.as_str()),
+            Some("id-secret")
+        );
+        assert_eq!(credentials.id_token(), None);
+        assert_eq!(credentials.access_token(), "access-secret");
+        assert!(matches!(
+            credentials.refresh_token(),
+            RefreshTokenUpdate::Rotate(_)
+        ));
+    }
+
+    #[test]
+    fn detaching_absent_id_token_retains_the_credential_bundle() {
+        let response = decode_token_response(
+            context(TokenGrantKind::AuthorizationCode),
+            200,
+            TokenResponseFormat::Json,
+            Zeroizing::new(br#"{"access_token":"access-secret","token_type":"Bearer"}"#.to_vec()),
+        )
+        .publish_then_release(&mut Sink::default())
+        .unwrap();
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut Sink::default())
+            .unwrap();
+
+        let (credentials, id_token) = credentials.detach_id_token();
+
+        assert!(id_token.is_none());
+        assert_eq!(credentials.id_token(), None);
+        assert_eq!(credentials.access_token(), "access-secret");
+        assert!(matches!(
+            credentials.refresh_token(),
+            RefreshTokenUpdate::Absent
         ));
     }
 
