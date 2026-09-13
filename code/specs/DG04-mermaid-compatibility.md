@@ -372,8 +372,9 @@ collapsing hyphenated node IDs. `diagram-layout-grid` resolves deterministic
 cell geometry before the shared backend-neutral PaintScene lowering path. A
 native Metal-to-PNG fixture gates this slice. Named classes and direct styles
 resolve for both cells and composites, including backend-neutral
-`stroke-dasharray` patterns; Block remains at the partial level while the
-pinned corpus is not yet complete.
+`stroke-dasharray` patterns. `classDef default` also styles cells and composites
+without an explicit class, while direct styles retain final precedence; Block
+remains at the partial level while the pinned corpus is not yet complete.
 
 ### Packet Native Slice
 

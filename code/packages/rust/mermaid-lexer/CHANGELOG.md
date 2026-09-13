@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.90.0
+
+- Tokenize Block default class definitions through a dedicated pinned grammar rule.
+
 ## 0.89.0
 
 - Tokenize Block links that declare shaped nodes directly at either endpoint.

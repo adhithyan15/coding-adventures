@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "CONNECTED-READING"
+  "segments": [
+    "LA-PATH-042"
   ],
+  "omits": [],
   "relocates": {}
 }
