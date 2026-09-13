@@ -134,6 +134,15 @@ layout SpiceWorkbench {
           )
         }
       }
+      Text [ schematic-wire-label ] ( content : slot: schematic-wire-label )
+      Row [ schematic-wire-actions ] {
+        For ( each: slot: schematic-wire-rows , as: wire , index: wire-index ) {
+          HostButton [ schematic-wire-remove ] (
+            label : ( wire ) ,
+            onClick : emit: onRemoveSchematicWire
+          )
+        }
+      }
       Text [ selected-schematic ] ( content : slot: selected-schematic-label )
       Column [ schematic-properties ] {
         Text [ schematic-properties-label ] ( content : slot: schematic-properties-label )
@@ -144,6 +153,11 @@ layout SpiceWorkbench {
           placeholder : slot: schematic-value-placeholder ,
           disabled : slot: schematic-value-disabled ,
           onChange : emit: onSchematicValueChange
+        )
+        HostButton [ remove-schematic-component ] (
+          label : slot: remove-schematic-component-label ,
+          disabled : slot: remove-schematic-component-disabled ,
+          onClick : emit: onRemoveSchematicComponent
         )
       }
       Text [ route-schematic ] ( content : slot: route-schematic-label )

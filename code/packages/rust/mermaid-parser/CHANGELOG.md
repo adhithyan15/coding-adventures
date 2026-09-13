@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.208.0
+
+- Parse Block circle and cross endpoint markers independently from edge direction and line style.
+
 ## 0.207.0
 
 - Parse bidirectional Block point-arrow connections while preserving their line styles.

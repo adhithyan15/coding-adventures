@@ -536,6 +536,64 @@ fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
 }
 
 #[test]
+fn browsing_context_effects_are_available_to_every_native_host() {
+    let page = venture_browser_visual_fixtures::load_browsing_context_page("http://venture.test")
+        .expect("load deterministic browsing-context fixture");
+    assert_eq!(page.paint.links.len(), 3);
+    assert_eq!(
+        page.paint.links[0].effective_target.as_deref(),
+        Some("reports")
+    );
+    assert_eq!(
+        page.paint.links[1].effective_target.as_deref(),
+        Some("_blank")
+    );
+    assert!(page.paint.links[1].rel_noreferrer);
+    assert_eq!(page.paint.links[2].download.as_deref(), Some("report.html"));
+
+    let hosts = [
+        (
+            "host/swiftui/MosaicHost.swift",
+            "venture_browser_macos_take_effect",
+        ),
+        (
+            "host/xaml/MosaicHost.cs",
+            "venture_browser_windows_take_effect",
+        ),
+        (
+            "host/flutter/mosaic_host.dart",
+            "venture_browser_flutter_take_effect",
+        ),
+        ("host/qt/MosaicHost.cpp", "take_effect"),
+        (
+            "host/compose/MosaicHost.kt",
+            "venture_browser_compose_take_effect",
+        ),
+    ];
+    for (path, symbol) in hosts {
+        let source = read_package_file(path);
+        assert!(source.contains(symbol), "{path} must consume {symbol}");
+        assert!(
+            source.contains("open-browsing-context"),
+            "{path} must forward browsing-context effects"
+        );
+        assert!(
+            source.contains("download"),
+            "{path} must forward download effects"
+        );
+    }
+
+    assert_eq!(
+        venture_browser_core::BrowserBrowsingContextTarget::from_effective_target(Some("_parent")),
+        venture_browser_core::BrowserBrowsingContextTarget::Parent
+    );
+    assert_eq!(
+        venture_browser_core::BrowserBrowsingContextTarget::from_effective_target(Some("reports")),
+        venture_browser_core::BrowserBrowsingContextTarget::Named("reports".into())
+    );
+}
+
+#[test]
 fn form_group_fixture_keeps_label_and_disabledness_policy_host_neutral() {
     let page = venture_browser_visual_fixtures::load_form_groups_page("http://venture.test")
         .expect("load Venture's deterministic form-group fixture");

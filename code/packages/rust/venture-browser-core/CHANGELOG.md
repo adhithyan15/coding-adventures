@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Mediate link and form browsing-context targets in shared session policy,
+  preserving transactional current navigation while emitting bounded
+  auxiliary-context and download host effects.
+
 - Restore bounded form/custom-element state and clamped scroll offsets by
   stable history-entry identity across Back/Forward, including repeated URLs
   and same-document fragment entries.

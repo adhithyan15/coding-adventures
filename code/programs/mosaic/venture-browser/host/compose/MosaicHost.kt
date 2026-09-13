@@ -72,6 +72,7 @@ private interface VentureNative : Library {
         append: Byte,
     ): Byte
     fun venture_browser_compose_activate_link(host: Pointer, x: Double, y: Double): Byte
+    fun venture_browser_compose_take_effect(host: Pointer): Pointer?
     fun venture_browser_compose_update_hover(host: Pointer, x: Double, y: Double): Byte
     fun venture_browser_compose_scroll_metrics(
         host: Pointer,
@@ -115,6 +116,10 @@ class MosaicHost private constructor(
     private var propsChangedHandler: (() -> Unit)? = null
     private var closed = false
     var lastAuxiliaryDocument: Map<String, Any?>? = null
+        private set
+    var lastBrowsingContextRequest: Map<String, Any?>? = null
+        private set
+    var lastDownloadRequest: Map<String, Any?>? = null
         private set
     val renderedFrameCount = AtomicInteger(0)
 
@@ -180,7 +185,10 @@ class MosaicHost private constructor(
             key,
             (if (shift) 1 else 0).toByte(),
         ).toInt() != 0
-        if (changed) surfaceChanged()
+        if (changed) {
+            decodeOptional(native.venture_browser_compose_take_effect(handle))?.let(::consumeEffect)
+            surfaceChanged()
+        }
         return changed
     }
 
@@ -196,6 +204,7 @@ class MosaicHost private constructor(
 
     fun activateLink(x: Double, y: Double) {
         if (native.venture_browser_compose_activate_link(handle, x, y).toInt() != 0) {
+            decodeOptional(native.venture_browser_compose_take_effect(handle))?.let(::consumeEffect)
             surfaceChanged()
             presentFilePickerIfRequested()
         }
@@ -282,6 +291,10 @@ class MosaicHost private constructor(
         val effect = response["effect"] as? Map<String, Any?> ?: return
         if (effect["type"] == "open-auxiliary-document") {
             lastAuxiliaryDocument = effect["document"] as? Map<String, Any?>
+        } else if (effect["type"] == "open-browsing-context") {
+            lastBrowsingContextRequest = effect
+        } else if (effect["type"] == "download") {
+            lastDownloadRequest = effect
         }
     }
 

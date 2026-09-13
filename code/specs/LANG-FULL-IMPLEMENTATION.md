@@ -990,7 +990,8 @@ backend immediately) come before the enabler-dependent items.
   instead reference the control or its own prior snapshot; capped abstract
   execution evaluates it after each true predicate and retains its exact
   integer or finite real result only after proving the terminating false
-  predicate. Dependency writes, compound bodies, nonnumeric targets, overflow,
+  predicate. Boolean recurrence targets use the same capped execution and
+  exact snapshot updates. Dependency writes, compound bodies, string targets, overflow,
   non-finite values, and loops exceeding 4,096 evaluations remain
   conservative. Capped abstract execution also retains the
   first integer or finite binary64 control value whose predicate is false when

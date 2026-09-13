@@ -319,8 +319,12 @@ bool MosaicHost::scrollCommand(const QByteArray &command)
 
 bool MosaicHost::controlKey(const QByteArray &key, bool shift)
 {
-  return browser_ && controlKey_
-    && controlKey_(browser_, key.constData(), shift ? 1 : 0) != 0;
+  if (!browser_ || !controlKey_
+      || controlKey_(browser_, key.constData(), shift ? 1 : 0) == 0) {
+    return false;
+  }
+  consumeEffect(response(takeEffect_(browser_)));
+  return true;
 }
 
 bool MosaicHost::controlText(const QByteArray &text)
@@ -373,7 +377,13 @@ bool MosaicHost::presentFilePicker()
 
 bool MosaicHost::activateLink(double x, double y)
 {
-  return browser_ && activateLink_ && activateLink_(browser_, x, y) != 0;
+  if (!browser_ || !activateLink_ || activateLink_(browser_, x, y) == 0) {
+    return false;
+  }
+  if (takeEffect_) {
+    consumeEffect(response(takeEffect_(browser_)));
+  }
+  return true;
 }
 
 bool MosaicHost::updateHover(double x, double y)
@@ -419,6 +429,7 @@ bool MosaicHost::loadBridge()
   RESOLVE(controlFile_, "control_file");
   RESOLVE(scrollMetrics_, "scroll_metrics");
   RESOLVE(activateLink_, "activate_link");
+  RESOLVE(takeEffect_, "take_effect");
   RESOLVE(updateHover_, "update_hover");
   RESOLVE(resize_, "resize");
   RESOLVE(render_, "render_rgba");
@@ -429,7 +440,7 @@ bool MosaicHost::loadBridge()
       || !scrollCommand_ || !controlKey_ || !controlText_ || !controlCopy_
       || !controlCut_ || !controlPaste_ || !caretTick_ || !imeCandidateRect_
       || !filePickerRequest_ || !controlFile_ || !scrollMetrics_
-      || !activateLink_ || !updateHover_
+      || !activateLink_ || !takeEffect_ || !updateHover_
       || !resize_ || !render_ || !stringFree_) {
     library_.unload();
     return false;
@@ -663,6 +674,12 @@ void MosaicHost::consumeEffect(const QVariantMap &response)
   if (effect.value(QStringLiteral("type")).toString()
       == QStringLiteral("open-auxiliary-document")) {
     emit auxiliaryDocumentRequested(effect.value(QStringLiteral("document")).toMap());
+  } else if (effect.value(QStringLiteral("type")).toString()
+             == QStringLiteral("open-browsing-context")) {
+    emit browsingContextRequested(effect);
+  } else if (effect.value(QStringLiteral("type")).toString()
+             == QStringLiteral("download")) {
+    emit downloadRequested(effect);
   }
 }
 

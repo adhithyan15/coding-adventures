@@ -416,6 +416,7 @@ impl ExpectedContentTree {
 
 impl ExpectedContentNode {
     fn into_browser_content_node(self) -> BrowserContentNode {
+        let effective_target = self.target.clone();
         BrowserContentNode {
             role: self.role,
             authored_role: self.authored_role,
@@ -431,6 +432,7 @@ impl ExpectedContentNode {
             href: self.href,
             resolved_href: self.resolved_href,
             target: self.target,
+            effective_target,
             rel: self.rel,
             rel_tokens: self.rel_tokens,
             download: self.download,

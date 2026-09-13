@@ -5,6 +5,9 @@ documented in this file.
 
 ## Unreleased
 
+- Carry base-inherited effective link targets through browser content and
+  render trees.
+
 - Retain legacy `a[name]` fragment targets separately from element tag names in
   browser content and render nodes.
 

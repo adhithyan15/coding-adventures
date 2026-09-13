@@ -1,5 +1,9 @@
 # Changelog — diagram-layout-graph
 
+## 0.19.0
+
+- Populate explicit point endpoint markers for existing directed graph edges.
+
 ## 0.18.0
 
 - Prevent mixed-size nodes in the same rank and mixed-size ranks from overlapping.

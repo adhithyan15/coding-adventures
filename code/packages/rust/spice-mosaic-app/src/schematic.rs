@@ -493,6 +493,32 @@ impl SchematicDocument {
         Ok(())
     }
 
+    /// Remove one component and every endpoint wire incident to it.
+    ///
+    /// An incomplete document remains editable; synchronization continues to
+    /// validate requirements such as a ground symbol and runnable analysis.
+    pub fn remove_component(&mut self, reference: &str) -> Result<usize, SchematicError> {
+        let index = self
+            .components
+            .iter()
+            .position(|component| component.reference == reference)
+            .ok_or_else(|| invalid("schematic component reference is unknown"))?;
+        let component = self.components.remove(index);
+        let terminals = component.terminals.into_iter().collect::<BTreeSet<_>>();
+        let wire_count = self.wires.len();
+        self.wires
+            .retain(|wire| !terminals.contains(&wire.start) && !terminals.contains(&wire.end));
+        Ok(wire_count - self.wires.len())
+    }
+
+    /// Remove one endpoint wire by its displayed source-order position.
+    pub fn remove_wire(&mut self, index: usize) -> Result<SchematicWire, SchematicError> {
+        if index >= self.wires.len() {
+            return Err(invalid("schematic wire is unavailable"));
+        }
+        Ok(self.wires.remove(index))
+    }
+
     /// Update the SPICE value of one selected, non-ground component.
     pub fn set_component_value(
         &mut self,
@@ -1175,6 +1201,54 @@ mod tests {
         assert_eq!(
             document.remove_analysis_card(0).unwrap_err().to_string(),
             "schematic requires at least one analysis card"
+        );
+    }
+
+    #[test]
+    fn edit_operations_remove_incident_wires_without_relaxing_endpoint_rules() {
+        let mut document = rc_document();
+        document
+            .connect_wire(SchematicWire {
+                start: point(10, 20),
+                end: point(10, 0),
+            })
+            .unwrap();
+        assert!(document.remove_component("R1").unwrap() >= 1);
+        assert!(document
+            .components
+            .iter()
+            .all(|component| component.reference != "R1"));
+        assert!(document.wires.iter().all(|wire| {
+            wire.start != point(10, 20)
+                && wire.end != point(10, 20)
+                && wire.start != point(40, 20)
+                && wire.end != point(40, 20)
+        }));
+        assert_eq!(
+            document.remove_component("R1").unwrap_err().to_string(),
+            "schematic component reference is unknown"
+        );
+
+        document
+            .connect_wire(SchematicWire {
+                start: point(0, 20),
+                end: point(0, 0),
+            })
+            .unwrap();
+        let last_wire = document.wires.len() - 1;
+        assert_eq!(
+            document.remove_wire(last_wire).unwrap(),
+            SchematicWire {
+                start: point(0, 20),
+                end: point(0, 0),
+            }
+        );
+        assert_eq!(
+            document
+                .remove_wire(document.wires.len())
+                .unwrap_err()
+                .to_string(),
+            "schematic wire is unavailable"
         );
     }
 

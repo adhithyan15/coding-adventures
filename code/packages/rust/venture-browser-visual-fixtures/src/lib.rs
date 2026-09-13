@@ -43,6 +43,7 @@ pub const FORM_SUBMISSION_FIXTURE_PATH: &str = "/form-submission.html";
 pub const FORM_SUBMISSION_RESULT_PATH: &str = "/form-result.html";
 pub const DISCLOSURE_FIXTURE_PATH: &str = "/disclosures.html";
 pub const TOP_LAYER_FIXTURE_PATH: &str = "/top-layer.html";
+pub const BROWSING_CONTEXT_FIXTURE_PATH: &str = "/browsing-context.html";
 pub const VIEWPORT_WIDTH: f64 = 240.0;
 pub const VIEWPORT_HEIGHT: f64 = 120.0;
 pub const GPU_LAYER_FIXTURE_WIDTH: u32 = 16;
@@ -178,6 +179,17 @@ pub const FORM_SUBMISSION_FIXTURE_HTML: &str = r#"<!doctype html><html><head><ti
 </body></html>"#;
 
 pub const FORM_SUBMISSION_RESULT_HTML: &str = r#"<!doctype html><html><head><title>Venture form result</title></head><body><p id="form-result">Form accepted</p></body></html>"#;
+
+pub const BROWSING_CONTEXT_FIXTURE_HTML: &str = r#"<!doctype html><html><head>
+<title>Venture browsing-context fixture</title><base target="reports">
+</head><body>
+<a id="inherited-target" href="/report">Inherited target</a>
+<a id="blank-target" href="/preview" target="_blank" rel="noreferrer">Blank target</a>
+<a id="download-target" href="/archive" download="report.html">Download report</a>
+<form id="export" action="/export" method="post" target="results" rel="noreferrer">
+<button id="export-control" name="mode" value="full" type="submit">Export</button>
+</form>
+</body></html>"#;
 
 /// Closed, open, grouped, nested-interactive, and generated-summary details.
 pub const DISCLOSURE_FIXTURE_HTML: &str = r#"<!doctype html><html><body>
@@ -600,6 +612,7 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
     let form_result_url = format!("{origin}{FORM_SUBMISSION_RESULT_PATH}");
     let disclosure_url = format!("{origin}{DISCLOSURE_FIXTURE_PATH}");
     let top_layer_url = format!("{origin}{TOP_LAYER_FIXTURE_PATH}");
+    let browsing_context_url = format!("{origin}{BROWSING_CONTEXT_FIXTURE_PATH}");
     match requested_url {
         url if url == page_url => Ok(BrowserFetchResponse::new(
             url,
@@ -726,6 +739,12 @@ pub fn fixture_response(origin: &str, requested_url: &str) -> Result<BrowserFetc
             200,
             Some("text/html; charset=utf-8".into()),
             TOP_LAYER_FIXTURE_HTML.as_bytes().to_vec(),
+        )),
+        url if url == browsing_context_url => Ok(BrowserFetchResponse::new(
+            url,
+            200,
+            Some("text/html; charset=utf-8".into()),
+            BROWSING_CONTEXT_FIXTURE_HTML.as_bytes().to_vec(),
         )),
         url if url == format!("{origin}{MISSING_IMAGE_PATH}") => {
             Err("intentional visual fixture image failure".into())
@@ -992,6 +1011,26 @@ pub fn load_top_layer_page(origin: &str) -> Result<BrowserPage, String> {
         &text,
     );
     let url = format!("{}{TOP_LAYER_FIXTURE_PATH}", origin.trim_end_matches('/'));
+    pipeline
+        .load(&url, &|requested: &str| fixture_response(origin, requested))
+        .map_err(|error| error.to_string())
+}
+
+pub fn load_browsing_context_page(origin: &str) -> Result<BrowserPage, String> {
+    let theme = mosaic_html_theme();
+    let text = DeterministicText;
+    let pipeline = BrowserPagePipeline::new(
+        &theme,
+        HtmlPaintViewport::new(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, 1.0),
+        &text,
+        &text,
+        &text,
+        &text,
+    );
+    let url = format!(
+        "{}{BROWSING_CONTEXT_FIXTURE_PATH}",
+        origin.trim_end_matches('/')
+    );
     pipeline
         .load(&url, &|requested: &str| fixture_response(origin, requested))
         .map_err(|error| error.to_string())

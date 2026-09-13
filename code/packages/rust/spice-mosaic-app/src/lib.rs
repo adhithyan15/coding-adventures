@@ -559,6 +559,8 @@ impl SpiceMosaicApp {
             "schematic-grid-lines": Self::schematic_grid_lines(),
             "schematic-wire-segments": schematic_wire_segments,
             "schematic-terminal-points": schematic_terminal_points,
+            "schematic-wire-label": "Wires",
+            "schematic-wire-rows": self.schematic.as_ref().map(|document| document.wires.iter().enumerate().map(|(index, _)| format!("Remove wire {}", index + 1)).collect::<Vec<_>>()).unwrap_or_default(),
             "selected-schematic-label": self.selected_schematic_component.as_deref().unwrap_or("No component selected"),
             "schematic-properties-label": "Component properties",
             "selected-schematic-kind-label": selected_schematic_component.map(|component| component.kind.palette_label()).unwrap_or("Select a component"),
@@ -566,6 +568,8 @@ impl SpiceMosaicApp {
             "schematic-value": selected_schematic_component.map(|component| component.value.as_str()).unwrap_or(""),
             "schematic-value-placeholder": "Select a non-ground component",
             "schematic-value-disabled": schematic_value_disabled,
+            "remove-schematic-component-label": "Remove selected component",
+            "remove-schematic-component-disabled": selected_schematic_component.is_none(),
             "route-schematic-label": "Route selected component to",
             "synchronize-schematic-label": "Sync netlist",
             "dark-theme": self.dark,
@@ -1072,6 +1076,37 @@ impl MosaicApp for SpiceMosaicApp {
                     .map_err(|error| invalid(error.to_string()))?;
                 self.diagnostics =
                     format!("Updated {reference} value. Sync the netlist when ready.");
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "removeSchematicComponent" => {
+                let reference = self.selected_schematic_component.clone().ok_or_else(|| {
+                    invalid("removeSchematicComponent requires a selected component")
+                })?;
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("removeSchematicComponent requires a loaded schematic")
+                })?;
+                let removed_wires = document
+                    .remove_component(&reference)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.selected_schematic_component = None;
+                self.diagnostics = format!(
+                    "Removed {reference} and {removed_wires} incident wire(s). Sync the netlist when ready."
+                );
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "removeSchematicWire" => {
+                let index = event.payload["index"].as_u64().ok_or_else(|| {
+                    invalid("removeSchematicWire requires a non-negative wire index")
+                })? as usize;
+                let document = self
+                    .schematic
+                    .as_mut()
+                    .ok_or_else(|| invalid("removeSchematicWire requires a loaded schematic"))?;
+                document
+                    .remove_wire(index)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.diagnostics =
+                    format!("Removed wire {}. Sync the netlist when ready.", index + 1);
                 Ok(self.announced(self.diagnostics.clone()))
             }
             "routeToSchematicComponent" => {
@@ -1688,6 +1723,57 @@ mod tests {
         assert_eq!(
             ground.to_string(),
             "G1 ground symbol does not accept a SPICE value"
+        );
+    }
+
+    #[test]
+    fn schematic_edit_events_remove_selected_components_and_source_ordered_wires() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let document = json!({
+            "title": "Editable wiring",
+            "components": [
+                {"reference":"V1","kind":"DcVoltage","value":"5","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"R1","kind":"Resistor","value":"1k","terminals":[{"x":0,"y":20},{"x":40,"y":20}]},
+                {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+            ],
+            "wires": [
+                {"start":{"x":0,"y":20},"end":{"x":40,"y":20}},
+                {"start":{"x":40,"y":20},"end":{"x":0,"y":0}}
+            ]
+        });
+        dispatch(&mut app, "schematicLoad", json!({"document": document}));
+        let removed_wire = dispatch(&mut app, "onRemoveSchematicWire", json!({"index": 0}));
+        assert_eq!(
+            removed_wire.props["schematic-wire-rows"],
+            json!(["Remove wire 1"])
+        );
+        dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference":"R1"}),
+        );
+        let removed_component = dispatch(&mut app, "onRemoveSchematicComponent", json!({}));
+        assert_eq!(
+            removed_component.props["schematic-rows"],
+            json!(["V1", "G1"])
+        );
+        assert_eq!(removed_component.props["schematic-wire-rows"], json!([]));
+        assert_eq!(
+            removed_component.props["selected-schematic-label"],
+            "No component selected"
+        );
+        assert_eq!(
+            removed_component.props["remove-schematic-component-disabled"],
+            true
+        );
+        let missing_selection = app
+            .dispatch(Event::new(1, "removeSchematicComponent", json!({})))
+            .unwrap_err();
+        assert_eq!(
+            missing_selection.to_string(),
+            "removeSchematicComponent requires a selected component"
         );
     }
 

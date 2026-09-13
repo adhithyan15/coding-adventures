@@ -2126,6 +2126,7 @@ pub struct BrowserContentNode {
     pub href: Option<String>,
     pub resolved_href: Option<String>,
     pub target: Option<String>,
+    pub effective_target: Option<String>,
     pub rel: Option<String>,
     pub rel_tokens: Vec<String>,
     pub download: Option<String>,
@@ -2320,6 +2321,7 @@ pub struct BrowserRenderNode {
     pub href: Option<String>,
     pub resolved_href: Option<String>,
     pub target: Option<String>,
+    pub effective_target: Option<String>,
     pub rel: Option<String>,
     pub rel_tokens: Vec<String>,
     pub download: Option<String>,
@@ -4218,31 +4220,48 @@ impl BrowserDocument {
 impl BrowserContentTree {
     pub fn from_document(document: &Document) -> Self {
         let base_href = browser_authored_base_href(document);
-        Self::from_document_with_base(document, base_href)
+        let base_target = browser_authored_base_target(document);
+        Self::from_document_with_base(document, base_href, base_target)
     }
 
     pub fn from_document_with_document_url(document: &Document, document_url: &str) -> Self {
         let base_href = browser_effective_base_href(document, document_url);
-        Self::from_document_with_base(document, base_href.as_deref())
+        let base_target = browser_authored_base_target(document);
+        Self::from_document_with_base(document, base_href.as_deref(), base_target)
     }
 
-    fn from_document_with_base(document: &Document, base_href: Option<&str>) -> Self {
+    fn from_document_with_base(
+        document: &Document,
+        base_href: Option<&str>,
+        base_target: Option<&str>,
+    ) -> Self {
         let body = find_first_element_in_nodes(&document.children, "body");
         let body_children = body
             .map(|element| element.children.as_slice())
             .unwrap_or(document.children.as_slice());
-        Self::from_nodes_with_base(body_children, base_href)
+        Self::from_nodes_with_base(body_children, base_href, base_target)
     }
 
     pub fn from_nodes(nodes: &[Node]) -> Self {
-        Self::from_nodes_with_base(nodes, None)
+        Self::from_nodes_with_base(nodes, None, None)
     }
 
-    fn from_nodes_with_base(nodes: &[Node], base_href: Option<&str>) -> Self {
+    fn from_nodes_with_base(
+        nodes: &[Node],
+        base_href: Option<&str>,
+        base_target: Option<&str>,
+    ) -> Self {
         let mut children = Vec::new();
         let labels = collect_label_texts_by_control_id(nodes);
         let id_texts = collect_element_texts_by_id(nodes);
-        collect_browser_content_nodes(nodes, &mut children, base_href, &labels, &id_texts);
+        collect_browser_content_nodes(
+            nodes,
+            &mut children,
+            base_href,
+            base_target,
+            &labels,
+            &id_texts,
+        );
         attach_content_datalist_options(&mut children, nodes);
         Self { children }
     }
@@ -4289,6 +4308,7 @@ impl BrowserRenderNode {
             href: content_node.href.clone(),
             resolved_href: content_node.resolved_href.clone(),
             target: content_node.target.clone(),
+            effective_target: content_node.effective_target.clone(),
             rel: content_node.rel.clone(),
             rel_tokens: content_node.rel_tokens.clone(),
             download: content_node.download.clone(),
@@ -17619,6 +17639,12 @@ fn browser_authored_base_href(document: &Document) -> Option<&str> {
         .and_then(|element| element.attribute("href"))
 }
 
+fn browser_authored_base_target(document: &Document) -> Option<&str> {
+    find_first_element_in_nodes(&document.children, "head")
+        .and_then(|element| find_first_element_in_nodes(&element.children, "base"))
+        .and_then(|element| element.attribute("target"))
+}
+
 fn browser_effective_base_href(document: &Document, document_url: &str) -> Option<String> {
     let document_url = document_url.trim();
     if !is_absolute_url(document_url) {
@@ -17811,11 +17837,12 @@ fn collect_browser_content_nodes(
     nodes: &[Node],
     output: &mut Vec<BrowserContentNode>,
     base_href: Option<&str>,
+    base_target: Option<&str>,
     labels: &[(String, String)],
     id_texts: &[(String, String)],
 ) {
     collect_browser_content_nodes_with_mode(
-        nodes, output, base_href, labels, id_texts, None, false, false,
+        nodes, output, base_href, base_target, labels, id_texts, None, false, false,
     );
 }
 
@@ -17823,6 +17850,7 @@ fn collect_browser_content_nodes_with_mode(
     nodes: &[Node],
     output: &mut Vec<BrowserContentNode>,
     base_href: Option<&str>,
+    base_target: Option<&str>,
     labels: &[(String, String)],
     id_texts: &[(String, String)],
     current_label_text: Option<&str>,
@@ -17853,6 +17881,7 @@ fn collect_browser_content_nodes_with_mode(
                         href: None,
                         resolved_href: None,
                         target: None,
+                        effective_target: None,
                         rel: None,
                         rel_tokens: Vec::new(),
                         download: None,
@@ -18034,6 +18063,7 @@ fn collect_browser_content_nodes_with_mode(
                 if let Some(content_node) = browser_content_node_for_element(
                     element,
                     base_href,
+                    base_target,
                     labels,
                     id_texts,
                     current_label_text,
@@ -18061,6 +18091,7 @@ fn attach_content_datalist_options(content: &mut [BrowserContentNode], body_root
 fn browser_content_node_for_element(
     element: &Element,
     base_href: Option<&str>,
+    base_target: Option<&str>,
     labels: &[(String, String)],
     id_texts: &[(String, String)],
     current_label_text: Option<&str>,
@@ -18099,6 +18130,7 @@ fn browser_content_node_for_element(
                 std::slice::from_ref(child),
                 &mut children,
                 base_href,
+                base_target,
                 labels,
                 id_texts,
                 child_label_text,
@@ -18118,6 +18150,11 @@ fn browser_content_node_for_element(
     }
 
     let href = element.attribute("href").map(ToOwned::to_owned);
+    let target = browser_anchor_target(element);
+    let effective_target = target
+        .clone()
+        .or_else(|| href.as_ref().and_then(|_| base_target.map(ToOwned::to_owned)));
+    let form_target = browser_control_form_target(element);
     let src = browser_content_src(element);
     let srcset = browser_content_srcset(element);
     let poster = browser_media_poster(element);
@@ -18152,7 +18189,8 @@ fn browser_content_node_for_element(
             .as_deref()
             .and_then(|href| resolve_browser_url(href, base_href)),
         href,
-        target: browser_anchor_target(element),
+        target,
+        effective_target,
         rel: browser_anchor_rel(element),
         rel_tokens: browser_anchor_rel_tokens(element),
         download: browser_anchor_download(element),
@@ -18289,7 +18327,7 @@ fn browser_content_node_for_element(
         form_action: browser_control_form_action(element),
         form_enctype: browser_control_form_enctype(element),
         form_method: browser_control_form_method(element),
-        form_target: browser_control_form_target(element),
+        form_target,
         form_novalidate: browser_control_form_novalidate(element),
         value: browser_content_value(element),
         autofocus: browser_autofocus(element),
@@ -62691,6 +62729,28 @@ mod tests {
         assert_eq!(element(&frameset[0]).name, "head");
         assert_eq!(element(&frameset[1]).name, "frameset");
         assert_eq!(element(&frameset[1]).children[1], Node::comment("b"));
+    }
+
+    #[test]
+    fn content_and_render_trees_preserve_effective_navigation_targets() {
+        let document = parse_html(
+            "<head><base target='workspace'></head><body>\
+             <a id='inherited' href='/report'>Report</a>\
+             <a id='blank' href='/new' target='_blank' rel='noreferrer' download='new.html'>New</a>\
+             <form action='/save'><button id='save'>Save</button></form></body>",
+        )
+        .unwrap();
+        let tree = BrowserRenderTree::from_document_with_document_url(
+            &document,
+            "https://example.test/start",
+        );
+        let inherited = &tree.children[0];
+        let blank = &tree.children[1];
+
+        assert_eq!(inherited.effective_target.as_deref(), Some("workspace"));
+        assert_eq!(blank.effective_target.as_deref(), Some("_blank"));
+        assert_eq!(blank.download.as_deref(), Some("new.html"));
+        assert_eq!(blank.rel_tokens, vec!["noreferrer"]);
     }
 
 }

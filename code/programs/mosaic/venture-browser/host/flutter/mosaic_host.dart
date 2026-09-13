@@ -157,6 +157,9 @@ class _VentureBindings {
       activateLink = library.lookupFunction<_PointNative, _PointDart>(
         'venture_browser_flutter_activate_link',
       ),
+      takeEffect = library.lookupFunction<_PropsNative, _PropsDart>(
+        'venture_browser_flutter_take_effect',
+      ),
       updateHover = library.lookupFunction<_PointNative, _PointDart>(
         'venture_browser_flutter_update_hover',
       ),
@@ -188,6 +191,7 @@ class _VentureBindings {
   final _ControlClipboardDart filePickerRequest;
   final _ControlFileDart controlFile;
   final _PointDart activateLink;
+  final _PropsDart takeEffect;
   final _PointDart updateHover;
   final _MetricsDart metrics;
   final _PointDart resize;
@@ -281,6 +285,8 @@ class MosaicHost {
   void Function()? _propsChangedHandler;
   bool _disposed = false;
   Map<String, Object?>? lastAuxiliaryDocument;
+  Map<String, Object?>? lastBrowsingContextRequest;
+  Map<String, Object?>? lastDownloadRequest;
   Stream<Map<String, Object?>> get filePickerRequests => _filePickerRequests.stream;
 
   FutureOr<Map<String, Object?>?> props() {
@@ -344,7 +350,10 @@ class MosaicHost {
     try {
       final changed =
           _bindings.controlKey(_host, value.pointer, shift ? 1 : 0) != 0;
-      if (changed) _surfaceChanged();
+      if (changed) {
+        _consumeEffect(_decodeResponse(_bindings.takeEffect(_host)));
+        _surfaceChanged();
+      }
       return changed;
     } finally {
       value.dispose();
@@ -379,6 +388,7 @@ class MosaicHost {
 
   void activateLink(double x, double y) {
     if (_bindings.activateLink(_host, x, y) == 0) return;
+    _consumeEffect(_decodeResponse(_bindings.takeEffect(_host)));
     _surfaceChanged();
     final request = _bindings.filePickerRequest(_host);
     if (request != nullptr) _filePickerRequests.add(_decodeResponse(request));
@@ -489,11 +499,13 @@ class MosaicHost {
 
   void _consumeEffect(Map<String, Object?> response) {
     final effect = response['effect'];
-    if (effect is Map && effect['type'] == 'open-auxiliary-document') {
-      final document = effect['document'];
-      if (document is Map) {
-        lastAuxiliaryDocument = Map<String, Object?>.from(document);
-      }
+    if (effect is! Map) return;
+    if (effect['type'] == 'open-auxiliary-document' && effect['document'] is Map) {
+      lastAuxiliaryDocument = Map<String, Object?>.from(effect['document'] as Map);
+    } else if (effect['type'] == 'open-browsing-context') {
+      lastBrowsingContextRequest = Map<String, Object?>.from(effect);
+    } else if (effect['type'] == 'download') {
+      lastDownloadRequest = Map<String, Object?>.from(effect);
     }
   }
 
