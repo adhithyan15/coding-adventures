@@ -6174,7 +6174,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY F.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[..XY..]\n05\nNON"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL pointer/overflow: an exact fit reaches width plus one without overflow.
     Prog {
@@ -6198,7 +6198,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY F.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[..XYZ]\n06\nNON"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL pointer/overflow: a partial STRING transfer updates its pointer before ON OVERFLOW.
     Prog {
@@ -6222,7 +6222,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY F.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[...abc]\n07\nYES"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL pointer/overflow: zero STRING pointer transfers nothing and remains unchanged.
     Prog {
@@ -6246,7 +6246,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY F.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[......]\n00\nYES"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL pointer/overflow: UNSTRING starts at a middle field and reports remaining input.
     Prog {
@@ -6270,7 +6270,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY F.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[b  ]\n05\nYES"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL pointer/overflow: UNSTRING exhaustion advances past the end and runs the success clause.
     Prog {
@@ -6296,7 +6296,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY F.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[a  ]\n[b  ]\n04\nNON"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL pointer/overflow: a past-end UNSTRING pointer leaves receiver and pointer unchanged.
     Prog {
@@ -6320,7 +6320,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY F.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[ZZZ]\n06\nYES"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL pointer/overflow: a trailing delimiter leaves an empty field and therefore overflows.
     Prog {
@@ -6344,7 +6344,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY F.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[A  ]\n[B  ]\nYES"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // INSPECT all accumulates: observe counters after each operation.
     Prog {
@@ -9297,7 +9297,14 @@ fn matrix_every_proven_cell_agrees() {
 /// rows (alphanumeric EVALUATE subject via `str_cmp`, and three reference-
 /// modification rows built on the existing `str_slice` lowering) gained a
 /// real, `erl`-proven `Beam` declaration, continuing the same bounded
-/// four-row-at-a-time promotion the prior COBOL BEAM slices used.
+/// four-row-at-a-time promotion the prior COBOL BEAM slices used. The
+/// pointer/overflow probe (446 → 454) promoted the full 8-row family at once
+/// rather than four at a time — it is a naturally self-contained unit (both
+/// `STRING`/`UNSTRING` `WITH POINTER` sides, both `ON OVERFLOW` branches) and
+/// the family the backlog specifically flagged as the best remaining
+/// candidate to expose a real `iir-to-beam` defect via
+/// `emit_string_pointer_overlay`'s chained `str_slice`/`str_concat` calls
+/// over fully run-time-computed bounds; all 8 passed clean on real `erl`.
 #[test]
 fn feature_coverage_doc_counts_match_programs_source() {
     fn rows_and_cells(lang: Language) -> (usize, usize) {
@@ -9316,7 +9323,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::DartmouthBasic, 51, 357),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
-        (Language::Cobol60, 58, 446),
+        (Language::Cobol60, 58, 454),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -15544,4 +15551,35 @@ fn portable_text_stdout_cobol_beam_inspect_tallying_replacing() {
     }
     assert_eq!(executed, 4);
     eprintln!("COBOL BEAM INSPECT TALLYING/REPLACING: {executed} programs executed");
+}
+
+// VM-040: the full pointer/overflow family (8 rows, indices 36-43 — the eight
+// rows immediately preceding the base INSPECT TALLYING/REPLACING family
+// promoted above). This is the first COBOL BEAM slice to reach
+// `cobol-iir-compiler::emit_string_pointer_overlay`, the shared `STRING ...
+// WITH POINTER` / `UNSTRING ... WITH POINTER` helper: it chains THREE
+// `str_slice` calls and TWO `str_concat` calls back to back, with every
+// bound (the overlay start, the room remaining, and how much actually fits)
+// computed entirely at run time from a live `PIC 9` pointer item rather than
+// from compile-time constants — structurally novel among COBOL BEAM rows
+// promoted so far, even though every individual op it emits already has a
+// BEAM lowering. Covers both `STRING` (in-range, exact-fit, partial-transfer,
+// zero-pointer) and `UNSTRING` (mid-field start, exhaustion, past-end
+// pointer, trailing-delimiter overflow) pointer/overflow behavior, so both
+// the `ON OVERFLOW` and `NOT ON OVERFLOW` branches of the shared dispatch
+// skeleton execute on real Erlang.
+#[test]
+fn portable_text_stdout_cobol_beam_pointer_overflow() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM pointer/overflow: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(36).take(8) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 8);
+    eprintln!("COBOL BEAM pointer/overflow: {executed} programs executed");
 }
