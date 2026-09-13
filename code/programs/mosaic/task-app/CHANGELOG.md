@@ -1,6 +1,20 @@
 # Changelog
 
-## Unreleased
+All notable changes to the `task-app` web program are documented here.
+
+## [Unreleased]
+
+Entries added after `task-app-v0.2.0` accumulate here until the next version is
+cut.
+
+## [0.2.0] - 2026-09-13
+
+### Fixed — release validations no longer cancel unrelated pull requests (#15060)
+
+TaskApp and Engram pull-request release validations now use pull-request-scoped
+concurrency keys. Workflow-dispatched publication remains serialized per
+product, while unrelated validation runs can wait without replacing one
+another in GitHub Actions' single-pending-run concurrency slot.
 
 ### Fixed — the view switcher moved out of the topbar (#14847, #14815)
 
@@ -41,15 +55,6 @@ The endpoint of a right-aligned row tracks the **viewport**, not its content —
 the switcher ends 33px from the right edge at every width — so reading that
 endpoint as a content demand inflated the number 2.4x. The real figures are
 1520px and 240px, measured by sweep.
-
-
-All notable changes to the `task-app` web program are documented here.
-
-## [Unreleased]
-
-Entries below ship in the next product release. `task-app-v0.1.0` published on
-2026-08-31; everything added after that tag accumulates here until the next
-version is cut and this heading is replaced with it.
 
 ### Fixed - the web bundle was not actually relocatable (#13832 follow-up)
 

@@ -154,9 +154,11 @@ gh workflow run release-task-app.yml --ref main \
 ```
 
 The workflow rejects invalid, mismatched, or previously published identifiers
-before it builds artifacts. Release-relevant pull requests run the same artifact
-matrix with a reserved CI-only SemVer identity, while the publisher remains
-manual-`main`-dispatch-only. The lane tests the Rust/WASM web inputs and production Vite
+before it builds artifacts. It also requires exactly one bracketed
+`[Unreleased]` changelog section and, for publication, requires the requested
+version to be the newest dated changelog section. Release-relevant pull requests
+run the same artifact matrix with a reserved CI-only SemVer identity, while the
+publisher remains manual-`main`-dispatch-only. The lane tests the Rust/WASM web inputs and production Vite
 bundle, generates every native project under the strict `native-complete` profile
 with the platform's real `task-mosaic-app` runtime, and checks each emitted-control
 contract. On Linux it also builds Qt, Flutter, and Compose Desktop release trees,
