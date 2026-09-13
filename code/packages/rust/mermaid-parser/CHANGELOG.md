@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.209.0
+
+- Preserve pipe-delimited labels on Block links with circle or cross endpoint markers.
+
 ## 0.208.0
 
 - Parse Block circle and cross endpoint markers independently from edge direction and line style.
