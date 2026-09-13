@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fc15f86b3302d6c6",
+  "sourceHash": "fnv1a64:77a047971d2e5fe7",
   "lessons": [
     {
       "id": "TE-S01-letter-ta",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f246320943c95f6f",
+      "sourceHash": "fnv1a64:d1be88d775f31bde",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -166,6 +166,209 @@
             {
               "kind": "speech",
               "text": "One more, from much earlier: ౨ — what amount does it stand for?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S01-copy-in-a-word",
+      "sequence": 256,
+      "title": "త (ta) — copy it where it lives",
+      "headword": "త",
+      "romanization": "",
+      "gloss": "copy the letter where it actually lives — inside a word you already say, model visible",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:9be9d4e9ef3449e3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Find త (ta) inside సంతోషం — santōṣaṁ — and put your finger on it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The model stays on the page. Copy త once on its own, then copy it a second time with the letter that follows it in the word, keeping the two the same size and the same distance apart as the printed pair."
+            },
+            {
+              "kind": "speech",
+              "text": "That second copy is the whole lesson. A letter traced alone teaches your hand one shape; a letter copied beside its neighbour teaches it where the shape has to stop, and a hand that has only ever drawn letters alone writes them too large and too far apart the first time it writes a word."
+            },
+            {
+              "kind": "speech",
+              "text": "Look back at the model as often as you want. Nothing is hidden today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hold your two copies next to the printed word. Is the gap you left the same one the book left? That gap is not spacing — it is the difference between two letters and one word."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S01-delayed-copy",
+      "sequence": 257,
+      "title": "త (ta) — write it with the model covered",
+      "headword": "త",
+      "romanization": "",
+      "gloss": "write the letter once the model is covered, then uncover and repair one thing",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2ebccff169acee29",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at త once and say ta. Then cover it, and every other త on the page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With the model covered, wait ten seconds, then write త (ta) once from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "Ten seconds is not long and is not meant to be. It is long enough that your hand cannot be tracing a shape it can still see, and short enough that a letter you met a minute ago is still there to be found."
+            },
+            {
+              "kind": "speech",
+              "text": "Only after the letter is finished, uncover the model and compare. Repair one thing — the first that differs — and leave the rest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The thing to look at is not whether your letter is beautiful. It is whether it is the same letter, and in this script that usually comes down to one curve closing where the model's closes, or staying open where the model's stays open. A hand drawing from memory rounds off what it is unsure about."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S01-dictation",
+      "sequence": 258,
+      "title": "త (ta) — the letter from the sound",
+      "headword": "త",
+      "romanization": "",
+      "gloss": "write the letter from the sound alone, and meet the vowel nobody said",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:917e2849b19ff23d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every త (ta) on the page. Nothing to copy and nothing to uncover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — dictation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say ta aloud, or play it, and write the letter that carries it. Once."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a different job from the last lesson even though the letter is the same. A delayed copy asks your hand to remember a shape. Dictation asks it to turn a sound into a shape, which is the thing writing is actually for, and the two do not always arrive together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover the model and compare — and then notice what you were asked to write."
+            },
+            {
+              "kind": "speech",
+              "text": "Not t. ta. The vowel is already inside the letter and nobody wrote it, which is the fact about this script that the first three lessons showed you and this one makes you act on. Hearing ta and writing one shape is the whole difference between an alphabet and what you are learning."
             }
           ]
         }

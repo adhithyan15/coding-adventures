@@ -64,6 +64,7 @@ and larger than it is printed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
 [PAUSE 1s]
 - [YOU LOOK: at these words, and find త in the ones that have it]

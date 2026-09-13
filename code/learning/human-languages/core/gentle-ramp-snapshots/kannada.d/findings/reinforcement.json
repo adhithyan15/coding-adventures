@@ -4,7 +4,7 @@
   "finding": {
     "language": "kannada",
     "kind": "reinforcement",
-    "count": 669,
+    "count": 672,
     "unit": "missed window(s)",
     "detail": "add retrieval at the expanding R1-R4 intervals"
   }

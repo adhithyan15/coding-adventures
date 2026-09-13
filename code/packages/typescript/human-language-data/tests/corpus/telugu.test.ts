@@ -11,7 +11,11 @@ import {
   measureExamCoverage,
   trackIntroducedAtoms,
 } from "../../src/exam-inventory.js";
-import { expectLanguageContinuity, expectLanguageModality } from "./assert-language-corpus.js";
+import {
+  expectLanguageContinuity,
+  expectLanguageModality,
+  languageWritingStages,
+} from "./assert-language-corpus.js";
 it("pins Telugu continuity", () => expectLanguageContinuity("telugu"));
 it("pins Telugu modality", () => expectLanguageModality("telugu"));
 it("keeps Telugu's opening free of future farewells and pronouns", () => {
@@ -61,3 +65,28 @@ it("pins Telugu A1 coverage, and the numeral column the ordinal tranche closed",
     "telugu A1 (partial inventory): 214/326 points covered (66%)",
   );
 }, 60_000);
+
+it("pins Telugu's pre-A1 writing ladder", () => {
+  const track = languageWritingStages("telugu");
+
+  // The track had NO stage evidence at all -- 49 script lessons and not one
+  // writing-stage directive -- so every one of its writing-stage debts read as
+  // outstanding while the lessons that could discharge them sat unmarked.
+  //
+  // The ORDER is asserted rather than the set. `missing-stage-prerequisite`
+  // makes a delayed copy invalid unless the tracing and the guided copy come
+  // earlier IN SEQUENCE, so a set-equality assertion would pass on a ladder
+  // whose rungs are in the wrong order and therefore prove nothing.
+  expect(track.validEvidence.map((entry) => [entry.lessonId, entry.stage])).toEqual([
+    ["TE-S01-letter-ta", "observe-trace"],
+    ["TE-S01-copy-in-a-word", "guided-copy"],
+    ["TE-S01-delayed-copy", "delayed-copy"],
+    ["TE-S01-dictation", "dictation-transcription"],
+  ]);
+  expect(track.defects).toEqual([]);
+  expect(track.levels[0]).toMatchObject({
+    level: "pre-A1",
+    missingStages: [],
+    complete: true,
+  });
+});

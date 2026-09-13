@@ -1,9 +1,12 @@
 {
   "language": "telugu",
   "chapter": 5,
-  "sourceHash": "fnv1a64:48344604a6ce3cbf",
+  "sourceHash": "fnv1a64:754764e8610e6390",
   "lessonIds": [
     "TE-S01-letter-ta",
+    "TE-S01-copy-in-a-word",
+    "TE-S01-delayed-copy",
+    "TE-S01-dictation",
     "TE-C05-maatlaadu",
     "TE-S147-digit-8",
     "TE-C05-nenu-telugu-maatlaadataanu",

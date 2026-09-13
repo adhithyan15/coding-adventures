@@ -1,26 +1,24 @@
 {
   "lesson": {
-    "id": "KA-S01-letter-na",
-    "language": "kannada",
-    "chapter": 1,
-    "sequence": 55,
+    "id": "TE-S01-dictation",
+    "language": "telugu",
+    "chapter": 5,
+    "sequence": 258,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
-      "writing-block",
-      "script-block"
+      "writing-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:5621eda890cae62d",
+    "sourceHash": "fnv1a64:917e2849b19ff23d",
     "detachableSegments": [
-      "Script you'll notice: ನ",
-      "Writing: ನ — copy what you see"
+      "Writing — dictation"
     ],
     "delivery": "script"
   },

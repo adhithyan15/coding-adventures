@@ -1,26 +1,24 @@
 {
   "lesson": {
-    "id": "KA-S01-letter-na",
+    "id": "KA-S01-copy-in-a-word",
     "language": "kannada",
     "chapter": 1,
-    "sequence": 55,
+    "sequence": 56,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
-      "writing-block",
-      "script-block"
+      "writing-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:5621eda890cae62d",
+    "sourceHash": "fnv1a64:d41eeecf9703794e",
     "detachableSegments": [
-      "Script you'll notice: ನ",
-      "Writing: ನ — copy what you see"
+      "Writing — guided copy"
     ],
     "delivery": "script"
   },
