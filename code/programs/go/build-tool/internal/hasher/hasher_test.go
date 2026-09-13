@@ -420,6 +420,9 @@ func TestNeutralSourceCollectionFixtures(t *testing.T) {
 		"source-collection-declared.json",
 		"source-collection-registry-roles.json",
 		"source-collection-engram-wasm-exact-inputs.json",
+		"source-collection-typescript-blog-exact-inputs.json",
+		"source-collection-typescript-landing-page-exact-inputs.json",
+		"source-collection-typescript-site-foreign-package.json",
 	} {
 		t.Run(name, func(t *testing.T) {
 			fixture := readJSONFixture[sourceCollectionFixture](t, name)
@@ -427,10 +430,14 @@ func TestNeutralSourceCollectionFixtures(t *testing.T) {
 				t.Fatalf("fixture registry digest %q does not match production %q", fixture.Input.Options.RegistrySHA256, languageSourceInputRegistryDigest)
 			}
 			root := materializeSourceFixture(t, fixture)
+			packageLanguage := fixture.Input.Options.Language
+			if strings.HasPrefix(fixture.Input.Options.PackageRoot, "code/sites/") {
+				packageLanguage = "unknown"
+			}
 			pkg := discovery.Package{
 				Name:         fixture.Input.Options.Language + "/demo",
 				Path:         root,
-				Language:     fixture.Input.Options.Language,
+				Language:     packageLanguage,
 				DeclaredSrcs: fixture.Input.Options.DeclaredSrcs,
 			}
 
@@ -961,6 +968,13 @@ func TestTypeScriptSiteSourceInputs(t *testing.T) {
 	want := []string{"BUILD", "forme.config.ts", "package.json"}
 	if paths := relativePaths(t, root, got); strings.Join(paths, "\n") != strings.Join(want, "\n") {
 		t.Fatalf("site source inputs: got %v, want %v", paths, want)
+	}
+	unreviewedRoot := filepath.Join(t.TempDir(), "code", "sites", "unreviewed")
+	if err := os.MkdirAll(unreviewedRoot, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := collectSourceFilesChecked(discovery.Package{Name: "unknown/unreviewed", Path: unreviewedRoot, Language: "unknown"}); err == nil {
+		t.Fatal("an unregistered site root must fail before source traversal")
 	}
 }
 
