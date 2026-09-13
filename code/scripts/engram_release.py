@@ -26,6 +26,7 @@ import shutil
 import struct
 import sys
 import tempfile
+import tomllib
 import unicodedata
 import zipfile
 from pathlib import Path
@@ -1409,22 +1410,31 @@ def archive_compose(
     # Checked here rather than in `build-native.sh` because the shell script's
     # symbol assertion runs `nm`, which does not exist on the Windows runner
     # and is skipped there. This path runs identically on all three.
+    # WHICH engine, derived — Compose is mid-migration.
+    #
+    # While Engram still overrides the generated Kotlin host, the distribution
+    # carries `engram_capi`. The moment that `[host_assets]` entry comes off the
+    # app reaches the engine through the standard runtime and carries
+    # `mosaic_app` instead, and this check has to move with it or it fails a
+    # correct build. Hardcoding either name is wrong on one side of that change.
+    #
+    # `archive_qt` is the cautionary case: it kept verifying `engram_capi` after
+    # Qt migrated, so it passed a bundle holding a library the app never opens.
+    stem = _engine_stem_for("compose")
     engine = next(
         (
             path
             for path in source.rglob("*")
             if not path.is_symlink()
             and path.is_file()
-            and path.stem.removeprefix("lib") == "engram_capi"
+            and path.stem.removeprefix("lib") == stem
         ),
         None,
     )
     if engine is None:
-        raise ValueError(
-            f"Compose distribution has no engram_capi engine: {source}"
-        )
+        raise ValueError(f"Compose distribution has no {stem} engine: {source}")
     if engine.stat().st_size == 0:
-        raise ValueError(f"engram_capi engine is empty: {engine}")
+        raise ValueError(f"{stem} engine is empty: {engine}")
 
     name = compose_artifact_name(version, platform)
     output = output_dir / name
@@ -1646,13 +1656,14 @@ def archive_flutter(
     expected_dir = source / FLUTTER_ENGINE_DIRS[platform] if FLUTTER_ENGINE_DIRS[
         platform
     ] else source
-    engine = _find_engine(expected_dir, platform)
+    stem = _engine_stem_for("flutter")
+    engine = _find_engine(expected_dir, platform, stem=stem)
     if engine is None:
         # Named separately from "not in the bundle at all", because the two
         # have different causes: a missing engine is a build that skipped the
         # copy, while one in the wrong place is a layout assumption that has
         # drifted from what this platform's loader actually reads.
-        elsewhere = _find_engine(source, platform, recursive=True)
+        elsewhere = _find_engine(source, platform, recursive=True, stem=stem)
         if elsewhere is not None:
             raise ValueError(
                 f"the engine is in the bundle but not where {platform} looks "
@@ -1660,10 +1671,10 @@ def archive_flutter(
                 f"under {FLUTTER_ENGINE_DIRS[platform] or '(the bundle root)'}"
             )
         raise ValueError(
-            f"Flutter {platform} bundle has no engram_capi engine: {source}"
+            f"Flutter {platform} bundle has no {stem} engine: {source}"
         )
     if engine.stat().st_size == 0:
-        raise ValueError(f"engram_capi engine is empty: {engine}")
+        raise ValueError(f"{stem} engine is empty: {engine}")
 
     name = flutter_artifact_name(version, platform)
     output = output_dir / name
@@ -1682,7 +1693,7 @@ def archive_flutter(
             if FLUTTER_ENGINE_DIRS[platform]
             else staged
         )
-        staged_engine = _find_engine(staged_dir, platform)
+        staged_engine = _find_engine(staged_dir, platform, stem=stem)
         if staged_engine is None or staged_engine.stat().st_size == 0:
             raise ValueError(
                 f"the staged bundle has no usable engine at "
@@ -1711,6 +1722,44 @@ LIBRARY_MAGIC = {
     "macos": ((b"\xcf\xfa\xed\xfe", b"\xca\xfe\xba\xbe", b"\xce\xfa\xed\xfe"), (".dylib",)),
     "windows": ((b"MZ",), (".dll",)),
 }
+
+
+def _engine_stem_for(backend: str) -> str:
+    """Which engine a backend's app actually opens, read from the manifest.
+
+    A backend has migrated to the standard Mosaic runtime exactly when Engram
+    stops overriding its generated host -- the `[host_assets]` entry coming off
+    IS the migration. So the manifest already knows, and asking it keeps this
+    from drifting the way `archive_qt` did: Qt migrated in #13728 and this check
+    went on verifying `engram_capi` for a bundle the app could not use.
+
+    Compose is mid-migration, which is why this is derived rather than written
+    down. The moment its override comes off, its distribution stops carrying
+    `engram_capi` and starts carrying `mosaic_app`, and a hardcoded answer here
+    would be wrong on one side of that change or the other.
+
+    Parsed, not grepped: `[host_effects]` and `[host_assets].dependencies` carry
+    their own `backend = ` lines, so a regex sweeps up Qt -- which has effect
+    handlers and no asset override -- and concludes it still needs the retired
+    engine.
+    """
+
+    manifest_path = (
+        Path(__file__).resolve().parents[2]
+        / "code"
+        / "programs"
+        / "mosaic"
+        / "engram-app"
+        / "mosaic-package.toml"
+    )
+    with manifest_path.open("rb") as handle:
+        manifest = tomllib.load(handle)
+    overridden = {
+        entry["backend"]
+        for entry in manifest.get("host_assets", {}).get("files", [])
+        if "backend" in entry
+    }
+    return "engram_capi" if backend in overridden else "mosaic_app"
 
 
 def _find_engine(
@@ -1979,10 +2028,11 @@ def archive_xaml(
                 f"treats as a fatal startup error"
             )
 
-    engine = _find_engine(source, "windows")
+    xaml_stem = _engine_stem_for("xaml")
+    engine = _find_engine(source, "windows", stem=xaml_stem)
     if engine is None:
         raise ValueError(
-            f"the XAML publish output has no engram_capi.dll beside its "
+            f"the XAML publish output has no {xaml_stem}.dll beside its "
             f"executable; .NET probes there, so the app would launch with "
             f"every deck operation silently unavailable: {source}"
         )
@@ -2055,7 +2105,7 @@ def archive_xaml(
         staged = Path(staging) / "Engram"
         shutil.copytree(source, staged, symlinks=True)
         _reject_links_out_of(staged)
-        if _find_engine(staged, "windows") is None:
+        if _find_engine(staged, "windows", stem=xaml_stem) is None:
             raise ValueError("the staged publish output lost its engine")
         _zip_tree(Path(staging), output, f"engram-xaml-{platform}-v{version}", commit)
     return output

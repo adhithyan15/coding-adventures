@@ -19,6 +19,17 @@ import engram_release  # noqa: E402
 
 
 COMMIT = "a" * 40
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+WORKFLOW = REPOSITORY_ROOT / ".github" / "workflows" / "release-engram.yml"
+
+
+class WorkflowTests(unittest.TestCase):
+    def test_pull_request_validation_does_not_share_publication_concurrency(self) -> None:
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+
+        self.assertIn("format('release-engram-pr-{0}'", workflow)
+        self.assertIn("'release-engram-publish'", workflow)
+        self.assertIn("cancel-in-progress: false", workflow)
 
 
 class ValidateIdentifiersTests(unittest.TestCase):
@@ -1614,6 +1625,23 @@ class ArchiveQtTests(unittest.TestCase):
             )
             self.assertEqual(output.name, "engram-qt-macos-v0.4.0.zip")
             self.assertIn(output.name, engram_release.artifact_names("0.4.0"))
+
+    def test_the_expected_engine_is_read_from_the_manifest(self) -> None:
+        """Which engine a backend ships is a fact about the manifest.
+
+        A backend has migrated to the standard runtime exactly when Engram
+        stops overriding its generated host, so `[host_assets]` is the source
+        of truth and `_engine_stem_for` reads it rather than hardcoding.
+
+        Only the two STABLE ends are pinned. Qt migrated in #13728 and cannot
+        un-migrate; Flutter is not migrating in any open change. **Compose is
+        deliberately not pinned** — it is mid-migration, and asserting its
+        current answer here would turn this test into a tripwire that fails the
+        very PR that completes the migration, which is the opposite of useful.
+        """
+
+        self.assertEqual(engram_release._engine_stem_for("qt"), "mosaic_app")
+        self.assertEqual(engram_release._engine_stem_for("flutter"), "engram_capi")
 
     def test_refuses_a_bundle_carrying_the_retired_engine(self) -> None:
         """The engine has to be the one the app opens, not merely *an* engine.

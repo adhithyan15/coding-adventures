@@ -27,12 +27,26 @@ not the artifact being shipped** — which is precisely what the release epic's
 Fixed in all three, and verified end to end against a real Qt build rather than
 by reasoning:
 
-- `STANDARD_RUNTIME_BACKENDS` is now the single list saying which hosts use the
-  standard runtime — a list rather than a chain of `==`, so the next migration
-  is one word. Compose joins it with its own migration and cannot land sooner:
-  until the `[host_assets]` override comes off, `native-complete` rewrites the
-  host into the standard binding shape while the package replaces that very
-  file, and the combination does not compile.
+- `STANDARD_RUNTIME_BACKENDS` says which hosts use the standard runtime, and is
+  **derived from the manifest rather than written down**. A backend has
+  migrated exactly when Engram stops overriding its generated host, so the
+  `[host_assets]` entry coming off *is* the migration — the manifest already
+  knows, and asking it means the list cannot drift from what it describes.
+
+  The first version was the literal `" qt swiftui "` with a comment saying
+  Compose would join "with its own migration". That is an unpaid promise, and
+  the day the override came off this script would have kept emitting Compose
+  for the retired architecture and bundling `engram-capi` beside a host that
+  opens `libmosaic_app` — this same bug, shipped again on the next backend.
+
+  Proven rather than asserted: removing the Compose `[host_assets]` line the
+  way #15057 does moves the derived list from `qt swiftui` to
+  `qt swiftui compose` with no edit to the script.
+
+  Parsed with `tomllib`, not grepped. `[host_effects]` and
+  `[host_assets].dependencies` carry their own `backend = ` lines, so a regex
+  over the file sweeps up Qt — which has effect handlers and no asset override
+  — and concludes it still needs `engram-capi`. Wrong in the silent direction.
 - Emission now reports `nativeComplete: true`, zero degradations, empty
   `replacedGeneratedFiles`. The app builds and links, and the bundle carries
   `libmosaic_app.dylib` beside the executable, exporting the six `mosaic_app_*`
@@ -48,8 +62,80 @@ by reasoning:
   the real archiver over the real built bundle produces
   `engram-qt-macos-v0.3.0.zip`.
 
+- **`archive_compose` was the same trap, armed.** It requires an `engram_capi`
+  engine, and #15057 stops Compose shipping one. That workflow runs on any pull
+  request touching `engram-app/**`, so the break was not hypothetical or
+  distant — it was one merge away, on a PR already open.
+
+  It now derives the expected engine from the manifest through
+  `_engine_stem_for`, so it follows the migration instead of a constant. Proven
+  in both directions against the real function: today a distribution carrying
+  `libengram_capi` is accepted and one carrying `libmosaic_app` refused; with
+  the Compose `[host_assets]` line removed the way #15057 removes it, that
+  inverts exactly.
+
+  The accompanying test pins only the **stable** ends — Qt, which cannot
+  un-migrate, and Flutter, which is not migrating. Compose is deliberately left
+  unpinned: asserting its current answer would make the test a tripwire that
+  fails the very PR completing the migration.
+
+- **Flutter's and XAML's checks derive their engine too**, though neither has
+  migrated and both are correct today. That is the point: the failure being
+  fixed here is that Qt's migration *did not touch this file*, so "the
+  migration will update it" is precisely the assumption that already failed
+  once. Leaving two known future traps while holding the mechanism that closes
+  them would be the same partial wiring in a new place.
+
+  Proven across the whole family by removing each `[host_assets]` override in
+  turn: every backend flips from `engram_capi` to `mosaic_app` exactly when its
+  own override comes off, one at a time, with no edit to the release script.
+  Their error messages name the derived engine rather than a hardcoded one, so
+  a future failure reads correctly instead of naming a library that is no
+  longer involved.
+
 Flutter and XAML are untouched and still correctly expect `engram_capi`,
 confirmed by re-running the script for Flutter.
+
+Also corrected while in the file: `--help` claimed that "backends other than qt
+emit and place the engine, but their compile step is not wired yet". All five
+have had a toolchain arm for some time, and the Engram release workflow builds
+every one of them with `--build` — so a reader trusting that text would have
+concluded the release path could not work.
+
+### Fixed — the Compose release build broke on its own migration
+
+Not predicted from the code: **#15057 went red on "Build the Compose Desktop
+app"**, and reproducing it locally gave
+
+```
+error: no jar in .../binaries/main/app contains MosaicHost; cannot place the engine
+```
+
+The Compose arm locates the jar containing `MosaicHost.class` — Engram's *own*
+Kotlin host — and places `engram_capi` beside it, because that host resolved the
+engine from its jar's directory at runtime. The migration deletes that class, so
+the `find` returns nothing and a perfectly good build fails.
+
+Same shape as Qt's, one backend along: the release script asserting something
+the architecture no longer has.
+
+A migrated Compose needs no placement at all. `--runtime-library` hands Gradle
+the runtime as a project resource and `createDistributable` carries it in —
+measured, not assumed: the distribution holds
+`engram_app.app/Contents/app/resources/libmosaic_app.dylib`.
+
+**The verification is not skipped with the placement.** Dropping both would
+trade a loud failure for a silent one, which is the trade this script exists to
+refuse — so the migrated path asserts the runtime is in the distribution and
+exports its six `mosaic_app_*` symbols.
+
+Both paths were run end to end on a real Gradle build: with the Compose
+`[host_assets]` line removed the way #15057 removes it, the build now succeeds
+and reports the runtime shipped; with the line present, it still places
+`engram_capi` beside the host jar exactly as before.
+
+**Ordering:** #15057 needs this to go green, so it should land after this
+change or rebase onto it.
 
 ### Fixed — more than half the style-drop allowlist had gone stale
 

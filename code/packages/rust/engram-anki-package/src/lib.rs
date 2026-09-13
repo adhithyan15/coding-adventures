@@ -7397,6 +7397,86 @@ CREATE TABLE graves (
         assert_eq!(state.media_assets[0].data, b"mp3");
     }
 
+    /// The media budget REFUSES an over-budget package.
+    ///
+    /// `media_budget_is_clamped_at_both_ends` checks the arithmetic and nothing
+    /// else. Deleting the `if spent > budget` guard in `read_media_files` leaves
+    /// it green, because a correct number nobody consults is still a correct
+    /// number -- an unasserted measurement is not a gate. This drives a real
+    /// package through the real reader and asserts the refusal.
+    ///
+    /// Built with REAL libzstd, not our own encoder: ours emits raw literals, so
+    /// a 20 MiB payload would produce a >20 MiB archive, the budget would scale
+    /// with it, and the guard would never fire. The bomb only exists because
+    /// libzstd crushes zeros to almost nothing -- which is also what an attacker
+    /// would use.
+    #[test]
+    fn media_expanding_past_the_budget_is_refused() {
+        // Comfortably over the 16 MiB floor, and far under the decoder's own
+        // 256 MiB `MAX_OUTPUT` -- so the refusal under test is the media budget
+        // and not zstd's frame cap.
+        const PAYLOAD: usize = 20 * 1024 * 1024;
+        let bomb = zstd_encode(&vec![0u8; PAYLOAD]);
+
+        let mut writer = ZipWriter::new();
+        let meta = PackageMetadataProto {
+            version: PackageVersionProto::Latest as i32,
+        }
+        .encode_pb();
+        writer.add_file(META, &meta, false);
+        writer.add_file(
+            SQLITE_21B_COLLECTION,
+            &zstd_encode(&v11_sqlite_collection_bytes()),
+            false,
+        );
+        let media_entries = MediaEntriesProto {
+            entries: vec![MediaEntryProto {
+                name: "audio/huge.wav".to_string(),
+                size: PAYLOAD as u32,
+                sha1: sum1(&vec![0u8; PAYLOAD]).to_vec(),
+                legacy_zip_filename: None,
+            }],
+        };
+        writer.add_file(MEDIA_MAP, &zstd_encode(&media_entries.encode_pb()), false);
+        writer.add_file("0", &bomb, false);
+        let apkg = writer.finish();
+
+        // The premise: a small archive, so the budget is the floor rather than a
+        // ratio of a large archive. Without this the test could pass because the
+        // package was simply too big, which is a different guard.
+        let budget = media_budget(apkg.len());
+        assert_eq!(
+            budget,
+            MEDIA_EXPANSION_FLOOR,
+            "the fixture must be small enough to get the floor, got an archive \
+             of {} bytes",
+            apkg.len()
+        );
+        assert!(
+            (PAYLOAD as u64) > budget,
+            "the payload must exceed the budget, or this proves nothing"
+        );
+
+        // Matched rather than `expect_err`, which would format the Ok value on
+        // failure -- and that value is the 20 MiB of zeros this test exists to
+        // stop, rendered one byte at a time. The mutation run that proved this
+        // test bites produced a 60 MB log doing exactly that.
+        let error = match read_media_files(&apkg) {
+            Err(error) => error,
+            Ok(files) => panic!(
+                "media expanding past the budget must be refused; got {} file(s) \
+                 totalling {} bytes",
+                files.len(),
+                files.iter().map(|file| file.data.len()).sum::<usize>()
+            ),
+        };
+        assert!(
+            error.message.contains("expands to more than"),
+            "the refusal must be the media budget's, got: {}",
+            error.message
+        );
+    }
+
     #[test]
     fn reads_modern_media_payloads_via_legacy_zip_filename() {
         let mut writer = ZipWriter::new();
