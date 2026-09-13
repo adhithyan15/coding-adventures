@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.212.0
+
+- Apply Block `classDef default` styles to cells and composites without explicit classes.
+
 ## 0.211.0
 
 - Lower shaped node declarations written directly on Block links into grid cells and connections.
