@@ -14,6 +14,8 @@ description = "Smoke-test harness for the SessionProgress Mosaic component packa
 publish     = false
 
 [dev-dependencies]
+mosaic-package-artifact-builder = { path = "../../rust/mosaic-package-artifact-builder" }
+tempfile = "3"
 mosmodel-compiler   = { path = "../../rust/mosmodel-compiler" }
 moslayout-compiler  = { path = "../../rust/moslayout-compiler" }
 mosstyle-compiler   = { path = "../../rust/mosstyle-compiler" }
@@ -29,3 +31,7 @@ toml                = "0.8"
 [[test]]
 name = "package_compiles"
 path = "tests/package_compiles.rs"
+
+[[test]]
+name = "native_complete_gate"
+path = "tests/native_complete_gate.rs"
