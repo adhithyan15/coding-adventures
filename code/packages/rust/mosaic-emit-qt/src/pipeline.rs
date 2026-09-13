@@ -4288,10 +4288,12 @@ fn qml_top_level_property(line: &str) -> Option<&str> {
 /// `conditional_color_expr` (`( {condition} ) ? "{value}" : ...`), and an
 /// authored condition may compare against a string: `mode == "{"` emits
 ///
-///     color: ( mode == "{" ) ? "#ff0000" : "#000000"
+/// ```text
+/// color: ( mode == "{" ) ? "#ff0000" : "#000000"
+/// ```
 ///
 /// A raw count reads that as opening a block. If the line is then dropped
-/// by [`qml_owned_lines`], the skip never finds its close and swallows
+/// by [`qml_dedupe_sources`], the skip never finds its close and swallows
 /// every remaining line -- `font.family` and `font.pixelSize` silently
 /// vanish from the control. The same desync can strand a real `}` and
 /// close the enclosing object early.
