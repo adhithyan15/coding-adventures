@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 1,
-  "sourceHash": "fnv1a64:197219e43e4d35bd",
+  "sourceHash": "fnv1a64:0d59a450ea3304b3",
   "lessonIds": [
     "FA-C01-salam",
     "FA-W00-alef-guided-copy",
@@ -17,6 +17,6 @@
   "text": "persian/narration/ch01.txt",
   "json": "persian/narration/ch01.json",
   "textHash": "fnv1a64:495260fcd119e74a",
-  "jsonHash": "fnv1a64:8ba01e08794429bd",
+  "jsonHash": "fnv1a64:d8bd1762c07200aa",
   "findings": []
 }

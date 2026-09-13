@@ -7,6 +7,7 @@ chapter: 1
 delivery: script
 type: writing
 headword: "ا"
+romanization: "alef"
 gloss: draw the one stroke after the model is covered, and find out which end it started from
 prerequisites: [FA-W00-alef-guided-copy]
 sounds: [rtl, long-a]

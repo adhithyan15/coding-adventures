@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:197219e43e4d35bd",
+  "sourceHash": "fnv1a64:0d59a450ea3304b3",
   "lessons": [
     {
       "id": "FA-C01-salam",
@@ -231,7 +231,7 @@
       "sequence": 16,
       "title": "ا (alef) — one stroke with the model covered",
       "headword": "ا",
-      "romanization": "",
+      "romanization": "alef",
       "gloss": "draw the one stroke after the model is covered, and find out which end it started from",
       "script": "perso-arabic",
       "modality": "pen",
@@ -241,7 +241,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:2db95198c5be7bfd",
+      "sourceHash": "fnv1a64:c3813d88b2ee6940",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -304,7 +304,7 @@
       "sequence": 17,
       "title": "ا (alef) — the stroke from the sound",
       "headword": "ا",
-      "romanization": "",
+      "romanization": "alef",
       "gloss": "draw the stroke from a sound alone, and meet the letter that stands for two different things",
       "script": "perso-arabic",
       "modality": "pen",
@@ -313,7 +313,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:ff70e8c683cc258b",
+      "sourceHash": "fnv1a64:c94da5dd4d677d9a",
       "notice": {
         "modality": "pen",
         "needs": [

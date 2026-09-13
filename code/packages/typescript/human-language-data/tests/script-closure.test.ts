@@ -292,6 +292,68 @@ describe("the real corpus", () => {
   });
 });
 
+// ---------------------------------------------------------------------------
+// A HEADWORD WITHOUT A ROMANIZATION IS TWO DIFFERENT FAULTS AT ONCE.
+//
+// `headwordsWithoutRomanization` already existed on every track, and three test
+// files discuss it in prose -- but nothing asserted it on the real corpus, so
+// the number could rise and no gate would notice. It rose: thirteen new script
+// lessons across three branches were authored without one, and what caught it
+// was a LaTeX warning in CI twenty minutes into a book build:
+//
+//     persian: hyperref_warning=2 [over baseline]
+//
+// Both faults come from the same missing field:
+//
+//  1. MEASUREMENT. The exposure rule in this module is drawn at exactly one
+//     place -- a headword is exposure when the lesson declares a romanization,
+//     and load-bearing script when it does not. A missing romanization silently
+//     moves a lesson from one side of that line to the other.
+//
+//  2. THE BOOK. The romanization is also the `\section[short]{...}` title, and
+//     the short title is what hyperref writes into the PDF bookmark. Without it
+//     the bookmark gets `\fa{ا}`, and hyperref cannot expand a font macro into
+//     a PDF string. That failure is only visible where XeLaTeX actually runs,
+//     which no local gate does.
+//
+// A ceiling rather than a flat zero, because 46 cases predate this gate across
+// three tracks. It may only fall. New debt cannot be added in any track, which
+// is the property that was missing.
+// ---------------------------------------------------------------------------
+describe("a headword without a romanization", () => {
+  const CEILING: Readonly<Record<string, number>> = {
+    arabic: 37,
+    marathi: 8,
+    hindi: 1,
+  };
+
+  it("is never added to a track that does not already carry the debt", () => {
+    const report = measureScriptClosure(loadEverything().lessons);
+    for (const track of report.tracks) {
+      expect(
+        track.headwordsWithoutRomanization,
+        `${track.language} headwords without a romanization`,
+      ).toBeLessThanOrEqual(CEILING[track.language] ?? 0);
+    }
+  });
+
+  it("names only tracks that actually carry the debt, so the ceiling cannot rot into a floor", () => {
+    const report = measureScriptClosure(loadEverything().lessons);
+    const carrying = new Set(
+      report.tracks
+        .filter((track) => track.headwordsWithoutRomanization > 0)
+        .map((track) => track.language),
+    );
+    // A ceiling for a track that has since paid its debt is a licence nobody is
+    // forced to hand back. Same argument as the assessment-artifact ceiling:
+    // paying a debt must lower the pin, not leave room for a new one.
+    for (const language of Object.keys(CEILING)) {
+      expect(carrying, `${language} no longer carries this debt -- lower its ceiling`)
+        .toContain(language);
+    }
+  });
+});
+
 // --- Regressions from security review ---------------------------------------
 
 describe("a headword's debt is not silently dropped", () => {

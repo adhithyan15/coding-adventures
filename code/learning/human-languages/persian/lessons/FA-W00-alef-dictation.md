@@ -7,6 +7,7 @@ chapter: 1
 delivery: script
 type: writing
 headword: "ا"
+romanization: "alef"
 gloss: draw the stroke from a sound alone, and meet the letter that stands for two different things
 prerequisites: [FA-W00-alef-delayed-copy]
 sounds: [rtl, long-a]
