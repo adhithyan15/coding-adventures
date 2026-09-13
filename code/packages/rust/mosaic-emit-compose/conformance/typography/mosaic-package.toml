@@ -1,0 +1,9 @@
+[package]
+name = "typography-fixture"
+version = "0.1.0"
+description = "Typography binding validation fixture"
+license = "MIT"
+[components]
+exports = ["ScaledText"]
+[kernel]
+version = "1"

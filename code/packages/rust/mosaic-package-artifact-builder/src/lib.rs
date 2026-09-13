@@ -1517,9 +1517,10 @@ fn ignored_native_property(
     enclosing_table: Option<&LayoutNode>,
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
-        (_, "font-size") if !matches!(backend, Backend::React | Backend::Electron) => Some((
+        (_, "font-size") if !matches!(backend, Backend::React | Backend::Electron)
+            && !(backend == Backend::Compose && mosaic_emit_compose::pipeline::has_native_font_size(node)) => Some((
             "typography.font-size-binding-unimplemented",
-            "layout font-size bindings are currently implemented only by React/Electron; static mosstyle typography is unaffected",
+            "layout font-size binding has no projection for this backend or primitive; static mosstyle typography is unaffected",
         )),
         // #14843. Was `backend != React` with no per-backend question at all,
         // so it said nothing about what any other backend could express --
@@ -7826,7 +7827,7 @@ layout AccessibleText {
     }
 
     #[test]
-    fn typography_bindings_are_explicitly_degraded_outside_react() {
+    fn typography_bindings_are_explicitly_degraded_outside_supported_backends() {
         let pkg = make_package("mosaic-pkg-scaled-text", &["ScaledText"]);
         fs::write(
             pkg.path().join("src/ScaledText.mil"),
@@ -7864,7 +7865,7 @@ layout AccessibleText {
                     .iter()
                     .filter(|entry| entry.code == "typography.font-size-binding-unimplemented")
                     .count(),
-                if matches!(backend, Backend::React | Backend::Electron) {
+                if matches!(backend, Backend::React | Backend::Electron | Backend::Compose) {
                     0
                 } else {
                     4

@@ -1,0 +1,1 @@
+component ScaledText { slot text-size : number ; }
