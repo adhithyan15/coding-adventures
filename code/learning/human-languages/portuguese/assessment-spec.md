@@ -1,6 +1,6 @@
 # Coding Adventures Portuguese Assessment
 
-**Version:** 1.0 target contract, 2026-09-13
+**Version:** 1.1 target contract, 2026-09-13
 
 **Basis:** CAPLE from A1 upward; a project-defined precursor below it
 
@@ -121,12 +121,31 @@ that its neighbours do not:
 
 ## The writing ramp, measured rather than assumed
 
-Portuguese has **one** writing lesson, carrying **observe-trace** and
-**guided-copy** and nothing beyond. Delayed copy and dictation/transcription are
-unproved for this track today, while the pre-A1 writing paper below requires
-both. The inventory describes the examination, not the corpus. Naming the gap
-here is what makes it fixable; the alternative is a contract that reads as
-satisfied.
+Version 1.0 of this document recorded a gap: Portuguese had **one** writing
+lesson, carrying observe-trace and guided-copy and nothing beyond, while the
+pre-A1 paper below requires a delayed-recall item and a dictation item.
+
+**That gap is now paid.** Chapter 1 carries the full pre-A1 ladder on the one
+word it already had:
+
+| stage | lesson | what the hand is asked to do |
+|---|---|---|
+| observe-trace | `PT-C01-ola` | notice the shape, trace it with the model visible |
+| guided-copy | `PT-W01-ola-guided-copy` | copy it, model still on the page |
+| delayed-copy | `PT-W01-ola-delayed-copy` | model covered, ten seconds, write from memory |
+| dictation-transcription | `PT-W01-ola-dictation` | nothing on the page — write from the sound |
+
+The order is load-bearing and enforced: a delayed copy is not valid evidence
+unless the tracing and the guided copy come earlier in sequence.
+
+**olá** is the right word to do this on because of its accent, which behaves
+differently at each of the last two stages. Covered-model recall is where the
+accent is the expected miss — it carries no sound of its own, so it is the part
+a hand drops first when it stops copying and starts remembering. Dictation is
+where it stops being a mark to remember and becomes one that can be **worked
+out**: the ear hears *oh-LAH* rather than *OH-lah*, and the written accent
+records exactly that stress. Which is what dimension 4's *graphic accent
+placement* is asking for.
 
 ## Administration rules
 

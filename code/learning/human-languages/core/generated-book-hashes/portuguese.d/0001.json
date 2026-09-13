@@ -1,10 +1,12 @@
 {
   "language": "portuguese",
   "chapter": 1,
-  "sourceHash": "fnv1a64:903c1fb1709e2937",
+  "sourceHash": "fnv1a64:56ac68a1e66eccf1",
   "lessonIds": [
     "PT-C01-ola",
     "PT-W01-ola-guided-copy",
+    "PT-W01-ola-delayed-copy",
+    "PT-W01-ola-dictation",
     "PT-C01-bom",
     "PT-C01-o-a",
     "PT-C01-dia",

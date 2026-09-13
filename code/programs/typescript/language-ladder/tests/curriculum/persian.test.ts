@@ -19,10 +19,20 @@ it("pins Persian's lesson-one alef bridge and greeting payoff", () => {
     extension.id === "FA-EXT-001-GREETING-PAYOFF"
   );
 
+  // The inline-script extension grew from two lessons to four: the same alef now
+  // carries the whole pre-A1 writing ladder, adding a delayed copy with the
+  // model covered and a dictation from the long vowel alone. One stroke is
+  // enough to ask all four stages, because the stages are about what the hand is
+  // asked to do rather than about how much language is on the page.
   expect(script).toMatchObject({
     kind: "required",
     category: "script",
-    lessons: ["FA-C01-salam", "FA-W00-alef-guided-copy"],
+    lessons: [
+      "FA-C01-salam",
+      "FA-W00-alef-guided-copy",
+      "FA-W00-alef-delayed-copy",
+      "FA-W00-alef-dictation",
+    ],
   });
   expect(payoff).toMatchObject({
     kind: "required",

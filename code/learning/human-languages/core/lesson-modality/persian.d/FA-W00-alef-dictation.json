@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "FA-W00-alef-dictation",
+    "language": "persian",
+    "chapter": 1,
+    "sequence": 17,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c94da5dd4d677d9a",
+    "detachableSegments": [
+      "Writing — dictation"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

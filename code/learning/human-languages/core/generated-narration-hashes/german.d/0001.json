@@ -1,10 +1,12 @@
 {
   "language": "german",
   "chapter": 1,
-  "sourceHash": "fnv1a64:eae9f8695eedffe4",
+  "sourceHash": "fnv1a64:437ad78f68b0aaea",
   "lessonIds": [
     "GE-C01-hallo",
     "GE-W01-hallo-guided-copy",
+    "GE-W01-hallo-delayed-copy",
+    "GE-W01-hallo-dictation",
     "GE-C01-gut",
     "GE-C01-der-die-das",
     "GE-C01-tag",
@@ -22,7 +24,7 @@
   "drivablePrefix": 0,
   "text": "german/narration/ch01.txt",
   "json": "german/narration/ch01.json",
-  "textHash": "fnv1a64:c1a31290282a8c9e",
-  "jsonHash": "fnv1a64:7b78acec425663d7",
+  "textHash": "fnv1a64:6c34362e949b9f7e",
+  "jsonHash": "fnv1a64:1766ff65b09c87d1",
   "findings": []
 }

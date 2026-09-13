@@ -1,10 +1,12 @@
 {
   "language": "italian",
   "chapter": 1,
-  "sourceHash": "fnv1a64:d3f7da967468a0ad",
+  "sourceHash": "fnv1a64:9e64903762b3f619",
   "lessonIds": [
     "IT-C01-ciao",
     "IT-W01-ciao-guided-copy",
+    "IT-W01-ciao-delayed-copy",
+    "IT-W01-ciao-dictation",
     "IT-C01-buono",
     "IT-C01-il-la-lo",
     "IT-C01-giorno",
@@ -18,7 +20,7 @@
   "drivablePrefix": 0,
   "text": "italian/narration/ch01.txt",
   "json": "italian/narration/ch01.json",
-  "textHash": "fnv1a64:12798e3e87943da2",
-  "jsonHash": "fnv1a64:bcdda1ddb2cb008c",
+  "textHash": "fnv1a64:f4dc42f317130727",
+  "jsonHash": "fnv1a64:481eb6265db7c844",
   "findings": []
 }

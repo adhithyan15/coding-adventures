@@ -3,7 +3,9 @@
   "spine_node": "SPINE-MEET-GREET",
   "lessons": [
     "PT-C01-ola",
-    "PT-W01-ola-guided-copy"
+    "PT-W01-ola-guided-copy",
+    "PT-W01-ola-delayed-copy",
+    "PT-W01-ola-dictation"
   ],
   "before": [],
   "inline": [],

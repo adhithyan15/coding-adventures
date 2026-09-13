@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "PT-W01-ola-delayed-copy",
+    "language": "portuguese",
+    "chapter": 1,
+    "sequence": 16,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:081ca678635c6624",
+    "detachableSegments": [
+      "Writing — delayed copy"
+    ]
+  },
+  "findings": []
+}

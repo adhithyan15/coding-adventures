@@ -1,10 +1,12 @@
 {
   "language": "german",
   "chapter": 1,
-  "sourceHash": "fnv1a64:d9f2275a818ef3aa",
+  "sourceHash": "fnv1a64:3392a85a0b930bbd",
   "lessonIds": [
     "GE-C01-hallo",
     "GE-W01-hallo-guided-copy",
+    "GE-W01-hallo-delayed-copy",
+    "GE-W01-hallo-dictation",
     "GE-C01-gut",
     "GE-C01-der-die-das",
     "GE-C01-tag",

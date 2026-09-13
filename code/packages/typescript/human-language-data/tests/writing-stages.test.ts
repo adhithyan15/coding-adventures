@@ -118,4 +118,46 @@ Learner copy comes first.
     expect(report.summary.tracks).toBe(registry.languages.length);
     expect(report.summary.invalidEvidenceBlocks).toBe(0);
   }, 30_000);
+
+  // ---------------------------------------------------------------------------
+  // The test above derives every field of the summary FROM the report, so it is
+  // self-consistent and asserts no number. `tracksCompleteAtPreA1` could fall
+  // from nineteen to fifteen and it would stay green -- which is the shape of a
+  // measurement nothing reads.
+  //
+  // This is the gate. It is a ratchet in both directions at once: the count may
+  // only rise, and the list of tracks that still fail may only shrink. Pinning
+  // the LIST rather than only the count is what stops the trade -- completing
+  // one track while regressing another leaves the count untouched.
+  // ---------------------------------------------------------------------------
+  it("never loses a track that proves the pre-A1 writing ladder", () => {
+    const { registry, lessons, curricula, spine: realSpine } = loadEverything();
+    const report = measureWritingStages(
+      loadAssessmentPolicy(),
+      registry.languages.map((track) => track.id),
+      lessons,
+      curricula,
+      realSpine,
+    );
+
+    const incomplete = report.tracks
+      .filter((track) => !track.levels[0]?.complete)
+      .map((track) => track.language)
+      .sort();
+
+    // 15 -> 19: german, italian, persian and portuguese each proved observe-trace
+    // and guided-copy and stopped there. Each gained a delayed copy with the
+    // model covered and a dictation from the sound, on the word or letter it
+    // already had -- the stages measure what the hand is asked to do, not how
+    // much language is on the page.
+    expect(report.summary.tracksCompleteAtPreA1).toBeGreaterThanOrEqual(19);
+
+    // The four that remain have NO stage evidence at all, not a partial ladder:
+    // between them they hold 223 script lessons and not one writing-stage
+    // directive, which is a different and larger piece of work than this was.
+    // A track may leave this list; none may join it.
+    for (const language of incomplete) {
+      expect(["bengali", "kannada", "sanskrit", "telugu"]).toContain(language);
+    }
+  }, 30_000);
 });

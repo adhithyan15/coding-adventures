@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eae9f8695eedffe4",
+  "sourceHash": "fnv1a64:437ad78f68b0aaea",
   "lessons": [
     {
       "id": "GE-C01-hallo",
@@ -208,6 +208,146 @@
             {
               "kind": "speech",
               "text": "Compare your copy with the model. If one letter differs, repair only that letter. No hiding, no spelling test, and no second word today."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-W01-hallo-delayed-copy",
+      "sequence": 7,
+      "title": "Hallo — write it with the model covered",
+      "headword": "Hallo",
+      "romanization": "Hallo",
+      "gloss": "write the first greeting after the model is covered, and keep the capital",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:8565142802ab003d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at Hallo once and say it: HA-lo. Then cover it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With the model covered, wait ten seconds, then write Hallo once from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "Ten seconds is long enough that your hand cannot be copying a shape it can still see, and short enough that a word you met a minute ago is still there."
+            },
+            {
+              "kind": "speech",
+              "text": "Only after the word is finished, uncover the model. Compare, and repair one letter — the first that differs and no others."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Check the H before anything else. Hearing HA-lo tells you nothing about whether the first letter is tall, and an English-trained hand writes hallo without noticing."
+            },
+            {
+              "kind": "speech",
+              "text": "Both spellings exist in German, which is exactly why the capital is worth checking rather than assuming: the double l is the part the sound guarantees, and the capital is the part it does not."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-W01-hallo-dictation",
+      "sequence": 8,
+      "title": "Hallo — write it from the sound",
+      "headword": "Hallo",
+      "romanization": "Hallo",
+      "gloss": "write the first greeting from sound alone, and hear the doubled letter that a single sound stands for",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:c64c04a84d302377",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every Hallo on the page. Nothing to copy and nothing to uncover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — dictation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say HA-lo aloud, or play it, and write what you hear. Once."
+            },
+            {
+              "kind": "speech",
+              "text": "A delayed copy asks your hand to remember a shape. Dictation asks it to turn a sound into a shape, which is the thing writing is actually for, and the two do not always arrive together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover the model and compare. You heard one l and the page wants two."
+            },
+            {
+              "kind": "speech",
+              "text": "That doubled letter is not decoration and it is not about the l at all — it is German telling you about the vowel in front of it. A doubled consonant means the vowel before it is short, so Hallo has the clipped a of HA-lo rather than a long one. German writes the length of its vowels by what comes after them, and this greeting is the first place you meet the rule."
             }
           ]
         }
