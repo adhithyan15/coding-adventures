@@ -197,7 +197,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      events and Mosaic controls, and synchronize the exact resulting card into
      the existing Berkeley parser flow. Keep multi-card plans, nested sweeps,
      and vendor-analysis controls for later product phases.
-   - **Mosaic schematic multi-analysis plans** (current phase): discovery after
+   - **Mosaic schematic multi-analysis plans** (completed in PR #14985): discovery after
      PR #14935: a schematic can configure only one card although the frozen
      parser/workbench plan supports ordered `.op`, `.dc`, `.ac`, and `.tran`
      records. Replace the single selected analysis/configuration with an
@@ -205,6 +205,15 @@ model-card parameter, or a UI artifact is not a completion signal.
      add/select/remove events plus selected-card configuration, lower directives
      in list order, persist the selected card, and add Mosaic contract coverage.
      Keep nested sweeps and vendor-analysis controls for later product phases.
+   - **Mosaic schematic document I/O** (current phase): discovery after PR #14985:
+     hosts can inject raw JSON through `schematicLoad`, but users cannot move a
+     canonical capture into or out of the workbench. Use existing protocol-2
+     awaited `file.open` / `file.save` effects for one versioned schematic JSON
+     envelope, validate and migrate imports before an atomic replacement,
+     export deterministic canonical JSON, retain no file handles in snapshots,
+     and add adapter and Mosaic host-contract coverage. Keep vendor interchange,
+     raw-format import, and arbitrary netlist-to-schematic synthesis for later
+     product phases.
 
 ### Operating rules
 
@@ -212,8 +221,9 @@ model-card parameter, or a UI artifact is not a completion signal.
   individual diagnostic column, field alias, or presentation artifact.
 - Reprioritize from corpus evidence after every merge.  Newly discovered work
   must be logged here before a next item is selected.
-- The stale MOS `TNOM` validation candidate is folded into item 2 if and only
-  if it fails a Berkeley v1 corpus case.
+- The stale MOS `TNOM` validation candidate is closed: origin/main already
+  records cross-language completion in PRs 9173 and 9631, with no Berkeley v1
+  corpus failure to group into a new phase.
 
 ## Completed Slices
 
