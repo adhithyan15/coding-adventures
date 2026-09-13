@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Emit transformed, clipped top-layer regions for shared dialog/popover hit
+  testing and modal host projection.
+
 - Emit transformed, clipped, scroll-aware details-summary hit regions with
   stable disclosure keys and open state.
 

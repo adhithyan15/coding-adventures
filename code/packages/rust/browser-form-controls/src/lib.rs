@@ -1796,11 +1796,23 @@ impl BrowserControlModel {
     }
 
     pub fn focus_next(&mut self, reverse: bool) -> Option<ControlEffect> {
+        let keys = self
+            .controls
+            .iter()
+            .map(|control| control.key.clone())
+            .collect::<Vec<_>>();
+        self.focus_next_in(&keys, reverse)
+    }
+
+    /// Move focus through a host-projected subset while preserving model order.
+    pub fn focus_next_in(&mut self, keys: &[String], reverse: bool) -> Option<ControlEffect> {
         let enabled = self
             .controls
             .iter()
             .enumerate()
-            .filter_map(|(index, control)| (!control.disabled).then_some(index))
+            .filter_map(|(index, control)| {
+                (!control.disabled && keys.contains(&control.key)).then_some(index)
+            })
             .collect::<Vec<_>>();
         if enabled.is_empty() {
             return None;
@@ -6059,6 +6071,26 @@ mod tests {
         assert_eq!(model.control(city).unwrap().value, "SEA");
         assert!(model.default_state(city).unwrap().dirty_value);
         assert!(!model.focused_suggestion_state().unwrap().open);
+    }
+
+    #[test]
+    fn constrained_focus_traversal_skips_controls_outside_the_projection() {
+        let tree = parse_browser_render_tree(
+            "<button id='before'>Before</button><button id='inside'>Inside</button>\
+             <button id='after'>After</button>",
+        )
+        .unwrap();
+        let mut model = BrowserControlModel::from_render_tree(&tree);
+        let projected = vec!["control:1:id:inside".to_string()];
+
+        assert_eq!(
+            model.focus_next_in(&projected, false),
+            Some(ControlEffect::Focused("control:1:id:inside".into()))
+        );
+        assert_eq!(
+            model.focus_next_in(&projected, true),
+            Some(ControlEffect::Focused("control:1:id:inside".into()))
+        );
     }
 
     #[test]

@@ -182,8 +182,13 @@ autocomplete grouping, ordered mutation effects, Back/Forward snapshots, and
 deferred custom-element callbacks. Datalist convergence now resolves authored
 option metadata into the retained tree, bounds and normalizes shared queries,
 tracks one keyboard/accessibility active option, and emits ordered mutation
-events when semantic native picker actions commit. The next P1 phase is live
-output, meter, and progress semantics.
+events when semantic native picker actions commit. Shared live output,
+meter, and progress semantics now recalculate and reset through one retained
+model. Dialog and popover convergence promotes open surfaces into a shared top
+layer, routes invoker/accessibility commands, owns modal focus, light-dismiss,
+and Escape policy, and publishes transformed hit regions without toolkit-owned
+visibility state. The tracked acceptance backlog is complete; each next phase
+starts from a fresh cross-host audit.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do
