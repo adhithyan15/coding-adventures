@@ -12,7 +12,7 @@ motivating gap as every size prop here, just not a *size*) on any layout node.
 ### Numeric typography bindings
 
 `Text`, `HostButton`, `HostInput` and `HostTable` accept a layout `font-size`
-property in React/Electron, Compose and Qt. Its value is a positive finite numeric literal or
+property in React/Electron, Compose, Qt and SwiftUI. Its value is a positive finite numeric literal or
 a numeric slot reference, in logical pixels. For example:
 
 ```mll
@@ -36,6 +36,11 @@ Qt rounds to the nearest integer pixel. Literals must round into the positive
 restore its previous value/binding, including platform defaults when no size
 was authored. Table bindings propagate to text and editors in both canonical
 native tables and the structural fallback.
+
+SwiftUI applies sizes in points through a stable modifier placed inside the
+authored font environment. Invalid live values retain that environment font,
+and resolved monospaced ancestors pass their design to scaled descendants.
+This avoids replacing a control with a conditional view when a value changes.
 
 Other backends report `typography.font-size-binding-unimplemented` in package
 degradation analysis. This foundation does not claim cross-backend typography acceptance,
