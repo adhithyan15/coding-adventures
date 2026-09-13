@@ -68,13 +68,28 @@ otherwise pick its own answer — the UI61 failure mode:
 
 **Correction on XAML.** This table first said XAML has native per-edge support.
 It has native per-edge *thickness* — `BorderThickness="left,top,right,bottom"`
-— but only a **single `BorderBrush` for all four edges**. So
-`border-top-color: X; border-bottom-color: Y` cannot both be honoured, and XAML
-needs a decision this spec has not made: honour one colour and report the
-others, or refuse the whole declaration. It is therefore *not* the cheap
-follow-up it was described as. Its thickness aggregation is also not a 1:1
-property mapping — four authored widths collapse into one attribute — which the
-emitter's per-property setter table cannot express as-is.
+— but only a **single `BorderBrush` for all four edges**. Its thickness
+aggregation is also not a 1:1 property mapping: four authored widths collapse
+into one attribute, which the emitter's per-property setter table cannot
+express as-is.
+
+### 4.1 The single-brush decision
+
+**Decided by measuring the corpus rather than by argument.** Across every
+`.msl` in the repo, **44 parts author per-edge colours and all 44 use a single
+colour**; not one authors two different colours on different edges of the same
+part. The impossible case is not a case anyone has.
+
+So:
+
+> XAML honours per-edge **thickness** always. Its `BorderBrush` is the single
+> authored edge colour. If a part authors two edges with **different** colours,
+> the first in CSS order (top, right, bottom, left) wins and **every other
+> authored edge colour is reported as a drop** — never silently repainted.
+
+Honouring what the toolkit can express and reporting exactly what it cannot is
+the same posture as `border-<edge>-style` in §3 rule 2. Refusing the whole
+declaration would discard 44 working cases to guard against zero broken ones.
 
 `drawBehind` is preferred over a sibling `HorizontalDivider` on Compose: a
 divider is a layout child and would take part in the parent's arrangement,
