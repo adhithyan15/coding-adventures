@@ -1,0 +1,15 @@
+{
+  "id": "LA-EXT-058-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read a Latin word cold, follow a line whose subject lives inside the verb, and read a short passage without translating word by word.",
+  "prerequisites": [
+    "LA-EXT-057-ORDER"
+  ],
+  "lessons": [
+    "LA-C58-labels",
+    "LA-C58-phrases",
+    "LA-C58-prima-lectio"
+  ]
+}
