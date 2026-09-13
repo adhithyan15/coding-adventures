@@ -2803,7 +2803,7 @@ fn emit_qml_tree(
     } else {
         Vec::new()
     };
-    let owners = qml_property_owners(&[
+    let deduped = qml_dedupe_sources(&[
         &typography,
         &text_part_lines,
         &cell_lines,
@@ -2811,7 +2811,7 @@ fn emit_qml_tree(
     ]);
 
     // Built-in property lines (e.g. Spacer's `Layout.fillWidth: true`).
-    for line in qml_owned_lines(&builtin_owned, 3, &owners) {
+    for line in &deduped[3] {
         writeln!(out, "{pad}    {line}").unwrap();
     }
 
@@ -2825,13 +2825,13 @@ fn emit_qml_tree(
         // and adopts the cell's alignment / colour / font / padding (see
         // [`CellTextStyle`]). Outside a styled cell, `ctx.text_style` is
         // `None` and the Text emits exactly as before.
-        for line in qml_owned_lines(&cell_lines, 2, &owners) {
+        for line in &deduped[2] {
             writeln!(out, "{pad}    {line}").unwrap();
         }
-        for line in qml_owned_lines(&text_part_lines, 1, &owners) {
+        for line in &deduped[1] {
             writeln!(out, "{pad}    {line}").unwrap();
         }
-        for line in qml_owned_lines(&typography, 0, &owners) {
+        for line in &deduped[0] {
             writeln!(out, "{pad}    {line}").unwrap();
         }
         if let Some(line) = build_text_attribute(node) {
@@ -4078,12 +4078,12 @@ fn emit_text_input_qml(
         .as_ref()
         .map(cell_text_style_lines)
         .unwrap_or_default();
-    let owners = qml_property_owners(&[&typography, &part_lines, &cell_lines]);
+    let deduped = qml_dedupe_sources(&[&typography, &part_lines, &cell_lines]);
 
-    for line in qml_owned_lines(&part_lines, 1, &owners) {
+    for line in &deduped[1] {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
-    for line in qml_owned_lines(&typography, 0, &owners) {
+    for line in &deduped[0] {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
@@ -4101,7 +4101,7 @@ fn emit_text_input_qml(
     // its alignment / colour / font so the in-place editor matches the
     // surrounding cells. `TextInput` honours the same `Text.Align*`
     // enums and `font.*` / `color` properties as `Text`.
-    for line in qml_owned_lines(&cell_lines, 2, &owners) {
+    for line in &deduped[2] {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
@@ -4280,62 +4280,107 @@ fn qml_top_level_property(line: &str) -> Option<&str> {
     ok.then_some(name)
 }
 
-/// Decide, once, which source owns each top-level QML property.
+/// The net block nesting a generated line opens, counting ONLY braces that
+/// are QML syntax -- never one inside a string literal.
 ///
-/// #15155 -- a QML object may assign a property exactly once. "Property
-/// value set multiple times" is a hard `qmlcachegen` error, not a warning,
-/// so two writers landing on one object take the whole app's build down.
-/// That is what happened when a part authored `color`: the part style and
-/// the enclosing cell's text style both wrote `color:` onto one
-/// `TextInput`, and the Trestle build failed three packages downstream of
-/// the authored value.
+/// A raw `matches('{').count()` is wrong here, and reachably so. State
+/// conditions are interpolated verbatim into generated lines by
+/// `conditional_color_expr` (`( {condition} ) ? "{value}" : ...`), and an
+/// authored condition may compare against a string: `mode == "{"` emits
 ///
-/// `sources` is given HIGHEST PRECEDENCE FIRST; the first source naming a
-/// property owns it. Callers then emit each source in its own positional
-/// order, keeping only the lines it owns, so the generated file's shape is
-/// unchanged apart from the duplicates that could never have compiled.
+///     color: ( mode == "{" ) ? "#ff0000" : "#000000"
 ///
-/// This replaces a one-property special case: the two text paths already
-/// filtered `font.pixelSize:` by hand when a live typography binding
-/// replaced it. That guarded the single overlap someone had hit, and left
-/// `color` -- and any future overlap -- open.
-fn qml_property_owners(sources: &[&[String]]) -> HashMap<String, usize> {
-    let mut owner: HashMap<String, usize> = HashMap::new();
+/// A raw count reads that as opening a block. If the line is then dropped
+/// by [`qml_owned_lines`], the skip never finds its close and swallows
+/// every remaining line -- `font.family` and `font.pixelSize` silently
+/// vanish from the control. The same desync can strand a real `}` and
+/// close the enclosing object early.
+///
+/// `moslayout-compiler`'s `token_source_text` re-quotes strings precisely
+/// so their contents cannot contribute structural characters to emitted
+/// source. This is the consumer that has to honour that invariant.
+fn qml_brace_delta(line: &str) -> i32 {
+    let mut depth = 0i32;
+    let mut in_string = false;
+    let mut escaped = false;
+    for ch in line.chars() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        match ch {
+            '\\' if in_string => escaped = true,
+            '"' => in_string = !in_string,
+            '{' if !in_string => depth += 1,
+            '}' if !in_string => depth -= 1,
+            _ => {}
+        }
+    }
+    depth
+}
+
+/// Partition generated property lines so each QML property is assigned by
+/// exactly ONE source.
+///
+/// #15155 -- a QML object may assign a property once. "Property value set
+/// multiple times" is a hard `qmlcachegen` error, not a warning, so two
+/// writers landing on one object take the whole app's build down. That is
+/// what happened when a part authored `color`: the part style and the
+/// enclosing cell's text style both wrote `color:` onto one `TextInput`,
+/// and the Trestle build failed three packages downstream of the authored
+/// value.
+///
+/// `sources` is given HIGHEST PRECEDENCE FIRST, and the returned vectors
+/// come back IN THE SAME ORDER, filtered. Callers emit each in its own
+/// position, so the generated file's shape is unchanged apart from the
+/// duplicates that could never have compiled.
+///
+/// Returning the filtered sources -- rather than an ownership map the
+/// caller indexes with a hand-written number -- is deliberate: the index
+/// and the precedence array cannot drift apart if there is only one call
+/// and the result carries its own order.
+///
+/// This replaces a one-property special case. The three emission sites
+/// each filtered `font.pixelSize:` by hand when a live typography binding
+/// replaced it, which guarded the single overlap someone had hit and left
+/// `color` -- and every future overlap -- open.
+///
+/// When a dropped line OPENS a block (`background: Rectangle {`), its
+/// children are dropped with it; otherwise they would be re-parented onto
+/// the control, or its `}` left stranded.
+fn qml_dedupe_sources(sources: &[&[String]]) -> Vec<Vec<String>> {
+    let mut owner: HashMap<&str, usize> = HashMap::new();
     for (idx, source) in sources.iter().enumerate() {
         for line in source.iter() {
             if let Some(property) = qml_top_level_property(line) {
-                owner.entry(property.to_string()).or_insert(idx);
+                owner.entry(property).or_insert(idx);
             }
         }
     }
-    owner
-}
 
-/// The lines `source` (at precedence index `idx`) may emit.
-///
-/// A line whose property another source owns is dropped. When such a line
-/// OPENS a block (`background: Rectangle {`), its children are dropped
-/// with it -- otherwise the nested lines would be re-parented onto the
-/// control and change its meaning, or fail to parse.
-fn qml_owned_lines(source: &[String], idx: usize, owner: &HashMap<String, usize>) -> Vec<String> {
-    let mut kept = Vec::new();
-    let mut skip_depth: i32 = 0;
-    for line in source {
-        if skip_depth > 0 {
-            skip_depth += line.matches('{').count() as i32;
-            skip_depth -= line.matches('}').count() as i32;
-            continue;
-        }
-        let drop = qml_top_level_property(line)
-            .and_then(|p| owner.get(p))
-            .is_some_and(|o| *o != idx);
-        if drop {
-            skip_depth = line.matches('{').count() as i32 - line.matches('}').count() as i32;
-            continue;
-        }
-        kept.push(line.clone());
-    }
-    kept
+    sources
+        .iter()
+        .enumerate()
+        .map(|(idx, source)| {
+            let mut kept = Vec::new();
+            let mut skip_depth: i32 = 0;
+            for line in source.iter() {
+                if skip_depth > 0 {
+                    skip_depth += qml_brace_delta(line);
+                    continue;
+                }
+                let drop = qml_top_level_property(line)
+                    .and_then(|p| owner.get(p))
+                    .is_some_and(|o| *o != idx);
+                if drop {
+                    skip_depth = qml_brace_delta(line);
+                    continue;
+                }
+                kept.push(line.clone());
+            }
+            kept
+        })
+        .collect()
 }
 
 fn host_control_style_qml_lines(
@@ -4519,11 +4564,11 @@ fn emit_host_button_qml(
 
     // #15155 -- see `qml_property_owners`: one writer per property.
     let button_part_lines = host_control_style_qml_lines(node, ctx, QmlControlStyle::BUTTON);
-    let button_owners = qml_property_owners(&[&typography, &button_part_lines]);
-    for line in qml_owned_lines(&button_part_lines, 1, &button_owners) {
+    let button_deduped = qml_dedupe_sources(&[&typography, &button_part_lines]);
+    for line in &button_deduped[1] {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
-    for line in qml_owned_lines(&typography, 0, &button_owners) {
+    for line in &button_deduped[0] {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
@@ -15262,11 +15307,8 @@ mod qml_property_ownership_tests {
             "color: (sel) ? \"#fff\" : \"#000\"".to_string(),
             "font.family: \"monospace\"".to_string(),
         ];
-        let owners = qml_property_owners(&[&typography, &part, &cell]);
-        assert_eq!(owners.get("color"), Some(&1), "the part style must own color");
-
-        let part_out = qml_owned_lines(&part, 1, &owners);
-        let cell_out = qml_owned_lines(&cell, 2, &owners);
+        let deduped = qml_dedupe_sources(&[&typography, &part, &cell]);
+        let (part_out, cell_out) = (&deduped[1], &deduped[2]);
         assert!(part_out.iter().any(|l| l == "color: \"#cccccc\""));
         assert!(
             !cell_out.iter().any(|l| l.starts_with("color:")),
@@ -15291,11 +15333,72 @@ mod qml_property_ownership_tests {
         let typography = vec!["font.pixelSize: 14".to_string()];
         let part: Vec<String> = vec![];
         let cell = vec!["font.pixelSize: 13".to_string(), "color: \"#eee\"".to_string()];
-        let owners = qml_property_owners(&[&typography, &part, &cell]);
-        assert_eq!(owners.get("font.pixelSize"), Some(&0));
-        let cell_out = qml_owned_lines(&cell, 2, &owners);
+        let deduped = qml_dedupe_sources(&[&typography, &part, &cell]);
+        let cell_out = &deduped[2];
         assert!(!cell_out.iter().any(|l| l.starts_with("font.pixelSize:")));
         assert!(cell_out.iter().any(|l| l.starts_with("color:")));
+    }
+
+    /// REACHABLE REGRESSION. A state condition is interpolated verbatim
+    /// into the generated line by `conditional_color_expr`, and an
+    /// authored condition may compare against a string containing a
+    /// brace: `state-when-danger: mode == "{"`. Counting braces in raw
+    /// text read that dropped `color:` line as opening a block, and the
+    /// skip then swallowed every line after it -- the control silently
+    /// lost its font. This is the exact shape of the #15155 repro, with
+    /// one authored character changed.
+    #[test]
+    fn a_brace_inside_an_authored_string_does_not_swallow_the_rest() {
+        let part = vec!["color: \"#cccccc\"".to_string()];
+        let cell = vec![
+            "anchors.fill: parent".to_string(),
+            "color: ( mode == \"{\" ) ? \"#ff0000\" : \"#000000\"".to_string(),
+            "font.family: \"monospace\"".to_string(),
+            "font.pixelSize: 13".to_string(),
+        ];
+        let deduped = qml_dedupe_sources(&[&part, &cell]);
+        let out = &deduped[1];
+        assert!(
+            out.iter().any(|l| l == "font.family: \"monospace\""),
+            "the font must survive a dropped colour whose value contains a brace: {out:?}"
+        );
+        assert!(
+            out.iter().any(|l| l == "font.pixelSize: 13"),
+            "nothing after the dropped line may be swallowed: {out:?}"
+        );
+        assert!(!out.iter().any(|l| l.starts_with("color:")));
+    }
+
+    /// The mirror case: a brace inside a string must not close a block
+    /// EARLY, which would re-parent the block's tail onto the control and
+    /// strand its real `}`.
+    #[test]
+    fn a_closing_brace_inside_a_string_does_not_end_a_block_early() {
+        let winner = vec!["background: Item {".to_string(), "}".to_string()];
+        let loser = vec![
+            "background: Rectangle {".to_string(),
+            "    color: ( m == \"}\" ) ? \"#fff\" : \"#000\"".to_string(),
+            "    radius: 4".to_string(),
+            "}".to_string(),
+            "opacity: 0.5".to_string(),
+        ];
+        let deduped = qml_dedupe_sources(&[&winner, &loser]);
+        let out = &deduped[1];
+        assert_eq!(
+            out,
+            &vec!["opacity: 0.5".to_string()],
+            "the whole Rectangle must go -- no orphaned child, no stray brace: {out:?}"
+        );
+    }
+
+    #[test]
+    fn brace_delta_ignores_braces_inside_strings() {
+        assert_eq!(qml_brace_delta("background: Rectangle {"), 1);
+        assert_eq!(qml_brace_delta("}"), -1);
+        assert_eq!(qml_brace_delta("color: ( m == \"{\" ) ? \"a\" : \"b\""), 0);
+        assert_eq!(qml_brace_delta("color: ( m == \"}\" ) ? \"a\" : \"b\""), 0);
+        assert_eq!(qml_brace_delta("text: \"a \\\" { b\""), 0);
+        assert_eq!(qml_brace_delta("anchors.fill: parent"), 0);
     }
 
     /// Dropping a line that OPENS a block must drop the block. Otherwise
@@ -15312,11 +15415,11 @@ mod qml_property_ownership_tests {
             "}".to_string(),
             "opacity: 0.5".to_string(),
         ];
-        let owners = qml_property_owners(&[&winner, &loser]);
-        let out = qml_owned_lines(&loser, 1, &owners);
+        let deduped = qml_dedupe_sources(&[&winner, &loser]);
+        let out = &deduped[1];
         assert_eq!(
             out,
-            vec!["opacity: 0.5".to_string()],
+            &vec!["opacity: 0.5".to_string()],
             "the whole Rectangle block must go, and nothing after it"
         );
     }

@@ -50,6 +50,24 @@ control.
 This replaces the per-property filter at all three sites rather than
 adding a second special case.
 
+**What this changes when a part DOES author a contested property.** A
+part's static `color` now wins over the cell's state-conditional one, so
+an editor inside a selected row shows the part's colour rather than the
+selection highlight. That is the specific-beats-inherited choice, and the
+alternative did not compile at all -- but it is a rendering change, not
+only a dedup, and worth knowing before authoring a colour on a part inside
+a styled cell.
+
+**A brace inside an authored string is not structural.** State conditions
+are interpolated verbatim (`( {condition} ) ? "{value}" : ...`), so an
+authored `state-when-danger: mode == "{"` puts a brace in a generated
+line. Counting braces in raw text read that as opening a block; if the
+line was then dropped, the skip never found its close and swallowed every
+line after it -- the control silently lost its font. The scanner ignores
+braces inside string literals, honouring the same invariant
+`moslayout-compiler`'s `token_source_text` documents when it re-quotes
+strings.
+
 **No output churn.** Emitted QML for task-app, visicalc and engram-app is
 byte-identical before and after, and all five `.qml` files compile under
 `qmlcachegen`. The change only affects objects that would not have
