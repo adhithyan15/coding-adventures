@@ -1,5 +1,9 @@
 # Changelog - diagram-layout-grid
 
+## 0.11.0
+
+- Resolve dotted and thick Block connections into backend-neutral edge styles.
+
 ## 0.10.0
 
 - Preserve authored Block stroke dash patterns through resolved cell and composite layout styles.
