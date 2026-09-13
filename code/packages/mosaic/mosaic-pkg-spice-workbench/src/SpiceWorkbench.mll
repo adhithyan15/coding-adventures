@@ -39,6 +39,16 @@ layout SpiceWorkbench {
           label : slot: save-schematic-label ,
           onClick : emit: onSaveSchematic
         )
+        HostButton [ undo-schematic ] (
+          label : slot: undo-schematic-label ,
+          disabled : slot: undo-schematic-disabled ,
+          onClick : emit: onUndoSchematic
+        )
+        HostButton [ redo-schematic ] (
+          label : slot: redo-schematic-label ,
+          disabled : slot: redo-schematic-disabled ,
+          onClick : emit: onRedoSchematic
+        )
       }
       Row [ schematic-palette ] {
         For ( each: slot: schematic-palette , as: kind , index: kind-index ) {

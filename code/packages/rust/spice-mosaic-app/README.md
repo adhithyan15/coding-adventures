@@ -30,6 +30,12 @@ the selected analysis card. Hosts can add, select, and remove cards while one
 card remains required. Synchronization replaces the text deck with the
 canonical emitted deck and refreshes its runnable Berkeley analysis plan.
 
+Schematic document mutations are undoable and redoable within a running
+workbench session, including metadata, component and wire edits, and analysis
+plan changes. Checkpoints retain the relevant component and analysis-card
+selection, clear the redo branch after a fresh edit, and are intentionally not
+serialized in durable snapshots.
+
 Protocol-2 hosts can also open and save a versioned `spice-mosaic/schematic`
 JSON envelope through awaited `file.open` and `file.save` effects. Import
 validates and migrates the document before replacing the current schematic;

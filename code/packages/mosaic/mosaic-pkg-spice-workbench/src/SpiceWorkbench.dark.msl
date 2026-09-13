@@ -10,6 +10,8 @@ style SpiceWorkbench {
   part schematic-document-actions { gap : 6 ; }
   part open-schematic { background : "#283a51" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#476786" ; border-radius : 3 ; padding : 6 ; }
   part save-schematic { background : "#1f6f4a" ; color : "#e9fff3" ; border-width : 1 ; border-color : "#3fa36f" ; border-radius : 3 ; padding : 6 ; }
+  part undo-schematic { background : "#3a2f20" ; color : "#fde68a" ; border-width : 1 ; border-color : "#a66b24" ; border-radius : 3 ; padding : 6 ; }
+  part redo-schematic { background : "#2b3646" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#56708e" ; border-radius : 3 ; padding : 6 ; }
   part schematic-palette { gap : 6 ; }
   part schematic-palette-item { background : "#163743" ; color : "#a5f3fc" ; border-width : 1 ; border-color : "#2c7180" ; border-radius : 3 ; padding : 6 ; }
   part schematic-analysis-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
