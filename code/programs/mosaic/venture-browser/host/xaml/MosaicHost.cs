@@ -1214,6 +1214,17 @@ public static class MosaicHost
             }
             if (menuKeyDown)
             {
+                var keyCode = (int)key;
+                var accessCharacter = keyCode is >= 65 and <= 90 or >= 48 and <= 57
+                    ? char.ConvertFromUtf32(keyCode)
+                    : null;
+                if (accessCharacter is not null && Native.AccessKey(browser, accessCharacter) != 0)
+                {
+                    ConsumeEffect(Native.Decode(Native.TakeEffect(browser)));
+                    changed = true;
+                    Refresh();
+                    return true;
+                }
                 var historyEvent = key switch
                 {
                     VirtualKey.Left => "onBack",
@@ -1389,6 +1400,12 @@ public static class MosaicHost
             IntPtr browser,
             [MarshalAs(UnmanagedType.LPUTF8Str)] string key,
             byte shift);
+
+        [DllImport(Library, EntryPoint = "venture_browser_windows_access_key",
+            CallingConvention = CallingConvention.Cdecl)]
+        internal static extern byte AccessKey(
+            IntPtr browser,
+            [MarshalAs(UnmanagedType.LPUTF8Str)] string character);
 
         [DllImport(Library, EntryPoint = "venture_browser_windows_control_text",
             CallingConvention = CallingConvention.Cdecl)]
