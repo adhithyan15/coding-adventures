@@ -7,6 +7,7 @@ chapter: 1
 delivery: script
 type: writing
 headword: "ನ"
+romanization: "na"
 gloss: write the letter once the model is covered, then uncover and repair one thing
 prerequisites: [KA-S01-copy-in-a-word]
 sounds: []

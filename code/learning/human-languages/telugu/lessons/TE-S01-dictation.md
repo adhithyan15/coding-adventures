@@ -7,6 +7,7 @@ chapter: 5
 delivery: script
 type: writing
 headword: "త"
+romanization: "ta"
 gloss: write the letter from the sound alone, and meet the vowel nobody said
 prerequisites: [TE-S01-delayed-copy]
 sounds: []
