@@ -35,6 +35,12 @@ style VentureChrome {
     background : "#b36f26" ; color : "#ffffff" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#d18b3d" ;
     state hover { background : "#c27e32" ; } state pressed { background : "#8b501b" ; } state focused { outline-color : "#f0bd7a" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; }
   }
+  part find-bar { background : "#28241f" ; padding : 6 ; gap : 6 ; align : center-vertical ; border-bottom-width : 1 ; border-bottom-color : "#50483d" ; }
+  part find-input { background : "#171512" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; flex-grow : 1 ; }
+  part find-result { color : "#bdb4a7" ; font-size : 11 ; }
+  part find-previous-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; state disabled { opacity : 0.45 ; } }
+  part find-next-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; state disabled { opacity : 0.45 ; } }
+  part find-close-button { background : "#3b3630" ; color : "#f1eadf" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#62584b" ; }
   part content-surface { background : "#11100e" ; min-height : 480 ; flex-grow : 1 ; }
   part status-bar { background : "#312d27" ; padding : 6 ; border-top-width : 1 ; border-top-color : "#50483d" ; }
   part status-text { color : "#bdb4a7" ; font-size : 11 ; }

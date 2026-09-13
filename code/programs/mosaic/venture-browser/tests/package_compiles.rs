@@ -589,6 +589,64 @@ fn native_hosts_forward_access_key_chords_to_shared_policy() {
 }
 
 #[test]
+fn find_in_page_uses_one_shared_transaction_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    for symbol in [
+        "slot find-query",
+        "slot find-result-label",
+        "slot find-disabled",
+        "emit onFindChange",
+        "emit onFindNext",
+        "emit onFindPrevious",
+        "emit onFindClose",
+    ] {
+        assert!(interface.contains(symbol), "find interface omits {symbol}");
+    }
+    for symbol in [
+        "HostInput [ find-input ]",
+        "HostButton [ find-previous-button ]",
+        "HostButton [ find-next-button ]",
+        "HostButton [ find-close-button ]",
+    ] {
+        assert!(layout.contains(symbol), "find layout omits {symbol}");
+    }
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "pub struct BrowserFindState",
+        "pub struct BrowserFindDiagnostic",
+        "MAX_FIND_MATCHES",
+        "pub fn find_in_page",
+        "pub fn find_next",
+        "pub fn find_previous",
+        "fn refresh_find_presentation",
+    ] {
+        assert!(core.contains(symbol), "shared find core omits {symbol}");
+    }
+
+    for (name, path) in [
+        ("Cairo", "../../../packages/rust/venture-browser-cairo/src/lib.rs"),
+        ("macOS", "../../../packages/rust/venture-browser-macos/src/lib.rs"),
+        ("Windows", "../../../packages/rust/venture-browser-windows/src/lib.rs"),
+    ] {
+        let host = read_package_file(path);
+        for symbol in ["onFindChange", "onFindNext", "onFindPrevious", "onFindClose"] {
+            assert!(host.contains(symbol), "{name} bridge omits {symbol}");
+        }
+    }
+
+    for path in [
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/web/VentureChromeInteraction.test.js",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(acceptance.contains("findNext") || acceptance.contains("onFindNext"));
+    }
+}
+
+#[test]
 fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
     let capture = venture_browser_visual_fixtures::capture("http://venture.test")
         .expect("capture Venture's deterministic real-page fixture");
