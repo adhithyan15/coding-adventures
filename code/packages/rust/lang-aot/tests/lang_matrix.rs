@@ -3388,6 +3388,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("7.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — the exact initial control snapshot may feed the sole body
+    // assignment when its checked post-body increment exits after one pass.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x; for x := 1.0 step 1.0 until 1.0 do x := x + 5.25; print(x) end",
+        expect: Expect::Stdout("7.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -12811,6 +12820,31 @@ fn algol_compound_single_step_control_snapshot_runs_on_every_available_standard_
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the compound control snapshot did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_dependent_single_step_control_snapshot_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("step 1.0 until 1.0 do x := x + 5.25")
+        })
+        .expect("the dependent single-step control snapshot must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the dependent control snapshot did not run"
             );
             continue;
         };

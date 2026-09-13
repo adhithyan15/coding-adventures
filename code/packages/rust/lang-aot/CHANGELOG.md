@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.335.0 — 2026-09-13 — ALGOL dependent control-exit snapshots
+
+The seven-backend ALGOL matrix now proves that an exactly-one-pass
+`step`/`until` body may derive its controlled assignment from the known entry
+control and retain the checked exit snapshot.
+
 ## 0.334.0 — 2026-09-12 — ALGOL compound control-exit snapshots
 
 The seven-backend ALGOL matrix now proves that a single-iteration
