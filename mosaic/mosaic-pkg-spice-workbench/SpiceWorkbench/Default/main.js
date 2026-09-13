@@ -14,6 +14,8 @@ const fallbackProps = {
   "netlistText": "Sample NetlistText",
   "openSchematicLabel": "Sample OpenSchematicLabel",
   "rawResultLabel": "Sample RawResultLabel",
+  "redoSchematicDisabled": false,
+  "redoSchematicLabel": "Sample RedoSchematicLabel",
   "removeSchematicAnalysisCardLabel": "Sample RemoveSchematicAnalysisCardLabel",
   "removeSchematicComponentDisabled": false,
   "removeSchematicComponentLabel": "Sample RemoveSchematicComponentLabel",
@@ -68,6 +70,8 @@ const fallbackProps = {
   "selectedSchematicLabel": "Sample SelectedSchematicLabel",
   "selectedWaveformLabel": "Sample SelectedWaveformLabel",
   "synchronizeSchematicLabel": "Sample SynchronizeSchematicLabel",
+  "undoSchematicDisabled": false,
+  "undoSchematicLabel": "Sample UndoSchematicLabel",
   "waveformAxisLabel": "Sample WaveformAxisLabel",
   "waveformLabel": "Sample WaveformLabel",
   "waveformRows": [],
@@ -95,6 +99,7 @@ const emitPayloads = {
       "type": "text"
     }
   ],
+  "onRedoSchematic": [],
   "onRemoveSchematicAnalysisCard": [],
   "onRemoveSchematicComponent": [],
   "onRemoveSchematicWire": [
@@ -183,7 +188,8 @@ const emitPayloads = {
       "type": "number"
     }
   ],
-  "onSynchronizeSchematic": []
+  "onSynchronizeSchematic": [],
+  "onUndoSchematic": []
 };
 const MOSAIC_HOST_READY_EVENT = "mosaic-host-ready";
 const MOSAIC_HOST_INTENT_EVENT = "mosaic-host-intent";

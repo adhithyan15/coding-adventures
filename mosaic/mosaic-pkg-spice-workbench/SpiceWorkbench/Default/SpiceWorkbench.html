@@ -31,6 +31,10 @@
         <button data-on-click="onOpenSchematic" style="background: #e0f2fe; color: #075985; border-width: 1px; border-color: #7dd3fc; border-radius: 3px; padding: 6px">{{openSchematicLabel}}</button>
         <!-- emit "onSaveSchematic" dropped: HTML is static -->
         <button data-on-click="onSaveSchematic" style="background: #dcfce7; color: #166534; border-width: 1px; border-color: #86efac; border-radius: 3px; padding: 6px">{{saveSchematicLabel}}</button>
+        <!-- emit "onUndoSchematic" dropped: HTML is static -->
+        <button data-disabled="{{undoSchematicDisabled}}" data-on-click="onUndoSchematic" style="background: #fef3c7; color: #92400e; border-width: 1px; border-color: #fcd34d; border-radius: 3px; padding: 6px">{{undoSchematicLabel}}</button>
+        <!-- emit "onRedoSchematic" dropped: HTML is static -->
+        <button data-disabled="{{redoSchematicDisabled}}" data-on-click="onRedoSchematic" style="background: #e0f2fe; color: #075985; border-width: 1px; border-color: #7dd3fc; border-radius: 3px; padding: 6px">{{redoSchematicLabel}}</button>
       </div>
       <div style="display: flex; flex-direction: row; gap: 6px">
         <!-- mosaic-for each="schematicPalette" as="kind" index="kind-index" -->
