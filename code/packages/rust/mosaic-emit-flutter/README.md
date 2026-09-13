@@ -158,6 +158,12 @@ so the Column receives a finite horizontal constraint without breaking a
 nested Row that is itself shrink-wrapped. Authored branch flex continues to
 use `Expanded`.
 
+Mosstyle `gap` values on `Row` and `Column` parts lower to horizontal and
+vertical `SizedBox` separators without replacing the flex container with a
+`Wrap`. Spacing is applied after Dart evaluates the generated child list, so
+conditional and repeated children receive exactly one gap only when they
+actually produce neighboring widgets.
+
 ## What works in v0.2 / what's deferred
 
 See `CHANGELOG.md` for the full feature matrix. The headline:

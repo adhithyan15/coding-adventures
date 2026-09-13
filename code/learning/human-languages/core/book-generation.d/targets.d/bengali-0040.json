@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 40,
+  "output": "bengali/book/chapters/ch40-reading-words-lines-and-a-passage.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

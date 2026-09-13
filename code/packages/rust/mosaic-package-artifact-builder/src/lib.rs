@@ -1526,7 +1526,8 @@ fn ignored_native_property(
     match (node.tag.as_str(), property.name.as_str()) {
         (_, "font-size") if !matches!(backend, Backend::React | Backend::Electron)
             && !(backend == Backend::Compose && mosaic_emit_compose::pipeline::has_native_font_size(node))
-            && !(backend == Backend::Qt && mosaic_emit_qt::pipeline::has_native_font_size(node)) => Some((
+            && !(backend == Backend::Qt && mosaic_emit_qt::pipeline::has_native_font_size(node))
+            && !(backend == Backend::SwiftUI && mosaic_emit_swiftui::pipeline::has_native_font_size(node)) => Some((
             "typography.font-size-binding-unimplemented",
             "layout font-size binding has no projection for this backend or primitive; static mosstyle typography is unaffected",
         )),
@@ -7873,7 +7874,7 @@ layout AccessibleText {
                     .iter()
                     .filter(|entry| entry.code == "typography.font-size-binding-unimplemented")
                     .count(),
-                if matches!(backend, Backend::React | Backend::Electron | Backend::Compose | Backend::Qt) {
+                if matches!(backend, Backend::React | Backend::Electron | Backend::Compose | Backend::Qt | Backend::SwiftUI) {
                     0
                 } else {
                     4

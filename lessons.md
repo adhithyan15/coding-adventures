@@ -7308,6 +7308,52 @@ Use a task-specific variable such as `sparse_dependency` for path lists. This
 also follows the general rule against repurposing common shell and system
 option names.
 
+### 2026-09-13 — "it matches the other event" is not a reason two handlers may do the same thing
+
+Engram's note-type editor was not reset by the collection-level `SaveNoteType`,
+where the editor-level `NoteTypeEditorSaveNoteType` did reset it, and a name
+typed after a collection save was silently dropped. The fix looked obvious:
+reset in both.
+
+It was a data-loss regression, and the reasoning is what produced it.
+
+- `NoteTypeEditorSaveNoteType` builds its note type from
+  `note_type_from_editor_selection` — by construction it saves what the editor
+  holds, so resetting afterwards is coherent.
+- `SaveNoteType` resolves its target from the **payload** and never consults the
+  editor at all.
+
+So the two can name different note types, and an unconditional reset threw away
+a draft of A because something saved B — for a brand-new model, the name,
+stylesheet, every field rename and template body at once, `reset()` being
+`*self = Self::default()`.
+
+Before making two handlers behave alike, check they are talking about the same
+object. Two events with matching names and adjacent match arms are not
+necessarily two routes to one operation; here one was "save what is open" and
+the other "upsert whatever you are given".
+
+Caught in security review, which measured both trees rather than reading them.
+The reachability was nil today — no shell emits the bare event — and that is not
+a defence: the event is documented for host model editors and aliased to
+`upsertNoteType`, which is what a sync or an import calls.
+
+### 2026-09-13 — a mutation that does not mutate is a false exoneration
+
+While checking whether a restored assertion caught "creating a note type through
+the collection path becomes a silent no-op", the mutation tested whether the id
+was in the collection **after** the upsert had already added it. The condition
+was never true, nothing changed, and the run reported that no test caught the
+defect.
+
+That is worse than not testing: it is evidence pointing the wrong way, and it
+would have justified deleting an assertion that review had just identified as
+the only one pinning that behaviour. Written faithfully — deciding before the
+reduce — the assertion caught it.
+
+Before reading which tests a mutation fails, confirm the mutation changed the
+behaviour. If a mutation reddens nothing, suspect the mutation first.
+
 ### 2026-09-13 — a separator-joined key is safe if the RAW parts are constant
 
 `sql-vm`'s `apply_distinct` builds a row key as `format!("{col}={val:?}")`
