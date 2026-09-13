@@ -225,6 +225,29 @@ class RenderTests(unittest.TestCase):
             d = write_dir(Path(tmp), {"a-claim.md": "# A claim\n\nbody\n"})
             self.assertIn(lessons.UNCATEGORISED, lessons.render(d))
 
+    def test_render_has_exactly_one_heading_per_lesson(self):
+        """The aggregate's outline must not overcount.
+
+        A shard's own sub-heading is `##`, which becomes `###` in the render --
+        the same level as a lesson title. Across the real directory that was 21
+        extra `###` from 6 shards, so the outline claimed 529 lessons where
+        there were 508.
+        """
+        text = lessons.render(lessons.LESSONS_DIR)
+        headings = sum(
+            1 for line in text.splitlines() if line.startswith("### ")
+        )
+        self.assertEqual(headings, len(lessons.load()))
+
+    def test_demote_leaves_fenced_shell_comments_alone(self):
+        """`# comment` at column 0 of a shell block matches the heading pattern
+        exactly and is not a heading."""
+        body = "para\n\n```bash\n# not a heading\n```\n\n## real subheading"
+        out = lessons.demote_headings(body)
+        self.assertIn("# not a heading", out)
+        self.assertNotIn("## not a heading", out)
+        self.assertIn("### real subheading", out)
+
     def test_the_render_says_it_is_generated(self):
         """A committed aggregate would reinstate the shared file we removed."""
         with tempfile.TemporaryDirectory() as tmp:

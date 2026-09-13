@@ -211,6 +211,28 @@ def cmd_validate(lessons_dir: Path) -> int:
     return 1 if problems else 0
 
 
+def demote_headings(body: str) -> str:
+    """Push a shard's own sub-headings one level deeper for the aggregate.
+
+    In a shard, the lesson is `#` and a sub-heading is `##`. In the render the
+    lesson becomes `###`, so an un-demoted `###` sub-heading would sit at the
+    SAME level as a lesson title -- 21 of them do, across 6 shards -- and the
+    aggregate's outline would claim 529 lessons where there are 508.
+
+    Fenced blocks are skipped, because `# comment` on the first column of a
+    shell example matches the heading pattern exactly and is not a heading.
+    """
+    out, in_fence = [], False
+    for line in body.splitlines():
+        if line.startswith("```"):
+            in_fence = not in_fence
+            out.append(line)
+            continue
+        match = None if in_fence else re.match(r"^(#{1,5}) (?=\S)", line)
+        out.append(f"#{line}" if match else line)
+    return "\n".join(out)
+
+
 def render(lessons_dir: Path = LESSONS_DIR) -> str:
     order = read_categories(lessons_dir)
     rank = {name: i for i, name in enumerate(order)}
@@ -233,7 +255,7 @@ def render(lessons_dir: Path = LESSONS_DIR) -> str:
             continue
         out += [f"## {category}", ""]
         for lesson in group:
-            out += [f"### {lesson.title}", "", lesson.body, ""]
+            out += [f"### {lesson.title}", "", demote_headings(lesson.body), ""]
     # A category nobody listed would otherwise vanish from the render with no
     # signal; validate() rejects it, and this makes the render fail loudly too.
     stray = {item.category for item in lessons} - set(rank) - {UNCATEGORISED}
