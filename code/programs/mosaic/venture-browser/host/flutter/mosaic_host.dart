@@ -613,6 +613,7 @@ class _VentureContentSurfaceState extends State<VentureContentSurface> {
             _ => null,
           }
         : switch (event.logicalKey) {
+      LogicalKeyboardKey.tab => 'tab',
       LogicalKeyboardKey.backspace => 'backspace',
       LogicalKeyboardKey.delete => 'delete',
       LogicalKeyboardKey.arrowLeft => 'arrow-left',

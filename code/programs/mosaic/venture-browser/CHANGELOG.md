@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Forward Tab and Shift+Tab from every native surface into shared sequential
+  page focus, including link/disclosure activation and focus presentation.
+
 - Add client-side image-map interaction through shared scaled shape geometry,
   accessibility keys, and existing link target/download mediation; all native
   and web content surfaces inherit the behavior from their pointer seam.

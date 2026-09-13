@@ -71,6 +71,8 @@ QByteArray controlKey(QKeyEvent *event)
     if (event->key() == Qt::Key_Right) return "word-right";
   }
   switch (event->key()) {
+  case Qt::Key_Tab:
+  case Qt::Key_Backtab: return "tab";
   case Qt::Key_Backspace: return "backspace";
   case Qt::Key_Delete: return "delete";
   case Qt::Key_Left: return "arrow-left";

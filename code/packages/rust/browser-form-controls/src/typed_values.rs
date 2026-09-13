@@ -366,7 +366,12 @@ mod tests {
     fn temporal_scalars_round_trip_across_calendar_boundaries() {
         for days in (-25_567..=47_847).step_by(37) {
             let formatted = format_typed_value(ControlKind::Date, days).unwrap();
-            assert_eq!(parse_typed_value(ControlKind::Date, &formatted).unwrap().scalar, days);
+            assert_eq!(
+                parse_typed_value(ControlKind::Date, &formatted)
+                    .unwrap()
+                    .scalar,
+                days
+            );
         }
         for months in (-840..=1_560).step_by(11) {
             let formatted = format_typed_value(ControlKind::Month, months).unwrap();

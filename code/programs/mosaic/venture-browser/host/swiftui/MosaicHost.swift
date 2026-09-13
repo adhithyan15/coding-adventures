@@ -1729,6 +1729,7 @@ private final class VentureContentView: NSView {
     }
     let controlKey: String?
     switch event.keyCode {
+    case 48: controlKey = "tab"
     case 51: controlKey = "backspace"
     case 117: controlKey = "delete"
     case 123: controlKey = "arrow-left"

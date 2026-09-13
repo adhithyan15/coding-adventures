@@ -85,6 +85,10 @@ recreating the surrounding chrome in backend-specific UI code.
   Alt-Left/Right on Windows reuse the Mosaic `onBack`/`onForward` reducer
   events and reproject chrome props after navigation. The direct generated-app
   gates require both native history shortcuts to traverse a real linked page.
+- Tab and Shift+Tab enter one shared page-focus reducer spanning links, form
+  controls, and details summaries. Positive `tabindex`, exclusions, modal
+  containment, visibility scrolling, activation, accessibility geometry, and
+  focus rings remain identical across SwiftUI, WinUI, Qt, Flutter, and Compose.
 - Editable page controls keep Unicode grapheme/word movement, selection,
   click-count policy, bounded undo/redo, drag autoscroll, clipboard flavor
   negotiation, and accessibility actions in `browser-form-controls`.

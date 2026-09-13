@@ -619,6 +619,7 @@ impl ControlValueState {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ControlKey {
+    Tab,
     Backspace,
     Delete,
     ArrowLeft,
@@ -640,6 +641,7 @@ pub enum ControlKey {
 impl ControlKey {
     pub fn from_name(name: &str) -> Option<Self> {
         Some(match name {
+            "tab" => Self::Tab,
             "backspace" => Self::Backspace,
             "delete" => Self::Delete,
             "arrow-left" => Self::ArrowLeft,
@@ -662,6 +664,7 @@ impl ControlKey {
 
     pub const fn name(self) -> &'static str {
         match self {
+            Self::Tab => "tab",
             Self::Backspace => "backspace",
             Self::Delete => "delete",
             Self::ArrowLeft => "arrow-left",
@@ -1794,6 +1797,19 @@ impl BrowserControlModel {
         self.editors[target].caret_phase_ms = 0;
         self.focused_key = Some(key.to_string());
         Some(ControlEffect::Focused(key.to_string()))
+    }
+
+    /// Clear retained focus when sequential navigation moves to a non-control.
+    pub fn blur(&mut self) -> bool {
+        let changed = self.focused_key.take().is_some();
+        for control in &mut self.controls {
+            control.focused = false;
+        }
+        for suggestion in &mut self.suggestions {
+            suggestion.open = false;
+            suggestion.active_index = None;
+        }
+        changed
     }
 
     pub fn focus_next(&mut self, reverse: bool) -> Option<ControlEffect> {

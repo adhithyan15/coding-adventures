@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add one sequential-focus reducer across links, controls, and details
+  summaries with `tabindex` ordering, modal containment, keyboard activation,
+  visibility scrolling, accessibility projection, and shared focus rings.
+
 - Project rendered image-map areas for accessibility and activate their stable
   keys through the existing transactional link and browsing-context planner.
 
