@@ -1,4 +1,7 @@
 component RowHeaderGrid {
+  slot row-height : number = 32 ;
+  slot font-size : number = 13 ;
+  slot row-font-size : number = 11 ;
   slot viewport-offset : number ;
   slot total-rows : number ;
   slot row-headers : list<text> ;

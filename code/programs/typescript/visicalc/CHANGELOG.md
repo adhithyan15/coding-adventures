@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-12
+
+- Forward preferred or explicit text scale to the Rust host without recreating the workbook on live scale changes. Verify startup and edit preservation at 100%, 150% and 200%. Native typography projection and visual acceptance remain tracked separately.
+
 ## 2026-09-08
 
 - Guide new workbooks with shared Mosaic content. Keep the same grid mounted

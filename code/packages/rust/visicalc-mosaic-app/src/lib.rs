@@ -220,10 +220,22 @@ impl VisiCalcMosaicApp {
             "viewport-rows": rows, "total-rows": ROWS, "total-cols": COLS,
             "row-headers": (cursor.offset + 1..=cursor.offset + cursor.size).map(|row| row.to_string()).collect::<Vec<_>>(),
             "column-headers": (1..=COLS).map(column_index_to_letters).collect::<Vec<_>>(),
-            "column-widths": vec![80; COLS as usize],
+            "column-widths": vec![80.0 * f64::from(cursor.text_scale); COLS as usize],
             "edit-row": edit_row, "edit-col": edit_col, "edit-content": edit_content,
             "editing": self.edit.is_some(), "dark-theme": cursor.dark,
             "text-scale": cursor.text_scale,
+            "row-height": 32.0 * f64::from(cursor.text_scale),
+            "font-eyebrow": 10.0 * f64::from(cursor.text_scale),
+            "font-row": 11.0 * f64::from(cursor.text_scale),
+            "font-caption": 12.0 * f64::from(cursor.text_scale),
+            "font-body": 13.0 * f64::from(cursor.text_scale),
+            "font-input": 14.0 * f64::from(cursor.text_scale),
+            "font-introduction": 18.0 * f64::from(cursor.text_scale),
+            "font-symbol": 22.0 * f64::from(cursor.text_scale),
+            "font-title": 38.0 * f64::from(cursor.text_scale),
+            "text-scale-label": format!("{:.0}% text", cursor.text_scale * 100.0),
+            "smaller-text-disabled": cursor.text_scale <= 1.0,
+            "larger-text-disabled": cursor.text_scale >= 2.0,
         }))
     }
 
@@ -328,12 +340,23 @@ impl MosaicApp for VisiCalcMosaicApp {
         if self.pending_file.is_some()
             && !matches!(
                 name(&event.name).as_str(),
-                "scroll" | "viewportShift" | "viewportRows" | "resizeViewport"
+                "scroll" | "viewportShift" | "viewportRows" | "resizeViewport" | "smallerText" | "largerText" | "setTextScale"
             )
         {
             return Ok(self.announced("Finish the current file operation first."));
         }
         match name(&event.name).as_str() {
+            "smallerText" | "largerText" | "setTextScale" => {
+                let scale = match name(&event.name).as_str() {
+                    "smallerText" => (self.cursor.text_scale - 0.25).clamp(1.0, 2.0),
+                    "largerText" => (self.cursor.text_scale + 0.25).clamp(1.0, 2.0),
+                    _ => event.payload.get("scale").and_then(Value::as_f64)
+                        .ok_or_else(|| invalid("text scale requires a number"))? as f32,
+                };
+                if !scale.is_finite() || scale <= 0.0 { return Err(invalid("invalid text scale")); }
+                self.cursor.text_scale = scale;
+                Ok(self.announced(format!("Text size {:.0}%", scale * 100.0)))
+            }
             "openWorkbook" => self.request_file(false),
             "saveWorkbook" => self.request_file(true),
             "navigate" | "gridNavigate" | "editStart" => {
@@ -541,7 +564,9 @@ impl MosaicApp for VisiCalcMosaicApp {
             return Err(invalid("expected one workbook sheet"));
         }
         self.workbook = workbook;
+        let text_scale = self.cursor.text_scale;
         self.cursor = saved.cursor;
+        self.cursor.text_scale = text_scale;
         self.edit = None;
         Ok(self.announced(format!(
             "Workbook restored. {}",
@@ -559,6 +584,33 @@ mod tests {
 
     fn dispatch(app: &mut VisiCalcMosaicApp, event: &str, payload: Value) -> AppUpdate {
         app.dispatch(Event::new(1, event, payload)).unwrap()
+    }
+
+    #[test]
+    fn text_scale_preserves_content_edits_and_current_host_context_on_restore() {
+        let mut app = VisiCalcMosaicApp::default();
+        let before = app.workbook.serialize();
+        let saved = app.snapshot().unwrap().unwrap();
+        dispatch(&mut app, "onFormulaChange", json!({"value":"=2+3"}));
+        let scaled = dispatch(&mut app, "setTextScale", json!({"scale":1.5}));
+        assert_eq!(scaled.props["font-body"], 19.5);
+        assert_eq!(scaled.props["column-widths"][0], 120.0);
+        assert_eq!(scaled.props["edit-content"], "=2+3");
+        assert_eq!(app.workbook.serialize(), before);
+        dispatch(&mut app, "largerText", json!({}));
+        let largest = dispatch(&mut app, "largerText", json!({}));
+        assert_eq!(largest.props["font-body"], 26.0);
+        assert_eq!(largest.props["larger-text-disabled"], true);
+        assert_eq!(dispatch(&mut app, "largerText", json!({})).props["text-scale"], 2.0);
+        dispatch(&mut app, "cancel", json!({}));
+        app.restore(saved).unwrap();
+        assert_eq!(app.update().props["text-scale"], 2.0);
+        assert_eq!(app.workbook.serialize(), before);
+        let snapshot = app.snapshot().unwrap();
+        for value in [json!(0), json!(-1), json!("2"), json!(1e100)] {
+            assert!(app.dispatch(Event::new(1, "setTextScale", json!({"scale":value}))).is_err());
+            assert_eq!(app.snapshot().unwrap(), snapshot);
+        }
     }
 
     #[test]

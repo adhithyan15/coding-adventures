@@ -172,3 +172,34 @@ it.each(["light", "dark"] as const)("guides an empty workbook without replacing 
     expect(introduction()).toBeDefined();
   } finally { await act(async () => root.unmount()); container.remove(); }
 });
+
+it.each([1, 1.5, 2])("scales the real workbook and retains an edit during text-size changes (%s)", async textScale => {
+  const module = await loadMosaicModule(readFileSync("public/visicalc_mosaic_app.wasm"));
+  const host = module.create({ textScale });
+  const load = vi.fn(async () => host);
+  const container = document.createElement("div"); document.body.append(container);
+  const root = createRoot(container);
+  try {
+    await act(async () => root.render(<App load={load} />));
+    const table = container.querySelector("table")!;
+    expect(table.style.fontSize).toBe(`${13 * textScale}px`);
+    expect((table.querySelector("tbody:not([data-mosaic-spacer]) td > div") as HTMLElement).style.height).toBe(`${32 * textScale}px`);
+    const field = container.querySelector<HTMLInputElement>('input[placeholder="Enter a value or formula"]')!;
+    expect(field.style.fontSize).toBe(`${14 * textScale}px`);
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(field, "=2+3");
+      field.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    await act(async () => root.render(<App load={load} textScale={2} />));
+    expect(load).toHaveBeenCalledTimes(1);
+    expect(host.update.props["edit-content"]).toBe("=2+3");
+    expect(field.value).toBe("=2+3");
+    expect(table.style.fontSize).toBe("26px");
+    expect((container.querySelector('[aria-label="Larger text"]') as HTMLButtonElement).disabled).toBe(true);
+    await act(async () => (container.querySelector('[aria-label="Smaller text"]') as HTMLButtonElement).click());
+    expect(host.update.props["text-scale"]).toBe(1.75);
+    expect(field.value).toBe("=2+3");
+    await act(async () => field.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })));
+    expect(table.querySelector("tbody:not([data-mosaic-spacer]) td")?.textContent).toBe("5");
+  } finally { await act(async () => root.unmount()); container.remove(); }
+});

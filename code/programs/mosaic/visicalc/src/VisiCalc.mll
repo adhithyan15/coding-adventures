@@ -2,21 +2,26 @@ layout VisiCalc {
   Column [workbook] {
     Row [toolbar] {
       Column [brand] {
-        Text [eyebrow] (content: "THE WORKBOOK")
-        Text [title] (content: "VisiCalc", a11y-role: heading)
+        Text [eyebrow] (font-size: slot: font-eyebrow, content: "THE WORKBOOK")
+        Text [title] (font-size: slot: font-title, content: "VisiCalc", a11y-role: heading)
       }
-      Text [subtitle] (content: "A little room for big ideas.")
+      Text [subtitle] (font-size: slot: font-body, content: "A little room for big ideas.")
     }
     Row [file-toolbar] {
-      HostButton [new-button] (label: "New workbook", onClick: emit: onNewWorkbook)
-      HostButton [open-button] (label: "Open", onClick: emit: onOpenWorkbook)
-      HostButton [save-button] (label: "Save", onClick: emit: onSaveWorkbook)
-      Text [file-status] (content: slot: file-status)
+      HostButton [new-button] (font-size: slot: font-body, label: "New workbook", onClick: emit: onNewWorkbook)
+      HostButton [open-button] (font-size: slot: font-body, label: "Open", onClick: emit: onOpenWorkbook)
+      HostButton [save-button] (font-size: slot: font-body, label: "Save", onClick: emit: onSaveWorkbook)
+      Text [file-status] (font-size: slot: font-caption, content: slot: file-status)
+    }
+    Row [text-toolbar] {
+      HostButton [smaller-text] (label: "A−", a11y-label: "Smaller text", font-size: slot: font-body, disabled: slot: smaller-text-disabled, onClick: emit: onSmallerText)
+      Text [text-scale-label] (content: slot: text-scale-label, font-size: slot: font-caption)
+      HostButton [larger-text] (label: "A+", a11y-label: "Larger text", font-size: slot: font-body, disabled: slot: larger-text-disabled, onClick: emit: onLargerText)
     }
     Row [formula-bar] {
-      Text [address-label] (content: slot: cell-address)
-      Text [formula-symbol] (content: "fx")
-      HostInput [formula-field] (
+      Text [address-label] (font-size: slot: font-input, content: slot: cell-address)
+      Text [formula-symbol] (font-size: slot: font-symbol, content: "fx")
+      HostInput [formula-field] (font-size: slot: font-input,
         value: slot: formula, read-only: slot: read-only,
         placeholder: "Enter a value or formula",
         onChange: emit: onFormulaChange,
@@ -24,17 +29,18 @@ layout VisiCalc {
       )
     }
     Row [sheet-toolbar] {
-      Text [sheet-name] (content: "Sheet 1")
-      Text [sheet-hint] (content: "Enter to apply · Esc to cancel")
+      Text [sheet-name] (font-size: slot: font-body, content: "Sheet 1")
+      Text [sheet-hint] (font-size: slot: font-caption, content: "Enter to apply · Esc to cancel")
     }
     If (when: slot: workbook-empty) {
       Column [empty-introduction] {
-        Text [empty-heading] (content: "Room for your next idea", a11y-role: heading)
-        Text [empty-hint] (content: "Choose a cell and type a number, a note, or a formula like =2+3. Press Enter to keep it.")
+        Text [empty-heading] (font-size: slot: font-introduction, content: "Room for your next idea", a11y-role: heading)
+        Text [empty-hint] (font-size: slot: font-body, content: "Choose a cell and type a number, a note, or a formula like =2+3. Press Enter to keep it.")
       }
     }
     HostScroll [sheet-frame] ( axis: both ) {
-      pkg::mosaic-pkg-grid::RowHeaderGrid (
+      pkg::mosaic-pkg-grid::RowHeaderGrid (row-height: slot: row-height,
+      font-size: slot: font-body, row-font-size: slot: font-row,
       viewport-offset: slot: viewport-offset,
       total-rows: slot: total-rows,
       onViewportShift: emit: onViewportShift,
@@ -54,6 +60,6 @@ layout VisiCalc {
       onEditCancel: emit: onEditCancel
       )
     }
-    Text [selection-summary] (content: slot: selection-summary)
+    Text [selection-summary] (font-size: slot: font-caption, content: slot: selection-summary)
   }
 }

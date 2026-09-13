@@ -2,7 +2,7 @@ style VisiCalcStartup {
   part surface { color-scheme: dark; background: #14221e; color: #e3eee4; min-height: 100vh; padding: 24px; box-sizing: border-box; font-family: sans-serif; align-items: center; justify-content: center; gap: 24px; }
   part card { width: 100%; max-width: 480px; box-sizing: border-box; padding: 32px; background: #1b2c25; border: 1px solid #32463b; border-radius: 16px; gap: 16px; }
   part eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #a3b6aa; }
-  part brand { font-family: serif; font-size: 44px; font-weight: 400; letter-spacing: 1px; }
+  part brand { overflow-wrap: anywhere; font-family: serif; font-size: 44px; font-weight: 400; letter-spacing: 1px; }
   part paper { gap: 8px; padding: 8px 0px; }
   part paper-first { flex: 1; height: 32px; background: #304f3c; border: 1px solid #42634c; border-radius: 4px; }
   part paper-second { flex: 1; height: 32px; background: #304f3c; border: 1px solid #42634c; border-radius: 4px; }
