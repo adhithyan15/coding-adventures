@@ -7,6 +7,7 @@ chapter: 2
 delivery: script
 type: writing
 headword: ন
+romanization: "nô"
 gloss: write the letter from the sound alone, and hear the vowel that is not a
 prerequisites: [BN-W01-na-delayed-copy]
 sounds: []

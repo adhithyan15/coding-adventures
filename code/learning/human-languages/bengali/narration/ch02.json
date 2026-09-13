@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Hanging From the Head-Line, One Piece at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:060acaf00231dd89",
+  "sourceHash": "fnv1a64:ac9b29626701de70",
   "lessons": [
     {
       "id": "BN-W01-na",
@@ -133,7 +133,7 @@
       "sequence": 71,
       "title": "ন (nô) — trace it, with the bar last",
       "headword": "ন",
-      "romanization": "",
+      "romanization": "nô",
       "gloss": "trace the letter with the model visible, following the bar last",
       "script": "bengali",
       "modality": "pen",
@@ -142,7 +142,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:848b1eb45ed5edf2",
+      "sourceHash": "fnv1a64:92eb5d98e47d4eb0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -204,7 +204,7 @@
       "sequence": 72,
       "title": "ন (nô) — copy it twice, and join the bar",
       "headword": "ন",
-      "romanization": "",
+      "romanization": "nô",
       "gloss": "copy the letter twice with the model visible, and draw one bar across both",
       "script": "bengali",
       "modality": "pen",
@@ -214,7 +214,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a8bcae0066e0eb9a",
+      "sourceHash": "fnv1a64:a469fdba6f1cb9e6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -273,7 +273,7 @@
       "sequence": 73,
       "title": "ন (nô) — write it with the model covered",
       "headword": "ন",
-      "romanization": "",
+      "romanization": "nô",
       "gloss": "write the letter with the model covered, then check the bar before the body",
       "script": "bengali",
       "modality": "pen",
@@ -283,7 +283,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:0e2e87cbfe68a656",
+      "sourceHash": "fnv1a64:474462f5557ae400",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -346,7 +346,7 @@
       "sequence": 74,
       "title": "ন (nô) — the letter from the sound",
       "headword": "ন",
-      "romanization": "",
+      "romanization": "nô",
       "gloss": "write the letter from the sound alone, and hear the vowel that is not a",
       "script": "bengali",
       "modality": "pen",
@@ -355,7 +355,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:da693c4118aabbf3",
+      "sourceHash": "fnv1a64:f6b65e417f6c57cf",
       "notice": {
         "modality": "pen",
         "needs": [

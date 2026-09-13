@@ -7,6 +7,7 @@ chapter: 2
 delivery: script
 type: writing
 headword: ন
+romanization: "nô"
 gloss: write the letter with the model covered, then check the bar before the body
 prerequisites: [BN-W01-na-guided-copy]
 sounds: []

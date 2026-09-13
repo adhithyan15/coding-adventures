@@ -7,6 +7,7 @@ chapter: 1
 delivery: script
 type: writing
 headword: "न"
+romanization: "na"
 gloss: write the letter from the sound alone, and meet the vowel nobody said
 prerequisites: [SA-S02-delayed-copy]
 sounds: []

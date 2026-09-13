@@ -7,6 +7,7 @@ chapter: 1
 delivery: script
 type: writing
 headword: "न"
+romanization: "na"
 gloss: write the letter with the model covered, and check the one stroke a memory drops
 prerequisites: [SA-S02-copy-the-three-strokes]
 sounds: []

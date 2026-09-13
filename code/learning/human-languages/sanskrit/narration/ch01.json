@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:41151c514eaff4c7",
+  "sourceHash": "fnv1a64:8790ae0e955f641e",
   "lessons": [
     {
       "id": "SA-C01-namaste",
@@ -461,7 +461,7 @@
       "sequence": 22,
       "title": "न (na) — copy it in three strokes, counting the lifts",
       "headword": "न",
-      "romanization": "",
+      "romanization": "na",
       "gloss": "copy the letter in the three strokes the source gives, counting pen lifts, model visible",
       "script": "devanagari",
       "modality": "pen",
@@ -470,7 +470,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:4af952cd379ebcc3",
+      "sourceHash": "fnv1a64:3c92bc1813196d2d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -532,7 +532,7 @@
       "sequence": 23,
       "title": "न (na) — write it with the model covered",
       "headword": "न",
-      "romanization": "",
+      "romanization": "na",
       "gloss": "write the letter with the model covered, and check the one stroke a memory drops",
       "script": "devanagari",
       "modality": "pen",
@@ -542,7 +542,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:048c6b9f543638f3",
+      "sourceHash": "fnv1a64:054bdab1deee69d9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -605,7 +605,7 @@
       "sequence": 24,
       "title": "न (na) — the letter from the sound",
       "headword": "न",
-      "romanization": "",
+      "romanization": "na",
       "gloss": "write the letter from the sound alone, and meet the vowel nobody said",
       "script": "devanagari",
       "modality": "pen",
@@ -614,7 +614,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:39b7cd0576ed1ce7",
+      "sourceHash": "fnv1a64:e614da60e545c595",
       "notice": {
         "modality": "pen",
         "needs": [

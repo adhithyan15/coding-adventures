@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 2,
-  "sourceHash": "fnv1a64:060acaf00231dd89",
+  "sourceHash": "fnv1a64:ac9b29626701de70",
   "lessonIds": [
     "BN-W01-na",
     "BN-W01-na-trace",
@@ -23,6 +23,6 @@
   "text": "bengali/narration/ch02.txt",
   "json": "bengali/narration/ch02.json",
   "textHash": "fnv1a64:0e7002b03a0a94cb",
-  "jsonHash": "fnv1a64:7781c02847cf2bf1",
+  "jsonHash": "fnv1a64:b6e1e7ad0aa65814",
   "findings": []
 }

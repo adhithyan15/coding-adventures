@@ -7,6 +7,7 @@ chapter: 1
 delivery: script
 type: writing
 headword: "न"
+romanization: "na"
 gloss: copy the letter in the three strokes the source gives, counting pen lifts, model visible
 prerequisites: [SA-S02-letter-na]
 sounds: []
