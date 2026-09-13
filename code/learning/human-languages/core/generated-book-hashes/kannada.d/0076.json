@@ -1,0 +1,11 @@
+{
+  "language": "kannada",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:a8cc94be11c28273",
+  "lessonIds": [
+    "KA-C76-words",
+    "KA-C76-lines",
+    "KA-C76-modala-oduvike"
+  ],
+  "tex": "kannada/book/chapters/ch76-reading-words-lines-and-a-passage.tex"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "KA-PATH-76-READING",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "KA-C76-words",
+    "KA-C76-lines",
+    "KA-C76-modala-oduvike"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-76-READING"
+  ],
+  "after": []
+}
