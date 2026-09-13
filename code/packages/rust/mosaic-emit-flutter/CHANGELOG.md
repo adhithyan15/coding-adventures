@@ -50,6 +50,23 @@ from a context *below* the generated `DefaultTextStyle.merge`, which a
 are still dropped silently, because this emitter has no style-drop
 reporting at all (#12022).
 
+Two build-breaking value ranges were closed while adding these sinks, both
+found in security review:
+
+- A **negative** border width reached `BorderSide`, whose constructor is
+  `assert(width >= 0.0)` -- so `border: -5px solid #ff0000` type-checked and
+  then threw when the widget built, taking out the input and everything
+  above it in the tree. `per_edge_border_expr` had guarded this for a while
+  and the new parse reintroduced it; it now rejects negatives and falls back
+  to Material's default.
+- `parse_pixel_value` filtered only `is_finite`, but Rust's `Display` for
+  `f64` never uses exponent notation, so a finite `1e300` expanded to a
+  **301-digit** bare literal. Dart rejects that outright
+  (`integer_literal_imprecise_as_double`), so one authored value stopped the
+  whole generated app compiling. Values beyond the exactly-representable
+  integer range now fall back to `0` like any other unreadable input. This
+  helper is shared, so the fix reaches container padding and sizing too.
+
 The CSS-wide keywords are dropped rather than guessed at: `css_color_to_dart`
 returns `None` for `inherit` and `transparent`, so neither invents a brush.
 That is deliberate -- inventing one is exactly how Compose and SwiftUI paint

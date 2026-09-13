@@ -3535,9 +3535,20 @@ fn parse_pixel_value(s: &str) -> String {
     // Not an injection -- no punctuation survives `parse::<f64>` -- but
     // it breaks the "generated source still type-checks" contract this
     // function's `0` fallback exists to keep.
+    // `is_finite` alone is NOT enough to keep the "generated source still
+    // type-checks" contract this function's `0` fallback exists for.
+    // Rust's `Display` for f64 never uses exponent notation, so a finite
+    // `1e300` expands to a 301-DIGIT bare literal, and Dart rejects that
+    // outright: "The integer literal is being used as a double, but can't
+    // be represented as a 64-bit double without overflow or loss of
+    // precision" -- a hard compile error that stops the whole generated
+    // app from building, from one authored style value. Anything beyond
+    // the exactly-representable integer range falls back to `0` like any
+    // other unreadable input.
+    const MAX_EXACT_INT: f64 = 9_007_199_254_740_992.0; // 2^53
     s.parse::<f64>()
         .ok()
-        .filter(|f| f.is_finite())
+        .filter(|f| f.is_finite() && f.abs() <= MAX_EXACT_INT)
         .map(|f| format!("{f}"))
         .unwrap_or_else(|| "0".to_string())
 }
@@ -4473,7 +4484,17 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
     fn strict_px(s: &str) -> Option<f64> {
         let t = s.trim();
         let t = t.strip_suffix("px").unwrap_or(t);
-        t.parse::<f64>().ok().filter(|f| f.is_finite())
+        // NEGATIVE widths are rejected, not clamped. `BorderSide`'s
+        // constructor is `assert(width >= 0.0)`, so a negative authored
+        // width type-checks and then THROWS when the widget builds,
+        // taking out the input and everything above it in the tree.
+        // `per_edge_border_expr` already skips such an edge for exactly
+        // this reason; this parse must not reintroduce the hazard.
+        // Falling through to `None` leaves Material's default border,
+        // which is the same correct-by-omission answer used elsewhere.
+        t.parse::<f64>()
+            .ok()
+            .filter(|f| f.is_finite() && *f >= 0.0)
     }
     fn is_zero(v: &str) -> bool {
         let t = v.trim();
@@ -14121,6 +14142,50 @@ mod host_input_style_tests {
             got,
             "TextStyle(color: const Color(0xFFE3EEE4), fontSize: 13, fontFamily: \"monospace\")"
         );
+    }
+
+    /// A NEGATIVE width must not reach `BorderSide`. Its constructor
+    /// asserts `width >= 0.0`, so a negative one type-checks and then
+    /// throws when the widget builds, taking out the input and its whole
+    /// ancestry. `per_edge_border_expr` has guarded this for a while; the
+    /// first draft of `host_input_border_expr` reintroduced it.
+    #[test]
+    fn a_negative_border_width_never_reaches_border_side() {
+        for value in ["-5px solid #ff0000", "-0.5px solid #ff0000"] {
+            let got = host_input_border_expr(&props(&[("border", value)]));
+            assert!(
+                got.is_none(),
+                "border: {value} must fall back to Material's default, got {got:?}"
+            );
+        }
+        assert!(
+            host_input_border_expr(&props(&[
+                ("border-width", "-3px"),
+                ("border-color", "#ff0000"),
+            ]))
+            .is_none(),
+            "a negative border-width must not emit a BorderSide"
+        );
+    }
+
+    /// `is_finite` alone does not keep generated Dart compiling: Rust's
+    /// `Display` for f64 never uses exponent notation, so a finite 1e300
+    /// becomes a 301-digit bare literal that Dart rejects outright
+    /// (`integer_literal_imprecise_as_double`), breaking the build of the
+    /// entire generated app from one authored value.
+    #[test]
+    fn an_absurd_pixel_value_falls_back_rather_than_emitting_300_digits() {
+        assert_eq!(parse_pixel_value("1e300px"), "0");
+        assert_eq!(parse_pixel_value("-1e300px"), "0");
+        assert!(
+            parse_pixel_value("1e300px").len() < 8,
+            "the fallback must be short, not a giant literal"
+        );
+        // the ordinary values every part authors are untouched
+        assert_eq!(parse_pixel_value("10px"), "10");
+        assert_eq!(parse_pixel_value("0px"), "0");
+        assert_eq!(parse_pixel_value("13"), "13");
+        assert_eq!(parse_pixel_value("6.5px"), "6.5");
     }
 
     /// The CSS-wide keywords must be DROPPED, never guessed at. This is
