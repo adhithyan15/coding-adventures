@@ -609,12 +609,12 @@ mod tests {
     #[test]
     fn tokenizes_quoted_labels_between_inline_block_nodes() {
         let tokens = try_tokenize_mermaid_block(
-            "block\nid1[\"first\"] -- \"a label\" --> id2[\"second\"]\n",
+            "block\nid1[\"first\"] -- \"solid\" --> id2[\"second\"]\nid2 == \"thick\" ==> id3\nid3 -. \"dotted\" -.-> id1\n",
         )
         .unwrap();
-        assert!(tokens.iter().any(|token| {
+        assert_eq!(tokens.iter().filter(|token| {
             token.type_name.as_deref() == Some("INLINE_LABELED_NODE_CONNECTION_LINE")
-        }));
+        }).count(), 3);
     }
 
     #[test]
