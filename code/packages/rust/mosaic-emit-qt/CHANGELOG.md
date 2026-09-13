@@ -4,6 +4,62 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — a border has edges (UI79, #14835)
+
+`border-{top,right,bottom,left}-{width,color}` now lowers. QML's
+`Rectangle.border` is all-four-edges, like Compose's `Modifier.border` and
+SwiftUI's `.border`, so each edge is **drawn** — but on Qt that means a *child
+element*, not a property: a `Rectangle` stretched along the edge by two
+opposing anchors and given a fixed extent on the third.
+
+The strips anchor to the styled wrapper, so they sit on the border box, outside
+the content layout's inset, where CSS puts them. They are siblings of that
+layout rather than children, so they take no part in its spacing — a border
+must not move anything.
+
+A part whose only border is per-edge now also gets the `Rectangle` wrapper it
+needs to anchor against; without that the edge would reach nothing.
+
+#### The binding loop, which only the QML runtime could show
+
+The obvious shape is wrong. The wrapper sizes itself with
+`implicitHeight: childrenRect.y + childrenRect.height`, and a strip anchored to
+`parent.bottom` depends on that height — so the height depends on the strip and
+the strip depends on the height:
+
+```
+QML Rectangle: Binding loop detected for property "implicitHeight"
+```
+
+Invisible in the emitted text, and invisible to the unit tests. Found by
+running the generated QML under the real `qml` runtime offscreen, and confirmed
+mine rather than pre-existing by running the same part **without** the strips,
+which is clean.
+
+Fixed by naming the content layout and sizing the wrapper from *it* rather than
+from `childrenRect`, only when strips are present: content → strip →
+`childrenRect`, with nothing feeding back.
+
+#### Verified by rendering
+
+`grabToImage` under the offscreen platform, four edges in four distinct colours,
+pixels sampled:
+
+| edge | authored | measured |
+| --- | --- | --- |
+| top | 2px | `y=0..1` — h=2 |
+| right | 3px | `x=35..37` — w=3 |
+| bottom | 4px | `y=27..30` — h=4 |
+| left | 5px | `x=0..4` — w=5 |
+
+Each on its own edge, each exactly its authored width, and zero binding-loop
+warnings.
+
+**Qt is verifiable on this host after all.** A previous note in this work
+claimed there was no Qt runtime here; `/opt/homebrew/bin/qml` exists, runs
+under `QT_QPA_PLATFORM=offscreen`, reports binding loops, and grabs frames.
+That is a real gate this backend did not have before.
+
 ### Added — `HostScroll` honours its axis (UI61, #14854)
 
 The cross-axis content extent is pinned **alongside** the scrollbar policy,
