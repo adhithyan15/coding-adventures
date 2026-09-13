@@ -7296,3 +7296,14 @@ The assertion guarding this missed it for the same reason: it used
 `find -path '*/Runtime/libmosaic_app.dylib'`, which matches at any depth and so
 cannot distinguish the layout that runs from the one that crashes. Assert the
 exact path when the layout is what matters.
+
+### 2026-09-12 — `path` is a special zsh parameter
+
+In zsh, the lowercase array parameter `path` is tied to the uppercase `PATH`
+environment variable. A shell loop written as `for path in ...` therefore
+replaces the executable search path on its first iteration, after which even
+`git` and `go` appear to be missing.
+
+Use a task-specific variable such as `sparse_dependency` for path lists. This
+also follows the general rule against repurposing common shell and system
+option names.
