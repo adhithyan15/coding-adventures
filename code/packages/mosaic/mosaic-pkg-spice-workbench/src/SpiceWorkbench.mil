@@ -56,6 +56,14 @@ component SpiceWorkbench {
   slot selected-schematic-label : text ;
   slot schematic-properties-label : text ;
   slot selected-schematic-kind-label : text ;
+  slot schematic-terminal-label : text ;
+  slot schematic-terminal-controls : list<text> ;
+  slot selected-schematic-terminal-label : text ;
+  slot schematic-terminal-disabled : bool ;
+  slot schematic-net-label-label : text ;
+  slot schematic-net-label : text ;
+  slot schematic-net-label-placeholder : text ;
+  slot schematic-net-label-disabled : bool ;
   slot schematic-reference-label : text ;
   slot schematic-reference : text ;
   slot schematic-reference-placeholder : text ;
@@ -102,6 +110,8 @@ component SpiceWorkbench {
   emit onSchematicAnalysisParameterTwoChange ( value : text ) ;
   emit onSchematicAnalysisParameterThreeChange ( value : text ) ;
   emit onSelectSchematicComponent ( reference : text ) ;
+  emit onSelectSchematicTerminal ( index : number ) ;
+  emit onSchematicNetLabelChange ( value : text ) ;
   emit onSchematicReferenceChange ( value : text ) ;
   emit onSchematicValueChange ( value : text ) ;
   emit onRemoveSchematicComponent ;

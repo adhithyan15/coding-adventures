@@ -184,6 +184,24 @@ layout SpiceWorkbench {
       Column [ schematic-properties ] {
         Text [ schematic-properties-label ] ( content : slot: schematic-properties-label )
         Text [ selected-schematic-kind ] ( content : slot: selected-schematic-kind-label )
+        Text [ schematic-terminal-label ] ( content : slot: schematic-terminal-label )
+        Row [ schematic-terminal-controls ] {
+          For ( each: slot: schematic-terminal-controls , as: terminal , index: terminal-index ) {
+            HostButton [ schematic-terminal-control ] (
+              label : ( terminal ) ,
+              disabled : slot: schematic-terminal-disabled ,
+              onClick : emit: onSelectSchematicTerminal
+            )
+          }
+        }
+        Text [ selected-schematic-terminal ] ( content : slot: selected-schematic-terminal-label )
+        Text [ schematic-net-label-label ] ( content : slot: schematic-net-label-label )
+        HostInput [ schematic-net-label-input ] (
+          value : slot: schematic-net-label ,
+          placeholder : slot: schematic-net-label-placeholder ,
+          disabled : slot: schematic-net-label-disabled ,
+          onChange : emit: onSchematicNetLabelChange
+        )
         Text [ schematic-reference-label ] ( content : slot: schematic-reference-label )
         HostInput [ schematic-reference-input ] (
           value : slot: schematic-reference ,
