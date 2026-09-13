@@ -250,6 +250,9 @@ overflow, and non-finite numeric results.
 Boolean snapshot evaluation distinguishes exact bare variables from unary
 wrappers, so direct `not` recurrences preserve their negated value rather than
 being treated as identity assignments.
+The recurrence assignment may be wrapped in a one-statement compound body;
+labels, conditionals, declarations, and additional statements remain outside
+this bounded analysis.
 
 Switch-list elements may use every supported designational expression: a
 conditional element selects its branch when `goto s[i]` runs, and a nested
