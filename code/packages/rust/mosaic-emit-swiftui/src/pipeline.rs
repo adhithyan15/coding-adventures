@@ -2556,36 +2556,57 @@ pub fn dropped_style_properties(
 ///
 /// [`container_spacing`] decides the last question rather than this function
 /// re-deriving it, so a value it rejects as unparseable is still a real drop.
+///
+/// EVERY occurrence has to consume it, not merely one. A part name can appear
+/// on more than one node — package resolution substitutes a `pkg::` reference
+/// with the resolved sub-tree, so a composed layout can carry a part from an
+/// inlined package beside a same-named part on a different tag. If one of them
+/// is a `Column` and the other a `Box`, the gap IS lost on the `Box`, and
+/// suppressing the report because some other node applied it hides a real loss.
+///
+/// This is the `all` the Compose reporter uses for the same reason — its
+/// `container_argument_covers` ends `on.iter().all(|c| carried_by(c))`, and its
+/// comment makes the same argument about a part shared between a `Row` and a
+/// `Text`. The first version of this function used `any`, which was the
+/// too-wide direction the doc above warns about; no current layout triggers it,
+/// which is exactly why it would have gone unnoticed.
 fn gap_consuming_parts<'a>(root: &'a LayoutNode, part_styles: &PartStyleMap) -> HashSet<&'a str> {
     fn walk<'a>(
         node: &'a LayoutNode,
         in_table: bool,
         part_styles: &PartStyleMap,
-        out: &mut HashSet<&'a str>,
+        // Per part: does every occurrence seen so far apply the gap? One that
+        // does not sets this false, and nothing sets it back.
+        out: &mut HashMap<&'a str, bool>,
     ) {
         // `HostTable` opens the context and it applies to the whole subtree,
-        // the way `table_ctx` is threaded through `emit_children`.
+        // the way `table_ctx` is threaded through `emit_children`. Stated as
+        // the tag rather than read from a `TableContext`, because the tag is
+        // where that context originates -- `extract_table_context` is only ever
+        // called on a `HostTable` node.
         let in_table = in_table || node.tag == "HostTable";
         let view = match node.tag.as_str() {
             "Column" => Some("VStack"),
             "Row" if !in_table => Some("HStack"),
             _ => None,
         };
-        if let Some(view) = view {
-            if container_spacing(view, node, part_styles).is_some() {
-                if let Some(part) = node.part_name.as_deref() {
-                    out.insert(part);
-                }
-            }
+        if let Some(part) = node.part_name.as_deref() {
+            let consumes =
+                view.is_some_and(|view| container_spacing(view, node, part_styles).is_some());
+            let entry = out.entry(part).or_insert(true);
+            *entry &= consumes;
         }
         for child in &node.children {
             walk(child, in_table, part_styles, out);
         }
     }
 
-    let mut out = HashSet::new();
-    walk(root, false, part_styles, &mut out);
-    out
+    let mut seen = HashMap::new();
+    walk(root, false, part_styles, &mut seen);
+    seen.into_iter()
+        .filter(|(_, every)| *every)
+        .map(|(part, _)| part)
+        .collect()
 }
 
 /// Why a property has no SwiftUI lowering, in terms a reader can act on.
@@ -14989,6 +15010,73 @@ mod tests {
 
         let inside = gap_drops(&gap_layout(Some("HostTable"), "Row", "c"));
         assert_eq!(inside.len(), 1, "got: {inside:?}");
+    }
+
+    #[test]
+    fn a_part_on_two_nodes_needs_every_one_of_them_to_apply_the_gap() {
+        // The case the first version of `gap_consuming_parts` got wrong. It
+        // used `any`, so one `Column` bearing the part suppressed the report
+        // for a `Box` bearing the same part -- where the gap really is lost.
+        //
+        // Not reachable in any layout in the repo today, which is precisely why
+        // it would have gone unnoticed: a part name can be bound to two tags
+        // once package resolution substitutes a `pkg::` reference with the
+        // resolved sub-tree.
+        //
+        // Caught in security review, below its reporting bar, by comparison
+        // with the Compose reporter -- whose `container_argument_covers` ends
+        // `on.iter().all(...)` and argues the same point about a part shared
+        // between a `Row` and a `Text`.
+        let both = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![
+                LayoutNode {
+                    tag: "Column".to_string(),
+                    part_name: Some("c".to_string()),
+                    props: Vec::new(),
+                    children: Vec::new(),
+                },
+                LayoutNode {
+                    tag: "Box".to_string(),
+                    part_name: Some("c".to_string()),
+                    props: Vec::new(),
+                    children: Vec::new(),
+                },
+            ],
+        };
+        let drops = gap_drops(&both);
+        assert_eq!(
+            drops.len(),
+            1,
+            "the Box occurrence loses the gap, so it stays reported; got: {drops:?}"
+        );
+
+        // And the control, so the assertion above is not passing because
+        // suppression stopped working altogether: two Columns, both applying
+        // it, report nothing.
+        let neither_loses = LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: vec![
+                LayoutNode {
+                    tag: "Column".to_string(),
+                    part_name: Some("c".to_string()),
+                    props: Vec::new(),
+                    children: Vec::new(),
+                },
+                LayoutNode {
+                    tag: "Row".to_string(),
+                    part_name: Some("c".to_string()),
+                    props: Vec::new(),
+                    children: Vec::new(),
+                },
+            ],
+        };
+        let none = gap_drops(&neither_loses);
+        assert!(none.is_empty(), "got: {none:?}");
     }
 
     #[test]

@@ -38,8 +38,23 @@ mirrors the emitter's tag-to-view mapping:
   `container_spacing` decides rather than this reporter assuming
   "`Column` means applied".
 
-Four tests cover those four cases; the last three are the ones that would catch
-a fix widened too far.
+**EVERY occurrence of a part has to consume the gap, not merely one.** The first
+version of `gap_consuming_parts` used `any`, which is the too-wide direction its
+own doc warns about: a part name can be bound to more than one node — package
+resolution substitutes a `pkg::` reference with the resolved sub-tree — and if
+one is a `Column` and the other a `Box`, the gap really is lost on the `Box`.
+Suppressing the report because some *other* node applied it hides a real loss.
+
+That is the `all` the Compose reporter already uses, for the same reason its
+`container_argument_covers` gives: a part shared between a `Row` and a `Text` is
+genuinely dropped on the `Text`. No layout in the repo triggers it today, which
+is precisely why it would have gone unnoticed; caught in security review, below
+its reporting bar, by comparison with that sibling.
+
+Five tests cover the five cases; four of them are the ones that would catch a
+fix widened too far. The multi-node test is mutation-tested against a faithful
+`any` — exactly that one test fails, and the other 216 stay green, so the test
+isolates the distinction rather than merely reacting to suppression breaking.
 
 A false drop is not a harmless extra line. It gets carried in
 `ALLOWED_STYLE_DROPS`, where it reads as a standing licence for a gap that
