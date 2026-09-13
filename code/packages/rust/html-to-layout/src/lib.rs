@@ -581,7 +581,7 @@ where
             focus_order,
         ),
     );
-    if let Some(image_map) = image_map_ext(node, &state.image_maps, image_index) {
+    if let Some(image_map) = image_map_ext(node, state, image_index) {
         layout.ext.insert("imageMap".into(), image_map);
     }
     layout
@@ -4169,6 +4169,8 @@ fn html_ext(
         "accessibleName",
         node.accessible_name.as_deref(),
     );
+    insert_optional(&mut values, "authoredRole", node.authored_role.as_deref());
+    insert_optional(&mut values, "editingMode", node.editing_mode.as_deref());
     insert_optional(&mut values, "name", node.anchor_name.as_deref());
     insert_optional(
         &mut values,
@@ -4243,14 +4245,16 @@ fn sequential_focus_order(node: &BrowserRenderNode) -> Option<i32> {
     {
         return None;
     }
-    let naturally_focusable = (node.role == "link"
+    let naturally_focusable = ((node.role == "link" || node.role == "image_map_area")
         && node
             .resolved_href
             .as_deref()
             .or(node.href.as_deref())
             .is_some_and(|href| !href.is_empty()))
         || node.role == "control"
-        || node.disclosure_kind.as_deref() == Some("summary");
+        || node.disclosure_kind.as_deref() == Some("summary")
+        || node.focusable == Some(true)
+        || node.editing_mode.is_some();
     let tab_index = node
         .tabindex
         .as_deref()
@@ -4261,7 +4265,7 @@ fn sequential_focus_order(node: &BrowserRenderNode) -> Option<i32> {
 
 fn image_map_ext(
     node: &BrowserRenderNode,
-    maps: &[ImageMapDefinition],
+    state: &mut ConversionState,
     image_index: Option<usize>,
 ) -> Option<ExtValue> {
     if node.role != "image" {
@@ -4271,7 +4275,11 @@ fn image_map_ext(
     if name.is_empty() {
         return None;
     }
-    let map = maps.iter().find(|map| map.name == name)?;
+    let map = state
+        .image_maps
+        .iter()
+        .find(|map| map.name == name)?
+        .clone();
     let image_index = image_index?;
     let image_key = node
         .id
@@ -4313,6 +4321,12 @@ fn image_map_ext(
                 ),
             );
             values.insert("areaIndex".into(), ExtValue::Int(index as i64));
+            if let Some(tab_index) = sequential_focus_order(area) {
+                let order = state.focus_index;
+                state.focus_index += 1;
+                values.insert("focusOrder".into(), ExtValue::Int(order as i64));
+                values.insert("tabIndex".into(), ExtValue::Int(i64::from(tab_index)));
+            }
             insert_optional(&mut values, "name", area.alt.as_deref());
             insert_optional(&mut values, "target", area.target.as_deref());
             insert_optional(
@@ -5458,5 +5472,46 @@ mod tests {
             ))
         );
         assert_eq!(area.get("href"), Some(&ExtValue::Str("north.html".into())));
+        assert_eq!(area.get("focusOrder"), Some(&ExtValue::Int(0)));
+        assert_eq!(area.get("tabIndex"), Some(&ExtValue::Int(0)));
+    }
+
+    #[test]
+    fn authored_focusability_projects_generic_role_name_and_order() {
+        let render = parse_browser_render_tree(
+            "<div id='action' role='button' tabindex='3' aria-label='Run report'>Run</div>\
+             <section id='editor' contenteditable aria-label='Notes'>Draft</section>\
+             <div id='skipped' tabindex='-1'>Skip</div>",
+        )
+        .unwrap();
+        let layout = html_render_tree_to_layout(&render, &mosaic_html_theme());
+        let action = find_by_id(&layout, "action").unwrap();
+        let editor = find_by_id(&layout, "editor").unwrap();
+        let skipped = find_by_id(&layout, "skipped").unwrap();
+        let ExtValue::Map(action_html) = action.ext.get("html").unwrap() else {
+            panic!("generic focus metadata should be a map");
+        };
+        assert_eq!(
+            action_html.get("authoredRole"),
+            Some(&ExtValue::Str("button".into()))
+        );
+        assert_eq!(
+            action_html.get("accessibleName"),
+            Some(&ExtValue::Str("Run report".into()))
+        );
+        assert_eq!(action_html.get("focusOrder"), Some(&ExtValue::Int(0)));
+        assert_eq!(action_html.get("tabIndex"), Some(&ExtValue::Int(3)));
+        let ExtValue::Map(editor_html) = editor.ext.get("html").unwrap() else {
+            panic!("editor focus metadata should be a map");
+        };
+        assert_eq!(
+            editor_html.get("editingMode"),
+            Some(&ExtValue::Str("richtext".into()))
+        );
+        assert_eq!(editor_html.get("focusOrder"), Some(&ExtValue::Int(1)));
+        let ExtValue::Map(skipped_html) = skipped.ext.get("html").unwrap() else {
+            panic!("skipped metadata should be a map");
+        };
+        assert!(!skipped_html.contains_key("focusOrder"));
     }
 }

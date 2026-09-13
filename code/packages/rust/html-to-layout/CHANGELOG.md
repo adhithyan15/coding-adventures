@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Project authored generic focusability, roles, names, editing mode, and
+  normalized `tabindex`, and allocate image-map area focus order beside the
+  associated rendered image.
+
 - Project stable document focus order and normalized `tabindex` for rendered
   links, controls, and details summaries into shared Layout IR metadata.
 
