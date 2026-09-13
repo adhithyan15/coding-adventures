@@ -122,7 +122,18 @@ The delivery order is:
    `vault-sealed-store` backend. Backend revision tokens are cryptographically
    bound to fixed-size custody revisions while the exact backend token is used
    for every atomic compare-and-swap or delete. HTTPS authority remains a
-   separate adapter.
+   separate adapter. An audit-first account-identity proof boundary is also
+   shipped as a prerequisite for selecting those opaque account keys. It
+   accepts only bounded zeroizing ID-token evidence plus exact provider,
+   client, issuer, nonce, caller-time, allowed-algorithm, and opaque
+   verification-context data; an injected trusted authority must verify the
+   signature and all bound claims before returning a provider-scoped opaque
+   account identity. Verification intent and its closed result are durably
+   provider/trace audited before the authority effect and result release. The
+   boundary exposes no subject claim or token bytes and implements no JWT,
+   JOSE, JWKS, discovery, network, clock, storage, or concrete cryptographic
+   authority. Broker composition that replaces caller-selected keys remains a
+   later step.
 6. **Confidential-client authentication:** web-service profiles for
    `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
    opaque custody references and audit-before-release rather than secrets in
