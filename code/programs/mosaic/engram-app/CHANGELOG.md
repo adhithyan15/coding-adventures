@@ -4,6 +4,25 @@
 
 ### Changed — Compose reaches the engine through the standard runtime
 
+**The release tests had to move with it, and CI is how that was found.**
+`Validate release identity` went red with **18 failures and 16 errors**, all in
+`ArchiveComposeTests`. #15089 taught `archive_compose` to derive its expected
+engine from the manifest, and left Compose's answer deliberately unpinned so
+this migration would not fail a test arguing it should not happen — but the
+*fixtures* still built `libengram_capi.dylib` distributions, and a migrated
+Compose ships `libmosaic_app`.
+
+They derive the name now, the same way the code does, so they keep testing
+layout and contents across a migration instead of becoming tripwires for the PR
+performing one. Which engine is correct is pinned separately; the fixtures make
+no such claim.
+
+Deriving a fixture from the same source as the check is also the shape that can
+quietly go vacuous, so it was mutation-tested three ways: dropping the engine
+requirement, reinstating the retired engine, and accepting an empty one each
+fail something. The second reproduces exactly the 18-and-16 CI reported, which
+is what confirms the diagnosis rather than merely agreeing with it.
+
 The third backend off a hand-written host, after Qt (#13728) and SwiftUI. The
 574-line `host/compose/MosaicHost.kt` — a JNA binding that opened the library,
 marshalled every event, owned snapshot persistence, and drove the file dialogs

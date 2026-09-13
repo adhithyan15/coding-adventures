@@ -297,6 +297,28 @@ class ArchiveWebTests(unittest.TestCase):
                 self.assertEqual(one.namelist(), two.namelist())
 
 
+# What a migrated Compose distribution carries, derived rather than written
+# down.
+#
+# `_engine_stem_for` reads the manifest: a backend has migrated exactly when
+# Engram stops overriding its generated host, so removing the Compose
+# `[host_assets]` entry flips this from `engram_capi` to `mosaic_app`. #15089
+# built that derivation and left Compose's answer deliberately unpinned in
+# `test_the_expected_engine_is_read_from_the_manifest`, so this change would not
+# fail a test arguing it should not happen — but the FIXTURES still hardcoded
+# the retired name, and 18 failures plus 16 errors is what that looked like.
+#
+# Deriving it keeps these tests about layout and contents across a migration
+# rather than turning them into tripwires for the PR performing one. Which
+# engine is correct is pinned separately; nothing here makes that claim.
+COMPOSE_STEM = engram_release._engine_stem_for("compose")
+COMPOSE_ENGINE_FILENAMES = {
+    "linux": f"lib{COMPOSE_STEM}.so",
+    "macos": f"lib{COMPOSE_STEM}.dylib",
+    "windows": f"{COMPOSE_STEM}.dll",
+}
+
+
 def _write_compose_dist(root: Path) -> Path:
     """A stand-in for what `createDistributable` leaves behind."""
 
@@ -304,7 +326,7 @@ def _write_compose_dist(root: Path) -> Path:
     (dist / "app").mkdir(parents=True)
     (dist / "MacOS").mkdir(parents=True)
     (dist / "app" / "engram-host.jar").write_bytes(b"PK\x03\x04stub")
-    (dist / "app" / "libengram_capi.dylib").write_bytes(b"\xcf\xfa\xed\xfe")
+    (dist / "app" / COMPOSE_ENGINE_FILENAMES["macos"]).write_bytes(b"\xcf\xfa\xed\xfe")
     launcher = dist / "MacOS" / "Engram"
     launcher.write_text("#!/bin/sh\nexec java -jar app/engram-host.jar\n")
     launcher.chmod(0o755)
@@ -325,7 +347,7 @@ class ArchiveComposeTests(unittest.TestCase):
                 names = archive.namelist()
                 self.assertIn(
                     "engram-compose-macos-v0.4.0/Engram.app/Contents/app/"
-                    "libengram_capi.dylib",
+                    + COMPOSE_ENGINE_FILENAMES["macos"],
                     names,
                 )
                 self.assertEqual(
@@ -361,18 +383,18 @@ class ArchiveComposeTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             dist = _write_compose_dist(root)
-            next(dist.rglob("libengram_capi.dylib")).unlink()
+            next(dist.rglob(COMPOSE_ENGINE_FILENAMES["macos"])).unlink()
             with self.assertRaises(ValueError) as caught:
                 engram_release.archive_compose(
                     "0.4.0", "macos", dist, root / "out", COMMIT
                 )
-            self.assertIn("engram_capi", str(caught.exception))
+            self.assertIn(COMPOSE_STEM, str(caught.exception))
 
     def test_refuses_an_empty_engine(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             dist = _write_compose_dist(root)
-            next(dist.rglob("libengram_capi.dylib")).write_bytes(b"")
+            next(dist.rglob(COMPOSE_ENGINE_FILENAMES["macos"])).write_bytes(b"")
             with self.assertRaises(ValueError) as caught:
                 engram_release.archive_compose(
                     "0.4.0", "macos", dist, root / "out", COMMIT
@@ -385,15 +407,15 @@ class ArchiveComposeTests(unittest.TestCase):
         # one spelling would reject the other two -- turning a correct build
         # into a failed release.
         for filename in [
-            "libengram_capi.so",
-            "libengram_capi.dylib",
-            "engram_capi.dll",
+            COMPOSE_ENGINE_FILENAMES["linux"],
+            COMPOSE_ENGINE_FILENAMES["macos"],
+            COMPOSE_ENGINE_FILENAMES["windows"],
         ]:
             with self.subTest(filename=filename):
                 with tempfile.TemporaryDirectory() as tmp:
                     root = Path(tmp)
                     dist = _write_compose_dist(root)
-                    engine = next(dist.rglob("libengram_capi.dylib"))
+                    engine = next(dist.rglob(COMPOSE_ENGINE_FILENAMES["macos"]))
                     engine.rename(engine.with_name(filename))
                     engram_release.archive_compose(
                         "0.4.0", "macos", dist, root / "out", COMMIT
@@ -697,7 +719,7 @@ class ArchiveComposeTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             dist = _write_compose_dist(root)
-            engine = next(dist.rglob("libengram_capi.dylib"))
+            engine = next(dist.rglob(COMPOSE_ENGINE_FILENAMES["macos"]))
             other = engine.with_name("something.txt")
             other.write_text("not an engine\n", encoding="utf-8")
             engine.unlink()
@@ -707,7 +729,7 @@ class ArchiveComposeTests(unittest.TestCase):
                 engram_release.archive_compose(
                     "0.4.0", "macos", dist, root / "out", COMMIT
                 )
-            self.assertIn("engram_capi", str(caught.exception))
+            self.assertIn(COMPOSE_STEM, str(caught.exception))
 
     def test_refuses_a_member_name_a_windows_extractor_would_split(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
