@@ -206,6 +206,10 @@ For a `while` element, a bounded static numeric comparison may likewise prove
 the initial body execution after abstractly assigning the controlled value;
 such known comparisons compose through ALGOL's boolean operators, while bare
 boolean literals, unsupported shapes, and dynamic operands remain conservative.
+A bounded control evolution may also simulate one simple local numeric
+assignment after every true predicate and retain its exact integer or finite
+real result. Predicate-dependency writes, compound bodies, nonnumeric targets,
+and loops that do not reach false within 4,096 evaluations fail closed.
 A conditional predicate is also evaluated when its selector is statically
 known; only the selected branch participates in the proof.
 Local string slots carry an empty verifier seed, but this is not a source-level
