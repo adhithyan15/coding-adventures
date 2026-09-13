@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Emit shape-aware, scaled client-side image-map link regions with shared
+  transforms, clipping, first-match precedence, and accessibility metadata.
+
 - Preserve effective link targets, download filenames, and opener/referrer
   restrictions in transformed, clipped hit regions.
 

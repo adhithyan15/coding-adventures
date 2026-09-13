@@ -308,7 +308,10 @@ where
     let theme = &context.theme;
     let style = root_computed_style(context);
     let ancestors = Vec::new();
-    let mut state = ConversionState::default();
+    let mut state = ConversionState {
+        image_maps: collect_image_maps(&render_tree.children),
+        ..ConversionState::default()
+    };
     let _root_counter_scope = state
         .counters
         .enter(&style.counter_reset, &style.counter_set);
@@ -356,9 +359,47 @@ where
 struct ConversionState {
     counters: CounterContext,
     control_index: usize,
+    image_index: usize,
     disclosure_index: usize,
     top_layer_index: usize,
     top_layers: Vec<LayoutNode>,
+    image_maps: Vec<ImageMapDefinition>,
+}
+
+#[derive(Clone, Debug)]
+struct ImageMapDefinition {
+    name: String,
+    areas: Vec<BrowserRenderNode>,
+}
+
+fn collect_image_maps(nodes: &[BrowserRenderNode]) -> Vec<ImageMapDefinition> {
+    fn visit(nodes: &[BrowserRenderNode], maps: &mut Vec<ImageMapDefinition>) {
+        for node in nodes {
+            if node.role == "image_map" {
+                if let Some(name) = node
+                    .image_map_name
+                    .as_deref()
+                    .map(str::trim)
+                    .filter(|name| !name.is_empty())
+                {
+                    maps.push(ImageMapDefinition {
+                        name: name.to_string(),
+                        areas: node
+                            .children
+                            .iter()
+                            .filter(|child| child.role == "image_map_area")
+                            .cloned()
+                            .collect(),
+                    });
+                }
+            }
+            visit(&node.children, maps);
+        }
+    }
+
+    let mut maps = Vec::new();
+    visit(nodes, &mut maps);
+    maps
 }
 
 fn convert_node<F>(
@@ -390,6 +431,11 @@ where
     let top_layer_index = top_layer_kind.map(|_| {
         let index = state.top_layer_index;
         state.top_layer_index += 1;
+        index
+    });
+    let image_index = (node.role == "image").then(|| {
+        let index = state.image_index;
+        state.image_index += 1;
         index
     });
     if display == "none"
@@ -522,6 +568,9 @@ where
         "html".into(),
         html_ext(node, disclosure_index, top_layer_index, top_layer_kind),
     );
+    if let Some(image_map) = image_map_ext(node, &state.image_maps, image_index) {
+        layout.ext.insert("imageMap".into(), image_map);
+    }
     layout
         .ext
         .insert("block".into(), block_ext(node, display, &style));
@@ -4155,6 +4204,97 @@ fn html_ext(
     ExtValue::Map(values)
 }
 
+fn image_map_ext(
+    node: &BrowserRenderNode,
+    maps: &[ImageMapDefinition],
+    image_index: Option<usize>,
+) -> Option<ExtValue> {
+    if node.role != "image" {
+        return None;
+    }
+    let name = node.usemap.as_deref()?.trim().strip_prefix('#')?.trim();
+    if name.is_empty() {
+        return None;
+    }
+    let map = maps.iter().find(|map| map.name == name)?;
+    let image_index = image_index?;
+    let image_key = node
+        .id
+        .as_deref()
+        .filter(|id| !id.is_empty())
+        .map(|id| format!("id:{id}"))
+        .unwrap_or_else(|| format!("index:{image_index}"));
+    let areas = map
+        .areas
+        .iter()
+        .enumerate()
+        .filter_map(|(index, area)| {
+            let href = area.resolved_href.as_deref().or(area.href.as_deref())?;
+            if href.is_empty() {
+                return None;
+            }
+            let mut values = HashMap::new();
+            values.insert(
+                "shape".into(),
+                ExtValue::Str(
+                    area.image_map_shape
+                        .as_deref()
+                        .unwrap_or("rect")
+                        .to_ascii_lowercase(),
+                ),
+            );
+            insert_optional(&mut values, "coords", area.image_map_coords.as_deref());
+            values.insert("href".into(), ExtValue::Str(href.to_string()));
+            values.insert(
+                "key".into(),
+                ExtValue::Str(
+                    area.id
+                        .as_deref()
+                        .filter(|id| !id.is_empty())
+                        .map(|id| format!("image-map:{image_key}:map:{name}:id:{id}"))
+                        .unwrap_or_else(|| {
+                            format!("image-map:{image_key}:map:{name}:area:{index}")
+                        }),
+                ),
+            );
+            values.insert("areaIndex".into(), ExtValue::Int(index as i64));
+            insert_optional(&mut values, "name", area.alt.as_deref());
+            insert_optional(&mut values, "target", area.target.as_deref());
+            insert_optional(
+                &mut values,
+                "effectiveTarget",
+                area.effective_target.as_deref(),
+            );
+            insert_optional(&mut values, "download", area.download.as_deref());
+            values.insert(
+                "relOpener".into(),
+                ExtValue::Bool(area.rel_tokens.iter().any(|token| token == "opener")),
+            );
+            values.insert(
+                "relNoopener".into(),
+                ExtValue::Bool(area.rel_tokens.iter().any(|token| token == "noopener")),
+            );
+            values.insert(
+                "relNoreferrer".into(),
+                ExtValue::Bool(area.rel_tokens.iter().any(|token| token == "noreferrer")),
+            );
+            Some(ExtValue::Map(values))
+        })
+        .collect();
+    let mut values = HashMap::from([
+        ("name".into(), ExtValue::Str(map.name.clone())),
+        ("imageIndex".into(), ExtValue::Int(image_index as i64)),
+        ("areas".into(), ExtValue::List(areas)),
+    ]);
+    if let Some(width) = parse_dimension(node.width.as_deref()).filter(|width| *width > 0.0) {
+        values.insert("coordinateWidth".into(), ExtValue::Float(width));
+    }
+    if let Some(height) = parse_dimension(node.height.as_deref()).filter(|height| *height > 0.0) {
+        values.insert("coordinateHeight".into(), ExtValue::Float(height));
+    }
+    Some(ExtValue::Map(values))
+}
+
 fn root_html_ext() -> ExtValue {
     ExtValue::Map(HashMap::from([(
         "role".into(),
@@ -5233,5 +5373,35 @@ mod tests {
             return None;
         };
         Some(value)
+    }
+
+    #[test]
+    fn client_side_image_maps_follow_usemap_into_layout_metadata() {
+        let render = parse_browser_render_tree(
+            "<img id='plan' src='plan.gif' width='200' height='100' usemap='#zones'>\
+             <map name='zones'><area id='north' shape='rect' coords='0,0,80,50' \
+             href='north.html' alt='North' target='preview'></map>",
+        )
+        .unwrap();
+        let layout = html_render_tree_to_layout(&render, &mosaic_html_theme());
+        let image = find_by_id(&layout, "plan").expect("mapped image should remain visible");
+        let ExtValue::Map(map) = image.ext.get("imageMap").expect("image-map metadata") else {
+            panic!("image-map metadata should be a map");
+        };
+        assert_eq!(map.get("name"), Some(&ExtValue::Str("zones".into())));
+        assert_eq!(map.get("coordinateWidth"), Some(&ExtValue::Float(200.0)));
+        let Some(ExtValue::List(areas)) = map.get("areas") else {
+            panic!("mapped areas should be ordered");
+        };
+        let ExtValue::Map(area) = &areas[0] else {
+            panic!("area metadata should be a map");
+        };
+        assert_eq!(
+            area.get("key"),
+            Some(&ExtValue::Str(
+                "image-map:id:plan:map:zones:id:north".into()
+            ))
+        );
+        assert_eq!(area.get("href"), Some(&ExtValue::Str("north.html".into())));
     }
 }

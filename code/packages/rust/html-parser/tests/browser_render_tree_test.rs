@@ -97,6 +97,8 @@ struct ExpectedRenderNode {
     #[serde(default)]
     image_map_coords: Option<String>,
     #[serde(default)]
+    usemap: Option<String>,
+    #[serde(default)]
     srcset: Option<String>,
     #[serde(default)]
     resolved_srcset: Option<String>,
@@ -509,6 +511,7 @@ impl ExpectedRenderNode {
             image_map_name: self.image_map_name,
             image_map_shape: self.image_map_shape,
             image_map_coords: self.image_map_coords,
+            usemap: self.usemap,
             srcset: self.srcset,
             resolved_srcset: self.resolved_srcset,
             sizes: self.sizes,

@@ -5,6 +5,9 @@ documented in this file.
 
 ## Unreleased
 
+- Carry local `img[usemap]` references into browser content and render nodes so
+  shared layout can associate hidden maps without reparsing HTML in a host.
+
 - Carry base-inherited effective link targets through browser content and
   render trees.
 

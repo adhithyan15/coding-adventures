@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Resolve client-side image maps onto their referencing replaced images as
+  ordered, typed Layout IR area metadata with stable accessibility keys.
+
 - Project effective targets, download names, and opener/referrer restrictions
   into shared link layout metadata.
 

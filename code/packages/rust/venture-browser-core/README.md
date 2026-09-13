@@ -123,6 +123,11 @@ content-area hosts can resize or scroll it, hit-test links in viewport
 coordinates, and request the exact viewport scene for each paint event. Page
 replacement resets scroll while preserving the current viewport height.
 
+Client-side image maps enter that same link path. The session exposes stable
+area accessibility keys and names, while pointer or semantic activation reuses
+the shared current/auxiliary/download planner. Native hosts never parse
+coordinates or choose overlap and target policy.
+
 `BrowserSession` is the reducer a native shell keeps for browser behavior. It
 dispatches Navigate, Back, Forward, Home, and Reload through the page pipeline,
 replaces redirect history with the final URL, and updates the viewport only

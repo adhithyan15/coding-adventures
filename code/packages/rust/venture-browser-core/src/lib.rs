@@ -713,6 +713,14 @@ pub struct BrowserPage {
     pub stylesheet_resources: Vec<BrowserStylesheetResource>,
 }
 
+/// A keyboard/accessibility target projected from a rendered image-map area.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ImageMapAccessibilityState {
+    pub key: String,
+    pub name: String,
+    pub url: String,
+}
+
 /// Host-neutral accessibility projection for one visible details summary.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct DisclosureAccessibilityState {
@@ -1646,6 +1654,43 @@ impl BrowserHostController {
         }
     }
 
+    /// Activate an image-map area by its stable shared accessibility key.
+    pub fn activate_image_map_area<F>(
+        &mut self,
+        key: &str,
+        execute: F,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        F: FnOnce(&mut BrowserSession, BrowserNavigation) -> Result<bool, BrowserLoadError>,
+    {
+        self.hovered_link_url = None;
+        self.session.pending_host_effect = None;
+        let Some(link) = self
+            .session
+            .viewport()
+            .and_then(|viewport| {
+                viewport
+                    .page()
+                    .paint
+                    .links
+                    .iter()
+                    .find(|link| link.key.as_deref() == Some(key))
+            })
+            .cloned()
+        else {
+            return Ok(false);
+        };
+        match plan_link_activation(link) {
+            BrowserLinkActivation::Navigate(url) => {
+                self.execute_navigation(BrowserNavigation::Navigate(url), execute)
+            }
+            BrowserLinkActivation::HostEffect(effect) => {
+                self.session.pending_host_effect = Some(effect);
+                Ok(true)
+            }
+        }
+    }
+
     pub fn update_hover(&mut self, viewport_x: f64, viewport_y: f64) -> bool {
         self.hovered_link_url = if viewport_x.is_finite() && viewport_y.is_finite() {
             self.session
@@ -1858,6 +1903,31 @@ impl BrowserSession {
             .as_ref()?
             .hit_test_link(viewport_x, viewport_y)
             .map(|link| link.url.as_str())
+    }
+
+    pub fn image_map_accessibility_states(&self) -> Vec<ImageMapAccessibilityState> {
+        let mut states = self
+            .viewport
+            .as_ref()
+            .into_iter()
+            .flat_map(|viewport| &viewport.page().paint.links)
+            .filter_map(|link| {
+                Some((
+                    link.image_map_order?,
+                    ImageMapAccessibilityState {
+                        key: link.key.clone()?,
+                        name: link
+                            .accessible_name
+                            .clone()
+                            .filter(|name| !name.trim().is_empty())
+                            .unwrap_or_else(|| link.url.clone()),
+                        url: link.url.clone(),
+                    },
+                ))
+            })
+            .collect::<Vec<_>>();
+        states.sort_by_key(|(order, _)| *order);
+        states.into_iter().map(|(_, state)| state).collect()
     }
 
     pub fn controls(&self) -> &BrowserControlModel {
@@ -4230,6 +4300,45 @@ impl BrowserSession {
             }
         }
     }
+
+    pub fn activate_image_map_area<'session, F, M, S, FM, R>(
+        &'session mut self,
+        key: &str,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<Option<&'session BrowserViewport>, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        self.pending_host_effect = None;
+        let Some(link) = self
+            .viewport()
+            .and_then(|viewport| {
+                viewport
+                    .page()
+                    .paint
+                    .links
+                    .iter()
+                    .find(|link| link.key.as_deref() == Some(key))
+            })
+            .cloned()
+        else {
+            return Ok(None);
+        };
+        match plan_link_activation(link) {
+            BrowserLinkActivation::Navigate(url) => {
+                self.execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
+            }
+            BrowserLinkActivation::HostEffect(effect) => {
+                self.pending_host_effect = Some(effect);
+                Ok(self.viewport.as_ref())
+            }
+        }
+    }
 }
 
 fn clipped_editor_rect(rect: ControlRect, viewport: ControlRect) -> Option<ControlRect> {
@@ -5809,6 +5918,9 @@ mod tests {
             y: 80.0,
             width: 30.0,
             height: 12.0,
+            key: None,
+            accessible_name: None,
+            image_map_order: None,
             url: "http://example.test/next".into(),
             target: None,
             effective_target: None,
@@ -5816,6 +5928,7 @@ mod tests {
             rel_opener: false,
             rel_noopener: false,
             rel_noreferrer: false,
+            shape: None,
             fixed: false,
             clips: Vec::new(),
         };
@@ -8460,6 +8573,81 @@ mod tests {
             requests.borrow().len(),
             1,
             "history traversal must not fetch"
+        );
+    }
+
+    #[test]
+    fn image_map_accessibility_activation_shares_navigation_target_policy() {
+        let start = "http://example.test/map";
+        let fetcher = |url: &str| {
+            let body = if url == start {
+                "<img src='plan.gif' width='200' height='100' usemap='#zones'>\
+                 <map name='zones'>\
+                   <area id='details' shape='rect' coords='0,0,80,100' href='/details' alt='Details'>\
+                   <area id='preview' shape='circle' coords='150,50,30' href='/preview' alt='Preview' target='_blank'>\
+                 </map>"
+            } else {
+                "<p>Destination</p>"
+            };
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                body.as_bytes().to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(260.0, 160.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(start, 160.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(
+            session.image_map_accessibility_states(),
+            vec![
+                ImageMapAccessibilityState {
+                    key: "image-map:index:0:map:zones:id:details".into(),
+                    name: "Details".into(),
+                    url: "http://example.test/details".into(),
+                },
+                ImageMapAccessibilityState {
+                    key: "image-map:index:0:map:zones:id:preview".into(),
+                    name: "Preview".into(),
+                    url: "http://example.test/preview".into(),
+                },
+            ]
+        );
+        session
+            .activate_image_map_area(
+                "image-map:index:0:map:zones:id:preview",
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        let Some(BrowserHostEffect::OpenBrowsingContext(request)) = session.take_host_effect()
+        else {
+            panic!("blank image-map target should become a bounded host effect");
+        };
+        assert_eq!(request.request.url, "http://example.test/preview");
+        assert_eq!(request.target, BrowserBrowsingContextTarget::Blank);
+
+        session
+            .activate_image_map_area(
+                "image-map:index:0:map:zones:id:details",
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        assert_eq!(
+            session.history().current_url(),
+            Some("http://example.test/details")
         );
     }
 }

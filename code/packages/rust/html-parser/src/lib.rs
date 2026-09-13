@@ -2151,6 +2151,7 @@ pub struct BrowserContentNode {
     pub image_map_name: Option<String>,
     pub image_map_shape: Option<String>,
     pub image_map_coords: Option<String>,
+    pub usemap: Option<String>,
     pub srcset: Option<String>,
     pub resolved_srcset: Option<String>,
     pub sizes: Option<String>,
@@ -2346,6 +2347,7 @@ pub struct BrowserRenderNode {
     pub image_map_name: Option<String>,
     pub image_map_shape: Option<String>,
     pub image_map_coords: Option<String>,
+    pub usemap: Option<String>,
     pub srcset: Option<String>,
     pub resolved_srcset: Option<String>,
     pub sizes: Option<String>,
@@ -4333,6 +4335,7 @@ impl BrowserRenderNode {
             image_map_name: content_node.image_map_name.clone(),
             image_map_shape: content_node.image_map_shape.clone(),
             image_map_coords: content_node.image_map_coords.clone(),
+            usemap: content_node.usemap.clone(),
             srcset: content_node.srcset.clone(),
             resolved_srcset: content_node.resolved_srcset.clone(),
             sizes: content_node.sizes.clone(),
@@ -17921,6 +17924,7 @@ fn collect_browser_content_nodes_with_mode(
                         image_map_name: None,
                         image_map_shape: None,
                         image_map_coords: None,
+                        usemap: None,
                         srcset: None,
                         resolved_srcset: None,
                         sizes: None,
@@ -18238,6 +18242,10 @@ fn browser_content_node_for_element(
         image_map_name: browser_image_map_name(element),
         image_map_shape: browser_image_map_shape(element),
         image_map_coords: browser_image_map_coords(element),
+        usemap: element
+            .attribute("usemap")
+            .map(collapse_html_whitespace)
+            .filter(|value| !value.is_empty()),
         resolved_srcset: srcset
             .as_deref()
             .map(|srcset| resolve_browser_srcset(srcset, base_href)),
