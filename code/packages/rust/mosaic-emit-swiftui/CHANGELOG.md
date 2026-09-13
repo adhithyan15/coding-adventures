@@ -4,6 +4,48 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — `gap` was reported as dropped while the container applied it
+
+`dropped_style_properties` derived its answer by running the modifier chain and
+collecting what no match arm handled. That is the right method for almost every
+property, and wrong for `gap`: SwiftUI takes spacing at view-**construction**
+time — `HStack(spacing:)`, `VStack(spacing:)` — and `container_spacing` has been
+reading it from the part's own style for some time. The modifier scan cannot see
+that, so it called every applied gap a drop.
+
+**22 of the 40 SwiftUI style drops reported for Engram were this**, and all 22
+were false. `$style.app-shell` was reported to drop `gap: 18` while the emitted
+Swift opened `VStack(spacing: 18)` on that very part. After the fix Engram
+reports 18 drops and no `gap` at all.
+
+`dropped_style_properties` now takes the layout, the same way the Compose
+reporter does for `justify-content`/`align-items` (#14834), and asks
+`container_spacing` rather than re-deriving the rule. `gap_consuming_parts`
+mirrors the emitter's tag-to-view mapping:
+
+- `Column` → `VStack` and `Row` → `HStack` consult `container_spacing`, so their
+  gap lands and is no longer reported.
+- `Box` → `Group`, `Stack` → `ZStack` and `HostScroll` → `ScrollView` do not.
+  `container_spacing` refuses them by name, deliberately: a `ZStack` overlays
+  along the depth axis and a `ScrollView` delegates layout to its content. Those
+  drops are still reported.
+- A `Row` **inside** a `HostTable` lowers through `container_table_row` to
+  `HStack(spacing: 0)`, pinning spacing to zero to match
+  `border-collapse: collapse`, so its authored gap really is discarded and stays
+  reported. That exception is what makes the table walk necessary rather than
+  decorative.
+- A value `container_spacing` cannot parse is still a drop, because
+  `container_spacing` decides rather than this reporter assuming
+  "`Column` means applied".
+
+Four tests cover those four cases; the last three are the ones that would catch
+a fix widened too far.
+
+A false drop is not a harmless extra line. It gets carried in
+`ALLOWED_STYLE_DROPS`, where it reads as a standing licence for a gap that
+genuinely stops being applied — the report is the evidence the release gate
+consults, so one that overstates cannot be acted on.
+
 ### Added — a border has edges (UI79, #14835)
 
 `border-{top,right,bottom,left}-{width,color}` now lowers. SwiftUI's `.border`
