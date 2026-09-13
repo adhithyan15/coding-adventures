@@ -258,7 +258,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      SPICE remote-node connection without a physical wire. Identical safe
      labels now join disconnected terminal nets at deck lowering while distinct
      labels on one physical net remain transactional errors.
-   - **Mosaic schematic terminal routing** (current phase): discovery after PR
+   - **Mosaic schematic terminal routing** (completed in PR #15097): discovery after PR
      #15069: the workbench routes a selected component to the nearest terminal
      of another component, so users cannot choose a non-nearest valid endpoint
      without raw document injection. Add an explicit selected-start-terminal /
@@ -266,6 +266,15 @@ model-card parameter, or a UI artifact is not a completion signal.
      transactional wire creation, selection cleanup, and Mosaic host-contract
      coverage. Keep arbitrary wire geometry, bus notation, and vendor
      interchange for later product phases.
+   - **Mosaic schematic transfer-function analysis** (current phase): discovery
+     after PR #15097: the workbench's canonical schematic plan exposes only
+     `.op`, `.dc`, `.ac`, and `.tran`, even though the frozen Berkeley v1
+     runnable plan also includes `.tf`. Add a persisted transfer-function card
+     with an independent-source selector and a labelled non-ground output-node
+     probe, preserve its source binding across component renames and snapshots,
+     lower the exact `.tf V(node) source` card, and cover the document, host,
+     and Mosaic control contracts. Keep arbitrary output expressions, current
+     probes, nested sweeps, and vendor-analysis controls for later phases.
 
 ### Operating rules
 

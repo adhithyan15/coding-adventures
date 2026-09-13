@@ -20,6 +20,11 @@ a draft of A because something saved B — for a brand-new model, the name,
 stylesheet, every field rename and template body at once, `reset()` being
 `*self = Self::default()`.
 
+Before making two handlers behave alike, check they are talking about the same
+object. Two events with matching names and adjacent match arms are not
+necessarily two routes to one operation; here one was "save what is open" and
+the other "upsert whatever you are given".
+
 Caught in security review, which measured both trees rather than reading them.
 The reachability was nil today — no shell emits the bare event — and that is not
 a defence: the event is documented for host model editors and aliased to
