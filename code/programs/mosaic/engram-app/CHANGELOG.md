@@ -50,9 +50,45 @@ That is #15089's precedent, which fixed Flutter's and XAML's release checks
 "though neither has migrated", on the grounds that holding the mechanism while
 leaving the known trap is the same partial wiring that caused the original bug.
 
-The release workflow installs `x86_64-apple-darwin` for the macOS leg only —
-`macos-latest` is arm64, and installing an Apple target on the Linux and Windows
-legs of the same matrix would be a download neither will ever use.
+The release workflow installs **both** Apple targets on the macOS leg only.
+Naming just the non-host one and relying on the runner to supply the other
+encodes "macos-latest is arm64" where nothing states it — and the script
+requires both, so an Intel runner would fail closed complaining about a target
+the workflow was never asked to install. Conditional, because installing an
+Apple target on the Linux and Windows legs of the same matrix would be a
+download neither will ever use; an empty value is byte-identical to the key
+being absent.
+
+**And the shipped artifact is now gated on being universal, rather than
+measured by hand.** The `x86_64 arm64` result above was established by running
+`lipo -archs` once and writing it down; nothing checked it, and
+`LIBRARY_MAGIC["macos"]` *accepts* the fat magic without requiring it — so a
+regression to a thin library would have published successfully and crashed on
+an Intel Mac.
+
+`archive_flutter` refuses one now, reading the file's own bytes rather than
+shelling out to `lipo` so the check works wherever the archiver runs. It tests
+`nfat_arch`, not just the magic: a fat container holding **one** architecture is
+legal and is exactly the artifact a magic-only check waves through. Gated on the
+migrated engine, since a backend still binding `engram-capi` is built host-only
+by a path this says nothing about.
+
+Mutation-tested three ways — the check doing nothing fails the three refusal
+tests; dropping the `nfat_arch` test fails only the one-architecture case; and
+dropping the platform/stem gate starts refusing correct Linux, Windows and
+unmigrated artifacts, which is what shows the gate is load-bearing rather than
+decoration.
+
+Two further review findings, both acted on. The `rustup target list` check now
+runs inside the same `cd "$RUST"` subshell the build uses, so it cannot answer
+for a different toolchain than the one that compiles. And the `lipo -create`
+abort-on-failure depends on `set -e`, which is now stated where someone moving
+this block into a function would read it.
+
+A reviewer also confirmed the architecture assertion empirically rather than by
+reasoning, against a real `x86_64 arm64e` binary: the space-padded `case`
+pattern correctly rejects `arm64e`, `arm64_32` and `x86_64h`, which is the
+substring trap this change could plausibly have had.
 
 ### Fixed — more than half of SwiftUI's reported style drops were not drops
 

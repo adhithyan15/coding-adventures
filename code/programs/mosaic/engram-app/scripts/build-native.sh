@@ -279,7 +279,14 @@ if [[ "$STANDARD_RUNTIME_BACKENDS" == *" $BACKEND "* ]]; then
   if [[ "$MOSAIC_UNIVERSAL" -eq 1 ]]; then
     APPLE_TARGETS=(aarch64-apple-darwin x86_64-apple-darwin)
     for target in "${APPLE_TARGETS[@]}"; do
-      if ! rustup target list --installed 2>/dev/null | grep -qx "$target"; then
+      # Asked INSIDE `$RUST`, which is where the build runs.
+      #
+      # `rustup target list` answers for the toolchain active in the current
+      # directory, and the build below runs in a `cd "$RUST"` subshell. There is
+      # no `rust-toolchain.toml` under it today, so the two agree -- but a
+      # check that answers for a different toolchain than the one that builds
+      # is a check that can pass while the build cannot.
+      if ! ( cd "$RUST" && rustup target list --installed 2>/dev/null ) | grep -qx "$target"; then
         echo "error: the $BACKEND macOS release needs both Apple targets" >&2
         echo "       run: rustup target add $target" >&2
         exit 1
@@ -296,7 +303,14 @@ if [[ "$STANDARD_RUNTIME_BACKENDS" == *" $BACKEND "* ]]; then
       SLICES+=("$slice")
     done
     # Written beside the slices rather than over either of them, so a re-run
-    # cannot lipo a fat file into itself.
+    # cannot lipo a fat file into itself. The inputs are always the per-target
+    # `release/` paths, which cargo only ever writes thin, so fat-into-fat is
+    # structurally impossible rather than merely unlikely.
+    #
+    # A failed `lipo -create` aborts here rather than falling through to check
+    # the PREVIOUS run's output, and that depends on `set -e` at the top of this
+    # file. Worth knowing if this block is ever moved into a function called
+    # from a conditional context, where `set -e` stops applying.
     MOSAIC_LIB="$RUST/target/$MOSAIC_LIB_NAME"
     lipo -create "${SLICES[@]}" -output "$MOSAIC_LIB"
     ARCHS="$(lipo -archs "$MOSAIC_LIB")"
