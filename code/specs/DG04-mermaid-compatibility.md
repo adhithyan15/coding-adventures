@@ -366,7 +366,8 @@ connections with solid, dotted, and thick lines and pipe-delimited optional
 labels, and circle or cross markers at either endpoint. Solid directed and
 undirected connections also accept native quoted labels. Link endpoints may
 declare square or rounded nodes inline, including their authored labels, rather
-than requiring a separate cell declaration. Terminal circle and
+than requiring a separate cell declaration; solid directed links preserve
+quoted labels in that inline form. Terminal circle and
 cross markers accept Mermaid's compact `A--oB` and `A--xB` forms without
 collapsing hyphenated node IDs. `diagram-layout-grid` resolves deterministic
 cell geometry before the shared backend-neutral PaintScene lowering path. A

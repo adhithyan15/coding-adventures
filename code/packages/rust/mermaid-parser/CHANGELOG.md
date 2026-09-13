@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.213.0
+
+- Preserve quoted labels on Block links that declare shaped endpoint nodes.
+
 ## 0.212.0
 
 - Apply Block `classDef default` styles to cells and composites without explicit classes.
