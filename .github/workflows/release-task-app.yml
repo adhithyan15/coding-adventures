@@ -71,6 +71,15 @@ jobs:
             --tag "$RELEASE_TAG" \
             --commit "$RELEASE_COMMIT"
 
+          changelog_args=(
+            --changelog code/programs/mosaic/task-app/CHANGELOG.md
+          )
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            changelog_args+=(--release-version "$RELEASE_VERSION")
+          fi
+          python code/scripts/taskapp_release.py validate-changelog \
+            "${changelog_args[@]}"
+
           if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
             if [[ "$RELEASE_REF" != "refs/heads/main" ]]; then
               echo "::error::TaskApp releases must be dispatched from main, not $RELEASE_REF"
