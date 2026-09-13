@@ -1,0 +1,16 @@
+{
+  "chapter": 84,
+  "title": "Reading — Words, Lines, and a First Passage",
+  "label": "ch:ta-mudhal-vaasippu",
+  "canDo": "I can read a Tamil word as shapes rather than sounds, recognise a question by its last word, and hold a whole passage without translating it word by word.",
+  "payoff": {
+    "lesson": "TA-C84-mudhal-vaasippu",
+    "kind": "four-skill-function-map",
+    "summary": "Thirty words of Tamil with no new word in them, four of whose lines have no verb at all because Tamil needs no word for is.",
+    "assesses": [
+      "TA-SKILL-CONNECTED-READING",
+      "TA-SKILL-READ-LINES",
+      "TA-SKILL-READ-WORDS"
+    ]
+  }
+}

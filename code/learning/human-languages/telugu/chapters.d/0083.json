@@ -1,0 +1,16 @@
+{
+  "chapter": 83,
+  "title": "Reading — Words, Lines, and a First Passage",
+  "label": "ch:te-modati-chadavu",
+  "canDo": "I can read a Telugu word downwards as well as along, read a sentence with no word for is, and hold a whole passage about one room without translating it word by word.",
+  "payoff": {
+    "lesson": "TE-C83-modati-chadavu",
+    "kind": "four-skill-function-map",
+    "summary": "Twenty-five words about one room, carried by ఉంది and లేదు, with respect marked in the verb where the teacher gets ఉన్నారా and the farmer does not.",
+    "assesses": [
+      "TE-SKILL-CONNECTED-READING",
+      "TE-SKILL-READ-LINES",
+      "TE-SKILL-READ-WORDS"
+    ]
+  }
+}
