@@ -1,0 +1,640 @@
+{
+  "version": 1,
+  "language": "italian",
+  "level": "pre-A1",
+  "target": {
+    "name": "Coding Adventures Italian pre-A1 Assessment — project-defined CILS A1 precursor",
+    "basis": "project-defined"
+  },
+  "sources": [
+    {
+      "id": "ca-hl16-assessment-policy",
+      "title": "HL16 — Exam-ready books and the gentle writing ramp",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL16-exam-ready-books-and-writing-ramp.md",
+      "published": "2026-08-20",
+      "accessed": "2026-09-13"
+    },
+    {
+      "id": "ca-hl18-task-shapes",
+      "title": "HL18 — Four-skill task shapes",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL18-four-skill-task-shapes.md",
+      "published": "2026-08-20",
+      "accessed": "2026-09-13"
+    },
+    {
+      "id": "ca-italian-assessment",
+      "title": "Coding Adventures Italian Assessment Specification",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/italian/assessment-spec.md",
+      "published": "2026-09-13",
+      "accessed": "2026-09-13"
+    },
+    {
+      "id": "cils-levels",
+      "title": "I livelli CILS — Università per Stranieri di Siena",
+      "url": "https://cils.unistrasi.it/1/79/82/I_livelli_CILS.htm",
+      "published": "not stated",
+      "accessed": "2026-09-13"
+    },
+    {
+      "id": "cils-structure-and-scoring",
+      "title": "CILS — Certificazione di Italiano come Lingua Straniera, Centro Linguistico, Università di Pavia",
+      "url": "https://cla.unipv.it/?page_id=54510",
+      "published": "not stated",
+      "accessed": "2026-09-13"
+    }
+  ],
+  "note": "The DELE ladder begins at A1; Instituto Cervantes publishes no diploma below it, and the para escolares variants are age-adapted forms of A1 and A2/B1 rather than sub-levels. This rung is therefore project-defined per HL18 §2. The two Cervantes sources are cited to fix what this precursor runs UP TO, not to imply an official pre-A1 format exists.",
+  "administration": {
+    "writtenMinutes": 25,
+    "speakingMinutes": 5,
+    "speakingGroupMaximum": 1,
+    "speakingPreparationMinutes": 2,
+    "deliveryModes": [
+      "paper",
+      "recorded-audio",
+      "live-interlocutor"
+    ]
+  },
+  "passRule": {
+    "maximumPoints": 100,
+    "passPoints": 60,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": 0.6,
+      "listening": 0.6,
+      "writing": 0.6,
+      "speaking": 0.6
+    },
+    "note": "Each skill is worth 25 points and must independently reach 60%; the overall 60-point floor cannot compensate for a failed skill. Unlike every other rung written so far, this is NOT a departure from the target exam's rule -- it is a match. CILS already refuses compensation: at A1 and A2 each part is out of 12 and a candidate must reach 7, and from B1 to C2 each part is out of 20 and must reach 11. Fall below on one part and the exam is not passed, whatever the other parts scored. CILS also has a FIFTH part, the analisi delle strutture di comunicazione, which the four-skill model has no slot for; it appears from A1 onward, where the CILS target itself begins, and there is no CILS pre-A1 for this rung to mirror."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 8,
+      "parts": [
+        {
+          "id": "prea1-reading-known-word-match",
+          "promptModes": [
+            "written text",
+            "nonverbal picture cue"
+          ],
+          "promptGenres": [
+            "fixed greeting",
+            "courtesy formula",
+            "very short practical label"
+          ],
+          "responseModes": [
+            "selected response",
+            "matching"
+          ],
+          "items": 6,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 1,
+            "maximum": 3,
+            "approximate": false
+          },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": 15,
+            "criteria": [
+              "answer-key match"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "nonverbal picture cue"
+            ],
+            "forbidden": [
+              "dictionary",
+              "glossary",
+              "English translation of the stimulus"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [
+            "response length is not applicable to a selected-response item",
+            "replay is not applicable to written input"
+          ],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-italian-assessment"
+          ]
+        },
+        {
+          "id": "prea1-reading-choose-the-reply",
+          "promptModes": [
+            "written text"
+          ],
+          "promptGenres": [
+            "two-turn greeting exchange",
+            "wellbeing question"
+          ],
+          "responseModes": [
+            "selected response"
+          ],
+          "items": 4,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 2,
+            "maximum": 6,
+            "approximate": false
+          },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": 10,
+            "criteria": [
+              "answer-key match"
+            ]
+          },
+          "aids": {
+            "allowed": [],
+            "forbidden": [
+              "dictionary",
+              "glossary",
+              "English translation of the stimulus"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [
+            "response length is not applicable to a selected-response item",
+            "replay is not applicable to written input"
+          ],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-italian-assessment"
+          ]
+        }
+      ]
+    },
+    {
+      "skill": "listening",
+      "minutes": 7,
+      "parts": [
+        {
+          "id": "prea1-listening-recognise-greeting",
+          "promptModes": [
+            "recorded-speech"
+          ],
+          "promptGenres": [
+            "fixed greeting",
+            "courtesy formula",
+            "time-of-day greeting"
+          ],
+          "responseModes": [
+            "selected response",
+            "matching"
+          ],
+          "items": 6,
+          "stimulusLength": {
+            "unit": "seconds",
+            "minimum": 1,
+            "maximum": 4,
+            "approximate": false
+          },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": {
+            "maxRawPoints": 15,
+            "criteria": [
+              "answer-key match"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "nonverbal picture cue",
+              "written answer options"
+            ],
+            "forbidden": [
+              "written transcript of the audio",
+              "dictionary"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [
+            "response length is not applicable to a selected-response item",
+            "delivery speed in syllables per second is not fixed by this project-defined rung and is left to the calibration step"
+          ],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-italian-assessment"
+          ]
+        },
+        {
+          "id": "prea1-listening-catch-the-name",
+          "promptModes": [
+            "recorded-speech"
+          ],
+          "promptGenres": [
+            "name exchange",
+            "wellbeing exchange"
+          ],
+          "responseModes": [
+            "selected response",
+            "short written response"
+          ],
+          "items": 4,
+          "stimulusLength": {
+            "unit": "seconds",
+            "minimum": 3,
+            "maximum": 8,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "words",
+            "minimum": 1,
+            "maximum": 2,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": {
+            "maxRawPoints": 10,
+            "criteria": [
+              "answer-key match",
+              "recognisable spelling of a taught word"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "written answer options"
+            ],
+            "forbidden": [
+              "written transcript of the audio",
+              "dictionary"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [
+            "delivery speed in syllables per second is not fixed by this project-defined rung and is left to the calibration step"
+          ],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-italian-assessment"
+          ]
+        }
+      ]
+    },
+    {
+      "skill": "writing",
+      "minutes": 10,
+      "parts": [
+        {
+          "id": "prea1-writing-delayed-recall",
+          "promptModes": [
+            "briefly-visible-written-model"
+          ],
+          "promptGenres": [
+            "known word"
+          ],
+          "responseModes": [
+            "delayed handwritten recall"
+          ],
+          "items": 2,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 1,
+            "maximum": 1,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "words",
+            "minimum": 1,
+            "maximum": 1,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": {
+            "maxRawPoints": 5,
+            "criteria": [
+              "correct letter sequence",
+              "double-consonant length",
+              "legibility"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "five-second initial model view"
+            ],
+            "forbidden": [
+              "visible model during response",
+              "tracing guide"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-italian-assessment",
+            "cils-levels",
+            "cils-structure-and-scoring"
+          ]
+        },
+        {
+          "id": "prea1-writing-dictation",
+          "promptModes": [
+            "recorded-speech"
+          ],
+          "promptGenres": [
+            "known word",
+            "memorised greeting chunk"
+          ],
+          "responseModes": [
+            "handwritten dictation"
+          ],
+          "items": 3,
+          "stimulusLength": {
+            "unit": "seconds",
+            "minimum": 1,
+            "maximum": 4,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "words",
+            "minimum": 1,
+            "maximum": 2,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": {
+            "maxRawPoints": 10,
+            "criteria": [
+              "correct letter sequence",
+              "double-consonant length",
+              "graphic accent on a final stressed vowel",
+              "legibility"
+            ]
+          },
+          "aids": {
+            "allowed": [],
+            "forbidden": [
+              "visible model",
+              "written answer options",
+              "dictionary",
+              "tracing guide"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [
+            "delivery speed in syllables per second is not fixed by this project-defined rung and is left to the calibration step"
+          ],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-italian-assessment",
+            "cils-levels",
+            "cils-structure-and-scoring"
+          ]
+        },
+        {
+          "id": "prea1-writing-bounded-production",
+          "promptModes": [
+            "written-icon-supported-instruction",
+            "nonverbal picture cue"
+          ],
+          "promptGenres": [
+            "greeting choice",
+            "personal name label",
+            "yes-no response"
+          ],
+          "responseModes": [
+            "independent handwritten word or memorised chunk"
+          ],
+          "items": 2,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 1,
+            "maximum": 5,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "words",
+            "minimum": 1,
+            "maximum": 4,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": {
+            "maxRawPoints": 10,
+            "criteria": [
+              "task completion",
+              "independent retrieval",
+              "orthographic control",
+              "double-consonant length",
+              "legibility"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "nonverbal picture cue"
+            ],
+            "forbidden": [
+              "copyable answer model",
+              "dictionary",
+              "tracing guide"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-italian-assessment",
+            "cils-levels",
+            "cils-structure-and-scoring"
+          ]
+        }
+      ]
+    },
+    {
+      "skill": "speaking",
+      "minutes": 5,
+      "parts": [
+        {
+          "id": "prea1-speaking-greeting-and-identity",
+          "promptModes": [
+            "live-interlocutor",
+            "nonverbal picture cue"
+          ],
+          "promptGenres": [
+            "greeting exchange",
+            "name exchange"
+          ],
+          "responseModes": [
+            "spoken rehearsed exchange"
+          ],
+          "items": 2,
+          "stimulusLength": {
+            "unit": "seconds",
+            "minimum": 1,
+            "maximum": 5,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "words",
+            "minimum": 1,
+            "maximum": 5,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": 10,
+            "criteria": [
+              "task completion",
+              "intelligibility to a sympathetic listener",
+              "responds without an English fallback",
+              "register appropriate to the prompt"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "nonverbal picture cue",
+              "two minutes of preparation"
+            ],
+            "forbidden": [
+              "written script",
+              "dictionary"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [
+            "replay is not applicable to a live interlocutor turn",
+            "the candidate is assessed individually even though a live interlocutor speaks; speakingGroupMaximum is 1"
+          ],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-italian-assessment"
+          ]
+        },
+        {
+          "id": "prea1-speaking-familiar-questions",
+          "promptModes": [
+            "live-interlocutor",
+            "nonverbal picture cue"
+          ],
+          "promptGenres": [
+            "wellbeing exchange",
+            "yes-no response"
+          ],
+          "responseModes": [
+            "spoken rehearsed exchange"
+          ],
+          "items": 2,
+          "stimulusLength": {
+            "unit": "seconds",
+            "minimum": 1,
+            "maximum": 5,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "words",
+            "minimum": 1,
+            "maximum": 4,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": 8,
+            "criteria": [
+              "task completion",
+              "intelligibility to a sympathetic listener",
+              "responds without an English fallback"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "nonverbal picture cue"
+            ],
+            "forbidden": [
+              "written script",
+              "dictionary"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [
+            "replay is not applicable to a live interlocutor turn",
+            "the candidate is assessed individually even though a live interlocutor speaks; speakingGroupMaximum is 1"
+          ],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-italian-assessment"
+          ]
+        },
+        {
+          "id": "prea1-speaking-short-request",
+          "promptModes": [
+            "live-interlocutor",
+            "nonverbal picture cue"
+          ],
+          "promptGenres": [
+            "polite request",
+            "leave-taking"
+          ],
+          "responseModes": [
+            "spoken rehearsed exchange"
+          ],
+          "items": 2,
+          "stimulusLength": {
+            "unit": "seconds",
+            "minimum": 1,
+            "maximum": 5,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "words",
+            "minimum": 1,
+            "maximum": 6,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": 7,
+            "criteria": [
+              "task completion",
+              "intelligibility to a sympathetic listener",
+              "responds without an English fallback",
+              "uses a courtesy formula rather than a bare imperative"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "nonverbal picture cue"
+            ],
+            "forbidden": [
+              "written script",
+              "dictionary"
+            ],
+            "notPublished": []
+          },
+          "notPublished": [
+            "replay is not applicable to a live interlocutor turn",
+            "the candidate is assessed individually even though a live interlocutor speaks; speakingGroupMaximum is 1"
+          ],
+          "sourceIds": [
+            "ca-hl16-assessment-policy",
+            "ca-hl18-task-shapes",
+            "ca-italian-assessment"
+          ]
+        }
+      ]
+    }
+  ]
+}
