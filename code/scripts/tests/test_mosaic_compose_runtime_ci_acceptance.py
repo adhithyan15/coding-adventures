@@ -53,6 +53,7 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             "rust/mosaic-app-conformance",
             "rust/mosaic-app-runtime",
             "rust/task-mosaic-app",
+            "rust/engram-mosaic-app",
         ):
             with self.subTest(package=package):
                 self.assertTrue(
@@ -65,6 +66,20 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertTrue(
             MODULE.requires_mosaic_compose_runtime(
                 {"affected_packages": ["mosaic/programs/task-app"]}
+            )
+        )
+
+    def test_engram_app_requires_acceptance(self) -> None:
+        """The lane compiles Engram's `[host_effects]` handler.
+
+        Without this, editing `host/compose/EngramEffects.kt` -- which affects
+        only this package -- would skip the one check that compiles it, so the
+        edits most likely to break the handler are the ones that go unchecked.
+        """
+
+        self.assertTrue(
+            MODULE.requires_mosaic_compose_runtime(
+                {"affected_packages": ["mosaic/programs/engram-app"]}
             )
         )
 
@@ -157,6 +172,43 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
             "gradle --no-daemon --stacktrace -p \"$strict_output/compose\" compileKotlin",
             workflow,
         )
+
+    def test_workflow_builds_engram_and_wires_its_effect_handler(self) -> None:
+        """The Engram block, mirroring the Qt and SwiftUI ones.
+
+        Scoped to the text AFTER the Engram marker rather than searched over the
+        whole workflow: `--profile native-complete` and `compileKotlin` both
+        appear several times in this lane already, so a whole-file `assertIn`
+        would pass with no Engram block at all.
+        """
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn("mosaic-compose-engram", workflow)
+        # Anchored on the block's opening comment, not on the `$RUNNER_TEMP`
+        # path: the build of the runtime library precedes that path, so slicing
+        # there would put half the block out of scope.
+        self.assertIn("# Engram on Compose", workflow)
+        engram_step = workflow[workflow.index("# Engram on Compose"):]
+        self.assertIn(
+            "cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app",
+            engram_step,
+        )
+        self.assertIn("libengram_mosaic_app.so", engram_step)
+        self.assertIn('test -f "$engram_runtime_library"', engram_step)
+        self.assertIn("--backend compose", engram_step)
+        self.assertIn("--profile native-complete", engram_step)
+        self.assertIn('--runtime-library "$engram_runtime_library"', engram_step)
+        # The override is pinned absent, which is what keeps the migration from
+        # quietly coming undone.
+        self.assertIn(
+            "jq -e '.replacedGeneratedFiles == []' "
+            '"$engram_output/compose/mosaic-degradations.json"',
+            engram_step,
+        )
+        # And the install is checked in the generated app, which no assertion
+        # over the handler's own source can reach.
+        self.assertIn("installEngramEffects(it)", engram_step)
+        self.assertIn('gradle --no-daemon --stacktrace -p "$engram_output/compose" compileKotlin', engram_step)
 
     def test_harness_does_not_duplicate_the_generated_binding(self) -> None:
         source = COMPOSE_CONFORMANCE / "src" / "main" / "kotlin"

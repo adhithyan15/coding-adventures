@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "source-collection/typescript-landing-page-exact-inputs",
+  "domain": "source_collection",
+  "summary": "The reviewed landing-page root retains exactly its authored document, persisted identities, checked image, and directly consumed stylesheet.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["source_collection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "source_collection",
+    "options": {
+      "language": "typescript",
+      "package_root": "code/sites/landing-page",
+      "mode": "extension",
+      "registry_sha256": "190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530",
+      "declared_srcs": [],
+      "candidates": [
+        {"path": "BUILD", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "data/.index.landing.id.json", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "data/.other.landing.id.json", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "data/assets/.og.jpg.id.json", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "data/assets/og-copy.jpg", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "data/assets/og.jpg", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "data/index.landing", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "data/other.landing", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "dist/generated.js", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "index.ts", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "landing.css", "kind": "file", "content_hex": "736f757263650a"},
+        {"path": "nested/landing.css", "kind": "file", "content_hex": "736f757263650a"}
+      ]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "source-collection/typescript-landing-page-exact-inputs",
+    "domain": "source_collection",
+    "outcome": "ok",
+    "result": {
+      "files": [
+        {"path": "BUILD", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "data/.index.landing.id.json", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "data/assets/.og.jpg.id.json", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "data/assets/og.jpg", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "data/index.landing", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "index.ts", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"},
+        {"path": "landing.css", "digest": "b8bb034f9b63bd0254fbc7c157cae746c75853f4643d6cea844dc48ddb57f522"}
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

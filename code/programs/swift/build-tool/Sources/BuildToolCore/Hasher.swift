@@ -84,10 +84,10 @@ public enum Hasher {
     /// environment authority, and compared field-for-field in the test suite.
     static let languageSourceInputRegistry = LanguageSourceInputRegistryProjection.value
     static let languageSourceInputRegistryDigest =
-        "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70"
+        "190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530"
     static let repositorySourceInputBoundaryRegistry = RepositorySourceInputBoundaryProjection.value
     static let repositorySourceInputBoundaryDigest =
-        "963cc4090e165752fd3a62921b699dfff8f0677b49d7236812398a8abed0a25f"
+        "cb396d048211f3ec20f1e4d5a438746e5b19642b6d2b039e33c93876a841cd6d"
     static var repositoryBoundaryRegisteredPaths: [String] {
         repositorySourceInputBoundaryRegistry.registeredInputPaths
     }
@@ -98,16 +98,15 @@ public enum Hasher {
     ) -> [String] {
         var paths = Set<String>()
         for package in packages {
-            guard let packageRoot = try? repositoryPackagePath(
-                package.path,
-                repositoryRoot: repositoryRoot,
-                expectedLanguage: package.language
+            guard let profile = try? sourceInputProfile(
+                package,
+                repositoryRoot: repositoryRoot
             ) else {
                 continue
             }
             paths.formUnion(
                 repositorySourceInputBoundaryRegistry.inputPaths(
-                    packageRoot: packageRoot
+                    packageRoot: profile.packageRoot
                 )
             )
         }
@@ -133,11 +132,11 @@ public enum Hasher {
         trackedRepositoryPaths: Set<String>? = nil
     ) throws -> String {
         do {
-            let packageRoot = try repositoryPackagePath(
-                package.path,
-                repositoryRoot: repositoryRoot,
-                expectedLanguage: package.language
+            let profile = try sourceInputProfile(
+                package,
+                repositoryRoot: repositoryRoot
             )
+            let packageRoot = profile.packageRoot
             let rootBefore = try secureDirectoryState(
                 package.path,
                 repositoryRoot: repositoryRoot
@@ -272,20 +271,16 @@ public enum Hasher {
         var declaredSourceMatchWork: UInt64 = 0
         var portableIdentities: [String: String] = [:]
 
-        guard let languageInputs = languageSourceInputRegistry.inputs(
-            for: package.language
-        ) else {
+        let profile = try repositoryRoot.map {
+            try sourceInputProfile(package, repositoryRoot: $0)
+        }
+        let sourceLanguage = profile?.language ?? package.language
+        guard let languageInputs = languageSourceInputRegistry.inputs(for: sourceLanguage) else {
             throw SourceHashInputError.unsafePath
         }
         let universal = languageSourceInputRegistry.universalInputs
         let generatedDirectories = Set(universal.generatedDirectoryComponents)
-        let repositoryPackageRoot = try repositoryRoot.map {
-            try repositoryPackagePath(
-                package.path,
-                repositoryRoot: $0,
-                expectedLanguage: package.language
-            )
-        }
+        let repositoryPackageRoot = profile?.packageRoot
         let packageExactPaths = Set(
             languageInputs.packageExactInputs
                 .filter { $0.packageRoot == repositoryPackageRoot }
@@ -497,16 +492,49 @@ public enum Hasher {
         return relative
     }
 
+    /// Site packages retain their historical unknown/* graph identity. Only
+    /// exact TypeScript roots named by the embedded registry may borrow the
+    /// TypeScript source selector; every other unknown root still fails closed.
+    private static func sourceInputProfile(
+        _ package: BuildPackage,
+        repositoryRoot: String
+    ) throws -> (language: String, packageRoot: String) {
+        let relative = try portableRelativePath(package.path, root: repositoryRoot)
+        let components = relative.split(separator: "/").map(String.init)
+        let registeredSiteRoot = package.language == "unknown"
+            && components.count == 3
+            && components[0] == "code"
+            && components[1] == "sites"
+            && languageSourceInputRegistry.inputs(for: "typescript")?
+                .packageExactInputs.contains { $0.packageRoot == relative } == true
+        if registeredSiteRoot {
+            return ("typescript", relative)
+        }
+        let packageRoot = try repositoryPackagePath(
+            package.path,
+            repositoryRoot: repositoryRoot,
+            expectedLanguage: package.language
+        )
+        return (package.language, packageRoot)
+    }
+
     private static func validateRepositoryPackageRoot(
         _ relative: String,
         expectedLanguage: String
     ) throws {
         try validatePortablePath(relative)
         let components = relative.split(separator: "/").map(String.init)
-        guard components.count >= 4,
-              components[0] == "code",
-              components[1] == "packages" || components[1] == "programs",
-              components[2] == expectedLanguage else {
+        let conventionalRoot = components.count >= 4
+            && components[0] == "code"
+            && (components[1] == "packages" || components[1] == "programs")
+            && components[2] == expectedLanguage
+        let registeredSiteRoot = expectedLanguage == "typescript"
+            && components.count == 3
+            && components[0] == "code"
+            && components[1] == "sites"
+            && languageSourceInputRegistry.inputs(for: expectedLanguage)?
+                .packageExactInputs.contains { $0.packageRoot == relative } == true
+        guard conventionalRoot || registeredSiteRoot else {
             throw SourceHashInputError.unsafePath
         }
     }

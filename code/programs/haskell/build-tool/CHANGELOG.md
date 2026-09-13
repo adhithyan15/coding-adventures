@@ -6,6 +6,12 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Extended the embedded source-input registry and neutral fixture coverage with
+  the two exact TypeScript site roots and their 13 reviewed authored inputs;
+  live hashing now maps their legacy `unknown/*` graph identities to the exact
+  TypeScript profile only relative to the discovered Git repository root, while
+  nested suffixes, unregistered sites, and foreign resources stay closed.
+
 - A pure bounded `ToolchainDetection.evaluateToolchainSnapshot` API that
   independently consumes all 11 neutral extra-CI-toolchain cases, including
   platform BUILD precedence, exact declaration grammar, scheduling, forced

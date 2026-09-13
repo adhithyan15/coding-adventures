@@ -178,7 +178,13 @@ language registry and verifies its domain-separated SHA-256 digest in tests.
 The shared production selector covers extension and declared-source modes,
 all seven selector roles, all 23 registered languages including OCaml, the
 five BUILD fronts, and exact case-sensitive pruning of all 26 generated
-components. It validates portable NFC paths and full-casefold identities,
+components. It admits only the two registry-named TypeScript site roots and
+their 13 exact authored resources beyond conventional package/program roots.
+Those sites retain their legacy `unknown/*` graph identities while live
+hashing derives the TypeScript selector only from an exact registered root
+relative to the discovered `.git` repository root; matching a filesystem
+suffix outside that boundary grants no selector authority.
+It validates portable NFC paths and full-casefold identities,
 sorts repository-relative paths by raw UTF-8 bytes, and streams exact file
 bytes in 8 KiB chunks through the local SHA-256 package using unsigned 64-bit
 big-endian path and content frames.

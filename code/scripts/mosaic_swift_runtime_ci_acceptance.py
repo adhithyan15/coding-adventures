@@ -17,6 +17,12 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosaic-app-conformance",
         "rust/mosaic-app-runtime",
         "rust/task-mosaic-app",
+        # This lane has built and launched Engram since #13728 without Engram
+        # being able to trigger it: a change to `host/swiftui/EngramEffects.swift`
+        # affects only `mosaic/programs/engram-app`, which was not listed, so the
+        # one check that compiles that handler was skipped for exactly the edits
+        # most likely to break it. Both entries added with the Compose migration.
+        "rust/engram-mosaic-app",
         "rust/mosaic-compile",
         "rust/mosaic-emit-swiftui",
         "rust/mosaic-package-artifact-builder",
@@ -24,6 +30,7 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosmodel-compiler",
         "rust/mosstyle-compiler",
         "mosaic/programs/task-app",
+        "mosaic/programs/engram-app",
     }
 )
 ACCEPTANCE_PACKAGE_PREFIXES = ("mosaic/mosaic-pkg-",)

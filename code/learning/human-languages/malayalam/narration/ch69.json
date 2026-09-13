@@ -1,0 +1,609 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 69,
+  "title": "Reading — Words, Lines, and a First Passage",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:3d5f5bb521a88d55",
+  "lessons": [
+    {
+      "id": "ML-C69-words",
+      "sequence": 2360,
+      "title": "(reading) — six words, and the mark that ends them",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "six words read cold — and the one small mark that ends five of them",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0241845cb8220c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every word below you have already met. Not one is new."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is that nobody says them to you first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇത് അത് ആണ് ഉണ്ട് പൂവ് പേര്."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down the list once, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again — and this time look at how every one of them ends."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All six end in the same small hook, the chandrakkala, and it is the most common mark on any Malayalam page."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "It does two different jobs, and where it sits tells you which. Inside a word it stacks two consonants into a single shape — that is the mark you learned when you first wrote the greeting."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "At the END of a word it does something else entirely: it is a faint half-u, breathed rather than said. പൂവ് does not stop at the v; there is a breath after it, and that breath is what the hook is for."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So a Malayalam word can end in a mark that is not silence, and a reader who treats it as silence will sound wrong on five words out of six."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six words down the list, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six words down the list, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ML-C69-words-flower",
+              "prompt": "Which word is the flower?",
+              "assesses": [
+                "ML-SKILL-READ-WORDS"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "poovu",
+                "പൂവ്",
+                "flower"
+              ],
+              "feedback": {
+                "correct": "പൂവ്.",
+                "incorrect": "പൂവ് -- the flower."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the six were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the chandrakkala do at the end of a word? (A faint half-u — not silence.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C69-lines",
+      "sequence": 2370,
+      "title": "(reading) — six lines, two verbs",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "six lines about one doorway — and the two words English would translate the same way",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0598191a646314dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson gave you words. These put them somewhere."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six lines, three things, and no word you have not met."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇത് വാതിൽ ആണ്. ഇവിടെ വാതിൽ ഉണ്ട്. ഇത് പൂവ് ആണ്. ഇവിടെ പൂവ് ഇല്ല. അത് വിളക്ക് ആണ്. അവിടെ വിളക്ക് ഉണ്ട്."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read the six once, straight down."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read only the last word of each line."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "English would translate ആണ് and ഉണ്ട് with the same word. It is, it is. Malayalam keeps them apart, and the difference is worth having."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ആണ് NAMES. It puts an equals sign between two things: this thing, that word. It says nothing at all about where either of them is."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ഉണ്ട് PLACES. It says a thing exists somewhere, and the somewhere is usually the first word on the line."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is why the last word of the line is worth reading first. It tells you whether the line is about to name something or point at it, before you have read the middle."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And the pair that does NOT match: ഇല്ല is the negative of ഉണ്ട്, never of ആണ്. It is the one line here that takes a thing away."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six lines aloud, once, straight down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six lines aloud, once, straight down]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ML-C69-lines-verb",
+              "prompt": "Which verb tells you WHERE a thing is?",
+              "assesses": [
+                "ML-SKILL-READ-LINES"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "undu",
+                "ഉണ്ട്",
+                "undŭ"
+              ],
+              "feedback": {
+                "correct": "ഉണ്ട് -- it places.",
+                "incorrect": "ഉണ്ട് places a thing; ആണ് only names it."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which verb names, and which places? (ആണ് names, ഉണ്ട് places.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two does ഇല്ല cancel? (ഉണ്ട്.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C69-adyathe-vaayana",
+      "sequence": 2380,
+      "title": "(reading) — the first passage",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "the first passage — one doorway, fifteen lines, and not one new word",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a77be552c278651a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six words, then six lines. Now fifteen of them together."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Still not one new word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇത് എന്റെ വാതിൽ ആണ്. ഇത് പഴയ വാതിൽ ആണ്. ഇവിടെ കോലം ഉണ്ട്. ഇത് നല്ല കോലം ആണ്. അവിടെ വലിയ മരം ഉണ്ട്. ഇവിടെ പൂവ് ഇല്ല. എന്നാൽ ഇവിടെ മാല ഉണ്ട്. പിന്നെ ഇവിടെ വിളക്ക് ഉണ്ട്. ഇത് പുതിയ വിളക്ക് ആണ്. അവിടെ ചെറിയ കസേര ഉണ്ട്. കസേര പഴയ കസേര ആണ്. അവിടെ പുസ്തകം ഉണ്ട്. ഇപ്പോൾ വെയിൽ ഉണ്ട്. ആകാശം നീല ആണ്. ഇവിടെ നോക്കൂ."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it once without stopping. Do not translate as you go — let the lines arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read it again, and watch ആണ് and ഉണ്ട് take turns."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The passage stands in one spot and never moves. Everything near is ഇവിടെ, everything far is അവിടെ, and each thing gets named once and placed once — which is the two verbs from the last lesson, alternating."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One line turns the page against itself. ഇവിടെ പൂവ് ഇല്ല. എന്നാൽ ഇവിടെ മാല ഉണ്ട്. No flower here — but a garland is. That is the only word on the page doing the work of joining two thoughts."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything else is held together by nothing at all except the order the lines are in. That is worth noticing, because it is what a language can do before it has taught you a single conjunction, and it is already enough to describe a place."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last line is the only one that asks you for something. Fourteen lines describe; the fifteenth turns and speaks to you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the passage aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the passage aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "ML-C69-adyathe-vaayana-absent",
+              "prompt": "What is not here?",
+              "assesses": [
+                "ML-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "the flower",
+                "പൂവ്",
+                "flower"
+              ],
+              "feedback": {
+                "correct": "പൂവ് -- ഇവിടെ പൂവ് ഇല്ല.",
+                "incorrect": "The flower -- ഇവിടെ പൂവ് ഇല്ല."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word joins two thoughts? (എന്നാൽ — but.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which line speaks to the reader rather than describing? (The last one — ഇവിടെ നോക്കൂ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -224,6 +224,76 @@ hashingSpec = describe "package hashing" $ do
         withSourcePackage "unknown" [("BUILD", "echo no\n")] $ \pkg ->
             hashPackage pkg `shouldThrow` anyIOException
 
+    it "maps only a registered legacy site identity to TypeScript inputs" $
+        withTemporaryDirectory "haskell-build-tool-site-hashing" $ \repositoryRoot -> do
+            let packageRoot = repositoryRoot </> "code" </> "sites" </> "blog"
+                buildFile = packageRoot </> "BUILD"
+                postPath = "data" </> "2026-05-08-capability-typed-stages.md"
+            createDirectory (repositoryRoot </> ".git")
+            createDirectoryIfMissing True (takeDirectory (packageRoot </> postPath))
+            BS8.writeFile buildFile "echo build\n"
+            BS8.writeFile (packageRoot </> postPath) "# post\n"
+            BS8.writeFile (packageRoot </> "data" </> "ignored.txt") "ignored\n"
+            let pkg =
+                    Package
+                        { packageName = "unknown/blog"
+                        , packagePath = packageRoot
+                        , packageBuildFile = buildFile
+                        , packageBuildCommands = ["echo build"]
+                        , packageLanguage = "unknown"
+                        }
+            initial <- hashPackage pkg
+            initial
+                `shouldBe`
+                hashSourceSnapshot
+                    [ ("code/sites/blog/BUILD", "echo build\n")
+                    , ("code/sites/blog/data/2026-05-08-capability-typed-stages.md", "# post\n")
+                    ]
+            BS8.writeFile (packageRoot </> "data" </> "ignored.txt") "changed decoy\n"
+            hashPackage pkg `shouldReturn` initial
+            BS8.writeFile (packageRoot </> postPath) "# changed post\n"
+            changed <- hashPackage pkg
+            changed `shouldNotBe` initial
+
+    it "rejects nested, case-aliased, unregistered, and outside site roots" $ do
+        forM_
+            [ "code" </> "misc" </> "code" </> "sites" </> "blog"
+            , "code" </> "sites" </> "Blog"
+            , "code" </> "sites" </> "unreviewed"
+            ]
+            $ \relativeRoot ->
+                withTemporaryDirectory "haskell-build-tool-invalid-site" $ \repositoryRoot -> do
+                    createDirectory (repositoryRoot </> ".git")
+                    let packageRoot = repositoryRoot </> relativeRoot
+                        buildFile = packageRoot </> "BUILD"
+                    createDirectoryIfMissing True packageRoot
+                    BS8.writeFile buildFile "echo build\n"
+                    hashPackage
+                        ( Package
+                            { packageName = "unknown/blog"
+                            , packagePath = packageRoot
+                            , packageBuildFile = buildFile
+                            , packageBuildCommands = ["echo build"]
+                            , packageLanguage = "unknown"
+                            }
+                        )
+                        `shouldThrow` anyIOException
+        withTemporaryDirectory "haskell-build-tool-outside-site" $ \outsideRoot -> do
+            let packageRoot = outsideRoot </> "code" </> "sites" </> "blog"
+                buildFile = packageRoot </> "BUILD"
+            createDirectoryIfMissing True packageRoot
+            BS8.writeFile buildFile "echo build\n"
+            hashPackage
+                ( Package
+                    { packageName = "unknown/blog"
+                    , packagePath = packageRoot
+                    , packageBuildFile = buildFile
+                    , packageBuildCommands = ["echo build"]
+                    , packageLanguage = "unknown"
+                    }
+                )
+                `shouldThrow` anyIOException
+
     it "embeds a production registry equal to the checked complete registry" $ do
         maybeRoot <- findRepoRoot Nothing
         repoRoot <- maybe (fail "could not locate repository root") pure maybeRoot
@@ -240,7 +310,7 @@ hashingSpec = describe "package hashing" $ do
         languageSourceInputRegistryValue `shouldBe` checked
         canonicalRegistryDigest checked `shouldBe` languageSourceInputRegistryDigest
         languageSourceInputRegistryDigest
-            `shouldBe` "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70"
+            `shouldBe` "190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530"
 
     it "makes every embedded registry language reachable from discovery" $ do
         let rules = registryLanguages languageSourceInputRegistry
@@ -353,6 +423,12 @@ hashingSpec = describe "package hashing" $ do
         selectSourceCandidates
             (request [])
                 { sourceCollectionPackageRoot = "code/packages/rust/demo"
+                }
+            `shouldBe` Left "SOURCE_HASH_PACKAGE_ROOT_INVALID"
+        selectSourceCandidates
+            (request [])
+                { sourceCollectionLanguage = "typescript"
+                , sourceCollectionPackageRoot = "code/sites/unreviewed"
                 }
             `shouldBe` Left "SOURCE_HASH_PACKAGE_ROOT_INVALID"
 
@@ -496,6 +572,9 @@ packageLocalSourceFixtureNames =
     , "source-collection-declared.json"
     , "source-collection-registry-roles.json"
     , "source-collection-engram-wasm-exact-inputs.json"
+    , "source-collection-typescript-blog-exact-inputs.json"
+    , "source-collection-typescript-landing-page-exact-inputs.json"
+    , "source-collection-typescript-site-foreign-package.json"
     ]
 
 loadSourceFixture :: FilePath -> IO SourceFixture

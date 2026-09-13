@@ -2628,6 +2628,54 @@ jobs:
             xvfb-run -a gradle --no-daemon --stacktrace --rerun-tasks -p "$taskapp_output/compose" \
               test --tests TaskAppUiTest.generatedControlsDriveRustSchedulingLifecycle
 
+          # Engram on Compose, the mirror of the SwiftUI and Qt Engram lanes.
+          #
+          # `.so`, not `.dylib`: this block is Linux-gated, unlike the SwiftUI
+          # one.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
+          engram_runtime_library="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.so"
+          test -f "$engram_runtime_library"
+          engram_output="$RUNNER_TEMP/mosaic-compose-engram"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend compose --output "$engram_output" --emit-project --profile native-complete --runtime-library "$engram_runtime_library"
+
+          # Pinned empty, exactly as the Qt and SwiftUI lanes pin it: Compose's
+          # `MosaicHost.kt` override is retired, and a package that starts
+          # overriding the generated host again has undone that and must fail
+          # here rather than pass quietly.
+          jq -e '.replacedGeneratedFiles == []' "$engram_output/compose/mosaic-degradations.json"
+          # `type == "array"` first: `null | length` is 0 in jq, so a report that
+          # lost the key entirely would satisfy a bare length check.
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_output/compose/mosaic-degradations.json"
+
+          # The handler is wired into the generated app. This is the half no
+          # assertion over a source file can reach -- and as on SwiftUI it
+          # matters more than on Qt, because Gradle compiles everything under
+          # `src/main/kotlin`, so an uninstalled handler still compiles, links
+          # and ships with no diagnostic at all. The failure only appears at
+          # runtime, when an unanswered `Await` disables snapshot and restore
+          # for the rest of the process.
+          grep -q 'installEngramEffects(it)' "$engram_output/compose/src/main/kotlin/Main.kt"
+          python3 - "$engram_output/compose/src/main/kotlin/Main.kt" <<'PY'
+          import sys
+
+          text = open(sys.argv[1]).read()
+          install = text.index("installEngramEffects(it)")
+
+          # After the host exists: installing onto a host that has not been
+          # loaded yet would not compile, but installing after the UI is built
+          # would compile and silently miss every effect raised during the first
+          # composition.
+          creation = text.index("val mosaicHost = remember")
+          assert creation < install, "install must follow the host's creation"
+          window = text.index("Window(onCloseRequest")
+          assert install < window, "install must precede the first composition"
+          PY
+
+          # The gate: it builds. `compileKotlin` is enough -- this lane already
+          # exercises `createDistributable` on task-app, and what is new here is
+          # the handler source, not the packaging.
+          gradle --no-daemon --stacktrace -p "$engram_output/compose" compileKotlin
+
           toolkit_output="$RUNNER_TEMP/mosaic-compose-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend compose --output "$toolkit_output" --emit-project
           gradle --no-daemon --stacktrace -p "$toolkit_output/compose" compileKotlin

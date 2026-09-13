@@ -87,6 +87,7 @@ import System.Process
 import Text.Read (readMaybe)
 import LanguageSourceInputRegistry
     ( generatedDirectoryComponents
+    , registeredPackageExactRoot
     , selectLanguageSourceInput
     )
 import Sha256 (Sha256Context, sha256FinalizeHex, sha256Init, sha256Update)
@@ -2589,7 +2590,7 @@ data DirectorySnapshot = DirectorySnapshot FilePath UTCTime [FilePath]
 
 packageRelevantFiles :: Package -> IO ([(String, FilePath)], [DirectorySnapshot])
 packageRelevantFiles pkg = do
-    packageRoot <- repositoryPackagePath pkg
+    (packageRoot, sourceLanguage) <- packageSourceProfile pkg
     rootLinked <- pathIsSymbolicLink (packagePath pkg)
     when rootLinked (sourceHashFailure "SOURCE_HASH_LINK_REJECTED")
     (allFiles, allCandidates, directories, _) <- collectFilesRecursively (packagePath pkg) 0
@@ -2598,16 +2599,16 @@ packageRelevantFiles pkg = do
         normalized <- validateSourceRelativePath relative
         pure (packageRoot ++ "/" ++ normalized, path)
     _ <- validateSourceIdentities candidateIdentities
-    (selectedReversed, _) <- foldM (selectFile packageRoot) ([], 0) allFiles
+    (selectedReversed, _) <- foldM (selectFile packageRoot sourceLanguage) ([], 0) allFiles
     checked <- validateSourceIdentities (reverse selectedReversed)
     pure (sortOn (TextEncoding.encodeUtf8 . Text.pack . fst) checked, directories)
   where
-    selectFile packageRoot (selected, selectedCount) path = do
+    selectFile packageRoot sourceLanguage (selected, selectedCount) path = do
         let relative = normalizeRelativePath (makeRelative (packagePath pkg) path)
         normalized <- validateSourceRelativePath relative
         include <-
             either sourceHashFailure pure
-                (selectLanguageSourceInput (packageLanguage pkg) packageRoot normalized)
+                (selectLanguageSourceInput sourceLanguage packageRoot normalized)
         if include
             then do
                 let nextCount = selectedCount + 1
@@ -2672,6 +2673,39 @@ repositoryPackagePath pkg =
         if normalized == identity
             then pure identity
             else sourceHashFailure "SOURCE_HASH_PATH_INVALID"
+
+-- Site packages intentionally keep their historical unknown/* graph identity.
+-- Source hashing may borrow the TypeScript selector only when the actual path
+-- is one exact registry-owned code/sites root relative to its repository.
+packageSourceProfile :: Package -> IO (String, String)
+packageSourceProfile pkg
+    | packageLanguage pkg == "unknown" = do
+        maybePackageRoot <- repositoryRelativeSiteRoot (packagePath pkg)
+        case maybePackageRoot of
+            Just packageRoot
+                | registeredPackageExactRoot "typescript" packageRoot ->
+                    pure (packageRoot, "typescript")
+            _ -> conventionalProfile
+    | otherwise = conventionalProfile
+  where
+    conventionalProfile = do
+        packageRoot <- repositoryPackagePath pkg
+        pure (packageRoot, packageLanguage pkg)
+
+repositoryRelativeSiteRoot :: FilePath -> IO (Maybe String)
+repositoryRelativeSiteRoot path = do
+    canonicalPackage <- canonicalizePath path
+    maybeRepositoryRoot <- findRepoRoot (Just canonicalPackage)
+    case maybeRepositoryRoot of
+        Nothing -> pure Nothing
+        Just repositoryRoot -> do
+            canonicalRepository <- canonicalizePath repositoryRoot
+            let relative = normalizeRelativePath (makeRelative canonicalRepository canonicalPackage)
+            pure $
+                case wordsBy (== '/') relative of
+                    ["code", "sites", site]
+                        | not (null site) -> Just relative
+                    _ -> Nothing
 
 validateSourceRelativePath :: String -> IO String
 validateSourceRelativePath relative =

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-12
+
+- Added exact-root source-collection cases for the eight authored blog inputs,
+  the five landing-page inputs, and a same-shaped ordinary TypeScript package
+  that must remain excluded. The corpus now has 149 cases.
+- Extended the TypeScript registry with two closed `package_exact_inputs`
+  rules, retained fail-closed unknown-site behavior, and refreshed the language
+  and repository-boundary digest chains.
+
 ## 2026-09-08
 
 - Promoted graph into the closed process-free domain schema with explicit

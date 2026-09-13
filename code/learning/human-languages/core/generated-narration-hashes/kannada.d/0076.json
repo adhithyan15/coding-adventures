@@ -1,0 +1,17 @@
+{
+  "language": "kannada",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:9913132cee2c9ecc",
+  "lessonIds": [
+    "KA-C76-words",
+    "KA-C76-lines",
+    "KA-C76-modala-oduvike"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "kannada/narration/ch76.txt",
+  "json": "kannada/narration/ch76.json",
+  "textHash": "fnv1a64:9847a6cbd25d4606",
+  "jsonHash": "fnv1a64:b169aacc41422744",
+  "findings": []
+}

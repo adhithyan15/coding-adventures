@@ -1,0 +1,16 @@
+{
+  "chapter": 76,
+  "title": "Reading — Words, Lines, and a First Passage",
+  "label": "ch:ka-modala-oduvike",
+  "canDo": "I can read a Kannada word cold, tell a naming sentence from a locating one, and hold a whole passage about one place without translating it word by word.",
+  "payoff": {
+    "lesson": "KA-C76-modala-oduvike",
+    "kind": "four-skill-function-map",
+    "summary": "Thirty-one words standing in one spot and pointing, where ಇಲ್ಲಿ and ಇಲ್ಲ sit one letter apart and do opposite work.",
+    "assesses": [
+      "KA-SKILL-CONNECTED-READING",
+      "KA-SKILL-READ-LINES",
+      "KA-SKILL-READ-WORDS"
+    ]
+  }
+}

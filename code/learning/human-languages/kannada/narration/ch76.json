@@ -1,0 +1,579 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 76,
+  "title": "Reading — Words, Lines, and a First Passage",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:9913132cee2c9ecc",
+  "lessons": [
+    {
+      "id": "KA-C76-words",
+      "sequence": 2670,
+      "title": "(reading) — six words, and a script shaped by a leaf",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "six words read cold — every sign in them is one the script ladder has taught",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72e0701ad04e9adb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every word below you have written. Not one is new."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is that nobody says them first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಗಿಲು ಕುರ್ಚಿ ನದಿ ಮರ ಗಾಳಿ ಹೂವು."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down the list once, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again — and notice how few straight lines there are."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Almost none. Kannada rounds nearly every letter, and the reason is the material: the script was cut into palm leaf for a thousand years, and a straight stroke splits a leaf along its grain."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So the curves are not decoration. They are what a scribe had to do to keep the page from tearing, kept long after the page became paper."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A reader gains from it too. Rounded shapes are easier to tell apart at a glance than straight ones, which is most of what reading a word cold is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six words down the list, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six words down the list, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "KA-C76-words-door",
+              "prompt": "Which word is the door?",
+              "assesses": [
+                "KA-SKILL-READ-WORDS"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "baagilu",
+                "ಬಾಗಿಲು",
+                "door"
+              ],
+              "feedback": {
+                "correct": "ಬಾಗಿಲು.",
+                "incorrect": "ಬಾಗಿಲು -- the door."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many of the six were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is Kannada round? (Palm leaf — a straight cut splits it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C76-lines",
+      "sequence": 2680,
+      "title": "(reading) — six lines, two verbs",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "six lines about a room — and the two words that carry all of them",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3fcb8cc3f0505609",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson gave you words. These put them somewhere."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing here is new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇದು ಬಾಗಿಲು. ಇದು ಕುರ್ಚಿ. ಕುರ್ಚಿ ಇಲ್ಲಿ ಇದೆ. ಮರ ಅಲ್ಲಿ ಇದೆ. ನಿಜ. ಈಗ."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down once, without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Again — and count how many different verbs there are."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One, and two of the lines have none at all."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ಇದು ಬಾಗಿಲು puts two words side by side and is finished: this door means this is a door. Kannada does not say is when it is only naming something."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "But ಇದೆ appears the moment you say where a thing is. Naming needs no verb; locating does. That is the distinction these six lines are for, and it is visible on the page before anyone names it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six lines, once, in order, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six lines, once, in order, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "KA-C76-lines-verb",
+              "prompt": "Which lines need ಇದೆ, and which do not?",
+              "assesses": [
+                "KA-SKILL-READ-LINES"
+              ],
+              "responseSeconds": 16,
+              "acceptedResponses": [
+                "locating needs it, naming does not",
+                "where something is",
+                "location"
+              ],
+              "feedback": {
+                "correct": "Locating needs ಇದೆ; naming does not.",
+                "incorrect": "Lines that say WHERE need ಇದೆ. Lines that only name do not."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What joins ಇದು and ಬಾಗಿಲು? (Nothing.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When does Kannada need ಇದೆ? (When it says where.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C76-modala-oduvike",
+      "sequence": 2690,
+      "title": "(reading) — the first passage",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "the first passage — thirty-one words about one place, and not one of them new",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d4c4c757fea2547",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six words, then six lines. Now eleven of them together."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Thirty-one words, and not one of them is new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇದು ಬಾಗಿಲು. ಇದು ಕುರ್ಚಿ. ಕುರ್ಚಿ ಇಲ್ಲಿ ಇದೆ. ಚಾಕು ಮತ್ತು ಪಾತ್ರೆ ಇಲ್ಲಿ ಇದೆ. ಮರ ಅಲ್ಲಿ ಇದೆ. ಬೇರು ದೊಡ್ಡ. ನದಿ ಅಲ್ಲಿ ಇದೆ. ಹಸು ಅಥವಾ ಮೇಕೆ. ಗಾಳಿ ಈಗ ಹೆಚ್ಚು. ಹೂವು ಇಲ್ಲಿ ಇಲ್ಲ. ಇದು ನಿಜ."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read it again, and watch ಇಲ್ಲಿ and ಅಲ್ಲಿ take turns."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The passage stands in one spot and points. Everything near is ಇಲ್ಲಿ, everything far is ಅಲ್ಲಿ, and the last line before the ending is the only one that says a thing is not here."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ಇಲ್ಲಿ ಇಲ್ಲ — here, not. Two words one letter apart doing opposite work, which is the hardest pair on this page to read quickly and the one worth slowing down for."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two joiners carry the whole thing: ಮತ್ತು adds, ಅಥವಾ offers. That is what a language can do before it has taught a third of either, and it is more than enough to describe a place."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the first whole passage the book has asked you to hold at once, and it works because everything in it was paid for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the passage aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the passage aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "KA-C76-modala-oduvike-absent",
+              "prompt": "What is not here?",
+              "assesses": [
+                "KA-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "the flower",
+                "ಹೂವು",
+                "flower"
+              ],
+              "feedback": {
+                "correct": "ಹೂವು -- ಹೂವು ಇಲ್ಲಿ ಇಲ್ಲ.",
+                "incorrect": "The flower -- ಹೂವು ಇಲ್ಲಿ ಇಲ್ಲ."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two words are one letter apart and mean opposite things? (ಇಲ್ಲಿ and ಇಲ್ಲ.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many joiners does the passage use? (Two.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

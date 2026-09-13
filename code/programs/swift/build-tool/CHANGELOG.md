@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added the two exact registered TypeScript site roots and their 13 reviewed
+  authored inputs to the generated source-input projection and neutral tests.
+  Repository-aware hashing preserves legacy `unknown/*` graph identities while
+  deriving only those exact TypeScript profiles; other sites fail closed.
+
 - Align declared-source glob matching with the language-neutral portable
   grammar and exact 50,000,000-unit match-work budget. Character classes now
   implement Python-compatible negation, ranges, and literal edge characters;
