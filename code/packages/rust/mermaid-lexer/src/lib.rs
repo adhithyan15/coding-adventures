@@ -568,6 +568,17 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_compact_block_terminal_markers_through_the_pinned_grammar() {
+        let tokens = try_tokenize_mermaid_block(
+            "block\nsource-node--otarget-one\ntarget-one==xtarget-two\ntarget-two-.-otarget-three\n",
+        )
+        .unwrap();
+        assert_eq!(tokens.iter().filter(|token| {
+            token.type_name.as_deref() == Some("COMPACT_MARKED_CONNECTION_LINE")
+        }).count(), 3);
+    }
+
+    #[test]
     fn tokenizes_packet_fields_as_complete_lines() {
         let tokens = try_tokenize_mermaid_packet(
             "packet-beta\n0-7: \"Header\"\n8-31: \"Payload\"\n",

@@ -1479,6 +1479,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             token_type,
             Some("STATEMENT_LINE")
                 | Some("ARROW_NODE_LINE")
+                | Some("COMPACT_MARKED_CONNECTION_LINE")
                 | Some("MARKED_CONNECTION_LINE")
                 | Some("BIDIRECTIONAL_CONNECTION_LINE")
                 | Some("DOTTED_CONNECTION_LINE")
@@ -1540,8 +1541,12 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             direct_styles.push((split_block_names(ids), parse_block_style(token, declarations)?));
             continue;
         }
-        if token_type == Some("MARKED_CONNECTION_LINE") {
-            let marked = parse_block_marked_connection(token, line)?;
+        if matches!(token_type, Some("COMPACT_MARKED_CONNECTION_LINE") | Some("MARKED_CONNECTION_LINE")) {
+            let marked = if token_type == Some("COMPACT_MARKED_CONNECTION_LINE") {
+                parse_block_compact_marked_connection(token, line)?
+            } else {
+                parse_block_marked_connection(token, line)?
+            };
             connections.push(GridConnection {
                 from: marked.from,
                 to: marked.to,
@@ -1700,6 +1705,61 @@ struct ParsedBlockConnection {
     start_marker: EdgeMarker,
     end_marker: EdgeMarker,
     label: Option<DiagramLabel>,
+}
+
+fn parse_block_compact_marked_connection(
+    token: &Token,
+    line: &str,
+) -> Result<ParsedBlockConnection, ParseError> {
+    for (marker_index, marker) in line.char_indices() {
+        let end_marker = match marker {
+            'o' => EdgeMarker::Circle,
+            'x' => EdgeMarker::Cross,
+            _ => continue,
+        };
+        let target = &line[marker_index + marker.len_utf8()..];
+        if !is_block_id(target) {
+            continue;
+        }
+
+        let prefix = &line[..marker_index];
+        let (link_start, line_style) = if prefix.ends_with("==") {
+            let start = prefix.trim_end_matches('=').len();
+            (start, GridEdgeStyle::Thick)
+        } else if prefix.ends_with('-') {
+            let trailing_dash = prefix.len() - 1;
+            let dot_start = prefix[..trailing_dash].trim_end_matches('.').len();
+            if dot_start < trailing_dash {
+                let start = if prefix[..dot_start].ends_with('-') { dot_start - 1 } else { dot_start };
+                (start, GridEdgeStyle::Dotted)
+            } else if prefix.ends_with("--") {
+                (prefix.len() - 2, GridEdgeStyle::Solid)
+            } else {
+                continue;
+            }
+        } else {
+            continue;
+        };
+        let from = &prefix[..link_start];
+        if !is_block_id(from) {
+            continue;
+        }
+        return Ok(ParsedBlockConnection {
+            from: from.to_string(),
+            to: target.to_string(),
+            kind: EdgeKind::Undirected,
+            line_style,
+            start_marker: EdgeMarker::None,
+            end_marker,
+            label: None,
+        });
+    }
+    Err(token_error(token, "invalid compact marked block connection"))
+}
+
+fn is_block_id(value: &str) -> bool {
+    value.starts_with(|character: char| character.is_ascii_alphabetic() || character == '_')
+        && value.chars().all(|character| character.is_ascii_alphanumeric() || matches!(character, '_' | '-'))
 }
 
 fn parse_block_marked_connection(token: &Token, line: &str) -> Result<ParsedBlockConnection, ParseError> {
@@ -9374,6 +9434,22 @@ mod tests_dg04 {
         assert_eq!(diagram.connections[2].line_style, GridEdgeStyle::Dotted);
         assert_eq!((diagram.connections[3].start_marker, diagram.connections[3].end_marker),
             (EdgeMarker::None, EdgeMarker::Cross));
+    }
+
+    #[test]
+    fn block_parses_compact_terminal_markers_with_hyphenated_ids() {
+        let diagram = parse_block(
+            "block\nsource-node target-one target-two target-three\nsource-node--otarget-one\ntarget-one==xtarget-two\ntarget-two-.-otarget-three",
+        )
+        .unwrap();
+        assert_eq!(diagram.connections[0].from, "source-node");
+        assert_eq!(diagram.connections[0].to, "target-one");
+        assert_eq!(diagram.connections[0].end_marker, EdgeMarker::Circle);
+        assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Solid);
+        assert_eq!(diagram.connections[1].end_marker, EdgeMarker::Cross);
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
+        assert_eq!(diagram.connections[2].end_marker, EdgeMarker::Circle);
+        assert_eq!(diagram.connections[2].line_style, GridEdgeStyle::Dotted);
     }
 
     #[test]
