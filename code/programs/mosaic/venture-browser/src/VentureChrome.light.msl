@@ -84,6 +84,12 @@ style VentureChrome {
     state focused { outline-color : "#56300c" ; outline-width : 2 ; }
     state disabled { opacity : 0.45 ; }
   }
+  part find-bar { background : "#f6f1e7" ; padding : 6 ; gap : 6 ; align : center-vertical ; border-bottom-width : 1 ; border-bottom-color : "#c8c0b1" ; }
+  part find-input { background : "#ffffff" ; color : "#211f1b" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#aaa08e" ; flex-grow : 1 ; }
+  part find-result { color : "#5b554b" ; font-size : 11 ; }
+  part find-previous-button { background : "#fffdf8" ; color : "#39342d" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ; state disabled { opacity : 0.45 ; } }
+  part find-next-button { background : "#fffdf8" ; color : "#39342d" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ; state disabled { opacity : 0.45 ; } }
+  part find-close-button { background : "#fffdf8" ; color : "#39342d" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ; }
   part content-surface {
     background : "#ffffff" ;
     min-height : 480 ;

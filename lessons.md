@@ -7333,3 +7333,69 @@ by anything the selector is not.
 
 This was caught by eye, on a file that was about to be pushed. The version that
 merges is the version nobody re-read.
+
+### 2026-09-13 — a separator-joined key is safe if the RAW parts are constant
+
+`sql-vm`'s `apply_distinct` builds a row key as `format!("{col}={val:?}")`
+joined by `,`, with the column name interpolated raw. That is the composite-key
+separator-injection shape this repo has fixed twice — card ids in
+`engram-core-wasm`, the provenance merge key in `engram-core` — and it was
+carried as a suspected third instance for weeks.
+
+It is not that bug, and the reason is worth having because it decides the whole
+class:
+
+- the column names are raw, **but they are also fixed across every row of one
+  DISTINCT**. `apply_distinct` only compares rows within a single result set, so
+  a hostile alias contributes the same constant prefix to every key and cannot
+  shift one row's boundary relative to another's;
+- the values vary, but `SqlValue`'s derived `Debug` quotes and escapes `Text`
+  and brackets `Blob`, so the rendering is injective.
+
+A constant prefix plus an injective rendering is injective. Measured before
+concluding: 864 rows over hostile aliases (`x=Int(1),y`, `a,b`, duplicate and
+empty names) and values whose rendered form carries `,`, `=` and quotes — zero
+collisions. The two keys that DO match come from queries with different column
+counts, which are never compared to each other.
+
+**The test to write is the one that keeps it true.** The load-bearing half is a
+`derive`, one `impl` away from a hand-written `Debug` that prints text raw — so
+the gate pins the escaping, not the absence of a collision that cannot happen.
+Mutation-checked with exactly that `impl`.
+
+So: before filing a separator-joined key as injectable, check BOTH halves —
+whether the varying parts are injectively rendered, and whether the raw parts
+are constant across everything the key is compared against. The shape alone does
+not decide it.
+
+And the corollary about reviews: a reviewer's "this is the same shape, here is
+an exploit" is a lead, not a finding. This one came with a concrete-looking
+example (`SELECT a AS "x=Int(1),y", b`) that does not actually collide — the
+alias is constant within the query, so it cancels. Reproduce the exploit before
+fixing it; implementing a fix for a bug that does not exist costs the same
+review budget as a real one and adds code nobody can justify later.
+
+And the same discipline applied to your OWN measurement, which is the harder
+half, because a number feels like evidence.
+
+Scoping style-drop reporting for the Flutter backend (#12022), I extracted the
+handled keys from `style_prop_to_container_arg` — a single `match` over property
+names whose own doc says "unknown props produce `None` and are silently dropped"
+— diffed them against every property authored in the repo's `.msl` files, and
+got a confident answer: **59 properties dropped**.
+
+The number was wrong, because the premise under it was. That function is one
+lowering path, not the lowering: `font-size`, `text-align` and `border-radius`
+are handled by other functions entirely (`props.get("border-radius")`,
+`base.get("text-align")`, `.get("font-size")`). Flutter has 48 scattered
+lookups; Qt has 81. Neither has the single match the three reporting backends
+share, which is exactly why they are the two that do not report.
+
+A reporter built on that measurement would have emitted roughly 53 false drops —
+the SwiftUI `gap` bug fixed the same day, at ten times the scale, and it would
+have looked authoritative because it came with a count.
+
+The check that would have caught it costs one grep: before concluding that a
+function is the whole of something, grep for a property it does NOT handle and
+see whether the codebase handles it elsewhere. A measurement inherits every
+assumption in the thing being measured, and states none of them.

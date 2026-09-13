@@ -4,8 +4,13 @@
 % The shape a learner (or an LLM) produces to ANSWER "which planet is third from
 % the Sun?" — it states no astronomy fact, only `import`s the grounded table and
 % asks binding queries. The engine resolves each `?` against the `planet_order`
-% rows and returns the position (or the planet, on a reverse query) + the NASA
-% source/locator/trust. A body that is not one of the eight major planets abstains
+% rows and returns the position (or the planet, on a reverse query) + THAT ROW'S
+% OWN NASA sentence (RS-5e per-row provenance, #14986 — before it, every
+% planet's answer quoted the same sentence about Venus). The `locator` is
+% inherited from the table envelope by every row. The trust tier is
+% inherited by SEVEN of the eight: Mercury OVERRIDES it to `inferred`,
+% because the page says it is "nearest to the Sun", never "the first
+% planet", so position 1 is reasoned rather than read. A body that is not one of the eight major planets abstains
 % honestly — the engine never invents an order.
 %
 % Run (from this directory so the relative import resolves):

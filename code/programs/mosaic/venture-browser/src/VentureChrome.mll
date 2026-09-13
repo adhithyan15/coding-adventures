@@ -57,6 +57,33 @@ layout VentureChrome {
       )
     }
 
+    Row [ find-bar ] {
+      HostInput [ find-input ] (
+        value : slot: find-query ,
+        placeholder : "Find in page" ,
+        read-only : slot: find-disabled ,
+        onChange : emit: onFindChange ,
+        onCommit : emit: onFindNext
+      )
+      Text [ find-result ] ( content : slot: find-result-label )
+      HostButton [ find-previous-button ] (
+        label : "Previous" ,
+        disabled : slot: find-disabled ,
+        state-when-disabled : slot: find-disabled ,
+        onClick : emit: onFindPrevious
+      )
+      HostButton [ find-next-button ] (
+        label : "Next" ,
+        disabled : slot: find-disabled ,
+        state-when-disabled : slot: find-disabled ,
+        onClick : emit: onFindNext
+      )
+      HostButton [ find-close-button ] (
+        label : "Close Find" ,
+        onClick : emit: onFindClose
+      )
+    }
+
     HostSurface [ content-surface ] (
       content : slot: content-surface
     )

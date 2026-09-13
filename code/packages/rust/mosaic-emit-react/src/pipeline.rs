@@ -4198,7 +4198,31 @@ fn emit_table_row_jsx(
 ) -> Result<String, PipelineEmitError> {
     let row_pad = " ".repeat(indent);
     let cell_pad = " ".repeat(indent + 2);
-    let mut out = format!("{row_pad}<tr>\n");
+    // #15051 -- the `<tr>` used to be emitted bare, so a `Row` inside a
+    // table section lost BOTH its authored part style and any bound
+    // dimension. The issue reported only the binding; measured, a static
+    // `height: 42px` on the same row was dropped too -- the row was the
+    // one element in this emitter that consulted no style at all.
+    //
+    // The general walker's full treatment (state spreads, built-in layout
+    // style) is deliberately NOT reproduced here: a `<tr>` has no built-in
+    // flex style to merge, and `state-when-*` on a table row is unused and
+    // untested. Static part style plus bound dimensions is what the issue
+    // is about, and what the fixtures exercise.
+    let row_part_style = row_node
+        .part_name
+        .as_deref()
+        .and_then(|n| part_styles.get(n).map(String::as_str))
+        .unwrap_or("");
+    let row_bound = dynamic_bound_style(row_node)?;
+    let row_style_attr = if row_part_style.is_empty() && row_bound.is_empty() {
+        String::new()
+    } else if row_part_style.is_empty() {
+        format!(" style={{{{ {} }}}}", row_bound.trim_start_matches(", "))
+    } else {
+        format!(" style={{{{ {row_part_style}{row_bound} }}}}")
+    };
+    let mut out = format!("{row_pad}<tr{row_style_attr}>\n");
     for cell in &row_node.children {
         // UI31-L10 seam — `For` inside a Row. Recognise the canonical
         // `For (each: …, as: c) { Text (content: c) }` shape and lower
@@ -6805,6 +6829,84 @@ mod tests {
             "numeric mosstyle values should be emitted as React numbers, got:\n{}",
             result.output
         );
+    }
+
+    /// #15051 — a `Row` inside a table section keeps its style.
+    ///
+    /// The `<tr>` was emitted bare, so it was the one element in this
+    /// emitter that consulted no style at all. The issue reported a
+    /// dropped `height: slot: …` binding; measured, a STATIC part height
+    /// on the same row was dropped too, which the issue said still
+    /// applied. Both halves are asserted here.
+    #[test]
+    fn ui_table_row_keeps_its_part_style_and_bound_dimension() {
+        let row = |part: Option<&str>, props: Vec<LayoutProp>| LayoutNode {
+            tag: "HostTable".into(),
+            part_name: None,
+            props: vec![],
+            children: vec![LayoutNode {
+                tag: "HostTableBody".into(),
+                part_name: None,
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Row".into(),
+                    part_name: part.map(String::from),
+                    props,
+                    children: vec![LayoutNode {
+                        tag: "Text".into(),
+                        part_name: None,
+                        props: vec![],
+                        children: vec![],
+                    }],
+                }],
+            }],
+        };
+        let bound = vec![LayoutProp {
+            name: "height".into(),
+            value: LayoutPropValue::SlotRef("row-height".into()),
+        }];
+        let model = component(
+            "X",
+            vec![slot("row-height", SlotType::Number, true)],
+            vec![],
+        );
+
+        // A bound dimension reaches the row.
+        let out = from_pipeline(
+            &model,
+            &LayoutDef { component_name: "X".into(), root: row(None, bound.clone()) },
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("<tr style={{ height: rowHeight }}>"),
+            "the binding must reach the tr, got:\n{out}"
+        );
+
+        // A static part style reaches it too.
+        let out = from_pipeline(
+            &model,
+            &LayoutDef { component_name: "X".into(), root: row(Some("r"), vec![]) },
+            &style_with_part("X", "r", &[("height", "42px")]),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains("<tr style={{ height: \"42px\" }}>"),
+            "the part style must reach the tr, got:\n{out}"
+        );
+
+        // The control: a row with neither keeps the bare `<tr>`, so this
+        // cannot pass by attaching an empty style object to every row.
+        let out = from_pipeline(
+            &model,
+            &LayoutDef { component_name: "X".into(), root: row(None, vec![]) },
+            &empty_style("X"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("<tr>"), "an unstyled row stays bare, got:\n{out}");
     }
 
     #[test]
