@@ -2468,6 +2468,16 @@ fn normalize_xaml_color_value(s: &str) -> Option<String> {
     if trimmed.eq_ignore_ascii_case("currentcolor") {
         return None;
     }
+    // #15141 -- the CSS-wide keywords are cascade instructions, not
+    // colours, and belong in the same bin as `currentColor` above. They
+    // reached the PascalCase fallback below and came out as
+    // `Foreground="Inherit"`, which is not a brush any XAML parser knows.
+    if matches!(
+        trimmed.to_ascii_lowercase().as_str(),
+        "inherit" | "initial" | "unset" | "revert" | "revert-layer"
+    ) {
+        return None;
+    }
     // `{x:Bind …}` / `{Binding …}` markup extensions or any string with
     // braces — keep verbatim.  These aren't color literals.
     if trimmed.starts_with('{') {
@@ -2479,11 +2489,20 @@ fn normalize_xaml_color_value(s: &str) -> Option<String> {
     if matches!(first, Some(c) if c.is_ascii_uppercase()) {
         return Some(s.to_string());
     }
-    // All-lowercase identifier — PascalCase it.  `transparent` →
-    // `Transparent`, `red` → `Red`, etc.  We don't gate on a known
-    // CSS-color whitelist: the markup compiler will reject anything
-    // that isn't a real named color, and over-pascalCasing is the
-    // failure mode we want (it just shifts which compiler complains).
+    // All-lowercase identifier -- PascalCase it. `transparent` ->
+    // `Transparent`, `red` -> `Red`, etc. We don't gate on a known
+    // CSS-color whitelist.
+    //
+    // #15141 -- this used to justify itself with "the markup compiler
+    // will reject anything that isn't a real named color, and
+    // over-pascalCasing just shifts which compiler complains". That is
+    // NOT true, and believing it is how `inherit` became
+    // `Foreground="Inherit"`: the markup compiler does not validate brush
+    // literals, so an unconvertible one builds clean and throws
+    // `E_XAMLPARSEFAILED` at RUNTIME, when the page is shown. The keyword
+    // guards above exist because of that; a genuinely misspelt colour
+    // name still slips through here, which is a narrower gap worth
+    // closing separately with a real named-colour set.
     if trimmed.chars().all(|c| c.is_ascii_lowercase()) {
         let mut chars = trimmed.chars();
         match chars.next() {
@@ -22014,4 +22033,53 @@ mod tests {
         );
     }
 
+}
+
+// =====================================================================
+// #15141 -- CSS-wide keywords are not brushes
+// =====================================================================
+#[cfg(test)]
+mod colour_keyword_tests {
+    use super::*;
+
+    /// These reached the PascalCase fallback and came out as
+    /// `Foreground="Inherit"`. That is not a brush, and -- unlike what
+    /// the fallback's comment used to claim -- the markup compiler does
+    /// NOT reject it: the app builds clean and throws
+    /// `E_XAMLPARSEFAILED` at runtime when the page is shown.
+    #[test]
+    fn a_css_wide_keyword_is_not_pascal_cased_into_a_brush() {
+        for keyword in ["inherit", "initial", "unset", "revert", "revert-layer"] {
+            assert_eq!(
+                normalize_xaml_color_value(keyword),
+                None,
+                "`{keyword}` must be dropped, not PascalCased into a brush"
+            );
+            assert_eq!(
+                normalize_xaml_color_value(&keyword.to_ascii_uppercase()),
+                None,
+                "`{keyword}` must be dropped regardless of case"
+            );
+        }
+    }
+
+    /// The neighbouring cascade keyword this joins, and the real colours
+    /// around it, are unchanged.
+    #[test]
+    fn real_colours_and_currentcolor_are_unchanged() {
+        assert_eq!(normalize_xaml_color_value("currentColor"), None);
+        assert_eq!(
+            normalize_xaml_color_value("#1e1e1e").as_deref(),
+            Some("#1e1e1e")
+        );
+        assert_eq!(
+            normalize_xaml_color_value("transparent").as_deref(),
+            Some("Transparent")
+        );
+        assert_eq!(normalize_xaml_color_value("red").as_deref(), Some("Red"));
+        assert_eq!(
+            normalize_xaml_color_value("SlateGray").as_deref(),
+            Some("SlateGray")
+        );
+    }
 }

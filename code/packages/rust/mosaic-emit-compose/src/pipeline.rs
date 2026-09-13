@@ -3371,7 +3371,25 @@ fn strip_css_px(v: &str) -> &str {
 /// Compose's `Color(0xAARRGGBB)` packs alpha in the high byte; CSS hex
 /// colors are opaque, so we force `FF` alpha.  Letters are upper-cased
 /// so the emitted literal is stable for the unit tests.
-fn compose_color_value(v: &str) -> String {
+/// A Compose `Color` expression for an authored colour, or `None` when the
+/// value is not one this emitter can resolve.
+///
+/// #15141 -- this used to be total, with `_ => Color.Transparent`. A
+/// catch-all transparent is the worst possible answer: it compiles, it
+/// renders, and what it renders is INVISIBLE, so the failure surfaces as
+/// "the text disappeared" long after the authored value that caused it.
+/// Two ways in, both real:
+///
+///  - `color: inherit`, a CSS-wide keyword and a perfectly reasonable
+///    thing to author, produced `TextStyle(color = Color.Transparent)`.
+///    Caught by reading emitted Kotlin while fixing #15048.
+///  - Any colour name Compose has no case for -- `rebeccapurple`, a typo,
+///    a design-token name -- did the same thing silently.
+///
+/// Returning `None` lets each caller keep whatever it already had, which
+/// for text means the inherited style: unstyled rather than invisible.
+/// That matches how `px_or_none` already behaves for lengths in this file.
+fn compose_color_value(v: &str) -> Option<String> {
     let trimmed = v.trim();
 
     let expanded: String;
@@ -3389,18 +3407,20 @@ fn compose_color_value(v: &str) -> String {
     };
 
     if let Some(hex) = hex_body {
-        return format!("Color(0xFF{})", hex.to_uppercase());
+        return Some(format!("Color(0xFF{})", hex.to_uppercase()));
     }
 
     match trimmed {
-        "white" => "Color.White".to_string(),
-        "black" => "Color.Black".to_string(),
-        "transparent" | "clear" => "Color.Transparent".to_string(),
-        "red" => "Color.Red".to_string(),
-        "green" => "Color.Green".to_string(),
-        "blue" => "Color.Blue".to_string(),
-        "gray" | "grey" => "Color.Gray".to_string(),
-        _ => "Color.Transparent".to_string(),
+        "white" => Some("Color.White".to_string()),
+        "black" => Some("Color.Black".to_string()),
+        // `transparent` stays a REAL answer -- an author asking for
+        // nothing painted gets nothing painted. Only the catch-all goes.
+        "transparent" | "clear" => Some("Color.Transparent".to_string()),
+        "red" => Some("Color.Red".to_string()),
+        "green" => Some("Color.Green".to_string()),
+        "blue" => Some("Color.Blue".to_string()),
+        "gray" | "grey" => Some("Color.Gray".to_string()),
+        _ => None,
     }
 }
 
@@ -3433,8 +3453,16 @@ fn path_paint(node: &LayoutNode, part_styles: &PartStyleMap) -> PathPaint {
     let mut stroke_width = "0".to_string();
     for p in props {
         match p.name.as_str() {
-            "background" | "background-color" => fill = Some(compose_color_value(&p.value)),
-            "border-color" => stroke = Some(compose_color_value(&p.value)),
+            "background" | "background-color" => {
+                if let Some(c) = compose_color_value(&p.value) {
+                    fill = Some(c);
+                }
+            }
+            "border-color" => {
+                if let Some(c) = compose_color_value(&p.value) {
+                    stroke = Some(c);
+                }
+            }
             "border-width" => {
                 let stripped = strip_css_px(&p.value);
                 if !stripped.is_empty()
@@ -4029,9 +4057,15 @@ fn compose_box_style(
                 }
             }
             "background" | "background-color" => {
-                set(&mut background, compose_color_value(&p.value));
+                if let Some(c) = compose_color_value(&p.value) {
+                    set(&mut background, c);
+                }
             }
-            "color" => set(&mut foreground, compose_color_value(&p.value)),
+            "color" => {
+                if let Some(c) = compose_color_value(&p.value) {
+                    set(&mut foreground, c);
+                }
+            }
             "font-size" => {
                 if let Some(v) = px_or_none(&p.value) {
                     set(&mut font_size, v);
@@ -4047,7 +4081,11 @@ fn compose_box_style(
                     set(&mut border_width, v);
                 }
             }
-            "border-color" => set(&mut border_color, compose_color_value(&p.value)),
+            "border-color" => {
+                if let Some(c) = compose_color_value(&p.value) {
+                    set(&mut border_color, c);
+                }
+            }
             // UI79 -- a non-solid border is DRAWN, because
             // `Modifier.border` has no dash. Captured base-only: a border
             // that changes dash pattern per state is not a thing anyone
@@ -4080,7 +4118,11 @@ fn compose_box_style(
                             set(&mut edge_width[edge], v);
                         }
                     }
-                    _ => set(&mut edge_color[edge], compose_color_value(&p.value)),
+                    _ => {
+                        if let Some(c) = compose_color_value(&p.value) {
+                            set(&mut edge_color[edge], c);
+                        }
+                    }
                 }
             }
             // #14810 — 318 occurrences in TaskApp alone, every one discarded,
@@ -4577,7 +4619,11 @@ fn sheet_text_style(part_styles: &PartStyleMap, part_name: &str) -> TextStyleCtx
     if let Some(props) = part_styles.get(part_name) {
         for p in props {
             match p.name.as_str() {
-                "color" => ctx.color = Some(compose_color_value(&p.value)),
+                "color" => {
+                    if let Some(c) = compose_color_value(&p.value) {
+                        ctx.color = Some(c);
+                    }
+                }
                 "font-family" if p.value.trim() == "monospace" => ctx.mono = true,
                 "font-size" => ctx.size = Some(strip_css_px(&p.value).to_string()),
                 _ => {}
@@ -14037,4 +14083,66 @@ mod tests {
         }
     }
 
+}
+
+// =====================================================================
+// #15141 -- an unresolvable colour is dropped, never painted invisible
+// =====================================================================
+#[cfg(test)]
+mod colour_keyword_tests {
+    use super::*;
+
+    /// The CSS-wide keywords are cascade instructions, not colours. They
+    /// used to reach `_ => Color.Transparent`, which is how
+    /// `color: inherit` on an inline editor produced
+    /// `TextStyle(color = Color.Transparent)` -- text that renders
+    /// perfectly and is invisible.
+    #[test]
+    fn a_css_wide_keyword_is_dropped() {
+        for keyword in ["inherit", "initial", "unset", "revert"] {
+            assert_eq!(
+                compose_color_value(keyword),
+                None,
+                "`{keyword}` must be dropped, not painted"
+            );
+        }
+    }
+
+    /// The same trap swallowed every colour name Compose has no case for.
+    /// A typo or a design-token name became invisible rather than
+    /// obviously-unstyled.
+    #[test]
+    fn an_unresolvable_colour_name_is_dropped() {
+        assert_eq!(compose_color_value("rebeccapurple"), None);
+        assert_eq!(compose_color_value("--brand-accent"), None);
+        assert_eq!(compose_color_value("#gggggg"), None);
+        assert_eq!(compose_color_value(""), None);
+    }
+
+    /// `transparent` is an AUTHORED answer, not a fallback: someone asking
+    /// for nothing painted must still get nothing painted. If this ever
+    /// starts returning `None` the distinction has been lost.
+    #[test]
+    fn transparent_is_still_a_real_answer() {
+        assert_eq!(
+            compose_color_value("transparent").as_deref(),
+            Some("Color.Transparent")
+        );
+        assert_eq!(
+            compose_color_value("clear").as_deref(),
+            Some("Color.Transparent")
+        );
+    }
+
+    /// Everything that resolved before still resolves identically.
+    #[test]
+    fn resolvable_colours_are_unchanged() {
+        assert_eq!(
+            compose_color_value("#1e1e1e").as_deref(),
+            Some("Color(0xFF1E1E1E)")
+        );
+        assert_eq!(compose_color_value("#fff").as_deref(), Some("Color(0xFFFFFFFF)"));
+        assert_eq!(compose_color_value("white").as_deref(), Some("Color.White"));
+        assert_eq!(compose_color_value("grey").as_deref(), Some("Color.Gray"));
+    }
 }
