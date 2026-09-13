@@ -547,6 +547,62 @@ impl<S: CredentialStore> CredentialCustody<S> {
         Ok(use_token(loaded.record.access_token.as_str()))
     }
 
+    /// Audit, load, then disclose an access token and exact revision for revocation.
+    ///
+    /// This fallback is available only when the selected credential has no
+    /// refresh token. A caller therefore cannot delete a still-refreshable
+    /// credential after revoking only its access token.
+    pub fn with_access_token_for_revocation<R, A: CredentialAuditSink>(
+        &self,
+        key: &CredentialKey,
+        trace: OAuthTraceId,
+        audit: &mut A,
+        use_token: impl FnOnce(&str, CredentialRevision) -> R,
+    ) -> Result<R, CustodyError> {
+        attempt(audit, key, trace, CredentialAuditAction::AccessToken)?;
+        let loaded = match self.store.load(key).map_err(map_store_error) {
+            Ok(Some(loaded)) => loaded,
+            Ok(None) => {
+                return finish(
+                    audit,
+                    key,
+                    trace,
+                    CredentialAuditAction::AccessToken,
+                    Err(CustodyError::NotFound),
+                )
+            }
+            Err(error) => {
+                return finish(
+                    audit,
+                    key,
+                    trace,
+                    CredentialAuditAction::AccessToken,
+                    Err(error),
+                )
+            }
+        };
+        if loaded.record.refresh_token.is_some() {
+            return finish(
+                audit,
+                key,
+                trace,
+                CredentialAuditAction::AccessToken,
+                Err(CustodyError::InvalidInput),
+            );
+        }
+        publish(
+            audit,
+            key,
+            trace,
+            CredentialAuditAction::AccessToken,
+            CredentialAuditOutcome::Succeeded,
+        )?;
+        Ok(use_token(
+            loaded.record.access_token.as_str(),
+            loaded.revision,
+        ))
+    }
+
     /// Audit, load, then release non-secret lifecycle metadata to one closure.
     pub fn with_metadata<R, A: CredentialAuditSink>(
         &self,
@@ -878,8 +934,9 @@ fn publish<A: CredentialAuditSink>(
 mod tests {
     use super::*;
     use coding_adventures_oauth::{
-        decode_token_response, prepare_token_refresh, OAuthAuditError, OAuthAuditEvent,
-        OAuthAuditSink, ProviderConfig, TokenResponseFormat,
+        begin_authorization, complete_authorization, decode_token_response, prepare_token_refresh,
+        EntropySource, OAuthAuditError, OAuthAuditEvent, OAuthAuditSink, ProviderConfig,
+        TokenResponseFormat,
     };
     use std::sync::{Arc, Mutex as StdMutex};
 
@@ -888,6 +945,18 @@ mod tests {
 
     impl OAuthAuditSink for CoreAudit {
         fn publish(&mut self, _event: &OAuthAuditEvent) -> Result<(), OAuthAuditError> {
+            Ok(())
+        }
+    }
+
+    struct FixedEntropy([u8; 64]);
+
+    impl EntropySource for FixedEntropy {
+        fn fill(
+            &mut self,
+            destination: &mut [u8],
+        ) -> Result<(), coding_adventures_oauth::OAuthError> {
+            destination.copy_from_slice(&self.0[..destination.len()]);
             Ok(())
         }
     }
@@ -970,6 +1039,45 @@ mod tests {
             200,
             TokenResponseFormat::Json,
             Zeroizing::new(format!("{{{}}}", fields.join(",")).into_bytes()),
+        )
+        .publish_then_release(&mut CoreAudit)
+        .unwrap()
+        .release_credentials()
+        .publish_then_release(&mut CoreAudit)
+        .unwrap()
+    }
+
+    fn initial_credentials_without_refresh(access: &str) -> TokenCredentials {
+        let config = config().with_distinct_redirect_uri();
+        let begin = begin_authorization(
+            &config,
+            &["vault.read"],
+            trace(),
+            &mut FixedEntropy([0x29; 64]),
+        )
+        .publish_then_release(&mut CoreAudit)
+        .unwrap();
+        let state = begin
+            .url()
+            .as_str()
+            .split('&')
+            .find_map(|parameter| parameter.strip_prefix("state="))
+            .unwrap()
+            .to_owned();
+        let (_, transaction) = begin.into_parts();
+        let request = complete_authorization(
+            transaction,
+            &format!("{}?code=code-value&state={state}", config.redirect_uri()),
+        )
+        .publish_then_release(&mut CoreAudit)
+        .unwrap();
+        decode_token_response(
+            request.response_context(),
+            200,
+            TokenResponseFormat::Json,
+            Zeroizing::new(
+                format!(r#"{{"access_token":"{access}","token_type":"Bearer"}}"#).into_bytes(),
+            ),
         )
         .publish_then_release(&mut CoreAudit)
         .unwrap()
@@ -1109,6 +1217,51 @@ mod tests {
             })
             .unwrap();
         assert_eq!(length, 10);
+        assert_eq!(
+            *timeline.lock().unwrap(),
+            ["audit-attempted", "audit-succeeded", "token-use"]
+        );
+    }
+
+    #[test]
+    fn access_token_revocation_material_requires_refresh_absence() {
+        let refreshable = CredentialCustody::new(InMemoryCredentialStore::new());
+        create(&refreshable);
+        let called = Arc::new(StdMutex::new(false));
+        let called_by_closure = Arc::clone(&called);
+        assert_eq!(
+            refreshable.with_access_token_for_revocation(
+                &key(),
+                trace(),
+                &mut RecordingAudit::default(),
+                move |_, _| *called_by_closure.lock().unwrap() = true,
+            ),
+            Err(CustodyError::InvalidInput)
+        );
+        assert!(!*called.lock().unwrap());
+
+        let access_only = CredentialCustody::new(InMemoryCredentialStore::new());
+        let revision = access_only
+            .create(
+                &key(),
+                initial_credentials_without_refresh("access-only"),
+                metadata(1_000),
+                trace(),
+                &mut RecordingAudit::default(),
+            )
+            .unwrap();
+        let timeline = Arc::new(StdMutex::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            timeline: Some(Arc::clone(&timeline)),
+            ..RecordingAudit::default()
+        };
+        access_only
+            .with_access_token_for_revocation(&key(), trace(), &mut audit, |token, observed| {
+                timeline.lock().unwrap().push("token-use");
+                assert_eq!(token, "access-only");
+                assert_eq!(observed, revision);
+            })
+            .unwrap();
         assert_eq!(
             *timeline.lock().unwrap(),
             ["audit-attempted", "audit-succeeded", "token-use"]

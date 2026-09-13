@@ -4,7 +4,7 @@
 installed-app Authorization Code + PKCE, RFC 8628 device-flow initiation and
 caller-driven polling classification and sequencing,
 token/error codecs, refresh rotation, revocation request/response
-classification and exact refresh-token detach, RFC 8414
+classification and exact refresh- or access-token detach, RFC 8414
 metadata validation, and an audited
 literal-loopback callback host plus storage-agnostic audit-before-disclosure
 credential custody now compose through data-driven provider registration,
@@ -182,9 +182,13 @@ The delivery order is:
    composes the exact stored refresh token through retained Basic/Post policy,
    audited secret access and transport, bounded response decoding, caller-owned
    time, OAuth credential release, and revision-bound atomic retain/rotation.
-   Binding and all later failures preserve the prior record. Account identity
-   proof/key selection and access-token-only detach remain separate composition
-   steps. Prepared `private_key_jwt` authorization-code exchange, refresh, and
+   Binding and all later failures preserve the prior record. A client-secret
+   access-token-only fallback now releases the token and exact revision only
+   when custody proves that no refresh token exists, then conditionally deletes
+   after exact HTTP 200 and every audit gate. Refreshable credentials, retryable
+   provider failures, and stale revisions retain local state. Account identity
+   proof and key selection remain separate composition steps. Prepared
+   `private_key_jwt` authorization-code exchange, refresh, and
    RFC 7009 revocation requests can now cross the broker through the existing
    abstract signer: exact retained provider, client, operation endpoint,
    method, and case-sensitive algorithm checks precede signing; signer and
