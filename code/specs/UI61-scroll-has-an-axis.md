@@ -71,13 +71,22 @@ Measured on a minimal `overflow: auto` part:
 
 So there are two ways to ask for a scroll viewport, they reach different sets
 of backends, and their intersection — the three web backends — is the only
-place either is reliable. VisiCalc picked the one that reaches no native
-backend at all, which is why its sheet cannot scroll anywhere it ships.
+place either is reliable.
 
-The visible consequence is #14842: at 1280px, VisiCalc's columns Q–Z measure
-`0 x 24` at origin `(0, 0)`. Ten columns present in the semantics tree,
-correctly named, occupying no space, with every accessibility gate passing on
-them.
+**Correction.** This section originally claimed VisiCalc "picked the one that
+reaches no native backend at all". That is wrong: VisiCalc authors **both** —
+a `HostScroll [sheet-frame]` node *and* `overflow: auto` on the same part. The
+`HostScroll` does reach every backend. What it lacked was an axis, so it
+scrolled vertically and clipped the sheet horizontally.
+
+The consequence was #14842, and that issue's own premise turned out to be a
+measurement artifact too. It reported columns Q–Z as `0 x 24` at origin
+`(0, 0)`, measured with `boundsInRoot` — which returns `Rect.Zero` for any node
+clipped outside the viewport. Read through `size` and `positionInRoot` instead,
+the columns were always laid out correctly at an 80px pitch (`P` at x=1308,
+`Q` at 1388, …). They were not collapsing; they were unreachable. Giving the
+sheet `axis: both` takes its horizontal scroll range from *none* to `0.0/896.0`
+and closes the issue.
 
 ## 3. What must be decided
 
@@ -182,12 +191,17 @@ These are not speculative; each was found while investigating #14842.
   Trestle was temporarily authored with `axis: horizontal`, generated, compiled
   and rendered. See the struck hazard in §5: the throw this guarded against does
   not exist at 1.6.11.
-- **[NOT done — out of scope here]** VisiCalc's columns Q–Z report a non-zero
-  width (#14842). The axis alone does not fix this, and saying so is the point:
-  VisiCalc reaches its viewport through `overflow: auto` in the `.msl`, not
-  through `HostScroll`, and its frame also depends on a `height: 60vh` that no
-  native backend lowers (§5 hazard 3). Q–Z needs all three — the axis, the
-  `overflow`→`HostScroll` migration, and the `vh` fraction.
+- **[done, on different grounds]** VisiCalc's tail columns (#14842). The
+  prediction here — that the axis alone would not be enough, because VisiCalc
+  reaches its viewport through `overflow` rather than `HostScroll` — was wrong
+  on its premise (see the correction in §2): VisiCalc authors a real
+  `HostScroll`, and `axis: both` alone fixes it. The `height: 60vh` gap (§5
+  hazard 3) is real but turned out not to block this.
+
+  The acceptance was also restated. "Report a non-zero width" is not assertable
+  through `boundsInRoot`, which is zero for anything clipped off-screen; the
+  gate asserts a **horizontal scroll range** plus **non-zero layout `size` on
+  the off-screen columns** instead.
 - **[NOT done — out of scope here]** `overflow` appears in the drop report of
   every backend that discards it (§3.3). Compose, SwiftUI and XAML already do;
   Qt and Flutter have no style-drop reporting at all and remain gated on
