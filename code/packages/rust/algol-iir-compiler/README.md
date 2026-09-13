@@ -258,8 +258,10 @@ An exact controlled-scalar assignment in a single-iteration `step`/`until`
 loop may use the same wrapper while retaining its checked post-body exit value.
 The assignment may also derive that value from the known entry control; unknown
 dependencies and assignments whose increment remains in range fail closed.
-Exact integer control assignments may be followed across multiple passes until
-their checked increment exits, subject to the same 4,096-pass analysis cap.
+Exact integer or real control assignments may be followed across multiple
+passes until their checked or finite binary64 increment exits, subject to the
+same 4,096-pass analysis cap. Real simulation also rejects rounded-away
+progress.
 
 Switch-list elements may use every supported designational expression: a
 conditional element selects its branch when `goto s[i]` runs, and a nested

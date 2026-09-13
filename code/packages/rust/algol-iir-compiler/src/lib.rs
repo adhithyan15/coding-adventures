@@ -5949,29 +5949,40 @@ impl Compiler {
                 {
                     return (None, None);
                 }
-                if let Some((Some(value), _)) = self.for_body_static_target_snapshot(
-                    target,
-                    target_ty,
-                    body,
-                    Some(start.to_string()),
-                    None,
-                )
-                {
-                    let Some(exit) = value
-                        .parse::<f64>()
-                        .ok()
-                        .map(|value| value + step)
-                        .filter(|value| value.is_finite())
-                    else {
-                        return (None, None);
-                    };
-                    return if (step > 0.0 && exit > limit)
-                        || (step < 0.0 && exit < limit)
-                    {
-                        (Some(exit.to_string()), None)
-                    } else {
-                        (None, None)
-                    };
+                if let Some(expr) = self.for_body_static_target_expression(target, body) {
+                    let saved_reals = self.static_real_slots.clone();
+                    let saved_integers = self.static_integer_slots.clone();
+                    let saved_booleans = self.static_boolean_slots.clone();
+                    let exit = (|| {
+                        let mut control = start;
+                        for _ in 0..MAX_STATIC_STEP_ITERATIONS {
+                            self.update_for_target_snapshot(
+                                target,
+                                Some(control.to_string()),
+                                None,
+                            )
+                            .ok()?;
+                            let body_value = self
+                                .static_assigned_real_value(expr)
+                                .filter(|value| value.is_finite())?;
+                            let next = body_value + step;
+                            if !next.is_finite() {
+                                return None;
+                            }
+                            if (step > 0.0 && next > limit) || (step < 0.0 && next < limit) {
+                                return Some(next);
+                            }
+                            if next == control {
+                                return None;
+                            }
+                            control = next;
+                        }
+                        None
+                    })();
+                    self.static_real_slots = saved_reals;
+                    self.static_integer_slots = saved_integers;
+                    self.static_boolean_slots = saved_booleans;
+                    return (exit.map(|value| value.to_string()), None);
                 }
                 if !self.for_body_avoids_target(target, body) {
                     return (None, None);
@@ -6201,41 +6212,6 @@ impl Compiler {
         !recursive_tokens(body).iter().any(|token| {
             token.effective_type_name() == "NAME" && token.value == target_name
         })
-    }
-
-    fn for_body_static_target_snapshot(
-        &mut self,
-        target: &GrammarASTNode,
-        target_ty: ScalarType,
-        body: &GrammarASTNode,
-        entry_real: Option<String>,
-        entry_integer: Option<i64>,
-    ) -> Option<(Option<String>, Option<i64>)> {
-        let expr = self.for_body_static_target_expression(target, body)?;
-        let saved_reals = self.static_real_slots.clone();
-        let saved_integers = self.static_integer_slots.clone();
-        let saved_booleans = self.static_boolean_slots.clone();
-        let snapshot = if self
-            .update_for_target_snapshot(target, entry_real, entry_integer)
-            .is_err()
-        {
-            None
-        } else {
-            match target_ty {
-                ScalarType::Integer => self
-                    .static_assigned_integer_value(expr)
-                    .map(|value| (None, Some(value))),
-                ScalarType::Real => self
-                    .static_assigned_real_value(expr)
-                    .filter(|value| value.is_finite())
-                    .map(|value| (Some(value.to_string()), None)),
-                ScalarType::Boolean | ScalarType::String => None,
-            }
-        };
-        self.static_real_slots = saved_reals;
-        self.static_integer_slots = saved_integers;
-        self.static_boolean_slots = saved_booleans;
-        snapshot
     }
 
     fn for_body_static_target_expression<'a>(
@@ -14714,6 +14690,30 @@ mod tests {
             "test",
         )
         .expect_err("a cyclic integer control recurrence must hit the analysis cap");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_real_step_loop_preserves_control_recurrence_exit_snapshot() {
+        let module = compile_source(
+            "begin real x; for x := 1.0 step 0.5 until 10.0 do x := x * 2.0; print(x) end",
+            "test",
+        )
+        .expect("a bounded real control recurrence may retain its finite exit");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.5")
+        }));
+    }
+
+    #[test]
+    fn al4_cyclic_real_control_recurrence_remains_conservative() {
+        let err = compile_source(
+            "begin real x; for x := 1.0 step 0.5 until 3.0 do x := 3.0 - x; print(x) end",
+            "test",
+        )
+        .expect_err("a cyclic real control recurrence must hit the analysis cap");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
