@@ -207,9 +207,15 @@ fn atmosphere_exosphere_carries_the_bound_the_page_states() {
         "highest",
         "Located between about 700 and 10,000 kilometers (440 and 6,200 miles) above Earth’s surface, the exosphere is the highest layer of Earth’s atmosphere and, at its top, merges with the solar wind.",
     );
-    assert!(
-        out.contains("is the highest layer of Earth’s atmosphere"),
-        "the bound itself reaches the answer: {out}"
+    // Count, not `contains`: as a bare substring this is inside the span
+    // `assert_layer` already pins three lines up, so it could never fail on its
+    // own. Asserting TWO occurrences pins something that pin does not — that
+    // the bound survives into the proof-DAG rendering under `steps`, and not
+    // only into the citation block.
+    assert_eq!(
+        out.matches("is the highest layer of Earth’s atmosphere").count(),
+        2,
+        "the bound reaches both the citation and the proof step: {out}"
     );
 }
 

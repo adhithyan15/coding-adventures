@@ -27,14 +27,18 @@ landed and why, not a semver-tracked API.
   rows a `source` naming the layer plus a `cites` carrying the feature. Security review found that
   this contradicts a standard already shipped in [`README.md`](README.md) — *"A citation must name
   its own subject"*, whose remedy is explicit: **widen the quote until it is self-contained.**
-  (Same lineage as #13931; `geology/speleothem-substrate.adj` widens for the same reason.) Worse, the
+  (That standard landed under #13992, as the root-cause fix for #13934;
+  `earth-science/speleothem-substrate.adj` widens for the same reason — its second sentence opens
+  "They typically grow…", a bare pronoun.) Worse, the
   paired shape put the *tier* on the naming sentence while the sentence that actually supports the
   row became an untiered corroboration — the row's warrant would have been a sentence about altitude
   that never mentions the feature.
 
-  So the spans are **widened minimally**: each begins at the last sentence naming its layer before
-  the feature sentence — not at the paragraph opener. 346 / 227 / 269 / 358 / 194 characters, all
-  inside the 702-character precedent this stdlib already set. No row needs a `cites`; the file adds
+  So the spans are **widened minimally**: each of the three begins at the last sentence naming its
+  layer before the feature sentence — not at the paragraph opener. (`stratosphere` and `exosphere`
+  are widened by zero; their own sentence already names layer and feature.) 346 / 227 / 269 / 358 /
+  194 characters, all inside the 708-character precedent this stdlib already set in
+  `biology/blood-groups.adj` — recorded as 702 in the entry below, which undercounted by six. No row needs a `cites`; the file adds
   none. Nothing here is a new shape, and the `read`/`reasoned` vocabulary is unchanged.
 
   ### A second false alarm from the bounding-language audit
@@ -68,9 +72,13 @@ landed and why, not a semver-tracked API.
     see it: replacing it with a fabricated sentence leaves the suite green, and that mutant is run to
     demonstrate it rather than left unmentioned. Only its *non-leakage* into an answer is pinned.
     Same unreachability as `si-base-units` (#15073) and `planets` (#15127).
-  - **A `trust` pin cannot prove inheritance.** `lower.rs:2622` defaults an annotation carrying a
-    `source` and no `trust` to `authoritative`, which is also the envelope's tier — so the
-    `"trust":"authoritative"` assertions here are consistent with both inheritance and defaulting.
+  - **A `trust` pin cannot prove inheritance.** The rows themselves do not default: a row block goes
+    through `row_provenance` (`lower.rs:2496`), which clones the envelope and overrides only the
+    fields the row writes. The slack is one level up — `lower.rs:2622`, in `annotations_to_provenance`,
+    defaults the **envelope's** tier to `Authoritative` whenever a `source` is present, so deleting
+    the envelope's `trust authoritative` line leaves every row still reading `authoritative` and the
+    suite green. (Checked both directions: setting the envelope to `trust consensus` does propagate
+    to the rows, so inheritance is real — it just isn't what the pin proves.)
 
   **Three of my own errors, all repeats:**
 
@@ -94,8 +102,10 @@ landed and why, not a semver-tracked API.
   restatement ended at a full stop the page does not have. Neither is a punctuation difference —
   swapping straight apostrophes for the page's curly ones still scores zero for both. The restatements
   are deleted rather than repaired: a second copy of a quote is a second thing to keep true, and the
-  rows are the copy that ships. The header also claimed *"An ADJ `table` carries ONE provenance
-  envelope"*, which RS-5e has not been true of since per-row blocks landed.
+  rows are the copy that ships. The header also reasoned from *"An ADJ `table` carries ONE provenance
+  envelope"* to "so only the cleanest span can ship, and the rest live in a comment". The premise is
+  still in `ADJ-TABLES.md` §4 and still true; RS-5e falsified the inference, and that sentence is the
+  form the exemplar-span defect takes when written down.
 
   The `thermosphere → auroras` row now records that the page places auroras in the exosphere's lowest
   part as well; this table carries one feature per layer and does not claim the aurora is unique to

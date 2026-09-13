@@ -77,8 +77,12 @@
 % a sentence whose subject is only "here" or "this atmospheric layer". The
 % shipped rule (../README.md, "A citation must name its own subject") is to
 % WIDEN the quote until it is self-contained, and that is what these rows do:
-% each span begins at the last sentence naming its layer before the feature
-% sentence. 346 / 227 / 269 / 358 / 194 characters.
+% those three spans begin at the last sentence naming the layer before the
+% feature sentence. (`stratosphere` and `exosphere` are widened by zero — their
+% own sentence already names layer and feature.) An earlier draft put each
+% span's character count here; they are in the CHANGELOG instead, since a count
+% in a comment is one more thing that can silently stop being true — the same
+% reason the five re-quoted spans came out.
 %
 % The envelope keeps the FRAMING span — the sentence that defends the table as
 % a whole, that these are the layers in order. It warrants no row, and a test
