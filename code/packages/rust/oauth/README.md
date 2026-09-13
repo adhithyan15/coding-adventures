@@ -26,7 +26,8 @@ The crate owns the security-sensitive, pure portion of installed-app OAuth:
 - closed provider-denial and callback errors;
 - one-use callback completion into an opaque token-exchange request; and
 - bounded JSON and form token/error decoding, explicit refresh-token rotation,
-  public-client refresh grants, and RFC 7009 revocation preparation plus
+  a no-clone split between zeroizing ID-token evidence and the remaining
+  credential bundle, public-client refresh grants, and RFC 7009 revocation preparation plus
   request-bound response classification. Only exact HTTP 200 confirms
   revocation; HTTP 503 remains a closed retryable outcome, while response
   handling acquires no retry timing, transport, or credential-removal authority.
