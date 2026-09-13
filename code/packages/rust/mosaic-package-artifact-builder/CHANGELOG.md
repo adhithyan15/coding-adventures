@@ -21,6 +21,30 @@ so the refusal is not preventing a silent break — it names the problem at buil
 time instead of surfacing as a Dart analyser error inside generated code the
 author never wrote.
 
+#### The two shapes need different calls, and the first version shipped one
+
+The permissive project declares `late final MosaicHost? _mosaicHost`; the
+`require_runtime` project declares it **non-nullable**. Emitting the same
+null-guarded call for both produced `unnecessary_null_comparison` in the
+required shape — and since the generated `analysis_options.yaml` pulls in
+`flutter_lints` while `flutter analyze` defaults to `--fatal-warnings`, that
+made the emitted project **fail the very command its own generated README tells
+the reader to run**.
+
+Security review caught it, and the miss is instructive: my verification analysed
+one emitted project, which was the permissive default, and I generalised. The
+test did drive both shapes — but asserted only that the install came after the
+host assignment, and ordering is identical in both. An assertion that holds for
+the broken shape is not a check on it.
+
+The call is now keyed off the field declaration already present in the file, so
+the two stay in step by construction. The test pins the emitted *form* per
+variant, and both shapes were re-emitted and analysed: `flutter analyze` reports
+no issues for each.
+
+This is the second time in this session the `require_runtime` variant has been
+the untested one — the SwiftUI end-to-end test had the same gap.
+
 **No downcast**, unlike SwiftUI and Compose. Flutter's `MosaicHost` carries
 `effectHandler` directly rather than hiding it behind an effect-unaware
 interface, so there is nothing to cast. The install does go through a **local**:

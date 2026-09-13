@@ -271,8 +271,9 @@ impl Backend {
     ///
     /// Copying a handler's source into the project is backend-agnostic;
     /// installing it is not. Qt, SwiftUI and Compose emit the call that reaches
-    /// it -- `qt_main_with_host_effects`, `swift_app_with_host_effects` and
-    /// `compose_main_with_host_effects`. Flutter and XAML do not yet.
+    /// it -- `qt_main_with_host_effects`, `swift_app_with_host_effects`,
+    /// `compose_main_with_host_effects` and `flutter_main_with_host_effects`.
+    /// XAML does not yet.
     ///
     /// Without this, a package declaring a handler for any other backend got
     /// the file copied, compiled and shipped with nothing ever calling it, and
@@ -3655,9 +3656,21 @@ fn compose_main_with_host_effects(
 /// a field silently dropped. Qt is the same shape as this one for the same
 /// reason -- C++ has no cross-file visibility either.
 ///
-/// The call goes immediately after the host is assigned in `initState`, through
-/// a local: `_mosaicHost` is a `late final MosaicHost?` field, and Dart does not
-/// promote fields to non-null, so the null check has to be on a local copy.
+/// The call goes immediately after the host is assigned in `initState`, and its
+/// shape depends on how the field was declared -- which is NOT the same in both
+/// emitted projects, and an earlier version of this emitted one shape for both.
+///
+/// The permissive project declares `late final MosaicHost? _mosaicHost`, so the
+/// call needs a null check, and that check has to be on a LOCAL: Dart does not
+/// promote a nullable field to non-null.
+///
+/// The `require_runtime` project declares `late final MosaicHost _mosaicHost`
+/// -- non-nullable, because the runtime is required. Emitting the same guard
+/// there produces `unnecessary_null_comparison`, and the generated
+/// `analysis_options.yaml` pulls in `flutter_lints` while `flutter analyze`
+/// defaults to `--fatal-warnings`. So the one-shape-fits-both version made the
+/// emitted project fail the very command its own README tells the reader to
+/// run.
 fn flutter_main_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
@@ -3703,6 +3716,13 @@ fn flutter_main_with_host_effects(
         .find('\n')
         .map_or(generated.len(), |index| at + index + 1);
 
+    // Read the FIELD to decide the call, rather than assuming a shape.
+    //
+    // Keyed on the declaration already in the file, so the two stay in step by
+    // construction: a future emitter that changed the nullability would change
+    // this line with it rather than leaving a guard that no longer type-checks.
+    let host_is_nullable = generated.contains("late final MosaicHost? _mosaicHost;");
+
     let mut out = String::with_capacity(generated.len() + 256);
     out.push_str(&generated[..line_end]);
     writeln!(
@@ -3710,12 +3730,16 @@ fn flutter_main_with_host_effects(
         "{indent}// Package-declared effect handler, from `[host_effects]`."
     )
     .expect("write Flutter host-effect comment");
-    writeln!(
-        out,
-        "{indent}final mosaicEffectHost = _mosaicHost;\n\
-         {indent}if (mosaicEffectHost != null) {{ {}(mosaicEffectHost); }}",
-        handler.install
-    )
+    if host_is_nullable {
+        writeln!(
+            out,
+            "{indent}final mosaicEffectHost = _mosaicHost;\n\
+             {indent}if (mosaicEffectHost != null) {{ {}(mosaicEffectHost); }}",
+            handler.install
+        )
+    } else {
+        writeln!(out, "{indent}{}(_mosaicHost);", handler.install)
+    }
     .expect("write Flutter host-effect install");
     out.push_str(&generated[line_end..]);
 
@@ -13170,13 +13194,49 @@ handlers = [
             let host = wired
                 .find("_mosaicHost = widget.mosaicHost")
                 .expect("host assignment");
-            let install = wired
-                .find("installProbeEffects(mosaicEffectHost)")
-                .expect("install");
+            let install = wired.find("installProbeEffects").expect("install");
             assert!(
                 host < install,
                 "require_runtime={require_runtime}:\n{wired}"
             );
+
+            // The SHAPE, not just the ordering. The two projects declare the
+            // field differently -- `MosaicHost?` permissively, `MosaicHost`
+            // when the runtime is required -- and emitting one guard for both
+            // produced `unnecessary_null_comparison` in the required shape.
+            // `flutter analyze` defaults to `--fatal-warnings` and the emitted
+            // `analysis_options.yaml` pulls in `flutter_lints`, so that made
+            // the project fail the command its own README prescribes.
+            //
+            // An ordering-only assertion passed that happily, which is exactly
+            // why this now pins the emitted form per variant.
+            let field_is_nullable = emitted
+                .main_dart
+                .contains("late final MosaicHost? _mosaicHost;");
+            assert_eq!(
+                field_is_nullable, !require_runtime,
+                "require_runtime={require_runtime} must select the field nullability"
+            );
+            if field_is_nullable {
+                assert!(
+                    wired.contains("if (mosaicEffectHost != null)"),
+                    "a nullable field needs the guard:\n{wired}"
+                );
+            } else {
+                // Scoped to the guard THIS emitter writes. The generated app
+                // contains other, legitimate null checks, and forbidding the
+                // substring outright failed on those -- an over-broad assertion
+                // that reported a defect which was not there.
+                assert!(
+                    !wired.contains("mosaicEffectHost != null"),
+                    "a non-nullable field must NOT be null-checked -- that is \
+                     `unnecessary_null_comparison`, which fails `flutter analyze`:\n{wired}"
+                );
+                assert!(
+                    wired.contains("installProbeEffects(_mosaicHost);"),
+                    "the non-nullable shape calls the host directly:\n{wired}"
+                );
+            }
         }
     }
 }
