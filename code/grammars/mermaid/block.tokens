@@ -11,6 +11,8 @@ GROUP_START   = /[ \t]*block:[A-Za-z_][^\r\n]*(?:\r?\n|$)/
 HEADER        = /[ \t]*block(?:-beta)?[ \t]*(?:\r?\n|$)/
 GROUP_END     = /[ \t]*end[ \t]*(?:\r?\n|$)/
 ARROW_NODE_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_-]*<\[[^\]\r\n]*\]>\([^\r\n)]*\)(?::[1-9][0-9]*)?[ \t]*(?:\r?\n|$)/
+MARKED_CONNECTION_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_-]*[ \t]+(?:[xo](?:--+[-xo>]|==+[=xo>]|-?\.+-[xo>]?)|(?:--+|==+|-?\.+-)[xo])[ \t]+[^\r\n]+(?:\r?\n|$)/
+BIDIRECTIONAL_CONNECTION_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_-]*[ \t]*(?:<-->|<-\.->|<==>)[ \t]*[^\r\n]+(?:\r?\n|$)/
 DOTTED_CONNECTION_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_-]*[ \t]*-\.->[ \t]*[^\r\n]+(?:\r?\n|$)/
 THICK_CONNECTION_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_-]*[ \t]*==>[ \t]*[^\r\n]+(?:\r?\n|$)/
 STATEMENT_LINE = /[ \t]*[^ \t\r\n][^\r\n]*/

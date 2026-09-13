@@ -50,6 +50,14 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .slots
         .iter()
+        .any(|slot| slot.name == "schematic-wire-rows"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "open-schematic-label"));
+    assert!(component
+        .slots
+        .iter()
         .any(|slot| slot.name == "schematic-analysis-controls"));
     assert!(component
         .slots
@@ -67,7 +75,19 @@ fn manifest_and_component_contract_are_complete() {
         .slots
         .iter()
         .any(|slot| slot.name == "schematic-value-disabled"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "remove-schematic-component-disabled"));
     assert!(component.emits.iter().any(|emit| emit.name == "onRun"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onOpenSchematic"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onSaveSchematic"));
     assert!(component
         .emits
         .iter()
@@ -108,6 +128,14 @@ fn manifest_and_component_contract_are_complete() {
         .emits
         .iter()
         .any(|emit| emit.name == "onSchematicValueChange"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onRemoveSchematicComponent"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onRemoveSchematicWire"));
 }
 
 #[test]
@@ -122,6 +150,8 @@ fn multiline_workbench_compiles_in_both_themes() {
     assert!(source("SpiceWorkbench.mll").contains("Path [ waveform-segment ]"));
     assert!(source("SpiceWorkbench.mll").contains("Path [ schematic-wire-segment ]"));
     assert!(source("SpiceWorkbench.mll").contains("Path [ schematic-terminal ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ open-schematic ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ save-schematic ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-control ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-card ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ remove-schematic-analysis-card ]"));
@@ -131,6 +161,8 @@ fn multiline_workbench_compiles_in_both_themes() {
     assert!(source("SpiceWorkbench.mll")
         .contains("HostInput [ schematic-analysis-parameter-one-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-value-input ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-wire-remove ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ remove-schematic-component ]"));
     assert!(source("SpiceWorkbench.mll").contains("segment[0]"));
     assert!(source("SpiceWorkbench.mll").contains("slot: diagnostic-rows"));
     assert!(source("SpiceWorkbench.mll").contains("onClick : emit: onRun"));
@@ -166,6 +198,8 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("x1=\"{{segment.0}}\""));
                 assert!(output.contains("data-on-change=\"onNetlistChange\""));
                 assert!(output.contains("data-on-click=\"onRun\""));
+                assert!(output.contains("data-on-click=\"onOpenSchematic\""));
+                assert!(output.contains("data-on-click=\"onSaveSchematic\""));
                 assert!(output.contains("data-on-click=\"onPlaceSchematicComponent\""));
                 assert!(output.contains("data-on-click=\"onAddSchematicAnalysis\""));
                 assert!(output.contains("data-on-click=\"onSelectSchematicAnalysisCard\""));
@@ -173,17 +207,23 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("data-on-click=\"onSelectSchematicAnalysisSource\""));
                 assert!(output.contains("data-on-change=\"onSchematicAnalysisParameterOneChange\""));
                 assert!(output.contains("data-on-change=\"onSchematicValueChange\""));
+                assert!(output.contains("data-on-click=\"onRemoveSchematicComponent\""));
+                assert!(output.contains("data-on-click=\"onRemoveSchematicWire\""));
             }
             Backend::React => {
                 assert!(output.contains("<svg aria-hidden=\"true\""));
                 assert!(output.contains("x1={( segment [ 0 ] )}"));
                 assert!(output.contains("type: \"netlistChange\""));
                 assert!(output.contains("type: \"run\""));
+                assert!(output.contains("type: \"openSchematic\""));
+                assert!(output.contains("type: \"saveSchematic\""));
                 assert!(output.contains("type: \"placeSchematicComponent\""));
                 assert!(output.contains("type: \"selectSchematicAnalysis\""));
                 assert!(output.contains("type: \"selectSchematicAnalysisSource\""));
                 assert!(output.contains("type: \"schematicAnalysisParameterOneChange\""));
                 assert!(output.contains("type: \"schematicValueChange\""));
+                assert!(output.contains("type: \"removeSchematicComponent\""));
+                assert!(output.contains("type: \"removeSchematicWire\""));
             }
             _ => unreachable!("the test only builds HTML and React artifacts"),
         }

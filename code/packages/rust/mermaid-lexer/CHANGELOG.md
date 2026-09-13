@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.87.0
+
+- Tokenize Block circle and cross endpoint connections through a dedicated grammar rule.
+
+## 0.86.0
+
+- Tokenize solid, dotted, and thick bidirectional Block connections through a dedicated grammar rule.
+
 ## 0.85.0
 
 - Tokenize dotted and thick Block connections through dedicated grammar productions.

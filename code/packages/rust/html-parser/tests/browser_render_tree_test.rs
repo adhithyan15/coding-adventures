@@ -467,6 +467,7 @@ impl ExpectedRenderTree {
 
 impl ExpectedRenderNode {
     fn into_browser_render_node(self) -> BrowserRenderNode {
+        let effective_target = self.target.clone();
         BrowserRenderNode {
             display: self.display,
             role: self.role,
@@ -483,6 +484,7 @@ impl ExpectedRenderNode {
             href: self.href,
             resolved_href: self.resolved_href,
             target: self.target,
+            effective_target,
             rel: self.rel,
             rel_tokens: self.rel_tokens,
             download: self.download,

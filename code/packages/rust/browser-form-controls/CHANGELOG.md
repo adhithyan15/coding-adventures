@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Retain authored submitter target overrides in shared control bindings.
+
 - Add document-ordered constrained focus traversal so modal surfaces can trap
   focus without moving traversal policy into native hosts.
 

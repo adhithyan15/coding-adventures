@@ -11,6 +11,8 @@ component SpiceWorkbench {
   slot diagnostic-rows : list<text> ;
   slot schematic-label : text ;
   slot schematic-title : text ;
+  slot open-schematic-label : text ;
+  slot save-schematic-label : text ;
   slot schematic-rows : list<text> ;
   slot schematic-palette : list<text> ;
   slot schematic-analysis-label : text ;
@@ -36,6 +38,8 @@ component SpiceWorkbench {
   slot schematic-grid-lines : list<list<number>> ;
   slot schematic-wire-segments : list<list<number>> ;
   slot schematic-terminal-points : list<list<number>> ;
+  slot schematic-wire-label : text ;
+  slot schematic-wire-rows : list<text> ;
   slot selected-schematic-label : text ;
   slot schematic-properties-label : text ;
   slot selected-schematic-kind-label : text ;
@@ -43,6 +47,8 @@ component SpiceWorkbench {
   slot schematic-value : text ;
   slot schematic-value-placeholder : text ;
   slot schematic-value-disabled : bool ;
+  slot remove-schematic-component-label : text ;
+  slot remove-schematic-component-disabled : bool ;
   slot route-schematic-label : text ;
   slot synchronize-schematic-label : text ;
   slot analysis-label : text ;
@@ -62,6 +68,8 @@ component SpiceWorkbench {
   emit onNetlistChange ( value : text ) ;
   emit onInspect ;
   emit onRun ;
+  emit onOpenSchematic ;
+  emit onSaveSchematic ;
   emit onPlaceSchematicComponent ( kind : text ) ;
   emit onAddSchematicAnalysis ( analysis : text ) ;
   emit onSelectSchematicAnalysis ( analysis : text ) ;
@@ -73,6 +81,8 @@ component SpiceWorkbench {
   emit onSchematicAnalysisParameterThreeChange ( value : text ) ;
   emit onSelectSchematicComponent ( reference : text ) ;
   emit onSchematicValueChange ( value : text ) ;
+  emit onRemoveSchematicComponent ;
+  emit onRemoveSchematicWire ( index : number ) ;
   emit onRouteToSchematicComponent ( reference : text ) ;
   emit onSynchronizeSchematic ;
   emit onSelectAnalysis ( index : number ) ;

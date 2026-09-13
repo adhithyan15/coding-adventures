@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Project effective targets, download names, and opener/referrer restrictions
+  into shared link layout metadata.
+
 - Project legacy named-anchor targets into shared Layout IR metadata for
   host-neutral fragment navigation.
 

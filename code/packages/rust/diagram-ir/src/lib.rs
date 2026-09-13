@@ -118,11 +118,21 @@ pub fn resolve_style_with_base(
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum EdgeKind {
     Directed,
+    Bidirectional,
     Undirected,
     NoteAssociation,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub enum EdgeMarker {
+    #[default]
+    None,
+    Point,
+    Circle,
+    Cross,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -204,6 +214,8 @@ pub struct GridConnection {
     pub from: String,
     pub to: String,
     pub kind: EdgeKind,
+    pub start_marker: EdgeMarker,
+    pub end_marker: EdgeMarker,
     pub line_style: GridEdgeStyle,
     pub label: Option<DiagramLabel>,
 }
@@ -420,6 +432,8 @@ pub struct LayoutedGraphEdge {
     pub from_node_id: String,
     pub to_node_id: String,
     pub kind: EdgeKind,
+    pub start_marker: EdgeMarker,
+    pub end_marker: EdgeMarker,
     pub points: Vec<Point>,
     pub label: Option<DiagramLabel>,
     pub label_position: Option<Point>,

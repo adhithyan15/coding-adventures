@@ -46,7 +46,11 @@ no concrete signing or network implementation is added. A separate composition
 validates that retained profile before credential access, releases the exact
 opaque account record's refresh token and revision, and conditionally deletes
 only that revision after exact HTTP 200 crosses signer, transport, protocol,
-custody, and broker audit gates. Every failure retains the local credential.
+custody, and broker audit gates. For records without a refresh token, a
+separate fallback proves refresh absence inside custody before releasing the
+access token and exact revision, then applies the same signing, transport,
+response, and conditional-delete gates. Refreshable records and every later
+failure retain the local credential.
 Authorization-code exchange can likewise compose its bounded response directly
 into an exact provider-bound opaque account key. Key mismatch fails before
 signing, transport, clock, or custody access; the response crosses the OAuth
@@ -68,9 +72,12 @@ composition reads the exact opaque account record's refresh token and revision,
 revokes that token through the retained client-secret method, and conditionally
 deletes only that revision after exact HTTP 200 and every intervening audit gate.
 Provider failures, transport failures, missing refresh tokens, and binding
-failures leave the credential record intact. These boundaries add no concrete
-network implementation. Exchange can either return its audit-gated response or
-compose it directly into
+failures leave the credential record intact. For records that have no refresh
+token, a separate access-token fallback releases that token and exact revision
+only after custody proves refresh absence; it then applies the same retained
+client-secret, transport, response, and conditional-delete gates. These
+boundaries add no concrete network implementation. Exchange can either return
+its audit-gated response or compose it directly into
 an exact provider-bound opaque account key, crossing the OAuth credential
 release and custody-create audit gates without credential disclosure. A stored
 refresh token can likewise cross exact retained Basic/Post authentication,
@@ -113,9 +120,8 @@ dependency are sibling packages in this repository.
 - concrete HTTPS, TLS, or socket authority;
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
-- account identity proof and key selection, listing, access-token-only detach
-  when no refresh token exists, device authorization UI, timing/sleep authority,
-  and full device-flow loops;
+- account identity proof and key selection, listing, device authorization UI,
+  timing/sleep authority, and full device-flow loops;
 - concrete private-key algorithms, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.

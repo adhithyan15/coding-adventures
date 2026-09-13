@@ -242,6 +242,12 @@ the same string, integer, or boolean output paths as typed procedures. Using a
 proper procedure in value position is a clean type error because it has no
 return value.
 
+Statically bounded integer- or real-controlled `while` elements can retain the
+final snapshot of one simple local integer, real, or boolean recurrence. The
+analysis must prove a terminating false predicate within 4,096 evaluations and
+rejects dependency writes, compound bodies, globals, arrays, by-name targets,
+overflow, and non-finite numeric results.
+
 Switch-list elements may use every supported designational expression: a
 conditional element selects its branch when `goto s[i]` runs, and a nested
 element such as `other[j]` performs that second lookup in the same computed-goto

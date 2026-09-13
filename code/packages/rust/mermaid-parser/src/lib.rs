@@ -12,7 +12,7 @@ pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
-    BlockArrowDirections, BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape,
+    BlockArrowDirections, BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape, EdgeMarker,
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
@@ -1479,6 +1479,8 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             token_type,
             Some("STATEMENT_LINE")
                 | Some("ARROW_NODE_LINE")
+                | Some("MARKED_CONNECTION_LINE")
+                | Some("BIDIRECTIONAL_CONNECTION_LINE")
                 | Some("DOTTED_CONNECTION_LINE")
                 | Some("THICK_CONNECTION_LINE")
         ) {
@@ -1538,9 +1540,35 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             direct_styles.push((split_block_names(ids), parse_block_style(token, declarations)?));
             continue;
         }
+        if token_type == Some("MARKED_CONNECTION_LINE") {
+            let (from, to, kind, line_style, start_marker, end_marker) =
+                parse_block_marked_connection(token, line)?;
+            connections.push(GridConnection {
+                from,
+                to,
+                kind,
+                start_marker,
+                end_marker,
+                line_style,
+                label: None,
+            });
+            continue;
+        }
         if let Some((from, rest, kind, line_style)) = line
-            .split_once("-.->")
-            .map(|(from, rest)| (from, rest, EdgeKind::Directed, GridEdgeStyle::Dotted))
+            .split_once("<-.->")
+            .map(|(from, rest)| (from, rest, EdgeKind::Bidirectional, GridEdgeStyle::Dotted))
+            .or_else(|| {
+                line.split_once("<==>")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Bidirectional, GridEdgeStyle::Thick))
+            })
+            .or_else(|| {
+                line.split_once("<-->")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Bidirectional, GridEdgeStyle::Solid))
+            })
+            .or_else(|| {
+                line.split_once("-.->")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Directed, GridEdgeStyle::Dotted))
+            })
             .or_else(|| {
                 line.split_once("==>")
                     .map(|(from, rest)| (from, rest, EdgeKind::Directed, GridEdgeStyle::Thick))
@@ -1567,6 +1595,12 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 from,
                 to: to.to_string(),
                 kind,
+                start_marker: if kind == EdgeKind::Bidirectional { EdgeMarker::Point } else { EdgeMarker::None },
+                end_marker: if matches!(kind, EdgeKind::Directed | EdgeKind::Bidirectional) {
+                    EdgeMarker::Point
+                } else {
+                    EdgeMarker::None
+                },
                 line_style,
                 label,
             });
@@ -1657,6 +1691,47 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         groups,
         connections,
     })
+}
+
+fn parse_block_marked_connection(
+    token: &Token,
+    line: &str,
+) -> Result<(String, String, EdgeKind, GridEdgeStyle, EdgeMarker, EdgeMarker), ParseError> {
+    let mut parts = line.split_whitespace();
+    let from = parts.next().unwrap_or_default();
+    let mut link = parts.next().unwrap_or_default();
+    let to = parts.next().unwrap_or_default();
+    if from.is_empty() || link.is_empty() || to.is_empty() || parts.next().is_some() {
+        return Err(token_error(token, "marked block connection requires source, link, and target"));
+    }
+
+    let start_marker = match link.as_bytes().first().copied() {
+        Some(b'o') => { link = &link[1..]; EdgeMarker::Circle }
+        Some(b'x') => { link = &link[1..]; EdgeMarker::Cross }
+        Some(b'<') => { link = &link[1..]; EdgeMarker::Point }
+        _ => EdgeMarker::None,
+    };
+    let end_marker = match link.as_bytes().last().copied() {
+        Some(b'o') => { link = &link[..link.len() - 1]; EdgeMarker::Circle }
+        Some(b'x') => { link = &link[..link.len() - 1]; EdgeMarker::Cross }
+        Some(b'>') => { link = &link[..link.len() - 1]; EdgeMarker::Point }
+        _ => EdgeMarker::None,
+    };
+    let line_style = if link.contains("==") {
+        GridEdgeStyle::Thick
+    } else if link.contains('.') {
+        GridEdgeStyle::Dotted
+    } else {
+        GridEdgeStyle::Solid
+    };
+    let kind = if start_marker == EdgeMarker::Point && end_marker == EdgeMarker::Point {
+        EdgeKind::Bidirectional
+    } else if start_marker == EdgeMarker::Point || end_marker == EdgeMarker::Point {
+        EdgeKind::Directed
+    } else {
+        EdgeKind::Undirected
+    };
+    Ok((from.to_string(), to.to_string(), kind, line_style, start_marker, end_marker))
 }
 
 fn take_grid_order(next_order: &mut HashMap<Option<String>, usize>, parent_id: &Option<String>) -> usize {
@@ -9251,6 +9326,28 @@ mod tests_dg04 {
         assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Dotted);
         assert_eq!(diagram.connections[1].kind, EdgeKind::Directed);
         assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
+    }
+
+    #[test]
+    fn block_preserves_bidirectional_connection_styles() {
+        let diagram = parse_block("block\nA B C D\nA <--> B\nB <-.-> C\nC <==> D").unwrap();
+        assert!(diagram.connections.iter().all(|connection| connection.kind == EdgeKind::Bidirectional));
+        assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Solid);
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Dotted);
+        assert_eq!(diagram.connections[2].line_style, GridEdgeStyle::Thick);
+    }
+
+    #[test]
+    fn block_preserves_circle_and_cross_endpoint_markers() {
+        let diagram = parse_block("block\nA B C D\nA o--x B\nB x==o C\nC o-.-o D\nD --x A").unwrap();
+        assert_eq!((diagram.connections[0].start_marker, diagram.connections[0].end_marker),
+            (EdgeMarker::Circle, EdgeMarker::Cross));
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
+        assert_eq!((diagram.connections[1].start_marker, diagram.connections[1].end_marker),
+            (EdgeMarker::Cross, EdgeMarker::Circle));
+        assert_eq!(diagram.connections[2].line_style, GridEdgeStyle::Dotted);
+        assert_eq!((diagram.connections[3].start_marker, diagram.connections[3].end_marker),
+            (EdgeMarker::None, EdgeMarker::Cross));
     }
 
     #[test]

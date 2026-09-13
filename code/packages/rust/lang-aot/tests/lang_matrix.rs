@@ -2747,6 +2747,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("6.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — bounded while analysis also carries one local boolean
+    // recurrence to the exact final snapshot used by formatter-free output.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do flag := flag eqv false; if flag then r := 42.0 else r := 0.5; print(r) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a statically nonempty while element may have a dynamic trip
     // count while still establishing the same control-independent body value.
     Prog {
@@ -12891,6 +12900,31 @@ fn algol_while_loop_scalar_recurrence_runs_on_every_available_standard_backend()
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the while-loop scalar recurrence did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_while_loop_boolean_recurrence_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("while i <= 3 do flag := flag eqv false")
+        })
+        .expect("the ALGOL while-loop boolean recurrence must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the while-loop boolean recurrence did not run"
             );
             continue;
         };

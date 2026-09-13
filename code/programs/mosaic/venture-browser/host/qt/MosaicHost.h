@@ -59,6 +59,8 @@ public:
 
 signals:
   void auxiliaryDocumentRequested(const QVariantMap &document);
+  void browsingContextRequested(const QVariantMap &request);
+  void downloadRequested(const QVariantMap &request);
 
 private:
   using NewFn = void *(*)(const char *, double, double);
@@ -99,6 +101,7 @@ private:
   NewFn new_ = nullptr;
   FreeFn free_ = nullptr;
   ApplyPropsFn applyProps_ = nullptr;
+  ApplyPropsFn takeEffect_ = nullptr;
   HandleEventFn handleEvent_ = nullptr;
   ScrollFn scroll_ = nullptr;
   ScrollCommandFn scrollCommand_ = nullptr;

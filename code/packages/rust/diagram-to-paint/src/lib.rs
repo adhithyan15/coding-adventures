@@ -32,7 +32,7 @@ use std::collections::HashMap;
 
 use diagram_ir::{
     DiagramShape, EdgeKind, GeoElement, GitCommitSymbol, LayoutedChartDiagram, LayoutedChartItem,
-    EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
+    EdgeMarker, EventModelEntityKind, LayoutedEventModelDiagram, LayoutedEventModelItem,
     LayoutedCynefinDiagram, LayoutedInfoDiagram, LayoutedIshikawaDiagram, LayoutedSwimlaneDiagram, LayoutedRailroadDiagram,
     LayoutedTreeViewDiagram, LayoutedTreemapDiagram, LayoutedVennDiagram, LayoutedWardleyDiagram,
     LayoutedGeometricDiagram, LayoutedGraphDiagram, LayoutedGraphEdge, LayoutedGraphNode,
@@ -1153,13 +1153,17 @@ fn line_path(points: &[Point], stroke: &str, stroke_width: f64) -> PaintPath {
 ///  left    |   right
 ///       base_mid
 /// ```
-fn arrowhead(edge: &LayoutedGraphEdge) -> Option<PaintPath> {
-    if edge.kind != EdgeKind::Directed || edge.points.len() < 2 {
+fn arrowhead(edge: &LayoutedGraphEdge, at_start: bool) -> Option<PaintPath> {
+    let marker = if at_start { edge.start_marker } else { edge.end_marker };
+    if marker != EdgeMarker::Point || edge.points.len() < 2 {
         return None;
     }
 
-    let end = &edge.points[edge.points.len() - 1];
-    let prev = &edge.points[edge.points.len() - 2];
+    let (end, prev) = if at_start {
+        (&edge.points[0], &edge.points[1])
+    } else {
+        (&edge.points[edge.points.len() - 1], &edge.points[edge.points.len() - 2])
+    };
 
     let dx = end.x - prev.x;
     let dy = end.y - prev.y;
@@ -1201,6 +1205,47 @@ fn arrowhead(edge: &LayoutedGraphEdge) -> Option<PaintPath> {
         stroke_dash: None,
         stroke_dash_offset: None,
     })
+}
+
+fn endpoint_marker(edge: &LayoutedGraphEdge, at_start: bool) -> Vec<PaintInstruction> {
+    let marker = if at_start { edge.start_marker } else { edge.end_marker };
+    if marker == EdgeMarker::Point {
+        return arrowhead(edge, at_start).map(PaintInstruction::Path).into_iter().collect();
+    }
+    if marker == EdgeMarker::None || edge.points.len() < 2 {
+        return Vec::new();
+    }
+    let tip = if at_start { &edge.points[0] } else { &edge.points[edge.points.len() - 1] };
+    match marker {
+        EdgeMarker::Circle => vec![PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(),
+            cx: tip.x,
+            cy: tip.y,
+            rx: 5.0,
+            ry: 5.0,
+            fill: Some("#ffffff".into()),
+            stroke: Some(edge.style.stroke.clone()),
+            stroke_width: Some(edge.style.stroke_width),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        })],
+        EdgeMarker::Cross => {
+            let radius = 5.0;
+            vec![
+                PaintInstruction::Path(line_path(
+                    &[Point { x: tip.x - radius, y: tip.y - radius }, Point { x: tip.x + radius, y: tip.y + radius }],
+                    &edge.style.stroke,
+                    edge.style.stroke_width,
+                )),
+                PaintInstruction::Path(line_path(
+                    &[Point { x: tip.x - radius, y: tip.y + radius }, Point { x: tip.x + radius, y: tip.y - radius }],
+                    &edge.style.stroke,
+                    edge.style.stroke_width,
+                )),
+            ]
+        }
+        EdgeMarker::None | EdgeMarker::Point => Vec::new(),
+    }
 }
 
 // ============================================================================
@@ -1335,9 +1380,8 @@ where
             path.stroke_dash = Some(vec![4.0, 4.0]);
         }
         instructions.push(PaintInstruction::Path(path));
-        if let Some(tip) = arrowhead(edge) {
-            instructions.push(PaintInstruction::Path(tip));
-        }
+        instructions.extend(endpoint_marker(edge, true));
+        instructions.extend(endpoint_marker(edge, false));
     }
 
     // ── 3. Node shapes — drawn over edges so endpoints are hidden ─────────────
@@ -4880,6 +4924,8 @@ mod tests {
                 from_node_id: "A".to_string(),
                 to_node_id: "B".to_string(),
                 kind: EdgeKind::Directed,
+                start_marker: EdgeMarker::None,
+                end_marker: EdgeMarker::Point,
                 points: vec![Point { x: 120.0, y: 50.0 }, Point { x: 216.0, y: 50.0 }],
                 label: None,
                 label_position: None,
@@ -5295,9 +5341,45 @@ mod tests {
     }
 
     #[test]
+    fn bidirectional_edge_produces_two_arrowhead_paths() {
+        let mut layout = simple_layout();
+        layout.edges[0].kind = EdgeKind::Bidirectional;
+        layout.edges[0].start_marker = EdgeMarker::Point;
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+        let paths = scene.instructions.iter().filter(|instruction| {
+            matches!(instruction, PaintInstruction::Path(_))
+        }).count();
+        assert_eq!(paths, 3, "bidirectional edge: polyline plus two arrowheads");
+    }
+
+    #[test]
+    fn circle_and_cross_edge_markers_lower_to_backend_neutral_geometry() {
+        let mut layout = simple_layout();
+        layout.edges[0].kind = EdgeKind::Undirected;
+        layout.edges[0].start_marker = EdgeMarker::Circle;
+        layout.edges[0].end_marker = EdgeMarker::Cross;
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+        assert_eq!(scene.instructions.iter().filter(|instruction| {
+            matches!(instruction, PaintInstruction::Ellipse(_))
+        }).count(), 1);
+        assert_eq!(scene.instructions.iter().filter(|instruction| {
+            matches!(instruction, PaintInstruction::Path(_))
+        }).count(), 3);
+    }
+
+    #[test]
     fn undirected_edge_has_no_arrowhead() {
         let mut layout = simple_layout();
         layout.edges[0].kind = EdgeKind::Undirected;
+        layout.edges[0].end_marker = EdgeMarker::None;
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
         let resolver = FakeResolver;

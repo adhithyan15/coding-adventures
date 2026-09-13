@@ -54,6 +54,10 @@ impl ImageSubmitCoordinates {
 pub struct FormNavigation {
     pub method: FormMethod,
     pub url: String,
+    pub target: Option<String>,
+    pub rel_opener: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
     pub content_type: Option<String>,
     pub body: Vec<u8>,
     pub entries: Vec<FormEntry>,
@@ -661,6 +665,9 @@ where
         .or(form.action.as_deref())
         .unwrap_or(document_url);
     let action = resolve_action(action, document_url)?;
+    let target = submitter
+        .and_then(|binding| binding.form_target.clone())
+        .or_else(|| form.effective_target.clone());
     let (url, content_type, body) = match (method, encoding.as_str()) {
         (FormMethod::Get, _) => {
             let encoded = bounded_urlencoded(&entries)?;
@@ -689,6 +696,10 @@ where
         activation: FormActivation::Navigate(FormNavigation {
             method,
             url,
+            target,
+            rel_opener: form.rel_tokens.iter().any(|token| token == "opener"),
+            rel_noopener: form.rel_noopener || form.rel_noreferrer,
+            rel_noreferrer: form.rel_noreferrer,
             content_type,
             body,
             entries,
@@ -1967,5 +1978,33 @@ mod tests {
             ImageSubmitCoordinates::from_local_point(f64::INFINITY, u32::MAX as f64 + 10.0),
             ImageSubmitCoordinates { x: 0, y: u32::MAX }
         );
+    }
+
+    #[test]
+    fn submission_preserves_effective_form_and_submitter_targets() {
+        let url = "http://example.test/form";
+        let (model, document) = model_and_document(
+            "<head><base target='reports'></head><body><form action='/save' rel='noreferrer'>\
+             <button id='default' name='mode' value='default'>Default</button>\
+             <button id='blank' name='mode' value='blank' formtarget='_blank'>Blank</button>\
+             </form></body>",
+            url,
+        );
+
+        let FormActivation::Navigate(default) =
+            plan_activation(&document, &model, "control:0:id:default", url).unwrap()
+        else {
+            panic!("expected default submission navigation");
+        };
+        assert_eq!(default.target.as_deref(), Some("reports"));
+        assert!(default.rel_noopener);
+        assert!(default.rel_noreferrer);
+
+        let FormActivation::Navigate(blank) =
+            plan_activation(&document, &model, "control:1:id:blank", url).unwrap()
+        else {
+            panic!("expected submitter navigation");
+        };
+        assert_eq!(blank.target.as_deref(), Some("_blank"));
     }
 }

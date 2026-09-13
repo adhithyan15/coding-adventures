@@ -8,8 +8,11 @@
 
 use std::{collections::BTreeSet, error::Error, fmt};
 
+use base64::{engine::general_purpose::STANDARD as BASE64, Engine as _};
 use mosaic_app_runtime::{
-    Announcement, AppUpdate, ColorScheme, Event, MosaicApp, Politeness, Snapshot, StartContext,
+    Announcement, AppUpdate, ColorScheme, Delivery, Effect, EffectCompletionError, EffectId,
+    EffectResult, Event, MosaicApp, Politeness, Snapshot, StartContext, EFFECT_PROTOCOL_VERSION,
+    MAX_EFFECT_ID, PROTOCOL_VERSION,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -23,7 +26,10 @@ pub use schematic::{
 };
 
 const SNAPSHOT_SCHEMA: &str = "spice-mosaic-app/state";
-const SNAPSHOT_VERSION: u32 = 4;
+const SNAPSHOT_VERSION: u32 = 5;
+const SCHEMATIC_FILE_SCHEMA: &str = "spice-mosaic/schematic";
+const SCHEMATIC_FILE_VERSION: u32 = 1;
+const MAX_SCHEMATIC_FILE_BYTES: usize = 16 * 1024 * 1024;
 const DEFAULT_DECK: &str = "* Berkeley SPICE Mosaic workbench\nV1 in 0 DC 1 AC 1\nR1 in out 1k\nR2 out 0 1k\nC1 out 0 1u IC=0\n.options method=trap\n.op\n.dc V1 0 1 1\n.ac dec 1 1k 1k\n.tran 1m 3m\n.tf V(out) V1\n.save V(out)\n.end\n";
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -57,6 +63,48 @@ struct SavedState {
     selected_schematic_component: Option<String>,
     #[serde(default)]
     selected_schematic_analysis_card: usize,
+    #[serde(default = "default_next_effect_id")]
+    next_schematic_file_effect_id: EffectId,
+}
+
+fn default_next_effect_id() -> EffectId {
+    1
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+struct SchematicFile {
+    schema: String,
+    version: u32,
+    document: SchematicDocument,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum SchematicFileOperation {
+    Open,
+    Save,
+}
+
+impl SchematicFileOperation {
+    fn effect_kind(self) -> &'static str {
+        match self {
+            Self::Open => "file.open",
+            Self::Save => "file.save",
+        }
+    }
+
+    fn label(self) -> &'static str {
+        match self {
+            Self::Open => "Schematic import",
+            Self::Save => "Schematic export",
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+struct PendingSchematicFileEffect {
+    id: EffectId,
+    operation: SchematicFileOperation,
 }
 
 /// A deliberately small host state. No parser or engine state crosses the
@@ -73,6 +121,9 @@ pub struct SpiceMosaicApp {
     schematic: Option<SchematicDocument>,
     selected_schematic_component: Option<String>,
     selected_schematic_analysis_card: usize,
+    protocol_version: u32,
+    next_schematic_file_effect_id: EffectId,
+    pending_schematic_file_effect: Option<PendingSchematicFileEffect>,
     mode: &'static str,
     dark: bool,
 }
@@ -91,6 +142,9 @@ impl Default for SpiceMosaicApp {
             schematic: None,
             selected_schematic_component: None,
             selected_schematic_analysis_card: 0,
+            protocol_version: PROTOCOL_VERSION,
+            next_schematic_file_effect_id: default_next_effect_id(),
+            pending_schematic_file_effect: None,
             mode: "Draft",
             dark: false,
         }
@@ -465,6 +519,8 @@ impl SpiceMosaicApp {
             "result-text": self.result_text,
             "schematic-label": "Schematic",
             "schematic-title": self.schematic.as_ref().map(|document| document.title.as_str()).unwrap_or("No schematic loaded"),
+            "open-schematic-label": "Open schematic",
+            "save-schematic-label": "Save schematic",
             "schematic-rows": self.schematic_rows(),
             "schematic-palette": [
                 SchematicComponentKind::Resistor.palette_label(),
@@ -503,6 +559,8 @@ impl SpiceMosaicApp {
             "schematic-grid-lines": Self::schematic_grid_lines(),
             "schematic-wire-segments": schematic_wire_segments,
             "schematic-terminal-points": schematic_terminal_points,
+            "schematic-wire-label": "Wires",
+            "schematic-wire-rows": self.schematic.as_ref().map(|document| document.wires.iter().enumerate().map(|(index, _)| format!("Remove wire {}", index + 1)).collect::<Vec<_>>()).unwrap_or_default(),
             "selected-schematic-label": self.selected_schematic_component.as_deref().unwrap_or("No component selected"),
             "schematic-properties-label": "Component properties",
             "selected-schematic-kind-label": selected_schematic_component.map(|component| component.kind.palette_label()).unwrap_or("Select a component"),
@@ -510,6 +568,8 @@ impl SpiceMosaicApp {
             "schematic-value": selected_schematic_component.map(|component| component.value.as_str()).unwrap_or(""),
             "schematic-value-placeholder": "Select a non-ground component",
             "schematic-value-disabled": schematic_value_disabled,
+            "remove-schematic-component-label": "Remove selected component",
+            "remove-schematic-component-disabled": selected_schematic_component.is_none(),
             "route-schematic-label": "Route selected component to",
             "synchronize-schematic-label": "Sync netlist",
             "dark-theme": self.dark,
@@ -579,6 +639,140 @@ impl SpiceMosaicApp {
         Ok(self.announced(self.diagnostics.clone()))
     }
 
+    fn suggested_schematic_file_name(document: &SchematicDocument) -> String {
+        let name = document
+            .title
+            .chars()
+            .map(|character| {
+                if character.is_ascii_alphanumeric() {
+                    character.to_ascii_lowercase()
+                } else {
+                    '-'
+                }
+            })
+            .collect::<String>();
+        let name = name.trim_matches('-');
+        let name = if name.is_empty() { "schematic" } else { name };
+        format!("{}.spice-mosaic.json", &name[..name.len().min(80)])
+    }
+
+    fn canonical_schematic_file(document: &SchematicDocument) -> Result<Vec<u8>, SpiceMosaicError> {
+        let mut document = document.clone();
+        document.migrate_legacy_analysis_cards();
+        document
+            .validate()
+            .map_err(|error| invalid(error.to_string()))?;
+        serde_json::to_vec(&SchematicFile {
+            schema: SCHEMATIC_FILE_SCHEMA.to_owned(),
+            version: SCHEMATIC_FILE_VERSION,
+            document,
+        })
+        .map_err(|error| invalid(error.to_string()))
+    }
+
+    fn request_schematic_file(
+        &mut self,
+        operation: SchematicFileOperation,
+        payload: Value,
+    ) -> Result<AppUpdate, SpiceMosaicError> {
+        if self.protocol_version < EFFECT_PROTOCOL_VERSION {
+            return Err(invalid("schematic document I/O requires Mosaic protocol 2"));
+        }
+        if self.pending_schematic_file_effect.is_some() {
+            return Err(invalid(
+                "a schematic document operation is already in progress",
+            ));
+        }
+        let id = self.next_schematic_file_effect_id;
+        if id == 0 || id > MAX_EFFECT_ID {
+            return Err(invalid(
+                "schematic document effect identifiers are exhausted",
+            ));
+        }
+        self.next_schematic_file_effect_id = id.saturating_add(1);
+        self.pending_schematic_file_effect = Some(PendingSchematicFileEffect { id, operation });
+        let mut update = self.announced(format!("{} requested.", operation.label()));
+        update.effects.push(Effect {
+            id,
+            delivery: Delivery::Await,
+            kind: operation.effect_kind().to_owned(),
+            payload,
+        });
+        Ok(update)
+    }
+
+    fn request_schematic_open(&mut self) -> Result<AppUpdate, SpiceMosaicError> {
+        self.request_schematic_file(
+            SchematicFileOperation::Open,
+            json!({"mimeType": "application/json", "extension": ".json"}),
+        )
+    }
+
+    fn request_schematic_save(&mut self) -> Result<AppUpdate, SpiceMosaicError> {
+        let document = self
+            .schematic
+            .as_ref()
+            .ok_or_else(|| invalid("saveSchematic requires a loaded schematic"))?;
+        let bytes = Self::canonical_schematic_file(document)?;
+        self.request_schematic_file(
+            SchematicFileOperation::Save,
+            json!({
+                "mimeType": "application/json",
+                "extension": ".json",
+                "suggestedName": Self::suggested_schematic_file_name(document),
+                "bytes": BASE64.encode(bytes),
+            }),
+        )
+    }
+
+    fn complete_schematic_file(
+        &mut self,
+        pending: PendingSchematicFileEffect,
+        result: EffectResult,
+    ) -> Result<AppUpdate, SpiceMosaicError> {
+        match result {
+            EffectResult::Cancelled(_) => {
+                self.pending_schematic_file_effect = None;
+                self.diagnostics = format!("{} cancelled.", pending.operation.label());
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            EffectResult::Failed(failure) => {
+                self.pending_schematic_file_effect = None;
+                self.diagnostics =
+                    format!("{} failed: {}", pending.operation.label(), failure.message);
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            EffectResult::Ok(_) if pending.operation == SchematicFileOperation::Save => {
+                self.pending_schematic_file_effect = None;
+                self.diagnostics = "Schematic exported.".to_owned();
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            EffectResult::Ok(payload) => {
+                let encoded = payload["bytes"]
+                    .as_str()
+                    .ok_or_else(|| invalid("schematic import result is missing base64 bytes"))?;
+                let bytes = BASE64.decode(encoded).map_err(|error| {
+                    invalid(format!("schematic import bytes are invalid: {error}"))
+                })?;
+                if bytes.len() > MAX_SCHEMATIC_FILE_BYTES {
+                    return Err(invalid("schematic import exceeds 16 MiB"));
+                }
+                let mut file: SchematicFile = serde_json::from_slice(&bytes).map_err(|error| {
+                    invalid(format!("schematic import is invalid JSON: {error}"))
+                })?;
+                if file.schema != SCHEMATIC_FILE_SCHEMA || file.version != SCHEMATIC_FILE_VERSION {
+                    return Err(invalid("unsupported schematic document format"));
+                }
+                file.document.migrate_legacy_analysis_cards();
+                file.document
+                    .validate()
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.pending_schematic_file_effect = None;
+                self.load_schematic(file.document)
+            }
+        }
+    }
+
     fn synchronize_schematic(&mut self) -> Result<AppUpdate, SpiceMosaicError> {
         let deck = self
             .schematic
@@ -595,10 +789,11 @@ impl MosaicApp for SpiceMosaicApp {
     type Error = SpiceMosaicError;
 
     fn start(&mut self, context: StartContext) -> Result<AppUpdate, Self::Error> {
+        self.protocol_version = context.protocol_version;
+        self.dark = context.color_scheme == ColorScheme::Dark;
         if let Some(snapshot) = context.restored_snapshot {
             return self.restore(snapshot);
         }
-        self.dark = context.color_scheme == ColorScheme::Dark;
         self.inspect()
     }
 
@@ -672,6 +867,8 @@ impl MosaicApp for SpiceMosaicApp {
                     })?;
                 self.load_schematic(document)
             }
+            "openSchematic" => self.request_schematic_open(),
+            "saveSchematic" => self.request_schematic_save(),
             "placeSchematicComponent" => {
                 let kind = event.payload["kind"]
                     .as_str()
@@ -881,6 +1078,37 @@ impl MosaicApp for SpiceMosaicApp {
                     format!("Updated {reference} value. Sync the netlist when ready.");
                 Ok(self.announced(self.diagnostics.clone()))
             }
+            "removeSchematicComponent" => {
+                let reference = self.selected_schematic_component.clone().ok_or_else(|| {
+                    invalid("removeSchematicComponent requires a selected component")
+                })?;
+                let document = self.schematic.as_mut().ok_or_else(|| {
+                    invalid("removeSchematicComponent requires a loaded schematic")
+                })?;
+                let removed_wires = document
+                    .remove_component(&reference)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.selected_schematic_component = None;
+                self.diagnostics = format!(
+                    "Removed {reference} and {removed_wires} incident wire(s). Sync the netlist when ready."
+                );
+                Ok(self.announced(self.diagnostics.clone()))
+            }
+            "removeSchematicWire" => {
+                let index = event.payload["index"].as_u64().ok_or_else(|| {
+                    invalid("removeSchematicWire requires a non-negative wire index")
+                })? as usize;
+                let document = self
+                    .schematic
+                    .as_mut()
+                    .ok_or_else(|| invalid("removeSchematicWire requires a loaded schematic"))?;
+                document
+                    .remove_wire(index)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.diagnostics =
+                    format!("Removed wire {}. Sync the netlist when ready.", index + 1);
+                Ok(self.announced(self.diagnostics.clone()))
+            }
             "routeToSchematicComponent" => {
                 let target = event.payload["reference"]
                     .as_str()
@@ -912,6 +1140,7 @@ impl MosaicApp for SpiceMosaicApp {
             schematic: self.schematic.clone(),
             selected_schematic_component: self.selected_schematic_component.clone(),
             selected_schematic_analysis_card: self.selected_schematic_analysis_card,
+            next_schematic_file_effect_id: self.next_schematic_file_effect_id,
         })
         .map_err(|error| invalid(error.to_string()))?;
         Ok(Some(Snapshot {
@@ -932,6 +1161,13 @@ impl MosaicApp for SpiceMosaicApp {
         if saved.selected_analysis_row >= analyses.len() && !analyses.is_empty() {
             return Err(invalid("snapshot analysis selection is out of range"));
         }
+        if saved.next_schematic_file_effect_id == 0
+            || saved.next_schematic_file_effect_id > MAX_EFFECT_ID.saturating_add(1)
+        {
+            return Err(invalid(
+                "snapshot schematic document effect identifier is invalid",
+            ));
+        }
         self.deck = saved.deck;
         self.analyses = analyses;
         self.selected_analysis_row = saved.selected_analysis_row;
@@ -942,6 +1178,10 @@ impl MosaicApp for SpiceMosaicApp {
         self.schematic = saved.schematic;
         self.selected_schematic_component = saved.selected_schematic_component;
         self.selected_schematic_analysis_card = saved.selected_schematic_analysis_card;
+        self.next_schematic_file_effect_id = self
+            .next_schematic_file_effect_id
+            .max(saved.next_schematic_file_effect_id);
+        self.pending_schematic_file_effect = None;
         if let Some(document) = &mut self.schematic {
             document.migrate_legacy_analysis_cards();
         }
@@ -967,6 +1207,21 @@ impl MosaicApp for SpiceMosaicApp {
         self.mode = "Draft";
         Ok(self.announced(self.diagnostics.clone()))
     }
+
+    fn complete_effect(
+        &mut self,
+        id: EffectId,
+        result: EffectResult,
+    ) -> Result<AppUpdate, EffectCompletionError<Self::Error>> {
+        let pending = self
+            .pending_schematic_file_effect
+            .ok_or_else(|| invalid("no schematic document operation is pending"))?;
+        if pending.id != id {
+            return Err(invalid("schematic document effect identifier is unknown").into());
+        }
+        self.complete_schematic_file(pending, result)
+            .map_err(Into::into)
+    }
 }
 
 mosaic_app_capi::export_mosaic_app!(SpiceMosaicApp, SpiceMosaicApp::default());
@@ -975,10 +1230,28 @@ mosaic_app_wasm::export_mosaic_wasm!(SpiceMosaicApp, SpiceMosaicApp::default());
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mosaic_app_runtime::{MosaicRuntime, Platform};
+    use mosaic_app_runtime::{EmptyOutcome, MosaicRuntime, Platform, EFFECT_PROTOCOL_VERSION};
 
     fn dispatch(app: &mut SpiceMosaicApp, name: &str, payload: Value) -> AppUpdate {
         app.dispatch(Event::new(1, name, payload)).unwrap()
+    }
+
+    fn schematic_document(title: &str) -> Value {
+        json!({
+            "title": title,
+            "components": [
+                {"reference":"V1","kind":"DcVoltage","value":"5","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"R1","kind":"Resistor","value":"1k","terminals":[{"x":0,"y":20},{"x":40,"y":20}]},
+                {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+            ],
+            "wires": []
+        })
+    }
+
+    fn protocol_two_context() -> StartContext {
+        let mut context = StartContext::new("en-US", Platform::Web);
+        context.protocol_version = EFFECT_PROTOCOL_VERSION;
+        context
     }
 
     #[test]
@@ -1114,6 +1387,101 @@ mod tests {
     }
 
     #[test]
+    fn schematic_document_io_exports_canonical_json_and_imports_atomically() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(protocol_two_context()).unwrap();
+        dispatch(
+            &mut app,
+            "schematicLoad",
+            json!({"document": schematic_document("Current RC")}),
+        );
+
+        let save = dispatch(&mut app, "onSaveSchematic", json!({}));
+        let effect = save.effects.first().unwrap();
+        assert_eq!(effect.delivery, Delivery::Await);
+        assert_eq!(effect.kind, "file.save");
+        assert_eq!(effect.payload["mimeType"], "application/json");
+        assert_eq!(effect.payload["extension"], ".json");
+        assert_eq!(
+            effect.payload["suggestedName"],
+            "current-rc.spice-mosaic.json"
+        );
+        let exported = BASE64
+            .decode(effect.payload["bytes"].as_str().unwrap())
+            .unwrap();
+        assert_eq!(
+            serde_json::from_slice::<Value>(&exported).unwrap()["schema"],
+            SCHEMATIC_FILE_SCHEMA
+        );
+        let saved = app
+            .complete_effect(
+                effect.id,
+                EffectResult::Ok(json!({"name":"current-rc.spice-mosaic.json"})),
+            )
+            .unwrap();
+        assert_eq!(saved.props["diagnostics"], "Schematic exported.");
+
+        let open = dispatch(&mut app, "onOpenSchematic", json!({}));
+        let effect = open.effects.first().unwrap();
+        assert_eq!(effect.delivery, Delivery::Await);
+        assert_eq!(effect.kind, "file.open");
+        assert_eq!(
+            effect.payload,
+            json!({"mimeType":"application/json","extension":".json"})
+        );
+        let before = app.snapshot().unwrap();
+        assert!(app
+            .complete_effect(effect.id, EffectResult::Ok(json!({"bytes":"not base64"})))
+            .is_err());
+        assert_eq!(app.snapshot().unwrap(), before);
+
+        let file = SchematicFile {
+            schema: SCHEMATIC_FILE_SCHEMA.to_owned(),
+            version: SCHEMATIC_FILE_VERSION,
+            document: serde_json::from_value(schematic_document("Imported RC")).unwrap(),
+        };
+        let bytes = BASE64.encode(serde_json::to_vec(&file).unwrap());
+        let imported = app
+            .complete_effect(
+                effect.id,
+                EffectResult::Ok(json!({"name":"imported.json","bytes":bytes})),
+            )
+            .unwrap();
+        assert_eq!(imported.props["schematic-title"], "Imported RC");
+        assert_eq!(imported.props["mode-label"], "Schematic");
+
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let cancelled = dispatch(&mut app, "onOpenSchematic", json!({}));
+        let cancelled = app
+            .complete_effect(
+                cancelled.effects[0].id,
+                EffectResult::Cancelled(EmptyOutcome {}),
+            )
+            .unwrap();
+        assert_eq!(cancelled.props["schematic-title"], "Imported RC");
+        assert_eq!(
+            cancelled.props["diagnostics"],
+            "Schematic import cancelled."
+        );
+        app.restore(snapshot).unwrap();
+        let resumed = dispatch(&mut app, "onOpenSchematic", json!({}));
+        assert_eq!(resumed.effects[0].id, 4);
+    }
+
+    #[test]
+    fn schematic_document_io_requires_the_protocol_two_file_contract() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        assert_eq!(
+            app.dispatch(Event::new(1, "openSchematic", json!({})))
+                .unwrap_err()
+                .to_string(),
+            "schematic document I/O requires Mosaic protocol 2"
+        );
+    }
+
+    #[test]
     fn schematic_analysis_configuration_edits_the_canonical_sweep_card_before_sync() {
         let mut app = SpiceMosaicApp::default();
         app.start(StartContext::new("en-US", Platform::Web))
@@ -1171,7 +1539,7 @@ mod tests {
             "0.5"
         );
         let snapshot = app.snapshot().unwrap().unwrap();
-        assert_eq!(snapshot.version, 4);
+        assert_eq!(snapshot.version, SNAPSHOT_VERSION);
         let mut restored = SpiceMosaicApp::default();
         let mut context = StartContext::new("en-US", Platform::Web);
         context.restored_snapshot = Some(snapshot);
@@ -1355,6 +1723,57 @@ mod tests {
         assert_eq!(
             ground.to_string(),
             "G1 ground symbol does not accept a SPICE value"
+        );
+    }
+
+    #[test]
+    fn schematic_edit_events_remove_selected_components_and_source_ordered_wires() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(StartContext::new("en-US", Platform::Web))
+            .unwrap();
+        let document = json!({
+            "title": "Editable wiring",
+            "components": [
+                {"reference":"V1","kind":"DcVoltage","value":"5","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                {"reference":"R1","kind":"Resistor","value":"1k","terminals":[{"x":0,"y":20},{"x":40,"y":20}]},
+                {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+            ],
+            "wires": [
+                {"start":{"x":0,"y":20},"end":{"x":40,"y":20}},
+                {"start":{"x":40,"y":20},"end":{"x":0,"y":0}}
+            ]
+        });
+        dispatch(&mut app, "schematicLoad", json!({"document": document}));
+        let removed_wire = dispatch(&mut app, "onRemoveSchematicWire", json!({"index": 0}));
+        assert_eq!(
+            removed_wire.props["schematic-wire-rows"],
+            json!(["Remove wire 1"])
+        );
+        dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference":"R1"}),
+        );
+        let removed_component = dispatch(&mut app, "onRemoveSchematicComponent", json!({}));
+        assert_eq!(
+            removed_component.props["schematic-rows"],
+            json!(["V1", "G1"])
+        );
+        assert_eq!(removed_component.props["schematic-wire-rows"], json!([]));
+        assert_eq!(
+            removed_component.props["selected-schematic-label"],
+            "No component selected"
+        );
+        assert_eq!(
+            removed_component.props["remove-schematic-component-disabled"],
+            true
+        );
+        let missing_selection = app
+            .dispatch(Event::new(1, "removeSchematicComponent", json!({})))
+            .unwrap_err();
+        assert_eq!(
+            missing_selection.to_string(),
+            "removeSchematicComponent requires a selected component"
         );
     }
 
