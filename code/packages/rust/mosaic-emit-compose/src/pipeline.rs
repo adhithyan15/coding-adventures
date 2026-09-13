@@ -3357,6 +3357,36 @@ fn strip_css_px(v: &str) -> &str {
     v.strip_suffix("px").unwrap_or(v)
 }
 
+/// A CSS length reduced to the bare number Compose needs, or `None` when
+/// the value is not one.
+///
+/// SECURITY -- this is the ONLY thing standing between an authored length
+/// and an unquoted position in generated Kotlin. `strip_css_px` merely
+/// removes a trailing `px`; it validates nothing. The emitted forms are
+/// bare interpolations (`fontSize = {sz}.sp`, `width = {w}.dp`), so an
+/// unvalidated value lands inside a Kotlin argument list, and `.msl`
+/// admits a quoted STRING that reaches here verbatim. A `sheet` part with
+/// `font-size: "0.sp, color = Color.Red); mosaicPwn("` would otherwise
+/// emit exactly that as code.
+///
+/// Hoisted to module scope (#15141) so there is ONE definition: it used
+/// to be nested inside `compose_box_style`, which left `sheet_text_style`
+/// -- the one other place that lowers `font-size` -- reaching the same
+/// unquoted sink through `strip_css_px` alone, unguarded.
+fn px_or_none(v: &str) -> Option<String> {
+    let stripped = strip_css_px(v);
+    if !stripped.is_empty()
+        && stripped
+            .chars()
+            .all(|c| c.is_ascii_digit() || c == '.' || c == '-')
+    {
+        Some(stripped.to_string())
+    } else {
+        None
+    }
+}
+
+
 /// Convert a CSS color value to a Jetpack Compose `Color(...)`
 /// expression.
 ///
@@ -3884,19 +3914,6 @@ fn compose_box_style(
     inherited_text_color: Option<&str>,
 ) -> ComposeStyle {
     let cpad = " ".repeat(chain_indent);
-    fn px_or_none(v: &str) -> Option<String> {
-        let stripped = strip_css_px(v);
-        if !stripped.is_empty()
-            && stripped
-                .chars()
-                .all(|c| c.is_ascii_digit() || c == '.' || c == '-')
-        {
-            Some(stripped.to_string())
-        } else {
-            None
-        }
-    }
-
     /// The normalised `text-align` keyword -- `start`, `center` or `end`.
     ///
     /// Deliberately NOT the rendered Compose argument. Which argument it
@@ -4625,7 +4642,15 @@ fn sheet_text_style(part_styles: &PartStyleMap, part_name: &str) -> TextStyleCtx
                     }
                 }
                 "font-family" if p.value.trim() == "monospace" => ctx.mono = true,
-                "font-size" => ctx.size = Some(strip_css_px(&p.value).to_string()),
+                // Guarded like every other `font-size` in this file. See
+                // `px_or_none`: `ctx.size` is interpolated UNQUOTED into
+                // `fontSize = {sz}.sp`, and `strip_css_px` alone validates
+                // nothing, so this arm was a code-injection sink.
+                "font-size" => {
+                    if let Some(v) = px_or_none(&p.value) {
+                        ctx.size = Some(v);
+                    }
+                }
                 _ => {}
             }
         }
@@ -14091,6 +14116,7 @@ mod tests {
 #[cfg(test)]
 mod colour_keyword_tests {
     use super::*;
+    use mosstyle_compiler::PartStyle;
 
     /// The CSS-wide keywords are cascade instructions, not colours. They
     /// used to reach `_ => Color.Transparent`, which is how
@@ -14131,6 +14157,89 @@ mod colour_keyword_tests {
         assert_eq!(
             compose_color_value("clear").as_deref(),
             Some("Color.Transparent")
+        );
+    }
+
+    /// SECURITY. `px_or_none` is the only guard between an authored
+    /// length and an UNQUOTED position in generated Kotlin
+    /// (`fontSize = {sz}.sp`). `.msl` admits a quoted STRING that arrives
+    /// here verbatim, so a hostile length is arbitrary Kotlin tokens
+    /// inside an argument list -- the same class as the `#00)+E(/*`
+    /// escape previously fixed in the Dart emitter.
+    ///
+    /// This guard used to be nested inside `compose_box_style`, leaving
+    /// `sheet_text_style` -- the one other place lowering `font-size` --
+    /// reaching that sink through `strip_css_px`, which validates
+    /// nothing. There is one definition now, and this pins it.
+    #[test]
+    fn a_hostile_length_never_reaches_generated_kotlin() {
+        for hostile in [
+            "0.sp, color = Color.Red); mosaicPwn(",
+            "12) /* ",
+            "1;System.exit(0)",
+            "$-{}",
+            "16px\n, foo = 1",
+        ] {
+            assert_eq!(
+                px_or_none(hostile),
+                None,
+                "`{hostile}` must not reach an unquoted Kotlin position"
+            );
+        }
+        // ordinary lengths still pass, with or without the unit
+        assert_eq!(px_or_none("13px").as_deref(), Some("13"));
+        assert_eq!(px_or_none("6.5px").as_deref(), Some("6.5"));
+        assert_eq!(px_or_none("0").as_deref(), Some("0"));
+        assert_eq!(px_or_none("-2px").as_deref(), Some("-2"));
+        assert_eq!(px_or_none(""), None);
+    }
+
+    /// The guard must be at the SINK, not merely available nearby. An
+    /// earlier version of this test only exercised `px_or_none` directly,
+    /// so reverting `sheet_text_style`'s arm to the unguarded
+    /// `strip_css_px` broke nothing and the test still passed. This one
+    /// drives the actual lowering and inspects what would be written into
+    /// the generated Kotlin.
+    #[test]
+    fn a_hostile_sheet_font_size_does_not_reach_the_emitted_text_args() {
+        fn sheet_map(value: &str) -> PartStyleMap {
+            build_part_style_map(
+                &StyleDef {
+                    component_name: "X".to_string(),
+                    parts: vec![PartStyle {
+                        name: "sheet".to_string(),
+                        base: vec![StyleProp {
+                            name: "font-size".to_string(),
+                            value: value.to_string(),
+                        }],
+                        transitions: vec![],
+                        states: vec![],
+                    }],
+                },
+                &[],
+            )
+        }
+
+        let hostile = "0.sp, color = Color.Red); mosaicPwn(";
+        let ctx = sheet_text_style(&sheet_map(hostile), "sheet");
+        assert_eq!(
+            ctx.size, None,
+            "a hostile font-size must be dropped before it becomes `fontSize = ..sp`"
+        );
+        let args = ctx.text_args();
+        assert!(
+            !args.contains("mosaicPwn") && !args.contains("Color.Red"),
+            "hostile tokens reached the emitted Kotlin argument list: {args}"
+        );
+        assert!(
+            !args.contains("fontSize"),
+            "no fontSize should be emitted at all for a rejected value: {args}"
+        );
+
+        // and a legitimate size still lowers
+        assert_eq!(
+            sheet_text_style(&sheet_map("13px"), "sheet").size.as_deref(),
+            Some("13")
         );
     }
 
