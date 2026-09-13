@@ -1594,8 +1594,12 @@ def _write_qt_bundle(
         _mach_o(["main"], dylibs=deps, signed=signed)
     )
     if engine:
-        (bundle / "Contents" / "MacOS" / "libengram_capi.dylib").write_bytes(
-            _mach_o(["eg_snapshot"], signed=True)
+        # `libmosaic_app`, not `libengram_capi`. Qt migrated off the bespoke ABI
+        # in #13728: the generated `MosaicHost.cpp` opens `libmosaic_app` and
+        # resolves `mosaic_app_create`. This fixture wrote the retired engine,
+        # so every Qt test here pinned a bundle shape the app cannot use.
+        (bundle / "Contents" / "MacOS" / "libmosaic_app.dylib").write_bytes(
+            _mach_o(["mosaic_app_create"], signed=True)
         )
     return bundle
 
@@ -1610,6 +1614,28 @@ class ArchiveQtTests(unittest.TestCase):
             )
             self.assertEqual(output.name, "engram-qt-macos-v0.4.0.zip")
             self.assertIn(output.name, engram_release.artifact_names("0.4.0"))
+
+    def test_refuses_a_bundle_carrying_the_retired_engine(self) -> None:
+        """The engine has to be the one the app opens, not merely *an* engine.
+
+        Qt migrated off `engram-capi` in #13728, so the generated `MosaicHost`
+        opens `libmosaic_app`. This check looked for `engram_capi`, which meant
+        a bundle carrying only the retired library passed — and that is not a
+        hypothetical shape: `build-native.sh` produced exactly it, placing
+        `libengram_capi.dylib` in `Contents/MacOS` and no `libmosaic_app` at
+        all. Both halves are fixed; this pins the verification half.
+        """
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_qt_bundle(root)
+            macos = bundle / "Contents" / "MacOS"
+            (macos / "libmosaic_app.dylib").rename(macos / "libengram_capi.dylib")
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_qt(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("mosaic_app", str(caught.exception))
 
     def test_refuses_a_bundle_that_links_qt_by_absolute_path(self) -> None:
         # THE check for a Qt payload. `qt_add_executable` links the frameworks
@@ -1654,20 +1680,39 @@ class ArchiveQtTests(unittest.TestCase):
                 engram_release.archive_qt(
                     "0.4.0", "macos", bundle, root / "out", COMMIT
                 )
-            self.assertIn("no engine beside its executable", str(caught.exception))
+            # Names WHICH engine, because "an engine" was the bug: the
+            # check used to accept the retired `engram_capi`.
+            self.assertIn(
+                "no mosaic_app engine beside its executable", str(caught.exception)
+            )
 
     def test_an_engine_in_frameworks_does_not_count(self) -> None:
+        # The engine planted here must be the one the app actually opens.
+        #
+        # This wrote `libengram_capi.dylib` and kept passing after the check
+        # moved to `mosaic_app` -- but then it passed because the NAME was
+        # wrong, not because the LOCATION was, which is the property it is
+        # named for. Security review falsified it: deleting the
+        # `Contents/MacOS` scoping entirely left the test green.
+        #
+        # The suite-count check that caught the other regression in this commit
+        # cannot catch this one. A count notices a test that stopped running,
+        # not one that kept running while asserting something else.
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             bundle = _write_qt_bundle(root, engine=False)
-            (bundle / "Contents" / "Frameworks" / "libengram_capi.dylib").write_bytes(
-                _mach_o(["eg_snapshot"], signed=True)
+            (bundle / "Contents" / "Frameworks" / "libmosaic_app.dylib").write_bytes(
+                _mach_o(["mosaic_app_create"], signed=True)
             )
             with self.assertRaises(ValueError) as caught:
                 engram_release.archive_qt(
                     "0.4.0", "macos", bundle, root / "out", COMMIT
                 )
-            self.assertIn("no engine beside its executable", str(caught.exception))
+            # Names WHICH engine, because "an engine" was the bug: the
+            # check used to accept the retired `engram_capi`.
+            self.assertIn(
+                "no mosaic_app engine beside its executable", str(caught.exception)
+            )
 
     def test_qt_declares_only_what_is_verified(self) -> None:
         # macOS only for now: `macdeployqt` and `windeployqt` ship with Qt and

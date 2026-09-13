@@ -1714,9 +1714,22 @@ LIBRARY_MAGIC = {
 
 
 def _find_engine(
-    directory: Path, platform: str, *, recursive: bool = False
+    directory: Path,
+    platform: str,
+    *,
+    recursive: bool = False,
+    stem: str = "engram_capi",
 ) -> Path | None:
-    """The `engram_capi` shared library in ``directory``, if there is one."""
+    """The engine shared library in ``directory``, if there is one.
+
+    ``stem`` is which engine, and the two are not interchangeable. A backend
+    whose Engram host still binds the bespoke ABI carries ``engram_capi``; one
+    that has migrated to the standard Mosaic runtime carries ``mosaic_app`` and
+    never opens the other. Verifying the wrong name passes a bundle that cannot
+    reach its engine at all -- which is exactly what `archive_qt` did after Qt
+    migrated in #13728, because the default was written when there was only one
+    engine to find.
+    """
 
     if not directory.is_dir():
         return None
@@ -1725,12 +1738,12 @@ def _find_engine(
     for path in sorted(candidates):
         if not path.is_file() or path.is_symlink():
             continue
-        # Matched on the NAME, not `stem`: `stem` strips one suffix, so a real
-        # versioned soname like `libengram_capi.so.0.4.0` would not match, and
-        # `engram_capi.pdb` would.
+        # Matched on the NAME, not `stem`: `Path.stem` strips one suffix, so a
+        # real versioned soname like `libengram_capi.so.0.4.0` would not match,
+        # and `engram_capi.pdb` would.
         name = path.name.removeprefix("lib")
         if not any(
-            name == f"engram_capi{suffix}" or name.startswith(f"engram_capi{suffix}.")
+            name == f"{stem}{suffix}" or name.startswith(f"{stem}{suffix}.")
             for suffix in suffixes
         ):
             continue
@@ -1791,10 +1804,15 @@ def archive_qt(
     Three separate claims are checked, because a Qt payload can fail each one
     while satisfying the others:
 
-    1. **It carries the engine.** Qt resolves `engram-capi` at runtime via
-       `QDir(appDir).filePath(...)`, and for a bundled app `appDir` is
-       `Contents/MacOS` -- so the engine goes beside the executable, not into
-       `Frameworks`.
+    1. **It carries the engine the host opens.** Since #13728 that is
+       `libmosaic_app`, not `engram-capi`: the generated `MosaicHost` resolves
+       `mosaic_app_create` and friends. It is loaded at runtime from the
+       application directory, and for a bundled app that is `Contents/MacOS` --
+       so the engine goes beside the executable, not into `Frameworks`.
+
+       Both halves of that matter, and the check used to get the first one
+       wrong: a bundle carrying the retired `engram_capi` passed while holding
+       nothing the app could open.
     2. **It is relocatable.** `qt_add_executable` links the frameworks by
        ABSOLUTE path, so an undeployed binary runs perfectly for whoever built
        it and fails to launch for everyone else. This is the check that makes a
@@ -1829,10 +1847,19 @@ def archive_qt(
     if binary.is_symlink() or not binary.is_file():
         raise ValueError(f"bundle executable is not a regular file: {binary}")
 
-    engine = _find_engine(macos_dir, platform)
+    # `mosaic_app`, not `engram_capi`. Qt migrated off the bespoke ABI in
+    # #13728: the generated `MosaicHost.cpp` opens `libmosaic_app` and resolves
+    # `mosaic_app_create`/`mosaic_app_dispatch`, and Engram's hand-written Qt
+    # host that used `engram_capi` is gone.
+    #
+    # This checked for the retired engine, so it verified the presence of a
+    # library the app never opens. Measured against a real build before fixing:
+    # `build-native.sh` placed `libengram_capi.dylib` in `Contents/MacOS` and no
+    # `libmosaic_app` at all -- and this check passed it.
+    engine = _find_engine(macos_dir, platform, stem="mosaic_app")
     if engine is None:
         raise ValueError(
-            "the Qt bundle has no engine beside its executable in "
+            "the Qt bundle has no mosaic_app engine beside its executable in "
             "Contents/MacOS; the app would launch with every deck operation "
             "silently unavailable"
         )

@@ -2,6 +2,55 @@
 
 ## Unreleased
 
+### Fixed — the Qt release artifact shipped a library the app never opens
+
+Qt migrated off `engram-capi` in #13728, so the generated `MosaicHost.cpp` opens
+`libmosaic_app` and resolves `mosaic_app_create` / `mosaic_app_dispatch`. Three
+separate places were still written for the retired architecture, and each one
+blessed the next:
+
+1. **`build-native.sh` emitted Qt without the runtime flags.** Only SwiftUI got
+   `--profile native-complete --runtime-library`. Measured on a real run before
+   fixing: the Qt emission reported `nativeComplete: false` with a
+   `runtime.sample-fallback` degradation — the emitter saying, in its own words,
+   that the app has no engine.
+2. **It then placed `libengram_capi.dylib` beside the project**, and copied that
+   into `Contents/MacOS` of the `.app`. So the bundle carried a library nothing
+   loads, and no `libmosaic_app` at all.
+3. **`archive_qt` verified the presence of `engram_capi`** and passed it. The
+   release check was aligned with the bug rather than with the app.
+
+Meanwhile CI emits Qt *with* both flags, so **the artifact being verified was
+not the artifact being shipped** — which is precisely what the release epic's
+"claiming only artifacts that were actually verified" line exists to prevent.
+
+Fixed in all three, and verified end to end against a real Qt build rather than
+by reasoning:
+
+- `STANDARD_RUNTIME_BACKENDS` is now the single list saying which hosts use the
+  standard runtime — a list rather than a chain of `==`, so the next migration
+  is one word. Compose joins it with its own migration and cannot land sooner:
+  until the `[host_assets]` override comes off, `native-complete` rewrites the
+  host into the standard binding shape while the package replaces that very
+  file, and the combination does not compile.
+- Emission now reports `nativeComplete: true`, zero degradations, empty
+  `replacedGeneratedFiles`. The app builds and links, and the bundle carries
+  `libmosaic_app.dylib` beside the executable, exporting the six `mosaic_app_*`
+  symbols the host resolves.
+- The post-build check and the `.app` copy name the engine the host opens. The
+  first attempt used the *cargo artifact* name, `libengram_mosaic_app.dylib`,
+  and failed on a correct build — `--runtime-library` installs it under the
+  ABI's conventional `libmosaic_app.dylib`, and the source name is never the
+  name on disk.
+- `archive_qt` checks `mosaic_app`, and `_find_engine` takes which engine to
+  look for rather than hard-coding one. Falsified rather than assumed: a bundle
+  carrying only the retired `libengram_capi.dylib` is now refused, and running
+  the real archiver over the real built bundle produces
+  `engram-qt-macos-v0.3.0.zip`.
+
+Flutter and XAML are untouched and still correctly expect `engram_capi`,
+confirmed by re-running the script for Flutter.
+
 ### Fixed — more than half the style-drop allowlist had gone stale
 
 `ALLOWED_STYLE_DROPS` pins the style properties each backend is currently

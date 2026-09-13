@@ -8,21 +8,29 @@
 #
 # ## What makes these native
 #
-# Every native host binds `engram-capi`'s `eg_*` symbols through a real Rust
-# cdylib — 47 exported functions — rather than loading wasm. Qt is C++/QML,
-# SwiftUI is Swift, Compose is Kotlin, XAML is C#, Flutter is Dart. The UI is
-# genuinely the platform's own.
+# Every native host binds a real Rust cdylib rather than loading wasm. Qt is
+# C++/QML, SwiftUI is Swift, Compose is Kotlin, XAML is C#, Flutter is Dart. The
+# UI is genuinely the platform's own.
+#
+# **Which cdylib depends on whether that host has migrated.** Qt and SwiftUI
+# reach the engine through the STANDARD Mosaic runtime — `libmosaic_app`, whose
+# `mosaic_app_*` symbols the generated `MosaicHost` resolves. Compose, XAML and
+# Flutter still ship a hand-written host bound to `engram-capi`'s `eg_*`
+# symbols. `STANDARD_RUNTIME_BACKENDS` below is the single place that says
+# which is which.
 #
 # ## The trap this script exists to close
 #
-# The hosts resolve the engine **at runtime**, from the application directory:
-#
-#     library_.setFileName(QDir(appDir).filePath("libengram_capi.dylib"));
-#
-# and the emitted CMakeLists copies that library beside the binary **only if it
-# already sits in the project directory**. Emission does not put it there. So an
-# emitted project builds cleanly, links nothing, launches, and then does
+# The hosts resolve the engine **at runtime**, from the application directory,
+# and the emitted build copies that library beside the binary **only if it
+# already sits in the project directory**. Emission alone does not put it there.
+# So an emitted project builds cleanly, links nothing, launches, and then does
 # nothing at all — every deck operation silently unavailable.
+#
+# The same trap has a second mouth, and Qt fell into it: placing the WRONG
+# library. A bundle carrying `libengram_capi` while the host opens
+# `libmosaic_app` passes every "is a library present" check and is just as
+# inert. That is why the checks below name the engine rather than counting one.
 #
 # CI's Qt lane compiles the emitted app, which is a real gate on emission but
 # says nothing about this: compiling is exactly the step that still succeeds.
@@ -84,6 +92,25 @@ case "$(uname -s)" in
   *) echo "unsupported host platform: $(uname -s)" >&2; exit 2 ;;
 esac
 
+# Which Engram hosts reach the engine through the STANDARD Mosaic runtime.
+#
+# Declared here, above its first use, because `set -u` aborts on an unset
+# variable and the symbol report below consults it.
+#
+# For these the hand-written `MosaicHost` override is retired: props, events,
+# snapshot and restore go through `engram-mosaic-app` and the generated binding,
+# and the dialogs ride `Effect` through `[host_effects]`. Such an app needs the
+# standard app-ABI cdylib bundled -- which is what `--runtime-library` does --
+# and `native-complete` is the profile that makes the generated host REQUIRE it
+# rather than fall back to a reflection bridge that will not be there.
+#
+# A list rather than a chain of `==`, so the next migration is one word. Compose
+# joins it with its own migration and cannot land sooner: until the
+# `[host_assets]` override comes off, emitting it `native-complete` rewrites the
+# host into the standard binding shape while the package replaces that very
+# file, and the combination does not compile.
+STANDARD_RUNTIME_BACKENDS=" qt swiftui "
+
 echo "[1/4] Building the Engram engine as a native library..."
 build_engram_capi() {
   local rustflags="${RUSTFLAGS-}"
@@ -120,26 +147,49 @@ if [[ "$EXPORTS" != "unknown" && "$EXPORTS" -lt 20 ]]; then
   echo "error: $LIB_NAME exports only $EXPORTS eg_* symbols; the host resolves ~40" >&2
   exit 1
 fi
-echo "  $LIB_NAME exports $EXPORTS eg_* symbols"
+# Says who still needs it. `engram-capi` is built unconditionally because the
+# three unmigrated backends bind it, but announcing its symbol count while
+# building Qt or SwiftUI reads as though that is the engine those apps ship --
+# which is exactly the confusion that let the wrong library into the Qt bundle.
+if [[ "$STANDARD_RUNTIME_BACKENDS" == *" $BACKEND "* ]]; then
+  echo "  $LIB_NAME exports $EXPORTS eg_* symbols (not used by $BACKEND)"
+else
+  echo "  $LIB_NAME exports $EXPORTS eg_* symbols"
+fi
 
 echo "[2/4] Emitting the Mosaic app for the $BACKEND backend..."
 rm -rf "$OUTPUT"
 
 EMIT_ARGS=(--backend "$BACKEND" --output "$OUTPUT" --emit-project)
 
-# SwiftUI reaches the engine through the STANDARD runtime now, not through
-# `engram-capi`.
+# Which Engram hosts reach the engine through the STANDARD runtime.
 #
-# Its `MosaicHost.swift` override is retired: props, events, snapshot and
-# restore go through `engram-mosaic-app` and the generated binding, and the
-# file dialogs ride `Effect` through `[host_effects]`. So the app needs the
-# standard app-ABI cdylib bundled, which is what `--runtime-library` does, and
-# `native-complete` is the profile that makes the generated host REQUIRE it
+# For these the hand-written `MosaicHost` override is retired: props, events,
+# snapshot and restore go through `engram-mosaic-app` and the generated binding,
+# and the dialogs ride `Effect` through `[host_effects]`. Such an app needs the
+# standard app-ABI cdylib bundled -- which is what `--runtime-library` does --
+# and `native-complete` is the profile that makes the generated host REQUIRE it
 # rather than fall back to a reflection bridge that will not be there.
 #
 # Without this the emitted app compiles and launches with no engine at all --
 # the "runnable is not working" trap the rest of this script exists to catch.
-if [[ "$BACKEND" == "swiftui" ]]; then
+#
+# QT WAS MISSING FROM THIS LIST, and the consequence was exactly that trap.
+# Qt migrated in #13728, so the generated `MosaicHost.cpp` it emits opens
+# `libmosaic_app.dylib` and resolves `mosaic_app_create`/`mosaic_app_dispatch`
+# -- while this script placed `libengram_capi.dylib` beside it and the release
+# script's `archive_qt` then verified that the wrong library was present.
+# Measured before fixing: the Qt release emission reported
+# `nativeComplete: false` with a `runtime.sample-fallback` degradation, which is
+# the emitter saying the app has no engine, while CI emits Qt WITH both flags
+# and therefore verified a different artifact than the one being shipped.
+#
+# A list rather than a chain of `==`, because the next migration should be one
+# word here. Compose joins it with its own migration, which cannot land sooner:
+# until the `[host_assets]` override comes off, emitting it `native-complete`
+# rewrites the host into the standard binding shape while the package replaces
+# that very file, and the combination does not compile.
+if [[ "$STANDARD_RUNTIME_BACKENDS" == *" $BACKEND "* ]]; then
   ( cd "$RUST" && cargo build -q -p engram-mosaic-app --release )
   case "$(uname -s)" in
     Darwin) MOSAIC_LIB_NAME="libengram_mosaic_app.dylib" ;;
@@ -160,10 +210,18 @@ fi
 APP="$OUTPUT/$BACKEND"
 
 echo "[3/4] Placing the engine where the emitted project expects it..."
-if [[ "$BACKEND" == "swiftui" ]]; then
+if [[ "$STANDARD_RUNTIME_BACKENDS" == *" $BACKEND "* ]]; then
   # Nothing to place. The standard runtime was bundled by `--runtime-library`
-  # at emit time, into `Sources/App/Runtime/`, where SwiftPM carries it as a
-  # resource and `Bundle.module` finds it.
+  # at emit time -- for SwiftUI into `Sources/App/Runtime/`, where SwiftPM
+  # carries it as a resource and `Bundle.module` finds it; for Qt into
+  # `<project>/runtime/`, from which the generated CMake copies it beside the
+  # binary POST_BUILD. (An earlier draft of this comment said "beside the
+  # emitted project", which is where the old manual copy went, not where
+  # `--runtime-library` puts it.)
+  #
+  # Placing `engram-capi` here instead is what made the Qt release artifact
+  # inert: the generated host opens `libmosaic_app`, so the other library was
+  # both the wrong one and the only one present.
   #
   # This is where the `CEngram` system-library block used to be: it built
   # `engram-capi` as a static archive, wrote a module map, and patched the
@@ -198,18 +256,37 @@ case "$BACKEND" in
     # conditional, so a rename or a moved output directory silently produces an
     # app that launches and does nothing -- and compiling cannot catch it,
     # because compiling is the part that still works.
+    # The name the GENERATED host actually opens, which is not the same library
+    # it used to be. `MosaicHost.cpp` calls
+    # `library_.setFileName(.../libmosaic_app.dylib)` and resolves
+    # `mosaic_app_create`; checking for `engram_capi` here verified the presence
+    # of a file nothing loads, and would have passed a bundle with no engine.
+    # The BUNDLED name, not the cargo artifact's. `--runtime-library` installs
+    # the crate's `libengram_mosaic_app.dylib` under the ABI's conventional
+    # `libmosaic_app.dylib`, and that conventional name is what the generated
+    # host opens. Checking `$MOSAIC_LIB_NAME` here looked right and failed on a
+    # correct build -- the source name is never the name on disk.
+    if [[ "$STANDARD_RUNTIME_BACKENDS" == *" $BACKEND "* ]]; then
+      case "$(uname -s)" in
+        Darwin) ENGINE_NAME="libmosaic_app.dylib" ;;
+        Linux)  ENGINE_NAME="libmosaic_app.so" ;;
+        *)      ENGINE_NAME="mosaic_app.dll" ;;
+      esac
+    else
+      ENGINE_NAME="$LIB_NAME"
+    fi
     BIN_DIR="$APP/build"
-    if [[ ! -f "$BIN_DIR/$LIB_NAME" ]]; then
+    if [[ ! -f "$BIN_DIR/$ENGINE_NAME" ]]; then
       # Multi-config generators put the binary in a subdirectory.
-      FOUND="$(find "$APP/build" -name "$LIB_NAME" -print -quit || true)"
+      FOUND="$(find "$APP/build" -name "$ENGINE_NAME" -print -quit || true)"
       if [[ -z "$FOUND" ]]; then
-        echo "error: $LIB_NAME is not beside the built binary" >&2
+        echo "error: $ENGINE_NAME is not beside the built binary" >&2
         echo "       the app would launch with every deck operation unavailable" >&2
         exit 1
       fi
       BIN_DIR="$(dirname "$FOUND")"
     fi
-    echo "  engine verified beside the binary in $BIN_DIR"
+    echo "  engine verified beside the binary in $BIN_DIR ($ENGINE_NAME)"
 
     # On macOS, turn the bare executable into a relocatable `.app`.
     #
@@ -230,10 +307,15 @@ case "$BACKEND" in
       rm -rf "$BUNDLE"
       mkdir -p "$BUNDLE/Contents/MacOS" "$BUNDLE/Contents/Resources"
       cp "$BIN_DIR/EngramApp" "$BUNDLE/Contents/MacOS/$APP_NAME"
-      # The host does `QDir(appDir).filePath("libengram_capi.dylib")`, and for a
-      # bundled app `appDir` is `Contents/MacOS` -- so the engine goes beside the
-      # executable, not into `Frameworks`.
-      cp "$BIN_DIR/$LIB_NAME" "$BUNDLE/Contents/MacOS/$LIB_NAME"
+      # The generated host looks beside the executable, and for a bundled app
+      # `appDir` is `Contents/MacOS` -- so the engine goes there, not into
+      # `Frameworks`.
+      #
+      # `$ENGINE_NAME`, not `$LIB_NAME`. This comment used to name
+      # `libengram_capi.dylib` after the retired Engram host, and the copy
+      # matched it: the bundle carried a library the app never opens while the
+      # one it does open, `libmosaic_app.dylib`, was absent.
+      cp "$BIN_DIR/$ENGINE_NAME" "$BUNDLE/Contents/MacOS/$ENGINE_NAME"
       printf 'APPL????' > "$BUNDLE/Contents/PkgInfo"
       cat > "$BUNDLE/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
