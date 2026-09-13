@@ -73,7 +73,14 @@ layout Cell {
       // the in-flight edit and the input accepts characters
       // normally.  When the user hits Enter, onCommit carries
       // the final value to the host's persistence layer.
-      HostInput (
+      // #15048 -- the editor carries a part so its geometry can be
+      // authored. Without one it emitted a bare native input, whose UA
+      // padding and border made the editing row 6px taller than a
+      // display row at every text scale measured (100/150/200 percent,
+      // headless Chrome), and `table_capacity.ts` refuses uniform
+      // viewport capacity when any row differs from the first by more
+      // than 0.5px.
+      HostInput [ cell-editor ] (
         auto-focus: true ,
         value:    slot: edit-content ,
         onChange: emit: onChange ,

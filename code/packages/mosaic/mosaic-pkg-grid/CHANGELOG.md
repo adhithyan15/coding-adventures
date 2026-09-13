@@ -1,6 +1,62 @@
 # Changelog
 
+All notable changes to `mosaic-pkg-grid` are documented in this file.
+The format follows [Keep a Changelog](https://keepachangelog.com/) and
+the package follows semantic versioning.
+
 ## Unreleased
+
+### Added -- `cell-editor` part, so the inline editor stops changing the row's height (#15048)
+
+`Cell`'s `HostInput` had no part name, so no stylesheet could reach it and
+it went out carrying user-agent padding, border and font. A row is as tall
+as its tallest cell, so simply focusing a cell made the row grow. Measured
+in headless Chrome against this package's own dark theme:
+
+| text scale | display row | editing row (before) | editing row (after) |
+| --- | --- | --- | --- |
+| 100% | 26px | 32px | 26px |
+| 150% | 36px | 42px | 36px |
+| 200% | 45px | 51px | 45px |
+
+A 6px step is well outside the 0.5px tolerance in the React runtime's
+`table_capacity.ts`, which refuses uniform viewport capacity as soon as one
+row differs from the first -- so editing a cell silently downgraded the
+grid to its initial row window. After: delta 0 at all three scales, guard
+clean. The guard itself is untouched and no generated code was patched.
+
+The part sets **no colour**, and that is deliberate. Every backend already
+colours the editor -- Compose merges the cell's text style, Qt emits a
+state-aware `color` binding, Flutter a `DefaultTextStyle` -- so the editor
+matches its display cell with nothing authored. Both attempts to set one
+were regressions, and each was caught by a different instrument:
+
+- `color: inherit` lowered to `Color.Transparent` on Compose and
+  `Color.clear` on SwiftUI (invisible text while editing) and to an
+  unconvertible `Foreground="Inherit"` on XAML. Caught by reading the
+  emitted Kotlin.
+- An explicit `color: #cccccc` made the Qt emitter write `color` twice on
+  the same `TextInput` -- once from the part, once from its state-aware
+  binding -- which is a hard `qmlcachegen` error. It broke the Trestle
+  task-app build in CI, three packages downstream
+  (task-app -> mosaic-pkg-sheet -> mosaic-pkg-grid). Caught by CI, then
+  reproduced locally at the identical source lines.
+
+Both are filed as emitter defects.
+
+**What this does not do.** It changes nothing for VisiCalc, which pins
+`height: 32px` on its own `cell` part and so could never grow; measurement
+confirms VisiCalc did not trip the guard before this change either. The fix
+matters for consumers that do not pin a cell height, this package's own
+default theme among them.
+
+### Fixed -- the file preamble and a second `## Unreleased` heading had been duplicated into the middle of this file
+
+A merge left the "All notable changes" block and an extra `## Unreleased`
+sitting between two entries, so the file had two Unreleased sections and no
+preamble at the top. Both entries were already correct; only the headings
+moved.
+
 
 ### Fixed — `Cell` was invoked unqualified, and seven backends could not emit the package (#14861)
 
@@ -59,12 +115,6 @@ Header and data columns now occupy **identical spans** at every column:
 `72..152`, `152..232`, `232..312`, `392..472`.
 
 Nothing was added to the `.msl`; the authored widths were always there.
-
-All notable changes to `mosaic-pkg-grid` are documented in this file.
-The format follows [Keep a Changelog](https://keepachangelog.com/) and
-the package follows semantic versioning.
-
-## Unreleased
 
 ### Fixed — column headers ignore the column widths (#14829)
 

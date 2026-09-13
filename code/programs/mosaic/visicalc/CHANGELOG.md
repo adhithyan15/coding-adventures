@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+### Changed -- the inline cell editor is styled by the grid package (#15048)
+
+`mosaic-pkg-grid` now exposes a `cell-editor` part on `Cell` so the inline
+editor stops carrying user-agent padding and borders, which made an editing
+row taller than a display row. VisiCalc picks that up through its direct
+dependency on the grid package and **overrides nothing** -- the package
+geometry is what VisiCalc wants, and every backend already colours the
+editor to match its display cell on its own. `tests/package_compiles.rs`
+pins the emitted editor for both themes so a future change cannot quietly
+drop it.
+
+An earlier revision of this work did override the part here, to force the
+editor's colour. That was wrong twice over: a part declared by a consumer
+REPLACES the package's wholesale rather than merging, so the override
+silently dropped the geometry it was supposed to keep; and authoring any
+colour at all made the Qt emitter write `color` twice on one `TextInput`,
+which is a hard QML compile error.
+
+**This fixes nothing visible in VisiCalc today.** VisiCalc pins
+`height: 32px` on `part cell` and on the row, so its rows could never grow;
+measuring the emitted React confirms an editing row matched a display row
+at 100%, 150% and 200% before any of this. The defect the issue describes
+is real for grid consumers that do not pin a cell height. What VisiCalc
+gains is an editor that is styled deliberately rather than by accident.
+
+### Fixed -- this file had two `## Unreleased` headings
+
+Both sections held real unreleased entries; only the duplicate heading was
+removed so they read as one section.
+
+
 ### Fixed — the sheet can now be scrolled to columns P-Z (#14842)
 
 The sheet's `HostScroll` declares `axis: both`, so the viewport offers a
@@ -107,8 +138,6 @@ renderer, which is a separate decision (#14798).
 
 - Add shared Open/Save controls and a compact file-status toolbar in both themes.
   The standard Rust adapter owns snapshot validation and file-operation outcomes.
-
-## Unreleased
 
 - Add a compact, themed selection readout with overflow truncation and complete
   Rust-owned cell descriptions for the host's atomic polite live region.
