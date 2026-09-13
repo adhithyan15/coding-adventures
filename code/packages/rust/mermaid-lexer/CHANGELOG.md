@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.84.0
+
+- Tokenize Mermaid 11.16.1 Block arrow nodes through a dedicated grammar rule.
+
 ## 0.83.0
 
 - Tokenize labeled named Block composite declarations through the pinned grammar.

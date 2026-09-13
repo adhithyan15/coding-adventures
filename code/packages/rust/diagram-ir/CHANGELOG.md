@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.112.0
+
+- Represent Block arrow nodes with typed cardinal direction flags.
+
 ## 0.111.0
 
 - Preserve optional Block composite styles in grid semantic IR.
