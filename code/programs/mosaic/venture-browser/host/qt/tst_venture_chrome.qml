@@ -141,11 +141,22 @@ TestCase {
         wait(0)
         compare(recordingHost.events[0].event, "onFindChange")
         compare(recordingHost.events[0].value, "venture")
-        mouseClick(nativeControl("find-next-button"))
-        mouseClick(nativeControl("find-previous-button"))
-        mouseClick(nativeControl("find-close-button"))
+        const nextButton = nativeControl("find-next-button")
+        nextButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
         compare(recordingHost.events[1].event, "onFindNext")
+
+        const previousButton = nativeControl("find-previous-button")
+        previousButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
         compare(recordingHost.events[2].event, "onFindPrevious")
+
+        const closeButton = nativeControl("find-close-button")
+        closeButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
         compare(recordingHost.events[3].event, "onFindClose")
     }
 }
