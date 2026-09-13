@@ -3,6 +3,7 @@
 ## 2026-09-13
 
 - Pass the layout to the SwiftUI style-drop reporter, so `styleDegradations` stops reporting a `gap` the container applies. SwiftUI takes spacing at view-construction time (`HStack(spacing:)`), which the modifier-chain scan cannot see; 22 of the 40 drops reported for Engram were this, and all 22 were false. Mirrors what the Compose reporter already does for `justify-content`/`align-items` (#14834). A gap a `Box`, `Stack` or `HostScroll` genuinely discards is still reported.
+- Recognize validated SwiftUI numeric font-size bindings while retaining explicit degradation for unsupported backends and forms.
 - Recognize supported Qt font-size bindings in capability reports. Guard the Unix-only host-asset symlink test so Windows builds can compile the test suite.
 - Recognize validated Compose typography projections while continuing to report unsupported backends, primitives and binding forms explicitly.
 

@@ -154,11 +154,13 @@ pub enum PipelineEmitError {
     /// content rather than a web link. Rejected rather than escaped --
     /// no escaping makes an unsafe scheme safe.
     UnsafeUriScheme(String),
+    InvalidTypography(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            Self::InvalidTypography(reason) => write!(f, "invalid SwiftUI typography: {reason}"),
             PipelineEmitError::ComponentNameMismatch {
                 mosmodel,
                 moslayout,
@@ -984,6 +986,52 @@ impl PartStyleMap {
     }
 }
 const CONCRETE_MODIFIER_HELPERS_KEY: &str = "_mosaic:concrete-modifier-helpers";
+
+// Environment propagation preserves the authored design when a descendant
+// changes only its size. File-private helpers can coexist across components.
+const TYPOGRAPHY_HELPER_SWIFT: &str = r#"
+private struct _MosaicFontDesignKey: EnvironmentKey {
+    static let defaultValue: Font.Design = .default
+}
+private extension EnvironmentValues {
+    var _mosaicFontDesign: Font.Design {
+        get { self[_MosaicFontDesignKey.self] }
+        set { self[_MosaicFontDesignKey.self] = newValue }
+    }
+}
+private struct _MosaicFontSize: ViewModifier {
+    let value: Double
+    @Environment(\.font) private var inheritedFont
+    @Environment(\._mosaicFontDesign) private var design
+    func body(content: Content) -> some View {
+        content.font(value.isFinite && value > 0
+            ? Font.system(size: CGFloat(value), design: design)
+            : inheritedFont)
+    }
+}
+"#;
+
+fn font_size_prop(node: &LayoutNode) -> Option<&LayoutPropValue> {
+    node.props.iter().find(|p| p.name == "font-size").map(|p| &p.value)
+}
+
+/// Keep capability reports aligned with accepted SwiftUI font bindings.
+pub fn has_native_font_size(node: &LayoutNode) -> bool {
+    if !matches!(node.tag.as_str(), "Text" | "HostInput" | "HostButton" | "HostTable") { return false; }
+    match font_size_prop(node) {
+        Some(LayoutPropValue::Number(n)) => n.is_finite() && *n > 0.0,
+        Some(LayoutPropValue::SlotRef(slot)) => validate_slot_or_field_name(&to_camel_case_first_lower(slot)).is_ok(),
+        _ => false,
+    }
+}
+
+fn validate_typography(node: &LayoutNode) -> Result<(), PipelineEmitError> {
+    if font_size_prop(node).is_some() && !has_native_font_size(node) {
+        return Err(PipelineEmitError::InvalidTypography(format!("{} requires a positive finite literal or safe slot on a supported text primitive", node.tag)));
+    }
+    for child in &node.children { validate_typography(child)?; }
+    Ok(())
+}
 
 const SLIDER_HELPER_SWIFT: &str = r#"private struct _MosaicSlider: View {
     let value: Double
@@ -2174,6 +2222,10 @@ fn swiftui_modifier_chain_with_drops(
         (false, false) => {}
     }
 
+    if !font_family_mono.empty() {
+        out.push_str(&format!("\n{pad}.environment(\\._mosaicFontDesign, .monospaced)"));
+    }
+
     // 3. .fontWeight
     if !font_weight.empty() {
         let expr = layer_value(&font_weight, state_layers, ".regular");
@@ -2742,6 +2794,7 @@ pub fn from_pipeline(
     layout: &LayoutDef,
     style: &StyleDef,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
+    validate_typography(&layout.root)?;
     // 1. Sanity check: the three IRs must agree on the component name. The
     //    style IR's name is not yet enforced (matches React backend behaviour).
     if interface.component != layout.component_name {
@@ -2782,6 +2835,7 @@ pub fn from_pipeline(
     )
     .unwrap();
     writeln!(out, "import SwiftUI").unwrap();
+    out.push_str(TYPOGRAPHY_HELPER_SWIFT);
     if layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget")
     {
@@ -3898,6 +3952,15 @@ fn emit_view_tree(
     // lands at the correct position inside the chain (before
     // background/border — see [`swiftui_modifier_chain`]'s ordering),
     // rather than being appended as a trailing `.frame(width:)`.
+    if let Some(value) = font_size_prop(node) {
+        let value = match value {
+            LayoutPropValue::Number(n) => n.to_string(),
+            LayoutPropValue::SlotRef(slot) => to_camel_case_first_lower(slot),
+            _ => unreachable!("typography was validated before emission"),
+        };
+        inner = format!("{}\n{}.modifier(_MosaicFontSize(value: {value}))\n", inner.trim_end_matches('\n'), " ".repeat(indent + 4));
+    }
+
     let mut consumed_injected = false;
     if let Some(part) = &node.part_name {
         let base_style = part_styles.get(part);
@@ -7810,6 +7873,69 @@ mod tests {
     // ---------------------------------------------------------------------
     // Test helpers — keep tests short by hiding the construction noise.
     // ---------------------------------------------------------------------
+
+    fn typography_fixture(name: &str) -> (MosmodelComponent, LayoutDef, StyleDef) {
+        let model = component(name, vec![slot("text-size", SlotType::Number, true)], vec![]);
+        let nodes = ["Text", "HostInput", "HostButton", "HostTable"].into_iter().map(|tag| {
+            let mut node = leaf(tag, vec![LayoutProp { name: "font-size".into(), value: LayoutPropValue::SlotRef("text-size".into()) }]);
+            node.part_name = Some("type".into());
+            if tag == "HostTable" { node.children.push(leaf("Text", vec![])); }
+            node
+        }).collect();
+        let layout = layout_with(name, container_node("Column", nodes));
+        let style = StyleDef { component_name: name.into(), parts: vec![PartStyle {
+            name: "type".into(), base: vec![sp("font-size", "13px"), sp("font-family", "monospace")], states: vec![], transitions: vec![],
+        }] };
+        (model, layout, style)
+    }
+
+    #[test]
+    fn typography_modifier_precedes_fallback_and_keeps_inherited_design() {
+        let (m, l, s) = typography_fixture("Scaled");
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert_eq!(out.matches(".modifier(_MosaicFontSize(value: textSize))").count(), 4, "{out}");
+        assert_eq!(out.matches(".environment(\\._mosaicFontDesign, .monospaced)").count(), 4, "{out}");
+        assert!(out.find(".modifier(_MosaicFontSize(value: textSize))").unwrap() < out.find(".font(.system(size: 13").unwrap());
+        assert!(out.contains("content.font(value.isFinite && value > 0"));
+        assert!(out.contains(": inheritedFont)"));
+    }
+
+    #[test]
+    fn invalid_typography_is_rejected_before_swift_emission() {
+        for value in [LayoutPropValue::Number(0.0), LayoutPropValue::Number(-1.0), LayoutPropValue::Number(f64::NAN),
+            LayoutPropValue::String("large".into()), LayoutPropValue::Expr("size * 2".into()), LayoutPropValue::SlotRef("bad;code".into())] {
+            let l = layout_with("X", leaf("Text", vec![LayoutProp { name: "font-size".into(), value }]));
+            assert!(matches!(from_pipeline(&component("X", vec![], vec![]), &l, &empty_style("X")), Err(PipelineEmitError::InvalidTypography(_))));
+        }
+        let mut node = leaf("Box", vec![LayoutProp { name: "font-size".into(), value: LayoutPropValue::Number(19.5) }]);
+        assert!(!has_native_font_size(&node));
+        node.tag = "Text".into();
+        let out = from_pipeline(&component("X", vec![], vec![]), &layout_with("X", node), &empty_style("X")).unwrap().output;
+        assert!(out.contains(".modifier(_MosaicFontSize(value: 19.5))"));
+    }
+
+    // Compile two generated files together: private helpers must coexist and
+    // SwiftUI's real type checker must accept controls, fonts and key paths.
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn generated_typography_typechecks_with_swiftui() {
+        let directory = std::env::temp_dir().join(format!("mosaic-swift-font-{}-{}", std::process::id(),
+            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
+        std::fs::create_dir(&directory).unwrap();
+        let mut paths = Vec::new();
+        for name in ["ScaledFirst", "ScaledSecond"] {
+            let (m, l, s) = typography_fixture(name);
+            let path = directory.join(format!("{name}.swift"));
+            std::fs::write(&path, from_pipeline(&m, &l, &s).unwrap().output).unwrap();
+            paths.push(path);
+        }
+        let architecture = if std::env::consts::ARCH == "aarch64" { "arm64" } else { "x86_64" };
+        let target = format!("{architecture}-apple-macosx14.0");
+        let result = std::process::Command::new("xcrun").args(["swiftc", "-typecheck", "-parse-as-library", "-target", &target])
+            .args(&paths).output().expect("macOS must provide SwiftUI and swiftc");
+        std::fs::remove_dir_all(&directory).unwrap();
+        assert!(result.status.success(), "{}", String::from_utf8_lossy(&result.stderr));
+    }
 
     fn empty_style(component: &str) -> StyleDef {
         StyleDef {
@@ -12493,7 +12619,7 @@ mod tests {
     fn part_style_font_size_and_monospace_combine_to_single_font_call() {
         let props = vec![sp("font-size", "12px"), sp("font-family", "monospace")];
         let chain = swiftui_modifier_chain(&props, &[], 0, None);
-        assert_eq!(chain, "\n.font(.system(size: 12, design: .monospaced))");
+        assert_eq!(chain, "\n.font(.system(size: 12, design: .monospaced))\n.environment(\\._mosaicFontDesign, .monospaced)");
 
         // Standalone font-size emits the size-only form.
         let only_size = swiftui_modifier_chain(&[sp("font-size", "14px")], &[], 0, None);
@@ -12501,7 +12627,7 @@ mod tests {
 
         // Standalone monospace family emits the .body shape.
         let only_mono = swiftui_modifier_chain(&[sp("font-family", "monospace")], &[], 0, None);
-        assert_eq!(only_mono, "\n.font(.system(.body, design: .monospaced))");
+        assert_eq!(only_mono, "\n.font(.system(.body, design: .monospaced))\n.environment(\\._mosaicFontDesign, .monospaced)");
     }
 
     // ---------------------------------------------------------------------
