@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Added exact client-secret usable-access composition: retained Basic/Post
+  policy is validated before credential or clock access, still-fresh tokens
+  reach only the audited custody closure, and due tokens cross the existing
+  audited refresh plus revision-bound rotation path before disclosure. No
+  secret or transport authority is invoked for a fresh token.
+- Added the corresponding audited `private_key_jwt` Authorization Code
+  exchange-to-verified-identity custody composition. Exact identity bindings
+  fail before signing; zeroizing ID-token evidence is consumed before storage;
+  and no concrete signing or verification algorithm is enabled.
 - Added client-secret Authorization Code exchange through audited ID-token
   identity proof into custody under the derived provider-scoped opaque account
   key. Provider/client/trace mismatch precedes secret or transport access;

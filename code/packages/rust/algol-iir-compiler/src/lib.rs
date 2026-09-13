@@ -6101,8 +6101,7 @@ impl Compiler {
             ScalarType::Boolean | ScalarType::String => return None,
         };
 
-        let statement = first_direct_node(body, "unlabeled_stmt")?;
-        let assignment = first_direct_node(statement, "assign_stmt")?;
+        let assignment = single_statement_assignment(body)?;
         let left_parts: Vec<&GrammarASTNode> = direct_nodes(assignment)
             .into_iter()
             .filter(|node| node.rule_name == "left_part")
@@ -6193,8 +6192,7 @@ impl Compiler {
         let Ok(target_name) = self.simple_variable_name(target) else {
             return None;
         };
-        let stmt = first_direct_node(body, "unlabeled_stmt")?;
-        let assign = first_direct_node(stmt, "assign_stmt")?;
+        let assign = single_statement_assignment(body)?;
         let left_parts: Vec<&GrammarASTNode> = direct_nodes(assign)
             .into_iter()
             .filter(|node| node.rule_name == "left_part")
@@ -14440,6 +14438,30 @@ mod tests {
     }
 
     #[test]
+    fn al4_finite_step_loop_tracks_single_compound_boolean_recurrence_snapshot() {
+        let module = compile_source(
+            "begin integer i; real r; boolean flag; flag := false; for i := 1 step 1 until 3 do begin flag := not flag end; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect("a bounded one-assignment compound recurrence has an exact final snapshot");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42")
+        }));
+    }
+
+    #[test]
+    fn al4_multi_statement_step_loop_recurrence_remains_conservative() {
+        let err = compile_source(
+            "begin integer i; real r; boolean flag; flag := false; for i := 1 step 1 until 3 do begin flag := not flag; r := r end; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect_err("multiple compound statements remain outside recurrence analysis");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
     fn al4_bounded_while_loop_tracks_scalar_recurrence_snapshot() {
         for (source, expected) in [
             (
@@ -14589,6 +14611,30 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
         }));
+    }
+
+    #[test]
+    fn al4_single_iteration_step_loop_preserves_compound_control_assignment() {
+        let module = compile_source(
+            "begin real x; for x := 1.0 step 1.0 until 1.0 do begin x := 6.25 end; print(x) end",
+            "test",
+        )
+        .expect("a compound-wrapped static control assignment retains its exit snapshot");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
+        }));
+    }
+
+    #[test]
+    fn al4_single_iteration_step_loop_rejects_multi_statement_control_assignment() {
+        let err = compile_source(
+            "begin real x, y; for x := 1.0 step 1.0 until 1.0 do begin x := 6.25; y := 1.0 end; print(x) end",
+            "test",
+        )
+        .expect_err("multiple compound statements keep the control snapshot conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

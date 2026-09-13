@@ -212,20 +212,21 @@ func compilerArgs(c Component, backend string, outputPath string, fixturesPath s
 	return append(args, "--backend", backend, "--output", outputPath)
 }
 
-// compileToString is a convenience wrapper around compile that returns the
-// compiled output as a string.
+// compileToBytes is a convenience wrapper around compile that returns the
+// compiled output without assuming it is UTF-8. Paint previews are PNG bytes;
+// browser backends use compileToString below.
 //
 // It creates a temp file in the OS temp directory, compiles into it, reads the
 // result, and removes the temp file.  The temp file approach keeps the
 // interface identical to the real compiler CLI (which always writes to a file).
-func (s *Server) compileToString(c Component, backend string, story *Story) (string, error) {
+func (s *Server) compileToBytes(c Component, backend string, story *Story) ([]byte, error) {
 	// Create a temp file with an extension appropriate for the backend.
 	// The extension doesn't affect correctness but helps debugging when you
 	// inspect /tmp during development.
 	ext := backendExtension(backend)
 	tmp, err := os.CreateTemp("", "mosaicbook-*"+ext)
 	if err != nil {
-		return "", fmt.Errorf("cannot create temp file: %w", err)
+		return nil, fmt.Errorf("cannot create temp file: %w", err)
 	}
 	tmpPath := tmp.Name()
 	tmp.Close() // Close before passing path to subprocess (some OS need this).
@@ -234,15 +235,20 @@ func (s *Server) compileToString(c Component, backend string, story *Story) (str
 	defer os.Remove(tmpPath)
 
 	if err := s.compile(c, backend, tmpPath, story); err != nil {
-		return "", err
+		return nil, err
 	}
 
 	data, err := os.ReadFile(tmpPath)
 	if err != nil {
-		return "", fmt.Errorf("cannot read compiler output: %w", err)
+		return nil, fmt.Errorf("cannot read compiler output: %w", err)
 	}
 
-	return string(data), nil
+	return data, nil
+}
+
+func (s *Server) compileToString(c Component, backend string, story *Story) (string, error) {
+	data, err := s.compileToBytes(c, backend, story)
+	return string(data), err
 }
 
 // backendExtension returns the conventional file extension for a compiler
@@ -255,6 +261,8 @@ func backendExtension(backend string) string {
 		return ".js"
 	case "react":
 		return ".tsx"
+	case "paint":
+		return ".png"
 	default:
 		return ".out"
 	}

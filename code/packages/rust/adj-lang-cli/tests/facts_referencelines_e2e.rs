@@ -105,3 +105,99 @@ fn geography_reference_lines_recall_binds_marks_with_citation_and_abstains() {
         "international_date_line abstains: {out}"
     );
 }
+
+/// #14758: the two tropic rows assert a SUPERLATIVE — northernmost /
+/// southernmost latitude at which the noon Sun stands overhead. Before RS-5e
+/// per-row provenance they inherited the table envelope, whose `source` is a
+/// sentence about the EQUATOR that states no bound at all. A reader auditing
+/// the answer got NOAA, `authoritative`, and an irrelevant sentence.
+///
+/// Each row is queried in its OWN program, so the output holds exactly one
+/// answer and a needle found in it necessarily belongs to that row. The first
+/// draft of this test queried both at once and three of four mutations of the
+/// `tropic_of_cancer` row stayed GREEN — the untouched `tropic_of_capricorn`
+/// row satisfied every needle. A citation pin that is not bound to a binding
+/// proves only that the string exists somewhere.
+fn assert_tropic_row_is_self_grounded(tag: &str, query: &str, binding: &str) {
+    let dir = scratch(tag);
+    let src = facts_stdlib().join("geography/reference-lines.adj");
+    std::fs::copy(&src, dir.join("reference-lines.adj"))
+        .expect("copy shipped reference-lines.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"reference-lines.adj\"\n{query}\n"),
+    )
+    .unwrap();
+
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+
+    // The row still resolves. A provenance assertion over a row the engine
+    // never reaches is worthless.
+    assert!(out.contains(binding), "query binds {binding}: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        1,
+        "exactly one answer, so every needle below belongs to THIS row: {out}"
+    );
+
+    // The row's own span, its own locator, and the honest tier as ONE object.
+    // Key-anchored: the bare URL also appears in the envelope's `cites`, so a
+    // loose substring search would not be an exclusivity check.
+    //
+    // `inferred`, not `authoritative`, is the point. The SAME sentence is
+    // `authoritative` in `reference-line-degree.adj` and
+    // `reference-line-hemisphere-location.adj`, where it STATES its row (a
+    // latitude; a hemisphere). Here the superlative is REASONED from it plus
+    // the "never directly overhead" span. The tier describes the claim, not
+    // the sentence.
+    assert!(
+        out.contains(
+            "\"source\":\"One in the Northern Hemisphere called the Tropic of Cancer at +23.5° latitude and one in the Southern Hemisphere called the Tropic of Capricorn at − 23.5° latitude.\",\"locator\":\"https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-solstice\",\"trust\":\"inferred\""
+        ),
+        "row carries its own span, its own locator, and trust inferred: {out}"
+    );
+
+    // The second justifying span reaches the answer. It existed ONLY inside
+    // `%` comments, and comments do not travel with an answer: measured on the
+    // PARENT COMMIT across all 1,330 `.adj` under `code/specs/data`, with
+    // whitespace collapsed, it occurred in ZERO machine-readable values. It
+    // occurs in one now — this file's row is that one.
+    assert!(
+        out.contains("the sun is never directly overhead."),
+        "the bounding span reaches the answer, not just the comments: {out}"
+    );
+
+    // NAMED NEGATIVE. The defect was that a tropic recall shipped the equator
+    // sentence as its warrant. It must not be THIS row's `source` — bounded by
+    // the key, because the equator sentence legitimately remains the table
+    // envelope and the test above still pins it there.
+    assert!(
+        !out.contains(
+            "\"source\":\"The equator is the most well known parallel. At 0 degrees latitude, it equally divides the Earth into the Northern and Southern hemispheres.\",\"locator\":\"https://oceanservice.noaa.gov/facts/latitude.html\",\"trust\":\"authoritative\""
+        ),
+        "not warranted by the equator sentence: {out}"
+    );
+    assert!(
+        !out.contains("\"trust\":\"authoritative\""),
+        "no authoritative tier survives on a reasoned superlative: {out}"
+    );
+}
+
+#[test]
+fn geography_tropic_of_cancer_cites_its_own_spans_at_the_inferred_tier() {
+    assert_tropic_row_is_self_grounded(
+        "reflinestropiccancer",
+        "? reference_line(tropic_of_cancer, $Marks)",
+        "\"Marks\":\"northernmost_sun_overhead\"",
+    );
+}
+
+#[test]
+fn geography_tropic_of_capricorn_cites_its_own_spans_at_the_inferred_tier() {
+    assert_tropic_row_is_self_grounded(
+        "reflinestropiccapricorn",
+        "? reference_line($Line, southernmost_sun_overhead)",
+        "\"Line\":\"tropic_of_capricorn\"",
+    );
+}

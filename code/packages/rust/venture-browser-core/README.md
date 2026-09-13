@@ -128,12 +128,14 @@ area accessibility keys and names, while pointer or semantic activation reuses
 the shared current/auxiliary/download planner. Native hosts never parse
 coordinates or choose overlap and target policy.
 
-Sequential focus is also session-owned. Rendered links, enabled controls, and
-details summaries form one ordered list: positive `tabindex` values lead,
-ordinary targets follow document order, negative and blocked targets are
-excluded, and modal top layers contain traversal. The session exposes reusable
-accessibility geometry, scrolls focused content into view, paints link/summary
-focus rings, and routes Enter/Space through existing activation transactions.
+Sequential focus is also session-owned. Rendered links, enabled controls,
+details summaries, image-map areas, generic authored `tabindex`, and
+contenteditable surfaces form one ordered list: positive values lead, ordinary
+targets follow document order, negative and blocked targets are excluded, and
+modal top layers contain traversal. The session exposes reusable roles, names,
+and accessibility geometry, scrolls focused content into view, paints shared
+non-control focus rings, and routes supported Enter/Space activation through
+existing transactions.
 
 `BrowserSession` is the reducer a native shell keeps for browser behavior. It
 dispatches Navigate, Back, Forward, Home, and Reload through the page pipeline,

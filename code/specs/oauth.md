@@ -220,7 +220,10 @@ The delivery order is:
    through the audited ID-token identity boundary before initial custody
    creation, eliminating caller key selection for that path. Other grant and
    authentication paths still keep identity proof and key selection as
-   separate composition steps. Prepared
+   separate composition steps. The corresponding `private_key_jwt` exchange
+   can now use the same nonce-bound identity-to-custody path through the
+   existing abstract signer, without enabling any concrete signing algorithm.
+   Other grants still keep identity proof and key selection separate. Prepared
    `private_key_jwt` authorization-code exchange, refresh, and
    RFC 7009 revocation requests can now cross the broker through the existing
    abstract signer: exact retained provider, client, operation endpoint,
@@ -247,7 +250,13 @@ The delivery order is:
    revision-bound atomic rotation. Profile mismatch fails before credential
    access, while signing, transport, clock, release, and compare-and-swap
    failures preserve the prior record. This enables neither a concrete signing
-   algorithm nor network authority.
+   algorithm nor network authority. A client-secret usable-access composition
+   now validates the exact retained Basic/Post method and provider-bound secret
+   key before credential or clock access. Still-fresh credentials invoke no
+   secret or transport authority; due credentials cross the existing audited
+   refresh and revision-bound atomic rotation path before the resulting access
+   token is disclosed through the custody closure. Clock, transport, secret
+   storage, credential storage, and token use remain injected authorities.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate

@@ -1,5 +1,17 @@
 # Changelog — `lang-aot`
 
+## 0.334.0 — 2026-09-12 — ALGOL compound control-exit snapshots
+
+The seven-backend ALGOL matrix now proves that a single-iteration
+`step`/`until` loop retains its controlled scalar's checked exit snapshot when
+the exact assignment is wrapped in a compound body.
+
+## 0.333.0 — 2026-09-12 — ALGOL compound step-loop recurrences
+
+The seven-backend ALGOL matrix now proves that a finite `step`/`until` boolean
+recurrence retains its terminal snapshot when its sole assignment is wrapped
+in a compound body.
+
 ## 0.332.0 — 2026-09-12 — ALGOL single-compound recurrences
 
 The seven-backend ALGOL matrix now proves that a bounded boolean recurrence

@@ -127,3 +127,58 @@ fn standard_slider_compiles_for_every_browser_backend() {
 
     fs::remove_dir_all(output_directory).ok();
 }
+
+#[test]
+fn paint_pipeline_emits_png_and_applies_story_fixtures() {
+    let repository = repository_root();
+    let package_collection = repository.join("code/packages/mosaic");
+    let package_root = package_collection.join("mosaic-pkg-toolkit");
+    let source_root = package_root.join("src");
+    let output_directory = temporary_directory();
+    let mut snapshots = Vec::new();
+
+    for (name, variant) in [("primary", "primary"), ("danger", "danger")] {
+        let fixtures = output_directory.join(format!("{name}.json"));
+        fs::write(
+            &fixtures,
+            format!(r#"{{"label":"Button","variant":"{variant}","size":"md"}}"#),
+        )
+        .expect("write fixtures");
+        let output = output_directory.join(format!("Button-{name}.png"));
+        let result = Command::new(env!("CARGO_BIN_EXE_mosaic-compile"))
+            .args([
+                "--backend",
+                "paint",
+                "--interface",
+                source_root.join("Button.mil").to_str().unwrap(),
+                "--layout",
+                source_root.join("Button.mll").to_str().unwrap(),
+                "--style",
+                source_root.join("Button.light.msl").to_str().unwrap(),
+                "--fixtures",
+                fixtures.to_str().unwrap(),
+                "--package-manifest",
+                package_root.join("mosaic-package.toml").to_str().unwrap(),
+                "--package-search-path",
+                package_collection.to_str().unwrap(),
+                "--output",
+                output.to_str().unwrap(),
+            ])
+            .output()
+            .expect("run mosaic-compile");
+        assert!(
+            result.status.success(),
+            "Button failed on Paint with {variant} fixture:\n{}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+        let artifact = fs::read(output).expect("read Paint PNG");
+        assert!(artifact.starts_with(b"\x89PNG\r\n\x1a\n"));
+        snapshots.push(artifact);
+    }
+
+    assert_ne!(
+        snapshots[0], snapshots[1],
+        "primary and danger fixtures must produce different Paint snapshots"
+    );
+    fs::remove_dir_all(output_directory).ok();
+}

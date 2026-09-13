@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C58-prima-lectio",
+    "language": "latin",
+    "chapter": 58,
+    "sequence": 1650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1e6371e84df1fe7"
+  },
+  "findings": []
+}

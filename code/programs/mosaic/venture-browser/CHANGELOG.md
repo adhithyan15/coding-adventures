@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Extend existing host-neutral Tab forwarding to image-map areas, authored
+  generic `tabindex`, and contenteditable surfaces without adding generated
+  host focus policy.
+
 - Forward Tab and Shift+Tab from every native surface into shared sequential
   page focus, including link/disclosure activation and focus presentation.
 

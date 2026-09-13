@@ -1780,6 +1780,7 @@ fn xaml_visual_state_target(
 /// A property `build_style_fragment_with_drops` could not lower to any
 /// XAML output at all — the raw ingredients `dropped_style_properties`
 /// (issue #12022) turns into a public, part-tagged `DroppedStyleProperty`.
+#[derive(Debug)]
 struct RawStyleDrop {
     name: String,
     value: String,
@@ -1837,6 +1838,109 @@ fn absolute_position_style_attrs(
     ])
 }
 
+/// UI79 -- splits `border-<edge>-<width|color>`. `None` for anything else,
+/// including `-style` and `border-top-left-radius`, which is a CORNER: it
+/// splits into `top-left` + `radius` and fails the edge match.
+///
+/// Index order is CSS's own: top, right, bottom, left.
+fn per_edge_border(name: &str) -> Option<(usize, &'static str)> {
+    let rest = name.strip_prefix("border-")?;
+    let (edge, which) = rest.rsplit_once('-')?;
+    let idx = match edge {
+        "top" => 0,
+        "right" => 1,
+        "bottom" => 2,
+        "left" => 3,
+        _ => return None,
+    };
+    match which {
+        "width" => Some((idx, "width")),
+        "color" => Some((idx, "color")),
+        _ => None,
+    }
+}
+
+/// UI79 -- the XAML attributes a part's per-edge borders lower to, plus
+/// any edge colour WinUI's single `BorderBrush` cannot paint.
+type PerEdgeBorder = (Vec<(String, String)>, Vec<RawStyleDrop>);
+
+/// UI79 §4.1 -- collapse per-edge borders into WinUI's two attributes.
+///
+/// `BorderThickness` really is per-edge (`"left,top,right,bottom"`), so
+/// four authored widths lower exactly. `BorderBrush` is NOT: WinUI has
+/// one brush for all four sides.
+///
+/// Measured across the repo: 44 parts author per-edge colours and every
+/// one uses a single colour. So the single authored colour becomes the
+/// brush, and if a part ever authors two DIFFERENT edge colours the
+/// first in CSS order wins and the rest are REPORTED as drops -- never
+/// silently repainted.
+///
+/// Returns `None` when no edge is authored, which leaves the existing
+/// shorthand path untouched and every current part byte-identical.
+fn per_edge_border_attrs(props: &[mosstyle_compiler::StyleProp]) -> Option<PerEdgeBorder> {
+    let edge_prop = |idx: usize, which: &str| {
+        props
+            .iter()
+            .rev()
+            .find(|p| per_edge_border(&p.name) == Some((idx, which)))
+    };
+    if (0..4).all(|i| edge_prop(i, "width").is_none()) {
+        return None;
+    }
+
+    let shorthand_w = props.iter().rev().find(|p| p.name == "border-width");
+    let shorthand_c = props.iter().rev().find(|p| p.name == "border-color");
+
+    // XAML orders the thickness left,top,right,bottom; our indices are
+    // CSS's top,right,bottom,left.
+    let mut widths: Vec<String> = Vec::with_capacity(4);
+    for idx in [3usize, 0, 1, 2] {
+        let raw = edge_prop(idx, "width")
+            .or(shorthand_w)
+            .map(|p| p.value.clone());
+        let v = raw
+            .as_deref()
+            .and_then(|v| translate_xaml_value("BorderThickness", v))
+            .unwrap_or_else(|| "0".to_string());
+        widths.push(v);
+    }
+
+    let mut attrs = vec![("BorderThickness".to_string(), widths.join(","))];
+    let mut drops = Vec::new();
+
+    // One brush. First authored edge colour in CSS order wins; the rest
+    // are reported rather than repainted.
+    let mut chosen: Option<String> = None;
+    for idx in 0..4 {
+        let Some(p) = edge_prop(idx, "color") else {
+            continue;
+        };
+        let Some(v) = translate_xaml_value("BorderBrush", &p.value) else {
+            continue;
+        };
+        match &chosen {
+            None => chosen = Some(v),
+            Some(first) if *first == v => {}
+            Some(_) => drops.push(RawStyleDrop {
+                name: p.name.clone(),
+                value: p.value.clone(),
+                reason: "WinUI has ONE BorderBrush for all four edges; the first authored \
+                         edge colour in CSS order is painted and this one cannot be (UI79 §4.1)",
+            }),
+        }
+    }
+    let brush = chosen.or_else(|| {
+        shorthand_c
+            .map(|p| p.value.clone())
+            .and_then(|v| translate_xaml_value("BorderBrush", &v))
+    });
+    if let Some(b) = brush {
+        attrs.push(("BorderBrush".to_string(), b));
+    }
+    Some((attrs, drops))
+}
+
 fn build_style_fragment_with_drops(
     props: &[mosstyle_compiler::StyleProp],
 ) -> (String, Vec<RawStyleDrop>) {
@@ -1846,8 +1950,21 @@ fn build_style_fragment_with_drops(
     // `position`/`top`/`left` entirely when they're consumed here,
     // rather than falling through to the generic "no WinUI setter" drop.
     let absolute_attrs = absolute_position_style_attrs(props);
+    // UI79 -- four authored widths collapse into ONE `BorderThickness`, so
+    // this cannot go through the per-property setter table below. Computed
+    // up front, exactly like `absolute_attrs`, and its inputs skipped in
+    // the loop rather than falling through to the generic drop.
+    let edge_border = per_edge_border_attrs(props);
     for p in props {
         if absolute_attrs.is_some() && matches!(p.name.as_str(), "position" | "top" | "left") {
+            continue;
+        }
+        if edge_border.is_some()
+            && (per_edge_border(&p.name).is_some()
+                || matches!(p.name.as_str(), "border-width" | "border-color"))
+        {
+            // Consumed above -- including the shorthand, which the
+            // pre-pass folded in for any edge the author left unset.
             continue;
         }
         if let Some((key, value)) = css_side_spacing_to_xaml_attr(&p.name, &p.value) {
@@ -1916,6 +2033,14 @@ fn build_style_fragment_with_drops(
         for (key, value) in attrs {
             upsert_style_attr(&mut parts, key, value);
         }
+    }
+    // UI79 -- after the loop, so the aggregated thickness wins over
+    // anything the per-property path might have written for the same key.
+    if let Some((attrs, edge_drops)) = edge_border {
+        for (key, value) in attrs {
+            upsert_style_attr(&mut parts, key, value);
+        }
+        drops.extend(edge_drops);
     }
     // X8/#12025: `escape_xaml_attr` does real XML attribute escaping
     // (`&`/`"`/`<`/`>`), not the C-string-style backslash escaping this
@@ -19240,6 +19365,99 @@ mod tests {
     }
 
     // ── X4: color-value normalization for WinUI 3 ──────────────────
+
+    /// UI79 §4.1 — four authored widths collapse into ONE
+    /// `BorderThickness`, in WinUI's left,top,right,bottom order.
+    ///
+    /// The shorthand control is the half with teeth: switching every
+    /// bordered part to the four-value form would look like a success
+    /// here while changing output for every part in every product.
+    #[test]
+    fn ui79_per_edge_widths_collapse_into_border_thickness() {
+        let sp = |n: &str, v: &str| StyleProp {
+            name: n.to_string(),
+            value: v.to_string(),
+        };
+
+        // Control: the shorthand alone keeps the single-value form.
+        let short = build_style_fragment(&[sp("border-width", "2px"), sp("border-color", "#243146")]);
+        assert!(short.contains("BorderThickness=\"2\""), "got: {short}");
+
+        // One edge: the others are 0.
+        let one = build_style_fragment(&[sp("border-bottom-width", "4px")]);
+        assert!(one.contains("BorderThickness=\"0,0,0,4\""), "got: {one}");
+
+        // Four edges, in CSS order top/right/bottom/left = 2/3/4/5,
+        // emitted as XAML's left,top,right,bottom = 5,2,3,4.
+        let all = build_style_fragment(&[
+            sp("border-top-width", "2px"),
+            sp("border-right-width", "3px"),
+            sp("border-bottom-width", "4px"),
+            sp("border-left-width", "5px"),
+        ]);
+        assert!(all.contains("BorderThickness=\"5,2,3,4\""), "got: {all}");
+
+        // An unauthored edge falls back to the shorthand (CSS cascade).
+        let mixed = build_style_fragment(&[sp("border-width", "1px"), sp("border-top-width", "9px")]);
+        assert!(mixed.contains("BorderThickness=\"1,9,1,1\""), "got: {mixed}");
+    }
+
+    /// UI79 §4.1 — WinUI has ONE `BorderBrush`. A single authored edge
+    /// colour becomes it; two DIFFERENT ones mean the first in CSS order
+    /// is painted and the rest are REPORTED, never silently repainted.
+    #[test]
+    fn ui79_a_second_edge_colour_is_reported_not_repainted() {
+        let sp = |n: &str, v: &str| StyleProp {
+            name: n.to_string(),
+            value: v.to_string(),
+        };
+
+        // The case the corpus actually has: one colour, no drop.
+        let (frag, drops) = build_style_fragment_with_drops(&[
+            sp("border-bottom-width", "1px"),
+            sp("border-bottom-color", "#243146"),
+        ]);
+        assert!(frag.contains("BorderBrush=\"#243146\""), "got: {frag}");
+        assert!(
+            !drops.iter().any(|d| d.name.contains("border")),
+            "a single edge colour must not be reported as a drop: {drops:?}"
+        );
+
+        // Two different colours: first in CSS order wins, second reported.
+        let (frag, drops) = build_style_fragment_with_drops(&[
+            sp("border-top-width", "2px"),
+            sp("border-top-color", "#110022"),
+            sp("border-bottom-width", "4px"),
+            sp("border-bottom-color", "#243146"),
+        ]);
+        assert!(frag.contains("BorderBrush=\"#110022\""), "got: {frag}");
+        assert!(
+            !frag.contains("#243146"),
+            "the losing colour must not be painted: {frag}"
+        );
+        let reported: Vec<&str> = drops
+            .iter()
+            .filter(|d| d.name == "border-bottom-color")
+            .map(|d| d.reason)
+            .collect();
+        assert_eq!(
+            reported.len(),
+            1,
+            "the losing colour must be REPORTED, not silent: {drops:?}"
+        );
+        assert!(reported[0].contains("BorderBrush"), "got: {}", reported[0]);
+    }
+
+    /// UI79 — `border-top-left-radius` is a CORNER, not an edge.
+    #[test]
+    fn ui79_a_corner_radius_is_not_an_edge() {
+        assert!(per_edge_border("border-top-left-radius").is_none());
+        assert!(per_edge_border("border-radius").is_none());
+        assert!(per_edge_border("border-width").is_none());
+        assert!(per_edge_border("border-bottom-style").is_none());
+        assert_eq!(per_edge_border("border-bottom-width"), Some((2, "width")));
+        assert_eq!(per_edge_border("border-left-color"), Some((3, "color")));
+    }
 
     /// X4: `background: "transparent"` in `.msl` must emit
     /// `Background="Transparent"` (PascalCase) — WinUI 3's markup

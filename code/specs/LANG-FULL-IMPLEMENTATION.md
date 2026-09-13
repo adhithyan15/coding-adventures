@@ -968,8 +968,9 @@ backend immediately) come before the enabler-dependent items.
   that does not reference the controlled variable from empty scalar metadata
   and retain constants established by that one pass. A finite static integer
   loop whose body avoids the controlled scalar also retains its checked first
-  post-limit value. A direct finite static assignment to the controlled scalar
-  is retained only when its post-increment value exits after exactly one pass.
+  post-limit value. A direct finite static assignment to the controlled scalar,
+  optionally wrapped in a one-statement compound body, is retained only when
+  its post-increment value exits after exactly one pass.
   Finite static real loops whose bodies avoid the control also retain their
   first post-limit value by simulating at most 4,096 emitted binary64 additions;
   non-finite and rounded-away progress fails closed. Finite static loops also
@@ -978,7 +979,9 @@ backend immediately) come before the enabler-dependent items.
   assignment may instead reference the control or its own prior snapshot:
   bounded analysis evaluates it once per iteration and retains its exact
   integer, finite real, or boolean result. Integer and real recurrence
-  simulation is capped at 4,096 passes. Larger loops, compound bodies, integer
+  simulation is capped at 4,096 passes. That recurrence assignment may unwrap
+  one unlabeled assignment from a single-statement compound body. Larger loops,
+  labels, conditionals, declarations, additional statements, integer
   overflow, non-finite results, zero steps, arrays, globals, by-name targets,
   tracking barriers, dynamic writes, and other control-dependent
   multi-iteration bodies remain conservative.

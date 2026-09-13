@@ -86,6 +86,13 @@ credential release, and revision-bound custody rotation without leaving the
 broker. Authentication mismatch is rejected before credential access, and
 transport, provider, clock, release, or compare-and-swap failures retain the
 prior record.
+The usable-access composition applies that same retained client-secret policy
+before even reading credential metadata. A still-fresh access token reaches
+only the existing audited custody closure and invokes neither secret custody nor
+transport. A token inside the provider-data refresh lead crosses the complete
+audited refresh and revision-bound rotation path first, so only the new stored
+access token can reach the closure. The clock, secret store, token transport,
+credential store, and closure all remain injected or caller-owned.
 
 For an OpenID Connect Authorization Code exchange using retained client-secret
 authentication, the broker can instead consume the exact non-cloneable
@@ -98,6 +105,11 @@ provider-scoped opaque account key selects storage. Missing or rejected ID-token
 evidence reaches no credential store, the consumed evidence is omitted from the
 stored record, and only the opaque revision is released. Verification, time,
 transport, and storage implementations remain injected.
+
+The same verified-identity custody path is available for retained
+`private_key_jwt` profiles through the existing audited abstract signer. Its
+provider/client/nonce bindings fail before signing, and the composition adds no
+concrete signing or ID-token verification algorithm.
 
 Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
@@ -134,7 +146,7 @@ dependency are sibling packages in this repository.
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
 - concrete account-identity verification/JWKS, identity composition for other
-  authentication or grant paths, account listing, device authorization UI,
+  grant paths, account listing, device authorization UI,
   timing/sleep authority, and full device-flow loops;
 - concrete private-key algorithms, OIDC validation, and DPoP.
 

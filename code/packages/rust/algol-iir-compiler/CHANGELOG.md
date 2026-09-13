@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.271.0 — 2026-09-12 — compound controlled-scalar exit snapshots
+
+Single-iteration `step`/`until` analysis now recognizes an exact controlled
+scalar assignment wrapped in a one-statement `begin`/`end` body and retains
+the checked post-body increment when it exits the loop. Multi-statement bodies
+continue to fail closed.
+
+## 0.270.0 — 2026-09-12 — compound step-loop recurrences
+
+Finite `step`/`until` recurrence analysis now uses the exact single-assignment
+extractor, allowing a scalar update wrapped in a one-statement `begin`/`end`
+body to retain its terminal static snapshot. Labels, conditionals,
+declarations, and multiple statements continue to fail closed.
+
 ## 0.269.0 — 2026-09-12 — single-compound recurrence snapshots
 
 Bounded while-loop recurrence analysis now unwraps an exact one-statement
