@@ -2,6 +2,56 @@
 
 ## Unreleased
 
+### Fixed — `onDeleteNoteType` reported success having deleted nothing
+
+Two silent no-ops in the same match arm, both reachable from the Delete button
+in the collection actions bar.
+
+**An unsaved draft.** That button emits `onDeleteNoteType` with no payload, so
+every real click takes the fallback, which resolves the target from the
+note-type editor's selection. For a new draft that selection is *synthetic* —
+a blank model minted by `default_note_type_model`. The fallback handed its id
+to `DeleteNoteType`, whose filter matched nothing. The call returned `ok`,
+changed no state, and left the draft open — the person sees the editor exactly
+as it was, with no reason given.
+
+The button is not disabled in this state: it is gated on the editor having *a*
+selection, and a draft is one. So the path was fully reachable, and clicking
+Delete on an unsaved note type did nothing at all.
+
+**And on an id collision it was destructive, not merely silent.** The first
+version of this entry claimed a draft's id is "filtered to one no saved note
+type holds, precisely so a draft cannot overwrite a real model". That guard is
+inert, and security review caught the claim. `start_new(now)` sets
+`draft_note_type_id` to `note-type-{now}` and `draft_created_at` to `now`; the
+fallback is `default_note_type_model(draft_created_at)`, whose id is
+`note-type-{now}` — the same string. Rejecting the colliding id therefore falls
+back to the identical colliding id.
+
+When a saved note type does hold that id, the old code resolved it and the
+reducer **deleted that model and cascaded to every note built on it**. Measured
+rather than argued: with the new draft branch disabled,
+`a_new_note_type_draft_can_collide_with_a_saved_id` ends with zero note types
+instead of one.
+
+Asking `draft_is_new` rather than resolving an id closes both cases at once,
+which is why the fix is shaped that way. The inert guard itself is left to a
+separate change: it also governs save, rename and field edits, which have their
+own test surface.
+
+Deleting an unsaved draft now discards it, which is what
+`onNoteTypeEditorDeleteNoteType` — one arm above in the same `match` — has
+always done. Both entry points now agree.
+
+**An id nothing holds.** An explicit `noteTypeId` naming no existing model took
+the same path to the same no-op `ok`. It is now refused, and the refusal names
+the id. A caller could not otherwise tell a delete that worked from one that
+matched nothing.
+
+The explicit-id and draft cases stay separate: an explicit id names its target
+outright and says nothing about what the editor is showing, so it is never
+diverted into discarding a draft.
+
 ### Fixed -- `upsertNoteType` accepted a template deck the collection does not contain (#14532)
 
 A `CardTemplate` carries an optional deck id, and that id **overrides the

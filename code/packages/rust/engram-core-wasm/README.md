@@ -196,9 +196,23 @@ Compose shells share one Basic-style note-type creation/editing flow.
 Host model editors can post `onSaveNoteType` with a top-level or nested
 `noteType` payload containing `id`/`noteTypeId`, `name`, `fields`, `templates`,
 and optional `stylesheet`; the shared reducer upserts the model and
-rematerializes notes that use it. `onDeleteNoteType` follows the same safety
-rule as note deletion: no target returns a host intent, while an explicit
-`noteTypeId` deletes the model and its related notes/cards through the core.
+rematerializes notes that use it.
+
+`onDeleteNoteType` resolves its target three ways, and each reports what it did:
+
+- An explicit `noteTypeId` deletes that model and its related notes and cards.
+  An id no model holds is **refused**, rather than reporting success for a
+  filter that removed nothing — a caller cannot tell that apart from a delete
+  that worked.
+- With no explicit id and an unsaved draft open in the note-type editor, the
+  draft is **discarded**. This is what `onNoteTypeEditorDeleteNoteType` has
+  always done; both entry points now agree. Previously the fallback handed the
+  reducer the draft's synthetic id — which is minted to be one no saved model
+  holds — so the call reported `ok`, changed nothing, and left the draft open.
+- With no explicit id and a saved model selected, that model is deleted.
+
+Neither this event nor `onDeleteNote` returns a host intent any more; a
+confirmation round trip is UI47 `Await` effect work.
 
 `daily_limit_usage` returns `{ ok: true, usage }` with new/review counts already
 seen in a host-provided day window and the remaining slots from `DeckOptions`.
