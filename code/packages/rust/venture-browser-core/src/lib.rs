@@ -42,7 +42,7 @@ use browser_form_submission::{
     check_form_validity as check_planned_form_validity,
     report_form_validity as report_planned_form_validity,
 };
-pub use browser_navigation::{NavigationHistory, VisitedLinks, VisitedUrl};
+pub use browser_navigation::{NavigationEntryId, NavigationHistory, VisitedLinks, VisitedUrl};
 use coding_adventures_html_parser::BrowserRenderNode;
 use coding_adventures_html_parser::{parse_html, BrowserDocument, BrowserRenderTree};
 use html_to_layout::{html_media_query_applies, HtmlAuthorStylesheet, HtmlStyleContext, HtmlTheme};
@@ -72,7 +72,7 @@ const CONTROL_TEXT_METRICS: ControlTextMetrics = ControlTextMetrics {
     caret_width: 1.5,
 };
 const EDITOR_OVERLAY_PREFIX: &str = "venture-editor:";
-const FORM_HISTORY_STATE_LIMIT: usize = 64;
+const SESSION_HISTORY_STATE_LIMIT: usize = 64;
 
 fn apply_details_open_states(
     nodes: &mut [BrowserRenderNode],
@@ -943,6 +943,21 @@ pub struct FragmentNavigationState {
     pub scroll_offset_y: f64,
 }
 
+/// Diagnostic projection of the latest Back/Forward state restoration.
+#[derive(Clone, Debug, PartialEq)]
+pub struct BrowserHistoryRestorationState {
+    pub entry_id: NavigationEntryId,
+    pub restored_form_state: bool,
+    pub restored_scroll: bool,
+    pub scroll_offset_y: f64,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+struct BrowserHistoryEntryState {
+    controls: ControlStateSnapshot,
+    scroll_offset_y: f64,
+}
+
 /// Reusable host scheduling seam for navigation-owned subresource work.
 ///
 /// Implementations may use threads, an async runtime, browser fetch, or a
@@ -1591,7 +1606,8 @@ pub struct BrowserSession {
     form_diagnostics: Vec<FormDiagnostic>,
     form_lifecycle_events: Vec<FormLifecycleEvent>,
     control_mutation_events: Vec<ControlMutationEvent>,
-    form_history_states: Vec<(String, ControlStateSnapshot)>,
+    history_states: Vec<(NavigationEntryId, BrowserHistoryEntryState)>,
+    history_restoration: Option<BrowserHistoryRestorationState>,
     fragment_navigation: Option<FragmentNavigationState>,
     viewport_height: f64,
     navigation_id: u64,
@@ -1612,7 +1628,8 @@ impl BrowserSession {
             form_diagnostics: Vec::new(),
             form_lifecycle_events: Vec::new(),
             control_mutation_events: Vec::new(),
-            form_history_states: Vec::new(),
+            history_states: Vec::new(),
+            history_restoration: None,
             fragment_navigation: None,
             viewport_height: finite_non_negative(viewport_height),
             navigation_id: 0,
@@ -2286,6 +2303,10 @@ impl BrowserSession {
 
     pub fn fragment_navigation_state(&self) -> Option<&FragmentNavigationState> {
         self.fragment_navigation.as_ref()
+    }
+
+    pub fn history_restoration_state(&self) -> Option<&BrowserHistoryRestorationState> {
+        self.history_restoration.as_ref()
     }
 
     pub fn take_top_layer_diagnostics(&mut self) -> Vec<TopLayerDiagnostic> {
@@ -3304,7 +3325,7 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let departing_state = self.current_form_history_state();
+        let departing_state = self.current_history_entry_state();
         let request = BrowserFetchRequest {
             method: match navigation.method {
                 FormMethod::Get => BrowserFetchMethod::Get,
@@ -3335,9 +3356,10 @@ impl BrowserSession {
         self.top_layer_stack = top_layer_stack;
         self.top_layer_invokers.clear();
         self.top_layer_diagnostics.clear();
-        if let Some((url, snapshot)) = departing_state {
-            self.remember_form_history_state(url, snapshot);
+        if let Some((entry_id, state)) = departing_state {
+            self.remember_history_entry_state(entry_id, state);
         }
+        self.history_restoration = None;
         self.form_diagnostics.clear();
         self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
         self.refresh_control_editor_presentation();
@@ -3623,24 +3645,34 @@ impl BrowserSession {
         Some(())
     }
 
-    fn current_form_history_state(&self) -> Option<(String, ControlStateSnapshot)> {
+    fn current_history_entry_state(&self) -> Option<(NavigationEntryId, BrowserHistoryEntryState)> {
         Some((
-            self.history.current_url()?.to_string(),
-            self.controls.capture_state(ControlStatePrivacy::Public),
+            self.history.current_entry_id()?,
+            BrowserHistoryEntryState {
+                controls: self.controls.capture_state(ControlStatePrivacy::Public),
+                scroll_offset_y: self
+                    .viewport
+                    .as_ref()
+                    .map_or(0.0, |viewport| viewport.scroll_state().offset_y()),
+            },
         ))
     }
 
-    fn remember_form_history_state(&mut self, url: String, snapshot: ControlStateSnapshot) {
+    fn remember_history_entry_state(
+        &mut self,
+        entry_id: NavigationEntryId,
+        state: BrowserHistoryEntryState,
+    ) {
         if let Some(position) = self
-            .form_history_states
+            .history_states
             .iter()
-            .position(|(candidate, _)| candidate == &url)
+            .position(|(candidate, _)| *candidate == entry_id)
         {
-            self.form_history_states.remove(position);
+            self.history_states.remove(position);
         }
-        self.form_history_states.push((url, snapshot));
-        if self.form_history_states.len() > FORM_HISTORY_STATE_LIMIT {
-            self.form_history_states.remove(0);
+        self.history_states.push((entry_id, state));
+        if self.history_states.len() > SESSION_HISTORY_STATE_LIMIT {
+            self.history_states.remove(0);
         }
     }
 
@@ -3710,12 +3742,12 @@ impl BrowserSession {
         R: FontResolver<Handle = S::Handle>,
     {
         let reloads_document = matches!(&navigation, BrowserNavigation::Reload);
-        let restores_form_state = matches!(
+        let traverses_history = matches!(
             &navigation,
             BrowserNavigation::Back | BrowserNavigation::Forward
         );
         let departing_state = (!matches!(&navigation, BrowserNavigation::Reload))
-            .then(|| self.current_form_history_state())
+            .then(|| self.current_history_entry_state())
             .flatten();
         let mut history = self.history.clone();
         let requested_url = match navigation {
@@ -3728,6 +3760,18 @@ impl BrowserSession {
         let Some(requested_url) = requested_url else {
             return Ok(BrowserNavigationUpdate::default());
         };
+        let target_entry_id = history
+            .current_entry_id()
+            .expect("a navigable history URL must have an entry identifier");
+        let restored_state = traverses_history
+            .then(|| {
+                self.history_states
+                    .iter()
+                    .rev()
+                    .find(|(entry_id, _)| *entry_id == target_entry_id)
+                    .map(|(_, state)| state.clone())
+            })
+            .flatten();
 
         if !reloads_document {
             let same_document = self.viewport.as_ref().and_then(|viewport| {
@@ -3735,21 +3779,63 @@ impl BrowserSession {
             });
             if let Some(fragment) = same_document {
                 let _ = self.visited_links.record(&requested_url);
-                let page = pipeline.reflow_retained_with_visited(
+                if let Some(state) = &restored_state {
+                    self.controls.restore_state(&state.controls);
+                    self.reflow_controls(pipeline);
+                } else {
+                    let page = pipeline.reflow_retained_with_visited(
+                        self.viewport
+                            .as_ref()
+                            .expect("same-document navigation requires a viewport")
+                            .page(),
+                        &self.visited_links,
+                    );
                     self.viewport
-                        .as_ref()
+                        .as_mut()
                         .expect("same-document navigation requires a viewport")
-                        .page(),
-                    &self.visited_links,
-                );
+                        .reflow_page(page, self.viewport_height);
+                }
                 let viewport = self
                     .viewport
                     .as_mut()
                     .expect("same-document navigation requires a viewport");
-                viewport.reflow_page(page, self.viewport_height);
-                let state = viewport.navigate_to_fragment(requested_url, fragment);
+                let fragment_state = if let Some(restored) = &restored_state {
+                    let scroll_offset_y = viewport.set_scroll_offset_y(restored.scroll_offset_y);
+                    let decoded = fragment
+                        .as_deref()
+                        .filter(|value| !value.is_empty())
+                        .map(|value| percent_decode(value).unwrap_or_else(|_| value.to_string()));
+                    let target_found = decoded.as_deref().is_none_or(|target| {
+                        navigation_target_offset(&viewport.page().paint.positioned, target)
+                            .is_some()
+                    });
+                    FragmentNavigationState {
+                        url: requested_url,
+                        fragment: decoded,
+                        target_found,
+                        scroll_offset_y,
+                    }
+                } else {
+                    viewport.navigate_to_fragment(requested_url, fragment)
+                };
+                if let Some((entry_id, state)) = departing_state {
+                    self.remember_history_entry_state(entry_id, state);
+                }
                 self.history = history;
-                self.fragment_navigation = Some(state);
+                self.fragment_navigation = Some(fragment_state);
+                self.history_restoration =
+                    restored_state
+                        .as_ref()
+                        .map(|_| BrowserHistoryRestorationState {
+                            entry_id: target_entry_id,
+                            restored_form_state: true,
+                            restored_scroll: true,
+                            scroll_offset_y: self
+                                .fragment_navigation
+                                .as_ref()
+                                .expect("fragment state was just committed")
+                                .scroll_offset_y,
+                        });
                 self.form_diagnostics.clear();
                 return Ok(BrowserNavigationUpdate {
                     viewport_changed: true,
@@ -3782,15 +3868,8 @@ impl BrowserSession {
             .filter(|surface| surface.open)
             .map(|surface| surface.key)
             .collect();
-        if restores_form_state {
-            if let Some((_, snapshot)) = self
-                .form_history_states
-                .iter()
-                .rev()
-                .find(|(url, _)| url == &page.final_url || url == &requested_url)
-            {
-                controls.restore_state(snapshot);
-            }
+        if let Some(state) = &restored_state {
+            controls.restore_state(&state.controls);
         }
         history.replace_current(page.final_url.clone());
         if let Some(viewport) = self.viewport.as_mut() {
@@ -3805,7 +3884,40 @@ impl BrowserSession {
         self.top_layer_stack = top_layer_stack;
         self.top_layer_invokers.clear();
         self.top_layer_diagnostics.clear();
-        self.fragment_navigation = if let Some(fragment) = requested_fragment {
+        if restored_state.is_some() {
+            self.reflow_controls(pipeline);
+        }
+        self.fragment_navigation = if let Some(state) = &restored_state {
+            let scroll_offset_y = self
+                .viewport
+                .as_mut()
+                .expect("committed navigation must retain a viewport")
+                .set_scroll_offset_y(state.scroll_offset_y);
+            requested_fragment.as_deref().map(|fragment| {
+                let decoded = percent_decode(fragment).unwrap_or_else(|_| fragment.to_string());
+                let target_found = navigation_target_offset(
+                    &self
+                        .viewport
+                        .as_ref()
+                        .expect("committed navigation must retain a viewport")
+                        .page()
+                        .paint
+                        .positioned,
+                    &decoded,
+                )
+                .is_some();
+                FragmentNavigationState {
+                    url: self
+                        .history
+                        .current_url()
+                        .expect("committed navigation must retain history")
+                        .to_string(),
+                    fragment: Some(decoded),
+                    target_found,
+                    scroll_offset_y,
+                }
+            })
+        } else if let Some(fragment) = requested_fragment {
             let url = self
                 .history
                 .current_url()
@@ -3820,9 +3932,23 @@ impl BrowserSession {
         } else {
             None
         };
-        if let Some((url, snapshot)) = departing_state {
-            self.remember_form_history_state(url, snapshot);
+        if let Some((entry_id, state)) = departing_state {
+            self.remember_history_entry_state(entry_id, state);
         }
+        self.history_restoration =
+            restored_state
+                .as_ref()
+                .map(|_| BrowserHistoryRestorationState {
+                    entry_id: target_entry_id,
+                    restored_form_state: true,
+                    restored_scroll: true,
+                    scroll_offset_y: self
+                        .viewport
+                        .as_ref()
+                        .expect("committed navigation must retain a viewport")
+                        .scroll_state()
+                        .offset_y(),
+                });
         self.form_diagnostics.clear();
         self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
         self.refresh_control_editor_presentation();
@@ -5326,7 +5452,7 @@ mod tests {
             session
                 .viewport()
                 .map(|viewport| viewport.scroll_state().offset_y()),
-            Some(0.0)
+            Some(offset)
         );
         session
             .execute(BrowserNavigation::Forward, &pipeline, &fetcher)
@@ -7644,6 +7770,83 @@ mod tests {
     }
 
     #[test]
+    fn history_restores_duplicate_url_entries_by_identity_with_scroll() {
+        let url = "http://example.test/repeated";
+        let fetcher = |requested: &str| {
+            Ok(BrowserFetchResponse::new(
+                requested,
+                200,
+                Some("text/html".into()),
+                b"<input id='draft' value=''><div style='height:600px'></div>".to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(320.0, 100.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(url, 100.0);
+
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let first_id = session.history().current_entry_id().unwrap();
+        session.focus_control(false, &pipeline).unwrap();
+        session.control_text_input("first", &pipeline).unwrap();
+        session.set_scroll_offset_y(120.0);
+
+        session
+            .execute(BrowserNavigation::Navigate(url.into()), &pipeline, &fetcher)
+            .unwrap();
+        let second_id = session.history().current_entry_id().unwrap();
+        assert_ne!(first_id, second_id);
+        session.focus_control(false, &pipeline).unwrap();
+        session.control_text_input("second", &pipeline).unwrap();
+        session.set_scroll_offset_y(240.0);
+
+        session
+            .execute(BrowserNavigation::Back, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(session.history().current_entry_id(), Some(first_id));
+        assert_eq!(
+            session
+                .controls()
+                .control("control:0:id:draft")
+                .unwrap()
+                .value,
+            "first"
+        );
+        assert_eq!(session.scroll_metrics().unwrap().offset_y, 120.0);
+        assert_eq!(
+            session.history_restoration_state(),
+            Some(&BrowserHistoryRestorationState {
+                entry_id: first_id,
+                restored_form_state: true,
+                restored_scroll: true,
+                scroll_offset_y: 120.0,
+            })
+        );
+
+        session
+            .execute(BrowserNavigation::Forward, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(session.history().current_entry_id(), Some(second_id));
+        assert_eq!(
+            session
+                .controls()
+                .control("control:0:id:draft")
+                .unwrap()
+                .value,
+            "second"
+        );
+        assert_eq!(session.scroll_metrics().unwrap().offset_y, 240.0);
+    }
+
+    #[test]
     fn session_commits_datalist_choices_without_triggering_implicit_submission() {
         struct SuggestionFetcher {
             requests: RefCell<Vec<String>>,
@@ -7963,8 +8166,14 @@ mod tests {
                 &fetcher,
             )
             .unwrap();
-        assert_eq!(requests.borrow().len(), 1, "same-document links must not fetch");
-        assert!(session.visited_links().contains("http://example.test/page#legacy"));
+        assert_eq!(
+            requests.borrow().len(),
+            1,
+            "same-document links must not fetch"
+        );
+        assert!(session
+            .visited_links()
+            .contains("http://example.test/page#legacy"));
         assert!(session.fragment_navigation_state().unwrap().target_found);
         let legacy_offset = session.scroll_metrics().unwrap().offset_y;
 
@@ -7987,12 +8196,22 @@ mod tests {
             .unwrap();
         assert_eq!(session.scroll_metrics().unwrap().offset_y, 0.0);
 
-        session.execute(BrowserNavigation::Back, &pipeline, &fetcher).unwrap();
+        session
+            .execute(BrowserNavigation::Back, &pipeline, &fetcher)
+            .unwrap();
         assert!(!session.fragment_navigation_state().unwrap().target_found);
-        session.execute(BrowserNavigation::Back, &pipeline, &fetcher).unwrap();
+        session
+            .execute(BrowserNavigation::Back, &pipeline, &fetcher)
+            .unwrap();
         assert!(session.fragment_navigation_state().unwrap().target_found);
         assert_eq!(session.scroll_metrics().unwrap().offset_y, legacy_offset);
-        session.execute(BrowserNavigation::Forward, &pipeline, &fetcher).unwrap();
-        assert_eq!(requests.borrow().len(), 1, "history traversal must not fetch");
+        session
+            .execute(BrowserNavigation::Forward, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(
+            requests.borrow().len(),
+            1,
+            "history traversal must not fetch"
+        );
     }
 }
