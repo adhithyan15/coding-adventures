@@ -362,6 +362,7 @@ struct ConversionState {
     image_index: usize,
     disclosure_index: usize,
     top_layer_index: usize,
+    focus_index: usize,
     top_layers: Vec<LayoutNode>,
     image_maps: Vec<ImageMapDefinition>,
 }
@@ -447,6 +448,12 @@ where
         state.top_layer_index += count_top_layer_nodes(&node.children);
         return None;
     }
+
+    let focus_order = sequential_focus_order(node).map(|_| {
+        let index = state.focus_index;
+        state.focus_index += 1;
+        index
+    });
 
     let counter_scope = state
         .counters
@@ -566,7 +573,13 @@ where
     }
     layout.ext.insert(
         "html".into(),
-        html_ext(node, disclosure_index, top_layer_index, top_layer_kind),
+        html_ext(
+            node,
+            disclosure_index,
+            top_layer_index,
+            top_layer_kind,
+            focus_order,
+        ),
     );
     if let Some(image_map) = image_map_ext(node, &state.image_maps, image_index) {
         layout.ext.insert("imageMap".into(), image_map);
@@ -742,6 +755,8 @@ where
             .iter()
             .any(|child| child.disclosure_kind.as_deref() == Some("summary"))
     {
+        let focus_order = state.focus_index;
+        state.focus_index += 1;
         let mut summary = text_leaf("Details", style);
         summary.ext.insert(
             "html".into(),
@@ -749,6 +764,8 @@ where
                 ("role".into(), ExtValue::Str("disclosure_summary".into())),
                 ("tag".into(), ExtValue::Str("summary".into())),
                 ("disclosureKind".into(), ExtValue::Str("summary".into())),
+                ("focusOrder".into(), ExtValue::Int(focus_order as i64)),
+                ("tabIndex".into(), ExtValue::Int(0)),
             ])),
         );
         children.insert(0, summary);
@@ -4140,12 +4157,18 @@ fn html_ext(
     disclosure_index: Option<usize>,
     top_layer_index: Option<usize>,
     top_layer_kind: Option<&str>,
+    focus_order: Option<usize>,
 ) -> ExtValue {
     let mut values = HashMap::new();
     values.insert("role".into(), ExtValue::Str(node.role.clone()));
     values.insert("display".into(), ExtValue::Str(node.display.clone()));
     insert_optional(&mut values, "tag", node.name.as_deref());
     insert_optional(&mut values, "id", node.id.as_deref());
+    insert_optional(
+        &mut values,
+        "accessibleName",
+        node.accessible_name.as_deref(),
+    );
     insert_optional(&mut values, "name", node.anchor_name.as_deref());
     insert_optional(
         &mut values,
@@ -4153,6 +4176,13 @@ fn html_ext(
         node.disclosure_kind.as_deref(),
     );
     values.insert("open".into(), ExtValue::Bool(node.open));
+    if let Some(order) = focus_order {
+        values.insert("focusOrder".into(), ExtValue::Int(order as i64));
+        values.insert(
+            "tabIndex".into(),
+            ExtValue::Int(sequential_focus_order(node).unwrap_or_default() as i64),
+        );
+    }
     if let Some(index) = disclosure_index {
         values.insert("disclosureIndex".into(), ExtValue::Int(index as i64));
     }
@@ -4202,6 +4232,31 @@ fn html_ext(
         node.table_section_kind.as_deref(),
     );
     ExtValue::Map(values)
+}
+
+fn sequential_focus_order(node: &BrowserRenderNode) -> Option<i32> {
+    if node.disabled
+        || node.hidden
+        || node.inert
+        || node.aria_hidden
+        || node.aria_disabled.as_deref() == Some("true")
+    {
+        return None;
+    }
+    let naturally_focusable = (node.role == "link"
+        && node
+            .resolved_href
+            .as_deref()
+            .or(node.href.as_deref())
+            .is_some_and(|href| !href.is_empty()))
+        || node.role == "control"
+        || node.disclosure_kind.as_deref() == Some("summary");
+    let tab_index = node
+        .tabindex
+        .as_deref()
+        .and_then(|value| value.trim().parse::<i32>().ok())
+        .unwrap_or_default();
+    (naturally_focusable && tab_index >= 0).then_some(tab_index)
 }
 
 fn image_map_ext(

@@ -82,18 +82,26 @@ changing spacing. A border must not move anything.
 
 ## 5. Scope
 
-**Done:** Compose (#15009, drawn with `drawBehind`), Flutter (`Border` with
-per-side `BorderSide`) and SwiftUI (drawn with `.overlay(alignment:)`).
+**Done:** Compose (#15009, `drawBehind`), Flutter (per-side `BorderSide`),
+SwiftUI (`.overlay(alignment:)`) and Qt (an anchored child `Rectangle`).
 
-**Remaining:** Qt and XAML, and neither is a port of the above.
+Qt was a different **shape** of change rather than a harder version of the same
+one: its border is a property on a QML `Rectangle`, but a per-edge rule needs a
+*child* element, emitted where children are rather than where properties are.
+It also needed the wrapper's implicit size re-derived from a named content
+layout — a strip anchored to `parent` and a parent sized from `childrenRect`
+form a **binding loop**, which only the QML runtime reveals.
 
-*Qt* is a different **shape** of change, not a harder version of the same one.
-Its border is a property on a QML `Rectangle` (`border.width`, `border.color`),
-and the emitter's styling functions return **lists of property lines**. A
-per-edge rule needs a *child* `Rectangle` anchored to one edge, so it has to be
-emitted where children are, not where properties are.
+**Remaining: XAML**, which needs the single-brush decision above settled first.
 
-*XAML* needs the single-brush decision above settled first.
+### A verification gate this spec did not know it had
+
+Qt *is* runnable on the development host: `qml` under
+`QT_QPA_PLATFORM=offscreen` loads generated QML, reports binding loops, and
+grabs frames via `grabToImage` for pixel sampling. Earlier notes in this work
+claimed otherwise. Every backend UI79 touched now has a way to check the
+rendered result rather than the emitted text — Compose and Qt by sampling
+pixels, Flutter by walking the widget tree, SwiftUI by `swift build`.
 
 Compose only, all four edges. The remaining four backends are follow-up work
 and are named as such rather than left looking finished — this spec is the

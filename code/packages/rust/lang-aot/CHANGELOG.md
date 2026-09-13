@@ -1,6 +1,6 @@
 # Changelog — `lang-aot`
 
-## 0.332.0 — 2026-09-13 — VM-040 COBOL BEAM pointer/overflow probe
+## 0.333.0 — 2026-09-13 — VM-040 COBOL BEAM pointer/overflow probe
 
 `git fetch origin && git merge origin/main` fast-forwarded cleanly (one
 unrelated SwiftUI border-edges commit, `092349e3ff`); `gh pr list --state
@@ -56,6 +56,12 @@ corrected total against a live run: 210 programs, 1373 cells exercised (was
 Reprioritize the remaining 10 undeclared COBOL BEAM rows (4 more base
 INSPECT TALLYING/REPLACING, 5 VM-047c BEFORE/AFTER region, 1 VM-057
 self-move) against VM-041/VM-060b/VM-058 after this merges.
+
+## 0.332.0 — 2026-09-12 — ALGOL single-compound recurrences
+
+The seven-backend ALGOL matrix now proves that a bounded boolean recurrence
+retains its terminal snapshot when its sole assignment is wrapped in a compound
+body.
 
 ## 0.331.0 — 2026-09-13 — VM-040 COBOL BEAM INSPECT TALLYING/REPLACING probe
 

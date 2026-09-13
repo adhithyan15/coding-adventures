@@ -10,6 +10,8 @@ style SpiceWorkbench {
   part schematic-document-actions { gap : 6 ; }
   part open-schematic { background : "#283a51" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#476786" ; border-radius : 3 ; padding : 6 ; }
   part save-schematic { background : "#1f6f4a" ; color : "#e9fff3" ; border-width : 1 ; border-color : "#3fa36f" ; border-radius : 3 ; padding : 6 ; }
+  part undo-schematic { background : "#3a2f20" ; color : "#fde68a" ; border-width : 1 ; border-color : "#a66b24" ; border-radius : 3 ; padding : 6 ; }
+  part redo-schematic { background : "#2b3646" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#56708e" ; border-radius : 3 ; padding : 6 ; }
   part schematic-palette { gap : 6 ; }
   part schematic-palette-item { background : "#163743" ; color : "#a5f3fc" ; border-width : 1 ; border-color : "#2c7180" ; border-radius : 3 ; padding : 6 ; }
   part schematic-analysis-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
@@ -20,6 +22,12 @@ style SpiceWorkbench {
   part schematic-analysis-card { background : "#312e81" ; color : "#ddd6fe" ; border-width : 1 ; border-color : "#818cf8" ; border-radius : 3 ; padding : 6 ; }
   part selected-schematic-analysis { color : "#c4b5fd" ; font-weight : bold ; }
   part schematic-analysis-configuration { gap : 4 ; }
+  part schematic-analysis-kind-label { font-size : 12 ; color : "#9fb3c8" ; }
+  part schematic-analysis-kind-controls { gap : 6 ; }
+  part schematic-analysis-kind-control { background : "#2e2545" ; color : "#ddd6fe" ; border-width : 1 ; border-color : "#7660a8" ; border-radius : 3 ; padding : 6 ; }
+  part schematic-analysis-card-move-actions { gap : 6 ; }
+  part move-schematic-analysis-card-earlier { background : "#2b3646" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#56708e" ; border-radius : 3 ; padding : 6 ; }
+  part move-schematic-analysis-card-later { background : "#2b3646" ; color : "#d2e7ff" ; border-width : 1 ; border-color : "#56708e" ; border-radius : 3 ; padding : 6 ; }
   part schematic-analysis-configuration-label { font-size : 12 ; font-weight : bold ; color : "#9fb3c8" ; }
   part remove-schematic-analysis-card { background : "#4c1d2d" ; color : "#fecdd3" ; border-width : 1 ; border-color : "#be123c" ; border-radius : 3 ; padding : 6 ; }
   part schematic-analysis-source-label { font-size : 12 ; color : "#9fb3c8" ; }

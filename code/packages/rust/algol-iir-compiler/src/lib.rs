@@ -6420,8 +6420,7 @@ impl Compiler {
             }
         }
 
-        let statement = first_direct_node(body, "unlabeled_stmt")?;
-        let assignment = first_direct_node(statement, "assign_stmt")?;
+        let assignment = single_statement_assignment(body)?;
         let left_parts: Vec<&GrammarASTNode> = direct_nodes(assignment)
             .into_iter()
             .filter(|node| node.rule_name == "left_part")
@@ -9276,6 +9275,40 @@ fn first_direct_node<'a>(node: &'a GrammarASTNode, rule: &str) -> Option<&'a Gra
         ASTNodeOrToken::Node(n) if n.rule_name == rule => Some(n),
         _ => None,
     })
+}
+
+fn single_statement_assignment(node: &GrammarASTNode) -> Option<&GrammarASTNode> {
+    match node.rule_name.as_str() {
+        "assign_stmt" => Some(node),
+        "statement" => {
+            let children = direct_nodes(node);
+            if children.iter().any(|child| child.rule_name == "label") {
+                return None;
+            }
+            let [child] = children.as_slice() else {
+                return None;
+            };
+            single_statement_assignment(child)
+        }
+        "unlabeled_stmt" => {
+            let children = direct_nodes(node);
+            let [child] = children.as_slice() else {
+                return None;
+            };
+            single_statement_assignment(child)
+        }
+        "compound_stmt" => {
+            let statements: Vec<&GrammarASTNode> = direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "statement")
+                .collect();
+            let [statement] = statements.as_slice() else {
+                return None;
+            };
+            single_statement_assignment(statement)
+        }
+        _ => None,
+    }
 }
 
 /// Standard functions that the direct formal-procedure slice may substitute.
@@ -14453,6 +14486,20 @@ mod tests {
             "test",
         )
         .expect("a bounded boolean negation recurrence has an exact final snapshot");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42")
+        }));
+    }
+
+    #[test]
+    fn al4_bounded_while_loop_tracks_single_compound_boolean_recurrence_snapshot() {
+        let module = compile_source(
+            "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do begin flag := not flag end; if flag then r := 42.0 else r := 0.5; print(r) end",
+            "test",
+        )
+        .expect("a single-assignment compound body retains its boolean recurrence snapshot");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "str_const"

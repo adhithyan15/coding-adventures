@@ -29,6 +29,14 @@ the Mosaic app event contract. They can also select a DC sweep source and edit
 the selected analysis card. Hosts can add, select, and remove cards while one
 card remains required. Synchronization replaces the text deck with the
 canonical emitted deck and refreshes its runnable Berkeley analysis plan.
+Selected cards can also change their Berkeley analysis kind or move earlier
+and later without discarding their per-card settings.
+
+Schematic document mutations are undoable and redoable within a running
+workbench session, including metadata, component and wire edits, and analysis
+plan changes. Checkpoints retain the relevant component and analysis-card
+selection, clear the redo branch after a fresh edit, and are intentionally not
+serialized in durable snapshots.
 
 Protocol-2 hosts can also open and save a versioned `spice-mosaic/schematic`
 JSON envelope through awaited `file.open` and `file.save` effects. Import

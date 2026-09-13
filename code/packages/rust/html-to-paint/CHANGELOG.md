@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Preserve focus keys, document order, `tabindex`, accessible names, and shared
+  geometry on link, control, and disclosure hit regions.
+
 - Emit shape-aware, scaled client-side image-map link regions with shared
   transforms, clipping, first-match precedence, and accessibility metadata.
 

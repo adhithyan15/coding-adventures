@@ -86,6 +86,19 @@ credential release, and revision-bound custody rotation without leaving the
 broker. Authentication mismatch is rejected before credential access, and
 transport, provider, clock, release, or compare-and-swap failures retain the
 prior record.
+
+For an OpenID Connect Authorization Code exchange using retained client-secret
+authentication, the broker can instead consume the exact non-cloneable
+authorization nonce and route the bounded response through the existing
+account-identity authority before custody creation. Provider, client, and trace
+bindings are checked before secret access or transport. The response then
+crosses the OAuth credential-release audit, its zeroizing ID token is detached
+without cloning and consumed by audited verification, and only the authority's
+provider-scoped opaque account key selects storage. Missing or rejected ID-token
+evidence reaches no credential store, the consumed evidence is omitted from the
+stored record, and only the opaque revision is released. Verification, time,
+transport, and storage implementations remain injected.
+
 Registration enforces exclusive
 redirect ownership whenever either provider relies on distinct-redirect mix-up
 defense; providers that both validate RFC 9207 issuers may share a redirect.
@@ -120,7 +133,8 @@ dependency are sibling packages in this repository.
 - concrete HTTPS, TLS, or socket authority;
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
-- account identity proof and key selection, listing, device authorization UI,
+- concrete account-identity verification/JWKS, identity composition for other
+  authentication or grant paths, account listing, device authorization UI,
   timing/sleep authority, and full device-flow loops;
 - concrete private-key algorithms, OIDC validation, and DPoP.
 

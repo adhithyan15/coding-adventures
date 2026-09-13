@@ -672,6 +672,12 @@ image-codec-jpeg       = { path = "../../../packages/rust/image-codec-jpeg" }
     hit testing, accessibility-key activation, and the shared target/download
     behavior defined by [UI80](./UI80-client-side-image-maps.md).
 
+13. **Sequential page focus** — Verify Tab and Shift+Tab traverse positive
+    `tabindex` targets before ordinary document order, exclude negative and
+    disabled targets, stay within a modal top layer, scroll focused geometry
+    into view, and activate focused links/details through the shared policy in
+    [UI81](./UI81-sequential-focus-navigation.md).
+
 ## Scope
 
 ### In Scope (Venture v0.1)
