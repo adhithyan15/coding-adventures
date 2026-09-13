@@ -272,7 +272,8 @@ impl Backend {
     /// Copying a handler's source into the project is backend-agnostic;
     /// installing it is not. Qt, SwiftUI and Compose emit the call that reaches
     /// it -- `qt_main_with_host_effects`, `swift_app_with_host_effects`,
-    /// `compose_main_with_host_effects` and `flutter_main_with_host_effects`.
+    /// `compose_main_with_host_effects`, `flutter_main_with_host_effects` and
+    /// `xaml_main_with_host_effects`.
     /// XAML does not yet.
     ///
     /// Without this, a package declaring a handler for any other backend got
@@ -287,12 +288,12 @@ impl Backend {
     /// the only version of "remember to update the supported set" that works.
     fn installs_host_effects(self) -> bool {
         match self {
-            Backend::Qt | Backend::SwiftUI | Backend::Compose | Backend::Flutter => true,
-            Backend::React
-            | Backend::Electron
-            | Backend::WebComponent
-            | Backend::Html
-            | Backend::Xaml => false,
+            Backend::Qt
+            | Backend::SwiftUI
+            | Backend::Compose
+            | Backend::Flutter
+            | Backend::Xaml => true,
+            Backend::React | Backend::Electron | Backend::WebComponent | Backend::Html => false,
         }
     }
 
@@ -3149,13 +3150,15 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                      event sequence, snapshots, returned buffers, and teardown. {}\n",
                     proj.readme, runtime_distribution
                 );
+                let main_window_cs =
+                    xaml_main_with_host_effects(&proj.main_window_cs, host_effects)?;
                 let flat: Vec<(String, &str)> = vec![
                     ("global.json".to_string(), &proj.global_json),
                     (format!("{component}.csproj"), &proj.csproj),
                     ("App.xaml".to_string(), &proj.app_xaml),
                     ("App.xaml.cs".to_string(), &proj.app_xaml_cs),
                     ("MainWindow.xaml".to_string(), &proj.main_window_xaml),
-                    ("MainWindow.xaml.cs".to_string(), &proj.main_window_cs),
+                    ("MainWindow.xaml.cs".to_string(), &main_window_cs),
                     ("app.manifest".to_string(), &proj.package_manifest),
                     ("build.ps1".to_string(), &proj.build_script),
                     ("README.md".to_string(), &readme),
@@ -3754,6 +3757,109 @@ fn flutter_main_with_host_effects(
         .and_then(|start| out[start + 1..].find('\n').map(|end| start + 1 + end + 1))
         .unwrap_or(0);
     out.insert_str(insert_at, &import);
+    Ok(out)
+}
+
+/// Install a package's `[host_effects]` handler into the generated WinUI window.
+///
+/// The fifth and last backend, and the one that differs most from the other
+/// four, for one reason: **XAML's generated host is a static class, not an
+/// instance.** `MosaicRuntimeHost` exposes `EffectHandler`, `CompleteEffect`
+/// and `DeferEffect` as statics over a process-wide `Lazy<Runtime?>`, so there
+/// is no host value to hand the handler. The emitted call therefore takes no
+/// argument, where Qt, SwiftUI, Compose and Flutter all pass one.
+///
+/// That makes the `install` name carry more weight here than elsewhere: C#
+/// resolves a fully-qualified static method with no import at all, so a handler
+/// outside `Mosaic.Generated` should be declared as `My.Namespace.Type.Method`.
+/// `include` is refused for that reason -- C# has no include directive, and a
+/// `using` that the install name makes unnecessary would be a second way to say
+/// the same thing.
+fn xaml_main_with_host_effects(
+    generated: &str,
+    host_effects: &mosaic_package_manifest::HostEffectsSection,
+) -> Result<String, BuildError> {
+    let Some(handler) = host_effects
+        .handlers
+        .iter()
+        .find(|handler| handler.backend == "xaml")
+    else {
+        return Ok(generated.to_string());
+    };
+
+    if let Some(include) = handler.include.as_deref() {
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` declares a XAML handler `{}` with `include = \"{include}\"`, \
+             but C# has no include directive and every type in the assembly is \
+             already visible. Qualify `install` with the handler's namespace \
+             instead -- a fully-qualified static method needs no `using`.",
+            handler.install
+        )));
+    };
+
+    // Anchored on `LoadRequired`, and the ordering it implies is LOAD-BEARING
+    // rather than tidy.
+    //
+    // `MosaicRuntimeHost.EffectHandler`'s setter is
+    // `if (State.Value is { } runtime) runtime.EffectHandler = value;` -- it
+    // SILENTLY DOES NOTHING when the runtime has not been loaded. So an install
+    // emitted above this line compiles, runs, assigns nothing, and the first
+    // symptom is an `Await` going unanswered at runtime, which disables
+    // snapshot and restore for the rest of the process.
+    //
+    // `LoadRequired` is what makes the setter take: it calls `RequiredRuntime`,
+    // which throws rather than returning null, so `State.Value` is non-null on
+    // every path that reaches the next line.
+    const ANCHOR: &str = "MosaicRuntimeHost.LoadRequired();";
+    let Some(at) = line_anchored_find(generated, ANCHOR) else {
+        // Loud, as on every other backend, and for the same reason sharpened:
+        // `Microsoft.NET.Sdk` globs `**/*.cs` by default, so a copied handler is
+        // compiled and shipped whether or not anything installs it. There is no
+        // missing symbol and no diagnostic -- only an effect nobody answers.
+        //
+        // XAML is also the one backend where this fires for an ordinary build
+        // rather than only a broken one, and the message says so. The STUB
+        // shell -- emitted without `--profile native-complete` -- has no
+        // `MosaicRuntimeHost` call at all: it finds a host by reflection, and
+        // may find a hand-written `Mosaic.Generated.MosaicHost` with no effect
+        // surface whatsoever.
+        //
+        // Qt, SwiftUI, Compose and Flutter can install into their stubs because
+        // each still constructs a host there. This one cannot, and the
+        // alternative to refusing is worse than it looks: assigning
+        // `MosaicRuntimeHost.EffectHandler` reaches a setter that checks
+        // `State.Value is { } runtime` and does NOTHING when the library is
+        // absent. A stub build would then claim an installed handler, answer no
+        // effects, and report nothing -- the exact silent failure `[host_effects]`
+        // exists to prevent.
+        return Err(BuildError::Io(format!(
+            "`[host_effects]` declares a XAML handler `{}`, but the generated \
+             window has no `{ANCHOR}` to install it after. The stub WinUI shell \
+             finds its host by reflection and never loads the standard runtime, \
+             so there is nothing to install onto. Emit with \
+             `--profile native-complete` or `--runtime-library <target cdylib>` \
+             -- either selects the runtime-backed window, which is the only \
+             XAML shell that can answer effects.",
+            handler.install
+        )));
+    };
+
+    let line_start = generated[..at].rfind('\n').map_or(0, |index| index + 1);
+    let indent: String = generated[line_start..at].to_string();
+    let line_end = generated[at..]
+        .find('\n')
+        .map_or(generated.len(), |index| at + index + 1);
+
+    let mut out = String::with_capacity(generated.len() + 128);
+    out.push_str(&generated[..line_end]);
+    writeln!(
+        out,
+        "{indent}// Package-declared effect handler, from `[host_effects]`.\n\
+         {indent}{}();",
+        handler.install
+    )
+    .expect("write XAML host-effect install");
+    out.push_str(&generated[line_end..]);
     Ok(out)
 }
 
@@ -12474,10 +12580,17 @@ version = "1"
     fn a_handler_for_a_backend_that_cannot_install_one_is_refused() {
         // Compose used to be in this list. It gained an emitter, the
         // classification flipped, and the tripwire above sent me back here --
-        // which is exactly what an exhaustive match buys over a list.
-        // Flutter used to be here; it gained an emitter and the tripwire sent
-        // me back. XAML is the last native backend that cannot install one.
-        for backend in [Backend::Xaml, Backend::React, Backend::Html] {
+        // which is exactly what an exhaustive match buys over a list. Flutter
+        // went the same way, and now XAML: with its install emitted, every
+        // NATIVE backend answers effects, and what is left here is the web
+        // family, where an "effect" is a browser API the page calls directly
+        // and there is no host process to hand one to.
+        for backend in [
+            Backend::React,
+            Backend::Html,
+            Backend::Electron,
+            Backend::WebComponent,
+        ] {
             let root = scratch();
             fs::create_dir_all(root.join("host/qt")).expect("create the source directory");
             fs::write(root.join("host/qt/effects.h"), b"// handler\n").expect("write the source");
@@ -12587,9 +12700,12 @@ version = "1"
     ///
     /// It is reachable, not theoretical: `[host_assets]` is a second door into
     /// the same output directory, and a package can ship the handler's
-    /// implementation there -- where SwiftPM and Gradle compile a directory
-    /// implicitly -- while declaring the handler in `[host_effects]`. Engram
-    /// already ships Compose host assets that way.
+    /// implementation there -- where SwiftPM, Gradle and `Microsoft.NET.Sdk`
+    /// all compile a directory implicitly -- while declaring the handler in
+    /// `[host_effects]`. Packages in this repository ship host assets that way.
+    ///
+    /// Uses `react` rather than `xaml`: XAML gained an install emission, so it
+    /// no longer refuses anything and would make this test vacuous.
     #[test]
     fn a_handler_with_no_file_of_its_own_is_still_refused() {
         let root = scratch();
@@ -12608,7 +12724,7 @@ exports = ["Probe"]
 
 [host_effects]
 handlers = [
-  { backend = "xaml", install = "installProbeEffects" },
+  { backend = "react", install = "installProbeEffects" },
 ]
 
 [kernel]
@@ -12623,7 +12739,7 @@ version = "1"
 
         let error = install_host_effects(
             &manifest,
-            Backend::Xaml,
+            Backend::React,
             &root,
             &root.join("out"),
             &HashMap::new(),
@@ -12635,6 +12751,81 @@ version = "1"
             "{error:?}"
         );
         let _ = fs::remove_dir_all(&root);
+    }
+
+    /// Without a project shell, a declared handler is COPIED AND NOT INSTALLED.
+    ///
+    /// Pinned as a decision rather than left as a silence, because it looks
+    /// exactly like the bug the refusal above exists to prevent and is not one.
+    ///
+    /// The install is spliced into a generated entry point, and without
+    /// `emit_project` there is no entry point -- the output is component
+    /// artifacts for embedding in a hand-written application, where the consumer
+    /// writes the install themselves. Copying the handler is the whole point
+    /// there, so refusing would break the legitimate use.
+    ///
+    /// This is uniform across every installing backend, which is the half worth
+    /// asserting: XAML gaining an install emission moved it from "refused
+    /// outright" into this shared behaviour, and a reviewer comparing the two
+    /// commits could reasonably read that as a regression. It is not -- the old
+    /// refusal fired because XAML could not install AT ALL, not because of the
+    /// profile. Qt has behaved this way since it was wired.
+    #[test]
+    fn a_handler_is_copied_without_a_shell_and_that_is_uniform() {
+        for backend in Backend::ALL
+            .into_iter()
+            .filter(|backend| backend.installs_host_effects())
+        {
+            let name = backend.dir_name();
+            let root = scratch();
+            fs::create_dir_all(root.join("host")).expect("create the source directory");
+            fs::write(root.join("host/effects.txt"), b"// handler\n").expect("write the source");
+
+            let manifest = mosaic_package_manifest::parse(&format!(
+                r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+[host_effects]
+files = [
+  {{ backend = "{name}", source = "host/effects.txt", target = "probe_effects.txt" }},
+]
+handlers = [
+  {{ backend = "{name}", install = "installProbeEffects" }},
+]
+
+[kernel]
+version = "1"
+"#
+            ))
+            .expect("probe manifest must parse");
+
+            // `install_host_effects` is the whole of what runs when no shell is
+            // emitted -- the splice lives inside `emit_project_shell`.
+            let written = install_host_effects(
+                &manifest,
+                backend,
+                &root,
+                &root.join("out"),
+                &HashMap::new(),
+                &HashSet::new(),
+            )
+            .unwrap_or_else(|error| panic!("{name} must copy the handler: {error:?}"));
+            assert_eq!(
+                written,
+                vec![root.join("out/probe_effects.txt")],
+                "{name} must copy exactly the declared handler"
+            );
+            let _ = fs::remove_dir_all(&root);
+        }
     }
 
     /// Every backend is classified, and the two that claim to install really do.
@@ -12666,9 +12857,25 @@ version = "1"
             .collect();
         assert_eq!(
             claiming,
-            vec!["swiftui", "qt", "flutter", "compose"],
+            vec!["swiftui", "qt", "xaml", "flutter", "compose"],
             "update this when a backend gains an install emission -- and when it \
              does, `install_host_effects` stops refusing it"
+        );
+        // The complement, spelled out rather than left as "whatever is missing
+        // above": with XAML wired, every NATIVE backend installs, and the line
+        // between the two lists is now exactly native/web. An equality on one
+        // list alone would still pass if a native backend were quietly dropped
+        // from both.
+        let refusing: Vec<&str> = Backend::ALL
+            .into_iter()
+            .filter(|backend| !backend.installs_host_effects())
+            .map(Backend::dir_name)
+            .collect();
+        assert_eq!(
+            refusing,
+            vec!["react", "electron", "webcomponent", "html"],
+            "every remaining backend is web-family, where an effect is a browser \
+             API the page calls directly and there is no host to hand one to"
         );
     }
 
@@ -13235,6 +13442,248 @@ handlers = [
                 assert!(
                     wired.contains("installProbeEffects(_mosaicHost);"),
                     "the non-nullable shape calls the host directly:\n{wired}"
+                );
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+mod xaml_host_effect_tests {
+    use super::*;
+
+    fn section(toml: &str) -> mosaic_package_manifest::HostEffectsSection {
+        let manifest = format!(
+            r#"
+[package]
+name = "mosaic-pkg-probe"
+version = "0.1.0"
+description = "probe"
+license = "MIT"
+
+[components]
+exports = ["Probe"]
+
+[dependencies]
+
+{toml}
+
+[kernel]
+version = "1"
+"#
+        );
+        mosaic_package_manifest::parse(&manifest)
+            .expect("probe manifest must parse")
+            .host_effects
+    }
+
+    fn handler() -> mosaic_package_manifest::HostEffectsSection {
+        section(
+            r#"
+[host_effects]
+files = [
+  { backend = "xaml", source = "host/xaml/Effects.cs", target = "ProbeEffects.cs" },
+]
+handlers = [
+  { backend = "xaml", install = "ProbeEffects.Install" },
+]
+"#,
+        )
+    }
+
+    const MAIN_WINDOW: &str = concat!(
+        "using Microsoft.UI.Xaml;\n",
+        "\n",
+        "namespace Mosaic.Generated;\n",
+        "\n",
+        "public sealed partial class MainWindow : Window\n",
+        "{\n",
+        "    public MainWindow()\n",
+        "    {\n",
+        "        MosaicRuntimeHost.LoadRequired();\n",
+        "        this.InitializeComponent();\n",
+        "        MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);\n",
+        "    }\n",
+        "}\n",
+    );
+
+    #[test]
+    fn a_package_with_no_xaml_handler_is_untouched() {
+        let empty = section("");
+        assert_eq!(
+            xaml_main_with_host_effects(MAIN_WINDOW, &empty).expect("wiring must succeed"),
+            MAIN_WINDOW
+        );
+    }
+
+    /// A handler for another backend leaves the XAML window alone.
+    ///
+    /// The "does not fire" direction. Every shipped manifest with
+    /// `[host_effects]` declares several backends, so a match keyed too broadly
+    /// would wire the wrong install into this file.
+    #[test]
+    fn a_qt_only_handler_leaves_the_window_alone() {
+        let qt_only = section(
+            r#"
+[host_effects]
+files = [
+  { backend = "qt", source = "host/qt/effects.cpp", target = "probe_effects.cpp" },
+]
+handlers = [
+  { backend = "qt", include = "probe_effects.h", install = "installProbeEffects" },
+]
+"#,
+        );
+        assert_eq!(
+            xaml_main_with_host_effects(MAIN_WINDOW, &qt_only).expect("wiring must succeed"),
+            MAIN_WINDOW
+        );
+    }
+
+    /// The install lands AFTER `LoadRequired`, and that ordering is the point.
+    ///
+    /// `MosaicRuntimeHost.EffectHandler`'s setter is
+    /// `if (State.Value is { } runtime) runtime.EffectHandler = value;` -- it
+    /// silently assigns nothing when the runtime has not loaded. An install
+    /// emitted above the anchor would compile, run, and do nothing at all.
+    #[test]
+    fn the_install_lands_after_the_runtime_is_loaded() {
+        let wired = xaml_main_with_host_effects(MAIN_WINDOW, &handler()).expect("wiring");
+        let load = wired
+            .find("MosaicRuntimeHost.LoadRequired();")
+            .expect("the load call");
+        let install = wired.find("ProbeEffects.Install();").expect("the install");
+        assert!(load < install, "{wired}");
+        // And before the component starts dispatching, which is the first thing
+        // that can raise an effect.
+        let apply = wired
+            .find("MosaicRuntimeHost.ApplyRequiredProps")
+            .expect("the props call");
+        assert!(install < apply, "{wired}");
+    }
+
+    /// No argument, unlike every other backend.
+    ///
+    /// XAML's host is a static class over a process-wide `Lazy<Runtime?>`, so
+    /// there is no host value to pass. Pinned because the asymmetry is easy to
+    /// "fix" into a call that does not compile.
+    #[test]
+    fn the_xaml_install_takes_no_host_argument() {
+        let wired = xaml_main_with_host_effects(MAIN_WINDOW, &handler()).expect("wiring");
+        assert!(wired.contains("ProbeEffects.Install();"), "{wired}");
+        assert!(
+            !wired.contains("ProbeEffects.Install(mosaic"),
+            "the static host takes no argument:\n{wired}"
+        );
+    }
+
+    #[test]
+    fn an_xaml_handler_with_an_include_is_refused() {
+        // C# has no include directive. A `using` would be a second way to say
+        // what a namespace-qualified `install` already says, so the manifest is
+        // told to qualify rather than quietly ignoring the field.
+        let effects = section(
+            r#"
+[host_effects]
+files = [
+  { backend = "xaml", source = "host/xaml/Effects.cs", target = "ProbeEffects.cs" },
+]
+handlers = [
+  { backend = "xaml", include = "ProbeEffects.cs", install = "ProbeEffects.Install" },
+]
+"#,
+        );
+        let error = xaml_main_with_host_effects(MAIN_WINDOW, &effects)
+            .expect_err("a XAML handler with an include must be refused");
+        let message = format!("{error:?}");
+        assert!(
+            message.contains("include") && message.contains("ProbeEffects.Install"),
+            "{message}"
+        );
+    }
+
+    #[test]
+    fn a_declared_xaml_handler_with_no_anchor_fails_the_build() {
+        let error = xaml_main_with_host_effects("public class Nothing {}\n", &handler())
+            .expect_err("a declared handler with nowhere to go must fail the build");
+        let message = format!("{error:?}");
+        assert!(message.contains("ProbeEffects.Install"), "{message}");
+        // The message must say what to DO. This fires for an ordinary stub
+        // build, not only a broken one, so "no anchor" alone would send the
+        // author looking for a bug that is not there.
+        assert!(
+            message.contains("native-complete"),
+            "the refusal must name the profile that can answer effects: {message}"
+        );
+    }
+
+    /// The stub shell genuinely has no anchor, and that is a real build path.
+    ///
+    /// This is the case Flutter's `require_runtime` blind spot taught me to
+    /// check: the two emitted shapes differ, and asserting only the one I
+    /// happened to emit would miss it. Here the shapes differ so much that the
+    /// answer is a refusal rather than a second anchor -- the stub finds its
+    /// host by reflection and never loads the standard runtime, so an install
+    /// would assign through a setter that does nothing.
+    ///
+    /// Driven through the real emitter for BOTH values, so a future emitter
+    /// that gives the stub a runtime call turns this test red rather than
+    /// leaving a refusal nobody revisits.
+    #[test]
+    fn only_the_native_complete_shell_can_be_wired() {
+        let component = mosmodel_compiler::MosmodelComponent {
+            component: "Probe".to_string(),
+            slots: Vec::new(),
+            emits: Vec::new(),
+        };
+        let layout = moslayout_compiler::LayoutDef {
+            component_name: "Probe".to_string(),
+            root: moslayout_compiler::LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        };
+        let style = mosstyle_compiler::StyleDef {
+            component_name: "Probe".to_string(),
+            parts: Vec::new(),
+        };
+        for require_runtime in [false, true] {
+            let options = mosaic_emit_xaml::pipeline::EmitOptions {
+                emit_project: true,
+                require_runtime,
+                ..Default::default()
+            };
+            let emitted = mosaic_emit_xaml::pipeline::from_pipeline(
+                &component, &layout, &style, None, &options,
+            )
+            .expect("the emitter must produce a project")
+            .project
+            .expect("emit_project: true must produce a shell");
+
+            assert_eq!(
+                emitted
+                    .main_window_cs
+                    .contains("MosaicRuntimeHost.LoadRequired();"),
+                require_runtime,
+                "require_runtime={require_runtime}: only the native-complete \
+                 shell loads the standard runtime"
+            );
+
+            let wired = xaml_main_with_host_effects(&emitted.main_window_cs, &handler());
+            if require_runtime {
+                let wired = wired.unwrap_or_else(|e| panic!("native-complete must wire: {e:?}"));
+                let load = wired
+                    .find("MosaicRuntimeHost.LoadRequired();")
+                    .expect("the load call");
+                let install = wired.find("ProbeEffects.Install();").expect("the install");
+                assert!(load < install, "{wired}");
+            } else {
+                let error = wired.expect_err("the stub shell must refuse, not emit a dead install");
+                assert!(
+                    format!("{error:?}").contains("native-complete"),
+                    "{error:?}"
                 );
             }
         }

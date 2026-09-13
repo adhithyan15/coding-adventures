@@ -2,7 +2,13 @@
 
 **Status:** Steps 1-5 of §5.4 are done. The protocol core landed in #14547; all five native hosts answer effects (Qt #14705, SwiftUI #14721, Compose #14731, Flutter #14739, XAML #14744); and `engram-mosaic-app` emits Anki import/export as `Await` effects (#14747). Two steps remain.
 
-**Step 6** (#13728, per-backend adapter migration) is unblocked and under way. §5.4a — nothing generated connects an effect handler — is designed in §5.5 and built: the manifest parses `[host_effects]`, and Qt and SwiftUI both wire the declared handler into the generated entry point. Engram's Qt and SwiftUI backends have made the migration and emit `nativeComplete: true` with zero degradations and an empty `replacedGeneratedFiles`. Compose, Flutter and XAML remain.
+**Step 6** (#13728, per-backend adapter migration) is unblocked and under way. It has two halves, and they are at different points.
+
+The **emitter** half — §5.4a, nothing generated connects an effect handler — is designed in §5.5 and **complete**. The manifest parses `[host_effects]`, and all five native backends now wire the declared handler into the generated entry point: Qt, SwiftUI, Compose, Flutter, and XAML. What still refuses a handler is exactly the web family (React, Electron, WebComponent, HTML), where an effect is a browser API the page calls directly and there is no host process to hand one to.
+
+XAML is the one asymmetry worth knowing before reading the code, and §5.5.4 covers it: its generated host is a static class, so the emitted install takes no argument, and its **stub** shell — emitted without `--profile native-complete` — is refused rather than wired. That shell finds its host by reflection and never loads the standard runtime, and `MosaicRuntimeHost.EffectHandler`'s setter silently assigns nothing when the library is absent, so emitting there would ship a handler nobody installed.
+
+The **adapter** half — each backend's Engram host migrating off its hand-written `MosaicHost` — is done for Qt, SwiftUI and Compose, each emitting `nativeComplete: true` with zero degradations and an empty `replacedGeneratedFiles`. Flutter and XAML remain, and both are now unblocked by the emitter half above.
 
 **Step 7** (`deleteNote` confirmation) is smaller than §4.2 makes it sound, and that section is annotated accordingly. #13933 already fixed the silent no-op: the event falls back to the selected note and errors when it cannot identify one. What is left is the confirmation round trip — deleting is immediate, with nothing asked first — which is a missing safeguard rather than a shipped bug.
 
@@ -243,7 +249,9 @@ Neither combination may fail silently. That rule is the whole lesson of §4.2.
 5. `engram-mosaic-app` emits `importAnki` / `exportAnki` as `Await` effects and
    `openCard` as `Notify`.
 6. Per-backend adapter migration (#13728), Qt first. ~~Blocked on 5a.~~
-   Unblocked by §5.5; Qt and SwiftUI done, Compose / Flutter / XAML remain.
+   Unblocked by §5.5. The emitter half is **complete** — all five native
+   backends wire a declared handler. The adapter half is done for Qt, SwiftUI
+   and Compose; Flutter and XAML remain, both now unblocked.
 7. `deleteNote` / `deleteNoteType` gain a real confirmation flow. This no
    longer "closes §4.2" — #13933 did that half. What is left is the
    confirmation itself, a missing safeguard rather than a shipped bug.
@@ -389,6 +397,28 @@ come from the Import and Export buttons. Paying for one would mean two-phase
 construction across all five templates: construct, install, *then* create the
 application. That is the fix if a startup effect is ever genuinely needed, and
 it should not be paid for speculatively.
+
+**XAML's stub shell is refused rather than wired, and that is deliberate.**
+Four of the five backends can install into either emitted shape, because their
+stubs still construct a host. XAML's does not: without
+`--profile native-complete` the generated window finds its host by *reflection*
+and never calls `MosaicRuntimeHost` at all — it may find a hand-written
+`Mosaic.Generated.MosaicHost` with no effect surface whatsoever.
+
+Emitting an install anyway would be the silent failure this whole section
+exists to prevent. `MosaicRuntimeHost.EffectHandler`'s setter is written
+`if (State.Value is { } runtime) runtime.EffectHandler = value;` — it assigns
+**nothing** when the library is absent, with no error. A stub build would ship a
+handler nobody installed, answer no effects, and report nothing.
+
+So a package declaring a XAML handler must emit with
+`--profile native-complete`, and the build fails with a message that says so
+rather than only "no anchor" — this fires on an ordinary build, not merely a
+broken one. The same reasoning fixes the anchor at
+`MosaicRuntimeHost.LoadRequired();`: that call routes through `RequiredRuntime`,
+which throws rather than returning null, so every path past it has a live
+runtime and the setter takes. An install above that line would compile, run,
+and assign nothing.
 
 What must not happen is the limit being discovered rather than read, which is
 why it is written here rather than left to whoever first tries it.
