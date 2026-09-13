@@ -15,8 +15,9 @@ It reported success. Its assertions checked that every *bullet* survived, and a
 bullet filter cannot see a paragraph it never collected. The check and the
 transform shared the same blind spot, so agreement between them proved nothing.
 
-The replacement keeps each side VERBATIM and checks the result two ways that a
-dropped paragraph cannot satisfy:
+`resolve_changelog_generic.py` in the scratchpad is the replacement. It keeps
+each side VERBATIM and checks the result two ways that a dropped paragraph
+cannot satisfy:
 
 - every non-blank line of both sides appears in the output, compared line by
   line rather than through a filter;
