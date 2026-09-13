@@ -3397,6 +3397,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("7.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — bounded abstract execution follows an exact integer control
+    // assignment until its checked post-body increment crosses the limit.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; for i := 1 step 1 until 10 do i := i * 2; print(i + 0.25) end",
+        expect: Expect::Stdout("15.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -12852,6 +12861,31 @@ fn algol_dependent_single_step_control_snapshot_runs_on_every_available_standard
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the dependent control snapshot did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_integer_control_recurrence_snapshot_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("step 1 until 10 do i := i * 2")
+        })
+        .expect("the integer control recurrence snapshot must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the control recurrence did not run"
             );
             continue;
         };
