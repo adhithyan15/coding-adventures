@@ -47,6 +47,11 @@ validates that retained profile before credential access, releases the exact
 opaque account record's refresh token and revision, and conditionally deletes
 only that revision after exact HTTP 200 crosses signer, transport, protocol,
 custody, and broker audit gates. Every failure retains the local credential.
+Authorization-code exchange can likewise compose its bounded response directly
+into an exact provider-bound opaque account key. Key mismatch fails before
+signing, transport, clock, or custody access; the response crosses the OAuth
+credential-release and custody-create audit gates inside the broker, and only
+the opaque revision is released.
 For client-secret profiles, prepared authorization-code exchange, refresh, and
 RFC 7009 revocation requests can now cross the complete broker boundary: the
 registered provider, client ID, exact operation endpoint, and retained
