@@ -2336,7 +2336,22 @@ fn dart_opacity_literal(value: &str) -> String {
     let trimmed = value.trim();
     match trimmed.parse::<f64>() {
         Ok(number) if number.is_finite() => dart_double_literal(number),
-        _ => trimmed.to_string(),
+        // SECURITY -- this arm used to be `trimmed.to_string()`, passing
+        // authored text verbatim into `Opacity(opacity: {expr}, ..)`.
+        // Exactly the hole just closed in `css_color_to_dart`, on a
+        // different helper and reachable the same way: a quoted STRING
+        // style value is unquoted before it arrives, so
+        // `opacity: "1 ), child: evil(/*"` emitted
+        //
+        //     Opacity(opacity: 1 ), child: evil(/*, child: ..)
+        //
+        // escaping the argument and commenting out what followed.
+        //
+        // A non-numeric opacity now falls back to fully opaque rather
+        // than being emitted. Dropping the declaration is the same
+        // choice the colour path makes, and an authored value the
+        // emitter cannot understand should not become code.
+        _ => "1.0".to_string(),
     }
 }
 
@@ -3587,6 +3602,13 @@ fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
             .map(|v| parse_pixel_value(v))
             .or_else(|| fallback_w.clone());
         let Some(w) = w else { continue };
+        // `BorderSide` asserts `width >= 0` at RUNTIME, so a negative
+        // authored width type-checks and then throws in the app. Skip
+        // the edge instead: the same "generated source still works"
+        // contract `parse_pixel_value`'s `0` fallback exists to keep.
+        if w.starts_with('-') {
+            continue;
+        }
         let c = m
             .get(&format!("border-{e}-color"))
             .and_then(|v| css_color_to_dart(v))
@@ -9324,6 +9346,22 @@ mod tests {
         assert!(out.contains("constraints: const BoxConstraints(minHeight: 60)"));
     }
 
+    /// SECURITY — a non-numeric opacity must not become Dart code.
+    ///
+    /// Same class as the colour hole below, on a different helper: the
+    /// fallback arm interpolated authored text straight into
+    /// `Opacity(opacity: {expr}, ..)`.
+    #[test]
+    fn a_non_numeric_opacity_is_refused() {
+        for hostile in ["1 ), child: evil(/*", "0.5)+f(", "inf", "NaN", "abc"] {
+            let out = dart_opacity_literal(hostile);
+            assert_eq!(out, "1.0", "`{hostile}` must not reach generated Dart");
+        }
+        // The legitimate side, so a fix that always returned "1.0" fails.
+        assert_eq!(dart_opacity_literal("0.5"), dart_double_literal(0.5));
+        assert_eq!(dart_opacity_literal(" 1 "), dart_double_literal(1.0));
+    }
+
     /// SECURITY — a colour is validated by its DIGITS, not its length.
     ///
     /// `css_color_to_dart` checked only that 6 or 8 characters followed
@@ -9442,6 +9480,14 @@ mod tests {
             "got: {mixed}"
         );
         assert_eq!(mixed.matches("BorderSide(").count(), 1, "got: {mixed}");
+
+        // A negative width would type-check and then trip `BorderSide`'s
+        // runtime assert, so the edge is skipped rather than emitted.
+        assert_eq!(
+            per_edge_border_expr(&m(&[("border-bottom-width", "-1px")])),
+            None,
+            "a negative width must not reach BorderSide"
+        );
     }
 
     // ----- HostScroll ---------------------------------------------------
