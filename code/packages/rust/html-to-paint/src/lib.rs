@@ -321,6 +321,24 @@ pub struct DisclosureRegion {
     pub clips: Vec<LinkClip>,
 }
 
+/// Geometry and semantics for an authored focus target that is not a native
+/// link, form control, or details summary.
+#[derive(Clone, Debug, PartialEq)]
+pub struct FocusRegion {
+    pub x: f64,
+    pub y: f64,
+    pub width: f64,
+    pub height: f64,
+    pub key: String,
+    pub role: String,
+    pub accessible_name: Option<String>,
+    pub focus_order: usize,
+    pub tab_index: i32,
+    pub top_layer_index: Option<usize>,
+    pub fixed: bool,
+    pub clips: Vec<LinkClip>,
+}
+
 /// Geometry for one open dialog or popover surface in shared top-layer order.
 #[derive(Clone, Debug, PartialEq)]
 pub struct TopLayerRegion {
@@ -379,6 +397,7 @@ pub struct HtmlPaintOutput {
     pub links: Vec<LinkRegion>,
     pub controls: Vec<ControlRegion>,
     pub disclosures: Vec<DisclosureRegion>,
+    pub focus_regions: Vec<FocusRegion>,
     pub top_layers: Vec<TopLayerRegion>,
     pub scene: PaintScene,
 }
@@ -616,14 +635,15 @@ where
     };
     let mut scene = layout_to_paint(&positioned, &options);
     annotate_html_image_metadata(&positioned, &mut scene);
-    let (links, controls, disclosures, top_layers) = extract_interactive_regions(&positioned);
+    let regions = extract_interactive_regions(&positioned);
 
     HtmlPaintOutput {
         positioned,
-        links,
-        controls,
-        disclosures,
-        top_layers,
+        links: regions.links,
+        controls: regions.controls,
+        disclosures: regions.disclosures,
+        focus_regions: regions.focus_regions,
+        top_layers: regions.top_layers,
         scene,
     }
 }
@@ -635,35 +655,42 @@ fn never_visited(_url: &str) -> bool {
 /// Extract resolved link rectangles while accumulating parent-relative layout
 /// coordinates into absolute logical document coordinates.
 pub fn extract_link_regions(root: &PositionedNode) -> Vec<LinkRegion> {
-    extract_interactive_regions(root).0
+    extract_interactive_regions(root).links
 }
 
 /// Extract form controls using the same transforms and clips as link regions.
 pub fn extract_control_regions(root: &PositionedNode) -> Vec<ControlRegion> {
-    extract_interactive_regions(root).1
+    extract_interactive_regions(root).controls
 }
 
 /// Extract visible details-summary regions in document order.
 pub fn extract_disclosure_regions(root: &PositionedNode) -> Vec<DisclosureRegion> {
-    extract_interactive_regions(root).2
+    extract_interactive_regions(root).disclosures
 }
 
 /// Extract open dialog and popover surfaces in shared paint order.
 pub fn extract_top_layer_regions(root: &PositionedNode) -> Vec<TopLayerRegion> {
-    extract_interactive_regions(root).3
+    extract_interactive_regions(root).top_layers
 }
 
-fn extract_interactive_regions(
-    root: &PositionedNode,
-) -> (
-    Vec<LinkRegion>,
-    Vec<ControlRegion>,
-    Vec<DisclosureRegion>,
-    Vec<TopLayerRegion>,
-) {
+/// Extract authored focus targets that do not have a more specific region.
+pub fn extract_focus_regions(root: &PositionedNode) -> Vec<FocusRegion> {
+    extract_interactive_regions(root).focus_regions
+}
+
+struct InteractiveRegions {
+    links: Vec<LinkRegion>,
+    controls: Vec<ControlRegion>,
+    disclosures: Vec<DisclosureRegion>,
+    focus_regions: Vec<FocusRegion>,
+    top_layers: Vec<TopLayerRegion>,
+}
+
+fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
     let mut links = Vec::new();
     let mut controls = Vec::new();
     let mut disclosures = Vec::new();
+    let mut focus_regions = Vec::new();
     let mut top_layers = Vec::new();
     let mut control_targets = Vec::new();
     let mut labels = Vec::new();
@@ -775,6 +802,50 @@ fn extract_interactive_regions(
                 }
             }
         }
+        let semantic_role = positioned_html_string(node, "role").unwrap_or("generic");
+        if let Some(focus_order) = positioned_html_int(node, "focusOrder")
+            .and_then(|value| usize::try_from(value).ok())
+            .filter(|_| {
+                !(semantic_role == "link"
+                    && positioned_html_string(node, "href").is_some_and(|href| !href.is_empty()))
+                    && positioned_control_state(node).is_none()
+                    && positioned_html_string(node, "disclosureKind") != Some("summary")
+            })
+        {
+            let region = clipped_box(
+                transformed_box((absolute_x, absolute_y, node.width, node.height), transform),
+                inherited_clip,
+            );
+            if let Some((x, y, width, height)) =
+                region.filter(|(x, y, width, height)| valid_link_box(*x, *y, *width, *height))
+            {
+                let role = if positioned_html_string(node, "editingMode").is_some() {
+                    "textbox"
+                } else {
+                    positioned_html_string(node, "authoredRole").unwrap_or(semantic_role)
+                };
+                let key = positioned_html_string(node, "id")
+                    .filter(|id| !id.is_empty())
+                    .map(|id| format!("focus:id:{id}"))
+                    .unwrap_or_else(|| format!("focus:{focus_order}"));
+                focus_regions.push(FocusRegion {
+                    x,
+                    y,
+                    width,
+                    height,
+                    key,
+                    role: role.to_string(),
+                    accessible_name: positioned_accessible_name(node),
+                    focus_order,
+                    tab_index: positioned_html_int(node, "tabIndex")
+                        .and_then(|value| i32::try_from(value).ok())
+                        .unwrap_or_default(),
+                    top_layer_index: current_top_layer,
+                    fixed,
+                    clips: inherited_clips.clone(),
+                });
+            }
+        }
         if positioned_html_string(node, "role") == Some("link") {
             if let Some(url) = positioned_html_string(node, "href") {
                 let region = clipped_box(
@@ -829,6 +900,7 @@ fn extract_interactive_regions(
                 inherited_clip,
                 &inherited_clips,
                 fixed,
+                current_top_layer,
             );
             // Link hit testing is topmost-first. Reversing here preserves the
             // HTML rule that the first matching area wins when shapes overlap.
@@ -970,7 +1042,13 @@ fn extract_interactive_regions(
         .collect::<Vec<_>>();
     // Direct controls remain topmost when a wrapping label contains its target.
     label_controls.extend(controls);
-    (links, label_controls, disclosures, top_layers)
+    InteractiveRegions {
+        links,
+        controls: label_controls,
+        disclosures,
+        focus_regions,
+        top_layers,
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -987,6 +1065,8 @@ struct ImageMapAreaMetadata {
     rel_noopener: bool,
     rel_noreferrer: bool,
     area_index: usize,
+    focus_order: Option<usize>,
+    tab_index: i32,
 }
 
 #[derive(Clone, Debug)]
@@ -1006,6 +1086,7 @@ fn image_map_link_regions(
     inherited_clip: Option<(f64, f64, f64, f64)>,
     inherited_clips: &[LinkClip],
     fixed: bool,
+    top_layer_index: Option<usize>,
 ) -> Vec<LinkRegion> {
     let Some(image_map) = positioned_image_map(node) else {
         return Vec::new();
@@ -1059,9 +1140,9 @@ fn image_map_link_regions(
                 height,
                 key: Some(area.key),
                 accessible_name: area.accessible_name,
-                focus_order: None,
-                tab_index: 0,
-                top_layer_index: None,
+                focus_order: area.focus_order,
+                tab_index: area.tab_index,
+                top_layer_index,
                 image_map_order: Some(ImageMapRegionOrder {
                     image_index: image_map.image_index,
                     area_index: area.area_index,
@@ -1227,6 +1308,8 @@ fn positioned_image_map(node: &PositionedNode) -> Option<ImageMapMetadata> {
                 rel_noopener: ext_bool(values.get("relNoopener")),
                 rel_noreferrer: ext_bool(values.get("relNoreferrer")),
                 area_index: ext_usize(values.get("areaIndex"))?,
+                focus_order: ext_usize(values.get("focusOrder")),
+                tab_index: ext_i32(values.get("tabIndex")).unwrap_or_default(),
             })
         })
         .collect();
@@ -1260,6 +1343,13 @@ fn ext_bool(value: Option<&ExtValue>) -> bool {
 fn ext_usize(value: Option<&ExtValue>) -> Option<usize> {
     match value? {
         ExtValue::Int(value) => usize::try_from(*value).ok(),
+        _ => None,
+    }
+}
+
+fn ext_i32(value: Option<&ExtValue>) -> Option<i32> {
+    match value? {
+        ExtValue::Int(value) => i32::try_from(*value).ok(),
         _ => None,
     }
 }
@@ -2866,6 +2956,8 @@ mod tests {
             .iter()
             .find(|link| link.key.as_deref() == Some("image-map:index:0:map:zones:id:circle"))
             .unwrap();
+        assert_eq!(circle.focus_order, Some(0));
+        assert_eq!(circle.tab_index, 0);
         assert_eq!(circle.accessible_name.as_deref(), Some("Circle"));
         assert!(circle.contains(
             circle.x + circle.width / 2.0,
@@ -2904,5 +2996,51 @@ mod tests {
         )
         .unwrap();
         assert_eq!(fallback_hit.url, "fallback.html");
+    }
+
+    #[test]
+    fn generic_focus_regions_keep_authored_semantics_and_transformed_geometry() {
+        let render = parse_browser_render_tree(
+            "<div id='action' role='button' tabindex='2' aria-label='Run report' \
+             style='width:80px;height:30px;transform:translate(12px, 7px)'>Run</div>\
+             <section id='editor' contenteditable aria-label='Notes'>Draft</section>\
+             <a id='anchor' tabindex='0'>Anchor target</a>\
+             <div id='skipped' tabindex='-1'>Skip</div>",
+        )
+        .unwrap();
+        let output = html_render_tree_to_paint(
+            &render,
+            &mosaic_html_theme(),
+            HtmlPaintViewport::new(300.0, 180.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        assert_eq!(output.focus_regions.len(), 3);
+        let action = output
+            .focus_regions
+            .iter()
+            .find(|region| region.key == "focus:id:action")
+            .unwrap();
+        assert_eq!(action.role, "button");
+        assert_eq!(action.accessible_name.as_deref(), Some("Run report"));
+        assert_eq!(action.tab_index, 2);
+        assert!(action.x >= 12.0);
+        let editor = output
+            .focus_regions
+            .iter()
+            .find(|region| region.key == "focus:id:editor")
+            .unwrap();
+        assert_eq!(editor.role, "textbox");
+        assert_eq!(editor.accessible_name.as_deref(), Some("Notes"));
+        assert!(output
+            .focus_regions
+            .iter()
+            .any(|region| region.key == "focus:id:anchor"));
+        assert!(!output
+            .focus_regions
+            .iter()
+            .any(|region| region.key == "focus:id:skipped"));
     }
 }

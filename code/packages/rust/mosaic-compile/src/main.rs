@@ -207,10 +207,9 @@ fn run(result: cli_builder::types::ParseResult) {
             process::exit(1);
         });
 
-    // UI30: pipeline mode now supports every emit-only backend
-    // (react, html, webcomponent, swiftui, qt, xaml, flutter). The
-    // legacy "paint" backend is single-file SOURCE mode only and is
-    // also kept here for back-compat.
+    // UI30: pipeline mode supports every emit-only backend. Paint also keeps
+    // its legacy single-file SOURCE mode for back-compat, while pipeline mode
+    // renders typed components directly to PNG bytes.
     let allowed_backends = [
         "webcomponent",
         "html",
@@ -698,21 +697,6 @@ fn run_pipeline(
     package_search_path: Option<&str>,
     fixtures_path: Option<&str>,
 ) {
-    // Pipeline mode supports every backend with a `pipeline::from_pipeline`
-    // entry point. The mosaic-package-artifact-builder crate calls each
-    // backend through the same surface, so they're all wire-compatible
-    // here. The `match backend` below dispatches to each. Reject only
-    // genuinely-unwired backends ("paint", which is legacy single-file
-    // only) with a clear "use legacy SOURCE mode" error.
-    if backend == "paint" {
-        eprintln!(
-            "mosaic-compile: pipeline mode does not support --backend paint \
-             (raster output flows through the legacy single-file pipeline). \
-             Use SOURCE mode with a .mosaic file."
-        );
-        process::exit(1);
-    }
-
     // -- 1. Compile the mosmodel interface ----------------------------------
     //
     // The mosmodel compiler emits a JSON descriptor that the moslayout
@@ -816,7 +800,7 @@ fn run_pipeline(
             }
         }
     }
-    let local_package = if matches!(backend, "html" | "webcomponent" | "react") {
+    let local_package = if matches!(backend, "html" | "webcomponent" | "react" | "paint") {
         package_manifest_path.and_then(|path| {
             let manifest = mosaic_package_manifest::parse_path(Path::new(path)).ok()?;
             let root = Path::new(path)
@@ -824,8 +808,16 @@ fn run_pipeline(
                 .filter(|parent| !parent.as_os_str().is_empty())
                 .unwrap_or_else(|| Path::new("."))
                 .to_path_buf();
-            let backend = pkg_backend_from_str(backend)
-                .expect("browser pipeline backend must map to package backend");
+            // Package composition currently has no Paint artifact target. Its
+            // backend selector is used to choose platform token overrides,
+            // while Paint consumes the composed typed tree directly. Use the
+            // HTML token profile as the defined Paint snapshot fallback;
+            // this does not claim that Paint renders HTML artifacts.
+            let backend = if backend == "paint" {
+                Backend::Html
+            } else {
+                pkg_backend_from_str(backend).expect("pipeline backend must map to package backend")
+            };
             Some((manifest, root, backend))
         })
     } else {
@@ -1061,6 +1053,30 @@ fn run_pipeline(
                 write_file_or_die(&readme_path, &proj.readme);
                 eprintln!("Written: {readme_path}");
             }
+        }
+        "paint" => {
+            // Paint is the binary counterpart to the text emitters above. The
+            // typed entry point lets repository components and their authored
+            // story fixtures render without reconstructing legacy .mosaic
+            // source or requiring a native platform toolchain.
+            let slot_values = pipeline_slot_values(fixtures_path);
+            let png_bytes = mosaic_emit_paint::render_png_from_pipeline_with_slot_values(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                &slot_values,
+                400.0,
+                300.0,
+            )
+            .unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: paint pipeline emit error: {e}");
+                process::exit(1);
+            });
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{}.png", mosmodel_out.component.component));
+            write_bytes_or_die(&out, &png_bytes);
+            eprintln!("Written: {out}");
         }
         // -------- HTML / WebComponent / SwiftUI / Qt / Flutter -------------
         //

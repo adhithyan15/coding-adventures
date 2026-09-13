@@ -25,7 +25,7 @@
 //	GET /               → serve static/index.html (the browser shell SPA)
 //	GET /api/stories    → JSON list of all discovered components + stories
 //	GET /api/backends   → JSON list of backends with availability
-//	GET /preview/...    → compiled HTML preview (see preview.go)
+//	GET /preview/...    → compiled HTML or Paint PNG preview (see preview.go)
 //	GET /events         → SSE stream for hot-reload notifications
 
 package main
@@ -149,8 +149,9 @@ func (s *Server) handleAPIStories(w http.ResponseWriter, r *http.Request) {
 
 // handleAPIBackends returns the list of backends and their availability.
 //
-// Tier 1 (browser-native) backends render live in the preview iframe. Tier 3
-// (native) backends have no render daemon yet — see UI19-mosaicbook.md §13 —
+// Tier 1 browser backends and the Tier 2 Paint snapshot backend render live in
+// the preview iframe. Tier 3 native backends have no render daemon yet — see
+// UI19-mosaicbook.md §13 —
 // so Rendered is false for all five, but degradation Analysis is available
 // for all five via GET /api/degradations/{backend}/{component_id}, since
 // that needs no daemon or platform runtime.
@@ -177,6 +178,7 @@ func (s *Server) handleAPIBackends(w http.ResponseWriter, r *http.Request) {
 			{ID: "html", Tier: 1, Rendered: true, Analysis: false},
 			{ID: "webcomponent", Tier: 1, Rendered: true, Analysis: false},
 			{ID: "react", Tier: 1, Rendered: true, Analysis: false},
+			{ID: "paint", Tier: 2, Rendered: true, Analysis: false},
 			{ID: "xaml", Tier: 3, Rendered: false, Analysis: true, Reason: noDaemon},
 			{ID: "swiftui", Tier: 3, Rendered: false, Analysis: true, Reason: noDaemon},
 			{ID: "qt", Tier: 3, Rendered: false, Analysis: true, Reason: noDaemon},

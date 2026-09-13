@@ -1,0 +1,14 @@
+{
+  "id": "IT-PATH-040",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "IT-C36-parole",
+    "IT-C36-frasi",
+    "IT-C36-prima-lettura"
+  ],
+  "before": [],
+  "inline": [
+    "IT-EXT-040-READING"
+  ],
+  "after": []
+}
