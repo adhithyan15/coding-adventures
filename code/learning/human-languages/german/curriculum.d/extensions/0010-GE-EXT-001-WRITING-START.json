@@ -3,9 +3,11 @@
   "stage": "pre-A1",
   "kind": "required",
   "category": "script",
-  "canDo": "I can copy my first German greeting with the model still visible.",
+  "canDo": "I can copy my first German greeting with the model visible, write it again once the model is covered, and produce it from the sound alone with its capital and its doubled consonant.",
   "prerequisites": [],
   "lessons": [
-    "GE-W01-hallo-guided-copy"
+    "GE-W01-hallo-guided-copy",
+    "GE-W01-hallo-delayed-copy",
+    "GE-W01-hallo-dictation"
   ]
 }

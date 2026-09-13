@@ -1,10 +1,12 @@
 {
   "language": "italian",
   "chapter": 1,
-  "sourceHash": "fnv1a64:7e7eded69c4d1746",
+  "sourceHash": "fnv1a64:8a31269a9e596ac5",
   "lessonIds": [
     "IT-C01-ciao",
     "IT-W01-ciao-guided-copy",
+    "IT-W01-ciao-delayed-copy",
+    "IT-W01-ciao-dictation",
     "IT-C01-buono",
     "IT-C01-il-la-lo",
     "IT-C01-giorno",

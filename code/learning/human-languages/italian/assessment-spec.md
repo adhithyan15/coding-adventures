@@ -1,6 +1,6 @@
 # Coding Adventures Italian Assessment
 
-**Version:** 1.0 target contract, 2026-09-13
+**Version:** 1.1 target contract, 2026-09-13
 
 **Basis:** CILS from A1 upward; a project-defined precursor below it
 
@@ -110,17 +110,32 @@ specific rather than broad. Two things carry almost all of it:
 
 ## The writing ramp, measured rather than assumed
 
-Italian is a Latin-script track and its corpus reflects that: **one** writing
-lesson, carrying **observe-trace** and **guided-copy** and nothing beyond them.
-Delayed copy and dictation/transcription are not proved anywhere in the Italian
-learning record today.
+Version 1.0 of this document recorded a gap: Italian had **one** writing lesson,
+carrying observe-trace and guided-copy and nothing beyond, while the pre-A1
+paper below requires a delayed-recall item and a dictation item. A learner the
+book never took past guided copy cannot answer either.
 
-That is stated here rather than in a backlog note because the pre-A1 writing
-paper below requires both. The inventory describes the examination, not the
-corpus, and the gap between them is the work: a delayed-recall item and a
-dictation item cannot be answered by a learner the book never took past guided
-copy. Naming the gap is what makes it fixable; the alternative is a contract
-that reads as satisfied.
+**That gap is now paid.** Chapter 1 carries the full pre-A1 ladder on the one
+word it already had:
+
+| stage | lesson | what the hand is asked to do |
+|---|---|---|
+| observe-trace | `IT-C01-ciao` | notice the shape, trace it with the model visible |
+| guided-copy | `IT-W01-ciao-guided-copy` | copy it, model still on the page |
+| delayed-copy | `IT-W01-ciao-delayed-copy` | model covered, ten seconds, write from memory |
+| dictation-transcription | `IT-W01-ciao-dictation` | nothing on the page — write from the sound |
+
+Four stages on four letters, which is the point: the stages measure what the
+hand is being asked to do, not how much language is on the page. The order is
+load-bearing and enforced — a delayed copy is not valid evidence unless the
+tracing and the guided copy come earlier in sequence.
+
+**ciao** turns out to be the right word to do this on. Three sounds, four
+letters: the **i** is written for the **c** to read, not for the learner to say.
+So the delayed copy's expected miss is the **i** (a hand writing from memory
+drops the letter it never heard), and the dictation is where that stops being a
+fact about one word and becomes a habit — *ch* before *a*, *o* or *u* puts an
+**i** on the page, and nothing in the sound will remind you.
 
 ## Administration rules
 
