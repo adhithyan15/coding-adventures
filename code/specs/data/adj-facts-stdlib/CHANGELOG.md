@@ -5,6 +5,55 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- **#14986: fifteen bones, twelve of which their own citation never mentions.**
+  `biology/skeleton-bones.adj` warranted every row with the FEMUR row's sentence, on a MedlinePlus
+  **leg image page**. Measured against that page, **12 of the 15 bones do not appear on it at all** —
+  so a recall of the occipital bone came back proved by a sentence about the thigh. What is different
+  here from the earlier entries is not the count — `food-groups` has 23 unmentioned rows and
+  `word-families` 31 — but that the envelope's **page** could not support twelve of these rows under
+  any quotation, not merely its chosen sentence. (That comparison is only about tables whose pages I
+  can read; `food-groups`' citations are currently unreadable, per #15139.)
+
+  The rows were never ungrounded. Their evidence sat in the file's header, listing a source, locator
+  and span per bone group — where no engine could reach it. Each row now carries its own, across
+  **seven pages**: five MedlinePlus, one StatPearls chapter, and the SEER divisions page for the
+  framing envelope.
+
+  ### The skull rows are re-grounded, not moved
+
+  The header's skull quote was:
+
+  > "An infant's skull is made up of 6 separate cranial (skull) bones: Frontal bone, Occipital bone,
+  > Two parietal bones, Two temporal bones."
+
+  **That string occurs zero times on the page it named.** There the four bones are a bulleted list,
+  and the commas joining them to the lead-in sentence were invented — the same defect class as the
+  invented `=` in `language/contraction.adj` (#15151), found the same day. SEER's axial-skeleton page
+  lists them too. StatPearls *"Anatomy, Head and Neck, Skull"* states them in prose, so those four
+  rows now cite it, widened to include the sentence naming the skull (its own opens *"It is composed
+  of…"*).
+
+  So this table needed both halves: eleven rows moved to evidence that already existed, and four
+  re-grounded on a source that states rather than lists.
+
+  ### Pins
+
+  **7 of 7 mutants killed, two controls counted separately.** Pointing a skull row back at the leg
+  page; un-widening the skull span to its anaphoric sentence; **restoring the comma-welded list quote
+  this entry removed**; rebinding a region; breaking only the tibia copy of the sentence it shares
+  with fibula; dropping a row's locator so it inherits the framing page; deleting a row outright.
+
+  Every row is bound by BONE, never by region — `arm` and `leg` have three rows each, and a
+  multi-answer query lets a needle be satisfied by a sibling's intact copy. That is not hypothetical:
+  it is the defect mutation found in `joint-types` below, and the reason it is designed out here
+  rather than discovered again.
+
+  Controls: unmutated green, and a fabricated envelope green — disclosed, because once every row
+  overrides `source` and `locator` the envelope's wording is unreachable from any answer.
+
+  `patella → knee` is disclosed as a reading rather than a quote-match: the page says *"Your kneecap
+  is called the patella"*, and `knee` is the region that names.
+
 - **#14986: seven joints, and a header that had written down its own defect.**
   `anatomy/joint-types.adj` warranted all seven rows with the HINGE row's own examples sentence, so a
   recall of the HIP came back proved by *"Examples include the elbow, knee, ankle, and interphalangeal
