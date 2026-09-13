@@ -157,7 +157,34 @@ def drop_leading_restatement(body: str, title: str) -> str:
 
 
 def main() -> int:
+    if not SOURCE.exists():
+        # The expected state once the migration has landed: `lessons.md` is
+        # generated-and-ignored, so a tracked one no longer exists. Say that,
+        # rather than tracebacking on a FileNotFoundError and reading as a
+        # broken script.
+        sys.exit(
+            f"{SOURCE.name} is not present, so the migration has already run "
+            f"(or the aggregate has not been rendered). This script is kept as "
+            f"the auditable record of how lessons.d/ was produced; to work with "
+            f"lessons now, use code/scripts/lessons.py."
+        )
+
     lines = SOURCE.read_text(encoding="utf-8").splitlines()
+
+    # `lessons.py render` RECREATES lessons.md at this exact path, and the
+    # rendered aggregate is not shaped like the original: lessons sit at `###`
+    # under `##` categories, where the source had bucket bullets and
+    # sentence-titled `##` sections. Re-running the migration over a render
+    # would therefore re-shard a different document and overwrite every shard
+    # with garbage -- while the reconciliation still balanced, because it only
+    # checks that characters are conserved, not that the input was the original.
+    if any("GENERATED" in line for line in lines[:8]):
+        sys.exit(
+            f"{SOURCE.name} is the GENERATED aggregate from `lessons.py "
+            f"render`, not the original file. Re-sharding it would overwrite "
+            f"lessons.d/ with a re-parse of its own output. Refusing."
+        )
+
     preamble, sections = carve_sections(lines)
 
     missing = set(BUCKETS) - {t for t, _ in sections}
