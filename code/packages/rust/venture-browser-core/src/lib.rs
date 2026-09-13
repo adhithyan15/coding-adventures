@@ -338,7 +338,7 @@ impl BrowserFindState {
             (_, 0) if self.query.is_empty() => String::new(),
             (_, 0) => "No matches".into(),
             (Some(active), count) => {
-                let suffix = self.truncated.then_some("+").unwrap_or("");
+                let suffix = if self.truncated { "+" } else { "" };
                 format!("{} of {count}{suffix}", active + 1)
             }
             _ => String::new(),
