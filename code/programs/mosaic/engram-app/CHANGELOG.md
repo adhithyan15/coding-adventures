@@ -2,6 +2,54 @@
 
 ## Unreleased
 
+### Changed — Compose reaches the engine through the standard runtime
+
+The third backend off a hand-written host, after Qt (#13728) and SwiftUI. The
+574-line `host/compose/MosaicHost.kt` — a JNA binding that opened the library,
+marshalled every event, owned snapshot persistence, and drove the file dialogs
+— is replaced by the generated `MosaicRuntimeHost` plus a 240-line
+`[host_effects]` handler that answers three effects and does nothing else.
+
+Emission is `nativeComplete: true` with `replacedGeneratedFiles: []`.
+
+**What the handler does differently from Qt's.** Qt answers inline, because its
+settle runs on the event-loop thread under `Qt::DirectConnection`. This host
+holds its monitor across the handler call, so a modal dialog run inline would
+hold it for as long as the dialog is open. It defers.
+
+It then marshals to the EDT, and that is a *second* reason rather than a
+restatement of the first: the host's contract says the props-changed handler
+runs on whichever thread answered, and Compose state must be written from the
+UI thread. Answering off the EDT would be a cross-thread write into the
+composition even if the monitor were free. `SwingUtilities.invokeLater` settles
+both, and is where a Swing dialog has to run anyway.
+
+**Compose is the first host to answer `confirmDelete`**, with Cancel as the
+default button so that Return and Escape both decline — for an irreversible
+action, the safe answer should be the one a stray keypress gives.
+
+**The anchors are `\A`/`\z`, and that was measured rather than carried over.**
+This is the fourth regex engine asked whether `$` concedes a trailing line
+terminator, and the fourth different answer: Rust refuses all of them, PCRE2
+concedes LF (a build-time convention, which is the bug the Qt handler had), ICU
+concedes the full set, and Java concedes LF, CRLF, CR, NEL and U+2028. No two
+agree. A compiled probe established that `Regex.matches()` rejects all of them
+anyway, so the anchors are redundant *as written today* — they are there so the
+pattern stays correct if the call ever becomes `containsMatchIn`, rather than
+correct only because of its caller.
+
+### Fixed — the SwiftUI and Compose CI lanes can now be triggered by Engram
+
+`mosaic/programs/engram-app` was absent from both acceptance sets, so a change
+touching only `host/swiftui/EngramEffects.swift` did not fire the lane that
+compiles it. The SwiftUI lane has built Engram since #13728 — but never on
+Engram's own account, only when some other package dragged it in. The edits
+most likely to break a handler were precisely the ones that skipped its only
+compile check.
+
+Found while adding the matching Compose lane. Both sets now list the package,
+and both suites have a test that fails without it.
+
 ### Fixed — the app shell now fills the window (#14837)
 
 Engram's composition root measured `1280 x 776` in a `1280 x 900` window.

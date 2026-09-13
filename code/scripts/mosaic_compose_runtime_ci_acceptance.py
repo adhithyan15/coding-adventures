@@ -17,6 +17,11 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosaic-app-conformance",
         "rust/mosaic-app-runtime",
         "rust/task-mosaic-app",
+        # Engram, like task-app, is built and launched by this lane -- and it is
+        # the package whose `[host_effects]` handler the lane greps for. Without
+        # it here, editing `host/compose/EngramEffects.kt` alone would skip the
+        # only check that compiles it.
+        "rust/engram-mosaic-app",
         "rust/mosaic-compile",
         "rust/mosaic-emit-compose",
         "rust/mosaic-package-artifact-builder",
@@ -24,6 +29,7 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosmodel-compiler",
         "rust/mosstyle-compiler",
         "mosaic/programs/task-app",
+        "mosaic/programs/engram-app",
     }
 )
 ACCEPTANCE_PACKAGE_PREFIXES = ("mosaic/mosaic-pkg-",)

@@ -79,31 +79,32 @@ editing, and save/delete/cancel controls.
 - The XAML host also handles Engram's Anki import/export `hostIntent` payloads
   with WinUI file pickers, merging selected `.apkg` / `.colpkg` packages through
   the native C ABI and saving current collection state back to `.apkg`.
-- The generated SwiftUI project shell has an optional `MosaicHost` hook.
-  Engram's `host/swiftui/MosaicHost.swift` implements it with `engram-capi`
-  through a staged `CEngram` Swift module, hydrating SwiftUI props and routing
-  generated Mosaic event envelopes back into the same core. On macOS it also
-  handles Anki import/export host intents with AppKit file panels, merging
-  `.apkg` / `.colpkg` packages and saving current collection state through the
-  native C ABI; non-macOS SwiftUI targets return an explicit unsupported result
-  until Mosaic grows an async document-picker bridge.
-- **Qt reaches the engine through the standard Mosaic runtime**, not through
-  `engram-capi`. Props, events, snapshot and restore all go through
-  `engram-mosaic-app` and the generated binding; the only Qt-specific file left
-  is `host/qt/engram_effects.cpp`, which answers the Anki import and export
-  effects with `QFileDialog`.
+- **Qt, SwiftUI and Compose reach the engine through the standard Mosaic
+  runtime**, not through `engram-capi`. Props, events, snapshot and restore all
+  go through `engram-mosaic-app` and the generated binding. The only
+  backend-specific file each still ships is an effect handler, declared under
+  `[host_effects]` and installed into the generated app:
 
-  It used to override the generated `MosaicHost.h/.cpp` with a 654-line
-  runtime-loaded `engram-capi` binding. That was retired in #13728, once UI47
-  gave `Effect` a completion path and the file dialogs had somewhere to live.
-  Qt is the first backend migrated; the rest still ship their own `MosaicHost`.
-- The generated Compose Desktop shell has an optional reflection-based
-  `MosaicHost` hook. Engram's `host/compose/MosaicHost.kt` implements it with
-  `engram-capi` through JNA, hydrating Compose slot props and routing generated
-  Mosaic event envelopes back into the same core. It also handles Anki
-  import/export host intents with desktop file choosers, merging `.apkg` /
-  `.colpkg` packages and saving current collection state through the native C
-  ABI.
+  | backend | handler | dialogs |
+  | --- | --- | --- |
+  | Qt | `host/qt/engram_effects.cpp` | `QFileDialog`, `QMessageBox` |
+  | SwiftUI | `host/swiftui/EngramEffects.swift` | `NSOpenPanel` / `NSSavePanel` |
+  | Compose | `host/compose/EngramEffects.kt` | `JFileChooser`, `JOptionPane` |
+
+  Each used to override the generated host with a hand-written `engram-capi`
+  binding — 654 lines on Qt, 574 on Compose — that reimplemented the whole
+  application boundary against the bespoke ABI. Qt was retired first (#13728),
+  once UI47 gave `Effect` a completion path and the file dialogs had somewhere
+  to live; SwiftUI and then Compose followed. Flutter and XAML still ship their
+  own `MosaicHost`.
+
+  The handlers differ in one way worth knowing before reading them. Qt answers
+  inline, because its settle runs on the event-loop thread. SwiftUI and Compose
+  must `deferEffect` first: their hosts hold a lock across the handler call, so
+  opening a modal dialog inline would hold it for as long as the dialog is
+  open. Compose additionally marshals to the EDT, because the props-changed
+  handler runs on whichever thread answered and Compose state must be written
+  from the UI thread.
 - The generated Flutter shell has an optional `MosaicHost` hook. Engram's
   `host/flutter/mosaic_host.dart` implements it with Dart FFI and
   `engram-capi`, hydrating Flutter slot props and routing generated Mosaic
