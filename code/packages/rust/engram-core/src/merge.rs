@@ -56,14 +56,52 @@ fn upsert_by<T>(target: &mut Vec<T>, incoming: Vec<T>, key: impl Fn(&T) -> Strin
     }
 }
 
+/// The key two provenance records are considered the same by.
+///
+/// LENGTH-PREFIXED, not separator-joined, and that is the whole point.
+///
+/// This used to join the four parts with `\u{1f}`, and two of them are
+/// attacker-influenced when the collection came from an `.apkg`: a media
+/// record's `target_id` is `format!("anki-media:{archive_name}")`, where the
+/// archive name is a zip entry, and `original_id` carries the Anki
+/// `notes.guid`. Moving a `\u{1f}` across the boundary between two parts
+/// produced the same key from genuinely different records — measured, both
+/// rendering as
+/// `Media\u{1f}anki-media:art\u{1f}anki-v11\u{1f}later\u{1f}` — and
+/// `upsert_by` REPLACES on a key match, so one silently displaced the other.
+///
+/// Prefixing each part with its byte length makes the encoding injective for
+/// any content at all, rather than for any content that happens to avoid one
+/// character. A guard on the separator would close this instance; the prefix
+/// closes the class, and needs nothing at the producers.
+///
+/// Fixed at the ENCODING rather than by a guard, which is the opposite of the
+/// choice `engram-core-wasm` made for the same shape in card ids. The reason is
+/// persistence: a card id is written into saved collections, snapshots and
+/// exported packages, so re-encoding it rewrites data already on disk. This key
+/// is derived per merge and stored nowhere, so changing it costs nothing.
+///
+/// Byte length, not char count: two different strings can share a char count,
+/// and the point is that the parts cannot be re-split ambiguously.
 fn external_source_merge_key(source: &ExternalSourceRecord) -> String {
-    format!(
-        "{:?}\u{1f}{}\u{1f}{}\u{1f}{}",
-        source.target,
-        source.target_id,
-        source.source,
-        source.original_id.as_deref().unwrap_or_default()
-    )
+    let target = format!("{:?}", source.target);
+    // EVERY part, including the target. Its `Debug` is a closed set of variant
+    // names and no one of them is a prefix of another, so leaving it bare would
+    // in fact be safe -- but that is a case analysis a reader has to redo every
+    // time a variant is added, and uniformity costs three characters.
+    let mut key = String::new();
+    for part in [
+        target.as_str(),
+        source.target_id.as_str(),
+        source.source.as_str(),
+        source.original_id.as_deref().unwrap_or_default(),
+    ] {
+        key.push_str(&part.len().to_string());
+        key.push(':');
+        key.push_str(part);
+        key.push('\u{1f}');
+    }
+    key
 }
 
 fn retarget_external_sources(
@@ -340,5 +378,165 @@ mod tests {
             original_id: original_id.map(str::to_string),
             data,
         }
+    }
+
+    /// Two distinct provenance records must not share a merge key.
+    ///
+    /// The key joined its four parts with `\u{1f}`, and two of them are
+    /// attacker-influenced when the collection came from an `.apkg`:
+    /// `target_id` for media is `format!("anki-media:{archive_name}")`, where
+    /// the archive name is a zip entry, and `original_id` carries the Anki
+    /// `notes.guid`. Neither was checked for the separator, so moving it across
+    /// the boundary produced the same key from different records — and
+    /// `upsert_by` REPLACES on a key match, so one silently displaced the
+    /// other.
+    ///
+    /// The same shape `engram-core-wasm` already refuses for card ids, where
+    /// `{note_id}::{template_id}` is ambiguous unless the halves are checked.
+    /// This one is fixed at the encoding instead of by a guard: nothing
+    /// persists this key, so unlike a card id it can be changed without
+    /// rewriting data already on disk.
+    #[test]
+    fn a_separator_in_a_provenance_field_cannot_forge_another_records_key() {
+        // `\u{1f}` moved across the target_id/source boundary. Both records
+        // describe genuinely different things.
+        let left = source(
+            ExternalSourceTarget::Media,
+            "anki-media:art\u{1f}anki-v11",
+            "later",
+            None,
+            BTreeMap::new(),
+        );
+        let right = source(
+            ExternalSourceTarget::Media,
+            "anki-media:art",
+            "anki-v11\u{1f}later",
+            None,
+            BTreeMap::new(),
+        );
+        assert_ne!(
+            external_source_merge_key(&left),
+            external_source_merge_key(&right),
+            "two different records produced one merge key"
+        );
+
+        // And the consequence, asserted through the merge rather than inferred
+        // from the keys: both records survive.
+        let merged = merge_app_states(
+            &AppState {
+                external_sources: vec![left.clone()],
+                ..AppState::default()
+            },
+            AppState {
+                external_sources: vec![right.clone()],
+                ..AppState::default()
+            },
+        );
+        assert_eq!(
+            merged.external_sources.len(),
+            2,
+            "one record displaced the other: {:?}",
+            merged.external_sources
+        );
+        assert!(merged.external_sources.contains(&left));
+        assert!(merged.external_sources.contains(&right));
+    }
+
+    /// No two distinct field-triples share a key, across an adversarial set.
+    ///
+    /// The single hand-built collision above is the one that was found; this is
+    /// the class. Every part is varied against every other with the separator,
+    /// the length delimiter and digits placed where they could confuse a
+    /// re-split, and all keys must differ.
+    ///
+    /// Written as all-pairs rather than a few chosen pairs because the failure
+    /// being guarded is precisely the one nobody thought to write down.
+    #[test]
+    fn no_two_distinct_provenance_records_share_a_key() {
+        // Each of these is a plausible-to-hostile value for a part: a `\u{1f}`
+        // at each end and in the middle, a `:` that could pass for the length
+        // delimiter, digits that could pass for a length, and the empty string
+        // that `original_id: None` produces.
+        let parts = [
+            "",
+            "a",
+            "ab",
+            "a\u{1f}b",
+            "\u{1f}ab",
+            "ab\u{1f}",
+            "2:ab",
+            "1:a\u{1f}1:b",
+            "anki-media:art",
+            "anki-media:art\u{1f}anki-v11",
+        ];
+
+        let mut seen: BTreeMap<String, (String, String, String)> = BTreeMap::new();
+        for target_id in parts {
+            for source_name in parts {
+                for original in parts {
+                    let record = source(
+                        ExternalSourceTarget::Media,
+                        target_id,
+                        source_name,
+                        Some(original),
+                        BTreeMap::new(),
+                    );
+                    let key = external_source_merge_key(&record);
+                    let triple = (
+                        target_id.to_string(),
+                        source_name.to_string(),
+                        original.to_string(),
+                    );
+                    if let Some(previous) = seen.insert(key.clone(), triple.clone()) {
+                        panic!("{previous:?} and {triple:?} share the key {key:?}");
+                    }
+                }
+            }
+        }
+        // 10^3, so the loop really ran over what it claims to have covered.
+        assert_eq!(seen.len(), parts.len().pow(3));
+    }
+
+    /// The same record still merges onto itself.
+    ///
+    /// The point of the key is de-duplication, so a fix that made every key
+    /// unique would pass the test above and break what this is for. Re-importing
+    /// the same package must still update one record rather than accumulate a
+    /// second.
+    #[test]
+    fn the_same_provenance_record_still_merges_onto_itself() {
+        let mut data = BTreeMap::new();
+        data.insert("guid".to_string(), "abc".to_string());
+        let first = source(
+            ExternalSourceTarget::Media,
+            "anki-media:art.png",
+            "anki-v11",
+            Some("guid-1"),
+            BTreeMap::new(),
+        );
+        let again = source(
+            ExternalSourceTarget::Media,
+            "anki-media:art.png",
+            "anki-v11",
+            Some("guid-1"),
+            data,
+        );
+        assert_eq!(
+            external_source_merge_key(&first),
+            external_source_merge_key(&again),
+            "the same record must keep one key"
+        );
+
+        let merged = merge_app_states(
+            &AppState {
+                external_sources: vec![first],
+                ..AppState::default()
+            },
+            AppState {
+                external_sources: vec![again.clone()],
+                ..AppState::default()
+            },
+        );
+        assert_eq!(merged.external_sources, vec![again]);
     }
 }
