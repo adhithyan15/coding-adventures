@@ -205,7 +205,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      add/select/remove events plus selected-card configuration, lower directives
      in list order, persist the selected card, and add Mosaic contract coverage.
      Keep nested sweeps and vendor-analysis controls for later product phases.
-   - **Mosaic schematic document I/O** (current phase): discovery after PR #14985:
+   - **Mosaic schematic document I/O** (completed in PR #15002): discovery after PR #14985:
      hosts can inject raw JSON through `schematicLoad`, but users cannot move a
      canonical capture into or out of the workbench. Use existing protocol-2
      awaited `file.open` / `file.save` effects for one versioned schematic JSON
@@ -214,6 +214,14 @@ model-card parameter, or a UI artifact is not a completion signal.
      and add adapter and Mosaic host-contract coverage. Keep vendor interchange,
      raw-format import, and arbitrary netlist-to-schematic synthesis for later
      product phases.
+   - **Mosaic schematic edit lifecycle** (current phase): discovery after PR
+     #15002: the property inspector already edits canonical source and passive
+     values, but a user cannot remove a mistakenly placed component or undo an
+     endpoint wire without injecting raw document JSON. Add document-owned
+     component removal that atomically drops incident wires, source-order wire
+     removal with explicit bounds diagnostics, and Mosaic controls for both.
+     Keep arbitrary wire geometry, netlist-to-schematic synthesis, and vendor
+     interchange for later product phases.
 
 ### Operating rules
 
