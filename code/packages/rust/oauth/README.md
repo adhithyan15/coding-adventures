@@ -16,7 +16,10 @@ The crate owns the security-sensitive, pure portion of installed-app OAuth:
   zeroizing device and user codes, audited one-use device-code poll contexts,
   and exact `authorization_pending`, `slow_down`, authorization, denial, and
   expiry classification with caller-owned timing;
-- 256-bit caller-injected state and PKCE entropy;
+- independent 256-bit caller-injected state and PKCE entropy;
+- an explicit OpenID Connect authorization begin path that requires the exact
+  `openid` scope and retains an independent zeroizing provider/client/trace-bound
+  transaction nonce for later ID-token proof;
 - mandatory PKCE `S256` authorization requests;
 - deterministic RFC 3986 form encoding;
 - exact redirect, state, and optional authorization-server issuer validation;
@@ -53,9 +56,9 @@ remaining authorities. Provider differences are data in `ProviderConfig`; the
 core contains no Google, Microsoft, GitHub, Dropbox, or other provider branch.
 
 This implements the pure authorization, device-flow, token-lifecycle, and RFC
-8414 metadata trust slices of `code/specs/oauth.md`. Device-flow clock/sleep and
-broker orchestration, DPoP, and production HTTPS transport remain separately
-testable backlog items.
+8414 metadata trust slices of `code/specs/oauth.md`. Device-flow clock/sleep,
+verified-identity broker composition, DPoP, and production HTTPS transport
+remain separately testable backlog items.
 
 ## Verification
 
