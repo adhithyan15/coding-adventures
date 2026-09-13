@@ -1,0 +1,17 @@
+{
+  "language": "portuguese",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:dc4c52ccdd6d188f",
+  "lessonIds": [
+    "PT-C29-palavras",
+    "PT-C29-linhas",
+    "PT-C29-primeira-leitura"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "portuguese/narration/ch29.txt",
+  "json": "portuguese/narration/ch29.json",
+  "textHash": "fnv1a64:3936921bb158808a",
+  "jsonHash": "fnv1a64:da6fe87e0a6ece6d",
+  "findings": []
+}
