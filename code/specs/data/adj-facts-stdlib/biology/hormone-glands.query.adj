@@ -5,7 +5,10 @@
 % The shape a learner (or an LLM) produces to ANSWER "which gland makes insulin?":
 % it states no endocrinology fact of its own — it only `import`s the grounded
 % table and asks binding queries. The engine resolves each `?` against the
-% `hormone_gland` rows and returns the gland + the table's source/locator/trust.
+% `hormone_gland` rows and returns the gland together with THAT ROW'S OWN
+% source and locator — since #14986 each row carries both (ADJ-TABLES RS-5e),
+% because the twelve rows are grounded on six different pages. Only `trust` is
+% inherited from the table's envelope.
 % The fourth query runs the relation BACKWARD (bind the gland `pituitary`, recall
 % a hormone it makes — growth_hormone). A word that is not one of the grounded
 % hormones abstains honestly — the engine never invents a gland.
