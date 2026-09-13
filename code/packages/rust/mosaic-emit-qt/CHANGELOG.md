@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-13
+
+- Project numeric typography on Text, HostInput, HostButton and HostTable through conditional native font bindings. Round to integer pixels and restore authored/inherited or platform defaults when live values are invalid. Include a generated-QML conformance fixture.
+
 All notable changes to this package will be documented in this file.
 
 ## [Unreleased]

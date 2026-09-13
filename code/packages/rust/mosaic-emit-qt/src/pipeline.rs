@@ -151,11 +151,13 @@ pub enum PipelineEmitError {
     /// local content rather than open as a web link. Rejected rather than
     /// escaped -- no escaping makes an unsafe scheme safe.
     UnsafeUriScheme(String),
+    InvalidTypography(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            Self::InvalidTypography(reason) => write!(f, "invalid Qt typography: {reason}"),
             PipelineEmitError::ComponentNameMismatch {
                 mosmodel,
                 moslayout,
@@ -925,6 +927,7 @@ struct InheritedStyle {
     color: Option<String>,
     font_family_mono: bool,
     font_pixel_size: Option<String>,
+    font_binding: Option<LayoutPropValue>,
 }
 
 impl<'a> EmitCtx<'a> {
@@ -962,6 +965,7 @@ struct CellTextStyle {
     font_family_mono: bool,
     /// Integer `font.pixelSize` value.
     font_pixel_size: Option<String>,
+    font_binding: Option<LayoutPropValue>,
     /// Inner content inset, from `padding: Npx`.
     padding: Option<String>,
 }
@@ -972,6 +976,7 @@ impl CellTextStyle {
             && self.horizontal_alignment.is_none()
             && !self.font_family_mono
             && self.font_pixel_size.is_none()
+            && self.font_binding.is_none()
             && self.padding.is_none()
     }
 }
@@ -992,6 +997,52 @@ fn qml_px_or_none(v: &str) -> Option<String> {
     } else {
         None
     }
+}
+
+fn font_size_prop(node: &LayoutNode) -> Option<&LayoutPropValue> {
+    node.props.iter().find(|p| p.name == "font-size").map(|p| &p.value)
+}
+
+/// Native typography capability shared with degradation analysis.
+pub fn has_native_font_size(node: &LayoutNode) -> bool {
+    if !matches!(node.tag.as_str(), "Text" | "HostInput" | "HostButton" | "HostTable") { return false; }
+    match font_size_prop(node) {
+        Some(LayoutPropValue::Number(n)) => n.is_finite() && *n > 0.0 && (1.0..=f64::from(i32::MAX)).contains(&n.round()),
+        Some(LayoutPropValue::SlotRef(slot)) => is_safe_identifier(&to_camel_case_first_lower(slot)),
+        _ => false,
+    }
+}
+
+fn validate_typography(node: &LayoutNode) -> Result<(), PipelineEmitError> {
+    if font_size_prop(node).is_some() && !has_native_font_size(node) {
+        return Err(PipelineEmitError::InvalidTypography(format!("{} requires a valid numeric font-size literal or slot on a supported text primitive", node.tag)));
+    }
+    for child in &node.children { validate_typography(child)?; }
+    Ok(())
+}
+
+/// Conditional native Binding restores the previous binding/value, including
+/// the platform default font, when a live value becomes invalid.
+fn typography_lines(node: &LayoutNode, ctx: &EmitCtx) -> Vec<String> {
+    let own = node.part_name.as_deref().and_then(|p| ctx.part_styles.get(p))
+        .and_then(|props| style_prop(props, "font-size")).and_then(qml_font_pixel_size);
+    let inherited = match &ctx.text_style {
+        Some(text) => text.font_binding.as_ref(),
+        None => ctx.inherited.font_binding.as_ref(),
+    };
+    let binding = font_size_prop(node).or_else(|| if own.is_none() { inherited } else { None });
+    let Some(binding) = binding else { return Vec::new(); };
+    let value = match binding {
+        LayoutPropValue::Number(n) => n.to_string(),
+        LayoutPropValue::SlotRef(slot) => format!("mosaicRoot.{}", to_camel_case_first_lower(slot)),
+        _ => return Vec::new(), // rejected by validate_typography
+    };
+    let valid = format!("typeof {value} === \"number\" && isFinite({value}) && {value} > 0 && Math.round({value}) >= 1 && Math.round({value}) <= 2147483647");
+    let mut lines = Vec::new();
+    let fallback = own.or_else(|| ctx.text_style.as_ref().and_then(|text| text.font_pixel_size.clone())).or_else(|| ctx.inherited.font_pixel_size.clone());
+    if let Some(size) = fallback { lines.push(format!("font.pixelSize: {size}")); }
+    lines.push(format!("Binding on font.pixelSize {{ when: {valid}; value: ({valid}) ? Math.round({value}) : 1; restoreMode: Binding.RestoreBindingOrValue }}"));
+    lines
 }
 
 /// Lower an MSL font size to Qt's integer-only `font.pixelSize` type.
@@ -1278,6 +1329,7 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
         font_pixel_size: style_prop(base, "font-size")
             .and_then(qml_font_pixel_size)
             .or_else(|| ctx.inherited.font_pixel_size.clone()),
+        font_binding: if style_prop(base, "font-size").is_some() { None } else { ctx.inherited.font_binding.clone() },
         padding: style_prop(base, "padding").and_then(qml_px_or_none),
         color: None,
     };
@@ -2170,6 +2222,7 @@ fn from_pipeline_with_runtime_policy(
     style: &StyleDef,
     require_runtime: bool,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
+    validate_typography(&layout.root)?;
     // 1. The three IRs must agree on the component name. The style IR's
     // `component_name` is allowed to differ when the style targets a
     // specific layout variant (UI23 §4); we therefore only validate
@@ -2727,8 +2780,10 @@ fn emit_qml_tree(
         out.push_str(&content_sizing_lines(depth + 1));
     }
 
+    let typography = if is_text { typography_lines(node, ctx) } else { Vec::new() };
+    let replaces_size = typography.iter().any(|line| line.starts_with("font.pixelSize:"));
     // Built-in property lines (e.g. Spacer's `Layout.fillWidth: true`).
-    for line in &builtin_lines {
+    for line in builtin_lines.iter().filter(|line| !replaces_size || !line.starts_with("font.pixelSize:")) {
         writeln!(out, "{pad}    {line}").unwrap();
     }
 
@@ -2743,15 +2798,16 @@ fn emit_qml_tree(
         // [`CellTextStyle`]). Outside a styled cell, `ctx.text_style` is
         // `None` and the Text emits exactly as before.
         if let Some(ts) = &ctx.text_style {
-            for line in cell_text_style_lines(ts) {
+            for line in cell_text_style_lines(ts).into_iter().filter(|line| !replaces_size || !line.starts_with("font.pixelSize:")) {
                 writeln!(out, "{pad}    {line}").unwrap();
             }
         }
         if let Some(props) = part_style_props(node, ctx) {
-            for line in qml_text_part_style_lines(props) {
+            for line in qml_text_part_style_lines(props).into_iter().filter(|line| !replaces_size || !line.starts_with("font.pixelSize:")) {
                 writeln!(out, "{pad}    {line}").unwrap();
             }
         }
+        for line in typography { writeln!(out, "{pad}    {line}").unwrap(); }
         if let Some(line) = build_text_attribute(node) {
             writeln!(out, "{pad}    {line}").unwrap();
         }
@@ -3963,6 +4019,8 @@ fn emit_text_input_qml(
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
+    let typography = typography_lines(node, ctx);
+    let replaces_size = typography.iter().any(|line| line.starts_with("font.pixelSize:"));
     let placeholder_line = build_placeholder_text_attribute(node);
     let control_tag = if multiline {
         "TextArea"
@@ -3976,9 +4034,10 @@ fn emit_text_input_qml(
     // Authored part styles. Without this the control read none at all, so
     // padding, background and opacity were dropped on Qt while every other
     // backend applied them (#14780).
-    for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::TEXT_ENTRY) {
+    for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::TEXT_ENTRY).into_iter().filter(|line| !replaces_size || !line.starts_with("font.pixelSize:")) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
+    for line in &typography { writeln!(out, "{inner_pad}{line}").unwrap(); }
 
     if let Some(part) = node.part_name.as_deref() {
         writeln!(
@@ -3995,7 +4054,7 @@ fn emit_text_input_qml(
     // surrounding cells. `TextInput` honours the same `Text.Align*`
     // enums and `font.*` / `color` properties as `Text`.
     if let Some(ts) = &ctx.text_style {
-        for line in cell_text_style_lines(ts) {
+        for line in cell_text_style_lines(ts).into_iter().filter(|line| !replaces_size || !line.starts_with("font.pixelSize:")) {
             writeln!(out, "{inner_pad}{line}").unwrap();
         }
     }
@@ -4280,6 +4339,8 @@ fn emit_host_button_qml(
         .and_then(|base| part_elevation_tier(base));
     let elevation_id = elevation.is_some().then(|| next_elevation_id(ctx));
     let mut out = String::new();
+    let typography = typography_lines(node, ctx);
+    let replaces_size = typography.iter().any(|line| line.starts_with("font.pixelSize:"));
     writeln!(out, "{pad}Button {{").unwrap();
     if let Some(id) = &elevation_id {
         writeln!(out, "{inner_pad}id: {id}").unwrap();
@@ -4332,9 +4393,10 @@ fn emit_host_button_qml(
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
-    for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::BUTTON) {
+    for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::BUTTON).into_iter().filter(|line| !replaces_size || !line.starts_with("font.pixelSize:")) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
+    for line in &typography { writeln!(out, "{inner_pad}{line}").unwrap(); }
 
     // onClicked: e(<arg>) — buttons fire QML's `clicked()` signal
     // which carries no payload.  If the author declared `emit onTap
@@ -5773,10 +5835,13 @@ fn emit_native_host_table_qml(
                     .map(|v| v.trim() == "monospace")
                     .unwrap_or(false),
                 font_pixel_size: style_prop(sheet, "font-size").and_then(qml_font_pixel_size),
+                font_binding: None,
             }
         }
         None => ctx.inherited.clone(),
     };
+    let mut inherited = inherited;
+    inherited.font_binding = font_size_prop(node).cloned().or(inherited.font_binding);
     let table_ctx = EmitCtx {
         col_widths_slot: width_slot,
         inherited,
@@ -6059,10 +6124,13 @@ fn emit_host_table_fallback_qml(
                     .map(|v| v.trim() == "monospace")
                     .unwrap_or(false),
                 font_pixel_size: style_prop(sheet, "font-size").and_then(qml_font_pixel_size),
+                font_binding: None,
             }
         }
         None => ctx.inherited.clone(),
     };
+    let mut inherited = inherited;
+    inherited.font_binding = font_size_prop(node).cloned().or(inherited.font_binding);
     let table_ctx = EmitCtx {
         col_widths_slot: discover_col_widths_slot(node),
         inherited,
@@ -7271,6 +7339,48 @@ mod tests {
             name: name.to_string(),
             r#type: t,
         }
+    }
+
+    #[test]
+    fn typography_emits_one_fallback_and_native_restore_binding() {
+        let m = component("X", vec![slot("text-size", SlotType::Number, false)], vec![]);
+        let style = StyleDef { component_name: "X".into(), parts: vec![PartStyle {
+            name: "label".into(), base: vec![sp("font-size", "13px")], transitions: vec![], states: vec![],
+        }] };
+        for tag in ["Text", "HostInput", "HostButton"] {
+            let l = LayoutDef { component_name: "X".into(), root: LayoutNode {
+                tag: tag.into(), part_name: Some("label".into()),
+                props: vec![lp("font-size", LayoutPropValue::SlotRef("text-size".into()))], children: vec![],
+            }};
+            let out = from_pipeline(&m, &l, &style).unwrap().output;
+            assert_eq!(out.matches("font.pixelSize: 13").count(), 1, "{out}");
+            assert_eq!(out.matches("Binding on font.pixelSize").count(), 1, "{out}");
+            assert!(out.contains("restoreMode: Binding.RestoreBindingOrValue"));
+            assert!(out.contains("Math.round(mosaicRoot.textSize) <= 2147483647"));
+        }
+        let mut table = canonical_native_table_layout();
+        table.root.props.push(lp("font-size", LayoutPropValue::SlotRef("text-size".into())));
+        let out = from_pipeline(&m, &table, &empty_style("X")).unwrap().output;
+        assert!(out.contains("TableView {"));
+        assert!(out.matches("Binding on font.pixelSize").count() >= 2, "{out}");
+    }
+
+    #[test]
+    fn typography_rejects_invalid_literals_syntax_and_placements() {
+        let m = component("X", vec![], vec![]);
+        for value in [LayoutPropValue::Number(0.0), LayoutPropValue::Number(-1.0),
+            LayoutPropValue::Number(f64::NAN), LayoutPropValue::Number(1e100), LayoutPropValue::Number(0.1),
+            LayoutPropValue::String("large".into()), LayoutPropValue::Expr("size * 2".into()),
+            LayoutPropValue::SlotRef("bad;code".into())] {
+            let mut l = single_box_layout("X"); l.root.tag = "Text".into();
+            l.root.props.push(lp("font-size", value));
+            assert!(matches!(from_pipeline(&m, &l, &empty_style("X")), Err(PipelineEmitError::InvalidTypography(_))));
+        }
+        let mut l = single_box_layout("X"); l.root.props.push(lp("font-size", LayoutPropValue::Number(19.5)));
+        assert!(!has_native_font_size(&l.root));
+        assert!(from_pipeline(&m, &l, &empty_style("X")).is_err());
+        l.root.tag = "Text".into();
+        assert!(from_pipeline(&m, &l, &empty_style("X")).unwrap().output.contains("Math.round(19.5)"));
     }
 
     // -------- Test 1: empty layout produces a valid QML skeleton --------
