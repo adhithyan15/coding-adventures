@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Emit transformed, clipped generic focus regions and carry sequential-focus
+  metadata plus top-layer ancestry on client-side image-map areas.
+
 - Preserve focus keys, document order, `tabindex`, accessible names, and shared
   geometry on link, control, and disclosure hit regions.
 

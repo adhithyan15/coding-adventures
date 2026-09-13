@@ -5,6 +5,24 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P0 browser convergence - authored focus targets.** Extend the shared
+  sequential-focus model to client-side image-map areas, generic authored
+  `tabindex`, and contenteditable surfaces while preserving positive ordering,
+  transformed/clipped geometry, accessible names and roles, modal ancestry,
+  scrolling, link activation, and focus rings. Completed in layout, paint, and
+  browser-core with no new generated-host ABI or toolkit-owned policy.
+
+- [ ] **P1 browser convergence - contenteditable transactions.** Promote the
+  parser's retained editing, selection, composition, and clipboard descriptors
+  into a bounded shared contenteditable value model. Reuse editor primitives
+  without treating arbitrary DOM content as a form control, and keep mutation,
+  selection, undo, accessibility, reflow, and host input policy transactional.
+
+- [ ] **P2 browser convergence - accesskey mediation.** Normalize retained
+  accesskey candidates, conflicts, disabledness, and activation targets in
+  shared core, then expose one semantic modifier/character command that native
+  and web hosts can translate without choosing winners or activation policy.
+
 - [x] **P0 browser convergence - shared sequential focus navigation.** Promote
   Tab and Shift+Tab from control-only traversal to one document-ordered model
   spanning links, controls, and details summaries; honor positive and negative
