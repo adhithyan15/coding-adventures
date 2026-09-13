@@ -13461,6 +13461,79 @@ mod tests {
             .any(|source| source["source"] == "anki-v11"));
     }
 
+    /// An imported Anki package cannot smuggle `::` into a card key half.
+    ///
+    /// `reject_card_id_separator` guards the command channel and the Mosaic
+    /// event channel, and `validate_command_id_separator` documents why restore
+    /// is exempt. Import is neither: it is a THIRD-PARTY file, so the "refusing
+    /// a restore would cost someone their collection" argument does not apply
+    /// to it, and no guard sits on `merge_anki_apkg`.
+    ///
+    /// It needs none, because the reader builds every one of these ids from an
+    /// Anki `i64`: a note is `note.id.to_string()`, a note type the same, and a
+    /// template is `format!("{note_type_id}:template:{ordinal}")`. A `::`
+    /// cannot appear in any of them.
+    ///
+    /// Safe BY CONSTRUCTION is exactly the kind of safety that stops being true
+    /// without anyone noticing, though — `template_id`'s format string is one
+    /// edit from `{note_type_id}::template::{ordinal}`, and nothing anywhere
+    /// said so. This is that check: the invariant the whole card-key fix rests
+    /// on, asserted at the one ingestion point that was never guarded because
+    /// it did not need to be.
+    #[test]
+    fn an_imported_package_cannot_carry_the_card_id_separator() {
+        let source = EngramSession::new_demo();
+        let exported: Value = serde_json::from_str(&source.export_anki_apkg()).unwrap();
+        let apkg = coding_adventures_base64::decode(
+            exported["apkg"].as_str().unwrap(),
+            &coding_adventures_base64::STANDARD,
+        )
+        .unwrap();
+
+        let mut target = EngramSession::new();
+        let merged: Value = serde_json::from_str(&target.merge_anki_apkg(&apkg)).unwrap();
+        assert_eq!(merged["ok"], true);
+
+        // Every id that becomes half of a card key.
+        let mut checked = 0;
+        for note in merged["state"]["notes"].as_array().unwrap() {
+            let id = note["id"].as_str().unwrap();
+            assert!(!id.contains(CARD_ID_SEPARATOR), "note id {id:?}");
+            checked += 1;
+        }
+        for note_type in merged["state"]["noteTypes"].as_array().unwrap() {
+            let id = note_type["id"].as_str().unwrap();
+            assert!(!id.contains(CARD_ID_SEPARATOR), "note type id {id:?}");
+            checked += 1;
+            for template in note_type["templates"].as_array().unwrap() {
+                let id = template["id"].as_str().unwrap();
+                assert!(!id.contains(CARD_ID_SEPARATOR), "template id {id:?}");
+                checked += 1;
+            }
+        }
+        // An import that produced no ids at all would satisfy every assertion
+        // above. Anchored so the zero cannot pass as a pass.
+        assert!(checked > 0, "the import produced no ids to check");
+
+        // And the property those halves exist to guarantee, asserted directly
+        // rather than inferred from them: no two cards share a key. This is
+        // what a `::` in an id would break, so checking it here means the test
+        // survives a change to how the halves are joined.
+        let cards = merged["state"]["cards"].as_array().unwrap();
+        let ids: std::collections::BTreeSet<&str> = cards
+            .iter()
+            .map(|card| card["id"].as_str().unwrap())
+            .collect();
+        assert_eq!(
+            ids.len(),
+            cards.len(),
+            "two imported cards share an id; {} card(s), {} distinct",
+            cards.len(),
+            ids.len()
+        );
+        assert!(!cards.is_empty(), "the import produced no cards to check");
+    }
+
     #[test]
     fn parse_anki_notes_tsv_honors_html_header() {
         let session = EngramSession::new();
