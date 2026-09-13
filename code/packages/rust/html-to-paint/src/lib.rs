@@ -178,6 +178,12 @@ pub struct LinkRegion {
     pub width: f64,
     pub height: f64,
     pub url: String,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub download: Option<String>,
+    pub rel_opener: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
     /// Fixed regions stay in viewport coordinates and ignore document scroll.
     pub fixed: bool,
     /// Ancestor overflow clips, including transformed elliptical corners.
@@ -691,6 +697,14 @@ fn extract_interactive_regions(
                         width,
                         height,
                         url: url.to_string(),
+                        target: positioned_html_string(node, "target").map(ToOwned::to_owned),
+                        effective_target: positioned_html_string(node, "effectiveTarget")
+                            .map(ToOwned::to_owned),
+                        download: positioned_html_string(node, "download").map(ToOwned::to_owned),
+                        rel_opener: positioned_html_bool(node, "relOpener").unwrap_or(false),
+                        rel_noopener: positioned_html_bool(node, "relNoopener").unwrap_or(false),
+                        rel_noreferrer: positioned_html_bool(node, "relNoreferrer")
+                            .unwrap_or(false),
                         fixed,
                         clips: inherited_clips.clone(),
                     });
@@ -1599,8 +1613,8 @@ mod tests {
     #[test]
     fn canned_html_reaches_a_drawable_paint_scene() {
         let render = parse_browser_render_tree(
-            "<base href='https://example.test/assets/'><h1>Mosaic lives</h1>\
-             <p>The browser pipeline is <a href='../status'>connected</a>.</p>\
+            "<base href='https://example.test/assets/' target='reports'><h1>Mosaic lives</h1>\
+             <p>The browser pipeline is <a href='../status' rel='noopener' download='status.html'>connected</a>.</p>\
              <img src='logo.gif' width='32' height='24'>",
         )
         .unwrap();
@@ -1647,6 +1661,9 @@ mod tests {
         );
         assert_eq!(output.links.len(), 1);
         assert_eq!(output.links[0].url, "https://example.test/status");
+        assert_eq!(output.links[0].effective_target.as_deref(), Some("reports"));
+        assert_eq!(output.links[0].download.as_deref(), Some("status.html"));
+        assert!(output.links[0].rel_noopener);
         assert_eq!(
             hit_test_link(
                 &output.links,
@@ -1779,6 +1796,12 @@ mod tests {
                 width: 20.0,
                 height: 10.0,
                 url: "https://example.test/visible".into(),
+                target: None,
+                effective_target: None,
+                download: None,
+                rel_opener: false,
+                rel_noopener: false,
+                rel_noreferrer: false,
                 fixed: false,
                 clips: Vec::new(),
             }]
@@ -1806,6 +1829,12 @@ mod tests {
                 width: 20.0,
                 height: 10.0,
                 url: "https://example.test/moved".into(),
+                target: None,
+                effective_target: None,
+                download: None,
+                rel_opener: false,
+                rel_noopener: false,
+                rel_noreferrer: false,
                 fixed: false,
                 clips: Vec::new(),
             }]
@@ -1820,6 +1849,12 @@ mod tests {
             width: 30.0,
             height: 12.0,
             url: "https://example.test/next".into(),
+            target: None,
+            effective_target: None,
+            download: None,
+            rel_opener: false,
+            rel_noopener: false,
+            rel_noreferrer: false,
             fixed: false,
             clips: Vec::new(),
         };

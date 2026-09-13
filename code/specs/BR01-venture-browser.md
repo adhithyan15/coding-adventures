@@ -661,6 +661,12 @@ image-codec-jpeg       = { path = "../../../packages/rust/image-codec-jpeg" }
 10. **Full navigation flow** — Open Venture, navigate to info.cern.ch, click
     links, use Back/Forward, add a bookmark, view source.
 
+11. **Browsing-context mediation** — Verify `_self`, `_parent`, and `_top`
+    retain transactional current navigation while `_blank`, named targets, and
+    downloads produce the bounded host effects defined by
+    [UI79](./UI79-browsing-context-mediation.md) without changing current
+    history.
+
 ## Scope
 
 ### In Scope (Venture v0.1)

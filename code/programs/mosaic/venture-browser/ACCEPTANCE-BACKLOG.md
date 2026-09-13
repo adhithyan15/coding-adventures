@@ -5,6 +5,14 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - browsing-context and download mediation.**
+  Preserve effective link/form targets through shared render, hit-test, and
+  submission plans; normalize `_self`, `_blank`, `_parent`, `_top`, and named
+  contexts; and emit bounded auxiliary-context/download effects without
+  mutating current history. Completed with submitter precedence,
+  opener/referrer policy, deterministic coverage, and one effect bridge across
+  every available native host.
+
 - [x] **P1 browser convergence - per-entry history state restoration.** Give
   reusable navigation entries stable identities and key bounded public form,
   custom-element, and logical scroll snapshots by entry rather than URL.

@@ -583,9 +583,8 @@ fn count_top_layer_nodes(nodes: &[BrowserRenderNode]) -> usize {
     nodes
         .iter()
         .map(|node| {
-            usize::from(
-                node.disclosure_kind.as_deref() == Some("dialog") || node.popover.is_some(),
-            ) + count_top_layer_nodes(&node.children)
+            usize::from(node.disclosure_kind.as_deref() == Some("dialog") || node.popover.is_some())
+                + count_top_layer_nodes(&node.children)
         })
         .sum()
 }
@@ -4124,6 +4123,24 @@ fn html_ext(
         node.resolved_href.as_deref().or(node.href.as_deref()),
     );
     insert_optional(&mut values, "target", node.target.as_deref());
+    insert_optional(
+        &mut values,
+        "effectiveTarget",
+        node.effective_target.as_deref(),
+    );
+    insert_optional(&mut values, "download", node.download.as_deref());
+    values.insert(
+        "relOpener".into(),
+        ExtValue::Bool(node.rel_tokens.iter().any(|token| token == "opener")),
+    );
+    values.insert(
+        "relNoopener".into(),
+        ExtValue::Bool(node.rel_tokens.iter().any(|token| token == "noopener")),
+    );
+    values.insert(
+        "relNoreferrer".into(),
+        ExtValue::Bool(node.rel_tokens.iter().any(|token| token == "noreferrer")),
+    );
     insert_optional(&mut values, "labelFor", node.label_for.as_deref());
     insert_optional(&mut values, "lang", node.lang.as_deref());
     insert_optional(&mut values, "dir", node.dir.as_deref());
@@ -5007,7 +5024,10 @@ mod tests {
             Some(ExtValue::Map(values))
                 if values.get("topLayerBackdrop") == Some(&ExtValue::Bool(true))
         )));
-        assert_eq!(layout.children.last().and_then(|node| node.id.as_deref()), Some("modal"));
+        assert_eq!(
+            layout.children.last().and_then(|node| node.id.as_deref()),
+            Some("modal")
+        );
     }
 
     #[test]

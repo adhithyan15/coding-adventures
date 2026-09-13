@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Preserve submitter-over-form effective targets in transactional navigation
+  plans.
+
 - Add ordered, cancelable invalid/submit/reset dispatch, script-style
   `requestSubmit`, mutable bounded `formdata` entries, and delayed navigation
   commit through one host-neutral transaction.

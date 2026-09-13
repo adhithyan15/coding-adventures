@@ -1031,6 +1031,91 @@ impl BrowserAuxiliaryDocument {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum BrowserHostEffect {
     OpenAuxiliaryDocument(BrowserAuxiliaryDocument),
+    OpenBrowsingContext(BrowserBrowsingContextRequest),
+    Download(BrowserDownloadRequest),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum BrowserBrowsingContextTarget {
+    Self_,
+    Blank,
+    Parent,
+    Top,
+    Named(String),
+}
+
+impl BrowserBrowsingContextTarget {
+    pub fn from_effective_target(target: Option<&str>) -> Self {
+        let target = target.unwrap_or_default().trim();
+        match target.to_ascii_lowercase().as_str() {
+            "" | "_self" => Self::Self_,
+            "_blank" => Self::Blank,
+            "_parent" => Self::Parent,
+            "_top" => Self::Top,
+            _ => Self::Named(target.to_string()),
+        }
+    }
+
+    pub const fn routes_current_context(&self) -> bool {
+        matches!(self, Self::Self_ | Self::Parent | Self::Top)
+    }
+
+    pub fn name(&self) -> &str {
+        match self {
+            Self::Self_ => "_self",
+            Self::Blank => "_blank",
+            Self::Parent => "_parent",
+            Self::Top => "_top",
+            Self::Named(name) => name,
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserBrowsingContextRequest {
+    pub target: BrowserBrowsingContextTarget,
+    pub request: BrowserFetchRequest,
+    pub noopener: bool,
+    pub noreferrer: bool,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserDownloadRequest {
+    pub request: BrowserFetchRequest,
+    pub suggested_filename: Option<String>,
+}
+
+enum BrowserLinkActivation {
+    Navigate(String),
+    HostEffect(BrowserHostEffect),
+}
+
+fn plan_link_activation(link: LinkRegion) -> BrowserLinkActivation {
+    if let Some(suggested_filename) = link.download {
+        return BrowserLinkActivation::HostEffect(BrowserHostEffect::Download(
+            BrowserDownloadRequest {
+                request: BrowserFetchRequest::get(link.url),
+                suggested_filename: (!suggested_filename.is_empty()).then_some(suggested_filename),
+            },
+        ));
+    }
+    let target = BrowserBrowsingContextTarget::from_effective_target(
+        link.effective_target.as_deref().or(link.target.as_deref()),
+    );
+    if target.routes_current_context() {
+        BrowserLinkActivation::Navigate(link.url)
+    } else {
+        BrowserLinkActivation::HostEffect(BrowserHostEffect::OpenBrowsingContext(
+            BrowserBrowsingContextRequest {
+                noopener: link.rel_noopener
+                    || link.rel_noreferrer
+                    || (target == BrowserBrowsingContextTarget::Blank && !link.rel_opener),
+                noreferrer: link.rel_noreferrer,
+                target,
+                request: BrowserFetchRequest::get(link.url),
+            },
+        ))
+    }
 }
 
 /// Complete result of dispatching one shared chrome event.
@@ -1414,6 +1499,10 @@ impl BrowserHostController {
         self.status_text = "Ready".to_string();
     }
 
+    pub fn take_host_effect(&mut self) -> Option<BrowserHostEffect> {
+        self.session.take_host_effect()
+    }
+
     pub fn props(&self) -> BrowserChromeProps {
         self.chrome.props(
             &self.session,
@@ -1452,6 +1541,7 @@ impl BrowserHostController {
         F: FnOnce(&mut BrowserSession, BrowserNavigation) -> Result<bool, BrowserLoadError>,
     {
         self.hovered_link_url = None;
+        self.session.pending_host_effect = None;
         let Some(action) = self.chrome.handle_event(event, &self.session, false) else {
             return Ok(BrowserHostEventOutcome::default());
         };
@@ -1536,14 +1626,24 @@ impl BrowserHostController {
         F: FnOnce(&mut BrowserSession, BrowserNavigation) -> Result<bool, BrowserLoadError>,
     {
         self.hovered_link_url = None;
-        let Some(url) = self
+        self.session.pending_host_effect = None;
+        let Some(link) = self
             .session
-            .hovered_link_url(viewport_x, viewport_y)
-            .map(str::to_owned)
+            .viewport()
+            .and_then(|viewport| viewport.hit_test_link(viewport_x, viewport_y))
+            .cloned()
         else {
             return Ok(false);
         };
-        self.execute_navigation(BrowserNavigation::Navigate(url), execute)
+        match plan_link_activation(link) {
+            BrowserLinkActivation::Navigate(url) => {
+                self.execute_navigation(BrowserNavigation::Navigate(url), execute)
+            }
+            BrowserLinkActivation::HostEffect(effect) => {
+                self.session.pending_host_effect = Some(effect);
+                Ok(true)
+            }
+        }
     }
 
     pub fn update_hover(&mut self, viewport_x: f64, viewport_y: f64) -> bool {
@@ -1611,6 +1711,7 @@ pub struct BrowserSession {
     fragment_navigation: Option<FragmentNavigationState>,
     viewport_height: f64,
     navigation_id: u64,
+    pending_host_effect: Option<BrowserHostEffect>,
 }
 
 impl BrowserSession {
@@ -1633,7 +1734,12 @@ impl BrowserSession {
             fragment_navigation: None,
             viewport_height: finite_non_negative(viewport_height),
             navigation_id: 0,
+            pending_host_effect: None,
         }
+    }
+
+    pub fn take_host_effect(&mut self) -> Option<BrowserHostEffect> {
+        self.pending_host_effect.take()
     }
 
     pub fn history(&self) -> &NavigationHistory {
@@ -3274,6 +3380,7 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
+        self.pending_host_effect = None;
         let reportable_diagnostics = outcome.reportable_diagnostics();
         self.form_lifecycle_events.extend(outcome.events);
         match outcome.activation {
@@ -3325,7 +3432,12 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let departing_state = self.current_history_entry_state();
+        let target =
+            BrowserBrowsingContextTarget::from_effective_target(navigation.target.as_deref());
+        let noopener = navigation.rel_noopener
+            || navigation.rel_noreferrer
+            || (target == BrowserBrowsingContextTarget::Blank && !navigation.rel_opener);
+        let noreferrer = navigation.rel_noreferrer;
         let request = BrowserFetchRequest {
             method: match navigation.method {
                 FormMethod::Get => BrowserFetchMethod::Get,
@@ -3335,6 +3447,18 @@ impl BrowserSession {
             content_type: navigation.content_type,
             body: navigation.body,
         };
+        if !target.routes_current_context() {
+            self.pending_host_effect = Some(BrowserHostEffect::OpenBrowsingContext(
+                BrowserBrowsingContextRequest {
+                    noopener,
+                    noreferrer,
+                    target,
+                    request,
+                },
+            ));
+            return Ok(());
+        }
+        let departing_state = self.current_history_entry_state();
         let mut history = self.history.clone();
         history.navigate(request.url.clone());
         let page =
@@ -4088,13 +4212,23 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let Some(url) = self
-            .hovered_link_url(viewport_x, viewport_y)
-            .map(str::to_owned)
+        self.pending_host_effect = None;
+        let Some(link) = self
+            .viewport()
+            .and_then(|viewport| viewport.hit_test_link(viewport_x, viewport_y))
+            .cloned()
         else {
             return Ok(None);
         };
-        self.execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
+        match plan_link_activation(link) {
+            BrowserLinkActivation::Navigate(url) => {
+                self.execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
+            }
+            BrowserLinkActivation::HostEffect(effect) => {
+                self.pending_host_effect = Some(effect);
+                Ok(self.viewport.as_ref())
+            }
+        }
     }
 }
 
@@ -5251,7 +5385,9 @@ mod tests {
             })
             .unwrap();
         assert!(!outcome.changed);
-        let BrowserHostEffect::OpenAuxiliaryDocument(auxiliary) = outcome.effect.unwrap();
+        let BrowserHostEffect::OpenAuxiliaryDocument(auxiliary) = outcome.effect.unwrap() else {
+            panic!("view source must produce an auxiliary document");
+        };
         assert_eq!(auxiliary.kind, BrowserAuxiliaryDocumentKind::ViewSource);
         assert_eq!(
             auxiliary.address,
@@ -5674,6 +5810,12 @@ mod tests {
             width: 30.0,
             height: 12.0,
             url: "http://example.test/next".into(),
+            target: None,
+            effective_target: None,
+            download: None,
+            rel_opener: false,
+            rel_noopener: false,
+            rel_noreferrer: false,
             fixed: false,
             clips: Vec::new(),
         };
@@ -5699,6 +5841,112 @@ mod tests {
         };
         assert_eq!(group.transform, Some([1.0, 0.0, 0.0, 1.0, 0.0, -60.0]));
         assert_eq!(group.children, document.instructions);
+    }
+
+    #[test]
+    fn link_targets_and_downloads_become_bounded_host_effects() {
+        let url = "http://example.test/";
+        let fetcher = |requested: &str| {
+            if requested != url {
+                return Err(format!("unexpected auxiliary fetch {requested}"));
+            }
+            Ok(BrowserFetchResponse::new(
+                requested,
+                200,
+                Some("text/html".into()),
+                b"<a href='/report' target='_blank' rel='noreferrer'>Report</a>\
+                  <a href='/archive' download='report.html'>Archive</a>\
+                  <a href='/trusted' target='_blank' rel='opener'>Trusted</a>\
+                  <form action='/submit' method='post' target='reports' rel='noreferrer'>\
+                    <button id='go' name='mode' value='preview'>Go</button></form>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(260.0, 100.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(url, 100.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+        let links = session.viewport().unwrap().page().paint.links.clone();
+        let history = session.history().clone();
+
+        session
+            .activate_link(links[0].x + 1.0, links[0].y + 1.0, &pipeline, &fetcher)
+            .unwrap();
+        let Some(BrowserHostEffect::OpenBrowsingContext(context)) = session.take_host_effect()
+        else {
+            panic!("blank target must become a browsing-context effect");
+        };
+        assert_eq!(context.target, BrowserBrowsingContextTarget::Blank);
+        assert_eq!(context.request.url, "http://example.test/report");
+        assert!(context.noopener);
+        assert!(context.noreferrer);
+        assert_eq!(session.history(), &history);
+
+        session
+            .activate_link(links[1].x + 1.0, links[1].y + 1.0, &pipeline, &fetcher)
+            .unwrap();
+        let Some(BrowserHostEffect::Download(download)) = session.take_host_effect() else {
+            panic!("download link must become a host download effect");
+        };
+        assert_eq!(download.request.url, "http://example.test/archive");
+        assert_eq!(download.suggested_filename.as_deref(), Some("report.html"));
+        assert_eq!(session.history(), &history);
+
+        session
+            .activate_link(links[2].x + 1.0, links[2].y + 1.0, &pipeline, &fetcher)
+            .unwrap();
+        let Some(BrowserHostEffect::OpenBrowsingContext(context)) = session.take_host_effect()
+        else {
+            panic!("explicit opener must remain part of the shared blank-target policy");
+        };
+        assert_eq!(context.target, BrowserBrowsingContextTarget::Blank);
+        assert!(!context.noopener);
+        assert!(!context.noreferrer);
+        assert_eq!(session.history(), &history);
+
+        session
+            .request_submit(0, Some("control:0:id:go"), |_| {}, &pipeline, &fetcher)
+            .unwrap();
+        let Some(BrowserHostEffect::OpenBrowsingContext(context)) = session.take_host_effect()
+        else {
+            panic!("named form target must become a browsing-context effect");
+        };
+        assert_eq!(
+            context.target,
+            BrowserBrowsingContextTarget::Named("reports".into())
+        );
+        assert_eq!(context.request.url, "http://example.test/submit");
+        assert_eq!(context.request.method, BrowserFetchMethod::Post);
+        assert_eq!(
+            context.request.content_type.as_deref(),
+            Some("application/x-www-form-urlencoded")
+        );
+        assert_eq!(context.request.body, b"mode=preview");
+        assert!(context.noopener);
+        assert!(context.noreferrer);
+        assert_eq!(session.history(), &history);
+    }
+
+    #[test]
+    fn browsing_context_target_keywords_are_case_insensitive() {
+        assert_eq!(
+            BrowserBrowsingContextTarget::from_effective_target(Some(" _TOP ")),
+            BrowserBrowsingContextTarget::Top
+        );
+        assert!(BrowserBrowsingContextTarget::Parent.routes_current_context());
+        assert_eq!(
+            BrowserBrowsingContextTarget::from_effective_target(Some("reports")),
+            BrowserBrowsingContextTarget::Named("reports".into())
+        );
     }
 
     #[test]
