@@ -596,6 +596,17 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_block_default_class_definition_through_the_pinned_grammar() {
+        let tokens = try_tokenize_mermaid_block(
+            "block\nclassDef default fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e\nA\n",
+        )
+        .unwrap();
+        assert!(tokens.iter().any(|token| {
+            token.type_name.as_deref() == Some("DEFAULT_CLASSDEF_LINE")
+        }));
+    }
+
+    #[test]
     fn tokenizes_packet_fields_as_complete_lines() {
         let tokens = try_tokenize_mermaid_packet(
             "packet-beta\n0-7: \"Header\"\n8-31: \"Payload\"\n",
