@@ -5735,11 +5735,15 @@ impl Compiler {
             };
             let (static_while_exit_real, static_while_exit_integer) = if is_while_element
                 && !entry_tracking_disabled
-                && self.for_body_avoids_target(target, body)
             {
                 self.for_while_exit_snapshot(target, var_ty, elem, body)
             } else {
                 (None, None)
+            };
+            let static_while_body_assignment = if is_while_element && !entry_tracking_disabled {
+                self.for_while_body_assignment_snapshot(target, var_ty, elem, body)
+            } else {
+                None
             };
             let tracks_step_body = static_step_exit_real.is_some()
                 || static_step_exit_integer.is_some()
@@ -5747,7 +5751,10 @@ impl Compiler {
             let tracks_while_body = is_while_element
                 && executes == Some(true)
                 && !entry_tracking_disabled
-                && self.for_body_avoids_target(target, body);
+                && (self.for_body_avoids_target(target, body)
+                    || static_while_exit_real.is_some()
+                    || static_while_exit_integer.is_some()
+                    || static_while_body_assignment.is_some());
             let step_executes_exactly_once = is_step_element
                 && self.for_step_executes_exactly_once(var_ty, elem);
             if tracks_step_body || tracks_while_body {
@@ -5806,6 +5813,19 @@ impl Compiler {
                     static_while_exit_real,
                     static_while_exit_integer,
                 )?;
+                if let Some((slot, snapshot)) = static_while_body_assignment {
+                    match snapshot {
+                        StaticScalarSnapshot::Integer(value) => {
+                            self.static_integer_slots.insert(slot, value);
+                        }
+                        StaticScalarSnapshot::Real(value) => {
+                            self.static_real_slots.insert(slot, value);
+                        }
+                        StaticScalarSnapshot::Boolean(value) => {
+                            self.static_boolean_slots.insert(slot, value);
+                        }
+                    }
+                }
             }
         }
         Ok(())
@@ -6302,6 +6322,9 @@ impl Compiler {
         let Ok(target_name) = self.simple_variable_name(target) else {
             return (None, None);
         };
+        if self.for_body_writes_name(body, &target_name, &target_name, body) {
+            return (None, None);
+        }
         let Some(value) = direct_nodes(elem)
             .into_iter()
             .find(|node| node.rule_name == "arith_expr")
@@ -6362,6 +6385,126 @@ impl Compiler {
         self.static_integer_slots = saved_integers;
         self.static_boolean_slots = saved_booleans;
         exit
+    }
+
+    fn for_while_body_assignment_snapshot(
+        &mut self,
+        target: &GrammarASTNode,
+        target_ty: ScalarType,
+        elem: &GrammarASTNode,
+        body: &GrammarASTNode,
+    ) -> Option<(String, StaticScalarSnapshot)> {
+        if array_subscripts(target).is_some() {
+            return None;
+        }
+        let target_name = self.simple_variable_name(target).ok()?;
+        let target_binding = self.require_var(&target_name).ok()?;
+        if target_binding.is_global || self.active_by_name_binding(&target_name).is_some() {
+            return None;
+        }
+        let value = direct_nodes(elem)
+            .into_iter()
+            .find(|node| node.rule_name == "arith_expr")?;
+        let condition = first_direct_node(elem, "bool_expr")?;
+        let mut dependencies = HashSet::new();
+        collect_expression_dependency_names(value, &target_name, &mut dependencies);
+        collect_expression_dependency_names(condition, &target_name, &mut dependencies);
+        for dependency in &dependencies {
+            let binding = self.require_var(dependency).ok()?;
+            if binding.is_global
+                || binding.array.is_some()
+                || self.active_by_name_binding(dependency).is_some()
+                || self.for_body_writes_name(body, dependency, &target_name, body)
+            {
+                return None;
+            }
+        }
+
+        let statement = first_direct_node(body, "unlabeled_stmt")?;
+        let assignment = first_direct_node(statement, "assign_stmt")?;
+        let left_parts: Vec<&GrammarASTNode> = direct_nodes(assignment)
+            .into_iter()
+            .filter(|node| node.rule_name == "left_part")
+            .collect();
+        if left_parts.len() != 1 {
+            return None;
+        }
+        let variable = first_direct_node(left_parts[0], "variable")?;
+        if array_subscripts(variable).is_some() {
+            return None;
+        }
+        let name = self.simple_variable_name(variable).ok()?;
+        let binding = self.require_var(&name).ok()?;
+        if binding.is_global
+            || binding.array.is_some()
+            || self.active_by_name_binding(&name).is_some()
+            || name == target_name
+        {
+            return None;
+        }
+        let expression = first_direct_node(assignment, "expression")?;
+
+        let saved_reals = self.static_real_slots.clone();
+        let saved_integers = self.static_integer_slots.clone();
+        let saved_booleans = self.static_boolean_slots.clone();
+        let mut snapshot = None;
+        let mut exited = false;
+        for _ in 0..MAX_STATIC_WHILE_ITERATIONS {
+            let static_real = (target_ty == ScalarType::Real)
+                .then(|| self.static_assigned_real_value(value))
+                .flatten()
+                .filter(|value| value.is_finite())
+                .map(|value| value.to_string());
+            let static_integer = (target_ty == ScalarType::Integer)
+                .then(|| self.static_assigned_integer_value(value))
+                .flatten();
+            if static_real.is_none() && static_integer.is_none() {
+                break;
+            }
+            if self
+                .update_for_target_snapshot(target, static_real, static_integer)
+                .is_err()
+            {
+                break;
+            }
+            match self.static_boolean_value(condition) {
+                Some(false) => {
+                    exited = true;
+                    break;
+                }
+                Some(true) => {}
+                None => break,
+            }
+            snapshot = match binding.ty {
+                ScalarType::Integer => self
+                    .static_assigned_integer_value(expression)
+                    .map(StaticScalarSnapshot::Integer),
+                ScalarType::Real => self
+                    .static_assigned_real_value(expression)
+                    .filter(|value| value.is_finite())
+                    .map(|value| StaticScalarSnapshot::Real(value.to_string())),
+                ScalarType::Boolean | ScalarType::String => None,
+            };
+            let Some(value) = snapshot.as_ref() else {
+                break;
+            };
+            match value {
+                StaticScalarSnapshot::Integer(value) => {
+                    self.static_integer_slots.insert(binding.slot.clone(), *value);
+                }
+                StaticScalarSnapshot::Real(value) => {
+                    self.static_real_slots
+                        .insert(binding.slot.clone(), value.clone());
+                }
+                StaticScalarSnapshot::Boolean(value) => {
+                    self.static_boolean_slots.insert(binding.slot.clone(), *value);
+                }
+            }
+        }
+        self.static_real_slots = saved_reals;
+        self.static_integer_slots = saved_integers;
+        self.static_boolean_slots = saved_booleans;
+        exited.then_some((binding.slot, snapshot?))
     }
 
     fn for_body_writes_name(
@@ -12880,13 +13023,17 @@ mod tests {
     }
 
     #[test]
-    fn al4_static_initial_while_rejects_control_dependent_body_snapshots() {
-        let err = compile_source(
+    fn al4_static_initial_while_tracks_control_dependent_body_snapshot() {
+        let module = compile_source(
             "begin integer i; real r; i := 0; for i := i + 1 while i < 3 do r := i + 0.25; print(r) end",
             "test",
         )
-        .expect_err("a control-dependent while body requires iteration-specific analysis");
-        assert!(format!("{err:?}").contains("cannot print a real value"));
+        .expect("bounded while analysis evaluates the assignment at each control value");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "2.25")
+        }));
     }
 
     #[test]
@@ -14254,6 +14401,62 @@ mod tests {
                     && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
             }));
         }
+    }
+
+    #[test]
+    fn al4_bounded_while_loop_tracks_scalar_recurrence_snapshot() {
+        for (source, expected) in [
+            (
+                "begin integer i, n; i := 0; n := 0; for i := i + 1 while i <= 3 do n := n + i; print(n + 0.25) end",
+                "6.25",
+            ),
+            (
+                "begin integer i; real r; i := 0; r := 0.25; for i := i + 1 while i <= 3 do r := r + i; print(r) end",
+                "6.25",
+            ),
+        ] {
+            let module = compile_source(source, "test")
+                .expect("a bounded while-loop recurrence has an exact final snapshot");
+            let main = module.get_function("main").expect("has main");
+            assert!(
+                main.instructions.iter().any(|instr| {
+                    instr.op == "str_const"
+                        && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == expected)
+                }),
+                "expected {expected:?} in {:?}",
+                main.instructions
+            );
+        }
+    }
+
+    #[test]
+    fn al4_long_while_recurrence_remains_conservative() {
+        let err = compile_source(
+            "begin integer i; real r; i := 0; r := 0.0; for i := i + 1 while i <= 5000 do r := r + 0.001; print(r) end",
+            "test",
+        )
+        .expect_err("while-loop recurrence simulation is bounded");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_overflowing_while_recurrence_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; i := 0; n := 9223372036854775807; for i := i + 1 while i <= 1 do n := n + 1; print(n + 0.25) end",
+            "test",
+        )
+        .expect_err("checked integer overflow prevents a recurrence snapshot");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_while_recurrence_that_writes_control_dependency_remains_conservative() {
+        let err = compile_source(
+            "begin integer i, n; real r; i := 0; n := 3; r := 0.25; for i := i + 1 while i <= n do begin r := r + i; n := n - 1 end; print(r) end",
+            "test",
+        )
+        .expect_err("a changing predicate dependency prevents bounded recurrence analysis");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

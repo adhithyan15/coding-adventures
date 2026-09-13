@@ -986,7 +986,13 @@ backend immediately) come before the enabler-dependent items.
   numeric comparison, evaluated after abstractly assigning its initial
   controlled value, proves the first condition true. Such an element also
   retains path-independent integer, real, and boolean constants established by
-  a body that avoids the control. Capped abstract execution also retains the
+  a body that avoids the control. One simple local scalar assignment may
+  instead reference the control or its own prior snapshot; capped abstract
+  execution evaluates it after each true predicate and retains its exact
+  integer or finite real result only after proving the terminating false
+  predicate. Dependency writes, compound bodies, nonnumeric targets, overflow,
+  non-finite values, and loops exceeding 4,096 evaluations remain
+  conservative. Capped abstract execution also retains the
   first integer or finite binary64 control value whose predicate is false when
   its value and predicate reference only the control and statically known
   ordinary local scalars that

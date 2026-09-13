@@ -72,6 +72,11 @@ and grand-total prose (1563 → 1567 declared cells) to match. The full
 `non_algol_matrix_every_proven_cell_agrees` capstone confirmed the corrected
 total against a live run: 210 programs, 1357 cells exercised (was 1353), 210
 skipped, zero failures, 478.98s.
+## 0.328.0 — 2026-09-12 — ALGOL while-loop scalar recurrences
+
+The seven-backend ALGOL matrix now proves formatter-free output from a real
+scalar recurrence simulated across each true iteration of a statically bounded
+integer-controlled `while` element.
 
 ## 0.326.0 — 2026-09-12 — ALGOL step-loop scalar recurrences
 
