@@ -15,6 +15,14 @@ checked before the authority sees any evidence. Durable audit intent is
 required before the authority sees token or nonce bytes, and durable success is
 required before the verified opaque key is released.
 
+Provider identity policy may be decoded from a bounded, wipe-on-drop, exact
+versioned static schema containing only provider ID, HTTPS issuer, and the
+case-sensitive `id_token_signing_alg_values_supported` set. Deployment client
+ID and the opaque provider-bound verification context remain caller-owned;
+unknown, missing, duplicate, malformed, `none`, and unbounded data fail closed.
+Decoding performs no source read and enables no signing or verification
+algorithm.
+
 The authority contract must verify the token signature, reject algorithms not
 in the exact allowed set (including `none`), validate `iss`, `aud`, `exp`, and
 nonce, and derive a stable provider-scoped opaque account identity without
