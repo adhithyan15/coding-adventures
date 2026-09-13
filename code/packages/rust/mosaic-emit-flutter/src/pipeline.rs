@@ -67,7 +67,7 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt::Write as _;
 
-use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue};
+use moslayout_compiler::{LayoutDef, LayoutNode, LayoutProp, LayoutPropValue, ScrollAxis};
 use mosmodel_compiler::{
     EmitDecl, EmitPayloadType, ListInnerType, MosmodelComponent, SlotDecl, SlotDefault, SlotType,
 };
@@ -4957,37 +4957,70 @@ fn emit_host_scroll(
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    if node.children.is_empty() {
-        return Ok(format!("{pad}const SingleChildScrollView()\n"));
-    }
-    if node.children.len() == 1 {
+
+    // UI61 -- the axis.
+    //
+    // Flutter has no two-axis scroll view, so `both` is the idiomatic
+    // composition: a vertical `SingleChildScrollView` wrapping a
+    // horizontal one. That makes the INNER view the horizontal one
+    // whenever the axis scrolls horizontally at all, and adds an outer
+    // vertical wrapper only for `both`.
+    //
+    // `vertical` emits a bare `SingleChildScrollView` -- Flutter's own
+    // default -- so every layout that never names an axis produces
+    // byte-identical Dart to what it did before UI61.
+    let axis = ScrollAxis::of(node);
+    let nest = axis == ScrollAxis::Both;
+    let base = indent + if nest { 2 } else { 0 };
+    let bpad = " ".repeat(base);
+    let dir = if axis.scrolls_horizontally() {
+        format!("{bpad}  scrollDirection: Axis.horizontal,\n")
+    } else {
+        String::new()
+    };
+
+    let core = if node.children.is_empty() {
+        if axis.scrolls_horizontally() {
+            format!("{bpad}const SingleChildScrollView(scrollDirection: Axis.horizontal)\n")
+        } else {
+            format!("{bpad}const SingleChildScrollView()\n")
+        }
+    } else if node.children.len() == 1 {
         let child = emit_widget_tree(
             &node.children[0],
-            indent + 2,
+            base + 2,
             part_styles,
             component,
             emits,
             ctx,
         )?;
         let child = child.trim_end_matches('\n');
-        return Ok(format!(
-            "{pad}SingleChildScrollView(\n{pad}  child: {child},\n{pad})\n"
-        ));
+        format!("{bpad}SingleChildScrollView(\n{dir}{bpad}  child: {child},\n{bpad})\n")
+    } else {
+        // Multi-child path. Use the paired walker so an `If`/`Else`
+        // sibling pair (Cell-style conditionals inside a scroll viewport)
+        // is consumed correctly.
+        let children = emit_paired_children(
+            &node.children,
+            base + 6,
+            part_styles,
+            component,
+            emits,
+            ctx,
+        )?;
+        format!(
+            "{bpad}SingleChildScrollView(\n{dir}{bpad}  child: Column(\n{bpad}    children: [\n{children}{bpad}    ],\n{bpad}  ),\n{bpad})\n"
+        )
+    };
+
+    if nest {
+        let inner = core.trim_start().trim_end_matches('\n');
+        Ok(format!(
+            "{pad}SingleChildScrollView(\n{pad}  child: {inner},\n{pad})\n"
+        ))
+    } else {
+        Ok(core)
     }
-    // Multi-child path. Use the paired walker so an `If`/`Else`
-    // sibling pair (Cell-style conditionals inside a scroll viewport)
-    // is consumed correctly.
-    let children = emit_paired_children(
-        &node.children,
-        indent + 6,
-        part_styles,
-        component,
-        emits,
-        ctx,
-    )?;
-    Ok(format!(
-        "{pad}SingleChildScrollView(\n{pad}  child: Column(\n{pad}    children: [\n{children}{pad}    ],\n{pad}  ),\n{pad})\n"
-    ))
 }
 
 /// #13010: does this `HostDialog` node lower to a real native dialog on
@@ -9195,6 +9228,77 @@ mod tests {
     }
 
     // ----- HostScroll ---------------------------------------------------
+
+    /// UI61 — the axis reaches the Dart. `both` is asserted as real
+    /// NESTING rather than as a `scrollDirection` string, because
+    /// Flutter has no two-axis scroll view: an emitter that merely wrote
+    /// `scrollDirection: Axis.horizontal` for `both` would scroll
+    /// sideways only, and would pass any assertion that just looked for
+    /// the word "horizontal".
+    #[test]
+    fn ui61_each_axis_selects_its_scroll_view_shape() {
+        let render = |axis: Option<&str>| {
+            let props = axis
+                .map(|a| {
+                    vec![LayoutProp {
+                        name: "axis".into(),
+                        value: LayoutPropValue::Keyword(a.into()),
+                    }]
+                })
+                .unwrap_or_default();
+            let root = node_with(
+                "HostScroll",
+                props,
+                vec![node_with(
+                    "Text",
+                    vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::String("row".into()),
+                    }],
+                    vec![],
+                )],
+            );
+            from_pipeline(&component("X", vec![], vec![]), &layout("X", root), &empty_style("X"))
+                .expect("emit scroll")
+                .output
+        };
+
+        // The default names no axis at all — Flutter's own default is
+        // vertical, and this is what keeps existing output still.
+        let vertical = render(None);
+        assert_eq!(
+            vertical,
+            render(Some("vertical")),
+            "an explicit `axis: vertical` must emit exactly the default"
+        );
+        assert!(
+            !vertical.contains("scrollDirection"),
+            "the vertical default must not name a direction, got:\n{vertical}"
+        );
+
+        let horizontal = render(Some("horizontal"));
+        assert_eq!(
+            horizontal.matches("SingleChildScrollView").count(),
+            1,
+            "horizontal is ONE scroll view, got:\n{horizontal}"
+        );
+        assert!(
+            horizontal.contains("scrollDirection: Axis.horizontal"),
+            "got:\n{horizontal}"
+        );
+
+        let both = render(Some("both"));
+        assert_eq!(
+            both.matches("SingleChildScrollView").count(),
+            2,
+            "`both` must nest a horizontal view inside a vertical one, got:\n{both}"
+        );
+        assert_eq!(
+            both.matches("scrollDirection: Axis.horizontal").count(),
+            1,
+            "only the INNER view names an axis, got:\n{both}"
+        );
+    }
 
     #[test]
     fn host_scroll_with_one_child_wraps_in_single_child_scroll_view() {
