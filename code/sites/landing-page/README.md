@@ -52,3 +52,9 @@ the last good page visible if a rebuild fails.
 
 Do not edit generated files under `dist/`; the Pages workflow always rebuilds
 from a clean checkout before publishing.
+
+The authored document, persisted-identity sidecars, social image, and
+`landing.css` are exact registered build inputs. Adding or renaming one requires
+updating the TypeScript `package_exact_inputs` rule for
+`code/sites/landing-page` in the checked language source-input registry and
+regenerating every checked build-tool projection.

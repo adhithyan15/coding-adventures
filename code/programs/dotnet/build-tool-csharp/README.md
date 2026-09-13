@@ -42,7 +42,12 @@ dotnet run -- --emit-plan --plan-file build-plan.json
   neither executable locates or decodes fixture JSON at runtime.
 - Source selection applies exact generated-component pruning, all seven
   package-local selector roles, direct Starlark `srcs` globs, and the reviewed
-  repository-boundary registry. The same boundary projection reverse-indexes
+  repository-boundary registry. Beyond conventional roots, only the two
+  registry-named TypeScript sites may contribute their 13 exact authored paths;
+  discovery preserves their legacy `unknown/*` graph identities while live
+  hashing resolves the selector from the exact registered root. Sibling sites
+  and same-shaped ordinary-package files remain excluded. The
+  same boundary projection reverse-indexes
   a changed shared input to every exact consumer.
 - Package hashes sort canonical repository-relative UTF-8 paths and frame each
   path and exact raw file body with unsigned 64-bit big-endian lengths before

@@ -104,8 +104,12 @@ last good blog when an edit produces a build error.
 
    …body in GFM…
    ```
-2. Re-run `npm run build`.
-3. Open `dist/blog/<slug>.html`.
+2. Register the new Markdown path and its persisted-identity sidecar in the
+   TypeScript `package_exact_inputs` rule for `code/sites/blog` in
+   `code/specs/fixtures/build-tool-v1/language-source-input-registry.json`.
+3. Regenerate the checked build-tool registry projections.
+4. Re-run `npm run build`.
+5. Open `dist/blog/<slug>.html`.
 
 The slug is derived from the filename (strip `.md`, lowercase,
 replace whitespace/`_` with `-`). To override, set `slug:` in

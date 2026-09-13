@@ -13629,6 +13629,55 @@ root-CSS widening. The implementation tranche refreshes the already-adopted Go,
 Haskell, Swift, and shared .NET projections, adds neutral exact-root and
 foreign-package cases, and runs the real site packages as downstream evidence.
 
+### Exact site-input implementation and parallel continuation audit
+
+The selected site-input owner now closes the 13 tracked authored-resource
+omissions without widening the TypeScript lane. The neutral registry admits
+only exact `code/sites/blog` and `code/sites/landing-page` roots and enumerates
+their eight and five tracked inputs respectively. Arbitrary, nested, and
+wrong-case site roots remain invalid; foreign-package resources and broad
+Markdown, `.landing`, image, sidecar, `data`, and root-CSS patterns remain
+excluded. Three neutral cases grow the process-free corpus from 146 to 149 and
+cover both exact packages plus the foreign-package rejection boundary.
+
+The language registry digest is now
+`190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530`.
+Its repository-boundary cascade is
+`cb396d048211f3ec20f1e4d5a438746e5b19642b6d2b039e33c93876a841cd6d`.
+The Python oracle and already-adopted Go, Haskell, Swift, and shared .NET
+engines consume the same exact-root rules; all five checked projections
+regenerate byte-for-byte. The registry test additionally proves that every
+selected site input is one stage-zero mode-`100644` Git entry and that its
+working bytes equal the indexed blob, so a link or untracked worktree file
+cannot masquerade as contract evidence.
+
+Local evidence includes the full 80-test/268-subtest Python conformance suite;
+Go race, vet, module verification, and 80.4% total coverage; Haskell's full
+79-example suite and 80% expression coverage; Swift's 86 tests and 81.26% line
+coverage; C#'s 82 tests and 88.38% line coverage; F#'s 18 tests; all five native
+build-tool `BUILD` fronts; and the real blog and landing-page `BUILD` fronts.
+Strict JSON, collision reporting, the 808-owner/1,379-edge state graph,
+generator idempotence, diff hygiene, Ruff, Bandit medium/high, and an
+independent security review also pass. Go and Haskell live legacy-site mapping
+is additionally anchored to the discovered `.git` repository root, so an
+outside, unregistered, or nested filesystem suffix cannot acquire TypeScript
+authority.
+
+Parallel dependency analysis kept backlog work moving during the long native
+build validations. This owner reaches 42 unfinished descendants over six hops
+and, once merged, immediately makes five consumers mechanically ready:
+Python, Ruby, and TypeScript language-source-input registry adoption, Elixir
+portable-source hashing, and Lua hashing/cache conformance. TypeScript registry
+adoption is the best continuity choice because it reuses the exact site
+boundary and then unlocks TypeScript reverse-diff work; Python and Ruby are
+bounded alternatives. Independent preparation should prioritize the JVM
+process-free graph/diff core ahead of Dart because it serves two lanes, while
+OCaml representative-package CI remains a ready hard promotion gate. The broad
+singleton umbrella has stale Rust counts and overlaps two dated classifiers;
+it must be consolidated or decomposed before selection. Native-authority and
+host-security owners that appear mechanically ready remain excluded by the
+parity selection policy rather than inflating the eligible queue.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -229,6 +229,7 @@ hashingSpec = describe "package hashing" $ do
             let packageRoot = repositoryRoot </> "code" </> "sites" </> "blog"
                 buildFile = packageRoot </> "BUILD"
                 postPath = "data" </> "2026-05-08-capability-typed-stages.md"
+            createDirectory (repositoryRoot </> ".git")
             createDirectoryIfMissing True (takeDirectory (packageRoot </> postPath))
             BS8.writeFile buildFile "echo build\n"
             BS8.writeFile (packageRoot </> postPath) "# post\n"
@@ -253,6 +254,45 @@ hashingSpec = describe "package hashing" $ do
             BS8.writeFile (packageRoot </> postPath) "# changed post\n"
             changed <- hashPackage pkg
             changed `shouldNotBe` initial
+
+    it "rejects nested, case-aliased, unregistered, and outside site roots" $ do
+        forM_
+            [ "code" </> "misc" </> "code" </> "sites" </> "blog"
+            , "code" </> "sites" </> "Blog"
+            , "code" </> "sites" </> "unreviewed"
+            ]
+            $ \relativeRoot ->
+                withTemporaryDirectory "haskell-build-tool-invalid-site" $ \repositoryRoot -> do
+                    createDirectory (repositoryRoot </> ".git")
+                    let packageRoot = repositoryRoot </> relativeRoot
+                        buildFile = packageRoot </> "BUILD"
+                    createDirectoryIfMissing True packageRoot
+                    BS8.writeFile buildFile "echo build\n"
+                    hashPackage
+                        ( Package
+                            { packageName = "unknown/blog"
+                            , packagePath = packageRoot
+                            , packageBuildFile = buildFile
+                            , packageBuildCommands = ["echo build"]
+                            , packageLanguage = "unknown"
+                            }
+                        )
+                        `shouldThrow` anyIOException
+        withTemporaryDirectory "haskell-build-tool-outside-site" $ \outsideRoot -> do
+            let packageRoot = outsideRoot </> "code" </> "sites" </> "blog"
+                buildFile = packageRoot </> "BUILD"
+            createDirectoryIfMissing True packageRoot
+            BS8.writeFile buildFile "echo build\n"
+            hashPackage
+                ( Package
+                    { packageName = "unknown/blog"
+                    , packagePath = packageRoot
+                    , packageBuildFile = buildFile
+                    , packageBuildCommands = ["echo build"]
+                    , packageLanguage = "unknown"
+                    }
+                )
+                `shouldThrow` anyIOException
 
     it "embeds a production registry equal to the checked complete registry" $ do
         maybeRoot <- findRepoRoot Nothing

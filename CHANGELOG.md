@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Exact site-authored build inputs
+
+- Registered the eight reviewed blog inputs and five landing-page inputs as
+  exact TypeScript package resources, including persisted identity sidecars,
+  checked assets, and the directly consumed landing stylesheet. Arbitrary site
+  roots and same-shaped files in ordinary TypeScript packages remain excluded.
+- Expanded the process-free source-collection corpus from 146 to 149 cases and
+  refreshed the generated Go, Haskell, Swift, C#, and F# registry projections
+  plus both domain-separated digest chains.
+
 ### Main CI repair: font-subset oracle interpreter pinning
 
 - Fixed: `rust/font-subset`'s `fonttools_oracle` tests were panicking with

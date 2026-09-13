@@ -40,7 +40,7 @@ public sealed class BuildToolTests : IDisposable
         Assert.Equal("unknown/blog", package.Name);
         Assert.Equal("unknown", package.Language);
         Assert.Equal(
-            ["BUILD", "data/2026-05-08-capability-typed-stages.md"],
+            ["BUILD", "data/2026-05-08-capability-typed-stages.md", "nested/BUILD"],
             Hasher.CollectSourceFiles(package)
                 .Select(path => Path.GetRelativePath(package.Path, path).Replace('\\', '/'))
                 .OrderBy(path => path, StringComparer.Ordinal));

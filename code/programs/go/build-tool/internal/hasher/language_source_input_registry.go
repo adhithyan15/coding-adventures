@@ -218,10 +218,13 @@ func validateLanguageSourceInputRegistry(registry languageSourceInputRegistryDoc
 		for _, exact := range language.PackageExactInputs {
 			rootParts := strings.Split(exact.PackageRoot, "/")
 			rootIdentity := strings.ToLower(exact.PackageRoot)
+			languageRoot := len(rootParts) >= 4 && rootParts[0] == "code" &&
+				(rootParts[1] == "packages" || rootParts[1] == "programs") && rootParts[2] == language.Language
+			siteRoot := language.Language == "typescript" && len(rootParts) == 3 &&
+				rootParts[0] == "code" && rootParts[1] == "sites" && rootParts[2] != ""
 			if !isRegistryIdentifier(exact.ID) || exact.ID <= previousPackageID || !isRegistryDescription(exact.Owner) || !isRegistryDescription(exact.Reason) ||
 				len(exact.Paths) == 0 || len(exact.Paths) > 256 || validateRegistryPath(exact.PackageRoot) != nil ||
-				len(rootParts) < 4 || rootParts[0] != "code" || (rootParts[1] != "packages" && rootParts[1] != "programs") ||
-				rootParts[2] != language.Language || seenPackageRoots[rootIdentity] || validateCanonicalRegistrySelectors(exact.Paths, "path") != nil {
+				(!languageRoot && !siteRoot) || seenPackageRoots[rootIdentity] || validateCanonicalRegistrySelectors(exact.Paths, "path") != nil {
 				return fmt.Errorf("invalid language source-input registry")
 			}
 			previousPackageID = exact.ID

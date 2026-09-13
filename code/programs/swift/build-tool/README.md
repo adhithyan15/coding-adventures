@@ -140,7 +140,12 @@ root-only `required_capabilities.json`, lane root metadata and variable
 manifests, fixed relative inputs, and exact package-specific inputs. This
 includes SwiftPM C-family targets below `Sources`, reviewed Rust companions,
 resources and scripts, and only the three exact Engram WASM BUILD inputs for
-the canonical Engram package root. Unknown languages, non-portable paths,
+the canonical Engram package root. It also admits only the exact registered
+blog and landing-page TypeScript roots and their 13 authored paths; arbitrary
+sites and same-shaped ordinary-package files remain excluded. The registered
+sites retain legacy `unknown/*` graph identities, and repository-aware hashing
+derives their TypeScript selector from the exact root. Other unknown
+languages, non-portable paths,
 NFC/full-casefold aliases, lane/root mismatches, lane roots without a package
 name, oversized inputs, and selector widening fail closed. Immediate directory
 entries are enumerated incrementally into the candidate ceiling before bounded
