@@ -14048,6 +14048,16 @@ fn doctype_triggers_quirks(
             "-//microsoft//dtd internet explorer 2.0 tables//",
             "-//microsoft//dtd internet explorer 3.0 html strict//",
             "-//microsoft//dtd internet explorer 3.0 html//",
+            "-//microsoft//dtd internet explorer 3.0 tables//",
+            "-//netscape comm. corp.//dtd html//",
+            "-//netscape comm. corp.//dtd strict html//",
+            "-//o'reilly and associates//dtd html 2.0//",
+            "-//o'reilly and associates//dtd html extended 1.0//",
+            "-//o'reilly and associates//dtd html extended relaxed 1.0//",
+            "-//sq//dtd html 2.0 hotmetal + extensions//",
+            "-//softquad software//dtd hotmetal pro 6.0::19990601::extensions to html 4.0//",
+            "-//softquad//dtd hotmetal pro 4.0::19971010::extensions to html 4.0//",
+            "-//spyglass//dtd html 2.0 extended//",
         ];
         let is_html_4_frameset_or_transitional = public_identifier
             .starts_with("-//w3c//dtd html 4.01 frameset")
@@ -35640,6 +35650,16 @@ mod tests {
             "-//Microsoft//DTD Internet Explorer 2.0 Tables//",
             "-//Microsoft//DTD Internet Explorer 3.0 HTML Strict//",
             "-//Microsoft//DTD Internet Explorer 3.0 HTML//",
+            "-//Microsoft//DTD Internet Explorer 3.0 Tables//",
+            "-//Netscape Comm. Corp.//DTD HTML//",
+            "-//Netscape Comm. Corp.//DTD Strict HTML//",
+            "-//O'Reilly and Associates//DTD HTML 2.0//",
+            "-//O'Reilly and Associates//DTD HTML Extended 1.0//",
+            "-//O'Reilly and Associates//DTD HTML Extended Relaxed 1.0//",
+            "-//SQ//DTD HTML 2.0 HoTMetaL + extensions//",
+            "-//SoftQuad Software//DTD HoTMetaL PRO 6.0::19990601::extensions to HTML 4.0//",
+            "-//SoftQuad//DTD HoTMetaL PRO 4.0::19971010::extensions to HTML 4.0//",
+            "-//Spyglass//DTD HTML 2.0 Extended//",
         ];
 
         for public_identifier in public_identifiers {
