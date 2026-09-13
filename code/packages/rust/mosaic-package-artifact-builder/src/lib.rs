@@ -1517,9 +1517,10 @@ fn ignored_native_property(
     enclosing_table: Option<&LayoutNode>,
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
-        (_, "font-size") if !matches!(backend, Backend::React | Backend::Electron) => Some((
+        (_, "font-size") if !matches!(backend, Backend::React | Backend::Electron)
+            && !(backend == Backend::Compose && mosaic_emit_compose::pipeline::has_native_font_size(node)) => Some((
             "typography.font-size-binding-unimplemented",
-            "layout font-size bindings are currently implemented only by React/Electron; static mosstyle typography is unaffected",
+            "layout font-size binding has no projection for this backend or primitive; static mosstyle typography is unaffected",
         )),
         // #14843. Was `backend != React` with no per-backend question at all,
         // so it said nothing about what any other backend could express --
@@ -2182,6 +2183,11 @@ fn install_host_assets(
     // The directory is the emitter's output, and a future emitter that forgets a
     // `push` cannot break this.
     let generated = generated_files_on_disk(backend_dir, pre_emission, written_by_emitters)?;
+    // Resolved once: every source below is checked against it, and the package
+    // root cannot move mid-loop.
+    let canonical_root = package_root
+        .canonicalize()
+        .map_err(|e| BuildError::Io(format!("canonicalize {}: {e}", package_root.display())))?;
     let mut written = Vec::new();
     let mut replaced = Vec::new();
     for asset in &manifest.host_assets.files {
@@ -2193,7 +2199,41 @@ fn install_host_assets(
         let target_rel = safe_manifest_relative_path("host asset target", &asset.target)?;
         let source = package_root.join(&source_rel);
         let target = backend_dir.join(&target_rel);
-        let bytes = fs::read(&source)
+
+        // Resolved and contained, the same as `install_host_effects`.
+        //
+        // `safe_manifest_relative_path` is LEXICAL: it refuses `..` and
+        // absolute paths, and a symlink at an innocent-looking relative path
+        // sails through it. `[host_effects]` grew this guard and this function
+        // did not -- and this is the OLDER and far wider door into the same
+        // output directory, the one every package shipping a host file uses
+        // today. The bytes are copied into the emitted project and, on several
+        // backends, compiled into it.
+        let canonical_source = source
+            .canonicalize()
+            .map_err(|e| BuildError::Io(format!("read {}: {e}", source.display())))?;
+        if !canonical_source.starts_with(&canonical_root) {
+            return Err(BuildError::Io(format!(
+                "host asset source {} resolves to {}, outside the package",
+                asset.source,
+                canonical_source.display()
+            )));
+        }
+
+        // A FIFO inside the package resolves and contains, and `fs::read` on
+        // one blocks forever -- a build that hangs rather than fails.
+        // Directories and dangling links already fail loudly; this covers the
+        // one that does not.
+        let metadata = fs::metadata(&canonical_source)
+            .map_err(|e| BuildError::Io(format!("stat {}: {e}", source.display())))?;
+        if !metadata.is_file() {
+            return Err(BuildError::Io(format!(
+                "host asset source {} is not a regular file",
+                asset.source
+            )));
+        }
+
+        let bytes = fs::read(&canonical_source)
             .map_err(|e| BuildError::Io(format!("read {}: {e}", source.display())))?;
         // Compared on the resolved destination, which is the only thing that
         // decides what gets clobbered. Whatever spelling the manifest used,
@@ -7787,7 +7827,7 @@ layout AccessibleText {
     }
 
     #[test]
-    fn typography_bindings_are_explicitly_degraded_outside_react() {
+    fn typography_bindings_are_explicitly_degraded_outside_supported_backends() {
         let pkg = make_package("mosaic-pkg-scaled-text", &["ScaledText"]);
         fs::write(
             pkg.path().join("src/ScaledText.mil"),
@@ -7825,7 +7865,7 @@ layout AccessibleText {
                     .iter()
                     .filter(|entry| entry.code == "typography.font-size-binding-unimplemented")
                     .count(),
-                if matches!(backend, Backend::React | Backend::Electron) {
+                if matches!(backend, Backend::React | Backend::Electron | Backend::Compose) {
                     0
                 } else {
                     4
@@ -9423,6 +9463,79 @@ files = [
             host.contains("mosaic_app_create"),
             "the standard binding should survive when nothing overwrites it"
         );
+    }
+
+    /// A `[host_assets]` source may not resolve outside the package either.
+    ///
+    /// `install_host_effects` grew this guard; `install_host_assets` did not,
+    /// and it is the OLDER and far wider door into the same output directory —
+    /// every package that ships a host file today uses it.
+    ///
+    /// `safe_manifest_relative_path` is LEXICAL. It refuses `..` and absolute
+    /// paths, and a symlink sitting at an innocent-looking relative path sails
+    /// straight through it. The bytes are then copied into the emitted project
+    /// and, for several backends, compiled into it.
+    ///
+    /// The secret lives genuinely outside the package root. The host-effects
+    /// version of this test records why: a first draft put it inside `root` and
+    /// passed a different directory as the package root, so the path never
+    /// resolved and the containment branch never ran — the test failed on a
+    /// missing file while appearing to exercise the guard.
+    #[test]
+    fn a_host_asset_symlink_escaping_the_package_is_refused() {
+        let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
+        let host_dir = pkg.path().join("host").join("web");
+        fs::create_dir_all(&host_dir).unwrap();
+
+        let outside = pkg
+            .path()
+            .parent()
+            .expect("temp dir has a parent")
+            .join(format!(
+                "mosaic-host-asset-secret-{}-{}",
+                std::process::id(),
+                std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .expect("system clock after epoch")
+                    .as_nanos()
+            ));
+        fs::write(&outside, b"SECRET\n").expect("write the file outside the package");
+        std::os::unix::fs::symlink(&outside, host_dir.join("grid-host.ts"))
+            .expect("create the escaping symlink");
+        // It must actually resolve, or this proves only that a broken link is
+        // refused — a different and much weaker claim.
+        assert_eq!(
+            fs::read_to_string(host_dir.join("grid-host.ts")).expect("the symlink must resolve"),
+            "SECRET\n"
+        );
+
+        append_host_assets(
+            pkg.path(),
+            r#"[host_assets]
+files = [
+  { backend = "react", source = "host/web/grid-host.ts", target = "src/grid-host.ts" },
+]"#,
+        );
+
+        let out = TempDir::new().unwrap();
+        let error = build_package(&BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend: Backend::React,
+            emit_project: true,
+            theme: None,
+        })
+        .expect_err("a host asset resolving outside the package must be refused");
+        let message = format!("{error:?}");
+        assert!(
+            message.contains("outside the package"),
+            "the refusal must say why: {message}"
+        );
+        assert!(
+            !out.path().join("react/src/grid-host.ts").exists(),
+            "nothing may be written when the source escapes"
+        );
+        let _ = fs::remove_file(&outside);
     }
 
     #[test]

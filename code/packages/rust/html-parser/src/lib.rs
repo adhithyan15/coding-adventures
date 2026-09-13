@@ -14536,6 +14536,16 @@ fn is_special_scope_boundary_element(name: &str) -> bool {
             | "dl"
             | "fieldset"
             | "figcaption"
+            | "figure"
+            | "footer"
+            | "header"
+            | "hgroup"
+            | "main"
+            | "menu"
+            | "nav"
+            | "ol"
+            | "pre"
+            | "section"
     ) || is_special_element(name)
 }
 
@@ -38084,6 +38094,16 @@ mod tests {
             "dl",
             "fieldset",
             "figcaption",
+            "figure",
+            "footer",
+            "header",
+            "hgroup",
+            "main",
+            "menu",
+            "nav",
+            "ol",
+            "pre",
+            "section",
         ] {
             let source = format!(
                 "<!doctype html><x-probe id=outer><{name} id=boundary></x-probe><span id=after>Y"

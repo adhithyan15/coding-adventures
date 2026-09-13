@@ -369,7 +369,9 @@ declare square or rounded nodes inline, including their authored labels, rather
 than requiring a separate cell declaration; solid directed links preserve
 quoted labels in that inline form. Terminal circle and
 cross markers accept Mermaid's compact `A--oB` and `A--xB` forms without
-collapsing hyphenated node IDs. `diagram-layout-grid` resolves deterministic
+collapsing hyphenated node IDs. Three-or-more-tilde links create their endpoint
+nodes and lower to open, normal-width solid edges, matching the pinned Block
+renderer. `diagram-layout-grid` resolves deterministic
 cell geometry before the shared backend-neutral PaintScene lowering path. A
 native Metal-to-PNG fixture gates this slice. Named classes and direct styles
 resolve for both cells and composites, including backend-neutral
