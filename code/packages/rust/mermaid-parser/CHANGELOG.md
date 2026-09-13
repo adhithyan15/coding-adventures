@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.203.0
+
+- Normalize quoted Block node labels to their authored display text.
+
 ## 0.202.0
 
 - Resolve named classes and direct styles for Block composites.

@@ -4,7 +4,7 @@
   "family": "block",
   "supported_subset": "Flat grids with columns, spanned spaces and nodes, labeled core, polygonal, and stadium shapes, and directed connections",
   "fixtures": [
-    { "id": "basic-grid", "source": "block-beta\ncolumns auto\nA[Parser] B(IR) C((Paint))" },
+    { "id": "basic-grid", "source": "block-beta\ncolumns auto\nA[\"Grammar Parser\"] B(\"Semantic IR\") C((\"Paint Output\"))" },
     { "id": "spaces-and-edges", "source": "block\ncolumns 2\nA[Source] space\nB[Output]\nA --> B\nA-- \"observes\" ---B" },
     { "id": "column-spans", "source": "block\ncolumns 4\nA[Wide]:2 B[Single] space\nspace:3 C[Next row]\nA --> B\nB --> C" },
     { "id": "polygonal-shapes", "source": "block\nA{{Hexagon}} B([Stadium]) C[/Right/] D[\\Left\\] E[/Trapezoid\\] F[\\Inverse/]" },
