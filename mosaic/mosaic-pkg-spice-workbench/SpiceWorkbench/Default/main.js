@@ -9,6 +9,10 @@ const fallbackProps = {
   "diagnosticsLabel": "Sample DiagnosticsLabel",
   "inspectLabel": "Sample InspectLabel",
   "modeLabel": "Sample ModeLabel",
+  "moveSchematicAnalysisCardEarlierDisabled": false,
+  "moveSchematicAnalysisCardEarlierLabel": "Sample MoveSchematicAnalysisCardEarlierLabel",
+  "moveSchematicAnalysisCardLaterDisabled": false,
+  "moveSchematicAnalysisCardLaterLabel": "Sample MoveSchematicAnalysisCardLaterLabel",
   "netlistLabel": "Sample NetlistLabel",
   "netlistPlaceholder": "Sample NetlistPlaceholder",
   "netlistText": "Sample NetlistText",
@@ -30,6 +34,9 @@ const fallbackProps = {
   "schematicAnalysisCardRows": [],
   "schematicAnalysisConfigurationLabel": "Sample SchematicAnalysisConfigurationLabel",
   "schematicAnalysisControls": [],
+  "schematicAnalysisKindControls": [],
+  "schematicAnalysisKindDisabled": false,
+  "schematicAnalysisKindLabel": "Sample SchematicAnalysisKindLabel",
   "schematicAnalysisLabel": "Sample SchematicAnalysisLabel",
   "schematicAnalysisParameterOneDisabled": false,
   "schematicAnalysisParameterOneLabel": "Sample SchematicAnalysisParameterOneLabel",
@@ -86,6 +93,8 @@ const emitPayloads = {
     }
   ],
   "onInspect": [],
+  "onMoveSchematicAnalysisCardEarlier": [],
+  "onMoveSchematicAnalysisCardLater": [],
   "onNetlistChange": [
     {
       "name": "value",

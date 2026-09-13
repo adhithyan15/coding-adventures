@@ -69,6 +69,19 @@
           </div>
           <span style="color: #6d28d9; font-weight: bold">{{selectedSchematicAnalysisLabel}}</span>
           <div style="display: flex; flex-direction: column; gap: 4px">
+            <span style="font-size: 12px; color: #475569">{{schematicAnalysisKindLabel}}</span>
+            <div style="display: flex; flex-direction: row; gap: 6px">
+              <!-- mosaic-for each="schematicAnalysisKindControls" as="analysis" index="analysis-index" -->
+                <!-- emit "onSelectSchematicAnalysis" dropped: HTML is static -->
+                <button data-disabled="{{schematicAnalysisKindDisabled}}" data-on-click="onSelectSchematicAnalysis" style="background: #f5f3ff; color: #5b21b6; border-width: 1px; border-color: #c4b5fd; border-radius: 3px; padding: 6px">{{analysis}}</button>
+              <!-- /mosaic-for -->
+            </div>
+            <div style="display: flex; flex-direction: row; gap: 6px">
+              <!-- emit "onMoveSchematicAnalysisCardEarlier" dropped: HTML is static -->
+              <button data-disabled="{{moveSchematicAnalysisCardEarlierDisabled}}" data-on-click="onMoveSchematicAnalysisCardEarlier" style="background: #e0f2fe; color: #075985; border-width: 1px; border-color: #7dd3fc; border-radius: 3px; padding: 6px">{{moveSchematicAnalysisCardEarlierLabel}}</button>
+              <!-- emit "onMoveSchematicAnalysisCardLater" dropped: HTML is static -->
+              <button data-disabled="{{moveSchematicAnalysisCardLaterDisabled}}" data-on-click="onMoveSchematicAnalysisCardLater" style="background: #e0f2fe; color: #075985; border-width: 1px; border-color: #7dd3fc; border-radius: 3px; padding: 6px">{{moveSchematicAnalysisCardLaterLabel}}</button>
+            </div>
             <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicAnalysisConfigurationLabel}}</span>
             <!-- emit "onRemoveSchematicAnalysisCard" dropped: HTML is static -->
             <button data-on-click="onRemoveSchematicAnalysisCard" style="background: #fff1f2; color: #9f1239; border-width: 1px; border-color: #fda4af; border-radius: 3px; padding: 6px">{{removeSchematicAnalysisCardLabel}}</button>
