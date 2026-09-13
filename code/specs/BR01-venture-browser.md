@@ -189,7 +189,10 @@ layer, routes invoker/accessibility commands, owns modal focus, light-dismiss,
 and Escape policy, and publishes transformed hit regions without toolkit-owned
 visibility state. Same-document fragment convergence now strips anchors before
 transport, resolves decoded `id` and legacy named targets from shared layout,
-and performs history scrolling without replacing retained page state. The
+and performs history scrolling without replacing retained page state. Stable
+navigation-entry identities now key bounded public form/custom-element state
+and logical scroll offsets, preserving independent repeated URLs and fragment
+traversals without host-owned restoration policy. The
 tracked acceptance backlog is complete; each next phase starts from a fresh
 cross-host audit.
 

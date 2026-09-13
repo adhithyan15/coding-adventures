@@ -5,6 +5,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - per-entry history state restoration.** Give
+  reusable navigation entries stable identities and key bounded public form,
+  custom-element, and logical scroll snapshots by entry rather than URL.
+  Completed with independent repeated-URL state, redirect-stable identities,
+  fetch-free fragment traversal restoration, clamped viewport offsets, and a
+  diagnostic projection consumed uniformly by every native/web host seam.
+
 - [x] **P1 browser convergence - same-document fragment navigation.** Strip
   URL fragments before transport, retain same-document history traversal,
   percent-decode `id` and legacy `a[name]` targets in document order, and route
