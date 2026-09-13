@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C83-lines",
+    "language": "telugu",
+    "chapter": 83,
+    "sequence": 3000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd8813a070ce9132"
+  },
+  "findings": []
+}
