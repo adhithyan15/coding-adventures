@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Expanded the process-free source-collection corpus from 146 to 149 cases and
   refreshed the generated Go, Haskell, Swift, C#, and F# registry projections
   plus both domain-separated digest chains.
+- Added native Windows build fronts for both newly registered site roots so
+  their artifact assertions do not rely on POSIX shell negation under `cmd`.
 
 ### Main CI repair: font-subset oracle interpreter pinning
 

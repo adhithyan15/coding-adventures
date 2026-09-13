@@ -86,8 +86,9 @@ last good blog when an edit produces a build error.
 - `forme-local-bootstrap` from `@coding-adventures/forme-cli` discovers and
   installs the local `file:` dependency graph in dependency order. Local builds
   and pull-request CI share that implementation.
-- `BUILD` — monorepo build-tool entry point. It installs the same dependency
-  graph, runs the pipeline, and verifies `dist/blog/` is produced.
+- `BUILD` / `BUILD_windows` — monorepo build-tool entry points. They install
+  the same dependency graph, run the pipeline, and verify `dist/blog/` is
+  produced without unresolved asset placeholders.
 - `dist/` — build output (git-ignored).
 
 ## Adding a post

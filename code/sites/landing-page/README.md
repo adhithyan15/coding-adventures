@@ -49,6 +49,8 @@ the last good page visible if a rebuild fails.
   packages.
 - `verify.ts` owns site-specific filesystem acceptance checks after the general
   `forme build` command.
+- `BUILD` and `BUILD_windows` preserve those acceptance checks across the
+  monorepo build tool's POSIX and Windows command front doors.
 
 Do not edit generated files under `dist/`; the Pages workflow always rebuilds
 from a clean checkout before publishing.
