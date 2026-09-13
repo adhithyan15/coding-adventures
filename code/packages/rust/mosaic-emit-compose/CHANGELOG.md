@@ -5,6 +5,58 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — `flex-shrink: 0` on a Row child is honoured (UI59, #14815)
+
+A previously-discarded property now lowers: a direct `Row` child that authors
+`flex-shrink: 0` gets `Modifier.wrapContentWidth(unbounded = true)`, which is
+what actually holds its width. Six sites in Trestle.
+
+**The modifier is not the one reasoning picks.** A probe measured a Row child
+beside a long `Text` at 420px:
+
+| child modifier | measured |
+| --- | --- |
+| none | `0 x 112` — starved |
+| `IntrinsicSize.Min` | `0 x 112` — still starved |
+| `IntrinsicSize.Max` | `0 x 112` — still starved |
+| `wrapContentWidth(unbounded = true)` | **`57 x 16`** |
+
+Both intrinsics looked obviously right and neither works. One probe settled it.
+
+Worth recording that the comment already in this file — "every other Row child
+stays intrinsic so it cannot starve later siblings" — is **not what happens**.
+A plain Row child measures `0 x 112`. Compose hands out the remaining width in
+order and the last child gets what is left, which can be nothing.
+
+`flex-grow` is the opposite request, so a weighted child keeps its weight and is
+not also width-guarded.
+
+#### What this does NOT do, measured rather than assumed
+
+**It changes no product rendering today.** Trestle's composer was measured at
+900px and 700px before and after, and every element is byte-identical:
+`name-input 154x24 / due-input 138x24 / add-btn 100x36` at 900, and
+`name-input 40x120 / due-input 138x24 / add-btn 100x36` at 700. The parts that
+author `flex-shrink: 0` already hold their width by other means.
+
+So this does **not** fix #14815's `On track` chip, which does not author the
+property, and does **not** fix `name-input` starving to `40 x 120` at 700px,
+which does not author it either. It makes an authored opt-out work; it does not
+change any default.
+
+UI59 §4's general rule — that an unannotated child should not be starved at all
+— remains unimplemented, and §8 records three mechanisms already measured and
+rejected for it.
+
+#### The drop report still over-reports
+
+`flex-shrink` is still listed in `styleDegradations` for the six parts that now
+honour it. Filtering it needs a second implementation of "is this a direct Row
+child" in the reporter, and a first attempt disagreed with the emitter — it
+un-reported seven parts where only six got the modifier. Under-reporting is the
+dangerous direction, and this file already says over-reporting is the safer
+error, so the filter was reverted rather than shipped half-right.
+
 ### Added — a border has edges (UI79, #14835)
 
 `border-{top,right,bottom,left}-{width,color}` now lowers. **92 declarations

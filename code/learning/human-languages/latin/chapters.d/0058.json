@@ -1,0 +1,16 @@
+{
+  "chapter": 58,
+  "title": "Reading — Words, Lines, and a First Passage",
+  "label": "ch:la-prima-lectio",
+  "canDo": "I can read a Latin word cold and know its job from its ending, follow a line whose subject lives inside the verb, and hold a whole passage without translating it word by word.",
+  "payoff": {
+    "lesson": "LA-C58-prima-lectio",
+    "kind": "four-skill-function-map",
+    "summary": "Forty-two words of Latin with no new word in them, where the verb goes last, the subject hides inside it, and bonus changes to bona without anyone explaining agreement.",
+    "assesses": [
+      "LA-SKILL-CONNECTED-READING",
+      "LA-SKILL-READ-PHRASES",
+      "LA-SKILL-READ-LABELS"
+    ]
+  }
+}

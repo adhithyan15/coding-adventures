@@ -9,7 +9,12 @@ it("pins Latin continuity", () => expectLanguageContinuity("latin"));
 it("pins Latin modality", () => expectLanguageModality("latin"));
 it("pins Latin lesson-content budgets", () =>
   expectLanguageLessonBudgets("latin", {
-    lessons: 160,
+    //
+    // 160 -> 163: chapter 58, the reading rung -- six words, six lines and a
+    // 42-word passage. No new word: every token was checked to occur in a
+    // lesson with a lower sequence number, which for Latin means the exact
+    // INFLECTED form, not the lemma.
+    lessons: 163,
     idioms: 16,
     senses: 6,
     cultureClaims: 17,

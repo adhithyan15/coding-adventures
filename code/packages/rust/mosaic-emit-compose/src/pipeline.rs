@@ -219,6 +219,18 @@ pub fn from_pipeline(
     // `RoundedCornerShape`/`clip` without their imports is Kotlin that does
     // not compile, which is exactly how the XAML `Not()` helper went wrong in
     // #14793. An unused Kotlin import is a warning; a missing one is an error.
+    // UI59 -- only when some part says it cannot shrink. Emitted from the
+    // STYLE rather than the layout: an unused Kotlin import is a warning
+    // and a missing one is an error, so over-approximating here is the
+    // safe direction. Generating this modifier without its import is
+    // exactly what `Unresolved reference 'wrapContentWidth'` looked like.
+    if style
+        .parts
+        .iter()
+        .any(|part| compose_flex_shrink_zero(&part.base))
+    {
+        writeln!(out, "import androidx.compose.foundation.layout.wrapContentWidth").unwrap();
+    }
     // UI79 -- only when a per-edge border is authored. `Offset` is already
     // imported by the drag-and-drop block above, so it is added here only
     // when that block did not run; a duplicate import is legal Kotlin but
@@ -5178,6 +5190,21 @@ pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> 
 /// `width: 100%`. Compose Rows do not shrink a preceding `fillMaxWidth()`
 /// child the way CSS flexbox does, so both idioms lower to RowScope `weight`.
 /// Invalid, non-finite, zero, and negative grow values stay intrinsic.
+/// UI59 -- does this part author `flex-shrink: 0`?
+///
+/// Every authored `flex-shrink` in the repo is `0`; not one is positive.
+/// So this is not the "which child yields" heuristic UI59 §5 worried
+/// about -- authors are naming who must NOT be starved, which is a
+/// narrower and far safer question to answer.
+fn compose_flex_shrink_zero(props: &[StyleProp]) -> bool {
+    props
+        .iter()
+        .rev()
+        .find(|p| p.name == "flex-shrink")
+        .map(|p| p.value.trim().trim_matches('"') == "0")
+        .unwrap_or(false)
+}
+
 fn compose_row_weight(props: &[StyleProp]) -> Option<String> {
     if let Some(value) = props
         .iter()
@@ -5292,11 +5319,27 @@ fn emit_container(
     // horizontal space" here; Compose expresses that as `weight`. Every
     // other Row child stays intrinsic so it cannot starve later siblings.
     if in_row_scope {
-        let weight = node
+        let row_props = node
             .part_name
             .as_deref()
-            .and_then(|part| part_styles.get(part))
-            .and_then(|props| compose_row_weight(props));
+            .and_then(|part| part_styles.get(part));
+        let weight = row_props.and_then(|props| compose_row_weight(props));
+        // UI59 -- `flex-shrink: 0` means "do not squeeze me".
+        //
+        // The comment above says every other Row child "stays intrinsic so
+        // it cannot starve later siblings". Measured, that is not what
+        // happens: a plain Row child beside a long Text measures 0 x 112 --
+        // Compose hands the remaining width to each child in order and the
+        // last one gets nothing. `wrapContentWidth(unbounded = true)` is
+        // what actually holds the width; the same probe measured
+        // `IntrinsicSize.Min` and `IntrinsicSize.Max` and BOTH still
+        // starved at 0, so this is not the modifier reasoning would pick.
+        //
+        // A weighted child is asking to absorb slack, which is the
+        // opposite request, so `flex-grow` wins and the shrink guard is
+        // skipped rather than both being emitted.
+        let holds_width =
+            weight.is_none() && row_props.map(|props| compose_flex_shrink_zero(props)).unwrap_or(false);
         if let Some(weight) = weight {
             let cpad = " ".repeat(chain_indent);
             let prefix = format!("\n{cpad}.weight({weight}f)");
@@ -5315,6 +5358,27 @@ fn emit_container(
                 dropped: Vec::new(),
                 gap: None,
                 font_weight: None,
+                });
+            }
+        }
+        if holds_width {
+            let cpad = " ".repeat(chain_indent);
+            let prefix = format!("\n{cpad}.wrapContentWidth(unbounded = true)");
+            if let Some(style) = &mut style {
+                style.modifier.insert_str(0, &prefix);
+            } else {
+                style = Some(ComposeStyle {
+                    modifier: prefix,
+                    background: None,
+                    justify_content: None,
+                    align_items: None,
+                    content_alignment: None,
+                    text_color: None,
+                    font_family_mono: false,
+                    font_size: None,
+                    dropped: Vec::new(),
+                    gap: None,
+                    font_weight: None,
                 });
             }
         }
@@ -11784,6 +11848,78 @@ mod tests {
 
 
     // ---- HostScroll (#14732) -----------------------------------------
+
+    /// UI59 — `flex-shrink: 0` on a direct Row child holds its width.
+    ///
+    /// Both directions, and the modifier matters: a probe measured a Row
+    /// child beside a long Text at `0 x 112` with no modifier, `0 x 112`
+    /// with `IntrinsicSize.Min`, `0 x 112` with `IntrinsicSize.Max`, and
+    /// `57 x 16` with `wrapContentWidth(unbounded = true)`. Reasoning
+    /// would have picked one of the intrinsics; only measuring found this.
+    #[test]
+    fn ui59_flex_shrink_zero_holds_a_row_child_width() {
+        assert!(compose_flex_shrink_zero(&[sprop("flex-shrink", "0")]));
+        assert!(compose_flex_shrink_zero(&[sprop("flex-shrink", "\"0\"")]));
+        // Only zero means "do not squeeze me".
+        assert!(!compose_flex_shrink_zero(&[sprop("flex-shrink", "1")]));
+        assert!(!compose_flex_shrink_zero(&[sprop("padding", "8px")]));
+        assert!(!compose_flex_shrink_zero(&[]));
+
+        let render = |props: Vec<StyleProp>, wrap_in_row: bool| {
+            let mut child = node("Column", vec![], vec![]);
+            child.part_name = Some("chip".to_string());
+            let root = if wrap_in_row {
+                node("Row", vec![], vec![child])
+            } else {
+                node("Column", vec![], vec![child])
+            };
+            let style = StyleDef {
+                component_name: "S".to_string(),
+                parts: vec![PartStyle {
+                    name: "chip".to_string(),
+                    base: props,
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+            from_pipeline(&component("S", vec![], vec![]), &layout("S", root), &style)
+                .unwrap()
+                .output
+        };
+
+        // A Row child that says it cannot shrink gets the guard.
+        let held = render(vec![sprop("flex-shrink", "0")], true);
+        assert!(
+            held.contains(".wrapContentWidth(unbounded = true)"),
+            "got:\n{held}"
+        );
+
+        // The negative halves. Same declaration in a COLUMN is about the
+        // vertical axis and must not get a width guard; and a Row child
+        // without the declaration must not get one either.
+        let in_column = render(vec![sprop("flex-shrink", "0")], false);
+        assert!(
+            !in_column.contains("wrapContentWidth(unbounded = true)"),
+            "flex-shrink in a Column is not a width guard, got:\n{in_column}"
+        );
+        let plain = render(vec![sprop("padding", "8px")], true);
+        assert!(
+            !plain.contains("wrapContentWidth(unbounded = true)"),
+            "an unannotated Row child must not be guarded, got:\n{plain}"
+        );
+
+        // `flex-grow` is the opposite request — absorb slack — so the
+        // weight wins and the two are never emitted together.
+        let grows = render(
+            vec![sprop("flex-shrink", "0"), sprop("flex-grow", "1")],
+            true,
+        );
+        assert!(grows.contains(".weight(1f)"), "got:\n{grows}");
+        assert!(
+            !grows.contains("wrapContentWidth(unbounded = true)"),
+            "a weighted child must not also be width-guarded, got:\n{grows}"
+        );
+    }
 
     /// UI79 — each authored edge draws on its own edge and nowhere else.
     ///

@@ -9102,6 +9102,7 @@ impl HtmlParser {
                 return;
             }
             if special_scope_blocks_end_tag(name)
+                && !is_scoped_block_end_tag(name)
                 && self.has_special_element_above(index)
                 && !(is_paragraph_boundary_element(name)
                     && self.has_element_above(index, |candidate| candidate == "button"))
@@ -14522,7 +14523,20 @@ fn is_special_element(name: &str) -> bool {
 }
 
 fn is_special_scope_boundary_element(name: &str) -> bool {
-    matches!(name, "div") || is_special_element(name)
+    matches!(
+        name,
+        "address"
+            | "article"
+            | "aside"
+            | "blockquote"
+            | "center"
+            | "details"
+            | "dir"
+            | "div"
+            | "dl"
+            | "fieldset"
+            | "figcaption"
+    ) || is_special_element(name)
 }
 
 fn special_scope_blocks_end_tag(name: &str) -> bool {
@@ -38055,6 +38069,40 @@ mod tests {
             fragment.parser_diagnostics,
             vec![generic_foreign_end_tag_mismatch(fragment_source, "x-box")]
         );
+    }
+
+    #[test]
+    fn generic_end_tags_stop_at_special_element_boundaries() {
+        for name in [
+            "address",
+            "article",
+            "aside",
+            "blockquote",
+            "center",
+            "details",
+            "dir",
+            "dl",
+            "fieldset",
+            "figcaption",
+        ] {
+            let source = format!(
+                "<!doctype html><x-probe id=outer><{name} id=boundary></x-probe><span id=after>Y"
+            );
+            let document = parse_html(&source).unwrap();
+            let outer = find_element_by_id(&document.children, "outer").unwrap();
+            let boundary = find_element_by_id(&outer.children, "boundary").unwrap();
+            assert!(
+                find_element_by_id(&boundary.children, "after").is_some(),
+                "source {source:?}"
+            );
+        }
+
+        let ordinary_source =
+            "<!doctype html><x-probe id=outer><span></x-probe><b id=after>Y";
+        let ordinary = parse_html(ordinary_source).unwrap();
+        let outer = find_element_by_id(&ordinary.children, "outer").unwrap();
+        assert!(find_element_by_id(&outer.children, "after").is_none());
+        assert!(find_element_by_id(&body(&ordinary).children, "after").is_some());
     }
 
     #[test]

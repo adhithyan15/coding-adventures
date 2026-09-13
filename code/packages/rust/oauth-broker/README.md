@@ -86,6 +86,13 @@ credential release, and revision-bound custody rotation without leaving the
 broker. Authentication mismatch is rejected before credential access, and
 transport, provider, clock, release, or compare-and-swap failures retain the
 prior record.
+The usable-access composition applies that same retained client-secret policy
+before even reading credential metadata. A still-fresh access token reaches
+only the existing audited custody closure and invokes neither secret custody nor
+transport. A token inside the provider-data refresh lead crosses the complete
+audited refresh and revision-bound rotation path first, so only the new stored
+access token can reach the closure. The clock, secret store, token transport,
+credential store, and closure all remain injected or caller-owned.
 
 For an OpenID Connect Authorization Code exchange using retained client-secret
 authentication, the broker can instead consume the exact non-cloneable

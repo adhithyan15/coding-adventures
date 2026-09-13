@@ -1479,6 +1479,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             token_type,
             Some("STATEMENT_LINE")
                 | Some("ARROW_NODE_LINE")
+                | Some("DEFAULT_CLASSDEF_LINE")
                 | Some("INLINE_NODE_CONNECTION_LINE")
                 | Some("COMPACT_MARKED_CONNECTION_LINE")
                 | Some("MARKED_CONNECTION_LINE")
@@ -1677,6 +1678,25 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
         }
     }
 
+    let explicitly_classed = class_assignments
+        .iter()
+        .filter(|(_, classes)| !classes.is_empty())
+        .flat_map(|(targets, _)| targets.iter().cloned())
+        .collect::<HashSet<_>>();
+    if let Some(default_style) = class_styles.get("default") {
+        let default_targets = cells
+            .iter()
+            .filter(|cell| cell.visible && !explicitly_classed.contains(&cell.id))
+            .map(|cell| cell.id.clone())
+            .chain(
+                groups
+                    .iter()
+                    .filter(|group| !explicitly_classed.contains(&group.id))
+                    .map(|group| group.id.clone()),
+            )
+            .collect::<Vec<_>>();
+        apply_block_style(&mut cells, &mut groups, &default_targets, default_style)?;
+    }
     for (targets, classes) in class_assignments {
         for class_name in classes {
             let class_style = class_styles.get(&class_name).ok_or_else(|| ParseError {
@@ -9535,6 +9555,40 @@ mod tests_dg04 {
         assert_eq!(diagram.cells[2].shape, DiagramShape::RoundedRect);
         assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
         assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
+    }
+
+    #[test]
+    fn block_applies_default_class_only_without_explicit_classes() {
+        let diagram = parse_block(
+            "block\nclassDef default fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e\nclassDef accent fill:#fef3c7,stroke:#b45309\nA[Implicit]\nB[Explicit]:::accent\nblock:G[Group]\nC[Child]\nend\nD[Direct]\nstyle D fill:#dcfce7",
+        )
+        .unwrap();
+        let cell = |id: &str| diagram.cells.iter().find(|cell| cell.id == id).unwrap();
+        assert_eq!(
+            cell("A").style.as_ref().unwrap().fill.as_deref(),
+            Some("#e0f2fe")
+        );
+        assert_eq!(
+            cell("B").style.as_ref().unwrap().fill.as_deref(),
+            Some("#fef3c7")
+        );
+        assert_eq!(cell("B").style.as_ref().unwrap().text_color, None);
+        assert_eq!(
+            cell("C").style.as_ref().unwrap().stroke.as_deref(),
+            Some("#0369a1")
+        );
+        assert_eq!(
+            cell("D").style.as_ref().unwrap().fill.as_deref(),
+            Some("#dcfce7")
+        );
+        assert_eq!(
+            cell("D").style.as_ref().unwrap().stroke.as_deref(),
+            Some("#0369a1")
+        );
+        assert_eq!(
+            diagram.groups[0].style.as_ref().unwrap().fill.as_deref(),
+            Some("#e0f2fe")
+        );
     }
 
     #[test]

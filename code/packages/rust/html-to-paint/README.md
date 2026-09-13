@@ -9,7 +9,7 @@ BrowserRenderTree
   -> html-to-layout
   -> layout-block
   -> layout-to-paint
-  -> HtmlPaintOutput { positioned, links, controls, scene }
+  -> HtmlPaintOutput { positioned, links, controls, disclosures, focus_regions, scene }
   -> scene_image_resource_uris
   -> resolve_scene_image_resources_incrementally(browser_resolver)
   -> PaintScene with pending, decoded, or failed images

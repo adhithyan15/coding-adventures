@@ -237,7 +237,7 @@ model-card parameter, or a UI artifact is not a completion signal.
      edit, exclude ephemeral history from persisted snapshots, and expose
      disabled-aware Mosaic controls. Keep collaborative history, arbitrary
      cross-session recovery, and vendor interchange for later product phases.
-   - **Mosaic schematic analysis-plan lifecycle** (current phase): discovery
+   - **Mosaic schematic analysis-plan lifecycle** (completed in PR #15035): discovery
      after PR #15026: the adapter supports changing an existing card's analysis
      kind, but the rendered workbench can only add or delete cards, and cannot
      change their source order. Expose kind conversion and selected-card move
@@ -245,6 +245,14 @@ model-card parameter, or a UI artifact is not a completion signal.
      deck lowering, history behavior, and disabled-state boundaries. Keep
      nested sweeps, vendor controls, and arbitrary card templates for later
      product phases.
+   - **Mosaic schematic net labels** (current phase): discovery after PR
+     #15035: canonical schematic lowering still assigns anonymous `n1`, `n2`,
+     and so on, which prevents users from carrying meaningful Berkeley node
+     names through the editable workbench. Add terminal-anchored named nets
+     with safe token validation, collision checks across joined endpoint-wire
+     nets, deterministic deck lowering, history restoration, and a
+     selected-component terminal editor in Mosaic. Keep arbitrary wire
+     geometry, bus notation, and vendor interchange for later product phases.
 
 ### Operating rules
 

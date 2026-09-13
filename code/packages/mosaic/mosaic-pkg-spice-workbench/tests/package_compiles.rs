@@ -107,6 +107,14 @@ fn manifest_and_component_contract_are_complete() {
         .slots
         .iter()
         .any(|slot| slot.name == "remove-schematic-component-disabled"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "schematic-terminal-controls"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "schematic-net-label"));
     assert!(component.emits.iter().any(|emit| emit.name == "onRun"));
     assert!(component
         .emits
@@ -188,6 +196,14 @@ fn manifest_and_component_contract_are_complete() {
         .emits
         .iter()
         .any(|emit| emit.name == "onRemoveSchematicWire"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onSelectSchematicTerminal"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onSchematicNetLabelChange"));
 }
 
 #[test]
@@ -222,6 +238,8 @@ fn multiline_workbench_compiles_in_both_themes() {
         .contains("HostInput [ schematic-analysis-parameter-one-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-value-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-reference-input ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-terminal-control ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-net-label-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-wire-remove ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ remove-schematic-component ]"));
     assert!(source("SpiceWorkbench.mll").contains("segment[0]"));
@@ -275,6 +293,8 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("data-on-change=\"onSchematicAnalysisParameterOneChange\""));
                 assert!(output.contains("data-on-change=\"onSchematicValueChange\""));
                 assert!(output.contains("data-on-change=\"onSchematicReferenceChange\""));
+                assert!(output.contains("data-on-click=\"onSelectSchematicTerminal\""));
+                assert!(output.contains("data-on-change=\"onSchematicNetLabelChange\""));
                 assert!(output.contains("data-on-click=\"onRemoveSchematicComponent\""));
                 assert!(output.contains("data-on-click=\"onRemoveSchematicWire\""));
             }
@@ -296,6 +316,8 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("type: \"schematicAnalysisParameterOneChange\""));
                 assert!(output.contains("type: \"schematicValueChange\""));
                 assert!(output.contains("type: \"schematicReferenceChange\""));
+                assert!(output.contains("type: \"selectSchematicTerminal\""));
+                assert!(output.contains("type: \"schematicNetLabelChange\""));
                 assert!(output.contains("type: \"removeSchematicComponent\""));
                 assert!(output.contains("type: \"removeSchematicWire\""));
             }

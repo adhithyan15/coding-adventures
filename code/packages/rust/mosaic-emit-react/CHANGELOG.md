@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-12
+
+- HostInput inherits parent font family and size by default; authored styles and valid numeric typography bindings retain precedence.
+
 All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
