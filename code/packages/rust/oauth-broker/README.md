@@ -130,6 +130,16 @@ evidence reaches no credential store, the consumed evidence is omitted from the
 stored record, and only the opaque revision is released. Verification, time,
 transport, and storage implementations remain injected.
 
+The broker can now load the exact static ID-token policy directly within that
+client-secret exchange-to-custody composition. The retained authentication,
+request endpoint/client, opaque verification context, and nonce are all bound
+to the registration before the injected policy source is read. Policy loading,
+secret access, transport, response release, verification, and storage retain
+their separate provider/trace audit gates, and a final composite audit precedes
+release of only the opaque revision. The caller supplies no decoded identity
+profile and gains no concrete source, verifier, clock, transport, or storage
+authority.
+
 The same verified-identity custody path is available for retained
 `private_key_jwt` profiles through the existing audited abstract signer. Its
 provider/client/nonce bindings fail before signing, and the composition adds no
