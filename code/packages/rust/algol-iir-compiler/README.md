@@ -254,6 +254,8 @@ being treated as identity assignments.
 The recurrence assignment in either loop form may be wrapped in a one-statement
 compound body; labels, conditionals, declarations, and additional statements
 remain outside this bounded analysis.
+An exact controlled-scalar assignment in a single-iteration `step`/`until`
+loop may use the same wrapper while retaining its checked post-body exit value.
 
 Switch-list elements may use every supported designational expression: a
 conditional element selects its branch when `goto s[i]` runs, and a nested

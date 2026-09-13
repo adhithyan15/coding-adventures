@@ -6192,8 +6192,7 @@ impl Compiler {
         let Ok(target_name) = self.simple_variable_name(target) else {
             return None;
         };
-        let stmt = first_direct_node(body, "unlabeled_stmt")?;
-        let assign = first_direct_node(stmt, "assign_stmt")?;
+        let assign = single_statement_assignment(body)?;
         let left_parts: Vec<&GrammarASTNode> = direct_nodes(assign)
             .into_iter()
             .filter(|node| node.rule_name == "left_part")
@@ -14612,6 +14611,30 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
         }));
+    }
+
+    #[test]
+    fn al4_single_iteration_step_loop_preserves_compound_control_assignment() {
+        let module = compile_source(
+            "begin real x; for x := 1.0 step 1.0 until 1.0 do begin x := 6.25 end; print(x) end",
+            "test",
+        )
+        .expect("a compound-wrapped static control assignment retains its exit snapshot");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
+        }));
+    }
+
+    #[test]
+    fn al4_single_iteration_step_loop_rejects_multi_statement_control_assignment() {
+        let err = compile_source(
+            "begin real x, y; for x := 1.0 step 1.0 until 1.0 do begin x := 6.25; y := 1.0 end; print(x) end",
+            "test",
+        )
+        .expect_err("multiple compound statements keep the control snapshot conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
