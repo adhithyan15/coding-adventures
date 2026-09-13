@@ -946,19 +946,40 @@ fn build_flutter_runtime_hook(source: &Path) -> Result<String, BuildError> {
         "mosaic_app.dll" => "Windows",
         _ => unreachable!("runtime_file_name returned an unknown conventional name"),
     };
-    // Apple targets build one architecture at a time and `lipo` the results
-    // together, so the runtime has to be SLICED rather than copied whole. See
-    // `APPLE_SLICE_HELPER` for what goes wrong without it. Linux and Windows
-    // ask for one architecture per build and take the file as it is.
-    let install = if file_name == "libmosaic_app.dylib" {
-        "    await _installSlice(source, runtime, input.config.code.targetArchitecture);\n"
-    } else {
-        "    await File.fromUri(source).copy(runtime.toFilePath());\n"
-    };
-    let helper = if file_name == "libmosaic_app.dylib" {
-        APPLE_SLICE_HELPER
-    } else {
-        ""
+    // Every target has to check the architecture; only Apple can fix a
+    // mismatch by slicing.
+    //
+    // Apple builds one architecture at a time and `lipo`s the results into a
+    // universal binary, so a fat library is sliced and a thin one that matches
+    // is copied. See `APPLE_SLICE_HELPER`.
+    //
+    // ELF has no fat format, so there is nothing to extract -- but the `.so`
+    // hook serves ANDROID as well as Linux, and an Android build is
+    // multi-ABI just as a macOS release is multi-architecture. Nothing fails
+    // there at build time, because there is no `lipo -create` step to refuse
+    // two identical slices: the same library is filed into every ABI directory
+    // and fails at `dlopen` on a device whose ABI does not match. That is a
+    // worse failure than the loud one this change fixes for Apple, so the ELF
+    // hook verifies and refuses. See `ELF_VERIFY_HELPER`.
+    //
+    // Windows is the one that genuinely takes the file as it is: one
+    // architecture per build and no multi-ABI packaging.
+    let (install, helper) = match file_name {
+        "libmosaic_app.dylib" => (
+            "    await _installSlice(source, runtime, input.config.code.targetArchitecture);\n",
+            APPLE_SLICE_HELPER,
+        ),
+        "libmosaic_app.so" => (
+            concat!(
+                "    await _verifyElfArchitecture(source, input.config.code.targetArchitecture);\n",
+                "    await File.fromUri(source).copy(runtime.toFilePath());\n",
+            ),
+            ELF_VERIFY_HELPER,
+        ),
+        _ => (
+            "    await File.fromUri(source).copy(runtime.toFilePath());\n",
+            "",
+        ),
     };
     Ok(format!(
         concat!(
@@ -1046,11 +1067,33 @@ const APPLE_SLICE_HELPER: &str = concat!(
     "    );\n",
     "  }\n",
     "  final path = source.toFilePath();\n",
-    "  final present = await Process.run('lipo', <String>['-archs', path]);\n",
+    "  final ProcessResult present;\n",
+    "  try {\n",
+    "    present = await Process.run('lipo', <String>['-archs', path]);\n",
+    "  } on ProcessException catch (error) {\n",
+    "    // `Process.run` THROWS when the executable is missing; it does not\n",
+    "    // return a non-zero exit code. Without this the build would die on a\n",
+    "    // bare ProcessException -- the opaque failure this whole change\n",
+    "    // exists to replace.\n",
+    "    throw StateError(\n",
+    "      'lipo is required to bundle the Mosaic runtime for Apple targets '\n",
+    "      'but could not be run (${error.message}). Install the Xcode '\n",
+    "      'command line tools: xcode-select --install',\n",
+    "    );\n",
+    "  }\n",
     "  if (present.exitCode != 0) {\n",
     "    throw StateError('lipo could not read $path: ${present.stderr}');\n",
     "  }\n",
-    "  final archs = (present.stdout as String).trim().split(RegExp(r'\\s+'));\n",
+    "  final archs = (present.stdout as String)\n",
+    "      .trim()\n",
+    "      .split(RegExp(r'\\s+'))\n",
+    "      .where((name) => name.isNotEmpty)\n",
+    "      .toList();\n",
+    "  // `''.split(...)` is `['']`, not `[]`, so an empty reply would otherwise\n",
+    "  // reach the mismatch message below and render as \"runtime is  but\".\n",
+    "  if (archs.isEmpty) {\n",
+    "    throw StateError('lipo reported no architectures for $path');\n",
+    "  }\n",
     "  if (!archs.contains(wanted)) {\n",
     "    throw UnsupportedError(\n",
     "      'The bundled Mosaic runtime is ${archs.join(\", \")} but this build '\n",
@@ -1076,6 +1119,92 @@ const APPLE_SLICE_HELPER: &str = concat!(
     "  if (sliced.exitCode != 0) {\n",
     "    throw StateError(\n",
     "      'lipo could not extract $wanted from $path: ${sliced.stderr}',\n",
+    "    );\n",
+    "  }\n",
+    "}\n",
+);
+
+/// Refuse an ELF runtime whose architecture is not the one being built.
+///
+/// The `.so` hook serves Android as well as Linux, and an Android build is
+/// multi-ABI exactly as a macOS release build is multi-architecture:
+/// `flutter build apk` produces `armeabi-v7a`, `arm64-v8a` and `x86_64` by
+/// default and runs this hook once for each.
+///
+/// ELF has no fat format, so there is nothing to slice — and, worse, no
+/// aggregation step to notice. Where `lipo` refuses two slices of one
+/// architecture loudly, Android files the same library into every ABI
+/// directory and fails at `dlopen` on a device whose ABI does not match, or
+/// appears to work on the developer's own device while every other one
+/// crashes. So the check is the whole fix here.
+///
+/// Read in pure Dart rather than shelling out to `readelf`: `e_machine` is two
+/// bytes at offset 0x12, and requiring a binutils install on every Linux and
+/// Android build to learn them would be a worse trade than parsing them.
+const ELF_VERIFY_HELPER: &str = concat!(
+    "\n",
+    "/// Refuse an ELF runtime whose architecture is not the one being built.\n",
+    "///\n",
+    "/// Android builds one ABI at a time, like a macOS release build, but ELF\n",
+    "/// has no fat format and no aggregation step -- so a mismatched library is\n",
+    "/// filed into every ABI directory and fails at `dlopen` on the device\n",
+    "/// rather than at build time here.\n",
+    "Future<void> _verifyElfArchitecture(\n",
+    "  Uri source,\n",
+    "  Architecture architecture,\n",
+    ") async {\n",
+    "  // e_machine values from the ELF spec.\n",
+    "  const machines = <Architecture, int>{\n",
+    "    Architecture.arm: 0x28,\n",
+    "    Architecture.arm64: 0xB7,\n",
+    "    Architecture.ia32: 0x03,\n",
+    "    Architecture.x64: 0x3E,\n",
+    "    Architecture.riscv64: 0xF3,\n",
+    "  };\n",
+    "  final path = source.toFilePath();\n",
+    "  final handle = await File(path).open();\n",
+    // `List<int>`, not `Uint8List`: `read` returns the latter, but naming it
+    // would need a `dart:typed_data` import that only this hook wants.
+    "  final List<int> header;\n",
+    "  try {\n",
+    "    header = await handle.read(20);\n",
+    "  } finally {\n",
+    "    await handle.close();\n",
+    "  }\n",
+    "  // Too short to be an ELF file at all. Left alone rather than guessed at:\n",
+    "  // a caller who passed something else entirely gets a clearer failure from\n",
+    "  // the linker than from an invented one here.\n",
+    "  if (header.length < 20) return;\n",
+    "  final isElf =\n",
+    "      header[0] == 0x7F &&\n",
+    "      header[1] == 0x45 &&\n",
+    "      header[2] == 0x4C &&\n",
+    "      header[3] == 0x46;\n",
+    "  if (!isElf) return;\n",
+    "  // EI_DATA: 1 is little-endian, 2 is big-endian. Read rather than assumed,\n",
+    "  // because the two orders give different machine numbers from the same\n",
+    "  // bytes and a wrong answer here would reject a correct library.\n",
+    "  final littleEndian = header[5] != 2;\n",
+    "  final machine = littleEndian\n",
+    "      ? header[18] | (header[19] << 8)\n",
+    "      : (header[18] << 8) | header[19];\n",
+    "  final wanted = machines[architecture];\n",
+    "  // An architecture this table does not name: say so rather than passing a\n",
+    "  // library that may be wrong, and rather than refusing one that is right.\n",
+    "  if (wanted == null) {\n",
+    "    throw UnsupportedError(\n",
+    "      'The Mosaic runtime hook does not know the ELF machine number for '\n",
+    "      '${architecture.name}, so it cannot check the bundled library.',\n",
+    "    );\n",
+    "  }\n",
+    "  if (machine != wanted) {\n",
+    "    throw UnsupportedError(\n",
+    "      'The bundled Mosaic runtime is ELF machine 0x'\n",
+    "      '${machine.toRadixString(16)} but this build asked for '\n",
+    "      '${architecture.name} (0x${wanted.toRadixString(16)}). Build the '\n",
+    "      'runtime for that target and pass it with --runtime-library. An '\n",
+    "      'Android build asks for every ABI it packages, so each needs its own '\n",
+    "      'library.',\n",
     "    );\n",
     "  }\n",
     "}\n",
@@ -8568,9 +8697,16 @@ layout NativeEvents {
         // slice there is — which is the path every debug build takes.
         assert!(dylib.contains("if (archs.length == 1) {"));
 
-        // The other two ask for one architecture per build, so there is nothing
-        // to slice and `lipo` is a macOS-only tool that has no business on a
-        // Linux or Windows build's path.
+        // The other two COPY rather than slice, because ELF and PE have no fat
+        // format to extract from -- and `lipo` is a macOS-only tool with no
+        // business on their path.
+        //
+        // Scoped to `lipo`, deliberately. A first version also asserted
+        // `!hook.contains("_installSlice")`, which reads as "these hooks must
+        // never consult the target architecture" -- and that is wrong for the
+        // `.so` hook, which serves Android. Pinning it would have made a future
+        // Android fix start by deleting a test arguing against it. Caught in
+        // security review, below its reporting bar.
         for (path, guard) in [
             ("/tmp/libengram_mosaic_app.so", "OS.linux"),
             ("/tmp/engram_mosaic_app.dll", "OS.windows"),
@@ -8584,6 +8720,65 @@ layout NativeEvents {
             assert!(!hook.contains("lipo"), "{path} must not run lipo");
             assert!(!hook.contains("_installSlice"), "{path} must not slice");
         }
+    }
+
+    /// The ELF hook refuses a library built for another architecture.
+    ///
+    /// The `.so` hook serves Android as well as Linux, and an Android build is
+    /// multi-ABI exactly as a macOS release is multi-architecture:
+    /// `flutter build apk` packages `armeabi-v7a`, `arm64-v8a` and `x86_64` and
+    /// runs the hook once for each.
+    ///
+    /// ELF has no fat format and, worse, no aggregation step to notice. Where
+    /// `lipo` refuses two slices of one architecture loudly, Android files the
+    /// same library into every ABI directory and fails at `dlopen` on a device
+    /// whose ABI does not match — or appears to work on the developer's own
+    /// device while every other one crashes. So the check is the whole fix.
+    ///
+    /// Found in security review of the Apple half, which pointed out that the
+    /// comment justifying the copy-whole branch — "Linux and Windows ask for
+    /// one architecture per build" — is true of Linux and Windows and false of
+    /// Android, the platform that branch also serves.
+    #[test]
+    fn the_elf_flutter_hook_refuses_a_mismatched_architecture() {
+        let elf =
+            build_flutter_runtime_hook(Path::new("/tmp/libengram_mosaic_app.so")).expect("so hook");
+        assert!(
+            elf.contains("_verifyElfArchitecture(source, input.config.code.targetArchitecture)")
+        );
+        // Read in Dart rather than shelled out to `readelf`, which would put a
+        // binutils install on the path of every Linux and Android build.
+        assert!(!elf.contains("readelf"), "{elf}");
+        assert!(!elf.contains("Process.run"), "{elf}");
+        // Every ABI Flutter packages for Android, plus the two desktop ones.
+        for (arch, machine) in [
+            ("Architecture.arm", "0x28"),
+            ("Architecture.arm64", "0xB7"),
+            ("Architecture.ia32", "0x03"),
+            ("Architecture.x64", "0x3E"),
+            ("Architecture.riscv64", "0xF3"),
+        ] {
+            assert!(
+                elf.contains(&format!("{arch}: {machine},")),
+                "{arch}: {elf}"
+            );
+        }
+        // Endianness is READ, not assumed: the same two bytes give different
+        // machine numbers under each order, so assuming would reject a correct
+        // big-endian library.
+        assert!(elf.contains("header[5] != 2"), "{elf}");
+        // An architecture the table does not name is refused rather than
+        // waved through -- passing a library that may be wrong is the failure
+        // this whole helper exists to prevent.
+        assert!(elf.contains("if (wanted == null) {"), "{elf}");
+        assert!(
+            elf.contains("does not know the ELF machine number"),
+            "{elf}"
+        );
+        // And the Windows hook gains none of it.
+        let dll =
+            build_flutter_runtime_hook(Path::new("/tmp/engram_mosaic_app.dll")).expect("dll hook");
+        assert!(!dll.contains("_verifyElfArchitecture"), "{dll}");
     }
 
     /// The README says what a macOS build actually needs.

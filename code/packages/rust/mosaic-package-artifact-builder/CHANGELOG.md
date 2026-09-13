@@ -41,9 +41,50 @@ universal runtime: build both targets and `lipo -create` them before passing
 --runtime-library.
 ```
 
-Linux and Windows are untouched — they ask for one architecture per build, so
-there is nothing to slice, and `lipo` is a macOS-only tool with no business on
-their path. A test asserts the helper and the word `lipo` appear in neither.
+Two smaller holes in the same helper, both found by review:
+
+- **`Process.run` throws when the executable is missing**, rather than returning
+  a non-zero exit code, so on a host without the Xcode command line tools the
+  build died on a bare `ProcessException` — the opaque failure this change
+  exists to replace. It now says what to install.
+- **`''.split(...)` is `['']`, not `[]`**, so an empty reply from `lipo` fell
+  through into the mismatch message and rendered as "runtime is  but this build
+  asked for". Empty is now its own error.
+
+### Fixed — and the same defect on Android, which had no `lipo` to catch it
+
+The `.so` hook serves **Android** as well as Linux, and an Android build is
+multi-ABI exactly as a macOS release is multi-architecture: `flutter build apk`
+packages `armeabi-v7a`, `arm64-v8a` and `x86_64`, running the hook once for
+each.
+
+ELF has no fat format, so there is nothing to slice — and, worse, no aggregation
+step to notice. Where `lipo` refuses two slices of one architecture loudly,
+Android files the same library into every ABI directory and fails at `dlopen` on
+a device whose ABI does not match, or appears to work on the developer's own
+device while every other one crashes. **A worse failure mode than the loud one
+being fixed above.**
+
+So the ELF hook verifies. `e_machine` is two bytes at offset `0x12`, read in
+pure Dart rather than shelled out to `readelf`, which would put a binutils
+install on the path of every Linux and Android build. Endianness is read from
+`EI_DATA` rather than assumed — the same two bytes give different machine
+numbers under each order, so assuming would reject a correct library. Verified
+against synthesised headers for all five architectures, both byte orders, a
+Mach-O (ignored, not misread) and a two-byte file.
+
+This was caught because the comment justifying the copy-whole branch said
+"Linux and Windows ask for one architecture per build" — true of Linux and
+Windows, false of Android, which that branch also serves. **And the first
+version of the test hardened it in place**, asserting `!hook.contains
+("_installSlice")` for the `.so` hook, which reads as "this hook must never
+consult the target architecture". A future Android fix would have had to begin
+by deleting a test arguing against it. The assertion is scoped to `lipo` now —
+the genuinely platform-specific part.
+
+Windows is the one that really does take the file as it is: one architecture per
+build, no multi-ABI packaging, and no fat format. A test asserts it gains
+neither helper.
 
 The emitted README states the requirement, because it is real and invisible: a
 `--debug` build works with a single-architecture library and says nothing, so
