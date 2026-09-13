@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.114.0
+
+- Preserve solid, dotted, and thick Block connection semantics in grid IR.
+
 ## 0.113.0
 
 - Preserve optional stroke dash patterns in authored and resolved diagram styles.

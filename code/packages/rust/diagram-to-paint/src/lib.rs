@@ -1330,6 +1330,7 @@ where
     // ── 2. Edges (lines + arrowheads) — drawn behind nodes ───────────────────
     for edge in &diagram.edges {
         let mut path = line_path(&edge.points, &edge.style.stroke, edge.style.stroke_width);
+        path.stroke_dash.clone_from(&edge.style.stroke_dash);
         if edge.kind == EdgeKind::NoteAssociation {
             path.stroke_dash = Some(vec![4.0, 4.0]);
         }
@@ -5452,6 +5453,21 @@ mod tests {
         }));
         assert!(scene.instructions.iter().any(|instruction| {
             matches!(instruction, PaintInstruction::Path(path) if path.stroke_dash.is_some())
+        }));
+    }
+
+    #[test]
+    fn styled_graph_edge_dash_reaches_backend_neutral_path() {
+        let mut layout = simple_layout();
+        layout.edges[0].style.stroke_dash = Some(vec![5.0, 4.0]);
+        let shaper = FakeShaper;
+        let metrics = FakeMetrics;
+        let resolver = FakeResolver;
+        let opts = make_opts(&shaper, &metrics, &resolver);
+        let scene = diagram_to_paint(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| {
+            matches!(instruction, PaintInstruction::Path(path)
+                if path.stroke_dash.as_deref() == Some(&[5.0, 4.0][..]))
         }));
     }
 

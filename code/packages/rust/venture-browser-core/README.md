@@ -83,6 +83,10 @@ Disabled-fieldset inheritance and explicit/implicit label activation also stay
 inside this boundary; host adapters forward page coordinates without deriving
 form ownership, effective disabledness, or activation behavior.
 Form values now survive Back/Forward through bounded session-owned snapshots.
+Those snapshots are keyed by stable history-entry identity rather than URL, so
+repeated visits restore independent public form and custom-element state. The
+same bounded entry snapshot restores the shared logical scroll offset before
+native/web hosts repaint, including fetch-free fragment traversal.
 The session exposes dirty/default state, grouped autofill descriptors, explicit
 public-versus-credential transactions, and ordered mutation events. Passwords
 are excluded from public snapshots and autofill, file payloads are never

@@ -749,3 +749,37 @@ same `Err`/nonzero-exit-means-`Trapped` handling every other backend's runner
 already had. Twenty-eight of 58 COBOL rows now declare BEAM, for 434 cells.
 Remaining COBOL features (STRING SIZE/delimiters, pointer/overflow) still
 require individual execution proofs.
+
+### COBOL STRING SIZE/delimiter on BEAM (VM-040)
+
+Four more COBOL programs execute on real BEAM: three `STRING ... DELIMITED
+BY SIZE` rows (item padding/truncation into differently-sized receivers, a
+short-receiver truncate paired with an exact-fill receiver, a changed source
+re-read by a second `STRING` into the same receiver) and one `STRING ...
+DELIMITED BY ","` row — the first COBOL BEAM row to reach a per-character
+delimiter scan. That scan (`cobol-iir-compiler::emit_prefix_before_delim`,
+shared with `UNSTRING`) reads a field via `str_len`/`str_index`/`str_slice`,
+and `str_len`/`str_index` had no BEAM lowering at all before this slice —
+added via `erlang:length/1` and `lists:nth(idx+1, source)` respectively (see
+`iir-to-beam`'s CHANGELOG 0.9.3). Thirty-two of 58 COBOL rows now declare
+BEAM, for 438 cells. Remaining COBOL features (UNSTRING, pointer/overflow,
+base INSPECT TALLYING/REPLACING, the VM-047c BEFORE/AFTER region forms, and
+the VM-057 STRING self-move edge case) still require individual execution
+proofs.
+
+### COBOL UNSTRING/delimiter on BEAM (VM-040)
+
+Four more COBOL programs execute on real BEAM: one more `STRING ...
+DELIMITED BY delim` row (an item delimiter stops a sender at its first
+match, even when another follows) and three `UNSTRING` rows (truncating/
+padding fields with no remainder carried into the last receiver; leading/
+consecutive delimiters producing space-filled empty receivers; an item
+delimiter with source exhaustion leaving later receivers untouched). All
+four compile through the same `emit_prefix_before_delim`/`emit_unstring`
+scan loops as the previous slice — `str_len`/`str_index`/`str_slice`/
+`str_concat`/`cmp_*`, every one already lowered for BEAM — so no
+`iir-to-beam` change was needed; all four passed real `erl` execution on the
+first probe. Thirty-six of 58 COBOL rows now declare BEAM, for 442 cells.
+Remaining COBOL features (pointer/overflow, base INSPECT TALLYING/REPLACING,
+the VM-047c BEFORE/AFTER region forms, and the VM-057 STRING self-move edge
+case) still require individual execution proofs.

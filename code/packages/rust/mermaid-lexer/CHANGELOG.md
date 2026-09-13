@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.85.0
+
+- Tokenize dotted and thick Block connections through dedicated grammar productions.
+
 ## 0.84.0
 
 - Tokenize Mermaid 11.16.1 Block arrow nodes through a dedicated grammar rule.

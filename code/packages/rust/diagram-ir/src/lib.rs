@@ -204,7 +204,16 @@ pub struct GridConnection {
     pub from: String,
     pub to: String,
     pub kind: EdgeKind,
+    pub line_style: GridEdgeStyle,
     pub label: Option<DiagramLabel>,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub enum GridEdgeStyle {
+    #[default]
+    Solid,
+    Dotted,
+    Thick,
 }
 
 #[derive(Clone, Debug, PartialEq, Default)]
