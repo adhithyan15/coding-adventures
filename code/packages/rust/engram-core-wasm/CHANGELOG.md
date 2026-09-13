@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+### Fixed — `onDeleteNoteType` reported success having deleted nothing
+
+Two silent no-ops in the same match arm, both reachable from the Delete button
+in the collection actions bar.
+
+**An unsaved draft.** That button emits `onDeleteNoteType` with no payload, so
+every real click takes the fallback, which resolves the target from the
+note-type editor's selection. For a new draft that selection is *synthetic*:
+`note_type_editor_selected_note_type` mints an id and explicitly filters it to
+one no saved note type holds, precisely so a draft cannot overwrite a real
+model. The fallback then handed that id to `DeleteNoteType`, whose filter
+matched nothing. The call returned `ok`, changed no state, and left the draft
+open — the person sees the editor exactly as it was, with no reason given.
+
+The button is not disabled in this state: it is gated on the editor having *a*
+selection, and a draft is one. So the path was fully reachable, and clicking
+Delete on an unsaved note type did nothing at all.
+
+Deleting an unsaved draft now discards it, which is what
+`onNoteTypeEditorDeleteNoteType` — one arm above in the same `match` — has
+always done. Both entry points now agree.
+
+**An id nothing holds.** An explicit `noteTypeId` naming no existing model took
+the same path to the same no-op `ok`. It is now refused, and the refusal names
+the id. A caller could not otherwise tell a delete that worked from one that
+matched nothing.
+
+The explicit-id and draft cases stay separate: an explicit id names its target
+outright and says nothing about what the editor is showing, so it is never
+diverted into discarding a draft.
+
 ### Fixed -- `upsertNoteType` accepted a template deck the collection does not contain (#14532)
 
 A `CardTemplate` carries an optional deck id, and that id **overrides the

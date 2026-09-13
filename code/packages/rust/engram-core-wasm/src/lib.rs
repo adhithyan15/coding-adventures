@@ -1797,19 +1797,57 @@ impl EngramSession {
                     );
                 }
                 EngramAppEvent::DeleteNoteType => {
-                    let note_type_id =
-                        explicit_note_type_id_from_app_event(&parsed).or_else(|| {
+                    // The draft case is reachable only through the FALLBACK. An
+                    // explicit id names its target outright and says nothing
+                    // about what the editor happens to be showing, so it must
+                    // not be diverted into discarding a draft.
+                    //
+                    // `explicit_note_type_id_from_app_event` already rejects an
+                    // empty or whitespace id, so a blank one falls through here
+                    // rather than being treated as a name.
+                    let explicit = explicit_note_type_id_from_app_event(&parsed);
+                    if explicit.is_none() && self.note_type_editor.draft_is_new {
+                        // Deleting an unsaved draft means discarding it.
+                        //
+                        // Without this the fallback hands the reducer the
+                        // draft's SYNTHETIC id -- minted by
+                        // `note_type_editor_selected_note_type`, which filters it
+                        // to an id no saved note type holds. `DeleteNoteType`'s
+                        // filter therefore matches nothing, and the call reported
+                        // `ok` having changed no state and left the draft open.
+                        //
+                        // `onNoteTypeEditorDeleteNoteType`, one arm above, has
+                        // always done exactly this. Both entry points now agree.
+                        self.note_type_editor.reset();
+                    } else {
+                        let note_type_id = explicit.or_else(|| {
                             note_type_editor_selected_id(&self.state, &self.note_type_editor, now)
                         });
-                    let Some(note_type_id) = note_type_id else {
-                        return Err(
-                            "cannot delete note type without a selected note type".to_string()
+                        let Some(note_type_id) = note_type_id else {
+                            return Err(
+                                "cannot delete note type without a selected note type".to_string()
+                            );
+                        };
+                        // Refuse an id nothing holds rather than reporting
+                        // success for a filter that removed nothing. A caller
+                        // cannot tell that apart from a delete that worked --
+                        // the same loud-traded-for-silent shape, and the reason
+                        // the draft bug above went unnoticed.
+                        if !self
+                            .state
+                            .note_types
+                            .iter()
+                            .any(|note_type| note_type.id == note_type_id)
+                        {
+                            return Err(format!(
+                                "cannot delete note type {note_type_id}: no such note type"
+                            ));
+                        }
+                        self.state = reduce(
+                            &self.state,
+                            engram_core::EngramCommand::DeleteNoteType { note_type_id },
                         );
-                    };
-                    self.state = reduce(
-                        &self.state,
-                        engram_core::EngramCommand::DeleteNoteType { note_type_id },
-                    );
+                    }
                 }
                 EngramAppEvent::AddNoteType => {
                     self.note_type_editor.start_new(now);
@@ -11007,6 +11045,114 @@ mod tests {
         assert!(deleted["state"]["noteTypes"].as_array().unwrap().is_empty());
         assert!(deleted["state"]["notes"].as_array().unwrap().is_empty());
         assert!(deleted["state"]["cards"].as_array().unwrap().is_empty());
+    }
+
+    /// `onDeleteNoteType` with an unsaved draft open must discard the draft.
+    ///
+    /// The collection-level arm falls back to the editor's selection when the
+    /// event carries no id, and for a new draft that selection is SYNTHETIC:
+    /// `note_type_editor_selected_note_type` mints an id and explicitly filters
+    /// it to one no saved note type holds. So the id it hands the reducer cannot
+    /// match anything, `DeleteNoteType`'s filter removes nothing, and the call
+    /// reports `ok` having done nothing at all -- with the draft still open, so
+    /// the person sees the editor unchanged and no reason why.
+    ///
+    /// `onNoteTypeEditorDeleteNoteType`, one arm above in the same match, has
+    /// always handled this by resetting the editor. Deleting an unsaved draft
+    /// means discarding it; both entry points now say so.
+    #[test]
+    fn delete_note_type_discards_an_unsaved_draft_instead_of_silently_doing_nothing() {
+        let mut session = EngramSession::new_demo();
+        let before: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onAddNoteType", "deck", NOW))
+                .unwrap();
+        assert_eq!(before["ok"], true);
+        // The draft is open, and its id is one no saved note type holds.
+        let draft_id = before["props"]["note-type-editor-note-type-id-value"]
+            .as_str()
+            .expect("draft id")
+            .to_string();
+        let saved_before = before["state"]["noteTypes"].as_array().unwrap().clone();
+        assert!(
+            !saved_before
+                .iter()
+                .any(|note_type| note_type["id"] == draft_id.as_str()),
+            "the draft must not already be saved, or this test proves nothing"
+        );
+        assert!(
+            !saved_before.is_empty(),
+            "the fixture needs saved note types, so that 'deleted nothing' is \
+             distinguishable from 'there was nothing to delete'"
+        );
+
+        let deleted: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onDeleteNoteType",
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(deleted["ok"], true);
+
+        // The draft is gone: the editor no longer reports the synthetic id.
+        assert_ne!(
+            deleted["props"]["note-type-editor-note-type-id-value"],
+            Value::from(draft_id.as_str()),
+            "deleting an unsaved draft must discard it, not leave it open"
+        );
+        // And nothing that was actually saved was touched. A fix that reset the
+        // editor by deleting a real note type would satisfy the assertion above.
+        assert_eq!(
+            deleted["state"]["noteTypes"], before["state"]["noteTypes"],
+            "discarding a draft must not delete any saved note type"
+        );
+        assert_eq!(deleted["state"]["notes"], before["state"]["notes"]);
+        assert_eq!(deleted["state"]["cards"], before["state"]["cards"]);
+    }
+
+    /// An explicit id for a note type that does not exist must not report `ok`.
+    ///
+    /// `DeleteNoteType`'s filter is a no-op for an unknown id, so the arm
+    /// returned success having changed nothing -- the loud-traded-for-silent
+    /// shape. A caller cannot tell this apart from a delete that worked.
+    #[test]
+    fn delete_note_type_rejects_an_id_no_note_type_holds() {
+        let mut session = EngramSession::new_demo();
+        let before: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onAddNote", "deck", NOW))
+                .unwrap();
+        let saved_before = before["state"]["noteTypes"].clone();
+        assert!(
+            !saved_before.as_array().unwrap().is_empty(),
+            "the fixture needs saved note types for this to mean anything"
+        );
+
+        let parsed: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onDeleteNoteType","noteTypeId":"no-such-note-type"}"#,
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(
+            parsed["ok"], false,
+            "deleting an id nothing holds must report failure, not silent success"
+        );
+        assert!(
+            parsed["error"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("no-such-note-type"),
+            "the refusal must name the id it could not find, got {parsed}"
+        );
+
+        // And the refusal changed nothing. Read through a LATER successful call
+        // rather than off the error envelope, which carries no `state` at all --
+        // asserting on that absent field would pass no matter what the refusal
+        // did to the collection.
+        let after: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onAddNote", "deck", NOW + 2))
+                .unwrap();
+        assert_eq!(after["ok"], true);
+        assert_eq!(after["state"]["noteTypes"], saved_before);
     }
 
     #[test]
