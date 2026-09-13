@@ -7,6 +7,7 @@ chapter: 5
 delivery: script
 type: writing
 headword: "త"
+romanization: "ta"
 gloss: copy the letter where it actually lives — inside a word you already say, model visible
 prerequisites: [TE-S01-letter-ta]
 sounds: []

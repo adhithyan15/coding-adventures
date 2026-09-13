@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:77a047971d2e5fe7",
+  "sourceHash": "fnv1a64:70cf3287f75cae36",
   "lessons": [
     {
       "id": "TE-S01-letter-ta",
@@ -176,7 +176,7 @@
       "sequence": 256,
       "title": "త (ta) — copy it where it lives",
       "headword": "త",
-      "romanization": "",
+      "romanization": "ta",
       "gloss": "copy the letter where it actually lives — inside a word you already say, model visible",
       "script": "telugu",
       "modality": "pen",
@@ -185,7 +185,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:9be9d4e9ef3449e3",
+      "sourceHash": "fnv1a64:04e6884856dedeb3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -243,7 +243,7 @@
       "sequence": 257,
       "title": "త (ta) — write it with the model covered",
       "headword": "త",
-      "romanization": "",
+      "romanization": "ta",
       "gloss": "write the letter once the model is covered, then uncover and repair one thing",
       "script": "telugu",
       "modality": "pen",
@@ -253,7 +253,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:2ebccff169acee29",
+      "sourceHash": "fnv1a64:23bf3280c3b2d3e9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -312,7 +312,7 @@
       "sequence": 258,
       "title": "త (ta) — the letter from the sound",
       "headword": "త",
-      "romanization": "",
+      "romanization": "ta",
       "gloss": "write the letter from the sound alone, and meet the vowel nobody said",
       "script": "telugu",
       "modality": "pen",
@@ -321,7 +321,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:917e2849b19ff23d",
+      "sourceHash": "fnv1a64:9923bcace44e597d",
       "notice": {
         "modality": "pen",
         "needs": [

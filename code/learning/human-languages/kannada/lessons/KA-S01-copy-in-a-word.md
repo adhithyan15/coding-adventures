@@ -7,6 +7,7 @@ chapter: 1
 delivery: script
 type: writing
 headword: "ನ"
+romanization: "na"
 gloss: copy the letter where it actually lives — inside a word you already say, model visible
 prerequisites: [KA-S01-letter-na]
 sounds: []

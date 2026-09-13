@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c1e5f903e61c7b94",
+  "sourceHash": "fnv1a64:f2c5f971ab36b3d6",
   "lessons": [
     {
       "id": "KA-C01-namaskara",
@@ -1051,7 +1051,7 @@
       "sequence": 56,
       "title": "ನ (na) — copy it where it lives",
       "headword": "ನ",
-      "romanization": "",
+      "romanization": "na",
       "gloss": "copy the letter where it actually lives — inside a word you already say, model visible",
       "script": "kannada",
       "modality": "pen",
@@ -1060,7 +1060,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d41eeecf9703794e",
+      "sourceHash": "fnv1a64:9e11b0dd20c59744",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1118,7 +1118,7 @@
       "sequence": 57,
       "title": "ನ (na) — write it with the model covered",
       "headword": "ನ",
-      "romanization": "",
+      "romanization": "na",
       "gloss": "write the letter once the model is covered, then uncover and repair one thing",
       "script": "kannada",
       "modality": "pen",
@@ -1128,7 +1128,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a3a3300fa536e8ff",
+      "sourceHash": "fnv1a64:77ee1150b97a2e35",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1187,7 +1187,7 @@
       "sequence": 58,
       "title": "ನ (na) — the letter from the sound",
       "headword": "ನ",
-      "romanization": "",
+      "romanization": "na",
       "gloss": "write the letter from the sound alone, and meet the vowel nobody said",
       "script": "kannada",
       "modality": "pen",
@@ -1196,7 +1196,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b6b6dabf0fb07865",
+      "sourceHash": "fnv1a64:df8e23122bb798d3",
       "notice": {
         "modality": "pen",
         "needs": [

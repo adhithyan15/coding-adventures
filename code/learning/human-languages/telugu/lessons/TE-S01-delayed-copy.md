@@ -7,6 +7,7 @@ chapter: 5
 delivery: script
 type: writing
 headword: "త"
+romanization: "ta"
 gloss: write the letter once the model is covered, then uncover and repair one thing
 prerequisites: [TE-S01-copy-in-a-word]
 sounds: []
