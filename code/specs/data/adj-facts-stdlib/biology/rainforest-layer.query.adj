@@ -5,8 +5,12 @@
 % The shape a learner (or an LLM) produces to ANSWER "what's the canopy
 % layer?": it states no biology fact — it only `import`s the grounded table
 % and asks binding queries. The engine resolves each `?` against the
-% `rainforest_layer` rows and returns the description atom + the table's
-% source/locator/trust. The last query runs the relation BACKWARD (bind the
+% `rainforest_layer` rows and returns the description atom + THAT ROW'S OWN
+% source and trust tier, with the `locator` inherited from the table envelope
+% (RS-5e per-row provenance, #14986 — before it, every layer's answer quoted
+% the emergent row's sentence). `emergent` and `canopy` answer at `inferred`
+% rather than `consensus`: their atoms restate their spans rather than quote
+% them ("tallest" and "treetop" are not on the page). The last query runs the relation BACKWARD (bind the
 % description, recall the layer). A word that is not one of the four layers
 % abstains honestly — the engine never invents a description.
 % ============================================================================
