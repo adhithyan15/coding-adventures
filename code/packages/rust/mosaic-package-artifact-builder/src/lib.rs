@@ -915,6 +915,23 @@ fn install_flutter_runtime_library(
     Ok(target)
 }
 
+/// What the emitted Flutter README says about the bundled runtime.
+///
+/// A function rather than an inline `format!` so a test can read it for each
+/// platform. The Apple paragraph is the reason: that requirement is real and
+/// invisible, since `--debug` works with a single-architecture library and says
+/// nothing, so the first time anyone meets it is a release build failing.
+fn flutter_runtime_distribution_note(file_name: &str) -> String {
+    let apple_note = if file_name == "libmosaic_app.dylib" {
+        " On macOS, `flutter build --release` always builds for both arm64 and x86_64, so the selected library must be **universal** — build both Rust targets and `lipo -create` them. `hook/build.dart` hands each architecture its own slice; a single-architecture library still works for `--debug`, which asks only for the host's, and a release build refuses it by name rather than failing later inside `lipo`."
+    } else {
+        ""
+    };
+    format!(
+        "The selected target Rust engine is copied to `runtime/{file_name}` and registered by `hook/build.dart` as a bundled Dart code asset. Flutter packages and resolves it for the target platform; no environment variable, hard-coded executable path, or global library install is required. Bundled-runtime projects require Flutter 3.38+, Dart 3.10+, and `flutter config --enable-native-assets`.{apple_note}"
+    )
+}
+
 fn build_flutter_runtime_hook(source: &Path) -> Result<String, BuildError> {
     let file_name = runtime_file_name(source)?;
     let target_guard = match file_name {
@@ -928,6 +945,20 @@ fn build_flutter_runtime_hook(source: &Path) -> Result<String, BuildError> {
         "libmosaic_app.so" => "Linux or Android",
         "mosaic_app.dll" => "Windows",
         _ => unreachable!("runtime_file_name returned an unknown conventional name"),
+    };
+    // Apple targets build one architecture at a time and `lipo` the results
+    // together, so the runtime has to be SLICED rather than copied whole. See
+    // `APPLE_SLICE_HELPER` for what goes wrong without it. Linux and Windows
+    // ask for one architecture per build and take the file as it is.
+    let install = if file_name == "libmosaic_app.dylib" {
+        "    await _installSlice(source, runtime, input.config.code.targetArchitecture);\n"
+    } else {
+        "    await File.fromUri(source).copy(runtime.toFilePath());\n"
+    };
+    let helper = if file_name == "libmosaic_app.dylib" {
+        APPLE_SLICE_HELPER
+    } else {
+        ""
     };
     Ok(format!(
         concat!(
@@ -946,7 +977,7 @@ fn build_flutter_runtime_hook(source: &Path) -> Result<String, BuildError> {
             "    }}\n",
             "    final source = input.packageRoot.resolve('runtime/{file_name}');\n",
             "    final runtime = input.outputDirectory.resolve('{file_name}');\n",
-            "    await File.fromUri(source).copy(runtime.toFilePath());\n",
+            "{install}",
             "    output.dependencies.add(source);\n",
             "    output.assets.code.add(\n",
             "      CodeAsset(\n",
@@ -958,12 +989,97 @@ fn build_flutter_runtime_hook(source: &Path) -> Result<String, BuildError> {
             "    );\n",
             "  }});\n",
             "}}\n",
+            "{helper}",
         ),
         target_guard = target_guard,
         target_family = target_family,
         file_name = file_name,
+        install = install,
+        helper = helper,
     ))
 }
+
+/// Hand an Apple build the slice of the runtime it actually asked for.
+///
+/// `flutter build macos --release` has no way to ask for a single
+/// architecture. It runs the hook once per architecture — measured, not
+/// inferred: the two `input.json` files a failing build left behind said
+/// `arm64` and `x64` — and then `lipo`s the outputs into one universal binary.
+///
+/// A hook that copies the same file every time hands `lipo` two slices of the
+/// same architecture, and it refuses:
+///
+/// ```text
+/// fatal error: lipo: .../16e3573553/libmosaic_app.dylib and
+/// .../285c64e3c7/libmosaic_app.dylib have the same architectures (arm64)
+/// and can't be in the same fat output file
+/// ```
+///
+/// which names two build hashes and no cause. Every Mosaic Flutter app on
+/// macOS failed its release build this way; `--debug` worked, because a debug
+/// build asks for the host architecture only.
+///
+/// No silent fallback. An earlier draft copied the file whole when `lipo -thin`
+/// failed, which turns a thin arm64 library asked for x86_64 straight back into
+/// the original confusing error one step later. A library that cannot serve the
+/// request says so, and says what would.
+const APPLE_SLICE_HELPER: &str = concat!(
+    "\n",
+    "/// Copy the slice of [source] matching [architecture] to [target].\n",
+    "///\n",
+    "/// Apple builds ask for one architecture at a time and `lipo` the results\n",
+    "/// together, so handing back the same file for every architecture gives\n",
+    "/// `lipo` two slices of one architecture and it refuses.\n",
+    "Future<void> _installSlice(\n",
+    "  Uri source,\n",
+    "  Uri target,\n",
+    "  Architecture architecture,\n",
+    ") async {\n",
+    "  const names = <Architecture, String>{\n",
+    "    Architecture.arm64: 'arm64',\n",
+    "    Architecture.x64: 'x86_64',\n",
+    "  };\n",
+    "  final wanted = names[architecture];\n",
+    "  if (wanted == null) {\n",
+    "    throw UnsupportedError(\n",
+    "      'The Mosaic runtime has no Apple slice for ${architecture.name}.',\n",
+    "    );\n",
+    "  }\n",
+    "  final path = source.toFilePath();\n",
+    "  final present = await Process.run('lipo', <String>['-archs', path]);\n",
+    "  if (present.exitCode != 0) {\n",
+    "    throw StateError('lipo could not read $path: ${present.stderr}');\n",
+    "  }\n",
+    "  final archs = (present.stdout as String).trim().split(RegExp(r'\\s+'));\n",
+    "  if (!archs.contains(wanted)) {\n",
+    "    throw UnsupportedError(\n",
+    "      'The bundled Mosaic runtime is ${archs.join(\", \")} but this build '\n",
+    "      'asked for $wanted. On macOS `flutter build --release` always asks '\n",
+    "      'for both arm64 and x86_64, so it needs a universal runtime: build '\n",
+    "      'both targets and `lipo -create` them before passing '\n",
+    "      '--runtime-library.',\n",
+    "    );\n",
+    "  }\n",
+    "  // Already thin and already right: copy it rather than asking lipo to\n",
+    "  // extract the only slice there is.\n",
+    "  if (archs.length == 1) {\n",
+    "    await File.fromUri(source).copy(target.toFilePath());\n",
+    "    return;\n",
+    "  }\n",
+    "  final sliced = await Process.run('lipo', <String>[\n",
+    "    path,\n",
+    "    '-thin',\n",
+    "    wanted,\n",
+    "    '-output',\n",
+    "    target.toFilePath(),\n",
+    "  ]);\n",
+    "  if (sliced.exitCode != 0) {\n",
+    "    throw StateError(\n",
+    "      'lipo could not extract $wanted from $path: ${sliced.stderr}',\n",
+    "    );\n",
+    "  }\n",
+    "}\n",
+);
 
 fn install_xaml_runtime_library(source: &Path, backend_dir: &Path) -> Result<PathBuf, BuildError> {
     if runtime_file_name(source)? != "mosaic_app.dll" {
@@ -2891,10 +3007,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     &host_asset_dependencies_for(host_asset_dependencies, "flutter"),
                 );
                 let runtime_distribution = if let Some(source) = runtime_library {
-                    let file_name = runtime_file_name(source)?;
-                    format!(
-                        "The selected target Rust engine is copied to `runtime/{file_name}` and registered by `hook/build.dart` as a bundled Dart code asset. Flutter packages and resolves it for the target platform; no environment variable, hard-coded executable path, or global library install is required. Bundled-runtime projects require Flutter 3.38+, Dart 3.10+, and `flutter config --enable-native-assets`."
-                    )
+                    flutter_runtime_distribution_note(runtime_file_name(source)?)
                 } else {
                     "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the Rust application library path, or rely on the platform's conventional `mosaic_app` library name. Strict installable builds should be regenerated with `--runtime-library <target cdylib>`.".to_string()
                 };
@@ -8386,6 +8499,14 @@ layout NativeEvents {
         assert!(hook.contains("File.fromUri(source).copy(runtime.toFilePath())"));
         assert!(hook.contains("output.dependencies.add(source)"));
         assert!(hook.contains("targetOS != OS.linux && targetOS != OS.android"));
+        // And NOT the Apple slicing helper. Linux asks for one architecture per
+        // build, so there is nothing to slice; emitting `lipo` here would put a
+        // macOS-only tool on the path of a Linux build.
+        assert!(
+            !hook.contains("_installSlice"),
+            "the Linux hook must not slice: {hook}"
+        );
+        assert!(!hook.contains("lipo"), "the Linux hook must not run lipo");
 
         let bundled = out.path().join("flutter/runtime/libmosaic_app.so");
         assert_eq!(fs::read(&bundled).unwrap(), b"selected-flutter-runtime");
@@ -8397,6 +8518,96 @@ layout NativeEvents {
         assert!(readme.contains("flutter config --enable-native-assets"));
         assert!(readme.contains("registered by `hook/build.dart` as a bundled Dart code asset"));
         assert!(readme.contains("no environment variable"));
+    }
+
+    /// The Apple hook slices the runtime; the others copy it.
+    ///
+    /// `flutter build macos --release` cannot be asked for one architecture. It
+    /// runs the hook once per architecture — measured on a failing build, whose
+    /// two `input.json` files said `arm64` and `x64` — and `lipo`s the results
+    /// into a universal binary. A hook that copies the same file every time
+    /// hands `lipo` two slices of one architecture, and it refuses with a
+    /// message naming two build hashes and no cause.
+    ///
+    /// Every Mosaic Flutter app on macOS failed its release build that way,
+    /// which is why the Engram release lane has no macOS Flutter artifact.
+    /// `--debug` worked throughout, because it asks for the host architecture
+    /// only — so the CI lane, which builds `--debug`, stayed green.
+    #[test]
+    fn the_apple_flutter_hook_slices_the_runtime_per_architecture() {
+        let dylib = build_flutter_runtime_hook(Path::new("/tmp/libengram_mosaic_app.dylib"))
+            .expect("dylib hook");
+        assert!(
+            dylib.contains("_installSlice(source, runtime, input.config.code.targetArchitecture)")
+        );
+        assert!(dylib.contains("Architecture.arm64: 'arm64'"));
+        assert!(dylib.contains("Architecture.x64: 'x86_64'"));
+        assert!(dylib.contains("'-thin',"));
+
+        // A library that cannot serve the request SAYS SO. An earlier draft
+        // fell back to copying the file whole when `lipo -thin` failed, which
+        // turns a thin arm64 library asked for x86_64 straight back into the
+        // original confusing `lipo` error one step later — a silent fallback
+        // rescuing the exact state the check exists to catch.
+        assert!(dylib.contains("but this build "));
+        assert!(dylib.contains("it needs a universal runtime"));
+        // Read the branch, not the indentation. A literal-with-newlines match
+        // would pass the moment the formatter moved a brace.
+        let failed_slice = dylib
+            .split_once("if (sliced.exitCode != 0) {")
+            .map(|(_, rest)| rest.split_once("\n  }").map_or(rest, |(body, _)| body))
+            .expect("the hook must check whether the slice succeeded");
+        assert!(
+            failed_slice.contains("throw"),
+            "a failed slice must throw, not fall back to copying the whole \
+             library -- that turns a thin library asked for the other \
+             architecture straight back into the `lipo` error this replaces:{failed_slice}"
+        );
+
+        // Already thin and already right is a copy, not a lipo call on the only
+        // slice there is — which is the path every debug build takes.
+        assert!(dylib.contains("if (archs.length == 1) {"));
+
+        // The other two ask for one architecture per build, so there is nothing
+        // to slice and `lipo` is a macOS-only tool that has no business on a
+        // Linux or Windows build's path.
+        for (path, guard) in [
+            ("/tmp/libengram_mosaic_app.so", "OS.linux"),
+            ("/tmp/engram_mosaic_app.dll", "OS.windows"),
+        ] {
+            let hook = build_flutter_runtime_hook(Path::new(path)).expect("hook");
+            assert!(hook.contains(guard), "{path}: {hook}");
+            assert!(
+                hook.contains("File.fromUri(source).copy(runtime.toFilePath())"),
+                "{path} should copy the runtime whole"
+            );
+            assert!(!hook.contains("lipo"), "{path} must not run lipo");
+            assert!(!hook.contains("_installSlice"), "{path} must not slice");
+        }
+    }
+
+    /// The README says what a macOS build actually needs.
+    ///
+    /// The requirement is real and invisible: `--debug` works with a
+    /// single-architecture library and says nothing, so the first time anyone
+    /// meets it is a release build failing. A reader following the emitted
+    /// README should not have to discover it that way.
+    #[test]
+    fn the_flutter_readme_states_the_apple_universal_requirement() {
+        let apple = flutter_runtime_distribution_note("libmosaic_app.dylib");
+        assert!(apple.contains("must be **universal**"), "{apple}");
+        assert!(apple.contains("lipo -create"), "{apple}");
+        // And the fact that makes it a requirement rather than advice.
+        assert!(apple.contains("both arm64 and x86_64"), "{apple}");
+
+        // Not on the platforms it is untrue of. A Linux reader told to build a
+        // universal binary would be following an instruction for a different
+        // operating system.
+        for other in ["libmosaic_app.so", "mosaic_app.dll"] {
+            let readme = flutter_runtime_distribution_note(other);
+            assert!(!readme.contains("universal"), "{other}: {readme}");
+            assert!(!readme.contains("lipo"), "{other}: {readme}");
+        }
     }
 
     #[test]
