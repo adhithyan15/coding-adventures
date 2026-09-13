@@ -192,9 +192,13 @@ The delivery order is:
    provider and trace; and bounded response decoding or classification
    completes before release. Revocation derives a separate profile from the
    explicitly configured revocation endpoint and never invents token-endpoint
-   audience acceptance. Issued-at time and 256-bit replay entropy remain
-   caller-owned, and this enables neither a concrete signing algorithm,
-   credential persistence or deletion, nor network authority.
+   audience acceptance. An exact opaque account record can now compose its
+   stored refresh token and revision through that path: the complete profile is
+   revalidated before credential access, and local deletion is conditional on
+   exact HTTP 200 plus every signer, transport, protocol, custody, and broker
+   audit gate. All failures retain the record. Issued-at time and 256-bit replay
+   entropy remain caller-owned, and this enables neither a concrete signing
+   algorithm, credential rotation, nor network authority.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate

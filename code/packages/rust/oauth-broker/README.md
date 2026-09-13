@@ -42,7 +42,11 @@ transports are separately audit-gated; and bounded response decoding or
 classification completes before release. Revocation requires its explicitly
 configured endpoint as the assertion audience and never assumes token-endpoint
 acceptance. The caller still owns issued-at time and 256-bit replay entropy, and
-no concrete signing or network implementation is added.
+no concrete signing or network implementation is added. A separate composition
+validates that retained profile before credential access, releases the exact
+opaque account record's refresh token and revision, and conditionally deletes
+only that revision after exact HTTP 200 crosses signer, transport, protocol,
+custody, and broker audit gates. Every failure retains the local credential.
 For client-secret profiles, prepared authorization-code exchange, refresh, and
 RFC 7009 revocation requests can now cross the complete broker boundary: the
 registered provider, client ID, exact operation endpoint, and retained
@@ -103,7 +107,7 @@ dependency are sibling packages in this repository.
 - account identity proof and key selection, listing, access-token-only detach
   when no refresh token exists, device authorization UI, timing/sleep authority,
   and full device-flow loops;
-- private-key credential-rotation and local-deletion orchestration,
+- private-key credential-rotation orchestration,
   concrete private-key algorithms, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.

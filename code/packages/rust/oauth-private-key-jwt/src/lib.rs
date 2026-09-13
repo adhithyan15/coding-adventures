@@ -112,6 +112,16 @@ impl PrivateKeyJwtProfile {
         &self.provider
     }
 
+    /// Return the exact client identity bound to assertion claims.
+    pub fn client_id(&self) -> &str {
+        &self.client_id
+    }
+
+    /// Return the exact HTTPS endpoint used as the assertion audience.
+    pub fn audience(&self) -> &str {
+        &self.audience
+    }
+
     /// Return the exact provider-selected signing algorithm.
     pub const fn algorithm(&self) -> &PrivateKeyJwtAlgorithm {
         &self.algorithm

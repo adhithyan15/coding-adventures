@@ -753,6 +753,8 @@ pub enum BrokerAuditAction {
     ClientSecretRevocation,
     /// Revoke the exact stored refresh token, then delete its credential revision.
     ClientSecretRevocationCredentialDelete,
+    /// Revoke through private-key JWT, then delete the exact credential revision.
+    PrivateKeyJwtRevocationCredentialDelete,
     /// Exchange and persist one client-secret-authenticated credential response.
     ClientSecretExchangeCredentialCreate,
     /// Send one request through the injected token transport.
@@ -865,6 +867,17 @@ pub trait OAuthPrivateKeyJwtBrokerAuditSink:
 
 impl<T> OAuthPrivateKeyJwtBrokerAuditSink for T where
     T: BrokerAuditSink + OAuthAuditSink + PrivateKeyAuditSink
+{
+}
+
+/// Audit sink capable of recording private-key JWT and credential custody effects.
+pub trait OAuthPrivateKeyJwtCredentialBrokerAuditSink:
+    OAuthPrivateKeyJwtBrokerAuditSink + CredentialAuditSink
+{
+}
+
+impl<T> OAuthPrivateKeyJwtCredentialBrokerAuditSink for T where
+    T: OAuthPrivateKeyJwtBrokerAuditSink + CredentialAuditSink
 {
 }
 
@@ -1760,6 +1773,74 @@ impl<S: CredentialStore> OAuthBroker<S> {
         )
     }
 
+    /// Revoke one exact stored refresh token through private-key JWT, then delete it.
+    ///
+    /// The opaque account key, retained provider policy, assertion profile,
+    /// client ID, revocation audience, and exact case-sensitive algorithm are
+    /// checked before credential custody is accessed. Custody releases only the
+    /// selected record's refresh token and revision into a zeroizing request.
+    /// Signing and transport remain injected and separately audit-gated; local
+    /// deletion is reachable only after exact HTTP 200 and every result audit.
+    pub fn revoke_refresh_token_with_private_key_jwt_and_delete_credentials<SA, T, A>(
+        &self,
+        key: &CredentialKey,
+        profile: &PrivateKeyJwtProfile,
+        trace: OAuthTraceId,
+        execution: PrivateKeyJwtRevocationExecution<'_, SA, T>,
+        audit: &mut A,
+    ) -> Result<(), BrokerError>
+    where
+        SA: SigningAuthority,
+        T: OAuthPrivateKeyJwtTokenRevocationTransport,
+        A: OAuthPrivateKeyJwtCredentialBrokerAuditSink,
+    {
+        let provider_id = key.provider().clone();
+        publish_broker(
+            audit,
+            &provider_id,
+            trace,
+            BrokerAuditAction::PrivateKeyJwtRevocationCredentialDelete,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            let provider = self.registered_provider(&provider_id)?.clone();
+            let revocation_endpoint = provider
+                .config()
+                .revocation_endpoint()
+                .ok_or(BrokerError::BindingMismatch)?;
+            validate_private_key_jwt_profile(&provider, profile, revocation_endpoint)?;
+            let (token, revision) = self
+                .custody
+                .with_refresh_token(key, trace, audit, |token, revision| {
+                    (Zeroizing::new(token.to_owned()), revision)
+                })
+                .map_err(map_custody_error)?;
+            let request = prepare_token_revocation(
+                provider.config(),
+                token,
+                RevocationTokenHint::RefreshToken,
+                trace,
+            )
+            .publish_then_release(audit)
+            .map_err(map_oauth_error)?;
+            let response =
+                self.send_private_key_jwt_revocation(profile, request, execution, audit)?;
+            if response.provider() != &provider_id || response.trace() != trace {
+                return Err(BrokerError::BindingMismatch);
+            }
+            self.custody
+                .delete(key, revision, trace, audit)
+                .map_err(map_custody_error)
+        })();
+        finish_broker(
+            audit,
+            &provider_id,
+            trace,
+            BrokerAuditAction::PrivateKeyJwtRevocationCredentialDelete,
+            result,
+        )
+    }
+
     /// Exchange and persist one client-secret-authenticated credential response.
     ///
     /// The opaque account key must name the request provider before any
@@ -2309,16 +2390,8 @@ impl<S: CredentialStore> OAuthBroker<S> {
         A: OAuthPrivateKeyJwtBrokerAuditSink,
     {
         let provider = self.registered_provider(request.provider())?;
-        if profile.provider() != provider.provider()
-            || provider.confidential_authentication_method()
-                != Some(ConfidentialClientAuthenticationMethod::PrivateKeyJwt)
-            || !provider
-                .client_authentication_signing_algorithms()
-                .iter()
-                .any(|algorithm| algorithm == profile.algorithm().as_str())
-            || request.client_id() != provider.config().client_id()
-            || Some(request.endpoint()) != provider.config().revocation_endpoint()
-        {
+        validate_private_key_jwt_profile(provider, profile, request.endpoint())?;
+        if Some(request.endpoint()) != provider.config().revocation_endpoint() {
             return Err(BrokerError::BindingMismatch);
         }
         let context = request.response_context();
@@ -2429,6 +2502,26 @@ struct RefreshMaterial {
     token: Zeroizing<String>,
     revision: CredentialRevision,
     scopes: Vec<String>,
+}
+
+fn validate_private_key_jwt_profile(
+    provider: &BrokerProvider,
+    profile: &PrivateKeyJwtProfile,
+    audience: &str,
+) -> Result<(), BrokerError> {
+    if profile.provider() != provider.provider()
+        || profile.client_id() != provider.config().client_id()
+        || profile.audience() != audience
+        || provider.confidential_authentication_method()
+            != Some(ConfidentialClientAuthenticationMethod::PrivateKeyJwt)
+        || !provider
+            .client_authentication_signing_algorithms()
+            .iter()
+            .any(|algorithm| algorithm == profile.algorithm().as_str())
+    {
+        return Err(BrokerError::BindingMismatch);
+    }
+    Ok(())
 }
 
 fn reschedule_device_flow(
@@ -2911,6 +3004,18 @@ mod tests {
                         BrokerAuditOutcome::Failed(_),
                     ) => "revoke-delete-failed",
                     (
+                        BrokerAuditAction::PrivateKeyJwtRevocationCredentialDelete,
+                        BrokerAuditOutcome::Attempted,
+                    ) => "private-key-revoke-delete-attempted",
+                    (
+                        BrokerAuditAction::PrivateKeyJwtRevocationCredentialDelete,
+                        BrokerAuditOutcome::Succeeded,
+                    ) => "private-key-revoke-delete-succeeded",
+                    (
+                        BrokerAuditAction::PrivateKeyJwtRevocationCredentialDelete,
+                        BrokerAuditOutcome::Failed(_),
+                    ) => "private-key-revoke-delete-failed",
+                    (
                         BrokerAuditAction::ClientSecretExchangeCredentialCreate,
                         BrokerAuditOutcome::Attempted,
                     ) => "exchange-store-attempted",
@@ -3237,6 +3342,8 @@ mod tests {
 
     struct MockPrivateKeyJwtRevocationTransport {
         response: Option<Result<TokenRevocationEndpointResponse, TokenTransportError>>,
+        expected_token: &'static str,
+        expected_hint: RevocationTokenHint,
         calls: usize,
         order: Rc<RefCell<Vec<&'static str>>>,
     }
@@ -3253,8 +3360,14 @@ mod tests {
                 request.endpoint(),
                 "https://token.fixture-confidential.example/revoke"
             );
-            assert!(request.form_body().contains("token=access-secret"));
-            assert!(request.form_body().contains("token_type_hint=access_token"));
+            assert!(request
+                .form_body()
+                .contains(&format!("token={}", self.expected_token)));
+            let expected_hint = match self.expected_hint {
+                RevocationTokenHint::AccessToken => "token_type_hint=access_token",
+                RevocationTokenHint::RefreshToken => "token_type_hint=refresh_token",
+            };
+            assert!(request.form_body().contains(expected_hint));
             assert!(request.form_body().contains(concat!(
                 "&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3A",
                 "client-assertion-type%3Ajwt-bearer&client_assertion="
@@ -4504,6 +4617,8 @@ mod tests {
                 Zeroizing::new(Vec::new()),
             )
             .unwrap())),
+            expected_token: "access-secret",
+            expected_hint: RevocationTokenHint::AccessToken,
             calls: 0,
             order: order.clone(),
         };
@@ -4601,6 +4716,8 @@ mod tests {
         let signer = AuditedPrivateKeySigner::from_audited_authority(authority);
         let mut transport = MockPrivateKeyJwtRevocationTransport {
             response: None,
+            expected_token: "access-secret",
+            expected_hint: RevocationTokenHint::AccessToken,
             calls: 0,
             order: order.clone(),
         };
@@ -4617,9 +4734,7 @@ mod tests {
                 ),
                 &mut audit,
             ),
-            Err(BrokerError::PrivateKeyJwt(
-                PrivateKeyJwtError::RequestBinding
-            ))
+            Err(BrokerError::BindingMismatch)
         ));
         assert_eq!(inspection.calls.load(Ordering::SeqCst), 0);
         assert_eq!(transport.calls, 0);
@@ -4630,6 +4745,237 @@ mod tests {
                 "private-key-revocation-attempted",
                 "private-key-revocation-failed"
             ]
+        );
+    }
+
+    #[test]
+    fn private_key_jwt_revocation_deletes_only_after_exact_remote_success() {
+        let provider_config = config("fixture-confidential")
+            .with_revocation_endpoint("https://token.fixture-confidential.example/revoke")
+            .unwrap();
+        let provider = BrokerProvider::new_confidential(
+            provider_config.clone(),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::PrivateKeyJwt,
+            vec!["EdDSA".to_owned()],
+        )
+        .unwrap();
+        let signing_key = PrivateKeyId::new(
+            provider_config.provider().clone(),
+            PrivateKeyReference::new([0x7c; 32]),
+        );
+        let profile = provider
+            .bind_private_key_jwt_revocation_profile(
+                signing_key.clone(),
+                PrivateKeyJwtAlgorithm::new("EdDSA").unwrap(),
+                None,
+                60,
+            )
+            .unwrap();
+        let token_audience_profile = provider
+            .bind_private_key_jwt_profile(
+                signing_key,
+                PrivateKeyJwtAlgorithm::new("EdDSA").unwrap(),
+                None,
+                60,
+            )
+            .unwrap();
+        let credential_key = key("fixture-confidential");
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        let response = decoded_refresh_response(
+            &provider_config,
+            trace(67),
+            r#"{"access_token":"access-one","refresh_token":"refresh-one","token_type":"Bearer"}"#,
+            &mut audit,
+        );
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut audit)
+            .unwrap();
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        custody
+            .create(
+                &credential_key,
+                credentials,
+                CredentialMetadata::new("Bearer", None, Vec::new()).unwrap(),
+                trace(67),
+                &mut audit,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(provider, trace(67), &mut audit)
+            .unwrap();
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let authority = RecordingSigningAuthority::default();
+        let inspection = authority.clone();
+        let signer = AuditedPrivateKeySigner::from_audited_authority(authority);
+        let mut rejected_transport = MockPrivateKeyJwtRevocationTransport {
+            response: None,
+            expected_token: "refresh-one",
+            expected_hint: RevocationTokenHint::RefreshToken,
+            calls: 0,
+            order: order.clone(),
+        };
+        assert_eq!(
+            broker.revoke_refresh_token_with_private_key_jwt_and_delete_credentials(
+                &credential_key,
+                &token_audience_profile,
+                trace(68),
+                PrivateKeyJwtRevocationExecution::new(
+                    &signer,
+                    1_700_000_000,
+                    [0x37; 32],
+                    &mut rejected_transport,
+                ),
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        );
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(inspection.calls.load(Ordering::SeqCst), 0);
+        assert_eq!(rejected_transport.calls, 0);
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "private-key-revoke-delete-attempted",
+                "private-key-revoke-delete-failed",
+            ]
+        );
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let authority = RecordingSigningAuthority::default();
+        let inspection = authority.clone();
+        let signer = AuditedPrivateKeySigner::from_audited_authority(authority);
+        let mut retryable_transport = MockPrivateKeyJwtRevocationTransport {
+            response: Some(Ok(TokenRevocationEndpointResponse::new(
+                503,
+                Zeroizing::new(Vec::new()),
+            )
+            .unwrap())),
+            expected_token: "refresh-one",
+            expected_hint: RevocationTokenHint::RefreshToken,
+            calls: 0,
+            order: order.clone(),
+        };
+        assert!(matches!(
+            broker.revoke_refresh_token_with_private_key_jwt_and_delete_credentials(
+                &credential_key,
+                &profile,
+                trace(69),
+                PrivateKeyJwtRevocationExecution::new(
+                    &signer,
+                    1_700_000_001,
+                    [0x38; 32],
+                    &mut retryable_transport,
+                ),
+                &mut audit,
+            ),
+            Err(BrokerError::Protocol(OAuthError::TokenRevocationEndpoint(
+                ProviderTokenRevocationError::TemporarilyUnavailable
+            )))
+        ));
+        assert_eq!(inspection.calls.load(Ordering::SeqCst), 1);
+        assert_eq!(retryable_transport.calls, 1);
+        assert!(audit.custody[custody_events_before..]
+            .iter()
+            .all(|event| event.action() != CredentialAuditAction::Delete));
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&credential_key, trace(69), &mut audit, |token| token
+                    .to_owned())
+                .unwrap(),
+            "access-one"
+        );
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let authority = RecordingSigningAuthority::default();
+        let inspection = authority.clone();
+        let signer = AuditedPrivateKeySigner::from_audited_authority(authority);
+        let mut successful_transport = MockPrivateKeyJwtRevocationTransport {
+            response: Some(Ok(TokenRevocationEndpointResponse::new(
+                200,
+                Zeroizing::new(Vec::new()),
+            )
+            .unwrap())),
+            expected_token: "refresh-one",
+            expected_hint: RevocationTokenHint::RefreshToken,
+            calls: 0,
+            order: order.clone(),
+        };
+        broker
+            .revoke_refresh_token_with_private_key_jwt_and_delete_credentials(
+                &credential_key,
+                &profile,
+                trace(70),
+                PrivateKeyJwtRevocationExecution::new(
+                    &signer,
+                    1_700_000_002,
+                    [0x39; 32],
+                    &mut successful_transport,
+                ),
+                &mut audit,
+            )
+            .unwrap();
+        assert_eq!(inspection.calls.load(Ordering::SeqCst), 1);
+        assert_eq!(successful_transport.calls, 1);
+        assert_eq!(
+            audit.custody[custody_events_before..]
+                .iter()
+                .map(|event| (event.action(), event.outcome()))
+                .collect::<Vec<_>>(),
+            vec![
+                (
+                    CredentialAuditAction::RefreshToken,
+                    CredentialAuditOutcome::Attempted,
+                ),
+                (
+                    CredentialAuditAction::RefreshToken,
+                    CredentialAuditOutcome::Succeeded,
+                ),
+                (
+                    CredentialAuditAction::Delete,
+                    CredentialAuditOutcome::Attempted,
+                ),
+                (
+                    CredentialAuditAction::Delete,
+                    CredentialAuditOutcome::Succeeded,
+                ),
+            ]
+        );
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "private-key-revoke-delete-attempted",
+                "refresh-token-access-attempted",
+                "refresh-token-access-succeeded",
+                "private-key-revocation-attempted",
+                "sign-attempted",
+                "sign-succeeded",
+                "revocation-transport-attempted",
+                "revocation-transport-effect",
+                "revocation-transport-succeeded",
+                "private-key-revocation-succeeded",
+                "credential-delete-attempted",
+                "credential-delete-succeeded",
+                "private-key-revoke-delete-succeeded",
+            ]
+        );
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&credential_key, trace(70), &mut audit, |_| ()),
+            Err(CustodyError::NotFound)
         );
     }
 

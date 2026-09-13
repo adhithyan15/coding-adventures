@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added exact stored-refresh-token detach through retained `private_key_jwt`:
+  account, client, revocation audience, and algorithm bindings are checked
+  before credential access; signing and transport remain injected and audited;
+  and only exact HTTP 200 permits revision-bound local deletion.
 - Added one broker-composed `private_key_jwt` RFC 7009 revocation boundary:
   retained provider policy now derives a separate assertion profile only from
   an explicitly configured revocation audience, and provider, client,
