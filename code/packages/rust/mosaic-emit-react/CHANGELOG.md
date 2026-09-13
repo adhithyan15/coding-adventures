@@ -8,6 +8,33 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — a table row kept none of its style (#15051)
+
+`<tr>` was emitted bare. A `Row` inside `HostTableBody` was the one element in
+this emitter that consulted no style at all, so both an authored part style and
+a bound dimension were dropped.
+
+```
+before   <tr>
+after    <tr style={{ height: rowHeight }}>
+```
+
+**The issue's premise was half wrong, and measuring said so.** It reported that
+the `height: slot: row-height` binding was lost while "static part height still
+applied". Driving the emitter directly, a static `height: 42px` on the same row
+was dropped too — the `<tr>` carried no style attribute of any kind. Both halves
+are fixed and both are asserted.
+
+The general walker's full treatment is deliberately **not** reproduced on the
+row: a `<tr>` has no built-in flex style to merge, and `state-when-*` on a table
+row is unused and untested here. Static part style plus bound dimensions is what
+the issue is about and what the tests exercise; a state spread on a table row
+would still be dropped, and that is stated rather than silently half-done.
+
+The test includes the control — a row with neither a part nor a binding keeps
+the bare `<tr>` — so it cannot pass by attaching an empty style object to every
+row.
+
 ### Changed — `HostScroll` honours its axis, and no longer scrolls both ways (UI61, #14854)
 
 Same deliberate narrowing as the html backend: the bare `overflow: "auto"`
