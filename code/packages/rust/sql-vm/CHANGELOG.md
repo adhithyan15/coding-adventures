@@ -5,6 +5,38 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.4.45] - Unreleased
 
+### Added
+
+- A test pinning that `DISTINCT`'s row key cannot be forged by a column alias or
+  a value.
+
+  The key is `format!("{col}={val:?}")` joined by `,`, with the column name
+  interpolated **raw** — the composite-key separator-injection shape this
+  repository has fixed twice elsewhere (card ids in `engram-core-wasm`, the
+  provenance merge key in `engram-core`), and one that `lessons.md` has carried
+  as a suspected third instance.
+
+  **Revisited, and it is not that bug — so nothing is fixed here.** Two things
+  must be true at once to forge a key, and only one is: the column names are raw,
+  but they are also *fixed across every row of one `DISTINCT`*, so a hostile
+  alias contributes the same constant prefix to every key and cannot shift one
+  row's boundary relative to another's. The values vary, but `SqlValue`'s derived
+  `Debug` quotes and escapes `Text` and brackets `Blob`, so the rendering is
+  injective. A constant prefix plus an injective rendering is injective.
+
+  Measured before concluding: 864 rows over hostile aliases (`x=Int(1),y`,
+  `a,b`, duplicate names, empty names) and values whose rendered form carries
+  `,`, `=` and quotes — zero collisions. The reported exploit,
+  `SELECT a AS "x=Int(1),y", b`, does not collide: the alias is constant within
+  the query, so it cancels. The two keys that *do* match come from queries with
+  different column counts, which `apply_distinct` never compares.
+
+  **So the test pins the property the safety rests on, not the absence of a
+  collision that cannot happen.** The load-bearing half is a `derive`, one
+  hand-written `impl` away from a `Debug` that prints text raw — which would make
+  the key forgeable immediately, with nothing else in the file noticing.
+  Mutation-checked with exactly that `impl`.
+
 ### Fixed
 
 - Two `clippy::approx_constant` errors in the test module. `3.14159` (printf

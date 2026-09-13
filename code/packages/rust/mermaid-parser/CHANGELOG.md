@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.216.0
+
+- Decode HTML entities in authored Block text before semantic IR lowering.
+
 ## 0.215.0
 
 - Preserve quoted labels on solid, dotted, and thick Block links.

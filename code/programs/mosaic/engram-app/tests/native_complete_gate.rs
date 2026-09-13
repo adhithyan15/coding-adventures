@@ -139,7 +139,18 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // `Spacer`, `.layoutPriority`), and this emitter appends modifiers to an
     // already-built view, so no match arm could apply them. Fixing them means
     // the container emitter reading the part's style before emitting children.
-    (Backend::SwiftUI, "gap"),
+    //
+    // `gap` was on this list and should not have been -- the comment above
+    // describes the fix, and the container emitter had ALREADY been doing it:
+    // `Column` opens `VStack(spacing:)` and `Row` an `HStack(spacing:)`, read
+    // from the part's own style. What had not been fixed was the REPORT, which
+    // scanned only the modifier chain and so called every applied gap a drop.
+    // 22 of Engram's 40 reported SwiftUI drops were this, `$style.app-shell`
+    // among them -- reported to drop `gap: 18` while its emitted Swift opened
+    // `VStack(spacing: 18)`.
+    //
+    // A `gap` that a `Box`, `Stack` or `HostScroll` really does discard is
+    // still reported, so this entry would come back if one appeared here.
     (Backend::SwiftUI, "align"),
     (Backend::SwiftUI, "align-items"),
     (Backend::SwiftUI, "justify-content"),

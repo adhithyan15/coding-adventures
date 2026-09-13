@@ -711,6 +711,9 @@ QVariantMap MosaicHost::normalizeProps(const QVariantMap &props)
     {QStringLiteral("bookmark-label"), QStringLiteral("bookmarkLabel")},
     {QStringLiteral("bookmark-disabled"), QStringLiteral("bookmarkDisabled")},
     {QStringLiteral("view-source-disabled"), QStringLiteral("viewSourceDisabled")},
+    {QStringLiteral("find-query"), QStringLiteral("findQuery")},
+    {QStringLiteral("find-result-label"), QStringLiteral("findResultLabel")},
+    {QStringLiteral("find-disabled"), QStringLiteral("findDisabled")},
     {QStringLiteral("navigation-disabled"), QStringLiteral("navigationDisabled")},
     {QStringLiteral("content-surface"), QStringLiteral("contentSurface")},
   };

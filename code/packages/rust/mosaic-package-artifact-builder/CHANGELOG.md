@@ -2,13 +2,40 @@
 
 ## 2026-09-13
 
+- Pass the layout to the SwiftUI style-drop reporter, so `styleDegradations` stops reporting a `gap` the container applies. SwiftUI takes spacing at view-construction time (`HStack(spacing:)`), which the modifier-chain scan cannot see; 22 of the 40 drops reported for Engram were this, and all 22 were false. Mirrors what the Compose reporter already does for `justify-content`/`align-items` (#14834). A gap a `Box`, `Stack` or `HostScroll` genuinely discards is still reported.
 - Recognize supported Qt font-size bindings in capability reports. Guard the Unix-only host-asset symlink test so Windows builds can compile the test suite.
-
-## 2026-09-13
-
 - Recognize validated Compose typography projections while continuing to report unsupported backends, primitives and binding forms explicitly.
 
 ## Unreleased
+
+### Added — the resolver's contract is now enforced, not assumed (#14886)
+
+`LayoutPackageResolver` promises backends "a layout tree containing no qualified
+tags", and every emitter is written against that guarantee — **none of the eight
+calls `package_ref()` or `component()` to check**. #14884 was the worked
+example: a `.mll` with a qualified `Cell` reached the XAML emitter with no
+resolver pass and `main` went red.
+
+Measured what all eight actually do when handed `pkg::mosaic-pkg-grid::Grid`
+directly:
+
+| backend | behaviour |
+| --- | --- |
+| compose, swiftui, html, react, webcomponent, qt, flutter, xaml | `UnknownPrimitive("pkg::mosaic-pkg-grid::Grid")` |
+
+**The failure mode worth fearing does not exist.** A backend that stripped the
+qualifier and emitted a structurally plausible element for the wrong component
+would fail *quietly* — that is the shape of #14867, which #14886 was opened to
+rule out. All eight fail loudly and name the offending tag.
+
+So the gap was never the behaviour; it was that nothing pinned it. This test is
+that pin, and it fails if any emitter starts accepting a qualified tag.
+
+It asserts on the **error** rather than on the absence of the component in the
+output: a backend that emitted an empty string would satisfy "no `Grid` in the
+output" while having silently dropped the component. Falsified by pointing the
+fixture at a tag the emitters do accept, which fails with `compose ACCEPTED a
+qualified tag and emitted 3298 bytes`.
 
 ### Fixed — a `[host_assets]` source could resolve outside the package
 
