@@ -1953,7 +1953,8 @@ fn emit_host_input_jsx(
         .as_deref()
         .and_then(|n| part_styles.get(n).map(String::as_str))
         .unwrap_or("");
-    let part_style_str = merge_styles(part_style_str, &bound_typography_style(node)?);
+    let inherited = merge_styles("fontFamily: \"inherit\", fontSize: \"inherit\"", part_style_str);
+    let part_style_str = merge_styles(&inherited, &bound_typography_style(node)?);
     if !part_style_str.is_empty() {
         attrs.push_str(&format!(" style={{{{ {part_style_str} }}}}"));
     }
@@ -7956,7 +7957,7 @@ mod tests {
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         let out = &result.output;
         assert!(
-            out.contains("<input type=\"text\" value={formulaText} />"),
+            out.contains("value={formulaText} />") && out.contains("fontSize: \"inherit\""),
             "expected `<input type=\"text\" value={{formulaText}} />`, got:\n{out}"
         );
     }
@@ -8047,7 +8048,7 @@ mod tests {
         }]);
         let result = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            result.output.contains("<input type=\"text\" autoFocus />"),
+            result.output.contains(" autoFocus />") && result.output.contains("fontSize: \"inherit\""),
             "expected native autoFocus attr, got:\n{}",
             result.output
         );
