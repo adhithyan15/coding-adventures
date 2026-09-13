@@ -14,7 +14,8 @@
 %     ? hormone_gland(insulin, $Gland)      % pancreas
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `hormone_gland(hormone, gland)` carrying the table's citation, so the
+% relation `hormone_gland(hormone, gland)` carrying THAT ROW'S OWN citation
+% (RS-5e — before #14986 it was the table's single envelope), so the
 % lookup above is the ordinary SLD binding query — the engine returns the gland
 % WITH its source, on the CPU, with zero model calls, and abstains on a word
 % that is not one of these grounded hormones (it never invents a gland).
@@ -51,98 +52,69 @@
 % it answers exactly the hormone→gland pairs it can ground, and only those.
 %
 % The `gland` value of every row is a SINGLE lowercase atom naming the endocrine
-% gland the source EXPLICITLY states makes that hormone — never one the source
+% gland the row's own span states makes that hormone — sometimes in the page's
+% own adjectival or plural wording ("pancreatic islets", "the testes"), never a
+% gland the source
 % does not support. (Where several hormones share a gland, the atom is repeated:
 % `pancreas` appears for both insulin and glucagon, `ovary` for both estrogen and
 % progesterone.)
 %
 % ---------------------------------------------------------------------------
-% Provenance (nothing here is asserted from memory — every hormone→gland pair
-% below was read out of a fetched primary U.S. government page, and any hormone
-% whose gland could not be verified in a fetched span was DROPPED). Each pair,
-% with the source it was copied from and the verbatim span that states it:
+% Provenance. All 12 pairs come from primary U.S. government references — the
+% NCI SEER Training Modules (National Cancer Institute) and MedlinePlus
+% (National Library of Medicine / NIH) — so `trust authoritative`.
 %
-%   insulin → pancreas
-%     https://training.seer.cancer.gov/anatomy/endocrine/glands/pancreas.html
-%     (NCI SEER Training Modules — U.S. National Cancer Institute)
-%     "Beta cells in the pancreatic islets secrete the hormone insulin in
-%      response to a high concentration of glucose in the blood."
+% EVERY ROW CARRIES ITS OWN SPAN AND ITS OWN LOCATOR, below, in the row's
+% `{ ... }` block (ADJ-TABLES RS-5e). This is a CROSS-PAGE conversion: the
+% twelve rows are grounded on seven different pages (SEER pancreas, thyroid,
+% adrenal, pituitary and gonads, plus MedlinePlus cortisol-test and
+% growth-hormone-tests), so a row's locator is part of its warrant, not a
+% detail inherited from the table.
 %
-%   glucagon → pancreas
-%     https://training.seer.cancer.gov/anatomy/endocrine/glands/pancreas.html
-%     (NCI SEER Training Modules — U.S. National Cancer Institute)
-%     "Alpha cells in the pancreatic islets secrete the hormone glucagons in
-%      response to a low concentration of glucose in the blood."
-%     (the page spells it "glucagons"; the hormone is glucagon)
+% This header used to re-quote all 12 spans a second time. They now ship in the
+% rows; a second copy is a second thing to keep true, and in #15137 two of five
+% such restatements had drifted from their page while sitting under the words
+% "quoted here word-for-word".
 %
-%   thyroxine → thyroid
-%     https://training.seer.cancer.gov/anatomy/endocrine/glands/thyroid.html
-%     (NCI SEER Training Modules — U.S. National Cancer Institute)
-%     "Internally, the gland consists of follicles, which produce thyroxine and
-%      triiodothyronine hormones." ("the gland" is the thyroid gland — the whole
-%      page is about the thyroid; the calcitonin span below names it outright)
+% WHAT #14986 CHANGED. The table had ONE envelope, and it was the INSULIN row's
+% own sentence — so recalling progesterone returned a warrant about beta cells.
+% The envelope now carries the FRAMING span (hormones are secreted by endocrine
+% glands), which warrants no row.
 %
-%   calcitonin → thyroid
-%     https://training.seer.cancer.gov/anatomy/endocrine/glands/thyroid.html
-%     (NCI SEER Training Modules — U.S. National Cancer Institute)
-%     "Calcitonin is secreted by the parafollicular cells of the thyroid gland."
+% THREE SPANS ARE WIDENED, per ../README.md, "A citation must name its own
+% subject" — widen the quote until it is self-contained:
 %
-%   cortisol → adrenal_gland
-%     https://medlineplus.gov/lab-tests/cortisol-test/
-%     (MedlinePlus — U.S. National Library of Medicine / NIH)
-%     "Cortisol is a hormone made by your adrenal glands, two small glands that
-%      sit above your kidneys."
+%   thyroxine       its sentence says "the gland" and names none
+%   melatonin       its sentence credits "the pinealocytes" and names no gland
+%   growth_hormone  its sentence calls the hormone only "GH"
 %
-%   epinephrine → adrenal_gland
-%     https://training.seer.cancer.gov/anatomy/endocrine/glands/adrenal.html
-%     (NCI SEER Training Modules — U.S. National Cancer Institute)
-%     "The adrenal medulla develops from neural tissue and secretes two hormones,
-%      epinephrine and norepinephrine."
+%   Each is widened back to the nearest sentence that supplies the missing
+%   name, and no further. The reason is recorded on the row itself.
 %
-%   growth_hormone → pituitary
-%     https://medlineplus.gov/lab-tests/growth-hormone-tests/
-%     (MedlinePlus — U.S. National Library of Medicine / NIH)
-%     "GH is made in the pituitary gland, a small organ at the base of your brain
-%      that controls many functions, including growth."
+% WHERE THE PAGE'S WORDING DIFFERS FROM THIS TABLE'S ATOMS. The span is always
+% quoted as the page has it — silently correcting a quote is how a citation
+% stops being checkable — so the atom and the span can legitimately differ:
 %
-%   melatonin → pineal_gland
-%     https://training.seer.cancer.gov/anatomy/endocrine/glands/pituitary.html
-%     (NCI SEER Training Modules — U.S. National Cancer Institute; the "Pituitary
-%      & Pineal Glands" page)
-%     "The pinealocytes synthesize the hormone melatonin and secrete it directly
-%      into the cerebrospinal fluid, which takes it into the blood."
-%     (pinealocytes are the cells of the pineal gland)
+%   glucagon        the SEER page writes "glucagons"
+%   estrogen        the span says "estrogens"
+%   testis          the span says "testes"
+%   ovary           the span says "ovaries"
+%   pancreas        insulin's and glucagon's spans say "pancreatic islets"
+%   adrenal_gland   epinephrine's span says "adrenal medulla"
 %
-%   parathyroid_hormone → parathyroid_gland
-%     https://training.seer.cancer.gov/anatomy/endocrine/glands/thyroid.html
-%     (NCI SEER Training Modules — U.S. National Cancer Institute)
-%     "These are parathyroid glands, and they secrete parathyroid hormone or
-%      parathormone."
+% Six of the twelve rows are of that kind, so a check that the span literally
+% contains the atom would fail for half the table; what each span does state is
+% the RELATION — that this gland (or its part, in its own words) makes this
+% hormone.
 %
-%   testosterone → testis
-%     https://training.seer.cancer.gov/anatomy/endocrine/glands/gonads.html
-%     (NCI SEER Training Modules — U.S. National Cancer Institute)
-%     "The principal androgen is testosterone, which is secreted by the testes."
+% One row's LOCATOR also looks wrong and is not:
 %
-%   estrogen → ovary
-%     https://training.seer.cancer.gov/anatomy/endocrine/glands/gonads.html
-%     (NCI SEER Training Modules — U.S. National Cancer Institute)
-%     "Two groups of female sex hormones are produced in the ovaries, the
-%      estrogens and progesterone."
+%   melatonin       cited from pituitary.html, because that SEER page covers the
+%                   pituitary AND pineal glands
 %
-%   progesterone → ovary
-%     https://training.seer.cancer.gov/anatomy/endocrine/glands/gonads.html
-%     (NCI SEER Training Modules — U.S. National Cancer Institute)
-%     "Two groups of female sex hormones are produced in the ovaries, the
-%      estrogens and progesterone."
+% `estrogen` and `progesterone` share one sentence, which states both. Each row
+% carries its own copy so either can be re-checked, or changed, alone.
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the SEER statement that fixes the
-% first row (insulin → pancreas). Every OTHER row's per-fact source and verbatim
-% span is listed above, so each gland remains independently checkable. All
-% sources are primary U.S. government references — the NCI SEER Training Modules
-% (National Cancer Institute) and MedlinePlus (National Library of Medicine /
-% NIH) — so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -150,20 +122,83 @@
 table hormone_gland {
     columns hormone, gland
 
-    row (insulin, pancreas)
-    row (glucagon, pancreas)
-    row (thyroxine, thyroid)
-    row (calcitonin, thyroid)
-    row (cortisol, adrenal_gland)
-    row (epinephrine, adrenal_gland)
-    row (growth_hormone, pituitary)
-    row (melatonin, pineal_gland)
-    row (parathyroid_hormone, parathyroid_gland)
-    row (testosterone, testis)
-    row (estrogen, ovary)
-    row (progesterone, ovary)
+    row (insulin, pancreas) {
+        source "Beta cells in the pancreatic islets secrete the hormone insulin in response to a high concentration of glucose in the blood."
+        locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/pancreas.html"
+    }
+    row (glucagon, pancreas) {
+        % The page spells it "glucagons"; the hormone is glucagon.
+        % The span is quoted as the page has it -- correcting a quote
+        % silently is how a citation stops being checkable.
+        source "Alpha cells in the pancreatic islets secrete the hormone glucagons in response to a low concentration of glucose in the blood."
+        locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/pancreas.html"
+    }
+    row (thyroxine, thyroid) {
+        % WIDENED. The sentence that states thyroxine says "the
+        % gland" and names none; quoted alone it grounds nothing.
+        % Widened to the paragraph's first sentence -- the nearest one
+        % naming the thyroid, since neither sentence between them
+        % does. README, "A citation must name its own subject".
+        source "The thyroid gland is a very vascular organ that is located in the neck. It consists of two lobes, one on each side of the trachea, just below the larynx or voice box. The two lobes are connected by a narrow band of tissue called the isthmus. Internally, the gland consists of follicles, which produce thyroxine and triiodothyronine hormones."
+        locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/thyroid.html"
+    }
+    row (calcitonin, thyroid) {
+        source "Calcitonin is secreted by the parafollicular cells of the thyroid gland."
+        locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/thyroid.html"
+    }
+    row (cortisol, adrenal_gland) {
+        source "Cortisol is a hormone made by your adrenal glands, two small glands that sit above your kidneys."
+        locator "https://medlineplus.gov/lab-tests/cortisol-test/"
+    }
+    row (epinephrine, adrenal_gland) {
+        source "The adrenal medulla develops from neural tissue and secretes two hormones, epinephrine and norepinephrine."
+        locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/adrenal.html"
+    }
+    row (growth_hormone, pituitary) {
+        % WIDENED. The sentence placing GH in the pituitary calls it
+        % only GH, which is not this row's subject spelled out. A
+        % first draft shipped it anyway with a comment claiming the
+        % span defined GH -- it did not. Widened back to the sentence
+        % that expands it, so the span names the hormone AND the
+        % gland without a reader supplying either.
+        source "GH, also known as human growth hormone, controls your body's growth. It also helps control metabolism, the process your body uses to make energy from the food you eat. GH is made in the pituitary gland, a small organ at the base of your brain that controls many functions, including growth."
+        locator "https://medlineplus.gov/lab-tests/growth-hormone-tests/"
+    }
+    row (melatonin, pineal_gland) {
+        % WIDENED. The melatonin sentence credits the pinealocytes
+        % and names no gland; a reader has to already know whose
+        % cells those are. The sentence before it says so outright,
+        % so the span now carries both. NOTE the locator: this SEER
+        % page covers the pituitary AND pineal glands, so a pineal
+        % row legitimately cites pituitary.html.
+        source "The pineal gland consists of portions of neurons, neuroglial cells, and specialized secretory cells called pinealocytes. The pinealocytes synthesize the hormone melatonin and secrete it directly into the cerebrospinal fluid, which takes it into the blood."
+        locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/pituitary.html"
+    }
+    row (parathyroid_hormone, parathyroid_gland) {
+        source "These are parathyroid glands, and they secrete parathyroid hormone or parathormone."
+        locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/thyroid.html"
+    }
+    row (testosterone, testis) {
+        source "The principal androgen is testosterone, which is secreted by the testes."
+        locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/gonads.html"
+    }
+    row (estrogen, ovary) {
+        source "Two groups of female sex hormones are produced in the ovaries, the estrogens and progesterone."
+        locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/gonads.html"
+    }
+    row (progesterone, ovary) {
+        % Shares estrogen's span: one sentence states both. Each row
+        % carries its own copy so either can be checked, or changed,
+        % without the other.
+        source "Two groups of female sex hormones are produced in the ovaries, the estrogens and progesterone."
+        locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/gonads.html"
+    }
 
-    source "Beta cells in the pancreatic islets secrete the hormone insulin in response to a high concentration of glucose in the blood."
-    locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/pancreas.html"
+    % The envelope is the FRAMING span — what defends the TABLE, not any one
+    % row: that hormones are secreted by endocrine glands at all. Until #14986
+    % it was the INSULIN row's own sentence, so recalling progesterone came
+    % back warranted by a sentence about beta cells.
+    source "The endocrine system is made up of the endocrine glands that secrete hormones."
+    locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/"
     trust authoritative
 }
