@@ -201,8 +201,13 @@ The delivery order is:
    account key: key/provider mismatch fails before signer, transport, clock, or
    custody access; OAuth credential release and custody creation remain
    separately audited; and only the opaque revision returns. Issued-at time and
-   256-bit replay entropy remain caller-owned, and this enables neither a
-   concrete signing algorithm, credential rotation, nor network authority.
+   256-bit replay entropy remain caller-owned. Stored refresh credentials can
+   now compose through the same exact profile, audited signer and transport,
+   bounded decoding, caller-owned clock, OAuth credential release, and
+   revision-bound atomic rotation. Profile mismatch fails before credential
+   access, while signing, transport, clock, release, and compare-and-swap
+   failures preserve the prior record. This enables neither a concrete signing
+   algorithm nor network authority.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate
