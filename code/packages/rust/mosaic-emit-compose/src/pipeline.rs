@@ -104,7 +104,10 @@ pub fn from_pipeline(
     }
     // Built before the header because the opt-in and imports below depend
     // on whether any part authors `flex-wrap` (#14836).
-    let part_styles = build_part_style_map(style, &component.slots);
+    let mut part_styles = build_part_style_map(style, &component.slots);
+    // UI59 -- resolve once, so every writer and the drop reporter agree.
+    part_styles.resolve_width_guards(&layout.root);
+    let part_styles = part_styles;
     // `FlowRow`/`FlowColumn` are behind ExperimentalLayoutApi. Added only
     // when something actually wraps, so a project that does not keeps a
     // byte-identical header.
@@ -1639,6 +1642,68 @@ fn container_composable_for_tag(tag: &str) -> Option<&'static str> {
 /// that lowers on one of them and not another is genuinely half-dropped,
 /// and the caller has to decide; collapsing to one composable here would
 /// hide that.
+/// UI59 -- the one answer to "do this node's children sit in RowScope?"
+///
+/// The emitter passes this down as `in_row_scope`; the drop reporter has
+/// to derive it by walking. When those were two separate notions they
+/// disagreed, and the disagreement was silent in the dangerous direction:
+/// the reporter un-reported seven parts where the emitter had guarded
+/// only six.
+///
+/// The cause was `flex-wrap`. A `Row` that wraps is emitted as a
+/// `FlowRow`, and a FlowRow's children are NOT RowScope children -- the
+/// emitter knows because it compares the flow-wrapped composable, and the
+/// first reporter walk compared the raw tag. Both callers now ask here.
+fn row_scoped_children(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
+    container_composable_for_tag(&node.tag)
+        .map(|composable| flow_wrapped_composable(node, part_styles, composable) == "Row")
+        .unwrap_or(false)
+}
+
+/// UI59 -- parts the emitter will width-guard: a direct RowScope child
+/// authoring `flex-shrink: 0` and no `flex-grow` (a weight wins).
+///
+/// Asks exactly what the guard at the emission site asks, via the same
+/// [`row_scoped_children`] and [`compose_flex_shrink_zero`].
+fn parts_width_guarded(root: &LayoutNode, part_styles: &PartStyleMap) -> HashSet<String> {
+    fn walk(
+        node: &LayoutNode,
+        in_row_scope: bool,
+        part_styles: &PartStyleMap,
+        out: &mut HashSet<String>,
+    ) {
+        // The guard lives in `emit_container`, so it can only reach a node
+        // that lowers to a container. A leaf -- a `Text`, an input -- goes
+        // through a different writer and gets nothing, so claiming it is
+        // guarded would un-report a drop that really happens. That is what
+        // left `tl-name` and `tl-window` in neither set.
+        let is_container = container_composable_for_tag(&node.tag).is_some();
+        if in_row_scope && is_container {
+            if let Some(part) = node.part_name.as_deref() {
+                if let Some(props) = part_styles.get(part) {
+                    if compose_flex_shrink_zero(props) && compose_row_weight(props).is_none() {
+                        out.insert(part.to_string());
+                    }
+                }
+            }
+        }
+        // `For`/`If`/`Else` are meta-primitives: they emit no container of
+        // their own, so a node inside a `For` inside a `Row` IS still a
+        // RowScope child, and the emitter treats it as one. Omitting this
+        // silently dropped `board-col`'s guard.
+        let row_here = match node.tag.as_str() {
+            "For" | "If" | "Else" => in_row_scope,
+            _ => row_scoped_children(node, part_styles),
+        };
+        for child in &node.children {
+            walk(child, row_here, part_styles, out);
+        }
+    }
+    let mut out = HashSet::new();
+    walk(root, false, part_styles, &mut out);
+    out
+}
+
 fn part_container_composables(root: &LayoutNode) -> HashMap<String, BTreeSet<&'static str>> {
     fn walk(node: &LayoutNode, out: &mut HashMap<String, BTreeSet<&'static str>>) {
         if let (Some(part), Some(composable)) = (
@@ -1757,10 +1822,29 @@ pub fn dropped_style_properties_in_layout(
     layout_root: Option<&LayoutNode>,
 ) -> Vec<DroppedStyleProperty> {
     let composables = layout_root.map(part_container_composables);
+    // UI59 -- a part the emitter width-guards is NOT a dropped
+    // `flex-shrink`. Derived from the same predicate the guard uses, so
+    // the two cannot drift; without the layout we cannot tell and fall
+    // back to reporting, which is the safe direction.
+    let guarded = layout_root.map(|root| {
+        // Slots only populate the slot-state index, which neither
+        // `flow_wrapped_composable` nor the guard predicate reads.
+        let mut part_styles = build_part_style_map(style, &[]);
+        part_styles.resolve_width_guards(root);
+        part_styles.width_guarded
+    });
     let mut out = Vec::new();
     for part in &style.parts {
         let built = compose_box_style(&part.base, &[], None, 0, None);
         for (name, value) in built.dropped {
+            if name == "flex-shrink"
+                && guarded
+                    .as_ref()
+                    .map(|set| set.contains(&part.name))
+                    .unwrap_or(false)
+            {
+                continue;
+            }
             // A property the container arguments now carry is not dropped on
             // the containers that carry it. Without the layout we cannot tell,
             // and fall back to reporting it -- over-reporting a drop is the
@@ -2578,11 +2662,30 @@ struct SlotStateStyle {
 struct PartStyleMap {
     props: HashMap<String, Vec<StyleProp>>,
     slot_states: HashMap<String, Vec<SlotStateStyle>>,
+    /// UI59 -- parts the `flex-shrink: 0` width guard applies to.
+    ///
+    /// Precomputed once from the layout and carried HERE, on the map that
+    /// is already threaded through every writer, so the emitter and the
+    /// drop reporter read the SAME set rather than each deciding for
+    /// itself. Two separate notions drifted in both directions on the real
+    /// product: two parts were un-reported that never got a guard (a
+    /// silent drop) and three were reported that did.
+    width_guarded: HashSet<String>,
 }
 
 impl PartStyleMap {
     fn get(&self, key: &str) -> Option<&Vec<StyleProp>> {
         self.props.get(key)
+    }
+
+    /// UI59 -- does this part get the no-shrink width guard?
+    fn is_width_guarded(&self, part: &str) -> bool {
+        self.width_guarded.contains(part)
+    }
+
+    /// Populate [`Self::width_guarded`] once the layout is known.
+    fn resolve_width_guards(&mut self, root: &LayoutNode) {
+        self.width_guarded = parts_width_guarded(root, self);
     }
 }
 
@@ -2642,7 +2745,11 @@ fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> PartStyleMap {
             slot_states.insert(part.name.clone(), owned);
         }
     }
-    PartStyleMap { props, slot_states }
+    PartStyleMap {
+        props,
+        slot_states,
+        width_guarded: HashSet::new(),
+    }
 }
 
 // =====================================================================
@@ -5338,8 +5445,14 @@ fn emit_container(
         // A weighted child is asking to absorb slack, which is the
         // opposite request, so `flex-grow` wins and the shrink guard is
         // skipped rather than both being emitted.
-        let holds_width =
-            weight.is_none() && row_props.map(|props| compose_flex_shrink_zero(props)).unwrap_or(false);
+        // UI59 -- ask the SHARED set, not a second opinion. The guard used
+        // to be recomputed here from `in_row_scope`, which no walk outside
+        // the emitter could reproduce.
+        let holds_width = node
+            .part_name
+            .as_deref()
+            .map(|part| part_styles.is_width_guarded(part))
+            .unwrap_or(false);
         if let Some(weight) = weight {
             let cpad = " ".repeat(chain_indent);
             let prefix = format!("\n{cpad}.weight({weight}f)");
@@ -11848,6 +11961,91 @@ mod tests {
 
 
     // ---- HostScroll (#14732) -----------------------------------------
+
+    /// UI59 — the emitter and the drop reporter must give the SAME answer.
+    ///
+    /// Every case below is one where two separate notions drifted apart on
+    /// the real product. The partition is the property: each authored part
+    /// is either guarded or reported, never both and never neither.
+    #[test]
+    fn ui59_guard_and_drop_report_partition_every_authored_part() {
+        let shrink = || {
+            vec![StyleProp {
+                name: "flex-shrink".to_string(),
+                value: "0".to_string(),
+            }]
+        };
+        let styled = |parts: Vec<(&str, Vec<StyleProp>)>| StyleDef {
+            component_name: "S".to_string(),
+            parts: parts
+                .into_iter()
+                .map(|(n, base)| PartStyle {
+                    name: n.to_string(),
+                    base,
+                    transitions: vec![],
+                    states: vec![],
+                })
+                .collect(),
+        };
+        let parted = |tag: &str, part: &str, children: Vec<LayoutNode>| {
+            let mut n = node(tag, vec![], children);
+            n.part_name = Some(part.to_string());
+            n
+        };
+        let check = |root: LayoutNode, style: &StyleDef, part: &str| -> (bool, bool) {
+            let out = from_pipeline(&component("S", vec![], vec![]), &layout("S", root.clone()), style)
+                .unwrap()
+                .output;
+            let guarded = out.contains("wrapContentWidth(unbounded = true)");
+            let reported = dropped_style_properties_in_layout(style, Some(&root))
+                .iter()
+                .any(|d| d.name == "flex-shrink" && d.part == part);
+            (guarded, reported)
+        };
+
+        // A plain Row container child: guarded, so NOT reported.
+        let style = styled(vec![("chip", shrink())]);
+        let root = node("Row", vec![], vec![parted("Column", "chip", vec![])]);
+        assert_eq!(check(root, &style, "chip"), (true, false), "plain Row child");
+
+        // Inside a `For`: a meta-primitive emits no container, so this is
+        // still a RowScope child. Omitting this dropped board-col's guard.
+        let root = node(
+            "Row",
+            vec![],
+            vec![node("For", vec![], vec![parted("Column", "chip", vec![])])],
+        );
+        assert_eq!(check(root, &style, "chip"), (true, false), "child of a For in a Row");
+
+        // A LEAF has no container writer, so it cannot be guarded and the
+        // drop is real. This is what left tl-name/tl-window in neither set.
+        let root = node("Row", vec![], vec![parted("Text", "chip", vec![])]);
+        assert_eq!(check(root, &style, "chip"), (false, true), "leaf Row child");
+
+        // Not in a Row at all.
+        let root = node("Column", vec![], vec![parted("Column", "chip", vec![])]);
+        assert_eq!(check(root, &style, "chip"), (false, true), "Column child");
+
+        // A wrapping Row lowers to FlowRow, whose children are NOT
+        // RowScope children. Reading the raw tag here is what un-reported
+        // parts the emitter had never guarded.
+        let wrap_style = styled(vec![
+            ("chip", shrink()),
+            (
+                "lane",
+                vec![StyleProp {
+                    name: "flex-wrap".to_string(),
+                    value: "wrap".to_string(),
+                }],
+            ),
+        ]);
+        let root = parted("Row", "lane", vec![parted("Column", "chip", vec![])]);
+        assert_eq!(
+            check(root, &wrap_style, "chip"),
+            (false, true),
+            "a FlowRow child is not RowScope"
+        );
+    }
 
     /// UI59 — `flex-shrink: 0` on a direct Row child holds its width.
     ///
