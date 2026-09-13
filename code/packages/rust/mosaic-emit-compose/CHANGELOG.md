@@ -9,6 +9,33 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — the no-starve floor reaches leaf Row children (UI59 §4, #14815)
+
+#15123 put a width floor under every `Row` child, but it lived in
+`emit_container`, so a **leaf** — a `Button`, a bare `Text` — got nothing. That
+gap was not theoretical, and the earlier measurement missed it because it only
+looked at the default view:
+
+| viewport / view | zero-width text before | after |
+| --- | --- | --- |
+| 1280, Board | **1** (`Delete`) | **0** |
+| 700, Board | **4** (`Timeline`, schedule, `Edit`, `Delete`) | **0** |
+
+`Delete` was starving at **1280 — the declared acceptance viewport** — the whole
+time. #15123's measurement reported zero starvation because the Board view was
+never entered; it has 32 text nodes against the default view's 25.
+
+The floor now reaches `emit_host_button` and `emit_text`, which read the same
+precomputed set the container path uses, so all three writers give one answer
+rather than three. The set widened to include leaves accordingly.
+
+VisiCalc and Engram remain **pixel-identical** to their pre-UI59 renders.
+
+#### What it still does not do
+
+Only Compose. And the floor is applied where a part is *named* — a leaf with no
+part carries no style to consult, so it is not floored.
+
 ### Fixed — a Row child is no longer starved (UI59 §4, #14815)
 
 Every `Row` child that is not already asking to absorb slack now carries
