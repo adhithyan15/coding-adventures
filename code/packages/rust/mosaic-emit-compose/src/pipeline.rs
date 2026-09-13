@@ -219,7 +219,7 @@ pub fn from_pipeline(
     // `RoundedCornerShape`/`clip` without their imports is Kotlin that does
     // not compile, which is exactly how the XAML `Not()` helper went wrong in
     // #14793. An unused Kotlin import is a warning; a missing one is an error.
-    // UI78 -- only when a per-edge border is authored. `Offset` is already
+    // UI79 -- only when a per-edge border is authored. `Offset` is already
     // imported by the drag-and-drop block above, so it is added here only
     // when that block did not run; a duplicate import is legal Kotlin but
     // reads like a mistake.
@@ -1810,12 +1810,12 @@ fn compose_drop_reason(name: &str) -> &'static str {
         "border-style" | "border-collapse" | "outline" => {
             "no Compose equivalent; Modifier.border takes a width, colour and shape only"
         }
-        // UI78 -- be exact about what was and was not honoured. The edge IS
+        // UI79 -- be exact about what was and was not honoured. The edge IS
         // drawn (from its width and colour); only the dash pattern is lost.
         // The generic "no lowering yet" reason would tell a reader the whole
-        // declaration vanished, which stopped being true when UI78 landed.
+        // declaration vanished, which stopped being true when UI79 landed.
         n if per_edge_border_style(n) => {
-            "the edge is drawn solid from its width and colour; Compose's drawRect has              no dash pattern, so only the style is lost (UI78 §3 rule 2)"
+            "the edge is drawn solid from its width and colour; Compose's drawRect has              no dash pattern, so only the style is lost (UI79 §3 rule 2)"
         }
         _ => "no Compose lowering in this emitter yet",
     }
@@ -1903,7 +1903,7 @@ fn layout_scrolls_horizontally(node: &LayoutNode) -> bool {
         || node.children.iter().any(layout_scrolls_horizontally)
 }
 
-/// UI78 -- is this `border-<edge>-style`? Kept separate from
+/// UI79 -- is this `border-<edge>-style`? Kept separate from
 /// [`per_edge_border`], which deliberately does not match `-style` so it
 /// falls through to the drop reporter.
 fn per_edge_border_style(name: &str) -> bool {
@@ -1915,7 +1915,7 @@ fn per_edge_border_style(name: &str) -> bool {
         .unwrap_or(false)
 }
 
-/// UI78 -- does any part in this stylesheet author a per-edge border?
+/// UI79 -- does any part in this stylesheet author a per-edge border?
 ///
 /// Drives the `drawBehind` / geometry imports. Asked of the STYLE rather
 /// than the layout, because this is a style-driven lowering: no tag makes
@@ -1939,7 +1939,7 @@ fn style_has_per_edge_border(style: &StyleDef) -> bool {
     })
 }
 
-/// UI78 -- splits `border-<edge>-<width|color>` into an edge index and which
+/// UI79 -- splits `border-<edge>-<width|color>` into an edge index and which
 /// half it sets. `None` for anything else, including `-style`, which stays
 /// unhandled on purpose so a non-`solid` style is reported rather than drawn
 /// solid.
@@ -3763,7 +3763,7 @@ fn compose_box_style(
     let mut font_family_mono = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
-    // UI78 -- per-edge borders. `Modifier.border` draws all four edges and
+    // UI79 -- per-edge borders. `Modifier.border` draws all four edges and
     // has no per-edge form, so each authored edge is DRAWN, not configured.
     // Indexed [top, right, bottom, left], the CSS order.
     let mut edge_width: Vec<PropBucket> = (0..4).map(|_| PropBucket::new(layer_count)).collect();
@@ -3900,12 +3900,12 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
-            // UI78 -- `border-{top,right,bottom,left}-{width,color}`.
+            // UI79 -- `border-{top,right,bottom,left}-{width,color}`.
             //
             // `-style` is deliberately NOT handled here: `solid` is the only
             // style this draws, so letting a `dashed` fall through to the
             // catch-all keeps it REPORTED rather than silently drawn solid
-            // (UI78 §3 rule 2).
+            // (UI79 §3 rule 2).
             name if per_edge_border(name).is_some() => {
                 let (edge, which) = per_edge_border(name).unwrap();
                 match which {
@@ -4128,7 +4128,7 @@ fn compose_box_style(
         modifier.push_str(&format!("\n{cpad}.border({w_expr}.dp, {c_expr}{shape_arg})"));
     }
 
-    // UI78 -- per-edge borders, drawn on the BORDER BOX.
+    // UI79 -- per-edge borders, drawn on the BORDER BOX.
     //
     // Emitted after `.border` and before `.padding`, which is what puts the
     // line outside the padding where CSS puts it. `drawRect` rather than
@@ -11785,14 +11785,14 @@ mod tests {
 
     // ---- HostScroll (#14732) -----------------------------------------
 
-    /// UI78 — each authored edge draws on its own edge and nowhere else.
+    /// UI79 — each authored edge draws on its own edge and nowhere else.
     ///
     /// Asserted as a SET. An emitter that drew all four edges for any
     /// single authored one — which is exactly what `Modifier.border`
     /// does, and why this had to be drawn rather than configured —
     /// passes every positive assertion on its own.
     #[test]
-    fn ui78_each_authored_edge_draws_only_itself() {
+    fn ui79_each_authored_edge_draws_only_itself() {
         let render = |props: &[(&str, &str)]| {
             let style = StyleDef {
                 component_name: "S".to_string(),
@@ -11867,12 +11867,12 @@ mod tests {
         assert_eq!(all.matches("drawRect(color =").count(), 4, "got:\n{all}");
     }
 
-    /// UI78 — `border-top-left-radius` is a CORNER, not an edge, and must
+    /// UI79 — `border-top-left-radius` is a CORNER, not an edge, and must
     /// not be swallowed by the edge matcher. Its name splits into
     /// `top-left` + `radius`, which is exactly the shape that would fool
     /// a looser parse.
     #[test]
-    fn ui78_a_corner_radius_is_not_an_edge() {
+    fn ui79_a_corner_radius_is_not_an_edge() {
         assert!(per_edge_border("border-top-left-radius").is_none());
         assert!(per_edge_border("border-radius").is_none());
         assert!(per_edge_border("border-width").is_none());

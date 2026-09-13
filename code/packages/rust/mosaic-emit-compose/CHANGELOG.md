@@ -5,7 +5,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-### Added — a border has edges (UI78, #14835)
+### Added — a border has edges (UI79, #14835)
 
 `border-{top,right,bottom,left}-{width,color}` now lowers. **92 declarations
 across 12 stylesheets** were being discarded; Trestle alone authors 34 of them.

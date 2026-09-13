@@ -1,4 +1,4 @@
-# UI78 — a border has edges
+# UI79 — a border has edges
 
 Issue: [#14835](https://github.com/adhithyan15/coding-adventures/issues/14835)
 
