@@ -5,6 +5,52 @@ this file.
 
 ## [Unreleased]
 
+### Fixed -- a negative length reached four unguarded `BorderSide` writers (#15160)
+
+Flutter's `BorderSide` constructor is `assert(width >= 0.0)`, so a negative
+authored width produces Dart that type-checks and then **throws when the
+widget builds**, taking out that widget and everything above it in the
+tree. It is a runtime crash reachable from any stylesheet, not a rendering
+glitch.
+
+`per_edge_border_expr` had guarded its own path for a while. Four other
+writers took their width straight from `parse_pixel_value`, which happily
+returned `-5`:
+
+| site | construct |
+| --- | --- |
+| styled container | `border: Border.all(color: .., width: {w})` |
+| `emit_styled_box` | `border: Border.all(color: .., width: {w})` |
+| button shape | `side: BorderSide(width: {w})` |
+| `path_paint` | `Border.all(color: {stroke}, width: {w})` |
+
+`Border.all` builds a `BorderSide`, so all four hit the same assert.
+
+The guard is central now: `parse_pixel_value` rejects negatives and falls
+back to `0`, the same answer it already gave for anything unreadable. That
+also covers `EdgeInsets`, `SizedBox` and every other length sink at once.
+
+**Audited before centralising**, because a shared helper is the wrong place
+for a rule that does not hold everywhere. Every property reaching it is
+non-negative geometry -- gap, padding, width, height, min-height,
+border-width, border-radius, font-size, stroke width -- and CSS forbids a
+negative for each. No margin, inset, offset or letter-spacing is lowered
+through it, so nothing that legitimately admits a negative loses one.
+(`top`/`left`/`right`/`bottom` appear nearby only as per-edge border names.)
+
+**A dead check the central fix would have created.** `per_edge_border_expr`
+tested `w.starts_with('-')` on the PARSED value. Once `parse_pixel_value`
+never returns a leading `-`, that check can never fire, and the edge would
+have been silently emitted at width 0 instead of skipped -- a different
+answer, since skipping lets the shorthand cascade in. It now reads the
+authored text. An existing test caught this, which is the only reason it is
+not in this release.
+
+**No product change.** Zero of the 3,536 length declarations in the
+authored `.msl` corpus is negative, and emitted Flutter output for
+task-app, visicalc and engram-app is byte-identical. This closes a latent
+trap; it does not fix a live defect.
+
 ### Fixed -- `HostInput` ignored its part style entirely (#15142)
 
 `emit_host_input` took `_part_styles` and never read it, so no authored

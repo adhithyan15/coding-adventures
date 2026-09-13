@@ -3529,26 +3529,40 @@ fn style_prop_to_container_arg(prop: &str) -> Option<String> {
 /// than panicking — generated source still type-checks.
 fn parse_pixel_value(s: &str) -> String {
     let s = s.trim().trim_end_matches("px");
-    // Non-finite values must not survive: `f64::parse` accepts `inf`,
-    // `NaN` and overflowing literals like `1e400`, and `{f}` then prints
-    // them as bare Dart identifiers (`inf`, `NaN`) that do not compile.
-    // Not an injection -- no punctuation survives `parse::<f64>` -- but
-    // it breaks the "generated source still type-checks" contract this
-    // function's `0` fallback exists to keep.
-    // `is_finite` alone is NOT enough to keep the "generated source still
-    // type-checks" contract this function's `0` fallback exists for.
-    // Rust's `Display` for f64 never uses exponent notation, so a finite
-    // `1e300` expands to a 301-DIGIT bare literal, and Dart rejects that
-    // outright: "The integer literal is being used as a double, but can't
-    // be represented as a 64-bit double without overflow or loss of
-    // precision" -- a hard compile error that stops the whole generated
-    // app from building, from one authored style value. Anything beyond
-    // the exactly-representable integer range falls back to `0` like any
-    // other unreadable input.
+    // Three ways an authored length breaks the generated app, all of which
+    // fall back to `0` -- the same answer this function has always given
+    // for input it cannot read. The contract is that generated Dart still
+    // compiles and still builds; a length is never worth breaking that for.
+    //
+    //  1. NOT FINITE. `f64::parse` accepts `inf`, `NaN` and overflowing
+    //     literals like `1e400`, and `{f}` prints them as bare Dart
+    //     identifiers that do not compile.
+    //
+    //  2. TOO LARGE. Rust's `Display` for f64 never uses exponent
+    //     notation, so a finite `1e300` expands to a 301-DIGIT bare
+    //     literal. Dart rejects that outright -- "the integer literal is
+    //     being used as a double, but can't be represented as a 64-bit
+    //     double without overflow or loss of precision" -- so one authored
+    //     value stops the whole app compiling.
+    //
+    //  3. NEGATIVE (#15160). This one type-checks and then THROWS. Every
+    //     property that reaches this function is non-negative geometry --
+    //     gap, padding, width, height, min-height, border-width,
+    //     border-radius, font-size, stroke width -- and CSS forbids a
+    //     negative for each. Flutter is harsher than "forbids": a width
+    //     reaching `BorderSide` hits its `assert(width >= 0.0)` and takes
+    //     out the widget and everything above it in the tree, in any debug
+    //     or profile build. Four `Border.all` / `BorderSide` writers took
+    //     their width from here unguarded.
+    //
+    //     Audited before centralising: no margin, inset, offset or
+    //     letter-spacing is lowered through this function, so nothing that
+    //     legitimately admits a negative loses one. (`top`/`left`/`right`/
+    //     `bottom` appear nearby only as per-edge BORDER names.)
     const MAX_EXACT_INT: f64 = 9_007_199_254_740_992.0; // 2^53
     s.parse::<f64>()
         .ok()
-        .filter(|f| f.is_finite() && f.abs() <= MAX_EXACT_INT)
+        .filter(|f| f.is_finite() && *f >= 0.0 && f.abs() <= MAX_EXACT_INT)
         .map(|f| format!("{f}"))
         .unwrap_or_else(|| "0".to_string())
 }
@@ -3645,22 +3659,31 @@ fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
     {
         return None;
     }
-    let fallback_w = m.get("border-width").map(|v| parse_pixel_value(v));
+    // A negative width is tested on the AUTHORED text, not on the parsed
+    // result. `parse_pixel_value` now rejects negatives centrally (#15160)
+    // and answers `0`, so a check on its output can never fire -- reading
+    // the raw value is what keeps this edge SKIPPED rather than silently
+    // emitted as a zero-width side. The two answers differ: skipping lets
+    // the shorthand cascade in, a zero-width side pins the edge to nothing.
+    let authored_negative =
+        |v: Option<&String>| v.is_some_and(|v| v.trim_start().starts_with('-'));
+    let fallback_w = (!authored_negative(m.get("border-width")))
+        .then(|| m.get("border-width").map(|v| parse_pixel_value(v)))
+        .flatten();
     let fallback_c = m.get("border-color").and_then(|v| css_color_to_dart(v));
     let mut sides = Vec::new();
     for e in edges {
-        let w = m
-            .get(&format!("border-{e}-width"))
+        let raw = m.get(&format!("border-{e}-width"));
+        // `BorderSide` asserts `width >= 0` at RUNTIME, so a negative
+        // authored width type-checks and then throws in the app, taking
+        // out the widget and everything above it. Skip the edge instead.
+        if authored_negative(raw) {
+            continue;
+        }
+        let w = raw
             .map(|v| parse_pixel_value(v))
             .or_else(|| fallback_w.clone());
         let Some(w) = w else { continue };
-        // `BorderSide` asserts `width >= 0` at RUNTIME, so a negative
-        // authored width type-checks and then throws in the app. Skip
-        // the edge instead: the same "generated source still works"
-        // contract `parse_pixel_value`'s `0` fallback exists to keep.
-        if w.starts_with('-') {
-            continue;
-        }
         let c = m
             .get(&format!("border-{e}-color"))
             .and_then(|v| css_color_to_dart(v))
@@ -14264,6 +14287,133 @@ mod host_input_style_tests {
         assert_eq!(
             deco, None,
             "neither `transparent` nor the `font` shorthand should invent a value"
+        );
+    }
+}
+
+// =====================================================================
+// #15160 -- a negative length never reaches generated Dart
+//
+// Flutter's `BorderSide` constructor is `assert(width >= 0.0)`. A
+// negative authored width therefore produces Dart that TYPE-CHECKS and
+// then THROWS the moment the widget builds, taking out that widget and
+// everything above it in the tree. It is a runtime crash reachable from
+// any stylesheet, not a rendering glitch.
+//
+// `per_edge_border_expr` had guarded its own path for a while; four other
+// `Border.all` / `BorderSide` writers took their width from
+// `parse_pixel_value` unguarded. The guard is central now.
+//
+// Audited before centralising: every property reaching `parse_pixel_value`
+// is non-negative geometry (gap, padding, width, height, min-height,
+// border-width, border-radius, font-size, stroke width), and CSS forbids a
+// negative for each. No margin, inset or offset is lowered through it, so
+// nothing that legitimately admits a negative loses one.
+// =====================================================================
+#[cfg(test)]
+mod negative_length_tests {
+    use super::*;
+
+    #[test]
+    fn a_negative_length_falls_back_rather_than_reaching_dart() {
+        for bad in ["-1px", "-0.5px", "-5", "-1e300px"] {
+            assert_eq!(
+                parse_pixel_value(bad),
+                "0",
+                "`{bad}` must not survive into generated Dart"
+            );
+        }
+        // ordinary values are untouched
+        assert_eq!(parse_pixel_value("0px"), "0");
+        assert_eq!(parse_pixel_value("13px"), "13");
+        assert_eq!(parse_pixel_value("6.5"), "6.5");
+    }
+
+    /// End to end through a real emit: a part authoring a negative border
+    /// width must not put `width: -N` anywhere in the generated file. This
+    /// covers the `Border.all` writers that a unit test on the helper
+    /// would miss.
+    #[test]
+    fn no_emitted_border_side_carries_a_negative_width() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        let m = MosmodelComponent {
+            component: "X".to_string(),
+            slots: vec![],
+            emits: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![
+                    prop("border-width", "-5px"),
+                    prop("border-color", "#ff0000"),
+                    prop("padding", "-3px"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &style).expect("emits").output;
+        assert!(
+            !out.contains("width: -"),
+            "a negative width reached BorderSide, which asserts at build: {out}"
+        );
+        assert!(
+            !out.contains("EdgeInsets.all(-"),
+            "a negative padding reached EdgeInsets: {out}"
+        );
+        // and the border is still drawn, at the clamped width
+        assert!(
+            out.contains("width: 0"),
+            "the border should fall back to 0, not vanish: {out}"
+        );
+    }
+
+    /// A negative PER-EDGE width is skipped entirely rather than clamped,
+    /// so the shorthand can cascade in. That is a different answer from
+    /// the central `0` fallback, and it is deliberate -- pinning it here
+    /// because the check has to read the AUTHORED text: once
+    /// `parse_pixel_value` rejects negatives, a check on its output can
+    /// never fire, and the edge would be silently emitted at width 0.
+    #[test]
+    fn a_negative_per_edge_width_skips_the_edge_rather_than_clamping() {
+        let mut m = HashMap::new();
+        m.insert("border-bottom-width".to_string(), "-1px".to_string());
+        assert_eq!(per_edge_border_expr(&m), None);
+
+        // with a positive sibling, only the good edge survives
+        let mut m2 = HashMap::new();
+        m2.insert("border-bottom-width".to_string(), "-1px".to_string());
+        m2.insert("border-top-width".to_string(), "2px".to_string());
+        m2.insert("border-color".to_string(), "#ABCDEF".to_string());
+        let got = per_edge_border_expr(&m2).expect("the top edge survives");
+        assert!(got.contains("top: BorderSide"), "got: {got}");
+        assert!(!got.contains("bottom:"), "the negative edge must be skipped: {got}");
+        assert!(!got.contains("width: -"), "got: {got}");
+
+        // a negative SHORTHAND must not cascade a negative into an edge
+        let mut m3 = HashMap::new();
+        m3.insert("border-width".to_string(), "-4px".to_string());
+        m3.insert("border-top-color".to_string(), "#ABCDEF".to_string());
+        let got3 = per_edge_border_expr(&m3);
+        assert!(
+            got3.as_deref().is_none_or(|g| !g.contains("width: -")),
+            "got: {got3:?}"
         );
     }
 }
