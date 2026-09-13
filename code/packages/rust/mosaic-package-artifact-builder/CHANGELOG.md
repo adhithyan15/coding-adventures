@@ -97,6 +97,7 @@ fails, now with the message above instead of the `lipo` one. The other half is
 filed separately rather than folded in, because it belongs to `engram-app`'s
 build script and that file has a migration in flight.
 
+- Recognize supported Qt font-size bindings in capability reports. Guard the Unix-only host-asset symlink test so Windows builds can compile the test suite.
 - Recognize validated Compose typography projections while continuing to report unsupported backends, primitives and binding forms explicitly.
 
 ## Unreleased
