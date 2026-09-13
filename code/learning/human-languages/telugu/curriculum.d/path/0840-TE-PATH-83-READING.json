@@ -1,0 +1,14 @@
+{
+  "id": "TE-PATH-83-READING",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "TE-C83-words",
+    "TE-C83-lines",
+    "TE-C83-modati-chadavu"
+  ],
+  "before": [],
+  "inline": [
+    "TE-EXT-83-READING"
+  ],
+  "after": []
+}

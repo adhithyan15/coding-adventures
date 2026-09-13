@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C83-words",
+    "language": "telugu",
+    "chapter": 83,
+    "sequence": 2990,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1e48b42d8e04b2cb"
+  },
+  "findings": []
+}
