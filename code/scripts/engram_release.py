@@ -1657,7 +1657,30 @@ def archive_flutter(
         platform
     ] else source
     stem = _engine_stem_for("flutter")
-    engine = _find_engine(expected_dir, platform, stem=stem)
+    # Recursive WITHIN the platform's own engine directory, and only when that
+    # is a real subdirectory.
+    #
+    # It has to recurse somewhere, because a migrated Flutter does not carry a
+    # bare library on macOS: the native-assets hook installs the standard
+    # runtime as a FRAMEWORK, at
+    # `Contents/Frameworks/mosaic_app.framework/Versions/A/mosaic_app` -- one
+    # level below where a `.dylib` would sit. Measured on a real build: a
+    # non-recursive search of `Contents/Frameworks` returns `None` for a
+    # perfectly good bundle, so this refused what it was written to accept.
+    #
+    # But NOT when the engine directory is the bundle root, which is Windows.
+    # There `expected_dir is source`, and recursing turns "beside the
+    # executable" into "anywhere in the bundle" -- the layout check collapses
+    # and an engine sitting in `lib/` passes. That is not hypothetical: it is
+    # the regression the first version of this line caused, caught by
+    # `test_each_platform_rejects_the_others_layout`, which exists to stop the
+    # layout table being quietly reduced to one directory.
+    engine = _find_engine(
+        expected_dir,
+        platform,
+        recursive=bool(FLUTTER_ENGINE_DIRS[platform]),
+        stem=stem,
+    )
     if engine is None:
         # Named separately from "not in the bundle at all", because the two
         # have different causes: a missing engine is a build that skipped the
@@ -1694,7 +1717,12 @@ def archive_flutter(
             if FLUTTER_ENGINE_DIRS[platform]
             else staged
         )
-        staged_engine = _find_engine(staged_dir, platform, stem=stem)
+        staged_engine = _find_engine(
+            staged_dir,
+            platform,
+            recursive=bool(FLUTTER_ENGINE_DIRS[platform]),
+            stem=stem,
+        )
         if staged_engine is None or staged_engine.stat().st_size == 0:
             raise ValueError(
                 f"the staged bundle has no usable engine at "
@@ -1841,7 +1869,25 @@ def _find_engine(
         # real versioned soname like `libengram_capi.so.0.4.0` would not match,
         # and `engram_capi.pdb` would.
         name = path.name.removeprefix("lib")
-        if not any(
+        # A framework binary has NO suffix, which is the one shape the rule
+        # above cannot express. Flutter's native-assets hook installs the
+        # standard runtime as `mosaic_app.framework/mosaic_app` on macOS -- a
+        # Mach-O with no `lib` prefix and no extension -- so a migrated Flutter
+        # bundle is correct and this returned `None` for it, even recursively.
+        #
+        # That is the `archive_qt` bug in mirror image. #13728 left that check
+        # verifying `engram_capi` and it ACCEPTED a bundle the app could not
+        # use; this one would REFUSE a bundle the app can. Both are the release
+        # check written against a layout the architecture stopped using.
+        #
+        # Tightly scoped on purpose: the file has to be named exactly `stem`
+        # AND live inside the matching `.framework`, so this cannot start
+        # matching a stray extensionless file that happens to share the name.
+        # Both `mosaic_app.framework/mosaic_app` and the real file it points at,
+        # `mosaic_app.framework/Versions/A/mosaic_app`, satisfy it -- the former
+        # is a symlink and skipped above, so the one returned is the binary.
+        in_framework = name == stem and f"{stem}.framework" in path.parts
+        if not in_framework and not any(
             name == f"{stem}{suffix}" or name.startswith(f"{stem}{suffix}.")
             for suffix in suffixes
         ):

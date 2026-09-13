@@ -24,6 +24,20 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosmodel-compiler",
         "rust/mosstyle-compiler",
         "mosaic/programs/task-app",
+        # Engram, which was absent until #13624's Flutter migration and was
+        # missed for a reason worth recording: the lane built task-app, so it
+        # was green, and nothing ever emitted Engram on Flutter with
+        # `--profile native-complete`. When something finally did, the project
+        # did not compile at all -- the hand-written `mosaic_host.dart`
+        # overrode the generated host without defining `loadRequired`, which
+        # the native-complete `main.dart` calls:
+        #
+        #     error - The method 'loadRequired' isn't defined for the type
+        #     'MosaicHost' - lib/main.dart:9:43 - undefined_method
+        #
+        # A package outside the acceptance set is not "covered by the other
+        # entries"; it is untested.
+        "mosaic/programs/engram-app",
     }
 )
 ACCEPTANCE_PACKAGE_PREFIXES = ("mosaic/mosaic-pkg-",)

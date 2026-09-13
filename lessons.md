@@ -7308,6 +7308,66 @@ Use a task-specific variable such as `sparse_dependency` for path lists. This
 also follows the general rule against repurposing common shell and system
 option names.
 
+### 2026-09-13 — an absence-gate that scans the whole file fails on its own documentation
+
+Three gates in one change were written as "this token must not appear in the
+file" and all three failed the same way: on the comment explaining why the token
+is banned.
+
+- `openCard` must not be answered — failed on the comment saying `openCard` is
+  deliberately not answered, because it is a `Notify`.
+- `\A`/`\z` must not appear in the Dart handler (they are identity escapes
+  there, not anchors) — failed on the comment recording that measurement.
+- `$target.part` must not be the export's staging name — failed on the comment
+  explaining that a guessable staging name is symlink-redirectable.
+
+Banning a token also bans documenting the decision to avoid it, which makes the
+file worse and the gate no stronger. The thing that is load-bearing is whether
+the token reaches CODE.
+
+Scan code lines only. `code_lines()` in
+`code/programs/mosaic/engram-app/tests/package_compiles.rs` is the helper;
+whole-line `//` comments are dropped and nothing else is parsed.
+
+The same shape applies to positive gates. `assert_contains(&handler,
+"confirmDelete")` passed against a branch nothing could reach, because the
+string was in the file — presence in the text is not reachability in the
+program. When what matters is dispatch, read the dispatch: collect the quoted
+kinds from the lines carrying the `->` or the `kind ==`, and assert the SET.
+
+### 2026-09-13 — `bash -n` does not catch a mis-indented heredoc terminator
+
+A `run: |` block in a GitHub workflow is dedented by YAML before bash sees it,
+so whether `<<'PY' ... PY` works depends on an indentation that nothing in the
+file makes visible. Get it wrong by one space and bash swallows the rest of the
+job as heredoc body.
+
+`bash -n` does not help. Measured: a script with the terminator at column 0 and
+the same script with it indented one space both return 0 with empty stderr.
+
+Check it by asserting `"\nPY\n"` appears in the post-YAML-parse string, and
+better, by extracting the block from `ci.yml` and RUNNING it. A lint that cannot
+fail on the defect is not evidence about the defect.
+
+### 2026-09-13 — a host override that replaces a generated file can break the build, not just duplicate it
+
+Engram's `host/flutter/mosaic_host.dart` overrode the generated Mosaic host and
+defined `load()` but not `loadRequired()`, which the native-complete
+`main.dart` calls. `flutter analyze` on the emitted project:
+
+    error - The method 'loadRequired' isn't defined for the type 'MosaicHost'
+          - lib/main.dart:9:43 - undefined_method
+
+Nothing caught it because `mosaic/programs/engram-app` was absent from the
+Flutter lane's `ACCEPTANCE_PACKAGES`, so no build had ever emitted Engram on
+that backend with `--profile native-complete`. The lane was green because it
+built task-app.
+
+A package outside a lane's acceptance set is not "covered by the other
+entries"; it is untested. When adding a backend override or a host adapter,
+check the package is in the acceptance set of the lane that compiles it — and
+add a test that fails without the entry.
+
 ### 2026-09-13 — a conflict resolver's assertions must be able to see what it discarded
 
 A script resolved an additive CHANGELOG conflict by extracting lines starting
