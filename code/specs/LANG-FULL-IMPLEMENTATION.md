@@ -970,7 +970,10 @@ backend immediately) come before the enabler-dependent items.
   loop whose body avoids the controlled scalar also retains its checked first
   post-limit value. A direct finite static assignment to the controlled scalar,
   optionally wrapped in a one-statement compound body, is retained only when
-  its post-increment value exits after exactly one pass.
+  its post-increment value exits after exactly one pass. That exact assignment
+  may reference the known entry value of the controlled scalar; unknown
+  dependencies and assignments whose checked increment remains in range still
+  fail closed.
   Finite static real loops whose bodies avoid the control also retain their
   first post-limit value by simulating at most 4,096 emitted binary64 additions;
   non-finite and rounded-away progress fails closed. Finite static loops also

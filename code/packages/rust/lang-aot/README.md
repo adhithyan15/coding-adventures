@@ -2,7 +2,8 @@
 
 COBOL STRING/UNSTRING pointer rows compare receiver text, pointer writeback and
 overflow/success markers together, including exact fit, partial transfer,
-invalid starts and a trailing delimiter. They declare all seven standard backends.
+invalid starts and a trailing delimiter. They declare all seven standard
+backends plus real BEAM (VM-040; see "COBOL pointer/overflow on BEAM" below).
 
 COBOL delimiter rows cover STRING first-delimiter behavior and UNSTRING field
 fitting, empty fields and exhausted-source receiver preservation. Bracketed
@@ -812,4 +813,39 @@ first probe. Forty of 58 COBOL rows now declare BEAM, for 446 cells.
 Remaining COBOL features (pointer/overflow, four more base INSPECT
 TALLYING/REPLACING rows, the VM-047c BEFORE/AFTER region forms, and the
 VM-057 STRING self-move edge case) still require individual execution
+proofs.
+
+### COBOL pointer/overflow on BEAM (VM-040)
+
+Re-verified from source (a brace-balanced scan of `PROGRAMS` restricted to
+`Language::Cobol60`) that the 8 pointer/overflow rows are exactly indices
+36-43, immediately preceding the base `INSPECT TALLYING`/`REPLACING` family
+promoted above — the prior slice's count held exactly. Read
+`cobol-iir-compiler`'s `emit_string`/`emit_unstring`/
+`emit_string_pointer_overlay` end to end before probing: the shared overlay
+helper chains THREE `str_slice` calls (the receiver's untouched head, the
+overlay content actually placed, and the receiver's untouched tail) and TWO
+`str_concat` calls to stitch them back together, with the overlay's start
+position, the room remaining to the receiver's end, and how much of the
+source actually fits all computed at run time from a live `PIC 9` pointer
+item — the first COBOL BEAM row to chain multiple `str_slice`/`str_concat`
+calls through one helper over fully run-time-computed bounds, rather than a
+single call with a run-time bound (VM-D032's case) or a compile-time-known
+one. Confirmed by direct register-flow reading that the receiver register is
+only ever written once, at the very end (after both reads of its prior value
+have already landed in separate registers), so no VM-057-shaped aliasing
+hazard exists here either.
+
+All eight programs — four `STRING ... WITH POINTER` cases (in-range,
+exact-fit, partial-transfer-then-overflow, zero-pointer) and four
+`UNSTRING ... WITH POINTER` cases (mid-field start, exhaustion, past-end
+pointer, trailing-delimiter overflow) — passed real `erl` execution on the
+first probe; no `iir-to-beam` defect was found and no production code
+changed. Unlike the four-row-at-a-time COBOL BEAM slices, this promotion
+covers the full 8-row family in one slice, since it is a naturally
+self-contained unit and was the specific family flagged as the best
+remaining candidate to expose a real defect. Forty-eight of 58 COBOL rows
+now declare BEAM, for 454 cells. Remaining COBOL features (four more base
+INSPECT TALLYING/REPLACING rows, the VM-047c BEFORE/AFTER region forms, and
+the VM-057 STRING self-move edge case) still require individual execution
 proofs.

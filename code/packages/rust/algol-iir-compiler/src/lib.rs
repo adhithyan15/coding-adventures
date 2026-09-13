@@ -5855,7 +5855,7 @@ impl Compiler {
     }
 
     fn for_step_exit_snapshot(
-        &self,
+        &mut self,
         target: &GrammarASTNode,
         target_ty: ScalarType,
         elem: &GrammarASTNode,
@@ -5885,8 +5885,13 @@ impl Compiler {
                 {
                     return (None, None);
                 }
-                if let Some((_, Some(body_value))) =
-                    self.for_body_static_target_snapshot(target, target_ty, body)
+                if let Some((_, Some(body_value))) = self.for_body_static_target_snapshot(
+                    target,
+                    target_ty,
+                    body,
+                    None,
+                    Some(start),
+                )
                 {
                     let Some(exit) = body_value.checked_add(step) else {
                         return (None, None);
@@ -5934,8 +5939,13 @@ impl Compiler {
                 {
                     return (None, None);
                 }
-                if let Some((Some(value), _)) =
-                    self.for_body_static_target_snapshot(target, target_ty, body)
+                if let Some((Some(value), _)) = self.for_body_static_target_snapshot(
+                    target,
+                    target_ty,
+                    body,
+                    Some(start.to_string()),
+                    None,
+                )
                 {
                     let Some(exit) = value
                         .parse::<f64>()
@@ -6184,10 +6194,12 @@ impl Compiler {
     }
 
     fn for_body_static_target_snapshot(
-        &self,
+        &mut self,
         target: &GrammarASTNode,
         target_ty: ScalarType,
         body: &GrammarASTNode,
+        entry_real: Option<String>,
+        entry_integer: Option<i64>,
     ) -> Option<(Option<String>, Option<i64>)> {
         let Ok(target_name) = self.simple_variable_name(target) else {
             return None;
@@ -6207,16 +6219,30 @@ impl Compiler {
             return None;
         }
         let expr = first_direct_node(assign, "expression")?;
-        match target_ty {
-            ScalarType::Integer => self
-                .static_assigned_integer_value(expr)
-                .map(|value| (None, Some(value))),
-            ScalarType::Real => self
-                .static_assigned_real_value(expr)
-                .filter(|value| value.is_finite())
-                .map(|value| (Some(value.to_string()), None)),
-            ScalarType::Boolean | ScalarType::String => None,
-        }
+        let saved_reals = self.static_real_slots.clone();
+        let saved_integers = self.static_integer_slots.clone();
+        let saved_booleans = self.static_boolean_slots.clone();
+        let snapshot = if self
+            .update_for_target_snapshot(target, entry_real, entry_integer)
+            .is_err()
+        {
+            None
+        } else {
+            match target_ty {
+                ScalarType::Integer => self
+                    .static_assigned_integer_value(expr)
+                    .map(|value| (None, Some(value))),
+                ScalarType::Real => self
+                    .static_assigned_real_value(expr)
+                    .filter(|value| value.is_finite())
+                    .map(|value| (Some(value.to_string()), None)),
+                ScalarType::Boolean | ScalarType::String => None,
+            }
+        };
+        self.static_real_slots = saved_reals;
+        self.static_integer_slots = saved_integers;
+        self.static_boolean_slots = saved_booleans;
+        snapshot
     }
 
     fn for_element_execution(
@@ -14625,6 +14651,30 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
         }));
+    }
+
+    #[test]
+    fn al4_single_iteration_step_loop_preserves_control_dependent_assignment() {
+        let module = compile_source(
+            "begin real x; for x := 1.0 step 1.0 until 1.0 do x := x + 5.25; print(x) end",
+            "test",
+        )
+        .expect("the known entry control may feed its exact one-pass assignment");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
+        }));
+    }
+
+    #[test]
+    fn al4_single_iteration_step_loop_rejects_unknown_control_dependency() {
+        let err = compile_source(
+            "begin real x, y; for x := 1.0 step 1.0 until 1.0 do x := x + y; print(x) end",
+            "test",
+        )
+        .expect_err("an unknown assignment dependency must keep the control conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
