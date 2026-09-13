@@ -1,0 +1,11 @@
+{
+  "language": "bengali",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:82f3b6d2307dd996",
+  "lessonIds": [
+    "BN-C40-words",
+    "BN-C40-lines",
+    "BN-C40-prothom-path"
+  ],
+  "tex": "bengali/book/chapters/ch40-reading-words-lines-and-a-passage.tex"
+}

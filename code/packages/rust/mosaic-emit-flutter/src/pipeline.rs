@@ -1294,6 +1294,12 @@ pub fn from_pipeline(
         || layout_contains_tag(&layout.root, "HostDropTarget");
     let uses_dialog = layout_contains_native_dialog(&layout.root);
     let uses_path = layout_contains_tag(&layout.root, "Path");
+    // UI85: Flutter has no `gap` argument on Row/Column. The generated
+    // helper inserts separators after Dart has evaluated collection-if and
+    // collection-for children, so only widgets that actually exist receive
+    // space between them.
+    let part_styles = build_part_style_map(style, &interface.slots)?;
+    let uses_flex_gap = layout_contains_flex_gap(&layout.root, &part_styles);
     if uses_radio {
         writeln!(out, "// ignore_for_file: deprecated_member_use").unwrap();
     }
@@ -1363,13 +1369,12 @@ pub fn from_pipeline(
         out.push_str(&emit_path_helpers());
         writeln!(out).unwrap();
     }
+    if uses_flex_gap {
+        out.push_str(&emit_flex_gap_helper());
+        writeln!(out).unwrap();
+    }
 
-    // 3. Pre-compute the per-part style map. Same shape as the React
-    //    emitter's `build_part_style_map`: kebab part-name → joined
-    //    `key: value;` string the widget builder can consume.
-    let part_styles = build_part_style_map(style, &interface.slots)?;
-
-    // 4. The widget class itself.
+    // 3. The widget class itself.
     out.push_str(&emit_widget_class(
         name,
         &interface.slots,
@@ -1390,6 +1395,28 @@ fn layout_contains_tag(node: &LayoutNode, tag: &str) -> bool {
             .children
             .iter()
             .any(|child| layout_contains_tag(child, tag))
+}
+
+/// Whether this tree contains a non-empty Flutter flex container with an
+/// authored `gap`.
+///
+/// `Row` and `Column` are the only Flutter widgets whose child lists receive
+/// UI85 spacing. A `Stack` is an overlay, and a multi-child `Box` happens to
+/// use an internal Column only as a lowering detail; giving either one flex
+/// gap semantics would turn an unsupported declaration into the wrong layout.
+fn layout_contains_flex_gap(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
+    let own_gap = !node.children.is_empty()
+        && matches!(node.tag.as_str(), "Row" | "Column")
+        && node
+            .part_name
+            .as_deref()
+            .and_then(|part| part_styles.get(part))
+            .is_some_and(|props| parse_style_props(props).contains_key("gap"));
+    own_gap
+        || node
+            .children
+            .iter()
+            .any(|child| layout_contains_flex_gap(child, part_styles))
 }
 
 /// #13010: like [`layout_contains_tag`] for `"HostDialog"`, but only
@@ -2754,8 +2781,22 @@ fn emit_container(
         child_ctx,
     )?;
 
+    let gap = if matches!(widget, "Row" | "Column") {
+        props.get("gap").map(|value| parse_pixel_value(value))
+    } else {
+        None
+    };
     let body = if children.is_empty() {
         format!("{pad}const {widget}(children: [])\n")
+    } else if let Some(gap) = gap {
+        let axis = if widget == "Row" {
+            "Axis.horizontal"
+        } else {
+            "Axis.vertical"
+        };
+        format!(
+            "{pad}{widget}(\n{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
+        )
     } else {
         format!("{pad}{widget}(\n{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
     };
@@ -7066,6 +7107,40 @@ class _MosaicCurvePainter extends CustomPainter {
       oldDelegate.fill != fill ||
       oldDelegate.stroke != stroke ||
       oldDelegate.strokeWidth != strokeWidth;
+}
+"#
+    .to_string()
+}
+
+/// Emit the one file-local helper that gives Flutter `Row` and `Column` the
+/// mosstyle `gap` contract (UI85).
+///
+/// The input list is already evaluated when this function runs. That matters
+/// for Mosaic's `If` and `For` lowering: spacing source expressions directly
+/// could leave a separator behind when a conditional widget is absent. Walking
+/// the completed list inserts exactly one separator between the widgets that
+/// actually exist.
+fn emit_flex_gap_helper() -> String {
+    r#"List<Widget> _mosaicWithGap(
+  List<Widget> children,
+  double gap,
+  Axis axis,
+) {
+  if (children.length < 2 || gap <= 0) {
+    return children;
+  }
+  final spaced = <Widget>[];
+  for (final child in children) {
+    if (spaced.isNotEmpty) {
+      spaced.add(
+        axis == Axis.horizontal
+            ? SizedBox(width: gap)
+            : SizedBox(height: gap),
+      );
+    }
+    spaced.add(child);
+  }
+  return spaced;
 }
 "#
     .to_string()
@@ -12662,6 +12737,141 @@ mod tests {
                 states: vec![],
             }],
         }
+    }
+
+    fn flex_node_with_part(tag: &str, part: &str, children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: Some(part.to_string()),
+            props: Vec::new(),
+            children,
+        }
+    }
+
+    // ====================================================================
+    // UI85 — Flutter flex gap (#14804)
+    // ====================================================================
+
+    #[test]
+    fn row_gap_preserves_row_and_inserts_horizontal_separators() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "items", vec![text_node("one"), text_node("two")]),
+        );
+        let s = style_with_part(
+            "X",
+            "items",
+            vec![StyleProp {
+                name: "gap".into(),
+                value: "12px".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+
+        assert!(out.contains("Row(\n"), "got:\n{out}");
+        assert!(
+            out.contains("children: _mosaicWithGap(<Widget>["),
+            "got:\n{out}"
+        );
+        assert!(out.contains("], 12, Axis.horizontal)"), "got:\n{out}");
+        assert!(out.contains("SizedBox(width: gap)"), "got:\n{out}");
+        assert_eq!(out.matches("List<Widget> _mosaicWithGap(").count(), 1);
+    }
+
+    #[test]
+    fn column_gap_inserts_vertical_separators() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Column", "items", vec![text_node("one"), text_node("two")]),
+        );
+        let s = style_with_part(
+            "X",
+            "items",
+            vec![StyleProp {
+                name: "gap".into(),
+                value: "7".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+
+        assert!(out.contains("Column(\n"), "got:\n{out}");
+        assert!(out.contains("], 7, Axis.vertical)"), "got:\n{out}");
+        assert!(out.contains("SizedBox(height: gap)"), "got:\n{out}");
+    }
+
+    #[test]
+    fn gap_wraps_the_evaluated_conditional_child_list() {
+        let m = component("X", vec![slot("visible", SlotType::Bool, true)], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part(
+                "Row",
+                "items",
+                vec![
+                    text_node("always"),
+                    if_node(
+                        LayoutPropValue::SlotRef("visible".into()),
+                        vec![text_node("sometimes")],
+                    ),
+                ],
+            ),
+        );
+        let s = style_with_part(
+            "X",
+            "items",
+            vec![StyleProp {
+                name: "gap".into(),
+                value: "5px".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+
+        let list_start = out
+            .find("children: _mosaicWithGap(<Widget>[")
+            .expect("gap must wrap the child list");
+        let conditional = out
+            .find("_mosaicTruthy(visible)")
+            .expect("conditional child must remain inside the list");
+        let call_end = out
+            .find("], 5, Axis.horizontal)")
+            .expect("gap helper call must close after the list");
+        assert!(
+            list_start < conditional && conditional < call_end,
+            "got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn gap_helper_is_omitted_without_an_applicable_flex_gap() {
+        let m = component("X", vec![], vec![]);
+        let plain_row = layout("X", node_with("Row", vec![], vec![text_node("one")]));
+        let plain = from_pipeline(&m, &plain_row, &empty_style("X"))
+            .expect("ok")
+            .output;
+        assert!(!plain.contains("_mosaicWithGap"), "got:\n{plain}");
+
+        let stack = layout(
+            "X",
+            flex_node_with_part("Stack", "overlay", vec![text_node("one"), text_node("two")]),
+        );
+        let stack_style = style_with_part(
+            "X",
+            "overlay",
+            vec![StyleProp {
+                name: "gap".into(),
+                value: "9px".into(),
+            }],
+        );
+        let unsupported = from_pipeline(&m, &stack, &stack_style).expect("ok").output;
+        assert!(
+            !unsupported.contains("_mosaicWithGap"),
+            "got:\n{unsupported}"
+        );
     }
 
     #[test]

@@ -169,12 +169,37 @@ fn manifest_declares_app_package_boundary() {
         "SwiftUI must not override a generated file; it reaches the engine \
          through the standard runtime and answers dialogs through [host_effects]"
     );
-    assert!(host_assets.contains(&(
+    assert!(host_effects.contains(&(
         "compose",
-        "host/compose/MosaicHost.kt",
-        "src/main/kotlin/MosaicHost.kt"
+        "host/compose/EngramEffects.kt",
+        "src/main/kotlin/EngramEffects.kt"
     )));
-    // Flutter no longer declares one either, for the same reason.
+    let compose_handler = package
+        .host_effects
+        .handlers
+        .iter()
+        .find(|handler| handler.backend == "compose")
+        .expect("Compose must declare an effect handler");
+    assert_eq!(compose_handler.install, "installEngramEffects");
+    // No `include`, for the same reason as SwiftUI: Kotlin has no include
+    // directive and every file in the module is visible. The emitter refuses
+    // one here rather than ignoring it.
+    assert_eq!(compose_handler.include, None);
+
+    // Same pin as SwiftUI above: the override is asserted ABSENT, not merely
+    // deleted, so a package that starts replacing the generated Kotlin host
+    // again fails here instead of quietly undoing this migration.
+    assert!(
+        !host_assets
+            .iter()
+            .any(|(backend, _, _)| *backend == "compose"),
+        "Compose must not override a generated file; it reaches the engine \
+         through the standard runtime and answers dialogs through [host_effects]"
+    );
+    // Flutter no longer declares one either, for the same reason. This
+    // REPLACES main's `host_assets.contains(("flutter", ...))`, which this
+    // branch invalidates by deleting that override -- keeping both would have
+    // asserted the file is simultaneously present and absent.
     //
     // Worth more here than on the other two, because this override was not
     // merely redundant: `mosaic_host.dart` replaced the generated host without
@@ -738,7 +763,6 @@ fn app_package_emits_native_project_shells() {
                 "build.gradle.kts",
                 "src/main/kotlin/Main.kt",
                 "src/main/kotlin/EngramApp.kt",
-                "src/main/kotlin/MosaicHost.kt",
                 "README.md",
             ],
         ),
@@ -1666,18 +1690,23 @@ fn native_project_shells_expose_engram_host_contract() {
         "id(\"org.jetbrains.compose\") version \"1.11.1\"",
     );
     assert_contains(&compose_gradle, "mainClass = \"MainKt\"");
-    let compose_host = fs::read_to_string(
-        tmp.path()
+    // The hand-written Kotlin host is gone. Under this profile Compose reaches
+    // the engine through the reflection bridge asserted just above
+    // (`Class.forName("MosaicHost")`), and under `native-complete` through the
+    // generated `MosaicRuntimeHost`; neither is a file this package ships.
+    //
+    // Pinned absent rather than deleted: a copied host reappearing here is the
+    // migration coming undone, and it should fail rather than pass quietly.
+    assert!(
+        !tmp.path()
             .join("compose")
             .join("src")
             .join("main")
             .join("kotlin")
-            .join("MosaicHost.kt"),
-    )
-    .expect("compose host");
-    assert_contains(&compose_host, "class MosaicHost");
-    assert_contains(&compose_host, "eg_engram_app_props");
-    assert_contains(&compose_host, "eg_handle_engram_app_event");
+            .join("MosaicHost.kt")
+            .exists(),
+        "Compose must not ship a hand-written host any more"
+    );
 
     let qml =
         fs::read_to_string(tmp.path().join("qt").join("EngramApp.qml")).expect("EngramApp.qml");
@@ -2783,7 +2812,10 @@ fn source_tree_has_expected_shape() {
         // And SwiftUI's `MosaicHost.swift` used to be here, retired the same
         // way and for the same reasons.
         "host/swiftui/EngramEffects.swift",
-        "host/compose/MosaicHost.kt",
+        // Likewise Compose's `MosaicHost.kt`: the third backend off the
+        // hand-written host, onto the generated `MosaicRuntimeHost` plus an
+        // effect handler.
+        "host/compose/EngramEffects.kt",
         // And Flutter's `mosaic_host.dart`, retired the same way -- the only
         // one of the four whose override broke the build rather than merely
         // duplicating the runtime.
@@ -3093,33 +3125,102 @@ fn source_tree_has_expected_shape() {
     assert_contains(&qt_effects, "MaxImportBytes");
     assert_contains(&qt_effects, "info.isFile()");
 
-    let compose_host = fs::read_to_string(package_root().join("host/compose/MosaicHost.kt"))
-        .expect("compose host template");
-    assert_contains(&compose_host, "interface EngramCapi");
-    assert_contains(&compose_host, "eg_engram_app_props");
-    assert_contains(&compose_host, "eg_handle_engram_app_event");
-    assert_contains(&compose_host, "Native.load");
-    assert_contains(&compose_host, "JSONObject(event)");
-    assert_contains(&compose_host, "\"hostIntent\"");
-    assert_contains(&compose_host, "\"hostResult\"");
-    assert_contains(&compose_host, "\"props\"");
-    assert_contains(&compose_host, "JFileChooser");
-    assert_contains(&compose_host, "FileNameExtensionFilter");
-    assert_contains(&compose_host, "importAnkiPackage");
-    assert_contains(&compose_host, "exportAnkiPackage");
-    assert_contains(&compose_host, "eg_merge_anki_apkg");
-    assert_contains(&compose_host, "eg_export_anki_apkg");
-    assert_contains(&compose_host, "ENGRAM_SNAPSHOT_PATH");
-    assert_contains(&compose_host, "mosaic-snapshot.v1.json");
-    assert_contains(&compose_host, "hydrateSession");
-    assert_contains(&compose_host, "persistSnapshot");
-    assert_contains(&compose_host, "eg_snapshot");
-    assert_contains(&compose_host, "eg_load_snapshot");
-    assert_contains(&compose_host, "withHostStatusProps");
-    assert_contains(&compose_host, "\"host-status-visible\" to true");
-    assert_contains(&compose_host, "hostResult[\"error\"] = error.toString()");
-    assert_contains(&compose_host, "Could not import $file: $error");
-    assert_contains(&compose_host, "Could not export Anki package: $error");
+    // Compose's `MosaicHost.kt` -- a JNA binding that opened the library,
+    // marshalled every event, and owned snapshot persistence -- is retired the
+    // same way Qt's and SwiftUI's were. Its `eg_*` symbols, `Native.load`,
+    // `hydrateSession`/`persistSnapshot` and `withHostStatusProps` all live in
+    // the generated runtime host now, so asserting on them here would be
+    // testing text this package no longer ships.
+    let compose_effects = fs::read_to_string(package_root().join("host/compose/EngramEffects.kt"))
+        .expect("compose effect handler");
+    assert_contains(&compose_effects, "fun installEngramEffects");
+    assert_contains(&compose_effects, "host.effectHandler =");
+    assert_contains(&compose_effects, "JFileChooser");
+    assert_contains(&compose_effects, "FileNameExtensionFilter");
+    assert_contains(&compose_effects, "importAnki");
+    assert_contains(&compose_effects, "exportAnki");
+    // And NOTHING else. A handler branch for a kind the application cannot
+    // mint is unreachable code that reads as shipped behaviour: an earlier
+    // version of this file answered `confirmDelete`, which
+    // `host_intent_for_event` has never emitted and `effect_for_intent` has
+    // never turned into an `Await`. It compiled, it was pinned by a test
+    // asserting the string `confirmDelete` appeared in the file, and it did
+    // nothing.
+    //
+    // So the gate is the complement -- but read off the DISPATCH, not the file
+    // text. A first cut of this asserted `openCard` appeared nowhere, and
+    // failed on the comment that explains why `openCard` is deliberately not
+    // answered: banning the word also bans documenting the decision. What is
+    // actually load-bearing is which kinds reach a `->`, so that is what this
+    // collects.
+    let answered: BTreeSet<&str> = compose_effects
+        .lines()
+        .map(str::trim)
+        // A dispatch arm, not prose: the line starts with a quoted kind and
+        // carries the arrow. Comment lines are excluded by construction --
+        // they start with `//`, never with `"`.
+        .filter(|line| line.starts_with('"') && line.contains("->"))
+        .flat_map(|line| {
+            line.split('"')
+                .skip(1)
+                .step_by(2)
+                .collect::<Vec<_>>()
+                .into_iter()
+        })
+        .collect();
+    assert_eq!(
+        answered,
+        BTreeSet::from(["importAnki", "exportAnki"]),
+        "host/compose/EngramEffects.kt dispatches on effect kinds that are not \
+         exactly the two `effect_for_intent` mints as `Await`. `openCard` is \
+         the facade's third intent and is a `Notify`, so answering it would be \
+         refused; anything else is a kind nothing sends, and an unreachable \
+         branch reads to the next person as shipped behaviour."
+    );
+    // All three outcomes, because a handler that only ever answers `ok` leaves
+    // a cancelled dialog looking like a hang.
+    assert_contains(&compose_effects, "completeEffect");
+    assert_contains(&compose_effects, "cancelledOutcome");
+    assert_contains(&compose_effects, "failedOutcome");
+    // DEFERRED and marshalled, for two independent reasons: this host holds its
+    // monitor across the handler call, and the props-changed handler runs on
+    // whichever thread answered while Compose state must be written from the UI
+    // thread. `SwingUtilities.invokeLater` settles both.
+    assert_contains(&compose_effects, "host.deferEffect(id)");
+    assert_contains(&compose_effects, "SwingUtilities.invokeLater");
+    // Nothing may escape the deferred block. Once `deferEffect` succeeds the id
+    // is out of the runtime's fail sweep, so an exception reaching the EDT's
+    // uncaught handler leaves it awaited for the life of the process -- and the
+    // runtime gates snapshot and restore on nothing being pending. The dialogs
+    // throw `HeadlessException` outside the `run*` functions' own I/O guards,
+    // which is the gap this closes. Qt guards the same span with `catch (...)`.
+    //
+    // Pinned on the guard's own message, NOT on `catch (error: Exception)`:
+    // `runImport` and `runExport` each already contain that phrase, so matching
+    // it would pass with this guard deleted -- a test that cannot fail for the
+    // reason it was written.
+    assert_contains(&compose_effects, "the dialog could not be opened");
+    // Absolute anchors. Java's `$` concedes a trailing LF, CRLF, CR, NEL and
+    // U+2028 -- broader than PCRE2's LF-only default, which is the bug the Qt
+    // handler had. `matches()` happens to reject them all today, so these are
+    // redundant as written; they are here so the pattern stays correct if the
+    // call ever becomes `containsMatchIn`.
+    assert_contains(&compose_effects, r"\A\.?[A-Za-z0-9_-]{1,16}\z");
+    // Strict base64 -- `getDecoder()`, never `getMimeDecoder()`, which skips
+    // characters outside the alphabet and would write a corrupt `.apkg` that
+    // only fails later inside Anki.
+    assert_contains(&compose_effects, "Base64.getDecoder().decode(encoded)");
+    // And the decoded bytes must be a zip. An is-it-empty check does not cover
+    // this: padding-only input decodes SUCCESSFULLY to a byte or two, clearing
+    // an emptiness test, and would be written out as a real `.apkg`.
+    assert_contains(&compose_effects, "0x50.toByte()");
+    assert_contains(&compose_effects, "0x4B.toByte()");
+    // The read is bounded before the file is opened, matching Qt and SwiftUI
+    // and the 256 MiB the package layer accepts on native targets. The
+    // regular-file test is separate work, not a restatement: a fifo reports no
+    // length and never reaches EOF.
+    assert_contains(&compose_effects, "MAX_IMPORT_BYTES");
+    assert_contains(&compose_effects, "chosen.isFile");
 
     // Twenty-two assertions on `host/flutter/mosaic_host.dart` stood here --
     // `dart:ffi`, `eg_engram_app_props`, `ENGRAM_SNAPSHOT_PATH`,

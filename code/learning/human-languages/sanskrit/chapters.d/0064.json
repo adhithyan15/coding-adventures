@@ -1,0 +1,20 @@
+{
+  "chapter": 64,
+  "title": "Reading — Words, Lines, and a First Passage",
+  "label": "ch:sa-prathama-pathanam",
+  "canDo": "I can read a Sanskrit word cold by looking at its ending first, see that three shuffles of one sentence are still one sentence, and hold a whole passage about one village without translating it word by word.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "SA-C64-prathama-pathanam",
+    "kind": "four-skill-function-map",
+    "summary": "Fourteen lines standing in one village, where च and वा follow what they join, किन्तु opens its line, and the whole thing closes on शान्तिः.",
+    "assesses": [
+      "SA-SKILL-CONNECTED-READING",
+      "SA-SKILL-READ-LINES",
+      "SA-SKILL-READ-WORDS"
+    ],
+    "note": "The reading rung is placed after the joiners of Chapter 52 rather than beside the deixis of Chapter 14, because a passage that can only place things is a list. च, वा and किन्तु are what turn fourteen lines into something held together, and all three were paid for before this chapter opens."
+  }
+}

@@ -1,5 +1,12 @@
 # Changelog — @coding-adventures/forme-cli
 
+## Unreleased
+
+- Made repository bootstrap installs compatible with npm 10 by bypassing its
+  crashing peer-dependency resolver for the local development package graph.
+- Made the CLI test harness use platform-native fixture paths so the complete
+  package suite exercises the same injected services on Unix and Windows.
+
 ## 0.4.0 — 2026-09-01
 
 - Added per-instance input/output revision, external source-state revision, and

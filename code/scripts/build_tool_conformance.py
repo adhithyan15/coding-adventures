@@ -24,7 +24,7 @@ import sys
 import unicodedata
 from collections.abc import Sequence
 from dataclasses import dataclass
-from functools import lru_cache
+from functools import cache, lru_cache
 from itertools import pairwise
 from pathlib import Path
 from typing import Any
@@ -684,6 +684,29 @@ def _source_input_text_error(value: str) -> str | None:
     return None
 
 
+def _source_package_root_matches_language(
+    package_root: str,
+    language: str,
+    package_exact_inputs: list[dict[str, Any]],
+) -> bool:
+    components = package_root.split("/")
+    conventional = (
+        len(components) >= 4
+        and components[0] == "code"
+        and components[1] in {"packages", "programs"}
+        and components[2] == language
+    )
+    if conventional:
+        return True
+    return (
+        language == "typescript"
+        and len(components) == 3
+        and components[:2] == ["code", "sites"]
+        and package_root
+        in {item["package_root"] for item in package_exact_inputs}
+    )
+
+
 def _repository_source_sensitive_path(path: str) -> bool:
     """Reject credential, secret, signing, and machine-local exact inputs."""
 
@@ -969,12 +992,8 @@ def _validate_source_input_registry(
                     "SOURCE_INPUT_PATH_UNSAFE",
                     f"unsafe package-exact source-input root {package_root!r}",
                 )
-            root_components = package_root.split("/")
-            if (
-                len(root_components) < 4
-                or root_components[0] != "code"
-                or root_components[1] not in {"packages", "programs"}
-                or root_components[2] != language
+            if not _source_package_root_matches_language(
+                package_root, language, package_exact_inputs
             ):
                 raise ConformanceError(
                     "SOURCE_INPUT_PACKAGE_ROOT_LANGUAGE_MISMATCH",
@@ -2574,12 +2593,15 @@ def _validate_pure_case_semantics(
                     "CASE_SOURCE_ROOT_UNSAFE",
                     f"source package root is not portable NFC: {package_root!r}",
                 )
-            root_components = package_root.split("/")
-            if (
-                len(root_components) < 4
-                or root_components[0] != "code"
-                or root_components[1] not in {"packages", "programs"}
-                or root_components[2] != options["language"]
+            language_inputs = next(
+                entry
+                for entry in registry["languages"]
+                if entry["language"] == options["language"]
+            )
+            if not _source_package_root_matches_language(
+                package_root,
+                options["language"],
+                language_inputs["package_exact_inputs"],
             ):
                 raise ConformanceError(
                     "CASE_SOURCE_ROOT_LANGUAGE_MISMATCH",
@@ -2778,7 +2800,7 @@ def _portable_glob_matches(pattern: str, path: str) -> bool:
     pattern_segments = pattern.split("/")
     path_segments = path.split("/")
 
-    @lru_cache(maxsize=None)
+    @cache
     def matches(pattern_index: int, path_index: int) -> bool:
         if pattern_index == len(pattern_segments):
             return path_index == len(path_segments)
@@ -2884,9 +2906,7 @@ def _expected_diff_selection(
                 continue
             path_known = True
             relative = path[len(root) :].lstrip("/")
-            if package["source_mode"] == "package_prefix":
-                changed.add(package["name"])
-            elif relative in build_names or any(
+            if package["source_mode"] == "package_prefix" or relative in build_names or any(
                 _portable_glob_matches(pattern, relative)
                 for pattern in package["source_globs"]
             ):
@@ -3020,6 +3040,15 @@ def _expected_source_collection(
             "source-collection case does not pin the validated registry snapshot",
         )
     language_inputs = _source_input_entry(registry, options["language"])
+    if not _source_package_root_matches_language(
+        options["package_root"],
+        options["language"],
+        language_inputs["package_exact_inputs"],
+    ):
+        raise ConformanceError(
+            "CASE_SOURCE_ROOT_LANGUAGE_MISMATCH",
+            "source package root does not belong to the declared consumer language",
+        )
     package_exact_paths = {
         path
         for item in language_inputs["package_exact_inputs"]
@@ -4373,12 +4402,14 @@ def validate_case_document(
         repository_source_input_boundary,
     )
     expected = case["expected"]
-    if expected["outcome"] in {"unsupported", "skipped"}:
-        if not expected["diagnostics"]:
-            raise ConformanceError(
-                "EXPECTED_DIAGNOSTIC_MISSING",
-                f"{expected['outcome']} requires a diagnostic",
-            )
+    if (
+        expected["outcome"] in {"unsupported", "skipped"}
+        and not expected["diagnostics"]
+    ):
+        raise ConformanceError(
+            "EXPECTED_DIAGNOSTIC_MISSING",
+            f"{expected['outcome']} requires a diagnostic",
+        )
     if expected != canonicalize_result(expected):
         raise ConformanceError(
             "EXPECTED_NOT_CANONICAL",

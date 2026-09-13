@@ -1,0 +1,11 @@
+{
+  "language": "portuguese",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:75c69021a077b14e",
+  "lessonIds": [
+    "PT-C29-palavras",
+    "PT-C29-linhas",
+    "PT-C29-primeira-leitura"
+  ],
+  "tex": "portuguese/book/chapters/ch29-reading-words-lines-and-a-passage.tex"
+}

@@ -15,6 +15,7 @@ module LanguageSourceInputRegistry
     , languageSourceInputRegistry
     , languageSourceInputRegistryDigest
     , languageSourceInputRegistryValue
+    , registeredPackageExactRoot
     , selectLanguageSourceInput
     , selectSourceCandidates
     ) where
@@ -195,7 +196,7 @@ decodeEmbedded label =
 
 languageSourceInputRegistryDigest :: String
 languageSourceInputRegistryDigest =
-    "f49bfe8c7c9c0fb9b534ecc9ca4a614f3684abe32bdb0edac82d99bdc806fb70"
+    "190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530"
 
 generatedDirectoryComponents :: [String]
 generatedDirectoryComponents =
@@ -204,6 +205,14 @@ generatedDirectoryComponents =
 selectLanguageSourceInput :: String -> String -> FilePath -> Either String Bool
 selectLanguageSourceInput language packageRoot relative =
     selectLanguageSourceInputForMode True language packageRoot relative
+
+registeredPackageExactRoot :: String -> FilePath -> Bool
+registeredPackageExactRoot language packageRoot =
+    any registeredLanguage (registryLanguages languageSourceInputRegistry)
+  where
+    registeredLanguage rule =
+        ruleLanguage rule == language
+            && any ((== packageRoot) . packageExactRoot) (rulePackageExactInputs rule)
 
 selectLanguageSourceInputForMode :: Bool -> String -> String -> FilePath -> Either String Bool
 selectLanguageSourceInputForMode includeRecursive language packageRoot relative = do
@@ -423,6 +432,10 @@ validatePackageRoot language packageRoot =
                     | bucket `elem` ["packages", "programs"]
                         && rootLanguage == language
                         && not (null rest) -> Right ()
+                ["code", "sites", site]
+                    | language == "typescript"
+                        && not (null site)
+                        && registeredPackageExactRoot language packageRoot -> Right ()
                 _ -> Left "SOURCE_HASH_PACKAGE_ROOT_INVALID"
 
 hasDrivePrefix :: String -> Bool

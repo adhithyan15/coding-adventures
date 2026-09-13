@@ -7367,3 +7367,141 @@ A package outside a lane's acceptance set is not "covered by the other
 entries"; it is untested. When adding a backend override or a host adapter,
 check the package is in the acceptance set of the lane that compiles it — and
 add a test that fails without the entry.
+
+### 2026-09-13 — a conflict resolver's assertions must be able to see what it discarded
+
+A script resolved an additive CHANGELOG conflict by extracting lines starting
+with `- ` from each side and concatenating them. That is right for a file of
+one-line entries, and it silently ate a 90-line prose section — `###` headings,
+paragraphs and a code fence — from a file whose newer entries have that shape.
+
+It reported success. Its assertions checked that every *bullet* survived, and a
+bullet filter cannot see a paragraph it never collected. The check and the
+transform shared the same blind spot, so agreement between them proved nothing.
+
+`resolve_changelog_generic.py` in the scratchpad is the replacement. It keeps
+each side VERBATIM and checks the result two ways that a dropped paragraph
+cannot satisfy:
+
+- every non-blank line of both sides appears in the output, compared line by
+  line rather than through a filter;
+- the output is no shorter than the conflicted file minus the marker lines.
+
+The general rule: when a transform selects a subset, do not verify it with the
+same selector. Verify against the whole input — by length, by line membership,
+by anything the selector is not.
+
+This was caught by eye, on a file that was about to be pushed. The version that
+merges is the version nobody re-read.
+
+### 2026-09-13 — "it matches the other event" is not a reason two handlers may do the same thing
+
+Engram's note-type editor was not reset by the collection-level `SaveNoteType`,
+where the editor-level `NoteTypeEditorSaveNoteType` did reset it, and a name
+typed after a collection save was silently dropped. The fix looked obvious:
+reset in both.
+
+It was a data-loss regression, and the reasoning is what produced it.
+
+- `NoteTypeEditorSaveNoteType` builds its note type from
+  `note_type_from_editor_selection` — by construction it saves what the editor
+  holds, so resetting afterwards is coherent.
+- `SaveNoteType` resolves its target from the **payload** and never consults the
+  editor at all.
+
+So the two can name different note types, and an unconditional reset threw away
+a draft of A because something saved B — for a brand-new model, the name,
+stylesheet, every field rename and template body at once, `reset()` being
+`*self = Self::default()`.
+
+Before making two handlers behave alike, check they are talking about the same
+object. Two events with matching names and adjacent match arms are not
+necessarily two routes to one operation; here one was "save what is open" and
+the other "upsert whatever you are given".
+
+Caught in security review, which measured both trees rather than reading them.
+The reachability was nil today — no shell emits the bare event — and that is not
+a defence: the event is documented for host model editors and aliased to
+`upsertNoteType`, which is what a sync or an import calls.
+
+### 2026-09-13 — a mutation that does not mutate is a false exoneration
+
+While checking whether a restored assertion caught "creating a note type through
+the collection path becomes a silent no-op", the mutation tested whether the id
+was in the collection **after** the upsert had already added it. The condition
+was never true, nothing changed, and the run reported that no test caught the
+defect.
+
+That is worse than not testing: it is evidence pointing the wrong way, and it
+would have justified deleting an assertion that review had just identified as
+the only one pinning that behaviour. Written faithfully — deciding before the
+reduce — the assertion caught it.
+
+Before reading which tests a mutation fails, confirm the mutation changed the
+behaviour. If a mutation reddens nothing, suspect the mutation first.
+
+### 2026-09-13 — a separator-joined key is safe if the RAW parts are constant
+
+`sql-vm`'s `apply_distinct` builds a row key as `format!("{col}={val:?}")`
+joined by `,`, with the column name interpolated raw. That is the composite-key
+separator-injection shape this repo has fixed twice — card ids in
+`engram-core-wasm`, the provenance merge key in `engram-core` — and it was
+carried as a suspected third instance for weeks.
+
+It is not that bug, and the reason is worth having because it decides the whole
+class:
+
+- the column names are raw, **but they are also fixed across every row of one
+  DISTINCT**. `apply_distinct` only compares rows within a single result set, so
+  a hostile alias contributes the same constant prefix to every key and cannot
+  shift one row's boundary relative to another's;
+- the values vary, but `SqlValue`'s derived `Debug` quotes and escapes `Text`
+  and brackets `Blob`, so the rendering is injective.
+
+A constant prefix plus an injective rendering is injective. Measured before
+concluding: 864 rows over hostile aliases (`x=Int(1),y`, `a,b`, duplicate and
+empty names) and values whose rendered form carries `,`, `=` and quotes — zero
+collisions. The two keys that DO match come from queries with different column
+counts, which are never compared to each other.
+
+**The test to write is the one that keeps it true.** The load-bearing half is a
+`derive`, one `impl` away from a hand-written `Debug` that prints text raw — so
+the gate pins the escaping, not the absence of a collision that cannot happen.
+Mutation-checked with exactly that `impl`.
+
+So: before filing a separator-joined key as injectable, check BOTH halves —
+whether the varying parts are injectively rendered, and whether the raw parts
+are constant across everything the key is compared against. The shape alone does
+not decide it.
+
+And the corollary about reviews: a reviewer's "this is the same shape, here is
+an exploit" is a lead, not a finding. This one came with a concrete-looking
+example (`SELECT a AS "x=Int(1),y", b`) that does not actually collide — the
+alias is constant within the query, so it cancels. Reproduce the exploit before
+fixing it; implementing a fix for a bug that does not exist costs the same
+review budget as a real one and adds code nobody can justify later.
+
+And the same discipline applied to your OWN measurement, which is the harder
+half, because a number feels like evidence.
+
+Scoping style-drop reporting for the Flutter backend (#12022), I extracted the
+handled keys from `style_prop_to_container_arg` — a single `match` over property
+names whose own doc says "unknown props produce `None` and are silently dropped"
+— diffed them against every property authored in the repo's `.msl` files, and
+got a confident answer: **59 properties dropped**.
+
+The number was wrong, because the premise under it was. That function is one
+lowering path, not the lowering: `font-size`, `text-align` and `border-radius`
+are handled by other functions entirely (`props.get("border-radius")`,
+`base.get("text-align")`, `.get("font-size")`). Flutter has 48 scattered
+lookups; Qt has 81. Neither has the single match the three reporting backends
+share, which is exactly why they are the two that do not report.
+
+A reporter built on that measurement would have emitted roughly 53 false drops —
+the SwiftUI `gap` bug fixed the same day, at ten times the scale, and it would
+have looked authoritative because it came with a count.
+
+The check that would have caught it costs one grep: before concluding that a
+function is the whole of something, grep for a property it does NOT handle and
+see whether the codebase handles it elsewhere. A measurement inherits every
+assumption in the thing being measured, and states none of them.

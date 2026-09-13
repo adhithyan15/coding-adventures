@@ -44,6 +44,7 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
             "rust/mosaic-app-conformance",
             "rust/mosaic-app-runtime",
             "rust/task-mosaic-app",
+            "rust/engram-mosaic-app",
         ):
             with self.subTest(package=package):
                 self.assertTrue(
@@ -56,6 +57,20 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertTrue(
             MODULE.requires_mosaic_swift_runtime(
                 {"affected_packages": ["mosaic/programs/task-app"]}
+            )
+        )
+
+    def test_engram_app_requires_acceptance(self) -> None:
+        """The lane has built Engram since #13728 -- but not on Engram's account.
+
+        This package was missing from the acceptance set, so a change to
+        `host/swiftui/EngramEffects.swift` skipped the only step that compiles
+        it. The gap was found while adding the matching Compose lane.
+        """
+
+        self.assertTrue(
+            MODULE.requires_mosaic_swift_runtime(
+                {"affected_packages": ["mosaic/programs/engram-app"]}
             )
         )
 

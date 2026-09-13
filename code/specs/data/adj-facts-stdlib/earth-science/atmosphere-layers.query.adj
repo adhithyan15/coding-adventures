@@ -5,8 +5,12 @@
 % The shape a learner (or an LLM) produces to ANSWER "what is the stratosphere
 % known for?": it states no earth-science fact — it only `import`s the grounded
 % table and asks binding queries. The engine resolves each `?` against the
-% `atmosphere_layer_feature` rows and returns the feature + the table's
-% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% `atmosphere_layer_feature` rows and returns the feature together with THAT
+% ROW'S OWN source/locator/trust — since #14986 each row carries its own span
+% (ADJ-TABLES RS-5e), so the warrant you get back is a sentence about the layer
+% you asked for, not the table's one shared envelope. The locator and trust are
+% still inherited from the envelope; only the span differs per row.
+% The fourth query runs the relation BACKWARD (bind the
 % feature `auroras`, recall the layer that has it — thermosphere). The `mantle`
 % is a layer of the solid Earth, not of the atmosphere, so a recall on it
 % abstains honestly — the engine never invents a feature.

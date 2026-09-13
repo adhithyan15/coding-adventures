@@ -114,6 +114,23 @@ let ``discovery language registry is reachable through the F sharp facade`` () =
             Directory.Delete(root, true)
 
 [<Fact>]
+let ``registered legacy sites are reachable through F sharp discovery`` () =
+    let root = tempRoot ()
+
+    try
+        writeFile root "code/sites/blog/BUILD" "echo build\n"
+        writeFile root "code/sites/unreviewed/BUILD" "echo ignored\n"
+
+        let packages = discoverPackages (Path.Combine(root, "code")) "linux" |> Seq.toArray
+
+        let package = Assert.Single(packages)
+        Assert.Equal("unknown/blog", package.Name)
+        Assert.Equal("unknown", package.Language)
+    finally
+        if Directory.Exists(root) then
+            Directory.Delete(root, true)
+
+[<Fact>]
 let ``force emit-plan writes a schema versioned plan`` () =
     let root = tempRoot ()
 

@@ -1,5 +1,13 @@
 # lang-aot
 
+Dartmouth BASIC's 18 purely string-valued matrix rows (literals/variables,
+concatenation, comparison, control flow — no numeric `PRINT`/`LET`/`FOR`/
+`INPUT`) now declare real BEAM alongside the seven standard backends (VM-040;
+see "Dartmouth BASIC pure-string family on BEAM" below). BASIC was the only
+non-ALGOL frontend with zero declared BEAM rows before this slice; its
+remaining numeric rows need new `iir-to-beam` float lowering, not just
+promotion.
+
 COBOL STRING/UNSTRING pointer rows compare receiver text, pointer writeback and
 overflow/success markers together, including exact fit, partial transfer,
 invalid starts and a trailing delimiter. They declare all seven standard
@@ -857,3 +865,36 @@ programs on real Erlang: LEADING, CHARACTERS (including field padding),
 no replacement rechaining and first matching replacement clause. These
 raise COBOL BEAM coverage to 52 of 58 rows, or 458 declared backend cells.
 The six remaining rows cover region boundaries and STRING self-move.
+
+## COBOL BEAM region and self-move coverage
+
+Six existing programs now declare BEAM after real Erlang execution: STRING
+self-move, BEFORE/AFTER tallying and replacement with absent delimiters,
+and independent tally/replace regions in one statement. A focused probe
+pins program identities and exact stdout. All 58 COBOL corpus rows now
+declare eight backends (464 cells); full language support and single-phrase
+BEFORE/AFTER intersection remain outside this coverage claim.
+
+### Dartmouth BASIC pure-string family on BEAM (VM-040)
+
+With COBOL's BEAM tail complete, a reprioritization audit found Dartmouth
+BASIC was the only non-ALGOL frontend with zero declared BEAM rows, despite
+"BASIC f64/I/O" naming it in VM-040's original scope from the start. The
+reason: `iir-to-beam` has no `f64` lowering at all, and BASIC's `BA7-1b`
+change routes every scalar numeric value — even an integer-spelled literal —
+through the shared `f64` value track, so its `__basic_print_real` family of
+helpers (unconditionally emitted into every compiled module) poisons
+whole-module BEAM validation for nearly the entire 51-row corpus.
+
+Exactly 18 rows are purely string-valued — string literals/variables, `+`
+concatenation, `=`/`<>`/`<`/`>` comparison, `IF`/`GOTO` control flow, and no
+numeric `PRINT`/`LET`/`FOR`/`INPUT` anywhere in source — so no float `const`
+is ever emitted and they compile through `iir-to-beam` unchanged. All 18 now
+declare `Beam` and execute correctly on real Erlang with byte-identical
+stdout to every other backend (`portable_text_stdout_dartmouth_basic_beam_strings`,
+357 → 375 declared BASIC cells). The remaining ~28 numeric rows need new
+`iir-to-beam` float-op lowering — its own properly scoped item, not a
+same-day promotion — and the 5 `INPUT` rows need the still-unscoped BEAM
+host-input design (VM-060b), shared with FLOW-MATIC's 4 blocked `INPUT`/EOF
+rows. See `code/specs/LANG-VM-NON-ALGOL-BACKLOG.md` (VM-D033) for the full
+investigation.

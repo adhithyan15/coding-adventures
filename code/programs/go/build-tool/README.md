@@ -20,7 +20,13 @@ modes also include the five exact BUILD fronts and the universal root-only
 Unknown language keys fail before the package root is inspected. Exact package
 inputs bind to their complete canonical `code/packages/<language>/<package>` or
 `code/programs/<language>/<package>` root, so the Engram WASM resources cannot
-widen to a sibling Rust package. The exact case-sensitive 26-component
+widen to a sibling Rust package. The only nonstandard roots are the exact
+registered `code/sites/blog` and `code/sites/landing-page` TypeScript profiles;
+they are derived only from exact paths relative to the nearest real Git
+repository root, so arbitrary, nested, and outside site roots fail before
+traversal. Their eight and five authored
+inputs are exact paths, so Markdown, identity JSON, image, and root CSS suffixes
+do not widen to other packages. The exact case-sensitive 26-component
 generated-directory registry is applied before every selector while preserving
 near names such as `_Build` and `_build-example`; symlink and Windows
 reparse-point components are never traversed.

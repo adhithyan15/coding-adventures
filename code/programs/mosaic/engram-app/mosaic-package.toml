@@ -26,26 +26,28 @@ files = [
   { backend = "react", source = "host/web/engram-host.ts", target = "src/engram-host.ts" },
   { backend = "react", source = "host/web/engram-mosaic-host-wasm.d.ts", target = "src/engram-mosaic-host-wasm.d.ts" },
   { backend = "electron", source = "host/electron/host.js", target = "electron/host.js" },
-  { backend = "compose", source = "host/compose/MosaicHost.kt", target = "src/main/kotlin/MosaicHost.kt" },
+  # Neither side of this merge survives. HEAD still listed Compose's
+  # `MosaicHost.kt` (retired by #15057, which landed first) and main still
+  # listed Flutter's `mosaic_host.dart` (retired by this branch). Taking either
+  # would re-declare an override whose file no longer exists, and
+  # `package_compiles.rs` asserts both backends absent.
   { backend = "xaml", source = "host/xaml/MosaicHost.cs", target = "MosaicHost.cs" },
 ]
 
 # Dependencies Engram's own host assets need, which the generated projects have
 # no reason to declare.
 #
-# `MosaicHost.kt` parses the engine's JSON responses with `org.json`. The Compose
-# emitter declares JNA and kotlinx-serialization because the code IT generates
-# uses them; it cannot know about a library only this package's host file
-# imports.
-#
-# Without this the emitted Compose project does not compile:
-#
-#     e: MosaicHost.kt:8:12 Unresolved reference 'json'.
-#
-# which is why it had only ever been built by a PowerShell script that patched
-# build.gradle.kts afterwards -- and therefore never on the Linux CI runner.
+# Compose used to need `org.json` here, because the retired `MosaicHost.kt`
+# parsed the engine's JSON responses with it. Nothing does any more: the
+# generated `MosaicRuntimeHost` uses the kotlinx-serialization the emitter
+# already declares, and `EngramEffects.kt` passes plain Kotlin maps. Dropped
+# with the Compose migration, and the CI lane's `compileKotlin` is what would
+# catch it if some Compose source still imported it.
 dependencies = [
-  { backend = "compose", coordinate = "org.json:json:20260522" },
+  # `org.json` is NOT restored here. HEAD still carried it because this branch
+  # forked before #15057; the comment above this list already records that the
+  # Compose migration dropped it.
+  #
   # `engram_effects.dart` opens the platform file picker for Anki import and
   # export. No generated Dart uses it, so the emitter has no reason to declare
   # it. This outlived the host that first needed it: the retired
@@ -79,6 +81,11 @@ files = [
   # `Sources/App` -- but unlike Swift, Dart resolves nothing across files
   # without an import, so this one still needs an `include` below.
   { backend = "flutter", source = "host/flutter/engram_effects.dart", target = "lib/engram_effects.dart" },
+
+  # Gradle's Kotlin convention compiles everything under `src/main/kotlin`, so
+  # the target is a path there and no build-list entry is needed -- the same
+  # shape as SwiftUI, unlike Qt.
+  { backend = "compose", source = "host/compose/EngramEffects.kt", target = "src/main/kotlin/EngramEffects.kt" },
 ]
 handlers = [
   { backend = "qt", include = "engram_effects.h", install = "installEngramEffects" },
@@ -86,6 +93,10 @@ handlers = [
   { backend = "swiftui", install = "installEngramEffects" },
   # Relative to `lib/`, which is what the generated `main.dart` imports from.
   { backend = "flutter", include = "engram_effects.dart", install = "installEngramEffects" },
+
+  # No `include`: Kotlin has no include directive and every file in the module
+  # is visible. The emitter refuses one here for exactly that reason.
+  { backend = "compose", install = "installEngramEffects" },
 ]
 
 [kernel]

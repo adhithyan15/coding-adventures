@@ -3406,6 +3406,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("15.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — bounded abstract execution also follows a finite real control
+    // recurrence until its post-body binary64 increment crosses the limit.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real x; for x := 1.0 step 0.5 until 10.0 do x := x * 2.0; print(x) end",
+        expect: Expect::Stdout("11.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -4622,7 +4631,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT \"HELLO\"\n20 END\n",
         expect: Expect::Stdout("HELLO"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 string variables. The frontend accepts `$`-suffixed
     // names, lowers `LET A$ = "HI"` directly into a safe typed `str_const` slot,
@@ -4634,7 +4643,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"HI\"\n20 PRINT A$\n30 END\n",
         expect: Expect::Stdout("HI"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 literal string reassignment. Re-emitting
     // `str_const` into the same backend-facing slot makes the most recent
@@ -4645,7 +4654,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"NO\"\n20 LET A$ = \"OK\"\n30 PRINT A$\n40 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 literal string concatenation. The frontend lowers
     // `"O" + "K"` to E4 `str_const` + `str_concat`, stores the result in the
@@ -4655,7 +4664,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"O\" + \"K\"\n20 PRINT A$\n30 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 literal-backed scalar string copy. `B$ = A$`
     // lowers to E4 `str_concat` with an empty suffix, proving immutable copy
@@ -4665,7 +4674,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"OK\"\n20 LET B$ = A$\n30 PRINT B$\n40 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 multi-item string PRINT. `;` keeps adjacent output,
     // so two scalar string slots are consumed by ordered E4 `print_str` calls
@@ -4675,7 +4684,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$; B$\n40 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 string PRINT composes with BA2 comma separators.
     // The comma path emits a single `putchar(' ')` between the ordered E4
@@ -4686,7 +4695,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$, B$\n40 END\n",
         expect: Expect::Stdout("O K"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 string expression in PRINT. This keeps concat out
     // of an assignment target and proves `PRINT` can consume a temporary E4
@@ -4696,7 +4705,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"O\"\n20 PRINT A$ + \"K\"\n30 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 variable-variable string expression in PRINT.
     // This proves `PRINT` can consume a temporary E4 `str_concat` result when
@@ -4706,7 +4715,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 PRINT A$ + B$\n40 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 string expression in IF equality. This proves the
     // relation path can consume a temporary E4 string expression result before
@@ -4716,7 +4725,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"O\"\n20 IF A$ + \"K\" = \"OK\" THEN 50\n30 PRINT \"BAD\"\n40 END\n50 PRINT \"OK\"\n60 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 variable-variable string expression in IF
     // equality. This extends the equality branch proof beyond `A$ + literal`:
@@ -4727,7 +4736,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 IF A$ + B$ = \"OK\" THEN 60\n40 PRINT \"BAD\"\n50 END\n60 PRINT \"OK\"\n70 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 string expression in IF inequality. This composes
     // the variable-variable concat proof with the `<>` branch path: E4
@@ -4738,7 +4747,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"O\"\n20 LET B$ = \"K\"\n30 IF A$ + B$ <> \"NO\" THEN 60\n40 PRINT \"BAD\"\n50 END\n60 PRINT \"OK\"\n70 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 string expression assignment with a variable
     // operand. This proves a non-literal concat can be stored in another safe
@@ -4748,7 +4757,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"O\"\n20 LET B$ = A$ + \"K\"\n30 PRINT B$\n40 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 chained string expression assignment. This takes
     // the variable-backed concat proof beyond two operands: `A$ + "B" + "C"`
@@ -4759,7 +4768,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"A\"\n20 LET B$ = A$ + \"B\" + \"C\"\n30 PRINT B$\n40 END\n",
         expect: Expect::Stdout("ABC"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 string equality drives control flow. `IF A$ = "Y"`
     // lowers to shared E4 `str_eq`, then the existing branch machinery chooses
@@ -4770,7 +4779,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"Y\"\n20 IF A$ = \"Y\" THEN 50\n30 PRINT \"BAD\"\n40 END\n50 PRINT \"OK\"\n60 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 copied string slots in control flow. This composes
     // the scalar copy foothold with `str_eq` over two string slots, proving
@@ -4780,7 +4789,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"OK\"\n20 LET B$ = A$\n30 IF B$ = A$ THEN 60\n40 PRINT \"BAD\"\n50 END\n60 PRINT \"OK\"\n70 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 string inequality drives control flow too. The
     // frontend reuses E4 `str_eq` but targets the THEN line with `jmp_if_false`,
@@ -4790,7 +4799,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"N\"\n20 IF A$ <> \"Y\" THEN 50\n30 PRINT \"BAD\"\n40 END\n50 PRINT \"OK\"\n60 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA4 lexical string ordering drives control flow. The
     // frontend lowers `$` string `<` / `>` relops through E4 `str_cmp`, compares
@@ -4801,7 +4810,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A$ = \"ALPHA\"\n20 IF A$ < \"BETA\" THEN 40\n30 END\n40 IF \"BETA\" > A$ THEN 60\n50 END\n60 PRINT \"OK\"\n70 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — `FOR`/`NEXT` loop with an accumulator (LANG-FULL BA0). Sums
     // 1..5 into S and prints 15. FOR/NEXT lowers to `cmp_le`, which the WASM and LLVM
@@ -6598,7 +6607,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY S.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("ABCDE"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-047c: INSPECT TALLYING FOR ALL ... BEFORE region — the count is bounded to
@@ -6624,7 +6633,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY C.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("001\n003"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-047c: INSPECT TALLYING FOR ALL ... AFTER region — the asymmetric partner of
@@ -6650,7 +6659,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY C.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("001\n001"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-047c: INSPECT REPLACING ALL ... BEFORE region — the rewrite is bounded to
@@ -6676,7 +6685,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" S \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[AB0CD0]\n[AB*CD0]\n[AB*CD*]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-047c: INSPECT REPLACING ALL ... AFTER region — the asymmetric partner of
@@ -6703,7 +6712,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" S \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[AB0CD0]\n[AB0CD*]\n[AB0CD0]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-047c: BEFORE and AFTER together in ONE INSPECT statement — the combined
@@ -6734,7 +6743,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY S.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("002\n0A0B*"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // VM-039a: real stdin and EOF on the shared native/LLVM runtime.
@@ -9365,10 +9374,10 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Twig, 49, 363),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 45),
-        (Language::DartmouthBasic, 51, 357),
+        (Language::DartmouthBasic, 51, 375),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
-        (Language::Cobol60, 58, 458),
+        (Language::Cobol60, 58, 464),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -12894,6 +12903,31 @@ fn algol_integer_control_recurrence_snapshot_runs_on_every_available_standard_ba
 }
 
 #[test]
+fn algol_real_control_recurrence_snapshot_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("step 0.5 until 10.0 do x := x * 2.0")
+        })
+        .expect("the real control recurrence snapshot must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the real control recurrence did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_finite_step_control_exit_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -15772,4 +15806,83 @@ fn portable_text_stdout_cobol_beam_pointer_overflow() {
     }
     assert_eq!(executed, 8);
     eprintln!("COBOL BEAM pointer/overflow: {executed} programs executed");
+}
+
+// Pin the six final COBOL corpus identities so an insertion cannot silently
+// redirect the proof to a different program. Missing delimiters distinguish
+// whole-source BEFORE from empty AFTER; self-move preserves the original bytes.
+#[test]
+fn portable_text_stdout_cobol_beam_regions_selfmove() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM regions/self-move: erl unavailable");
+        return;
+    }
+    let programs: Vec<_> = PROGRAMS.iter()
+        .filter(|p| p.lang == Language::Cobol60)
+        .skip(52).take(6).collect();
+    assert_eq!(programs.len(), 6);
+    let expected = [
+        ("STRING-SELF-PROOF", "ABCDE"),
+        ("TALLY-BEFORE", "001\n003"),
+        ("TALLY-AFTER", "001\n001"),
+        ("REPLACE-BEFORE", "[AB0CD0]\n[AB*CD0]\n[AB*CD*]"),
+        ("REPLACE-AFTER", "[AB0CD0]\n[AB0CD*]\n[AB0CD0]"),
+        ("COMBINED-REGIONS", "002\n0A0B*"),
+    ];
+    for (program, (id, stdout)) in programs.iter().zip(expected) {
+        assert!(program.src.contains(id), "selected COBOL source changed");
+        assert!(matches!(program.expect, Expect::Stdout(value) if value == stdout),
+            "selected COBOL expectation changed");
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+    }
+    eprintln!("COBOL BEAM regions/self-move: 6 programs executed");
+}
+
+// VM-040 Dartmouth BASIC BEAM pure-string family. Every BASIC scalar numeric
+// value (even an integer-spelled literal) rides the shared `f64` value track
+// since BA7-1b, and `compile_source_to_beam` unconditionally emits the
+// `__basic_print_real`/`__basic_print_fixed_mag`/`__basic_print_real_e`
+// helpers into every compiled module regardless of whether a given program's
+// own control flow reaches them — so `iir-to-beam`'s whole-module float-const
+// validation (it has no f64 lowering at all: `str_len`/`str_index`/`str_slice`
+// exist, but no `f64`/`Float` arm anywhere in `lower.rs`) rejects EVERY
+// numeric BASIC program, even ones that never print a float themselves. Only
+// the purely string-valued programs — no numeric `PRINT`/`LET`/`FOR`/`INPUT`
+// anywhere in source, so the frontend never emits a float `const` at all —
+// compile cleanly today. A probe compiling all 51 corpus rows through
+// `compile_source_to_beam` found exactly these 18 consecutive rows (filtered
+// indices 2-19, immediately after the two numeric baseline rows and
+// immediately before the first `FOR`/`NEXT` loop) pass BEAM validation
+// unchanged, and all 18 execute correctly on real `erl` with byte-identical
+// stdout to every other backend. This does not touch BASIC's much larger
+// remaining numeric family (real arithmetic, transcendentals, RND, arrays,
+// DEF FN) — that needs actual new `iir-to-beam` f64 lowering, a separate,
+// larger design item — nor the `INPUT`-driven rows, which need the
+// still-unscoped BEAM host-input design (VM-060b).
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_strings() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM strings: erl unavailable");
+        return;
+    }
+    let programs: Vec<_> = PROGRAMS.iter()
+        .filter(|p| p.lang == Language::DartmouthBasic)
+        .skip(2).take(18).collect();
+    assert_eq!(programs.len(), 18);
+    let expected_stdout = [
+        "HELLO", "HI", "OK", "OK", "OK", "OK", "O K", "OK", "OK", "OK", "OK",
+        "OK", "OK", "ABC", "OK", "OK", "OK", "OK",
+    ];
+    let mut executed = 0;
+    for (program, stdout) in programs.iter().zip(expected_stdout) {
+        assert!(program.backends.contains(&Beam), "selected BASIC row must declare Beam");
+        assert!(matches!(program.expect, Expect::Stdout(value) if value == stdout),
+            "selected BASIC expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 18);
+    eprintln!("Dartmouth BASIC BEAM pure-string family: {executed} programs executed");
 }

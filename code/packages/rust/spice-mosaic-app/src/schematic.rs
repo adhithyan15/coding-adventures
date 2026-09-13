@@ -90,6 +90,7 @@ pub enum SchematicAnalysis {
     DcSweep,
     AcSweep,
     Transient,
+    TransferFunction,
 }
 
 impl SchematicAnalysis {
@@ -100,6 +101,7 @@ impl SchematicAnalysis {
             "DC sweep" => Ok(Self::DcSweep),
             "AC sweep" => Ok(Self::AcSweep),
             "Transient" => Ok(Self::Transient),
+            "Transfer function" => Ok(Self::TransferFunction),
             _ => Err(invalid("unknown schematic analysis")),
         }
     }
@@ -111,6 +113,7 @@ impl SchematicAnalysis {
             Self::DcSweep => "DC sweep",
             Self::AcSweep => "AC sweep",
             Self::Transient => "Transient",
+            Self::TransferFunction => "Transfer function",
         }
     }
 
@@ -120,6 +123,7 @@ impl SchematicAnalysis {
             Self::DcSweep => ["Start", "Stop", "Step"],
             Self::AcSweep => ["Points per decade", "Start frequency", "Stop frequency"],
             Self::Transient => ["Time step", "Stop time", ""],
+            Self::TransferFunction => ["Output node", "", ""],
         }
     }
 }
@@ -139,6 +143,14 @@ pub struct SchematicAnalysisSettings {
     pub ac_stop_frequency: String,
     pub transient_time_step: String,
     pub transient_stop_time: String,
+    #[serde(default)]
+    pub tf_output_node: String,
+    #[serde(default = "default_tf_source")]
+    pub tf_source: String,
+}
+
+fn default_tf_source() -> String {
+    "V1".to_owned()
 }
 
 impl Default for SchematicAnalysisSettings {
@@ -153,6 +165,8 @@ impl Default for SchematicAnalysisSettings {
             ac_stop_frequency: "10k".to_owned(),
             transient_time_step: "1m".to_owned(),
             transient_stop_time: "10m".to_owned(),
+            tf_output_node: String::new(),
+            tf_source: default_tf_source(),
         }
     }
 }
@@ -246,6 +260,7 @@ fn analysis_parameter_values(
             &settings.transient_stop_time,
             "",
         ],
+        SchematicAnalysis::TransferFunction => [&settings.tf_output_node, "", ""],
     }
 }
 
@@ -644,7 +659,7 @@ impl SchematicDocument {
         Ok(())
     }
 
-    /// Rename one component without leaving a DC sweep card behind on its old source.
+    /// Rename one component without leaving a source-controlled card behind on its old source.
     pub fn rename_component(
         &mut self,
         current_reference: &str,
@@ -685,16 +700,32 @@ impl SchematicDocument {
         );
         let mut updated_cards = 0;
         if self.analysis_cards.is_empty() {
+            let mut updated = false;
             if self.analysis_settings.dc_source == old_reference {
                 self.analysis_settings.dc_source = new_reference.to_owned();
-                updated_cards += 1;
+                updated = true;
             }
+            if self.analysis == SchematicAnalysis::TransferFunction
+                && self.analysis_settings.tf_source == old_reference
+            {
+                self.analysis_settings.tf_source = new_reference.to_owned();
+                updated = true;
+            }
+            updated_cards += usize::from(updated);
         } else {
             for card in &mut self.analysis_cards {
+                let mut updated = false;
                 if card.settings.dc_source == old_reference {
                     card.settings.dc_source = new_reference.to_owned();
-                    updated_cards += 1;
+                    updated = true;
                 }
+                if card.analysis == SchematicAnalysis::TransferFunction
+                    && card.settings.tf_source == old_reference
+                {
+                    card.settings.tf_source = new_reference.to_owned();
+                    updated = true;
+                }
+                updated_cards += usize::from(updated);
             }
         }
         Ok(updated_cards)
@@ -727,8 +758,8 @@ impl SchematicDocument {
         Ok(())
     }
 
-    /// Return selectable independent sources for a canonical DC sweep.
-    pub fn dc_sweep_source_references(&self) -> Vec<&str> {
+    /// Return selectable independent sources for source-controlled analysis cards.
+    pub fn independent_source_references(&self) -> Vec<&str> {
         self.components
             .iter()
             .filter(|component| {
@@ -741,6 +772,28 @@ impl SchematicDocument {
             })
             .map(|component| component.reference.as_str())
             .collect()
+    }
+
+    /// Return named non-ground nets that can be probed by a transfer-function card.
+    pub fn transfer_function_output_nodes(&self) -> Vec<&str> {
+        let ground_points = self
+            .components
+            .iter()
+            .filter(|component| component.kind == SchematicComponentKind::Ground)
+            .flat_map(|component| component.terminals.iter())
+            .collect::<BTreeSet<_>>();
+        self.net_labels
+            .iter()
+            .filter(|label| !ground_points.contains(&label.point))
+            .map(|label| label.name.as_str())
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect()
+    }
+
+    /// Return selectable independent sources for a canonical DC sweep.
+    pub fn dc_sweep_source_references(&self) -> Vec<&str> {
+        self.independent_source_references()
     }
 
     /// Select the independent source controlled by the first analysis card.
@@ -759,12 +812,38 @@ impl SchematicDocument {
                 "schematic analysis source applies only to DC sweep",
             ));
         }
-        if !self.dc_sweep_source_references().contains(&reference) {
+        self.set_analysis_card_source(index, reference)
+    }
+
+    /// Select the independent source controlled by a DC-sweep or transfer-function card.
+    pub fn set_analysis_card_source(
+        &mut self,
+        index: usize,
+        reference: &str,
+    ) -> Result<(), SchematicError> {
+        let analysis = self
+            .analysis_card(index)
+            .ok_or_else(|| invalid("schematic analysis card is unavailable"))?
+            .analysis;
+        if !matches!(
+            analysis,
+            SchematicAnalysis::DcSweep | SchematicAnalysis::TransferFunction
+        ) {
+            return Err(invalid(
+                "schematic analysis source applies only to DC sweep or transfer function",
+            ));
+        }
+        if !self.independent_source_references().contains(&reference) {
             return Err(invalid(format!(
                 "{reference} is not an independent voltage or current source"
             )));
         }
-        self.analysis_card_mut(index)?.settings.dc_source = reference.to_owned();
+        let settings = &mut self.analysis_card_mut(index)?.settings;
+        match analysis {
+            SchematicAnalysis::DcSweep => settings.dc_source = reference.to_owned(),
+            SchematicAnalysis::TransferFunction => settings.tf_source = reference.to_owned(),
+            _ => unreachable!("source availability was checked before assigning a source"),
+        }
         Ok(())
     }
 
@@ -828,7 +907,10 @@ impl SchematicDocument {
         if analysis == SchematicAnalysis::OperatingPoint {
             return Err(invalid("operating point does not accept sweep parameters"));
         }
-        if index >= 3 || (analysis == SchematicAnalysis::Transient && index == 2) {
+        if index >= 3
+            || (analysis == SchematicAnalysis::Transient && index == 2)
+            || (analysis == SchematicAnalysis::TransferFunction && index != 0)
+        {
             return Err(invalid("schematic analysis parameter is unavailable"));
         }
         if value.is_empty() || value.chars().any(char::is_whitespace) {
@@ -846,6 +928,7 @@ impl SchematicDocument {
             (SchematicAnalysis::AcSweep, 2) => settings.ac_stop_frequency = value.to_owned(),
             (SchematicAnalysis::Transient, 0) => settings.transient_time_step = value.to_owned(),
             (SchematicAnalysis::Transient, 1) => settings.transient_stop_time = value.to_owned(),
+            (SchematicAnalysis::TransferFunction, 0) => settings.tf_output_node = value.to_owned(),
             _ => unreachable!("availability was checked before assigning a parameter"),
         }
         Ok(())
@@ -880,6 +963,30 @@ impl SchematicDocument {
                 ".tran {} {}",
                 settings.transient_time_step, settings.transient_stop_time
             )),
+            SchematicAnalysis::TransferFunction => {
+                if !self
+                    .independent_source_references()
+                    .contains(&settings.tf_source.as_str())
+                {
+                    return Err(invalid(format!(
+                        "{} is not an independent voltage or current source",
+                        settings.tf_source
+                    )));
+                }
+                if !self
+                    .transfer_function_output_nodes()
+                    .contains(&settings.tf_output_node.as_str())
+                {
+                    return Err(invalid(format!(
+                        "{} is not a labelled non-ground schematic net",
+                        settings.tf_output_node
+                    )));
+                }
+                Ok(format!(
+                    ".tf V({}) {}",
+                    settings.tf_output_node, settings.tf_source
+                ))
+            }
         }
     }
 
@@ -1528,6 +1635,69 @@ mod tests {
     }
 
     #[test]
+    fn transfer_function_cards_require_a_labelled_output_and_independent_source() {
+        let mut document = rc_document();
+        document
+            .set_analysis_card_kind(0, SchematicAnalysis::TransferFunction)
+            .unwrap();
+        assert_eq!(
+            document.to_berkeley_netlist().unwrap_err().to_string(),
+            "Output node must be one non-empty SPICE token"
+        );
+
+        document.set_net_label(point(40, 20), "OUT").unwrap();
+        assert_eq!(document.transfer_function_output_nodes(), ["OUT"]);
+        document.set_analysis_card_parameter(0, 0, "OUT").unwrap();
+        document.set_analysis_card_source(0, "V1").unwrap();
+        let deck = document.to_berkeley_netlist().unwrap();
+        assert!(deck.contains(".tf V(OUT) V1"));
+        parse_netlist(&deck).unwrap();
+        assert_eq!(run_netlist(&deck).unwrap().len(), 1);
+
+        assert_eq!(
+            document
+                .set_analysis_card_source(0, "R1")
+                .unwrap_err()
+                .to_string(),
+            "R1 is not an independent voltage or current source"
+        );
+        assert_eq!(
+            document
+                .set_analysis_card_parameter(0, 1, "ignored")
+                .unwrap_err()
+                .to_string(),
+            "schematic analysis parameter is unavailable"
+        );
+        document
+            .set_analysis_card_parameter(0, 0, "MISSING")
+            .unwrap();
+        assert_eq!(
+            document.to_berkeley_netlist().unwrap_err().to_string(),
+            "MISSING is not a labelled non-ground schematic net"
+        );
+    }
+
+    #[test]
+    fn persisted_analysis_settings_without_transfer_fields_keep_safe_defaults() {
+        let settings: SchematicAnalysisSettings = serde_json::from_str(
+            r#"{
+                "dc_source":"V1",
+                "dc_start":"0",
+                "dc_stop":"5",
+                "dc_step":"1",
+                "ac_points_per_decade":"10",
+                "ac_start_frequency":"10",
+                "ac_stop_frequency":"10k",
+                "transient_time_step":"1m",
+                "transient_stop_time":"10m"
+            }"#,
+        )
+        .unwrap();
+        assert_eq!(settings.tf_output_node, "");
+        assert_eq!(settings.tf_source, "V1");
+    }
+
+    #[test]
     fn ordered_analysis_cards_lower_and_validate_in_source_order() {
         let mut document = rc_document();
         document
@@ -1667,6 +1837,27 @@ mod tests {
                 .to_string(),
             "R1 reference must begin with V and use ASCII letters, digits, or _"
         );
+    }
+
+    #[test]
+    fn component_renames_keep_transfer_function_source_bindings_current() {
+        let mut document = rc_document();
+        document.set_net_label(point(40, 20), "OUT").unwrap();
+        document
+            .set_analysis_card_kind(0, SchematicAnalysis::TransferFunction)
+            .unwrap();
+        document.set_analysis_card_parameter(0, 0, "OUT").unwrap();
+        document.set_analysis_card_source(0, "V1").unwrap();
+
+        assert_eq!(document.rename_component("V1", "VBIAS").unwrap(), 1);
+        assert_eq!(
+            document.analysis_card(0).unwrap().settings.tf_source,
+            "VBIAS"
+        );
+        assert!(document
+            .to_berkeley_netlist()
+            .unwrap()
+            .contains(".tf V(OUT) VBIAS"));
     }
 
     #[test]

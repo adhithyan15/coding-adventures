@@ -86,7 +86,11 @@ func readJSONFixture[T any](t *testing.T, name string) T {
 
 func materializeSourceFixture(t *testing.T, fixture sourceCollectionFixture) string {
 	t.Helper()
-	root := filepath.Join(t.TempDir(), filepath.FromSlash(fixture.Input.Options.PackageRoot))
+	repositoryRoot := t.TempDir()
+	if err := os.Mkdir(filepath.Join(repositoryRoot, ".git"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	root := filepath.Join(repositoryRoot, filepath.FromSlash(fixture.Input.Options.PackageRoot))
 	if err := os.MkdirAll(root, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -420,6 +424,9 @@ func TestNeutralSourceCollectionFixtures(t *testing.T) {
 		"source-collection-declared.json",
 		"source-collection-registry-roles.json",
 		"source-collection-engram-wasm-exact-inputs.json",
+		"source-collection-typescript-blog-exact-inputs.json",
+		"source-collection-typescript-landing-page-exact-inputs.json",
+		"source-collection-typescript-site-foreign-package.json",
 	} {
 		t.Run(name, func(t *testing.T) {
 			fixture := readJSONFixture[sourceCollectionFixture](t, name)
@@ -427,10 +434,14 @@ func TestNeutralSourceCollectionFixtures(t *testing.T) {
 				t.Fatalf("fixture registry digest %q does not match production %q", fixture.Input.Options.RegistrySHA256, languageSourceInputRegistryDigest)
 			}
 			root := materializeSourceFixture(t, fixture)
+			packageLanguage := fixture.Input.Options.Language
+			if strings.HasPrefix(fixture.Input.Options.PackageRoot, "code/sites/") {
+				packageLanguage = "unknown"
+			}
 			pkg := discovery.Package{
 				Name:         fixture.Input.Options.Language + "/demo",
 				Path:         root,
-				Language:     fixture.Input.Options.Language,
+				Language:     packageLanguage,
 				DeclaredSrcs: fixture.Input.Options.DeclaredSrcs,
 			}
 
@@ -943,7 +954,11 @@ func TestRepositoryRelativePackagePath(t *testing.T) {
 }
 
 func TestTypeScriptSiteSourceInputs(t *testing.T) {
-	root := filepath.Join(t.TempDir(), "code", "sites", "blog")
+	repositoryRoot := t.TempDir()
+	if err := os.Mkdir(filepath.Join(repositoryRoot, ".git"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	root := filepath.Join(repositoryRoot, "code", "sites", "blog")
 	for _, relative := range []string{"BUILD", "forme.config.ts", "package.json", "data/post.md", "data/diagram.svg", "dist/generated.js"} {
 		path := filepath.Join(root, filepath.FromSlash(relative))
 		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
@@ -961,6 +976,25 @@ func TestTypeScriptSiteSourceInputs(t *testing.T) {
 	want := []string{"BUILD", "forme.config.ts", "package.json"}
 	if paths := relativePaths(t, root, got); strings.Join(paths, "\n") != strings.Join(want, "\n") {
 		t.Fatalf("site source inputs: got %v, want %v", paths, want)
+	}
+	unreviewedRoot := filepath.Join(repositoryRoot, "code", "sites", "unreviewed")
+	if err := os.MkdirAll(unreviewedRoot, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := collectSourceFilesChecked(discovery.Package{Name: "unknown/unreviewed", Path: unreviewedRoot, Language: "unknown"}); err == nil {
+		t.Fatal("an unregistered site root must fail before source traversal")
+	}
+	for _, invalidRoot := range []string{
+		filepath.Join(repositoryRoot, "code", "misc", "code", "sites", "blog"),
+		filepath.Join(repositoryRoot, "code", "sites", "Blog"),
+		filepath.Join(t.TempDir(), "code", "sites", "blog"),
+	} {
+		if err := os.MkdirAll(invalidRoot, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := collectSourceFilesChecked(discovery.Package{Name: "unknown/blog", Path: invalidRoot, Language: "unknown"}); err == nil {
+			t.Fatalf("invalid site root %q must fail before source traversal", invalidRoot)
+		}
 	}
 }
 

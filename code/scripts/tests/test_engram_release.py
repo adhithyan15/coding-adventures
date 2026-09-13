@@ -297,6 +297,28 @@ class ArchiveWebTests(unittest.TestCase):
                 self.assertEqual(one.namelist(), two.namelist())
 
 
+# What a migrated Compose distribution carries, derived rather than written
+# down.
+#
+# `_engine_stem_for` reads the manifest: a backend has migrated exactly when
+# Engram stops overriding its generated host, so removing the Compose
+# `[host_assets]` entry flips this from `engram_capi` to `mosaic_app`. #15089
+# built that derivation and left Compose's answer deliberately unpinned in
+# `test_the_expected_engine_is_read_from_the_manifest`, so this change would not
+# fail a test arguing it should not happen — but the FIXTURES still hardcoded
+# the retired name, and 18 failures plus 16 errors is what that looked like.
+#
+# Deriving it keeps these tests about layout and contents across a migration
+# rather than turning them into tripwires for the PR performing one. Which
+# engine is correct is pinned separately; nothing here makes that claim.
+COMPOSE_STEM = engram_release._engine_stem_for("compose")
+COMPOSE_ENGINE_FILENAMES = {
+    "linux": f"lib{COMPOSE_STEM}.so",
+    "macos": f"lib{COMPOSE_STEM}.dylib",
+    "windows": f"{COMPOSE_STEM}.dll",
+}
+
+
 def _write_compose_dist(root: Path) -> Path:
     """A stand-in for what `createDistributable` leaves behind."""
 
@@ -304,7 +326,7 @@ def _write_compose_dist(root: Path) -> Path:
     (dist / "app").mkdir(parents=True)
     (dist / "MacOS").mkdir(parents=True)
     (dist / "app" / "engram-host.jar").write_bytes(b"PK\x03\x04stub")
-    (dist / "app" / "libengram_capi.dylib").write_bytes(b"\xcf\xfa\xed\xfe")
+    (dist / "app" / COMPOSE_ENGINE_FILENAMES["macos"]).write_bytes(b"\xcf\xfa\xed\xfe")
     launcher = dist / "MacOS" / "Engram"
     launcher.write_text("#!/bin/sh\nexec java -jar app/engram-host.jar\n")
     launcher.chmod(0o755)
@@ -325,7 +347,7 @@ class ArchiveComposeTests(unittest.TestCase):
                 names = archive.namelist()
                 self.assertIn(
                     "engram-compose-macos-v0.4.0/Engram.app/Contents/app/"
-                    "libengram_capi.dylib",
+                    + COMPOSE_ENGINE_FILENAMES["macos"],
                     names,
                 )
                 self.assertEqual(
@@ -361,18 +383,18 @@ class ArchiveComposeTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             dist = _write_compose_dist(root)
-            next(dist.rglob("libengram_capi.dylib")).unlink()
+            next(dist.rglob(COMPOSE_ENGINE_FILENAMES["macos"])).unlink()
             with self.assertRaises(ValueError) as caught:
                 engram_release.archive_compose(
                     "0.4.0", "macos", dist, root / "out", COMMIT
                 )
-            self.assertIn("engram_capi", str(caught.exception))
+            self.assertIn(COMPOSE_STEM, str(caught.exception))
 
     def test_refuses_an_empty_engine(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             dist = _write_compose_dist(root)
-            next(dist.rglob("libengram_capi.dylib")).write_bytes(b"")
+            next(dist.rglob(COMPOSE_ENGINE_FILENAMES["macos"])).write_bytes(b"")
             with self.assertRaises(ValueError) as caught:
                 engram_release.archive_compose(
                     "0.4.0", "macos", dist, root / "out", COMMIT
@@ -385,15 +407,15 @@ class ArchiveComposeTests(unittest.TestCase):
         # one spelling would reject the other two -- turning a correct build
         # into a failed release.
         for filename in [
-            "libengram_capi.so",
-            "libengram_capi.dylib",
-            "engram_capi.dll",
+            COMPOSE_ENGINE_FILENAMES["linux"],
+            COMPOSE_ENGINE_FILENAMES["macos"],
+            COMPOSE_ENGINE_FILENAMES["windows"],
         ]:
             with self.subTest(filename=filename):
                 with tempfile.TemporaryDirectory() as tmp:
                     root = Path(tmp)
                     dist = _write_compose_dist(root)
-                    engine = next(dist.rglob("libengram_capi.dylib"))
+                    engine = next(dist.rglob(COMPOSE_ENGINE_FILENAMES["macos"]))
                     engine.rename(engine.with_name(filename))
                     engram_release.archive_compose(
                         "0.4.0", "macos", dist, root / "out", COMMIT
@@ -697,7 +719,7 @@ class ArchiveComposeTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             dist = _write_compose_dist(root)
-            engine = next(dist.rglob("libengram_capi.dylib"))
+            engine = next(dist.rglob(COMPOSE_ENGINE_FILENAMES["macos"]))
             other = engine.with_name("something.txt")
             other.write_text("not an engine\n", encoding="utf-8")
             engine.unlink()
@@ -707,7 +729,7 @@ class ArchiveComposeTests(unittest.TestCase):
                 engram_release.archive_compose(
                     "0.4.0", "macos", dist, root / "out", COMMIT
                 )
-            self.assertIn("engram_capi", str(caught.exception))
+            self.assertIn(COMPOSE_STEM, str(caught.exception))
 
     def test_refuses_a_member_name_a_windows_extractor_would_split(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -1403,6 +1425,87 @@ def _write_flutter_bundle(
         b"" if empty else magic[platform] + b"\x00rest-of-the-library\x00"
     )
     return bundle
+
+
+class UniversalMacosRuntimeTests(unittest.TestCase):
+    """A macOS Flutter artifact must ship a universal runtime.
+
+    Tested against the helper directly rather than only through
+    `archive_flutter`, because the check is gated on the MIGRATED engine stem
+    and Flutter still binds `engram-capi` on this branch — so every archive
+    test passes with the check dormant, which proves nothing about it.
+
+    That gap is the whole reason these exist: the universality was previously
+    established by running `lipo -archs` once by hand and writing the result in
+    a changelog, and `LIBRARY_MAGIC["macos"]` accepts the fat magic without
+    requiring it.
+    """
+
+    @staticmethod
+    def _macho(magic: bytes, architectures: int) -> bytes:
+        """A Mach-O header: 4-byte magic, then big-endian `nfat_arch`."""
+        return magic + architectures.to_bytes(4, "big") + b"\x00" * 24
+
+    def _engine(self, payload: bytes) -> Path:
+        directory = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, directory, True)
+        path = directory / "libmosaic_app.dylib"
+        path.write_bytes(payload)
+        return path
+
+    def test_a_universal_runtime_is_accepted(self) -> None:
+        for magic in (b"\xca\xfe\xba\xbe", b"\xca\xfe\xba\xbf"):
+            with self.subTest(magic=magic):
+                engine = self._engine(self._macho(magic, 2))
+                engram_release._reject_thin_macos_flutter_engine(
+                    "macos", "mosaic_app", engine
+                )
+
+    def test_a_thin_runtime_is_refused(self) -> None:
+        # `\xcf\xfa\xed\xfe` is a 64-bit little-endian Mach-O: a perfectly
+        # valid dylib, and exactly what a plain `cargo build` produces.
+        engine = self._engine(self._macho(b"\xcf\xfa\xed\xfe", 0))
+        with self.assertRaises(ValueError) as caught:
+            engram_release._reject_thin_macos_flutter_engine(
+                "macos", "mosaic_app", engine
+            )
+        self.assertIn("not universal", str(caught.exception))
+
+    def test_a_fat_container_holding_one_architecture_is_refused(self) -> None:
+        # Legal, and exactly the artifact a magic-only check would wave
+        # through while it serves half the Macs it is offered to.
+        engine = self._engine(self._macho(b"\xca\xfe\xba\xbe", 1))
+        with self.assertRaises(ValueError) as caught:
+            engram_release._reject_thin_macos_flutter_engine(
+                "macos", "mosaic_app", engine
+            )
+        self.assertIn("1 architecture", str(caught.exception))
+
+    def test_it_does_not_fire_where_it_does_not_apply(self) -> None:
+        """Three exemptions, each for its own reason.
+
+        Without these the check would refuse artifacts that are correct: a
+        Linux `.so` has no fat format, and a backend still binding
+        `engram-capi` is built host-only by a path this says nothing about.
+        """
+
+        thin = self._engine(self._macho(b"\xcf\xfa\xed\xfe", 0))
+        for platform, stem in [
+            ("linux", "mosaic_app"),
+            ("windows", "mosaic_app"),
+            ("macos", "engram_capi"),
+        ]:
+            with self.subTest(platform=platform, stem=stem):
+                engram_release._reject_thin_macos_flutter_engine(
+                    platform, stem, thin
+                )
+
+    def test_a_truncated_file_is_refused_rather_than_read_past(self) -> None:
+        engine = self._engine(b"\xca\xfe\xba\xbe")
+        with self.assertRaises(ValueError):
+            engram_release._reject_thin_macos_flutter_engine(
+                "macos", "mosaic_app", engine
+            )
 
 
 class ArchiveFlutterTests(unittest.TestCase):

@@ -8,6 +8,164 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 Dartmouth BASIC BEAM pure-string family (selected after #15119 merged)
+
+`git fetch origin && git merge origin/main` fast-forwarded cleanly to
+`db7125e689` — no conflict, and `git log --oneline -30` confirmed both #15099
+and #15119 (the two PRs that took all 58 COBOL-60 rows to full BEAM
+declaration) already on main, matching this backlog's own top section.
+`gh pr list --state open --limit 50` showed no LANG-VM-related open PR to
+coordinate with.
+
+**Real reprioritization, not another COBOL slice by habit.** With COBOL's
+BEAM tail exhausted, this backlog's own top section explicitly calls for
+reranking against the real remaining candidates rather than assuming more
+COBOL rows exist. Ran the "Prioritization policy" order for real:
+
+- **Rung 1/2 (red cells, missing CI protection):** none found. Every prior
+  slice's trailing validation still reports positive sentinels; VM-024/032
+  keep the matrix in normal CI.
+- **Rung 3 (stale documentation):** re-audited `LANG-VM-FEATURE-COVERAGE.md`
+  and `LANG-VM-FEATURE-COVERAGE.md`'s pinned `feature_coverage_doc_counts_match_programs_source`
+  test against fresh source; both still agreed (the COBOL-60 completion had
+  already been reconciled by #15119's own trailing update). No stale-doc gap
+  found ahead of rung 4.
+- **Rung 4 (missing backend parity):** this session's mandate specifically
+  asked whether ANY other non-ALGOL frontend still has undeclared BEAM rows
+  the way COBOL did before this effort — a question nobody had actually
+  re-asked from source since VM-061 (which only reconciled Twig's *counted*
+  cells, not audited every frontend's *Beam-declared* count). A brace/string-
+  aware parse of every `Prog` entry's `lang`/`backends` fields, cross-checked
+  against the compiled `feature_coverage_doc_counts_match_programs_source`
+  test (which is the actual source of truth — a first pure-regex pass without
+  string-escaping awareness overcounted several languages, including falsely
+  reporting a `McCarthyLisp` row that does not exist), found the real
+  per-frontend Beam-declared/total-rows split: Twig 20/49 (VM-041, design
+  required), Nib 26/26 (complete), Brainfuck 3/6 (complete per VM-042 —
+  the other 3 are the intentional `getchar` refusal), Oct 12/12 (complete),
+  FlowMatic 4/8 (the other 4 are `INPUT`/EOF rows blocked on VM-060b),
+  COBOL-60 58/58 (complete, this effort), and **Dartmouth BASIC 0/51** — the
+  only non-ALGOL frontend with a *total* BEAM gap, despite being explicitly
+  in scope since VM-040's original 2026-09 family list ("BASIC f64/I/O")
+  and never picked up while every other family in that list got addressed.
+  This is the closest analogue to the just-finished COBOL work: a large,
+  completely untouched BEAM gap on an existing, fully-implemented frontend.
+
+**Why BASIC's gap is bigger than COBOL's was, and why this slice does not
+close all of it.** Before writing a single test, probed all 51 corpus rows
+through `lang_aot::compile_source_to_beam` (compile-only, no `erl` needed for
+this first pass). Every row failed except 18, all with the identical
+`iir-to-beam` validation error: `"const instruction has a Float operand;
+float constants are not supported"`, reported against `__basic_print_real`/
+`__basic_print_fixed_mag`/`__basic_print_real_e` — helper functions the
+frontend unconditionally emits into every compiled module regardless of
+whether a given program's control flow ever reaches them. Reading
+`iir-to-beam/src/lower.rs` end to end confirms it has genuinely zero `f64`
+lowering support (no `f64`/`Float`/`fadd` match arm anywhere in the file,
+versus full string-op coverage: `str_const`/`str_concat`/`str_slice`/
+`str_len`/`str_index`/`str_eq`/`str_cmp` all already exist). Cross-referencing
+`dartmouth-basic-iir-compiler`'s doc comments confirms this is not a narrow
+gap: BA7-1b made *every* BASIC scalar numeric value — even an integer-spelled
+literal like `PRINT 42` — ride the shared `f64` value track, so the float-op
+gap blocks nearly the entire numeric two-thirds of the corpus, not an edge
+case. This is qualitatively different from every prior VM-040 COBOL slice,
+which only ever needed *promotion* (every required op already had a BEAM
+lowering). Real BASIC-BEAM numeric parity needs new `iir-to-beam` production
+code — a properly scoped design item in its own right, not a same-day
+bounded slice — so it is intentionally NOT attempted here.
+
+The exactly-18 rows that DO compile today are structurally distinct: every
+one is purely string-valued (string literals/variables, `+` concatenation,
+`=`/`<>`/`<`/`>` comparison, `IF`/`GOTO` control flow) with no numeric
+`PRINT`/`LET`/`FOR`/`INPUT` anywhere in source, so the frontend never emits a
+float `const` at all and the poisoned shared helpers are simply never
+reached. This is a genuine, zero-new-lowering promotion opportunity — the
+same shape as every COBOL BEAM slice — that nobody had noticed because
+VM-040's original family list bucketed all of BASIC under one undifferentiated
+"f64/I/O" line item.
+
+### VM-040 Dartmouth BASIC BEAM pure-string family contract
+
+Add `Beam` to the 18 consecutive pure-string `DartmouthBasic` rows' `backends`
+arrays (filtered indices 2–19, i.e. `.skip(2).take(18)` — immediately after
+the two numeric baseline rows and immediately before the first `FOR`/`NEXT`
+loop) and add `portable_text_stdout_dartmouth_basic_beam_strings`, pinning
+each row's expected stdout so an insertion cannot silently redirect the
+proof. Execute all 18 against real `erl` before promoting — per this loop's
+own "probe before declaring" discipline, even though the compile-only probe
+already gave high confidence nothing new was needed. Do not touch the
+remaining 33 numeric/`INPUT` rows; log the float-lowering gap and the
+host-input gap as separate follow-up work rather than attempting either here.
+
+### VM-040 Dartmouth BASIC BEAM pure-string family validation
+
+All 18 selected programs passed on real Erlang
+(`portable_text_stdout_dartmouth_basic_beam_strings`), byte-identical to
+every other backend's stdout; no `iir-to-beam` defect was found and no
+production code changed — a clean-pass promotion, exactly like Nib/Oct/
+COBOL's prior BEAM slices. Two of the fresh cells (global indices 362 and
+379, the first and last of the 18) were independently re-verified in fresh
+processes via `LANG_MATRIX_ONLY_CELL`, each emitting its positive
+`lang-matrix: single-cell ran` sentinel. All 22 BEAM-prefixed `lang_matrix`
+tests pass together (21 prior plus this new one). `feature_coverage_doc_counts_match_programs_source`
+was updated (Dartmouth BASIC tuple `(51, 357)` → `(51, 375)`) and passes
+against the live `PROGRAMS` corpus. `LANG-VM-FEATURE-COVERAGE.md`'s Dartmouth
+BASIC row and grand-total prose were updated to match (1593 → 1611 declared
+cells). The full `non_algol_matrix_every_proven_cell_agrees` capstone
+confirmed the corrected total against a live run: 210 programs, **1401**
+cells exercised, 210 skipped (the same host-wide missing `ilasm` pattern
+every prior slice reports), zero failures, in 602.62s — 1401 + 210 = 1611
+matches the corrected declared total exactly. Dartmouth BASIC is no longer
+the one non-ALGOL frontend with a total BEAM gap; its remaining 33 rows need
+new `iir-to-beam` float lowering (numeric family) or the still-unscoped BEAM
+host-input design (the 5 `INPUT` rows, shared with FLOW-MATIC's blocked
+rows — VM-060b).
+
+Reprioritize after this merges: no red cell or missing-CI-protection issue
+was found ahead of this slice, and none is expected to appear ahead of the
+next one either. The real remaining rung-4/rung-5 candidates are: (a) scope
+and implement `iir-to-beam` f64 lowering as its own item, unlocking BASIC's
+remaining ~28 numeric rows (a materially larger, genuinely novel-lowering
+undertaking — likely its own multi-slice track, the way COBOL BEAM was);
+(b) VM-041 (Twig dynamic-string/record/closure BEAM isolation, 29 rows,
+design required); (c) VM-060b (BEAM host-input design, unblocking BASIC's 5
+`INPUT` rows and FLOW-MATIC's 4 `INPUT`/EOF rows together); (d) VM-058 (COBOL
+`BEFORE`/`AFTER` single-phrase intersection, 9 call sites, bounded but new
+frontend semantics). Recommend scoping the BASIC f64-lowering item next: it
+is the only one of the four that is bounded backend-parity work for an
+already-fully-implemented, already-tested language feature (rung 4) rather
+than new frontend semantics (rung 5), even though — unlike every prior VM-040
+slice — it needs new production code before any row can promote.
+
+## VM-040 COBOL BEAM regions and self-move (selected after #15099)
+
+Refreshed main to `e8b737045b` after #15099 merged. External PR #15103
+independently repeats the four base replacements already on main; it does
+not cover the six rows selected here. Preserve that owner's branch.
+Prioritize the remaining existing COBOL corpus gaps over new Twig/CLR host
+ABI design and full Oct/Nib machine semantics: five INSPECT region cases
+and the STRING self-move regression complete this declared corpus's BEAM
+column. No observed failing cell currently takes precedence.
+
+Contract: execute COBOL filtered indices 52–57 on real Erlang before
+promotion. Pin source identities and exact stdout for STRING self-move,
+BEFORE/AFTER tallying and replacing (including absent-delimiter asymmetry),
+and combined tally-then-replace with independent regions. This does not
+implement a single-phrase BEFORE/AFTER intersection (VM-058), nor establish
+full COBOL language support. Missing Erlang may skip; detected-runtime
+failure must fail. Promote only proven cells, run focused COBOL regression,
+fresh individual matrix cells, coverage consistency and Clippy. Specify any
+new backend defect before production edits.
+
+Validation: six real Erlang probes passed before promotion; all thirteen
+focused COBOL BEAM tests passed together. Fresh cells 469–474 emitted
+positive execution sentinels, and coverage consistency plus all-target
+lang-aot/iir-to-beam Clippy passed. No production fix was needed. All 58
+COBOL corpus rows declare BEAM (464 cells); non-ALGOL declares 1593 cells.
+No full-capstone rerun is claimed. After merge, reprioritize remaining
+language/backend gaps and VM-058 rather than treating corpus completion as
+full COBOL support.
+
 ## VM-040 remaining base INSPECT replacements (selected after #15033)
 
 PR #15033 merged as `8f1c60fc1b` with 16 successful and 31 skipped checks.
@@ -2602,7 +2760,7 @@ items requiring new runtime lowering follow the coverage-only promotions.
 | done (see PR below) | VM-049 | Add a real .NET lane for the existing Macsyma arithmetic corpus with explicit tool gating and full result assertions; preserve the simulator floor. |
 | done #14471 | VM-038 | Probe Macsyma v0 integer arithmetic/assignment on BEAM and add a real Erlang corpus lane, or record a precise unsupported lowering with a regression before a separate fix. |
 | done #14601 | VM-039 | Define portable FLOW-MATIC input_more/EOF semantics, then run a finite read/process/write stream on each code-generation column; no post-detection failure-to-skip conversion. |
-| 10 | VM-040 | Inventory remaining BEAM cells separately for Twig strings, Twig records/closures, Nib scalars, BASIC f64/I/O, Oct u8/I/O, FLOW-MATIC and COBOL. Each family first gets a discriminating probe; split actual lowering defects before implementation. Brainfuck remains the explicit excluded tape design. |
+| 10 | VM-040 | Inventory remaining BEAM cells separately for Twig strings, Twig records/closures, Nib scalars, BASIC f64/I/O, Oct u8/I/O, FLOW-MATIC and COBOL. Each family first gets a discriminating probe; split actual lowering defects before implementation. Brainfuck remains the explicit excluded tape design. Nib, Oct and COBOL-60 are now fully BEAM-declared; Dartmouth BASIC's 18-row pure-string family is BEAM-declared, its remaining ~28 numeric rows need new `iir-to-beam` f64 lowering (VM-D033), and its 5 `INPUT` rows plus FLOW-MATIC's 4 `INPUT`/EOF rows need VM-060b. |
 | done (see PR below) | VM-042 | ~~Pin Brainfuck's intentional BEAM exclusion with a driver-level error assertion for mutable tape operations~~ — the premise was stale (VM-D031): tape mutation already works via `iir-to-beam`'s `:atomics` ops. Promoted the three non-input rows to real BEAM cells instead, and pinned the genuinely remaining `getchar`/host-input refusal at both the `lang-aot` and `iir-to-beam` layers; distinguishes supported frontend compilation from backend refusal, correctly scoped to input only. |
 | 12 | VM-041 | Isolate Twig captured/reassigned runtime-string lowering from existing source-local string metadata; add one captured-string value proof before wider dynamic-string expansion. |
 | 13 | VM-048 | Define a representation-neutral observation for Macsyma's implemented inert symbolic Apply, then promote one oracle-derived symbolic result per backend; do not compare raw pointer/tag identities. |
@@ -2633,6 +2791,37 @@ implementation item. The known DEF FN-global and print-zone semantics remain
 future frontend design scope, not missing proofs for already-implemented code.
 
 ## Discovery log
+
+- **VM-D033 — confirmed 2026-09-13:** with all 58 COBOL-60 rows BEAM-declared
+  (#15099/#15119), a fresh reprioritization asked whether any OTHER non-ALGOL
+  frontend still had undeclared BEAM rows the way COBOL did — a question
+  nobody had actually re-derived from source since VM-061 (which reconciled
+  Twig's counted cells, not every frontend's Beam-declared row count). A
+  string-escaping-aware parse of every `Prog` entry, cross-checked against
+  the compiled `feature_coverage_doc_counts_match_programs_source` test,
+  found Dartmouth BASIC alone at 0/51 declared Beam rows — the only non-ALGOL
+  frontend with a *total* BEAM gap, despite "BASIC f64/I/O" being named in
+  VM-040's original 2026-09 family list from the start; every other family in
+  that list (Nib, Oct, FLOW-MATIC's non-input half, COBOL) had since been
+  addressed while BASIC was simply never picked up. A `compile_source_to_beam`
+  probe over all 51 rows found the root cause: `iir-to-beam` has zero `f64`
+  lowering support (confirmed by reading `lower.rs` end to end — full
+  string-op coverage, no float arm at all), and BASIC's `BA7-1b` change
+  routes every scalar numeric value, even integer-spelled literals, through
+  the shared `f64` track, while the frontend also unconditionally emits its
+  `__basic_print_real`/`__basic_print_fixed_mag`/`__basic_print_real_e`
+  helpers into every compiled module regardless of reachability — so
+  `iir-to-beam`'s whole-module float-const validation rejects every numeric
+  BASIC program, even ones that never print a float themselves. Exactly 18
+  rows (the entire purely-string-valued family — no numeric `PRINT`/`LET`/
+  `FOR`/`INPUT` in source, so no float `const` is ever emitted) compile
+  cleanly and need no new lowering. **Resolved for those 18** (see the
+  top-of-file VM-040 Dartmouth BASIC BEAM pure-string family section): all 18
+  promoted and executed correctly on real `erl`. **Not resolved** for the
+  remaining ~28 numeric rows (needs new `iir-to-beam` f64 lowering — its own
+  properly scoped design/implementation item, materially larger than a
+  same-day promotion slice) or the 5 `INPUT` rows (needs VM-060b, shared with
+  FLOW-MATIC's 4 blocked `INPUT`/EOF rows).
 
 - **VM-D032 — confirmed 2026-09-11:** while probing the next COBOL BEAM
   reference-modification rows for promotion (the first two to require

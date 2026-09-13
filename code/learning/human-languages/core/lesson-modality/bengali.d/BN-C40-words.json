@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C40-words",
+    "language": "bengali",
+    "chapter": 40,
+    "sequence": 2130,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ead918b20ead82f6"
+  },
+  "findings": []
+}

@@ -25,17 +25,52 @@
 %                                                                  60 meters (200 feet) dominate the skyline."
 %     canopy         deep_treetop_vegetation_layer                "Beneath the emergent layer is the canopy, a deep layer of vegetation roughly
 %                                                                  six meters (20 feet) thick."
-%     understory     dark_humid_layer_below_canopy                "the understory is an even darker, stiller and more humid environment."
+%     understory     dark_humid_layer_below_canopy                "Located several meters below the canopy, the
+%                                                                  understory is an even darker, stiller and more humid
+%                                                                  environment."
 %     forest_floor   darkest_layer_hard_for_plants_to_grow        "The forest floor is the darkest of all rainforest layers, making it extremely
 %                                                                  difficult for plants to grow."
 %
-% Provenance: quoted verbatim from National Geographic Education's "Rain
-% Forest" encyclopedic entry, WebFetch-verified before writing (fetched
-% twice — once for the overall page, once specifically for the emergent
-% layer's paragraph, to confirm the tree-height sentence verbatim). `trust
-% consensus` — National Geographic Education is a reputable education
-% organization, not a primary government source, the same tier this stdlib
-% already reserves for its other non-.gov sources (e.g. Wikipedia's
+% Provenance: quoted from National Geographic Education's "Rain Forest"
+% encyclopedic entry. Each row now carries ITS OWN sentence (RS-5e per-row
+% provenance, #14986); the envelope holds the FRAMING span. Until then the
+% envelope was the EMERGENT row's sentence, so a recall of the forest floor
+% was warranted by a sentence about the treetops.
+%
+% RE-MEASURED 2026-09-13 UTC with a RAW fetch, not a summarizing fetcher.
+% (This paragraph used to say "quoted verbatim ... WebFetch-verified before
+% writing". A summarizing fetcher is not an instrument for a verbatim span —
+% see biology/kingdoms.adj, where a WebFetch-"verified" line turned out to
+% contain a phrase the page does not have.) Each of the four row spans and
+% the framing span occurs EXACTLY ONCE in the page's rendered text (inline
+% tags removed with no separator, block tags as breaks). Controls: a nonsense
+% span scores zero, and a near-miss of each of the five — its final word
+% altered — scores zero.
+%
+% TWO ROWS ARE READ, TWO REST ON A READING, and the tier says which:
+%
+%   forest_floor  READ. "the darkest of all rainforest layers" is on the page,
+%                 once. The bounding-language audit flagged this row as a
+%                 superlative with no bounding language in its provenance —
+%                 the claim was never the problem, only that the evidence sat
+%                 outside the machine-readable envelope.
+%   understory    READ. darker, more humid, below the canopy: all stated.
+%   emergent      READING. "tallest" occurs ZERO times on the page. It says
+%                 "The top layer of the rainforest is the emergent layer" and
+%                 "trees as tall as 60 meters". `tallest` restates that.
+%   canopy        READING. "treetop" occurs ZERO times on the page. It says
+%                 "a deep layer of vegetation" whose leaves form a "roof"
+%                 over the layers below. `treetop` restates that.
+%
+% The two readings carry `trust inferred`. NOTE THE COST, because it is a
+% real limitation rather than a clean win: the five tiers are one dimension,
+% so marking those rows `inferred` DROPS the `consensus` signal that says
+% this is a teaching resource rather than a primary source. Both facts are
+% true of those rows and only one fits. Not resolved here.
+%
+% `trust consensus` on the envelope — National Geographic Education is a
+% reputable education organization, not a primary government source, the same
+% tier this stdlib already reserves for its other non-.gov sources (e.g. Wikipedia's
 % Greek-alphabet entry, Speakspeak's plural-ending article). A word that is
 % NOT one of these four layers — "soil layer", "topsoil", or a made-up layer
 % name — is deliberately NOT a row, so a recall ABSTAINS on it rather than
@@ -46,12 +81,39 @@
 table rainforest_layer {
     columns layer, description
 
-    row (emergent, tallest_trees_dominate_skyline)
-    row (canopy, deep_treetop_vegetation_layer)
-    row (understory, dark_humid_layer_below_canopy)
-    row (forest_floor, darkest_layer_hard_for_plants_to_grow)
+    row (emergent, tallest_trees_dominate_skyline) {
+        % READING, not a quotation. The page says "The top layer of
+        % the rainforest is the emergent layer" and "trees as tall as
+        % 60 meters"; the word "tallest" occurs ZERO times on it.
+        % Position at the top plus that height is where `tallest`
+        % comes from, so this row carries `trust inferred`.
+        source "The top layer of the rainforest is the emergent layer. Here, trees as tall as 60 meters (200 feet) dominate the skyline."
+        trust inferred
+    }
+    row (canopy, deep_treetop_vegetation_layer) {
+        % READING, not a quotation. "treetop" occurs ZERO times on the
+        % page. It says the canopy is "a deep layer of vegetation" and
+        % that its leaves and branches form a "roof" over the layers
+        % below -- which is what `treetop` restates.
+        source "Beneath the emergent layer is the canopy, a deep layer of vegetation roughly six meters (20 feet) thick."
+        trust inferred
+    }
+    row (understory, dark_humid_layer_below_canopy) {
+        source "Located several meters below the canopy, the understory is an even darker, stiller and more humid environment."
+    }
+    row (forest_floor, darkest_layer_hard_for_plants_to_grow) {
+        % The superlative IS stated: "the darkest of all rainforest
+        % layers" occurs once. This row was flagged by the bounding-
+        % language audit only because the evidence sat outside the
+        % machine-readable envelope, which is what RS-5e fixes.
+        source "The forest floor is the darkest of all rainforest layers, making it extremely difficult for plants to grow."
+    }
 
-    source "The top layer of the rainforest is the emergent layer. Here, trees as tall as 60 meters (200 feet) dominate the skyline."
+    % The envelope is the FRAMING span -- what defends the table as a
+    % whole: that rainforests have these four layers, and which they are.
+    % Until #14986 it was the EMERGENT row's own sentence, so a recall of
+    % the forest floor was warranted by a sentence about the treetops.
+    source "Most rainforests are structured in four layers: emergent, canopy, understory and forest floor."
     locator "https://education.nationalgeographic.org/resource/rain-forest/"
     trust consensus
 }

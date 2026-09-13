@@ -131,6 +131,180 @@ native-assets hook, which hands `lipo` two arm64 copies of the runtime library
 under two framework names. Reproduced identically on the pre-migration tree, so
 it predates this change and is filed separately. `--debug` builds fine on both.
 
+### Changed — Compose reaches the engine through the standard runtime
+
+**The release tests had to move with it, and CI is how that was found.**
+`Validate release identity` went red with **18 failures and 16 errors**, all in
+`ArchiveComposeTests`. #15089 taught `archive_compose` to derive its expected
+engine from the manifest, and left Compose's answer deliberately unpinned so
+this migration would not fail a test arguing it should not happen — but the
+*fixtures* still built `libengram_capi.dylib` distributions, and a migrated
+Compose ships `libmosaic_app`.
+
+They derive the name now, the same way the code does, so they keep testing
+layout and contents across a migration instead of becoming tripwires for the PR
+performing one. Which engine is correct is pinned separately; the fixtures make
+no such claim.
+
+Deriving a fixture from the same source as the check is also the shape that can
+quietly go vacuous, so it was mutation-tested three ways: dropping the engine
+requirement, reinstating the retired engine, and accepting an empty one each
+fail something. The second reproduces exactly the 18-and-16 CI reported, which
+is what confirms the diagnosis rather than merely agreeing with it.
+
+The third backend off a hand-written host, after Qt (#13728) and SwiftUI. The
+574-line `host/compose/MosaicHost.kt` — a JNA binding that opened the library,
+marshalled every event, owned snapshot persistence, and drove the file dialogs
+— is replaced by the generated `MosaicRuntimeHost` plus a 240-line
+`[host_effects]` handler that answers three effects and does nothing else.
+
+Emission is `nativeComplete: true` with `replacedGeneratedFiles: []`.
+
+**What the handler does differently from Qt's.** Qt answers inline, because its
+settle runs on the event-loop thread under `Qt::DirectConnection`. This host
+holds its monitor across the handler call, so a modal dialog run inline would
+hold it for as long as the dialog is open. It defers.
+
+It then marshals to the EDT, and that is a *second* reason rather than a
+restatement of the first: the host's contract says the props-changed handler
+runs on whichever thread answered, and Compose state must be written from the
+UI thread. Answering off the EDT would be a cross-thread write into the
+composition even if the monitor were free. `SwingUtilities.invokeLater` settles
+both, and is where a Swing dialog has to run anyway.
+
+**Nothing escapes the deferred block.** The first draft guarded the file I/O
+inside each `run*` function and carried a comment claiming "exactly one answer,
+on every path" — which the code did not do. The dialogs sit outside those
+guards: `JFileChooser`'s constructor and all three `show*Dialog` calls throw
+`HeadlessException` on a display-less session. An exception there unwinds to the
+EDT's uncaught handler, `completeEffect` never runs, and because `deferEffect`
+has already taken the id out of the runtime's fail sweep, the effect stays
+awaited for the life of the process — which disables snapshot *and* restore, not
+just that one dialog. Caught in security review; Qt guards the same span with
+`catch (...)`.
+
+**The handler answers exactly the two kinds the application mints, and a test
+now pins the complement.** A draft of this file also answered `confirmDelete`
+with a Swing confirmation dialog, and this entry claimed Compose was the first
+host to carry one. Neither was true of anything that runs: `host_intent_for_event`
+emits `importAnki`, `exportAnki` and `openCard` and nothing else, and
+`effect_for_intent` turns only the first two into an `Await` — so the branch was
+unreachable, and the delete intents it imagined were deliberately retired in
+issue #13933. It compiled, and the test written for it asserted only that the
+string `confirmDelete` appeared in the file, so it passed. The gate is now the
+complement — that kind, `openCard`, and the two retired delete intents must
+*not* appear — which fails on the dead branch instead of ratifying it.
+
+**The anchors are `\A`/`\z`, and that was measured rather than carried over.**
+This is the fourth regex engine asked whether `$` concedes a trailing line
+terminator, and the fourth different answer: Rust refuses all of them, PCRE2
+concedes LF (a build-time convention, which is the bug the Qt handler had), ICU
+concedes the full set, and Java concedes LF, CRLF, CR, NEL and U+2028. No two
+agree. A compiled probe established that `Regex.matches()` rejects all of them
+anyway, so the anchors are redundant *as written today* — they are there so the
+pattern stays correct if the call ever becomes `containsMatchIn`, rather than
+correct only because of its caller.
+
+### Fixed — the SwiftUI and Compose CI lanes can now be triggered by Engram
+
+`mosaic/programs/engram-app` was absent from both acceptance sets, so a change
+touching only `host/swiftui/EngramEffects.swift` did not fire the lane that
+compiles it. The SwiftUI lane has built Engram since #13728 — but never on
+Engram's own account, only when some other package dragged it in. The edits
+most likely to break a handler were precisely the ones that skipped its only
+compile check.
+
+Found while adding the matching Compose lane. Both sets now list the package,
+and both suites have a test that fails without it.
+
+### Fixed — the macOS Flutter release artifact could not be built at all
+
+The last hard blocker on `engram-v0.3.0`, and it fails closed, which is why it
+blocks rather than degrades: the publish job `needs:` every build job **and**
+asserts the artifact set on disk exactly equals what `artifact-names` declares.
+`engram-flutter-macos-v0.3.0.zip` is in that declared set, so a release cannot
+be cut while it cannot be produced.
+
+`flutter build macos --release` has no `--target-platform`. It always builds
+arm64 **and** x86_64 — running the native-assets hook once per architecture and
+`lipo`ing the results into a universal binary — and `build-native.sh` handed it
+whatever a plain `cargo build` produced, which on an arm64 Mac is arm64-only.
+
+Two halves, and this is the second. The first is the hook learning to slice per
+architecture; without it a universal library still fails. Together they were
+proven end to end before either was written: a universal library plus a sliced
+hook builds `mosaic_task_app.app` with an `x86_64 arm64` framework, where the
+unsliced hook fails with `lipo: … have the same architectures`.
+
+**Keyed on the build's behaviour, not on the backend being Flutter.** The
+condition is "does the emitted build ask for more than one architecture", which
+today only Flutter on macOS does — stated that way so whoever adds the next
+multi-architecture target knows what to look for.
+
+**Qt and SwiftUI on macOS are deliberately excluded, not overlooked.**
+`swift build -c release` and the generated CMake both build for the host only,
+so a fat library there is bytes in the bundle that nothing loads. Their macOS
+artifacts are host-architecture; whether Engram should ship universal apps on
+those backends is a separate question, and not one to answer by accident here.
+
+The `lipo -create` output is **asserted** to carry both slices rather than
+assumed. Over two copies of one architecture `lipo` fails loudly, but over a fat
+file and a thin one it succeeds — so the check is on what came out, not on what
+went in. It also writes beside the slices rather than over either, so a re-run
+cannot lipo a fat file into itself.
+
+**Dormant until the Flutter migration lands**, and verified anyway. Flutter is
+not in `STANDARD_RUNTIME_BACKENDS` until its `[host_assets]` override comes off,
+so the new block is unreachable on `main` today. Verified by removing that line
+the way the migration does: the derived list moves from `qt swiftui` to
+`qt swiftui flutter`, the universal path activates, and the emitted project
+carries an `x86_64 arm64` runtime with `nativeComplete: true` and zero
+degradations.
+
+That is #15089's precedent, which fixed Flutter's and XAML's release checks
+"though neither has migrated", on the grounds that holding the mechanism while
+leaving the known trap is the same partial wiring that caused the original bug.
+
+The release workflow installs **both** Apple targets on the macOS leg only.
+Naming just the non-host one and relying on the runner to supply the other
+encodes "macos-latest is arm64" where nothing states it — and the script
+requires both, so an Intel runner would fail closed complaining about a target
+the workflow was never asked to install. Conditional, because installing an
+Apple target on the Linux and Windows legs of the same matrix would be a
+download neither will ever use; an empty value is byte-identical to the key
+being absent.
+
+**And the shipped artifact is now gated on being universal, rather than
+measured by hand.** The `x86_64 arm64` result above was established by running
+`lipo -archs` once and writing it down; nothing checked it, and
+`LIBRARY_MAGIC["macos"]` *accepts* the fat magic without requiring it — so a
+regression to a thin library would have published successfully and crashed on
+an Intel Mac.
+
+`archive_flutter` refuses one now, reading the file's own bytes rather than
+shelling out to `lipo` so the check works wherever the archiver runs. It tests
+`nfat_arch`, not just the magic: a fat container holding **one** architecture is
+legal and is exactly the artifact a magic-only check waves through. Gated on the
+migrated engine, since a backend still binding `engram-capi` is built host-only
+by a path this says nothing about.
+
+Mutation-tested three ways — the check doing nothing fails the three refusal
+tests; dropping the `nfat_arch` test fails only the one-architecture case; and
+dropping the platform/stem gate starts refusing correct Linux, Windows and
+unmigrated artifacts, which is what shows the gate is load-bearing rather than
+decoration.
+
+Two further review findings, both acted on. The `rustup target list` check now
+runs inside the same `cd "$RUST"` subshell the build uses, so it cannot answer
+for a different toolchain than the one that compiles. And the `lipo -create`
+abort-on-failure depends on `set -e`, which is now stated where someone moving
+this block into a function would read it.
+
+A reviewer also confirmed the architecture assertion empirically rather than by
+reasoning, against a real `x86_64 arm64e` binary: the space-padded `case`
+pattern correctly rejects `arm64e`, `arm64_32` and `x86_64h`, which is the
+substring trap this change could plausibly have had.
+
 ### Fixed — more than half of SwiftUI's reported style drops were not drops
 
 Engram's SwiftUI emission reported **40 style drops, 22 of them `gap`, and all

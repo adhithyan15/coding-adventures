@@ -1698,6 +1698,7 @@ def archive_flutter(
         )
     if engine.stat().st_size == 0:
         raise ValueError(f"{stem} engine is empty: {engine}")
+    _reject_thin_macos_flutter_engine(platform, stem, engine)
 
     name = flutter_artifact_name(version, platform)
     output = output_dir / name
@@ -1750,6 +1751,55 @@ LIBRARY_MAGIC = {
     "macos": ((b"\xcf\xfa\xed\xfe", b"\xca\xfe\xba\xbe", b"\xce\xfa\xed\xfe"), (".dylib",)),
     "windows": ((b"MZ",), (".dll",)),
 }
+
+# The two fat Mach-O magics: 32-bit and 64-bit offset tables, both big-endian.
+_MACHO_FAT_MAGICS = (b"\xca\xfe\xba\xbe", b"\xca\xfe\xba\xbf")
+
+
+def _reject_thin_macos_flutter_engine(platform: str, stem: str, engine: Path) -> None:
+    """A macOS Flutter artifact must ship a UNIVERSAL runtime.
+
+    `flutter build macos --release` has no `--target-platform`: it always builds
+    arm64 and x86_64. A thin runtime cannot serve both, so an artifact carrying
+    one either failed to build or was built in a way that will not run on half
+    the Macs it is offered to.
+
+    This exists because the universality was previously established by a human
+    running `lipo -archs` once and writing the result in a changelog. Nothing
+    gated it, and `LIBRARY_MAGIC["macos"]` accepts the fat magic without
+    requiring it — so a regression to a thin library would have produced a
+    release that published successfully and crashed on an Intel Mac.
+
+    Read from the file's own bytes rather than by shelling out to `lipo`, so the
+    check works wherever the archiver runs rather than only on macOS.
+
+    Gated on the MIGRATED engine. A backend still binding `engram-capi` is built
+    host-only by a path this says nothing about; `_engine_stem_for` is the same
+    derivation the rest of this module uses to tell those apart.
+    """
+
+    if platform != "macos" or stem != "mosaic_app":
+        return
+
+    with engine.open("rb") as handle:
+        header = handle.read(8)
+    if len(header) < 8 or header[:4] not in _MACHO_FAT_MAGICS:
+        raise ValueError(
+            f"the macOS Flutter runtime is not universal: {engine} begins "
+            f"{header[:4]!r}, not a fat Mach-O. `flutter build macos "
+            f"--release` builds arm64 and x86_64, so a thin runtime serves "
+            f"only half the Macs this artifact is offered to."
+        )
+    # `nfat_arch` is the next four bytes, big-endian. A fat container holding
+    # ONE architecture is legal and is not what this asserts -- it would pass a
+    # magic-only check while being exactly the artifact being guarded against.
+    architectures = int.from_bytes(header[4:8], "big")
+    if architectures < 2:
+        raise ValueError(
+            f"the macOS Flutter runtime is a fat container with "
+            f"{architectures} architecture(s): {engine}. It must carry both "
+            f"arm64 and x86_64."
+        )
 
 
 def _engine_stem_for(backend: str) -> str:

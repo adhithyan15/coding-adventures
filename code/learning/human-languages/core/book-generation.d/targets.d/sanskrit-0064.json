@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 64,
+  "output": "sanskrit/book/chapters/ch64-reading-first-passage.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}
