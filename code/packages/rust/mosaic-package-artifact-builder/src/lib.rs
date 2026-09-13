@@ -1518,7 +1518,8 @@ fn ignored_native_property(
 ) -> Option<(&'static str, &'static str)> {
     match (node.tag.as_str(), property.name.as_str()) {
         (_, "font-size") if !matches!(backend, Backend::React | Backend::Electron)
-            && !(backend == Backend::Compose && mosaic_emit_compose::pipeline::has_native_font_size(node)) => Some((
+            && !(backend == Backend::Compose && mosaic_emit_compose::pipeline::has_native_font_size(node))
+            && !(backend == Backend::Qt && mosaic_emit_qt::pipeline::has_native_font_size(node)) => Some((
             "typography.font-size-binding-unimplemented",
             "layout font-size binding has no projection for this backend or primitive; static mosstyle typography is unaffected",
         )),
@@ -7865,7 +7866,7 @@ layout AccessibleText {
                     .iter()
                     .filter(|entry| entry.code == "typography.font-size-binding-unimplemented")
                     .count(),
-                if matches!(backend, Backend::React | Backend::Electron | Backend::Compose) {
+                if matches!(backend, Backend::React | Backend::Electron | Backend::Compose | Backend::Qt) {
                     0
                 } else {
                     4
@@ -9481,6 +9482,7 @@ files = [
     /// passed a different directory as the package root, so the path never
     /// resolved and the containment branch never ran — the test failed on a
     /// missing file while appearing to exercise the guard.
+    #[cfg(unix)]
     #[test]
     fn a_host_asset_symlink_escaping_the_package_is_refused() {
         let pkg = make_package("mosaic-pkg-grid", &["Grid"]);
