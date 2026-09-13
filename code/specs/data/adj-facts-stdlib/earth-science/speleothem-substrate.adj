@@ -104,11 +104,21 @@
 % from a fetch summary; summarised readings of this same page have
 % disagreed with each other about what it contains.
 %
-% Provenance is TABLE-level, so all eleven rows carry both sentences and
-% `--explain` shows only the primary one — meaning the frostwork rows
-% display under the helictite sentence there. That is a property of every
-% multi-sentence table in this stdlib, tracked as issue #13898; the JSON
-% output is the authoritative view.
+% PROVENANCE IS PER-ROW (ADJ-TABLES RS-5e, #14986). Each row carries the
+% sentence about ITS OWN speleothem; `locator` and `trust` are inherited,
+% since both sentences come from this one page at one tier.
+%
+% Until then provenance was TABLE-level, so all eleven rows carried both
+% sentences: the helictite one as the `source` — the field that carries the
+% trust tier — and the frostwork one as an untiered `cites`. The five
+% FROSTWORK rows were therefore warranted by a sentence about helictites,
+% with their own evidence demoted to a corroboration. The header used to
+% record that as a display quirk of `--explain` (issue #13898); it was not a
+% display quirk, it was the warrant.
+%
+% Nothing new was fetched to fix it and no span was widened: both sentences
+% already name their own speleothem. The `cites` became the frostwork rows'
+% `source`.
 %
 % Honest abstention:
 %
@@ -131,21 +141,52 @@
 table speleothem_substrate {
     columns speleothem, substrate
 
-    row (helictite, cave_ceiling)
-    row (helictite, cave_wall)
-    row (helictite, cave_floor_less_often)
-    row (helictite, carbonate_coating)
-    row (helictite, crust)
-    row (helictite, soda_straw_sometimes)
+    row (helictite, cave_ceiling) {
+        % This sentence was the table's single envelope, so it also
+        % warranted the five FROSTWORK rows below.
+        source "Helictites grow on cave ceilings, walls, and less often on cave floors. They typically grow on other speleothems, such as carbonate coatings, crusts, and sometimes on soda straws."
+    }
+    row (helictite, cave_wall) {
+        source "Helictites grow on cave ceilings, walls, and less often on cave floors. They typically grow on other speleothems, such as carbonate coatings, crusts, and sometimes on soda straws."
+    }
+    row (helictite, cave_floor_less_often) {
+        source "Helictites grow on cave ceilings, walls, and less often on cave floors. They typically grow on other speleothems, such as carbonate coatings, crusts, and sometimes on soda straws."
+    }
+    row (helictite, carbonate_coating) {
+        source "Helictites grow on cave ceilings, walls, and less often on cave floors. They typically grow on other speleothems, such as carbonate coatings, crusts, and sometimes on soda straws."
+    }
+    row (helictite, crust) {
+        source "Helictites grow on cave ceilings, walls, and less often on cave floors. They typically grow on other speleothems, such as carbonate coatings, crusts, and sometimes on soda straws."
+    }
+    row (helictite, soda_straw_sometimes) {
+        source "Helictites grow on cave ceilings, walls, and less often on cave floors. They typically grow on other speleothems, such as carbonate coatings, crusts, and sometimes on soda straws."
+    }
 
-    row (frostwork, stalactite)
-    row (frostwork, cave_wall)
-    row (frostwork, cave_ceiling)
-    row (frostwork, ledge)
-    row (frostwork, cave_floor_less_occasionally)
+    row (frostwork, stalactite) {
+        % PROMOTED from a table-level `cites` to this row's own
+        % `source`. It was already in the file, one line down, as an
+        % untiered corroboration attached to every row -- while the
+        % field carrying the trust tier said helictite. A row's
+        % warrant has to be the sentence that supports it.
+        source "Frostwork can also be found on stalactites, walls, ceilings, ledges, and less occasionally on floors (Hill, 1997)."
+    }
+    row (frostwork, cave_wall) {
+        source "Frostwork can also be found on stalactites, walls, ceilings, ledges, and less occasionally on floors (Hill, 1997)."
+    }
+    row (frostwork, cave_ceiling) {
+        source "Frostwork can also be found on stalactites, walls, ceilings, ledges, and less occasionally on floors (Hill, 1997)."
+    }
+    row (frostwork, ledge) {
+        source "Frostwork can also be found on stalactites, walls, ceilings, ledges, and less occasionally on floors (Hill, 1997)."
+    }
+    row (frostwork, cave_floor_less_occasionally) {
+        source "Frostwork can also be found on stalactites, walls, ceilings, ledges, and less occasionally on floors (Hill, 1997)."
+    }
 
-    source "Helictites grow on cave ceilings, walls, and less often on cave floors. They typically grow on other speleothems, such as carbonate coatings, crusts, and sometimes on soda straws."
+    % The envelope is the FRAMING span -- it defends the TABLE (that
+    % where a speleothem forms is a fact about it) and warrants no
+    % row. Until #14986 it was the HELICTITE row's own sentence.
+    source "In general, however, one thing caves do have in common is where speleothems form."
     locator "https://www.nps.gov/subjects/caves/speleothems.htm"
     trust authoritative
-    cites "Frostwork can also be found on stalactites, walls, ceilings, ledges, and less occasionally on floors (Hill, 1997)." locator "https://www.nps.gov/subjects/caves/speleothems.htm"
 }

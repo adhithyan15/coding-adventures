@@ -230,3 +230,135 @@ fn speleothem_substrate_abstains_where_the_source_names_no_substrate() {
         "a surface shape is not a substrate value: {out}"
     );
 }
+
+const SPEL_LOCATOR: &str = "https://www.nps.gov/subjects/caves/speleothems.htm";
+const HELICTITE_SPAN: &str = "Helictites grow on cave ceilings, walls, and less often on cave floors. They typically grow on other speleothems, such as carbonate coatings, crusts, and sometimes on soda straws.";
+const FROSTWORK_SPAN: &str = "Frostwork can also be found on stalactites, walls, ceilings, ledges, and less occasionally on floors (Hill, 1997).";
+
+/// Assert a row's warrant with a needle that SPANS from the binding into the
+/// citation, so the span provably belongs to the row that bound it.
+///
+/// Two dead ends preceded this shape, and both are worth recording:
+///
+/// 1. A fully-ground query (`speleothem_substrate(frostwork, ledge)`) emits no
+///    `citations` at all — the engine ranks it as a hypothesis rather than
+///    recalling it. An assertion counting citation blocks failed with zero.
+/// 2. Binding only the speleothem returns six rows for `helictite`, and a
+///    whole-stdout `contains` is then satisfied by any sibling's intact copy —
+///    the masking defect mutation found in `anatomy/joint-types.adj` (#15164).
+///
+/// Binding the SUBSTRATE and spanning binding→citation avoids both: the needle
+/// cannot match an answer that bound a different speleothem, even when both
+/// answers are in the same output.
+fn assert_warrant(tag: &str, substrate: &str, speleothem: &str, span: &str) -> String {
+    let dir = scratch(tag);
+    std::fs::copy(
+        facts_stdlib().join("earth-science/speleothem-substrate.adj"),
+        dir.join("speleothem-substrate.adj"),
+    )
+    .expect("copy shipped speleothem-substrate.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"speleothem-substrate.adj\"\n? speleothem_substrate($S, {substrate})\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains(&format!(
+            "\"bindings\":{{\"S\":\"{speleothem}\"}},\"citations\":[{{\"source\":\"{span}\",\"locator\":\"{SPEL_LOCATOR}\",\"trust\":\"authoritative\"",
+        )),
+        "{speleothem}/{substrate}: the span belongs to the row that bound it: {out}"
+    );
+    out
+}
+
+/// #14986. This table held BOTH justifying sentences already — the helictite
+/// one as the envelope `source`, the frostwork one as a table-level `cites` —
+/// so every row got both, and the five FROSTWORK rows were warranted by a
+/// sentence about helictites, with their real evidence demoted to an untiered
+/// corroboration.
+///
+/// That is what the atmosphere review (#15137) rejected in the other
+/// direction: the field carrying the TIER must be the sentence that supports
+/// the row. No new source and no widening were needed — both sentences already
+/// name their own speleothem.
+#[test]
+fn each_row_is_warranted_by_its_own_speleothems_sentence() {
+    // `ledge` is frostwork's alone, so this output has exactly one answer.
+    let out = assert_warrant("spelledge", "ledge", "frostwork", FROSTWORK_SPAN);
+    assert!(
+        !out.contains("Helictites grow on cave ceilings"),
+        "a frostwork row is no longer proved by a sentence about helictites: {out}"
+    );
+    // No corroboration: the warrant IS the supporting sentence now. Twice —
+    // provenance is emitted under `citations` and again under `steps`.
+    assert_eq!(
+        out.matches("\"corroborations\":[]").count(),
+        2,
+        "the row's own sentence is its warrant, so nothing corroborates: {out}"
+    );
+
+    let out = assert_warrant("spelstraw", "soda_straw_sometimes", "helictite", HELICTITE_SPAN);
+    assert!(
+        !out.contains("Frostwork can also be found"),
+        "and the frostwork sentence no longer reaches a helictite answer: {out}"
+    );
+}
+
+/// All eleven rows, each pinned by a binding→citation needle. `cave_wall` and
+/// `cave_ceiling` belong to BOTH speleothems and return two answers; the
+/// spanning needle still distinguishes them, which is the property that makes
+/// this shape worth using over a count.
+#[test]
+fn all_eleven_rows_carry_their_own_span() {
+    for (tag, sub) in [
+        ("h1", "cave_ceiling"),
+        ("h2", "cave_wall"),
+        ("h3", "cave_floor_less_often"),
+        ("h4", "carbonate_coating"),
+        ("h5", "crust"),
+        ("h6", "soda_straw_sometimes"),
+    ] {
+        assert_warrant(tag, sub, "helictite", HELICTITE_SPAN);
+    }
+    for (tag, sub) in [
+        ("f1", "stalactite"),
+        ("f2", "cave_wall"),
+        ("f3", "cave_ceiling"),
+        ("f4", "ledge"),
+        ("f5", "cave_floor_less_occasionally"),
+    ] {
+        assert_warrant(tag, sub, "frostwork", FROSTWORK_SPAN);
+    }
+}
+
+/// The envelope now carries the page's framing sentence about WHERE
+/// speleothems form. It warrants no row; its wording is unreachable from any
+/// answer once every row overrides `source`, which is disclosed rather than
+/// implied.
+#[test]
+fn the_framing_envelope_never_reaches_an_answer() {
+    let dir = scratch("spelenvelope");
+    std::fs::copy(
+        facts_stdlib().join("earth-science/speleothem-substrate.adj"),
+        dir.join("speleothem-substrate.adj"),
+    )
+    .expect("copy shipped speleothem-substrate.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"speleothem-substrate.adj\"\n? speleothem_substrate($S, $B)\n",
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        11,
+        "all eleven rows answer: {out}"
+    );
+    assert!(
+        !out.contains("one thing caves do have in common"),
+        "the framing span warrants no row: {out}"
+    );
+}
