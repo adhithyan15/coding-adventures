@@ -3493,14 +3493,14 @@ fn path_paint(node: &LayoutNode, part_styles: &PartStyleMap) -> PathPaint {
                     stroke = Some(c);
                 }
             }
+            // Shares `px_or_none` rather than restating its character
+            // check. Two copies of "is this a safe length" is how the
+            // `sheet_text_style` sink stayed open: the guard existed, but
+            // not everywhere it was needed, and nothing tied the copies
+            // together.
             "border-width" => {
-                let stripped = strip_css_px(&p.value);
-                if !stripped.is_empty()
-                    && stripped
-                        .chars()
-                        .all(|c| c.is_ascii_digit() || c == '.' || c == '-')
-                {
-                    stroke_width = stripped.to_string();
+                if let Some(v) = px_or_none(&p.value) {
+                    stroke_width = v;
                 }
             }
             _ => {}
