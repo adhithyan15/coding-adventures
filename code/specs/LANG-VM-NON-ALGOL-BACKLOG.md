@@ -8,6 +8,27 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 remaining base INSPECT replacements (selected after #15033)
+
+PR #15033 merged as `8f1c60fc1b` with 16 successful and 31 skipped checks.
+Refreshed main and checked open PRs: ALGOL remains separately owned; no open
+COBOL/BEAM implementation overlaps this slice. The ten missing COBOL BEAM
+rows are four base replacements, five region cases and one STRING self-move.
+Select the four base replacements before region coverage: they establish
+LEADING, CHARACTERS, no rechaining and first matching clause precedence.
+There is no observed failing cell ahead of them. Twig VM-041, encoded CLR
+host input VM-060b and full Oct/Nib machine fidelity remain separate design
+work; this bounded slice completes an existing replacement family first.
+
+Contract: probe COBOL filtered indices 48 through 51 on real Erlang before
+adding BEAM declarations. Require all four executions and exact existing
+stdout, including padding and replacement order. Missing Erlang may skip;
+a detected runtime failure must fail. Promote only these four rows after
+successful probes, update coverage counts and documentation, and run the
+coverage consistency test and focused Clippy. Any backend defect discovered
+must be logged and specified before its implementation. No full machine
+fidelity or rerun of the other seven backend columns is claimed.
+
 ## VM-040 COBOL BEAM pointer/overflow probe (selected after #15012 merged)
 
 `git fetch origin && git merge origin/main` fast-forwarded cleanly from
