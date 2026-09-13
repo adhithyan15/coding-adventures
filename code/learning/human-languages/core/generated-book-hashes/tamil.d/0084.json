@@ -1,0 +1,11 @@
+{
+  "language": "tamil",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:ba51f577cece8d51",
+  "lessonIds": [
+    "TA-C84-words",
+    "TA-C84-lines",
+    "TA-C84-mudhal-vaasippu"
+  ],
+  "tex": "tamil/book/chapters/ch84-reading-words-lines-and-a-passage.tex"
+}
