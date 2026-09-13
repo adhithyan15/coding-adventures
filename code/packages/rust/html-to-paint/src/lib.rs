@@ -179,6 +179,8 @@ pub struct LinkRegion {
     pub height: f64,
     pub key: Option<String>,
     pub accessible_name: Option<String>,
+    pub access_keys: Vec<String>,
+    pub access_order: Option<usize>,
     pub focus_order: Option<usize>,
     pub tab_index: i32,
     pub top_layer_index: Option<usize>,
@@ -292,6 +294,8 @@ pub struct ControlRegion {
     pub height: f64,
     pub key: String,
     pub accessible_name: Option<String>,
+    pub access_keys: Vec<String>,
+    pub access_order: Option<usize>,
     pub focus_order: Option<usize>,
     pub tab_index: i32,
     pub top_layer_index: Option<usize>,
@@ -312,6 +316,8 @@ pub struct DisclosureRegion {
     pub width: f64,
     pub height: f64,
     pub key: String,
+    pub access_keys: Vec<String>,
+    pub access_order: Option<usize>,
     pub focus_order: Option<usize>,
     pub tab_index: i32,
     pub top_layer_index: Option<usize>,
@@ -332,7 +338,13 @@ pub struct FocusRegion {
     pub key: String,
     pub role: String,
     pub accessible_name: Option<String>,
-    pub focus_order: usize,
+    pub access_keys: Vec<String>,
+    pub access_order: Option<usize>,
+    pub activation_target: Option<String>,
+    pub activation_command: Option<String>,
+    pub editing_mode: Option<String>,
+    pub editing_host: bool,
+    pub focus_order: Option<usize>,
     pub tab_index: i32,
     pub top_layer_index: Option<usize>,
     pub fixed: bool,
@@ -379,6 +391,18 @@ impl DisclosureRegion {
 }
 
 impl ControlRegion {
+    pub fn contains(&self, x: f64, y: f64) -> bool {
+        x.is_finite()
+            && y.is_finite()
+            && x >= self.x
+            && x < self.x + self.width
+            && y >= self.y
+            && y < self.y + self.height
+            && self.clips.iter().all(|clip| clip.contains(x, y))
+    }
+}
+
+impl FocusRegion {
     pub fn contains(&self, x: f64, y: f64) -> bool {
         x.is_finite()
             && y.is_finite()
@@ -704,6 +728,7 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
         IDENTITY,
         None::<(usize, String, bool)>,
         None::<usize>,
+        false,
     )];
 
     while let Some((
@@ -716,6 +741,7 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
         inherited_transform,
         parent_disclosure,
         inherited_top_layer,
+        inherited_editable,
     )) = stack.pop()
     {
         let absolute_x = parent_x + node.x;
@@ -727,6 +753,14 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
             .map(|local| multiply(inherited_transform, local))
             .unwrap_or(inherited_transform);
         let fixed = inherited_fixed || style.position == layout_positioned::Position::Fixed;
+        let editing_mode = positioned_html_string(node, "editingMode");
+        let explicitly_editable = matches!(editing_mode, Some("plaintext" | "richtext"));
+        let editing_host = explicitly_editable && !inherited_editable;
+        let current_editable = match editing_mode {
+            Some("plaintext" | "richtext") => true,
+            Some("false") => false,
+            _ => inherited_editable,
+        };
         let node_top_layer = positioned_html_int(node, "topLayerIndex")
             .and_then(|value| usize::try_from(value).ok());
         let current_top_layer = node_top_layer.or(inherited_top_layer);
@@ -788,6 +822,9 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
                         width,
                         height,
                         key: key.clone(),
+                        access_keys: positioned_html_strings(node, "accessKeys"),
+                        access_order: positioned_html_int(node, "accessOrder")
+                            .and_then(|value| usize::try_from(value).ok()),
                         focus_order: positioned_html_int(node, "focusOrder")
                             .and_then(|value| usize::try_from(value).ok()),
                         tab_index: positioned_html_int(node, "tabIndex")
@@ -803,15 +840,16 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
             }
         }
         let semantic_role = positioned_html_string(node, "role").unwrap_or("generic");
-        if let Some(focus_order) = positioned_html_int(node, "focusOrder")
-            .and_then(|value| usize::try_from(value).ok())
-            .filter(|_| {
-                !(semantic_role == "link"
-                    && positioned_html_string(node, "href").is_some_and(|href| !href.is_empty()))
-                    && positioned_control_state(node).is_none()
-                    && positioned_html_string(node, "disclosureKind") != Some("summary")
-            })
-        {
+        let focus_order =
+            positioned_html_int(node, "focusOrder").and_then(|value| usize::try_from(value).ok());
+        let access_order =
+            positioned_html_int(node, "accessOrder").and_then(|value| usize::try_from(value).ok());
+        if (focus_order.is_some() || access_order.is_some()) && {
+            !(semantic_role == "link"
+                && positioned_html_string(node, "href").is_some_and(|href| !href.is_empty()))
+                && positioned_control_state(node).is_none()
+                && positioned_html_string(node, "disclosureKind") != Some("summary")
+        } {
             let region = clipped_box(
                 transformed_box((absolute_x, absolute_y, node.width, node.height), transform),
                 inherited_clip,
@@ -819,7 +857,7 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
             if let Some((x, y, width, height)) =
                 region.filter(|(x, y, width, height)| valid_link_box(*x, *y, *width, *height))
             {
-                let role = if positioned_html_string(node, "editingMode").is_some() {
+                let role = if explicitly_editable {
                     "textbox"
                 } else {
                     positioned_html_string(node, "authoredRole").unwrap_or(semantic_role)
@@ -827,7 +865,9 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
                 let key = positioned_html_string(node, "id")
                     .filter(|id| !id.is_empty())
                     .map(|id| format!("focus:id:{id}"))
-                    .unwrap_or_else(|| format!("focus:{focus_order}"));
+                    .unwrap_or_else(|| {
+                        format!("focus:{}", focus_order.or(access_order).unwrap_or_default())
+                    });
                 focus_regions.push(FocusRegion {
                     x,
                     y,
@@ -836,6 +876,14 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
                     key,
                     role: role.to_string(),
                     accessible_name: positioned_accessible_name(node),
+                    access_keys: positioned_html_strings(node, "accessKeys"),
+                    access_order,
+                    activation_target: positioned_html_string(node, "activationTarget")
+                        .map(ToOwned::to_owned),
+                    activation_command: positioned_html_string(node, "activationCommand")
+                        .map(ToOwned::to_owned),
+                    editing_mode: editing_mode.map(str::to_string),
+                    editing_host,
                     focus_order,
                     tab_index: positioned_html_int(node, "tabIndex")
                         .and_then(|value| i32::try_from(value).ok())
@@ -866,8 +914,15 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
                             .or_else(|| {
                                 positioned_html_int(node, "focusOrder")
                                     .map(|order| format!("link:{order}"))
+                            })
+                            .or_else(|| {
+                                positioned_html_int(node, "accessOrder")
+                                    .map(|order| format!("link:access:{order}"))
                             }),
                         accessible_name: positioned_accessible_name(node),
+                        access_keys: positioned_html_strings(node, "accessKeys"),
+                        access_order: positioned_html_int(node, "accessOrder")
+                            .and_then(|value| usize::try_from(value).ok()),
                         focus_order: positioned_html_int(node, "focusOrder")
                             .and_then(|value| usize::try_from(value).ok()),
                         tab_index: positioned_html_int(node, "tabIndex")
@@ -923,6 +978,9 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
                     key: control.key,
                     accessible_name: positioned_html_string(node, "accessibleName")
                         .map(ToOwned::to_owned),
+                    access_keys: positioned_html_strings(node, "accessKeys"),
+                    access_order: positioned_html_int(node, "accessOrder")
+                        .and_then(|value| usize::try_from(value).ok()),
                     focus_order: positioned_html_int(node, "focusOrder")
                         .and_then(|value| usize::try_from(value).ok()),
                     tab_index: positioned_html_int(node, "tabIndex")
@@ -962,6 +1020,9 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
                         width,
                         height,
                         target,
+                        access_keys: positioned_html_strings(node, "accessKeys"),
+                        access_order: positioned_html_int(node, "accessOrder")
+                            .and_then(|value| usize::try_from(value).ok()),
                         fixed,
                         clips: inherited_clips.clone(),
                     });
@@ -1008,6 +1069,7 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
                 transform,
                 current_disclosure.clone(),
                 current_top_layer,
+                current_editable,
             ));
         }
     }
@@ -1029,6 +1091,8 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
                 height: label.height,
                 key: target.key,
                 accessible_name: target.accessible_name,
+                access_keys: label.access_keys,
+                access_order: label.access_order,
                 focus_order: target.focus_order,
                 tab_index: target.tab_index,
                 top_layer_index: target.top_layer_index,
@@ -1055,6 +1119,8 @@ fn extract_interactive_regions(root: &PositionedNode) -> InteractiveRegions {
 struct ImageMapAreaMetadata {
     key: String,
     accessible_name: Option<String>,
+    access_keys: Vec<String>,
+    access_order: Option<usize>,
     shape: String,
     coords: Option<String>,
     url: String,
@@ -1140,6 +1206,8 @@ fn image_map_link_regions(
                 height,
                 key: Some(area.key),
                 accessible_name: area.accessible_name,
+                access_keys: area.access_keys,
+                access_order: area.access_order,
                 focus_order: area.focus_order,
                 tab_index: area.tab_index,
                 top_layer_index,
@@ -1298,6 +1366,8 @@ fn positioned_image_map(node: &PositionedNode) -> Option<ImageMapMetadata> {
             Some(ImageMapAreaMetadata {
                 key: ext_string(values.get("key"))?.to_string(),
                 accessible_name: ext_string(values.get("name")).map(ToOwned::to_owned),
+                access_keys: ext_strings(values.get("accessKeys")),
+                access_order: ext_usize(values.get("accessOrder")),
                 shape: ext_string(values.get("shape"))?.to_string(),
                 coords: ext_string(values.get("coords")).map(ToOwned::to_owned),
                 url: ext_string(values.get("href"))?.to_string(),
@@ -1367,6 +1437,8 @@ struct LabelRegion {
     width: f64,
     height: f64,
     target: LabelTarget,
+    access_keys: Vec<String>,
+    access_order: Option<usize>,
     fixed: bool,
     clips: Vec<LinkClip>,
 }
@@ -1382,6 +1454,8 @@ fn first_descendant_control_region(node: &PositionedNode) -> Option<ControlRegio
                 key: control.key,
                 accessible_name: positioned_html_string(node, "accessibleName")
                     .map(ToOwned::to_owned),
+                access_keys: Vec::new(),
+                access_order: None,
                 focus_order: None,
                 tab_index: 0,
                 top_layer_index: None,
@@ -1607,6 +1681,26 @@ fn positioned_html_string<'a>(node: &'a PositionedNode, key: &str) -> Option<&'a
         return None;
     };
     Some(value)
+}
+
+fn positioned_html_strings(node: &PositionedNode, key: &str) -> Vec<String> {
+    let Some(ExtValue::Map(values)) = node.ext.get("html") else {
+        return Vec::new();
+    };
+    ext_strings(values.get(key))
+}
+
+fn ext_strings(value: Option<&ExtValue>) -> Vec<String> {
+    let Some(ExtValue::List(values)) = value else {
+        return Vec::new();
+    };
+    values
+        .iter()
+        .filter_map(|value| match value {
+            ExtValue::Str(value) => Some(value.clone()),
+            _ => None,
+        })
+        .collect()
 }
 
 fn positioned_accessible_name(node: &PositionedNode) -> Option<String> {
@@ -2345,6 +2439,8 @@ mod tests {
                 height: 10.0,
                 key: None,
                 accessible_name: None,
+                access_keys: Vec::new(),
+                access_order: None,
                 focus_order: None,
                 tab_index: 0,
                 top_layer_index: None,
@@ -2385,6 +2481,8 @@ mod tests {
                 height: 10.0,
                 key: None,
                 accessible_name: None,
+                access_keys: Vec::new(),
+                access_order: None,
                 focus_order: None,
                 tab_index: 0,
                 top_layer_index: None,
@@ -2412,6 +2510,8 @@ mod tests {
             height: 12.0,
             key: None,
             accessible_name: None,
+            access_keys: Vec::new(),
+            access_order: None,
             focus_order: None,
             tab_index: 0,
             top_layer_index: None,

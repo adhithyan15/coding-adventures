@@ -9,6 +9,8 @@ type HostRequest = {
 const events: HostRequest[] = [];
 let navigationDisabled = true;
 let bookmarked = false;
+let findQuery = "";
+let findResultLabel = "";
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 const props = (statusText: string) => ({
@@ -21,6 +23,9 @@ const props = (statusText: string) => ({
     bookmarkLabel: bookmarked ? "Remove Bookmark" : "Bookmark",
     bookmarkDisabled: navigationDisabled,
     viewSourceDisabled: navigationDisabled,
+    findQuery,
+    findResultLabel,
+    findDisabled: navigationDisabled,
     navigationDisabled,
     contentSurface: "React host surface",
   },
@@ -33,6 +38,15 @@ window.mosaicHost = {
     if (request.event.type === "toggleBookmark") {
       bookmarked = !bookmarked;
       return props("Bookmark persisted through MosaicHost");
+    }
+    if (request.event.type === "findChange") {
+      findQuery = request.event.value ?? "";
+      findResultLabel = findQuery ? "1 of 2" : "";
+      return props("Find updated through MosaicHost");
+    }
+    if (request.event.type === "findNext") {
+      findResultLabel = "2 of 2";
+      return props("Find advanced through MosaicHost");
     }
     return request.event.type === "navigate"
       ? props("Navigated through MosaicHost")
@@ -120,6 +134,28 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   });
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("viewSource");
+
+  const find = [...document.querySelectorAll('input[type="text"]')].find(
+    candidate =>
+      candidate instanceof HTMLInputElement && candidate.placeholder === "Find in page",
+  ) as HTMLInputElement;
+  await act(async () => {
+    const valueSetter = Object.getOwnPropertyDescriptor(
+      HTMLInputElement.prototype,
+      "value",
+    )?.set;
+    valueSetter?.call(find, "venture");
+    find.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  await flush();
+  expect(events[events.length - 1]?.event).toEqual({ type: "findChange", value: "venture" });
+  expect(document.body.textContent).toContain("1 of 2");
+  await act(async () => {
+    textButton("Next").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("findNext");
+  expect(document.body.textContent).toContain("2 of 2");
 
   await act(async () => {
     textButton("Go").click();

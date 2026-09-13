@@ -245,14 +245,27 @@ model-card parameter, or a UI artifact is not a completion signal.
      deck lowering, history behavior, and disabled-state boundaries. Keep
      nested sweeps, vendor controls, and arbitrary card templates for later
      product phases.
-   - **Mosaic schematic net labels** (current phase): discovery after PR
-     #15035: canonical schematic lowering still assigns anonymous `n1`, `n2`,
-     and so on, which prevents users from carrying meaningful Berkeley node
-     names through the editable workbench. Add terminal-anchored named nets
-     with safe token validation, collision checks across joined endpoint-wire
-     nets, deterministic deck lowering, history restoration, and a
-     selected-component terminal editor in Mosaic. Keep arbitrary wire
-     geometry, bus notation, and vendor interchange for later product phases.
+   - **Mosaic schematic net labels** (completed in PR #15052): discovery after
+     PR #15035: canonical schematic lowering still assigned anonymous `n1`,
+     `n2`, and so on, which prevented users from carrying meaningful Berkeley
+     node names through the editable workbench. Terminal-anchored labels now
+     validate safe tokens, reject conflicts on joined endpoint-wire nets,
+     lower deterministically, restore through history, and are editable from a
+     selected component terminal in Mosaic.
+   - **Mosaic schematic named-net links** (completed in PR #15069): discovery after PR
+     #15052: labels name individual endpoint-wire nets but reject the same
+     label on disconnected terminals, so a user could not author the ordinary
+     SPICE remote-node connection without a physical wire. Identical safe
+     labels now join disconnected terminal nets at deck lowering while distinct
+     labels on one physical net remain transactional errors.
+   - **Mosaic schematic terminal routing** (current phase): discovery after PR
+     #15069: the workbench routes a selected component to the nearest terminal
+     of another component, so users cannot choose a non-nearest valid endpoint
+     without raw document injection. Add an explicit selected-start-terminal /
+     selected-target-terminal flow, document-owned terminal-index validation,
+     transactional wire creation, selection cleanup, and Mosaic host-contract
+     coverage. Keep arbitrary wire geometry, bus notation, and vendor
+     interchange for later product phases.
 
 ### Operating rules
 

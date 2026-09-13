@@ -493,11 +493,19 @@ impl NoteTypeEditorSessionState {
         self.confirm_delete = false;
     }
 
-    fn start_new(&mut self, now: u64) {
+    fn start_new(&mut self, note_type_id: String, now: u64) {
         self.selected_index = usize::MAX;
         self.selected_field_index = 0;
         self.selected_template_index = 0;
-        self.draft_note_type_id = Some(format!("note-type-{now}"));
+        // The id is minted by the CALLER, which has the collection and can
+        // therefore avoid one a saved note type already holds. This used to be
+        // `format!("note-type-{now}")` built here, blind to the state, which is
+        // half of why the collision guard downstream could not work: it had
+        // nothing unique to fall back to.
+        //
+        // Same shape as the note editor's `start_new`, which has always taken
+        // its id from `unique_note_id`.
+        self.draft_note_type_id = Some(note_type_id);
         self.draft_name = Some("Basic".to_string());
         self.draft_stylesheet = Some(String::new());
         self.draft_field_names.clear();
@@ -935,6 +943,7 @@ impl EngramSession {
             // `catch_json`, so a `Err` becomes `{"ok": false, "error": ...}`
             // rather than a silently dropped note.
             validate_command_deck_reference(&self.state, &command)?;
+            validate_command_id_separator(&command)?;
             if let FacadeCommand::UpsertNote { note, .. } = &command {
                 validate_note_target(
                     &self.state,
@@ -1685,7 +1694,8 @@ impl EngramSession {
                     self.note_type_editor.set_stylesheet(&note_type_id, value);
                 }
                 EngramAppEvent::NoteTypeEditorNewNoteType => {
-                    self.note_type_editor.start_new(now);
+                    self.note_type_editor
+                        .start_new(unique_note_type_id(&self.state, now), now);
                 }
                 EngramAppEvent::NoteTypeEditorSaveNoteType => {
                     let note_type =
@@ -1821,14 +1831,20 @@ impl EngramSession {
                         //     deletes that model and cascades to every note
                         //     built on it. Measured, not inferred: with this
                         //     branch disabled,
-                        //     `a_new_note_type_draft_can_collide_with_a_saved_id`
-                        //     ends with zero note types instead of one.
+                        //     `a_new_note_type_draft_cannot_collide_with_a_saved_id`
+                        //     ended with zero note types instead of one.
                         //
-                        // The second case is reachable because the collision
-                        // guard in `note_type_editor_selected_note_type` is
-                        // inert -- see that test. Resolving by id is therefore
-                        // the wrong question entirely; `draft_is_new` already
-                        // says the target is not a saved model.
+                        // That second case is no longer reachable: the collision
+                        // guard in `note_type_editor_selected_note_type` was
+                        // inert and has been fixed, so a draft cannot hold a
+                        // saved model's id any more.
+                        //
+                        // This branch stays regardless, and not out of caution.
+                        // Resolving by id is the wrong question: `draft_is_new`
+                        // already says the target is not a saved model, and
+                        // asking the flag cannot be wrong even if id minting
+                        // changes again. It was the only line of defence; it is
+                        // now the second, which is where it belongs.
                         //
                         // `onNoteTypeEditorDeleteNoteType`, one arm above, has
                         // always done exactly this. Both entry points now agree.
@@ -1864,7 +1880,8 @@ impl EngramSession {
                     }
                 }
                 EngramAppEvent::AddNoteType => {
-                    self.note_type_editor.start_new(now);
+                    self.note_type_editor
+                        .start_new(unique_note_type_id(&self.state, now), now);
                     self.active_screen = EngramAppScreen::Options;
                 }
                 EngramAppEvent::AddNote => {
@@ -3871,6 +3888,34 @@ fn selected_deck_id_with_override(
         .unwrap_or_default()
 }
 
+/// An id no saved note type holds.
+///
+/// The note-type twin of [`unique_note_id`], and it did not exist, which is why
+/// the collision guard in `note_type_editor_selected_note_type` was inert: that
+/// guard rejected a colliding `draft_note_type_id` and then fell back to
+/// `default_note_type_model`'s `note-type-{now}` — the *same string* the
+/// rejected id was built from. Refusing the collision assigned the collision.
+///
+/// A colliding draft id matters more than it sounds. `default_note_type_model`
+/// is a blank two-field model, so saving a draft that carries a real note
+/// type's id writes that blank over it, discarding its fields and templates and
+/// taking every note built on them.
+fn unique_note_type_id(state: &AppState, now: u64) -> String {
+    let base = format!("note-type-{now}");
+    if state.note_types.iter().all(|kind| kind.id != base) {
+        return base;
+    }
+
+    let mut suffix = 1_u32;
+    loop {
+        let candidate = format!("{base}-{suffix}");
+        if state.note_types.iter().all(|kind| kind.id != candidate) {
+            return candidate;
+        }
+        suffix += 1;
+    }
+}
+
 fn unique_note_id(state: &AppState, now: u64) -> String {
     let base = format!("note-{now}");
     if state.notes.iter().all(|note| note.id != base) {
@@ -4545,6 +4590,110 @@ fn note_editor_selected_field<'a>(
 /// family patched the routes someone had already found, and each time there was
 /// another; enumerating the surface is what stops that. A new variant carrying
 /// a deck id will not compile past this without a decision being made about it.
+/// The id separator `::` may not appear inside a note or template id.
+///
+/// A generated card's id is `{note_id}::{template_id}`, and the cloze form
+/// appends `::c{ordinal}` — an unescaped composite key. If either component may
+/// itself contain the separator, the key is ambiguous. Measured with the real
+/// generator rather than argued:
+///
+/// ```text
+/// note "a"    + template "b::c"  ->  card id "a::b::c"
+/// note "a::b" + template "c"     ->  card id "a::b::c"
+/// ```
+///
+/// Two different (note, template) pairs, one card id. Cards are keyed by id in
+/// `AppState`, so one silently displaces the other.
+///
+/// **Why a guard rather than an escape.** Length-prefixing the key would fix it
+/// at the root, but every existing card id has this shape — in saved
+/// collections, in snapshots, and in imported packages — so changing the
+/// encoding rewrites data that is already on disk. Refusing the input that
+/// makes the key ambiguous costs nothing real: Engram mints `note-{timestamp}`
+/// and `note-type-{timestamp}`, and Anki's ids are integers, so nothing that
+/// exists today contains `::`.
+///
+/// **Deck NAMES are untouched, and that distinction is the point.** Anki's deck
+/// hierarchy is literally `Parent::Child`, and `subdeck_name` splits on it. This
+/// guards ids, which are opaque keys, not names.
+///
+/// Reachable through `dispatch`, which is a documented public surface: the
+/// crate README describes it, the web host declares it, and `eg_dispatch`
+/// exports it to every native shell. That is the same surface the deck-id
+/// family was hardened on.
+/// The card-id separator, and the one place that spells it.
+const CARD_ID_SEPARATOR: &str = "::";
+
+/// Refuse a single id that would make a card id ambiguous.
+///
+/// Shared by every surface that accepts a caller-supplied note or template id,
+/// because there is more than one and guarding only the obvious one leaves the
+/// bug reachable. `dispatch` is the documented command channel; `onSaveNote`
+/// and `onSaveNoteType` are the Mosaic event channel, exported just as widely
+/// through `eg_handle_engram_app_event`. The first version of this guard
+/// covered only `dispatch`, and security review reproduced the collision
+/// through the event surface — two cards with id `a::b::c` coexisting in one
+/// collection.
+fn reject_card_id_separator(what: &str, id: &str) -> Result<(), String> {
+    if id.contains(CARD_ID_SEPARATOR) {
+        return Err(format!(
+            "{what} {id:?} contains {CARD_ID_SEPARATOR:?}, which separates a \
+             card id's note and template halves; two different notes could then \
+             generate the same card"
+        ));
+    }
+    Ok(())
+}
+
+fn validate_command_id_separator(command: &FacadeCommand) -> Result<(), String> {
+    // `(what it is, the id)`, so the refusal can say which field was wrong
+    // rather than making the caller guess which of several ids it meant.
+    let ids: Vec<(&str, &str)> = match command {
+        // The note carries the id that becomes the card key's left half, and
+        // `materialize_cards_at` is what turns it into card ids.
+        FacadeCommand::UpsertNote { note, .. } => vec![("note id", note.id.as_str())],
+        // And the note type carries every template id that becomes the right
+        // half. Checked per template, because one bad template poisons only its
+        // own cards and naming it is what makes the error actionable.
+        FacadeCommand::UpsertNoteType { note_type, .. } => {
+            let mut ids = vec![("note type id", note_type.id.as_str())];
+            ids.extend(
+                note_type
+                    .templates
+                    .iter()
+                    .map(|template| ("template id", template.id.as_str())),
+            );
+            ids
+        }
+        // `LoadState` is DELIBERATELY exempt, and the reason is worth stating
+        // because it is the one variant that carries whole `notes` and
+        // `note_types` vectors through here.
+        //
+        // It replaces the collection wholesale rather than editing it, and the
+        // same is true of `load_snapshot` and `import_backup`, which do not
+        // pass through this function at all. Refusing a restore because one
+        // note in it carries an odd id would cost someone their whole
+        // collection to avoid a misplaced card — the opposite of the trade this
+        // crate makes everywhere else, where a cursor that will not parse costs
+        // a scroll position rather than the collection.
+        //
+        // `validate_command_deck_reference` exempts it for the same reason.
+        // Constraining what a restore may contain is a separate question about
+        // snapshot trust, not about this key.
+        //
+        // Everything else either names an existing record or carries no id that
+        // reaches card generation. A DELETE naming an id nothing holds is
+        // already refused elsewhere, and refusing it here as well would report
+        // the wrong reason.
+        _ => Vec::new(),
+    };
+
+    for (what, id) in ids {
+        reject_card_id_separator(what, id)?;
+    }
+    Ok(())
+}
+
 fn validate_command_deck_reference(
     state: &AppState,
     command: &FacadeCommand,
@@ -4871,29 +5020,33 @@ fn note_type_editor_selected_note_type(
         // discarding its fields and templates, and taking every note built on it
         // with them.
         //
-        // WARNING: this guard does NOT achieve that, and the sentence that used
-        // to end this comment — "keeping the freshly minted id makes it a
-        // genuinely new note type" — was false. The minted id and the rejected
-        // id are the SAME STRING: `start_new(now)` sets `draft_note_type_id` to
-        // `note-type-{now}` and `draft_created_at` to `now`, and the fallback
-        // here is `default_note_type_model(draft_created_at)`, whose id is
-        // `note-type-{now}`. So refusing the colliding id leaves `draft.id`
-        // holding that same colliding value.
+        // This guard used not to achieve that, and the comment here said so.
+        // The minted id and the rejected id were the SAME STRING: `start_new`
+        // built `draft_note_type_id` as `note-type-{now}` and set
+        // `draft_created_at` to `now`, while the fallback was
+        // `default_note_type_model(draft_created_at)`, whose id is
+        // `note-type-{now}`. Refusing the colliding id left `draft.id` holding
+        // that same colliding value, so the rule held for exactly the inputs
+        // that could not violate it.
         //
-        // Measured by `a_new_note_type_draft_can_collide_with_a_saved_id`,
-        // which pins the collision rather than the intent.
+        // Both halves are fixed now. `start_new` takes its id from
+        // `unique_note_type_id`, so a fresh draft cannot collide at all; and the
+        // fallback below mints one too, which is what a RESTORED snapshot needs
+        // — it can carry any id, including one that already collided when it was
+        // written.
         //
-        // The note EDITOR twin is genuinely collision-free — it falls back to
-        // `unique_note_id(state, now)` — and this should do the equivalent.
-        // Until it does, callers must not assume a `draft_is_new` selection
-        // names something unsaved: `DeleteNoteType` asks `draft_is_new` instead
-        // of resolving an id for exactly this reason.
-        if let Some(note_type_id) = editor
-            .draft_note_type_id
-            .as_ref()
-            .filter(|id| !state.note_types.iter().any(|kind| kind.id == **id))
-        {
-            draft.id = note_type_id.clone();
+        // `a_new_note_type_draft_cannot_collide_with_a_saved_id` pinned the old
+        // behaviour under its old name and now pins the new one, against the
+        // same adversarial fixture.
+        match editor.draft_note_type_id.as_ref() {
+            Some(note_type_id) if !state.note_types.iter().any(|kind| kind.id == *note_type_id) => {
+                draft.id = note_type_id.clone();
+            }
+            // Either no id at all, or one a saved note type holds. Both want an
+            // id nothing holds, rather than the blind `note-type-{now}`.
+            _ => {
+                draft.id = unique_note_type_id(state, editor.draft_created_at.unwrap_or(now));
+            }
         }
         draft
     } else {
@@ -5631,6 +5784,10 @@ fn note_from_app_event(
     let note_payload = payload.get("note").unwrap_or(payload);
     let note_id = explicit_note_id_from_app_event(parsed, state)
         .ok_or_else(|| "onSaveNote is missing a noteId".to_string())?;
+    // The id comes straight from the payload, so this surface needs the same
+    // guard `dispatch` has. It is not a lesser door: `eg_handle_engram_app_event`
+    // is exported to every native shell exactly as `eg_dispatch` is.
+    reject_card_id_separator("note id", &note_id)?;
     let existing_note = state.notes.iter().find(|note| note.id == note_id);
     let note_type_id = string_field(note_payload, &["noteTypeId", "note_type_id"])
         .or_else(|| existing_note.map(|note| note.note_type_id.clone()))
@@ -5710,6 +5867,7 @@ fn note_type_from_app_event(
         updated_at: now,
     });
 
+    reject_card_id_separator("note type id", &note_type_id)?;
     note_type.id = note_type_id;
     if let Some(name) = string_field(note_type_payload, &["name"]) {
         note_type.name = name;
@@ -5725,6 +5883,12 @@ fn note_type_from_app_event(
         note_type.templates =
             serde_json::from_value::<Vec<engram_core::CardTemplate>>(templates.clone())
                 .map_err(|error| format!("invalid note type templates: {error}"))?;
+        // Checked AFTER deserialising, because the ids only exist once the
+        // payload has parsed -- and checked per template, so the refusal names
+        // the one that is wrong rather than the note type as a whole.
+        for template in &note_type.templates {
+            reject_card_id_separator("template id", &template.id)?;
+        }
     }
     if let Some(stylesheet) = note_type_payload.get("stylesheet") {
         note_type.stylesheet = match stylesheet {
@@ -6819,6 +6983,214 @@ mod tests {
     use serde_json::Value;
 
     const NOW: u64 = 1_700_000_000_000;
+
+    /// A note id may not contain the card-id separator.
+    ///
+    /// `generated_card_id` is `{note_id}::{template_id}`, an unescaped
+    /// composite key, so a note id carrying `::` makes two different
+    /// (note, template) pairs collide on one card id. Measured with the real
+    /// generator before writing this guard:
+    ///
+    /// ```text
+    /// note "a"    + template "b::c"  ->  "a::b::c"
+    /// note "a::b" + template "c"     ->  "a::b::c"
+    /// ```
+    ///
+    /// Cards are keyed by id in `AppState`, so one silently displaces the
+    /// other. Driven through `dispatch` because that is the reachable surface:
+    /// the README documents it, the web host declares it, and `eg_dispatch`
+    /// exports it to every native shell.
+    #[test]
+    fn dispatch_refuses_a_note_id_containing_the_card_id_separator() {
+        let mut session = EngramSession::new_demo();
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertNote",
+                "note": {
+                    "id": "note-1::forward",
+                    "noteTypeId": "basic-story",
+                    "deckId": "tamil-script",
+                    "fields": [],
+                    "tags": [],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], false, "{value}");
+        let error = value["error"].as_str().unwrap_or_default();
+        assert!(
+            error.contains("note id") && error.contains("::"),
+            "the refusal must name the field and the separator, got: {error}"
+        );
+    }
+
+    /// A template id may not contain it either — the other half of the key.
+    #[test]
+    fn dispatch_refuses_a_template_id_containing_the_card_id_separator() {
+        let mut session = EngramSession::new_demo();
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertNoteType",
+                "noteType": {
+                    "id": "basic-2",
+                    "name": "Basic 2",
+                    "fields": [
+                        {"id": "front", "name": "Front", "required": true, "ordinal": 0}
+                    ],
+                    "templates": [{
+                        "id": "forward::c1",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "",
+                        "requiredFieldNames": ["Front"],
+                        "ordinal": 0
+                    }],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], false, "{value}");
+        let error = value["error"].as_str().unwrap_or_default();
+        assert!(
+            error.contains("template id"),
+            "the refusal must name the template, got: {error}"
+        );
+    }
+
+    /// And the guard is not simply refusing everything.
+    ///
+    /// The half that makes the two tests above mean something: an ordinary id
+    /// still saves. A guard that rejected every `upsertNote` would satisfy them
+    /// both and break the application completely.
+    #[test]
+    fn dispatch_still_accepts_an_ordinary_note_id() {
+        let mut session = EngramSession::new_demo();
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "upsertNote",
+                "note": {
+                    "id": "note-without-a-separator",
+                    "noteTypeId": "basic-story",
+                    "deckId": "tamil-script",
+                    "fields": [],
+                    "tags": [],
+                    "createdAt": 1700000000000,
+                    "updatedAt": 1700000000000
+                }
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], true, "{value}");
+        assert!(
+            value["state"]["notes"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|note| note["id"] == "note-without-a-separator"),
+            "the note must actually have been stored"
+        );
+    }
+
+    /// The EVENT surface is guarded too, not only `dispatch`.
+    ///
+    /// This is the gap the first version of the guard left, and security review
+    /// found it by reproducing the collision rather than reading the code:
+    /// `onSaveNote` reads its id straight from the payload and calls `reduce`
+    /// directly, never passing through `validate_command_id_separator`. Both
+    /// events returned `ok: true` and two cards with id `a::b::c` coexisted in
+    /// one collection.
+    ///
+    /// `eg_handle_engram_app_event` is exported to every native shell exactly
+    /// as `eg_dispatch` is, so this was not a lesser door.
+    #[test]
+    fn the_event_surface_refuses_a_note_id_containing_the_separator() {
+        let mut session = EngramSession::new_demo();
+        let value: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{
+                "event": "onSaveNote",
+                "note": {
+                    "noteId": "note-1::forward",
+                    "noteTypeId": "basic-story",
+                    "deckId": "tamil-script",
+                    "fields": []
+                }
+            }"#,
+            "tamil-script",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], false, "{value}");
+        assert!(
+            value["error"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("note id"),
+            "the refusal must name the field, got {value}"
+        );
+    }
+
+    /// And the same for a template id arriving through `onSaveNoteType`.
+    #[test]
+    fn the_event_surface_refuses_a_template_id_containing_the_separator() {
+        let mut session = EngramSession::new_demo();
+        let value: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{
+                "event": "onSaveNoteType",
+                "noteType": {
+                    "noteTypeId": "basic-2",
+                    "name": "Basic 2",
+                    "fields": [
+                        {"id": "front", "name": "Front", "required": true, "ordinal": 0}
+                    ],
+                    "templates": [{
+                        "id": "forward::c1",
+                        "name": "Forward",
+                        "frontTemplate": "{{Front}}",
+                        "backTemplate": "",
+                        "requiredFieldNames": ["Front"],
+                        "ordinal": 0
+                    }]
+                }
+            }"#,
+            "tamil-script",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], false, "{value}");
+        assert!(
+            value["error"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("template id"),
+            "the refusal must name the template, got {value}"
+        );
+    }
+
+    /// Deck NAMES keep their `::`, and that distinction is the whole point.
+    ///
+    /// Anki's deck hierarchy is literally `Parent::Child` and `subdeck_name`
+    /// splits on it, so a guard that swept names in with ids would break the
+    /// feature it was meant to protect. This guards opaque keys only.
+    #[test]
+    fn a_deck_name_may_still_contain_the_separator() {
+        let mut session = EngramSession::new();
+        let value: Value = serde_json::from_str(&session.dispatch(
+            r#"{
+                "type": "createDeck",
+                "id": "parent-child",
+                "name": "Parent::Child",
+                "description": "",
+                "createdAt": 1700000000000
+            }"#,
+        ))
+        .unwrap();
+        assert_eq!(value["ok"], true, "{value}");
+        assert_eq!(value["state"]["decks"][0]["name"], "Parent::Child");
+    }
 
     #[test]
     fn dispatch_create_deck_returns_camel_case_state_json() {
@@ -11140,26 +11512,31 @@ mod tests {
         assert_eq!(deleted["state"]["cards"], before["state"]["cards"]);
     }
 
-    /// A new draft CAN carry an id a saved note type already holds.
+    /// A new draft may NOT carry an id a saved note type already holds.
     ///
-    /// `note_type_editor_selected_note_type` looks like it prevents this: it
-    /// filters `draft_note_type_id` to an id no saved note type holds before
-    /// adopting it. That filter is inert. `start_new(now)` sets
-    /// `draft_note_type_id` to `note-type-{now}` and `draft_created_at` to
-    /// `now`, and the fallback is `default_note_type_model(draft_created_at)`,
-    /// whose id is `note-type-{now}` — the same string. So rejecting the
-    /// colliding id falls back to the identical colliding id.
+    /// This test previously pinned the opposite, because the opposite was true.
+    /// `note_type_editor_selected_note_type` looked like it prevented the
+    /// collision — it filtered `draft_note_type_id` to an id no saved note type
+    /// holds — but the fallback was `default_note_type_model(draft_created_at)`,
+    /// whose id is `note-type-{draft_created_at}`, the same string
+    /// `start_new(now)` derived the rejected id from. Rejecting the collision
+    /// assigned the collision.
     ///
-    /// Pinned because two comments in this file assert the opposite, and
-    /// because the collision is what makes the draft branch in `DeleteNoteType`
-    /// load-bearing rather than merely tidy: with `draft_is_new` set beside a
-    /// saved model of the same id, resolving the target by id alone would
-    /// cascade-delete that saved model and every note built on it.
+    /// Both halves are fixed: `start_new` now takes its id from
+    /// `unique_note_type_id`, and the fallback mints one too for the restored-
+    /// snapshot path. The fixture is unchanged — a saved note type holding
+    /// exactly the id `start_new` would have minted — so this asserts against
+    /// the same adversarial input, with the expectation inverted.
     ///
-    /// The note EDITOR twin does not have this bug — it falls back to
-    /// `unique_note_id(state, now)`.
+    /// Why it matters: `default_note_type_model` is a blank two-field model, so
+    /// a draft carrying a real note type's id saves that blank over it and takes
+    /// every note built on it. And `DeleteNoteType`'s draft branch exists partly
+    /// because of this — with `draft_is_new` set beside a saved model of the
+    /// same id, resolving the target by id alone cascade-deleted the saved one
+    /// (#15063). That branch stays: asking the flag is still right, and is no
+    /// longer the only thing standing between a draft and a real model.
     #[test]
-    fn a_new_note_type_draft_can_collide_with_a_saved_id() {
+    fn a_new_note_type_draft_cannot_collide_with_a_saved_id() {
         let mut session = EngramSession::new();
         // A saved note type holding exactly the id `start_new(NOW)` will mint.
         let snapshot = format!(
@@ -11187,14 +11564,31 @@ mod tests {
             serde_json::from_str(&session.handle_engram_app_event("onAddNoteType", "deck", NOW))
                 .unwrap();
         assert_eq!(drafted["ok"], true);
-        assert_eq!(
-            drafted["props"]["note-type-editor-note-type-id-value"],
+        let draft_id = drafted["props"]["note-type-editor-note-type-id-value"]
+            .as_str()
+            .expect("draft id")
+            .to_string();
+        assert_ne!(
+            draft_id,
             format!("note-type-{NOW}"),
-            "the draft adopts the saved model's id; the collision filter is inert"
+            "the draft must not adopt the saved model's id"
+        );
+        // Asserted against the COLLECTION, not against one known string. The
+        // point is that no saved note type holds it, whatever suffix the
+        // uniqueness helper happened to pick.
+        assert!(
+            !drafted["state"]["noteTypes"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|note_type| note_type["id"] == draft_id.as_str()),
+            "no saved note type may hold the draft's id, got {draft_id}"
         );
 
-        // The draft branch is what keeps this from being destructive: the
-        // delete discards the draft rather than resolving that id.
+        // And the saved model survives a delete. Kept from when this test
+        // pinned the collision: back then the draft branch was the ONLY thing
+        // standing between this gesture and a cascade-delete of "Real Model".
+        // It is now the second line rather than the first, and both are checked.
         let deleted: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onDeleteNoteType",
             "deck",
@@ -11208,6 +11602,90 @@ mod tests {
             "discarding a colliding draft must not delete the saved model it shadows"
         );
         assert_eq!(deleted["state"]["noteTypes"][0]["name"], "Real Model");
+    }
+
+    /// Saving a draft through the COLLECTION event leaves the editor drafting.
+    ///
+    /// `NoteTypeEditorSaveNoteType` resets the editor after saving;
+    /// `SaveNoteType` does not. So `draft_is_new` stays true beside the model
+    /// that was just written, and the selection is resolved fresh.
+    ///
+    /// Measured rather than assumed, and NOT fixed here. Before the collision
+    /// fix this left the editor showing the saved model's own id as an unsaved
+    /// blank draft, and a second save would have written that blank over it.
+    /// Now the editor moves to a genuinely new id instead.
+    ///
+    /// **The new outcome is better but not free, and the difference is worth
+    /// stating.** Because the draft's id now moves when the collection moves,
+    /// the next field edit resolves a different id than `draft_note_type_id`
+    /// holds, and `ensure_selected_draft` responds by clearing the draft —
+    /// `draft_is_new = false`, every draft map emptied. So a name typed after
+    /// saving from the collection is silently dropped and the editor snaps to
+    /// the last saved note type.
+    ///
+    /// That is a trade of **data loss for draft loss**: the old path kept the
+    /// draft and would have overwritten a real model with a blank on the next
+    /// save. Strictly an improvement, and still wrong — which is why it is
+    /// pinned here rather than left to be rediscovered. The fix is for
+    /// `SaveNoteType` to reset the editor the way `NoteTypeEditorSaveNoteType`
+    /// does, but that is an editor-behaviour decision rather than part of
+    /// closing the collision, so it is filed instead of folded in.
+    #[test]
+    fn saving_from_the_collection_leaves_a_fresh_draft_rather_than_the_saved_id() {
+        let mut session = EngramSession::new_demo();
+        let drafted: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onAddNoteType", "deck", NOW))
+                .unwrap();
+        let draft_id = drafted["props"]["note-type-editor-note-type-id-value"]
+            .as_str()
+            .expect("draft id")
+            .to_string();
+
+        let saved: Value = serde_json::from_str(&session.handle_engram_app_event(
+            &format!(
+                r#"{{"event":"onSaveNoteType","noteType":{{"id":"{draft_id}","name":"Saved Model",
+                   "fields":[{{"id":"front","name":"Front","required":true,"ordinal":0}}],
+                   "templates":[{{"id":"forward","name":"Forward","frontTemplate":"{{{{Front}}}}",
+                   "backTemplate":"","requiredFieldNames":["Front"],"ordinal":0}}]}}}}"#
+            ),
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(saved["ok"], true, "{saved}");
+        assert!(
+            saved["state"]["noteTypes"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|note_type| note_type["id"] == draft_id.as_str()),
+            "the draft's id must now be a saved note type"
+        );
+
+        // The editor no longer claims the saved model's id.
+        let after = saved["props"]["note-type-editor-note-type-id-value"]
+            .as_str()
+            .expect("editor id")
+            .to_string();
+        assert_ne!(
+            after, draft_id,
+            "the open draft must not keep claiming an id that is now saved; a \
+             second save would write a blank model over it"
+        );
+        // And it holds an id nothing has saved -- which is what makes it a
+        // FRESH DRAFT rather than a selection of some other existing model.
+        //
+        // Asserted because the weaker `after != draft_id` above would also pass
+        // if the editor had closed and landed on an unrelated note type, which
+        // is a different outcome wearing the same assertion.
+        assert!(
+            !saved["state"]["noteTypes"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|note_type| note_type["id"] == after.as_str()),
+            "the editor must hold an unsaved id, got {after}"
+        );
     }
 
     /// An explicit id for a note type that does not exist must not report `ok`.
@@ -12981,6 +13459,128 @@ mod tests {
             .unwrap()
             .iter()
             .any(|source| source["source"] == "anki-v11"));
+    }
+
+    /// An imported Anki package cannot smuggle `::` into a card key half.
+    ///
+    /// `reject_card_id_separator` guards the command channel and the Mosaic
+    /// event channel, and `validate_command_id_separator` documents why restore
+    /// is exempt. Import is neither: it is a THIRD-PARTY file, so the "refusing
+    /// a restore would cost someone their collection" argument does not apply
+    /// to it, and no guard sits on `merge_anki_apkg`.
+    ///
+    /// It needs none, because the reader builds every one of these ids from an
+    /// Anki `i64`: a note is `note.id.to_string()`, a note type the same, and a
+    /// template is `format!("{note_type_id}:template:{ordinal}")`. A `::`
+    /// cannot appear in any of them.
+    ///
+    /// Safe BY CONSTRUCTION is exactly the kind of safety that stops being true
+    /// without anyone noticing, though — `template_id`'s format string is one
+    /// edit from `{note_type_id}::template::{ordinal}`, and nothing anywhere
+    /// said so. This is that check: the invariant the whole card-key fix rests
+    /// on, asserted at the one ingestion point that was never guarded because
+    /// it did not need to be.
+    /// Assert the invariant over one merged state, and report what it saw.
+    ///
+    /// Returns `(notes, note_types, templates, cards)` so the caller can anchor
+    /// each loop separately. One shared counter would have been satisfied by
+    /// the notes alone — it could not prove the note-type and template loops
+    /// ran at all, which are the ids the mutation actually breaks.
+    fn assert_no_card_id_separator(merged: &Value) -> (usize, usize, usize, usize) {
+        let mut notes = 0;
+        let mut note_types = 0;
+        let mut templates = 0;
+        for note in merged["state"]["notes"].as_array().unwrap() {
+            let id = note["id"].as_str().unwrap();
+            assert!(!id.contains(CARD_ID_SEPARATOR), "note id {id:?}");
+            notes += 1;
+        }
+        for note_type in merged["state"]["noteTypes"].as_array().unwrap() {
+            let id = note_type["id"].as_str().unwrap();
+            assert!(!id.contains(CARD_ID_SEPARATOR), "note type id {id:?}");
+            note_types += 1;
+            for template in note_type["templates"].as_array().unwrap() {
+                let id = template["id"].as_str().unwrap();
+                assert!(!id.contains(CARD_ID_SEPARATOR), "template id {id:?}");
+                templates += 1;
+            }
+        }
+
+        // The property those halves exist to guarantee, asserted directly
+        // rather than inferred from them: no two cards share a key. Checking it
+        // here means the test survives a change to how the halves are joined.
+        let cards = merged["state"]["cards"].as_array().unwrap();
+        let ids: std::collections::BTreeSet<&str> = cards
+            .iter()
+            .map(|card| card["id"].as_str().unwrap())
+            .collect();
+        assert_eq!(
+            ids.len(),
+            cards.len(),
+            "two imported cards share an id; {} card(s), {} distinct",
+            cards.len(),
+            ids.len()
+        );
+
+        (notes, note_types, templates, cards.len())
+    }
+
+    #[test]
+    fn an_imported_package_cannot_carry_the_card_id_separator() {
+        let source = EngramSession::new_demo();
+        let exported: Value = serde_json::from_str(&source.export_anki_apkg()).unwrap();
+        let apkg = coding_adventures_base64::decode(
+            exported["apkg"].as_str().unwrap(),
+            &coding_adventures_base64::STANDARD,
+        )
+        .unwrap();
+
+        let mut target = EngramSession::new();
+        let merged: Value = serde_json::from_str(&target.merge_anki_apkg(&apkg)).unwrap();
+        assert_eq!(merged["ok"], true);
+
+        // Every count anchored on its own. An import that produced nothing
+        // would satisfy every assertion inside, and a zero that reads as a
+        // pass is the failure this crate keeps finding.
+        let (notes, note_types, templates, cards) = assert_no_card_id_separator(&merged);
+        assert!(notes > 0, "no notes to check");
+        assert!(note_types > 0, "no note types to check");
+        assert!(templates > 0, "no templates to check");
+        assert!(cards > 0, "no cards to check");
+    }
+
+    /// The same, through the OTHER reader.
+    ///
+    /// `read_v11_collection` dispatches on `col.ver` and hands anything at
+    /// schema 18 or above to `parse_schema18_collection`, a separate reader
+    /// with its own id derivation. The test above imports a package this crate
+    /// exported, which is v11 — so on its own it says nothing about the path a
+    /// package from a modern Anki actually takes.
+    ///
+    /// Found by a reviewer walking the claim independently rather than by the
+    /// original survey, which is the whole argument for doing that: "safe by
+    /// construction" was established over one of two readers and read as
+    /// covering both.
+    ///
+    /// Schema 18 is safe on the same grounds — the notetype id is the rowid,
+    /// and fields and templates carry integer ordinals — but it is a different
+    /// body of code and gets its own check. The fixture is a real Anki export.
+    #[test]
+    fn a_modern_package_cannot_carry_the_card_id_separator_either() {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../engram-anki-package/tests/fixtures/anki/anki-modern.apkg");
+        let bytes = std::fs::read(&path)
+            .unwrap_or_else(|error| panic!("schema-18 fixture at {}: {error}", path.display()));
+
+        let mut target = EngramSession::new();
+        let merged: Value = serde_json::from_str(&target.merge_anki_apkg(&bytes)).unwrap();
+        assert_eq!(merged["ok"], true, "schema-18 import: {merged}");
+
+        let (notes, note_types, templates, cards) = assert_no_card_id_separator(&merged);
+        assert!(notes > 0, "no notes to check");
+        assert!(note_types > 0, "no note types to check");
+        assert!(templates > 0, "no templates to check");
+        assert!(cards > 0, "no cards to check");
     }
 
     #[test]

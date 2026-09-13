@@ -1,9 +1,147 @@
 # Changelog
 
+## 2026-09-13
+
+- Project numeric font-size bindings on Text, HostInput, HostButton and HostTable as native TextUnit values. Preserve authored/inherited fallbacks for invalid live values, propagate table typography through split sections and scale input placeholders.
+
 All notable changes to `mosaic-emit-compose` are documented here.
 This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+### Fixed — the no-starve floor reaches leaf Row children (UI59 §4, #14815)
+
+#15123 put a width floor under every `Row` child, but it lived in
+`emit_container`, so a **leaf** — a `Button`, a bare `Text` — got nothing. That
+gap was not theoretical, and the earlier measurement missed it because it only
+looked at the default view:
+
+| viewport / view | zero-width text before | after |
+| --- | --- | --- |
+| 1280, Board | **1** (`Delete`) | **0** |
+| 700, Board | **4** (`Timeline`, schedule, `Edit`, `Delete`) | **0** |
+
+`Delete` was starving at **1280 — the declared acceptance viewport** — the whole
+time. #15123's measurement reported zero starvation because the Board view was
+never entered; it has 32 text nodes against the default view's 25.
+
+The floor now reaches `emit_host_button` and `emit_text`, which read the same
+precomputed set the container path uses, so all three writers give one answer
+rather than three. The set widened to include leaves accordingly.
+
+VisiCalc and Engram remain **pixel-identical** to their pre-UI59 renders.
+
+#### What it still does not do
+
+Only Compose. And the floor is applied where a part is *named* — a leaf with no
+part carries no style to consult, so it is not floored.
+
+### Fixed — a Row child is no longer starved (UI59 §4, #14815)
+
+Every `Row` child that is not already asking to absorb slack now carries
+`Modifier.wrapContentWidth(unbounded = true)`. That is CSS's own rule: a flex
+item has `min-width: auto`, so it shrinks toward its content and then stops, and
+the container overflows rather than starving anyone. Compose has no such floor —
+it hands out the remaining width in order and the last child gets whatever is
+left, which can be nothing.
+
+**UI59 §8 had rejected this as unreachable.** It measured three mechanisms and
+concluded each "merely chose a different child to starve". All three were
+`weight`-based. This one is not a distribution mechanism at all — `weight`
+divides the row, this puts a floor under each child — which is why it was not
+found then.
+
+Measured on Trestle:
+
+| viewport | zero-width text | wrapped 3+ lines | off-screen | tallest text |
+| --- | --- | --- | --- | --- |
+| 1280 before / after | 0 / 0 | 0 / 0 | 0 / 0 | 48 / 48 |
+| 900 before / after | **1** / **0** | 2 / **1** | 0 / 0 | 168 / **72** |
+| 700 before / after | **1** / **0** | 5 / **4** | 0 / 0 | 168 / **120** |
+
+Better on every axis with nothing worse — the test §8's three mechanisms failed.
+`IntrinsicSize.Min` and `IntrinsicSize.Max` were measured too and both still
+starved the child to zero.
+
+**VisiCalc and Engram render pixel-identical** (0 differing pixels), so this is
+inert outside the product that had the defect.
+
+`flex-shrink: 0` is now honoured by default and stops being reported where the
+floor applies; a POSITIVE value asks to shrink below content, which the floor
+refuses, so it stays reported.
+
+#### What it does not do
+
+The floor lives in `emit_container`, so a **leaf** Row child — a bare `Text` —
+still gets nothing and can still be starved. On Trestle that leaves `due-input`,
+`tl-name` and `tl-window` reported rather than guarded: 8 authored, 5 guarded,
+3 reported, none in both.
+
+`row_children_use_weight_and_intrinsic_measurement_in_split_sections` needed its
+assertion rewritten. Its claim — intrinsic width — still holds; it was asserting
+the *spelling* (`modifier = Modifier,`), and a bare modifier is precisely what
+let that group be starved. It now asserts the property.
+
+### Added — a dashed border is drawn, and `border-style: none` suppresses one (UI79, #14835)
+
+`Modifier.border` draws a solid stroke and takes no `PathEffect`, so a non-solid
+border has to be drawn: `drawRoundRect` with a dashed `Stroke`, which honours
+the authored corner radius — a plain `drawRect` would square off every rounded
+box that dashes. Trestle authors two, the composer's plus box (radius 8) and the
+empty-state box (radius 13); both rendered **solid** before while the style was
+reported dropped.
+
+CSS does not specify dash geometry, so the lengths are a choice: 4dp on / 4dp
+off for `dashed`, and for `dotted` a round cap with a zero-length on-segment,
+which is what produces dots rather than short dashes.
+
+`border-style: none` now **suppresses** the border. Consuming it without acting
+would have been worse than the old drop — the report would fall silent while a
+border still painted.
+
+`border-style` degradations on Trestle go from **5 to 0**, and that is co-total
+rather than convenient: all three authored values are now genuinely handled
+(`solid` keeps `Modifier.border`, `dashed`/`dotted` are drawn, `none`
+suppresses).
+
+#### `drawWithContent`, not `drawBehind` — measured
+
+The first attempt used `drawBehind`. The Kotlin compiled, the stroke ran, and
+**no dashes appeared**: this modifier is appended after `.background(..)`, so
+drawing behind it paints the dashes under the background.
+
+The screenshot could not settle it either way — the two dashed boxes are small,
+so their straight edges are ~14px and a dash there is a one-run difference lost
+in noise. A minimal probe did: a 200x60 dashed box renders **24 separate runs**
+along its top edge where solid renders 1.
+
+### Fixed — the width guard and its drop report now share one answer (UI59, #14815)
+
+#15062 landed `flex-shrink: 0` but left the drop report claiming those parts
+were dropped, because filtering needed a second notion of "is this a direct Row
+child" and the two drifted. This replaces both with **one precomputed set**,
+carried on `PartStyleMap` — which is already threaded through every writer — so
+the emitter and the reporter read the same answer rather than each deciding.
+
+#### Three divergences, each found by tagging the emitted guard with its part
+
+A second walk cannot reproduce the emitter's traversal, and the counts alone
+hid that: 8 authored parts, 7 un-reported, 6 guarded looked nearly right. Only
+labelling each emitted guard showed which parts were which.
+
+| divergence | cause | effect before |
+| --- | --- | --- |
+| `flex-wrap` | a wrapping `Row` is emitted as `FlowRow`, whose children are **not** RowScope children. The walk read the raw tag. | parts un-reported that were never guarded — a **silent drop** |
+| leaf nodes | the guard lives in `emit_container`, so a `Text` child gets nothing | `tl-name`/`tl-window` in **neither** set |
+| `For`/`If` | meta-primitives emit no container, so their children are still RowScope children | `board-col` lost its guard |
+
+Measured on Trestle, every authored part now lands in exactly one set — guarded
+`{board-col, composer-plus, due-error-focus, due-input-focus, rail}` and
+reported `{due-input, tl-name, tl-window}`, with **nothing unaccounted and
+nothing in both**. The guard count is unchanged at 6, so this fixes the report
+without changing what is emitted.
+
+Falsified: restoring the raw-tag read fails the FlowRow case.
 
 ### Added — `flex-shrink: 0` on a Row child is honoured (UI59, #14815)
 

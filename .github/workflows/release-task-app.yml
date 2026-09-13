@@ -34,7 +34,9 @@ env:
   RUST_VERSION: "1.97.0"
 
 concurrency:
-  group: release-task-app
+  # Keep publication serialized, while allowing unrelated pull requests to
+  # retain their own pending validation run.
+  group: ${{ github.event_name == 'pull_request' && format('release-task-app-pr-{0}', github.event.pull_request.number) || 'release-task-app-publish' }}
   cancel-in-progress: false
 
 jobs:
@@ -68,6 +70,15 @@ jobs:
             --version "$RELEASE_VERSION" \
             --tag "$RELEASE_TAG" \
             --commit "$RELEASE_COMMIT"
+
+          changelog_args=(
+            --changelog code/programs/mosaic/task-app/CHANGELOG.md
+          )
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            changelog_args+=(--release-version "$RELEASE_VERSION")
+          fi
+          python code/scripts/taskapp_release.py validate-changelog \
+            "${changelog_args[@]}"
 
           if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
             if [[ "$RELEASE_REF" != "refs/heads/main" ]]; then

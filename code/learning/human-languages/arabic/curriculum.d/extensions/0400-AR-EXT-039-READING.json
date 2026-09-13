@@ -1,0 +1,15 @@
+{
+  "id": "AR-EXT-039-READING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can read familiar Arabic words and complete lines without romanization, then follow a connected encounter from greeting through a choice to farewell.",
+  "prerequisites": [
+    "AR-EXT-038-CALL-AND-REPAIR"
+  ],
+  "lessons": [
+    "AR-C42-words",
+    "AR-C42-lines",
+    "AR-C42-first-passage"
+  ]
+}

@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.274.0 — 2026-09-13 — real control recurrence snapshots
+
+Finite `step`/`until` analysis now follows one exact assignment to a real
+controlled scalar across multiple passes and retains the finite binary64 value
+that exits the bound. Simulation remains capped at 4,096 passes; cycles,
+rounded-away progress, unknown expressions, and non-finite results fail closed.
+
+## 0.273.0 — 2026-09-13 — integer control recurrence snapshots
+
+Finite `step`/`until` analysis now follows one exact assignment to an integer
+controlled scalar across multiple passes and retains the checked value that
+exits the bound. Simulation is capped at 4,096 passes; cycles, overflow,
+unknown expressions, and non-exact bodies continue to fail closed.
+
+## 0.272.0 — 2026-09-13 — dependent controlled-scalar exit snapshots
+
+Single-iteration `step`/`until` analysis now seeds the controlled scalar's
+known entry snapshot before evaluating its sole exact assignment. Checked
+post-body increments that immediately exit retain their value; unknown
+dependencies and assignments that can repeat continue to fail closed.
+
+## 0.271.0 — 2026-09-12 — compound controlled-scalar exit snapshots
+
+Single-iteration `step`/`until` analysis now recognizes an exact controlled
+scalar assignment wrapped in a one-statement `begin`/`end` body and retains
+the checked post-body increment when it exits the loop. Multi-statement bodies
+continue to fail closed.
+
 ## 0.270.0 — 2026-09-12 — compound step-loop recurrences
 
 Finite `step`/`until` recurrence analysis now uses the exact single-assignment

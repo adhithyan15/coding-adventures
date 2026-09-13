@@ -363,12 +363,16 @@ multiline accessibility metadata, recursive anonymous and named composite blocks
 with authored labels, local column counts, and parent-grid spans, and directed
 and undirected solid connections, plus directed and bidirectional point-arrow
 connections with solid, dotted, and thick lines and pipe-delimited optional
-labels, and circle or cross markers at either endpoint. Solid directed and
-undirected connections also accept native quoted labels. Link endpoints may
-declare square or rounded nodes inline, including their authored labels, rather
-than requiring a separate cell declaration. Terminal circle and
+labels, and circle or cross markers at either endpoint. Quoted labels are
+preserved on solid, dotted, and thick directed links. Link endpoints may
+declare square or rounded nodes inline, including their authored labels and
+quoted edge labels, rather than requiring a separate cell declaration. Block
+node, composite, edge, title, and accessibility text decode HTML entities into
+semantic Unicode before layout. Terminal circle and
 cross markers accept Mermaid's compact `A--oB` and `A--xB` forms without
-collapsing hyphenated node IDs. `diagram-layout-grid` resolves deterministic
+collapsing hyphenated node IDs. Three-or-more-tilde links create their endpoint
+nodes and lower to open, normal-width solid edges, matching the pinned Block
+renderer. `diagram-layout-grid` resolves deterministic
 cell geometry before the shared backend-neutral PaintScene lowering path. A
 native Metal-to-PNG fixture gates this slice. Named classes and direct styles
 resolve for both cells and composites, including backend-neutral

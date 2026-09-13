@@ -1,6 +1,6 @@
 # LANG VM feature and backend coverage
 
-Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification, then reference-modification MOVE/trap, then STRING SIZE/delimiter, then UNSTRING/delimiter, then INSPECT TALLYING/REPLACING). This is an inventory of the implemented
+Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification, then reference-modification MOVE/trap, then STRING SIZE/delimiter, then UNSTRING/delimiter, then INSPECT TALLYING/REPLACING, then pointer/overflow). This is an inventory of the implemented
 frontend families and their executable proof boundaries, not a claim that the
 historical languages or every backend are complete. Follow-up IDs live in the
 [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md).
@@ -31,11 +31,11 @@ refusal also does not imply the complete driver refuses that feature.
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
 | FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
-| COBOL-60 | 58 | 446 | 40 of those cells are BEAM (VM-040 COBOL BEAM slices); much larger frontend JIT/oracle suite |
+| COBOL-60 | 58 | 464 | All 58 of those cells are BEAM (VM-040 COBOL BEAM slices); much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1575
+The normal non-ALGOL capstone therefore declares 210 programs and 1593
 declared cells (sum of the non-ALGOL rows above). At VM-061 this matched a
 fresh `non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells
 exercised plus 210 skipped (missing local `ilasm`) = 1548. VM-042 then added
@@ -64,8 +64,16 @@ LEADING` and `REPLACING ALL` rows, all compiling through
 which use only `str_len`/`str_index`/`cmp_*`/`const`/`add`/`sub`/`mov`/`jmp*`/
 `label`/`and`/`or` — every one already lowered for BEAM before this slice, so
 no new `iir-to-beam` lowering was needed here either — so a fresh run on a
-host with `erl` now reports 1365 exercised + 210 skipped = 1575; all
-twenty-seven new cells since VM-061 are exercised, not skipped, since `erl`
+host with `erl` now reports 1365 exercised + 210 skipped = 1575; this slice
+(VM-040 COBOL BEAM pointer/overflow) added all eight remaining
+pointer/overflow cells to COBOL-60 at once (446 → 454 declared) — the first
+COBOL BEAM row to reach `emit_string_pointer_overlay`, the shared `STRING`/
+`UNSTRING ... WITH POINTER` helper that chains three `str_slice` calls and
+two `str_concat` calls with every bound computed entirely at run time from a
+live `PIC 9` pointer item — so a fresh run on a host with `erl` now reports
+1373 exercised + 210 skipped = 1583; no `iir-to-beam` defect was found, all
+eight programs passed on the first real-`erl` probe. All thirty-five new
+cells since VM-061 are exercised, not skipped, since `erl`
 was present when they were promoted. The "Declared cells" column counts every backend a
 row proves, Beam included — the convention Nib, Oct, FLOW-MATIC and
 COBOL-60's numbers already used. Twig was the one holdout at VM-061: its old
@@ -285,3 +293,12 @@ source entry runs compiled. Encoded CIL input remains VM-059.
 VM-040 Oct: all twelve BEAM cells executed in fresh processes with positive
 single-cell sentinels and no skips. The dedicated real-BEAM corpus separately
 checks stdout and zero return values. Intel-8008 semantics remain VM-013.
+
+The remaining base INSPECT BEAM probe adds four declared COBOL cells
+(454 to 458). All four ran on real Erlang; this slice does not report a
+new full-capstone run. Six COBOL rows still lack BEAM declarations.
+
+The regions/self-move probe executes the final six COBOL BEAM corpus rows.
+All 58 existing COBOL programs now declare eight backends (464 cells).
+This is corpus coverage, not full language support; VM-058 remains open.
+No new full-capstone or other seven-column rerun is reported here.

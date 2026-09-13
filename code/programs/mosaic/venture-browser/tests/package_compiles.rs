@@ -194,6 +194,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_macos_scroll",
         "venture_browser_macos_scroll_command",
         "venture_browser_macos_control_key",
+        "venture_browser_macos_access_key",
         "venture_browser_macos_control_text",
         "venture_browser_macos_control_copy",
         "venture_browser_macos_control_cut",
@@ -210,6 +211,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "host?.resize(width: bounds.width, height: bounds.height)",
         "override func keyDown",
         "host?.controlKey",
+        "host?.accessKey",
         "host?.controlText",
         "performNativeSurfaceWheel",
         "performNativeAddressCommit",
@@ -251,6 +253,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_windows_scroll",
         "venture_browser_windows_scroll_command",
         "venture_browser_windows_control_key",
+        "venture_browser_windows_access_key",
         "venture_browser_windows_control_text",
         "venture_browser_windows_control_copy",
         "venture_browser_windows_control_cut",
@@ -269,6 +272,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "private void OnKeyDown",
         "CharacterReceived += OnCharacterReceived",
         "Native.ControlKey",
+        "Native.AccessKey",
         "Native.ControlText",
         "RunFocusAcceptance",
         "CommitAddressWithEnter",
@@ -360,6 +364,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_flutter_new",
         "venture_browser_flutter_handle_event",
         "venture_browser_flutter_control_key",
+        "venture_browser_flutter_access_key",
         "venture_browser_flutter_control_text",
         "venture_browser_flutter_control_copy",
         "venture_browser_flutter_control_cut",
@@ -423,6 +428,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "MosaicHost::activateLink",
         "MosaicHost::scrollCommand",
         "MosaicHost::controlKey",
+        "MosaicHost::accessKey",
         "MosaicHost::controlText",
         "controlCopy_",
         "controlCut_",
@@ -452,6 +458,7 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
         "venture_browser_compose_new",
         "venture_browser_compose_handle_event",
         "venture_browser_compose_control_key",
+        "venture_browser_compose_access_key",
         "venture_browser_compose_control_text",
         "venture_browser_compose_control_copy",
         "venture_browser_compose_control_cut",
@@ -517,6 +524,125 @@ fn interface_and_manifest_pin_the_browser_chrome_contract() {
             web_acceptance.contains(symbol),
             "HTML/Web Component interaction acceptance omits {symbol}"
         );
+    }
+}
+
+#[test]
+fn native_hosts_forward_access_key_chords_to_shared_policy() {
+    let hosts = [
+        (
+            "SwiftUI",
+            read_package_file("host/swiftui/MosaicHost.swift"),
+            [
+                "venture_browser_macos_access_key",
+                "host?.accessKey",
+                ".control, .option",
+            ],
+        ),
+        (
+            "XAML",
+            read_package_file("host/xaml/MosaicHost.cs"),
+            [
+                "venture_browser_windows_access_key",
+                "Native.AccessKey",
+                "menuKeyDown",
+            ],
+        ),
+        (
+            "Qt",
+            read_package_file("host/qt/MosaicHost.cpp"),
+            ["access_key", "MosaicHost::accessKey", "Qt::AltModifier"],
+        ),
+        (
+            "Flutter",
+            read_package_file("host/flutter/mosaic_host.dart"),
+            [
+                "venture_browser_flutter_access_key",
+                "widget.host.accessKey",
+                "isAltPressed",
+            ],
+        ),
+        (
+            "Compose",
+            read_package_file("host/compose/MosaicHost.kt"),
+            [
+                "venture_browser_compose_access_key",
+                "host.accessKey",
+                "event.isAltPressed",
+            ],
+        ),
+    ];
+    for (name, source, required) in hosts {
+        for token in required {
+            assert!(
+                source.contains(token),
+                "{name} access-key seam omits {token}"
+            );
+        }
+        assert!(
+            !source.contains("duplicate-access-key")
+                && !source.contains("access_key_candidates")
+                && !source.contains("access_key_diagnostics"),
+            "{name} must not own access-key selection or diagnostics"
+        );
+    }
+}
+
+#[test]
+fn find_in_page_uses_one_shared_transaction_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    for symbol in [
+        "slot find-query",
+        "slot find-result-label",
+        "slot find-disabled",
+        "emit onFindChange",
+        "emit onFindNext",
+        "emit onFindPrevious",
+        "emit onFindClose",
+    ] {
+        assert!(interface.contains(symbol), "find interface omits {symbol}");
+    }
+    for symbol in [
+        "HostInput [ find-input ]",
+        "HostButton [ find-previous-button ]",
+        "HostButton [ find-next-button ]",
+        "HostButton [ find-close-button ]",
+    ] {
+        assert!(layout.contains(symbol), "find layout omits {symbol}");
+    }
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "pub struct BrowserFindState",
+        "pub struct BrowserFindDiagnostic",
+        "MAX_FIND_MATCHES",
+        "pub fn find_in_page",
+        "pub fn find_next",
+        "pub fn find_previous",
+        "fn refresh_find_presentation",
+    ] {
+        assert!(core.contains(symbol), "shared find core omits {symbol}");
+    }
+
+    for (name, path) in [
+        ("Cairo", "../../../packages/rust/venture-browser-cairo/src/lib.rs"),
+        ("macOS", "../../../packages/rust/venture-browser-macos/src/lib.rs"),
+        ("Windows", "../../../packages/rust/venture-browser-windows/src/lib.rs"),
+    ] {
+        let host = read_package_file(path);
+        for symbol in ["onFindChange", "onFindNext", "onFindPrevious", "onFindClose"] {
+            assert!(host.contains(symbol), "{name} bridge omits {symbol}");
+        }
+    }
+
+    for path in [
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/web/VentureChromeInteraction.test.js",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(acceptance.contains("findNext") || acceptance.contains("onFindNext"));
     }
 }
 

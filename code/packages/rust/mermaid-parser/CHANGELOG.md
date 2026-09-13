@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.216.0
+
+- Decode HTML entities in authored Block text before semantic IR lowering.
+
+## 0.215.0
+
+- Preserve quoted labels on solid, dotted, and thick Block links.
+
+## 0.214.0
+
+- Lower Block tilde links into open, solid grid connections with inline endpoint nodes.
+
+## 0.213.0
+
+- Preserve quoted labels on Block links that declare shaped endpoint nodes.
+
 ## 0.212.0
 
 - Apply Block `classDef default` styles to cells and composites without explicit classes.

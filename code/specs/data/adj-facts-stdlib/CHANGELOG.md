@@ -5,6 +5,374 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- **#14986: the rainforest superlative its own page states, and two atoms it does not.**
+  `biology/rainforest-layer.adj` had one envelope — the EMERGENT row's sentence — so a recall of the
+  forest floor was warranted by a sentence about the treetops. Each row now carries its own.
+
+  ### The superlative was never the problem
+
+  The bounding-language audit flagged `forest_floor → darkest_layer_hard_for_plants_to_grow` as a
+  row asserting a bound whose provenance states none. Measured 2026-09-13 UTC with a raw fetch, the
+  page says **"The forest floor is the darkest of all rainforest layers, making it extremely
+  difficult for plants to grow."** — one occurrence. The claim was always supported; the evidence
+  simply sat outside the machine-readable envelope, which is exactly what RS-5e moves.
+
+  The two audits were pointing at one defect here. **Not for the first time** — an earlier draft of
+  this entry claimed it was, and #14758's tropic rows, four entries down, are the same convergence:
+  a row asserting a bound, warranted by an envelope that states none. That is the second time in
+  three entries I have written a false "first in the series" claim, and the second time review
+  caught it rather than me. The claim added nothing; only the observation does.
+
+  ### Two atoms restate rather than quote
+
+  | row | tier | why |
+  | --- | --- | --- |
+  | `forest_floor` | `consensus` | the superlative is on the page, verbatim |
+  | `understory` | `consensus` | darker, more humid, below the canopy — stated; **"layer" is not**, see below |
+  | `emergent` | **`inferred`** | **"tallest" occurs ZERO times on the page** |
+  | `canopy` | **`inferred`** | **"treetop" occurs ZERO times on the page** |
+
+  The page says *"The top layer of the rainforest is the emergent layer"* and *"trees as tall as 60
+  meters"*; `tallest` restates that. It says the canopy is *"a deep layer of vegetation"* whose
+  leaves form a *"roof"*; `treetop` restates that. Both are readings — not fabrications like the
+  kingdoms row removed above, and not quotations either.
+
+  **`understory` is the weakest of the two kept at `consensus`, and the table above understated it.**
+  Its atom is `dark_humid_layer_below_canopy`; its span supplies *below the canopy*, *darker* and
+  *more humid*, but says "environment", not "layer". The tier is kept because `layer` is this
+  table's own column vocabulary — `rainforest_layer(layer, description)` — and the framing span
+  names understory as one of four layers. But the envelope reaches no answer, so a consumer of the
+  citation never sees that warrant. Named rather than smoothed over.
+
+  **The atoms are left alone.** Renaming a key changes what a recall returns, which is a larger
+  decision than a provenance conversion and does not belong in the same change.
+
+  ### A cost worth naming
+
+  Marking those two rows `inferred` **drops the `consensus` signal** — that this is a teaching
+  resource, not a primary source. The five tiers are one dimension; both facts are true of those
+  rows and only one fits. Recorded rather than resolved.
+
+  ### Instrument failures, three of them, all mine
+
+  1. The atom-vs-span checker with a 4-character stem let **"tallest" match "tall as 60 meters"** and
+     reported every token present. Whole-word matching surfaced it — and is in turn too strict for
+     inflection (`darker`/`dark`). Neither setting adjudicates; the phrase counts above do.
+  2. A near-miss control replaced the word "layer", which the understory span does not contain, so
+     the "near-miss" was **identical to the real span** and scored 1. A control that cannot differ
+     from its subject proves nothing. Now the final word is altered, with an assert that it differs.
+  3. The envelope replacement matched as a **substring** of the emergent row's more-indented line,
+     so the row answered with the framing span while the envelope kept the old sentence. Line
+     anchored now.
+
+  ### Pins
+
+  **6 mutants, plus a restore-to-green control.** (The si-base-units entry below retired "7/7" for
+  conflating a control with a kill; an earlier draft of this entry reinstated it. Same error, three
+  entries apart.) Swapping the forest-floor span for the old emergent envelope, dropping its
+  superlative clause, dropping the understory row's source, flipping either reasoned row's tier to
+  `consensus`, and dropping the shared locator all redden.
+
+  **Green by design, and disclosed here as well as in the test:** reverting the envelope `source` to
+  the old emergent sentence leaves every test green. Once all four rows override `source`, no row
+  can reach the envelope, so its wording is invisible to any output-based test — the same
+  unreachability recorded for `si-base-units` and `planets`. The headline of this entry IS that
+  envelope swap, so saying it is covered would be wrong; what IS pinned is that the framing span
+  reaches no answer.
+
+  One of those started as a surviving mutant and was **a harness bug, not a coverage gap**: a bare
+  phrase replace hit a header comment quoting the same sentence and left the row untouched. Anchored
+  to the row line, it reddens.
+
+  A pre-existing test asserted `emergent` answers at `consensus`. That tier **changed on purpose**,
+  and the test now says so rather than being quietly made green.
+
+- **#14986: eight planets, one citation about Venus — and a table where the trust tier finally does
+  visible work.** `astronomy/planets.adj` had one envelope, the sentence *"Venus is the second planet
+  from the Sun"*. Ask for Jupiter's position and the citation was about Venus.
+
+  Each row now carries the NASA hub page's own sentence for that planet, via RS-5e. No row restates
+  `locator` — one page, inherited. The envelope becomes the **framing** span: *"Our solar system has
+  eight planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune."*
+
+  ### Seven rows are read. One is reasoned. The tier says which.
+
+  Measured 2026-09-13 UTC with a raw fetch: each of the eight spans occurs **exactly once** in the
+  raw HTML and once in the rendered text. Seven literally state their ordinal — *"the fifth planet
+  from the Sun"*, *"the eighth and most distant planet"*.
+
+  **Mercury's does not.** The page says *"Mercury is the planet nearest to the Sun"* — never "the
+  first planet". Position 1 is read off "nearest" plus the ordering of a second span, *"The first
+  four planets from the Sun are Mercury, Venus, Earth, and Mars."*, in which Mercury is named first.
+  That is a reading, not a quotation, so **that row alone carries `trust inferred`** and both spans —
+  the same treatment the tropic rows get in `geography/reference-lines.adj`.
+
+  The distinction is pinned: flipping Mercury to `authoritative` reddens.
+
+  An earlier draft of this entry called this "the first table in the series where the read/reasoned
+  distinction shows up within one table". **That is false**, and falsified by the file this entry
+  cites as its own precedent: `geography/reference-lines.adj` (#15056) already ships four rows
+  inheriting `authoritative` beside two overriding to `inferred`. The claim was about my own work
+  rather than about the page, and I did not check it.
+
+  ### The envelope change is unreachable by construction, and was unpinned
+
+  Review measured it: replacing the new framing span with *"Our solar system has nine planets:
+  entirely fabricated."* left **every test green**. That is not a gap that an output-based pin can
+  close — once all eight rows override `source`, the envelope can never reach an answer, so no CLI
+  test can see its wording at all. Presenting "the envelope becomes the framing span" as a
+  delivered, covered fix was overstated.
+
+  What IS now pinned is the property: a test asserts that all eight rows answer AND that the
+  framing span appears in none of them. If a future change let the envelope leak back into an
+  answer, that reddens. The same unreachability holds for `metrology/si-base-units.adj` (#15073),
+  where it was disclosed but not asserted.
+
+  ### It propagates through a derived `rule`
+
+  Measured, not assumed. `astronomy/planet-ordinal-position.adj` is a `rule` bridging this table to
+  `mathematics/ordinal-numbers.adj`. After the change — summarised from the JSON, not captured
+  verbatim, and each answer actually carries TWO citations (the NASA span at the row's tier, plus
+  the ordinal-word source at `consensus`):
+
+  ```
+  planet_ordinal_position(jupiter, fifth)   trust=authoritative
+      src: Jupiter is the fifth planet from the Sun, and the largest planet in our solar system.
+  planet_ordinal_position(mercury, first)   trust=inferred   corroborations=1
+      src: Mercury is the planet nearest to the Sun, and the smallest planet in our solar system.
+  ```
+
+  The derived answer carries the **row's own** span and the row's own tier — including `inferred`
+  for the one reasoned row. So repairing a base table repairs every rule standing on it, without
+  touching the rule. That is an argument for converting tables that have dependents first, and it
+  was not obvious beforehand.
+
+  ### Also corrected
+
+  The header claimed every order was *"confirmed by its own NASA page"*. The spans are all from the
+  **hub** page; the eight per-planet pages were never fetched and nothing rests on them. Now said
+  plainly.
+
+  ### Pins
+
+  **9 mutants killed, 1 green by design, 1 restore control** — final state, after the coverage gap
+  below was closed. (Two earlier drafts of this line were wrong in different ways: "9/9" conflated
+  kills with a deliberate green, and a later "8 killed + 1 green control" was measured before four
+  more rows were pinned.)
+
+  Killed: Jupiter's span swapped for the old Venus envelope; Jupiter's, Neptune's and **Saturn's**
+  blocks dropped; "fifth" changed to "sixth" in Jupiter's span; **Mercury's tier flipped**;
+  Mercury's ordering `cites` dropped; **Mercury's `cites` locator repointed at Wikipedia**; the
+  shared envelope locator dropped.
+
+  **Green by design:** fabricating the envelope's framing span. See the unreachability section
+  above — no output test can see its wording, and expecting otherwise was my error rather than a
+  gap.
+
+  **The coverage gap review found:** Saturn was not the single unpinned row. `venus`, `mars`,
+  `saturn` and `uranus` were *all* entirely unpinned — a dropped block, a fabricated span, and even
+  a **corrupted order value** each stayed green. All eight rows are pinned now, and cross-row
+  isolation (a row-level mutant reddens only the test that queries it, verified for all eight)
+  replaces the retired "queried by no test" control, which no longer has a subject.
+
+  Controls on the span measurement: a nonsense span scores zero, and a near-miss of each of the
+  SEVEN that carry an ordinal word (that word changed) scores zero. It is inapplicable to Mercury's
+  span, which has no ordinal word — that being this table's whole point. The en dashes in the Earth sentence are the page's
+  own U+2013 and survive byte-exact.
+
+- **#14986: a row whose cited page does not contain its example, found while converting
+  `biology/kingdoms.adj` to per-row provenance.** The conversion is the smaller half of this entry.
+
+  ### The row
+
+  `plantae → multicellular_algae` is **removed**. Re-measured 2026-09-13 UTC with a raw fetch, the
+  cited Science Notes page's plantae line reads *"Examples: Flowers, grasses, conifers, ferns,
+  mosses"* — it does not contain "multicellular algae", and that phrase occurs **zero times**
+  anywhere on the page: zero in the rendered text *and* zero in the raw HTML, which no choice of
+  extractor can move. ("algae" occurs twice, both Protista, where the page actively places algae.)
+  A row the cited page does not state is precisely what this library exists not to ship, so the
+  recall now abstains instead of asserting it.
+
+  **Which of three causes is not determined here, and that is deliberate.** The previous header
+  recorded the plantae span *with* "multicellular algae" and described the check as follows — quoted
+  as a block so its own inner double quotes survive intact rather than being requoted:
+
+  > WebFetch-verified (re-fetched the live page and confirmed every "Examples:" line word-for-word
+  > against the header's original transcription)
+
+  That trailing qualifier is load-bearing, and an earlier draft of this very entry cut it — quoting
+  the sentence as if it ended at "word-for-word". In an entry whose subject is verbatim-span
+  discipline, that reproduced the defect it exists to correct, and it is restored here in full. The
+  qualifier says the old check compared the page against **this file's own prior transcription**,
+  which admits a third cause beside the obvious two: the page changed after the check; the
+  summarizing fetcher misreported the line; or the line was never independently read, and the check
+  confirmed the header against itself. The evidence to hand cannot separate them, so none is
+  asserted. What is settled: a raw fetch today does not contain the phrase, and a summarizing
+  fetcher is not an instrument for a verbatim span.
+
+  ### The census that found it
+
+  2026-09-13 UTC, over the one cited page. Rows read out of the shipped `.adj`, not retyped.
+
+  **Two counts, because they answer different questions and only one of them justifies deleting a
+  row.** An earlier draft of this entry reported a single "22 of 23", which hid the distinction:
+
+  Counted over the **23 rows as shipped before this change**; the right-hand column is where the
+  22 rows shipped after it stand, so neither number is falsified by the commit carrying it:
+
+  | test | before (23 rows) | after (22 rows) |
+  | --- | --- | --- |
+  | the atom is a **contiguous substring** of its kingdom's line | **21** | 21 |
+  | every **token** of the atom appears in that line | **22** | 22 |
+
+  The two rows that differ are not the same case, and reporting one number concealed that:
+
+  - **`bacteria → gram_positive_bacteria` — KEPT.** Every token is present; the page writes
+    *"Gram-positive and Gram-negative bacteria"*, distributing one head noun across two examples.
+    The row rests on reading that conjunction as distributive. That is a *reading*, not a
+    quotation, and the header now says so instead of implying it with an ellipsis.
+  - **`plantae → multicellular_algae` — REMOVED.** Not a substring, not all tokens, and the phrase
+    occurs zero times on the page under any reading.
+
+  Deleting one while keeping the other is defensible only if the standard is stated. It now is.
+
+  **Two instrument failures had to be fixed before that number meant anything.**
+
+  1. The first harness scored **zero on its own positive control** — it could not find the span that
+     was, at the time, this table's shipped `source`. Cause: the page writes
+     `<strong>Examples</strong>:`, and an extractor that replaces *every* tag with a space yields
+     `"Examples : "`. Inline tags must vanish with no separator; block tags become a break.
+  2. With that fixed, four rows read as MISSES. **Two were the instrument**: the page writes
+     "single-celled algae" and "Gram-negative", and normalising only underscores to spaces leaves
+     the hyphens unmatched. Of the remaining two, one is the distributive-reading case above and
+     one is the real defect. (An earlier draft of this entry said hyphens cleared *three* — it
+     clears two, and `gram_positive_bacteria` is not a hyphen artifact at all.)
+
+  Controls: a fabricated atom fails for every kingdom; a known-good atom passes.
+
+  ### Also measured, and deliberately not acted on
+
+  The fungi line reads *"Mushrooms, yeast, molds, rusts"* today — the three shipped fungi rows are
+  each stated by it, and `rusts` is a fourth example this table does not carry. The page also now
+  describes a sixth kingdom, Archaea. Both are under-coverage, not defects; neither is expanded here.
+
+  ### The conversion
+
+  The remaining 22 rows each carry their own kingdom's line as an RS-5e `source`. No row restates
+  `locator` or `trust` — one page, one tier, inherited. The envelope becomes a genuine **framing**
+  span, *"The traditional five kingdoms are Animalia, Plantae, Fungi, Protista, and Monera."*, plus
+  a `cites` for *"The six-kingdom system separates Monera into Bacteria and Archaea."* — which is
+  what makes `bacteria` a kingdom key at all. Previously the envelope held the **animalia** line, so
+  asking for a fungus returned a citation about humans and sponges.
+
+  All seven shipped spans occur exactly once in the page's rendered text; a nonsense span and a
+  near-miss variant each score zero.
+
+  ### Pins
+
+  **8/8 mutants behaved, and two of the eight exist because earlier versions survived.**
+
+  - Pinning the span plus a loose `contains("sciencenotes.org")` stayed **green** when the envelope's
+    `locator` was deleted — the envelope's own `cites` carries that locator, so the check was
+    satisfied by the corroboration, never by the inheritance it claimed to test. Now the pin is the
+    whole `source`/`locator`/`trust` object.
+  - Dropping **one** row's block stayed **green**, because a kingdom query returns one answer per row
+    and the siblings satisfied a `contains` check — cross-row masking again, this time inside a
+    single kingdom. Now the object's occurrence count is asserted exactly.
+
+  The remaining six: swapping a kingdom's span for the animalia line, dropping a single row's block,
+  truncating the fungi span, swapping plantae's span, **re-adding the removed row**, and dropping
+  the shared locator all redden. Restore returns to green.
+
+  **Two further gaps the review found, both now closed.**
+
+  - **14 of the 22 rows had no per-row pin at all.** Only `fungi` and `plantae` were covered, so
+    stripping every `animalia` or `bacteria` `{ source }` block — reverting those rows to the
+    envelope, *the exact defect this entry is about* — left the whole suite green. All five
+    kingdoms are pinned now.
+
+    That closing the gap also **retired a control**: "mutate a kingdom neither test queries, expect
+    green" no longer has a subject, because no kingdom is unqueried. What replaced it is stronger —
+    **cross-kingdom isolation**: stripping or fabricating any one kingdom's spans reddens exactly
+    that kingdom's test and no other, verified for all five.
+  - **The envelope's `cites` was unpinned.** Deleting the span that makes `bacteria` a kingdom key
+    at all left the suite green, because the object pin stops at `"trust"`, before
+    `corroborations`. Now asserted.
+
+  One correction to this entry's own accounting: re-adding the removed row reddens the **exact row
+  count**, not the `!contains("multicellular")` absence pin, which the count assertion dominates.
+  The absence pin is redundant rather than vacuous, and is kept as a statement of intent.
+
+- **#14986: seven SI base units, and a citation naming none of them.** `metrology/si-base-units.adj`
+  had one envelope for seven rows, and that envelope says the SI *has* seven base units without
+  naming one. A recall of `si_base_unit(mass, $U, $S)` shipped NIST, `authoritative`, and a
+  sentence that does not contain the word "kilogram".
+
+  Each row now carries the NIST page's own line for its own unit, via **RS-5e per-row provenance** —
+  `{ source "Mass - kilogram (kg)" }` and the six siblings. No row restates `locator` or `trust`:
+  all seven come from the one page at one tier, and a row inherits every field it does not write.
+  The inherited `authoritative` is correct here because each span **states** its row outright —
+  these are read, not reasoned. (Contrast the tropic rows in `geography/reference-lines.adj`,
+  reasoned from two spans and carrying `trust inferred`.)
+
+  **This was already scoped and deferred, with the text recorded.** The previous e2e test pinned the
+  envelope on a row query and explained why in its own comment — *"a row-binding pin today would
+  freeze the #14124 defect into a test"* — then listed all seven per-row spans as present on the
+  page and closed with *"Deferred to #14124 with the text recorded, NOT unavailable."* This delivers
+  exactly that, and the sound row-binding pin that comment was waiting for is now the test.
+
+  ### Measured on the page's bytes
+
+  Fetched 2026-09-13 **UTC** with **raw urllib, not a summarizing fetcher** — a summarizer has
+  misquoted a cited page three different ways before, and a `source` must be verbatim. Each of the
+  seven spans occurs **exactly once** in the raw HTML, once under an extractor that breaks only on
+  block elements, and once under a crude one that treats every tag as a break — 21 counts, all 1.
+  Each is the entire text of one `<li><a>`, which is *why* it survives all three modes: no tag
+  falls inside it.
+
+  The separator is SPACE, **U+002D HYPHEN-MINUS**, SPACE — read out of the extracted text rather
+  than assumed. Controls, each stated with the mode it holds in: the nonsense span
+  `"Zorblatt - quux (zz)"` scores zero in all three; an en-dash variant and a no-spaces variant
+  each score zero in all three, so the count is sensitive to the exact characters rather than
+  matching loosely.
+
+  **A control of mine did not hold, and the failure is the interesting part.** I offered the
+  envelope sentence as the positive control — known present, so the harness must find it. It scores
+  **zero in raw HTML**: `<a href=…>NIST SP 1247</a>` splits it, with a trailing `&nbsp;`. Which
+  means the thing worth reporting is not the control but its corollary: **the envelope `source` is
+  not a verbatim raw-byte span of the page.** It is a de-tagged rendering — true of the text as
+  displayed, not of the bytes. That predates this change and is not repaired here; it is named
+  because the heading says "measured on the page's bytes", and a reader should know which values
+  clear that bar. The seven per-row spans do. The envelope does not.
+
+  ### One consequence, named rather than left silent
+
+  Every row now overrides `source`, so **no answer can cite the envelope sentence** — it defends the
+  table's shape and reaches no recall. Its only verbatim pin was removed along with the row-binding
+  pin it sat in, and what replaced it asserts the sentence is *absent* from a row answer. A silent
+  edit to the envelope text would redden nothing. `locator` and `trust` are still pinned, via the
+  inheritance assertions.
+
+  ### Pins
+
+  Two tests, forward and reverse, each in its own program so the output holds exactly one answer
+  and a needle necessarily belongs to that row. Each asserts the row's own span key-anchored to
+  `source`, asserts the `locator` was actually **inherited** rather than restated, and carries the
+  named negative that the framing sentence no longer warrants a row.
+
+  **The `trust` assertion is weaker than it looks, and the test now says so.** `lower.rs:2622`
+  defaults a tier to `Authoritative` whenever a `source` is present, so the pin cannot tell
+  "inherited from the declared envelope tier" from "silently defaulted"; deleting the envelope's
+  `trust authoritative` leaves it green. It does discriminate the other four tiers — setting the
+  envelope to `trust inferred` propagates and reddens it.
+
+  **6 mutants, plus a restore-to-green** (the restore is a control, not a mutant — the previous
+  entry would have called this "7/7"). Swapping the mass row's span for the envelope sentence,
+  dropping its block, changing its hyphen to an en dash, dropping the candela row's block, and
+  dropping the shared locator each redden. **Dropping the block on the `time` row — which neither
+  test queries — stays green**, which is the cross-row control the previous installment's first
+  draft failed.
+
 - **#14758: two rows asserting a superlative, warranted by a sentence about the equator.**
   `geography/reference-lines.adj`'s `tropic_of_cancer → northernmost_sun_overhead` and
   `tropic_of_capricorn → southernmost_sun_overhead` both assert a BOUND — the furthest north

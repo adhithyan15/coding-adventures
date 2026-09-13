@@ -24,12 +24,23 @@
 //!
 //! `style_degradations` is deliberately outside `native_complete` (see
 //! `mosaic-package-artifact-builder`), because some entries are accepted
-//! platform limits. Engram has twelve, all on XAML, and ignoring them would let
-//! a thirteenth arrive unnoticed.
+//! platform limits. Ignoring them would let a new one arrive unnoticed.
+//!
+//! (This paragraph used to say "Engram has twelve, all on XAML". That stopped
+//! being true when Compose and SwiftUI began reporting their own drops, and the
+//! count is exactly the kind of number that goes stale unread — which is the
+//! argument for pinning properties rather than counts, made against itself.)
 //!
 //! So they are pinned by **property**, which is the part that carries meaning.
 //! A count would pass if one drop were fixed and another introduced; a property
 //! list says exactly what is being tolerated and fails on anything new.
+//!
+//! Pinning runs in **both** directions, and only one of them was here
+//! originally. A pinned drop that stops happening has to be removed too:
+//! left in place it is no longer a record of a known gap but a standing licence
+//! for that property to be dropped again with the gate still green. The first
+//! run of `no_pinned_style_drop_has_silently_been_fixed` found 11 of 21 entries
+//! in exactly that state.
 //!
 //! ## This is not the same "native-complete" as the Qt project gate
 //!
@@ -78,55 +89,43 @@ const NATIVE_BACKENDS: &[Backend] = &[
 /// Pinned by property rather than by count: a count would still pass if one
 /// drop were fixed and a different one appeared, which is precisely the
 /// exchange worth noticing.
+/// ## Eleven entries were deleted here, not fixed here
+///
+/// `no_pinned_style_drop_has_silently_been_fixed` is new, and the first time it
+/// ran it found **11 of these 21 pins no longer occurred**. The emitters had
+/// learned the mappings -- Compose's `max-width` is `Modifier.widthIn`, tagged
+/// `#14833` in `mosaic-emit-compose`; XAML's per-side borders lower to
+/// `BorderThickness` and have their own tests -- and nothing brought anyone
+/// back to this list, because fixing an emitter does not touch this file.
+///
+/// A stale pin is worse than untidy. It stops being a record of a known gap and
+/// becomes a standing licence: the property may be dropped again, on that
+/// backend, and the gate stays green. More than half this list had quietly
+/// turned into that.
+///
+/// What remains below is what is still genuinely dropped.
 const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // ---- Compose (#14811) ----
     //
-    // These 17 became visible the moment Compose started reporting its drops
-    // in #14811. They are pre-existing gaps, not regressions: Engram has been
-    // rendering without them on Compose since the parts were authored. Each is
-    // pinned to a filed issue rather than fixed here, because #14811 is the
-    // reporting mechanism and mapping four unrelated layout features inside it
-    // would make the change that everything else waits on far harder to judge.
+    // These became visible the moment Compose started reporting its drops in
+    // #14811. They are pre-existing gaps, not regressions: Engram has been
+    // rendering without them on Compose since the parts were authored.
     //
-    // They are NOT all the same kind of gap, and the pins say which is which:
+    // Of the nine originally pinned here, seven are gone -- `max-width`
+    // (#14833), the three arrangement arguments (#14834), the two
+    // `border-bottom` halves (#14835) and `flex-wrap` (#14836) all now map.
+    // Only the one that needs no mapping is left.
     //
-    // #14833 -- `max-width` on all seven screen parts (760px-1100px). A plain
-    // `Modifier.widthIn(max = ..)`; `chain_sets_own_width` already anticipates
-    // it. The worst of the four by visible effect: Engram's study screen is
-    // authored as a 760px reading column and currently runs the full width of
-    // the window.
-    (Backend::Compose, "max-width"),
-    // #14834 -- NOT an expressiveness gap. `justify-content`/`align-items`/
-    // `align` are the `horizontalArrangement`/`verticalAlignment` ARGUMENTS of
-    // Row and Column, the same slot `gap` already reaches as
-    // `Arrangement.spacedBy` (#14804). The emitter simply does not thread
-    // them. #14811 splits the drop reason so it stops implying otherwise.
-    (Backend::Compose, "justify-content"),
-    (Backend::Compose, "align-items"),
-    (Backend::Compose, "align"),
-    // #14835 -- a real gap, and the same one XAML had above: `Modifier.border`
-    // draws all four edges and has no per-side form, so a bottom rule needs
-    // `drawBehind` or a divider. The deck list renders as an undivided run of
-    // rows until then.
-    (Backend::Compose, "border-bottom-width"),
-    (Backend::Compose, "border-bottom-color"),
+    // `border-bottom-style: solid` has no Compose equivalent and needs none --
+    // solid is the only stroke it draws.
     (Backend::Compose, "border-bottom-style"),
-    // #14836 -- `FlowRow` exists, so unlike XAML below this is not a platform
-    // limit; it is a change of which composable a container lowers to, which
-    // is exactly what UI60 (#14828) is already changing. Sequenced after it.
-    (Backend::Compose, "flex-wrap"),
     // WinUI 3 genuinely has no WrapPanel, so `flex-wrap` has nowhere to go.
     // An inherent platform limit rather than a mapping we have not written.
     (Backend::Xaml, "flex-wrap"),
-    // #14132 — NOT a platform limit. WinUI expresses a bottom rule perfectly
-    // well as `BorderThickness="0,0,0,1"`, and the emitter simply has no
-    // mapping for the per-side properties. Introduced by the deck-list hairline
-    // in #14115; the rows render on XAML without their separator until the
-    // emitter learns the mapping.
-    (Backend::Xaml, "border-bottom-width"),
-    (Backend::Xaml, "border-bottom-color"),
     // `border-bottom-style: solid` has no XAML equivalent and needs none --
-    // solid is the only kind of border WinUI draws.
+    // solid is the only kind of border WinUI draws. Its sibling
+    // `border-bottom-width`/`-color` pins (#14132) are gone: the emitter
+    // learned `BorderThickness="0,0,0,1"`.
     (Backend::Xaml, "border-bottom-style"),
     // ---- SwiftUI (#14728) ----
     //
@@ -140,7 +139,18 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // `Spacer`, `.layoutPriority`), and this emitter appends modifiers to an
     // already-built view, so no match arm could apply them. Fixing them means
     // the container emitter reading the part's style before emitting children.
-    (Backend::SwiftUI, "gap"),
+    //
+    // `gap` was on this list and should not have been -- the comment above
+    // describes the fix, and the container emitter had ALREADY been doing it:
+    // `Column` opens `VStack(spacing:)` and `Row` an `HStack(spacing:)`, read
+    // from the part's own style. What had not been fixed was the REPORT, which
+    // scanned only the modifier chain and so called every applied gap a drop.
+    // 22 of Engram's 40 reported SwiftUI drops were this, `$style.app-shell`
+    // among them -- reported to drop `gap: 18` while its emitted Swift opened
+    // `VStack(spacing: 18)`.
+    //
+    // A `gap` that a `Box`, `Stack` or `HostScroll` really does discard is
+    // still reported, so this entry would come back if one appeared here.
     (Backend::SwiftUI, "align"),
     (Backend::SwiftUI, "align-items"),
     (Backend::SwiftUI, "justify-content"),
@@ -148,12 +158,9 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // No SwiftUI equivalent before the `Layout` protocol; a wrapping stack has
     // to be written. The closest thing to a genuine platform limit here.
     (Backend::SwiftUI, "flex-wrap"),
-    // The same defect as XAML's entries above, on another backend (#14132's
-    // shape, tracked for SwiftUI in #14728): `.overlay(alignment: .bottom)`
-    // draws a bottom rule perfectly well, the emitter simply has no mapping.
-    (Backend::SwiftUI, "border-bottom-width"),
-    (Backend::SwiftUI, "border-bottom-color"),
-    // Needs no mapping -- solid is the only stroke SwiftUI draws.
+    // Needs no mapping -- solid is the only stroke SwiftUI draws. The
+    // `border-bottom-width`/`-color` pins beside it are gone: `.overlay`
+    // draws the rule and the emitter learned it.
     (Backend::SwiftUI, "border-bottom-style"),
 ];
 
@@ -253,5 +260,70 @@ fn no_style_property_is_dropped_beyond_the_pinned_set() {
         "no style degradations reported at all -- expected XAML's known drops, \
          so either they were fixed (update ALLOWED_STYLE_DROPS) or the analyzer \
          stopped looking"
+    );
+}
+
+/// Every pinned drop is still a drop.
+///
+/// The test above is one-directional: it catches a NEW drop, and cannot catch a
+/// pinned one that stopped happening. That asymmetry is not cosmetic. An entry
+/// whose gap was fixed stays on the list, and from then on it is a permanently
+/// open hole -- a later regression that re-drops the same property on the same
+/// backend is allowlisted and passes silently, which is exactly the state this
+/// file exists to prevent.
+///
+/// `seen_any` does not cover it either. It asks whether ANY drop was reported,
+/// so it stays green while twenty of twenty-one entries go stale.
+///
+/// So each pair must still be observed. When one is not, the gap was fixed and
+/// the entry should be deleted -- which is also the only moment anyone finds
+/// out, since fixing an emitter mapping does not otherwise touch this file.
+#[test]
+fn no_pinned_style_drop_has_silently_been_fixed() {
+    // A `Vec`, not a `HashSet`: `Backend` is not `Hash`, and deriving it to
+    // suit a test would be the tail wagging the dog. Both collections are
+    // dozens of entries, so the linear scan below costs nothing.
+    let mut observed: Vec<(Backend, String)> = Vec::new();
+
+    for &backend in NATIVE_BACKENDS {
+        let output = TempDir::new().expect("temporary output");
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: package_root(),
+                output_root: output.path().to_path_buf(),
+                backend,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .unwrap_or_else(|error| panic!("{backend:?} degradation analysis failed: {error}"));
+
+        for entry in &report.style_degradations {
+            if let Some(primitive) = entry.primitive.as_deref() {
+                observed.push((backend, primitive.to_string()));
+            }
+        }
+    }
+
+    let stale: Vec<String> = ALLOWED_STYLE_DROPS
+        .iter()
+        .filter(|(backend, property)| {
+            !observed
+                .iter()
+                .any(|(seen, seen_property)| seen == backend && seen_property == property)
+        })
+        .map(|(backend, property)| format!("  {backend:?}: {property}"))
+        .collect();
+
+    assert!(
+        stale.is_empty(),
+        "{} pinned style drop(s) no longer occur:\n{}\n\n\
+         The emitter learned the mapping, so delete these from \
+         ALLOWED_STYLE_DROPS -- and close the issue each is pinned to. Left in \
+         place they stop being a record of a known gap and become a licence for \
+         that property to be dropped again with nothing noticing.",
+        stale.len(),
+        stale.join("\n")
     );
 }

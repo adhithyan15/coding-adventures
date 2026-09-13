@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- Added static identity-policy proof composition. The broker derives the trace
+  only from the one-use authorization nonce, validates the registered provider,
+  deployment client, and opaque verification context before source access,
+  then carries the zeroizing ID token through the existing separately audited
+  policy-load and trusted-verification gates. Only the verified provider-scoped
+  opaque credential key is released after the composite result audit; no
+  concrete source, verifier, JWT/JOSE/JWKS algorithm, clock, storage, transport,
+  or network authority is added.
+- Added an audited static ID-token identity-policy source boundary. Existing
+  provider registration, deployment client ID, requested provider, opaque
+  verification context, and trace are exactly bound before the source read;
+  zeroizing bytes are decoded through the closed identity schema and the
+  profile is withheld unless its result audit is durable. No concrete source,
+  verifier, key, clock, storage, or network authority is added.
+- Added exact `private_key_jwt` usable-access composition: the complete retained
+  provider/client/endpoint/method/algorithm/key profile is validated before
+  credential or clock access, still-fresh tokens invoke no signer or transport,
+  and due tokens cross audited assertion, transport, and revision-bound rotation
+  before custody disclosure. Unused replay entropy remains zeroizing.
 - Added exact client-secret usable-access composition: retained Basic/Post
   policy is validated before credential or clock access, still-fresh tokens
   reach only the audited custody closure, and due tokens cross the existing

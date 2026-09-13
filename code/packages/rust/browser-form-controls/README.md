@@ -27,6 +27,8 @@ only from host-supplied elapsed time. Clipboard copy/cut/paste remains in the
 shared reducer; payloads negotiate plain and escaped HTML flavors, and password
 controls never return clipboard payloads. Platform accessibility adapters use
 the same movement, selection, replacement, and transaction actions.
+`text_editor_presentation` exposes the geometry reducer independently so other
+browser text surfaces can reuse it without becoming form controls.
 
 Typed inputs also share one value reducer. Unicode-scalar `maxlength` is
 enforced during replacement, email and absolute URL syntax produce reusable

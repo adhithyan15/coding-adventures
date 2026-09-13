@@ -24,6 +24,22 @@ before proceeding to separately audited registration. Confidential source
 loading reads only provider policy and never acquires client-secret or
 signing-key access. No file path, backend diagnostic, or profile byte enters
 broker audit data.
+The broker can also load the separate exact-schema ID-token identity policy
+through an injected source. It requires an existing provider registration and
+an opaque verification context naming that exact provider before the source
+effect, derives the deployment client ID only from the registration, keeps
+returned bytes zeroizing, and durably records the provider/trace-bound source
+intent and closed decode result before releasing the validated identity
+profile. No concrete source or verifier is added.
+That load can now compose directly into nonce-bound Authorization Code identity
+proof. The one-use nonce supplies the only trace; its provider and deployment
+client, plus the opaque verification context's provider, must match the
+registration before source access. The zeroizing ID token then crosses the
+existing separately audited policy-load and trusted-verification gates, and a
+final broker audit must be durable before only the provider-scoped opaque
+credential key is released. The composition still adds no concrete source,
+verifier, JWT/JOSE/JWKS algorithm, clock, storage, transport, or network
+authority.
 For retained `client_secret_basic` and `client_secret_post` profiles, the
 validated provider data can bind an exact provider-matched opaque secret key
 into the existing client-secret adapter without letting the caller choose or
@@ -93,6 +109,14 @@ transport. A token inside the provider-data refresh lead crosses the complete
 audited refresh and revision-bound rotation path first, so only the new stored
 access token can reach the closure. The clock, secret store, token transport,
 credential store, and closure all remain injected or caller-owned.
+The symmetric `private_key_jwt` usable-access composition validates the complete
+retained provider, client, token-endpoint, method, algorithm, and opaque-key
+profile before credential or clock access. Fresh credentials invoke neither the
+abstract signer nor transport and discard caller replay entropy through
+zeroizing ownership. Due credentials cross the existing separately audited
+assertion, transport, response, release, and revision-bound rotation gates
+before custody discloses the newly stored access token to one closure. No
+concrete signing algorithm or network authority is enabled.
 
 For an OpenID Connect Authorization Code exchange using retained client-secret
 authentication, the broker can instead consume the exact non-cloneable
@@ -105,6 +129,16 @@ provider-scoped opaque account key selects storage. Missing or rejected ID-token
 evidence reaches no credential store, the consumed evidence is omitted from the
 stored record, and only the opaque revision is released. Verification, time,
 transport, and storage implementations remain injected.
+
+The broker can now load the exact static ID-token policy directly within that
+client-secret exchange-to-custody composition. The retained authentication,
+request endpoint/client, opaque verification context, and nonce are all bound
+to the registration before the injected policy source is read. Policy loading,
+secret access, transport, response release, verification, and storage retain
+their separate provider/trace audit gates, and a final composite audit precedes
+release of only the opaque revision. The caller supplies no decoded identity
+profile and gains no concrete source, verifier, clock, transport, or storage
+authority.
 
 The same verified-identity custody path is available for retained
 `private_key_jwt` profiles through the existing audited abstract signer. Its

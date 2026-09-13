@@ -2,8 +2,8 @@
 
 This package is the shared Mosaic source of truth for Venture's native browser
 chrome. It authors the title, Back, Forward, Home, Reload, address input, Go
-action, bookmark and View Source controls, status line, disabled states, and dispatch contract
-once in MIL, MLL, and MSL.
+action, bookmark, View Source, and find-in-page controls, status line, disabled
+states, and dispatch contract once in MIL, MLL, and MSL.
 
 The package intentionally does not draw a web page. `venture-browser-core`
 owns navigation and the URL-to-paint pipeline. The `content-surface` node slot
@@ -28,6 +28,15 @@ recreating the surrounding chrome in backend-specific UI code.
   scrolling, native scrollbar offsets, link activation, and hover projection
   are shared by the macOS and Windows bridges. Platform crates supply only
   their text/page composition and final paint backends.
+- Access keys retain an independent document order through layout and paint so
+  targets with negative `tabindex` remain available without entering Tab
+  traversal. Core resolves normalized duplicates, disabledness, modal scope,
+  focus, and activation; native adapters only translate the platform modifier
+  chord and forward one character through their matching `access_key` ABI.
+- Find-in-page retains one bounded query and result sequence in core. Visible
+  text matching, wrap state, automatic reveal, result labels, diagnostics, and
+  backend-neutral paint highlights are shared; generated hosts only forward
+  query, next, previous, and close events from the Mosaic-authored find bar.
 - View Source never refetches the page. The core escapes the exact retained
   response text into a synthetic `<pre>` HTML document and emits one typed
   `open-auxiliary-document` effect. SwiftUI, WinUI, Qt, Flutter, and Compose

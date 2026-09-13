@@ -429,7 +429,16 @@ impl TaskMosaicApp {
             "sheet-mode": if self.state.view == ViewMode::Sheet { "sheet" } else { "" },
             "sheet-viewport-rows": sheet_rows,
             "sheet-column-headers": ["Name", "Done", "Due", "Priority", "Labels"],
-            "sheet-column-widths": [3, 1, 2, 2, 2],
+            // #15131 -- PIXEL widths, which is what the slot means.
+            //
+            // These were `[3, 1, 2, 2, 2]`, plainly intended as relative
+            // proportions, but `Grid.mil` declares `column-widths` as
+            // "per-column pixel widths" and every backend threads them
+            // straight into a width. Three of the sheet's cells therefore
+            // measured ZERO WIDTH at 1280, 900 and 700 alike -- a 1px
+            // column has no room for its text. The same proportions at a
+            // 80px unit, matching the grid's own 72px minimum cell.
+            "sheet-column-widths": [240, 80, 160, 160, 160],
             "sheet-selected-row": self.state.sheet_selected_row,
             "sheet-selected-col": self.state.sheet_selected_col,
             "sheet-edit-row": self.state.sheet_edit_row,
@@ -2103,5 +2112,37 @@ mod tests {
     #[test]
     fn protocol_constant_is_current() {
         assert_eq!(PROTOCOL_VERSION, 1);
+    }
+
+    /// #15131 -- `column-widths` is declared by `Grid.mil` as "per-column
+    /// PIXEL widths", and every backend threads the number straight into a
+    /// width. These were once `[3, 1, 2, 2, 2]`, plainly meant as relative
+    /// proportions, and three of the sheet's cells measured ZERO WIDTH at
+    /// 1280, 900 and 700 alike -- a 1px column has no room for its text.
+    ///
+    /// A ratio and a pixel width are both `number`, so nothing upstream can
+    /// catch the confusion; this asserts the magnitude instead. The bound
+    /// is deliberately loose -- it is here to catch single digits, not to
+    /// pin a layout.
+    #[test]
+    fn sheet_column_widths_are_pixels_not_ratios() {
+        let mut app = TaskMosaicApp::default();
+        let update = app.start(context()).unwrap();
+        let widths = update.props["sheet-column-widths"]
+            .as_array()
+            .expect("sheet-column-widths is a list");
+        assert!(!widths.is_empty(), "the sheet declares columns");
+        for (index, value) in widths.iter().enumerate() {
+            let px = value.as_f64().expect("each width is a number");
+            assert!(
+                px >= 40.0,
+                "column {index} is {px}px wide -- that is a ratio, not a pixel width (#15131)"
+            );
+        }
+        // Parallel-shaped to the headers, which `Grid.mil` also requires.
+        let headers = update.props["sheet-column-headers"]
+            .as_array()
+            .expect("sheet-column-headers is a list");
+        assert_eq!(widths.len(), headers.len(), "one width per column");
     }
 }

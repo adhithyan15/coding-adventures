@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.93.0
+
+- Tokenize quoted labels on solid, dotted, and thick Block links.
+
+## 0.92.0
+
+- Tokenize Block links written with three or more tildes.
+
+## 0.91.0
+
+- Tokenize quoted labels on Block links that declare nodes inline.
+
 ## 0.90.0
 
 - Tokenize Block default class definitions through a dedicated pinned grammar rule.

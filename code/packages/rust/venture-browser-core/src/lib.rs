@@ -4,6 +4,14 @@
 //! final paint backend. This crate composes the shared network, HTML, layout,
 //! paint, and asynchronous image-resource lifecycle.
 
+mod contenteditable;
+
+pub use contenteditable::{
+    ContentEditableAccessibilityState, ContentEditableDiagnostic, ContentEditableEffect,
+    ContentEditableMode, ContentEditableModel, ContentEditableSnapshot,
+    ContentEditableSnapshotEntry,
+};
+
 use browser_bookmarks::transact as transact_bookmarks;
 pub use browser_bookmarks::{
     Bookmark, BookmarkCatalog, BookmarkChange, BookmarkRepository, BookmarkRepositoryError,
@@ -11,16 +19,16 @@ pub use browser_bookmarks::{
 };
 pub use browser_form_controls::{
     format_typed_value, normalize_color, parse_typed_step, parse_typed_value, step_typed_value,
-    typed_constraints, BrowserControlModel, ControlAccessibilityAction, ControlAutofillDescriptor,
-    ControlAutofillOutcome, ControlAutofillTransaction, ControlAutofillValue,
-    ControlChoiceOptionState, ControlChoiceState, ControlClipboardPayload, ControlDefaultState,
-    ControlEditorPresentation, ControlEditorState, ControlEffect, ControlFileItemState,
-    ControlFilePickerRequest, ControlFileState, ControlKey, ControlMutationEvent,
-    ControlMutationEventKind, ControlMutationSource, ControlNavigationUnit, ControlRect,
-    ControlRestorationEntry, ControlSelection, ControlStateDiagnostic, ControlStatePrivacy,
-    ControlStateSnapshot, ControlSuggestionDiagnostic, ControlSuggestionOption,
-    ControlSuggestionPickerAction, ControlSuggestionState, ControlTextDirection,
-    ControlTextMetrics, ControlValueDiagnostic, ControlValueState,
+    text_editor_presentation, typed_constraints, BrowserControlModel, ControlAccessibilityAction,
+    ControlAutofillDescriptor, ControlAutofillOutcome, ControlAutofillTransaction,
+    ControlAutofillValue, ControlChoiceOptionState, ControlChoiceState, ControlClipboardPayload,
+    ControlDefaultState, ControlEditorPresentation, ControlEditorState, ControlEffect,
+    ControlFileItemState, ControlFilePickerRequest, ControlFileState, ControlKey,
+    ControlMutationEvent, ControlMutationEventKind, ControlMutationSource, ControlNavigationUnit,
+    ControlRect, ControlRestorationEntry, ControlSelection, ControlStateDiagnostic,
+    ControlStatePrivacy, ControlStateSnapshot, ControlSuggestionDiagnostic,
+    ControlSuggestionOption, ControlSuggestionPickerAction, ControlSuggestionState,
+    ControlTextDirection, ControlTextMetrics, ControlValueDiagnostic, ControlValueState,
     CustomElementAccessibilityAction, CustomElementAccessibilityProjection,
     CustomElementAccessibilityState, CustomElementAccessibilityValue, CustomElementDiagnostic,
     CustomElementFormAssociation, CustomElementFormEntry, CustomElementFormEntryValue,
@@ -73,7 +81,9 @@ const CONTROL_TEXT_METRICS: ControlTextMetrics = ControlTextMetrics {
 };
 const EDITOR_OVERLAY_PREFIX: &str = "venture-editor:";
 const PAGE_FOCUS_OVERLAY_PREFIX: &str = "venture-page-focus:";
+const FIND_OVERLAY_PREFIX: &str = "venture-find:";
 const SESSION_HISTORY_STATE_LIMIT: usize = 64;
+pub const MAX_FIND_MATCHES: usize = 256;
 
 fn apply_details_open_states(
     nodes: &mut [BrowserRenderNode],
@@ -313,8 +323,125 @@ fn navigation_target_offset(node: &PositionedNode, target: &str) -> Option<f64> 
     find(node, 0.0, target)
 }
 
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct BrowserFindState {
+    pub query: String,
+    pub match_count: usize,
+    pub active_match: Option<usize>,
+    pub wrapped: bool,
+    pub truncated: bool,
+}
+
+impl BrowserFindState {
+    pub fn result_label(&self) -> String {
+        match (self.active_match, self.match_count) {
+            (_, 0) if self.query.is_empty() => String::new(),
+            (_, 0) => "No matches".into(),
+            (Some(active), count) => {
+                let suffix = if self.truncated { "+" } else { "" };
+                format!("{} of {count}{suffix}", active + 1)
+            }
+            _ => String::new(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserFindDiagnostic {
+    pub code: &'static str,
+    pub message: &'static str,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+struct BrowserFindMatch {
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    fixed: bool,
+}
+
+fn collect_find_matches(
+    node: &PositionedNode,
+    parent_x: f64,
+    parent_y: f64,
+    inherited_fixed: bool,
+    folded_query: &str,
+    matches: &mut Vec<BrowserFindMatch>,
+    truncated: &mut bool,
+) {
+    let x = parent_x + node.x;
+    let y = parent_y + node.y;
+    let fixed = inherited_fixed || positioned_node_is_fixed(node);
+    if let Some(layout_ir::Content::Text(text)) = &node.content {
+        let (folded_text, scalar_positions) = fold_find_text(&text.value);
+        let scalar_count = text.value.chars().count().max(1);
+        let mut search_start = 0;
+        while let Some(relative) = folded_text[search_start..].find(folded_query) {
+            if matches.len() == MAX_FIND_MATCHES {
+                *truncated = true;
+                break;
+            }
+            let start = search_start + relative;
+            let end = start + folded_query.len();
+            let start_scalar = scalar_positions
+                .iter()
+                .find(|(byte, _)| *byte == start)
+                .map_or(0, |(_, scalar)| *scalar);
+            let end_scalar = scalar_positions
+                .iter()
+                .find(|(byte, _)| *byte == end)
+                .map_or(scalar_count, |(_, scalar)| *scalar)
+                .max(start_scalar + 1)
+                .min(scalar_count);
+            matches.push(BrowserFindMatch {
+                x: x + node.width * start_scalar as f64 / scalar_count as f64,
+                y,
+                width: (node.width * (end_scalar - start_scalar) as f64 / scalar_count as f64)
+                    .max(1.0),
+                height: node.height.max(1.0),
+                fixed,
+            });
+            search_start = end;
+            if search_start >= folded_text.len() {
+                break;
+            }
+        }
+    }
+    if !*truncated {
+        for child in &node.children {
+            collect_find_matches(child, x, y, fixed, folded_query, matches, truncated);
+            if *truncated {
+                break;
+            }
+        }
+    }
+}
+
+fn fold_find_text(value: &str) -> (String, Vec<(usize, usize)>) {
+    let mut folded = String::new();
+    let mut positions = Vec::new();
+    let mut scalar_count = 0;
+    for (scalar, character) in value.chars().enumerate() {
+        scalar_count = scalar + 1;
+        for lowercase in character.to_lowercase() {
+            positions.push((folded.len(), scalar));
+            folded.push(lowercase);
+        }
+    }
+    positions.push((folded.len(), scalar_count));
+    (folded, positions)
+}
+
+fn positioned_node_is_fixed(node: &PositionedNode) -> bool {
+    let Some(ExtValue::Map(values)) = node.ext.get("positioned") else {
+        return false;
+    };
+    matches!(values.get("position"), Some(ExtValue::Str(value)) if value == "fixed")
+}
+
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 9] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 12] = [
     "address",
     "page-title",
     "status-text",
@@ -323,6 +450,9 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 9] = [
     "bookmark-label",
     "bookmark-disabled",
     "view-source-disabled",
+    "find-query",
+    "find-result-label",
+    "find-disabled",
     "navigation-disabled",
 ];
 
@@ -330,13 +460,17 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 9] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 8] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 12] = [
     "onBack",
     "onForward",
     "onHome",
     "onReload",
     "onToggleBookmark",
     "onViewSource",
+    "onFindChange",
+    "onFindNext",
+    "onFindPrevious",
+    "onFindClose",
     "onAddressChange",
     "onNavigate",
 ];
@@ -737,6 +871,7 @@ pub struct PageFocusAccessibilityState {
     pub key: String,
     pub role: String,
     pub name: String,
+    pub access_keys: Vec<String>,
     pub tab_index: i32,
     pub focused: bool,
     pub x: f64,
@@ -744,6 +879,44 @@ pub struct PageFocusAccessibilityState {
     pub width: f64,
     pub height: f64,
 }
+
+/// One normalized access-key candidate in retained document order.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AccessKeyCandidateState {
+    pub access_key: String,
+    pub key: String,
+    pub role: String,
+    pub name: String,
+    pub access_order: usize,
+    pub conflict: bool,
+    pub focused: bool,
+}
+
+/// A deterministic diagnostic produced while normalizing access-key tokens.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AccessKeyDiagnostic {
+    pub code: String,
+    pub access_key: String,
+    pub winner: Option<String>,
+    pub ignored: Option<String>,
+}
+
+/// Platform chord already recognized by a thin host event adapter.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum AccessKeyModifier {
+    Alt,
+    ControlOption,
+}
+
+/// One host-neutral access-key command delivered to shared browser policy.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AccessKeyCommand {
+    pub modifier: AccessKeyModifier,
+    pub character: String,
+}
+
+pub const MAX_ACCESS_KEY_TARGETS: usize = 1_024;
+pub const MAX_ACCESS_KEYS_PER_TARGET: usize = 16;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 enum PageFocusTarget {
@@ -759,6 +932,27 @@ struct PageFocusItem {
     state: PageFocusAccessibilityState,
     order: usize,
     fixed: bool,
+}
+
+#[derive(Clone, Debug)]
+struct AccessKeyItem {
+    target: PageFocusTarget,
+    key: String,
+    role: String,
+    name: String,
+    access_keys: Vec<String>,
+    access_order: usize,
+    top_layer_index: Option<usize>,
+}
+
+fn normalize_access_key(value: &str) -> Option<String> {
+    let value = value.trim();
+    let mut characters = value.chars();
+    let character = characters.next()?;
+    if character.is_control() || characters.next().is_some() {
+        return None;
+    }
+    Some(character.to_lowercase().collect())
 }
 
 /// Shared accessibility and host projection for an open dialog or popover.
@@ -987,6 +1181,7 @@ pub struct FragmentNavigationState {
 pub struct BrowserHistoryRestorationState {
     pub entry_id: NavigationEntryId,
     pub restored_form_state: bool,
+    pub restored_editing_state: bool,
     pub restored_scroll: bool,
     pub scroll_offset_y: f64,
 }
@@ -994,6 +1189,7 @@ pub struct BrowserHistoryRestorationState {
 #[derive(Clone, Debug, PartialEq)]
 struct BrowserHistoryEntryState {
     controls: ControlStateSnapshot,
+    contenteditables: ContentEditableSnapshot,
     scroll_offset_y: f64,
 }
 
@@ -1313,6 +1509,28 @@ impl BrowserViewport {
         Some((region.clone(), viewport_x - region.x, content_y - region.y))
     }
 
+    fn focus_local_point(
+        &self,
+        viewport_x: f64,
+        viewport_y: f64,
+    ) -> Option<(html_to_paint::FocusRegion, f64, f64)> {
+        self.page
+            .paint
+            .focus_regions
+            .iter()
+            .rev()
+            .find_map(|region| {
+                let content_y = if region.fixed {
+                    viewport_y
+                } else {
+                    viewport_y + self.scroll.offset_y()
+                };
+                region
+                    .contains(viewport_x, content_y)
+                    .then(|| (region.clone(), viewport_x - region.x, content_y - region.y))
+            })
+    }
+
     pub fn viewport_scene(&self) -> PaintScene {
         scrolled_viewport_scene(&self.page.paint.scene, &self.scroll)
     }
@@ -1338,6 +1556,10 @@ pub enum BrowserChromeAction {
     Navigate(BrowserNavigation),
     ToggleCurrentBookmark,
     ViewSource,
+    FindQuery(String),
+    FindNext,
+    FindPrevious,
+    CloseFind,
 }
 
 /// An event emitted by the shared Mosaic `VentureChrome` component.
@@ -1349,6 +1571,10 @@ pub enum BrowserChromeEvent {
     Reload,
     ToggleBookmark,
     ViewSource,
+    FindChange(String),
+    FindNext,
+    FindPrevious,
+    FindClose,
     AddressChange(String),
     Navigate,
 }
@@ -1362,6 +1588,10 @@ impl BrowserChromeEvent {
             Self::Reload => "onReload",
             Self::ToggleBookmark => "onToggleBookmark",
             Self::ViewSource => "onViewSource",
+            Self::FindChange(_) => "onFindChange",
+            Self::FindNext => "onFindNext",
+            Self::FindPrevious => "onFindPrevious",
+            Self::FindClose => "onFindClose",
             Self::AddressChange(_) => "onAddressChange",
             Self::Navigate => "onNavigate",
         }
@@ -1379,6 +1609,9 @@ pub struct BrowserChromeProps {
     pub bookmark_label: String,
     pub bookmark_disabled: bool,
     pub view_source_disabled: bool,
+    pub find_query: String,
+    pub find_result_label: String,
+    pub find_disabled: bool,
     pub navigation_disabled: bool,
 }
 
@@ -1454,10 +1687,24 @@ impl BrowserChromeController {
             BrowserChromeEvent::ViewSource if session.viewport().is_some() => {
                 Some(BrowserChromeAction::ViewSource)
             }
+            BrowserChromeEvent::FindChange(query) if session.viewport().is_some() => {
+                Some(BrowserChromeAction::FindQuery(query))
+            }
+            BrowserChromeEvent::FindNext if session.find_state().match_count > 0 => {
+                Some(BrowserChromeAction::FindNext)
+            }
+            BrowserChromeEvent::FindPrevious if session.find_state().match_count > 0 => {
+                Some(BrowserChromeAction::FindPrevious)
+            }
+            BrowserChromeEvent::FindClose => Some(BrowserChromeAction::CloseFind),
             BrowserChromeEvent::Back | BrowserChromeEvent::Forward | BrowserChromeEvent::Reload => {
                 None
             }
-            BrowserChromeEvent::ToggleBookmark | BrowserChromeEvent::ViewSource => None,
+            BrowserChromeEvent::ToggleBookmark
+            | BrowserChromeEvent::ViewSource
+            | BrowserChromeEvent::FindChange(_)
+            | BrowserChromeEvent::FindNext
+            | BrowserChromeEvent::FindPrevious => None,
         }
     }
 
@@ -1490,6 +1737,9 @@ impl BrowserChromeController {
             .to_string(),
             bookmark_disabled: navigation_disabled || session.history().current_url().is_none(),
             view_source_disabled: navigation_disabled || session.viewport().is_none(),
+            find_query: session.find_state().query.clone(),
+            find_result_label: session.find_state().result_label(),
+            find_disabled: navigation_disabled || session.viewport().is_none(),
             navigation_disabled,
         }
     }
@@ -1613,6 +1863,18 @@ impl BrowserHostController {
                         BrowserAuxiliaryDocument::view_source(page),
                     ),
                 ))
+            }
+            BrowserChromeAction::FindQuery(query) => Ok(BrowserHostEventOutcome::changed(
+                self.session.find_in_page(&query),
+            )),
+            BrowserChromeAction::FindNext => {
+                Ok(BrowserHostEventOutcome::changed(self.session.find_next()))
+            }
+            BrowserChromeAction::FindPrevious => Ok(BrowserHostEventOutcome::changed(
+                self.session.find_previous(),
+            )),
+            BrowserChromeAction::CloseFind => {
+                Ok(BrowserHostEventOutcome::changed(self.session.close_find()))
             }
         }
     }
@@ -1775,6 +2037,7 @@ pub struct BrowserSession {
     bookmarks: BookmarkCatalog,
     viewport: Option<BrowserViewport>,
     controls: BrowserControlModel,
+    contenteditables: ContentEditableModel,
     focused_link: Option<String>,
     focused_disclosure: Option<String>,
     focused_generic: Option<String>,
@@ -1787,6 +2050,9 @@ pub struct BrowserSession {
     history_states: Vec<(NavigationEntryId, BrowserHistoryEntryState)>,
     history_restoration: Option<BrowserHistoryRestorationState>,
     fragment_navigation: Option<FragmentNavigationState>,
+    find_state: BrowserFindState,
+    find_matches: Vec<BrowserFindMatch>,
+    find_diagnostics: Vec<BrowserFindDiagnostic>,
     viewport_height: f64,
     navigation_id: u64,
     pending_host_effect: Option<BrowserHostEffect>,
@@ -1800,6 +2066,7 @@ impl BrowserSession {
             bookmarks: BookmarkCatalog::new(),
             viewport: None,
             controls: BrowserControlModel::default(),
+            contenteditables: ContentEditableModel::default(),
             focused_link: None,
             focused_disclosure: None,
             focused_generic: None,
@@ -1812,6 +2079,9 @@ impl BrowserSession {
             history_states: Vec::new(),
             history_restoration: None,
             fragment_navigation: None,
+            find_state: BrowserFindState::default(),
+            find_matches: Vec::new(),
+            find_diagnostics: Vec::new(),
             viewport_height: finite_non_negative(viewport_height),
             navigation_id: 0,
             pending_host_effect: None,
@@ -1871,6 +2141,167 @@ impl BrowserSession {
 
     pub fn viewport_mut(&mut self) -> Option<&mut BrowserViewport> {
         self.viewport.as_mut()
+    }
+
+    pub fn find_state(&self) -> &BrowserFindState {
+        &self.find_state
+    }
+
+    pub fn find_diagnostics(&self) -> &[BrowserFindDiagnostic] {
+        &self.find_diagnostics
+    }
+
+    pub fn find_in_page(&mut self, query: &str) -> bool {
+        let query = query.trim().to_string();
+        let previous = self.find_state.clone();
+        self.find_matches.clear();
+        self.find_diagnostics.clear();
+        let mut truncated = false;
+        if !query.is_empty() {
+            let folded_query = query.to_lowercase();
+            if let Some(positioned) = self
+                .viewport
+                .as_ref()
+                .map(|viewport| &viewport.page().paint.positioned)
+            {
+                collect_find_matches(
+                    positioned,
+                    0.0,
+                    0.0,
+                    false,
+                    &folded_query,
+                    &mut self.find_matches,
+                    &mut truncated,
+                );
+            }
+        }
+        if truncated {
+            self.find_diagnostics.push(BrowserFindDiagnostic {
+                code: "find-match-limit",
+                message: "find results were truncated at the shared match limit",
+            });
+        }
+        self.find_state = BrowserFindState {
+            query,
+            match_count: self.find_matches.len(),
+            active_match: (!self.find_matches.is_empty()).then_some(0),
+            wrapped: false,
+            truncated,
+        };
+        self.reveal_active_find_match();
+        self.refresh_find_presentation();
+        self.find_state != previous
+    }
+
+    pub fn find_next(&mut self) -> bool {
+        self.advance_find(false)
+    }
+
+    pub fn find_previous(&mut self) -> bool {
+        self.advance_find(true)
+    }
+
+    pub fn close_find(&mut self) -> bool {
+        let changed = !self.find_state.query.is_empty() || !self.find_matches.is_empty();
+        self.find_state = BrowserFindState::default();
+        self.find_matches.clear();
+        self.find_diagnostics.clear();
+        self.refresh_find_presentation();
+        changed
+    }
+
+    fn advance_find(&mut self, reverse: bool) -> bool {
+        let count = self.find_matches.len();
+        if count == 0 {
+            return false;
+        }
+        let current = self.find_state.active_match.unwrap_or(0);
+        let (next, wrapped) = if reverse {
+            if current == 0 {
+                (count - 1, true)
+            } else {
+                (current - 1, false)
+            }
+        } else if current + 1 == count {
+            (0, true)
+        } else {
+            (current + 1, false)
+        };
+        self.find_state.active_match = Some(next);
+        self.find_state.wrapped = wrapped;
+        self.reveal_active_find_match();
+        self.refresh_find_presentation();
+        true
+    }
+
+    fn reveal_active_find_match(&mut self) {
+        let Some(active) = self
+            .find_state
+            .active_match
+            .and_then(|index| self.find_matches.get(index))
+        else {
+            return;
+        };
+        if active.fixed {
+            return;
+        }
+        let Some(viewport) = self.viewport.as_mut() else {
+            return;
+        };
+        let top = viewport.scroll_state().offset_y();
+        let bottom = top + viewport.scroll_state().viewport_height;
+        if active.y < top || active.y + active.height > bottom {
+            viewport.set_scroll_offset_y((active.y - 12.0).max(0.0));
+        }
+    }
+
+    fn refresh_find_presentation(&mut self) {
+        let active = self.find_state.active_match;
+        let overlays = self
+            .find_matches
+            .iter()
+            .enumerate()
+            .map(|(index, result)| {
+                let mut metadata = std::collections::HashMap::new();
+                if result.fixed {
+                    metadata.insert("layout.position".into(), "fixed".into());
+                }
+                PaintInstruction::Group(PaintGroup {
+                    base: PaintBase {
+                        id: Some(format!("{FIND_OVERLAY_PREFIX}{index}")),
+                        metadata: (!metadata.is_empty()).then_some(metadata),
+                    },
+                    children: vec![PaintInstruction::Rect(PaintRect::filled(
+                        result.x,
+                        result.y,
+                        result.width,
+                        result.height,
+                        if active == Some(index) {
+                            "rgba(245, 158, 11, 0.62)"
+                        } else {
+                            "rgba(250, 204, 21, 0.38)"
+                        },
+                    ))],
+                    transform: None,
+                    opacity: None,
+                })
+            })
+            .collect::<Vec<_>>();
+        if let Some(viewport) = self.viewport.as_mut() {
+            viewport.page.paint.scene.instructions.retain(|instruction| {
+                !matches!(instruction,
+                    PaintInstruction::Group(group)
+                        if group.base.id.as_deref().is_some_and(|id| id.starts_with(FIND_OVERLAY_PREFIX)))
+            });
+            viewport.page.paint.scene.instructions.extend(overlays);
+        }
+    }
+
+    fn refresh_find_after_reflow(&mut self) {
+        let query = self.find_state.query.clone();
+        if !query.is_empty() {
+            self.find_in_page(&query);
+        }
     }
 
     pub const fn navigation_id(&self) -> u64 {
@@ -1967,6 +2398,14 @@ impl BrowserSession {
 
     pub fn controls(&self) -> &BrowserControlModel {
         &self.controls
+    }
+
+    pub fn contenteditable_states(&self) -> Vec<ContentEditableAccessibilityState> {
+        self.contenteditables.accessibility_states()
+    }
+
+    pub fn contenteditable_diagnostics(&self) -> &[ContentEditableDiagnostic] {
+        self.contenteditables.diagnostics()
     }
 
     pub fn live_value_states(&self) -> Vec<LiveValueState> {
@@ -2468,6 +2907,7 @@ impl BrowserSession {
                         .accessible_name
                         .clone()
                         .unwrap_or_else(|| region.url.clone()),
+                    access_keys: region.access_keys.clone(),
                     tab_index: region.tab_index,
                     focused: self.focused_link.as_deref() == Some(key),
                     x: region.x,
@@ -2504,6 +2944,7 @@ impl BrowserSession {
                         .or_else(|| control.map(|control| control.display_value()))
                         .filter(|name| !name.is_empty())
                         .unwrap_or_else(|| region.kind.name().into()),
+                    access_keys: region.access_keys.clone(),
                     tab_index: region.tab_index,
                     focused: self.controls.focused_key() == Some(region.key.as_str()),
                     x: region.x,
@@ -2537,6 +2978,7 @@ impl BrowserSession {
                     key: region.key.clone(),
                     role: "disclosure".into(),
                     name,
+                    access_keys: region.access_keys.clone(),
                     tab_index: region.tab_index,
                     focused: self.focused_disclosure.as_deref() == Some(&region.key),
                     x: region.x,
@@ -2549,6 +2991,9 @@ impl BrowserSession {
             });
         }
         for region in &page.paint.focus_regions {
+            let Some(order) = region.focus_order else {
+                continue;
+            };
             if items
                 .iter()
                 .any(|item: &PageFocusItem| item.state.key == region.key)
@@ -2565,6 +3010,7 @@ impl BrowserSession {
                         .clone()
                         .filter(|name| !name.trim().is_empty())
                         .unwrap_or_else(|| region.role.clone()),
+                    access_keys: region.access_keys.clone(),
                     tab_index: region.tab_index,
                     focused: self.focused_generic.as_deref() == Some(&region.key),
                     x: region.x,
@@ -2572,7 +3018,7 @@ impl BrowserSession {
                     width: region.width,
                     height: region.height,
                 },
-                order: region.focus_order,
+                order,
                 fixed: region.fixed,
             });
         }
@@ -2609,6 +3055,362 @@ impl BrowserSession {
             }
         });
         items
+    }
+
+    fn access_key_items(&self) -> Vec<AccessKeyItem> {
+        let Some(viewport) = &self.viewport else {
+            return Vec::new();
+        };
+        let page = viewport.page();
+        let mut items = Vec::new();
+        for region in &page.paint.links {
+            let (Some(access_order), Some(key)) = (region.access_order, region.key.as_ref()) else {
+                continue;
+            };
+            if items
+                .iter()
+                .any(|item: &AccessKeyItem| item.access_order == access_order)
+            {
+                continue;
+            }
+            items.push(AccessKeyItem {
+                target: PageFocusTarget::Link(key.clone()),
+                key: key.clone(),
+                role: "link".into(),
+                name: region
+                    .accessible_name
+                    .clone()
+                    .unwrap_or_else(|| region.url.clone()),
+                access_keys: region.access_keys.clone(),
+                access_order,
+                top_layer_index: region.top_layer_index,
+            });
+        }
+        for region in &page.paint.controls {
+            let Some(access_order) = region.access_order else {
+                continue;
+            };
+            if region.disabled
+                || items
+                    .iter()
+                    .any(|item: &AccessKeyItem| item.access_order == access_order)
+            {
+                continue;
+            }
+            let control = self.controls.control(&region.key);
+            items.push(AccessKeyItem {
+                target: PageFocusTarget::Control(region.key.clone()),
+                key: region.key.clone(),
+                role: region.kind.name().into(),
+                name: region
+                    .accessible_name
+                    .clone()
+                    .filter(|name| !name.is_empty())
+                    .or_else(|| control.map(|control| control.display_value()))
+                    .filter(|name| !name.is_empty())
+                    .unwrap_or_else(|| region.kind.name().into()),
+                access_keys: region.access_keys.clone(),
+                access_order,
+                top_layer_index: region.top_layer_index,
+            });
+        }
+        let disclosures = self.disclosure_accessibility_states();
+        for region in &page.paint.disclosures {
+            let Some(access_order) = region.access_order else {
+                continue;
+            };
+            if items
+                .iter()
+                .any(|item: &AccessKeyItem| item.access_order == access_order)
+            {
+                continue;
+            }
+            items.push(AccessKeyItem {
+                target: PageFocusTarget::Disclosure(region.key.clone()),
+                key: region.key.clone(),
+                role: "disclosure".into(),
+                name: disclosures
+                    .iter()
+                    .find(|state| state.key == region.key)
+                    .map(|state| state.name.clone())
+                    .unwrap_or_else(|| "Details".into()),
+                access_keys: region.access_keys.clone(),
+                access_order,
+                top_layer_index: region.top_layer_index,
+            });
+        }
+        for region in &page.paint.focus_regions {
+            let Some(access_order) = region.access_order else {
+                continue;
+            };
+            if items
+                .iter()
+                .any(|item: &AccessKeyItem| item.access_order == access_order)
+            {
+                continue;
+            }
+            items.push(AccessKeyItem {
+                target: PageFocusTarget::Generic(region.key.clone()),
+                key: region.key.clone(),
+                role: region.role.clone(),
+                name: region
+                    .accessible_name
+                    .clone()
+                    .filter(|name| !name.trim().is_empty())
+                    .unwrap_or_else(|| region.role.clone()),
+                access_keys: region.access_keys.clone(),
+                access_order,
+                top_layer_index: region.top_layer_index,
+            });
+        }
+        if let Some(modal) = page
+            .paint
+            .top_layers
+            .iter()
+            .filter(|region| region.modal)
+            .max_by_key(|region| region.top_layer_index)
+        {
+            items.retain(|item| item.top_layer_index == Some(modal.top_layer_index));
+        }
+        items.sort_by_key(|item| item.access_order);
+        items.truncate(MAX_ACCESS_KEY_TARGETS);
+        items
+    }
+
+    /// Project normalized candidates, including deterministic duplicate status.
+    pub fn access_key_candidates(&self) -> Vec<AccessKeyCandidateState> {
+        let mut winners = Vec::<String>::new();
+        let current = self.current_page_focus_target();
+        self.access_key_items()
+            .into_iter()
+            .flat_map(|item| {
+                item.access_keys
+                    .iter()
+                    .take(MAX_ACCESS_KEYS_PER_TARGET)
+                    .filter_map(|token| normalize_access_key(token))
+                    .map(|access_key| {
+                        let conflict = winners.iter().any(|winner| winner == &access_key);
+                        if !conflict {
+                            winners.push(access_key.clone());
+                        }
+                        AccessKeyCandidateState {
+                            access_key,
+                            key: item.key.clone(),
+                            role: item.role.clone(),
+                            name: item.name.clone(),
+                            access_order: item.access_order,
+                            conflict,
+                            focused: current.as_ref() == Some(&item.target),
+                        }
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .collect()
+    }
+
+    /// Return invalid-token and duplicate diagnostics in retained document order.
+    pub fn access_key_diagnostics(&self) -> Vec<AccessKeyDiagnostic> {
+        let items = self.access_key_items();
+        let mut diagnostics = Vec::new();
+        let mut winners = Vec::<(String, String)>::new();
+        for item in items {
+            for token in item.access_keys.iter().take(MAX_ACCESS_KEYS_PER_TARGET) {
+                let Some(access_key) = normalize_access_key(token) else {
+                    diagnostics.push(AccessKeyDiagnostic {
+                        code: "invalid-access-key".into(),
+                        access_key: token.clone(),
+                        winner: None,
+                        ignored: Some(item.key.clone()),
+                    });
+                    continue;
+                };
+                if let Some((_, winner)) = winners.iter().find(|(key, _)| key == &access_key) {
+                    diagnostics.push(AccessKeyDiagnostic {
+                        code: "duplicate-access-key".into(),
+                        access_key,
+                        winner: Some(winner.clone()),
+                        ignored: Some(item.key.clone()),
+                    });
+                } else {
+                    winners.push((access_key, item.key.clone()));
+                }
+            }
+        }
+        diagnostics
+    }
+
+    fn focus_access_key_item<M, S, FM, R>(
+        &mut self,
+        item: &AccessKeyItem,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+    ) -> Option<()>
+    where
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        match &item.target {
+            PageFocusTarget::Link(key) => {
+                self.controls.blur();
+                self.contenteditables.blur();
+                self.focused_link = Some(key.clone());
+                self.focused_disclosure = None;
+                self.focused_generic = None;
+            }
+            PageFocusTarget::Control(key) => {
+                self.controls.focus(key)?;
+                self.contenteditables.blur();
+                self.focused_link = None;
+                self.focused_disclosure = None;
+                self.focused_generic = None;
+            }
+            PageFocusTarget::Disclosure(key) => {
+                self.controls.blur();
+                self.contenteditables.blur();
+                self.focused_link = None;
+                self.focused_disclosure = Some(key.clone());
+                self.focused_generic = None;
+            }
+            PageFocusTarget::Generic(key) => {
+                self.controls.blur();
+                if self.contenteditables.contains(key) {
+                    self.contenteditables.focus(key)?;
+                } else {
+                    self.contenteditables.blur();
+                }
+                self.focused_link = None;
+                self.focused_disclosure = None;
+                self.focused_generic = Some(key.clone());
+            }
+        }
+        self.reflow_controls(pipeline)?;
+        self.refresh_page_focus_presentation();
+        Some(())
+    }
+
+    /// Resolve a semantic modifier/character command through shared policy.
+    pub fn access_key_command_and_submit<F, M, S, FM, R>(
+        &mut self,
+        command: AccessKeyCommand,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        let Some(character) = normalize_access_key(&command.character) else {
+            return Ok(false);
+        };
+        let Some(item) = self.access_key_items().into_iter().find(|item| {
+            item.access_keys
+                .iter()
+                .take(MAX_ACCESS_KEYS_PER_TARGET)
+                .filter_map(|token| normalize_access_key(token))
+                .any(|token| token == character)
+        }) else {
+            return Ok(false);
+        };
+        let target = item.target.clone();
+        if self.focus_access_key_item(&item, pipeline).is_none() {
+            return Ok(false);
+        }
+        match target {
+            PageFocusTarget::Link(key) => {
+                let link = self.viewport.as_ref().and_then(|viewport| {
+                    viewport
+                        .page()
+                        .paint
+                        .links
+                        .iter()
+                        .find(|region| region.key.as_deref() == Some(&key))
+                        .cloned()
+                });
+                let Some(link) = link else {
+                    return Ok(true);
+                };
+                self.pending_host_effect = None;
+                match plan_link_activation(link) {
+                    BrowserLinkActivation::Navigate(url) => self
+                        .execute(BrowserNavigation::Navigate(url), pipeline, fetcher)
+                        .map(|viewport| viewport.is_some()),
+                    BrowserLinkActivation::HostEffect(effect) => {
+                        self.pending_host_effect = Some(effect);
+                        Ok(true)
+                    }
+                }
+            }
+            PageFocusTarget::Control(_) => {
+                self.control_accessibility_action_and_submit(
+                    ControlAccessibilityAction::Activate,
+                    pipeline,
+                    fetcher,
+                )?;
+                Ok(true)
+            }
+            PageFocusTarget::Disclosure(key) => Ok(self
+                .disclosure_accessibility_action(
+                    &key,
+                    DisclosureAccessibilityAction::Toggle,
+                    pipeline,
+                )
+                .is_some()),
+            PageFocusTarget::Generic(key) => {
+                let command = self.viewport.as_ref().and_then(|viewport| {
+                    viewport
+                        .page()
+                        .paint
+                        .focus_regions
+                        .iter()
+                        .find(|region| region.key == key)
+                        .and_then(|region| {
+                            Some((
+                                region.activation_command.clone()?,
+                                region.activation_target.clone()?,
+                            ))
+                        })
+                });
+                if let Some((command, target)) = command {
+                    if let Some(action) = top_layer_action_from_command(&command) {
+                        return Ok(self.apply_top_layer_action(
+                            &target,
+                            action,
+                            Some(&key),
+                            pipeline,
+                        ));
+                    }
+                }
+                Ok(true)
+            }
+        }
+    }
+
+    /// Convenience entry point for Alt-based hosts and direct core callers.
+    pub fn access_key_and_submit<F, M, S, FM, R>(
+        &mut self,
+        character: &str,
+        pipeline: &BrowserPagePipeline<'_, M, S, FM, R>,
+        fetcher: &F,
+    ) -> Result<bool, BrowserLoadError>
+    where
+        F: BrowserResourceFetcher,
+        M: TextMeasurer,
+        S: TextShaper,
+        FM: FontMetrics<Handle = S::Handle>,
+        R: FontResolver<Handle = S::Handle>,
+    {
+        self.access_key_command_and_submit(
+            AccessKeyCommand {
+                modifier: AccessKeyModifier::Alt,
+                character: character.into(),
+            },
+            pipeline,
+            fetcher,
+        )
     }
 
     fn current_page_focus_target(&self) -> Option<PageFocusTarget> {
@@ -2656,24 +3458,32 @@ impl BrowserSession {
         match &item.target {
             PageFocusTarget::Link(key) => {
                 self.controls.blur();
+                self.contenteditables.blur();
                 self.focused_link = Some(key.clone());
                 self.focused_disclosure = None;
                 self.focused_generic = None;
             }
             PageFocusTarget::Control(key) => {
                 self.controls.focus(key)?;
+                self.contenteditables.blur();
                 self.focused_link = None;
                 self.focused_disclosure = None;
                 self.focused_generic = None;
             }
             PageFocusTarget::Disclosure(key) => {
                 self.controls.blur();
+                self.contenteditables.blur();
                 self.focused_link = None;
                 self.focused_disclosure = Some(key.clone());
                 self.focused_generic = None;
             }
             PageFocusTarget::Generic(key) => {
                 self.controls.blur();
+                if self.contenteditables.contains(key) {
+                    self.contenteditables.focus(key)?;
+                } else {
+                    self.contenteditables.blur();
+                }
                 self.focused_link = None;
                 self.focused_disclosure = None;
                 self.focused_generic = Some(key.clone());
@@ -3097,10 +3907,32 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let (region, x, y) = self
+        let point = self
             .viewport
             .as_ref()?
-            .control_local_point(viewport_x, viewport_y)?;
+            .control_local_point(viewport_x, viewport_y);
+        let Some((region, x, y)) = point else {
+            let (region, x, y) = self
+                .viewport
+                .as_ref()?
+                .focus_local_point(viewport_x, viewport_y)?;
+            if !self.contenteditables.contains(&region.key) {
+                return None;
+            }
+            let effect = self.contenteditables.pointer_down(
+                &region.key,
+                x - CONTROL_TEXT_METRICS.inset_x,
+                y - CONTROL_TEXT_METRICS.inset_y,
+                CONTROL_TEXT_METRICS,
+                1,
+            )?;
+            self.controls.blur();
+            self.focused_link = None;
+            self.focused_disclosure = None;
+            self.focused_generic = Some(region.key);
+            self.reflow_controls(pipeline)?;
+            return Some(effect.into());
+        };
         let effect = if region.label_activation {
             self.controls.pointer_activate(&region.key)?
         } else if region.kind.accepts_text() {
@@ -3134,10 +3966,32 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let (region, x, y) = self
+        let point = self
             .viewport
             .as_ref()?
-            .control_local_point(viewport_x, viewport_y)?;
+            .control_local_point(viewport_x, viewport_y);
+        let Some((region, x, y)) = point else {
+            let (region, x, y) = self
+                .viewport
+                .as_ref()?
+                .focus_local_point(viewport_x, viewport_y)?;
+            if !self.contenteditables.contains(&region.key) {
+                return None;
+            }
+            let effect = self.contenteditables.pointer_down(
+                &region.key,
+                x - CONTROL_TEXT_METRICS.inset_x,
+                y - CONTROL_TEXT_METRICS.inset_y,
+                CONTROL_TEXT_METRICS,
+                1,
+            )?;
+            self.controls.blur();
+            self.focused_link = None;
+            self.focused_disclosure = None;
+            self.focused_generic = Some(region.key);
+            self.reflow_controls(pipeline)?;
+            return Some(effect.into());
+        };
         if region.label_activation || !region.kind.accepts_text() {
             return self.activate_control(viewport_x, viewport_y, pipeline);
         }
@@ -3150,6 +4004,7 @@ impl BrowserSession {
         self.focused_link = None;
         self.focused_disclosure = None;
         self.focused_generic = None;
+        self.contenteditables.blur();
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -3167,10 +4022,32 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let (region, x, y) = self
+        let point = self
             .viewport
             .as_ref()?
-            .control_local_point(viewport_x, viewport_y)?;
+            .control_local_point(viewport_x, viewport_y);
+        let Some((region, x, y)) = point else {
+            let (region, x, y) = self
+                .viewport
+                .as_ref()?
+                .focus_local_point(viewport_x, viewport_y)?;
+            if !self.contenteditables.contains(&region.key) {
+                return None;
+            }
+            let effect = self.contenteditables.pointer_down(
+                &region.key,
+                x - CONTROL_TEXT_METRICS.inset_x,
+                y - CONTROL_TEXT_METRICS.inset_y,
+                CONTROL_TEXT_METRICS,
+                click_count,
+            )?;
+            self.controls.blur();
+            self.focused_link = None;
+            self.focused_disclosure = None;
+            self.focused_generic = Some(region.key);
+            self.reflow_controls(pipeline)?;
+            return Some(effect.into());
+        };
         if region.label_activation || !region.kind.accepts_text() {
             return self.activate_control(viewport_x, viewport_y, pipeline);
         }
@@ -3181,6 +4058,7 @@ impl BrowserSession {
             CONTROL_TEXT_METRICS,
             click_count,
         )?;
+        self.contenteditables.blur();
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -3199,7 +4077,32 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let key = self.controls.focused_key()?.to_string();
+        let Some(key) = self.controls.focused_key().map(str::to_string) else {
+            let key = self.focused_generic.clone()?;
+            if !self.contenteditables.contains(&key) {
+                return None;
+            }
+            let viewport = self.viewport.as_ref()?;
+            let region = viewport
+                .page()
+                .paint
+                .focus_regions
+                .iter()
+                .find(|region| region.key == key)?
+                .clone();
+            let content_y = if region.fixed {
+                viewport_y
+            } else {
+                viewport_y + viewport.scroll_state().offset_y()
+            };
+            let effect = self.contenteditables.pointer_drag(
+                viewport_x - region.x - CONTROL_TEXT_METRICS.inset_x,
+                content_y - region.y - CONTROL_TEXT_METRICS.inset_y,
+                CONTROL_TEXT_METRICS,
+            )?;
+            self.reflow_controls(pipeline)?;
+            return Some(effect.into());
+        };
         let viewport = self.viewport.as_ref()?;
         let region = viewport
             .page()
@@ -3226,16 +4129,27 @@ impl BrowserSession {
 
     pub fn control_pointer_up(&mut self) {
         self.controls.pointer_release();
+        self.contenteditables.pointer_up();
     }
 
     /// Read selected text for a host clipboard. Password values are rejected
     /// by the shared model before they can cross the host boundary.
     pub fn control_copy(&self) -> Option<String> {
-        self.controls.copy_selection()
+        self.controls.copy_selection().or_else(|| {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.copy_payload()?.plain_text
+        })
     }
 
     pub fn control_copy_payload(&self) -> Option<ControlClipboardPayload> {
-        self.controls.copy_selection_payload()
+        self.controls.copy_selection_payload().or_else(|| {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.copy_payload()
+        })
     }
 
     pub fn control_cut<M, S, FM, R>(
@@ -3248,11 +4162,18 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let cut = self.controls.cut_selection()?;
+        let text = if let Some(cut) = self.controls.cut_selection() {
+            cut.text
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.cut()?.0
+        };
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
-        Some(cut.text)
+        Some(text)
     }
 
     pub fn control_paste<M, S, FM, R>(
@@ -3266,7 +4187,16 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.paste_text(text)?;
+        let effect = if let Some(effect) = self.controls.paste_text(text) {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables
+                .paste(&ControlClipboardPayload::from_plain_text(text))?
+                .into()
+        };
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -3284,7 +4214,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.paste_payload(payload)?;
+        let effect = if let Some(effect) = self.controls.paste_payload(payload) {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.paste(payload)?.into()
+        };
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -3302,8 +4239,20 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.accessibility_action(action)?;
-        self.record_control_effect_events(&effect);
+        let (effect, is_form_control) = if self.controls.focused_key().is_some() {
+            (self.controls.accessibility_action(action)?, true)
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            (
+                self.contenteditables.accessibility_action(action)?.into(),
+                false,
+            )
+        };
+        if is_form_control {
+            self.record_control_effect_events(&effect);
+        }
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -3355,7 +4304,8 @@ impl BrowserSession {
 
     /// Advance caret animation from a host-provided monotonic duration.
     pub fn control_advance_caret_blink(&mut self, elapsed_ms: u64) -> bool {
-        let changed = self.controls.advance_caret_blink(elapsed_ms);
+        let changed = self.controls.advance_caret_blink(elapsed_ms)
+            | self.contenteditables.advance_caret_blink(elapsed_ms);
         if changed {
             self.refresh_control_editor_presentation();
         }
@@ -3363,20 +4313,34 @@ impl BrowserSession {
     }
 
     pub fn focused_ime_candidate_rect(&mut self) -> Option<ControlRect> {
-        let key = self.controls.focused_key()?.to_string();
+        let key = self
+            .controls
+            .focused_key()
+            .map(str::to_string)
+            .or_else(|| self.contenteditables.focused_key().map(str::to_string))?;
         let mut rect = self
             .refresh_control_editor_presentation()
             .into_iter()
             .find(|presentation| presentation.key == key)?
             .candidate_rect?;
         let viewport = self.viewport.as_ref()?;
-        let region = viewport
+        let fixed = viewport
             .page()
             .paint
             .controls
             .iter()
-            .find(|region| region.key == key)?;
-        if !region.fixed {
+            .find(|region| region.key == key)
+            .map(|region| region.fixed)
+            .or_else(|| {
+                viewport
+                    .page()
+                    .paint
+                    .focus_regions
+                    .iter()
+                    .find(|region| region.key == key)
+                    .map(|region| region.fixed)
+            })?;
+        if !fixed {
             rect.y -= viewport.scroll_state().offset_y();
         }
         Some(rect)
@@ -3899,6 +4863,8 @@ impl BrowserSession {
         let mut visited_links = self.visited_links.clone();
         let _ = visited_links.record(&page.final_url);
         let controls = BrowserControlModel::from_render_tree(&page.render_tree);
+        let contenteditables =
+            ContentEditableModel::from_page(&page.render_tree, &page.paint.focus_regions);
         let top_layer_stack = top_layer_snapshots(&page.render_tree)
             .into_iter()
             .filter(|surface| surface.open)
@@ -3909,6 +4875,7 @@ impl BrowserSession {
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        self.contenteditables = contenteditables;
         self.focused_link = None;
         self.focused_disclosure = None;
         self.focused_generic = None;
@@ -3994,7 +4961,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.key_down_with_shift(key, shift)?;
+        let effect = if let Some(effect) = self.controls.key_down_with_shift(key, shift) {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.key_down(key, shift)?.into()
+        };
         self.record_control_effect_events(&effect);
         self.form_diagnostics.clear();
         self.controls.clear_validation();
@@ -4013,7 +4987,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.text_input(text)?;
+        let effect = if let Some(effect) = self.controls.text_input(text) {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.text_input(text)?.into()
+        };
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -4033,7 +5014,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.set_selection(key, anchor, focus)?;
+        let effect = self
+            .controls
+            .set_selection(key, anchor, focus)
+            .or_else(|| {
+                self.contenteditables
+                    .set_selection(key, anchor, focus)
+                    .map(Into::into)
+            })?;
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -4049,7 +5037,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.update_composition(text)?;
+        let effect = if let Some(effect) = self.controls.update_composition(text) {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.update_composition(text)?.into()
+        };
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -4064,7 +5059,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.commit_composition()?;
+        let effect = if let Some(effect) = self.controls.commit_composition() {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.commit_composition()?.into()
+        };
         self.form_diagnostics.clear();
         self.controls.clear_validation();
         self.reflow_controls(pipeline)?;
@@ -4081,7 +5083,14 @@ impl BrowserSession {
         FM: FontMetrics<Handle = S::Handle>,
         R: FontResolver<Handle = S::Handle>,
     {
-        let effect = self.controls.cancel_composition()?;
+        let effect = if let Some(effect) = self.controls.cancel_composition() {
+            effect
+        } else {
+            self.focused_generic
+                .as_deref()
+                .filter(|key| self.contenteditables.contains(key))?;
+            self.contenteditables.cancel_composition()?.into()
+        };
         self.reflow_controls(pipeline)?;
         Some(effect)
     }
@@ -4094,6 +5103,11 @@ impl BrowserSession {
             .viewport
             .as_ref()
             .map(|viewport| viewport.page.paint.controls.clone())
+            .unwrap_or_default();
+        let editable_regions = self
+            .viewport
+            .as_ref()
+            .map(|viewport| viewport.page.paint.focus_regions.clone())
             .unwrap_or_default();
         let mut presentations = Vec::new();
         let mut overlays = Vec::new();
@@ -4159,6 +5173,72 @@ impl BrowserSession {
                     stroke_dash: None,
                     stroke_dash_offset: None,
                 }));
+            }
+            let mut metadata = std::collections::HashMap::new();
+            if region.fixed {
+                metadata.insert("layout.position".into(), "fixed".into());
+            }
+            overlays.push(PaintInstruction::Group(PaintGroup {
+                base: PaintBase {
+                    id: Some(format!("{EDITOR_OVERLAY_PREFIX}{}", region.key)),
+                    metadata: (!metadata.is_empty()).then_some(metadata),
+                },
+                children,
+                transform: None,
+                opacity: None,
+            }));
+            presentations.push(presentation);
+        }
+        for region in editable_regions {
+            if !self.contenteditables.contains(&region.key) {
+                continue;
+            }
+            let bounds = ControlRect {
+                x: region.x,
+                y: region.y,
+                width: region.width,
+                height: region.height,
+            };
+            let Some(presentation) =
+                self.contenteditables
+                    .presentation(&region.key, bounds, CONTROL_TEXT_METRICS)
+            else {
+                continue;
+            };
+            let mut children = Vec::new();
+            for rect in &presentation.selection {
+                if let Some(rect) = clipped_editor_rect(*rect, presentation.viewport) {
+                    children.push(PaintInstruction::Rect(PaintRect::filled(
+                        rect.x,
+                        rect.y,
+                        rect.width,
+                        rect.height,
+                        "rgba(37, 99, 235, 0.32)",
+                    )));
+                }
+            }
+            for rect in &presentation.composition_underlines {
+                if let Some(rect) = clipped_editor_rect(*rect, presentation.viewport) {
+                    children.push(PaintInstruction::Rect(PaintRect::filled(
+                        rect.x,
+                        rect.y,
+                        rect.width,
+                        rect.height,
+                        "#2563eb",
+                    )));
+                }
+            }
+            if let Some(rect) = presentation
+                .caret
+                .and_then(|rect| clipped_editor_rect(rect, presentation.viewport))
+            {
+                children.push(PaintInstruction::Rect(PaintRect::filled(
+                    rect.x,
+                    rect.y,
+                    rect.width,
+                    rect.height,
+                    "#111827",
+                )));
             }
             let mut metadata = std::collections::HashMap::new();
             if region.fixed {
@@ -4282,11 +5362,14 @@ impl BrowserSession {
     {
         let mut current = self.viewport.as_ref()?.page().clone();
         self.controls.sync_render_tree(&mut current.render_tree);
+        self.contenteditables
+            .sync_render_tree(&mut current.render_tree);
         let updated = pipeline.reflow_retained_with_visited(&current, &self.visited_links);
         self.viewport
             .as_mut()?
             .reflow_page(updated, self.viewport_height);
         self.refresh_control_editor_presentation();
+        self.refresh_find_after_reflow();
         Some(())
     }
 
@@ -4295,6 +5378,7 @@ impl BrowserSession {
             self.history.current_entry_id()?,
             BrowserHistoryEntryState {
                 controls: self.controls.capture_state(ControlStatePrivacy::Public),
+                contenteditables: self.contenteditables.capture_state(),
                 scroll_offset_y: self
                     .viewport
                     .as_ref()
@@ -4344,6 +5428,8 @@ impl BrowserSession {
         self.viewport
             .as_mut()?
             .reflow_page(page, self.viewport_height);
+        self.refresh_control_editor_presentation();
+        self.refresh_find_after_reflow();
         self.viewport.as_ref()
     }
 
@@ -4474,6 +5560,7 @@ impl BrowserSession {
                         .map(|_| BrowserHistoryRestorationState {
                             entry_id: target_entry_id,
                             restored_form_state: true,
+                            restored_editing_state: true,
                             restored_scroll: true,
                             scroll_offset_y: self
                                 .fragment_navigation
@@ -4482,6 +5569,7 @@ impl BrowserSession {
                                 .scroll_offset_y,
                         });
                 self.form_diagnostics.clear();
+                self.refresh_find_after_reflow();
                 return Ok(BrowserNavigationUpdate {
                     viewport_changed: true,
                     requests: Vec::new(),
@@ -4508,6 +5596,8 @@ impl BrowserSession {
         let mut visited_links = self.visited_links.clone();
         let _ = visited_links.record(&page.final_url);
         let mut controls = BrowserControlModel::from_render_tree(&page.render_tree);
+        let mut contenteditables =
+            ContentEditableModel::from_page(&page.render_tree, &page.paint.focus_regions);
         let top_layer_stack = top_layer_snapshots(&page.render_tree)
             .into_iter()
             .filter(|surface| surface.open)
@@ -4515,6 +5605,7 @@ impl BrowserSession {
             .collect();
         if let Some(state) = &restored_state {
             controls.restore_state(&state.controls);
+            contenteditables.restore_state(&state.contenteditables);
         }
         history.replace_current(page.final_url.clone());
         if let Some(viewport) = self.viewport.as_mut() {
@@ -4525,6 +5616,7 @@ impl BrowserSession {
         self.history = history;
         self.visited_links = visited_links;
         self.controls = controls;
+        self.contenteditables = contenteditables;
         self.focused_link = None;
         self.focused_disclosure = None;
         self.focused_generic = None;
@@ -4588,6 +5680,7 @@ impl BrowserSession {
                 .map(|_| BrowserHistoryRestorationState {
                     entry_id: target_entry_id,
                     restored_form_state: true,
+                    restored_editing_state: true,
                     restored_scroll: true,
                     scroll_offset_y: self
                         .viewport
@@ -4599,6 +5692,7 @@ impl BrowserSession {
         self.form_diagnostics.clear();
         self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
         self.refresh_control_editor_presentation();
+        self.refresh_find_after_reflow();
         Ok(BrowserNavigationUpdate {
             viewport_changed: true,
             requests: self.pending_subresource_requests(),
@@ -4698,6 +5792,7 @@ impl BrowserSession {
             viewport.reflow_page(updated, self.viewport_height);
         }
         self.refresh_control_editor_presentation();
+        self.refresh_find_after_reflow();
         let pending_after = self.pending_subresource_requests();
         let requests = pending_after
             .iter()
@@ -5735,6 +6830,9 @@ mod tests {
                 bookmark_label: "Bookmark".into(),
                 bookmark_disabled: true,
                 view_source_disabled: true,
+                find_query: String::new(),
+                find_result_label: String::new(),
+                find_disabled: true,
                 navigation_disabled: false,
             }
         );
@@ -5788,6 +6886,9 @@ mod tests {
                 bookmark_label: "Bookmark".into(),
                 bookmark_disabled: false,
                 view_source_disabled: false,
+                find_query: String::new(),
+                find_result_label: String::new(),
+                find_disabled: false,
                 navigation_disabled: false,
             }
         );
@@ -5812,7 +6913,95 @@ mod tests {
         assert!(disabled.forward_disabled);
         assert!(disabled.bookmark_disabled);
         assert!(disabled.view_source_disabled);
+        assert!(disabled.find_disabled);
         assert!(disabled.navigation_disabled);
+    }
+
+    #[test]
+    fn shared_find_session_matches_wraps_scrolls_and_paints_without_host_policy() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<p>Venture first</p><div style='height: 180px'></div><p>venture second</p>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(220.0, 100.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/", 60.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        assert!(session.find_in_page("VENTURE"));
+        assert_eq!(
+            session.find_state(),
+            &BrowserFindState {
+                query: "VENTURE".into(),
+                match_count: 2,
+                active_match: Some(0),
+                wrapped: false,
+                truncated: false,
+            }
+        );
+        assert_eq!(session.find_state().result_label(), "1 of 2");
+        assert_eq!(find_overlay_count(session.viewport().unwrap()), 2);
+
+        assert!(session.find_next());
+        assert_eq!(session.find_state().result_label(), "2 of 2");
+        assert!(session.scroll_metrics().unwrap().offset_y > 0.0);
+        assert!(session.find_next());
+        assert_eq!(session.find_state().active_match, Some(0));
+        assert!(session.find_state().wrapped);
+
+        assert!(session.close_find());
+        assert_eq!(session.find_state(), &BrowserFindState::default());
+        assert_eq!(find_overlay_count(session.viewport().unwrap()), 0);
+
+        let many = format!("<p>{}</p>", "match ".repeat(MAX_FIND_MATCHES + 1));
+        let many_fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                many.as_bytes().to_vec(),
+            ))
+        };
+        session
+            .execute(
+                BrowserNavigation::Navigate("http://example.test/many".into()),
+                &pipeline,
+                &many_fetcher,
+            )
+            .unwrap();
+        assert!(session.find_in_page("match"));
+        assert_eq!(session.find_state().match_count, MAX_FIND_MATCHES);
+        assert!(session.find_state().truncated);
+        assert_eq!(session.find_diagnostics()[0].code, "find-match-limit");
+    }
+
+    fn find_overlay_count(viewport: &BrowserViewport) -> usize {
+        viewport
+            .page()
+            .paint
+            .scene
+            .instructions
+            .iter()
+            .filter(|instruction| {
+                matches!(instruction,
+                    PaintInstruction::Group(group)
+                        if group.base.id.as_deref().is_some_and(|id| id.starts_with(FIND_OVERLAY_PREFIX)))
+            })
+            .count()
     }
 
     #[test]
@@ -5824,6 +7013,10 @@ mod tests {
             BrowserChromeEvent::Reload,
             BrowserChromeEvent::ToggleBookmark,
             BrowserChromeEvent::ViewSource,
+            BrowserChromeEvent::FindChange(String::new()),
+            BrowserChromeEvent::FindNext,
+            BrowserChromeEvent::FindPrevious,
+            BrowserChromeEvent::FindClose,
             BrowserChromeEvent::AddressChange(String::new()),
             BrowserChromeEvent::Navigate,
         ];
@@ -6373,6 +7566,8 @@ mod tests {
             height: 12.0,
             key: None,
             accessible_name: None,
+            access_keys: Vec::new(),
+            access_order: None,
             focus_order: None,
             tab_index: 0,
             top_layer_index: None,
@@ -8643,6 +9838,7 @@ mod tests {
             Some(&BrowserHistoryRestorationState {
                 entry_id: first_id,
                 restored_form_state: true,
+                restored_editing_state: true,
                 restored_scroll: true,
                 scroll_offset_y: 120.0,
             })
@@ -8952,6 +10148,91 @@ mod tests {
                 .open
         );
         assert!(session.top_layer_diagnostics().is_empty());
+    }
+
+    #[test]
+    fn session_resolves_access_keys_in_document_order_through_shared_activation() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<a id='first' accesskey='g' href='/first'>First</a>\
+                  <a id='duplicate' accesskey='G' href='/duplicate'>Duplicate</a>\
+                  <button id='disabled' accesskey='x' disabled>Disabled</button>\
+                  <div tabindex='0' accesskey='bad'>Invalid</div>\
+                  <div id='focus-only' tabindex='-1' accesskey='f'>Focus only</div>\
+                  <label accesskey='l' for='named'>Name</label><input id='named'>\
+                  <details id='details'><summary accesskey='d'>Details</summary><p>Body</p></details>\
+                  <button id='menu-button' accesskey='m' popovertarget='menu'>Menu</button>\
+                  <div id='menu' popover='auto'><button accesskey='i'>Inside</button></div>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(480.0, 240.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/access", 240.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        let candidates = session.access_key_candidates();
+        assert_eq!(
+            candidates
+                .iter()
+                .map(|candidate| (candidate.access_key.as_str(), candidate.conflict))
+                .collect::<Vec<_>>(),
+            vec![
+                ("g", false),
+                ("g", true),
+                ("f", false),
+                ("l", false),
+                ("d", false),
+                ("m", false)
+            ]
+        );
+        assert_eq!(
+            session
+                .access_key_diagnostics()
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec!["duplicate-access-key", "invalid-access-key"]
+        );
+        assert!(session
+            .access_key_and_submit("F", &pipeline, &fetcher)
+            .unwrap());
+        assert!(session
+            .access_key_candidates()
+            .iter()
+            .any(|candidate| candidate.key == "focus:id:focus-only" && candidate.focused));
+        assert!(session
+            .access_key_and_submit("l", &pipeline, &fetcher)
+            .unwrap());
+        assert_eq!(session.controls().focused_key(), Some("control:1:id:named"));
+
+        assert!(session
+            .access_key_and_submit("d", &pipeline, &fetcher)
+            .unwrap());
+        assert!(session.disclosure_accessibility_states()[0].open);
+        assert!(session
+            .access_key_and_submit("m", &pipeline, &fetcher)
+            .unwrap());
+        assert!(session
+            .top_layer_accessibility_states()
+            .iter()
+            .any(|surface| surface.kind == "popover" && surface.open));
+        assert!(session
+            .access_key_candidates()
+            .iter()
+            .any(|candidate| candidate.access_key == "i"));
     }
 
     #[test]
@@ -9299,5 +10580,121 @@ mod tests {
             session.history().current_url(),
             Some("http://example.test/second")
         );
+    }
+
+    #[test]
+    fn contenteditable_transactions_share_host_input_without_form_ownership() {
+        let start = "http://example.test/editing";
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<input id='form-value' value='untouched'>\
+                  <section id='notes' contenteditable='plaintext-only' aria-label='Notes'>Draft</section>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(320.0, 180.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(start, 180.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        assert_eq!(session.contenteditable_states().len(), 1);
+        session.focus_page(false, &pipeline).unwrap();
+        session.focus_page(false, &pipeline).unwrap();
+        assert!(
+            session.contenteditable_states()[0].focused,
+            "Tab should transfer the common input seam to the editing host"
+        );
+
+        session
+            .control_key_down(ControlKey::SelectAll, &pipeline)
+            .unwrap();
+        session.control_text_input("Shared", &pipeline).unwrap();
+        assert_eq!(session.contenteditable_states()[0].value, "Shared");
+        assert_eq!(
+            session
+                .controls()
+                .control("control:0:id:form-value")
+                .unwrap()
+                .value,
+            "untouched",
+            "arbitrary editable DOM must not enter form-control state"
+        );
+
+        session
+            .control_set_selection("focus:id:notes", 0, 6, &pipeline)
+            .unwrap();
+        assert_eq!(session.control_copy().as_deref(), Some("Shared"));
+        assert_eq!(session.control_cut(&pipeline).as_deref(), Some("Shared"));
+        session
+            .control_paste_payload(
+                &ControlClipboardPayload {
+                    plain_text: None,
+                    html: Some("<b>Restored</b>".into()),
+                },
+                &pipeline,
+            )
+            .unwrap();
+        assert_eq!(session.contenteditable_states()[0].value, "Restored");
+
+        session.control_update_composition("界", &pipeline).unwrap();
+        assert!(session.focused_ime_candidate_rect().is_some());
+        session.control_commit_composition(&pipeline).unwrap();
+        assert_eq!(session.contenteditable_states()[0].value, "Restored界");
+        session
+            .control_key_down(ControlKey::Undo, &pipeline)
+            .unwrap();
+        assert_eq!(session.contenteditable_states()[0].value, "Restored");
+        session
+            .control_accessibility_action(
+                ControlAccessibilityAction::SetValue("Accessible".into()),
+                &pipeline,
+            )
+            .unwrap();
+        assert_eq!(session.contenteditable_states()[0].value, "Accessible");
+        assert!(session
+            .viewport()
+            .unwrap()
+            .page()
+            .paint
+            .scene
+            .instructions
+            .iter()
+            .any(|instruction| matches!(
+                instruction,
+                PaintInstruction::Group(group)
+                    if group.base.id.as_deref() == Some("venture-editor:focus:id:notes")
+            )));
+        assert!(session.contenteditable_diagnostics().is_empty());
+
+        session
+            .execute(
+                BrowserNavigation::Navigate("http://example.test/other".into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        session
+            .execute(BrowserNavigation::Back, &pipeline, &fetcher)
+            .unwrap();
+        assert_eq!(
+            session.contenteditable_states()[0].value,
+            "Accessible",
+            "editing state should restore by history-entry identity"
+        );
+        assert!(session
+            .history_restoration_state()
+            .is_some_and(|state| state.restored_editing_state));
     }
 }

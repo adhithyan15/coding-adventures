@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+- Add a shared find-in-page transaction with bounded visible-text matching,
+  active-result wrap and reveal, paint highlights, diagnostics, and one
+  Mosaic-authored query/next/previous/close contract across every host.
+
+- Add shared access-key candidate normalization, conflict diagnostics, modal
+  containment, focus/activation policy, and semantic native host forwarding.
+
 - Extend existing host-neutral Tab forwarding to image-map areas, authored
   generic `tabindex`, and contenteditable surfaces without adding generated
   host focus policy.

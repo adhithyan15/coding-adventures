@@ -133,7 +133,22 @@ The delivery order is:
    signature and all bound claims before returning a provider-scoped opaque
    account identity. Verification intent and its closed result are durably
    provider/trace audited before the authority effect and result release. For
-   Authorization Code identity proof, the boundary consumes the core's
+   static provider policy, a bounded exact-schema decoder retains only the
+   provider, HTTPS issuer, and case-sensitive non-`none` ID-token signing
+   algorithms while deployment client identity and the opaque verification
+   context remain injected. It performs no source read and enables no
+   verification algorithm. A broker boundary can read that policy through an
+   injected source only after exact registered-provider and opaque-context
+   binding, auditing the provider and trace before the read and its closed
+   decode result before profile release; concrete source and verification
+   authority remain absent. A broker composition can now carry that exact
+   source load directly into Authorization Code identity proof. It derives the
+   trace only from the one-use nonce, rejects registered-provider, deployment-
+   client, nonce, or opaque-context mismatch before the source read, preserves
+   the source and trusted-verifier audit gates, and withholds the verified
+   provider-scoped opaque credential key until a final broker result audit is
+   durable. It adds no concrete source or verification authority. For
+   Authorization Code identity proof, the underlying boundary consumes the core's
    non-cloneable nonce object, validates its exact provider and client, and
    derives the audit trace from that browser ceremony before any authority
    effect. The boundary exposes no subject claim or token bytes and implements
@@ -151,7 +166,13 @@ The delivery order is:
    transport; missing or rejected identity evidence fails before credential
    storage; the consumed ID token is not retained in the stored credential.
    Concrete JWT, JOSE, JWKS, discovery, clock, storage, and network authorities
-   remain injected or out of scope.
+   remain injected or out of scope. That complete client-secret exchange path
+   can now load the exact static identity policy internally: retained
+   authentication, request endpoint/client, opaque verification context, and
+   nonce are bound to the registration before the source read; the source,
+   secret, transport, verifier, and storage effects retain separate
+   provider/trace audit gates; and only the final opaque credential revision is
+   released. The caller no longer supplies a decoded identity profile.
 6. **Confidential-client authentication:** web-service profiles for
    `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
    opaque custody references and audit-before-release rather than secrets in
@@ -218,9 +239,12 @@ The delivery order is:
    provider failures, and stale revisions retain local state. Client-secret
    Authorization Code exchange can additionally derive its opaque account key
    through the audited ID-token identity boundary before initial custody
-   creation, eliminating caller key selection for that path. Other grant and
-   authentication paths still keep identity proof and key selection as
-   separate composition steps. The corresponding `private_key_jwt` exchange
+   creation, eliminating caller key selection for that path. The exact static
+   identity policy can now be loaded inside that same client-secret composition
+   after registered request/authentication/context/nonce binding and before any
+   credential or transport effect, eliminating caller-owned decoded policy as
+   well. Other grant and authentication paths still keep identity proof and key
+   selection as separate composition steps. The corresponding `private_key_jwt` exchange
    can now use the same nonce-bound identity-to-custody path through the
    existing abstract signer, without enabling any concrete signing algorithm.
    Other grants still keep identity proof and key selection separate. Prepared
@@ -256,7 +280,14 @@ The delivery order is:
    secret or transport authority; due credentials cross the existing audited
    refresh and revision-bound atomic rotation path before the resulting access
    token is disclosed through the custody closure. Clock, transport, secret
-   storage, credential storage, and token use remain injected authorities.
+   storage, credential storage, and token use remain injected authorities. The
+   symmetric `private_key_jwt` usable-access path validates the full retained
+   provider/client/endpoint/method/algorithm/key profile before credential or
+   clock access, invokes neither signer nor transport for a fresh credential,
+   and carries a due credential through the existing separately audited
+   assertion, transport, response, release, and atomic-rotation gates before
+   custody disclosure. Unused replay entropy stays zeroizing, and no concrete
+   signing algorithm is enabled.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate

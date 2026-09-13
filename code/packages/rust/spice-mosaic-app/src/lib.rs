@@ -66,6 +66,8 @@ struct SavedState {
     #[serde(default)]
     selected_schematic_terminal: usize,
     #[serde(default)]
+    selected_schematic_route_target: Option<String>,
+    #[serde(default)]
     selected_schematic_analysis_card: usize,
     #[serde(default = "default_next_effect_id")]
     next_schematic_file_effect_id: EffectId,
@@ -118,6 +120,7 @@ struct SchematicHistoryEntry {
     document: Option<SchematicDocument>,
     selected_component: Option<String>,
     selected_terminal: usize,
+    selected_route_target: Option<String>,
     selected_analysis_card: usize,
 }
 
@@ -135,6 +138,7 @@ pub struct SpiceMosaicApp {
     schematic: Option<SchematicDocument>,
     selected_schematic_component: Option<String>,
     selected_schematic_terminal: usize,
+    selected_schematic_route_target: Option<String>,
     selected_schematic_analysis_card: usize,
     protocol_version: u32,
     next_schematic_file_effect_id: EffectId,
@@ -159,6 +163,7 @@ impl Default for SpiceMosaicApp {
             schematic: None,
             selected_schematic_component: None,
             selected_schematic_terminal: 0,
+            selected_schematic_route_target: None,
             selected_schematic_analysis_card: 0,
             protocol_version: PROTOCOL_VERSION,
             next_schematic_file_effect_id: default_next_effect_id(),
@@ -395,6 +400,7 @@ impl SpiceMosaicApp {
             document: self.schematic.clone(),
             selected_component: self.selected_schematic_component.clone(),
             selected_terminal: self.selected_schematic_terminal,
+            selected_route_target: self.selected_schematic_route_target.clone(),
             selected_analysis_card: self.selected_schematic_analysis_card,
         }
     }
@@ -445,8 +451,28 @@ impl SpiceMosaicApp {
                     "schematic history without a component has a terminal selection",
                 ));
             }
+            if let Some(target) = &entry.selected_route_target {
+                let Some(selected) = &entry.selected_component else {
+                    return Err(invalid(
+                        "schematic history route target requires a component selection",
+                    ));
+                };
+                if selected == target {
+                    return Err(invalid(
+                        "schematic history route target matches the selected component",
+                    ));
+                }
+                if !document
+                    .components
+                    .iter()
+                    .any(|component| component.reference == *target)
+                {
+                    return Err(invalid("schematic history route target is unknown"));
+                }
+            }
         } else if entry.selected_component.is_some()
             || entry.selected_terminal != 0
+            || entry.selected_route_target.is_some()
             || entry.selected_analysis_card != 0
         {
             return Err(invalid(
@@ -456,6 +482,7 @@ impl SpiceMosaicApp {
         self.schematic = entry.document;
         self.selected_schematic_component = entry.selected_component;
         self.selected_schematic_terminal = entry.selected_terminal;
+        self.selected_schematic_route_target = entry.selected_route_target;
         self.selected_schematic_analysis_card = entry.selected_analysis_card;
         Ok(())
     }
@@ -567,6 +594,38 @@ impl SpiceMosaicApp {
         let schematic_net_label = selected_schematic_terminal
             .and_then(|point| self.schematic.as_ref()?.net_label_at(point))
             .unwrap_or("");
+        let schematic_route_targets = self
+            .schematic
+            .as_ref()
+            .map(|document| {
+                document
+                    .components
+                    .iter()
+                    .filter(|component| {
+                        Some(component.reference.as_str())
+                            != self.selected_schematic_component.as_deref()
+                    })
+                    .map(|component| component.reference.clone())
+                    .collect::<Vec<_>>()
+            })
+            .unwrap_or_default();
+        let selected_schematic_route_target = self
+            .selected_schematic_route_target
+            .as_deref()
+            .and_then(|reference| {
+                self.schematic
+                    .as_ref()?
+                    .components
+                    .iter()
+                    .find(|component| component.reference == reference)
+            });
+        let schematic_route_terminal_controls = selected_schematic_route_target
+            .map(|component| {
+                (0..component.terminals.len())
+                    .map(|index| format!("Terminal {}", index + 1))
+                    .collect::<Vec<_>>()
+            })
+            .unwrap_or_default();
         let schematic_value_disabled = selected_schematic_component
             .is_none_or(|component| component.kind == SchematicComponentKind::Ground);
         let selected_schematic_analysis_card = self
@@ -749,7 +808,11 @@ impl SpiceMosaicApp {
             "schematic-value-disabled": schematic_value_disabled,
             "remove-schematic-component-label": "Remove selected component",
             "remove-schematic-component-disabled": selected_schematic_component.is_none(),
-            "route-schematic-label": "Route selected component to",
+            "route-schematic-label": "Route selected terminal to",
+            "schematic-route-targets": schematic_route_targets,
+            "selected-schematic-route-target-label": selected_schematic_route_target.map(|component| component.reference.as_str()).unwrap_or("Select a target component"),
+            "schematic-route-terminal-controls": schematic_route_terminal_controls,
+            "schematic-route-terminal-disabled": selected_schematic_component.is_none() || selected_schematic_route_target.is_none(),
             "synchronize-schematic-label": "Sync netlist",
             "dark-theme": self.dark,
         }))
@@ -813,6 +876,7 @@ impl SpiceMosaicApp {
             .map_err(|error| invalid(error.to_string()))?;
         self.selected_schematic_component = None;
         self.selected_schematic_terminal = 0;
+        self.selected_schematic_route_target = None;
         self.selected_schematic_analysis_card = 0;
         self.schematic = Some(document);
         self.record_schematic_edit(history);
@@ -1088,6 +1152,7 @@ impl MosaicApp for SpiceMosaicApp {
                     .map_err(|error| invalid(error.to_string()))?;
                 self.selected_schematic_component = Some(reference.clone());
                 self.selected_schematic_terminal = 0;
+                self.selected_schematic_route_target = None;
                 self.record_schematic_edit(history);
                 self.diagnostics = format!(
                     "Placed {reference} on the grid. Select a component and route it to a target."
@@ -1319,6 +1384,7 @@ impl MosaicApp for SpiceMosaicApp {
                 }
                 self.selected_schematic_component = Some(reference.to_owned());
                 self.selected_schematic_terminal = 0;
+                self.selected_schematic_route_target = None;
                 Ok(self.announced(format!("Selected {reference}.")))
             }
             "selectSchematicTerminal" => {
@@ -1416,6 +1482,7 @@ impl MosaicApp for SpiceMosaicApp {
                     .map_err(|error| invalid(error.to_string()))?;
                 self.selected_schematic_component = None;
                 self.selected_schematic_terminal = 0;
+                self.selected_schematic_route_target = None;
                 self.record_schematic_edit(history);
                 self.diagnostics = format!(
                     "Removed {reference} and {removed_wires} incident wire(s). Sync the netlist when ready."
@@ -1439,22 +1506,59 @@ impl MosaicApp for SpiceMosaicApp {
                     format!("Removed wire {}. Sync the netlist when ready.", index + 1);
                 Ok(self.announced(self.diagnostics.clone()))
             }
-            "routeToSchematicComponent" => {
+            "selectSchematicRouteTarget" => {
                 let target = event.payload["reference"]
                     .as_str()
-                    .ok_or_else(|| invalid("routeToSchematicComponent requires reference"))?;
-                let selected = self.selected_schematic_component.clone().ok_or_else(|| {
-                    invalid("routeToSchematicComponent requires a selected component")
+                    .ok_or_else(|| invalid("selectSchematicRouteTarget requires reference"))?;
+                let selected = self
+                    .selected_schematic_component
+                    .as_deref()
+                    .ok_or_else(|| {
+                        invalid("selectSchematicRouteTarget requires a selected component")
+                    })?;
+                if selected == target {
+                    return Err(invalid("schematic route requires two different components"));
+                }
+                let document = self.schematic.as_ref().ok_or_else(|| {
+                    invalid("selectSchematicRouteTarget requires a loaded schematic")
                 })?;
+                if !document
+                    .components
+                    .iter()
+                    .any(|component| component.reference == target)
+                {
+                    return Err(invalid("selectSchematicRouteTarget reference is unknown"));
+                }
+                self.selected_schematic_route_target = Some(target.to_owned());
+                Ok(self.announced(format!("Selected {target} as the route target.")))
+            }
+            "routeToSchematicTerminal" => {
+                let target_terminal = event.payload["index"].as_u64().ok_or_else(|| {
+                    invalid("routeToSchematicTerminal requires a non-negative terminal index")
+                })? as usize;
+                let selected = self.selected_schematic_component.clone().ok_or_else(|| {
+                    invalid("routeToSchematicTerminal requires a selected component")
+                })?;
+                let target = self
+                    .selected_schematic_route_target
+                    .clone()
+                    .ok_or_else(|| {
+                        invalid("routeToSchematicTerminal requires a selected route target")
+                    })?;
+                let selected_terminal = self.selected_schematic_terminal;
                 let history = self.schematic_history_entry();
                 let document = self.schematic.as_mut().ok_or_else(|| {
-                    invalid("routeToSchematicComponent requires a loaded schematic")
+                    invalid("routeToSchematicTerminal requires a loaded schematic")
                 })?;
                 document
-                    .route_components(&selected, target)
+                    .route_terminals(&selected, selected_terminal, &target, target_terminal)
                     .map_err(|error| invalid(error.to_string()))?;
                 self.record_schematic_edit(history);
-                self.diagnostics = format!("Routed {selected} to {target} on the schematic grid.");
+                self.diagnostics = format!(
+                    "Routed {selected} Terminal {} to {target} Terminal {} on the schematic grid.",
+                    selected_terminal + 1,
+                    target_terminal + 1
+                );
                 Ok(self.announced(self.diagnostics.clone()))
             }
             "undoSchematic" => {
@@ -1482,6 +1586,7 @@ impl MosaicApp for SpiceMosaicApp {
             schematic: self.schematic.clone(),
             selected_schematic_component: self.selected_schematic_component.clone(),
             selected_schematic_terminal: self.selected_schematic_terminal,
+            selected_schematic_route_target: self.selected_schematic_route_target.clone(),
             selected_schematic_analysis_card: self.selected_schematic_analysis_card,
             next_schematic_file_effect_id: self.next_schematic_file_effect_id,
         })
@@ -1521,6 +1626,7 @@ impl MosaicApp for SpiceMosaicApp {
         self.schematic = saved.schematic;
         self.selected_schematic_component = saved.selected_schematic_component;
         self.selected_schematic_terminal = saved.selected_schematic_terminal;
+        self.selected_schematic_route_target = saved.selected_schematic_route_target;
         self.selected_schematic_analysis_card = saved.selected_schematic_analysis_card;
         self.next_schematic_file_effect_id = self
             .next_schematic_file_effect_id
@@ -1556,6 +1662,30 @@ impl MosaicApp for SpiceMosaicApp {
                 return Err(invalid(
                     "snapshot schematic analysis selection is out of range",
                 ));
+            }
+        }
+        if let Some(target) = &self.selected_schematic_route_target {
+            let Some(document) = &self.schematic else {
+                return Err(invalid(
+                    "snapshot schematic route target requires a loaded schematic",
+                ));
+            };
+            let Some(selected) = &self.selected_schematic_component else {
+                return Err(invalid(
+                    "snapshot schematic route target requires a component selection",
+                ));
+            };
+            if selected == target {
+                return Err(invalid(
+                    "snapshot schematic route target matches the selected component",
+                ));
+            }
+            if !document
+                .components
+                .iter()
+                .any(|component| component.reference == *target)
+            {
+                return Err(invalid("snapshot schematic route target is unknown"));
             }
         }
         self.diagnostics = "Workbench restored. Inspect or run the saved deck.".to_owned();
@@ -2140,7 +2270,58 @@ mod tests {
                 json!({"wire":{"start":{"x":0,"y":20},"end":{"x":40,"y":20}}}),
             ))
             .unwrap_err();
-        assert_eq!(conflict.to_string(), "schematic net already has a label");
+        assert_eq!(conflict.to_string(), "schematic net has conflicting labels");
+    }
+
+    #[test]
+    fn schematic_net_label_inspector_links_disconnected_terminals_by_name() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(protocol_two_context()).unwrap();
+        dispatch(
+            &mut app,
+            "schematicLoad",
+            json!({
+                "document": {
+                    "title": "Remote label link",
+                    "components": [
+                        {"reference":"V1","kind":"DcVoltage","value":"5","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                        {"reference":"R1","kind":"Resistor","value":"1k","terminals":[{"x":40,"y":20},{"x":40,"y":0}]},
+                        {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+                    ],
+                    "wires": []
+                }
+            }),
+        );
+        dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference":"V1"}),
+        );
+        dispatch(
+            &mut app,
+            "onSchematicNetLabelChange",
+            json!({"value":"SENSE"}),
+        );
+        dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference":"R1"}),
+        );
+        let linked = dispatch(
+            &mut app,
+            "onSchematicNetLabelChange",
+            json!({"value":"SENSE"}),
+        );
+        assert_eq!(linked.props["schematic-net-label"], "SENSE");
+
+        let synchronized = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
+        let deck = synchronized.props["netlist-text"].as_str().unwrap();
+        assert!(deck.contains("R1 SENSE n1 1k\nV1 SENSE 0 DC 5"));
+
+        dispatch(&mut app, "onUndoSchematic", json!({}));
+        assert_eq!(app.update().props["schematic-net-label"], "");
+        dispatch(&mut app, "onRedoSchematic", json!({}));
+        assert_eq!(app.update().props["schematic-net-label"], "SENSE");
     }
 
     #[test]
@@ -2394,17 +2575,40 @@ mod tests {
             "onSelectSchematicComponent",
             json!({"reference": "R1"}),
         );
-        let routed = dispatch(
+        let target = dispatch(
             &mut app,
-            "onRouteToSchematicComponent",
+            "onSelectSchematicRouteTarget",
             json!({"reference": "C1"}),
         );
+        assert_eq!(target.props["selected-schematic-route-target-label"], "C1");
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut restored = SpiceMosaicApp::default();
+        let restored_target = restored.restore(snapshot).unwrap();
+        assert_eq!(
+            restored_target.props["selected-schematic-route-target-label"],
+            "C1"
+        );
+        let routed = dispatch(&mut app, "onRouteToSchematicTerminal", json!({"index": 0}));
         assert_eq!(
             routed.props["diagnostics"],
-            "Routed R1 to C1 on the schematic grid."
+            "Routed R1 Terminal 1 to C1 Terminal 1 on the schematic grid."
         );
         assert_eq!(
             routed.props["schematic-wire-segments"]
+                .as_array()
+                .unwrap()
+                .len(),
+            1
+        );
+        let undone = dispatch(&mut app, "onUndoSchematic", json!({}));
+        assert_eq!(undone.props["selected-schematic-route-target-label"], "C1");
+        assert!(undone.props["schematic-wire-segments"]
+            .as_array()
+            .unwrap()
+            .is_empty());
+        let redone = dispatch(&mut app, "onRedoSchematic", json!({}));
+        assert_eq!(
+            redone.props["schematic-wire-segments"]
                 .as_array()
                 .unwrap()
                 .len(),

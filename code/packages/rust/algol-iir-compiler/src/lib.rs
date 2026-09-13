@@ -5855,7 +5855,7 @@ impl Compiler {
     }
 
     fn for_step_exit_snapshot(
-        &self,
+        &mut self,
         target: &GrammarASTNode,
         target_ty: ScalarType,
         elem: &GrammarASTNode,
@@ -5885,16 +5885,31 @@ impl Compiler {
                 {
                     return (None, None);
                 }
-                if let Some((_, Some(body_value))) =
-                    self.for_body_static_target_snapshot(target, target_ty, body)
-                {
-                    let Some(exit) = body_value.checked_add(step) else {
-                        return (None, None);
-                    };
-                    if (step > 0 && exit > limit) || (step < 0 && exit < limit) {
-                        return (None, Some(exit));
-                    }
-                    return (None, None);
+                if let Some(expr) = self.for_body_static_target_expression(target, body) {
+                    let saved_reals = self.static_real_slots.clone();
+                    let saved_integers = self.static_integer_slots.clone();
+                    let saved_booleans = self.static_boolean_slots.clone();
+                    let exit = (|| {
+                        let mut control = start;
+                        for _ in 0..MAX_STATIC_STEP_ITERATIONS {
+                            self.update_for_target_snapshot(target, None, Some(control))
+                                .ok()?;
+                            let body_value = self.static_assigned_integer_value(expr)?;
+                            let next = body_value.checked_add(step)?;
+                            if (step > 0 && next > limit) || (step < 0 && next < limit) {
+                                return Some(next);
+                            }
+                            if next == control {
+                                return None;
+                            }
+                            control = next;
+                        }
+                        None
+                    })();
+                    self.static_real_slots = saved_reals;
+                    self.static_integer_slots = saved_integers;
+                    self.static_boolean_slots = saved_booleans;
+                    return (None, exit);
                 }
                 if !self.for_body_avoids_target(target, body) {
                     return (None, None);
@@ -5934,24 +5949,40 @@ impl Compiler {
                 {
                     return (None, None);
                 }
-                if let Some((Some(value), _)) =
-                    self.for_body_static_target_snapshot(target, target_ty, body)
-                {
-                    let Some(exit) = value
-                        .parse::<f64>()
-                        .ok()
-                        .map(|value| value + step)
-                        .filter(|value| value.is_finite())
-                    else {
-                        return (None, None);
-                    };
-                    return if (step > 0.0 && exit > limit)
-                        || (step < 0.0 && exit < limit)
-                    {
-                        (Some(exit.to_string()), None)
-                    } else {
-                        (None, None)
-                    };
+                if let Some(expr) = self.for_body_static_target_expression(target, body) {
+                    let saved_reals = self.static_real_slots.clone();
+                    let saved_integers = self.static_integer_slots.clone();
+                    let saved_booleans = self.static_boolean_slots.clone();
+                    let exit = (|| {
+                        let mut control = start;
+                        for _ in 0..MAX_STATIC_STEP_ITERATIONS {
+                            self.update_for_target_snapshot(
+                                target,
+                                Some(control.to_string()),
+                                None,
+                            )
+                            .ok()?;
+                            let body_value = self
+                                .static_assigned_real_value(expr)
+                                .filter(|value| value.is_finite())?;
+                            let next = body_value + step;
+                            if !next.is_finite() {
+                                return None;
+                            }
+                            if (step > 0.0 && next > limit) || (step < 0.0 && next < limit) {
+                                return Some(next);
+                            }
+                            if next == control {
+                                return None;
+                            }
+                            control = next;
+                        }
+                        None
+                    })();
+                    self.static_real_slots = saved_reals;
+                    self.static_integer_slots = saved_integers;
+                    self.static_boolean_slots = saved_booleans;
+                    return (exit.map(|value| value.to_string()), None);
                 }
                 if !self.for_body_avoids_target(target, body) {
                     return (None, None);
@@ -6183,17 +6214,13 @@ impl Compiler {
         })
     }
 
-    fn for_body_static_target_snapshot(
+    fn for_body_static_target_expression<'a>(
         &self,
         target: &GrammarASTNode,
-        target_ty: ScalarType,
-        body: &GrammarASTNode,
-    ) -> Option<(Option<String>, Option<i64>)> {
-        let Ok(target_name) = self.simple_variable_name(target) else {
-            return None;
-        };
-        let stmt = first_direct_node(body, "unlabeled_stmt")?;
-        let assign = first_direct_node(stmt, "assign_stmt")?;
+        body: &'a GrammarASTNode,
+    ) -> Option<&'a GrammarASTNode> {
+        let target_name = self.simple_variable_name(target).ok()?;
+        let assign = single_statement_assignment(body)?;
         let left_parts: Vec<&GrammarASTNode> = direct_nodes(assign)
             .into_iter()
             .filter(|node| node.rule_name == "left_part")
@@ -6207,17 +6234,7 @@ impl Compiler {
         {
             return None;
         }
-        let expr = first_direct_node(assign, "expression")?;
-        match target_ty {
-            ScalarType::Integer => self
-                .static_assigned_integer_value(expr)
-                .map(|value| (None, Some(value))),
-            ScalarType::Real => self
-                .static_assigned_real_value(expr)
-                .filter(|value| value.is_finite())
-                .map(|value| (Some(value.to_string()), None)),
-            ScalarType::Boolean | ScalarType::String => None,
-        }
+        first_direct_node(assign, "expression")
     }
 
     fn for_element_execution(
@@ -14612,6 +14629,102 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
         }));
+    }
+
+    #[test]
+    fn al4_single_iteration_step_loop_preserves_compound_control_assignment() {
+        let module = compile_source(
+            "begin real x; for x := 1.0 step 1.0 until 1.0 do begin x := 6.25 end; print(x) end",
+            "test",
+        )
+        .expect("a compound-wrapped static control assignment retains its exit snapshot");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
+        }));
+    }
+
+    #[test]
+    fn al4_single_iteration_step_loop_preserves_control_dependent_assignment() {
+        let module = compile_source(
+            "begin real x; for x := 1.0 step 1.0 until 1.0 do x := x + 5.25; print(x) end",
+            "test",
+        )
+        .expect("the known entry control may feed its exact one-pass assignment");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "7.25")
+        }));
+    }
+
+    #[test]
+    fn al4_single_iteration_step_loop_rejects_unknown_control_dependency() {
+        let err = compile_source(
+            "begin real x, y; for x := 1.0 step 1.0 until 1.0 do x := x + y; print(x) end",
+            "test",
+        )
+        .expect_err("an unknown assignment dependency must keep the control conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_integer_step_loop_preserves_control_recurrence_exit_snapshot() {
+        let module = compile_source(
+            "begin integer i; for i := 1 step 1 until 10 do i := i * 2; print(i + 0.25) end",
+            "test",
+        )
+        .expect("a bounded integer control recurrence may retain its checked exit");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "15.25")
+        }));
+    }
+
+    #[test]
+    fn al4_cyclic_integer_control_recurrence_remains_conservative() {
+        let err = compile_source(
+            "begin integer i; for i := 1 step 1 until 3 do i := 3 - i; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a cyclic integer control recurrence must hit the analysis cap");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_real_step_loop_preserves_control_recurrence_exit_snapshot() {
+        let module = compile_source(
+            "begin real x; for x := 1.0 step 0.5 until 10.0 do x := x * 2.0; print(x) end",
+            "test",
+        )
+        .expect("a bounded real control recurrence may retain its finite exit");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.5")
+        }));
+    }
+
+    #[test]
+    fn al4_cyclic_real_control_recurrence_remains_conservative() {
+        let err = compile_source(
+            "begin real x; for x := 1.0 step 0.5 until 3.0 do x := 3.0 - x; print(x) end",
+            "test",
+        )
+        .expect_err("a cyclic real control recurrence must hit the analysis cap");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_single_iteration_step_loop_rejects_multi_statement_control_assignment() {
+        let err = compile_source(
+            "begin real x, y; for x := 1.0 step 1.0 until 1.0 do begin x := 6.25; y := 1.0 end; print(x) end",
+            "test",
+        )
+        .expect_err("multiple compound statements keep the control snapshot conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]

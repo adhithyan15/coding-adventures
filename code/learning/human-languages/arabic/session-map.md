@@ -1,4 +1,4 @@
-# Session Map — Arabic Chapters 1–2
+# Session Map — Arabic Chapters 1–2 and 37–42
 
 Same spaced-repetition schedule as the other tracks (a word from session *N*
 resurfaces at *N+1, N+3, N+7, N+15*). Lessons named by slug; this map is the
@@ -36,7 +36,7 @@ greetings, plus the root engine and the attached *al-*.
 | 15 | tasharrafna | تشرفنا | "pleased to meet you" ("we are honoured"; root sh-r-f → *sharīf/sheriff*) |
 | 16 | practice | (dialogue) | the whole exchange |
 
-## Chapters 37–41 — the present tense, joining, and repair
+## Chapters 37–42 — the present tense, joining, repair, and reading
 
 | # | Slug | Item | What it turns on |
 |---|---|---|---|
@@ -61,6 +61,9 @@ greetings, plus the root engine and the attached *al-*.
 | 121 | ya | يا | one particle between naming somebody and calling them |
 | 122 | karrir | كرّر من فضلك | the first command in the book, on the Form II of فكّر |
 | 123 | R — calling and asking again | | the first meeting, replayed and repaired |
+| 124 | reading — words | | six familiar words without romanization |
+| 125 | reading — lines | | greeting, names and a simple choice in right-to-left script |
+| 126 | reading — first encounter | | one connected exchange, with no new word or glyph |
 
 ## Next
 

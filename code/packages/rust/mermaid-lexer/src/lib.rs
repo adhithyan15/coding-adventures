@@ -607,6 +607,28 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_quoted_labels_between_inline_block_nodes() {
+        let tokens = try_tokenize_mermaid_block(
+            "block\nid1[\"first\"] -- \"solid\" --> id2[\"second\"]\nid2 == \"thick\" ==> id3\nid3 -. \"dotted\" -.-> id1\n",
+        )
+        .unwrap();
+        assert_eq!(tokens.iter().filter(|token| {
+            token.type_name.as_deref() == Some("INLINE_LABELED_NODE_CONNECTION_LINE")
+        }).count(), 3);
+    }
+
+    #[test]
+    fn tokenizes_block_tilde_links_through_the_pinned_grammar() {
+        let tokens = try_tokenize_mermaid_block(
+            "block\nsource[Start] ~~~ target(Stop)\nleft ~~~~ right\n",
+        )
+        .unwrap();
+        assert_eq!(tokens.iter().filter(|token| {
+            token.type_name.as_deref() == Some("TILDE_NODE_CONNECTION_LINE")
+        }).count(), 2);
+    }
+
+    #[test]
     fn tokenizes_packet_fields_as_complete_lines() {
         let tokens = try_tokenize_mermaid_packet(
             "packet-beta\n0-7: \"Header\"\n8-31: \"Payload\"\n",

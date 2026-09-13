@@ -12,7 +12,7 @@ motivating gap as every size prop here, just not a *size*) on any layout node.
 ### Numeric typography bindings
 
 `Text`, `HostButton`, `HostInput` and `HostTable` accept a layout `font-size`
-property in React/Electron. Its value is a positive finite numeric literal or
+property in React/Electron, Compose and Qt. Its value is a positive finite numeric literal or
 a numeric slot reference, in logical pixels. For example:
 
 ```mll
@@ -26,8 +26,19 @@ live values (non-numeric, non-finite or non-positive) retain the authored
 fallback. Invalid literals, expressions, CSS strings and unsupported primitive
 placements are compile errors. Static mosstyle typography is unchanged.
 
+Compose projects the value to `sp`, preserving the platform font scale. Live
+values that overflow or underflow a positive finite Float retain the fallback;
+without an authored size, Compose uses `TextUnit.Unspecified`. Table bindings
+flow through descendant text and inputs, including split generated sections.
+
+Qt rounds to the nearest integer pixel. Literals must round into the positive
+32-bit pixel-size range; invalid live values suspend the native binding and
+restore its previous value/binding, including platform defaults when no size
+was authored. Table bindings propagate to text and editors in both canonical
+native tables and the structural fallback.
+
 Other backends report `typography.font-size-binding-unimplemented` in package
-degradation analysis. This foundation does not claim native typography scaling,
+degradation analysis. This foundation does not claim cross-backend typography acceptance,
 startup context propagation, or application layout acceptance; those are tracked
 in #14661. The initial compiler slice is #14677.
 

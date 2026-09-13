@@ -2,6 +2,297 @@
 
 ## Unreleased
 
+### Fixed — the macOS Flutter release artifact could not be built at all
+
+The last hard blocker on `engram-v0.3.0`, and it fails closed, which is why it
+blocks rather than degrades: the publish job `needs:` every build job **and**
+asserts the artifact set on disk exactly equals what `artifact-names` declares.
+`engram-flutter-macos-v0.3.0.zip` is in that declared set, so a release cannot
+be cut while it cannot be produced.
+
+`flutter build macos --release` has no `--target-platform`. It always builds
+arm64 **and** x86_64 — running the native-assets hook once per architecture and
+`lipo`ing the results into a universal binary — and `build-native.sh` handed it
+whatever a plain `cargo build` produced, which on an arm64 Mac is arm64-only.
+
+Two halves, and this is the second. The first is the hook learning to slice per
+architecture; without it a universal library still fails. Together they were
+proven end to end before either was written: a universal library plus a sliced
+hook builds `mosaic_task_app.app` with an `x86_64 arm64` framework, where the
+unsliced hook fails with `lipo: … have the same architectures`.
+
+**Keyed on the build's behaviour, not on the backend being Flutter.** The
+condition is "does the emitted build ask for more than one architecture", which
+today only Flutter on macOS does — stated that way so whoever adds the next
+multi-architecture target knows what to look for.
+
+**Qt and SwiftUI on macOS are deliberately excluded, not overlooked.**
+`swift build -c release` and the generated CMake both build for the host only,
+so a fat library there is bytes in the bundle that nothing loads. Their macOS
+artifacts are host-architecture; whether Engram should ship universal apps on
+those backends is a separate question, and not one to answer by accident here.
+
+The `lipo -create` output is **asserted** to carry both slices rather than
+assumed. Over two copies of one architecture `lipo` fails loudly, but over a fat
+file and a thin one it succeeds — so the check is on what came out, not on what
+went in. It also writes beside the slices rather than over either, so a re-run
+cannot lipo a fat file into itself.
+
+**Dormant until the Flutter migration lands**, and verified anyway. Flutter is
+not in `STANDARD_RUNTIME_BACKENDS` until its `[host_assets]` override comes off,
+so the new block is unreachable on `main` today. Verified by removing that line
+the way the migration does: the derived list moves from `qt swiftui` to
+`qt swiftui flutter`, the universal path activates, and the emitted project
+carries an `x86_64 arm64` runtime with `nativeComplete: true` and zero
+degradations.
+
+That is #15089's precedent, which fixed Flutter's and XAML's release checks
+"though neither has migrated", on the grounds that holding the mechanism while
+leaving the known trap is the same partial wiring that caused the original bug.
+
+The release workflow installs **both** Apple targets on the macOS leg only.
+Naming just the non-host one and relying on the runner to supply the other
+encodes "macos-latest is arm64" where nothing states it — and the script
+requires both, so an Intel runner would fail closed complaining about a target
+the workflow was never asked to install. Conditional, because installing an
+Apple target on the Linux and Windows legs of the same matrix would be a
+download neither will ever use; an empty value is byte-identical to the key
+being absent.
+
+**And the shipped artifact is now gated on being universal, rather than
+measured by hand.** The `x86_64 arm64` result above was established by running
+`lipo -archs` once and writing it down; nothing checked it, and
+`LIBRARY_MAGIC["macos"]` *accepts* the fat magic without requiring it — so a
+regression to a thin library would have published successfully and crashed on
+an Intel Mac.
+
+`archive_flutter` refuses one now, reading the file's own bytes rather than
+shelling out to `lipo` so the check works wherever the archiver runs. It tests
+`nfat_arch`, not just the magic: a fat container holding **one** architecture is
+legal and is exactly the artifact a magic-only check waves through. Gated on the
+migrated engine, since a backend still binding `engram-capi` is built host-only
+by a path this says nothing about.
+
+Mutation-tested three ways — the check doing nothing fails the three refusal
+tests; dropping the `nfat_arch` test fails only the one-architecture case; and
+dropping the platform/stem gate starts refusing correct Linux, Windows and
+unmigrated artifacts, which is what shows the gate is load-bearing rather than
+decoration.
+
+Two further review findings, both acted on. The `rustup target list` check now
+runs inside the same `cd "$RUST"` subshell the build uses, so it cannot answer
+for a different toolchain than the one that compiles. And the `lipo -create`
+abort-on-failure depends on `set -e`, which is now stated where someone moving
+this block into a function would read it.
+
+A reviewer also confirmed the architecture assertion empirically rather than by
+reasoning, against a real `x86_64 arm64e` binary: the space-padded `case`
+pattern correctly rejects `arm64e`, `arm64_32` and `x86_64h`, which is the
+substring trap this change could plausibly have had.
+
+### Fixed — more than half of SwiftUI's reported style drops were not drops
+
+Engram's SwiftUI emission reported **40 style drops, 22 of them `gap`, and all
+22 were false.** `$style.app-shell` was reported to drop `gap: 18` while the
+emitted Swift opened `VStack(spacing: 18)` on that very part.
+
+SwiftUI takes spacing at view-**construction** time, and the emitter has been
+reading it from the part's own style for some time. The *reporter* had not
+caught up: it derived drops by running the modifier chain and collecting what no
+match arm handled, which is the right method for almost every property and blind
+to this one. It now takes the layout, the way the Compose reporter already does
+for `justify-content`/`align-items` (#14834).
+
+Engram now reports 18, and no `gap`. `(SwiftUI, "gap")` is off
+`ALLOWED_STYLE_DROPS` here and in the two packages that pinned it —
+`mosaic-pkg-deck-stats` and `mosaic-pkg-collection-actions`, the only two of the
+twelve that did. Which three were stale was measured by running all thirteen
+gates, not inferred.
+
+The entry's own comment already described the fix — "the container emitter
+reading the part's style before emitting children" — which is what
+`container_spacing` does. The mapping had landed and nothing brought anyone back
+to the list, exactly as with the eleven stale pins found earlier; that is the
+drift `no_pinned_style_drop_has_silently_been_fixed` exists to catch, and it
+caught this one.
+
+A gap a `Box`, `Stack` or `HostScroll` genuinely discards is still reported —
+`container_spacing` refuses those by name, deliberately — as is a `Row` inside a
+`HostTable`, which lowers to `HStack(spacing: 0)` to match
+`border-collapse: collapse`.
+
+### Fixed — the Qt release artifact shipped a library the app never opens
+
+Qt migrated off `engram-capi` in #13728, so the generated `MosaicHost.cpp` opens
+`libmosaic_app` and resolves `mosaic_app_create` / `mosaic_app_dispatch`. Three
+separate places were still written for the retired architecture, and each one
+blessed the next:
+
+1. **`build-native.sh` emitted Qt without the runtime flags.** Only SwiftUI got
+   `--profile native-complete --runtime-library`. Measured on a real run before
+   fixing: the Qt emission reported `nativeComplete: false` with a
+   `runtime.sample-fallback` degradation — the emitter saying, in its own words,
+   that the app has no engine.
+2. **It then placed `libengram_capi.dylib` beside the project**, and copied that
+   into `Contents/MacOS` of the `.app`. So the bundle carried a library nothing
+   loads, and no `libmosaic_app` at all.
+3. **`archive_qt` verified the presence of `engram_capi`** and passed it. The
+   release check was aligned with the bug rather than with the app.
+
+Meanwhile CI emits Qt *with* both flags, so **the artifact being verified was
+not the artifact being shipped** — which is precisely what the release epic's
+"claiming only artifacts that were actually verified" line exists to prevent.
+
+Fixed in all three, and verified end to end against a real Qt build rather than
+by reasoning:
+
+- `STANDARD_RUNTIME_BACKENDS` says which hosts use the standard runtime, and is
+  **derived from the manifest rather than written down**. A backend has
+  migrated exactly when Engram stops overriding its generated host, so the
+  `[host_assets]` entry coming off *is* the migration — the manifest already
+  knows, and asking it means the list cannot drift from what it describes.
+
+  The first version was the literal `" qt swiftui "` with a comment saying
+  Compose would join "with its own migration". That is an unpaid promise, and
+  the day the override came off this script would have kept emitting Compose
+  for the retired architecture and bundling `engram-capi` beside a host that
+  opens `libmosaic_app` — this same bug, shipped again on the next backend.
+
+  Proven rather than asserted: removing the Compose `[host_assets]` line the
+  way #15057 does moves the derived list from `qt swiftui` to
+  `qt swiftui compose` with no edit to the script.
+
+  Parsed with `tomllib`, not grepped. `[host_effects]` and
+  `[host_assets].dependencies` carry their own `backend = ` lines, so a regex
+  over the file sweeps up Qt — which has effect handlers and no asset override
+  — and concludes it still needs `engram-capi`. Wrong in the silent direction.
+- Emission now reports `nativeComplete: true`, zero degradations, empty
+  `replacedGeneratedFiles`. The app builds and links, and the bundle carries
+  `libmosaic_app.dylib` beside the executable, exporting the six `mosaic_app_*`
+  symbols the host resolves.
+- The post-build check and the `.app` copy name the engine the host opens. The
+  first attempt used the *cargo artifact* name, `libengram_mosaic_app.dylib`,
+  and failed on a correct build — `--runtime-library` installs it under the
+  ABI's conventional `libmosaic_app.dylib`, and the source name is never the
+  name on disk.
+- `archive_qt` checks `mosaic_app`, and `_find_engine` takes which engine to
+  look for rather than hard-coding one. Falsified rather than assumed: a bundle
+  carrying only the retired `libengram_capi.dylib` is now refused, and running
+  the real archiver over the real built bundle produces
+  `engram-qt-macos-v0.3.0.zip`.
+
+- **`archive_compose` was the same trap, armed.** It requires an `engram_capi`
+  engine, and #15057 stops Compose shipping one. That workflow runs on any pull
+  request touching `engram-app/**`, so the break was not hypothetical or
+  distant — it was one merge away, on a PR already open.
+
+  It now derives the expected engine from the manifest through
+  `_engine_stem_for`, so it follows the migration instead of a constant. Proven
+  in both directions against the real function: today a distribution carrying
+  `libengram_capi` is accepted and one carrying `libmosaic_app` refused; with
+  the Compose `[host_assets]` line removed the way #15057 removes it, that
+  inverts exactly.
+
+  The accompanying test pins only the **stable** ends — Qt, which cannot
+  un-migrate, and Flutter, which is not migrating. Compose is deliberately left
+  unpinned: asserting its current answer would make the test a tripwire that
+  fails the very PR completing the migration.
+
+- **Flutter's and XAML's checks derive their engine too**, though neither has
+  migrated and both are correct today. That is the point: the failure being
+  fixed here is that Qt's migration *did not touch this file*, so "the
+  migration will update it" is precisely the assumption that already failed
+  once. Leaving two known future traps while holding the mechanism that closes
+  them would be the same partial wiring in a new place.
+
+  Proven across the whole family by removing each `[host_assets]` override in
+  turn: every backend flips from `engram_capi` to `mosaic_app` exactly when its
+  own override comes off, one at a time, with no edit to the release script.
+  Their error messages name the derived engine rather than a hardcoded one, so
+  a future failure reads correctly instead of naming a library that is no
+  longer involved.
+
+Flutter and XAML are untouched and still correctly expect `engram_capi`,
+confirmed by re-running the script for Flutter.
+
+Also corrected while in the file: `--help` claimed that "backends other than qt
+emit and place the engine, but their compile step is not wired yet". All five
+have had a toolchain arm for some time, and the Engram release workflow builds
+every one of them with `--build` — so a reader trusting that text would have
+concluded the release path could not work.
+
+### Fixed — the Compose release build broke on its own migration
+
+Not predicted from the code: **#15057 went red on "Build the Compose Desktop
+app"**, and reproducing it locally gave
+
+```
+error: no jar in .../binaries/main/app contains MosaicHost; cannot place the engine
+```
+
+The Compose arm locates the jar containing `MosaicHost.class` — Engram's *own*
+Kotlin host — and places `engram_capi` beside it, because that host resolved the
+engine from its jar's directory at runtime. The migration deletes that class, so
+the `find` returns nothing and a perfectly good build fails.
+
+Same shape as Qt's, one backend along: the release script asserting something
+the architecture no longer has.
+
+A migrated Compose needs no placement at all. `--runtime-library` hands Gradle
+the runtime as a project resource and `createDistributable` carries it in —
+measured, not assumed: the distribution holds
+`engram_app.app/Contents/app/resources/libmosaic_app.dylib`.
+
+**The verification is not skipped with the placement.** Dropping both would
+trade a loud failure for a silent one, which is the trade this script exists to
+refuse — so the migrated path asserts the runtime is in the distribution and
+exports its six `mosaic_app_*` symbols.
+
+Both paths were run end to end on a real Gradle build: with the Compose
+`[host_assets]` line removed the way #15057 removes it, the build now succeeds
+and reports the runtime shipped; with the line present, it still places
+`engram_capi` beside the host jar exactly as before.
+
+**Ordering:** #15057 needs this to go green, so it should land after this
+change or rebase onto it.
+
+### Fixed — more than half the style-drop allowlist had gone stale
+
+`ALLOWED_STYLE_DROPS` pins the style properties each backend is currently
+allowed to drop. The gate around it was one-directional: it catches a **new**
+drop, and could not catch a pinned one that had **stopped** happening.
+
+That asymmetry is not cosmetic. An entry whose gap was fixed stays on the list,
+and from then on it is a standing licence — a later regression that re-drops the
+same property on the same backend is allowlisted and passes green, which is
+precisely the state this file exists to prevent.
+
+The existing `seen_any` backstop does not cover it. It asks whether *any* drop
+was reported, so it stays green while twenty of twenty-one entries rot.
+
+`no_pinned_style_drop_has_silently_been_fixed` now requires every pinned pair to
+still be observed. **On its first run it found 11 of the 21 stale:**
+
+| backend | properties no longer dropped |
+| --- | --- |
+| Compose | `max-width`, `justify-content`, `align-items`, `align`, `border-bottom-width`, `border-bottom-color`, `flex-wrap` |
+| XAML | `border-bottom-width`, `border-bottom-color` |
+| SwiftUI | `border-bottom-width`, `border-bottom-color` |
+
+Spot-checked against the emitters rather than taken from the test: Compose's
+`max-width` is `Modifier.widthIn`, tagged `#14833` in `mosaic-emit-compose`, and
+XAML's per-side borders lower to `BorderThickness` with their own tests. The
+gaps were real and were closed; nothing brought anyone back to this list,
+because fixing an emitter does not touch this file.
+
+All eleven are deleted. The ten that remain are genuinely still dropped, and
+most of them are the entries that need no mapping at all — `border-bottom-style`
+is `solid` on every backend that has only solid strokes.
+
+No production code changed. The eleven mappings this records were landed by
+other work; what changed here is that the ledger now matches reality, and cannot
+drift from it silently again.
+
 ### Fixed — the app shell now fills the window (#14837)
 
 Engram's composition root measured `1280 x 776` in a `1280 x 900` window.

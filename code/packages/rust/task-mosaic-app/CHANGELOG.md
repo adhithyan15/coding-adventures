@@ -1,5 +1,64 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — the sheet's column widths were ratios, not pixels (#15131)
+
+Three cells in Trestle's Sheet view measured **zero width** — the task name, the
+completion toggle and the due date — at 1280, 900 and 700 alike.
+
+`sheet-column-widths` was `[3, 1, 2, 2, 2]`, plainly intended as relative
+proportions. But `Grid.mil` declares the slot as **"per-column pixel widths"**,
+and every backend threads the number straight into a width, so those were 3px
+and 1px columns. A 1px column has no room for its text.
+
+Now `[240, 80, 160, 160, 160]` — the same proportions at an 80px unit, matching
+the grid's own 72px minimum cell. Measured after: **0 zero-width nodes in the
+Sheet view at all three viewports**, and every other Trestle view stays clean.
+
+#### Why nothing caught it
+
+A ratio and a pixel width are both `number`, so the slot type cannot tell them
+apart and no backend can either. The viewport-independence was the tell: this
+was zero at 1280 as much as at 700, whereas a starvation bug is
+viewport-dependent by definition — that is what separated it from UI59.
+
+It was also invisible to every existing gate, because presence and
+accessibility assertions all pass on a `0 x h` node.
+
+The new test asserts the **magnitude** rather than the layout: every sheet
+column must be at least 40px. It is deliberately loose — it exists to catch
+single digits, not to pin a design.
+
+## [Unreleased] — the Flutter harness measured the test font, not the app (#14857)
+
+`flutter test` ships a default font that measures **one em per glyph**, so every
+width taken in this harness was roughly double the real thing. That distortion
+is not a detail — it is the whole of #14857.
+
+That issue reported Trestle's task row at **1076px on Flutter against 466 on
+Compose**, a 2.3x layout defect that blocked `max-width` on Flutter (#14851).
+Loading a real font and re-measuring the same row:
+
+| widget | test font | real font | Compose |
+| --- | --- | --- | --- |
+| Edit | 68 | **48.0** | 64 |
+| Delete | 97 | **53.1** | 77 |
+| task name | 318 | **128.2** | 185 |
+| due date | 200 | **96.1** | 133 |
+
+With a real font Flutter is **narrower than Compose on every text widget**, and
+the row sums to ~389px — comfortably inside the authored 760px cap. The toggle
+button measured 64 on both backends all along, which already ruled out the
+Material-minimum-size theory.
+
+The harness now loads a real font when one is present and **proves it took
+effect**: `Delete` is asserted under 75px, separating the real 53.1 from the
+test font's 96.6. Without that check the load would be decoration — the suite
+passes either way, because nothing else here asserts a width, and that is
+exactly how this went unnoticed for so long.
+
+Where no font file exists the check self-disables rather than failing, so the
+suite still runs; only width claims lose their meaning there.
+
 ## [Unreleased] — declare the Compose acceptance viewport (#14771)
 
 `TaskAppUiTest` used `createComposeRule()`, whose surface is whatever the test

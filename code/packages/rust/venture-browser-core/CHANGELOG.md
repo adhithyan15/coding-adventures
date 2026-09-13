@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Add retained find-in-page state, bounded visible-text matching diagnostics,
+  wrapping active-result navigation, shared reveal scrolling, and
+  backend-neutral result highlights.
+
+- Add retained access-key candidates and diagnostics with deterministic
+  duplicate resolution, modal containment, accessibility discoverability, and
+  transactional link, control, disclosure, and top-layer activation.
+
+- Add bounded contenteditable value, selection, composition, clipboard,
+  undo/redo, history restoration, accessibility, reflow, and shared overlay
+  transactions through the existing cross-host input seam.
+
 - Extend shared sequential focus to image-map areas, authored generic
   `tabindex` targets, and contenteditable surfaces with reusable accessibility
   roles, modal containment, scrolling, activation, and focus rings.

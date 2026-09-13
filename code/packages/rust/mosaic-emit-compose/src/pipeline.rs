@@ -17,11 +17,13 @@ pub enum PipelineEmitError {
     UnsafeEmitName(String),
     UnsupportedHostLink(String),
     UnsupportedHostDialog(String),
+    InvalidTypography(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            Self::InvalidTypography(reason) => write!(f, "invalid Compose typography: {reason}"),
             Self::UnknownPrimitive(t) => write!(
                 f,
                 "moslayout primitive '{t}' is not yet supported by the Compose emitter"
@@ -69,6 +71,7 @@ pub fn from_pipeline(
     layout: &LayoutDef,
     style: &StyleDef,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
+    validate_typography(&layout.root)?;
     let name = component.component.clone();
     // Defence in depth: validate the component name before we
     // interpolate it into Kotlin identifier positions (sealed class
@@ -104,7 +107,10 @@ pub fn from_pipeline(
     }
     // Built before the header because the opt-in and imports below depend
     // on whether any part authors `flex-wrap` (#14836).
-    let part_styles = build_part_style_map(style, &component.slots);
+    let mut part_styles = build_part_style_map(style, &component.slots);
+    // UI59 -- resolve once, so every writer and the drop reporter agree.
+    part_styles.resolve_width_guards(&layout.root);
+    let part_styles = part_styles;
     // `FlowRow`/`FlowColumn` are behind ExperimentalLayoutApi. Added only
     // when something actually wraps, so a project that does not keeps a
     // byte-identical header.
@@ -219,16 +225,26 @@ pub fn from_pipeline(
     // `RoundedCornerShape`/`clip` without their imports is Kotlin that does
     // not compile, which is exactly how the XAML `Not()` helper went wrong in
     // #14793. An unused Kotlin import is a warning; a missing one is an error.
-    // UI59 -- only when some part says it cannot shrink. Emitted from the
-    // STYLE rather than the layout: an unused Kotlin import is a warning
-    // and a missing one is an error, so over-approximating here is the
-    // safe direction. Generating this modifier without its import is
+    // UI79 -- a dashed border is drawn, so it needs the draw-scope types.
+    // `drawBehind` itself is imported by the per-edge block below; this
+    // adds only what the dash stroke needs on top.
+    if style.parts.iter().any(|part| {
+        part.base.iter().any(|p| {
+            p.name == "border-style"
+                && matches!(p.value.trim().trim_matches('"'), "dashed" | "dotted")
+        })
+    }) {
+        writeln!(out, "import androidx.compose.ui.draw.drawWithContent").unwrap();
+        writeln!(out, "import androidx.compose.ui.geometry.CornerRadius").unwrap();
+        writeln!(out, "import androidx.compose.ui.graphics.PathEffect").unwrap();
+        writeln!(out, "import androidx.compose.ui.graphics.StrokeCap").unwrap();
+        writeln!(out, "import androidx.compose.ui.graphics.drawscope.Stroke").unwrap();
+    }
+    // UI59 -- needed wherever a Row has children. An unused Kotlin import
+    // is a warning and a missing one is an error, so over-approximating is
+    // the safe direction; generating the modifier without its import is
     // exactly what `Unresolved reference 'wrapContentWidth'` looked like.
-    if style
-        .parts
-        .iter()
-        .any(|part| compose_flex_shrink_zero(&part.base))
-    {
+    if layout_contains_tag(&layout.root, "Row") {
         writeln!(out, "import androidx.compose.foundation.layout.wrapContentWidth").unwrap();
     }
     // UI79 -- only when a per-edge border is authored. `Offset` is already
@@ -485,9 +501,7 @@ pub fn from_pipeline(
     writeln!(out, "import androidx.compose.ui.semantics.semantics").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.sp").unwrap();
-    if uses_icon {
-        writeln!(out, "import androidx.compose.ui.unit.TextUnit").unwrap();
-    }
+    writeln!(out, "import androidx.compose.ui.unit.TextUnit").unwrap();
     if uses_host_link || uses_host_dialog || uses_icon {
         writeln!(out, "import androidx.compose.material.MaterialTheme").unwrap();
     }
@@ -1639,6 +1653,70 @@ fn container_composable_for_tag(tag: &str) -> Option<&'static str> {
 /// that lowers on one of them and not another is genuinely half-dropped,
 /// and the caller has to decide; collapsing to one composable here would
 /// hide that.
+/// UI59 -- the one answer to "do this node's children sit in RowScope?"
+///
+/// The emitter passes this down as `in_row_scope`; the drop reporter has
+/// to derive it by walking. When those were two separate notions they
+/// disagreed, and the disagreement was silent in the dangerous direction:
+/// the reporter un-reported seven parts where the emitter had guarded
+/// only six.
+///
+/// The cause was `flex-wrap`. A `Row` that wraps is emitted as a
+/// `FlowRow`, and a FlowRow's children are NOT RowScope children -- the
+/// emitter knows because it compares the flow-wrapped composable, and the
+/// first reporter walk compared the raw tag. Both callers now ask here.
+fn row_scoped_children(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
+    container_composable_for_tag(&node.tag)
+        .map(|composable| flow_wrapped_composable(node, part_styles, composable) == "Row")
+        .unwrap_or(false)
+}
+
+/// UI59 -- parts the emitter will width-guard: a direct RowScope child
+/// authoring `flex-shrink: 0` and no `flex-grow` (a weight wins).
+///
+/// Asks exactly what the guard at the emission site asks, via the same
+/// [`row_scoped_children`] and [`compose_flex_shrink_zero`].
+fn parts_width_guarded(root: &LayoutNode, part_styles: &PartStyleMap) -> HashSet<String> {
+    fn walk(
+        node: &LayoutNode,
+        in_row_scope: bool,
+        part_styles: &PartStyleMap,
+        out: &mut HashSet<String>,
+    ) {
+        // UI59 §4 -- leaves are in the set too now: the floor reaches them
+        // through their own writers, which read `is_width_guarded`.
+        if in_row_scope {
+            if let Some(part) = node.part_name.as_deref() {
+                // UI59 §4 -- the floor is universal now, so membership no
+                // longer depends on `flex-shrink`. It still depends on the
+                // two things the emitter checks: a weight opts out, and the
+                // guard lives in `emit_container`, so a LEAF never gets it.
+                let weighted = part_styles
+                    .get(part)
+                    .map(|props| compose_row_weight(props).is_some())
+                    .unwrap_or(false);
+                if !weighted {
+                    out.insert(part.to_string());
+                }
+            }
+        }
+        // `For`/`If`/`Else` are meta-primitives: they emit no container of
+        // their own, so a node inside a `For` inside a `Row` IS still a
+        // RowScope child, and the emitter treats it as one. Omitting this
+        // silently dropped `board-col`'s guard.
+        let row_here = match node.tag.as_str() {
+            "For" | "If" | "Else" => in_row_scope,
+            _ => row_scoped_children(node, part_styles),
+        };
+        for child in &node.children {
+            walk(child, row_here, part_styles, out);
+        }
+    }
+    let mut out = HashSet::new();
+    walk(root, false, part_styles, &mut out);
+    out
+}
+
 fn part_container_composables(root: &LayoutNode) -> HashMap<String, BTreeSet<&'static str>> {
     fn walk(node: &LayoutNode, out: &mut HashMap<String, BTreeSet<&'static str>>) {
         if let (Some(part), Some(composable)) = (
@@ -1757,10 +1835,36 @@ pub fn dropped_style_properties_in_layout(
     layout_root: Option<&LayoutNode>,
 ) -> Vec<DroppedStyleProperty> {
     let composables = layout_root.map(part_container_composables);
+    // UI59 -- a part the emitter width-guards is NOT a dropped
+    // `flex-shrink`. Derived from the same predicate the guard uses, so
+    // the two cannot drift; without the layout we cannot tell and fall
+    // back to reporting, which is the safe direction.
+    let guarded = layout_root.map(|root| {
+        // Slots only populate the slot-state index, which neither
+        // `flow_wrapped_composable` nor the guard predicate reads.
+        let mut part_styles = build_part_style_map(style, &[]);
+        part_styles.resolve_width_guards(root);
+        part_styles.width_guarded
+    });
     let mut out = Vec::new();
     for part in &style.parts {
         let built = compose_box_style(&part.base, &[], None, 0, None);
         for (name, value) in built.dropped {
+            // UI59 §4 -- the width floor is universal, so `flex-shrink: 0`
+            // on a guarded part is honoured and is not a drop. A POSITIVE
+            // value asks to shrink below content, which the floor refuses,
+            // so it stays reported. Nothing in the repo authors one today,
+            // but skipping on the property name alone would make the first
+            // one silent.
+            if name == "flex-shrink"
+                && value.trim().trim_matches('"') == "0"
+                && guarded
+                    .as_ref()
+                    .map(|set| set.contains(&part.name))
+                    .unwrap_or(false)
+            {
+                continue;
+            }
             // A property the container arguments now carry is not dropped on
             // the containers that carry it. Without the layout we cannot tell,
             // and fall back to reporting it -- over-reporting a drop is the
@@ -2578,11 +2682,35 @@ struct SlotStateStyle {
 struct PartStyleMap {
     props: HashMap<String, Vec<StyleProp>>,
     slot_states: HashMap<String, Vec<SlotStateStyle>>,
+    /// UI59 -- parts the `flex-shrink: 0` width guard applies to.
+    ///
+    /// Precomputed once from the layout and carried HERE, on the map that
+    /// is already threaded through every writer, so the emitter and the
+    /// drop reporter read the SAME set rather than each deciding for
+    /// itself. Two separate notions drifted in both directions on the real
+    /// product: two parts were un-reported that never got a guard (a
+    /// silent drop) and three were reported that did.
+    width_guarded: HashSet<String>,
 }
 
 impl PartStyleMap {
     fn get(&self, key: &str) -> Option<&Vec<StyleProp>> {
         self.props.get(key)
+    }
+
+
+    /// UI59 §4 -- does this part get the no-shrink width floor?
+    ///
+    /// Read by LEAF writers, which have no `in_row_scope` of their own.
+    /// Containers ask the walk directly; both answers come from
+    /// [`parts_width_guarded`], so the two cannot drift.
+    fn is_width_guarded(&self, part: &str) -> bool {
+        self.width_guarded.contains(part)
+    }
+
+    /// Populate [`Self::width_guarded`] once the layout is known.
+    fn resolve_width_guards(&mut self, root: &LayoutNode) {
+        self.width_guarded = parts_width_guarded(root, self);
     }
 }
 
@@ -2642,7 +2770,11 @@ fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> PartStyleMap {
             slot_states.insert(part.name.clone(), owned);
         }
     }
-    PartStyleMap { props, slot_states }
+    PartStyleMap {
+        props,
+        slot_states,
+        width_guarded: HashSet::new(),
+    }
 }
 
 // =====================================================================
@@ -3775,6 +3907,10 @@ fn compose_box_style(
     let mut font_family_mono = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
+    // UI79 -- `dashed`/`dotted`; `None` means the solid `Modifier.border`.
+    let mut border_dash: Option<String> = None;
+    // `border-style: none` suppresses the border entirely.
+    let mut border_none = false;
     // UI79 -- per-edge borders. `Modifier.border` draws all four edges and
     // has no per-edge form, so each authored edge is DRAWN, not configured.
     // Indexed [top, right, bottom, left], the CSS order.
@@ -3912,6 +4048,24 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
+            // UI79 -- a non-solid border is DRAWN, because
+            // `Modifier.border` has no dash. Captured base-only: a border
+            // that changes dash pattern per state is not a thing anyone
+            // authors, and `drawBehind` takes a value, not a layer stack.
+            "border-style" if layer_idx.is_none() => {
+                let raw = p.value.trim().trim_matches('"');
+                match raw {
+                    "dashed" | "dotted" => border_dash = Some(raw.to_string()),
+                    // `none` means NO border, so it must suppress one that
+                    // `border-width` would otherwise draw. Consuming it
+                    // without acting would be worse than the old drop: the
+                    // report would fall silent while a border still
+                    // painted.
+                    "none" => border_none = true,
+                    "solid" => {}
+                    _ => dropped.push((p.name.clone(), p.value.clone())),
+                }
+            }
             // UI79 -- `border-{top,right,bottom,left}-{width,color}`.
             //
             // `-style` is deliberately NOT handled here: `solid` is the only
@@ -4130,14 +4284,48 @@ fn compose_box_style(
 
     // .border — needs at least the width.  Default color `Color.Gray`
     // when only the width is set.
-    if !border_width.empty() {
+    if !border_width.empty() && !border_none {
         let w_expr = numeric_layer_value(&border_width, state_layers, "0");
         let c_expr = if border_color.empty() {
             "Color.Gray".to_string()
         } else {
             layer_value(&border_color, state_layers, "Color.Gray")
         };
-        modifier.push_str(&format!("\n{cpad}.border({w_expr}.dp, {c_expr}{shape_arg})"));
+        match &border_dash {
+            // `Modifier.border` draws a solid stroke and takes no
+            // `PathEffect`, so a dash has to be drawn. `drawRoundRect`
+            // with a `Stroke` honours the authored corner radius; a plain
+            // `drawRect` would square off every rounded box that dashes.
+            //
+            // CSS does not specify dash geometry, so these lengths are a
+            // choice: 4dp on / 4dp off for `dashed`, and for `dotted` a
+            // round cap with a zero-length on-segment, which is what
+            // actually produces dots rather than short dashes.
+            Some(kind) => {
+                let radius_px = radius
+                    .as_deref()
+                    .map(|r| format!("{r}.dp.toPx()"))
+                    .unwrap_or_else(|| "0f".to_string());
+                let (intervals, cap) = if kind == "dotted" {
+                    ("0f, {w}.dp.toPx() * 2".to_string(), ", cap = StrokeCap.Round")
+                } else {
+                    ("4.dp.toPx(), 4.dp.toPx()".to_string(), "")
+                };
+                let intervals = intervals.replace("{w}", &w_expr);
+                modifier.push_str(&format!(
+                    // `drawWithContent`, NOT `drawBehind`: this modifier
+                    // is appended after `.background(..)`, and a
+                    // `drawBehind` there paints UNDER the background, so
+                    // the dashes were drawn and then covered. Measured --
+                    // the emitted Kotlin compiled, the stroke ran, and the
+                    // screenshot showed no dashes at all.
+                    "\n{cpad}.drawWithContent {{ drawContent(); drawRoundRect(color = {c_expr}, cornerRadius = CornerRadius({radius_px}), style = Stroke(width = {w_expr}.dp.toPx(){cap}, pathEffect = PathEffect.dashPathEffect(floatArrayOf({intervals}), 0f))) }}"
+                ));
+            }
+            None => {
+                modifier.push_str(&format!("\n{cpad}.border({w_expr}.dp, {c_expr}{shape_arg})"))
+            }
+        }
     }
 
     // UI79 -- per-edge borders, drawn on the BORDER BOX.
@@ -4275,6 +4463,43 @@ fn compose_style_for_node(
 // Layout tree walker
 // =====================================================================
 
+/// Whether this node's font-size binding has a native Compose projection.
+/// Keep degradation analysis aligned with the emitter's accepted contract.
+pub fn has_native_font_size(node: &LayoutNode) -> bool {
+    if !matches!(node.tag.as_str(), "Text" | "HostInput" | "HostButton" | "HostTable") {
+        return false;
+    }
+    match find_prop_value(node, "font-size") {
+        Some(LayoutPropValue::Number(n)) => n.is_finite() && *n > 0.0 && (*n as f32).is_finite() && (*n as f32) > 0.0,
+        Some(LayoutPropValue::SlotRef(slot)) => validate_safe_identifier(&to_camel_case_first_lower(slot)).is_ok(),
+        _ => false,
+    }
+}
+
+fn validate_typography(node: &LayoutNode) -> Result<(), PipelineEmitError> {
+    if find_prop_value(node, "font-size").is_some() && !has_native_font_size(node) {
+        return Err(PipelineEmitError::InvalidTypography(format!(
+            "{} requires a positive finite literal or safe slot on Text, HostInput, HostButton or HostTable", node.tag
+        )));
+    }
+    for child in &node.children { validate_typography(child)?; }
+    Ok(())
+}
+
+fn bound_text_style(node: &LayoutNode, mut text: TextStyleCtx) -> TextStyleCtx {
+    let fallback = text.bound_size.clone().or_else(|| text.size.as_ref().map(|s| format!("{s}.sp")))
+        .unwrap_or_else(|| "TextUnit.Unspecified".to_string());
+    match find_prop_value(node, "font-size") {
+        Some(LayoutPropValue::Number(n)) => text.bound_size = Some(format!("({n}).toFloat().sp")),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let slot = to_camel_case_first_lower(slot);
+            text.bound_size = Some(format!("({slot} as? Number)?.toFloat().let {{ value -> if (value != null && value.isFinite() && value > 0f) value.sp else {fallback} }}"));
+        }
+        _ => {}
+    }
+    text
+}
+
 /// Inherited text styling threaded from a HostTable's `sheet` part (and
 /// overridden by a cell's own part) down to the `Text` / `BasicTextField`
 /// it wraps.  Compose has NO inherited text style on a `Box` the way CSS
@@ -4290,6 +4515,8 @@ struct TextStyleCtx {
     mono: bool,
     /// Font size in CSS px (unit-stripped), threaded as `N.sp`.
     size: Option<String>,
+    /// Complete TextUnit expression for a validated live binding.
+    bound_size: Option<String>,
     /// Compose `FontWeight.*` expression for an authored `font-weight`.
     weight: Option<String>,
 }
@@ -4306,7 +4533,9 @@ impl TextStyleCtx {
         if self.mono {
             s.push_str(", fontFamily = FontFamily.Monospace");
         }
-        if let Some(sz) = &self.size {
+        if let Some(size) = &self.bound_size {
+            s.push_str(&format!(", fontSize = {size}"));
+        } else if let Some(sz) = &self.size {
             s.push_str(&format!(", fontSize = {sz}.sp"));
         }
         if let Some(w) = &self.weight {
@@ -4323,7 +4552,9 @@ impl TextStyleCtx {
         if self.mono {
             fields.push("fontFamily = FontFamily.Monospace".to_string());
         }
-        if let Some(sz) = &self.size {
+        if let Some(size) = &self.bound_size {
+            fields.push(format!("fontSize = {size}"));
+        } else if let Some(sz) = &self.size {
             fields.push(format!("fontSize = {sz}.sp"));
         }
         if let Some(w) = &self.weight {
@@ -4371,6 +4602,7 @@ fn cell_text_style(inherited: &TextStyleCtx, style: &ComposeStyle) -> TextStyleC
     }
     if let Some(sz) = &style.font_size {
         ctx.size = Some(sz.clone());
+        ctx.bound_size = None;
     }
     if let Some(w) = &style.font_weight {
         ctx.weight = Some(w.clone());
@@ -4612,7 +4844,14 @@ fn emit_compose_tree(
                 "{pad}// Col (column-width hint — no Compose analog)\n"
             ))
         }
-        "Text" => emit_text(node, depth, text_ctx, for_payload),
+        "Text" if find_prop_value(node, "font-size").is_some() => {
+            let inherited = text_ctx.cloned().unwrap_or_default();
+            let style = compose_style_for_node(node, part_styles, None, (depth + 2) * 4, inherited.color.as_deref());
+            let text = style.as_ref().map(|s| cell_text_style(&inherited, s)).unwrap_or(inherited);
+            let text = bound_text_style(node, text);
+            emit_text(node, depth, Some(&text), for_payload, part_styles)
+        },
+        "Text" => emit_text(node, depth, text_ctx, for_payload, part_styles),
         "Icon" => emit_icon_compose(node, depth, part_styles, text_ctx),
         "Path" => emit_path(node, depth, part_styles),
         "Spacer" => Ok(format!("{pad}Spacer(modifier = Modifier.weight(1f))\n")),
@@ -5045,6 +5284,9 @@ fn emit_container_frame(
         }
         None => text_ctx.cloned(),
     };
+    let child_text = if node.tag == "HostTable" {
+        Some(bound_text_style(node, child_text.unwrap_or_default()))
+    } else { child_text };
 
     if has_chain || content_alignment.is_some() || gap.is_some() {
         let modifier_pad = "    ".repeat(depth + 1);
@@ -5190,21 +5432,6 @@ pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> 
 /// `width: 100%`. Compose Rows do not shrink a preceding `fillMaxWidth()`
 /// child the way CSS flexbox does, so both idioms lower to RowScope `weight`.
 /// Invalid, non-finite, zero, and negative grow values stay intrinsic.
-/// UI59 -- does this part author `flex-shrink: 0`?
-///
-/// Every authored `flex-shrink` in the repo is `0`; not one is positive.
-/// So this is not the "which child yields" heuristic UI59 §5 worried
-/// about -- authors are naming who must NOT be starved, which is a
-/// narrower and far safer question to answer.
-fn compose_flex_shrink_zero(props: &[StyleProp]) -> bool {
-    props
-        .iter()
-        .rev()
-        .find(|p| p.name == "flex-shrink")
-        .map(|p| p.value.trim().trim_matches('"') == "0")
-        .unwrap_or(false)
-}
-
 fn compose_row_weight(props: &[StyleProp]) -> Option<String> {
     if let Some(value) = props
         .iter()
@@ -5338,8 +5565,18 @@ fn emit_container(
         // A weighted child is asking to absorb slack, which is the
         // opposite request, so `flex-grow` wins and the shrink guard is
         // skipped rather than both being emitted.
-        let holds_width =
-            weight.is_none() && row_props.map(|props| compose_flex_shrink_zero(props)).unwrap_or(false);
+        // UI59 §4 -- a Row child is not starved.
+        //
+        // CSS gives every flex item `min-width: auto`: it shrinks toward
+        // its content and then stops, and the container overflows. Compose
+        // has no such floor -- it hands out the remaining width in order
+        // and the last child gets whatever is left, which can be nothing.
+        // So the floor is applied here, to every child that is not already
+        // asking to absorb slack.
+        //
+        // `flex-grow` IS that opposite request, so a weighted child keeps
+        // its weight and no floor.
+        let holds_width = weight.is_none();
         if let Some(weight) = weight {
             let cpad = " ".repeat(chain_indent);
             let prefix = format!("\n{cpad}.weight({weight}f)");
@@ -5426,6 +5663,9 @@ fn emit_container(
         }
         None => text_ctx.cloned(),
     };
+    let child_text = if node.tag == "HostTable" {
+        Some(bound_text_style(node, child_text.unwrap_or_default()))
+    } else { child_text };
 
     // ---- opener -----------------------------------------------------
     if has_chain || content_alignment.is_some() || gap.is_some() {
@@ -6007,6 +6247,7 @@ fn emit_text(
     depth: usize,
     text_ctx: Option<&TextStyleCtx>,
     for_payload: Option<ForPayloadScope<'_>>,
+    part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let value_expr = match find_prop_value(node, "content") {
@@ -6038,6 +6279,20 @@ fn emit_text(
             (None, true) => Some("Modifier.semantics { heading() }".to_string()),
             (None, false) => None,
         }
+    };
+    // UI59 §4 -- a bare `Text` is a leaf, so `emit_container`'s floor never
+    // reaches it. Trestle's schedule text measured ZERO WIDTH at 700 in the
+    // Board view for exactly that reason.
+    let modifier = if node
+        .part_name
+        .as_deref()
+        .map(|part| part_styles.is_width_guarded(part))
+        .unwrap_or(false)
+    {
+        let base = modifier.unwrap_or_else(|| "Modifier".to_string());
+        Some(format!("{base}.wrapContentWidth(unbounded = true)"))
+    } else {
+        modifier
     };
     Ok(format!(
         "{pad}{}\n",
@@ -6090,6 +6345,7 @@ fn emit_host_input(
         None => inherited_text,
     };
 
+    let input_text = bound_text_style(node, input_text);
     let value_expr = text_prop_expr(node, "value")?.unwrap_or_else(|| "\"\"".to_string());
 
     let mut out = String::new();
@@ -6226,7 +6482,8 @@ fn emit_host_input(
         writeln!(out, "{inner}decorationBox = {{ innerTextField ->").unwrap();
         writeln!(out, "{inner}    Box {{").unwrap();
         writeln!(out, "{inner}        if ({value_expr}.isEmpty()) {{").unwrap();
-        writeln!(out, "{inner}            Text(text = {placeholder})").unwrap();
+        let placeholder_text = input_text.bound_size.as_ref().map(|_| &input_text);
+        writeln!(out, "{inner}            {}", text_call(&placeholder, placeholder_text, None)).unwrap();
         writeln!(out, "{inner}        }}").unwrap();
         writeln!(out, "{inner}        innerTextField()").unwrap();
         writeln!(out, "{inner}    }}").unwrap();
@@ -6266,6 +6523,7 @@ fn emit_host_button(
         None => inherited_text,
     };
 
+    let label_text = bound_text_style(node, label_text);
     // onTap → onClick dispatch
     let on_click = if let Some(emit_name) =
         find_emit_ref_prop(node, "onClick").or_else(|| find_emit_ref_prop(node, "onTap"))
@@ -6330,6 +6588,19 @@ fn emit_host_button(
     };
 
     let mut modifier_expr = host_control_modifier_expr(node, style.as_ref());
+    // UI59 §4 -- the floor reaches leaves too. `emit_container` applies it
+    // for container children; a `Button` is emitted here instead and got
+    // nothing, so `Delete` measured ZERO WIDTH at 1280 -- the declared
+    // acceptance viewport -- in the Board view.
+    if node
+        .part_name
+        .as_deref()
+        .map(|part| part_styles.is_width_guarded(part))
+        .unwrap_or(false)
+    {
+        let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
+        modifier_expr = Some(format!("{base}.wrapContentWidth(unbounded = true)"));
+    }
     if let Some(accessible_label) = text_prop_expr(node, "a11y-label")? {
         let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
         modifier_expr = Some(format!(
@@ -7739,6 +8010,49 @@ mod tests {
     /// `state-when-selected` / `state-when-editing` predicates → If/Else).
     /// Returns the `(component, layout, style)` triple the tests run
     /// through `from_pipeline`.
+    #[test]
+    fn font_bindings_preserve_fallbacks_and_inherit_through_tables() {
+        let m = component("Scaled", vec![slot("text-size", SlotType::Number, false)], vec![]);
+        let leaf = |tag: &str| styled_node(tag, "leaf", vec![slot_prop("font-size", "text-size")], vec![]);
+        let l = layout("Scaled", node("Column", vec![], vec![
+            leaf("Text"), leaf("HostInput"), leaf("HostButton"),
+            styled_node("HostTable", "leaf", vec![slot_prop("font-size", "text-size")], vec![
+                node("HostTableBody", vec![], vec![node("Row", vec![], vec![
+                    node("Box", vec![], vec![node("Text", vec![], vec![]), node("HostInput", vec![], vec![])])
+                ])])
+            ])
+        ]));
+        let style = style_def("Scaled", vec![part("leaf", vec![sprop("font-size", "13px")], vec![])]);
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        assert!(out.contains("import androidx.compose.ui.unit.TextUnit"));
+        assert_eq!(out.matches("value.isFinite() && value > 0f").count(), 5, "{out}");
+        assert_eq!(out.matches("else 13.sp").count(), 5, "{out}");
+        assert!(out.contains("textStyle = TextStyle(fontSize = (textSize as? Number)"), "{out}");
+        // Root HostTable uses the section-splitting path, which must preserve
+        // the same bound inherited context as a nested table.
+        let root_table = l.root.children.last().unwrap().clone();
+        let root = from_pipeline(&m, &layout("Scaled", root_table), &style).unwrap().output;
+        assert_eq!(root.matches("else 13.sp").count(), 2, "{root}");
+    }
+
+    #[test]
+    fn typography_rejects_unsupported_values_and_placements() {
+        let m = component("Scaled", vec![], vec![]);
+        let style = style_def("Scaled", vec![]);
+        for value in [LayoutPropValue::Number(0.0), LayoutPropValue::Number(-1.0),
+            LayoutPropValue::Number(f64::INFINITY), LayoutPropValue::Number(1e100), LayoutPropValue::Number(1e-100),
+            LayoutPropValue::String("large".into()), LayoutPropValue::Expr("size * 2".into()),
+            LayoutPropValue::SlotRef("bad;code".into())] {
+            let l = layout("Scaled", node("Text", vec![LayoutProp { name: "font-size".into(), value }], vec![]));
+            assert!(matches!(from_pipeline(&m, &l, &style), Err(PipelineEmitError::InvalidTypography(_))));
+        }
+        let prop = LayoutProp { name: "font-size".into(), value: LayoutPropValue::Number(19.5) };
+        let l = layout("Scaled", node("Text", vec![prop.clone()], vec![]));
+        assert!(from_pipeline(&m, &l, &style).unwrap().output.contains("fontSize = (19.5).toFloat().sp"));
+        let l = layout("Scaled", node("Box", vec![prop], vec![]));
+        assert!(matches!(from_pipeline(&m, &l, &style), Err(PipelineEmitError::InvalidTypography(_))));
+    }
+
     fn visicalc_grid_triple() -> (MosmodelComponent, LayoutDef, StyleDef) {
         let m = component(
             "Grid",
@@ -8324,8 +8638,19 @@ mod tests {
             .rfind("Row(")
             .map(|i| &progress[i..])
             .expect("gap must belong to a Row");
+        // UI59 §4 -- this test's claim is INTRINSIC WIDTH, and that still
+        // holds; only its spelling moved. A Row child now carries
+        // `wrapContentWidth(unbounded = true)`, which is what intrinsic
+        // width means once the universal floor exists -- previously the
+        // bare `Modifier,` meant "whatever the Row leaves you", which is
+        // how this group could be starved to zero. The assertion is
+        // rewritten to the property so it cannot pass on a fill.
         assert!(
-            opener.contains("modifier = Modifier,") && !opener.contains("fillMaxWidth"),
+            !opener.contains("fillMaxWidth"),
+            "the progress group must not gain a fill:\n{out}"
+        );
+        assert!(
+            opener.contains("wrapContentWidth(unbounded = true)"),
             "the progress group must keep intrinsic width:\n{out}"
         );
 
@@ -11849,30 +12174,90 @@ mod tests {
 
     // ---- HostScroll (#14732) -----------------------------------------
 
-    /// UI59 — `flex-shrink: 0` on a direct Row child holds its width.
+    /// UI79 — a non-solid border is DRAWN; `Modifier.border` has no dash.
     ///
-    /// Both directions, and the modifier matters: a probe measured a Row
-    /// child beside a long Text at `0 x 112` with no modifier, `0 x 112`
-    /// with `IntrinsicSize.Min`, `0 x 112` with `IntrinsicSize.Max`, and
-    /// `57 x 16` with `wrapContentWidth(unbounded = true)`. Reasoning
-    /// would have picked one of the intrinsics; only measuring found this.
+    /// Both directions: `solid` (and an unauthored style) must keep the
+    /// byte-identical `Modifier.border`, because switching every bordered
+    /// part to a hand-drawn stroke would look like success here while
+    /// changing output everywhere.
     #[test]
-    fn ui59_flex_shrink_zero_holds_a_row_child_width() {
-        assert!(compose_flex_shrink_zero(&[sprop("flex-shrink", "0")]));
-        assert!(compose_flex_shrink_zero(&[sprop("flex-shrink", "\"0\"")]));
-        // Only zero means "do not squeeze me".
-        assert!(!compose_flex_shrink_zero(&[sprop("flex-shrink", "1")]));
-        assert!(!compose_flex_shrink_zero(&[sprop("padding", "8px")]));
-        assert!(!compose_flex_shrink_zero(&[]));
+    fn ui79_a_dashed_border_is_drawn_not_bordered() {
+        let render = |style_value: Option<&str>| {
+            let mut base = vec![
+                sprop("border-width", "2px"),
+                sprop("border-color", "#243146"),
+                sprop("border-radius", "8px"),
+            ];
+            if let Some(v) = style_value {
+                base.push(sprop("border-style", v));
+            }
+            let style = StyleDef {
+                component_name: "S".to_string(),
+                parts: vec![PartStyle {
+                    name: "boxy".to_string(),
+                    base,
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+            let mut root = node("Column", vec![], vec![]);
+            root.part_name = Some("boxy".to_string());
+            from_pipeline(&component("S", vec![], vec![]), &layout("S", root), &style)
+                .unwrap()
+                .output
+        };
 
-        let render = |props: Vec<StyleProp>, wrap_in_row: bool| {
+        // The control: no style, and an explicit `solid`, both keep
+        // `Modifier.border` and draw nothing by hand.
+        for control in [None, Some("solid")] {
+            let out = render(control);
+            assert!(out.contains(".border(2.dp,"), "control {control:?} — got:\n{out}");
+            assert!(
+                !out.contains("dashPathEffect"),
+                "control {control:?} must not draw — got:\n{out}"
+            );
+        }
+
+        let dashed = render(Some("\"dashed\""));
+        assert!(
+            dashed.contains("dashPathEffect(floatArrayOf(4.dp.toPx(), 4.dp.toPx())"),
+            "got:\n{dashed}"
+        );
+        // `drawWithContent`, not `drawBehind`: this sits after
+        // `.background(..)` in the chain, and drawing behind there paints
+        // the dashes UNDER the background. Measured — the Kotlin compiled,
+        // the stroke ran, and nothing appeared.
+        assert!(dashed.contains(".drawWithContent {"), "got:\n{dashed}");
+        // The authored corner radius must survive; a plain `drawRect`
+        // would square off every rounded box that dashes.
+        assert!(
+            dashed.contains("cornerRadius = CornerRadius(8.dp.toPx())"),
+            "got:\n{dashed}"
+        );
+        assert!(
+            !dashed.contains(".border(2.dp,"),
+            "a dashed border must REPLACE the solid one — got:\n{dashed}"
+        );
+
+        // `dotted` is a round cap with a zero-length on-segment; a short
+        // dash is not a dot.
+        let dotted = render(Some("\"dotted\""));
+        assert!(dotted.contains("cap = StrokeCap.Round"), "got:\n{dotted}");
+        assert!(dotted.contains("floatArrayOf(0f,"), "got:\n{dotted}");
+    }
+
+    /// UI59 §4 — an UNANNOTATED Row child is not starved.
+    ///
+    /// This is the general rule, and it needed no authored opt-in: CSS
+    /// gives every flex item `min-width: auto`, and Compose has no such
+    /// floor. §8 rejected three mechanisms because each merely chose a
+    /// different child to starve; all three were `weight`-based, and this
+    /// one is not.
+    #[test]
+    fn ui59_an_unannotated_row_child_keeps_its_width() {
+        let render = |props: Vec<StyleProp>, parent: &str| {
             let mut child = node("Column", vec![], vec![]);
             child.part_name = Some("chip".to_string());
-            let root = if wrap_in_row {
-                node("Row", vec![], vec![child])
-            } else {
-                node("Column", vec![], vec![child])
-            };
             let style = StyleDef {
                 component_name: "S".to_string(),
                 parts: vec![PartStyle {
@@ -11882,42 +12267,125 @@ mod tests {
                     states: vec![],
                 }],
             };
-            from_pipeline(&component("S", vec![], vec![]), &layout("S", root), &style)
-                .unwrap()
-                .output
+            from_pipeline(
+                &component("S", vec![], vec![]),
+                &layout("S", node(parent, vec![], vec![child])),
+                &style,
+            )
+            .unwrap()
+            .output
         };
 
-        // A Row child that says it cannot shrink gets the guard.
-        let held = render(vec![sprop("flex-shrink", "0")], true);
+        // Nothing authored at all: the floor still applies.
+        let bare = render(vec![sprop("padding", "8px")], "Row");
         assert!(
-            held.contains(".wrapContentWidth(unbounded = true)"),
-            "got:\n{held}"
+            bare.contains(".wrapContentWidth(unbounded = true)"),
+            "an unannotated Row child must keep its width:\n{bare}"
         );
 
-        // The negative halves. Same declaration in a COLUMN is about the
-        // vertical axis and must not get a width guard; and a Row child
-        // without the declaration must not get one either.
-        let in_column = render(vec![sprop("flex-shrink", "0")], false);
+        // A COLUMN child is not in RowScope; the floor is about the main
+        // axis, so it must not appear there.
+        let col = render(vec![sprop("padding", "8px")], "Column");
         assert!(
-            !in_column.contains("wrapContentWidth(unbounded = true)"),
-            "flex-shrink in a Column is not a width guard, got:\n{in_column}"
-        );
-        let plain = render(vec![sprop("padding", "8px")], true);
-        assert!(
-            !plain.contains("wrapContentWidth(unbounded = true)"),
-            "an unannotated Row child must not be guarded, got:\n{plain}"
+            !col.contains("wrapContentWidth(unbounded = true)"),
+            "a Column child must not be width-floored:\n{col}"
         );
 
-        // `flex-grow` is the opposite request — absorb slack — so the
-        // weight wins and the two are never emitted together.
-        let grows = render(
-            vec![sprop("flex-shrink", "0"), sprop("flex-grow", "1")],
-            true,
-        );
+        // `flex-grow` is the opposite request — absorb slack — so a
+        // weighted child keeps its weight and takes no floor.
+        let grows = render(vec![sprop("flex-grow", "1")], "Row");
         assert!(grows.contains(".weight(1f)"), "got:\n{grows}");
         assert!(
             !grows.contains("wrapContentWidth(unbounded = true)"),
-            "a weighted child must not also be width-guarded, got:\n{grows}"
+            "a weighted child must not also be floored:\n{grows}"
+        );
+    }
+
+    /// UI59 — the emitter and the drop reporter must give the SAME answer.
+    ///
+    /// Every case below is one where two separate notions drifted apart on
+    /// the real product. The partition is the property: each authored part
+    /// is either guarded or reported, never both and never neither.
+    #[test]
+    fn ui59_guard_and_drop_report_partition_every_authored_part() {
+        let shrink = || {
+            vec![StyleProp {
+                name: "flex-shrink".to_string(),
+                value: "0".to_string(),
+            }]
+        };
+        let styled = |parts: Vec<(&str, Vec<StyleProp>)>| StyleDef {
+            component_name: "S".to_string(),
+            parts: parts
+                .into_iter()
+                .map(|(n, base)| PartStyle {
+                    name: n.to_string(),
+                    base,
+                    transitions: vec![],
+                    states: vec![],
+                })
+                .collect(),
+        };
+        let parted = |tag: &str, part: &str, children: Vec<LayoutNode>| {
+            let mut n = node(tag, vec![], children);
+            n.part_name = Some(part.to_string());
+            n
+        };
+        let check = |root: LayoutNode, style: &StyleDef, part: &str| -> (bool, bool) {
+            let out = from_pipeline(&component("S", vec![], vec![]), &layout("S", root.clone()), style)
+                .unwrap()
+                .output;
+            let guarded = out.contains("wrapContentWidth(unbounded = true)");
+            let reported = dropped_style_properties_in_layout(style, Some(&root))
+                .iter()
+                .any(|d| d.name == "flex-shrink" && d.part == part);
+            (guarded, reported)
+        };
+
+        // A plain Row container child: guarded, so NOT reported.
+        let style = styled(vec![("chip", shrink())]);
+        let root = node("Row", vec![], vec![parted("Column", "chip", vec![])]);
+        assert_eq!(check(root, &style, "chip"), (true, false), "plain Row child");
+
+        // Inside a `For`: a meta-primitive emits no container, so this is
+        // still a RowScope child. Omitting this dropped board-col's guard.
+        let root = node(
+            "Row",
+            vec![],
+            vec![node("For", vec![], vec![parted("Column", "chip", vec![])])],
+        );
+        assert_eq!(check(root, &style, "chip"), (true, false), "child of a For in a Row");
+
+        // A LEAF is guarded too now. It was not when the floor lived only
+        // in `emit_container`, and that gap was not theoretical: Trestle's
+        // `Delete` button measured ZERO WIDTH at 1280 -- the declared
+        // acceptance viewport -- in the Board view, with the schedule
+        // `Text` joining it at 700.
+        let root = node("Row", vec![], vec![parted("Text", "chip", vec![])]);
+        assert_eq!(check(root, &style, "chip"), (true, false), "leaf Row child");
+
+        // Not in a Row at all.
+        let root = node("Column", vec![], vec![parted("Column", "chip", vec![])]);
+        assert_eq!(check(root, &style, "chip"), (false, true), "Column child");
+
+        // A wrapping Row lowers to FlowRow, whose children are NOT
+        // RowScope children. Reading the raw tag here is what un-reported
+        // parts the emitter had never guarded.
+        let wrap_style = styled(vec![
+            ("chip", shrink()),
+            (
+                "lane",
+                vec![StyleProp {
+                    name: "flex-wrap".to_string(),
+                    value: "wrap".to_string(),
+                }],
+            ),
+        ]);
+        let root = parted("Row", "lane", vec![parted("Column", "chip", vec![])]);
+        assert_eq!(
+            check(root, &wrap_style, "chip"),
+            (false, true),
+            "a FlowRow child is not RowScope"
         );
     }
 

@@ -19,6 +19,17 @@ import engram_release  # noqa: E402
 
 
 COMMIT = "a" * 40
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+WORKFLOW = REPOSITORY_ROOT / ".github" / "workflows" / "release-engram.yml"
+
+
+class WorkflowTests(unittest.TestCase):
+    def test_pull_request_validation_does_not_share_publication_concurrency(self) -> None:
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+
+        self.assertIn("format('release-engram-pr-{0}'", workflow)
+        self.assertIn("'release-engram-publish'", workflow)
+        self.assertIn("cancel-in-progress: false", workflow)
 
 
 class ValidateIdentifiersTests(unittest.TestCase):
@@ -1370,6 +1381,87 @@ def _write_flutter_bundle(
     return bundle
 
 
+class UniversalMacosRuntimeTests(unittest.TestCase):
+    """A macOS Flutter artifact must ship a universal runtime.
+
+    Tested against the helper directly rather than only through
+    `archive_flutter`, because the check is gated on the MIGRATED engine stem
+    and Flutter still binds `engram-capi` on this branch — so every archive
+    test passes with the check dormant, which proves nothing about it.
+
+    That gap is the whole reason these exist: the universality was previously
+    established by running `lipo -archs` once by hand and writing the result in
+    a changelog, and `LIBRARY_MAGIC["macos"]` accepts the fat magic without
+    requiring it.
+    """
+
+    @staticmethod
+    def _macho(magic: bytes, architectures: int) -> bytes:
+        """A Mach-O header: 4-byte magic, then big-endian `nfat_arch`."""
+        return magic + architectures.to_bytes(4, "big") + b"\x00" * 24
+
+    def _engine(self, payload: bytes) -> Path:
+        directory = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, directory, True)
+        path = directory / "libmosaic_app.dylib"
+        path.write_bytes(payload)
+        return path
+
+    def test_a_universal_runtime_is_accepted(self) -> None:
+        for magic in (b"\xca\xfe\xba\xbe", b"\xca\xfe\xba\xbf"):
+            with self.subTest(magic=magic):
+                engine = self._engine(self._macho(magic, 2))
+                engram_release._reject_thin_macos_flutter_engine(
+                    "macos", "mosaic_app", engine
+                )
+
+    def test_a_thin_runtime_is_refused(self) -> None:
+        # `\xcf\xfa\xed\xfe` is a 64-bit little-endian Mach-O: a perfectly
+        # valid dylib, and exactly what a plain `cargo build` produces.
+        engine = self._engine(self._macho(b"\xcf\xfa\xed\xfe", 0))
+        with self.assertRaises(ValueError) as caught:
+            engram_release._reject_thin_macos_flutter_engine(
+                "macos", "mosaic_app", engine
+            )
+        self.assertIn("not universal", str(caught.exception))
+
+    def test_a_fat_container_holding_one_architecture_is_refused(self) -> None:
+        # Legal, and exactly the artifact a magic-only check would wave
+        # through while it serves half the Macs it is offered to.
+        engine = self._engine(self._macho(b"\xca\xfe\xba\xbe", 1))
+        with self.assertRaises(ValueError) as caught:
+            engram_release._reject_thin_macos_flutter_engine(
+                "macos", "mosaic_app", engine
+            )
+        self.assertIn("1 architecture", str(caught.exception))
+
+    def test_it_does_not_fire_where_it_does_not_apply(self) -> None:
+        """Three exemptions, each for its own reason.
+
+        Without these the check would refuse artifacts that are correct: a
+        Linux `.so` has no fat format, and a backend still binding
+        `engram-capi` is built host-only by a path this says nothing about.
+        """
+
+        thin = self._engine(self._macho(b"\xcf\xfa\xed\xfe", 0))
+        for platform, stem in [
+            ("linux", "mosaic_app"),
+            ("windows", "mosaic_app"),
+            ("macos", "engram_capi"),
+        ]:
+            with self.subTest(platform=platform, stem=stem):
+                engram_release._reject_thin_macos_flutter_engine(
+                    platform, stem, thin
+                )
+
+    def test_a_truncated_file_is_refused_rather_than_read_past(self) -> None:
+        engine = self._engine(b"\xca\xfe\xba\xbe")
+        with self.assertRaises(ValueError):
+            engram_release._reject_thin_macos_flutter_engine(
+                "macos", "mosaic_app", engine
+            )
+
+
 class ArchiveFlutterTests(unittest.TestCase):
     def test_archives_each_platform(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -1594,8 +1686,12 @@ def _write_qt_bundle(
         _mach_o(["main"], dylibs=deps, signed=signed)
     )
     if engine:
-        (bundle / "Contents" / "MacOS" / "libengram_capi.dylib").write_bytes(
-            _mach_o(["eg_snapshot"], signed=True)
+        # `libmosaic_app`, not `libengram_capi`. Qt migrated off the bespoke ABI
+        # in #13728: the generated `MosaicHost.cpp` opens `libmosaic_app` and
+        # resolves `mosaic_app_create`. This fixture wrote the retired engine,
+        # so every Qt test here pinned a bundle shape the app cannot use.
+        (bundle / "Contents" / "MacOS" / "libmosaic_app.dylib").write_bytes(
+            _mach_o(["mosaic_app_create"], signed=True)
         )
     return bundle
 
@@ -1610,6 +1706,45 @@ class ArchiveQtTests(unittest.TestCase):
             )
             self.assertEqual(output.name, "engram-qt-macos-v0.4.0.zip")
             self.assertIn(output.name, engram_release.artifact_names("0.4.0"))
+
+    def test_the_expected_engine_is_read_from_the_manifest(self) -> None:
+        """Which engine a backend ships is a fact about the manifest.
+
+        A backend has migrated to the standard runtime exactly when Engram
+        stops overriding its generated host, so `[host_assets]` is the source
+        of truth and `_engine_stem_for` reads it rather than hardcoding.
+
+        Only the two STABLE ends are pinned. Qt migrated in #13728 and cannot
+        un-migrate; Flutter is not migrating in any open change. **Compose is
+        deliberately not pinned** — it is mid-migration, and asserting its
+        current answer here would turn this test into a tripwire that fails the
+        very PR that completes the migration, which is the opposite of useful.
+        """
+
+        self.assertEqual(engram_release._engine_stem_for("qt"), "mosaic_app")
+        self.assertEqual(engram_release._engine_stem_for("flutter"), "engram_capi")
+
+    def test_refuses_a_bundle_carrying_the_retired_engine(self) -> None:
+        """The engine has to be the one the app opens, not merely *an* engine.
+
+        Qt migrated off `engram-capi` in #13728, so the generated `MosaicHost`
+        opens `libmosaic_app`. This check looked for `engram_capi`, which meant
+        a bundle carrying only the retired library passed — and that is not a
+        hypothetical shape: `build-native.sh` produced exactly it, placing
+        `libengram_capi.dylib` in `Contents/MacOS` and no `libmosaic_app` at
+        all. Both halves are fixed; this pins the verification half.
+        """
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_qt_bundle(root)
+            macos = bundle / "Contents" / "MacOS"
+            (macos / "libmosaic_app.dylib").rename(macos / "libengram_capi.dylib")
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_qt(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("mosaic_app", str(caught.exception))
 
     def test_refuses_a_bundle_that_links_qt_by_absolute_path(self) -> None:
         # THE check for a Qt payload. `qt_add_executable` links the frameworks
@@ -1654,20 +1789,39 @@ class ArchiveQtTests(unittest.TestCase):
                 engram_release.archive_qt(
                     "0.4.0", "macos", bundle, root / "out", COMMIT
                 )
-            self.assertIn("no engine beside its executable", str(caught.exception))
+            # Names WHICH engine, because "an engine" was the bug: the
+            # check used to accept the retired `engram_capi`.
+            self.assertIn(
+                "no mosaic_app engine beside its executable", str(caught.exception)
+            )
 
     def test_an_engine_in_frameworks_does_not_count(self) -> None:
+        # The engine planted here must be the one the app actually opens.
+        #
+        # This wrote `libengram_capi.dylib` and kept passing after the check
+        # moved to `mosaic_app` -- but then it passed because the NAME was
+        # wrong, not because the LOCATION was, which is the property it is
+        # named for. Security review falsified it: deleting the
+        # `Contents/MacOS` scoping entirely left the test green.
+        #
+        # The suite-count check that caught the other regression in this commit
+        # cannot catch this one. A count notices a test that stopped running,
+        # not one that kept running while asserting something else.
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             bundle = _write_qt_bundle(root, engine=False)
-            (bundle / "Contents" / "Frameworks" / "libengram_capi.dylib").write_bytes(
-                _mach_o(["eg_snapshot"], signed=True)
+            (bundle / "Contents" / "Frameworks" / "libmosaic_app.dylib").write_bytes(
+                _mach_o(["mosaic_app_create"], signed=True)
             )
             with self.assertRaises(ValueError) as caught:
                 engram_release.archive_qt(
                     "0.4.0", "macos", bundle, root / "out", COMMIT
                 )
-            self.assertIn("no engine beside its executable", str(caught.exception))
+            # Names WHICH engine, because "an engine" was the bug: the
+            # check used to accept the retired `engram_capi`.
+            self.assertIn(
+                "no mosaic_app engine beside its executable", str(caught.exception)
+            )
 
     def test_qt_declares_only_what_is_verified(self) -> None:
         # macOS only for now: `macdeployqt` and `windeployqt` ship with Qt and

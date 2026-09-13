@@ -1449,7 +1449,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 let label = if label == id {
                     id.clone()
                 } else {
-                    normalize_mermaid_line_breaks(&unquote_block_label(&label))
+                    normalize_block_text(&unquote_block_label(&label))
                 };
                 (id, column_span, label)
             } else {
@@ -1480,6 +1480,8 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             Some("STATEMENT_LINE")
                 | Some("ARROW_NODE_LINE")
                 | Some("DEFAULT_CLASSDEF_LINE")
+                | Some("INLINE_LABELED_NODE_CONNECTION_LINE")
+                | Some("TILDE_NODE_CONNECTION_LINE")
                 | Some("INLINE_NODE_CONNECTION_LINE")
                 | Some("COMPACT_MARKED_CONNECTION_LINE")
                 | Some("MARKED_CONNECTION_LINE")
@@ -1511,15 +1513,15 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             continue;
         }
         if let Some(value) = line.strip_prefix("title ") {
-            title = Some(normalize_mermaid_line_breaks(value.trim()));
+            title = Some(normalize_block_text(value.trim()));
             continue;
         }
         if let Some((_, value)) = line.strip_prefix("accTitle").and_then(|line| line.split_once(':')) {
-            accessibility_title = Some(value.trim().to_string());
+            accessibility_title = Some(normalize_block_text(value.trim()));
             continue;
         }
         if let Some((_, value)) = line.strip_prefix("accDescr").and_then(|line| line.split_once(':')) {
-            accessibility_description = Some(normalize_mermaid_line_breaks(value.trim()));
+            accessibility_description = Some(normalize_block_text(value.trim()));
             continue;
         }
         if let Some(value) = line.strip_prefix("classDef ") {
@@ -1587,17 +1589,26 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 line.split_once("---")
                     .map(|(from, rest)| (from, rest, EdgeKind::Undirected, GridEdgeStyle::Solid))
             })
+            .or_else(|| {
+                split_block_tilde_connection(line)
+                    .map(|(from, rest)| (from, rest, EdgeKind::Undirected, GridEdgeStyle::Solid))
+            })
         {
             let (from, quoted_label) = parse_block_quoted_connection_label(token, from)?;
             let (to, label) = if let Some(rest) = rest.trim().strip_prefix('|') {
                 let (label, to) = rest
                     .split_once('|')
                     .ok_or_else(|| token_error(token, "unterminated block connection label"))?;
-                (to.trim(), Some(DiagramLabel::new(label.trim())))
+                (to.trim(), Some(DiagramLabel::new(normalize_block_text(label.trim()))))
             } else {
                 (rest.trim(), quoted_label.map(DiagramLabel::new))
             };
-            let (from, to) = if token_type == Some("INLINE_NODE_CONNECTION_LINE") {
+            let (from, to) = if matches!(
+                token_type,
+                Some("INLINE_LABELED_NODE_CONNECTION_LINE")
+                    | Some("TILDE_NODE_CONNECTION_LINE")
+                    | Some("INLINE_NODE_CONNECTION_LINE")
+            ) {
                 let parent_id = group_stack.last().cloned();
                 (
                     register_inline_block_node(
@@ -1664,7 +1675,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             }
             cells.push(GridCell {
                 id: id.clone(),
-                label: DiagramLabel::new(normalize_mermaid_line_breaks(&unquote_block_label(&label))),
+                label: DiagramLabel::new(normalize_block_text(&unquote_block_label(&label))),
                 shape,
                 column_span,
                 parent_id,
@@ -1743,6 +1754,12 @@ struct ParsedBlockConnection {
     label: Option<DiagramLabel>,
 }
 
+fn split_block_tilde_connection(source: &str) -> Option<(&str, &str)> {
+    let start = source.find("~~~")?;
+    let tilde_count = source[start..].bytes().take_while(|byte| *byte == b'~').count();
+    Some((&source[..start], &source[start + tilde_count..]))
+}
+
 fn register_inline_block_node(
     token: &Token,
     source: &str,
@@ -1770,7 +1787,7 @@ fn register_inline_block_node(
     let order = take_grid_order(next_order, parent_id);
     cells.push(GridCell {
         id: id.clone(),
-        label: DiagramLabel::new(normalize_mermaid_line_breaks(&unquote_block_label(&label))),
+        label: DiagramLabel::new(normalize_block_text(&unquote_block_label(&label))),
         shape,
         column_span: 1,
         parent_id: parent_id.clone(),
@@ -1851,7 +1868,7 @@ fn parse_block_marked_connection(token: &Token, line: &str) -> Result<ParsedBloc
         let (label, to) = labelled
             .split_once('|')
             .ok_or_else(|| token_error(token, "unterminated marked block connection label"))?;
-        (to.trim(), Some(DiagramLabel::new(label.trim())))
+        (to.trim(), Some(DiagramLabel::new(normalize_block_text(label.trim()))))
     } else {
         (remainder.trim(), None)
     };
@@ -1939,14 +1956,18 @@ fn prepare_block_source(source: &str) -> Result<String, ParseError> {
 
 fn parse_block_quoted_connection_label(token: &Token, source: &str) -> Result<(String, Option<String>), ParseError> {
     let source = source.trim();
-    let Some((from, label)) = source.split_once("--") else {
+    let Some(label_body) = source.strip_suffix('"') else {
         return Ok((source.to_string(), None));
     };
-    let label = label.trim();
-    if label.len() < 2 || !label.starts_with('"') || !label.ends_with('"') {
-        return Err(token_error(token, "invalid quoted block connection label"));
-    }
-    Ok((from.trim().to_string(), Some(normalize_mermaid_line_breaks(&label[1..label.len() - 1]))))
+    let label_start = label_body.rfind('"')
+        .ok_or_else(|| token_error(token, "invalid quoted block connection label"))?;
+    let from_and_start_link = source[..label_start].trim_end();
+    let from = ["--", "==", "-."].iter().find_map(|start_link| {
+        from_and_start_link.strip_suffix(start_link).map(str::trim)
+    }).filter(|from| !from.is_empty())
+        .ok_or_else(|| token_error(token, "invalid quoted block connection start"))?;
+    let label = &source[label_start + 1..source.len() - 1];
+    Ok((from.to_string(), Some(normalize_block_text(label))))
 }
 
 fn split_block_names(source: &str) -> Vec<String> {
@@ -2048,6 +2069,10 @@ fn unquote_block_label(source: &str) -> String {
     } else {
         source.to_string()
     }
+}
+
+fn normalize_block_text(source: &str) -> String {
+    commonmark_parser::entities::decode_entities(&normalize_mermaid_line_breaks(source))
 }
 
 fn prepare_line_grammar_source(source: &str) -> Result<String, ParseError> {
@@ -9558,6 +9583,44 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn block_preserves_quoted_labels_between_inline_node_declarations() {
+        let diagram = parse_block(
+            "block\nid1[\"first\"] -- \"solid label\" --> id2[\"second\"]\nid2 == \"thick label\" ==> id3(\"third\")\nid3 -. \"dotted label\" -.-> id1",
+        )
+        .unwrap();
+        assert_eq!(diagram.cells.len(), 3);
+        assert_eq!(diagram.cells[0].label.text, "first");
+        assert_eq!(diagram.cells[1].label.text, "second");
+        assert_eq!(diagram.cells[2].label.text, "third");
+        assert_eq!(diagram.connections.len(), 3);
+        assert_eq!(diagram.connections[0].from, "id1");
+        assert_eq!(diagram.connections[0].to, "id2");
+        assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
+        assert_eq!(
+            diagram.connections[0].label.as_ref().unwrap().text,
+            "solid label"
+        );
+        assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Solid);
+        assert_eq!(diagram.connections[1].label.as_ref().unwrap().text, "thick label");
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
+        assert_eq!(diagram.connections[2].label.as_ref().unwrap().text, "dotted label");
+        assert_eq!(diagram.connections[2].line_style, GridEdgeStyle::Dotted);
+    }
+
+    #[test]
+    fn block_parses_tilde_links_as_open_solid_connections() {
+        let diagram = parse_block("block\nsource[Start] ~~~~ target(Stop)").unwrap();
+        assert_eq!(diagram.cells.len(), 2);
+        assert_eq!(diagram.cells[0].label.text, "Start");
+        assert_eq!(diagram.cells[1].label.text, "Stop");
+        assert_eq!(diagram.connections.len(), 1);
+        assert_eq!(diagram.connections[0].kind, EdgeKind::Undirected);
+        assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Solid);
+        assert_eq!(diagram.connections[0].start_marker, EdgeMarker::None);
+        assert_eq!(diagram.connections[0].end_marker, EdgeMarker::None);
+    }
+
+    #[test]
     fn block_applies_default_class_only_without_explicit_classes() {
         let diagram = parse_block(
             "block\nclassDef default fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e\nclassDef accent fill:#fef3c7,stroke:#b45309\nA[Implicit]\nB[Explicit]:::accent\nblock:G[Group]\nC[Child]\nend\nD[Direct]\nstyle D fill:#dcfce7",
@@ -9601,6 +9664,21 @@ mod tests_dg04 {
         assert_eq!(diagram.cells[1].label.text, "Paint output");
         assert_eq!(diagram.cells[0].shape, DiagramShape::Rect);
         assert_eq!(diagram.cells[1].shape, DiagramShape::RoundedRect);
+    }
+
+    #[test]
+    fn block_decodes_entities_before_lowering_authored_text() {
+        let diagram = parse_block(
+            "block\ntitle Grammar &amp; Paint\naccTitle: Parser &lt;Pipeline&gt;\naccDescr: Semantic&#32;IR\nblock:group[\"Decode &quot;labels&quot;\"]\nA[Grammar&nbsp;Parser] B[Paint]\nA -- \"lower&amp;shape\" --> B\nA o--x |return&#32;path| B\nend",
+        )
+        .unwrap();
+        assert_eq!(diagram.title.as_deref(), Some("Grammar & Paint"));
+        assert_eq!(diagram.accessibility_title.as_deref(), Some("Parser <Pipeline>"));
+        assert_eq!(diagram.accessibility_description.as_deref(), Some("Semantic IR"));
+        assert_eq!(diagram.groups[0].label.text, "Decode \"labels\"");
+        assert_eq!(diagram.cells[0].label.text, "Grammar\u{a0}Parser");
+        assert_eq!(diagram.connections[0].label.as_ref().unwrap().text, "lower&shape");
+        assert_eq!(diagram.connections[1].label.as_ref().unwrap().text, "return path");
     }
 
     #[test]

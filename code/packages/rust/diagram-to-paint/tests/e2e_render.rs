@@ -230,7 +230,7 @@ mod apple {
     #[test]
     fn render_mermaid_block_to_png() {
         let grid = parse_block(
-            "block-beta\ntitle Native block grid\naccTitle: Native block pipeline\naccDescr {\nGrammar through semantic IR\ninto backend-neutral paint\n}\ncolumns 3\nblock:pipeline[\"Processing Pipeline\"]:2\ncolumns 2\nA{{\"Grammar UI\"}} B([\"Semantic IR\"])\nend\nC(((Paint)))\nD[[Metal]] E[(PNG)] F>Backend flag]\nG<[\"Flow\"]>(right)\nH(\"Inline source\")-->I[\"Inline target\"]\nclassDef default fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e\nclassDef pipelineNode fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px,stroke-dasharray:5 3\nclass A,C pipelineNode\nstyle pipeline fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:7 2,font-weight:bold\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA-- \"lowers\" -->B\nB --> C\nC --- D\nD --> E\nE --> F\nA -.-> E\nB ==> F\nC <--> G\nG o--x |returns| D\nF--oA",
+            "block-beta\ntitle Native block grid\naccTitle: Native block pipeline\naccDescr {\nGrammar through semantic IR\ninto backend-neutral paint\n}\ncolumns 3\nblock:pipeline[\"Processing Pipeline\"]:2\ncolumns 2\nA{{\"Grammar UI\"}} B([\"Semantic IR\"])\nend\nC(((Paint)))\nD[[Metal]] E[(PNG)] F>Backend flag]\nG<[\"Flow\"]>(right)\nH(\"Inline source\") -- \"routes\" --> I[\"Inline target\"]\nspace\nJ[\"Tilde source\"] ~~~ K(\"Tilde target\")\nspace\nL[\"Thick source\"] == \"thick route\" ==> M(\"Thick target\")\nspace\nN[\"Dotted source\"] -. \"dotted route\" -.-> O(\"Dotted target\")\nspace\nclassDef default fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e\nclassDef pipelineNode fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px,stroke-dasharray:5 3\nclass A,C pipelineNode\nstyle pipeline fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:7 2,font-weight:bold\nstyle E fill:#dcfce7,stroke:#166534,font-weight:bold\nA-- \"lowers\" -->B\nB --> C\nC --- D\nD --> E\nE --> F\nA -.-> E\nB ==> F\nC <--> G\nG o--x |returns| D\nF--oA",
         )
         .expect("block parse failed");
         let layout = layout_grid_diagram(&grid);
@@ -250,6 +250,26 @@ mod apple {
             edge.from_node_id == "H"
                 && edge.to_node_id == "I"
                 && edge.kind == EdgeKind::Directed
+                && edge.label.as_ref().is_some_and(|label| label.text == "routes")
+        }));
+        assert!(layout.edges.iter().any(|edge| {
+            edge.from_node_id == "J"
+                && edge.to_node_id == "K"
+                && edge.kind == EdgeKind::Undirected
+                && edge.start_marker == diagram_ir::EdgeMarker::None
+                && edge.end_marker == diagram_ir::EdgeMarker::None
+        }));
+        assert!(layout.edges.iter().any(|edge| {
+            edge.from_node_id == "L"
+                && edge.to_node_id == "M"
+                && edge.style.stroke_width == 3.5
+                && edge.label.as_ref().is_some_and(|label| label.text == "thick route")
+        }));
+        assert!(layout.edges.iter().any(|edge| {
+            edge.from_node_id == "N"
+                && edge.to_node_id == "O"
+                && edge.style.stroke_dash.as_deref() == Some(&[5.0, 4.0][..])
+                && edge.label.as_ref().is_some_and(|label| label.text == "dotted route")
         }));
         let inline_source = layout
             .nodes
@@ -309,6 +329,36 @@ mod apple {
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_block_e2e.png").expect("PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_block_entity_labels_to_png() {
+        let grid = parse_block(
+            "block\ntitle Grammar &amp; Paint\nA[Parse&nbsp;input] -- \"lower&amp;shape\" --> B[Paint]",
+        )
+        .expect("block entity parse failed");
+        assert_eq!(grid.title.as_deref(), Some("Grammar & Paint"));
+        assert_eq!(grid.cells[0].label.text, "Parse\u{a0}input");
+        assert_eq!(grid.connections[0].label.as_ref().unwrap().text, "lower&shape");
+        let layout = layout_grid_diagram(&grid);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let opts = DiagramToPaintOptions {
+            background: layout_ir::Color { r: 248, g: 250, b: 252, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 14.0),
+            title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        };
+        let scene = diagram_to_paint(&layout, &opts);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(_))));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_block_entities_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 

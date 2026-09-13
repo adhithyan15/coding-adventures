@@ -501,6 +501,40 @@ impl SchematicDocument {
         Ok(wire)
     }
 
+    /// Connect two explicitly selected terminals on different components.
+    pub fn route_terminals(
+        &mut self,
+        start_reference: &str,
+        start_terminal: usize,
+        end_reference: &str,
+        end_terminal: usize,
+    ) -> Result<SchematicWire, SchematicError> {
+        if start_reference == end_reference {
+            return Err(invalid("schematic route requires two different components"));
+        }
+        let start = self
+            .components
+            .iter()
+            .find(|component| component.reference == start_reference)
+            .ok_or_else(|| invalid("schematic route start reference is unknown"))?
+            .terminals
+            .get(start_terminal)
+            .copied()
+            .ok_or_else(|| invalid("schematic route start terminal is unavailable"))?;
+        let end = self
+            .components
+            .iter()
+            .find(|component| component.reference == end_reference)
+            .ok_or_else(|| invalid("schematic route target reference is unknown"))?
+            .terminals
+            .get(end_terminal)
+            .copied()
+            .ok_or_else(|| invalid("schematic route target terminal is unavailable"))?;
+        let wire = SchematicWire { start, end };
+        self.connect_wire(wire)?;
+        Ok(wire)
+    }
+
     /// Add one endpoint-only wire between terminals that belong to this document.
     ///
     /// This is the common admission boundary for raw host wiring and routed
@@ -564,7 +598,8 @@ impl SchematicDocument {
     /// Set or clear a Berkeley node name on a component terminal.
     ///
     /// An empty name removes the label, which lets text controls clear an
-    /// accidental label without a second destructive action.
+    /// accidental label without a second destructive action. Matching labels
+    /// on disconnected terminal nets lower as one Berkeley node.
     pub fn set_net_label(
         &mut self,
         point: SchematicPoint,
@@ -916,8 +951,8 @@ impl SchematicDocument {
         sets: &mut DisjointSet,
         ground_root: Option<usize>,
     ) -> Result<BTreeMap<usize, String>, SchematicError> {
+        // Multiple physical roots may share one explicit Berkeley node name.
         let mut names = BTreeMap::new();
-        let mut roots_by_name = BTreeMap::new();
         for label in &self.net_labels {
             if !self.terminal_points().contains(&label.point) {
                 return Err(invalid(
@@ -929,16 +964,12 @@ impl SchematicDocument {
             if Some(root) == ground_root {
                 return Err(invalid("schematic net labels must not target ground"));
             }
-            if names.insert(root, label.name.clone()).is_some() {
-                return Err(invalid("schematic net already has a label"));
-            }
-            if let Some(previous_root) = roots_by_name.insert(label.name.as_str(), root) {
-                if previous_root != root {
-                    return Err(invalid(format!(
-                        "schematic net label {} is already assigned",
-                        label.name
-                    )));
+            if let Some(existing) = names.get(&root) {
+                if existing != &label.name {
+                    return Err(invalid("schematic net has conflicting labels"));
                 }
+            } else {
+                names.insert(root, label.name.clone());
             }
         }
         Ok(names)
@@ -1218,7 +1249,55 @@ mod tests {
     }
 
     #[test]
-    fn net_labels_reject_ambiguous_or_invalid_connections_and_clean_up_with_components() {
+    fn matching_net_labels_link_disconnected_nets_during_lowering() {
+        let mut document = rc_document();
+        document.remove_wire(0).unwrap();
+        document.set_net_label(point(0, 20), "SENSE").unwrap();
+        document.set_net_label(point(10, 20), "SENSE").unwrap();
+
+        let deck = document.to_berkeley_netlist().unwrap();
+        assert_eq!(
+            deck,
+            "* RC divider\nC1 n1 0 1u\nR1 SENSE n1 1k\nV1 SENSE 0 DC 5\n.op\n.end\n"
+        );
+        parse_netlist(&deck).unwrap();
+        assert_eq!(run_netlist(&deck).unwrap().len(), 1);
+
+        document
+            .connect_wire(SchematicWire {
+                start: point(0, 20),
+                end: point(10, 20),
+            })
+            .unwrap();
+        assert_eq!(document.net_label_at(point(0, 20)), Some("SENSE"));
+        assert_eq!(document.net_label_at(point(10, 20)), Some("SENSE"));
+    }
+
+    #[test]
+    fn routes_explicit_component_terminals_without_using_nearest_geometry() {
+        let mut document = rc_document();
+        let wire = document.route_terminals("V1", 0, "C1", 0).unwrap();
+        assert_eq!(wire.start, point(0, 20));
+        assert_eq!(wire.end, point(50, 20));
+        assert!(document.wires.contains(&wire));
+        assert_eq!(
+            document
+                .route_terminals("V1", 2, "C1", 0)
+                .unwrap_err()
+                .to_string(),
+            "schematic route start terminal is unavailable"
+        );
+        assert_eq!(
+            document
+                .route_terminals("V1", 0, "C1", 2)
+                .unwrap_err()
+                .to_string(),
+            "schematic route target terminal is unavailable"
+        );
+    }
+
+    #[test]
+    fn net_labels_reject_invalid_or_conflicting_connections_and_clean_up_with_components() {
         let mut document = rc_document();
         assert_eq!(
             document.set_net_label(point(0, 20), "0").unwrap_err().to_string(),
@@ -1250,7 +1329,7 @@ mod tests {
         });
         assert_eq!(
             document.validate().unwrap_err().to_string(),
-            "schematic net already has a label"
+            "schematic net has conflicting labels"
         );
         document.net_labels.pop();
         document.set_net_label(point(40, 20), "OUTPUT").unwrap();
@@ -1262,7 +1341,7 @@ mod tests {
                 })
                 .unwrap_err()
                 .to_string(),
-            "schematic net already has a label"
+            "schematic net has conflicting labels"
         );
         assert_eq!(document.wires.len(), 4);
 

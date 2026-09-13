@@ -1,0 +1,1 @@
+style ScaledText { part root { gap: 16px; padding: 24px; background: #fffef9; color: #203d34; height: 700px; } part title { font-size: 13px; } part action { font-size: 13px; } part field { font-size: 13px; } part grid { font-size: 13px; } }

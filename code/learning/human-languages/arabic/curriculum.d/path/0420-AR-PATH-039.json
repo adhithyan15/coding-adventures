@@ -1,0 +1,14 @@
+{
+  "id": "AR-PATH-039",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "AR-C42-words",
+    "AR-C42-lines",
+    "AR-C42-first-passage"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-039-READING"
+  ],
+  "after": []
+}

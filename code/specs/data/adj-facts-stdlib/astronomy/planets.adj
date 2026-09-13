@@ -15,28 +15,70 @@
 % The `order` value is a NUMBER, so a recalled position composes into arithmetic
 % (how many planets lie between Mars and Saturn? 6 − 4 − 1 = 1).
 %
-% Provenance: NASA states each planet's ordinal position in prose (e.g. "Venus is
-% the second planet from the Sun"); the citable artifact is NASA's Solar System
-% Planets hub at the `locator`, and every planet's order below is confirmed by its
-% own NASA page. `trust authoritative` — the space agency's primary reference.
-% Nothing here is asserted from memory. Order is the canonical eight major planets
-% only, Mercury (nearest) → Neptune (farthest). (See ../README.md;
+% Provenance: the citable artifact is NASA's Solar System Planets hub at the
+% `locator`, and that ONE page carries a sentence for each planet. Each row now
+% carries ITS OWN SENTENCE (RS-5e per-row provenance, #14986). The envelope's
+% `trust authoritative` — the space agency's primary reference — is inherited by
+% seven of the eight rows; Mercury overrides it, for the reason set out below. No row restates `locator`: one page, and
+% a row inherits every field it does not write. Order is the canonical eight
+% major planets only, Mercury (nearest) → Neptune (farthest).
+%
+% This paragraph used to say every order "is confirmed by its own NASA page".
+% The spans below are all from the HUB page, not from eight per-planet pages;
+% the per-planet pages were not fetched and nothing here rests on them.
+%
+% SEVEN OF EIGHT ROWS ARE READ, ONE IS REASONED, and the tier says which.
+% Measured 2026-09-13 UTC with a raw fetch, each of the eight spans occurs
+% EXACTLY ONCE in the raw HTML and once in the rendered text (inline tags
+% removed with no separator, block tags as breaks). Seven of them literally
+% state their row's ordinal, e.g. "the fifth planet from the Sun".
+% NEPTUNE'S IS THE MARGINAL ONE of those seven: "the eighth and most
+% distant planet in our solar system" gives the ordinal word but takes the
+% from-the-Sun axis from "most distant" rather than from the phrase itself.
+% It is still a literal statement of position 8, and it is named here rather
+% than quietly counted with the other six.
+% MERCURY'S DOES NOT STATE ITS ORDINAL AT ALL: the page says "the planet nearest to the
+% Sun", never "the first planet". That row is read off "nearest" plus the
+% ordering of a second span, "The first four planets from the Sun are Mercury,
+% Venus, Earth, and Mars.", in which Mercury is named first — a reading, not a
+% quotation — so it alone carries `trust inferred`, the same treatment the
+% tropic rows get in `geography/reference-lines.adj`.
+%
+% Controls for that measurement: a nonsense span scores zero; and a near-miss
+% of each of the eight (its ordinal word changed) scores zero, so a count of
+% one is not loose matching. The en dashes in the Earth sentence are the page's
+% own U+2013 and survive byte-exact.
+% (See ../README.md; ADJ-TABLES.md RS-5e;
 % feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table planet_order {
     columns planet, order_from_sun
 
-    row (mercury, 1)
-    row (venus, 2)
-    row (earth, 3)
-    row (mars, 4)
-    row (jupiter, 5)
-    row (saturn, 6)
-    row (uranus, 7)
-    row (neptune, 8)
+    row (mercury, 1) {
+        % The ONE row the page does not state literally: it
+        % says "nearest to the Sun", not "the first planet". Position 1
+        % is READ OFF that plus the ordering of the second
+        % span, where Mercury is named first. A reading, so
+        % `trust inferred` -- the same treatment the tropic
+        % rows get in geography/reference-lines.adj.
+        source "Mercury is the planet nearest to the Sun, and the smallest planet in our solar system."
+        trust inferred
+        cites "The first four planets from the Sun are Mercury, Venus, Earth, and Mars." locator "https://science.nasa.gov/solar-system/planets/"
+    }
+    row (venus, 2) { source "Venus is the second planet from the Sun, and the sixth largest planet." }
+    row (earth, 3) { source "Earth – our home planet – is the third planet from the Sun, and the fifth largest planet." }
+    row (mars, 4) { source "Mars is the fourth planet from the Sun, and the seventh largest planet." }
+    row (jupiter, 5) { source "Jupiter is the fifth planet from the Sun, and the largest planet in our solar system." }
+    row (saturn, 6) { source "Saturn is the sixth planet from the Sun, the second largest planet in our solar system." }
+    row (uranus, 7) { source "Uranus is the seventh planet from the Sun, and the third largest planet in our solar system." }
+    row (neptune, 8) { source "Neptune is the eighth and most distant planet in our solar system." }
 
-    source "Venus is the second planet from the Sun"
+    % The envelope is the FRAMING span -- what defends the table as
+    % a whole: that there are eight planets and that these are they.
+    % Until #14986 it was the VENUS sentence, which is one ROW's
+    % evidence, so a recall of Jupiter quoted a sentence about Venus.
+    source "Our solar system has eight planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune."
     locator "https://science.nasa.gov/solar-system/planets/"
     trust authoritative
 }

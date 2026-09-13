@@ -21,8 +21,12 @@
 % reference data ships in — a published list, one base quantity per row with its
 % unit and symbol. The citable artifact IS the NIST "SI Units" page at the
 % `locator` below, and each quantity→unit→symbol triple here is read straight off
-% it. The whole table is defended by one provenance envelope rather than repeating
-% source/locator/trust on every row.
+% it. Each row carries the page's own line for its own unit (RS-5e); the envelope
+% carries the framing sentence and the shared `locator`/`trust`, which every row
+% inherits. Until #14986 the table had ONE envelope and no per-row spans, so this
+% paragraph said the whole table was "defended by one provenance envelope rather
+% than repeating source/locator/trust on every row" — true as written, and it
+% meant every answer quoted a sentence naming none of the seven units.
 %
 % Why the symbol is a STRING and the unit an ATOM: unit names (`meter`,
 % `kilogram`) are lowercase atoms that bind and compose like any other recalled
@@ -41,24 +45,72 @@
 %   amount_of_substance → mole     "mol"
 %   luminous_intensity  → candela  "cd"
 %
-% The `source` span below is that page's sentence stating the SI is built from
-% seven base units. `trust authoritative` — a primary standards reference,
-% re-fetchable at the `locator`. Nothing here is asserted from memory: every
-% quantity→unit→symbol triple is a row of the cited list, and only the seven base
-% quantities the page names are included. (See ../README.md; ADJ-TABLES.md;
+% The envelope `source` below is that page's sentence stating the SI is built
+% from seven base units — the FRAMING span, what defends the table as a whole.
+% Since every row now overrides `source`, NO ANSWER CAN CITE IT: it defends the
+% table's existence and shape, and reaches no recall. Said out loud because it
+% has a consequence — the e2e suite's only VERBATIM pin on this sentence was
+% removed with the row-binding pin it sat in, and what replaced it asserts the
+% sentence is ABSENT from a row answer. So a silent edit to the envelope text
+% would not redden anything here. `locator` and `trust` are still pinned, by
+% the inheritance assertions.
+% `trust authoritative` — a primary standards reference, re-fetchable at the
+% `locator`. Nothing here is asserted from memory: every quantity→unit→symbol
+% triple is a row of the cited list, and only the seven base quantities the page
+% names are included.
+%
+% Measured on the page's bytes (#14986), fetched 2026-09-13 UTC with raw
+% urllib, NOT a summarizing fetcher — a summarizer has misquoted a cited page
+% three different ways before, and a `source` must be verbatim. Each of the
+% seven per-row spans occurs EXACTLY ONCE in the raw HTML, once under an
+% extractor that breaks only on BLOCK elements, and once under a crude one that
+% treats every tag as a break — 21 counts, all 1. Each is the entire text of
+% one `<li><a>` in the list under "The seven SI base units, which are comprised
+% of:", which is WHY it survives all three modes: no tag falls inside it.
+%
+% The separator the page writes is SPACE, U+002D HYPHEN-MINUS, SPACE — read out
+% of the extracted text, not assumed.
+%
+% Controls for that harness, stated with the mode each holds in, because the
+% first version of this note claimed a positive control that does not hold in
+% all three: the ENVELOPE sentence is found under both extractors but scores
+% ZERO in raw HTML, because `<a href=...>NIST SP 1247</a>` splits it and a
+% trailing `&nbsp;` follows. The nonsense span "Zorblatt - quux (zz)" scores
+% zero in all three. Two deliberately wrong separator variants — an en dash,
+% and no spaces — each score zero in all three, so the count is sensitive to
+% the exact characters rather than matching loosely.
+%
+% That raw-mode zero is worth stating plainly rather than filing under a
+% control: THE ENVELOPE `source` IS NOT A VERBATIM RAW-BYTE SPAN of the page.
+% It is a de-tagged rendering, true of the text as displayed and not of the
+% bytes. That predates this change and is not repaired here; it is named
+% because the heading above says "measured on the page's bytes", and a reader
+% is entitled to know which of the values below meet that bar. The seven
+% per-row spans do. The envelope does not. (See ../README.md; ADJ-TABLES.md;
 % feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table si_base_unit {
     columns quantity, unit, symbol
 
-    row (length, meter, "m")
-    row (mass, kilogram, "kg")
-    row (time, second, "s")
-    row (electric_current, ampere, "A")
-    row (temperature, kelvin, "K")
-    row (amount_of_substance, mole, "mol")
-    row (luminous_intensity, candela, "cd")
+    % RS-5e PER-ROW PROVENANCE (#14986). The envelope below states that the SI
+    % HAS seven base units; it names none of them. Before this, a recall of
+    % `si_base_unit(length, $U, $S)` shipped NIST, `authoritative`, and a
+    % sentence that does not contain the word "meter". Each row now carries the
+    % page's own line for THAT unit.
+    %
+    % No row restates `locator` or `trust`: all seven come from the one NIST
+    % page at one tier, and a row inherits every field it does not write. Each
+    % span STATES its row outright, so the inherited `authoritative` is right —
+    % these are read, not reasoned. (Contrast `geography/reference-lines.adj`,
+    % where the tropic rows are reasoned and carry `trust inferred`.)
+    row (length, meter, "m")            { source "Length - meter (m)" }
+    row (mass, kilogram, "kg")          { source "Mass - kilogram (kg)" }
+    row (time, second, "s")             { source "Time - second (s)" }
+    row (electric_current, ampere, "A") { source "Electric current - ampere (A)" }
+    row (temperature, kelvin, "K")      { source "Temperature - kelvin (K)" }
+    row (amount_of_substance, mole, "mol")   { source "Amount of substance - mole (mol)" }
+    row (luminous_intensity, candela, "cd")  { source "Luminous intensity - candela (cd)" }
 
     source "The SI is made up of 7 base units that define the 22 derived units with special names and symbols, which are illustrated in NIST SP 1247, SI Base Units Relationship Poster."
     locator "https://www.nist.gov/pml/owm/metric-si/si-units"
