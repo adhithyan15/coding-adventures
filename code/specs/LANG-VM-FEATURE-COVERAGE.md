@@ -1,6 +1,6 @@
 # LANG VM feature and backend coverage
 
-Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification, then reference-modification MOVE/trap, then STRING SIZE/delimiter, then UNSTRING/delimiter, then INSPECT TALLYING/REPLACING, then pointer/overflow). This is an inventory of the implemented
+Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification, then reference-modification MOVE/trap, then STRING SIZE/delimiter, then UNSTRING/delimiter, then INSPECT TALLYING/REPLACING, then pointer/overflow, then regions/self-move, then Dartmouth BASIC BEAM pure-string family). This is an inventory of the implemented
 frontend families and their executable proof boundaries, not a claim that the
 historical languages or every backend are complete. Follow-up IDs live in the
 [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md).
@@ -27,7 +27,7 @@ refusal also does not imply the complete driver refuses that feature.
 | Twig | 49 | 363 | 20 of those cells are BEAM; dedicated heap/closure tests |
 | Nib | 26 | 208 | All eight columns including real BEAM u4/u8 and BCD storage |
 | Brainfuck | 6 | 45 | Dedicated WASM/JVM/CLR and JIT execution; 3 of 6 rows also real BEAM (VM-042) |
-| Dartmouth BASIC | 51 | 357 | Random differential suite and frontend JIT tests |
+| Dartmouth BASIC | 51 | 375 | 18 of those cells are BEAM (the pure-string family); random differential suite and frontend JIT tests |
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
 | FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
@@ -35,7 +35,7 @@ refusal also does not imply the complete driver refuses that feature.
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1593
+The normal non-ALGOL capstone therefore declares 210 programs and 1611
 declared cells (sum of the non-ALGOL rows above). At VM-061 this matched a
 fresh `non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells
 exercised plus 210 skipped (missing local `ilasm`) = 1548. VM-042 then added
@@ -72,9 +72,31 @@ COBOL BEAM row to reach `emit_string_pointer_overlay`, the shared `STRING`/
 two `str_concat` calls with every bound computed entirely at run time from a
 live `PIC 9` pointer item — so a fresh run on a host with `erl` now reports
 1373 exercised + 210 skipped = 1583; no `iir-to-beam` defect was found, all
-eight programs passed on the first real-`erl` probe. All thirty-five new
-cells since VM-061 are exercised, not skipped, since `erl`
-was present when they were promoted. The "Declared cells" column counts every backend a
+eight programs passed on the first real-`erl` probe. With all 58 COBOL-60
+rows then declaring BEAM (VM-040 COBOL BEAM regions and self-move), a fresh
+reprioritization audited every non-ALGOL frontend's row/BEAM-declared count
+directly from source (not by memory) and found Dartmouth BASIC — despite
+being explicitly in scope since VM-040's original family list ("BASIC
+f64/I/O") — was the only non-ALGOL frontend with **zero** declared BEAM
+rows out of 51. A `compile_source_to_beam` probe over all 51 rows found
+`iir-to-beam` rejects every one of them at whole-module validation: BASIC's
+`BA7-1b` change routes every scalar numeric value, even an integer-spelled
+literal, through the shared `f64` value track, and the frontend
+unconditionally emits its `__basic_print_real`/`__basic_print_fixed_mag`/
+`__basic_print_real_e` helpers into every compiled module regardless of
+whether a given program's control flow ever reaches them — so `iir-to-beam`'s
+whole-module float-const check (it has no `f64` lowering support at all)
+rejects every numeric BASIC program, even ones that never print a float.
+Exactly 18 rows — every purely string-valued program, with no numeric
+`PRINT`/`LET`/`FOR`/`INPUT` anywhere in source, so no float `const` is ever
+emitted — compile unchanged and all 18 ran correctly on real `erl` with
+byte-identical stdout (VM-040 Dartmouth BASIC BEAM pure-string family;
+357 → 375 declared BASIC cells). The full `non_algol_matrix_every_proven_cell_agrees`
+capstone confirmed the corrected total against a live run: 210 programs,
+**1401** cells exercised, 210 skipped (the same host-wide missing `ilasm`
+pattern every prior slice reports), zero failures, in 602.62s — and
+1401 + 210 = 1611 matches the corrected declared total exactly. The
+"Declared cells" column counts every backend a
 row proves, Beam included — the convention Nib, Oct, FLOW-MATIC and
 COBOL-60's numbers already used. Twig was the one holdout at VM-061: its old
 "343" was `49 rows × 7 standard backends`, silently excluding its 20 Beam
@@ -109,7 +131,7 @@ tenth universal backend.
 | [Twig lowerer](../packages/rust/twig-ir-compiler/src/compiler.rs) | Scalars, variadic arithmetic, lexical bindings, calls, cons/list operations, symbols, globals, records/unions, closures and source-inferred strings. Unified rows cover heap arithmetic, list helpers, quote equality, records/match, forward and boxed globals, capturing closures, literal/local/parameter strings and a bounds trap. | BEAM covers 20 selected rows, not all strings/records/closures. Dynamic or captured/reassigned strings exceed the source-local fast path. VM-040 inventories the remaining BEAM families; VM-041 isolates dynamic-string lowering from existing literal metadata. |
 | [Nib lowerer](../packages/rust/nib-iir-compiler/src/lib.rs) | Integer arithmetic, narrow masking, wrapping/saturating addition, bitwise/logical operations, branches/loops, calls, const/static initialization and BCD storage. Unified rows execute standard-backend cases. [JIT tests](../packages/rust/nib-iir-compiler/tests/jit_e2e.rs) independently exercise compiled functions. | Standard-target parity does not establish 4004 arithmetic/control-flow fidelity. Existing VM-028 owns that audit; VM-012 proves only its landed BCD storage slice. BEAM remains undeclared (VM-040). |
 | [Brainfuck compiler](../packages/rust/brainfuck-iir-compiler/src/compiler.rs) | All eight commands, wrapped tape cells/pointer movement, nested loops and input/EOF. Unified rows plus [WASM](../packages/rust/brainfuck-iir-compiler/tests/wasm_e2e.rs), [JVM](../packages/rust/brainfuck-iir-compiler/tests/jvm_e2e.rs), [CLR](../packages/rust/brainfuck-iir-compiler/tests/clr_e2e.rs) and [JIT](../packages/rust/brainfuck-iir-compiler/tests/jit_smoke.rs) execution. | VM-042/VM-D031: the frontend README's "BEAM tape support intentionally excluded" claim was stale — `iir-to-beam`'s `:atomics`-backed mutable memory (added for this exact purpose) already lowers tape mutation and `.`; a real `erl` probe promoted the 3 non-input rows to a real Beam cell each. `,` still refuses explicitly (no `getchar` builtin), pinned by `call_builtin_getchar_rejected_but_putchar_accepted`; that gap is host input (VM-060b), shared with every other frontend's BEAM input rows, not a Brainfuck- or tape-specific limitation. |
-| [BASIC lowerer](../packages/rust/dartmouth-basic-iir-compiler/src/lib.rs) | f64 arithmetic/general power/transcendentals, deterministic RND, scalar/string input and output, branches, FOR, GOSUB/RETURN, DEF FN, numeric/string arrays, mixed DATA/READ/RESTORE. All 51 rows declare seven columns; random differential tests supplement fixed results. | DEF FN global access and historical print zones are frontend semantics, not already-implemented parity. BEAM remains undeclared (VM-040). Two-dimensional numeric DIM already has a seven-column matrix proof; the stale one-dimensional-only README wording is corrected in this audit. |
+| [BASIC lowerer](../packages/rust/dartmouth-basic-iir-compiler/src/lib.rs) | f64 arithmetic/general power/transcendentals, deterministic RND, scalar/string input and output, branches, FOR, GOSUB/RETURN, DEF FN, numeric/string arrays, mixed DATA/READ/RESTORE. All 51 rows declare at least seven columns; 18 pure-string rows also declare BEAM; random differential tests supplement fixed results. | DEF FN global access and historical print zones are frontend semantics, not already-implemented parity. The remaining 33 numeric/`INPUT` rows still lack BEAM: `iir-to-beam` has no `f64` lowering at all, and BASIC routes every scalar numeric value (even integer-spelled literals) through the shared `f64` track since BA7-1b, so real BEAM parity there needs new float-op lowering, not just promotion (VM-040); the `INPUT` rows separately need the unscoped BEAM host-input design (VM-060b). Two-dimensional numeric DIM already has a seven-column matrix proof; the stale one-dimensional-only README wording is corrected in this audit. |
 | [Oct lowerer](../packages/rust/oct-iir-compiler/src/lib.rs) | u8 arithmetic/masking, bitwise/logical operations, functions, local/global state, if/while/loop/break and stdout `out`. Matrix covers output, wrap, short circuit, shared globals, loop-carried wrapping returned from a function, conditional break and nested break targets; [JIT suite](../packages/rust/oct-iir-compiler/tests/jit_e2e.rs) separately executes while loops and returned function values. | VM-044 adds observable loop/break and returned-call standard-column proofs. `in`, carry arithmetic and rotations are explicit intrinsic errors; VM-013 owns portable machine-state design. Body-local static and floats are not implemented parity gaps. |
 | [ALGOL lowerer](../packages/rust/algol-iir-compiler/src/lib.rs) | Scalar integer/boolean/real/string operations, arrays, procedures, by-name specializations, switches and nonlocal control flow have a substantial evolving corpus. [Frontend JIT](../packages/rust/algol-iir-compiler/tests/jit_e2e.rs) and [AOT smoke](../packages/rust/algol-iir-compiler/tests/aot_smoke.rs) are separate proofs. | Full LANG matrix remains excluded for the recorded native-array failure. VM-025 and the separate ALGOL owner control fixes and detailed feature expansion; 232 declarations do not mean 232 green Linux programs. |
 | [FLOW-MATIC lowerer](../packages/rust/flow-matic-iir-compiler/src/lib.rs) | MOVE, COMPARE/IF/OTHERWISE, GO TO/JUMP, STOP, READ-ITEM/EOF and WRITE-ITEM. Four unified rows prove scalar move/output, a taken EQUAL, false LESS/GREATER reaching OTHERWISE, and a jump chain. [JIT stream tests](../packages/rust/flow-matic-iir-compiler/tests/jit_e2e.rs) run read/process/write to EOF through custom `input_more`/`input_i64` builtins. | VM-037 adds terminating, output-discriminating control-flow rows; positive LESS/GREATER on nonzero input still requires VM-039. VM-039 provides portable EOF-aware input before promoting record streams to code-generation columns. TRANSFER and tape control are clean frontend rejections, not secretly implemented file I/O. |
