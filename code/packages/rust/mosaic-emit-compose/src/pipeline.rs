@@ -240,16 +240,11 @@ pub fn from_pipeline(
         writeln!(out, "import androidx.compose.ui.graphics.StrokeCap").unwrap();
         writeln!(out, "import androidx.compose.ui.graphics.drawscope.Stroke").unwrap();
     }
-    // UI59 -- only when some part says it cannot shrink. Emitted from the
-    // STYLE rather than the layout: an unused Kotlin import is a warning
-    // and a missing one is an error, so over-approximating here is the
-    // safe direction. Generating this modifier without its import is
+    // UI59 -- needed wherever a Row has children. An unused Kotlin import
+    // is a warning and a missing one is an error, so over-approximating is
+    // the safe direction; generating the modifier without its import is
     // exactly what `Unresolved reference 'wrapContentWidth'` looked like.
-    if style
-        .parts
-        .iter()
-        .any(|part| compose_flex_shrink_zero(&part.base))
-    {
+    if layout_contains_tag(&layout.root, "Row") {
         writeln!(out, "import androidx.compose.foundation.layout.wrapContentWidth").unwrap();
     }
     // UI79 -- only when a per-edge border is authored. `Offset` is already
@@ -1696,10 +1691,16 @@ fn parts_width_guarded(root: &LayoutNode, part_styles: &PartStyleMap) -> HashSet
         let is_container = container_composable_for_tag(&node.tag).is_some();
         if in_row_scope && is_container {
             if let Some(part) = node.part_name.as_deref() {
-                if let Some(props) = part_styles.get(part) {
-                    if compose_flex_shrink_zero(props) && compose_row_weight(props).is_none() {
-                        out.insert(part.to_string());
-                    }
+                // UI59 §4 -- the floor is universal now, so membership no
+                // longer depends on `flex-shrink`. It still depends on the
+                // two things the emitter checks: a weight opts out, and the
+                // guard lives in `emit_container`, so a LEAF never gets it.
+                let weighted = part_styles
+                    .get(part)
+                    .map(|props| compose_row_weight(props).is_some())
+                    .unwrap_or(false);
+                if !weighted {
+                    out.insert(part.to_string());
                 }
             }
         }
@@ -1853,7 +1854,14 @@ pub fn dropped_style_properties_in_layout(
     for part in &style.parts {
         let built = compose_box_style(&part.base, &[], None, 0, None);
         for (name, value) in built.dropped {
+            // UI59 §4 -- the width floor is universal, so `flex-shrink: 0`
+            // on a guarded part is honoured and is not a drop. A POSITIVE
+            // value asks to shrink below content, which the floor refuses,
+            // so it stays reported. Nothing in the repo authors one today,
+            // but skipping on the property name alone would make the first
+            // one silent.
             if name == "flex-shrink"
+                && value.trim().trim_matches('"') == "0"
                 && guarded
                     .as_ref()
                     .map(|set| set.contains(&part.name))
@@ -2694,10 +2702,6 @@ impl PartStyleMap {
         self.props.get(key)
     }
 
-    /// UI59 -- does this part get the no-shrink width guard?
-    fn is_width_guarded(&self, part: &str) -> bool {
-        self.width_guarded.contains(part)
-    }
 
     /// Populate [`Self::width_guarded`] once the layout is known.
     fn resolve_width_guards(&mut self, root: &LayoutNode) {
@@ -5423,21 +5427,6 @@ pub fn radio_groups_with_native_semantics(root: &LayoutNode) -> HashSet<String> 
 /// `width: 100%`. Compose Rows do not shrink a preceding `fillMaxWidth()`
 /// child the way CSS flexbox does, so both idioms lower to RowScope `weight`.
 /// Invalid, non-finite, zero, and negative grow values stay intrinsic.
-/// UI59 -- does this part author `flex-shrink: 0`?
-///
-/// Every authored `flex-shrink` in the repo is `0`; not one is positive.
-/// So this is not the "which child yields" heuristic UI59 §5 worried
-/// about -- authors are naming who must NOT be starved, which is a
-/// narrower and far safer question to answer.
-fn compose_flex_shrink_zero(props: &[StyleProp]) -> bool {
-    props
-        .iter()
-        .rev()
-        .find(|p| p.name == "flex-shrink")
-        .map(|p| p.value.trim().trim_matches('"') == "0")
-        .unwrap_or(false)
-}
-
 fn compose_row_weight(props: &[StyleProp]) -> Option<String> {
     if let Some(value) = props
         .iter()
@@ -5571,14 +5560,18 @@ fn emit_container(
         // A weighted child is asking to absorb slack, which is the
         // opposite request, so `flex-grow` wins and the shrink guard is
         // skipped rather than both being emitted.
-        // UI59 -- ask the SHARED set, not a second opinion. The guard used
-        // to be recomputed here from `in_row_scope`, which no walk outside
-        // the emitter could reproduce.
-        let holds_width = node
-            .part_name
-            .as_deref()
-            .map(|part| part_styles.is_width_guarded(part))
-            .unwrap_or(false);
+        // UI59 §4 -- a Row child is not starved.
+        //
+        // CSS gives every flex item `min-width: auto`: it shrinks toward
+        // its content and then stops, and the container overflows. Compose
+        // has no such floor -- it hands out the remaining width in order
+        // and the last child gets whatever is left, which can be nothing.
+        // So the floor is applied here, to every child that is not already
+        // asking to absorb slack.
+        //
+        // `flex-grow` IS that opposite request, so a weighted child keeps
+        // its weight and no floor.
+        let holds_width = weight.is_none();
         if let Some(weight) = weight {
             let cpad = " ".repeat(chain_indent);
             let prefix = format!("\n{cpad}.weight({weight}f)");
@@ -8612,8 +8605,19 @@ mod tests {
             .rfind("Row(")
             .map(|i| &progress[i..])
             .expect("gap must belong to a Row");
+        // UI59 §4 -- this test's claim is INTRINSIC WIDTH, and that still
+        // holds; only its spelling moved. A Row child now carries
+        // `wrapContentWidth(unbounded = true)`, which is what intrinsic
+        // width means once the universal floor exists -- previously the
+        // bare `Modifier,` meant "whatever the Row leaves you", which is
+        // how this group could be starved to zero. The assertion is
+        // rewritten to the property so it cannot pass on a fill.
         assert!(
-            opener.contains("modifier = Modifier,") && !opener.contains("fillMaxWidth"),
+            !opener.contains("fillMaxWidth"),
+            "the progress group must not gain a fill:\n{out}"
+        );
+        assert!(
+            opener.contains("wrapContentWidth(unbounded = true)"),
             "the progress group must keep intrinsic width:\n{out}"
         );
 
@@ -12209,6 +12213,61 @@ mod tests {
         assert!(dotted.contains("floatArrayOf(0f,"), "got:\n{dotted}");
     }
 
+    /// UI59 §4 — an UNANNOTATED Row child is not starved.
+    ///
+    /// This is the general rule, and it needed no authored opt-in: CSS
+    /// gives every flex item `min-width: auto`, and Compose has no such
+    /// floor. §8 rejected three mechanisms because each merely chose a
+    /// different child to starve; all three were `weight`-based, and this
+    /// one is not.
+    #[test]
+    fn ui59_an_unannotated_row_child_keeps_its_width() {
+        let render = |props: Vec<StyleProp>, parent: &str| {
+            let mut child = node("Column", vec![], vec![]);
+            child.part_name = Some("chip".to_string());
+            let style = StyleDef {
+                component_name: "S".to_string(),
+                parts: vec![PartStyle {
+                    name: "chip".to_string(),
+                    base: props,
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+            from_pipeline(
+                &component("S", vec![], vec![]),
+                &layout("S", node(parent, vec![], vec![child])),
+                &style,
+            )
+            .unwrap()
+            .output
+        };
+
+        // Nothing authored at all: the floor still applies.
+        let bare = render(vec![sprop("padding", "8px")], "Row");
+        assert!(
+            bare.contains(".wrapContentWidth(unbounded = true)"),
+            "an unannotated Row child must keep its width:\n{bare}"
+        );
+
+        // A COLUMN child is not in RowScope; the floor is about the main
+        // axis, so it must not appear there.
+        let col = render(vec![sprop("padding", "8px")], "Column");
+        assert!(
+            !col.contains("wrapContentWidth(unbounded = true)"),
+            "a Column child must not be width-floored:\n{col}"
+        );
+
+        // `flex-grow` is the opposite request — absorb slack — so a
+        // weighted child keeps its weight and takes no floor.
+        let grows = render(vec![sprop("flex-grow", "1")], "Row");
+        assert!(grows.contains(".weight(1f)"), "got:\n{grows}");
+        assert!(
+            !grows.contains("wrapContentWidth(unbounded = true)"),
+            "a weighted child must not also be floored:\n{grows}"
+        );
+    }
+
     /// UI59 — the emitter and the drop reporter must give the SAME answer.
     ///
     /// Every case below is one where two separate notions drifted apart on
@@ -12291,78 +12350,6 @@ mod tests {
             check(root, &wrap_style, "chip"),
             (false, true),
             "a FlowRow child is not RowScope"
-        );
-    }
-
-    /// UI59 — `flex-shrink: 0` on a direct Row child holds its width.
-    ///
-    /// Both directions, and the modifier matters: a probe measured a Row
-    /// child beside a long Text at `0 x 112` with no modifier, `0 x 112`
-    /// with `IntrinsicSize.Min`, `0 x 112` with `IntrinsicSize.Max`, and
-    /// `57 x 16` with `wrapContentWidth(unbounded = true)`. Reasoning
-    /// would have picked one of the intrinsics; only measuring found this.
-    #[test]
-    fn ui59_flex_shrink_zero_holds_a_row_child_width() {
-        assert!(compose_flex_shrink_zero(&[sprop("flex-shrink", "0")]));
-        assert!(compose_flex_shrink_zero(&[sprop("flex-shrink", "\"0\"")]));
-        // Only zero means "do not squeeze me".
-        assert!(!compose_flex_shrink_zero(&[sprop("flex-shrink", "1")]));
-        assert!(!compose_flex_shrink_zero(&[sprop("padding", "8px")]));
-        assert!(!compose_flex_shrink_zero(&[]));
-
-        let render = |props: Vec<StyleProp>, wrap_in_row: bool| {
-            let mut child = node("Column", vec![], vec![]);
-            child.part_name = Some("chip".to_string());
-            let root = if wrap_in_row {
-                node("Row", vec![], vec![child])
-            } else {
-                node("Column", vec![], vec![child])
-            };
-            let style = StyleDef {
-                component_name: "S".to_string(),
-                parts: vec![PartStyle {
-                    name: "chip".to_string(),
-                    base: props,
-                    transitions: vec![],
-                    states: vec![],
-                }],
-            };
-            from_pipeline(&component("S", vec![], vec![]), &layout("S", root), &style)
-                .unwrap()
-                .output
-        };
-
-        // A Row child that says it cannot shrink gets the guard.
-        let held = render(vec![sprop("flex-shrink", "0")], true);
-        assert!(
-            held.contains(".wrapContentWidth(unbounded = true)"),
-            "got:\n{held}"
-        );
-
-        // The negative halves. Same declaration in a COLUMN is about the
-        // vertical axis and must not get a width guard; and a Row child
-        // without the declaration must not get one either.
-        let in_column = render(vec![sprop("flex-shrink", "0")], false);
-        assert!(
-            !in_column.contains("wrapContentWidth(unbounded = true)"),
-            "flex-shrink in a Column is not a width guard, got:\n{in_column}"
-        );
-        let plain = render(vec![sprop("padding", "8px")], true);
-        assert!(
-            !plain.contains("wrapContentWidth(unbounded = true)"),
-            "an unannotated Row child must not be guarded, got:\n{plain}"
-        );
-
-        // `flex-grow` is the opposite request — absorb slack — so the
-        // weight wins and the two are never emitted together.
-        let grows = render(
-            vec![sprop("flex-shrink", "0"), sprop("flex-grow", "1")],
-            true,
-        );
-        assert!(grows.contains(".weight(1f)"), "got:\n{grows}");
-        assert!(
-            !grows.contains("wrapContentWidth(unbounded = true)"),
-            "a weighted child must not also be width-guarded, got:\n{grows}"
         );
     }
 

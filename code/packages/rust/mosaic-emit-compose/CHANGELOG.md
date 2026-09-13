@@ -9,6 +9,52 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — a Row child is no longer starved (UI59 §4, #14815)
+
+Every `Row` child that is not already asking to absorb slack now carries
+`Modifier.wrapContentWidth(unbounded = true)`. That is CSS's own rule: a flex
+item has `min-width: auto`, so it shrinks toward its content and then stops, and
+the container overflows rather than starving anyone. Compose has no such floor —
+it hands out the remaining width in order and the last child gets whatever is
+left, which can be nothing.
+
+**UI59 §8 had rejected this as unreachable.** It measured three mechanisms and
+concluded each "merely chose a different child to starve". All three were
+`weight`-based. This one is not a distribution mechanism at all — `weight`
+divides the row, this puts a floor under each child — which is why it was not
+found then.
+
+Measured on Trestle:
+
+| viewport | zero-width text | wrapped 3+ lines | off-screen | tallest text |
+| --- | --- | --- | --- | --- |
+| 1280 before / after | 0 / 0 | 0 / 0 | 0 / 0 | 48 / 48 |
+| 900 before / after | **1** / **0** | 2 / **1** | 0 / 0 | 168 / **72** |
+| 700 before / after | **1** / **0** | 5 / **4** | 0 / 0 | 168 / **120** |
+
+Better on every axis with nothing worse — the test §8's three mechanisms failed.
+`IntrinsicSize.Min` and `IntrinsicSize.Max` were measured too and both still
+starved the child to zero.
+
+**VisiCalc and Engram render pixel-identical** (0 differing pixels), so this is
+inert outside the product that had the defect.
+
+`flex-shrink: 0` is now honoured by default and stops being reported where the
+floor applies; a POSITIVE value asks to shrink below content, which the floor
+refuses, so it stays reported.
+
+#### What it does not do
+
+The floor lives in `emit_container`, so a **leaf** Row child — a bare `Text` —
+still gets nothing and can still be starved. On Trestle that leaves `due-input`,
+`tl-name` and `tl-window` reported rather than guarded: 8 authored, 5 guarded,
+3 reported, none in both.
+
+`row_children_use_weight_and_intrinsic_measurement_in_split_sections` needed its
+assertion rewritten. Its claim — intrinsic width — still holds; it was asserting
+the *spelling* (`modifier = Modifier,`), and a bare modifier is precisely what
+let that group be starved. It now asserts the property.
+
 ### Added — a dashed border is drawn, and `border-style: none` suppresses one (UI79, #14835)
 
 `Modifier.border` draws a solid stroke and takes no `PathEffect`, so a non-solid

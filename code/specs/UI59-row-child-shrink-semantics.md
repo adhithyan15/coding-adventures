@@ -209,6 +209,62 @@ a topbar element measuring zero width fails, at the stage where it happened.
 Presence assertions cannot see this — the chip was present, named and
 "displayed" at `0 x 168` for as long as the defect existed.
 
+## 10.1 Implemented — the mechanism §8 could not find
+
+**§8's conclusion is superseded.** It measured three mechanisms, rejected all
+three because each "merely chose a different child to starve", and concluded the
+acceptance in §6 could not be met. Every one of those three was `weight`-based.
+
+The mechanism is `Modifier.wrapContentWidth(unbounded = true)`, applied to every
+`Row` child that is not already asking to absorb slack. It is CSS's own rule:
+a flex item has `min-width: auto`, so it shrinks toward its content and then
+stops, and the container overflows rather than starving anyone. Compose has no
+such floor — it hands out remaining width in order and the last child gets
+whatever is left, which can be nothing.
+
+It was not found earlier because it is not a distribution mechanism at all.
+`weight` divides the row; this puts a floor under each child.
+
+### Measured, Trestle, before and after
+
+| viewport | zero-width text | wrapped 3+ lines | off-screen | tallest text |
+| --- | --- | --- | --- | --- |
+| 1280 before | 0 | 0 | 0 | 48 |
+| 1280 after | 0 | 0 | 0 | 48 |
+| 900 before | **1** (`On track`) | 2 | 0 | 168 |
+| 900 after | **0** | **1** | 0 | **72** |
+| 700 before | **1** (`On track`) | 5 | 0 | 168 |
+| 700 after | **0** | **4** | 0 | **120** |
+
+Better on every axis, and nothing got worse — which is exactly the test §8's
+three mechanisms failed. `IntrinsicSize.Min` and `IntrinsicSize.Max` were also
+measured and both still starved the child to zero; only this modifier holds.
+
+**VisiCalc and Engram render pixel-identical** — 0 differing pixels — so the
+rule is inert outside the product that had the defect.
+
+### The four decisions in §5, answered
+
+1. **Which child yields.** None. Every child keeps a floor and the row overflows,
+   which is what CSS does. There is no victim to choose, which is why the three
+   earlier mechanisms all failed: each had to pick one.
+2. **Interaction with an existing `flex-grow` weight.** The weight wins; a child
+   asking to absorb slack is making the opposite request and takes no floor.
+3. **Interaction with `Arrangement.spacedBy`.** Measured, not assumed: no element
+   moved off-screen at any of the three viewports.
+4. **Whether `flex-shrink: 0` is honoured.** It now is, by default, so it stops
+   being reported as a drop where the floor applies. A POSITIVE `flex-shrink`
+   asks to shrink below content, which the floor refuses, so it stays reported —
+   nothing in the repo authors one, and skipping on the property name alone
+   would make the first one silent.
+
+### What it does not do
+
+The floor lives in `emit_container`, so a **leaf** Row child — a bare `Text` — still
+gets nothing and can still be starved. On Trestle that leaves `due-input`,
+`tl-name` and `tl-window` reported as drops rather than guarded, which is the
+honest partition: 8 authored, 5 guarded, 3 reported, none in both.
+
 ## 11. Flutter has the same defect, and it does not starve — it throws
 
 Measured while implementing `max-width` on Flutter (#14851, #14857). Capping
