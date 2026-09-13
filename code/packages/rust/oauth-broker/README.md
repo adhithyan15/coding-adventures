@@ -68,9 +68,12 @@ composition reads the exact opaque account record's refresh token and revision,
 revokes that token through the retained client-secret method, and conditionally
 deletes only that revision after exact HTTP 200 and every intervening audit gate.
 Provider failures, transport failures, missing refresh tokens, and binding
-failures leave the credential record intact. These boundaries add no concrete
-network implementation. Exchange can either return its audit-gated response or
-compose it directly into
+failures leave the credential record intact. For records that have no refresh
+token, a separate access-token fallback releases that token and exact revision
+only after custody proves refresh absence; it then applies the same retained
+client-secret, transport, response, and conditional-delete gates. These
+boundaries add no concrete network implementation. Exchange can either return
+its audit-gated response or compose it directly into
 an exact provider-bound opaque account key, crossing the OAuth credential
 release and custody-create audit gates without credential disclosure. A stored
 refresh token can likewise cross exact retained Basic/Post authentication,

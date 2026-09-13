@@ -30,6 +30,12 @@ the selected analysis card. Hosts can add, select, and remove cards while one
 card remains required. Synchronization replaces the text deck with the
 canonical emitted deck and refreshes its runnable Berkeley analysis plan.
 
+Protocol-2 hosts can also open and save a versioned `spice-mosaic/schematic`
+JSON envelope through awaited `file.open` and `file.save` effects. Import
+validates and migrates the document before replacing the current schematic;
+failed or cancelled file operations retain the existing document and no file
+handle enters the snapshot.
+
 ```sh
 cargo test -p spice-mosaic-app
 cargo clippy -p spice-mosaic-app --all-targets -- -D warnings

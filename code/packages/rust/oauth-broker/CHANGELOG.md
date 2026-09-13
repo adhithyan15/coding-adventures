@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added exact access-token-only detach through retained client-secret policy:
+  custody refuses the fallback when a refresh token exists, retryable and
+  closed failures retain the record, and only exact HTTP 200 permits deletion
+  of the revision released with the access token.
 - Added exact stored private-key-JWT refresh composition: the complete retained
   profile is validated before the selected credential's refresh token is
   released; signing and transport remain injected and audited; and the bounded

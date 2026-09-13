@@ -5286,6 +5286,25 @@ impl HtmlParser {
             in_foreign_content = false;
             forced_html_fragment_breakout = true;
         }
+        if !in_foreign_content
+            && self.current_element_is("noscript")
+            && self.has_authored_open_html_element("head")
+            && self.options.scripting == HtmlScriptingMode::Disabled
+            && !matches!(
+                name.as_str(),
+                "basefont"
+                    | "bgsound"
+                    | "head"
+                    | "html"
+                    | "link"
+                    | "meta"
+                    | "noframes"
+                    | "noscript"
+                    | "style"
+            )
+        {
+            self.pop_current_if(|current| current == "noscript");
+        }
         if in_foreign_content
             && !self.current_node_is_svg_html_integration_point()
             && exits_foreign_content_on_start_tag(&name, &attributes)
@@ -5466,7 +5485,7 @@ impl HtmlParser {
         }
 
         if !in_foreign_content {
-            if self.has_open_html_element("head")
+            if self.has_authored_open_html_element("head")
                 && !self.current_element_is("head")
                 && !self.has_open_html_template_element()
                 && starts_body_after_head(&name)
@@ -6071,13 +6090,19 @@ impl HtmlParser {
         if !in_foreign_content
             && name == "noscript"
             && self.current_element_is("noscript")
+            && self.options.scripting == HtmlScriptingMode::Enabled
             && attributes.is_empty()
         {
             self.append_text_to_current("<noscript>".to_string());
             return;
         }
 
-        if !in_foreign_content && name == "noscript" && self.has_open_html_element("noscript") {
+        if !in_foreign_content
+            && name == "noscript"
+            && self.has_open_html_element("noscript")
+            && (self.options.scripting == HtmlScriptingMode::Enabled
+                || self.has_authored_open_html_element("head"))
+        {
             return;
         }
 
@@ -6411,7 +6436,7 @@ impl HtmlParser {
             return;
         }
 
-        if self.has_open_html_element("head")
+        if self.has_authored_open_html_element("head")
             && !self.current_element_is("head")
             && !self.has_open_html_template_element()
             && !self.current_element_is("noframes")
@@ -7742,6 +7767,14 @@ impl HtmlParser {
             self.append_text_to_current("</script>".to_string());
             return;
         }
+        if self.current_namespace().is_none()
+            && self.current_element_is("noscript")
+            && self.has_authored_open_html_element("head")
+            && self.options.scripting == HtmlScriptingMode::Disabled
+            && !matches!(name, "noscript" | "br")
+        {
+            return;
+        }
         if name == "body"
             && self.is_fragment
             && self.open_fragment_context_name() == Some("html")
@@ -8594,7 +8627,10 @@ impl HtmlParser {
                     .at_emission(self.current_token_emission_position),
                 );
             }
-            "p" if self.has_open_html_element("head") && !self.has_open_element("body") => {
+            "p"
+                if self.has_authored_open_html_element("head")
+                    && !self.has_open_element("body") =>
+            {
                 self.diagnostics.push(
                     ParserDiagnostic::new(
                         "unexpected-p-end-tag-before-body",
@@ -8603,7 +8639,8 @@ impl HtmlParser {
                     .at_emission(self.current_token_emission_position),
                 );
             }
-            "p" if !self.has_open_element("p")
+            "p" if !self.is_fragment
+                && !self.has_open_element("p")
                 && !self.has_open_element("body")
                 && !self.document_has_body_element()
                 && !self.body_has_non_whitespace_child() =>
@@ -8692,7 +8729,10 @@ impl HtmlParser {
                 self.append_start_tag("p".to_string(), Vec::new(), false);
                 self.close_element("p");
             }
-            "html" if self.has_open_html_element("head") && !self.has_open_element("body") => {
+            "html"
+                if self.has_authored_open_html_element("head")
+                    && !self.has_open_element("body") =>
+            {
                 self.pop_current_if(|current| current == "head");
                 self.append_implied_element("body");
             }
@@ -11808,10 +11848,15 @@ impl HtmlParser {
 
     fn document_has_non_frameset_compatible_body_content(&self) -> bool {
         self.document.children.iter().any(|node| {
+            let ignorable = if self.is_fragment {
+                is_fragment_frameset_compatible_node(node)
+            } else {
+                is_ignorable_before_frameset_node_with_scripting(node, self.options.scripting)
+            };
             !matches!(
                 node,
                 Node::DocumentType(_) | Node::Comment(_) | Node::ProcessingInstruction(_)
-            ) && !is_ignorable_before_frameset_node(node)
+            ) && !ignorable
         })
     }
 
@@ -13699,9 +13744,11 @@ fn frameset_nodes_from_compatible_wrapper(node: &Node) -> Option<Vec<Node>> {
 }
 
 fn is_frameset_compatible_wrapper(element: &Element) -> bool {
-    element.namespace.is_some()
-        || matches!(element.name.as_str(), "html" | "body")
-        || (matches!(element.name.as_str(), "p" | "div") && element.attributes.is_empty())
+    if has_fragment_context_marker(element) {
+        return element.namespace.is_some()
+            || matches!(element.name.as_str(), "html" | "body");
+    }
+    element.name != "frameset" && element_start_preserves_frameset_ok(element)
 }
 
 fn strip_replacement_characters_from_direct_text(nodes: &mut [Node]) {
@@ -13723,7 +13770,7 @@ fn is_hidden_input_node(node: &Node) -> bool {
     )
 }
 
-fn is_ignorable_before_frameset_node(node: &Node) -> bool {
+fn is_fragment_frameset_compatible_node(node: &Node) -> bool {
     is_hidden_input_node(node)
         || matches!(
             node,
@@ -13743,21 +13790,106 @@ fn is_ignorable_before_frameset_node(node: &Node) -> bool {
             node,
             Node::Element(element)
                 if matches!(element.name.as_str(), "html" | "body" | "p")
-                    && element.children.iter().all(is_ignorable_before_frameset_node)
+                    && element.children.iter().all(is_fragment_frameset_compatible_node)
         )
         || matches!(
             node,
             Node::Element(element)
                 if element.name == "div"
                     && element.attributes.is_empty()
-                    && element.children.iter().all(is_ignorable_before_frameset_node)
+                    && element.children.iter().all(is_fragment_frameset_compatible_node)
         )
         || matches!(
             node,
             Node::Element(element)
                 if element.namespace.is_some()
-                    && element.children.iter().all(is_ignorable_before_frameset_node)
+                    && element.children.iter().all(is_fragment_frameset_compatible_node)
         )
+}
+
+fn is_ignorable_before_frameset_node(node: &Node) -> bool {
+    is_ignorable_before_frameset_node_with_scripting(node, HtmlScriptingMode::Enabled)
+}
+
+fn is_ignorable_before_frameset_node_with_scripting(
+    node: &Node,
+    scripting: HtmlScriptingMode,
+) -> bool {
+    is_hidden_input_node(node)
+        || matches!(node, Node::Comment(_) | Node::ProcessingInstruction(_))
+        || matches!(
+            node,
+            Node::Element(element)
+                if element.namespace.is_none()
+                    && matches!(element.name.as_str(), "param" | "source" | "track")
+        )
+        || matches!(
+            node,
+            Node::Text(text)
+                if text
+                    .data
+                    .chars()
+                    .all(|character| is_html_whitespace(character) || character == '\u{FFFD}')
+        )
+        || matches!(
+            node,
+            Node::Element(element)
+                if element.name != "frameset"
+                    && element_start_preserves_frameset_ok(element)
+                    && (element_text_preserves_frameset_ok(element, scripting)
+                        || element.children.iter().all(|child| {
+                            is_ignorable_before_frameset_node_with_scripting(child, scripting)
+                        }))
+        )
+}
+
+fn element_text_preserves_frameset_ok(
+    element: &Element,
+    scripting: HtmlScriptingMode,
+) -> bool {
+    element.namespace.is_none()
+        && (matches!(
+            element.name.as_str(),
+            "noembed" | "noframes" | "script" | "style" | "title"
+        ) || (element.name == "noscript" && scripting == HtmlScriptingMode::Enabled))
+}
+
+fn element_start_preserves_frameset_ok(element: &Element) -> bool {
+    if element.namespace.is_some() {
+        return true;
+    }
+    if element.name == "input" {
+        return element
+            .attribute("type")
+            .is_some_and(|value| value.eq_ignore_ascii_case("hidden"));
+    }
+    !matches!(
+        element.name.as_str(),
+        "applet"
+            | "area"
+            | "br"
+            | "button"
+            | "dd"
+            | "dt"
+            | "embed"
+            | "hr"
+            | "iframe"
+            | "image"
+            | "img"
+            | "keygen"
+            | "li"
+            | "listing"
+            | "marquee"
+            | "object"
+            | "plaintext"
+            | "pre"
+            | "select"
+            | "table"
+            | "template"
+            | "textarea"
+            | "wbr"
+            | "xmp"
+    )
 }
 
 fn is_head_element(name: &str) -> bool {
@@ -46298,6 +46430,112 @@ mod tests {
     }
 
     #[test]
+    fn preserves_frameset_ok_across_empty_generic_element_families() {
+        for markup in [
+            "<div id=x></div>",
+            "<span></span>",
+            "<span id=x></span>",
+            "<b></b>",
+            "<i></i>",
+            "<a></a>",
+            "<font></font>",
+            "<nobr></nobr>",
+            "<h1></h1>",
+            "<section></section>",
+            "<article></article>",
+            "<ul></ul>",
+            "<ol></ol>",
+            "<dl></dl>",
+            "<menu></menu>",
+            "<form></form>",
+            "<option></option>",
+            "<optgroup></optgroup>",
+            "<canvas></canvas>",
+            "<audio></audio>",
+            "<video></video>",
+            "<details></details>",
+            "<ruby></ruby>",
+            "<rb></rb>",
+            "<rt></rt>",
+            "<x-widget></x-widget>",
+            "<span> </span>",
+            "<span><!--x--></span>",
+        ] {
+            let source = format!("<!doctype html>{markup}<frameset><frame></frameset>");
+            let document = parse_html(&source).unwrap();
+            let document_html = html(&document);
+            assert_eq!(element(&document_html.children[1]).name, "frameset", "{markup}");
+        }
+
+        for markup in [
+            "<li></li>",
+            "<dd></dd>",
+            "<dt></dt>",
+            "<applet></applet>",
+            "<marquee></marquee>",
+            "<img>",
+            "<br>",
+            "<hr>",
+            "<input>",
+            "<button></button>",
+            "<table></table>",
+            "<p><template></template>",
+            "<div><template><!--x--></template></div>",
+            "<select></select>",
+            "<textarea></textarea>",
+            "<pre></pre>",
+            "<listing></listing>",
+            "<iframe></iframe>",
+            "<object></object>",
+            "<span>x</span>",
+        ] {
+            let source = format!("<!doctype html>{markup}<frameset><frame></frameset>");
+            let document = parse_html(&source).unwrap();
+            let document_html = html(&document);
+            assert_eq!(element(&document_html.children[1]).name, "body", "{markup}");
+        }
+    }
+
+    #[test]
+    fn preserves_frameset_ok_across_raw_text_that_does_not_use_in_body_rules() {
+        for markup in [
+            "<noembed>x</noembed>",
+            "<noframes>x</noframes>",
+            "<script>x</script>",
+            "<style>x</style>",
+            "<title>x</title>",
+            "<noscript>x</noscript>",
+        ] {
+            let source = format!("<!doctype html>{markup}<frameset><frame></frameset>");
+            let document = parse_html(&source).unwrap();
+            assert_eq!(element(&html(&document).children[1]).name, "frameset", "{markup}");
+        }
+
+        let disabled = parse_html_with_options(
+            "<!doctype html><noscript>x</noscript><frameset><frame></frameset>",
+            HtmlParseOptions {
+                scripting: HtmlScriptingMode::Disabled,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(element(&html(&disabled).children[1]).name, "body");
+
+        for markup in [
+            "<svg>x</svg>",
+            "<math>x</math>",
+            "<textarea>x</textarea>",
+            "<xmp>x</xmp>",
+            "<iframe>x</iframe>",
+            "<p>x</p>",
+        ] {
+            let source = format!("<!doctype html>{markup}<frameset><frame></frameset>");
+            let document = parse_html(&source).unwrap();
+            assert_eq!(element(&html(&document).children[1]).name, "body", "{markup}");
+        }
+    }
+
+    #[test]
     fn positions_in_frameset_character_diagnostics_at_text_emission() {
         let source = "<!doctype html><frameset><!--é-->\r\n aβ <frame>γ ";
         let output = parse_html_with_diagnostics(source).unwrap();
@@ -47379,6 +47617,120 @@ mod tests {
         let paragraph = element(&body(&document).children[1]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn applies_in_head_noscript_recovery_when_scripting_is_disabled() {
+        let options = HtmlParseOptions {
+            scripting: HtmlScriptingMode::Disabled,
+            ..HtmlParseOptions::default()
+        };
+
+        let nested = parse_html_with_options(
+            "<!doctype html><noscript><noscript>x</noscript></noscript><span>z",
+            options,
+        )
+        .unwrap();
+        assert!(element(&head(&nested).children[0]).children.is_empty());
+        assert_eq!(body(&nested).children[0], Node::text("x"));
+        assert_eq!(element(&body(&nested).children[1]).name, "span");
+
+        for end_tag in ["body", "html", "head", "div"] {
+            let source = format!(
+                "<!doctype html><noscript></{end_tag}></noscript><span>z"
+            );
+            let document = parse_html_with_options(&source, options).unwrap();
+            assert!(element(&head(&document).children[0]).children.is_empty(), "{end_tag}");
+            assert_eq!(element(&body(&document).children[0]).name, "span", "{end_tag}");
+        }
+
+        for (markup, expected) in [
+            ("<base>", "base"),
+            ("<title>x</title>", "title"),
+            ("<script>x</script>", "script"),
+            ("<template>x</template>", "template"),
+        ] {
+            let source = format!("<!doctype html><noscript>{markup}</noscript><span>z");
+            let document = parse_html_with_options(&source, options).unwrap();
+            let document_head = head(&document);
+            assert_eq!(document_head.children.len(), 2, "{markup}");
+            assert_eq!(element(&document_head.children[0]).name, "noscript", "{markup}");
+            assert_eq!(element(&document_head.children[1]).name, expected, "{markup}");
+        }
+
+        let noembed = parse_html_with_options(
+            "<!doctype html><noscript><noembed>x</noembed></noscript><span>z",
+            options,
+        )
+        .unwrap();
+        assert!(element(&head(&noembed).children[0]).children.is_empty());
+        assert_eq!(element(&body(&noembed).children[0]).name, "noembed");
+    }
+
+    #[test]
+    fn allows_nested_body_noscript_when_scripting_is_disabled() {
+        let document = parse_html_with_options(
+            "<!doctype html><body><noscript><noscript>x</noscript>y</noscript><span>z",
+            HtmlParseOptions {
+                scripting: HtmlScriptingMode::Disabled,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+
+        let outer = element(&body(&document).children[0]);
+        assert_eq!(outer.name, "noscript");
+        let inner = element(&outer.children[0]);
+        assert_eq!(inner.name, "noscript");
+        assert_eq!(inner.children, vec![Node::text("x")]);
+        assert_eq!(outer.children[1], Node::text("y"));
+        assert_eq!(element(&body(&document).children[1]).name, "span");
+    }
+
+    #[test]
+    fn disabled_head_fragment_noscript_uses_fragment_body_rules() {
+        let options = HtmlParseOptions {
+            scripting: HtmlScriptingMode::Disabled,
+            ..HtmlParseOptions::default()
+        };
+
+        let fragment = parse_html_fragment_for_context_with_options(
+            "<noscript><noscript>x</noscript>y</noscript><span>z",
+            "head",
+            options,
+        )
+        .unwrap();
+        let outer = element(&fragment[0]);
+        assert_eq!(outer.name, "noscript");
+        assert_eq!(element(&outer.children[0]).name, "noscript");
+        assert_eq!(outer.children[1], Node::text("y"));
+        assert_eq!(element(&fragment[1]).name, "span");
+
+        let fragment = parse_html_fragment_for_context_with_options(
+            "<noscript><div>x</div></noscript><link>",
+            "head",
+            options,
+        )
+        .unwrap();
+        let noscript = element(&fragment[0]);
+        assert_eq!(element(&noscript.children[0]).name, "div");
+        assert_eq!(element(&fragment[1]).name, "link");
+
+        let fragment = parse_html_fragment_for_context_with_options(
+            "<noscript></html></noscript><span>z",
+            "head",
+            options,
+        )
+        .unwrap();
+        assert!(element(&fragment[0]).children.is_empty());
+        assert_eq!(element(&fragment[1]).name, "span");
+    }
+
+    #[test]
+    fn head_fragment_p_end_tag_uses_in_body_recovery() {
+        let fragment = parse_html_fragment_for_context("</p>x", "head").unwrap();
+        assert_eq!(element(&fragment[0]).name, "p");
+        assert_eq!(fragment[1], Node::text("x"));
     }
 
     #[test]

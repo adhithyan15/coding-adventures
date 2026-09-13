@@ -9,6 +9,7 @@ license = "MIT"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+base64 = "0.22"
 mosaic-app-capi = { path = "../mosaic-app-capi" }
 mosaic-app-runtime = { path = "../mosaic-app-runtime" }
 mosaic-app-wasm = { path = "../mosaic-app-wasm" }
