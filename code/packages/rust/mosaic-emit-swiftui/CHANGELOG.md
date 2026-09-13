@@ -4,6 +4,11 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `HostScroll` honours its axis (UI61, #14854)
+
+`vertical` stays a bare `ScrollView` — SwiftUI's own default and byte-identical
+to what every existing layout emits. `horizontal` and `both` name their axes.
+
 ### Fixed — `min-height` reached nothing (#14837)
 
 The same gap Compose had, found because Engram is gated on **both**. Authoring

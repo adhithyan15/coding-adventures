@@ -121,7 +121,7 @@ pressed or selected variant still exposes that more-specific state.
 | `Icon`           | SF Symbols, or `ProgressView` for `spinner`    |
 | `Divider`        | `Divider()`                                   |
 | `Stack`          | `ZStack { ... }` *(v0.2.0; UI29 kernel)*      |
-| `HostScroll`     | `ScrollView { ... }` *(v0.2.0; UI29 kernel)*  |
+| `HostScroll`     | `ScrollView { ... }`; `axis` selects `ScrollView(.horizontal)` / `ScrollView([.horizontal, .vertical])` (UI61) *(v0.2.0; UI29 kernel)*  |
 | `Input`          | `TextEditor` when `multiline: true`; otherwise the native `TextField` path *(UI25 compatibility)* |
 | `HostInput`      | `TextField` with a dispatching `Binding` when `onChange` is wired *(UI29 kernel)* |
 | `HostButton`     | `Button(action: { dispatch(.tap) }) { Text(label) }` *(v0.2.0; UI29 kernel)* |
