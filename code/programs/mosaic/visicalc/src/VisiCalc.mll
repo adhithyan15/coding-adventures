@@ -33,7 +33,7 @@ layout VisiCalc {
         Text [empty-hint] (content: "Choose a cell and type a number, a note, or a formula like =2+3. Press Enter to keep it.")
       }
     }
-    HostScroll [sheet-frame] {
+    HostScroll [sheet-frame] ( axis: both ) {
       pkg::mosaic-pkg-grid::RowHeaderGrid (
       viewport-offset: slot: viewport-offset,
       total-rows: slot: total-rows,

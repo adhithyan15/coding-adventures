@@ -2,6 +2,43 @@
 
 ## Unreleased
 
+### Fixed — the sheet can now be scrolled to columns P-Z (#14842)
+
+The sheet's `HostScroll` declares `axis: both`, so the viewport offers a
+horizontal scroll range where it previously offered none. Measured on the
+semantics tree, before and after, at the same 1280x900 viewport:
+
+| | horizontal range |
+| --- | --- |
+| before | **none** |
+| after | `0.0 / 896.0` |
+
+896px is exactly the overflow: 2128px of content in a 1232px viewport.
+
+**#14842's premise was a measurement artifact, and this is worth recording
+because the issue is closed on different grounds than it was opened.** The
+columns were reported as collapsing to "zero width" via `boundsInRoot`. But
+`boundsInRoot` is `Rect.Zero` for any node clipped outside the viewport, so a
+correctly laid-out off-screen column and a genuinely collapsed one are
+indistinguishable through it. Reading `size` and `positionInRoot` instead shows
+the columns were always laid out correctly, at the right size and the right
+80px pitch — `P` at x=1308, `Q` at 1388, and so on. Nothing was collapsing.
+
+What was actually missing was any way to *reach* them: `HostScroll` had no
+horizontal axis until UI61, so the sheet clipped them permanently. The fix is
+one prop, and the work was in measuring the right thing.
+
+Three hypotheses were falsified along the way, each by rendering rather than
+reading: that `fillMaxWidth` inside a horizontal scroll collapses its subtree
+(stripping all 14 of them changes nothing), that the header `Row` was the
+constraint (forcing it to 3000dp changes nothing), and that the Rust runtime
+was supplying zero widths (it supplies a uniform 80 for all 26).
+
+The regression gate asserts the two things that were genuinely wrong, both of
+which the old "does the column exist" reading would have passed: that the
+viewport offers a horizontal range at all, and that the off-screen columns have
+real layout size. It fails on the unfixed build with exactly that message.
+
 ### Fixed — the sheet exposes its focus and accessible name on Compose (#14843)
 
 `focusable: true` and `a11y-label: "Data table"` are authored on the grid and
