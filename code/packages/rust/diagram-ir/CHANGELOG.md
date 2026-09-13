@@ -1,5 +1,9 @@
 # Changelog — diagram-ir
 
+## 0.115.0
+
+- Represent bidirectional point-arrow connections explicitly in shared edge semantics.
+
 ## 0.114.0
 
 - Preserve solid, dotted, and thick Block connection semantics in grid IR.

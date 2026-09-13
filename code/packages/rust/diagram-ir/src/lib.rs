@@ -121,6 +121,7 @@ pub fn resolve_style_with_base(
 #[derive(Clone, Debug, PartialEq)]
 pub enum EdgeKind {
     Directed,
+    Bidirectional,
     Undirected,
     NoteAssociation,
 }

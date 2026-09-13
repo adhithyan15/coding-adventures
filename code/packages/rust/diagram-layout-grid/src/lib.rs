@@ -358,24 +358,30 @@ mod tests {
                 })
                 .collect(),
             groups: Vec::new(),
-            connections: [GridEdgeStyle::Solid, GridEdgeStyle::Dotted, GridEdgeStyle::Thick]
+            connections: [
+                (GridEdgeStyle::Solid, EdgeKind::Directed),
+                (GridEdgeStyle::Dotted, EdgeKind::Directed),
+                (GridEdgeStyle::Thick, EdgeKind::Directed),
+                (GridEdgeStyle::Solid, EdgeKind::Bidirectional),
+            ]
                 .into_iter()
-                .map(|line_style| GridConnection {
+                .map(|(line_style, kind)| GridConnection {
                     from: "a".into(),
                     to: "b".into(),
-                    kind: EdgeKind::Directed,
+                    kind,
                     line_style,
                     label: None,
                 })
                 .collect(),
         };
         let layout = layout_grid_diagram(&diagram);
-        assert_eq!(layout.edges.len(), 3);
+        assert_eq!(layout.edges.len(), 4);
         assert_eq!(layout.edges[0].points[0].x, layout.nodes[0].x + CELL_WIDTH);
         assert_eq!(layout.edges[0].points[1].x, layout.nodes[1].x);
         assert!(layout.edges[0].style.stroke_dash.is_none());
         assert_eq!(layout.edges[1].style.stroke_dash.as_deref(), Some(&[5.0, 4.0][..]));
         assert_eq!(layout.edges[2].style.stroke_width, 3.5);
+        assert_eq!(layout.edges[3].kind, EdgeKind::Bidirectional);
     }
 
     #[test]

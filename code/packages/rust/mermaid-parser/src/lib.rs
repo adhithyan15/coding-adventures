@@ -1479,6 +1479,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             token_type,
             Some("STATEMENT_LINE")
                 | Some("ARROW_NODE_LINE")
+                | Some("BIDIRECTIONAL_CONNECTION_LINE")
                 | Some("DOTTED_CONNECTION_LINE")
                 | Some("THICK_CONNECTION_LINE")
         ) {
@@ -1539,8 +1540,20 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             continue;
         }
         if let Some((from, rest, kind, line_style)) = line
-            .split_once("-.->")
-            .map(|(from, rest)| (from, rest, EdgeKind::Directed, GridEdgeStyle::Dotted))
+            .split_once("<-.->")
+            .map(|(from, rest)| (from, rest, EdgeKind::Bidirectional, GridEdgeStyle::Dotted))
+            .or_else(|| {
+                line.split_once("<==>")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Bidirectional, GridEdgeStyle::Thick))
+            })
+            .or_else(|| {
+                line.split_once("<-->")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Bidirectional, GridEdgeStyle::Solid))
+            })
+            .or_else(|| {
+                line.split_once("-.->")
+                    .map(|(from, rest)| (from, rest, EdgeKind::Directed, GridEdgeStyle::Dotted))
+            })
             .or_else(|| {
                 line.split_once("==>")
                     .map(|(from, rest)| (from, rest, EdgeKind::Directed, GridEdgeStyle::Thick))
@@ -9251,6 +9264,15 @@ mod tests_dg04 {
         assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Dotted);
         assert_eq!(diagram.connections[1].kind, EdgeKind::Directed);
         assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
+    }
+
+    #[test]
+    fn block_preserves_bidirectional_connection_styles() {
+        let diagram = parse_block("block\nA B C D\nA <--> B\nB <-.-> C\nC <==> D").unwrap();
+        assert!(diagram.connections.iter().all(|connection| connection.kind == EdgeKind::Bidirectional));
+        assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Solid);
+        assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Dotted);
+        assert_eq!(diagram.connections[2].line_style, GridEdgeStyle::Thick);
     }
 
     #[test]
