@@ -196,9 +196,13 @@ The delivery order is:
    stored refresh token and revision through that path: the complete profile is
    revalidated before credential access, and local deletion is conditional on
    exact HTTP 200 plus every signer, transport, protocol, custody, and broker
-   audit gate. All failures retain the record. Issued-at time and 256-bit replay
-   entropy remain caller-owned, and this enables neither a concrete signing
-   algorithm, credential rotation, nor network authority.
+   audit gate. All failures retain the record. Private-key-JWT authorization-code
+   exchange can also route its bounded response directly into an exact opaque
+   account key: key/provider mismatch fails before signer, transport, clock, or
+   custody access; OAuth credential release and custody creation remain
+   separately audited; and only the opaque revision returns. Issued-at time and
+   256-bit replay entropy remain caller-owned, and this enables neither a
+   concrete signing algorithm, credential rotation, nor network authority.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate
