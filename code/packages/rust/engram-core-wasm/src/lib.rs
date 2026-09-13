@@ -1757,6 +1757,38 @@ impl EngramSession {
                 }
                 EngramAppEvent::SaveNoteType => {
                     let note_type = note_type_from_app_event(&parsed, &self.state, now)?;
+                    // Resolved BEFORE the reduce, because the selection is
+                    // resolved against the collection and the reduce is what
+                    // moves it.
+                    //
+                    // ONLY when the save names what the editor is holding, and
+                    // that distinction is the whole of this arm.
+                    //
+                    // `NoteTypeEditorSaveNoteType` resets unconditionally, and
+                    // is right to: it builds its note type from
+                    // `note_type_from_editor_selection`, so by construction it
+                    // saves what the editor holds. This event resolves its
+                    // target from the PAYLOAD -- `note_type_from_app_event`
+                    // never consults the editor -- so the two can name
+                    // different note types.
+                    //
+                    // Resetting regardless would discard a draft of A because
+                    // something saved B: a half-typed rename lost, or, worse, a
+                    // brand-new model with its name, stylesheet, fields and
+                    // templates all thrown away at once, with no confirmation.
+                    // Not reachable from any shell today, since the editor's
+                    // own button emits the editor-level event -- but
+                    // `onSaveNoteType` is documented for host model editors and
+                    // aliased to `upsertNoteType`, which is exactly what a sync
+                    // or an import would call.
+                    //
+                    // "It matches the other event" is the argument that fails
+                    // here, and it was the one this arm was first written on.
+                    let editor_holds_it =
+                        note_type_editor_selected_id(&self.state, &self.note_type_editor, now)
+                            .is_some_and(|id| id == note_type.id)
+                            || self.note_type_editor.draft_note_type_id.as_deref()
+                                == Some(note_type.id.as_str());
                     self.state = reduce(
                         &self.state,
                         engram_core::EngramCommand::UpsertNoteType {
@@ -1764,20 +1796,27 @@ impl EngramSession {
                             materialize_cards_at: Some(now),
                         },
                     );
-                    // Reset, exactly as `NoteTypeEditorSaveNoteType` does above.
-                    //
-                    // Leaving the editor drafting across a save is not a
-                    // harmless difference between the two events. The draft
-                    // keeps a `draft_note_type_id` the selection no longer
-                    // resolves to, so the NEXT edit gets a different id and
-                    // `ensure_selected_draft` clears the draft in response --
-                    // a name typed after saving from the collection went
-                    // nowhere and the editor snapped to the last saved model.
-                    //
-                    // #15093 found and recorded that while closing a different
-                    // bug, and left it: it is an editor-behaviour decision
-                    // rather than part of the collision fix.
-                    self.note_type_editor.reset();
+                    if editor_holds_it {
+                        // The bug this arm exists to fix: without the reset the
+                        // draft keeps a `draft_note_type_id` the selection no
+                        // longer resolves to, so the next edit gets a different
+                        // id and `ensure_selected_draft` clears the draft --
+                        // a name typed after saving went nowhere and the editor
+                        // snapped to the last saved model.
+                        self.note_type_editor.reset();
+                    } else {
+                        // A confirmation is disarmed even by an UNRELATED save,
+                        // and that is not the same call as the reset above.
+                        //
+                        // Measured on the pre-change behaviour: a delete
+                        // confirmation armed on a note type survived an
+                        // unrelated collection mutation, and the next click
+                        // deleted. An armed confirmation is a claim about a
+                        // collection the person has just seen change, so it
+                        // should not outlive the change. Costs a second click;
+                        // the alternative costs a note type.
+                        self.note_type_editor.confirm_delete = false;
+                    }
                 }
                 // A delete that cannot identify its note is an ERROR, not a
                 // no-op (#13933). The two halves of this were individually
@@ -11618,6 +11657,141 @@ mod tests {
         assert_eq!(deleted["state"]["noteTypes"][0]["name"], "Real Model");
     }
 
+    /// An UNRELATED collection save must not discard the open draft.
+    ///
+    /// The reason the reset above is conditional, and the regression the first
+    /// version of this fix introduced.
+    ///
+    /// `NoteTypeEditorSaveNoteType` builds its note type from
+    /// `note_type_from_editor_selection`, so it saves what the editor holds and
+    /// resetting afterwards is coherent. `SaveNoteType` resolves its target
+    /// from the payload and never consults the editor, so the two can name
+    /// different note types — and an unconditional reset threw away a draft of
+    /// A because something saved B.
+    ///
+    /// A brand-new draft is the case worth pinning: name, stylesheet, every
+    /// field rename and template body go together, with no confirmation and no
+    /// way back. `reset()` is `*self = Self::default()`.
+    ///
+    /// Found in security review, which measured it rather than arguing it —
+    /// "it matches the other event" was the reasoning that produced the bug.
+    #[test]
+    fn an_unrelated_collection_save_keeps_the_open_draft() {
+        let mut session = EngramSession::new_demo();
+        serde_json::from_str::<Value>(&session.handle_engram_app_event(
+            "onAddNoteType",
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        let typed: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onNoteTypeEditorNameChange","value":"My New Model"}"#,
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(typed["ok"], true, "{typed}");
+        assert_eq!(
+            typed["props"]["note-type-editor-name-value"],
+            "My New Model"
+        );
+
+        // A save naming a DIFFERENT note type: one that already exists in the
+        // demo collection, nothing to do with the draft.
+        let other = typed["state"]["noteTypes"][0]["id"]
+            .as_str()
+            .expect("an existing note type")
+            .to_string();
+        let saved: Value = serde_json::from_str(&session.handle_engram_app_event(
+            &format!(
+                r#"{{"event":"onSaveNoteType","noteType":{{"id":"{other}","name":"Renamed Elsewhere",
+                   "fields":[{{"id":"front","name":"Front","required":true,"ordinal":0}}],
+                   "templates":[{{"id":"forward","name":"Forward","frontTemplate":"{{{{Front}}}}",
+                   "backTemplate":"","requiredFieldNames":["Front"],"ordinal":0}}]}}}}"#
+            ),
+            "deck",
+            NOW + 2,
+        ))
+        .unwrap();
+        assert_eq!(saved["ok"], true, "{saved}");
+        // The save happened...
+        assert!(
+            saved["state"]["noteTypes"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|note_type| note_type["name"] == "Renamed Elsewhere"),
+            "the unrelated save must still have been applied"
+        );
+        // ...and the draft is untouched.
+        assert_eq!(
+            saved["props"]["note-type-editor-name-value"], "My New Model",
+            "an unrelated save discarded the open draft"
+        );
+    }
+
+    /// An unrelated collection save disarms a pending delete confirmation.
+    ///
+    /// Not the same call as the reset, and asserted separately because it is a
+    /// separate claim — the `else` arm does this one thing.
+    ///
+    /// Measured on the pre-change behaviour: a confirmation armed on a note
+    /// type survived an unrelated collection mutation, and the next click
+    /// deleted. An armed confirmation is a claim about a collection the person
+    /// has just watched change, so it should not outlive the change. The cost
+    /// of disarming is a second click; the cost of not is a note type.
+    #[test]
+    fn an_unrelated_collection_save_disarms_a_pending_delete() {
+        let mut session = EngramSession::new_demo();
+        let armed: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onNoteTypeEditorDeleteNoteType",
+            "deck",
+            NOW,
+        ))
+        .unwrap();
+        assert_eq!(armed["ok"], true, "{armed}");
+        assert_eq!(
+            armed["props"]["note-type-editor-delete-label"], "Confirm delete",
+            "the first click must arm a confirmation: {armed}"
+        );
+        let before = armed["state"]["noteTypes"].as_array().unwrap().len();
+
+        // A save naming a note type that is not the armed one. The demo holds
+        // exactly one, so this creates a second rather than renaming a
+        // neighbour -- which is the more realistic shape anyway: a host
+        // upserting a model the person is not looking at.
+        let saved: Value = serde_json::from_str(&session.handle_engram_app_event(
+            r#"{"event":"onSaveNoteType","noteType":{"id":"unrelated-model","name":"Unrelated",
+               "fields":[{"id":"front","name":"Front","required":true,"ordinal":0}],
+               "templates":[{"id":"forward","name":"Forward","frontTemplate":"{{Front}}",
+               "backTemplate":"","requiredFieldNames":["Front"],"ordinal":0}]}}"#,
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(saved["ok"], true, "{saved}");
+        assert_eq!(
+            saved["props"]["note-type-editor-delete-label"], "Delete type",
+            "the confirmation outlived a collection change it was not about"
+        );
+
+        // And the consequence, asserted rather than inferred from the label:
+        // the next click re-arms instead of deleting. `before + 1` because the
+        // unrelated save added one.
+        let clicked: Value = serde_json::from_str(&session.handle_engram_app_event(
+            "onNoteTypeEditorDeleteNoteType",
+            "deck",
+            NOW + 2,
+        ))
+        .unwrap();
+        assert_eq!(clicked["ok"], true, "{clicked}");
+        assert_eq!(
+            clicked["state"]["noteTypes"].as_array().unwrap().len(),
+            before + 1,
+            "the click after an unrelated save deleted a note type"
+        );
+    }
+
     /// The two save events leave the editor in the SAME place.
     ///
     /// This test used to pin the opposite, and said so: `SaveNoteType` did not
@@ -11669,15 +11843,48 @@ mod tests {
                 serde_json::from_str(&session.handle_engram_app_event(&event, "deck", NOW + 1))
                     .unwrap();
             assert_eq!(saved["ok"], true, "{saved}");
+
+            // The save PERSISTED. Restored after review found that the
+            // assertion deleted with the old test was the only one in the
+            // crate pinning it: with it gone, making `SaveNoteType` a silent
+            // no-op for a NEW note type left all 107 tests green. `ok: true`
+            // and a props read cannot tell a save from a no-op, because after
+            // the reset the props show the same saved model either way.
+            assert!(
+                saved["state"]["noteTypes"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .any(|note_type| note_type["id"] == draft_id.as_str()),
+                "the draft's id must now be a saved note type"
+            );
+
             let after = saved["props"]["note-type-editor-note-type-id-value"]
                 .as_str()
                 .expect("editor id")
                 .to_string();
-            // No draft may claim an id the collection now holds.
-            assert_ne!(
-                after, draft_id,
-                "the editor must not keep claiming an id that is now saved; a \
-                 second save would write a blank model over it"
+
+            // NO DRAFT IS OPEN -- which is the property, and `after != draft_id`
+            // was not measuring it.
+            //
+            // After the reset there is no draft at all, so the id prop is just
+            // the selected saved model's, and therefore always an id the
+            // collection holds. The inequality passed only because the demo
+            // fixture's index 0 is some OTHER model; on a collection whose only
+            // note type is the one just saved, both arms give
+            // `after == draft_id` and it would fail while nothing is wrong.
+            //
+            // That is exactly the tripwire this test set out to avoid: it would
+            // fail on a later decision to select the model just saved, which
+            // the doc above explicitly declines to rule out.
+            //
+            // The delete label reads "Delete type" only when no draft is open;
+            // a draft shows the confirm affordance. Asserted through the props
+            // for the same reason the symptom test is: it is what the person
+            // sees.
+            assert_eq!(
+                saved["props"]["note-type-editor-delete-label"], "Delete type",
+                "a draft is still open after saving: {saved}"
             );
             (draft_id, after)
         }
@@ -11745,20 +11952,26 @@ mod tests {
             "the name typed after a collection-level save was dropped"
         );
 
-        // And it survives the next read, rather than appearing once and being
-        // cleared by the following event's `ensure_selected_draft`.
+        // And it survives the next event, rather than appearing once and being
+        // cleared by the following `ensure_selected_draft`.
+        //
+        // The first version of this sent a bare `"onNoteTypeEditorSelectField"`
+        // with no index, which always answers
+        // `{"ok":false,"error":"... is missing an index"}` -- so the `if ok`
+        // guard around the assertion meant it never ran, and "it survives the
+        // next read" was a sentence with no test under it. Caught in review.
+        // The index is supplied now and the result is asserted unconditionally.
         let again: Value = serde_json::from_str(&session.handle_engram_app_event(
-            "onNoteTypeEditorSelectField",
+            r#"{"event":"onNoteTypeEditorSelectField","value":0}"#,
             "deck",
             NOW + 3,
         ))
         .unwrap();
-        if again["ok"] == true {
-            assert_eq!(
-                again["props"]["note-type-editor-name-value"], "Typed After Saving",
-                "the name did not survive the next event"
-            );
-        }
+        assert_eq!(again["ok"], true, "{again}");
+        assert_eq!(
+            again["props"]["note-type-editor-name-value"], "Typed After Saving",
+            "the name did not survive the next event"
+        );
     }
 
     /// An explicit id for a note type that does not exist must not report `ok`.
