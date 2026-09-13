@@ -164,6 +164,29 @@ vertical `SizedBox` separators without replacing the flex container with a
 conditional and repeated children receive exactly one gap only when they
 actually produce neighboring widgets.
 
+## `HostInput` styling
+
+A `HostInput`'s part style reaches the widget through two different
+arguments, and it is worth knowing which is which:
+
+- **`decoration:`** takes `padding` (as `isDense` + `contentPadding`),
+  `border`, and `background` (as `filled` + `fillColor`). There is exactly
+  one producer of this argument -- the placeholder's `hintText` is merged
+  into the same `InputDecoration`, because emitting `decoration:` twice is
+  a Dart compile error.
+- **`style:`** takes `color`, `font-size`, `font-family` and `font-weight`.
+  This is not interchangeable with the above: a `TextField` does **not**
+  inherit an enclosing `DefaultTextStyle` the way a `Text` does, so a font
+  that is not passed here is silently replaced by the Material theme's.
+
+An input that authors none of these emits exactly what it always did.
+
+Two limits worth stating. `font: inherit` cannot be honoured -- Flutter has
+no "inherit" for a `TextField`, and the enclosing style is only reachable
+from a context below the generated `DefaultTextStyle.merge`. And anything
+not in the table above is dropped silently, because this emitter has no
+style-drop reporting (#12022).
+
 ## What works in v0.2 / what's deferred
 
 See `CHANGELOG.md` for the full feature matrix. The headline:
