@@ -64,7 +64,12 @@ describe("local dependency bootstrap", () => {
     });
     expect(calls.map(call => call.cwd)).toEqual([leaf, project]);
     expect(calls.every(call => call.command === "npm-test")).toBe(true);
-    expect(calls[0].args).toEqual(["install", "--silent", "--package-lock=false"]);
+    expect(calls[0].args).toEqual([
+      "install",
+      "--silent",
+      "--package-lock=false",
+      "--legacy-peer-deps",
+    ]);
     expect(logs).toEqual(["[bootstrap] leaf", "[bootstrap] project"]);
   });
 
