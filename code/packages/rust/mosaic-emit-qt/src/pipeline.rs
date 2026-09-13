@@ -2781,9 +2781,37 @@ fn emit_qml_tree(
     }
 
     let typography = if is_text { typography_lines(node, ctx) } else { Vec::new() };
-    let replaces_size = typography.iter().any(|line| line.starts_with("font.pixelSize:"));
+    // #15155 -- FOUR sources can write into this one object: the live
+    // typography binding, the node's own part style, the enclosing cell's
+    // text style, and the primitive's built-in lines. A QML object assigns
+    // each property once; a second assignment fails `qmlcachegen` and takes
+    // the app's build with it. Ownership is settled once, most specific
+    // first, rather than by a per-property filter.
+    let builtin_owned: Vec<String> = builtin_lines.iter().map(|l| l.to_string()).collect();
+    let cell_lines = if is_text {
+        ctx.text_style
+            .as_ref()
+            .map(cell_text_style_lines)
+            .unwrap_or_default()
+    } else {
+        Vec::new()
+    };
+    let text_part_lines = if is_text {
+        part_style_props(node, ctx)
+            .map(qml_text_part_style_lines)
+            .unwrap_or_default()
+    } else {
+        Vec::new()
+    };
+    let deduped = qml_dedupe_sources(&[
+        &typography,
+        &text_part_lines,
+        &cell_lines,
+        &builtin_owned,
+    ]);
+
     // Built-in property lines (e.g. Spacer's `Layout.fillWidth: true`).
-    for line in builtin_lines.iter().filter(|line| !replaces_size || !line.starts_with("font.pixelSize:")) {
+    for line in &deduped[3] {
         writeln!(out, "{pad}    {line}").unwrap();
     }
 
@@ -2797,17 +2825,15 @@ fn emit_qml_tree(
         // and adopts the cell's alignment / colour / font / padding (see
         // [`CellTextStyle`]). Outside a styled cell, `ctx.text_style` is
         // `None` and the Text emits exactly as before.
-        if let Some(ts) = &ctx.text_style {
-            for line in cell_text_style_lines(ts).into_iter().filter(|line| !replaces_size || !line.starts_with("font.pixelSize:")) {
-                writeln!(out, "{pad}    {line}").unwrap();
-            }
+        for line in &deduped[2] {
+            writeln!(out, "{pad}    {line}").unwrap();
         }
-        if let Some(props) = part_style_props(node, ctx) {
-            for line in qml_text_part_style_lines(props).into_iter().filter(|line| !replaces_size || !line.starts_with("font.pixelSize:")) {
-                writeln!(out, "{pad}    {line}").unwrap();
-            }
+        for line in &deduped[1] {
+            writeln!(out, "{pad}    {line}").unwrap();
         }
-        for line in typography { writeln!(out, "{pad}    {line}").unwrap(); }
+        for line in &deduped[0] {
+            writeln!(out, "{pad}    {line}").unwrap();
+        }
         if let Some(line) = build_text_attribute(node) {
             writeln!(out, "{pad}    {line}").unwrap();
         }
@@ -4020,7 +4046,6 @@ fn emit_text_input_qml(
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
     let typography = typography_lines(node, ctx);
-    let replaces_size = typography.iter().any(|line| line.starts_with("font.pixelSize:"));
     let placeholder_line = build_placeholder_text_attribute(node);
     let control_tag = if multiline {
         "TextArea"
@@ -4034,10 +4059,33 @@ fn emit_text_input_qml(
     // Authored part styles. Without this the control read none at all, so
     // padding, background and opacity were dropped on Qt while every other
     // backend applied them (#14780).
-    for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::TEXT_ENTRY).into_iter().filter(|line| !replaces_size || !line.starts_with("font.pixelSize:")) {
+    //
+    // #15155 -- THREE sources write into this one object: the authored
+    // part style, the live typography binding, and the enclosing cell's
+    // text style. A QML object may assign a property once, and a second
+    // assignment is a hard `qmlcachegen` error that fails the whole app's
+    // build. `qml_property_owners` settles ownership once, highest
+    // precedence first, so each property is written by exactly one source.
+    //
+    // Precedence, and why: a live typography binding is the most specific
+    // thing anyone can express, so it outranks both (this is the rule the
+    // old hand-rolled `font.pixelSize` filter encoded). An authored part
+    // style outranks the cell style it sits inside, the ordinary
+    // specific-beats-inherited answer.
+    let part_lines = host_control_style_qml_lines(node, ctx, QmlControlStyle::TEXT_ENTRY);
+    let cell_lines = ctx
+        .text_style
+        .as_ref()
+        .map(cell_text_style_lines)
+        .unwrap_or_default();
+    let deduped = qml_dedupe_sources(&[&typography, &part_lines, &cell_lines]);
+
+    for line in &deduped[1] {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
-    for line in &typography { writeln!(out, "{inner_pad}{line}").unwrap(); }
+    for line in &deduped[0] {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
 
     if let Some(part) = node.part_name.as_deref() {
         writeln!(
@@ -4053,10 +4101,8 @@ fn emit_text_input_qml(
     // its alignment / colour / font so the in-place editor matches the
     // surrounding cells. `TextInput` honours the same `Text.Align*`
     // enums and `font.*` / `color` properties as `Text`.
-    if let Some(ts) = &ctx.text_style {
-        for line in cell_text_style_lines(ts).into_iter().filter(|line| !replaces_size || !line.starts_with("font.pixelSize:")) {
-            writeln!(out, "{inner_pad}{line}").unwrap();
-        }
+    for line in &deduped[2] {
+        writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
     // text: <slot or literal>
@@ -4213,6 +4259,132 @@ impl QmlControlStyle {
 /// part styles at all -- so authored padding, background and opacity were
 /// silently dropped on every checkbox, radio, text input, slider and number
 /// input, on Qt alone (#14780). React, SwiftUI and XAML all style them.
+/// The QML property a generated line assigns, when it assigns one at the
+/// object's TOP level.
+///
+/// Returns `None` for a nested line (any leading whitespace -- the emitter
+/// indents children of a `background: Rectangle {` block), and for
+/// anything that is not a plain `name:` assignment, notably
+/// `Binding on font.pixelSize { ... }`, whose text contains a colon but
+/// binds no property of its own here.
+fn qml_top_level_property(line: &str) -> Option<&str> {
+    if line.starts_with(char::is_whitespace) {
+        return None;
+    }
+    let name = line.split_once(':')?.0;
+    let ok = !name.is_empty()
+        && name
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '.')
+        && name.starts_with(|c: char| c.is_ascii_alphabetic() || c == '_');
+    ok.then_some(name)
+}
+
+/// The net block nesting a generated line opens, counting ONLY braces that
+/// are QML syntax -- never one inside a string literal.
+///
+/// A raw `matches('{').count()` is wrong here, and reachably so. State
+/// conditions are interpolated verbatim into generated lines by
+/// `conditional_color_expr` (`( {condition} ) ? "{value}" : ...`), and an
+/// authored condition may compare against a string: `mode == "{"` emits
+///
+/// ```text
+/// color: ( mode == "{" ) ? "#ff0000" : "#000000"
+/// ```
+///
+/// A raw count reads that as opening a block. If the line is then dropped
+/// by [`qml_dedupe_sources`], the skip never finds its close and swallows
+/// every remaining line -- `font.family` and `font.pixelSize` silently
+/// vanish from the control. The same desync can strand a real `}` and
+/// close the enclosing object early.
+///
+/// `moslayout-compiler`'s `token_source_text` re-quotes strings precisely
+/// so their contents cannot contribute structural characters to emitted
+/// source. This is the consumer that has to honour that invariant.
+fn qml_brace_delta(line: &str) -> i32 {
+    let mut depth = 0i32;
+    let mut in_string = false;
+    let mut escaped = false;
+    for ch in line.chars() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        match ch {
+            '\\' if in_string => escaped = true,
+            '"' => in_string = !in_string,
+            '{' if !in_string => depth += 1,
+            '}' if !in_string => depth -= 1,
+            _ => {}
+        }
+    }
+    depth
+}
+
+/// Partition generated property lines so each QML property is assigned by
+/// exactly ONE source.
+///
+/// #15155 -- a QML object may assign a property once. "Property value set
+/// multiple times" is a hard `qmlcachegen` error, not a warning, so two
+/// writers landing on one object take the whole app's build down. That is
+/// what happened when a part authored `color`: the part style and the
+/// enclosing cell's text style both wrote `color:` onto one `TextInput`,
+/// and the Trestle build failed three packages downstream of the authored
+/// value.
+///
+/// `sources` is given HIGHEST PRECEDENCE FIRST, and the returned vectors
+/// come back IN THE SAME ORDER, filtered. Callers emit each in its own
+/// position, so the generated file's shape is unchanged apart from the
+/// duplicates that could never have compiled.
+///
+/// Returning the filtered sources -- rather than an ownership map the
+/// caller indexes with a hand-written number -- is deliberate: the index
+/// and the precedence array cannot drift apart if there is only one call
+/// and the result carries its own order.
+///
+/// This replaces a one-property special case. The three emission sites
+/// each filtered `font.pixelSize:` by hand when a live typography binding
+/// replaced it, which guarded the single overlap someone had hit and left
+/// `color` -- and every future overlap -- open.
+///
+/// When a dropped line OPENS a block (`background: Rectangle {`), its
+/// children are dropped with it; otherwise they would be re-parented onto
+/// the control, or its `}` left stranded.
+fn qml_dedupe_sources(sources: &[&[String]]) -> Vec<Vec<String>> {
+    let mut owner: HashMap<&str, usize> = HashMap::new();
+    for (idx, source) in sources.iter().enumerate() {
+        for line in source.iter() {
+            if let Some(property) = qml_top_level_property(line) {
+                owner.entry(property).or_insert(idx);
+            }
+        }
+    }
+
+    sources
+        .iter()
+        .enumerate()
+        .map(|(idx, source)| {
+            let mut kept = Vec::new();
+            let mut skip_depth: i32 = 0;
+            for line in source.iter() {
+                if skip_depth > 0 {
+                    skip_depth += qml_brace_delta(line);
+                    continue;
+                }
+                let drop = qml_top_level_property(line)
+                    .and_then(|p| owner.get(p))
+                    .is_some_and(|o| *o != idx);
+                if drop {
+                    skip_depth = qml_brace_delta(line);
+                    continue;
+                }
+                kept.push(line.clone());
+            }
+            kept
+        })
+        .collect()
+}
+
 fn host_control_style_qml_lines(
     node: &LayoutNode,
     ctx: &EmitCtx,
@@ -4340,7 +4512,6 @@ fn emit_host_button_qml(
     let elevation_id = elevation.is_some().then(|| next_elevation_id(ctx));
     let mut out = String::new();
     let typography = typography_lines(node, ctx);
-    let replaces_size = typography.iter().any(|line| line.starts_with("font.pixelSize:"));
     writeln!(out, "{pad}Button {{").unwrap();
     if let Some(id) = &elevation_id {
         writeln!(out, "{inner_pad}id: {id}").unwrap();
@@ -4393,10 +4564,15 @@ fn emit_host_button_qml(
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
-    for line in host_control_style_qml_lines(node, ctx, QmlControlStyle::BUTTON).into_iter().filter(|line| !replaces_size || !line.starts_with("font.pixelSize:")) {
+    // #15155 -- see `qml_property_owners`: one writer per property.
+    let button_part_lines = host_control_style_qml_lines(node, ctx, QmlControlStyle::BUTTON);
+    let button_deduped = qml_dedupe_sources(&[&typography, &button_part_lines]);
+    for line in &button_deduped[1] {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
-    for line in &typography { writeln!(out, "{inner_pad}{line}").unwrap(); }
+    for line in &button_deduped[0] {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
 
     // onClicked: e(<arg>) — buttons fire QML's `clicked()` signal
     // which carries no payload.  If the author declared `emit onTap
@@ -15059,4 +15235,194 @@ mod tests {
         assert!(!out.contains("readOnly:"), "got:\n{out}");
     }
 
+}
+
+// =====================================================================
+// #15155 -- one writer per QML property
+//
+// A QML object may assign a property exactly once. "Property value set
+// multiple times" is a hard `qmlcachegen` error, not a warning, so two
+// writers landing on one object take the whole app's build down.
+//
+// That is not hypothetical: authoring `color` on mosaic-pkg-grid's
+// `cell-editor` part made the part style and the enclosing cell's text
+// style both write `color:` onto one TextInput, and the Trestle build
+// failed at `TaskApp.qml:2354:109` -- three packages downstream of the
+// authored value, in a product that does not own the part.
+//
+// Note the instrument: `qmllint` does NOT detect this. It reports zero
+// problems on the exact file `qmlcachegen` rejects, so a clean lint says
+// nothing about whether generated QML compiles.
+// =====================================================================
+#[cfg(test)]
+mod qml_property_ownership_tests {
+    use super::*;
+
+    #[test]
+    fn a_top_level_assignment_is_recognised() {
+        assert_eq!(qml_top_level_property("color: \"#cccccc\""), Some("color"));
+        assert_eq!(qml_top_level_property("font.pixelSize: 13"), Some("font.pixelSize"));
+        assert_eq!(
+            qml_top_level_property("background: Rectangle {"),
+            Some("background")
+        );
+        assert_eq!(qml_top_level_property("anchors.fill: parent"), Some("anchors.fill"));
+    }
+
+    /// A NESTED line must not be mistaken for the object's own property.
+    /// `background: Rectangle { color: ... }` contains a `color:` that
+    /// belongs to the Rectangle, and treating it as the control's would
+    /// suppress the control's real colour.
+    #[test]
+    fn a_nested_line_is_not_a_top_level_assignment() {
+        assert_eq!(qml_top_level_property("    color: \"transparent\""), None);
+        assert_eq!(qml_top_level_property("    border.width: 1"), None);
+    }
+
+    /// `Binding on font.pixelSize { ... }` contains a colon but assigns no
+    /// property of its own here. Splitting naively on `:` would invent a
+    /// property named `Binding on font.pixelSize { when`.
+    #[test]
+    fn a_binding_block_is_not_an_assignment() {
+        assert_eq!(
+            qml_top_level_property(
+                "Binding on font.pixelSize { when: ok; value: 1; restoreMode: Binding.RestoreBindingOrValue }"
+            ),
+            None
+        );
+        assert_eq!(qml_top_level_property("}"), None);
+        assert_eq!(qml_top_level_property(""), None);
+    }
+
+    /// The conflict that broke the build: a part style and a cell text
+    /// style both naming `color`. The part is more specific and wins; the
+    /// cell keeps everything the part does not claim.
+    #[test]
+    fn the_more_specific_source_owns_a_contested_property() {
+        let typography: Vec<String> = vec![];
+        let part = vec![
+            "leftPadding: 0".to_string(),
+            "color: \"#cccccc\"".to_string(),
+        ];
+        let cell = vec![
+            "anchors.fill: parent".to_string(),
+            "color: (sel) ? \"#fff\" : \"#000\"".to_string(),
+            "font.family: \"monospace\"".to_string(),
+        ];
+        let deduped = qml_dedupe_sources(&[&typography, &part, &cell]);
+        let (part_out, cell_out) = (&deduped[1], &deduped[2]);
+        assert!(part_out.iter().any(|l| l == "color: \"#cccccc\""));
+        assert!(
+            !cell_out.iter().any(|l| l.starts_with("color:")),
+            "the cell's colour must be suppressed, got {cell_out:?}"
+        );
+        // exactly one `color:` across everything written into the object
+        let total = part_out
+            .iter()
+            .chain(cell_out.iter())
+            .filter(|l| qml_top_level_property(l) == Some("color"))
+            .count();
+        assert_eq!(total, 1, "a QML object may assign `color` exactly once");
+        // and the cell still contributes what it alone declares
+        assert!(cell_out.iter().any(|l| l == "font.family: \"monospace\""));
+        assert!(cell_out.iter().any(|l| l == "anchors.fill: parent"));
+    }
+
+    /// The precedence the old hand-rolled filter encoded: a live
+    /// typography binding outranks both style sources for font.pixelSize.
+    #[test]
+    fn a_live_typography_binding_still_outranks_the_styles() {
+        let typography = vec!["font.pixelSize: 14".to_string()];
+        let part: Vec<String> = vec![];
+        let cell = vec!["font.pixelSize: 13".to_string(), "color: \"#eee\"".to_string()];
+        let deduped = qml_dedupe_sources(&[&typography, &part, &cell]);
+        let cell_out = &deduped[2];
+        assert!(!cell_out.iter().any(|l| l.starts_with("font.pixelSize:")));
+        assert!(cell_out.iter().any(|l| l.starts_with("color:")));
+    }
+
+    /// REACHABLE REGRESSION. A state condition is interpolated verbatim
+    /// into the generated line by `conditional_color_expr`, and an
+    /// authored condition may compare against a string containing a
+    /// brace: `state-when-danger: mode == "{"`. Counting braces in raw
+    /// text read that dropped `color:` line as opening a block, and the
+    /// skip then swallowed every line after it -- the control silently
+    /// lost its font. This is the exact shape of the #15155 repro, with
+    /// one authored character changed.
+    #[test]
+    fn a_brace_inside_an_authored_string_does_not_swallow_the_rest() {
+        let part = vec!["color: \"#cccccc\"".to_string()];
+        let cell = vec![
+            "anchors.fill: parent".to_string(),
+            "color: ( mode == \"{\" ) ? \"#ff0000\" : \"#000000\"".to_string(),
+            "font.family: \"monospace\"".to_string(),
+            "font.pixelSize: 13".to_string(),
+        ];
+        let deduped = qml_dedupe_sources(&[&part, &cell]);
+        let out = &deduped[1];
+        assert!(
+            out.iter().any(|l| l == "font.family: \"monospace\""),
+            "the font must survive a dropped colour whose value contains a brace: {out:?}"
+        );
+        assert!(
+            out.iter().any(|l| l == "font.pixelSize: 13"),
+            "nothing after the dropped line may be swallowed: {out:?}"
+        );
+        assert!(!out.iter().any(|l| l.starts_with("color:")));
+    }
+
+    /// The mirror case: a brace inside a string must not close a block
+    /// EARLY, which would re-parent the block's tail onto the control and
+    /// strand its real `}`.
+    #[test]
+    fn a_closing_brace_inside_a_string_does_not_end_a_block_early() {
+        let winner = vec!["background: Item {".to_string(), "}".to_string()];
+        let loser = vec![
+            "background: Rectangle {".to_string(),
+            "    color: ( m == \"}\" ) ? \"#fff\" : \"#000\"".to_string(),
+            "    radius: 4".to_string(),
+            "}".to_string(),
+            "opacity: 0.5".to_string(),
+        ];
+        let deduped = qml_dedupe_sources(&[&winner, &loser]);
+        let out = &deduped[1];
+        assert_eq!(
+            out,
+            &vec!["opacity: 0.5".to_string()],
+            "the whole Rectangle must go -- no orphaned child, no stray brace: {out:?}"
+        );
+    }
+
+    #[test]
+    fn brace_delta_ignores_braces_inside_strings() {
+        assert_eq!(qml_brace_delta("background: Rectangle {"), 1);
+        assert_eq!(qml_brace_delta("}"), -1);
+        assert_eq!(qml_brace_delta("color: ( m == \"{\" ) ? \"a\" : \"b\""), 0);
+        assert_eq!(qml_brace_delta("color: ( m == \"}\" ) ? \"a\" : \"b\""), 0);
+        assert_eq!(qml_brace_delta("text: \"a \\\" { b\""), 0);
+        assert_eq!(qml_brace_delta("anchors.fill: parent"), 0);
+    }
+
+    /// Dropping a line that OPENS a block must drop the block. Otherwise
+    /// the children are re-parented onto the control -- a nested
+    /// `color: "transparent"` would become the control's own colour, or
+    /// the stray `}` would fail to parse.
+    #[test]
+    fn dropping_a_block_opener_drops_its_children() {
+        let winner = vec!["background: Item {".to_string(), "}".to_string()];
+        let loser = vec![
+            "background: Rectangle {".to_string(),
+            "    color: \"transparent\"".to_string(),
+            "    radius: 4".to_string(),
+            "}".to_string(),
+            "opacity: 0.5".to_string(),
+        ];
+        let deduped = qml_dedupe_sources(&[&winner, &loser]);
+        let out = &deduped[1];
+        assert_eq!(
+            out,
+            &vec!["opacity: 0.5".to_string()],
+            "the whole Rectangle block must go, and nothing after it"
+        );
+    }
 }

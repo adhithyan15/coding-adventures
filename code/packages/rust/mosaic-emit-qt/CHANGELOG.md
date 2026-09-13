@@ -8,6 +8,79 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed -- two writers could assign one QML property, failing the build (#15155)
+
+A QML object may assign a property exactly once. `Property value set
+multiple times` is a hard `qmlcachegen` error, not a warning, so two
+writers landing on one object take the whole app's build down.
+
+Up to three sources write into a single generated control: the authored
+part style, a live typography binding, and the enclosing cell's text
+style (four, for a `Text` primitive, which adds its built-in lines). Only
+ONE overlap was handled -- each site filtered `font.pixelSize:` by hand
+when a typography binding replaced it. `color` was not, and neither was
+anything else.
+
+So authoring `color` on `mosaic-pkg-grid`'s `cell-editor` part made the
+part style and the cell text style both write `color:` onto one
+`TextInput`:
+
+```qml
+TextInput {
+    color: "#cccccc"                                   // the part style
+    objectName: "cell-editor"
+    color: (r == sheetSelectedRow && ...) ? ... : ...  // the cell style
+}
+```
+
+That failed the **Trestle task-app** build at `TaskApp.qml:2354:109` --
+three packages downstream of the authored value
+(`task-app -> mosaic-pkg-sheet -> mosaic-pkg-grid`), in a product that
+does not own the part.
+
+`qml_property_owners` now settles ownership once per object, highest
+precedence first, and each source emits only what it owns. Precedence: a
+live typography binding beats both style sources (the rule the old
+`font.pixelSize` filter encoded), and an authored part style beats the
+cell style it sits inside -- the ordinary specific-beats-inherited answer.
+Dropping a line that opens a block drops the block, so a suppressed
+`background: Rectangle { ... }` cannot orphan its children onto the
+control.
+
+This replaces the per-property filter at all three sites rather than
+adding a second special case.
+
+**What this changes when a part DOES author a contested property.** A
+part's static `color` now wins over the cell's state-conditional one, so
+an editor inside a selected row shows the part's colour rather than the
+selection highlight. That is the specific-beats-inherited choice, and the
+alternative did not compile at all -- but it is a rendering change, not
+only a dedup, and worth knowing before authoring a colour on a part inside
+a styled cell.
+
+**A brace inside an authored string is not structural.** State conditions
+are interpolated verbatim (`( {condition} ) ? "{value}" : ...`), so an
+authored `state-when-danger: mode == "{"` puts a brace in a generated
+line. Counting braces in raw text read that as opening a block; if the
+line was then dropped, the skip never found its close and swallowed every
+line after it -- the control silently lost its font. The scanner ignores
+braces inside string literals, honouring the same invariant
+`moslayout-compiler`'s `token_source_text` documents when it re-quotes
+strings.
+
+**No output churn.** Emitted QML for task-app, visicalc and engram-app is
+byte-identical before and after, and all five `.qml` files compile under
+`qmlcachegen`. The change only affects objects that would not have
+compiled.
+
+**Note on instruments.** `qmllint` does NOT detect this -- it reports zero
+problems on the exact file `qmlcachegen` rejects. A clean `qmllint` says
+nothing about whether generated QML compiles; use `qmlcachegen`:
+
+```
+qmlcachegen --resource-path /Name.qml -o /tmp/out.cpp <path>/Name.qml
+```
+
 ### Added — a border has edges (UI79, #14835)
 
 `border-{top,right,bottom,left}-{width,color}` now lowers. QML's
