@@ -95,6 +95,13 @@ Forward, Home, Reload, and redirect replacement. The same package owns
 default ports, percent escapes, dot segments, and fragments independently of
 the page pipeline.
 
+`BrowserSession` also owns same-document fragment traversal. It strips
+fragments before transport, percent-decodes target identifiers, resolves both
+`id` and legacy anchor `name` metadata in document order, clamps target
+geometry through the shared viewport, and publishes `FragmentNavigationState`
+for diagnostics. Navigate, Back, and Forward update history and scrolling
+without refetching or replacing retained controls and document state.
+
 Bookmarks are re-exported from the storage-neutral `browser-bookmarks`
 package. `BrowserSession` owns the active catalog and applies add/remove
 commands with save-before-commit transaction semantics, while native hosts

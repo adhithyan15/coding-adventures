@@ -187,8 +187,11 @@ meter, and progress semantics now recalculate and reset through one retained
 model. Dialog and popover convergence promotes open surfaces into a shared top
 layer, routes invoker/accessibility commands, owns modal focus, light-dismiss,
 and Escape policy, and publishes transformed hit regions without toolkit-owned
-visibility state. The tracked acceptance backlog is complete; each next phase
-starts from a fresh cross-host audit.
+visibility state. Same-document fragment convergence now strips anchors before
+transport, resolves decoded `id` and legacy named targets from shared layout,
+and performs history scrolling without replacing retained page state. The
+tracked acceptance backlog is complete; each next phase starts from a fresh
+cross-host audit.
 
 These are browser-wiring and acceptance items. They do not relax the exact
 zero-missing WPT tree-construction or tokenizer coverage ratchets, and they do

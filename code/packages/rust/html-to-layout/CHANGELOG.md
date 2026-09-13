@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Project legacy named-anchor targets into shared Layout IR metadata for
+  host-neutral fragment navigation.
+
 - Promote open dialogs and popovers into a shared root top layer, hide closed
   surfaces, synthesize modal backdrops, and retain stable semantics in Layout IR.
 

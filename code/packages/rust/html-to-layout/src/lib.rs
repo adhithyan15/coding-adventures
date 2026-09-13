@@ -4098,6 +4098,7 @@ fn html_ext(
     values.insert("display".into(), ExtValue::Str(node.display.clone()));
     insert_optional(&mut values, "tag", node.name.as_deref());
     insert_optional(&mut values, "id", node.id.as_deref());
+    insert_optional(&mut values, "name", node.anchor_name.as_deref());
     insert_optional(
         &mut values,
         "disclosureKind",
@@ -4286,6 +4287,16 @@ mod tests {
                 .color,
             rgb(0, 0, 238)
         );
+    }
+
+    #[test]
+    fn legacy_anchor_names_survive_as_navigation_metadata() {
+        let render = parse_browser_render_tree("<a name='legacy-target'>Old section</a>").unwrap();
+        let layout = html_render_tree_to_layout(&render, &mosaic_html_theme());
+        let anchor = find_by_html_role(&layout, "link").unwrap();
+
+        assert_eq!(html_string(anchor, "tag"), Some("a"));
+        assert_eq!(html_string(anchor, "name"), Some("legacy-target"));
     }
 
     #[test]

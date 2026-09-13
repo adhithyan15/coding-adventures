@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Keep same-document fragment navigation in retained session state, strip
+  fragments from network requests, decode `id` and legacy named-anchor targets,
+  and scroll through shared viewport geometry without refetching.
+
 - Own dialog and popover invoker commands, top-layer ordering, modal focus,
   light-dismiss, Escape, accessibility actions, and reusable diagnostics in
   the shared browser session.

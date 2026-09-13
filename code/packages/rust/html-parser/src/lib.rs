@@ -2115,6 +2115,7 @@ pub struct BrowserContentNode {
     pub role: String,
     pub authored_role: Option<String>,
     pub name: Option<String>,
+    pub anchor_name: Option<String>,
     pub id: Option<String>,
     pub classes: Vec<String>,
     pub style: Option<String>,
@@ -2308,6 +2309,7 @@ pub struct BrowserRenderNode {
     pub role: String,
     pub authored_role: Option<String>,
     pub name: Option<String>,
+    pub anchor_name: Option<String>,
     pub id: Option<String>,
     pub classes: Vec<String>,
     pub style: Option<String>,
@@ -4276,6 +4278,7 @@ impl BrowserRenderNode {
             role: content_node.role.clone(),
             authored_role: content_node.authored_role.clone(),
             name: content_node.name.clone(),
+            anchor_name: content_node.anchor_name.clone(),
             id: content_node.id.clone(),
             classes: content_node.classes.clone(),
             style: content_node.style.clone(),
@@ -17707,6 +17710,7 @@ fn collect_browser_content_nodes_with_mode(
                         role: "text".to_string(),
                         authored_role: None,
                         name: None,
+                        anchor_name: None,
                         id: None,
                         classes: Vec::new(),
                         style: None,
@@ -17998,6 +18002,10 @@ fn browser_content_node_for_element(
         role: role.to_string(),
         authored_role: browser_authored_role(element),
         name: Some(element.name.clone()),
+        anchor_name: element
+            .attribute("name")
+            .filter(|_| element.name == "a")
+            .map(ToOwned::to_owned),
         id: element.attribute("id").map(ToOwned::to_owned),
         classes: element
             .attribute("class")
@@ -30631,7 +30639,8 @@ mod tests {
     fn browser_identity_metadata_tracks_language_direction_and_classes() {
         let document = parse_html(
             "<html lang=en dir=ltr><body id=main class=\"page legacy\" lang=en-US>\
-             <p id=intro class=\"lede print\" title=\"Intro\" dir=auto>Hello</p>",
+             <p id=intro class=\"lede print\" title=\"Intro\" dir=auto>Hello</p>\
+             <a name=legacy-target>Old section</a>",
         )
         .unwrap();
 
@@ -30648,6 +30657,16 @@ mod tests {
         assert_eq!(paragraph.classes, vec!["lede", "print"]);
         assert_eq!(paragraph.title.as_deref(), Some("Intro"));
         assert_eq!(paragraph.dir.as_deref(), Some("auto"));
+        assert_eq!(
+            content_tree.children[1].anchor_name.as_deref(),
+            Some("legacy-target")
+        );
+
+        let render_tree = BrowserRenderTree::from_content_tree(&content_tree);
+        assert_eq!(
+            render_tree.children[1].anchor_name.as_deref(),
+            Some("legacy-target")
+        );
     }
 
     #[test]

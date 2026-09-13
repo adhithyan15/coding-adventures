@@ -5,6 +5,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - same-document fragment navigation.** Strip
+  URL fragments before transport, retain same-document history traversal,
+  percent-decode `id` and legacy `a[name]` targets in document order, and route
+  clamped scrolling plus diagnostics through the shared session. Completed
+  without refetching, replacing retained controls, or moving target policy into
+  native/web hosts.
+
 - [x] **P0 browser convergence — shared details disclosure semantics.** Hide
   closed details content before layout, emit reusable summary hit regions, and
   route pointer, Enter/Space, accessibility, generated-summary, and named-group
