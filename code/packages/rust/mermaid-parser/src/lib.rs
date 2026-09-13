@@ -1481,6 +1481,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 | Some("ARROW_NODE_LINE")
                 | Some("DEFAULT_CLASSDEF_LINE")
                 | Some("INLINE_LABELED_NODE_CONNECTION_LINE")
+                | Some("TILDE_NODE_CONNECTION_LINE")
                 | Some("INLINE_NODE_CONNECTION_LINE")
                 | Some("COMPACT_MARKED_CONNECTION_LINE")
                 | Some("MARKED_CONNECTION_LINE")
@@ -1588,6 +1589,10 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
                 line.split_once("---")
                     .map(|(from, rest)| (from, rest, EdgeKind::Undirected, GridEdgeStyle::Solid))
             })
+            .or_else(|| {
+                split_block_tilde_connection(line)
+                    .map(|(from, rest)| (from, rest, EdgeKind::Undirected, GridEdgeStyle::Solid))
+            })
         {
             let (from, quoted_label) = parse_block_quoted_connection_label(token, from)?;
             let (to, label) = if let Some(rest) = rest.trim().strip_prefix('|') {
@@ -1600,7 +1605,9 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             };
             let (from, to) = if matches!(
                 token_type,
-                Some("INLINE_LABELED_NODE_CONNECTION_LINE") | Some("INLINE_NODE_CONNECTION_LINE")
+                Some("INLINE_LABELED_NODE_CONNECTION_LINE")
+                    | Some("TILDE_NODE_CONNECTION_LINE")
+                    | Some("INLINE_NODE_CONNECTION_LINE")
             ) {
                 let parent_id = group_stack.last().cloned();
                 (
@@ -1745,6 +1752,12 @@ struct ParsedBlockConnection {
     start_marker: EdgeMarker,
     end_marker: EdgeMarker,
     label: Option<DiagramLabel>,
+}
+
+fn split_block_tilde_connection(source: &str) -> Option<(&str, &str)> {
+    let start = source.find("~~~")?;
+    let tilde_count = source[start..].bytes().take_while(|byte| *byte == b'~').count();
+    Some((&source[..start], &source[start + tilde_count..]))
 }
 
 fn register_inline_block_node(
@@ -9578,6 +9591,19 @@ mod tests_dg04 {
             diagram.connections[0].label.as_ref().unwrap().text,
             "a label"
         );
+    }
+
+    #[test]
+    fn block_parses_tilde_links_as_open_solid_connections() {
+        let diagram = parse_block("block\nsource[Start] ~~~~ target(Stop)").unwrap();
+        assert_eq!(diagram.cells.len(), 2);
+        assert_eq!(diagram.cells[0].label.text, "Start");
+        assert_eq!(diagram.cells[1].label.text, "Stop");
+        assert_eq!(diagram.connections.len(), 1);
+        assert_eq!(diagram.connections[0].kind, EdgeKind::Undirected);
+        assert_eq!(diagram.connections[0].line_style, GridEdgeStyle::Solid);
+        assert_eq!(diagram.connections[0].start_marker, EdgeMarker::None);
+        assert_eq!(diagram.connections[0].end_marker, EdgeMarker::None);
     }
 
     #[test]
