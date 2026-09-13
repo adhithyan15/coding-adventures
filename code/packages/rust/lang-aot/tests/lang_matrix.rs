@@ -6054,7 +6054,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" T \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[aZZZ]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL delimiters: UNSTRING truncates/pads fields; the last receiver does not take the remainder.
     Prog {
@@ -6076,7 +6076,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" R3 \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[AB]\n[Z  ]\n[Q]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL delimiters: leading and consecutive delimiters produce space-filled empty receivers.
     Prog {
@@ -6100,7 +6100,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" R4 \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[  ]\n[A ]\n[  ]\n[B ]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL delimiters: an item delimiter splits fields; exhausted source leaves later receivers alone.
     Prog {
@@ -6123,7 +6123,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY \"[\" R3 \"]\".\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("[A ]\n[B ]\n[ZZ]"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // COBOL pointer/overflow: in-range STRING preserves both sides and advances by bytes placed.
     Prog {
@@ -9289,7 +9289,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::DartmouthBasic, 51, 357),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
-        (Language::Cobol60, 58, 438),
+        (Language::Cobol60, 58, 442),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -15404,4 +15404,20 @@ fn portable_text_stdout_cobol_beam_string_size_and_delimiter() {
     }
     assert_eq!(executed, 4);
     eprintln!("COBOL BEAM STRING SIZE/delimiter: {executed} programs executed");
+}
+
+#[test]
+fn portable_text_stdout_cobol_beam_unstring_and_delimiter() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM UNSTRING/delimiter: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(32).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM UNSTRING/delimiter: {executed} programs executed");
 }

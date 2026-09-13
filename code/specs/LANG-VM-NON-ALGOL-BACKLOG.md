@@ -1,12 +1,122 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-12
+Status date: 2026-09-13
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
 `LANG-FULL-IMPLEMENTATION.md`; when the two disagree about landed behavior,
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
+
+## VM-040 COBOL BEAM UNSTRING/delimiter probe (selected after #14983 merged)
+
+`git fetch origin && git merge origin/main` reported "Already up to date" —
+this worktree already sat at `32cf9a5efa` with zero commits behind
+`origin/main`, and PR #14983 (VM-040 COBOL BEAM STRING SIZE/delimiter probe,
+commit `b1335971d9`) was directly visible at the tip of `git log --oneline
+-5`. `gh pr list --state open --limit 100` returned zero rows, so nothing —
+LANG-VM-related or otherwise — was in flight to coordinate with; no rebase or
+conflict handling was needed to start this slice.
+
+PR #14983's own trailing note asked for a real reprioritization of the ~26
+undeclared COBOL BEAM rows against VM-041 (Twig dynamic-string isolation),
+VM-060b (host input design) and VM-058 (INSPECT BEFORE/AFTER intersection) —
+the same comparison run eight times before this one. Re-checked against
+current source rather than repeated by habit:
+
+**Did anything change the picture since #14983 merged?** This worktree was
+already at `origin/main`'s tip by construction (the fetch/merge above
+reported "Already up to date"), so no commit by anyone — ALGOL's separately-
+owned campaign included — landed in any window to re-examine. Grepping this
+file for `VM-041` and `VM-060b` still shows no dedicated scoped design entry
+for either beyond the same one-liner in the "Ranked backlog" table — nobody
+picked up either design task in the meantime, and VM-058 remains rung 5
+(new frontend semantics on top of an already-implemented BEFORE/AFTER
+region pair, not a red cell or missing parity).
+
+**Is the "~26 undeclared rows" figure still accurate?** Re-verified directly
+against source: a brace-balanced scan restricted to the `lang: Language::X,`
+field lines and bounded each `Prog` by the next such field line (rather than
+a fixed line-count window, which under-scans COBOL rows whose `src` runs
+past a hundred lines) found exactly 58 `Cobol60` rows, of which exactly 32
+declare `Beam` and exactly 26 do not — the "~26" estimate was, again, exactly
+right. Cross-checked against `feature_coverage_doc_counts_match_programs_source`'s
+existing pinned tuple `(Cobol60, 58, 438)`, which matches 32 Beam-declaring
+rows out of 50 non-Beam-declaring cells (7 standard backends × 26 = 182,
+7 × 32 + 32 = 256, 182 + 256 = 438) — arithmetic-consistent with the direct
+scan, not just a second independent count.
+
+**Conclusion:** nothing outranks continuing the COBOL BEAM rows. Rungs 1–2
+are clear (every trailing validation paragraph reports positive sentinels;
+VM-024/VM-032 keep the matrix and Windows execution in normal CI). Rung 3
+found nothing stale this round: `LANG-VM-FEATURE-COVERAGE.md`'s COBOL-60 row
+and grand-total prose already agreed with source before this slice started
+(438 declared cells, 1567 grand total, matching the pinned test tuple).
+Between the rung-4 COBOL BEAM rows (bounded, proof-promotion, an established
+`.skip(N).take(4)` pattern with nine successful prior slices) and rung-5
+VM-041/VM-060b (still genuinely open-ended design work with no scoping
+progress since last checked), COBOL BEAM rows win again — a legitimate,
+re-verified outcome, not a repeated habit.
+
+The next four rows in file order after the thirty-two already declared are:
+one more `STRING ... DELIMITED BY delim` row (an item delimiter stops a
+sender at its first match, even when another follows) and three `UNSTRING`
+rows (truncating/padding fields with no remainder carried into the last
+receiver; leading/consecutive delimiters producing space-filled empty
+receivers; an item delimiter with source exhaustion leaving later receivers
+untouched). All four compile through `cobol-iir-compiler`'s
+`emit_prefix_before_delim`/`emit_unstring`, both of which read fields via
+`str_len`/`str_index`/`str_slice`/`str_concat`/`cmp_*` — every one of those
+ops already lowered for BEAM before this slice (the immediately prior slice
+added `str_len`/`str_index`; everything else was already proven by earlier
+COBOL BEAM rows). Read both compiler routines end to end before probing to
+confirm this, rather than discovering an unsupported op via a failing probe.
+
+### VM-040 COBOL BEAM UNSTRING/delimiter contract
+
+A bounded proof-promotion slice, following the established `.skip(N).take(4)`-
+over-`Cobol60`-filter pattern directly: no new design decisions, since the
+four target programs' compiled IIR uses no operation absent from `iir-to-beam`.
+Add `Beam` to the four rows' `backends` arrays, add
+`portable_text_stdout_cobol_beam_unstring_and_delimiter` mirroring the
+existing COBOL BEAM probe tests (`.skip(32).take(4)`), and run it against real
+`erl` before treating the rows as proven — per this loop's own "probe before
+declaring" discipline, even though the op-level audit above gave high
+confidence nothing new was needed.
+
+### VM-040 COBOL BEAM UNSTRING/delimiter validation
+
+All four selected programs passed on real Erlang on the first probe
+(`portable_text_stdout_cobol_beam_unstring_and_delimiter`); no `iir-to-beam`
+defect was found and no production code changed — the op-level audit's
+prediction held. `iir-to-beam`'s package suite is unaffected (still 107
+tests: 22 unit, 80 integration, 5 doc, all passing) since no `iir-to-beam`
+source file changed. Focused Clippy on `lang-aot` and `iir-to-beam` with all
+targets and warnings denied is clean. Thirty-six of 58 COBOL rows now declare
+BEAM (442 total declared cells, up from 438).
+`feature_coverage_doc_counts_match_programs_source` was confirmed to actually
+exercise the check by first running it against the pre-fix COBOL-60 figure of
+438, where it failed with the expected assertion message naming the 442/438
+mismatch, before the doc was corrected to match. The full
+`non_algol_matrix_every_proven_cell_agrees` capstone confirmed the corrected
+total against a live run: 210 programs, **1361** cells exercised (was 1357),
+210 skipped (the same host-wide missing `ilasm` pattern every prior slice
+reports), zero failures — confirming the doc's corrected grand total
+(1567 → 1571) against a live run rather than arithmetic alone.
+
+Reprioritize the remaining ~22 undeclared COBOL BEAM rows against VM-041
+(Twig dynamic-string isolation), VM-060b (host input design) and VM-058
+(INSPECT BEFORE/AFTER intersection) after this merges, following the same
+real policy comparison run above — re-verifying premises against source, not
+repeating prior conclusions by habit. The remaining 22 rows are no longer a
+single homogeneous family: 8 pointer/overflow rows (STRING/UNSTRING `WITH
+POINTER` and `ON OVERFLOW`/`NOT ON OVERFLOW`), 8 base `INSPECT
+TALLYING`/`REPLACING` rows (ALL/CHARACTERS/LEADING variants, first-match and
+no-rechaining semantics), 5 VM-047c `BEFORE`/`AFTER` region rows (including
+the combined-regions form), and 1 VM-057 STRING self-move edge case (a
+sending field that is also its own INTO receiver). The next slice should
+re-scope against this actual composition rather than assuming the pointer/
+overflow shape carries through unchanged.
 
 ## VM-040 COBOL BEAM STRING SIZE/delimiter probe (selected after #14803 merged)
 
