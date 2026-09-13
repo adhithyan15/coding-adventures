@@ -1541,16 +1541,15 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             continue;
         }
         if token_type == Some("MARKED_CONNECTION_LINE") {
-            let (from, to, kind, line_style, start_marker, end_marker) =
-                parse_block_marked_connection(token, line)?;
+            let marked = parse_block_marked_connection(token, line)?;
             connections.push(GridConnection {
-                from,
-                to,
-                kind,
-                start_marker,
-                end_marker,
-                line_style,
-                label: None,
+                from: marked.from,
+                to: marked.to,
+                kind: marked.kind,
+                start_marker: marked.start_marker,
+                end_marker: marked.end_marker,
+                line_style: marked.line_style,
+                label: marked.label,
             });
             continue;
         }
@@ -1693,16 +1692,34 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
     })
 }
 
-fn parse_block_marked_connection(
-    token: &Token,
-    line: &str,
-) -> Result<(String, String, EdgeKind, GridEdgeStyle, EdgeMarker, EdgeMarker), ParseError> {
+struct ParsedBlockConnection {
+    from: String,
+    to: String,
+    kind: EdgeKind,
+    line_style: GridEdgeStyle,
+    start_marker: EdgeMarker,
+    end_marker: EdgeMarker,
+    label: Option<DiagramLabel>,
+}
+
+fn parse_block_marked_connection(token: &Token, line: &str) -> Result<ParsedBlockConnection, ParseError> {
     let mut parts = line.split_whitespace();
     let from = parts.next().unwrap_or_default();
     let mut link = parts.next().unwrap_or_default();
-    let to = parts.next().unwrap_or_default();
-    if from.is_empty() || link.is_empty() || to.is_empty() || parts.next().is_some() {
+    let remainder = parts.collect::<Vec<_>>().join(" ");
+    if from.is_empty() || link.is_empty() || remainder.is_empty() {
         return Err(token_error(token, "marked block connection requires source, link, and target"));
+    }
+    let (to, label) = if let Some(labelled) = remainder.strip_prefix('|') {
+        let (label, to) = labelled
+            .split_once('|')
+            .ok_or_else(|| token_error(token, "unterminated marked block connection label"))?;
+        (to.trim(), Some(DiagramLabel::new(label.trim())))
+    } else {
+        (remainder.trim(), None)
+    };
+    if to.is_empty() || to.chars().any(char::is_whitespace) {
+        return Err(token_error(token, "marked block connection requires one target id"));
     }
 
     let start_marker = match link.as_bytes().first().copied() {
@@ -1731,7 +1748,15 @@ fn parse_block_marked_connection(
     } else {
         EdgeKind::Undirected
     };
-    Ok((from.to_string(), to.to_string(), kind, line_style, start_marker, end_marker))
+    Ok(ParsedBlockConnection {
+        from: from.to_string(),
+        to: to.to_string(),
+        kind,
+        line_style,
+        start_marker,
+        end_marker,
+        label,
+    })
 }
 
 fn take_grid_order(next_order: &mut HashMap<Option<String>, usize>, parent_id: &Option<String>) -> usize {
@@ -9339,9 +9364,10 @@ mod tests_dg04 {
 
     #[test]
     fn block_preserves_circle_and_cross_endpoint_markers() {
-        let diagram = parse_block("block\nA B C D\nA o--x B\nB x==o C\nC o-.-o D\nD --x A").unwrap();
+        let diagram = parse_block("block\nA B C D\nA o--x |handoff| B\nB x==o C\nC o-.-o D\nD --x A").unwrap();
         assert_eq!((diagram.connections[0].start_marker, diagram.connections[0].end_marker),
             (EdgeMarker::Circle, EdgeMarker::Cross));
+        assert_eq!(diagram.connections[0].label.as_ref().unwrap().text, "handoff");
         assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
         assert_eq!((diagram.connections[1].start_marker, diagram.connections[1].end_marker),
             (EdgeMarker::Cross, EdgeMarker::Circle));
