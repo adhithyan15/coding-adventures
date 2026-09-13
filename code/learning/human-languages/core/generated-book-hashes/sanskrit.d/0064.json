@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:2ab75c768fcc1e31",
+  "lessonIds": [
+    "SA-C64-words",
+    "SA-C64-lines",
+    "SA-C64-prathama-pathanam"
+  ],
+  "tex": "sanskrit/book/chapters/ch64-reading-first-passage.tex"
+}
