@@ -521,6 +521,13 @@ jobs:
 
       - name: Verify repo-wide metadata contracts
         run: |
+          # `lessons.d/` is one file per lesson so concurrent PRs cannot
+          # conflict on it. `validate` is what keeps that true: it rejects a
+          # duplicate title, a category absent from `_meta.md`, and a filename
+          # that no longer derives from its own title -- the last being how a
+          # lesson could be filed twice without git ever seeing a collision.
+          python3 code/scripts/lessons.py validate
+          python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_elixir_windows_build_fronts.py'
           python3 code/scripts/validate_elixir_windows_build_fronts.py --format json > /tmp/elixir-windows-build-fronts.json

@@ -1,0 +1,11 @@
+---
+category: Testing & coverage
+---
+
+# Tests requiring an external CLI must run a probe
+
+(`git --version`, etc.) — `exec.LookPath("git")` only proves the binary exists, not that it works. **But whether a failed probe should SKIP depends on what the CLI is FOR, and getting that wrong is how conformance bugs ship.** Two cases, opposite answers:
+- The CLI is a *convenience* (a fixture generator, a formatter, a helper you could hand-roll): skipping is fine — the test still proves something without it.
+- The CLI is the *oracle* — the only independent implementation the test compares against: skipping is not degradation, it is total loss. `if !cli_available() { return; }` reports PASS while checking nothing, so on any machine or CI leg without the binary the test is indistinguishable from an empty function. `code/packages/rust/zstd` had exactly this shape: its `zstd`-CLI interop tests were the sole check that its output was real RFC 8878 rather than a self-consistent private format, and they opened with a skip. Three wire-format bugs (Lessons 95/96/98) plus an entire missing feature class (Huffman literals, FSE table descriptions — the decoder rejected nearly every real `.zst` file) survived behind that green checkmark, because every *other* test compared the crate's encoder against the crate's own decoder, and two halves wrong in the same way agree perfectly.
+- The fix has two halves. (1) Make a missing oracle a hard FAILURE carrying install instructions. (2) Commit **golden vectors** — real output from the reference implementation, checked in as bytes and embedded with `include_bytes!` — so the cross-implementation property is still checked where the binary genuinely cannot be installed (a Windows CI leg, say). Scope the live tests with `#[cfg(unix)]` rather than a runtime `if`: a compile-time platform boundary is visible in the source and in the reported test count, whereas a runtime skip is byte-identical to a pass. Ship a `#[ignore]`d regeneration test alongside the vectors so they stay auditable rather than mysterious.
+- The tell that a suite needs this: ask "if I deleted every assertion body in this file, which test would go red?" If the honest answer is "none, on the machine where it matters", the suite is decorative.

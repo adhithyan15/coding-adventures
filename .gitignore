@@ -131,3 +131,9 @@ erl_crash.dump
 # -- and one of them is a bundled JDK. Left untracked and unignored, a careless
 # `git add -A` commits hundreds of megabytes of it.
 code/programs/mosaic/*/dist-native-*/
+
+# The single-file view of `lessons.d/`, rebuilt on demand by
+# `code/scripts/lessons.py render`. Deliberately NOT committed: a shared
+# aggregate is precisely the file whose removal stopped every pair of
+# concurrent PRs from conflicting. Edit the shard, never this.
+/lessons.md
