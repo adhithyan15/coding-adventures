@@ -93,6 +93,14 @@ transport. A token inside the provider-data refresh lead crosses the complete
 audited refresh and revision-bound rotation path first, so only the new stored
 access token can reach the closure. The clock, secret store, token transport,
 credential store, and closure all remain injected or caller-owned.
+The symmetric `private_key_jwt` usable-access composition validates the complete
+retained provider, client, token-endpoint, method, algorithm, and opaque-key
+profile before credential or clock access. Fresh credentials invoke neither the
+abstract signer nor transport and discard caller replay entropy through
+zeroizing ownership. Due credentials cross the existing separately audited
+assertion, transport, response, release, and revision-bound rotation gates
+before custody discloses the newly stored access token to one closure. No
+concrete signing algorithm or network authority is enabled.
 
 For an OpenID Connect Authorization Code exchange using retained client-secret
 authentication, the broker can instead consume the exact non-cloneable

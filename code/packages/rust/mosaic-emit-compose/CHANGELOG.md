@@ -5,6 +5,34 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed — the width guard and its drop report now share one answer (UI59, #14815)
+
+#15062 landed `flex-shrink: 0` but left the drop report claiming those parts
+were dropped, because filtering needed a second notion of "is this a direct Row
+child" and the two drifted. This replaces both with **one precomputed set**,
+carried on `PartStyleMap` — which is already threaded through every writer — so
+the emitter and the reporter read the same answer rather than each deciding.
+
+#### Three divergences, each found by tagging the emitted guard with its part
+
+A second walk cannot reproduce the emitter's traversal, and the counts alone
+hid that: 8 authored parts, 7 un-reported, 6 guarded looked nearly right. Only
+labelling each emitted guard showed which parts were which.
+
+| divergence | cause | effect before |
+| --- | --- | --- |
+| `flex-wrap` | a wrapping `Row` is emitted as `FlowRow`, whose children are **not** RowScope children. The walk read the raw tag. | parts un-reported that were never guarded — a **silent drop** |
+| leaf nodes | the guard lives in `emit_container`, so a `Text` child gets nothing | `tl-name`/`tl-window` in **neither** set |
+| `For`/`If` | meta-primitives emit no container, so their children are still RowScope children | `board-col` lost its guard |
+
+Measured on Trestle, every authored part now lands in exactly one set — guarded
+`{board-col, composer-plus, due-error-focus, due-input-focus, rail}` and
+reported `{due-input, tl-name, tl-window}`, with **nothing unaccounted and
+nothing in both**. The guard count is unchanged at 6, so this fixes the report
+without changing what is emitted.
+
+Falsified: restoring the raw-tag read fails the FlowRow case.
+
 ### Added — `flex-shrink: 0` on a Row child is honoured (UI59, #14815)
 
 A previously-discarded property now lowers: a direct `Row` child that authors

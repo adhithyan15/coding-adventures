@@ -493,11 +493,19 @@ impl NoteTypeEditorSessionState {
         self.confirm_delete = false;
     }
 
-    fn start_new(&mut self, now: u64) {
+    fn start_new(&mut self, note_type_id: String, now: u64) {
         self.selected_index = usize::MAX;
         self.selected_field_index = 0;
         self.selected_template_index = 0;
-        self.draft_note_type_id = Some(format!("note-type-{now}"));
+        // The id is minted by the CALLER, which has the collection and can
+        // therefore avoid one a saved note type already holds. This used to be
+        // `format!("note-type-{now}")` built here, blind to the state, which is
+        // half of why the collision guard downstream could not work: it had
+        // nothing unique to fall back to.
+        //
+        // Same shape as the note editor's `start_new`, which has always taken
+        // its id from `unique_note_id`.
+        self.draft_note_type_id = Some(note_type_id);
         self.draft_name = Some("Basic".to_string());
         self.draft_stylesheet = Some(String::new());
         self.draft_field_names.clear();
@@ -1685,7 +1693,8 @@ impl EngramSession {
                     self.note_type_editor.set_stylesheet(&note_type_id, value);
                 }
                 EngramAppEvent::NoteTypeEditorNewNoteType => {
-                    self.note_type_editor.start_new(now);
+                    self.note_type_editor
+                        .start_new(unique_note_type_id(&self.state, now), now);
                 }
                 EngramAppEvent::NoteTypeEditorSaveNoteType => {
                     let note_type =
@@ -1821,14 +1830,20 @@ impl EngramSession {
                         //     deletes that model and cascades to every note
                         //     built on it. Measured, not inferred: with this
                         //     branch disabled,
-                        //     `a_new_note_type_draft_can_collide_with_a_saved_id`
-                        //     ends with zero note types instead of one.
+                        //     `a_new_note_type_draft_cannot_collide_with_a_saved_id`
+                        //     ended with zero note types instead of one.
                         //
-                        // The second case is reachable because the collision
-                        // guard in `note_type_editor_selected_note_type` is
-                        // inert -- see that test. Resolving by id is therefore
-                        // the wrong question entirely; `draft_is_new` already
-                        // says the target is not a saved model.
+                        // That second case is no longer reachable: the collision
+                        // guard in `note_type_editor_selected_note_type` was
+                        // inert and has been fixed, so a draft cannot hold a
+                        // saved model's id any more.
+                        //
+                        // This branch stays regardless, and not out of caution.
+                        // Resolving by id is the wrong question: `draft_is_new`
+                        // already says the target is not a saved model, and
+                        // asking the flag cannot be wrong even if id minting
+                        // changes again. It was the only line of defence; it is
+                        // now the second, which is where it belongs.
                         //
                         // `onNoteTypeEditorDeleteNoteType`, one arm above, has
                         // always done exactly this. Both entry points now agree.
@@ -1864,7 +1879,8 @@ impl EngramSession {
                     }
                 }
                 EngramAppEvent::AddNoteType => {
-                    self.note_type_editor.start_new(now);
+                    self.note_type_editor
+                        .start_new(unique_note_type_id(&self.state, now), now);
                     self.active_screen = EngramAppScreen::Options;
                 }
                 EngramAppEvent::AddNote => {
@@ -3871,6 +3887,34 @@ fn selected_deck_id_with_override(
         .unwrap_or_default()
 }
 
+/// An id no saved note type holds.
+///
+/// The note-type twin of [`unique_note_id`], and it did not exist, which is why
+/// the collision guard in `note_type_editor_selected_note_type` was inert: that
+/// guard rejected a colliding `draft_note_type_id` and then fell back to
+/// `default_note_type_model`'s `note-type-{now}` — the *same string* the
+/// rejected id was built from. Refusing the collision assigned the collision.
+///
+/// A colliding draft id matters more than it sounds. `default_note_type_model`
+/// is a blank two-field model, so saving a draft that carries a real note
+/// type's id writes that blank over it, discarding its fields and templates and
+/// taking every note built on them.
+fn unique_note_type_id(state: &AppState, now: u64) -> String {
+    let base = format!("note-type-{now}");
+    if state.note_types.iter().all(|kind| kind.id != base) {
+        return base;
+    }
+
+    let mut suffix = 1_u32;
+    loop {
+        let candidate = format!("{base}-{suffix}");
+        if state.note_types.iter().all(|kind| kind.id != candidate) {
+            return candidate;
+        }
+        suffix += 1;
+    }
+}
+
 fn unique_note_id(state: &AppState, now: u64) -> String {
     let base = format!("note-{now}");
     if state.notes.iter().all(|note| note.id != base) {
@@ -4871,29 +4915,33 @@ fn note_type_editor_selected_note_type(
         // discarding its fields and templates, and taking every note built on it
         // with them.
         //
-        // WARNING: this guard does NOT achieve that, and the sentence that used
-        // to end this comment — "keeping the freshly minted id makes it a
-        // genuinely new note type" — was false. The minted id and the rejected
-        // id are the SAME STRING: `start_new(now)` sets `draft_note_type_id` to
-        // `note-type-{now}` and `draft_created_at` to `now`, and the fallback
-        // here is `default_note_type_model(draft_created_at)`, whose id is
-        // `note-type-{now}`. So refusing the colliding id leaves `draft.id`
-        // holding that same colliding value.
+        // This guard used not to achieve that, and the comment here said so.
+        // The minted id and the rejected id were the SAME STRING: `start_new`
+        // built `draft_note_type_id` as `note-type-{now}` and set
+        // `draft_created_at` to `now`, while the fallback was
+        // `default_note_type_model(draft_created_at)`, whose id is
+        // `note-type-{now}`. Refusing the colliding id left `draft.id` holding
+        // that same colliding value, so the rule held for exactly the inputs
+        // that could not violate it.
         //
-        // Measured by `a_new_note_type_draft_can_collide_with_a_saved_id`,
-        // which pins the collision rather than the intent.
+        // Both halves are fixed now. `start_new` takes its id from
+        // `unique_note_type_id`, so a fresh draft cannot collide at all; and the
+        // fallback below mints one too, which is what a RESTORED snapshot needs
+        // — it can carry any id, including one that already collided when it was
+        // written.
         //
-        // The note EDITOR twin is genuinely collision-free — it falls back to
-        // `unique_note_id(state, now)` — and this should do the equivalent.
-        // Until it does, callers must not assume a `draft_is_new` selection
-        // names something unsaved: `DeleteNoteType` asks `draft_is_new` instead
-        // of resolving an id for exactly this reason.
-        if let Some(note_type_id) = editor
-            .draft_note_type_id
-            .as_ref()
-            .filter(|id| !state.note_types.iter().any(|kind| kind.id == **id))
-        {
-            draft.id = note_type_id.clone();
+        // `a_new_note_type_draft_cannot_collide_with_a_saved_id` pinned the old
+        // behaviour under its old name and now pins the new one, against the
+        // same adversarial fixture.
+        match editor.draft_note_type_id.as_ref() {
+            Some(note_type_id) if !state.note_types.iter().any(|kind| kind.id == *note_type_id) => {
+                draft.id = note_type_id.clone();
+            }
+            // Either no id at all, or one a saved note type holds. Both want an
+            // id nothing holds, rather than the blind `note-type-{now}`.
+            _ => {
+                draft.id = unique_note_type_id(state, editor.draft_created_at.unwrap_or(now));
+            }
         }
         draft
     } else {
@@ -11140,26 +11188,31 @@ mod tests {
         assert_eq!(deleted["state"]["cards"], before["state"]["cards"]);
     }
 
-    /// A new draft CAN carry an id a saved note type already holds.
+    /// A new draft may NOT carry an id a saved note type already holds.
     ///
-    /// `note_type_editor_selected_note_type` looks like it prevents this: it
-    /// filters `draft_note_type_id` to an id no saved note type holds before
-    /// adopting it. That filter is inert. `start_new(now)` sets
-    /// `draft_note_type_id` to `note-type-{now}` and `draft_created_at` to
-    /// `now`, and the fallback is `default_note_type_model(draft_created_at)`,
-    /// whose id is `note-type-{now}` — the same string. So rejecting the
-    /// colliding id falls back to the identical colliding id.
+    /// This test previously pinned the opposite, because the opposite was true.
+    /// `note_type_editor_selected_note_type` looked like it prevented the
+    /// collision — it filtered `draft_note_type_id` to an id no saved note type
+    /// holds — but the fallback was `default_note_type_model(draft_created_at)`,
+    /// whose id is `note-type-{draft_created_at}`, the same string
+    /// `start_new(now)` derived the rejected id from. Rejecting the collision
+    /// assigned the collision.
     ///
-    /// Pinned because two comments in this file assert the opposite, and
-    /// because the collision is what makes the draft branch in `DeleteNoteType`
-    /// load-bearing rather than merely tidy: with `draft_is_new` set beside a
-    /// saved model of the same id, resolving the target by id alone would
-    /// cascade-delete that saved model and every note built on it.
+    /// Both halves are fixed: `start_new` now takes its id from
+    /// `unique_note_type_id`, and the fallback mints one too for the restored-
+    /// snapshot path. The fixture is unchanged — a saved note type holding
+    /// exactly the id `start_new` would have minted — so this asserts against
+    /// the same adversarial input, with the expectation inverted.
     ///
-    /// The note EDITOR twin does not have this bug — it falls back to
-    /// `unique_note_id(state, now)`.
+    /// Why it matters: `default_note_type_model` is a blank two-field model, so
+    /// a draft carrying a real note type's id saves that blank over it and takes
+    /// every note built on it. And `DeleteNoteType`'s draft branch exists partly
+    /// because of this — with `draft_is_new` set beside a saved model of the
+    /// same id, resolving the target by id alone cascade-deleted the saved one
+    /// (#15063). That branch stays: asking the flag is still right, and is no
+    /// longer the only thing standing between a draft and a real model.
     #[test]
-    fn a_new_note_type_draft_can_collide_with_a_saved_id() {
+    fn a_new_note_type_draft_cannot_collide_with_a_saved_id() {
         let mut session = EngramSession::new();
         // A saved note type holding exactly the id `start_new(NOW)` will mint.
         let snapshot = format!(
@@ -11187,14 +11240,31 @@ mod tests {
             serde_json::from_str(&session.handle_engram_app_event("onAddNoteType", "deck", NOW))
                 .unwrap();
         assert_eq!(drafted["ok"], true);
-        assert_eq!(
-            drafted["props"]["note-type-editor-note-type-id-value"],
+        let draft_id = drafted["props"]["note-type-editor-note-type-id-value"]
+            .as_str()
+            .expect("draft id")
+            .to_string();
+        assert_ne!(
+            draft_id,
             format!("note-type-{NOW}"),
-            "the draft adopts the saved model's id; the collision filter is inert"
+            "the draft must not adopt the saved model's id"
+        );
+        // Asserted against the COLLECTION, not against one known string. The
+        // point is that no saved note type holds it, whatever suffix the
+        // uniqueness helper happened to pick.
+        assert!(
+            !drafted["state"]["noteTypes"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|note_type| note_type["id"] == draft_id.as_str()),
+            "no saved note type may hold the draft's id, got {draft_id}"
         );
 
-        // The draft branch is what keeps this from being destructive: the
-        // delete discards the draft rather than resolving that id.
+        // And the saved model survives a delete. Kept from when this test
+        // pinned the collision: back then the draft branch was the ONLY thing
+        // standing between this gesture and a cascade-delete of "Real Model".
+        // It is now the second line rather than the first, and both are checked.
         let deleted: Value = serde_json::from_str(&session.handle_engram_app_event(
             "onDeleteNoteType",
             "deck",
@@ -11208,6 +11278,90 @@ mod tests {
             "discarding a colliding draft must not delete the saved model it shadows"
         );
         assert_eq!(deleted["state"]["noteTypes"][0]["name"], "Real Model");
+    }
+
+    /// Saving a draft through the COLLECTION event leaves the editor drafting.
+    ///
+    /// `NoteTypeEditorSaveNoteType` resets the editor after saving;
+    /// `SaveNoteType` does not. So `draft_is_new` stays true beside the model
+    /// that was just written, and the selection is resolved fresh.
+    ///
+    /// Measured rather than assumed, and NOT fixed here. Before the collision
+    /// fix this left the editor showing the saved model's own id as an unsaved
+    /// blank draft, and a second save would have written that blank over it.
+    /// Now the editor moves to a genuinely new id instead.
+    ///
+    /// **The new outcome is better but not free, and the difference is worth
+    /// stating.** Because the draft's id now moves when the collection moves,
+    /// the next field edit resolves a different id than `draft_note_type_id`
+    /// holds, and `ensure_selected_draft` responds by clearing the draft —
+    /// `draft_is_new = false`, every draft map emptied. So a name typed after
+    /// saving from the collection is silently dropped and the editor snaps to
+    /// the last saved note type.
+    ///
+    /// That is a trade of **data loss for draft loss**: the old path kept the
+    /// draft and would have overwritten a real model with a blank on the next
+    /// save. Strictly an improvement, and still wrong — which is why it is
+    /// pinned here rather than left to be rediscovered. The fix is for
+    /// `SaveNoteType` to reset the editor the way `NoteTypeEditorSaveNoteType`
+    /// does, but that is an editor-behaviour decision rather than part of
+    /// closing the collision, so it is filed instead of folded in.
+    #[test]
+    fn saving_from_the_collection_leaves_a_fresh_draft_rather_than_the_saved_id() {
+        let mut session = EngramSession::new_demo();
+        let drafted: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onAddNoteType", "deck", NOW))
+                .unwrap();
+        let draft_id = drafted["props"]["note-type-editor-note-type-id-value"]
+            .as_str()
+            .expect("draft id")
+            .to_string();
+
+        let saved: Value = serde_json::from_str(&session.handle_engram_app_event(
+            &format!(
+                r#"{{"event":"onSaveNoteType","noteType":{{"id":"{draft_id}","name":"Saved Model",
+                   "fields":[{{"id":"front","name":"Front","required":true,"ordinal":0}}],
+                   "templates":[{{"id":"forward","name":"Forward","frontTemplate":"{{{{Front}}}}",
+                   "backTemplate":"","requiredFieldNames":["Front"],"ordinal":0}}]}}}}"#
+            ),
+            "deck",
+            NOW + 1,
+        ))
+        .unwrap();
+        assert_eq!(saved["ok"], true, "{saved}");
+        assert!(
+            saved["state"]["noteTypes"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|note_type| note_type["id"] == draft_id.as_str()),
+            "the draft's id must now be a saved note type"
+        );
+
+        // The editor no longer claims the saved model's id.
+        let after = saved["props"]["note-type-editor-note-type-id-value"]
+            .as_str()
+            .expect("editor id")
+            .to_string();
+        assert_ne!(
+            after, draft_id,
+            "the open draft must not keep claiming an id that is now saved; a \
+             second save would write a blank model over it"
+        );
+        // And it holds an id nothing has saved -- which is what makes it a
+        // FRESH DRAFT rather than a selection of some other existing model.
+        //
+        // Asserted because the weaker `after != draft_id` above would also pass
+        // if the editor had closed and landed on an unrelated note type, which
+        // is a different outcome wearing the same assertion.
+        assert!(
+            !saved["state"]["noteTypes"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|note_type| note_type["id"] == after.as_str()),
+            "the editor must hold an unsaved id, got {after}"
+        );
     }
 
     /// An explicit id for a note type that does not exist must not report `ok`.

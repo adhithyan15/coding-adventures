@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 62,
-  "sourceHash": "fnv1a64:18029aa3b4cbc334",
+  "sourceHash": "fnv1a64:fab4fe2bfa025d17",
   "lessonIds": [
     "MR-C62-labels",
     "MR-C62-message",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "marathi/narration/ch62.txt",
   "json": "marathi/narration/ch62.json",
-  "textHash": "fnv1a64:5da4aafbd63ce874",
-  "jsonHash": "fnv1a64:3f74e3b22db3faf5",
+  "textHash": "fnv1a64:4ce0ef956b695b4b",
+  "jsonHash": "fnv1a64:b89346f3bc2e2b1f",
   "findings": []
 }

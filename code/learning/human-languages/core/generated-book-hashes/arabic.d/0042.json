@@ -1,0 +1,11 @@
+{
+  "language": "arabic",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:baa912d05fcc4309",
+  "lessonIds": [
+    "AR-C42-words",
+    "AR-C42-lines",
+    "AR-C42-first-passage"
+  ],
+  "tex": "arabic/book/chapters/ch42-reading-words-lines-and-a-first-encounter.tex"
+}

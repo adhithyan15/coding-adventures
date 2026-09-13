@@ -133,6 +133,11 @@ The delivery order is:
    signature and all bound claims before returning a provider-scoped opaque
    account identity. Verification intent and its closed result are durably
    provider/trace audited before the authority effect and result release. For
+   static provider policy, a bounded exact-schema decoder retains only the
+   provider, HTTPS issuer, and case-sensitive non-`none` ID-token signing
+   algorithms while deployment client identity and the opaque verification
+   context remain injected. It performs no source read and enables no
+   verification algorithm. For
    Authorization Code identity proof, the boundary consumes the core's
    non-cloneable nonce object, validates its exact provider and client, and
    derives the audit trace from that browser ceremony before any authority
@@ -256,7 +261,14 @@ The delivery order is:
    secret or transport authority; due credentials cross the existing audited
    refresh and revision-bound atomic rotation path before the resulting access
    token is disclosed through the custody closure. Clock, transport, secret
-   storage, credential storage, and token use remain injected authorities.
+   storage, credential storage, and token use remain injected authorities. The
+   symmetric `private_key_jwt` usable-access path validates the full retained
+   provider/client/endpoint/method/algorithm/key profile before credential or
+   clock access, invokes neither signer nor transport for a fresh credential,
+   and carries a due credential through the existing separately audited
+   assertion, transport, response, release, and atomic-rotation gates before
+   custody disclosure. Unused replay entropy stays zeroizing, and no concrete
+   signing algorithm is enabled.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate

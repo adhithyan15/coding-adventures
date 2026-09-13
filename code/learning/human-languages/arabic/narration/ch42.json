@@ -1,0 +1,566 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 42,
+  "title": "Reading — Words, Lines, and a First Encounter",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:1049eca4d945941c",
+  "lessons": [
+    {
+      "id": "AR-C42-words",
+      "sequence": 1220,
+      "title": "(reading) — six old words, with the training wheels gone",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "six familiar Arabic words read cold, without a romanized line underneath",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d77f9119b1aa251e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have heard, said and written every word below. Nothing here is new."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is the empty space beneath each word. There is no romanized line to catch you. Let the Arabic carry its own sound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سلام شكرًا شاي نعم لا حسنًا."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read down once, right to left, without translating."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read again. The first and third words stretch an ا into a long sound, while شكرًا and حسنًا share the little ـًا ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The script, taken apart",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Arabic letters change coat when they join, but they do not change identity. The ح in حسنًا is the same hook body you learned in خير; the word only asks you to recognize it at speed."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And لا is still the lām-alif pair from chapter five. Reading is not a new script lesson. It is trusting the shapes you already paid for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six words in order, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six words in order, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "AR-C42-words-tea",
+              "prompt": "Which written word means tea?",
+              "assesses": [
+                "AR-SKILL-READ-WORDS",
+                "AR-CONCEPT-C33-SHAY-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "شاي",
+                "shay",
+                "shāy",
+                "tea"
+              ],
+              "feedback": {
+                "correct": "شاي — tea.",
+                "incorrect": "Read شاي: tea."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two words share the written ـًا ending? (شكرًا، حسنًا.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many new Arabic words did you meet? (None.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C42-lines",
+      "sequence": 1230,
+      "title": "(reading) — six lines that already know each other",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "six familiar lines read in Arabic script, from greeting through a simple choice",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c608507e60bbc77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson gave you words standing alone. Now the words join other words, in the same way that the letters inside them join one another."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have said every line. Read the Arabic first; let meaning arrive before any romanization does."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "السلام عليكم. وعليكم السلام. ما اسمك؟ اسمي سامي. شاي أو حليب؟ شاي."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read all six lines once without stopping."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read again. The question mark tells you where a voice asks; the full stop tells you where it answers. Arabic puts its question mark the other way round — ؟ — because the line itself runs the other way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The sentence, taken apart",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "اسمي سامي has no written word for is. The zero copula from chapter two is not missing ink; it is how an Arabic present-tense sentence works."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is one gift of reading whole lines: the blank between ideas can carry grammar too. You already learned that blank by ear. Now you can see it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six lines in order, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six lines in order, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "AR-C42-lines-name",
+              "prompt": "Which written line asks for the other person's name?",
+              "assesses": [
+                "AR-SKILL-READ-LINES",
+                "AR-CONCEPT-C02-MAA-ISMUKA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "ما اسمك؟",
+                "ما اسمك",
+                "ma ismuka",
+                "mā ismuka"
+              ],
+              "feedback": {
+                "correct": "ما اسمك؟ — what is your name?",
+                "incorrect": "Read the line with the Arabic question mark: ما اسمك؟"
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two lines ask questions? (ما اسمك؟ شاي أو حليب؟)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where is is in اسمي سامي? (Nowhere on the page — Arabic does not need it here.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C42-first-passage",
+      "sequence": 1240,
+      "title": "(reading) — the first whole encounter",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "the first connected Arabic encounter, read from greeting through a choice to farewell",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1df1a2fc2cff1db1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six words, then six lines. Now read one encounter from its first peace to its last."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every form has appeared before. The only new thing is holding all of them together without a romanized line underneath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "السلام عليكم. وعليكم السلام. ما اسمك؟ اسمي سامي. مرحبًا يا سامي. شاي أو حليب؟ حليب؟ لا. شاي؟ نعم. حسنًا. شكرًا. مع السلامة."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read the whole encounter once. Do not stop to translate a word; let each turn answer the turn before it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it again. This time notice the hinge: شاي أو حليب؟ One choice becomes two tiny questions, then a clear answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The passage, taken apart",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A connected passage does not have to be one speaker's paragraph. Here the connection is the work each line does: greeting invites reply, a name invites welcome, and شاي أو حليب؟ opens a choice."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "لا closes the first option. نعم accepts the second. حسنًا closes the choice, and شكرًا acknowledges it. The passage is connected by meaning before it is connected by grammar."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first and last lines share س-ل-م. Arabic opens the encounter with peace and closes it with safety, so the oldest root in the book gives the whole reading a frame."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole encounter aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole encounter aloud, once, without stopping]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "AR-C42-first-passage-choice",
+              "prompt": "Which drink is accepted in the passage?",
+              "assesses": [
+                "AR-SKILL-CONNECTED-READING",
+                "AR-CONCEPT-C33-SHAY-01",
+                "AR-CONCEPT-C33-HALIB-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "tea",
+                "شاي",
+                "shay",
+                "shāy"
+              ],
+              "feedback": {
+                "correct": "شاي — tea is the option followed by نعم.",
+                "incorrect": "Follow the two options: حليب؟ لا. شاي؟ نعم."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which line calls the learner by name? (مرحبًا يا سامي.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which drink is declined, and which is accepted? (حليب: لا. شاي: نعم.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which line closes the encounter? (مع السلامة.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

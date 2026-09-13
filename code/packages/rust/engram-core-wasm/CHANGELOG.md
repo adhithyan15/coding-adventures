@@ -2,6 +2,60 @@
 
 ## Unreleased
 
+### Fixed — a new note-type draft could carry a saved model's id
+
+The guard against this existed, was documented, and did nothing.
+
+`note_type_editor_selected_note_type` filtered `draft_note_type_id` to an id no
+saved note type holds before adopting it — and then fell back to
+`default_note_type_model(draft_created_at)`, whose id is
+`note-type-{draft_created_at}`: the same string `start_new(now)` derived the
+rejected id from. **Refusing the collision assigned the collision.** The rule
+held for exactly the inputs that could not violate it.
+
+Why it matters: `default_note_type_model` is a blank two-field model. A draft
+carrying a real note type's id saves that blank *over* it, discarding its fields
+and templates and taking every note built on them. #15063 found the delete-side
+consequence — a payload-less delete cascade-deleting the shadowed model — and
+closed that path while recording the root cause here.
+
+Both halves are fixed:
+
+- **`start_new` no longer mints its own id.** It takes one from the new
+  `unique_note_type_id`, the note-type twin of `unique_note_id`, which the note
+  editor's `start_new` has always used. A fresh draft cannot collide at all.
+- **The fallback mints one too**, which is what the restored-snapshot path
+  needs. A snapshot can carry any `draft_note_type_id`, including one that
+  already collided when it was written.
+
+The signature change is what found the call sites: `start_new` now takes the id,
+so the compiler named both callers rather than leaving one to be spotted.
+
+The existing test that *pinned* the collision now asserts its absence, against
+the same adversarial fixture — a saved note type holding exactly the id
+`start_new` would have minted. It asserts against the collection rather than one
+expected string, so it holds whatever suffix the helper picks. Mutation-tested:
+restoring the collision fails it.
+
+**Not fixed, and now pinned.** `SaveNoteType` (the collection-level event) does
+not reset the editor, where `NoteTypeEditorSaveNoteType` does — so `draft_is_new`
+stays true beside the model just written.
+
+Before this change that left the editor showing the saved model's own id as an
+unsaved blank, and a second save would have written the blank over it. That
+version is gone, and the replacement is better but not free: because the draft's
+id now moves when the collection moves, the next field edit resolves a different
+id than `draft_note_type_id` holds, and `ensure_selected_draft` clears the draft
+in response. A name typed after saving from the collection is silently dropped
+and the editor snaps to the last saved note type.
+
+That is a trade of **data loss for draft loss** — strictly an improvement, and
+still wrong. Found in security review rather than by reasoning, and pinned by a
+test that fails against the pre-fix behaviour. The fix is for `SaveNoteType` to
+reset the editor the way its editor-level twin does, which is an
+editor-behaviour decision rather than part of closing the collision, so it is
+filed rather than folded in.
+
 ### Fixed — `onDeleteNoteType` reported success having deleted nothing
 
 Two silent no-ops in the same match arm, both reachable from the Delete button

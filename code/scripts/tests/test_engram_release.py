@@ -19,6 +19,17 @@ import engram_release  # noqa: E402
 
 
 COMMIT = "a" * 40
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+WORKFLOW = REPOSITORY_ROOT / ".github" / "workflows" / "release-engram.yml"
+
+
+class WorkflowTests(unittest.TestCase):
+    def test_pull_request_validation_does_not_share_publication_concurrency(self) -> None:
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+
+        self.assertIn("format('release-engram-pr-{0}'", workflow)
+        self.assertIn("'release-engram-publish'", workflow)
+        self.assertIn("cancel-in-progress: false", workflow)
 
 
 class ValidateIdentifiersTests(unittest.TestCase):

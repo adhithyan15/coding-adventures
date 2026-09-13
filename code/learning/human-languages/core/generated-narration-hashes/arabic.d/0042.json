@@ -1,0 +1,17 @@
+{
+  "language": "arabic",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:1049eca4d945941c",
+  "lessonIds": [
+    "AR-C42-words",
+    "AR-C42-lines",
+    "AR-C42-first-passage"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "arabic/narration/ch42.txt",
+  "json": "arabic/narration/ch42.json",
+  "textHash": "fnv1a64:ca6764d13eb588c2",
+  "jsonHash": "fnv1a64:ab17ac66983229da",
+  "findings": []
+}

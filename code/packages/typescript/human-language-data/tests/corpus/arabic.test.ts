@@ -25,7 +25,11 @@ it("pins Arabic lesson-content budgets", () =>
     // conjunction is none of the three, and the one lesson that could have
     // claimed a culture note (يا, whose absence means a learner cannot address
     // anybody) states a GRAMMATICAL fact about the vocative particle.
-    lessons: 123,
+    // 123 -> 126: chapter 42 adds the first reading rung -- six familiar
+    // words, six familiar lines and one connected encounter. It introduces no
+    // vocabulary, idiom, sense or culture claim; it removes romanization in
+    // three gentle steps and keeps ALPT's unpublished stimulus length honest.
+    lessons: 126,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

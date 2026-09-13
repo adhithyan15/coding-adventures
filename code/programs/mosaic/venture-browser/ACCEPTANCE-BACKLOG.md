@@ -12,11 +12,14 @@ cross-platform proving application. Items are ordered by risk and dependency.
   scrolling, link activation, and focus rings. Completed in layout, paint, and
   browser-core with no new generated-host ABI or toolkit-owned policy.
 
-- [ ] **P1 browser convergence - contenteditable transactions.** Promote the
+- [x] **P1 browser convergence - contenteditable transactions.** Promote the
   parser's retained editing, selection, composition, and clipboard descriptors
   into a bounded shared contenteditable value model. Reuse editor primitives
   without treating arbitrary DOM content as a form control, and keep mutation,
   selection, undo, accessibility, reflow, and host input policy transactional.
+  Completed with a separate bounded editing-host reducer, shared Unicode and
+  presentation primitives, history restoration, deterministic acceptance, and
+  automatic reuse of every existing native/web input bridge.
 
 - [ ] **P2 browser convergence - accesskey mediation.** Normalize retained
   accesskey candidates, conflicts, disabledness, and activation targets in

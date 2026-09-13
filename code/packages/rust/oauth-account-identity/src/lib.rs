@@ -9,6 +9,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+use coding_adventures_bounded_json::{parse_with_depth_limit, JsonNumber, JsonValue};
 use coding_adventures_oauth::{OAuthTraceId, OpenIdAuthorizationNonce, ProviderId};
 use coding_adventures_oauth_credential_custody::{AccountId, CredentialKey};
 use coding_adventures_zeroize::Zeroizing;
@@ -22,6 +23,9 @@ const MAX_ISSUER_BYTES: usize = 2_048;
 const MAX_NONCE_BYTES: usize = 1_024;
 const MAX_ALGORITHMS: usize = 16;
 const MAX_ALGORITHM_BYTES: usize = 64;
+const STATIC_PROFILE_SCHEMA_VERSION: i64 = 1;
+const MAX_STATIC_PROFILE_BYTES: usize = 64 * 1024;
+const MAX_STATIC_PROFILE_DEPTH: usize = 8;
 
 /// Opaque reference to trusted verification state such as a reviewed JWKS set.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -121,6 +125,49 @@ pub struct IdTokenIdentityProfile {
 }
 
 impl IdTokenIdentityProfile {
+    /// Decode one exact, versioned static provider identity profile.
+    ///
+    /// The static data supplies only the provider's HTTPS issuer and exact
+    /// case-sensitive ID-token signing-algorithm policy. Deployment client
+    /// identity and the provider-bound opaque verification context remain
+    /// caller-owned. Unknown, missing, duplicate, malformed, or unbounded
+    /// fields fail closed. The wipe-on-drop input is consumed without reading
+    /// a file, invoking a verifier, or enabling any concrete algorithm.
+    ///
+    /// The v1 object has this exact shape:
+    ///
+    /// ```text
+    /// {
+    ///   "schema_version": 1,
+    ///   "provider": "example",
+    ///   "issuer": "https://login.example/tenant",
+    ///   "id_token_signing_alg_values_supported": ["RS256"]
+    /// }
+    /// ```
+    pub fn from_static_provider_data(
+        body: Zeroizing<Vec<u8>>,
+        client_id: impl Into<String>,
+        context: IdentityVerificationId,
+    ) -> Result<Self, AccountIdentityError> {
+        if body.is_empty() || body.len() > MAX_STATIC_PROFILE_BYTES {
+            return Err(AccountIdentityError::InvalidInput);
+        }
+        let text = std::str::from_utf8(&body).map_err(|_| AccountIdentityError::InvalidInput)?;
+        let root = parse_with_depth_limit(text, MAX_STATIC_PROFILE_DEPTH)
+            .map_err(|_| AccountIdentityError::InvalidInput)?;
+        let fields = static_profile_object(&root)?;
+        static_profile_exact_fields(fields)?;
+        if static_profile_integer(fields, "schema_version")? != STATIC_PROFILE_SCHEMA_VERSION {
+            return Err(AccountIdentityError::InvalidInput);
+        }
+        let provider = ProviderId::new(static_profile_string(fields, "provider")?)
+            .map_err(|_| AccountIdentityError::InvalidInput)?;
+        let issuer = static_profile_string(fields, "issuer")?.to_owned();
+        let algorithms =
+            static_profile_algorithms(fields, "id_token_signing_alg_values_supported")?;
+        Self::new(provider, client_id, issuer, algorithms, context)
+    }
+
     /// Validate exact provider, audience, issuer, algorithm, and context data.
     ///
     /// The issuer must be a bounded HTTPS URL without userinfo, query, or
@@ -568,6 +615,89 @@ fn valid_client_id(value: &str) -> bool {
     !value.is_empty() && value.len() <= MAX_CLIENT_ID_BYTES && !value.chars().any(char::is_control)
 }
 
+fn static_profile_object(
+    value: &JsonValue,
+) -> Result<&[(String, JsonValue)], AccountIdentityError> {
+    match value {
+        JsonValue::Object(fields) => Ok(fields),
+        _ => Err(AccountIdentityError::InvalidInput),
+    }
+}
+
+fn static_profile_exact_fields(fields: &[(String, JsonValue)]) -> Result<(), AccountIdentityError> {
+    const EXPECTED: [&str; 4] = [
+        "schema_version",
+        "provider",
+        "issuer",
+        "id_token_signing_alg_values_supported",
+    ];
+    if fields.len() != EXPECTED.len() {
+        return Err(AccountIdentityError::InvalidInput);
+    }
+    let mut seen = BTreeSet::new();
+    if fields
+        .iter()
+        .any(|(name, _)| !EXPECTED.contains(&name.as_str()) || !seen.insert(name.as_str()))
+    {
+        return Err(AccountIdentityError::InvalidInput);
+    }
+    Ok(())
+}
+
+fn static_profile_member<'a>(
+    fields: &'a [(String, JsonValue)],
+    name: &str,
+) -> Result<&'a JsonValue, AccountIdentityError> {
+    let mut matches = fields.iter().filter(|(candidate, _)| candidate == name);
+    let value = matches
+        .next()
+        .map(|(_, value)| value)
+        .ok_or(AccountIdentityError::InvalidInput)?;
+    if matches.next().is_some() {
+        return Err(AccountIdentityError::InvalidInput);
+    }
+    Ok(value)
+}
+
+fn static_profile_string<'a>(
+    fields: &'a [(String, JsonValue)],
+    name: &str,
+) -> Result<&'a str, AccountIdentityError> {
+    match static_profile_member(fields, name)? {
+        JsonValue::String(value) => Ok(value),
+        _ => Err(AccountIdentityError::InvalidInput),
+    }
+}
+
+fn static_profile_integer(
+    fields: &[(String, JsonValue)],
+    name: &str,
+) -> Result<i64, AccountIdentityError> {
+    match static_profile_member(fields, name)? {
+        JsonValue::Number(JsonNumber::Integer(value)) => Ok(*value),
+        _ => Err(AccountIdentityError::InvalidInput),
+    }
+}
+
+fn static_profile_algorithms(
+    fields: &[(String, JsonValue)],
+    name: &str,
+) -> Result<Vec<IdTokenSigningAlgorithm>, AccountIdentityError> {
+    let JsonValue::Array(values) = static_profile_member(fields, name)? else {
+        return Err(AccountIdentityError::InvalidInput);
+    };
+    if values.is_empty() || values.len() > MAX_ALGORITHMS {
+        return Err(AccountIdentityError::InvalidInput);
+    }
+    values
+        .iter()
+        .map(|value| match value {
+            JsonValue::String(value) => IdTokenSigningAlgorithm::new(value.clone()),
+            _ => Err(AccountIdentityError::InvalidInput),
+        })
+        .collect()
+}
+
 fn valid_issuer(value: &str) -> bool {
     if value.is_empty()
         || value.len() > MAX_ISSUER_BYTES
@@ -800,6 +930,97 @@ mod tests {
             ));
             Ok(AccountId::new([0x42; 32]))
         }
+    }
+
+    const STATIC_PROFILE: &str = r#"{
+        "schema_version":1,
+        "provider":"fixture",
+        "issuer":"https://issuer.example/tenant",
+        "id_token_signing_alg_values_supported":["EdDSA","RS256"]
+    }"#;
+
+    fn decode_static_profile(body: &str) -> Result<IdTokenIdentityProfile, AccountIdentityError> {
+        IdTokenIdentityProfile::from_static_provider_data(
+            Zeroizing::new(body.as_bytes().to_vec()),
+            "deployment-client",
+            context("fixture", 0x44),
+        )
+    }
+
+    #[test]
+    fn static_provider_data_binds_exact_identity_policy_to_caller_context() {
+        let profile = decode_static_profile(STATIC_PROFILE).unwrap();
+
+        assert_eq!(profile.provider().as_str(), "fixture");
+        assert_eq!(profile.client_id(), "deployment-client");
+        assert_eq!(profile.issuer(), "https://issuer.example/tenant");
+        assert_eq!(
+            profile
+                .allowed_algorithms()
+                .iter()
+                .map(IdTokenSigningAlgorithm::as_str)
+                .collect::<Vec<_>>(),
+            ["EdDSA", "RS256"]
+        );
+        assert_eq!(profile.context(), &context("fixture", 0x44));
+
+        let debug = format!("{profile:?}");
+        assert!(!debug.contains("deployment-client"));
+        assert!(!debug.contains("issuer.example"));
+    }
+
+    #[test]
+    fn static_provider_data_schema_and_identity_binding_fail_closed() {
+        let cases = [
+            STATIC_PROFILE.replace(r#""schema_version":1"#, r#""schema_version":2"#),
+            STATIC_PROFILE.replace(r#""provider":"fixture""#, r#""unknown":"fixture""#),
+            STATIC_PROFILE.replace(r#""issuer":"https://issuer.example/tenant","#, ""),
+            STATIC_PROFILE.replace(
+                r#""schema_version":1"#,
+                r#""schema_version":1,"schema_version":1"#,
+            ),
+            STATIC_PROFILE.replace(r#"["EdDSA","RS256"]"#, r#"["none"]"#),
+            STATIC_PROFILE.replace(r#"["EdDSA","RS256"]"#, r#"["RS256","RS256"]"#),
+            STATIC_PROFILE.replace(r#"["EdDSA","RS256"]"#, "[]"),
+            STATIC_PROFILE.replace(r#"["EdDSA","RS256"]"#, r#"["rs 256"]"#),
+            STATIC_PROFILE.replace("https://issuer.example/tenant", "http://issuer.example"),
+            "{".to_owned(),
+            "".to_owned(),
+        ];
+        for body in cases {
+            assert_eq!(
+                decode_static_profile(&body).unwrap_err(),
+                AccountIdentityError::InvalidInput
+            );
+        }
+
+        assert_eq!(
+            IdTokenIdentityProfile::from_static_provider_data(
+                Zeroizing::new(STATIC_PROFILE.as_bytes().to_vec()),
+                "deployment-client",
+                context("other-provider", 0x44),
+            )
+            .unwrap_err(),
+            AccountIdentityError::InvalidInput
+        );
+        assert_eq!(
+            IdTokenIdentityProfile::from_static_provider_data(
+                Zeroizing::new(vec![0xff]),
+                "deployment-client",
+                context("fixture", 0x44),
+            )
+            .unwrap_err(),
+            AccountIdentityError::InvalidInput
+        );
+        assert_eq!(
+            IdTokenIdentityProfile::from_static_provider_data(
+                Zeroizing::new(vec![b' '; MAX_STATIC_PROFILE_BYTES + 1]),
+                "deployment-client",
+                context("fixture", 0x44),
+            )
+            .unwrap_err(),
+            AccountIdentityError::InvalidInput
+        );
     }
 
     #[test]

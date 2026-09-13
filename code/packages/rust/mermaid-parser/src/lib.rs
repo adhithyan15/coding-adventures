@@ -1480,6 +1480,7 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             Some("STATEMENT_LINE")
                 | Some("ARROW_NODE_LINE")
                 | Some("DEFAULT_CLASSDEF_LINE")
+                | Some("INLINE_LABELED_NODE_CONNECTION_LINE")
                 | Some("INLINE_NODE_CONNECTION_LINE")
                 | Some("COMPACT_MARKED_CONNECTION_LINE")
                 | Some("MARKED_CONNECTION_LINE")
@@ -1597,7 +1598,10 @@ pub fn parse_block(source: &str) -> Result<GridDiagram, ParseError> {
             } else {
                 (rest.trim(), quoted_label.map(DiagramLabel::new))
             };
-            let (from, to) = if token_type == Some("INLINE_NODE_CONNECTION_LINE") {
+            let (from, to) = if matches!(
+                token_type,
+                Some("INLINE_LABELED_NODE_CONNECTION_LINE") | Some("INLINE_NODE_CONNECTION_LINE")
+            ) {
                 let parent_id = group_stack.last().cloned();
                 (
                     register_inline_block_node(
@@ -9555,6 +9559,25 @@ mod tests_dg04 {
         assert_eq!(diagram.cells[2].shape, DiagramShape::RoundedRect);
         assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
         assert_eq!(diagram.connections[1].line_style, GridEdgeStyle::Thick);
+    }
+
+    #[test]
+    fn block_preserves_quoted_labels_between_inline_node_declarations() {
+        let diagram = parse_block(
+            "block\nid1[\"first\"] -- \"a label\" --> id2[\"second\"]",
+        )
+        .unwrap();
+        assert_eq!(diagram.cells.len(), 2);
+        assert_eq!(diagram.cells[0].label.text, "first");
+        assert_eq!(diagram.cells[1].label.text, "second");
+        assert_eq!(diagram.connections.len(), 1);
+        assert_eq!(diagram.connections[0].from, "id1");
+        assert_eq!(diagram.connections[0].to, "id2");
+        assert_eq!(diagram.connections[0].kind, EdgeKind::Directed);
+        assert_eq!(
+            diagram.connections[0].label.as_ref().unwrap().text,
+            "a label"
+        );
     }
 
     #[test]

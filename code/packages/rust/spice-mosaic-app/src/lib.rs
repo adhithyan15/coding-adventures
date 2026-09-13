@@ -2140,7 +2140,58 @@ mod tests {
                 json!({"wire":{"start":{"x":0,"y":20},"end":{"x":40,"y":20}}}),
             ))
             .unwrap_err();
-        assert_eq!(conflict.to_string(), "schematic net already has a label");
+        assert_eq!(conflict.to_string(), "schematic net has conflicting labels");
+    }
+
+    #[test]
+    fn schematic_net_label_inspector_links_disconnected_terminals_by_name() {
+        let mut app = SpiceMosaicApp::default();
+        app.start(protocol_two_context()).unwrap();
+        dispatch(
+            &mut app,
+            "schematicLoad",
+            json!({
+                "document": {
+                    "title": "Remote label link",
+                    "components": [
+                        {"reference":"V1","kind":"DcVoltage","value":"5","terminals":[{"x":0,"y":20},{"x":0,"y":0}]},
+                        {"reference":"R1","kind":"Resistor","value":"1k","terminals":[{"x":40,"y":20},{"x":40,"y":0}]},
+                        {"reference":"G1","kind":"Ground","value":"","terminals":[{"x":0,"y":0}]}
+                    ],
+                    "wires": []
+                }
+            }),
+        );
+        dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference":"V1"}),
+        );
+        dispatch(
+            &mut app,
+            "onSchematicNetLabelChange",
+            json!({"value":"SENSE"}),
+        );
+        dispatch(
+            &mut app,
+            "onSelectSchematicComponent",
+            json!({"reference":"R1"}),
+        );
+        let linked = dispatch(
+            &mut app,
+            "onSchematicNetLabelChange",
+            json!({"value":"SENSE"}),
+        );
+        assert_eq!(linked.props["schematic-net-label"], "SENSE");
+
+        let synchronized = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
+        let deck = synchronized.props["netlist-text"].as_str().unwrap();
+        assert!(deck.contains("R1 SENSE n1 1k\nV1 SENSE 0 DC 5"));
+
+        dispatch(&mut app, "onUndoSchematic", json!({}));
+        assert_eq!(app.update().props["schematic-net-label"], "");
+        dispatch(&mut app, "onRedoSchematic", json!({}));
+        assert_eq!(app.update().props["schematic-net-label"], "SENSE");
     }
 
     #[test]
