@@ -13573,6 +13573,62 @@ Oct remain the next alternatives but overlap live work, so they rank behind the
 RV32I contract tranche. With the new site-resource owner, the state has 790
 unique owners: 212 merged, 577 pending, and one PR open.
 
+### Post-PR #14659 refresh and site-input extension selection
+
+PR #14659 completed every final-head check acceptably on
+`5116540c204f6062acb4b357c54a5bfc6eea7f9d`. GitHub reported the branch
+mergeable, guarded squash auto-merge was armed, and GitHub merged the reviewed
+Go registry adoption as `248eedfb1604a40f155a19536f39738e559d812d` at
+2026-09-08T19:36:22Z without a manual merge command.
+
+After fetching exact current `origin/main`
+`5e48b5f83db4b1112aea3dfa5e63d42480be808c`, the collision-checked schema-3
+inventory reports 15 established lanes, 1,440 implementation identities, 4,665
+implementation slots, and 1,480 all-reported identities. Its bands are 175
+packages with 265 missing slots, 123/934, 181/2,282, and 961/13,454. Rust has
+1,217 packages and 781 singletons, Python has 503 packages, emerging OCaml
+remains at five packages, total missing established-lane slots are 16,935, and
+canonical collisions and unknown language buckets remain zero.
+
+The refresh registers every newly discovered identity or semantic contract
+before selection. Eighteen new owners cover the portable OAuth private-key
+signer, private-key JWT, and account-identity cores; neutral Wasm GC reference
+refinement and scalar nearest/NaN behavior plus blocked rollout umbrellas;
+IIR-to-BEAM integer operands; AArch64, Apple M1, and RV64I functional or
+gate-level classifiers; a bounded QR decoder and locator chain; and the three
+portable visual connected-components, geometric-estimation, and
+pattern-scanning prerequisites. The gate-level owners preserve exact large
+resource topology rather than assuming a blind all-language port. OAuth host,
+key, credential, network, storage, clock, entropy, and HSM/KMS/Vault authority
+remains outside the pure owners. QR rollout requires real-photo evidence rather
+than relying on the current synthetic fixtures.
+
+A parallel build-tool audit found 12 tested established-lane front doors but no
+Dart, Java, or Kotlin implementation and no native OCaml build tool. The neutral
+suite now contains 146 process-free cases across 13 domains, while all adapter
+manifest entries still report missing. The audit also closed two backlog-DAG
+holes. Every pending registry consumer now depends on the site-input extension,
+so no lane can adopt the already-known incomplete registry. The terminal
+all-language adapter/CI owner now directly requires each remaining-engine
+contract umbrella plus real three-platform OCaml build-tool execution. The 25
+new bookkeeping edges and the 18 classified owners leave a unique,
+dependency-complete, acyclic graph of 808 owners and 1,379 edges: 213 merged,
+594 pending, and exactly one in progress, with no merged owner depending on
+unfinished work.
+
+This leverage pass supersedes the earlier provisional RV32I recommendation and
+selects `build-tool-site-authored-resource-source-input-extension` on fresh
+clean branch `codex/build-tool-site-authored-resources-20260912`. The owner has
+its sole prerequisite merged and closes 13 already-evidenced tracked build
+inputs before Python, Ruby, TypeScript, JVM, Dart, and OCaml consume the
+registry, avoiding repeated generated-projection churn. Two exact
+package-scoped TypeScript rules will bind the eight blog and five landing-page
+inputs to their canonical `code/sites` roots. The contract deliberately rejects
+language-wide Markdown, `.landing`, image, sidecar, `data`-directory, and
+root-CSS widening. The implementation tranche refreshes the already-adopted Go,
+Haskell, Swift, and shared .NET projections, adds neutral exact-root and
+foreign-package cases, and runs the real site packages as downstream evidence.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

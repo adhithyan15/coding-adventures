@@ -11,35 +11,29 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 14659,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/14659",
-    "branch": "codex/build-tool-go-language-source-registry-20260908",
-    "implementation_revision": "fc7a40369c29a4e6a400a089f683755558ad857b",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-08T19:00:40Z",
+    "observed_at": "2026-09-08T19:36:22Z",
     "pr_number": 14659,
-    "status": "checks-pending",
-    "notes": "Both replacement CI builds passed detection but remained queued for package execution. Go CodeQL analysis completed, and its aggregate check reported two high allocation-overflow findings in registry-digest framing. Production and the independent test oracle now stream the domain, fixed-width length, and canonical payload into SHA-256 without a combined-size allocation. Focused and full Go tests, race, vet, module verification, tidy-diff, and diff hygiene pass. The smallest repair was pushed to the same branch; replacement checks are pending and auto-merge remains disabled until they are terminal and acceptable and mergeability is clean."
+    "status": "merged",
+    "notes": "All final-head checks completed acceptably on 5116540c204f6062acb4b357c54a5bfc6eea7f9d. GitHub reported the branch mergeable, guarded squash auto-merge was armed, and GitHub merged PR #14659 as 248eedfb1604a40f155a19536f39738e559d812d without a manual merge command."
   },
   "last_inventory": {
-    "revision": "668e551588ebf183e4f7c2835e47ebeed9d37230",
+    "revision": "5e48b5f83db4b1112aea3dfa5e63d42480be808c",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1430,
-    "implementation_package_slots": 4652,
-    "all_reported_identities": 1470,
+    "implementation_identities": 1440,
+    "implementation_package_slots": 4665,
+    "all_reported_identities": 1480,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
-    "two_to_four_packages": 178,
-    "two_to_four_missing_slots": 2243,
-    "singleton_packages": 954,
-    "singleton_missing_slots": 13356,
-    "rust_singletons": 771,
+    "two_to_four_packages": 181,
+    "two_to_four_missing_slots": 2282,
+    "singleton_packages": 961,
+    "singleton_missing_slots": 13454,
+    "rust_singletons": 781,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -962,7 +956,7 @@
     {
       "id": "build-tool-go-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Go build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-go-portable-source-hashing-conformance"],
       "branch": "codex/build-tool-go-language-source-registry-20260908",
       "pr_number": 14659,
@@ -982,15 +976,22 @@
       "ci_repair_notes": "The two failed CI builds both stopped before package execution with HASH_PACKAGE_FAILED for unknown/blog. The repair preserves legacy unknown/* graph identities while recognizing only canonical code/sites roots as TypeScript source-input profiles and hashing their real code/sites repository paths. The merged neutral registry and digest remain byte-identical; authored site Markdown/SVG coverage is classified under a separate dependent owner. After the conflict-free rebase onto b6888ebfdd218b58807599f0dfa685efa30bd77d, the full Go suite, hasher race suite, vet, module verification, tidy-diff, trimpath build, 24 schema tests, 80 neutral runner tests, 5,172-package all-language dry plan, state DAG, and diff checks pass.",
       "codeql_repair_revision": "fc7a40369c29a4e6a400a089f683755558ad857b",
       "codeql_repair_notes": "The aggregate CodeQL result exposed two high-severity size-overflow findings even though the Go analysis workflow itself succeeded. Both findings came from allocating domain-length-payload framing in one slice. Production and its independent digest oracle now hash the same domain-separated framing incrementally with an eight-byte big-endian length, eliminating size-addition overflow without changing the registry digest. Focused and full Go tests, the hasher race suite, vet, module verification, tidy-diff, and diff hygiene pass.",
+      "merged_head_revision": "5116540c204f6062acb4b357c54a5bfc6eea7f9d",
+      "merged_at": "2026-09-08T19:36:22Z",
+      "merge_revision": "248eedfb1604a40f155a19536f39738e559d812d",
+      "merge_notes": "All final-head checks completed acceptably after the focused site-root mapping and allocation-overflow repairs. GitHub reported the branch mergeable, guarded squash auto-merge was armed, and GitHub merged PR #14659 without a manual merge command.",
       "notes": "Production Go currently owns 14 source-language entries, 14 metadata-language entries, and a 26-name generated-component registry, but the neutral registry adds reviewed Rust companions and package resources for hybrid lanes. Replace the engine-local maps with an exact complete projection and prove no missing or undeclared-extra selector."
     },
     {
       "id": "build-tool-site-authored-resource-source-input-extension",
       "title": "Extend the neutral source-input registry for authored site resources",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-go-language-source-input-registry-adoption"],
-      "branch": null,
+      "branch": "codex/build-tool-site-authored-resources-20260912",
       "pr_number": null,
+      "selected_at": "2026-09-13T05:26:04Z",
+      "selection_revision": "5e48b5f83db4b1112aea3dfa5e63d42480be808c",
+      "selection_notes": "Selected after PR #14659 completed all final-head checks and merged through guarded squash auto-merge. The exact-main collision-checked schema-3 inventory reports 15 established lanes, 1,440 implementation identities, 4,665 slots, 1,480 all-reported identities, bands 175/265, 123/934, 181/2,282, and 961/13,454, 781 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Eighteen newly discovered owners are registered before selection. A parallel build-tool audit ranks this extension first because it closes 13 known omitted site inputs before Python, Ruby, TypeScript, JVM, Dart, and OCaml adopt the registry, avoiding repeated generated-projection churn. The fresh clean branch and worktree start from exact live main with no active parity PR.",
       "notes": "Discovered from PR #14659's failed full-repository CI run and expanded by a parallel exact-input audit. The repository's two code/sites packages retain legacy unknown/* graph identities but are TypeScript build surfaces. The focused PR repair safely maps those canonical roots to the already-reviewed TypeScript hashing profile. The merged neutral registry still omits 13 tracked build inputs: three blog Markdown posts, their three persisted-identity JSON sidecars, one SVG and its sidecar, landing-page index.landing and its sidecar, og.jpg and its sidecar, and root landing.css. Both site configs enable persisted identities, and the landing renderer reads landing.css directly. Evolve the neutral registry and digest, refresh every already-adopted engine projection, add exact site fixtures, and prove unrelated TypeScript data directories cannot be widened. This remains a separate dependent contract change because mutating the registry inside the Go adoption PR would invalidate Haskell, Swift, and .NET digest pins and mix cross-engine work into the CI repair."
     },
     {
@@ -1007,7 +1008,7 @@
       "id": "build-tool-python-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Python build tool",
       "status": "pending",
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-python-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-python-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Production Python currently owns only a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including scoped Rust companions, package resources, and exact root metadata, and test production lookup equality rather than a fixture-only copy."
@@ -1016,7 +1017,7 @@
       "id": "build-tool-ruby-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the Ruby build tool",
       "status": "pending",
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-ruby-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Production Ruby currently owns a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including path-scoped native companions and resources, with exact production lookup equality and no selector widening."
@@ -1082,7 +1083,7 @@
       "id": "build-tool-typescript-language-source-input-registry-adoption",
       "title": "Adopt the exact language source-input registry in the TypeScript build tool",
       "status": "pending",
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-typescript-portable-source-hashing-conformance"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Production TypeScript currently owns a small global suffix and metadata allowlist plus generated-directory pruning. Adopt the checked registry including path-scoped CSS, native Rust companions, exact metadata scope, and universal capability input without blanket JSON, YAML, or TOML inclusion."
@@ -1091,7 +1092,7 @@
       "id": "build-tool-elixir-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Elixir recursively hashes without the exact generated-component registry and lacks portable path framing and OCaml source recognition. Repair those bounded collector semantics, consume the complete checked language source-input registry in production, and prove exact projection equality with no undeclared selector."
@@ -1119,7 +1120,7 @@
       "id": "build-tool-perl-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Perl build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-perl-blib-generated-directory-registry-repair"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-perl-blib-generated-directory-registry-repair", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Perl has only a partial artifact skip registry, uses platform-native relative paths, and lacks OCaml source recognition. Adopt the complete checked language source-input registry and normalized framing contract in one engine-scoped tranche, proving exact production lookup equality."
@@ -1319,7 +1320,7 @@
       "id": "build-tool-rust-portable-source-hashing-conformance",
       "title": "Complete portable source hashing in the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-rust-generated-directory-hashing-exclusion", "build-tool-rust-declared-source-metadata-plumbing", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair"],
+      "depends_on": ["build-tool-rust-generated-directory-hashing-exclusion", "build-tool-rust-declared-source-metadata-plumbing", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. After Rust adopts the neutral generated-directory registry, add normalized unambiguous path framing and consume the complete checked language source-input registry, including reviewed cross-language smoke companions, with exact production equality."
@@ -1352,7 +1353,7 @@
       "id": "build-tool-lua-hashing-cache-conformance",
       "title": "Implement portable source hashing and cache behavior in the Lua build tool",
       "status": "pending",
-      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-lua-dune-build-discovery-fixture-adoption", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair"],
+      "depends_on": ["build-tool-generated-directory-hashing-conformance-corpus", "build-tool-lua-dune-build-discovery-fixture-adoption", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-shared-and-generated-boundary-source-input-contract", "build-tool-engram-wasm-package-source-input-registry-repair", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#13544 source-hashing audit. Lua has no source-hasher/cache layer, so add the complete checked language source-input registry, portable package and named/raw dependency digest framing, raw combined-digest construction, dependency invalidation, and stable cache recovery only after its Dune discovery evidence and the shared corpus land. The new engine must prove exact registry projection rather than introduce another local map."
@@ -1362,7 +1363,7 @@
       "title": "Complete portable source hashing across every remaining build-tool engine",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-native-source-snapshot-stability-hardening", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-native-source-snapshot-stability-hardening", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-go-repository-boundary-reverse-diff-digest-adoption", "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-lua-repository-boundary-reverse-diff-digest-adoption", "build-tool-perl-repository-boundary-reverse-diff-digest-adoption", "build-tool-python-repository-boundary-reverse-diff-digest-adoption", "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption", "build-tool-rust-repository-boundary-reverse-diff-digest-adoption", "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption", "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "depends_on": ["build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-python-portable-source-hashing-conformance", "build-tool-go-portable-source-hashing-conformance", "build-tool-elixir-native-source-snapshot-stability-hardening", "build-tool-perl-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-csharp-fsharp-portable-source-hashing-conformance", "build-tool-swift-portable-source-hashing-conformance", "build-tool-ruby-portable-source-hashing-conformance", "build-tool-rust-portable-source-hashing-conformance", "build-tool-typescript-portable-source-hashing-conformance", "build-tool-lua-hashing-cache-conformance", "build-tool-go-native-source-snapshot-stability-hardening", "build-tool-python-language-source-input-registry-adoption", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-typescript-language-source-input-registry-adoption", "build-tool-go-repository-boundary-reverse-diff-digest-adoption", "build-tool-elixir-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-lua-repository-boundary-reverse-diff-digest-adoption", "build-tool-perl-repository-boundary-reverse-diff-digest-adoption", "build-tool-python-repository-boundary-reverse-diff-digest-adoption", "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption", "build-tool-rust-repository-boundary-reverse-diff-digest-adoption", "build-tool-typescript-repository-boundary-reverse-diff-digest-adoption", "build-tool-csharp-fsharp-repository-boundary-diff-fixture-adoption", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the complete hashing contract. It has no independent source behavior and advances only after every engine-scoped leaf proves exact component pruning, portable source recognition, normalized path framing, deterministic byte hashing, dependency invalidation, and stable cache recovery or records a reviewed exception."
@@ -2661,7 +2662,8 @@
     "build-tool-extra-ci-toolchain-declaration-corpus",
     "build-tool-execution-semantics-corpus",
     "build-tool-go-repository-boundary-reverse-diff-digest-adoption",
-    "build-tool-go-portable-dependency-hashing-conformance"
+    "build-tool-go-portable-dependency-hashing-conformance",
+    "build-tool-site-authored-resource-source-input-extension"
       ],
       "branch": null,
       "pr_number": null,
@@ -2707,8 +2709,21 @@
         "build-tool-jvm-current-contract-conformance",
         "build-tool-dart-current-contract-conformance",
         "ocaml-build-tool-current-contract-conformance",
+        "ocaml-build-tool-three-platform-ci-execution",
         "build-tool-neutral-graph-diff-corpus-completion",
         "build-tool-execution-semantics-corpus",
+        "build-tool-ci-gate-registry-established-lane-parity",
+        "build-tool-cli-parser-remaining-engines",
+        "build-tool-dune-build-discovery-exclusion-remaining-engines",
+        "build-tool-extra-ci-toolchain-declaration-remaining-engines",
+        "build-tool-orphan-crate-validation-remaining-engines",
+        "build-tool-plan-atomic-overwrite-remaining-writers",
+        "build-tool-portable-dependency-hashing-remaining-engines",
+        "build-tool-portable-source-hashing-remaining-engines",
+        "build-tool-rockspec-utf8-remaining-engines",
+        "build-tool-starlark-metering-remaining-engines",
+        "build-tool-tracked-artifact-validation-remaining-engines",
+        "build-tool-validation-oracle-remaining-engines",
         "c-cpp-graduation"
       ],
       "branch": null,
@@ -2900,11 +2915,11 @@
       "depends_on": ["ocaml-representative-core", "ocaml-ci-toolchain"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered during the ocaml-representative-core parallel validation audit. The pinned three-platform OCaml workflow currently executes only scaffold fixtures, while canonical generic CI can discover real OCaml packages without provisioning opam. Extend the reviewed pinned toolchain path to execute logic-gates plus the leaf-first graph, directed-graph, and state-machine chain on Ubuntu, macOS, and Windows with real format, test, numeric coverage-floor, install, source-archive, installed downstream-consumer, retained-artifact, and no-skip evidence. Include stale-coverage isolation, consistent Unix/Windows aggregation, explicit direct-BUILD fail-fast semantics, and an exact reviewed odoc pin with warning-clean documentation builds in this same workflow/toolchain owner rather than creating an overlapping release-hardening item. Keep this execution-coupled owner separate from the process-free representative-core tranche and require it before lane promotion."
+      "notes": "Discovered during the ocaml-representative-core parallel validation audit. The pinned three-platform OCaml workflow currently executes only scaffold fixtures; canonical generic CI now provisions the reviewed OCaml toolchain and can discover real OCaml packages, but it still does not execute the representative chain. Extend the reviewed pinned toolchain path to execute logic-gates plus the leaf-first graph, directed-graph, and state-machine chain on Ubuntu, macOS, and Windows with real format, test, numeric coverage-floor, install, source-archive, installed downstream-consumer, retained-artifact, and no-skip evidence. Include stale-coverage isolation, consistent Unix/Windows aggregation, explicit direct-BUILD fail-fast semantics, and an exact reviewed odoc pin with warning-clean documentation builds in this same workflow/toolchain owner rather than creating an overlapping release-hardening item. Correct the stale OCaml lane README and OCAML06 status documentation in this execution tranche. Keep this execution-coupled owner separate from the process-free representative-core tranche and require it before lane promotion."
     },
     {
       "id": "ocaml-build-tool-and-promotion",
-      "title": "Implement the native OCaml build tool",
+      "title": "Implement the native OCaml build-tool foundation",
       "status": "pending",
       "depends_on": [
         "ocaml-build-substrate",
@@ -8482,7 +8497,7 @@
       "id": "oauth-credential-broker-vault-custody-and-scope",
       "title": "Review OAuth credential-broker, vault custody, and authorized scope",
       "status": "pending",
-      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-installed-app-host-authority-review", "oauth-wire-codecs-refresh-revocation-conformance", "oauth-credential-custody-portable-conformance", "oauth-client-secret-custody-portable-conformance", "oauth-credential-sealed-store-native-authority-review"],
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-installed-app-host-authority-review", "oauth-wire-codecs-refresh-revocation-conformance", "oauth-credential-custody-portable-conformance", "oauth-client-secret-custody-portable-conformance", "oauth-credential-sealed-store-native-authority-review", "oauth-private-key-signer-portable-conformance", "oauth-private-key-jwt-portable-conformance", "oauth-account-identity-portable-conformance"],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
@@ -8892,7 +8907,7 @@
       "id": "build-tool-jvm-current-contract-conformance",
       "title": "Bring Java and Kotlin build tools to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for both JVM front doors. Require the current language registry, repository-boundary reverse-diff and digest corpus, CI-gate corpus, and every other established process-free build-tool contract before either lane counts as complete."
@@ -8901,7 +8916,7 @@
       "id": "build-tool-dart-current-contract-conformance",
       "title": "Bring the Dart build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-dart", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-dart", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for the Dart build-tool front door. Require all current process-free contracts and language-neutral fixtures before the lane is counted complete."
@@ -8910,7 +8925,7 @@
       "id": "ocaml-build-tool-current-contract-conformance",
       "title": "Bring the OCaml build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "The existing OCaml native-build-tool owner predates later shared contracts. Before promotion, require native consumption of every current process-free corpus, including source registry, repository-boundary reverse diff and digest, CI-gate selection, and the remaining universal contract families."
@@ -9395,6 +9410,170 @@
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main audit found 157 of 172 identities in the two-to-four-language band without exact owners. Prioritize foundational symbolic-ir, simulator-protocol, and hdl-ir families and decompose them into explicit dependency-shaped work."
+    },
+    {
+      "id": "oauth-private-key-signer-portable-conformance",
+      "title": "Define portable OAuth private-key signing conformance",
+      "status": "pending",
+      "depends_on": ["oauth-authorization-server-metadata-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the collision-checked post-#14659 inventory after the Rust-only oauth-private-key-signer identity appeared. Define a pure injected-signer contract for algorithm and key identifiers, bounded canonical signing input, non-exporting key handles, deterministic success and redacted failures, and applicable-lane rollout. Concrete HSM, KMS, Vault, JOSE provider, filesystem, process, network, credential, clock, and entropy authority remain outside this portable core."
+    },
+    {
+      "id": "wasm-gc-reference-refinement-language-neutral-conformance",
+      "title": "Define language-neutral Wasm GC reference-refinement conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#14659 semantic inventory. Fixture the deterministic GC reference-refinement subset, including nullable and non-null references, casts, tests, branch refinement, traps, malformed types, stable diagnostics, and resource bounds without host GC or runtime authority."
+    },
+    {
+      "id": "wasm-gc-reference-refinement-established-lane-parity",
+      "title": "Roll Wasm GC reference refinement through applicable established lanes",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["wasm-gc-reference-refinement-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "After the neutral GC reference-refinement contract lands, implement it in every applicable established Wasm lane or record narrow reviewed exceptions. Keep browser, native runtime, collector, and host embedding authority outside this aggregate."
+    },
+    {
+      "id": "wasm-scalar-nearest-nan-language-neutral-conformance",
+      "title": "Define language-neutral Wasm nearest and NaN conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#14659 semantic inventory. Pin f32/f64 nearest rounding, signed zero, ties-to-even, canonical and arithmetic NaN acceptance, payload-insensitive comparisons, traps, stable diagnostics, and bounded deterministic fixtures."
+    },
+    {
+      "id": "wasm-scalar-nearest-nan-established-lane-parity",
+      "title": "Roll Wasm nearest and NaN behavior through applicable lanes",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["wasm-scalar-nearest-nan-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "After the neutral scalar contract lands, reconcile every applicable Wasm implementation or record narrow reviewed floating-point exceptions. Host math libraries and native execution remain outside this aggregate."
+    },
+    {
+      "id": "iir-to-beam-integer-arithmetic-operands-language-neutral-conformance",
+      "title": "Define language-neutral IIR-to-BEAM integer operand conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#14659 semantic inventory after tracked integer-arithmetic operand work changed existing compiler roots without changing topology. Fixture operand order, exact integer width, division and remainder behavior, invalid operands, output separation, stable diagnostics, and backend-neutral execution cells."
+    },
+    {
+      "id": "aarch64-simulator-two-lane-classification",
+      "title": "Classify AArch64 simulator parity across Python and Rust",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14672 added Rust beside the established Python aarch64-simulator. Reconcile the pure functional state, instruction subset, checked lifecycle, transactional faults, traces, resource ceilings, capability truthfulness, and a language-neutral differential corpus before broader lane rollout."
+    },
+    {
+      "id": "aarch64-gatelevel-two-lane-classification",
+      "title": "Classify AArch64 gate-level parity across Python and Rust",
+      "status": "pending",
+      "depends_on": ["aarch64-simulator-two-lane-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14679 added the Rust AArch64 gate-level lane beside Python. Classify the exact gate topology, functional differential, deterministic resource ceilings, checked lifecycle, and applicable-lane or narrow reviewed resource exceptions without treating a more than 500,000-DFF model as a blind all-language port."
+    },
+    {
+      "id": "riscv-rv64i-gatelevel-singleton-classification",
+      "title": "Classify the Rust-only RV64I gate-level simulator",
+      "status": "pending",
+      "depends_on": ["riscv-rv64i-simulator-two-lane-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14656 added the Rust-only riscv-rv64i-gatelevel identity. Define its exact topology, checked state and faults, functional differential, bounded traces and runs, capability profile, and practical applicable-lane or reviewed resource exceptions."
+    },
+    {
+      "id": "apple-m1-simulator-two-lane-classification",
+      "title": "Classify Apple M1 simulator parity across Python and Rust",
+      "status": "pending",
+      "depends_on": ["aarch64-simulator-two-lane-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14689 added Rust beside the Python apple-m1-simulator. Reconcile the Apple-specific deterministic functional layer against the shared AArch64 contract, including state, supported instructions, faults, lifecycle, traces, resources, and truthful host exclusions."
+    },
+    {
+      "id": "apple-m1-gatelevel-singleton-classification",
+      "title": "Classify the Rust-only Apple M1 gate-level simulator",
+      "status": "pending",
+      "depends_on": ["apple-m1-simulator-two-lane-classification", "aarch64-gatelevel-two-lane-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14871 added the Rust-only apple-m1-gatelevel identity. Classify the exact large gate topology, shared AArch64 functional differential, Apple-specific behavior, deterministic ceilings, and narrow practical lane exceptions rather than manufacturing resource-heavy copies."
+    },
+    {
+      "id": "oauth-account-identity-portable-conformance",
+      "title": "Define portable OAuth account-identity conformance",
+      "status": "pending",
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-credential-custody-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #15020 added the Rust-only oauth-account-identity identity. Define deterministic provider/account/key identity normalization, equality, bounded serialization, audit linkage, stable redacted failures, and applicable-lane rollout. Provider discovery, network, storage, credentials, clocks, and host account authority remain outside."
+    },
+    {
+      "id": "oauth-private-key-jwt-portable-conformance",
+      "title": "Define portable OAuth private-key JWT conformance",
+      "status": "pending",
+      "depends_on": ["oauth-private-key-signer-portable-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-wire-codecs-refresh-revocation-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14872 added the Rust-only oauth-private-key-jwt identity. Fixture canonical bounded assertion construction, registered claims, audience and lifetime validation against injected time, signer delegation, replay identifiers, stable diagnostics, and applicable-lane rollout. Concrete keys, HSM/KMS/Vault, network, entropy, clock, and custody authority remain outside."
+    },
+    {
+      "id": "qr-decoder-portable-conformance",
+      "title": "Define portable QR decoder conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14695 added the Rust-only qr-decoder identity. Define bounded matrix-to-payload decoding, format/version/error-correction behavior, stable failures, adversarial limits, and applicable-lane rollout with real-photo-derived fixtures supplementing the current synthetic-only evidence. Camera, filesystem, image codecs, and device authority remain outside."
+    },
+    {
+      "id": "vis-connected-components-portable-conformance",
+      "title": "Define portable connected-components conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14778 added the Rust-only vis-connected-components identity. Fixture deterministic connectivity, labels, component statistics, malformed inputs, numeric behavior, ordering, and image/resource ceilings without camera or filesystem authority."
+    },
+    {
+      "id": "vis-geometric-estimation-portable-conformance",
+      "title": "Define portable geometric-estimation conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14783 added the Rust-only vis-geometric-estimation identity. Fixture deterministic transforms, scoring, inlier selection, injected sampling, degeneracy, malformed numeric inputs, stable diagnostics, and bounded work without device or entropy authority."
+    },
+    {
+      "id": "vis-pattern-scanning-portable-conformance",
+      "title": "Define portable visual pattern-scanning conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14787 added the Rust-only vis-pattern-scanning identity. Define bounded deterministic finder-pattern scanning, candidate ordering and merging, malformed image handling, stable diagnostics, and applicable-lane rollout without camera or filesystem authority."
+    },
+    {
+      "id": "qr-locate-portable-conformance",
+      "title": "Define portable QR location conformance",
+      "status": "pending",
+      "depends_on": ["qr-decoder-portable-conformance", "vis-connected-components-portable-conformance", "vis-geometric-estimation-portable-conformance", "vis-pattern-scanning-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after merged PR #14820 added the Rust-only qr-locate identity. Compose the reviewed vision primitives into deterministic bounded candidate location, perspective estimation, sampling, ordering, diagnostics, and applicable-lane rollout. Require real-photo fixture coverage before broad ports; camera, native imaging, filesystem, and device authority remain outside."
     },
     {
       "id": "build-tool-ci-gate-registry-established-lane-parity",
