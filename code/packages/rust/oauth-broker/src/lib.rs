@@ -21,6 +21,7 @@ use coding_adventures_oauth::{
 use coding_adventures_oauth_account_identity::{
     AccountIdentityAuditSink, AccountIdentityAuthority, AccountIdentityError,
     AuditedAccountIdentityAuthority, IdTokenIdentityProfile, IdentityVerificationId,
+    VerifiedCredentialKey,
 };
 use coding_adventures_oauth_client_secret_custody::{
     ClientSecretAuditSink, ClientSecretAuthenticatedRequest, ClientSecretAuthentication,
@@ -753,6 +754,8 @@ pub enum BrokerAuditAction {
     ProviderDataLoad,
     /// Read and decode one registered provider's static ID-token identity policy.
     IdentityProviderDataLoad,
+    /// Load static identity policy and verify one nonce-bound ID token.
+    IdentityProviderProof,
     /// Register or idempotently confirm one provider definition.
     ProviderRegister,
     /// Store an initial credential response under an opaque account key.
@@ -951,6 +954,37 @@ pub trait OAuthVerifiedIdentityCredentialBrokerAuditSink:
 impl<T> OAuthVerifiedIdentityCredentialBrokerAuditSink for T where
     T: OAuthClientSecretCredentialBrokerAuditSink + AccountIdentityAuditSink
 {
+}
+
+/// Audit sink capable of recording static identity-policy loads and proof.
+pub trait OAuthIdentityProviderProofAuditSink: BrokerAuditSink + AccountIdentityAuditSink {}
+
+impl<T> OAuthIdentityProviderProofAuditSink for T where T: BrokerAuditSink + AccountIdentityAuditSink
+{}
+
+/// One-use authorization identity evidence and its caller-observed time.
+pub struct IdentityProviderProofInput {
+    context: IdentityVerificationId,
+    id_token: Zeroizing<String>,
+    nonce: OpenIdAuthorizationNonce,
+    observed_at_unix_seconds: u64,
+}
+
+impl IdentityProviderProofInput {
+    /// Bind opaque context, zeroizing evidence, nonce, and observation time.
+    pub fn new(
+        context: IdentityVerificationId,
+        id_token: Zeroizing<String>,
+        nonce: OpenIdAuthorizationNonce,
+        observed_at_unix_seconds: u64,
+    ) -> Self {
+        Self {
+            context,
+            id_token,
+            nonce,
+            observed_at_unix_seconds,
+        }
+    }
 }
 
 /// Injected effect authorities for one exchange-to-custody composition.
@@ -1401,6 +1435,84 @@ impl<S: CredentialStore> OAuthBroker<S> {
             requested_provider,
             trace,
             BrokerAuditAction::IdentityProviderDataLoad,
+            result,
+        )
+    }
+
+    /// Load exact static identity policy and verify one Authorization Code ID token.
+    ///
+    /// The one-use nonce supplies the only trace and must name the requested
+    /// provider and its registered deployment client before the injected source
+    /// can be read. The opaque verification context must name that provider as
+    /// well. Policy loading and trusted verification cross their existing
+    /// audit-before-effect/result gates, then this composite result is durably
+    /// audited before the provider-scoped opaque credential key is released.
+    /// This boundary adds no concrete source, verifier, JWT/JOSE/JWKS algorithm,
+    /// clock, storage, transport, or network authority.
+    pub fn load_and_verify_authorization_id_token<D, V, A>(
+        &self,
+        requested_provider: &ProviderId,
+        input: IdentityProviderProofInput,
+        source: &mut D,
+        identity_authority: &AuditedAccountIdentityAuthority<V>,
+        audit: &mut A,
+    ) -> Result<VerifiedCredentialKey, BrokerError>
+    where
+        D: IdentityProviderDataSource,
+        V: AccountIdentityAuthority,
+        A: OAuthIdentityProviderProofAuditSink,
+    {
+        let IdentityProviderProofInput {
+            context,
+            id_token,
+            nonce,
+            observed_at_unix_seconds,
+        } = input;
+        let trace = nonce.trace();
+        publish_broker(
+            audit,
+            requested_provider,
+            trace,
+            BrokerAuditAction::IdentityProviderProof,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            let registered = self.registered_provider(requested_provider)?;
+            if context.provider() != requested_provider
+                || nonce.provider() != requested_provider
+                || nonce.client_id() != registered.config().client_id()
+            {
+                return Err(BrokerError::BindingMismatch);
+            }
+            let profile = self.load_id_token_identity_profile(
+                requested_provider,
+                context,
+                trace,
+                source,
+                audit,
+            )?;
+            let verified = identity_authority
+                .verify_authorization_id_token(
+                    &profile,
+                    id_token,
+                    nonce,
+                    observed_at_unix_seconds,
+                    audit,
+                )
+                .map_err(map_account_identity_error)?;
+            if verified.credential_key().provider() != requested_provider
+                || verified.client_id() != registered.config().client_id()
+                || verified.trace() != trace
+            {
+                return Err(BrokerError::BindingMismatch);
+            }
+            Ok(verified)
+        })();
+        finish_broker(
+            audit,
+            requested_provider,
+            trace,
+            BrokerAuditAction::IdentityProviderProof,
             result,
         )
     }
@@ -3865,6 +3977,15 @@ mod tests {
                         BrokerAuditAction::IdentityProviderDataLoad,
                         BrokerAuditOutcome::Failed(_),
                     ) => "identity-load-failed",
+                    (BrokerAuditAction::IdentityProviderProof, BrokerAuditOutcome::Attempted) => {
+                        "identity-proof-attempted"
+                    }
+                    (BrokerAuditAction::IdentityProviderProof, BrokerAuditOutcome::Succeeded) => {
+                        "identity-proof-succeeded"
+                    }
+                    (BrokerAuditAction::IdentityProviderProof, BrokerAuditOutcome::Failed(_)) => {
+                        "identity-proof-failed"
+                    }
                     (BrokerAuditAction::ProviderRegister, BrokerAuditOutcome::Attempted) => {
                         "register-attempted"
                     }
@@ -5304,6 +5425,225 @@ mod tests {
             Err(BrokerError::Audit)
         ));
         assert_eq!(source.calls, 1);
+    }
+
+    #[test]
+    fn static_identity_policy_proof_audits_source_authority_and_release() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let requested = ProviderId::new("fixture-confidential").unwrap();
+        broker
+            .register_provider(
+                policy("fixture-confidential", 300),
+                trace(46),
+                &mut RecordingAudit::default(),
+            )
+            .unwrap();
+        let (_, nonce) = prepared_openid_exchange(
+            &config("fixture-confidential"),
+            trace(47),
+            &mut RecordingAudit::default(),
+        );
+        let context = IdentityVerificationId::new(
+            requested.clone(),
+            IdentityVerificationReference::new([0x69; 32]),
+        );
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut source =
+            MockProviderDataSource::successful(identity_provider_data("fixture-confidential"));
+        source.order = Some(Rc::clone(&order));
+        let authority = RecordingIdentityAuthority::succeeds(AccountId::new([0x90; 32]));
+        let calls = Arc::clone(&authority.calls);
+        let verifier = AuditedAccountIdentityAuthority::from_audited_authority(authority);
+        let mut audit = RecordingAudit {
+            order: Some(Rc::clone(&order)),
+            ..RecordingAudit::default()
+        };
+
+        let verified = broker
+            .load_and_verify_authorization_id_token(
+                &requested,
+                IdentityProviderProofInput::new(
+                    context.clone(),
+                    Zeroizing::new("header.payload.signature".to_owned()),
+                    nonce,
+                    1_000,
+                ),
+                &mut source,
+                &verifier,
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_eq!(source.calls, 1);
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+        assert_eq!(verified.credential_key().provider(), &requested);
+        assert_eq!(verified.client_id(), "fixture-confidential-public-client");
+        assert_eq!(verified.trace(), trace(47));
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "identity-proof-attempted",
+                "identity-load-attempted",
+                "identity-source-read",
+                "identity-load-succeeded",
+                "identity-attempted",
+                "identity-succeeded",
+                "identity-proof-succeeded",
+            ]
+        );
+        assert_eq!(audit.identity.len(), 2);
+        assert!(audit.identity.iter().all(|event| {
+            event.context() == &context
+                && event.trace() == trace(47)
+                && event.action() == AccountIdentityAuditAction::VerifyIdToken
+        }));
+        assert!(audit.broker.iter().all(|event| {
+            event.provider() == &requested
+                && event.trace() == trace(47)
+                && matches!(
+                    event.action(),
+                    BrokerAuditAction::IdentityProviderDataLoad
+                        | BrokerAuditAction::IdentityProviderProof
+                )
+        }));
+    }
+
+    #[test]
+    fn static_identity_policy_proof_fails_closed_before_effects_and_release() {
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        let mut broker = OAuthBroker::new(custody);
+        let requested = ProviderId::new("fixture-confidential").unwrap();
+        broker
+            .register_provider(
+                policy("fixture-confidential", 300),
+                trace(48),
+                &mut RecordingAudit::default(),
+            )
+            .unwrap();
+        let context = || {
+            IdentityVerificationId::new(
+                requested.clone(),
+                IdentityVerificationReference::new([0x6a; 32]),
+            )
+        };
+        let verifier = |result| {
+            let authority = RecordingIdentityAuthority {
+                calls: Arc::new(AtomicUsize::new(0)),
+                result,
+            };
+            let calls = Arc::clone(&authority.calls);
+            (
+                AuditedAccountIdentityAuthority::from_audited_authority(authority),
+                calls,
+            )
+        };
+
+        let (_, wrong_nonce) =
+            prepared_openid_exchange(&config("other"), trace(49), &mut RecordingAudit::default());
+        let mut source =
+            MockProviderDataSource::successful(identity_provider_data("fixture-confidential"));
+        let (authority, calls) = verifier(Ok(AccountId::new([0x91; 32])));
+        assert!(matches!(
+            broker.load_and_verify_authorization_id_token(
+                &requested,
+                IdentityProviderProofInput::new(
+                    context(),
+                    Zeroizing::new("header.payload.signature".to_owned()),
+                    wrong_nonce,
+                    1_000,
+                ),
+                &mut source,
+                &authority,
+                &mut RecordingAudit::default(),
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(source.calls, 0);
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+
+        let (_, nonce) = prepared_openid_exchange(
+            &config("fixture-confidential"),
+            trace(50),
+            &mut RecordingAudit::default(),
+        );
+        let mut source = MockProviderDataSource::failed();
+        let (authority, calls) = verifier(Ok(AccountId::new([0x92; 32])));
+        assert!(matches!(
+            broker.load_and_verify_authorization_id_token(
+                &requested,
+                IdentityProviderProofInput::new(
+                    context(),
+                    Zeroizing::new("header.payload.signature".to_owned()),
+                    nonce,
+                    1_000,
+                ),
+                &mut source,
+                &authority,
+                &mut RecordingAudit::default(),
+            ),
+            Err(BrokerError::ProviderDataSource)
+        ));
+        assert_eq!(source.calls, 1);
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+
+        let (_, nonce) = prepared_openid_exchange(
+            &config("fixture-confidential"),
+            trace(51),
+            &mut RecordingAudit::default(),
+        );
+        let mut source =
+            MockProviderDataSource::successful(identity_provider_data("fixture-confidential"));
+        let (authority, calls) = verifier(Err(IdentityAuthorityError::ClaimsInvalid));
+        assert!(matches!(
+            broker.load_and_verify_authorization_id_token(
+                &requested,
+                IdentityProviderProofInput::new(
+                    context(),
+                    Zeroizing::new("header.payload.signature".to_owned()),
+                    nonce,
+                    1_000,
+                ),
+                &mut source,
+                &authority,
+                &mut RecordingAudit::default(),
+            ),
+            Err(BrokerError::AccountIdentity(
+                AccountIdentityError::ClaimsInvalid
+            ))
+        ));
+        assert_eq!(source.calls, 1);
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+
+        let (_, nonce) = prepared_openid_exchange(
+            &config("fixture-confidential"),
+            trace(52),
+            &mut RecordingAudit::default(),
+        );
+        let mut source =
+            MockProviderDataSource::successful(identity_provider_data("fixture-confidential"));
+        let (authority, calls) = verifier(Ok(AccountId::new([0x93; 32])));
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(4),
+            ..RecordingAudit::default()
+        };
+        assert!(matches!(
+            broker.load_and_verify_authorization_id_token(
+                &requested,
+                IdentityProviderProofInput::new(
+                    context(),
+                    Zeroizing::new("header.payload.signature".to_owned()),
+                    nonce,
+                    1_000,
+                ),
+                &mut source,
+                &authority,
+                &mut audit,
+            ),
+            Err(BrokerError::Audit)
+        ));
+        assert_eq!(source.calls, 1);
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
     }
 
     #[test]

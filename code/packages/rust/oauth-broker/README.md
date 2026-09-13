@@ -31,6 +31,15 @@ effect, derives the deployment client ID only from the registration, keeps
 returned bytes zeroizing, and durably records the provider/trace-bound source
 intent and closed decode result before releasing the validated identity
 profile. No concrete source or verifier is added.
+That load can now compose directly into nonce-bound Authorization Code identity
+proof. The one-use nonce supplies the only trace; its provider and deployment
+client, plus the opaque verification context's provider, must match the
+registration before source access. The zeroizing ID token then crosses the
+existing separately audited policy-load and trusted-verification gates, and a
+final broker audit must be durable before only the provider-scoped opaque
+credential key is released. The composition still adds no concrete source,
+verifier, JWT/JOSE/JWKS algorithm, clock, storage, transport, or network
+authority.
 For retained `client_secret_basic` and `client_secret_post` profiles, the
 validated provider data can bind an exact provider-matched opaque secret key
 into the existing client-secret adapter without letting the caller choose or

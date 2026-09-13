@@ -141,8 +141,14 @@ The delivery order is:
    injected source only after exact registered-provider and opaque-context
    binding, auditing the provider and trace before the read and its closed
    decode result before profile release; concrete source and verification
-   authority remain absent. For
-   Authorization Code identity proof, the boundary consumes the core's
+   authority remain absent. A broker composition can now carry that exact
+   source load directly into Authorization Code identity proof. It derives the
+   trace only from the one-use nonce, rejects registered-provider, deployment-
+   client, nonce, or opaque-context mismatch before the source read, preserves
+   the source and trusted-verifier audit gates, and withholds the verified
+   provider-scoped opaque credential key until a final broker result audit is
+   durable. It adds no concrete source or verification authority. For
+   Authorization Code identity proof, the underlying boundary consumes the core's
    non-cloneable nonce object, validates its exact provider and client, and
    derives the audit trace from that browser ceremony before any authority
    effect. The boundary exposes no subject claim or token bytes and implements
