@@ -783,3 +783,33 @@ first probe. Thirty-six of 58 COBOL rows now declare BEAM, for 442 cells.
 Remaining COBOL features (pointer/overflow, base INSPECT TALLYING/REPLACING,
 the VM-047c BEFORE/AFTER region forms, and the VM-057 STRING self-move edge
 case) still require individual execution proofs.
+
+### COBOL INSPECT TALLYING/REPLACING on BEAM (VM-040)
+
+The remaining 22 undeclared COBOL BEAM rows split into four distinct
+families rather than one homogeneous tail: 8 pointer/overflow rows
+(`STRING`/`UNSTRING` `WITH POINTER` and `ON OVERFLOW`/`NOT ON OVERFLOW`), 8
+base `INSPECT TALLYING`/`REPLACING` rows, 5 VM-047c `BEFORE`/`AFTER` region
+rows, and 1 VM-057 STRING self-move edge case. Investigating each found every
+family's IIR already compiles through ops long proven on BEAM (`str_len`/
+`str_index`/`str_slice`/`str_concat`/`cmp_*`/`and`/`or`/`const`/`add`/`sub`/
+`mov`/`jmp*`/`label`), and — specifically checking VM-057's single row for
+the WASM-shaped destination-aliases-source hazard that produced the original
+VM-057/VM-D032 discoveries — `iir-to-beam`'s `str_slice` lowering already
+stages its source operand into a scratch register before ever overwriting
+the destination register, so that hazard does not recur here even though
+`iir-to-beam` also maps one x-register per variable name.
+
+Selected the base `INSPECT TALLYING`/`REPLACING` family as the lowest-risk of
+the four (no op combination here is novel to BEAM, unlike pointer/overflow's
+first-time chained `str_slice`/`str_concat` overlay). Four more COBOL
+programs execute on real BEAM: `TALLYING FOR ALL`, `TALLYING FOR
+CHARACTERS`, `TALLYING FOR LEADING` and `REPLACING ALL`, all compiling
+through `emit_inspect_tallying`/`emit_inspect_replacing`/
+`emit_inspect_region_window` — every op already lowered for BEAM, so no
+`iir-to-beam` change was needed; all four passed real `erl` execution on the
+first probe. Forty of 58 COBOL rows now declare BEAM, for 446 cells.
+Remaining COBOL features (pointer/overflow, four more base INSPECT
+TALLYING/REPLACING rows, the VM-047c BEFORE/AFTER region forms, and the
+VM-057 STRING self-move edge case) still require individual execution
+proofs.

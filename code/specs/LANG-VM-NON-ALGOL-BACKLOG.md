@@ -8,6 +8,167 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-040 COBOL BEAM INSPECT TALLYING/REPLACING probe (selected after #14999 merged)
+
+`git fetch origin && git merge origin/main` reported "Already up to date" —
+this worktree already sat at `9595613c41` with zero commits behind
+`origin/main`, and PR #14999 (VM-040 COBOL BEAM UNSTRING/delimiter probe,
+commit `1ee70e708d`) was directly visible at the tip of `git log --oneline
+-5`. `gh pr list --state open --limit 100` returned zero rows, so nothing —
+LANG-VM-related or otherwise — was in flight to coordinate with; no rebase or
+conflict handling was needed to start this slice.
+
+PR #14999's own trailing note made an important re-scoping: the remaining 22
+undeclared COBOL BEAM rows are NOT one homogeneous family. A brace-balanced
+scan restricted to the `lang: Language::X,` field lines confirmed the count
+directly against source: 58 `Cobol60` rows, 36 declaring `Beam`, 22 not, and
+— reading every undeclared row's source and its preceding comment — the 22
+split exactly as the trailing note described: 8 pointer/overflow rows (lines
+6139–6309: `STRING`/`UNSTRING` `WITH POINTER` and `ON OVERFLOW`/`NOT ON
+OVERFLOW`), 8 base `INSPECT TALLYING`/`REPLACING` rows (lines 6333–6511:
+`ALL`/`CHARACTERS`/`LEADING` tallying, `ALL`/`LEADING`/`CHARACTERS`/no-
+rechaining/first-match replacing), 1 VM-057 STRING self-move row (line
+6525), and 5 VM-047c `BEFORE`/`AFTER` region rows (lines 6548–6674). These
+four families are contiguous in file order in exactly that sequence — the
+22 undeclared rows are the literal tail of the 58 `Cobol60` rows, not
+scattered through the array.
+
+**Did anything change the picture since #14999 merged?** This worktree was
+already at `origin/main`'s tip by construction, so no commit by anyone —
+ALGOL's separately-owned campaign included — landed in any window to
+re-examine. Grepping this file for `VM-041` and `VM-060b` still shows no
+dedicated scoped design entry for either beyond the same one-liner in the
+"Ranked backlog" table; nobody picked up either design task in the meantime,
+and VM-058 remains rung 5 (new frontend semantics, not a red cell or missing
+parity).
+
+**Investigating each of the four families instead of assuming they carry
+equal risk, per this session's specific mandate:**
+
+- **Pointer/overflow (8 rows).** `cobol-iir-compiler::emit_string` (the
+  `WITH POINTER` overlay path, `emit_string_pointer_overlay`) and
+  `emit_unstring`'s pointer/overflow arm compile through `const`/`cmp_lt`/
+  `cmp_gt`/`cmp_le`/`cmp_ge`/`sub`/`add`/`mov`/`str_slice`/`str_concat`/
+  `jmp_if_true`/`jmp_if_false`/`jmp`/`label` — every one of those ops already
+  has a BEAM lowering (`cmp_gt`/`cmp_le` confirmed present in
+  `iir-to-beam/src/lower.rs`'s `cmp_*` match arm alongside `cmp_eq`/`cmp_ne`/
+  `cmp_lt`/`cmp_ge`; `str_slice`'s bounds check was the exact defect VM-D032
+  fixed two slices ago, so it now enforces its documented contract
+  explicitly rather than relying on `lists:sublist`'s incidental leniency).
+  This family is the most STRUCTURALLY novel of the four — the first COBOL
+  BEAM rows to chain multiple `str_slice`/`str_concat` calls through one
+  helper (`emit_string_pointer_overlay`) with fully run-time-computed
+  bounds (the overlay offset comes from a live `PIC 9` pointer item, not a
+  compile-time constant) — so it is the best candidate for exposing a real
+  gap, even though no op-level gap was found by inspection alone.
+- **Base INSPECT TALLYING/REPLACING (8 rows).** `emit_inspect_tallying`/
+  `emit_inspect_replacing` (the region-less path) compile through
+  `str_len`/`str_index`/`cmp_eq`/`cmp_ge`/`cmp_lt`/`const`/`add`/`sub`/`mov`/
+  `jmp*`/`label`/`and`/`or`/`str_const` — confirmed by extracting every
+  `self.emit("...")` op name from `cobol-iir-compiler::lib.rs` lines
+  2713–4963 (the whole INSPECT family) via a small script rather than
+  reading every line by eye. `str_len`/`str_index` were added two slices ago
+  (VM-040 STRING SIZE/delimiter) and `and`/`or` were proven in the
+  boolean/EVALUATE probe; nothing here is a novel combination. This is the
+  lowest-risk family, exactly as this session's brief hinted: it is the
+  closest in shape to already-proven work.
+- **VM-047c BEFORE/AFTER region rows (5 rows).** These reuse
+  `emit_inspect_region_window`, whose own op list is a strict SUBSET of the
+  base family's (an extra delimiter-scan loop using the same `str_index`/
+  `cmp_*`/`const`/`add`/`mov`/`jmp*`/`label` ops, no new op). The BEFORE/AFTER
+  region semantics themselves were already fully implemented and
+  exhaustively tested on all seven standard backends by VM-047c itself; this
+  is purely a missing-BEAM-column promotion of already-proven behavior, not
+  new design. Structurally as low-risk as the base family, just gated behind
+  it in file order.
+- **VM-057 STRING self-move edge case (1 row).** This row is isolated as its
+  own family (rather than folded into the base STRING slices) because it is
+  the exact regression that originally exposed the VM-057/VM-D032 defect
+  class on WASM: `STRING S DELIMITED BY SIZE INTO S` lowers (via
+  `cobol-iir-compiler::string_source`, which returns an `Operandy::Name`'s
+  own live register directly) to a single `str_slice` whose destination and
+  source are the IDENTICAL register. `iir-to-beam` shares WASM's general
+  register-allocation SHAPE — `reg_map: HashMap<String, u8>` maps one
+  x-register per variable NAME, the same "one mutable slot per name" pattern
+  that made WASM vulnerable — so this row specifically deserved the
+  aliasing-hazard scrutiny the task called for, not just an op-presence
+  check. Reading `iir-to-beam/src/lower.rs`'s `str_slice` arm line by line:
+  the bounds check reads `src_reg`/`start_reg`/`end_reg` directly (before
+  anything is staged); then `src_reg`, `start_reg` and `end_reg` are each
+  `OP_MOVE`d into scratch registers ABOVE `next_reg` (`s_src`/`s_start1`/
+  `s_len`) BEFORE the `call_ext` to `lists:sublist/3` runs; only AFTER that
+  call does `if rd != 0 { move x0 -> rd }` write the destination. Since
+  `s_src` already captured the original value of `src_reg` before `rd` is
+  ever touched, `rd == src_reg` (the exact self-move shape) is safe — the
+  aliasing hazard that hit WASM's bump-allocate-then-`memory.copy` shape
+  does NOT recur in BEAM's stage-then-call-then-writeback shape. This is a
+  negative result specific to one row, not evidence the family is riskier
+  than its size suggests; logged here so the next slice does not re-derive
+  it from scratch.
+
+**Conclusion:** all four families are rung-4 work (missing backend parity
+for an already-implemented, already-tested COBOL feature); none is a red
+cell, and no CI-protection or stale-documentation issue was found ahead of
+them (rungs 1–3 clear, as every prior slice's trailing validation confirms).
+`VM-041`/`VM-060b` remain rung 5 with no scoped design progress. Op-level
+risk is effectively tied across all four — every required op already has a
+multi-slice BEAM track record, and the one family flagged for a possible
+aliasing gap (VM-057) checks out safe by direct source reading. Given that
+tie, this slice selects the family the task's own investigation independently
+converges on as safest to execute cleanly: **base INSPECT TALLYING/REPLACING**
+— no op combination here is novel to BEAM, unlike pointer/overflow's
+first-time chained-overlay shape. This is a deliberate DEVIATION from pure
+file order (pointer/overflow's 8 rows precede this family in the array) —
+justified by the investigation above, not assumed by habit. Pointer/overflow
+is queued next specifically because its structural novelty makes it the best
+remaining candidate to actually expose a defect, per rung-1's standing
+priority over further easy parity work once a real candidate is identified.
+
+### VM-040 COBOL BEAM INSPECT TALLYING/REPLACING contract
+
+A bounded proof-promotion slice, following the established `.skip(N).take(4)`-
+over-`Cobol60`-filter pattern directly: no new design decisions, since the
+four target programs' compiled IIR uses no operation absent from
+`iir-to-beam`. Add `Beam` to the four rows' `backends` arrays (`TALLYING FOR
+ALL`, `TALLYING FOR CHARACTERS`, `TALLYING FOR LEADING`, `REPLACING ALL` —
+filtered indices 44–47, i.e. `.skip(44).take(4)`, since the 8 undeclared
+pointer/overflow rows occupy indices 36–43 ahead of this family and are
+deliberately left for the next slice), add
+`portable_text_stdout_cobol_beam_inspect_tallying_replacing` mirroring the
+existing COBOL BEAM probe tests, and run it against real `erl` before
+treating the rows as proven — per this loop's own "probe before declaring"
+discipline, even though the op-level audit above gave high confidence
+nothing new was needed.
+
+### VM-040 COBOL BEAM INSPECT TALLYING/REPLACING validation
+
+All four selected programs passed on real Erlang on the first probe
+(`portable_text_stdout_cobol_beam_inspect_tallying_replacing`); no
+`iir-to-beam` defect was found and no production code changed — the
+op-level audit's prediction held. `iir-to-beam`'s package suite is
+unaffected (still 107 tests: 22 unit, 80 integration, 5 doc, all passing)
+since no `iir-to-beam` source file changed. All 18 BEAM `lang_matrix` tests
+pass together (fourteen prior plus this new one), 15.03s. Focused Clippy on
+`lang-aot` and `iir-to-beam` with all targets and warnings denied is clean.
+Forty of 58 COBOL rows now declare BEAM (446 total declared cells, up from
+442). `feature_coverage_doc_counts_match_programs_source` was updated (COBOL-
+60 tuple `(58, 442)` → `(58, 446)`) and confirmed passing against the live
+`PROGRAMS` corpus. The full `non_algol_matrix_every_proven_cell_agrees`
+capstone confirmed the corrected total against a live run: 210 programs,
+**1365** cells exercised (was 1361), 210 skipped (the same host-wide missing
+`ilasm` pattern every prior slice reports), zero failures, in 496.04s —
+matching the op-level audit's prediction exactly (four newly exercised
+cells, zero newly skipped, zero failures).
+
+Reprioritize the remaining 18 undeclared COBOL BEAM rows (8 pointer/overflow,
+4 more base INSPECT TALLYING/REPLACING, 5 VM-047c BEFORE/AFTER region, 1
+VM-057 self-move) against VM-041 (Twig dynamic-string isolation), VM-060b
+(host input design) and VM-058 (INSPECT BEFORE/AFTER intersection) after this
+merges, following the same real policy comparison run above. Pointer/overflow
+is the natural next candidate per this slice's own reasoning (structurally
+novel, best remaining chance to surface a real defect) unless a fresh audit
+finds otherwise.
+
 ## VM-040 COBOL BEAM UNSTRING/delimiter probe (selected after #14983 merged)
 
 `git fetch origin && git merge origin/main` reported "Already up to date" —

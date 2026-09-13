@@ -6368,7 +6368,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY C.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("009\n009\n013"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // INSPECT characters counts padding: observe counters after each operation.
@@ -6389,7 +6389,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY C.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("011\n017"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // INSPECT leading stops at first mismatch: observe counters after each operation.
@@ -6418,7 +6418,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY C.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("007\n004\n007\n012"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // INSPECT replace all items: observe the rebuilt source text.
@@ -6444,7 +6444,7 @@ const PROGRAMS: &[Prog] = &[
                000000 DISPLAY S.\n\
                000000 STOP RUN.",
         expect: Expect::Stdout("XBXBX\nXBXBX\nXYXYX"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
     // INSPECT replace leading gap: observe the rebuilt source text.
@@ -9316,7 +9316,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::DartmouthBasic, 51, 357),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
-        (Language::Cobol60, 58, 442),
+        (Language::Cobol60, 58, 446),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -15520,4 +15520,28 @@ fn portable_text_stdout_cobol_beam_unstring_and_delimiter() {
     }
     assert_eq!(executed, 4);
     eprintln!("COBOL BEAM UNSTRING/delimiter: {executed} programs executed");
+}
+
+// VM-040: the base INSPECT TALLYING/REPLACING family (skip the 8 pointer/
+// overflow rows that precede it in file order — see the VM-040 COBOL BEAM
+// INSPECT TALLYING/REPLACING backlog contract for why this family, not the
+// next-in-file-order pointer/overflow family, was selected first). This
+// batch covers TALLYING FOR ALL, TALLYING FOR CHARACTERS, TALLYING FOR
+// LEADING and REPLACING ALL; the remaining four base rows (REPLACING LEADING,
+// REPLACING CHARACTERS, REPLACING with no rechaining, REPLACING first-match)
+// are the natural next slice.
+#[test]
+fn portable_text_stdout_cobol_beam_inspect_tallying_replacing() {
+    if !erl_ok() {
+        eprintln!("SKIP COBOL BEAM INSPECT TALLYING/REPLACING: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Cobol60).skip(44).take(4) {
+        let result = run_beam(program).expect("detected erl must execute COBOL");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("COBOL BEAM INSPECT TALLYING/REPLACING: {executed} programs executed");
 }
