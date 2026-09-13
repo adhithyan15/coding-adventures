@@ -166,7 +166,13 @@ The delivery order is:
    transport; missing or rejected identity evidence fails before credential
    storage; the consumed ID token is not retained in the stored credential.
    Concrete JWT, JOSE, JWKS, discovery, clock, storage, and network authorities
-   remain injected or out of scope.
+   remain injected or out of scope. That complete client-secret exchange path
+   can now load the exact static identity policy internally: retained
+   authentication, request endpoint/client, opaque verification context, and
+   nonce are bound to the registration before the source read; the source,
+   secret, transport, verifier, and storage effects retain separate
+   provider/trace audit gates; and only the final opaque credential revision is
+   released. The caller no longer supplies a decoded identity profile.
 6. **Confidential-client authentication:** web-service profiles for
    `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
    opaque custody references and audit-before-release rather than secrets in
@@ -233,9 +239,12 @@ The delivery order is:
    provider failures, and stale revisions retain local state. Client-secret
    Authorization Code exchange can additionally derive its opaque account key
    through the audited ID-token identity boundary before initial custody
-   creation, eliminating caller key selection for that path. Other grant and
-   authentication paths still keep identity proof and key selection as
-   separate composition steps. The corresponding `private_key_jwt` exchange
+   creation, eliminating caller key selection for that path. The exact static
+   identity policy can now be loaded inside that same client-secret composition
+   after registered request/authentication/context/nonce binding and before any
+   credential or transport effect, eliminating caller-owned decoded policy as
+   well. Other grant and authentication paths still keep identity proof and key
+   selection as separate composition steps. The corresponding `private_key_jwt` exchange
    can now use the same nonce-bound identity-to-custody path through the
    existing abstract signer, without enabling any concrete signing algorithm.
    Other grants still keep identity proof and key selection separate. Prepared
