@@ -81,7 +81,9 @@ const CONTROL_TEXT_METRICS: ControlTextMetrics = ControlTextMetrics {
 };
 const EDITOR_OVERLAY_PREFIX: &str = "venture-editor:";
 const PAGE_FOCUS_OVERLAY_PREFIX: &str = "venture-page-focus:";
+const FIND_OVERLAY_PREFIX: &str = "venture-find:";
 const SESSION_HISTORY_STATE_LIMIT: usize = 64;
+pub const MAX_FIND_MATCHES: usize = 256;
 
 fn apply_details_open_states(
     nodes: &mut [BrowserRenderNode],
@@ -321,8 +323,125 @@ fn navigation_target_offset(node: &PositionedNode, target: &str) -> Option<f64> 
     find(node, 0.0, target)
 }
 
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct BrowserFindState {
+    pub query: String,
+    pub match_count: usize,
+    pub active_match: Option<usize>,
+    pub wrapped: bool,
+    pub truncated: bool,
+}
+
+impl BrowserFindState {
+    pub fn result_label(&self) -> String {
+        match (self.active_match, self.match_count) {
+            (_, 0) if self.query.is_empty() => String::new(),
+            (_, 0) => "No matches".into(),
+            (Some(active), count) => {
+                let suffix = if self.truncated { "+" } else { "" };
+                format!("{} of {count}{suffix}", active + 1)
+            }
+            _ => String::new(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BrowserFindDiagnostic {
+    pub code: &'static str,
+    pub message: &'static str,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+struct BrowserFindMatch {
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    fixed: bool,
+}
+
+fn collect_find_matches(
+    node: &PositionedNode,
+    parent_x: f64,
+    parent_y: f64,
+    inherited_fixed: bool,
+    folded_query: &str,
+    matches: &mut Vec<BrowserFindMatch>,
+    truncated: &mut bool,
+) {
+    let x = parent_x + node.x;
+    let y = parent_y + node.y;
+    let fixed = inherited_fixed || positioned_node_is_fixed(node);
+    if let Some(layout_ir::Content::Text(text)) = &node.content {
+        let (folded_text, scalar_positions) = fold_find_text(&text.value);
+        let scalar_count = text.value.chars().count().max(1);
+        let mut search_start = 0;
+        while let Some(relative) = folded_text[search_start..].find(folded_query) {
+            if matches.len() == MAX_FIND_MATCHES {
+                *truncated = true;
+                break;
+            }
+            let start = search_start + relative;
+            let end = start + folded_query.len();
+            let start_scalar = scalar_positions
+                .iter()
+                .find(|(byte, _)| *byte == start)
+                .map_or(0, |(_, scalar)| *scalar);
+            let end_scalar = scalar_positions
+                .iter()
+                .find(|(byte, _)| *byte == end)
+                .map_or(scalar_count, |(_, scalar)| *scalar)
+                .max(start_scalar + 1)
+                .min(scalar_count);
+            matches.push(BrowserFindMatch {
+                x: x + node.width * start_scalar as f64 / scalar_count as f64,
+                y,
+                width: (node.width * (end_scalar - start_scalar) as f64 / scalar_count as f64)
+                    .max(1.0),
+                height: node.height.max(1.0),
+                fixed,
+            });
+            search_start = end;
+            if search_start >= folded_text.len() {
+                break;
+            }
+        }
+    }
+    if !*truncated {
+        for child in &node.children {
+            collect_find_matches(child, x, y, fixed, folded_query, matches, truncated);
+            if *truncated {
+                break;
+            }
+        }
+    }
+}
+
+fn fold_find_text(value: &str) -> (String, Vec<(usize, usize)>) {
+    let mut folded = String::new();
+    let mut positions = Vec::new();
+    let mut scalar_count = 0;
+    for (scalar, character) in value.chars().enumerate() {
+        scalar_count = scalar + 1;
+        for lowercase in character.to_lowercase() {
+            positions.push((folded.len(), scalar));
+            folded.push(lowercase);
+        }
+    }
+    positions.push((folded.len(), scalar_count));
+    (folded, positions)
+}
+
+fn positioned_node_is_fixed(node: &PositionedNode) -> bool {
+    let Some(ExtValue::Map(values)) = node.ext.get("positioned") else {
+        return false;
+    };
+    matches!(values.get("position"), Some(ExtValue::Str(value)) if value == "fixed")
+}
+
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 9] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 12] = [
     "address",
     "page-title",
     "status-text",
@@ -331,6 +450,9 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 9] = [
     "bookmark-label",
     "bookmark-disabled",
     "view-source-disabled",
+    "find-query",
+    "find-result-label",
+    "find-disabled",
     "navigation-disabled",
 ];
 
@@ -338,13 +460,17 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 9] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 8] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 12] = [
     "onBack",
     "onForward",
     "onHome",
     "onReload",
     "onToggleBookmark",
     "onViewSource",
+    "onFindChange",
+    "onFindNext",
+    "onFindPrevious",
+    "onFindClose",
     "onAddressChange",
     "onNavigate",
 ];
@@ -1430,6 +1556,10 @@ pub enum BrowserChromeAction {
     Navigate(BrowserNavigation),
     ToggleCurrentBookmark,
     ViewSource,
+    FindQuery(String),
+    FindNext,
+    FindPrevious,
+    CloseFind,
 }
 
 /// An event emitted by the shared Mosaic `VentureChrome` component.
@@ -1441,6 +1571,10 @@ pub enum BrowserChromeEvent {
     Reload,
     ToggleBookmark,
     ViewSource,
+    FindChange(String),
+    FindNext,
+    FindPrevious,
+    FindClose,
     AddressChange(String),
     Navigate,
 }
@@ -1454,6 +1588,10 @@ impl BrowserChromeEvent {
             Self::Reload => "onReload",
             Self::ToggleBookmark => "onToggleBookmark",
             Self::ViewSource => "onViewSource",
+            Self::FindChange(_) => "onFindChange",
+            Self::FindNext => "onFindNext",
+            Self::FindPrevious => "onFindPrevious",
+            Self::FindClose => "onFindClose",
             Self::AddressChange(_) => "onAddressChange",
             Self::Navigate => "onNavigate",
         }
@@ -1471,6 +1609,9 @@ pub struct BrowserChromeProps {
     pub bookmark_label: String,
     pub bookmark_disabled: bool,
     pub view_source_disabled: bool,
+    pub find_query: String,
+    pub find_result_label: String,
+    pub find_disabled: bool,
     pub navigation_disabled: bool,
 }
 
@@ -1546,10 +1687,24 @@ impl BrowserChromeController {
             BrowserChromeEvent::ViewSource if session.viewport().is_some() => {
                 Some(BrowserChromeAction::ViewSource)
             }
+            BrowserChromeEvent::FindChange(query) if session.viewport().is_some() => {
+                Some(BrowserChromeAction::FindQuery(query))
+            }
+            BrowserChromeEvent::FindNext if session.find_state().match_count > 0 => {
+                Some(BrowserChromeAction::FindNext)
+            }
+            BrowserChromeEvent::FindPrevious if session.find_state().match_count > 0 => {
+                Some(BrowserChromeAction::FindPrevious)
+            }
+            BrowserChromeEvent::FindClose => Some(BrowserChromeAction::CloseFind),
             BrowserChromeEvent::Back | BrowserChromeEvent::Forward | BrowserChromeEvent::Reload => {
                 None
             }
-            BrowserChromeEvent::ToggleBookmark | BrowserChromeEvent::ViewSource => None,
+            BrowserChromeEvent::ToggleBookmark
+            | BrowserChromeEvent::ViewSource
+            | BrowserChromeEvent::FindChange(_)
+            | BrowserChromeEvent::FindNext
+            | BrowserChromeEvent::FindPrevious => None,
         }
     }
 
@@ -1582,6 +1737,9 @@ impl BrowserChromeController {
             .to_string(),
             bookmark_disabled: navigation_disabled || session.history().current_url().is_none(),
             view_source_disabled: navigation_disabled || session.viewport().is_none(),
+            find_query: session.find_state().query.clone(),
+            find_result_label: session.find_state().result_label(),
+            find_disabled: navigation_disabled || session.viewport().is_none(),
             navigation_disabled,
         }
     }
@@ -1705,6 +1863,18 @@ impl BrowserHostController {
                         BrowserAuxiliaryDocument::view_source(page),
                     ),
                 ))
+            }
+            BrowserChromeAction::FindQuery(query) => Ok(BrowserHostEventOutcome::changed(
+                self.session.find_in_page(&query),
+            )),
+            BrowserChromeAction::FindNext => {
+                Ok(BrowserHostEventOutcome::changed(self.session.find_next()))
+            }
+            BrowserChromeAction::FindPrevious => Ok(BrowserHostEventOutcome::changed(
+                self.session.find_previous(),
+            )),
+            BrowserChromeAction::CloseFind => {
+                Ok(BrowserHostEventOutcome::changed(self.session.close_find()))
             }
         }
     }
@@ -1880,6 +2050,9 @@ pub struct BrowserSession {
     history_states: Vec<(NavigationEntryId, BrowserHistoryEntryState)>,
     history_restoration: Option<BrowserHistoryRestorationState>,
     fragment_navigation: Option<FragmentNavigationState>,
+    find_state: BrowserFindState,
+    find_matches: Vec<BrowserFindMatch>,
+    find_diagnostics: Vec<BrowserFindDiagnostic>,
     viewport_height: f64,
     navigation_id: u64,
     pending_host_effect: Option<BrowserHostEffect>,
@@ -1906,6 +2079,9 @@ impl BrowserSession {
             history_states: Vec::new(),
             history_restoration: None,
             fragment_navigation: None,
+            find_state: BrowserFindState::default(),
+            find_matches: Vec::new(),
+            find_diagnostics: Vec::new(),
             viewport_height: finite_non_negative(viewport_height),
             navigation_id: 0,
             pending_host_effect: None,
@@ -1965,6 +2141,167 @@ impl BrowserSession {
 
     pub fn viewport_mut(&mut self) -> Option<&mut BrowserViewport> {
         self.viewport.as_mut()
+    }
+
+    pub fn find_state(&self) -> &BrowserFindState {
+        &self.find_state
+    }
+
+    pub fn find_diagnostics(&self) -> &[BrowserFindDiagnostic] {
+        &self.find_diagnostics
+    }
+
+    pub fn find_in_page(&mut self, query: &str) -> bool {
+        let query = query.trim().to_string();
+        let previous = self.find_state.clone();
+        self.find_matches.clear();
+        self.find_diagnostics.clear();
+        let mut truncated = false;
+        if !query.is_empty() {
+            let folded_query = query.to_lowercase();
+            if let Some(positioned) = self
+                .viewport
+                .as_ref()
+                .map(|viewport| &viewport.page().paint.positioned)
+            {
+                collect_find_matches(
+                    positioned,
+                    0.0,
+                    0.0,
+                    false,
+                    &folded_query,
+                    &mut self.find_matches,
+                    &mut truncated,
+                );
+            }
+        }
+        if truncated {
+            self.find_diagnostics.push(BrowserFindDiagnostic {
+                code: "find-match-limit",
+                message: "find results were truncated at the shared match limit",
+            });
+        }
+        self.find_state = BrowserFindState {
+            query,
+            match_count: self.find_matches.len(),
+            active_match: (!self.find_matches.is_empty()).then_some(0),
+            wrapped: false,
+            truncated,
+        };
+        self.reveal_active_find_match();
+        self.refresh_find_presentation();
+        self.find_state != previous
+    }
+
+    pub fn find_next(&mut self) -> bool {
+        self.advance_find(false)
+    }
+
+    pub fn find_previous(&mut self) -> bool {
+        self.advance_find(true)
+    }
+
+    pub fn close_find(&mut self) -> bool {
+        let changed = !self.find_state.query.is_empty() || !self.find_matches.is_empty();
+        self.find_state = BrowserFindState::default();
+        self.find_matches.clear();
+        self.find_diagnostics.clear();
+        self.refresh_find_presentation();
+        changed
+    }
+
+    fn advance_find(&mut self, reverse: bool) -> bool {
+        let count = self.find_matches.len();
+        if count == 0 {
+            return false;
+        }
+        let current = self.find_state.active_match.unwrap_or(0);
+        let (next, wrapped) = if reverse {
+            if current == 0 {
+                (count - 1, true)
+            } else {
+                (current - 1, false)
+            }
+        } else if current + 1 == count {
+            (0, true)
+        } else {
+            (current + 1, false)
+        };
+        self.find_state.active_match = Some(next);
+        self.find_state.wrapped = wrapped;
+        self.reveal_active_find_match();
+        self.refresh_find_presentation();
+        true
+    }
+
+    fn reveal_active_find_match(&mut self) {
+        let Some(active) = self
+            .find_state
+            .active_match
+            .and_then(|index| self.find_matches.get(index))
+        else {
+            return;
+        };
+        if active.fixed {
+            return;
+        }
+        let Some(viewport) = self.viewport.as_mut() else {
+            return;
+        };
+        let top = viewport.scroll_state().offset_y();
+        let bottom = top + viewport.scroll_state().viewport_height;
+        if active.y < top || active.y + active.height > bottom {
+            viewport.set_scroll_offset_y((active.y - 12.0).max(0.0));
+        }
+    }
+
+    fn refresh_find_presentation(&mut self) {
+        let active = self.find_state.active_match;
+        let overlays = self
+            .find_matches
+            .iter()
+            .enumerate()
+            .map(|(index, result)| {
+                let mut metadata = std::collections::HashMap::new();
+                if result.fixed {
+                    metadata.insert("layout.position".into(), "fixed".into());
+                }
+                PaintInstruction::Group(PaintGroup {
+                    base: PaintBase {
+                        id: Some(format!("{FIND_OVERLAY_PREFIX}{index}")),
+                        metadata: (!metadata.is_empty()).then_some(metadata),
+                    },
+                    children: vec![PaintInstruction::Rect(PaintRect::filled(
+                        result.x,
+                        result.y,
+                        result.width,
+                        result.height,
+                        if active == Some(index) {
+                            "rgba(245, 158, 11, 0.62)"
+                        } else {
+                            "rgba(250, 204, 21, 0.38)"
+                        },
+                    ))],
+                    transform: None,
+                    opacity: None,
+                })
+            })
+            .collect::<Vec<_>>();
+        if let Some(viewport) = self.viewport.as_mut() {
+            viewport.page.paint.scene.instructions.retain(|instruction| {
+                !matches!(instruction,
+                    PaintInstruction::Group(group)
+                        if group.base.id.as_deref().is_some_and(|id| id.starts_with(FIND_OVERLAY_PREFIX)))
+            });
+            viewport.page.paint.scene.instructions.extend(overlays);
+        }
+    }
+
+    fn refresh_find_after_reflow(&mut self) {
+        let query = self.find_state.query.clone();
+        if !query.is_empty() {
+            self.find_in_page(&query);
+        }
     }
 
     pub const fn navigation_id(&self) -> u64 {
@@ -5032,6 +5369,7 @@ impl BrowserSession {
             .as_mut()?
             .reflow_page(updated, self.viewport_height);
         self.refresh_control_editor_presentation();
+        self.refresh_find_after_reflow();
         Some(())
     }
 
@@ -5091,6 +5429,7 @@ impl BrowserSession {
             .as_mut()?
             .reflow_page(page, self.viewport_height);
         self.refresh_control_editor_presentation();
+        self.refresh_find_after_reflow();
         self.viewport.as_ref()
     }
 
@@ -5230,6 +5569,7 @@ impl BrowserSession {
                                 .scroll_offset_y,
                         });
                 self.form_diagnostics.clear();
+                self.refresh_find_after_reflow();
                 return Ok(BrowserNavigationUpdate {
                     viewport_changed: true,
                     requests: Vec::new(),
@@ -5352,6 +5692,7 @@ impl BrowserSession {
         self.form_diagnostics.clear();
         self.navigation_id = self.navigation_id.wrapping_add(1).max(1);
         self.refresh_control_editor_presentation();
+        self.refresh_find_after_reflow();
         Ok(BrowserNavigationUpdate {
             viewport_changed: true,
             requests: self.pending_subresource_requests(),
@@ -5451,6 +5792,7 @@ impl BrowserSession {
             viewport.reflow_page(updated, self.viewport_height);
         }
         self.refresh_control_editor_presentation();
+        self.refresh_find_after_reflow();
         let pending_after = self.pending_subresource_requests();
         let requests = pending_after
             .iter()
@@ -6488,6 +6830,9 @@ mod tests {
                 bookmark_label: "Bookmark".into(),
                 bookmark_disabled: true,
                 view_source_disabled: true,
+                find_query: String::new(),
+                find_result_label: String::new(),
+                find_disabled: true,
                 navigation_disabled: false,
             }
         );
@@ -6541,6 +6886,9 @@ mod tests {
                 bookmark_label: "Bookmark".into(),
                 bookmark_disabled: false,
                 view_source_disabled: false,
+                find_query: String::new(),
+                find_result_label: String::new(),
+                find_disabled: false,
                 navigation_disabled: false,
             }
         );
@@ -6565,7 +6913,95 @@ mod tests {
         assert!(disabled.forward_disabled);
         assert!(disabled.bookmark_disabled);
         assert!(disabled.view_source_disabled);
+        assert!(disabled.find_disabled);
         assert!(disabled.navigation_disabled);
+    }
+
+    #[test]
+    fn shared_find_session_matches_wraps_scrolls_and_paints_without_host_policy() {
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                b"<p>Venture first</p><div style='height: 180px'></div><p>venture second</p>"
+                    .to_vec(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(220.0, 100.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new("http://example.test/", 60.0);
+        session
+            .execute(BrowserNavigation::Home, &pipeline, &fetcher)
+            .unwrap();
+
+        assert!(session.find_in_page("VENTURE"));
+        assert_eq!(
+            session.find_state(),
+            &BrowserFindState {
+                query: "VENTURE".into(),
+                match_count: 2,
+                active_match: Some(0),
+                wrapped: false,
+                truncated: false,
+            }
+        );
+        assert_eq!(session.find_state().result_label(), "1 of 2");
+        assert_eq!(find_overlay_count(session.viewport().unwrap()), 2);
+
+        assert!(session.find_next());
+        assert_eq!(session.find_state().result_label(), "2 of 2");
+        assert!(session.scroll_metrics().unwrap().offset_y > 0.0);
+        assert!(session.find_next());
+        assert_eq!(session.find_state().active_match, Some(0));
+        assert!(session.find_state().wrapped);
+
+        assert!(session.close_find());
+        assert_eq!(session.find_state(), &BrowserFindState::default());
+        assert_eq!(find_overlay_count(session.viewport().unwrap()), 0);
+
+        let many = format!("<p>{}</p>", "match ".repeat(MAX_FIND_MATCHES + 1));
+        let many_fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                many.as_bytes().to_vec(),
+            ))
+        };
+        session
+            .execute(
+                BrowserNavigation::Navigate("http://example.test/many".into()),
+                &pipeline,
+                &many_fetcher,
+            )
+            .unwrap();
+        assert!(session.find_in_page("match"));
+        assert_eq!(session.find_state().match_count, MAX_FIND_MATCHES);
+        assert!(session.find_state().truncated);
+        assert_eq!(session.find_diagnostics()[0].code, "find-match-limit");
+    }
+
+    fn find_overlay_count(viewport: &BrowserViewport) -> usize {
+        viewport
+            .page()
+            .paint
+            .scene
+            .instructions
+            .iter()
+            .filter(|instruction| {
+                matches!(instruction,
+                    PaintInstruction::Group(group)
+                        if group.base.id.as_deref().is_some_and(|id| id.starts_with(FIND_OVERLAY_PREFIX)))
+            })
+            .count()
     }
 
     #[test]
@@ -6577,6 +7013,10 @@ mod tests {
             BrowserChromeEvent::Reload,
             BrowserChromeEvent::ToggleBookmark,
             BrowserChromeEvent::ViewSource,
+            BrowserChromeEvent::FindChange(String::new()),
+            BrowserChromeEvent::FindNext,
+            BrowserChromeEvent::FindPrevious,
+            BrowserChromeEvent::FindClose,
             BrowserChromeEvent::AddressChange(String::new()),
             BrowserChromeEvent::Navigate,
         ];

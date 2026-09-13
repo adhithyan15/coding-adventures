@@ -1116,7 +1116,7 @@ mod mosaic_ffi {
             .map(|message| format!(",\"error\":{}", json_string(message)))
             .unwrap_or_default();
         let value = format!(
-            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"view-source-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
+            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"view-source-disabled\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
             json_string(&props.address),
             json_string(&props.page_title),
             json_string(&props.status_text),
@@ -1125,6 +1125,9 @@ mod mosaic_ffi {
             json_string(&props.bookmark_label),
             props.bookmark_disabled,
             props.view_source_disabled,
+            json_string(&props.find_query),
+            json_string(&props.find_result_label),
+            props.find_disabled,
         );
         CString::new(value)
             .expect("JSON response contains no NUL")
@@ -1183,6 +1186,10 @@ mod mosaic_ffi {
             "onReload" => Some(BrowserChromeEvent::Reload),
             "onToggleBookmark" => Some(BrowserChromeEvent::ToggleBookmark),
             "onViewSource" => Some(BrowserChromeEvent::ViewSource),
+            "onFindChange" => string_arg(value).map(BrowserChromeEvent::FindChange),
+            "onFindNext" => Some(BrowserChromeEvent::FindNext),
+            "onFindPrevious" => Some(BrowserChromeEvent::FindPrevious),
+            "onFindClose" => Some(BrowserChromeEvent::FindClose),
             "onNavigate" => Some(BrowserChromeEvent::Navigate),
             "onAddressChange" => string_arg(value).map(BrowserChromeEvent::AddressChange),
             _ => None,

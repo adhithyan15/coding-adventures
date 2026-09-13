@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Reading — Labels, a Form, and the Same Facts as Sentences",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3a41364c29036727",
+  "sourceHash": "fnv1a64:0080e43cb22bfe40",
   "lessons": [
     {
       "id": "PA-C45-labels",
@@ -391,14 +391,14 @@
       "title": "(reading) (merā nāṁ aman hai. merā kamm naukarī hai.) (nāṁ · umar · kamm · rihāiś · bhāśā · foun) (nāṁ: aman · umar: 25 · kamm: naukarī) — the same six facts, as sentences",
       "headword": "(reading)",
       "romanization": "merā nāṁ aman hai. merā kamm naukarī hai.",
-      "gloss": "the same six facts as sentences - forty-three words of Punjabi in a row, and not one of them new",
+      "gloss": "the same six facts as sentences - seventy-two words of Punjabi in a row, and not one of them new",
       "script": "gurmukhi",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58beb19a93135601",
+      "sourceHash": "fnv1a64:697b0eeda0d2ef79",
       "notice": null,
       "blocks": [
         {
@@ -424,7 +424,7 @@
             },
             {
               "kind": "speech",
-              "text": "Forty-three words, and not one of them is new."
+              "text": "Seventy-two words, and not one of them is new."
             }
           ]
         },
@@ -435,7 +435,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ਮੇਰਾ ਨਾਂ ਅਮਨ ਹੈ। ਮੇਰਾ ਕੰਮ ਨੌਕਰੀ ਹੈ। ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ। ਮੈਂ ਸੋਚਦਾ ਹਾਂ ਕਿ ਪੰਜਾਬੀ ਚੰਗਾ ਹੈ। ਮਨਨ ਮੇਰਾ ਦੋਸਤ ਹੈ। ਮਨਨ ਦਾ ਕੰਮ ਖੇਤੀ ਹੈ। ਮਨਨ ਠੀਕ-ਠਾਕ ਹੈ। ਪਰ ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ ਕਿ ਉਹ ਕਿੱਥੇ ਹੈ। ਅਸੀਂ ਜਲਦੀ ਮਿਲਾਂਗੇ। ਧੰਨਵਾਦ।."
+              "text": "ਮੇਰਾ ਨਾਂ ਅਮਨ ਹੈ। ਮੇਰਾ ਕੰਮ ਨੌਕਰੀ ਹੈ। ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ। ਮੈਂ ਸੋਚਦਾ ਹਾਂ ਕਿ ਪੰਜਾਬੀ ਚੰਗਾ ਹੈ। ਮਨਨ ਮੇਰਾ ਦੋਸਤ ਹੈ। ਮਨਨ ਦਾ ਕੰਮ ਖੇਤੀ ਹੈ। ਮਨਨ ਠੀਕ-ਠਾਕ ਹੈ। ਉਹ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹੈ। ਉਹ ਸੋਚਦਾ ਹੈ ਕਿ ਪੰਜਾਬੀ ਚੰਗਾ ਹੈ। ਉਹ ਮੇਰਾ ਦੋਸਤ ਹੈ। ਮੈਂ ਠੀਕ-ਠਾਕ ਹਾਂ। ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ। ਮੈਂ ਸੋਚਦਾ ਹਾਂ ਕਿ ਪੰਜਾਬੀ ਚੰਗਾ ਹੈ। ਪਰ ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ ਕਿ ਉਹ ਕਿੱਥੇ ਹੈ। ਅਸੀਂ ਜਲਦੀ ਮਿਲਾਂਗੇ। ਧੰਨਵਾਦ।."
             },
             {
               "kind": "pause",

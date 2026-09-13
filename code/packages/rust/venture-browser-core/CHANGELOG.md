@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add retained find-in-page state, bounded visible-text matching diagnostics,
+  wrapping active-result navigation, shared reveal scrolling, and
+  backend-neutral result highlights.
+
 - Add retained access-key candidates and diagnostics with deterministic
   duplicate resolution, modal containment, accessibility discoverability, and
   transactional link, control, disclosure, and top-layer activation.

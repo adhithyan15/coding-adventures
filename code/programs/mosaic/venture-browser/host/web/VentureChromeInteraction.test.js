@@ -29,6 +29,9 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       bookmarkLabel: "Bookmark",
       bookmarkDisabled: true,
       viewSourceDisabled: true,
+      findQuery: "",
+      findResultLabel: "",
+      findDisabled: true,
       navigationDisabled: true,
       contentSurface,
     };
@@ -44,6 +47,12 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
         }
         if (request.event.type === "toggleBookmark") {
           props = { ...props, bookmarkLabel: "Remove Bookmark" };
+        }
+        if (request.event.type === "findChange") {
+          props = { ...props, findQuery: request.event.value, findResultLabel: "1 of 2" };
+        }
+        if (request.event.type === "findNext") {
+          props = { ...props, findResultLabel: "2 of 2" };
         }
         props = {
           ...props,
@@ -68,6 +77,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(controls.viewSource.disabled, true);
     assert.equal(controls.go.disabled, true);
     assert.equal(controls.address.readOnly, true);
+    assert.equal(controls.find.readOnly, true);
     assert.match(renderScope(root).textContent, /Ready from MosaicHost/);
     assert.ok(root.querySelector(`[data-venture-host-surface="${backend}"]`));
 
@@ -83,6 +93,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       backDisabled: false,
       bookmarkDisabled: false,
       viewSourceDisabled: false,
+      findDisabled: false,
       navigationDisabled: false,
       statusText: "Enabled by mosaic-host-ready",
     };
@@ -96,6 +107,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(controls.viewSource.disabled, false);
     assert.equal(controls.go.disabled, false);
     assert.equal(controls.address.readOnly, false);
+    assert.equal(controls.find.readOnly, false);
     assert.match(renderScope(root).textContent, /Enabled by mosaic-host-ready/);
 
     controls.bookmark.click();
@@ -107,6 +119,18 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     controls.viewSource.click();
     await settle();
     assert.equal(calls.at(-1)?.type, "viewSource");
+
+    controls = readControls(root);
+    controls.find.value = "venture";
+    controls.find.dispatchEvent(new Event(backend === "html" ? "input" : "change", { bubbles: true }));
+    await settle();
+    assert.deepEqual(calls.at(-1), { type: "findChange", value: "venture" });
+    assert.match(renderScope(root).textContent, /1 of 2/);
+    controls = readControls(root);
+    controls.findNext.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "findNext");
+    assert.match(renderScope(root).textContent, /2 of 2/);
 
     controls = readControls(root);
     const nextAddress = "https://venture.test/next";
@@ -131,7 +155,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(calls.at(-1)?.type, "navigate");
     assert.deepEqual(
       calls.map(event => event.type),
-      ["toggleBookmark", "viewSource", "addressChange", "navigate", "navigate"],
+      ["toggleBookmark", "viewSource", "findChange", "findNext", "addressChange", "navigate", "navigate"],
     );
     assert.match(renderScope(root).textContent, /Handled navigate through MosaicHost/);
   } finally {
@@ -175,8 +199,9 @@ function readControls(root) {
   const buttons = new Map(
     [...scope.querySelectorAll("button")].map(button => [button.textContent.trim(), button]),
   );
-  const address = scope.querySelector("input");
+  const [address, find] = scope.querySelectorAll("input");
   assert.ok(address, "address input must exist");
+  assert.ok(find, "find input must exist");
   for (const label of ["Back", "Forward", "Reload", "Bookmark", "Remove Bookmark", "View Source", "Go"]) {
     if (label === "Bookmark" || label === "Remove Bookmark") continue;
     assert.ok(buttons.has(label), `${label} button must exist`);
@@ -190,7 +215,9 @@ function readControls(root) {
     bookmark,
     viewSource: buttons.get("View Source"),
     go: buttons.get("Go"),
+    findNext: buttons.get("Next"),
     address,
+    find,
   };
 }
 
