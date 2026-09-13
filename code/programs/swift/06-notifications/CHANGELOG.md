@@ -1,5 +1,10 @@
 # Changelog — 06-notifications
 
+## Unreleased
+
+### Fixed
+- Include `WaterFacts.swift` in the checked-in Xcode project so direct Xcode and CodeQL builds compile the notification schedule.
+
 ## [1.0.0] — 2026-03-29
 
 ### Added
