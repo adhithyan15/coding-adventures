@@ -55,47 +55,46 @@
 % ball-and-socket) or a jammed finger (an interphalangeal hinge).
 %
 % ---------------------------------------------------------------------------
-% Provenance (nothing here is asserted from memory — every joint_type→example
-% pair was read out of a page fetched this session, and any pair whose example
-% token did not appear VERBATIM in a fetched sentence was DROPPED). All seven
-% rows come from the SAME single source: the U.S. National Library of Medicine
-% (NIH) NCBI Bookshelf reference StatPearls "Anatomy, Joints"
-% (ncbi.nlm.nih.gov/books/NBK507893/). Each example token below is quoted inside
-% its verbatim source sentence so any reader can re-check it:
+% Provenance. All seven rows come from ONE page: the U.S. National Library of
+% Medicine (NIH) NCBI Bookshelf reference StatPearls "Anatomy, Joints"
+% (ncbi.nlm.nih.gov/books/NBK507893/). StatPearls is hosted and peer-reviewed on
+% the NLM's Bookshelf, the same judgement the sibling lung-lobes table makes, so
+% `trust authoritative`.
 %
-%   hinge → elbow
-%     "Examples include the elbow, knee, ankle, and interphalangeal joints."
+% EVERY ROW CARRIES ITS OWN SPAN, below, in the row's `{ ... }` block
+% (ADJ-TABLES RS-5e). No row restates `locator` or `trust`: one page, one tier,
+% and a row inherits every field it does not write. (Contrast
+% `biology/hormone-glands.adj`, whose twelve rows sit on seven different pages
+% and each carry a locator.)
 %
-%   pivot → atlantoaxial
-%     "The atlantoaxial joint, formed by the 1st (atlas) and 2nd (axis) cervical
-%      vertebrae, is a pivot joint."
+% WHAT #14986 CHANGED. The table had ONE envelope and it was the HINGE row's own
+% examples sentence — so a recall of the HIP came back warranted by a sentence
+% about elbows and ankles. The envelope now carries the FRAMING span, which
+% warrants no row: the page's own list of the six movement classes.
 %
-%   condyloid → knuckles
-%     "Examples of condyloid joints are the knuckles, formed by the distal
-%      metacarpals and proximal phalanges of the medial 4 fingers."
+% THREE SPANS ARE WIDENED, per ../README.md, "A citation must name its own
+% subject":
 %
-%   saddle → thumb
-%     "This joint allows the thumb to flex and extend parallel to the palm and
-%      abduct and adduct perpendicular to the palm, making the digit opposable."
-%     (The saddle joint of the preceding sentence is "the joint formed by the
-%      trapezium and 1st metacarpal bone" — the base of the thumb.)
+%   hinge     its sentence opens "Examples include..." and names no type
+%   planar    the same shape
+%   saddle    the page never puts "saddle" and "thumb" in one sentence at all
 %
-%   planar → intercarpal
-%     "Examples include the acromioclavicular, intercarpal, and intertarsal
-%      joints."
+%   This page allows widening because its type-defining sentences are ordinary
+%   prose. Two tables probed alongside it are NOT convertible for exactly the
+%   opposite reason: `language/idiom-meaning.adj` and
+%   `physics/energy-form-family.adj` carry the grouping in a HEADING, which no
+%   widening can reach.
 %
-%   ball_and_socket → hip, shoulder
-%     "The body's only ball-and-socket joints are the hip and shoulder
-%      (glenohumeral) joints."
+% THE OLD HEADER ALREADY CONTAINED THE DEFECT, IN PROSE. Its saddle entry quoted
+% "This joint allows the thumb to flex and extend..." and then explained, in a
+% parenthetical underneath, which joint "This joint" meant. A quote that needs a
+% note to say what it is about is the thing the README rule exists to catch; the
+% row now carries all four sentences instead.
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the StatPearls sentence that fixes
-% the first row (hinge → elbow). Every OTHER row's per-fact source and verbatim
-% span is listed above, so each pair remains independently checkable. All seven
-% rows share the ONE source — StatPearls, hosted and peer-reviewed on the NIH
-% National Library of Medicine's NCBI Bookshelf — so, following the same
-% NIH/NLM-primary judgement used by the sibling lung-lobes table (which cites the
-% same StatPearls corpus), `trust authoritative`.
+% The header no longer re-quotes the seven spans. They ship in the rows, and a
+% second copy is a second thing to keep true — in #15137 two of five such
+% restatements had drifted from their page.
+%
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -103,15 +102,51 @@
 table joint_example {
     columns joint_type, example
 
-    row (hinge, elbow)
-    row (pivot, atlantoaxial)
-    row (condyloid, knuckles)
-    row (saddle, thumb)
-    row (planar, intercarpal)
-    row (ball_and_socket, hip)
-    row (ball_and_socket, shoulder)
+    row (hinge, elbow) {
+        % WIDENED. The examples sentence says only "Examples
+        % include..." and names no joint type -- it was this table's
+        % whole envelope, which is why a recall of the HIP used to
+        % come back warranted by a sentence about the elbow. Widened
+        % to the nearest sentence naming hinge joints.
+        source "Flexion and extension are typically the only movements allowed by hinge joints. Examples include the elbow, knee, ankle, and interphalangeal joints."
+    }
+    row (pivot, atlantoaxial) {
+        source "The atlantoaxial joint, formed by the 1st (atlas) and 2nd (axis) cervical vertebrae, is a pivot joint."
+    }
+    row (condyloid, knuckles) {
+        source "Examples of condyloid joints are the knuckles, formed by the distal metacarpals and proximal phalanges of the medial 4 fingers."
+    }
+    row (saddle, thumb) {
+        % WIDENED, and the longest span here at 369 characters. The
+        % page never puts "saddle" and "thumb" in one sentence: it
+        % defines the saddle joint, gives the trapezium/metacarpal
+        % joint as its example, and only THEN says that joint moves
+        % the thumb. All four sentences are needed to carry the row
+        % without a reader supplying a step.
+        source "A saddle joint is an articulation between 2 saddle-shaped bones, which are concave in one direction and convex in another. This joint type is biaxial. One example is the joint formed by the trapezium and 1st metacarpal bone. This joint allows the thumb to flex and extend parallel to the palm and abduct and adduct perpendicular to the palm, making the digit opposable."
+    }
+    row (planar, intercarpal) {
+        % WIDENED, same reason as hinge: its own sentence begins
+        % "Examples include..." and names no type.
+        source "Planar joints are multiaxial but restricted by the surrounding ligaments. Examples include the acromioclavicular, intercarpal, and intertarsal joints."
+    }
+    row (ball_and_socket, hip) {
+        % The page writes "ball-and-socket"; the atom uses
+        % underscores. The span is quoted as the page has it.
+        source "The body's only ball-and-socket joints are the hip and shoulder (glenohumeral) joints."
+    }
+    row (ball_and_socket, shoulder) {
+        % Shares the hip row's sentence -- it states both. Each row
+        % carries its own copy so either can be checked, or changed,
+        % without the other.
+        source "The body's only ball-and-socket joints are the hip and shoulder (glenohumeral) joints."
+    }
 
-    source "Examples include the elbow, knee, ankle, and interphalangeal joints."
+    % The envelope is the FRAMING span -- it defends the TABLE (these are
+    % the six movement classes), and warrants no row. Until #14986 it was
+    % the HINGE row's own examples sentence, so a recall of the hip came
+    % back proved by a sentence about elbows and ankles.
+    source "Thus, synovial joints are often classified by the movement types they permit: hinge, saddle, planar, pivot, condyloid, and ball-and-socket."
     locator "https://www.ncbi.nlm.nih.gov/books/NBK507893/"
     trust authoritative
 }
