@@ -5,6 +5,39 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — a dashed border is drawn, and `border-style: none` suppresses one (UI79, #14835)
+
+`Modifier.border` draws a solid stroke and takes no `PathEffect`, so a non-solid
+border has to be drawn: `drawRoundRect` with a dashed `Stroke`, which honours
+the authored corner radius — a plain `drawRect` would square off every rounded
+box that dashes. Trestle authors two, the composer's plus box (radius 8) and the
+empty-state box (radius 13); both rendered **solid** before while the style was
+reported dropped.
+
+CSS does not specify dash geometry, so the lengths are a choice: 4dp on / 4dp
+off for `dashed`, and for `dotted` a round cap with a zero-length on-segment,
+which is what produces dots rather than short dashes.
+
+`border-style: none` now **suppresses** the border. Consuming it without acting
+would have been worse than the old drop — the report would fall silent while a
+border still painted.
+
+`border-style` degradations on Trestle go from **5 to 0**, and that is co-total
+rather than convenient: all three authored values are now genuinely handled
+(`solid` keeps `Modifier.border`, `dashed`/`dotted` are drawn, `none`
+suppresses).
+
+#### `drawWithContent`, not `drawBehind` — measured
+
+The first attempt used `drawBehind`. The Kotlin compiled, the stroke ran, and
+**no dashes appeared**: this modifier is appended after `.background(..)`, so
+drawing behind it paints the dashes under the background.
+
+The screenshot could not settle it either way — the two dashed boxes are small,
+so their straight edges are ~14px and a dash there is a one-run difference lost
+in noise. A minimal probe did: a 200x60 dashed box renders **24 separate runs**
+along its top edge where solid renders 1.
+
 ### Fixed — the width guard and its drop report now share one answer (UI59, #14815)
 
 #15062 landed `flex-shrink: 0` but left the drop report claiming those parts

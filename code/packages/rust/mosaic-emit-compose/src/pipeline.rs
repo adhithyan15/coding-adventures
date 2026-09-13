@@ -222,6 +222,21 @@ pub fn from_pipeline(
     // `RoundedCornerShape`/`clip` without their imports is Kotlin that does
     // not compile, which is exactly how the XAML `Not()` helper went wrong in
     // #14793. An unused Kotlin import is a warning; a missing one is an error.
+    // UI79 -- a dashed border is drawn, so it needs the draw-scope types.
+    // `drawBehind` itself is imported by the per-edge block below; this
+    // adds only what the dash stroke needs on top.
+    if style.parts.iter().any(|part| {
+        part.base.iter().any(|p| {
+            p.name == "border-style"
+                && matches!(p.value.trim().trim_matches('"'), "dashed" | "dotted")
+        })
+    }) {
+        writeln!(out, "import androidx.compose.ui.draw.drawWithContent").unwrap();
+        writeln!(out, "import androidx.compose.ui.geometry.CornerRadius").unwrap();
+        writeln!(out, "import androidx.compose.ui.graphics.PathEffect").unwrap();
+        writeln!(out, "import androidx.compose.ui.graphics.StrokeCap").unwrap();
+        writeln!(out, "import androidx.compose.ui.graphics.drawscope.Stroke").unwrap();
+    }
     // UI59 -- only when some part says it cannot shrink. Emitted from the
     // STYLE rather than the layout: an unused Kotlin import is a warning
     // and a missing one is an error, so over-approximating here is the
@@ -3882,6 +3897,10 @@ fn compose_box_style(
     let mut font_family_mono = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
+    // UI79 -- `dashed`/`dotted`; `None` means the solid `Modifier.border`.
+    let mut border_dash: Option<String> = None;
+    // `border-style: none` suppresses the border entirely.
+    let mut border_none = false;
     // UI79 -- per-edge borders. `Modifier.border` draws all four edges and
     // has no per-edge form, so each authored edge is DRAWN, not configured.
     // Indexed [top, right, bottom, left], the CSS order.
@@ -4019,6 +4038,24 @@ fn compose_box_style(
                 }
             }
             "border-color" => set(&mut border_color, compose_color_value(&p.value)),
+            // UI79 -- a non-solid border is DRAWN, because
+            // `Modifier.border` has no dash. Captured base-only: a border
+            // that changes dash pattern per state is not a thing anyone
+            // authors, and `drawBehind` takes a value, not a layer stack.
+            "border-style" if layer_idx.is_none() => {
+                let raw = p.value.trim().trim_matches('"');
+                match raw {
+                    "dashed" | "dotted" => border_dash = Some(raw.to_string()),
+                    // `none` means NO border, so it must suppress one that
+                    // `border-width` would otherwise draw. Consuming it
+                    // without acting would be worse than the old drop: the
+                    // report would fall silent while a border still
+                    // painted.
+                    "none" => border_none = true,
+                    "solid" => {}
+                    _ => dropped.push((p.name.clone(), p.value.clone())),
+                }
+            }
             // UI79 -- `border-{top,right,bottom,left}-{width,color}`.
             //
             // `-style` is deliberately NOT handled here: `solid` is the only
@@ -4237,14 +4274,48 @@ fn compose_box_style(
 
     // .border — needs at least the width.  Default color `Color.Gray`
     // when only the width is set.
-    if !border_width.empty() {
+    if !border_width.empty() && !border_none {
         let w_expr = numeric_layer_value(&border_width, state_layers, "0");
         let c_expr = if border_color.empty() {
             "Color.Gray".to_string()
         } else {
             layer_value(&border_color, state_layers, "Color.Gray")
         };
-        modifier.push_str(&format!("\n{cpad}.border({w_expr}.dp, {c_expr}{shape_arg})"));
+        match &border_dash {
+            // `Modifier.border` draws a solid stroke and takes no
+            // `PathEffect`, so a dash has to be drawn. `drawRoundRect`
+            // with a `Stroke` honours the authored corner radius; a plain
+            // `drawRect` would square off every rounded box that dashes.
+            //
+            // CSS does not specify dash geometry, so these lengths are a
+            // choice: 4dp on / 4dp off for `dashed`, and for `dotted` a
+            // round cap with a zero-length on-segment, which is what
+            // actually produces dots rather than short dashes.
+            Some(kind) => {
+                let radius_px = radius
+                    .as_deref()
+                    .map(|r| format!("{r}.dp.toPx()"))
+                    .unwrap_or_else(|| "0f".to_string());
+                let (intervals, cap) = if kind == "dotted" {
+                    ("0f, {w}.dp.toPx() * 2".to_string(), ", cap = StrokeCap.Round")
+                } else {
+                    ("4.dp.toPx(), 4.dp.toPx()".to_string(), "")
+                };
+                let intervals = intervals.replace("{w}", &w_expr);
+                modifier.push_str(&format!(
+                    // `drawWithContent`, NOT `drawBehind`: this modifier
+                    // is appended after `.background(..)`, and a
+                    // `drawBehind` there paints UNDER the background, so
+                    // the dashes were drawn and then covered. Measured --
+                    // the emitted Kotlin compiled, the stroke ran, and the
+                    // screenshot showed no dashes at all.
+                    "\n{cpad}.drawWithContent {{ drawContent(); drawRoundRect(color = {c_expr}, cornerRadius = CornerRadius({radius_px}), style = Stroke(width = {w_expr}.dp.toPx(){cap}, pathEffect = PathEffect.dashPathEffect(floatArrayOf({intervals}), 0f))) }}"
+                ));
+            }
+            None => {
+                modifier.push_str(&format!("\n{cpad}.border({w_expr}.dp, {c_expr}{shape_arg})"))
+            }
+        }
     }
 
     // UI79 -- per-edge borders, drawn on the BORDER BOX.
@@ -11961,6 +12032,78 @@ mod tests {
 
 
     // ---- HostScroll (#14732) -----------------------------------------
+
+    /// UI79 — a non-solid border is DRAWN; `Modifier.border` has no dash.
+    ///
+    /// Both directions: `solid` (and an unauthored style) must keep the
+    /// byte-identical `Modifier.border`, because switching every bordered
+    /// part to a hand-drawn stroke would look like success here while
+    /// changing output everywhere.
+    #[test]
+    fn ui79_a_dashed_border_is_drawn_not_bordered() {
+        let render = |style_value: Option<&str>| {
+            let mut base = vec![
+                sprop("border-width", "2px"),
+                sprop("border-color", "#243146"),
+                sprop("border-radius", "8px"),
+            ];
+            if let Some(v) = style_value {
+                base.push(sprop("border-style", v));
+            }
+            let style = StyleDef {
+                component_name: "S".to_string(),
+                parts: vec![PartStyle {
+                    name: "boxy".to_string(),
+                    base,
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+            let mut root = node("Column", vec![], vec![]);
+            root.part_name = Some("boxy".to_string());
+            from_pipeline(&component("S", vec![], vec![]), &layout("S", root), &style)
+                .unwrap()
+                .output
+        };
+
+        // The control: no style, and an explicit `solid`, both keep
+        // `Modifier.border` and draw nothing by hand.
+        for control in [None, Some("solid")] {
+            let out = render(control);
+            assert!(out.contains(".border(2.dp,"), "control {control:?} — got:\n{out}");
+            assert!(
+                !out.contains("dashPathEffect"),
+                "control {control:?} must not draw — got:\n{out}"
+            );
+        }
+
+        let dashed = render(Some("\"dashed\""));
+        assert!(
+            dashed.contains("dashPathEffect(floatArrayOf(4.dp.toPx(), 4.dp.toPx())"),
+            "got:\n{dashed}"
+        );
+        // `drawWithContent`, not `drawBehind`: this sits after
+        // `.background(..)` in the chain, and drawing behind there paints
+        // the dashes UNDER the background. Measured — the Kotlin compiled,
+        // the stroke ran, and nothing appeared.
+        assert!(dashed.contains(".drawWithContent {"), "got:\n{dashed}");
+        // The authored corner radius must survive; a plain `drawRect`
+        // would square off every rounded box that dashes.
+        assert!(
+            dashed.contains("cornerRadius = CornerRadius(8.dp.toPx())"),
+            "got:\n{dashed}"
+        );
+        assert!(
+            !dashed.contains(".border(2.dp,"),
+            "a dashed border must REPLACE the solid one — got:\n{dashed}"
+        );
+
+        // `dotted` is a round cap with a zero-length on-segment; a short
+        // dash is not a dot.
+        let dotted = render(Some("\"dotted\""));
+        assert!(dotted.contains("cap = StrokeCap.Round"), "got:\n{dotted}");
+        assert!(dotted.contains("floatArrayOf(0f,"), "got:\n{dotted}");
+    }
 
     /// UI59 — the emitter and the drop reporter must give the SAME answer.
     ///
