@@ -28,6 +28,15 @@ failure must fail. Promote only proven cells, run focused COBOL regression,
 fresh individual matrix cells, coverage consistency and Clippy. Specify any
 new backend defect before production edits.
 
+Validation: six real Erlang probes passed before promotion; all thirteen
+focused COBOL BEAM tests passed together. Fresh cells 469–474 emitted
+positive execution sentinels, and coverage consistency plus all-target
+lang-aot/iir-to-beam Clippy passed. No production fix was needed. All 58
+COBOL corpus rows declare BEAM (464 cells); non-ALGOL declares 1593 cells.
+No full-capstone rerun is claimed. After merge, reprioritize remaining
+language/backend gaps and VM-058 rather than treating corpus completion as
+full COBOL support.
+
 ## VM-040 remaining base INSPECT replacements (selected after #15033)
 
 PR #15033 merged as `8f1c60fc1b` with 16 successful and 31 skipped checks.

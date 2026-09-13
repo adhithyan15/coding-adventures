@@ -857,3 +857,12 @@ programs on real Erlang: LEADING, CHARACTERS (including field padding),
 no replacement rechaining and first matching replacement clause. These
 raise COBOL BEAM coverage to 52 of 58 rows, or 458 declared backend cells.
 The six remaining rows cover region boundaries and STRING self-move.
+
+## COBOL BEAM region and self-move coverage
+
+Six existing programs now declare BEAM after real Erlang execution: STRING
+self-move, BEFORE/AFTER tallying and replacement with absent delimiters,
+and independent tally/replace regions in one statement. A focused probe
+pins program identities and exact stdout. All 58 COBOL corpus rows now
+declare eight backends (464 cells); full language support and single-phrase
+BEFORE/AFTER intersection remain outside this coverage claim.
