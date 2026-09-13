@@ -1,8 +1,8 @@
 // preview.go — /preview/{backend}/{component_id}/{story_name} handler
 //
 // The preview endpoint is the heart of MosaicBook: it compiles a .mosaic file
-// to a given backend and returns a self-contained HTML page suitable for
-// display inside an <iframe> in the browser shell.
+// to a given backend and returns either a self-contained HTML page or a Paint
+// PNG suitable for display inside an <iframe> in the browser shell.
 //
 // # Backend wrapping strategies
 //
@@ -23,6 +23,10 @@
 //     unpkg CDN and use Babel's in-browser transform (type="text/babel") to
 //     avoid a build step.  No Vite, no webpack — Phase 1 keeps it simple.
 //
+//   paint backend:
+//     The compiler emits binary PNG data. We serve it directly as image/png;
+//     the iframe renders the snapshot without a browser-side build step.
+//
 // # Error handling
 //
 // If compilation fails (compiler not on PATH, syntax error, etc.) we return
@@ -39,11 +43,12 @@ import (
 	"strings"
 )
 
-// validBackends is the set of backends supported in Phase 1.
+// validBackends is the set of directly previewable backends.
 var validBackends = map[string]bool{
 	"html":         true,
 	"webcomponent": true,
 	"react":        true,
+	"paint":        true,
 }
 
 // handlePreview handles GET /preview/{backend}/{component_id}/{story_name}.
@@ -82,7 +87,7 @@ func (s *Server) handlePreview(w http.ResponseWriter, r *http.Request) {
 
 	// Validate the backend before doing any work.
 	if !validBackends[backend] {
-		http.Error(w, fmt.Sprintf("unknown backend %q; supported: html, webcomponent, react", backend), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("unknown backend %q; supported: html, webcomponent, react, paint", backend), http.StatusBadRequest)
 		return
 	}
 
@@ -112,7 +117,20 @@ func (s *Server) handlePreview(w http.ResponseWriter, r *http.Request) {
 		story = &found.Stories[0]
 	}
 
-	// Compile the source file to the requested backend.
+	if backend == "paint" {
+		compiled, compileErr := s.compileToBytes(*found, backend, story)
+		if compileErr != nil {
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			fmt.Fprint(w, errorPage(compileErr.Error(), backend, found.ID, storyName))
+			return
+		}
+		w.Header().Set("Content-Type", "image/png")
+		w.Header().Set("Content-Disposition", "inline")
+		_, _ = w.Write(compiled)
+		return
+	}
+
+	// Compile the source file to the requested browser backend.
 	compiled, compileErr := s.compileToString(*found, backend, story)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")

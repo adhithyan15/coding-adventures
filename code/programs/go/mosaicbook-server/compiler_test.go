@@ -7,6 +7,12 @@ import (
 	"testing"
 )
 
+func TestBackendExtensionIncludesBinaryPaintOutput(t *testing.T) {
+	if got := backendExtension("paint"); got != ".png" {
+		t.Fatalf("backendExtension(paint) = %q, want .png", got)
+	}
+}
+
 func TestCappedWriter_UnderLimit(t *testing.T) {
 	w := &cappedWriter{limit: 100}
 	n, err := w.Write([]byte("hello"))

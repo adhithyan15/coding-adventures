@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Extend shared sequential focus to image-map areas, authored generic
+  `tabindex` targets, and contenteditable surfaces with reusable accessibility
+  roles, modal containment, scrolling, activation, and focus rings.
+
 - Add one sequential-focus reducer across links, controls, and details
   summaries with `tabindex` ordering, modal containment, keyboard activation,
   visibility scrolling, accessibility projection, and shared focus rings.

@@ -192,7 +192,12 @@ transport, resolves decoded `id` and legacy named targets from shared layout,
 and performs history scrolling without replacing retained page state. Stable
 navigation-entry identities now key bounded public form/custom-element state
 and logical scroll offsets, preserving independent repeated URLs and fragment
-traversals without host-owned restoration policy. The
+traversals without host-owned restoration policy. Shared sequential focus now
+also includes shape-aware image-map areas, authored generic `tabindex` targets,
+and contenteditable surfaces. Layout and paint retain names, roles, transformed
+geometry, and top-layer ancestry while the session owns ordering, modal
+containment, scrolling, accessibility state, and focus rings without a new
+host ABI. The
 tracked acceptance backlog is complete; each next phase starts from a fresh
 cross-host audit.
 
@@ -677,6 +682,11 @@ image-codec-jpeg       = { path = "../../../packages/rust/image-codec-jpeg" }
     disabled targets, stay within a modal top layer, scroll focused geometry
     into view, and activate focused links/details through the shared policy in
     [UI81](./UI81-sequential-focus-navigation.md).
+
+14. **Authored focus targets** — Verify image-map areas, generic `tabindex`,
+    and contenteditable targets join the same order, accessibility projection,
+    modal containment, scrolling, and focus-ring policy defined by
+    [UI82](./UI82-authored-focus-targets.md).
 
 ## Scope
 

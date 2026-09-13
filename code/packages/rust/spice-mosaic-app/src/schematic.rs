@@ -190,12 +190,21 @@ pub struct SchematicWire {
     pub end: SchematicPoint,
 }
 
+/// A user-authored Berkeley node name anchored to a component terminal.
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct SchematicNetLabel {
+    pub point: SchematicPoint,
+    pub name: String,
+}
+
 /// A compact editor document that can be lowered into a canonical Berkeley deck.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct SchematicDocument {
     pub title: String,
     pub components: Vec<SchematicComponent>,
     pub wires: Vec<SchematicWire>,
+    #[serde(default)]
+    pub net_labels: Vec<SchematicNetLabel>,
     #[serde(default)]
     pub analysis: SchematicAnalysis,
     #[serde(default)]
@@ -503,6 +512,10 @@ impl SchematicDocument {
             return Err(invalid("schematic wire is already connected"));
         }
         self.wires.push(wire);
+        if let Err(error) = self.validate_net_labels() {
+            self.wires.pop();
+            return Err(error);
+        }
         Ok(())
     }
 
@@ -521,6 +534,8 @@ impl SchematicDocument {
         let wire_count = self.wires.len();
         self.wires
             .retain(|wire| !terminals.contains(&wire.start) && !terminals.contains(&wire.end));
+        self.net_labels
+            .retain(|label| !terminals.contains(&label.point));
         Ok(wire_count - self.wires.len())
     }
 
@@ -530,6 +545,59 @@ impl SchematicDocument {
             return Err(invalid("schematic wire is unavailable"));
         }
         Ok(self.wires.remove(index))
+    }
+
+    /// Return the explicit name for the net containing one terminal, if any.
+    pub fn net_label_at(&self, point: SchematicPoint) -> Option<&str> {
+        let (point_ids, mut sets, _) = self.net_topology();
+        let root = sets.find(*point_ids.get(&point)?);
+        self.net_labels
+            .iter()
+            .find(|label| {
+                point_ids
+                    .get(&label.point)
+                    .is_some_and(|point_id| sets.find(*point_id) == root)
+            })
+            .map(|label| label.name.as_str())
+    }
+
+    /// Set or clear a Berkeley node name on a component terminal.
+    ///
+    /// An empty name removes the label, which lets text controls clear an
+    /// accidental label without a second destructive action.
+    pub fn set_net_label(
+        &mut self,
+        point: SchematicPoint,
+        name: &str,
+    ) -> Result<(), SchematicError> {
+        if !self.terminal_points().contains(&point) {
+            return Err(invalid(
+                "schematic net labels must target component terminals",
+            ));
+        }
+        let name = name.trim();
+        if !name.is_empty() {
+            Self::validate_net_label_name(name)?;
+        }
+        let previous = self.net_labels.clone();
+        let (point_ids, mut sets, _) = self.net_topology();
+        let root = sets.find(point_ids[&point]);
+        self.net_labels.retain(|label| {
+            point_ids
+                .get(&label.point)
+                .is_none_or(|point_id| sets.find(*point_id) != root)
+        });
+        if !name.is_empty() {
+            self.net_labels.push(SchematicNetLabel {
+                point,
+                name: name.to_owned(),
+            });
+        }
+        if let Err(error) = self.validate_net_labels() {
+            self.net_labels = previous;
+            return Err(error);
+        }
+        Ok(())
     }
 
     /// Update the one-line title used by document I/O and deck comments.
@@ -784,16 +852,101 @@ impl SchematicDocument {
         if wire.start == wire.end {
             return Err(invalid("schematic wires must have distinct endpoints"));
         }
-        let terminal_points = self
-            .components
-            .iter()
-            .flat_map(|component| component.terminals.iter().copied())
-            .collect::<BTreeSet<_>>();
+        let terminal_points = self.terminal_points();
         if !terminal_points.contains(&wire.start) || !terminal_points.contains(&wire.end) {
             return Err(invalid(
                 "schematic wire endpoints must be component terminals",
             ));
         }
+        Ok(())
+    }
+
+    fn terminal_points(&self) -> BTreeSet<SchematicPoint> {
+        self.components
+            .iter()
+            .flat_map(|component| component.terminals.iter().copied())
+            .collect()
+    }
+
+    fn validate_net_label_name(name: &str) -> Result<(), SchematicError> {
+        let mut characters = name.chars();
+        if name == "0"
+            || !matches!(characters.next(), Some(character) if character.is_ascii_alphabetic() || character == '_')
+            || !characters.all(|character| character.is_ascii_alphanumeric() || character == '_')
+        {
+            return Err(invalid(
+                "schematic net labels must begin with an ASCII letter or _ and use ASCII letters, digits, or _",
+            ));
+        }
+        Ok(())
+    }
+
+    fn net_topology(&self) -> (BTreeMap<SchematicPoint, usize>, DisjointSet, Option<usize>) {
+        let mut point_ids = BTreeMap::new();
+        for point in self
+            .components
+            .iter()
+            .flat_map(|component| component.terminals.iter().copied())
+        {
+            let next = point_ids.len();
+            point_ids.entry(point).or_insert(next);
+        }
+        let mut sets = DisjointSet::with_len(point_ids.len());
+        for wire in &self.wires {
+            sets.union(point_ids[&wire.start], point_ids[&wire.end]);
+        }
+        let ground_points = self
+            .components
+            .iter()
+            .filter(|component| component.kind == SchematicComponentKind::Ground)
+            .map(|component| point_ids[&component.terminals[0]])
+            .collect::<Vec<_>>();
+        let ground_root = ground_points.first().copied().map(|ground_point| {
+            for point in ground_points.into_iter().skip(1) {
+                sets.union(ground_point, point);
+            }
+            sets.find(ground_point)
+        });
+        (point_ids, sets, ground_root)
+    }
+
+    fn net_label_names(
+        &self,
+        point_ids: &BTreeMap<SchematicPoint, usize>,
+        sets: &mut DisjointSet,
+        ground_root: Option<usize>,
+    ) -> Result<BTreeMap<usize, String>, SchematicError> {
+        let mut names = BTreeMap::new();
+        let mut roots_by_name = BTreeMap::new();
+        for label in &self.net_labels {
+            if !self.terminal_points().contains(&label.point) {
+                return Err(invalid(
+                    "schematic net labels must target component terminals",
+                ));
+            }
+            Self::validate_net_label_name(&label.name)?;
+            let root = sets.find(point_ids[&label.point]);
+            if Some(root) == ground_root {
+                return Err(invalid("schematic net labels must not target ground"));
+            }
+            if names.insert(root, label.name.clone()).is_some() {
+                return Err(invalid("schematic net already has a label"));
+            }
+            if let Some(previous_root) = roots_by_name.insert(label.name.as_str(), root) {
+                if previous_root != root {
+                    return Err(invalid(format!(
+                        "schematic net label {} is already assigned",
+                        label.name
+                    )));
+                }
+            }
+        }
+        Ok(names)
+    }
+
+    fn validate_net_labels(&self) -> Result<(), SchematicError> {
+        let (point_ids, mut sets, ground_root) = self.net_topology();
+        self.net_label_names(&point_ids, &mut sets, ground_root)?;
         Ok(())
     }
 
@@ -879,6 +1032,7 @@ impl SchematicDocument {
                 return Err(invalid("schematic wire is already connected"));
             }
         }
+        self.validate_net_labels()?;
         Ok(())
     }
 
@@ -886,33 +1040,9 @@ impl SchematicDocument {
     pub fn to_berkeley_netlist(&self) -> Result<String, SchematicError> {
         self.validate()?;
 
-        let mut point_ids = BTreeMap::new();
-        for point in self
-            .components
-            .iter()
-            .flat_map(|component| component.terminals.iter().copied())
-            .chain(self.wires.iter().flat_map(|wire| [wire.start, wire.end]))
-        {
-            let next = point_ids.len();
-            point_ids.entry(point).or_insert(next);
-        }
-
-        let mut sets = DisjointSet::with_len(point_ids.len());
-        for wire in &self.wires {
-            sets.union(point_ids[&wire.start], point_ids[&wire.end]);
-        }
-
-        let ground_points = self
-            .components
-            .iter()
-            .filter(|component| component.kind == SchematicComponentKind::Ground)
-            .map(|component| point_ids[&component.terminals[0]])
-            .collect::<Vec<_>>();
-        let ground_point = ground_points[0];
-        for point in ground_points.into_iter().skip(1) {
-            sets.union(ground_point, point);
-        }
-        let ground_root = sets.find(ground_point);
+        let (point_ids, mut sets, ground_root) = self.net_topology();
+        let ground_root = ground_root.expect("a validated schematic has a ground symbol");
+        let label_names = self.net_label_names(&point_ids, &mut sets, Some(ground_root))?;
 
         let mut root_points: BTreeMap<usize, SchematicPoint> = BTreeMap::new();
         for (point, point_id) in &point_ids {
@@ -926,11 +1056,17 @@ impl SchematicDocument {
         ordered_roots.sort_by_key(|(_, point)| *point);
 
         let mut names = BTreeMap::new();
+        let reserved_names = label_names.values().collect::<BTreeSet<_>>();
         let mut next_net = 1;
         for (root, _) in ordered_roots {
             if root == ground_root {
                 names.insert(root, "0".to_owned());
+            } else if let Some(name) = label_names.get(&root) {
+                names.insert(root, name.clone());
             } else {
+                while reserved_names.contains(&format!("n{next_net}")) {
+                    next_net += 1;
+                }
                 names.insert(root, format!("n{next_net}"));
                 next_net += 1;
             }
@@ -1038,6 +1174,7 @@ mod tests {
                     end: point(50, 0),
                 },
             ],
+            net_labels: Vec::new(),
             analysis: SchematicAnalysis::OperatingPoint,
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -1066,11 +1203,81 @@ mod tests {
     }
 
     #[test]
+    fn lowers_terminal_net_labels_and_reserves_them_from_anonymous_names() {
+        let mut document = rc_document();
+        document.set_net_label(point(0, 20), "INPUT").unwrap();
+        document.set_net_label(point(40, 20), "n1").unwrap();
+        assert_eq!(
+            document.to_berkeley_netlist().unwrap(),
+            "* RC divider\nC1 n1 0 1u\nR1 INPUT n1 1k\nV1 INPUT 0 DC 5\n.op\n.end\n"
+        );
+        document.set_net_label(point(40, 20), "OUTPUT").unwrap();
+        let deck = document.to_berkeley_netlist().unwrap();
+        assert!(deck.contains("C1 OUTPUT 0 1u\nR1 INPUT OUTPUT 1k"));
+        parse_netlist(&deck).unwrap();
+    }
+
+    #[test]
+    fn net_labels_reject_ambiguous_or_invalid_connections_and_clean_up_with_components() {
+        let mut document = rc_document();
+        assert_eq!(
+            document.set_net_label(point(0, 20), "0").unwrap_err().to_string(),
+            "schematic net labels must begin with an ASCII letter or _ and use ASCII letters, digits, or _"
+        );
+        assert_eq!(
+            document
+                .set_net_label(point(99, 99), "INPUT")
+                .unwrap_err()
+                .to_string(),
+            "schematic net labels must target component terminals"
+        );
+        assert_eq!(
+            document
+                .set_net_label(point(0, 0), "GROUND")
+                .unwrap_err()
+                .to_string(),
+            "schematic net labels must not target ground"
+        );
+
+        document.set_net_label(point(0, 20), "INPUT").unwrap();
+        assert_eq!(document.net_label_at(point(10, 20)), Some("INPUT"));
+        document.set_net_label(point(10, 20), "ALIAS").unwrap();
+        assert_eq!(document.net_label_at(point(0, 20)), Some("ALIAS"));
+        document.set_net_label(point(0, 20), "INPUT").unwrap();
+        document.net_labels.push(SchematicNetLabel {
+            point: point(10, 20),
+            name: "ALIAS".to_owned(),
+        });
+        assert_eq!(
+            document.validate().unwrap_err().to_string(),
+            "schematic net already has a label"
+        );
+        document.net_labels.pop();
+        document.set_net_label(point(40, 20), "OUTPUT").unwrap();
+        assert_eq!(
+            document
+                .connect_wire(SchematicWire {
+                    start: point(10, 20),
+                    end: point(40, 20),
+                })
+                .unwrap_err()
+                .to_string(),
+            "schematic net already has a label"
+        );
+        assert_eq!(document.wires.len(), 4);
+
+        document.remove_component("R1").unwrap();
+        assert_eq!(document.net_label_at(point(10, 20)), None);
+        assert_eq!(document.net_label_at(point(40, 20)), None);
+    }
+
+    #[test]
     fn palette_placement_and_component_routing_are_deterministic() {
         let mut document = SchematicDocument {
             title: "Palette routing".to_owned(),
             components: Vec::new(),
             wires: Vec::new(),
+            net_labels: Vec::new(),
             analysis: SchematicAnalysis::default(),
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -1157,6 +1364,7 @@ mod tests {
                 start: point(20, 0),
                 end: point(0, 0),
             }],
+            net_labels: Vec::new(),
             analysis: SchematicAnalysis::AcSweep,
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),

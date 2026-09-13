@@ -1,7 +1,7 @@
 // Package main is the entry point for mosaicbook-server, a local development
 // server that acts as a "Storybook" for Mosaic components. It discovers
-// .mosaic files in a project tree, compiles them on-demand to browser-native
-// backends (html, webcomponent, react), and serves an interactive preview UI.
+// Mosaic files in a project tree, compiles them on-demand to browser-native
+// backends or Paint PNG snapshots, and serves an interactive preview UI.
 //
 // Usage:
 //
@@ -37,7 +37,7 @@ func main() {
 	//             Defaults to "mosaic-compile" so it can be found on PATH after
 	//             a normal `go install` of the compiler.
 	compiler := flag.String("compiler", "mosaic-compile", "Path to mosaic-compile binary")
-	check := flag.Bool("check", false, "Compile every explicit story for all browser backends, then exit")
+	check := flag.Bool("check", false, "Compile every explicit story for all preview backends, then exit")
 	checkWorkers := flag.Int("check-workers", runtime.NumCPU(), "Maximum concurrent compiler processes in --check mode")
 	checkTimeout := flag.Duration("check-timeout", 10*time.Minute, "Overall deadline for --check mode")
 	checkDegradations := flag.String("check-degradations", "", "JSON file of issue-linked expected story compile degradations")
