@@ -9,7 +9,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
-use coding_adventures_oauth::{OAuthTraceId, ProviderId};
+use coding_adventures_oauth::{OAuthTraceId, OpenIdAuthorizationNonce, ProviderId};
 use coding_adventures_oauth_credential_custody::{AccountId, CredentialKey};
 use coding_adventures_zeroize::Zeroizing;
 use std::collections::BTreeSet;
@@ -483,7 +483,57 @@ impl<V: AccountIdentityAuthority> AuditedAccountIdentityAuthority<V> {
         audit: &mut A,
     ) -> Result<VerifiedCredentialKey, AccountIdentityError> {
         attempt(audit, profile, trace)?;
-        let result = if !valid_evidence(
+        let result = self.verify_evidence(
+            profile,
+            id_token,
+            expected_nonce,
+            observed_at_unix_seconds,
+            trace,
+        );
+        finish(audit, profile, trace, result)
+    }
+
+    /// Audit and verify an Authorization Code ID token using its exact nonce binding.
+    ///
+    /// The nonce supplies the provider, client, and trace established when the
+    /// browser request was prepared. Exact provider and client agreement is
+    /// checked before the injected authority can observe any evidence. Token
+    /// and nonce ownership remains wipe-on-drop, and the opaque key is withheld
+    /// unless both the attempt and result events are durable.
+    pub fn verify_authorization_id_token<A: AccountIdentityAuditSink>(
+        &self,
+        profile: &IdTokenIdentityProfile,
+        id_token: Zeroizing<String>,
+        nonce: OpenIdAuthorizationNonce,
+        observed_at_unix_seconds: u64,
+        audit: &mut A,
+    ) -> Result<VerifiedCredentialKey, AccountIdentityError> {
+        let trace = nonce.trace();
+        attempt(audit, profile, trace)?;
+        let result =
+            if nonce.provider() != profile.provider() || nonce.client_id() != profile.client_id() {
+                Err(AccountIdentityError::InvalidInput)
+            } else {
+                self.verify_evidence(
+                    profile,
+                    id_token,
+                    nonce.into_value(),
+                    observed_at_unix_seconds,
+                    trace,
+                )
+            };
+        finish(audit, profile, trace, result)
+    }
+
+    fn verify_evidence(
+        &self,
+        profile: &IdTokenIdentityProfile,
+        id_token: Zeroizing<String>,
+        expected_nonce: Zeroizing<String>,
+        observed_at_unix_seconds: u64,
+        trace: OAuthTraceId,
+    ) -> Result<VerifiedCredentialKey, AccountIdentityError> {
+        if !valid_evidence(
             id_token.as_str(),
             expected_nonce.as_str(),
             observed_at_unix_seconds,
@@ -504,8 +554,7 @@ impl<V: AccountIdentityAuthority> AuditedAccountIdentityAuthority<V> {
                     trace,
                 })
                 .map_err(map_authority_error)
-        };
-        finish(audit, profile, trace, result)
+        }
     }
 }
 
@@ -618,6 +667,10 @@ impl AccountIdentityError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use coding_adventures_oauth::{
+        begin_openid_authorization, EntropySource, OAuthAuditError, OAuthAuditEvent,
+        OAuthAuditSink, OAuthError, ProviderConfig,
+    };
     use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::{Arc, Mutex};
 
@@ -652,21 +705,70 @@ mod tests {
     }
 
     fn profile() -> IdTokenIdentityProfile {
+        profile_for("fixture", "client-1")
+    }
+
+    fn profile_for(provider_name: &str, client_id: &str) -> IdTokenIdentityProfile {
         IdTokenIdentityProfile::new(
-            provider("fixture"),
-            "client-1",
+            provider(provider_name),
+            client_id,
             "https://issuer.example/tenant",
             vec![
                 IdTokenSigningAlgorithm::new("EdDSA").unwrap(),
                 IdTokenSigningAlgorithm::new("RS256").unwrap(),
             ],
-            context("fixture", 3),
+            context(provider_name, 3),
         )
         .unwrap()
     }
 
     fn trace() -> OAuthTraceId {
         OAuthTraceId::new([9; 16])
+    }
+
+    struct FixedOpenIdEntropy;
+
+    impl EntropySource for FixedOpenIdEntropy {
+        fn fill(&mut self, destination: &mut [u8]) -> Result<(), OAuthError> {
+            destination.fill(0);
+            Ok(())
+        }
+    }
+
+    #[derive(Default)]
+    struct OAuthAudit;
+
+    impl OAuthAuditSink for OAuthAudit {
+        fn publish(&mut self, _event: &OAuthAuditEvent) -> Result<(), OAuthAuditError> {
+            Ok(())
+        }
+    }
+
+    fn authorization_nonce(
+        provider_name: &str,
+        client_id: &str,
+        ceremony_trace: OAuthTraceId,
+    ) -> OpenIdAuthorizationNonce {
+        let config = ProviderConfig::new(
+            provider(provider_name),
+            "https://authorize.example/oauth2/auth",
+            "https://token.example/oauth2/token",
+            client_id,
+            "http://127.0.0.1:53682/callback",
+        )
+        .unwrap()
+        .with_expected_issuer("https://issuer.example")
+        .unwrap();
+        let request = begin_openid_authorization(
+            &config,
+            &["openid"],
+            ceremony_trace,
+            &mut FixedOpenIdEntropy,
+        )
+        .publish_then_release(&mut OAuthAudit)
+        .unwrap();
+        let (_, _, nonce) = request.into_parts();
+        nonce
     }
 
     #[derive(Clone, Default)]
@@ -822,6 +924,98 @@ mod tests {
             audit.events[1].outcome(),
             AccountIdentityAuditOutcome::Succeeded
         );
+    }
+
+    #[test]
+    fn authorization_verification_consumes_exact_nonce_bindings() {
+        let authority = RecordingAuthority::default();
+        let inspection = authority.clone();
+        let verifier = AuditedAccountIdentityAuthority::from_audited_authority(authority);
+        let mut audit = Audit::default();
+        let nonce = authorization_nonce("fixture", "client-1", trace());
+
+        let verified = verifier
+            .verify_authorization_id_token(
+                &profile(),
+                Zeroizing::new("header.payload.signature".to_owned()),
+                nonce,
+                1_700_000_000,
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_eq!(inspection.calls.load(Ordering::SeqCst), 1);
+        assert_eq!(
+            inspection.seen.lock().unwrap().as_slice(),
+            ["fixture|client-1|https://issuer.example/tenant|EdDSA,RS256|header.payload.signature|AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA|1700000000"]
+        );
+        assert_eq!(verified.credential_key().provider().as_str(), "fixture");
+        assert_eq!(verified.client_id(), "client-1");
+        assert_eq!(verified.trace(), trace());
+        assert_eq!(audit.events.len(), 2);
+        assert_eq!(audit.events[0].trace(), trace());
+        assert_eq!(
+            audit.events[0].outcome(),
+            AccountIdentityAuditOutcome::Attempted
+        );
+        assert_eq!(
+            audit.events[1].outcome(),
+            AccountIdentityAuditOutcome::Succeeded
+        );
+    }
+
+    #[test]
+    fn authorization_nonce_mismatch_is_audited_before_authority_access() {
+        let authority = RecordingAuthority::default();
+        let inspection = authority.clone();
+        let verifier = AuditedAccountIdentityAuthority::from_audited_authority(authority);
+
+        for nonce in [
+            authorization_nonce("other", "client-1", trace()),
+            authorization_nonce("fixture", "other-client", trace()),
+        ] {
+            let mut audit = Audit::default();
+            assert!(matches!(
+                verifier.verify_authorization_id_token(
+                    &profile(),
+                    Zeroizing::new("token".to_owned()),
+                    nonce,
+                    10,
+                    &mut audit,
+                ),
+                Err(AccountIdentityError::InvalidInput)
+            ));
+            assert_eq!(audit.events.len(), 2);
+            assert_eq!(audit.events[0].trace(), trace());
+            assert_eq!(
+                audit.events[1].outcome(),
+                AccountIdentityAuditOutcome::Failed(AccountIdentityFailureClass::InvalidInput)
+            );
+        }
+        assert_eq!(inspection.calls.load(Ordering::SeqCst), 0);
+    }
+
+    #[test]
+    fn authorization_attempt_audit_failure_prevents_authority_access() {
+        let authority = RecordingAuthority::default();
+        let inspection = authority.clone();
+        let verifier = AuditedAccountIdentityAuthority::from_audited_authority(authority);
+        let mut audit = Audit {
+            events: Vec::new(),
+            fail_at: Some(0),
+        };
+
+        assert!(matches!(
+            verifier.verify_authorization_id_token(
+                &profile(),
+                Zeroizing::new("token".to_owned()),
+                authorization_nonce("fixture", "client-1", trace()),
+                10,
+                &mut audit,
+            ),
+            Err(AccountIdentityError::Audit)
+        ));
+        assert_eq!(inspection.calls.load(Ordering::SeqCst), 0);
     }
 
     #[test]

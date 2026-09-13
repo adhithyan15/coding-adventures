@@ -129,15 +129,19 @@ The delivery order is:
    verification-context data; an injected trusted authority must verify the
    signature and all bound claims before returning a provider-scoped opaque
    account identity. Verification intent and its closed result are durably
-   provider/trace audited before the authority effect and result release. The
-   boundary exposes no subject claim or token bytes and implements no JWT,
-   JOSE, JWKS, discovery, network, clock, storage, or concrete cryptographic
+   provider/trace audited before the authority effect and result release. For
+   Authorization Code identity proof, the boundary consumes the core's
+   non-cloneable nonce object, validates its exact provider and client, and
+   derives the audit trace from that browser ceremony before any authority
+   effect. The boundary exposes no subject claim or token bytes and implements
+   no JWT, JOSE, JWKS, discovery, network, clock, storage, or concrete cryptographic
    authority. The authorization core now also provides an explicit OIDC begin
    path: exact `openid` scope is mandatory, caller-injected entropy supplies an
    independent 256-bit `nonce` beside state and PKCE, provider extras cannot
    override it, and a non-cloneable zeroizing provider/client/trace-bound nonce
-   is retained for the later proof. Broker composition that consumes that
-   nonce and replaces caller-selected keys remains a later step.
+   is retained for the later proof. Broker composition that persists the
+   resulting verified opaque key without caller key selection remains a later
+   step.
 6. **Confidential-client authentication:** web-service profiles for
    `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
    opaque custody references and audit-before-release rather than secrets in
