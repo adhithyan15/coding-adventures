@@ -4219,7 +4219,7 @@ fn emit_image(node: &LayoutNode, indent: usize) -> String {
 fn emit_host_input(
     node: &LayoutNode,
     indent: usize,
-    _part_styles: &HashMap<String, String>,
+    part_styles: &HashMap<String, String>,
     component: &str,
     emits: &[EmitDecl],
     direct_row_child: bool,
@@ -4295,13 +4295,16 @@ fn emit_host_input(
     )
     .unwrap();
 
-    if let Some(p) = find_string_prop(node, "placeholder") {
-        writeln!(
-            out,
-            "{input_pad}  decoration: InputDecoration(hintText: \"{}\"),",
-            escape_dart_string(p)
-        )
-        .unwrap();
+    // #15142 -- ONE decoration writer. The hint used to be emitted here on
+    // its own and the part style was dropped entirely; both now funnel
+    // through `host_input_decoration_arg`, because `decoration:` is a named
+    // argument and a second one is a Dart compile error.
+    let hint = find_string_prop(node, "placeholder");
+    if let Some(decoration) = host_input_decoration_arg(node, part_styles, hint) {
+        writeln!(out, "{input_pad}  decoration: InputDecoration({decoration}),").unwrap();
+    }
+    if let Some(text_style) = host_input_text_style_arg(node, part_styles) {
+        writeln!(out, "{input_pad}  style: {text_style},").unwrap();
     }
 
     if let Some(read_only) = bool_prop_expression(node, "read-only")? {
@@ -4367,6 +4370,222 @@ fn emit_host_input(
         writeln!(out, "{pad})").unwrap();
     }
     Ok(out)
+}
+
+/// #15142 -- lower a `HostInput`'s part style into its `InputDecoration`.
+///
+/// Until this existed `emit_host_input` took `_part_styles` and never read
+/// it, so NO authored style reached a text input on Flutter. That is not a
+/// cosmetic gap: a bare `TextField` keeps Material's default decoration --
+/// an underline border and a generous `contentPadding` -- so an input is
+/// materially taller than the text it replaces. In a grid that makes the
+/// editing row taller than its display rows, which is #15048.
+///
+/// Returns the ARGUMENTS for a single `InputDecoration(..)`, hint included,
+/// or `None` when there is nothing to say. It must stay the only producer
+/// of that argument: `decoration:` is a named parameter, and emitting it
+/// twice is a Dart compile error. The same shape bit the Qt emitter, which
+/// writes `color` from two places onto one `TextInput` (#15155).
+///
+/// What is lowered, and what is deliberately not:
+///
+/// | authored          | Dart                                        |
+/// | ----------------- | ------------------------------------------- |
+/// | `padding`         | `isDense: true, contentPadding: EdgeInsets`  |
+/// | `border: 0 / none`| `border: InputBorder.none`                   |
+/// | `border: W solid C` | `OutlineInputBorder(borderSide: ..)`       |
+/// | `background`      | `filled: true, fillColor: ..`                |
+///
+/// Text colour and font are NOT lowered here. They belong on `TextField`'s
+/// `style:`, not its decoration, and how a `TextField` resolves its own
+/// style against an enclosing `DefaultTextStyle` needs its own measurement
+/// before anything is emitted -- authoring a colour blind is precisely what
+/// broke Compose (`Color.Transparent`) and Qt (duplicate property) on
+/// #15048. Tracked separately rather than guessed at.
+///
+/// Anything unrecognised is dropped, which is the same silent loss every
+/// other unlowered Flutter property suffers: this emitter has no style-drop
+/// reporting at all (#12022). Dropping is at least correct-by-omission --
+/// `css_color_to_dart` returns `None` for `inherit` and `transparent`
+/// rather than inventing a brush.
+fn host_input_decoration_arg(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, String>,
+    hint: Option<&str>,
+) -> Option<String> {
+    let props = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(String::as_str)
+        .map(parse_style_props)
+        .unwrap_or_default();
+
+    let mut args: Vec<String> = Vec::new();
+    if let Some(hint) = hint {
+        args.push(format!("hintText: \"{}\"", escape_dart_string(hint)));
+    }
+
+    // `isDense` matters as much as the padding itself: without it Material
+    // enforces a 48dp minimum touch target that no `contentPadding` can
+    // undercut, so a `padding: 0px` alone still leaves the row taller.
+    if let Some(padding) = props.get("padding") {
+        args.push("isDense: true".to_string());
+        args.push(format!(
+            "contentPadding: EdgeInsets.all({})",
+            parse_pixel_value(padding)
+        ));
+    }
+
+    if let Some(border) = host_input_border_expr(&props) {
+        args.push(format!("border: {border}"));
+    }
+
+    if let Some(fill) = props
+        .get("background")
+        .or_else(|| props.get("background-color"))
+        .and_then(|v| css_color_to_dart(v))
+    {
+        args.push("filled: true".to_string());
+        args.push(format!("fillColor: {fill}"));
+    }
+
+    (!args.is_empty()).then(|| args.join(", "))
+}
+
+/// The `border:` argument for a `HostInput`'s decoration, or `None` when the
+/// part authors no border at all (leaving Material's default underline,
+/// which is what every input rendered before #15142).
+///
+/// A zero or `none` border is the interesting case -- it is how a part says
+/// "this input must not add a box" -- and it must map to `InputBorder.none`
+/// rather than to a zero-width `OutlineInputBorder`, which still reserves
+/// space and still paints a hairline.
+fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
+    // A STRICT length parse, deliberately not `parse_pixel_value`. That
+    // helper falls back to "0" for anything it cannot read, which is right
+    // where it is used but catastrophic here: the shorthand
+    // `border: 1px solid #32463b` is unparseable as a single length, would
+    // fall back to 0, and would therefore be classified as "no border" --
+    // silently DELETING the border from every input that authors one.
+    // VisiCalc's formula bar caught this; it lost its outline the first
+    // time this function was written.
+    fn strict_px(s: &str) -> Option<f64> {
+        let t = s.trim();
+        let t = t.strip_suffix("px").unwrap_or(t);
+        t.parse::<f64>().ok().filter(|f| f.is_finite())
+    }
+    fn is_zero(v: &str) -> bool {
+        let t = v.trim();
+        t == "none" || strict_px(t) == Some(0.0)
+    }
+
+    let shorthand = props.get("border").map(|s| s.trim().to_string());
+    let width = props.get("border-width").map(|s| s.trim().to_string());
+    let style = props.get("border-style").map(|s| s.trim().to_string());
+
+    if style.as_deref() == Some("none")
+        || width.as_deref().is_some_and(is_zero)
+        || shorthand.as_deref().is_some_and(is_zero)
+    {
+        return Some("InputBorder.none".to_string());
+    }
+
+    // `<width> solid <colour>`, the only multi-token form authored in this
+    // repo. A shorthand naming a style this emitter cannot draw is left to
+    // Material's default rather than approximated -- `dashed` silently
+    // becoming `solid` would be a worse lie than not lowering it, and
+    // Flutter has no style-drop reporting to record either choice (#12022).
+    let (side_width, side_color) = match shorthand.as_deref() {
+        Some(text) => {
+            if !text.split_whitespace().any(|t| t == "solid") {
+                return None;
+            }
+            let w = text.split_whitespace().find_map(strict_px);
+            let c = text.split_whitespace().find_map(css_color_to_dart);
+            (w, c)
+        }
+        None => (
+            width.as_deref().and_then(strict_px),
+            props.get("border-color").and_then(|v| css_color_to_dart(v)),
+        ),
+    };
+    let side_width = side_width?;
+    let mut side: Vec<String> = Vec::new();
+    if let Some(color) = side_color {
+        side.push(format!("color: {color}"));
+    }
+    side.push(format!("width: {side_width}"));
+    Some(format!(
+        "OutlineInputBorder(borderSide: BorderSide({}))",
+        side.join(", ")
+    ))
+}
+
+/// #15142 -- lower a `HostInput`'s text properties onto `TextField`'s
+/// `style:`, which is a DIFFERENT argument from its decoration.
+///
+/// This is not optional polish, it is most of the height fix. A
+/// `TextField` does NOT inherit the enclosing `DefaultTextStyle` the way a
+/// `Text` does -- it falls back to the Material theme's own body style --
+/// so an input sitting beside 13px text renders at the theme's 16px and is
+/// taller for that reason alone, entirely separately from its decoration.
+///
+/// Measured in a real `flutter test` with a real font loaded, a display
+/// `Text` against the editor in the same cell:
+///
+/// | editor                        | height | delta |
+/// | ----------------------------- | ------ | ----- |
+/// | bare `TextField`              | 48.0   | +28   |
+/// | + decoration only             | 24.0   | +4    |
+/// | + decoration and this style   | 21.0   | +1    |
+///
+/// The residual 1px is the editable's own line box and is not reachable
+/// from an authored stylesheet; it is recorded rather than chased.
+///
+/// Returns `None` when the part authors none of these, which keeps every
+/// existing input emitting byte-identical Dart.
+fn host_input_text_style_arg(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, String>,
+) -> Option<String> {
+    let props = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(String::as_str)
+        .map(parse_style_props)
+        .unwrap_or_default();
+
+    let mut fields: Vec<String> = Vec::new();
+    if let Some(color) = props.get("color").and_then(|v| css_color_to_dart(v)) {
+        fields.push(format!("color: {color}"));
+    }
+    if let Some(size) = props.get("font-size").map(|v| parse_pixel_value(v)) {
+        fields.push(format!("fontSize: {size}"));
+    }
+    // Only the generic families Flutter resolves without a bundled asset.
+    // A named family that is not registered silently falls back, so it is
+    // dropped here rather than emitted as a string that means nothing.
+    if let Some(family) = props.get("font-family").and_then(|v| match v.trim() {
+        "monospace" => Some("\"monospace\""),
+        "serif" => Some("\"serif\""),
+        "sans-serif" => Some("\"sans-serif\""),
+        _ => None,
+    }) {
+        fields.push(format!("fontFamily: {family}"));
+    }
+    if let Some(weight) = props.get("font-weight").and_then(|v| match v.trim() {
+        "bold" | "700" => Some("FontWeight.w700"),
+        "600" => Some("FontWeight.w600"),
+        "500" => Some("FontWeight.w500"),
+        "normal" | "400" => Some("FontWeight.w400"),
+        _ => None,
+    }) {
+        fields.push(format!("fontWeight: {weight}"));
+    }
+
+    (!fields.is_empty()).then(|| format!("TextStyle({})", fields.join(", ")))
 }
 
 /// Build the named event arguments supplied by a native text input callback.
@@ -13730,4 +13949,199 @@ mod tests {
         assert!(!out.contains("readOnly:"), "got:\n{out}");
     }
 
+}
+
+// =====================================================================
+// #15142 -- HostInput part styles reach the widget
+//
+// `emit_host_input` took `_part_styles` and never read it, so no authored
+// style reached a text input on Flutter at all. That is a geometry bug,
+// not a cosmetic one: a bare `TextField` keeps Material's default
+// decoration and the theme's own font, and measures 48.0 high where the
+// `Text` it replaces measures 20.0 (real `flutter test`, real font). In a
+// grid that makes the editing row taller than every display row (#15048).
+//
+// Measured progression, same harness:
+//
+//     bare TextField                       48.0   (+28)
+//     + decoration from the part           24.0   (+4)
+//     + text style from the part           21.0   (+1)
+//
+// These tests pin the lowering rules those measurements justified. They
+// do not re-measure pixels -- there is no Flutter runtime here.
+// =====================================================================
+#[cfg(test)]
+mod host_input_style_tests {
+    use super::*;
+
+    fn props(pairs: &[(&str, &str)]) -> HashMap<String, String> {
+        pairs
+            .iter()
+            .map(|(k, v)| (k.to_string(), v.to_string()))
+            .collect()
+    }
+
+    fn input_with_part(part: &str) -> LayoutNode {
+        LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some(part.to_string()),
+            props: Vec::new(),
+            children: Vec::new(),
+        }
+    }
+
+    fn styles(part: &str, css: &str) -> HashMap<String, String> {
+        let mut m = HashMap::new();
+        m.insert(part.to_string(), css.to_string());
+        m
+    }
+
+    /// A zero border means "add no box", which is `InputBorder.none`. A
+    /// zero-width `OutlineInputBorder` is NOT equivalent: it still
+    /// reserves space and still paints a hairline.
+    #[test]
+    fn a_zero_border_becomes_input_border_none() {
+        for value in ["0", "0px", "none"] {
+            assert_eq!(
+                host_input_border_expr(&props(&[("border", value)])).as_deref(),
+                Some("InputBorder.none"),
+                "border: {value}"
+            );
+        }
+        assert_eq!(
+            host_input_border_expr(&props(&[("border-width", "0px")])).as_deref(),
+            Some("InputBorder.none")
+        );
+        assert_eq!(
+            host_input_border_expr(&props(&[("border-style", "none")])).as_deref(),
+            Some("InputBorder.none")
+        );
+    }
+
+    /// REGRESSION. `parse_pixel_value` answers "0" for anything it cannot
+    /// read, so routing a multi-token shorthand through it classified
+    /// `1px solid #32463b` as a ZERO border and silently deleted the
+    /// outline from every input that authored one -- caught on VisiCalc's
+    /// formula bar. The parse here has to be strict.
+    #[test]
+    fn a_real_shorthand_border_is_not_mistaken_for_zero() {
+        let got = host_input_border_expr(&props(&[("border", "1px solid #32463b")]));
+        assert_eq!(
+            got.as_deref(),
+            Some("OutlineInputBorder(borderSide: BorderSide(color: const Color(0xFF32463B), width: 1))"),
+            "a 1px border must survive as a real border"
+        );
+        assert!(
+            !got.unwrap().contains("InputBorder.none"),
+            "a non-zero border must never collapse to none"
+        );
+    }
+
+    /// A style this emitter cannot draw is left to Material's default
+    /// rather than silently redrawn as `solid`. Flutter has no style-drop
+    /// reporting (#12022), so approximating here would be an unrecorded
+    /// lie about what the author asked for.
+    #[test]
+    fn an_undrawable_border_style_is_left_alone() {
+        assert_eq!(
+            host_input_border_expr(&props(&[("border", "2px dashed #ff0000")])),
+            None
+        );
+        assert_eq!(host_input_border_expr(&props(&[])), None);
+    }
+
+    /// `isDense` is as load-bearing as the padding: without it Material
+    /// enforces a 48dp minimum that no `contentPadding` can undercut,
+    /// which is most of the +28.
+    #[test]
+    fn padding_lowers_with_is_dense() {
+        let got = host_input_decoration_arg(
+            &input_with_part("cell-editor"),
+            &styles("cell-editor", "padding: 0px; border: 0px"),
+            None,
+        )
+        .expect("a styled part yields a decoration");
+        assert!(got.contains("isDense: true"), "got: {got}");
+        assert!(got.contains("contentPadding: EdgeInsets.all(0)"), "got: {got}");
+        assert!(got.contains("border: InputBorder.none"), "got: {got}");
+    }
+
+    /// `decoration:` is a named argument, so there must be exactly ONE
+    /// producer of it. The hint used to be written on its own; if it ever
+    /// splits back out, the generated Dart stops compiling. The Qt
+    /// emitter has this exact defect today with `color` (#15155).
+    #[test]
+    fn the_hint_and_the_part_style_share_one_decoration() {
+        let got = host_input_decoration_arg(
+            &input_with_part("field"),
+            &styles("field", "padding: 10px; background: #14221e"),
+            Some("Enter a value"),
+        )
+        .expect("decoration");
+        assert!(got.contains("hintText: \"Enter a value\""), "got: {got}");
+        assert!(got.contains("contentPadding: EdgeInsets.all(10)"), "got: {got}");
+        assert!(got.contains("fillColor: const Color(0xFF14221E)"), "got: {got}");
+        assert!(got.contains("filled: true"), "got: {got}");
+        assert!(
+            !got.contains("InputDecoration"),
+            "this returns the ARGUMENTS only -- the caller wraps them exactly once: {got}"
+        );
+    }
+
+    /// An unstyled input keeps emitting exactly what it always did, hint
+    /// and all, so this change is inert for every part that authors
+    /// nothing.
+    #[test]
+    fn an_unstyled_input_is_unchanged() {
+        let node = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: None,
+            props: Vec::new(),
+            children: Vec::new(),
+        };
+        assert_eq!(host_input_decoration_arg(&node, &HashMap::new(), None), None);
+        assert_eq!(
+            host_input_decoration_arg(&node, &HashMap::new(), Some("Due")).as_deref(),
+            Some("hintText: \"Due\"")
+        );
+        assert_eq!(host_input_text_style_arg(&node, &HashMap::new()), None);
+    }
+
+    /// A `TextField` does not inherit `DefaultTextStyle`, so the font has
+    /// to be handed to it explicitly -- that is what takes the delta from
+    /// +4 to +1.
+    #[test]
+    fn font_and_colour_lower_onto_the_text_style() {
+        let got = host_input_text_style_arg(
+            &input_with_part("f"),
+            &styles("f", "color: #e3eee4; font-size: 13px; font-family: monospace"),
+        )
+        .expect("text style");
+        assert_eq!(
+            got,
+            "TextStyle(color: const Color(0xFFE3EEE4), fontSize: 13, fontFamily: \"monospace\")"
+        );
+    }
+
+    /// The CSS-wide keywords must be DROPPED, never guessed at. This is
+    /// the #15141 failure mode: Compose and SwiftUI lower `inherit` to a
+    /// transparent brush and paint invisible text. `css_color_to_dart`
+    /// returning `None` is what makes dropping automatic here, so pin it.
+    #[test]
+    fn inherit_is_dropped_rather_than_invented() {
+        assert_eq!(
+            host_input_text_style_arg(&input_with_part("f"), &styles("f", "color: inherit")),
+            None,
+            "`inherit` must not become a colour"
+        );
+        let deco = host_input_decoration_arg(
+            &input_with_part("f"),
+            &styles("f", "background: transparent; font: inherit"),
+            None,
+        );
+        assert_eq!(
+            deco, None,
+            "neither `transparent` nor the `font` shorthand should invent a value"
+        );
+    }
 }
