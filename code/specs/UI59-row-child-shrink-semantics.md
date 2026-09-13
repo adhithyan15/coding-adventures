@@ -258,12 +258,28 @@ rule is inert outside the product that had the defect.
    nothing in the repo authors one, and skipping on the property name alone
    would make the first one silent.
 
+### Leaves needed it too, and the first measurement missed them
+
+The floor first landed in `emit_container` only, so a **leaf** Row child got
+nothing. Measured again in the **Board view** — which the earlier probe never
+entered, and which has 32 text nodes against the default view's 25:
+
+| viewport | zero-width before | after |
+| --- | --- | --- |
+| 1280 | **1** (`Delete`) | **0** |
+| 700 | **4** (`Timeline`, schedule, `Edit`, `Delete`) | **0** |
+
+`Delete` was starving at 1280, the declared acceptance viewport, and the first
+round reported zero only because it measured one view. A measurement is scoped
+to the state it visits.
+
+The floor now reaches `emit_host_button` and `emit_text` as well, all three
+reading the same precomputed set, so the writers cannot give different answers.
+
 ### What it does not do
 
-The floor lives in `emit_container`, so a **leaf** Row child — a bare `Text` — still
-gets nothing and can still be starved. On Trestle that leaves `due-input`,
-`tl-name` and `tl-window` reported as drops rather than guarded, which is the
-honest partition: 8 authored, 5 guarded, 3 reported, none in both.
+Compose only, and only where a part is named — a leaf with no part carries no
+style to consult.
 
 ## 11. Flutter has the same defect, and it does not starve — it throws
 

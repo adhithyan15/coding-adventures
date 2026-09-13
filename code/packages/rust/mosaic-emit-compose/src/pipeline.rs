@@ -1683,13 +1683,9 @@ fn parts_width_guarded(root: &LayoutNode, part_styles: &PartStyleMap) -> HashSet
         part_styles: &PartStyleMap,
         out: &mut HashSet<String>,
     ) {
-        // The guard lives in `emit_container`, so it can only reach a node
-        // that lowers to a container. A leaf -- a `Text`, an input -- goes
-        // through a different writer and gets nothing, so claiming it is
-        // guarded would un-report a drop that really happens. That is what
-        // left `tl-name` and `tl-window` in neither set.
-        let is_container = container_composable_for_tag(&node.tag).is_some();
-        if in_row_scope && is_container {
+        // UI59 §4 -- leaves are in the set too now: the floor reaches them
+        // through their own writers, which read `is_width_guarded`.
+        if in_row_scope {
             if let Some(part) = node.part_name.as_deref() {
                 // UI59 §4 -- the floor is universal now, so membership no
                 // longer depends on `flex-shrink`. It still depends on the
@@ -2702,6 +2698,15 @@ impl PartStyleMap {
         self.props.get(key)
     }
 
+
+    /// UI59 §4 -- does this part get the no-shrink width floor?
+    ///
+    /// Read by LEAF writers, which have no `in_row_scope` of their own.
+    /// Containers ask the walk directly; both answers come from
+    /// [`parts_width_guarded`], so the two cannot drift.
+    fn is_width_guarded(&self, part: &str) -> bool {
+        self.width_guarded.contains(part)
+    }
 
     /// Populate [`Self::width_guarded`] once the layout is known.
     fn resolve_width_guards(&mut self, root: &LayoutNode) {
@@ -4844,9 +4849,9 @@ fn emit_compose_tree(
             let style = compose_style_for_node(node, part_styles, None, (depth + 2) * 4, inherited.color.as_deref());
             let text = style.as_ref().map(|s| cell_text_style(&inherited, s)).unwrap_or(inherited);
             let text = bound_text_style(node, text);
-            emit_text(node, depth, Some(&text), for_payload)
+            emit_text(node, depth, Some(&text), for_payload, part_styles)
         },
-        "Text" => emit_text(node, depth, text_ctx, for_payload),
+        "Text" => emit_text(node, depth, text_ctx, for_payload, part_styles),
         "Icon" => emit_icon_compose(node, depth, part_styles, text_ctx),
         "Path" => emit_path(node, depth, part_styles),
         "Spacer" => Ok(format!("{pad}Spacer(modifier = Modifier.weight(1f))\n")),
@@ -6242,6 +6247,7 @@ fn emit_text(
     depth: usize,
     text_ctx: Option<&TextStyleCtx>,
     for_payload: Option<ForPayloadScope<'_>>,
+    part_styles: &PartStyleMap,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let value_expr = match find_prop_value(node, "content") {
@@ -6273,6 +6279,20 @@ fn emit_text(
             (None, true) => Some("Modifier.semantics { heading() }".to_string()),
             (None, false) => None,
         }
+    };
+    // UI59 §4 -- a bare `Text` is a leaf, so `emit_container`'s floor never
+    // reaches it. Trestle's schedule text measured ZERO WIDTH at 700 in the
+    // Board view for exactly that reason.
+    let modifier = if node
+        .part_name
+        .as_deref()
+        .map(|part| part_styles.is_width_guarded(part))
+        .unwrap_or(false)
+    {
+        let base = modifier.unwrap_or_else(|| "Modifier".to_string());
+        Some(format!("{base}.wrapContentWidth(unbounded = true)"))
+    } else {
+        modifier
     };
     Ok(format!(
         "{pad}{}\n",
@@ -6568,6 +6588,19 @@ fn emit_host_button(
     };
 
     let mut modifier_expr = host_control_modifier_expr(node, style.as_ref());
+    // UI59 §4 -- the floor reaches leaves too. `emit_container` applies it
+    // for container children; a `Button` is emitted here instead and got
+    // nothing, so `Delete` measured ZERO WIDTH at 1280 -- the declared
+    // acceptance viewport -- in the Board view.
+    if node
+        .part_name
+        .as_deref()
+        .map(|part| part_styles.is_width_guarded(part))
+        .unwrap_or(false)
+    {
+        let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
+        modifier_expr = Some(format!("{base}.wrapContentWidth(unbounded = true)"));
+    }
     if let Some(accessible_label) = text_prop_expr(node, "a11y-label")? {
         let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
         modifier_expr = Some(format!(
@@ -12323,10 +12356,13 @@ mod tests {
         );
         assert_eq!(check(root, &style, "chip"), (true, false), "child of a For in a Row");
 
-        // A LEAF has no container writer, so it cannot be guarded and the
-        // drop is real. This is what left tl-name/tl-window in neither set.
+        // A LEAF is guarded too now. It was not when the floor lived only
+        // in `emit_container`, and that gap was not theoretical: Trestle's
+        // `Delete` button measured ZERO WIDTH at 1280 -- the declared
+        // acceptance viewport -- in the Board view, with the schedule
+        // `Text` joining it at 700.
         let root = node("Row", vec![], vec![parted("Text", "chip", vec![])]);
-        assert_eq!(check(root, &style, "chip"), (false, true), "leaf Row child");
+        assert_eq!(check(root, &style, "chip"), (true, false), "leaf Row child");
 
         // Not in a Row at all.
         let root = node("Column", vec![], vec![parted("Column", "chip", vec![])]);
