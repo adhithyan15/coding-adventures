@@ -1345,6 +1345,30 @@ ENGINE_FILENAMES = {
     "windows": "engram_capi.dll",
 }
 
+# What a MIGRATED backend's bundle carries, derived rather than written down.
+#
+# These fixtures used to hardcode `engram_capi` for Flutter, which was correct
+# until Flutter migrated and then refused every good bundle. Deriving it from
+# the manifest means the layout and contents tests below keep testing layout and
+# contents across a migration instead of turning into tripwires for the PR that
+# performs one -- which is the same argument `_engine_stem_for` makes in the
+# code it tests.
+#
+# Which engine is the right one is pinned separately, by
+# `test_the_expected_engine_is_read_from_the_manifest`; nothing here is trying
+# to make that claim.
+def _engine_filename(platform: str, stem: str) -> str:
+    prefix = "" if platform == "windows" else "lib"
+    suffix = {"linux": ".so", "macos": ".dylib", "windows": ".dll"}[platform]
+    return f"{prefix}{stem}{suffix}"
+
+
+FLUTTER_STEM = engram_release._engine_stem_for("flutter")
+FLUTTER_ENGINE_FILENAMES = {
+    platform: _engine_filename(platform, FLUTTER_STEM)
+    for platform in ("linux", "macos", "windows")
+}
+
 
 def _write_flutter_bundle(
     root: Path, platform: str, *, engine_dir: str | None = None, empty: bool = False
@@ -1375,7 +1399,7 @@ def _write_flutter_bundle(
     # A fixture with made-up bytes would exercise the filename match and skip
     # the part that distinguishes a library from a `.pdb`.
     magic = {"linux": b"\x7fELF", "macos": b"\xcf\xfa\xed\xfe", "windows": b"MZ"}
-    (target / ENGINE_FILENAMES[platform]).write_bytes(
+    (target / FLUTTER_ENGINE_FILENAMES[platform]).write_bytes(
         b"" if empty else magic[platform] + b"\x00rest-of-the-library\x00"
     )
     return bundle
@@ -1405,12 +1429,12 @@ class ArchiveFlutterTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             bundle = _write_flutter_bundle(root, "macos")
-            next(bundle.rglob("libengram_capi.dylib")).unlink()
+            next(bundle.rglob(FLUTTER_ENGINE_FILENAMES["macos"])).unlink()
             with self.assertRaises(ValueError) as caught:
                 engram_release.archive_flutter(
                     "0.4.0", "macos", bundle, root / "out", COMMIT
                 )
-            self.assertIn("no engram_capi engine", str(caught.exception))
+            self.assertIn(f"no {FLUTTER_STEM} engine", str(caught.exception))
 
     def test_refuses_an_engine_in_the_wrong_place_for_this_platform(self) -> None:
         # The trap this backend actually has. Flutter puts native libraries in
@@ -1429,6 +1453,73 @@ class ArchiveFlutterTests(unittest.TestCase):
             message = str(caught.exception)
             self.assertIn("not where macos looks for it", message)
             self.assertIn("Contents/Frameworks", message)
+
+    def test_macos_accepts_the_framework_the_native_assets_hook_installs(
+        self,
+    ) -> None:
+        """A migrated Flutter does not ship a bare `.dylib` on macOS.
+
+        Flutter's native-assets hook installs the standard runtime as a
+        FRAMEWORK — `Contents/Frameworks/mosaic_app.framework/Versions/A/
+        mosaic_app`, a Mach-O with no `lib` prefix, no extension, and one
+        directory deeper than a plain library. Measured on a real
+        `flutter build macos`, not invented for this test.
+
+        Every other fixture here writes a bare library, so nothing covered the
+        shape this backend actually produces, and `_find_engine` returned
+        `None` for a perfectly good bundle — the mirror of the `archive_qt`
+        bug, which accepted a bad one.
+        """
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_flutter_bundle(root, "macos")
+            frameworks = bundle / "Contents" / "Frameworks"
+            bare = frameworks / FLUTTER_ENGINE_FILENAMES["macos"]
+            payload = bare.read_bytes()
+            bare.unlink()
+
+            versions = frameworks / f"{FLUTTER_STEM}.framework" / "Versions" / "A"
+            versions.mkdir(parents=True)
+            (versions / FLUTTER_STEM).write_bytes(payload)
+            # The symlink Flutter leaves at the framework root. It must not be
+            # what the check returns — `_find_engine` skips symlinks — so its
+            # presence is part of the fixture rather than incidental.
+            (frameworks / f"{FLUTTER_STEM}.framework" / FLUTTER_STEM).symlink_to(
+                Path("Versions") / "A" / FLUTTER_STEM
+            )
+
+            output = engram_release.archive_flutter(
+                "0.4.0", "macos", bundle, root / "out", COMMIT
+            )
+            self.assertEqual(output.name, "engram-flutter-macos-v0.4.0.zip")
+
+    def test_a_framework_outside_the_loader_directory_is_still_refused(self) -> None:
+        """Recursion is scoped to the engine directory, not the whole bundle.
+
+        Finding the framework needs a recursive search, and a recursive search
+        is exactly how a layout check stops checking layout. So: same framework,
+        one directory too high, and it must still fail.
+        """
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_flutter_bundle(root, "macos")
+            contents = bundle / "Contents"
+            bare = contents / "Frameworks" / FLUTTER_ENGINE_FILENAMES["macos"]
+            payload = bare.read_bytes()
+            bare.unlink()
+
+            # In `Contents/`, beside `Frameworks/` rather than inside it.
+            versions = contents / f"{FLUTTER_STEM}.framework" / "Versions" / "A"
+            versions.mkdir(parents=True)
+            (versions / FLUTTER_STEM).write_bytes(payload)
+
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_flutter(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("not where macos looks for it", str(caught.exception))
 
     def test_each_platform_rejects_the_others_layout(self) -> None:
         # So the layout table cannot be quietly collapsed to one directory.
@@ -1457,7 +1548,7 @@ class ArchiveFlutterTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             bundle = _write_flutter_bundle(root, "windows")
-            self.assertTrue((bundle / "engram_capi.dll").is_file())
+            self.assertTrue((bundle / FLUTTER_ENGINE_FILENAMES["windows"]).is_file())
             engram_release.archive_flutter(
                 "0.4.0", "windows", bundle, root / "out", COMMIT
             )
@@ -1473,13 +1564,13 @@ class ArchiveFlutterTests(unittest.TestCase):
                 engram_release.archive_flutter(
                     "0.4.0", "linux", bundle, root / "out", COMMIT
                 )
-            self.assertIn("no engram_capi engine", str(caught.exception))
+            self.assertIn(f"no {FLUTTER_STEM} engine", str(caught.exception))
 
     def test_a_symlinked_engine_does_not_satisfy_the_check(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             bundle = _write_flutter_bundle(root, "linux")
-            engine = bundle / "lib" / "libengram_capi.so"
+            engine = bundle / "lib" / FLUTTER_ENGINE_FILENAMES["linux"]
             real = bundle / "lib" / "other.bin"
             real.write_bytes(b"\x00")
             engine.unlink()
@@ -1488,7 +1579,7 @@ class ArchiveFlutterTests(unittest.TestCase):
                 engram_release.archive_flutter(
                     "0.4.0", "linux", bundle, root / "out", COMMIT
                 )
-            self.assertIn("engram_capi", str(caught.exception))
+            self.assertIn(FLUTTER_STEM, str(caught.exception))
 
     def test_refuses_debug_symbols_named_like_the_engine(self) -> None:
         # A Rust cdylib on Windows emits `engram_capi.dll`,
@@ -1498,13 +1589,13 @@ class ArchiveFlutterTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             bundle = _write_flutter_bundle(root, "windows")
-            (bundle / "engram_capi.dll").unlink()
-            (bundle / "engram_capi.pdb").write_bytes(b"Microsoft C/C++ MSF 7.00")
+            (bundle / FLUTTER_ENGINE_FILENAMES["windows"]).unlink()
+            (bundle / f"{FLUTTER_STEM}.pdb").write_bytes(b"Microsoft C/C++ MSF 7.00")
             with self.assertRaises(ValueError) as caught:
                 engram_release.archive_flutter(
                     "0.4.0", "windows", bundle, root / "out", COMMIT
                 )
-            self.assertIn("no engram_capi engine", str(caught.exception))
+            self.assertIn(f"no {FLUTTER_STEM} engine", str(caught.exception))
 
     def test_refuses_a_file_with_the_right_name_and_wrong_contents(self) -> None:
         for content, label in [(b"x", "one byte"), (b"not a library\n", "text")]:
@@ -1512,12 +1603,12 @@ class ArchiveFlutterTests(unittest.TestCase):
                 with tempfile.TemporaryDirectory() as tmp:
                     root = Path(tmp)
                     bundle = _write_flutter_bundle(root, "linux")
-                    (bundle / "lib" / "libengram_capi.so").write_bytes(content)
+                    (bundle / "lib" / FLUTTER_ENGINE_FILENAMES["linux"]).write_bytes(content)
                     with self.assertRaises(ValueError) as caught:
                         engram_release.archive_flutter(
                             "0.4.0", "linux", bundle, root / "out", COMMIT
                         )
-                    self.assertIn("no engram_capi engine", str(caught.exception))
+                    self.assertIn(f"no {FLUTTER_STEM} engine", str(caught.exception))
 
     def test_accepts_a_versioned_soname(self) -> None:
         # `Path.stem` strips one suffix, so a real versioned soname
@@ -1526,8 +1617,8 @@ class ArchiveFlutterTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             bundle = _write_flutter_bundle(root, "linux")
-            engine = bundle / "lib" / "libengram_capi.so"
-            engine.rename(engine.with_name("libengram_capi.so.0.4.0"))
+            engine = bundle / "lib" / FLUTTER_ENGINE_FILENAMES["linux"]
+            engine.rename(engine.with_name(f'{FLUTTER_ENGINE_FILENAMES["linux"]}.0.4.0'))
             engram_release.archive_flutter(
                 "0.4.0", "linux", bundle, root / "out", COMMIT
             )
@@ -1633,15 +1724,24 @@ class ArchiveQtTests(unittest.TestCase):
         stops overriding its generated host, so `[host_assets]` is the source
         of truth and `_engine_stem_for` reads it rather than hardcoding.
 
-        Only the two STABLE ends are pinned. Qt migrated in #13728 and cannot
-        un-migrate; Flutter is not migrating in any open change. **Compose is
-        deliberately not pinned** — it is mid-migration, and asserting its
-        current answer here would turn this test into a tripwire that fails the
-        very PR that completes the migration, which is the opposite of useful.
+        Only the STABLE ends are pinned, and which backends those are moves as
+        the migrations land. Qt migrated in #13728 and cannot un-migrate;
+        Flutter has now migrated too, in the change that edited this line — the
+        previous version pinned it to `engram_capi` on the stated grounds that
+        it "is not migrating in any open change", which was true when written
+        and is the reason this assertion had to be revisited rather than merely
+        satisfied. XAML is the stable unmigrated end and still overrides its
+        generated host.
+
+        **Compose is deliberately not pinned** — it is mid-migration, and
+        asserting its current answer here would turn this test into a tripwire
+        that fails the very PR that completes the migration, which is the
+        opposite of useful.
         """
 
         self.assertEqual(engram_release._engine_stem_for("qt"), "mosaic_app")
-        self.assertEqual(engram_release._engine_stem_for("flutter"), "engram_capi")
+        self.assertEqual(engram_release._engine_stem_for("flutter"), "mosaic_app")
+        self.assertEqual(engram_release._engine_stem_for("xaml"), "engram_capi")
 
     def test_refuses_a_bundle_carrying_the_retired_engine(self) -> None:
         """The engine has to be the one the app opens, not merely *an* engine.

@@ -91,6 +91,41 @@ Compose's. What replaces them covers the three outcomes, the deferral line, the
 bounded read, the zip-signature check, and a gate that the handler dispatches on
 *exactly* the two kinds the application mints.
 
+#### Two release-path checks written for the retired architecture
+
+#15089 found three of these for Qt and fixed them. Migrating Flutter exposes the
+same shape in two more places, and neither is theoretical — both were run
+against a real built bundle.
+
+**`build-native.sh` would have copied `engram-capi` into the bundle.** The
+`flutter` arm placed `$LIB_NAME` unconditionally, so a migrated Flutter app
+would ship a library nothing loads while the engine it does open sits
+elsewhere. The migrated path now *verifies* instead of placing, and the
+verification searches two names: measured on a real `flutter build macos`, the
+runtime lands as `Contents/Frameworks/mosaic_app.framework/mosaic_app` — a
+framework binary with no `lib` prefix and no extension — so a search for
+`libmosaic_app.dylib` alone finds nothing on a perfectly good build. Falsified
+both ways: an empty bundle and one carrying only the retired `engram_capi` name
+are both refused.
+
+`STANDARD_RUNTIME_BACKENDS` needed no edit at all, which is #15089's manifest
+derivation paying off exactly as claimed — removing the `[host_assets]` line
+moves the derived list from `qt swiftui` to `qt swiftui flutter` on its own.
+
+**`archive_flutter` refused a correct bundle** — the mirror image of the
+`archive_qt` bug. That one verified `engram_capi` and *accepted* a bundle the
+app could not use; this one looked for a bare `mosaic_app.dylib` and returned
+`None` for the framework Flutter actually installs, so a good artifact failed
+the release check. `_find_engine` now recognises a binary named exactly the stem
+inside the matching `.framework`, and the search recurses **only where the
+engine directory is a real subdirectory**.
+
+That scoping is not a detail. The first version recursed unconditionally, and on
+Windows — where the engine directory *is* the bundle root — that turned "beside
+the executable" into "anywhere in the bundle" and the layout check collapsed. It
+was caught by `test_each_platform_rejects_the_others_layout`, which exists for
+precisely that, and both halves are now pinned by tests that fail without them.
+
 **Known and untouched:** `flutter build macos --release` fails in the
 native-assets hook, which hands `lipo` two arm64 copies of the runtime library
 under two framework names. Reproduced identically on the pre-migration tree, so
