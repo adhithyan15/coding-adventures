@@ -19,10 +19,10 @@
     "status": "ci-repair-validated"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-13T07:49:33Z",
+    "observed_at": "2026-09-13T08:52:54Z",
     "pr_number": 15080,
     "status": "repair-validated",
-    "notes": "The landing-page clean-checkout deploy failed in Forme bootstrap at the first local TypeScript dependency under CI's npm 10.9.8. Direct local reproduction exposed npm Arborist crashing with Cannot read properties of null (reading 'edgesOut') while resolving unrelated Vitest development peers. Revision 5a56f11279725ccf73e073bd715363c3ba21e062 adds bootstrap-only --legacy-peer-deps; the exact npm 10.9.8 install then succeeds with zero vulnerabilities, the focused bootstrap contract passes 5 tests, and the Forme CLI TypeScript build passes after leaf-first dependency installation. Auto-merge remains disabled until the repaired head completes every required check without failure or conflict."
+    "notes": "After the npm 10 bootstrap repair passed both site deploys, the affected Windows build exposed 13 Forme CLI tests whose POSIX-only /project fixture paths missed the injected config on Windows. Revision cc2a2a65c1d615a388a10cbe24bf02a5eb5fd866 makes only the test fixture paths platform-native. The complete package suite now passes 28 tests with 88.23% line coverage and the TypeScript build passes locally. A separate failed Ubuntu check never acquired a runner and published no log artifact; a duplicate Ubuntu build remains pending. Auto-merge remains disabled until the new repaired head completes every required check without failure or conflict."
   },
   "last_inventory": {
     "revision": "5e48b5f83db4b1112aea3dfa5e63d42480be808c",
@@ -996,8 +996,8 @@
       "branch": "codex/build-tool-site-authored-resources-20260912",
       "pr_number": 15080,
       "implementation_revision": "c9e752986c06df056dabc8a6e42e28fd7b6f1735",
-      "ci_repair_revision": "5a56f11279725ccf73e073bd715363c3ba21e062",
-      "ci_repair_notes": "The root landing-page deploy reproduced an npm 10.9.8 Arborist peer-graph crash on the first local TypeScript dependency. The focused Forme bootstrap repair passes --legacy-peer-deps only for repository-local installs, with an exact invocation test, package documentation, and changelog entry. Direct npm 10.9.8 installation succeeds, the five focused bootstrap tests pass, and the Forme CLI TypeScript build passes after leaf-first dependency installation.",
+      "ci_repair_revision": "cc2a2a65c1d615a388a10cbe24bf02a5eb5fd866",
+      "ci_repair_notes": "Two focused repairs are now present. Revision 5a56f11279725ccf73e073bd715363c3ba21e062 bypasses npm 10's crashing peer resolver only for repository-local bootstrap installs. Revision cc2a2a65c1d615a388a10cbe24bf02a5eb5fd866 makes the CLI test harness use platform-native fixture paths after Windows CI proved its injected services were bypassed by POSIX-only literals. Exact npm 10.9.8 installation succeeds with zero vulnerabilities; all 28 Forme CLI tests pass with 88.23% line coverage; and the TypeScript build passes.",
       "publication_notes": "Opened ready-for-review PR #15080 after two clean rebases onto disjoint origin/main advances and a normal first push. GitHub reports the branch mergeable with initial checks queued or running. Auto-merge remains disabled while checks are nonterminal.",
       "selected_at": "2026-09-13T05:26:04Z",
       "selection_revision": "5e48b5f83db4b1112aea3dfa5e63d42480be808c",
