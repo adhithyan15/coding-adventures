@@ -70,10 +70,23 @@ fn upsert_by<T>(target: &mut Vec<T>, incoming: Vec<T>, key: impl Fn(&T) -> Strin
 /// `Media\u{1f}anki-media:art\u{1f}anki-v11\u{1f}later\u{1f}` — and
 /// `upsert_by` REPLACES on a key match, so one silently displaced the other.
 ///
-/// Prefixing each part with its byte length makes the encoding injective for
-/// any content at all, rather than for any content that happens to avoid one
-/// character. A guard on the separator would close this instance; the prefix
-/// closes the class, and needs nothing at the producers.
+/// Prefixing each part with its byte length makes the encoding a netstring, and
+/// therefore injective OVER THE FOUR RENDERED PARTS: a decoder reads to the
+/// first `:`, takes exactly that many bytes, and never infers a part's extent
+/// from its content, so nothing inside a part can confuse the split. A guard on
+/// the separator would close this instance; the prefix closes the class, and
+/// needs nothing at the producers.
+///
+/// Over the four parts, not over the record. `original_id: None` and
+/// `Some("")` both render as the empty part and still share a key — unchanged
+/// behaviour, not a regression, but the distinction matters if anyone ever
+/// needs those two told apart (encode presence: a `-1:` sentinel, or a fifth
+/// part).
+///
+/// The trailing `\u{1f}` after the last part is a visual marker, not a
+/// delimiter — the lengths alone are sufficient, confirmed by a reviewer
+/// brute-forcing the encoding without it. Said so that nobody removing it
+/// believes they have broken the injectivity, or adds a guard protecting it.
 ///
 /// Fixed at the ENCODING rather than by a guard, which is the opposite of the
 /// choice `engram-core-wasm` made for the same shape in card ids. The reason is
@@ -85,10 +98,18 @@ fn upsert_by<T>(target: &mut Vec<T>, incoming: Vec<T>, key: impl Fn(&T) -> Strin
 /// and the point is that the parts cannot be re-split ambiguously.
 fn external_source_merge_key(source: &ExternalSourceRecord) -> String {
     let target = format!("{:?}", source.target);
-    // EVERY part, including the target. Its `Debug` is a closed set of variant
-    // names and no one of them is a prefix of another, so leaving it bare would
-    // in fact be safe -- but that is a case analysis a reader has to redo every
-    // time a variant is added, and uniformity costs three characters.
+    // EVERY part, including the target.
+    //
+    // The first version of this comment said leaving the target bare would be
+    // safe "because no variant name is a prefix of another". That is FALSE:
+    // `Note` is a prefix of `NoteType`. Leaving it bare would still have been
+    // safe, but for a different reason -- the next byte emitted is always a
+    // decimal digit, so `Note` followed by `9:` can never be read as
+    // `NoteType`. Caught in review.
+    //
+    // Which is the argument for prefixing it rather than reasoning about it: a
+    // case analysis a reader has to redo every time a variant is added, and get
+    // right, is worse than three characters.
     let mut key = String::new();
     for part in [
         target.as_str(),
@@ -470,31 +491,48 @@ mod tests {
             "anki-media:art\u{1f}anki-v11",
         ];
 
-        let mut seen: BTreeMap<String, (String, String, String)> = BTreeMap::new();
-        for target_id in parts {
-            for source_name in parts {
-                for original in parts {
-                    let record = source(
-                        ExternalSourceTarget::Media,
-                        target_id,
-                        source_name,
-                        Some(original),
-                        BTreeMap::new(),
-                    );
-                    let key = external_source_merge_key(&record);
-                    let triple = (
-                        target_id.to_string(),
-                        source_name.to_string(),
-                        original.to_string(),
-                    );
-                    if let Some(previous) = seen.insert(key.clone(), triple.clone()) {
-                        panic!("{previous:?} and {triple:?} share the key {key:?}");
+        // `Note` and `NoteType` specifically, because the comment on the key
+        // first justified the target prefix by claiming no variant name is a
+        // prefix of another -- and these two are exactly the counterexample.
+        // The first version of this test held the target at `Media` while its
+        // doc said "every part is varied against every other", so it could not
+        // have caught the claim being wrong.
+        let targets = [
+            ExternalSourceTarget::Media,
+            ExternalSourceTarget::Note,
+            ExternalSourceTarget::NoteType,
+        ];
+
+        type Tuple = (String, String, String, String);
+        let mut seen: BTreeMap<String, Tuple> = BTreeMap::new();
+        for target in targets {
+            for target_id in parts {
+                for source_name in parts {
+                    for original in parts {
+                        let record = source(
+                            target,
+                            target_id,
+                            source_name,
+                            Some(original),
+                            BTreeMap::new(),
+                        );
+                        let key = external_source_merge_key(&record);
+                        let tuple = (
+                            format!("{target:?}"),
+                            target_id.to_string(),
+                            source_name.to_string(),
+                            original.to_string(),
+                        );
+                        if let Some(previous) = seen.insert(key.clone(), tuple.clone()) {
+                            panic!("{previous:?} and {tuple:?} share the key {key:?}");
+                        }
                     }
                 }
             }
         }
-        // 10^3, so the loop really ran over what it claims to have covered.
-        assert_eq!(seen.len(), parts.len().pow(3));
+        // 3 * 10^3, so the loop really ran over what it claims to have covered
+        // rather than short-circuiting somewhere.
+        assert_eq!(seen.len(), targets.len() * parts.len().pow(3));
     }
 
     /// The same record still merges onto itself.

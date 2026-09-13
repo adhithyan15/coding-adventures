@@ -1088,9 +1088,26 @@ fn deleted_external_source_record(source: &ExternalSourceRecord) -> Option<Exter
 
     Some(ExternalSourceRecord {
         target: ExternalSourceTarget::Deleted,
+        // Length-prefixed, the same shape `external_source_merge_key` uses and
+        // for the same reason: `source` is free text from a loaded state file
+        // and `original_id` is the Anki guid from an imported package, so a
+        // separator-joined form lets one render as another. With
+        // `source = "anki-v11:note:x"` this produced the same string as
+        // `source = "anki-v11"` with `original_id = "x:deck:..."`.
+        //
+        // NOT a live defect, and fixed anyway. Nothing parses this string back
+        // apart -- one producer, zero consumers -- and the merge key now
+        // carries `source` and `original_id` as separately prefixed parts, so
+        // two records cannot displace each other through it. But it is the same
+        // class in the same crate, found in the review of that fix, and "you
+        // closed one and left two" is the shape this repo keeps meeting.
         target_id: format!(
-            "deleted:{}:{}:{}",
-            source.source, deleted_target, original_id
+            "deleted:{}:{}:{}:{}:{}",
+            source.source.len(),
+            source.source,
+            deleted_target,
+            original_id.len(),
+            original_id
         ),
         source: source.source.clone(),
         original_id: Some(original_id),
@@ -2611,6 +2628,17 @@ mod tests {
             source.target == ExternalSourceTarget::Deleted
                 && source.original_id.as_deref() == Some("2000")
                 && source.data.get("deletedTarget").map(String::as_str) == Some("card")
+        }));
+        // The tombstone's `target_id` is length-prefixed, so a `source` or an
+        // `original_id` carrying the delimiter cannot render as another
+        // tombstone. Nothing asserted its SHAPE before -- the tests read
+        // `original_id` and `deletedTarget` off the record and never touched
+        // the composed string -- so the format was free to drift either way.
+        assert!(next.external_sources.iter().any(|source| {
+            source.target == ExternalSourceTarget::Deleted
+                && source
+                    .target_id
+                    .contains(&format!(":{}:{}", "2000".len(), "2000"))
         }));
         let active = next.active_session.unwrap();
         assert_eq!(active.queue, vec![card("manual")]);
