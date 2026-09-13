@@ -14035,6 +14035,16 @@ fn doctype_triggers_quirks(
             "-//ietf//dtd html level 3//",
             "-//ietf//dtd html strict level 0//",
             "-//ietf//dtd html strict level 1//",
+            "-//ietf//dtd html strict level 2//",
+            "-//ietf//dtd html strict level 3//",
+            "-//ietf//dtd html strict//",
+            "-//ietf//dtd html//",
+            "-//metrius//dtd metrius presentational//",
+            "-//microsoft//dtd internet explorer 2.0 html strict//",
+            "-//microsoft//dtd internet explorer 2.0 html//",
+            "-//microsoft//dtd internet explorer 2.0 tables//",
+            "-//microsoft//dtd internet explorer 3.0 html strict//",
+            "-//microsoft//dtd internet explorer 3.0 html//",
         ];
         let is_html_4_frameset_or_transitional = public_identifier
             .starts_with("-//w3c//dtd html 4.01 frameset")
@@ -35612,6 +35622,16 @@ mod tests {
             "-//IETF//DTD HTML Level 3//",
             "-//IETF//DTD HTML Strict Level 0//",
             "-//IETF//DTD HTML Strict Level 1//",
+            "-//IETF//DTD HTML Strict Level 2//",
+            "-//IETF//DTD HTML Strict Level 3//",
+            "-//IETF//DTD HTML Strict//",
+            "-//IETF//DTD HTML//",
+            "-//Metrius//DTD Metrius Presentational//",
+            "-//Microsoft//DTD Internet Explorer 2.0 HTML Strict//",
+            "-//Microsoft//DTD Internet Explorer 2.0 HTML//",
+            "-//Microsoft//DTD Internet Explorer 2.0 Tables//",
+            "-//Microsoft//DTD Internet Explorer 3.0 HTML Strict//",
+            "-//Microsoft//DTD Internet Explorer 3.0 HTML//",
         ];
 
         for public_identifier in public_identifiers {
