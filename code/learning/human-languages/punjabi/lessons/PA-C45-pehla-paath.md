@@ -7,7 +7,7 @@ chapter: 45
 type: reading
 headword: "(reading)"
 romanization: "merā nāṁ aman hai. merā kamm naukarī hai."
-gloss: the same six facts as sentences - forty-three words of Punjabi in a row, and not one of them new
+gloss: the same six facts as sentences - seventy-two words of Punjabi in a row, and not one of them new
 concept_tag: CONNECTED-READING
 prerequisites: [PA-C45-form, PA-C40-sochda-ki, PA-C39-par, PA-C38-ate, PA-C42-oh, PA-C42-asi, PA-C43-kitthe, PA-C37-nahin-pata, PA-C35-jaldi-milaange, PA-C32-changa, PA-C32-thik-thak, PA-C39-doublet, PA-W05-farming]
 sounds: []
@@ -40,7 +40,7 @@ reviews_of: [PA-C45-form, PA-C40-sochda-ki, PA-C39-par, PA-C42-oh]
 [PAUSE 2s] Six labels, then six lines of a form. Now the same person, in
 sentences.
 
-[PAUSE 1s] Forty-three words, and not one of them is new.
+[PAUSE 1s] Seventy-two words, and not one of them is new.
 
 ## Reading
 <!-- hl-knowledge: introduces=[PA-SKILL-CONNECTED-READING]; assesses=[PA-JOIN-SOCHDA-KI-01, PA-LEX-CHANGA] -->
@@ -52,6 +52,12 @@ sentences.
 > ਮਨਨ ਮੇਰਾ ਦੋਸਤ ਹੈ।
 > ਮਨਨ ਦਾ ਕੰਮ ਖੇਤੀ ਹੈ।
 > ਮਨਨ ਠੀਕ-ਠਾਕ ਹੈ।
+> ਉਹ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹੈ।
+> ਉਹ ਸੋਚਦਾ ਹੈ ਕਿ ਪੰਜਾਬੀ ਚੰਗਾ ਹੈ।
+> ਉਹ ਮੇਰਾ ਦੋਸਤ ਹੈ।
+> ਮੈਂ ਠੀਕ-ਠਾਕ ਹਾਂ।
+> ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ।
+> ਮੈਂ ਸੋਚਦਾ ਹਾਂ ਕਿ ਪੰਜਾਬੀ ਚੰਗਾ ਹੈ।
 > ਪਰ ਮੈਨੂੰ ਨਹੀਂ ਪਤਾ ਕਿ ਉਹ ਕਿੱਥੇ ਹੈ।
 > ਅਸੀਂ ਜਲਦੀ ਮਿਲਾਂਗੇ।
 > ਧੰਨਵਾਦ।
