@@ -78,6 +78,28 @@ layout SpiceWorkbench {
       }
       Text [ selected-schematic-analysis ] ( content : slot: selected-schematic-analysis-label )
       Column [ schematic-analysis-configuration ] {
+        Text [ schematic-analysis-kind-label ] ( content : slot: schematic-analysis-kind-label )
+        Row [ schematic-analysis-kind-controls ] {
+          For ( each: slot: schematic-analysis-kind-controls , as: analysis , index: analysis-index ) {
+            HostButton [ schematic-analysis-kind-control ] (
+              label : ( analysis ) ,
+              disabled : slot: schematic-analysis-kind-disabled ,
+              onClick : emit: onSelectSchematicAnalysis
+            )
+          }
+        }
+        Row [ schematic-analysis-card-move-actions ] {
+          HostButton [ move-schematic-analysis-card-earlier ] (
+            label : slot: move-schematic-analysis-card-earlier-label ,
+            disabled : slot: move-schematic-analysis-card-earlier-disabled ,
+            onClick : emit: onMoveSchematicAnalysisCardEarlier
+          )
+          HostButton [ move-schematic-analysis-card-later ] (
+            label : slot: move-schematic-analysis-card-later-label ,
+            disabled : slot: move-schematic-analysis-card-later-disabled ,
+            onClick : emit: onMoveSchematicAnalysisCardLater
+          )
+        }
         Text [ schematic-analysis-configuration-label ] ( content : slot: schematic-analysis-configuration-label )
         HostButton [ remove-schematic-analysis-card ] (
           label : slot: remove-schematic-analysis-card-label ,

@@ -345,6 +345,19 @@ impl SchematicDocument {
         Ok(())
     }
 
+    /// Move one card to a new source-order position without rewriting its settings.
+    pub fn move_analysis_card(&mut self, from: usize, to: usize) -> Result<(), SchematicError> {
+        let cards = self.materialized_analysis_cards();
+        if from >= cards.len() || to >= cards.len() {
+            return Err(invalid("schematic analysis card is unavailable"));
+        }
+        if from != to {
+            let card = cards.remove(from);
+            cards.insert(to, card);
+        }
+        Ok(())
+    }
+
     /// Change a card kind without disturbing other source-ordered cards.
     pub fn set_analysis_card_kind(
         &mut self,
@@ -1257,10 +1270,23 @@ mod tests {
         assert!(deck.contains(".dc V1 -1 2 0.5\n.ac dec 20 1 1k\n.tran 2m 20m\n.end"));
         parse_netlist(&deck).unwrap();
         assert_eq!(run_netlist(&deck).unwrap().len(), 3);
+        document.move_analysis_card(1, 0).unwrap();
+        assert_eq!(
+            document.analysis_card_labels(),
+            ["1. AC sweep", "2. DC sweep", "3. Transient"]
+        );
+        assert!(document
+            .to_berkeley_netlist()
+            .unwrap()
+            .contains(".ac dec 20 1 1k\n.dc V1 -1 2 0.5\n.tran 2m 20m\n.end"));
+        assert_eq!(
+            document.move_analysis_card(0, 3).unwrap_err().to_string(),
+            "schematic analysis card is unavailable"
+        );
         document.remove_analysis_card(1).unwrap();
         assert_eq!(
             document.analysis_card_labels(),
-            ["1. DC sweep", "2. Transient"]
+            ["1. AC sweep", "2. Transient"]
         );
         document.remove_analysis_card(1).unwrap();
         assert_eq!(

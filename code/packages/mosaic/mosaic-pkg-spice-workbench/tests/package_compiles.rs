@@ -78,6 +78,18 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .slots
         .iter()
+        .any(|slot| slot.name == "schematic-analysis-kind-controls"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "schematic-analysis-kind-disabled"));
+    assert!(component
+        .slots
+        .iter()
+        .any(|slot| slot.name == "move-schematic-analysis-card-later-disabled"));
+    assert!(component
+        .slots
+        .iter()
         .any(|slot| slot.name == "schematic-analysis-source-options"));
     assert!(component
         .slots
@@ -143,6 +155,14 @@ fn manifest_and_component_contract_are_complete() {
     assert!(component
         .emits
         .iter()
+        .any(|emit| emit.name == "onMoveSchematicAnalysisCardEarlier"));
+    assert!(component
+        .emits
+        .iter()
+        .any(|emit| emit.name == "onMoveSchematicAnalysisCardLater"));
+    assert!(component
+        .emits
+        .iter()
         .any(|emit| emit.name == "onRemoveSchematicAnalysisCard"));
     assert!(component
         .emits
@@ -189,6 +209,11 @@ fn multiline_workbench_compiles_in_both_themes() {
     assert!(source("SpiceWorkbench.mll").contains("HostInput [ schematic-title-input ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-control ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-card ]"));
+    assert!(source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-kind-control ]"));
+    assert!(source("SpiceWorkbench.mll")
+        .contains("HostButton [ move-schematic-analysis-card-earlier ]"));
+    assert!(source("SpiceWorkbench.mll")
+        .contains("HostButton [ move-schematic-analysis-card-later ]"));
     assert!(source("SpiceWorkbench.mll").contains("HostButton [ remove-schematic-analysis-card ]"));
     assert!(
         source("SpiceWorkbench.mll").contains("HostButton [ schematic-analysis-source-option ]")
@@ -242,6 +267,9 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("data-on-click=\"onPlaceSchematicComponent\""));
                 assert!(output.contains("data-on-click=\"onAddSchematicAnalysis\""));
                 assert!(output.contains("data-on-click=\"onSelectSchematicAnalysisCard\""));
+                assert!(output.contains("data-on-click=\"onSelectSchematicAnalysis\""));
+                assert!(output.contains("data-on-click=\"onMoveSchematicAnalysisCardEarlier\""));
+                assert!(output.contains("data-on-click=\"onMoveSchematicAnalysisCardLater\""));
                 assert!(output.contains("data-on-click=\"onRemoveSchematicAnalysisCard\""));
                 assert!(output.contains("data-on-click=\"onSelectSchematicAnalysisSource\""));
                 assert!(output.contains("data-on-change=\"onSchematicAnalysisParameterOneChange\""));
@@ -262,6 +290,8 @@ fn emitted_web_workbench_preserves_the_multiline_editor_and_actions() {
                 assert!(output.contains("type: \"schematicTitleChange\""));
                 assert!(output.contains("type: \"placeSchematicComponent\""));
                 assert!(output.contains("type: \"selectSchematicAnalysis\""));
+                assert!(output.contains("type: \"moveSchematicAnalysisCardEarlier\""));
+                assert!(output.contains("type: \"moveSchematicAnalysisCardLater\""));
                 assert!(output.contains("type: \"selectSchematicAnalysisSource\""));
                 assert!(output.contains("type: \"schematicAnalysisParameterOneChange\""));
                 assert!(output.contains("type: \"schematicValueChange\""));

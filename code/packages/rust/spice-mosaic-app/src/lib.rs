@@ -521,6 +521,11 @@ impl SpiceMosaicApp {
                     .min(document.analysis_card_count().saturating_sub(1))
             })
             .unwrap_or(0);
+        let schematic_analysis_card_count = self
+            .schematic
+            .as_ref()
+            .map(SchematicDocument::analysis_card_count)
+            .unwrap_or(0);
         let (
             schematic_analysis_source_options,
             selected_schematic_analysis_source_label,
@@ -635,6 +640,18 @@ impl SpiceMosaicApp {
             "schematic-analysis-card-label": "Analysis plan",
             "schematic-analysis-card-rows": self.schematic.as_ref().map(|document| document.analysis_card_labels().into_iter().map(|label| vec![label]).collect::<Vec<_>>()).unwrap_or_default(),
             "selected-schematic-analysis-label": self.schematic.as_ref().and_then(|document| document.analysis_card(selected_schematic_analysis_card)).map(|card| card.analysis.palette_label()).unwrap_or(SchematicAnalysis::default().palette_label()),
+            "schematic-analysis-kind-label": "Change selected card",
+            "schematic-analysis-kind-disabled": self.schematic.is_none(),
+            "schematic-analysis-kind-controls": [
+                SchematicAnalysis::OperatingPoint.palette_label(),
+                SchematicAnalysis::DcSweep.palette_label(),
+                SchematicAnalysis::AcSweep.palette_label(),
+                SchematicAnalysis::Transient.palette_label(),
+            ],
+            "move-schematic-analysis-card-earlier-label": "Move earlier",
+            "move-schematic-analysis-card-earlier-disabled": selected_schematic_analysis_card == 0,
+            "move-schematic-analysis-card-later-label": "Move later",
+            "move-schematic-analysis-card-later-disabled": schematic_analysis_card_count == 0 || selected_schematic_analysis_card + 1 >= schematic_analysis_card_count,
             "schematic-analysis-configuration-label": "Selected card configuration",
             "remove-schematic-analysis-card-label": "Remove selected card",
             "schematic-analysis-source-label": "DC sweep source",
@@ -1071,6 +1088,50 @@ impl MosaicApp for SpiceMosaicApp {
                     document.analysis_card_labels()[index]
                 )))
             }
+            "moveSchematicAnalysisCardEarlier" | "moveSchematicAnalysisCardLater" => {
+                let direction = event_name(&event.name);
+                let card_count = self
+                    .schematic
+                    .as_ref()
+                    .ok_or_else(|| {
+                        invalid("moveSchematicAnalysisCard requires a loaded schematic")
+                    })?
+                    .analysis_card_count();
+                let target = match direction.as_str() {
+                    "moveSchematicAnalysisCardEarlier" => self
+                        .selected_schematic_analysis_card
+                        .checked_sub(1)
+                        .ok_or_else(|| {
+                            invalid("selected schematic analysis card is already first")
+                        })?,
+                    "moveSchematicAnalysisCardLater" => {
+                        if self.selected_schematic_analysis_card + 1 >= card_count {
+                            return Err(invalid(
+                                "selected schematic analysis card is already last",
+                            ));
+                        }
+                        self.selected_schematic_analysis_card + 1
+                    }
+                    _ => unreachable!("the match arm lists every analysis-card move event"),
+                };
+                let history = self.schematic_history_entry();
+                self.schematic
+                    .as_mut()
+                    .expect("the schematic was checked before moving a card")
+                    .move_analysis_card(self.selected_schematic_analysis_card, target)
+                    .map_err(|error| invalid(error.to_string()))?;
+                self.selected_schematic_analysis_card = target;
+                self.record_schematic_edit(history);
+                self.diagnostics = format!(
+                    "Moved the selected schematic analysis card {}.",
+                    if direction == "moveSchematicAnalysisCardEarlier" {
+                        "earlier"
+                    } else {
+                        "later"
+                    }
+                );
+                Ok(self.announced(self.diagnostics.clone()))
+            }
             "removeSchematicAnalysisCard" => {
                 let history = self.schematic_history_entry();
                 let document = self.schematic.as_mut().ok_or_else(|| {
@@ -1437,6 +1498,7 @@ mod tests {
         assert_eq!(update.props["mode-label"], "Inspection");
         assert_eq!(update.props["analysis-rows"].as_array().unwrap().len(), 5);
         assert_eq!(update.props["analysis-rows"][4][0], ".tf (analysis 5)");
+        assert_eq!(update.props["schematic-analysis-kind-disabled"], true);
     }
 
     #[test]
@@ -1797,6 +1859,42 @@ mod tests {
             configured.props["schematic-analysis-card-rows"],
             json!([["1. Operating point"], ["2. DC sweep"], ["3. AC sweep"]])
         );
+        let moved = dispatch(&mut app, "onMoveSchematicAnalysisCardEarlier", json!({}));
+        assert_eq!(
+            moved.props["schematic-analysis-card-rows"],
+            json!([["1. Operating point"], ["2. AC sweep"], ["3. DC sweep"]])
+        );
+        assert_eq!(moved.props["selected-schematic-analysis-label"], "AC sweep");
+        assert_eq!(moved.props["schematic-analysis-kind-disabled"], false);
+        assert_eq!(
+            moved.props["schematic-analysis-parameter-three-value"],
+            "1k"
+        );
+        let converted = dispatch(
+            &mut app,
+            "onSelectSchematicAnalysis",
+            json!({"analysis":"Transient"}),
+        );
+        assert_eq!(
+            converted.props["selected-schematic-analysis-label"],
+            "Transient"
+        );
+        assert_eq!(
+            dispatch(&mut app, "undoSchematic", json!({})).props
+                ["selected-schematic-analysis-label"],
+            "AC sweep"
+        );
+        dispatch(&mut app, "redoSchematic", json!({}));
+        dispatch(
+            &mut app,
+            "onSchematicAnalysisParameterOneChange",
+            json!({"value":"2m"}),
+        );
+        dispatch(
+            &mut app,
+            "onSchematicAnalysisParameterTwoChange",
+            json!({"value":"20m"}),
+        );
         let snapshot = app.snapshot().unwrap().unwrap();
         let mut restored = SpiceMosaicApp::default();
         let mut context = StartContext::new("en-US", Platform::Web);
@@ -1804,13 +1902,13 @@ mod tests {
         let restored_update = restored.start(context).unwrap();
         assert_eq!(
             restored_update.props["selected-schematic-analysis-label"],
-            "AC sweep"
+            "Transient"
         );
         let synchronized = dispatch(&mut app, "onSynchronizeSchematic", json!({}));
         assert!(synchronized.props["netlist-text"]
             .as_str()
             .unwrap()
-            .contains(".op\n.dc V1 -1 2 0.5\n.ac dec 20 1 1k\n.end"));
+            .contains(".op\n.tran 2m 20m\n.dc V1 -1 2 0.5\n.end"));
     }
 
     #[test]
