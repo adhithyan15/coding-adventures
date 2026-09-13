@@ -220,7 +220,10 @@ The delivery order is:
    through the audited ID-token identity boundary before initial custody
    creation, eliminating caller key selection for that path. Other grant and
    authentication paths still keep identity proof and key selection as
-   separate composition steps. Prepared
+   separate composition steps. The corresponding `private_key_jwt` exchange
+   can now use the same nonce-bound identity-to-custody path through the
+   existing abstract signer, without enabling any concrete signing algorithm.
+   Other grants still keep identity proof and key selection separate. Prepared
    `private_key_jwt` authorization-code exchange, refresh, and
    RFC 7009 revocation requests can now cross the broker through the existing
    abstract signer: exact retained provider, client, operation endpoint,
