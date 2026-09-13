@@ -13,6 +13,10 @@ with the exact provider, opaque account, and caller trace. Durable audit intent
 is required before storage access; durable success is required before a token,
 revision, or write result is released.
 
+The access-token revocation closure returns an exact storage revision only for
+records with no refresh token. This keeps higher layers from deleting a
+still-refreshable credential after revoking only its access token.
+
 Refresh rotation is one atomic compare-and-swap. Omitted refresh tokens retain
 the current credential, new refresh tokens replace it, and a raced revision
 fails closed. Raw token bytes, labels, scopes, provider errors, backend errors,
