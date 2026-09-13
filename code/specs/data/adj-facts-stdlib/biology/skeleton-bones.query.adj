@@ -4,7 +4,10 @@
 % The shape a learner (or an LLM) produces to ANSWER "where is the femur?": it
 % states no anatomy fact of its own — it only `import`s the grounded table and
 % asks binding queries. The engine resolves each `?` against the `bone_region`
-% rows and returns the region + the table's source/locator/trust. The fourth
+% rows and returns the region together with THAT ROW'S OWN source and
+% locator -- since #14986 each row carries both (ADJ-TABLES RS-5e), because
+% the fifteen rows are grounded on seven different pages. Only `trust` is
+% inherited from the table's envelope. The fourth
 % query runs the relation BACKWARD (bind the region `arm`, recall the bones in
 % it — humerus, radius, ulna). A word that is not one of these bones abstains
 % honestly — the engine never invents a region.
