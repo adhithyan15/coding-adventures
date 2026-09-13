@@ -31,7 +31,25 @@ mutation-tested by making exactly that edit, which fails it with
 It also asserts, directly rather than by inference from the halves, that no two
 imported cards share an id — so the test survives a change to how the halves are
 joined — and that the import produced ids and cards at all, since every
-assertion above would pass on an empty import.
+assertion above would pass on an empty import. Notes, note types, templates and
+cards are counted **separately**: one shared counter is satisfied by the notes
+loop alone and could not prove the template loop ran, which is the id the
+mutation actually breaks.
+
+**Two readers, not one.** `read_v11_collection` dispatches on `col.ver` and
+hands anything at schema 18 or above to `parse_schema18_collection`, a separate
+reader with its own id derivation. The first version of this test imported a
+package *this crate exported*, which is v11, and so said nothing about the path
+a package from a modern Anki actually takes — the survey established "safe by
+construction" over one of two readers and read as covering both. Found by a
+reviewer walking the claim independently, which is the argument for doing that.
+
+Schema 18 is safe on the same grounds (the notetype id is the rowid; fields and
+templates carry integer ordinals) and now has its own test against a real Anki
+fixture. The mutation fails both, with **different** ids —
+`1788376852072::template::0` from the real export and `2000000::template::0`
+from this crate's — which is what shows the two tests exercise two readers
+rather than one path twice.
 
 ### Fixed — two notes could generate the same card id
 
