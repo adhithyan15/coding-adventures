@@ -250,7 +250,13 @@ The delivery order is:
    revision-bound atomic rotation. Profile mismatch fails before credential
    access, while signing, transport, clock, release, and compare-and-swap
    failures preserve the prior record. This enables neither a concrete signing
-   algorithm nor network authority.
+   algorithm nor network authority. A client-secret usable-access composition
+   now validates the exact retained Basic/Post method and provider-bound secret
+   key before credential or clock access. Still-fresh credentials invoke no
+   secret or transport authority; due credentials cross the existing audited
+   refresh and revision-bound atomic rotation path before the resulting access
+   token is disclosed through the custody closure. Clock, transport, secret
+   storage, credential storage, and token use remain injected authorities.
    The repository-owned Ed25519 implementation must first replace
    secret-dependent scalar branches/loops and scrub key-derived temporaries
    before an `EdDSA` authority can be enabled; `RS256` requires a separate

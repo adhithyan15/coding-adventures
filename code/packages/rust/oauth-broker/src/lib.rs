@@ -960,6 +960,31 @@ pub struct ClientSecretRefreshCredentialExecution<'a, C, T> {
     transport: &'a mut T,
 }
 
+/// Retained authentication and injected authorities for usable token access.
+pub struct ClientSecretAccessExecution<'a, SS: ClientSecretStore, C, T> {
+    authentication: &'a ClientSecretAuthentication,
+    client_secret_custody: &'a ClientSecretCustody<SS>,
+    clock: &'a mut C,
+    transport: &'a mut T,
+}
+
+impl<'a, SS: ClientSecretStore, C, T> ClientSecretAccessExecution<'a, SS, C, T> {
+    /// Bind exact retained authentication and caller-owned effect authorities.
+    pub fn new(
+        authentication: &'a ClientSecretAuthentication,
+        client_secret_custody: &'a ClientSecretCustody<SS>,
+        clock: &'a mut C,
+        transport: &'a mut T,
+    ) -> Self {
+        Self {
+            authentication,
+            client_secret_custody,
+            clock,
+            transport,
+        }
+    }
+}
+
 impl<'a, C, T> ClientSecretRefreshCredentialExecution<'a, C, T> {
     /// Bind caller-owned time and transport authorities to one execution.
     pub fn new(clock: &'a mut C, transport: &'a mut T) -> Self {
@@ -1491,6 +1516,65 @@ impl<S: CredentialStore> OAuthBroker<S> {
                 .ok_or(BrokerError::Clock)?;
             if expires_at <= refresh_at {
                 self.force_refresh(key, trace, clock, transport, audit)?;
+            }
+        }
+        self.custody
+            .with_access_token(key, trace, audit, use_token)
+            .map_err(map_custody_error)
+    }
+
+    /// Release a usable access token through exact retained client-secret policy.
+    ///
+    /// The opaque account key, registered provider, client ID, token endpoint,
+    /// retained Basic/Post method, and provider-bound secret key are validated
+    /// before credential, clock, secret, or transport access. When the stored
+    /// token is inside the provider's refresh lead, its exact refresh token and
+    /// revision cross the existing audited refresh/rotation composition before
+    /// custody releases the resulting access token to `use_token`. Otherwise no
+    /// client-secret or transport authority is invoked.
+    pub fn with_client_secret_access_token<R, SS, C, T, A>(
+        &self,
+        key: &CredentialKey,
+        trace: OAuthTraceId,
+        execution: ClientSecretAccessExecution<'_, SS, C, T>,
+        audit: &mut A,
+        use_token: impl FnOnce(&str) -> R,
+    ) -> Result<R, BrokerError>
+    where
+        SS: ClientSecretStore,
+        C: BrokerClock,
+        T: OAuthClientSecretTokenTransport,
+        A: OAuthClientSecretCredentialBrokerAuditSink,
+    {
+        let ClientSecretAccessExecution {
+            authentication,
+            client_secret_custody,
+            clock,
+            transport,
+        } = execution;
+        let provider = self.registered_provider(key.provider())?.clone();
+        let expected = provider.bind_client_secret_authentication(authentication.key().clone())?;
+        if &expected != authentication {
+            return Err(BrokerError::BindingMismatch);
+        }
+        let metadata = self
+            .custody
+            .with_metadata(key, trace, audit, Clone::clone)
+            .map_err(map_custody_error)?;
+        if let Some(expires_at) = metadata.expires_at_unix_seconds() {
+            let now = clock.now_unix_seconds().map_err(|_| BrokerError::Clock)?;
+            let refresh_at = now
+                .checked_add(provider.refresh_lead_seconds)
+                .ok_or(BrokerError::Clock)?;
+            if expires_at <= refresh_at {
+                self.refresh_client_secret_and_rotate_credentials(
+                    key,
+                    authentication,
+                    trace,
+                    client_secret_custody,
+                    ClientSecretRefreshCredentialExecution::new(clock, transport),
+                    audit,
+                )?;
             }
         }
         self.custody
@@ -8135,6 +8219,166 @@ mod tests {
                 vec!["mail.read".to_owned(), "profile".to_owned()],
             )
         );
+    }
+
+    #[test]
+    fn client_secret_access_refreshes_only_when_due_after_exact_binding() {
+        let provider_config = config("fixture-confidential");
+        let secret_key = ClientSecretKey::new(
+            provider_config.provider().clone(),
+            ClientSecretReference::new([0x91; 32]),
+        );
+        let provider = BrokerProvider::new_confidential(
+            provider_config.clone(),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+            Vec::new(),
+        )
+        .unwrap();
+        let authentication = provider
+            .bind_client_secret_authentication(secret_key.clone())
+            .unwrap();
+        let credential_key = key("fixture-confidential");
+        let mut audit = RecordingAudit::default();
+        let response = decoded_refresh_response(
+            &provider_config,
+            trace(90),
+            r#"{"access_token":"access-one","refresh_token":"refresh-one","token_type":"Bearer","expires_in":1000}"#,
+            &mut audit,
+        );
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut audit)
+            .unwrap();
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        custody
+            .create(
+                &credential_key,
+                credentials,
+                CredentialMetadata::new("Bearer", Some(2_000), vec!["mail.read".to_owned()])
+                    .unwrap(),
+                trace(90),
+                &mut audit,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(provider, trace(90), &mut audit)
+            .unwrap();
+        let client_secret_custody = ClientSecretCustody::new(InMemoryClientSecretStore::new());
+        client_secret_custody
+            .create(
+                &secret_key,
+                Zeroizing::new("client secret".to_owned()),
+                trace(90),
+                &mut audit,
+            )
+            .unwrap();
+
+        let custody_events_before = audit.custody.len();
+        let secret_events_before = audit.client_secret.len();
+        let wrong_authentication = ClientSecretAuthentication::new(
+            secret_key.clone(),
+            ClientSecretAuthenticationMethod::ClientSecretPost,
+        );
+        let mut rejected_clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let mut rejected_transport = MockClientSecretTransport {
+            response: None,
+            expected_authorization_header: true,
+            expected_refresh: "refresh-one",
+            calls: 0,
+            order: Rc::new(RefCell::new(Vec::new())),
+        };
+        assert_eq!(
+            broker.with_client_secret_access_token(
+                &credential_key,
+                trace(91),
+                ClientSecretAccessExecution::new(
+                    &wrong_authentication,
+                    &client_secret_custody,
+                    &mut rejected_clock,
+                    &mut rejected_transport,
+                ),
+                &mut audit,
+                str::to_owned,
+            ),
+            Err(BrokerError::BindingMismatch)
+        );
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(audit.client_secret.len(), secret_events_before);
+        assert_eq!(rejected_clock.calls, 0);
+        assert_eq!(rejected_transport.calls, 0);
+
+        let mut fresh_clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let mut unused_transport = MockClientSecretTransport {
+            response: None,
+            expected_authorization_header: true,
+            expected_refresh: "refresh-one",
+            calls: 0,
+            order: Rc::new(RefCell::new(Vec::new())),
+        };
+        let fresh_access = broker
+            .with_client_secret_access_token(
+                &credential_key,
+                trace(92),
+                ClientSecretAccessExecution::new(
+                    &authentication,
+                    &client_secret_custody,
+                    &mut fresh_clock,
+                    &mut unused_transport,
+                ),
+                &mut audit,
+                str::to_owned,
+            )
+            .unwrap();
+        assert_eq!(fresh_access, "access-one");
+        assert_eq!(fresh_clock.calls, 1);
+        assert_eq!(unused_transport.calls, 0);
+        assert_eq!(audit.client_secret.len(), secret_events_before);
+
+        let mut due_clock = CountingClock {
+            now: 1_800,
+            calls: 0,
+        };
+        let mut transport = MockClientSecretTransport {
+            response: Some(
+                TokenEndpointResponse::new(
+                    200,
+                    Zeroizing::new(
+                        br#"{"access_token":"access-two","refresh_token":"refresh-two","token_type":"Bearer","expires_in":3600}"#.to_vec(),
+                    ),
+                )
+                .unwrap(),
+            ),
+            expected_authorization_header: true,
+            expected_refresh: "refresh-one",
+            calls: 0,
+            order: Rc::new(RefCell::new(Vec::new())),
+        };
+        let refreshed_access = broker
+            .with_client_secret_access_token(
+                &credential_key,
+                trace(93),
+                ClientSecretAccessExecution::new(
+                    &authentication,
+                    &client_secret_custody,
+                    &mut due_clock,
+                    &mut transport,
+                ),
+                &mut audit,
+                str::to_owned,
+            )
+            .unwrap();
+        assert_eq!(refreshed_access, "access-two");
+        assert_eq!(due_clock.calls, 2);
+        assert_eq!(transport.calls, 1);
     }
 
     #[test]
