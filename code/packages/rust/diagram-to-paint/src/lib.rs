@@ -805,7 +805,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
             fill: Some(node.style.fill.clone()),
             stroke: Some(node.style.stroke.clone()),
             stroke_width: Some(node.style.stroke_width),
-            stroke_dash: None,
+            stroke_dash: node.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }),
         DiagramShape::Diamond => {
@@ -832,7 +832,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 stroke_width: Some(node.style.stroke_width),
                 stroke_cap: None,
                 stroke_join: Some(StrokeJoin::Round),
-                stroke_dash: None,
+                stroke_dash: node.style.stroke_dash.clone(),
                 stroke_dash_offset: None,
             })
         }
@@ -900,7 +900,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 fill: Some(node.style.fill.clone()), fill_rule: None,
                 stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
                 stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
-                stroke_dash: None, stroke_dash_offset: None,
+                stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
             })
         }
         DiagramShape::Subroutine => {
@@ -939,14 +939,14 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                         fill: Some(node.style.fill.clone()), fill_rule: None,
                         stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
                         stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
-                        stroke_dash: None, stroke_dash_offset: None,
+                        stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
                     }),
                     PaintInstruction::Ellipse(PaintEllipse {
                         base: PaintBase::default(),
                         cx: node.x + node.width / 2.0, cy: node.y + cap,
                         rx: node.width / 2.0, ry: cap,
                         fill: Some(node.style.fill.clone()), stroke: Some(node.style.stroke.clone()),
-                        stroke_width: Some(node.style.stroke_width), stroke_dash: None, stroke_dash_offset: None,
+                        stroke_width: Some(node.style.stroke_width), stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
                     }),
                 ],
                 transform: None,
@@ -1009,7 +1009,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
                 stroke_width: Some(node.style.stroke_width),
                 stroke_cap: None,
                 stroke_join: Some(StrokeJoin::Round),
-                stroke_dash: None,
+                stroke_dash: node.style.stroke_dash.clone(),
                 stroke_dash_offset: None,
             })
         }
@@ -1023,7 +1023,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
             stroke: Some(node.style.stroke.clone()),
             stroke_width: Some(node.style.stroke_width),
             corner_radius: Some(0.0),
-            stroke_dash: None,
+            stroke_dash: node.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }),
         DiagramShape::RoundedRect => PaintInstruction::Rect(PaintRect {
@@ -1036,7 +1036,7 @@ fn node_shape_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
             stroke: Some(node.style.stroke.clone()),
             stroke_width: Some(node.style.stroke_width),
             corner_radius: Some(node.style.corner_radius),
-            stroke_dash: None,
+            stroke_dash: node.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }),
     }
@@ -1083,7 +1083,7 @@ fn polygon_node_instruction(node: &LayoutedGraphNode, points: &[(f64, f64)]) -> 
         stroke_width: Some(node.style.stroke_width),
         stroke_cap: None,
         stroke_join: Some(StrokeJoin::Round),
-        stroke_dash: None,
+        stroke_dash: node.style.stroke_dash.clone(),
         stroke_dash_offset: None,
     })
 }
@@ -1093,7 +1093,7 @@ fn node_rect_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
         base: PaintBase::default(), x: node.x, y: node.y, width: node.width, height: node.height,
         fill: Some(node.style.fill.clone()), stroke: Some(node.style.stroke.clone()),
         stroke_width: Some(node.style.stroke_width), corner_radius: Some(0.0),
-        stroke_dash: None, stroke_dash_offset: None,
+        stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
     })
 }
 
@@ -1102,7 +1102,7 @@ fn node_open_path_instruction(node: &LayoutedGraphNode, commands: Vec<PathComman
         base: PaintBase::default(), commands, fill: None, fill_rule: None,
         stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
         stroke_cap: None, stroke_join: Some(StrokeJoin::Round),
-        stroke_dash: None, stroke_dash_offset: None,
+        stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
     })
 }
 
@@ -1112,7 +1112,7 @@ fn node_ellipse_instruction(node: &LayoutedGraphNode, inset: f64, fill: Option<S
         cx: node.x + node.width / 2.0, cy: node.y + node.height / 2.0,
         rx: node.width / 2.0 - inset, ry: node.height / 2.0 - inset,
         fill, stroke: Some(node.style.stroke.clone()), stroke_width: Some(node.style.stroke_width),
-        stroke_dash: None, stroke_dash_offset: None,
+        stroke_dash: node.style.stroke_dash.clone(), stroke_dash_offset: None,
     })
 }
 
@@ -1306,7 +1306,7 @@ where
             stroke: Some(group.style.stroke.clone()),
             stroke_width: Some(group.style.stroke_width),
             corner_radius: Some(group.style.corner_radius),
-            stroke_dash: None,
+            stroke_dash: group.style.stroke_dash.clone(),
             stroke_dash_offset: None,
         }));
         for divider_y in &group.divider_y {
@@ -4830,6 +4830,7 @@ mod tests {
             fill: "none".to_string(),
             stroke: "#4b5563".to_string(),
             stroke_width: 2.0,
+            stroke_dash: None,
             text_color: "#374151".to_string(),
             font_size: 12.0,
             font_weight: 400,
@@ -5414,6 +5415,18 @@ mod tests {
     }
 
     #[test]
+    fn authored_node_dash_pattern_reaches_backend_neutral_paint() {
+        let mut layout = simple_layout();
+        layout.nodes[0].style.stroke_dash = Some(vec![5.0, 3.0]);
+        let instruction = node_shape_instruction(&layout.nodes[0]);
+        assert!(matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.stroke_dash.as_deref() == Some(&[5.0, 3.0][..])
+        ));
+    }
+
+    #[test]
     fn block_asymmetric_shape_lowers_to_five_point_path() {
         let mut layout = simple_layout();
         layout.nodes[0].shape = DiagramShape::Asymmetric;
@@ -5507,6 +5520,7 @@ mod tests {
                 font_italic: false,
                 font_family: "Helvetica".into(),
                 corner_radius: 8.0,
+                stroke_dash: Some(vec![7.0, 2.0]),
             },
         });
         let shaper = FakeShaper;
@@ -5520,7 +5534,8 @@ mod tests {
                 if rect.width == 340.0
                     && rect.fill.as_deref() == Some("#fef3c7")
                     && rect.stroke.as_deref() == Some("#b45309")
-                    && rect.stroke_width == Some(3.0))
+                    && rect.stroke_width == Some(3.0)
+                    && rect.stroke_dash.as_deref() == Some(&[7.0, 2.0][..]))
         }));
         assert!(scene.instructions.iter().any(|instruction| {
             matches!(instruction, PaintInstruction::Path(path)

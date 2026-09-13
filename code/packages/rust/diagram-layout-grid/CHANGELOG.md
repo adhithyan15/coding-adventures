@@ -1,5 +1,9 @@
 # Changelog - diagram-layout-grid
 
+## 0.10.0
+
+- Preserve authored Block stroke dash patterns through resolved cell and composite layout styles.
+
 ## 0.9.0
 
 - Preserve typed Block arrow geometry through resolved grid layout.

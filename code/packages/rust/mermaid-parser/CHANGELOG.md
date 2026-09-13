@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.205.0
+
+- Parse and validate Block `stroke-dasharray` styles into semantic dash patterns.
+
 ## 0.204.0
 
 - Parse Block arrow labels and cardinal or axis direction lists into typed grid IR.

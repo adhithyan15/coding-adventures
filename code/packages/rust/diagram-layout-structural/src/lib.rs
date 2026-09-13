@@ -32,6 +32,7 @@ fn structural_style(node: &StructuralNode) -> diagram_ir::ResolvedDiagramStyle {
             fill: "#f9fafb".into(),
             stroke: "#374151".into(),
             stroke_width: 1.5,
+            stroke_dash: None,
             text_color: "#111827".into(),
             font_size: 14.0,
             font_weight: 400,

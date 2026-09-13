@@ -429,13 +429,15 @@ mod tests {
             cells: vec![GridCell {
                 id: "styled".into(), label: DiagramLabel::new("Styled"), shape: DiagramShape::Rect,
                 column_span: 1, parent_id: None, order: 0, visible: true,
-                style: Some(DiagramStyle { fill: Some("#123456".into()), stroke_width: Some(5.0), ..DiagramStyle::default() }),
+                style: Some(DiagramStyle { fill: Some("#123456".into()), stroke_width: Some(5.0),
+                    stroke_dash: Some(vec![5.0, 3.0]), ..DiagramStyle::default() }),
             }], groups: Vec::new(), connections: Vec::new(),
         };
         let style = &layout_grid_diagram(&diagram).nodes[0].style;
         assert_eq!(style.fill, "#123456");
         assert_eq!(style.stroke, "#0284c7");
         assert_eq!(style.stroke_width, 5.0);
+        assert_eq!(style.stroke_dash.as_deref(), Some(&[5.0, 3.0][..]));
     }
 
     #[test]
@@ -447,7 +449,8 @@ mod tests {
             groups: vec![
                 GridGroup { id: "pipeline".into(), label: DiagramLabel::new("pipeline"), parent_id: None,
                     columns: GridColumns::Fixed(1), column_span: 2, order: 0, style: Some(DiagramStyle {
-                        fill: Some("#fef3c7".into()), stroke_width: Some(4.0), ..DiagramStyle::default()
+                        fill: Some("#fef3c7".into()), stroke_width: Some(4.0),
+                        stroke_dash: Some(vec![7.0, 2.0]), ..DiagramStyle::default()
                     }) },
                 GridGroup { id: "nested".into(), label: DiagramLabel::new(""), parent_id: Some("pipeline".into()),
                     columns: GridColumns::Fixed(1), column_span: 1, order: 0, style: None },
@@ -457,6 +460,7 @@ mod tests {
         assert_eq!(layout.groups.len(), 2);
         assert_eq!(layout.groups[0].style.fill, "#fef3c7");
         assert_eq!(layout.groups[0].style.stroke_width, 4.0);
+        assert_eq!(layout.groups[0].style.stroke_dash.as_deref(), Some(&[7.0, 2.0][..]));
         assert!(layout.groups[1].x > layout.groups[0].x);
         assert!(layout.groups[1].y > layout.groups[0].y);
         assert!(layout.nodes[0].x > layout.groups[1].x);

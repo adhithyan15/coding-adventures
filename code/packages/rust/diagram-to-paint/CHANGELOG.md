@@ -1,5 +1,9 @@
 # Changelog — diagram-to-paint
 
+## 0.123.0
+
+- Lower resolved Block cell and composite dash patterns to backend-neutral Paint strokes.
+
 ## 0.122.0
 
 - Lower Block arrows to backend-neutral directional outline paths.
