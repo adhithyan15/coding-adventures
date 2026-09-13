@@ -7348,3 +7348,28 @@ example (`SELECT a AS "x=Int(1),y", b`) that does not actually collide — the
 alias is constant within the query, so it cancels. Reproduce the exploit before
 fixing it; implementing a fix for a bug that does not exist costs the same
 review budget as a real one and adds code nobody can justify later.
+
+And the same discipline applied to your OWN measurement, which is the harder
+half, because a number feels like evidence.
+
+Scoping style-drop reporting for the Flutter backend (#12022), I extracted the
+handled keys from `style_prop_to_container_arg` — a single `match` over property
+names whose own doc says "unknown props produce `None` and are silently dropped"
+— diffed them against every property authored in the repo's `.msl` files, and
+got a confident answer: **59 properties dropped**.
+
+The number was wrong, because the premise under it was. That function is one
+lowering path, not the lowering: `font-size`, `text-align` and `border-radius`
+are handled by other functions entirely (`props.get("border-radius")`,
+`base.get("text-align")`, `.get("font-size")`). Flutter has 48 scattered
+lookups; Qt has 81. Neither has the single match the three reporting backends
+share, which is exactly why they are the two that do not report.
+
+A reporter built on that measurement would have emitted roughly 53 false drops —
+the SwiftUI `gap` bug fixed the same day, at ten times the scale, and it would
+have looked authoritative because it came with a count.
+
+The check that would have caught it costs one grep: before concluding that a
+function is the whole of something, grep for a property it does NOT handle and
+see whether the codebase handles it elsewhere. A measurement inherits every
+assumption in the thing being measured, and states none of them.
