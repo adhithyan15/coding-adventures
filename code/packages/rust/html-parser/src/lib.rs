@@ -14014,11 +14014,26 @@ fn doctype_triggers_quirks(
 
     if let Some(public_identifier) = public_identifier {
         let public_identifier = public_identifier.to_ascii_lowercase();
+        let legacy_quirks_prefixes = [
+            "+//silmaril//dtd html pro v0r11 19970101//",
+            "-//as//dtd html 3.0 aswedit + extensions//",
+            "-//advasoft ltd//dtd html 3.0 aswedit + extensions//",
+            "-//ietf//dtd html 2.0 level 1//",
+            "-//ietf//dtd html 2.0 level 2//",
+            "-//ietf//dtd html 2.0 strict level 1//",
+            "-//ietf//dtd html 2.0 strict level 2//",
+            "-//ietf//dtd html 2.0 strict//",
+            "-//ietf//dtd html 2.0//",
+            "-//ietf//dtd html 2.1e//",
+        ];
         let is_html_4_frameset_or_transitional = public_identifier
             .starts_with("-//w3c//dtd html 4.01 frameset")
             || public_identifier.starts_with("-//w3c//dtd html 4.01 transitional");
         if public_identifier == "html"
             || public_identifier.starts_with("-//w3c//dtd html 3.2")
+            || legacy_quirks_prefixes
+                .iter()
+                .any(|prefix| public_identifier.starts_with(prefix))
             || (is_html_4_frameset_or_transitional
                 && system_identifier.is_none_or(str::is_empty))
         {
@@ -35562,6 +35577,43 @@ mod tests {
         assert_eq!(image.name, "img");
         assert_eq!(image.attribute("src"), Some("cat.png"));
         assert_eq!(image.attribute("alt"), Some("Cat"));
+    }
+
+    #[test]
+    fn legacy_doctype_prefixes_enable_quirks_table_paragraph_recovery() {
+        let public_identifiers = [
+            "+//Silmaril//dtd html Pro v0r11 19970101//",
+            "-//AS//DTD HTML 3.0 asWedit + extensions//",
+            "-//AdvaSoft Ltd//DTD HTML 3.0 asWedit + extensions//",
+            "-//IETF//DTD HTML 2.0 Level 1//",
+            "-//IETF//DTD HTML 2.0 Level 2//",
+            "-//IETF//DTD HTML 2.0 Strict Level 1//",
+            "-//IETF//DTD HTML 2.0 Strict Level 2//",
+            "-//IETF//DTD HTML 2.0 Strict//",
+            "-//IETF//DTD HTML 2.0//",
+            "-//IETF//DTD HTML 2.1E//",
+        ];
+
+        for public_identifier in public_identifiers {
+            let source = format!(
+                "<!DOCTYPE html PUBLIC \"{public_identifier}\"><p><table><tr><td>X"
+            );
+            let document = parse_html(&source).unwrap();
+            let paragraph = element(&body(&document).children[0]);
+            assert_eq!(paragraph.name, "p", "{public_identifier}");
+            assert_eq!(
+                element(&paragraph.children[0]).name,
+                "table",
+                "{public_identifier}"
+            );
+        }
+
+        let no_quirks = parse_html(
+            "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\"><p><table><tr><td>X",
+        )
+        .unwrap();
+        assert_eq!(element(&body(&no_quirks).children[0]).name, "p");
+        assert_eq!(element(&body(&no_quirks).children[1]).name, "table");
     }
 
     #[test]
