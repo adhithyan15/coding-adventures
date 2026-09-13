@@ -60,6 +60,6 @@ table ocean_zone_scientific_name {
     row (midnight_zone, bathypelagic)
 
     source "The midnight zone, or bathypelagic, extends to about 4,000 meters (about 13,100 feet), which reaches the ocean floor in many places is in perpetual darkness."
-    locator "https://www.whoi.edu/know-your-ocean/ocean-topics/how-the-ocean-works/ocean-zones/"
+    locator "https://www.whoi.edu/ocean-learning-hub/ocean-topics/how-the-ocean-works/ocean-zones/"
     trust consensus
 }

@@ -57,8 +57,12 @@ fn eye_part_property_recalls_forward_with_citation() {
         out.contains("\"term\":\"eye_part_property(iris, colored_part_of_eye)\""),
         "the iris is the colored part of the eye: {out}"
     );
+    // THE WHOLE LOCATOR, not just the host. #15139 found five stdlib
+    // locators addressing pages that had moved; a host-only pin stays
+    // green straight through that rot, because the host is the half a
+    // site reorganization leaves alone.
     assert!(
-        out.contains("nei.nih.gov") && out.contains("\"trust\":\"authoritative\""),
+        out.contains("\"locator\":\"https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work\",\"trust\":\"authoritative\""),
         "carries the NEI citation: {out}"
     );
 }

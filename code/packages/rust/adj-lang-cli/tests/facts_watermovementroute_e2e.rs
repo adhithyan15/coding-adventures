@@ -89,9 +89,14 @@ fn runoff_moves_water_across_the_surface() {
         out.contains("Water moves across the surface through snowmelt, runoff, and streamflow."),
         "the envelope carries this sentence verbatim. NOTE: provenance is TABLE-level, so this          proves the sentence reached stdout, NOT that runoff is attributed to it specifically --          every row carries all three sentences (issue #13898): {out}"
     );
+    // THE LOCATOR BOUND TO THE TIER, not two loose substrings. These two
+    // halves drifted apart once already: with `cites` corroborations
+    // carrying the same url, reverting ONLY the envelope locator left
+    // this assertion green (#15139). A corroboration serializes with
+    // `locator` as its last key, so pairing it with `trust` can only
+    // match the row's own warrant.
     assert!(
-        out.contains("usgs.gov/special-topics/water-science-school/science/water-cycle")
-            && out.contains("\"trust\":\"authoritative\""),
+        out.contains("\"locator\":\"https://www.usgs.gov/water-science-school/water-cycle\",\"trust\":\"authoritative\""),
         "carries the USGS citation: {out}"
     );
 }

@@ -127,8 +127,8 @@ table water_movement_route {
     row (groundwater_recharge, into_the_ground)
 
     source "Water moves between the atmosphere and the surface through evaporation, evapotranspiration, and precipitation."
-    locator "https://www.usgs.gov/special-topics/water-science-school/science/water-cycle"
+    locator "https://www.usgs.gov/water-science-school/water-cycle"
     trust authoritative
-    cites "Water moves across the surface through snowmelt, runoff, and streamflow." locator "https://www.usgs.gov/special-topics/water-science-school/science/water-cycle"
-    cites "Water moves into the ground through infiltration and groundwater recharge." locator "https://www.usgs.gov/special-topics/water-science-school/science/water-cycle"
+    cites "Water moves across the surface through snowmelt, runoff, and streamflow." locator "https://www.usgs.gov/water-science-school/water-cycle"
+    cites "Water moves into the ground through infiltration and groundwater recharge." locator "https://www.usgs.gov/water-science-school/water-cycle"
 }

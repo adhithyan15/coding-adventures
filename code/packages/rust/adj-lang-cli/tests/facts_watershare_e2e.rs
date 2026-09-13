@@ -94,9 +94,14 @@ fn a_share_always_arrives_with_its_denominator() {
         out.contains("of the total freshwater, over 68 percent is locked up in ice and glaciers"),
         "carries the grounding sentence verbatim: {out}"
     );
+    // THE LOCATOR BOUND TO THE TIER, not two loose substrings. These two
+    // halves drifted apart once already: with `cites` corroborations
+    // carrying the same url, reverting ONLY the envelope locator left
+    // this assertion green (#15139). A corroboration serializes with
+    // `locator` as its last key, so pairing it with `trust` can only
+    // match the row's own warrant.
     assert!(
-        out.contains("usgs.gov/special-topics/water-science-school/science/where-earths-water")
-            && out.contains("\"trust\":\"authoritative\""),
+        out.contains("\"locator\":\"https://www.usgs.gov/water-science-school/science/where-earths-water\",\"trust\":\"authoritative\""),
         "carries the USGS citation: {out}"
     );
 }

@@ -66,8 +66,12 @@ fn ocean_zone_recall_binds_the_order_directly() {
         out.contains("\"N\":\"2\""),
         "the twilight zone is the second depth zone: {out}"
     );
+    // THE WHOLE LOCATOR, not just the host. #15139 found five stdlib
+    // locators addressing pages that had moved; a host-only pin stays
+    // green straight through that rot, because the host is the half a
+    // site reorganization leaves alone.
     assert!(
-        out.contains("whoi.edu") && out.contains("\"trust\":\"consensus\""),
+        out.contains("\"locator\":\"https://www.whoi.edu/ocean-learning-hub/ocean-topics/how-the-ocean-works/ocean-zones/\",\"trust\":\"consensus\""),
         "carries the WHOI citation: {out}"
     );
 }
