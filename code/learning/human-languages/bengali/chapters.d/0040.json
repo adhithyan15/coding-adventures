@@ -1,0 +1,16 @@
+{
+  "chapter": 40,
+  "title": "Reading — Words, Lines, and a First Passage",
+  "label": "ch:bn-prothom-path",
+  "canDo": "I can read a Bengali word by its shape under the head-line, read the lines I would say to a stranger, and hold a whole passage without translating it word by word.",
+  "payoff": {
+    "lesson": "BN-C40-prothom-path",
+    "kind": "four-skill-function-map",
+    "summary": "Thirty-six words of Bengali with no new word in them, carried by three joiners of which only one is borrowed, and with the verb last in every line that has one.",
+    "assesses": [
+      "BN-SKILL-CONNECTED-READING",
+      "BN-SKILL-READ-LINES",
+      "BN-SKILL-READ-WORDS"
+    ]
+  }
+}
