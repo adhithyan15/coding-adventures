@@ -2785,7 +2785,10 @@ fn emit_container(
     let has_border = base_border_width.is_some()
         || state_layers
             .iter()
-            .any(|layer| layer.border_width.is_some());
+            .any(|layer| layer.border_width.is_some())
+        // UI79 -- a part whose ONLY border is per-edge must still take
+        // the decoration path, or the edge reaches nothing.
+        || per_edge_border_expr(&props).is_some();
     let has_padding =
         base_padding.is_some() || state_layers.iter().any(|layer| layer.padding.is_some());
 
@@ -2847,9 +2850,16 @@ fn emit_container(
                     |layer| layer.border_width.as_ref(),
                     base_border_width.as_deref().unwrap_or("0"),
                 );
-                decoration.push(format!(
-                    "border: Border.all(color: {border_color}, width: {border_width})"
-                ));
+                decoration.push(
+                    // UI79 -- a per-edge declaration replaces the
+                    // all-four form, filling unauthored sides from the
+                    // shorthand. This is the writer that actually runs
+                    // for a styled container; `emit_styled_box` has a
+                    // second one that does not.
+                    per_edge_border_expr(&props).unwrap_or_else(|| {
+                        format!("border: Border.all(color: {border_color}, width: {border_width})")
+                    }),
+                );
             }
             if let Some(tier) = elevation {
                 decoration.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
@@ -3515,6 +3525,53 @@ fn css_color_to_dart(s: &str) -> Option<String> {
 /// Split a joined `"key: value; key: value"` part-style string into a
 /// `key → value` map. Both halves are trimmed; values keep their CSS
 /// units (`22px`, `#3f3f46`) for downstream parsing.
+/// UI79 -- per-edge borders.
+///
+/// Flutter is the one backend whose toolkit expresses this directly:
+/// `Border(top: BorderSide(..), bottom: ..)` carries a colour AND a width
+/// per side, so nothing has to be hand-drawn the way Compose's
+/// `drawBehind` does.
+///
+/// Returns `None` when no edge is authored, which is what keeps every
+/// existing part emitting the byte-identical `Border.all(..)` it does
+/// today. When an edge IS authored, unauthored sides fall back to the
+/// `border-width`/`border-color` shorthand -- the CSS cascade answer, and
+/// UI79 §3 rule 3.
+///
+/// `border-<edge>-style` is not consulted: only `solid` is drawn, and
+/// Flutter has no style-drop reporting at all (#12022), so a `dashed`
+/// here is lost silently. That is a gap in the REPORT, not in this
+/// lowering, and it is recorded rather than worked around.
+fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
+    let edges = ["top", "right", "bottom", "left"];
+    if !edges
+        .iter()
+        .any(|e| m.contains_key(&format!("border-{e}-width")))
+    {
+        return None;
+    }
+    let fallback_w = m.get("border-width").map(|v| parse_pixel_value(v));
+    let fallback_c = m.get("border-color").and_then(|v| css_color_to_dart(v));
+    let mut sides = Vec::new();
+    for e in edges {
+        let w = m
+            .get(&format!("border-{e}-width"))
+            .map(|v| parse_pixel_value(v))
+            .or_else(|| fallback_w.clone());
+        let Some(w) = w else { continue };
+        let c = m
+            .get(&format!("border-{e}-color"))
+            .and_then(|v| css_color_to_dart(v))
+            .or_else(|| fallback_c.clone())
+            .unwrap_or_else(|| "Colors.transparent".to_string());
+        sides.push(format!("{e}: BorderSide(color: {c}, width: {w})"));
+    }
+    if sides.is_empty() {
+        return None;
+    }
+    Some(format!("border: Border({})", sides.join(", ")))
+}
+
 fn parse_style_props(style_props: &str) -> HashMap<String, String> {
     let mut map = HashMap::new();
     for prop in style_props.split(';') {
@@ -3541,6 +3598,10 @@ fn part_has_decoration(style_props: &str) -> bool {
     let m = parse_style_props(style_props);
     m.contains_key("border-width")
         || m.contains_key("border-color")
+        // UI79 -- without this a part whose ONLY border is per-edge takes
+        // the lightweight inline path, which cannot express a decoration
+        // at all, and the edge reaches nothing.
+        || per_edge_border_expr(&m).is_some()
         || m.contains_key("background")
         || m.contains_key("background-color")
         || m.contains_key("height")
@@ -3858,7 +3919,10 @@ fn emit_styled_box(
     let mut deco_parts: Vec<String> = vec![format!("color: {bg_expr}")];
     let base_border_color = base.get("border-color").and_then(|v| css_color_to_dart(v));
     let base_border_width = base.get("border-width").map(|v| parse_pixel_value(v));
-    if base_border_width.is_some() || layers.iter().any(|layer| layer.border_width.is_some()) {
+    if base_border_width.is_some()
+        || layers.iter().any(|layer| layer.border_width.is_some())
+        || per_edge_border_expr(&base).is_some()
+    {
         let border_color = state_color_expr(
             &layers,
             |layer| layer.border_color.as_ref(),
@@ -3869,9 +3933,14 @@ fn emit_styled_box(
             |layer| layer.border_width.as_ref(),
             base_border_width.as_deref().unwrap_or("0"),
         );
-        deco_parts.push(format!(
-            "border: Border.all(color: {border_color}, width: {border_width})"
-        ));
+        deco_parts.push(
+            // UI79 -- a per-edge declaration replaces the all-four form
+            // for the whole border, filling unauthored sides from the
+            // shorthand it just read.
+            per_edge_border_expr(&base).unwrap_or_else(|| {
+                format!("border: Border.all(color: {border_color}, width: {border_width})")
+            }),
+        );
     }
     // UI41, #12028 item 1 — base props only (see `elevation_tier`'s doc
     // comment).
@@ -9225,6 +9294,78 @@ mod tests {
         .expect("emit styled empty drop target")
         .output;
         assert!(out.contains("constraints: const BoxConstraints(minHeight: 60)"));
+    }
+
+    // ----- UI79: per-edge borders ---------------------------------------
+
+    /// Each authored edge becomes its own `BorderSide`, and a part that
+    /// authors none keeps the byte-identical `Border.all` it emits today.
+    ///
+    /// The `Border.all` half is the one with teeth: switching every
+    /// bordered part to the per-side form would look like a success here
+    /// while changing output for every part in every product.
+    #[test]
+    fn ui79_per_edge_borders_become_border_sides() {
+        let m = |pairs: &[(&str, &str)]| {
+            pairs
+                .iter()
+                .map(|(k, v)| (k.to_string(), v.to_string()))
+                .collect::<HashMap<String, String>>()
+        };
+
+        // No edge authored -> None, which is what leaves `Border.all` in
+        // place at the call site.
+        assert_eq!(
+            per_edge_border_expr(&m(&[("border-width", "1px"), ("border-color", "#112233")])),
+            None,
+            "the shorthand alone must not switch to the per-side form"
+        );
+        assert_eq!(per_edge_border_expr(&m(&[("padding", "8px")])), None);
+
+        // One edge -> exactly one side.
+        let one = per_edge_border_expr(&m(&[
+            ("border-bottom-width", "4px"),
+            ("border-bottom-color", "#243146"),
+        ]))
+        .expect("bottom edge");
+        assert!(
+            one.contains("bottom: BorderSide(color: const Color(0xFF243146), width: 4)"),
+            "got: {one}"
+        );
+        for other in ["top:", "right:", "left:"] {
+            assert!(
+                !one.contains(other),
+                "one authored edge must not emit {other} — got: {one}"
+            );
+        }
+
+        // Four edges -> four sides, each carrying its own colour.
+        let all = per_edge_border_expr(&m(&[
+            ("border-top-width", "2px"),
+            ("border-top-color", "#110022"),
+            ("border-right-width", "3px"),
+            ("border-right-color", "#003311"),
+            ("border-bottom-width", "4px"),
+            ("border-bottom-color", "#243146"),
+            ("border-left-width", "5px"),
+            ("border-left-color", "#445566"),
+        ]))
+        .expect("four edges");
+        assert_eq!(all.matches("BorderSide(").count(), 4, "got: {all}");
+        assert!(all.contains("width: 2") && all.contains("width: 5"), "got: {all}");
+
+        // An unauthored half falls back to the shorthand — the CSS
+        // cascade answer (UI79 §3 rule 3).
+        let mixed = per_edge_border_expr(&m(&[
+            ("border-color", "#ABCDEF"),
+            ("border-bottom-width", "2px"),
+        ]))
+        .expect("bottom edge with inherited colour");
+        assert!(
+            mixed.contains("bottom: BorderSide(color: const Color(0xFFABCDEF), width: 2)"),
+            "got: {mixed}"
+        );
+        assert_eq!(mixed.matches("BorderSide(").count(), 1, "got: {mixed}");
     }
 
     // ----- HostScroll ---------------------------------------------------

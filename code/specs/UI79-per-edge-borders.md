@@ -63,14 +63,28 @@ otherwise pick its own answer — the UI61 failure mode:
 | Compose | `Modifier.drawBehind { drawLine(..) }` | no — must be drawn |
 | SwiftUI | `.overlay(alignment:) { Rectangle().frame(height:) }` | no — must be drawn |
 | Qt | a child `Rectangle` anchored to the edge | no — must be drawn |
-| Flutter | `BoxDecoration(border: Border(bottom: BorderSide(..)))` | **yes** |
-| XAML | `<Border BorderThickness="0,0,0,1" BorderBrush=".."/>` | **yes** |
+| Flutter | `BoxDecoration(border: Border(bottom: BorderSide(..)))` | **yes** — width *and* colour per side |
+| XAML | `<Border BorderThickness="0,0,0,1" BorderBrush=".."/>` | **partly** — see below |
+
+**Correction on XAML.** This table first said XAML has native per-edge support.
+It has native per-edge *thickness* — `BorderThickness="left,top,right,bottom"`
+— but only a **single `BorderBrush` for all four edges**. So
+`border-top-color: X; border-bottom-color: Y` cannot both be honoured, and XAML
+needs a decision this spec has not made: honour one colour and report the
+others, or refuse the whole declaration. It is therefore *not* the cheap
+follow-up it was described as. Its thickness aggregation is also not a 1:1
+property mapping — four authored widths collapse into one attribute — which the
+emitter's per-property setter table cannot express as-is.
 
 `drawBehind` is preferred over a sibling `HorizontalDivider` on Compose: a
 divider is a layout child and would take part in the parent's arrangement,
 changing spacing. A border must not move anything.
 
-## 5. Scope of the first change
+## 5. Scope
+
+**Done:** Compose (#15009, drawn with `drawBehind`) and Flutter (`Border` with
+per-side `BorderSide`). **Remaining:** SwiftUI and Qt, which must draw like
+Compose, and XAML, which needs the single-brush decision above settled first.
 
 Compose only, all four edges. The remaining four backends are follow-up work
 and are named as such rather than left looking finished — this spec is the
