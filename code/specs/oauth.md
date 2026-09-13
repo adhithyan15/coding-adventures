@@ -133,6 +133,11 @@ The delivery order is:
    signature and all bound claims before returning a provider-scoped opaque
    account identity. Verification intent and its closed result are durably
    provider/trace audited before the authority effect and result release. For
+   static provider policy, a bounded exact-schema decoder retains only the
+   provider, HTTPS issuer, and case-sensitive non-`none` ID-token signing
+   algorithms while deployment client identity and the opaque verification
+   context remain injected. It performs no source read and enables no
+   verification algorithm. For
    Authorization Code identity proof, the boundary consumes the core's
    non-cloneable nonce object, validates its exact provider and client, and
    derives the audit trace from that browser ceremony before any authority
