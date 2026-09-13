@@ -2765,6 +2765,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a sole recurrence assignment may retain its snapshot through
+    // an otherwise effect-free compound-statement wrapper.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real r; boolean flag; i := 0; flag := false; for i := i + 1 while i <= 3 do begin flag := not flag end; if flag then r := 42.0 else r := 0.5; print(r) end",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a statically nonempty while element may have a dynamic trip
     // count while still establishing the same control-independent body value.
     Prog {
@@ -12957,6 +12966,29 @@ fn algol_while_loop_boolean_negation_recurrence_runs_on_every_available_standard
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the while-loop boolean negation recurrence did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_while_loop_single_compound_recurrence_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("do begin flag := not flag end")
+        })
+        .expect("the ALGOL single-compound recurrence must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the single-compound recurrence did not run"
             );
             continue;
         };

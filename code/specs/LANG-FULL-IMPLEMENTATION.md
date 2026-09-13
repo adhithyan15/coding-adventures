@@ -993,7 +993,9 @@ backend immediately) come before the enabler-dependent items.
   predicate. Boolean recurrence targets use the same capped execution and
   direct unary `not` updates retain their exact negated snapshots because
   operator wrappers are distinguished from bare-variable reads. Exact snapshot
-  updates still reject dependency writes, compound bodies, string targets, overflow,
+  updates may unwrap one unlabeled assignment from a single-statement compound
+  body, but still reject labels, conditionals, declarations, additional
+  statements, dependency writes, string targets, overflow,
   non-finite values, and loops exceeding 4,096 evaluations remain
   conservative. Capped abstract execution also retains the
   first integer or finite binary64 control value whose predicate is false when

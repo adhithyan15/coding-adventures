@@ -1,5 +1,11 @@
 # Changelog — `lang-aot`
 
+## 0.332.0 — 2026-09-12 — ALGOL single-compound recurrences
+
+The seven-backend ALGOL matrix now proves that a bounded boolean recurrence
+retains its terminal snapshot when its sole assignment is wrapped in a compound
+body.
+
 ## 0.331.0 — 2026-09-13 — VM-040 COBOL BEAM INSPECT TALLYING/REPLACING probe
 
 Reprioritized the post-UNSTRING/delimiter queue by re-running the backlog's
