@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a8a8d25224a45efe",
+  "sourceHash": "fnv1a64:197219e43e4d35bd",
   "lessons": [
     {
       "id": "FA-C01-salam",
@@ -221,6 +221,150 @@
             {
               "kind": "speech",
               "text": "Compare your copy with ا (alef). How many strokes? (One.) Which way did that stroke travel? (Top to bottom.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-W00-alef-delayed-copy",
+      "sequence": 16,
+      "title": "ا (alef) — one stroke with the model covered",
+      "headword": "ا",
+      "romanization": "",
+      "gloss": "draw the one stroke after the model is covered, and find out which end it started from",
+      "script": "perso-arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2db95198c5be7bfd",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ا (alef) once and say the long â. Then cover it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With the model covered, wait ten seconds, then draw ا (alef) once from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "Ten seconds is long enough that your hand cannot be tracing a shape it can still see, and short enough that a stroke you made a minute ago is still there."
+            },
+            {
+              "kind": "speech",
+              "text": "Only after the stroke is finished, uncover the model and compare."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One stroke is the easiest shape in the script to get right and the easiest to get backwards, and the page cannot tell you which you did."
+            },
+            {
+              "kind": "speech",
+              "text": "So the question to ask yourself is not whether it looks right. It is: which end did your pen start from? Alef travels top to bottom. A stroke drawn upward lands in the same place and behaves differently the moment it has neighbours, which is why a single line is worth this much attention now rather than later."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-W00-alef-dictation",
+      "sequence": 17,
+      "title": "ا (alef) — the stroke from the sound",
+      "headword": "ا",
+      "romanization": "",
+      "gloss": "draw the stroke from a sound alone, and meet the letter that stands for two different things",
+      "script": "perso-arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:ff70e8c683cc258b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every ا (alef) on the page. Nothing to trace and nothing to uncover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — dictation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the long â of salâm aloud, or play it, and write the letter that carries it. One stroke, top to bottom, on the right-hand side of the line."
+            },
+            {
+              "kind": "speech",
+              "text": "A delayed copy asked your hand to remember a shape. This asks it to turn a sound into a shape, which is the thing writing is actually for, and the two do not always arrive together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover the model and compare."
+            },
+            {
+              "kind": "speech",
+              "text": "Now a warning worth having on the first day rather than the hundredth. What you wrote was alef standing for a vowel, and that is one of its two jobs. At the start of a word the same stroke often carries no long â at all — it is a stand for a short vowel to sit on, because Persian does not begin a word with a bare vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "So alef is not a letter with a sound. It is a letter with a position, and what it says depends on where it stands. Nothing in the dictation will tell you that; the word around it will."
             }
           ]
         }

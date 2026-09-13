@@ -3,9 +3,11 @@
   "stage": "pre-A1",
   "kind": "required",
   "category": "script",
-  "canDo": "I can copy my first Italian greeting with the model still visible and preserve its four-letter shape.",
+  "canDo": "I can copy my first Italian greeting with the model visible, write it again once the model is covered, and produce it from the sound alone.",
   "prerequisites": [],
   "lessons": [
-    "IT-W01-ciao-guided-copy"
+    "IT-W01-ciao-guided-copy",
+    "IT-W01-ciao-delayed-copy",
+    "IT-W01-ciao-dictation"
   ]
 }

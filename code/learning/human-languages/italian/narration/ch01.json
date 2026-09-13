@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d3f7da967468a0ad",
+  "sourceHash": "fnv1a64:9e64903762b3f619",
   "lessons": [
     {
       "id": "IT-C01-ciao",
@@ -209,6 +209,142 @@
             {
               "kind": "speech",
               "text": "Compare your copy with the model. If one letter differs, repair only that letter. No hiding, no spelling from memory, and no free sentence yet."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-W01-ciao-delayed-copy",
+      "sequence": 16,
+      "title": "ciao — write it with the model covered",
+      "headword": "ciao",
+      "romanization": "ciao",
+      "gloss": "write the first greeting after the model is covered, then repair one letter",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:1d604bbe4d524dc4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ciao once and say it: CHOW. Then cover it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With the model covered, wait ten seconds, then write ciao once from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "Ten seconds is not a long time and it is not meant to be. It is long enough that your hand cannot be copying a shape it can still see, and short enough that a word you met a minute ago is still there to be found."
+            },
+            {
+              "kind": "speech",
+              "text": "Only after the word is finished, uncover the model. Compare, and repair one letter — the first that differs and no others."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "If the letter that differed was the i, that is the expected miss. Four letters, and one of them is silent: the i in ciao is not a sound, it is the instruction that makes c say ch instead of k. A hand writing from memory drops the letter it never heard."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-W01-ciao-dictation",
+      "sequence": 17,
+      "title": "ciao — write it from the sound",
+      "headword": "ciao",
+      "romanization": "ciao",
+      "gloss": "write the first greeting from sound alone, and supply the letter the sound does not contain",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:cfabe20f82b8a518",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the book on every page that has ciao written on it. Nothing to copy and nothing to uncover this time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — dictation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say CHOW aloud, or play it, and write what you hear. Once."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a different job from the last lesson, even though the word is the same. A delayed copy asks your hand to remember a shape. Dictation asks it to turn a sound into a shape, which is the thing reading and writing are actually for, and the two do not always arrive together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover the model and compare."
+            },
+            {
+              "kind": "speech",
+              "text": "Three sounds, four letters. ciao is the clearest possible first lesson in what Italian spelling does: the i is written for the c to read, not for you to say. Dictation is where that stops being a fact about one word and starts being a habit — when you hear ch before a, o or u, an i has to go on the page, and nothing in the sound will remind you."
             }
           ]
         }

@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "IT-W01-ciao-dictation",
+    "language": "italian",
+    "chapter": 1,
+    "sequence": 17,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cfabe20f82b8a518",
+    "detachableSegments": [
+      "Writing — dictation"
+    ]
+  },
+  "findings": []
+}

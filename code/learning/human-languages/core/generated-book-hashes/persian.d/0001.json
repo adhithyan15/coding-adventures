@@ -1,10 +1,12 @@
 {
   "language": "persian",
   "chapter": 1,
-  "sourceHash": "fnv1a64:68ca56191cf5cec9",
+  "sourceHash": "fnv1a64:2f621f4dff527ca8",
   "lessonIds": [
     "FA-C01-salam",
     "FA-W00-alef-guided-copy",
+    "FA-W00-alef-delayed-copy",
+    "FA-W00-alef-dictation",
     "FA-C01-mamnoon",
     "FA-C01-bale",
     "FA-C01-na",
