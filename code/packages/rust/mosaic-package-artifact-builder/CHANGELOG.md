@@ -2,6 +2,10 @@
 
 ## 2026-09-13
 
+- Recognize supported Qt font-size bindings in capability reports. Guard the Unix-only host-asset symlink test so Windows builds can compile the test suite.
+
+## 2026-09-13
+
 - Recognize validated Compose typography projections while continuing to report unsupported backends, primitives and binding forms explicitly.
 
 ## Unreleased
