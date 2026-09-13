@@ -12,6 +12,7 @@
     "kannada/pre-A1": 3,
     "latin/A1": 3,
     "latin/pre-A1": 2,
+    "malayalam/pre-A1": 3,
     "marathi/A1": 3,
     "marathi/pre-A1": 3,
     "marwadi/pre-A1": 3,
@@ -23,6 +24,7 @@
     "sanskrit/pre-A1": 3,
     "spanish/A1": 2,
     "spanish/pre-A1": 2,
+    "tamil/pre-A1": 3,
     "telugu/pre-A1": 3,
     "urdu/pre-A1": 3
   }
