@@ -129,11 +129,17 @@
 %
 % SIX PAGES FOR EIGHT ROWS. `larynx.html` states both the larynx and the
 % trachea; `bronchi.html` states both the bronchi and the alveoli. One of the
-% six is the module index, which is ALSO the envelope's locator — the lungs row
-% cites it for a different sentence. That coincidence is recorded at the table
-% because it makes one otherwise-obvious mutation an equivalent mutant: dropping
-% the lungs row's locator changes nothing observable, since what it would
-% inherit is the same URL.
+% six is the module index, which is ALSO the envelope's locator — the LUNGS row
+% draws its sentence from that page, so under the rule `ADJ-TABLES.md` §4
+% states (restate a row locator only when its page DIFFERS from the envelope's)
+% that row INHERITS and the other seven restate.
+%
+% Until that rule was applied here the lungs row repeated the URL, and this
+% paragraph declared the coincidence made one otherwise-obvious mutation an
+% EQUIVALENT MUTANT: dropping that row's locator changed nothing observable,
+% because what it would inherit was the same URL. There is nothing to declare
+% now — the row has no locator to drop. (The table comment below already said
+% so while this header still said the opposite.)
 %
 % All sources are the NCI SEER Training Modules, a primary U.S. government
 % (National Cancer Institute) teaching resource, so one shared `trust

@@ -30,6 +30,17 @@ landed and why, not a semver-tracked API.
   **effective** page (its own locator if present, the envelope's otherwise) and asserts those five
   are distinct: stronger, and independent of the convention.
 
+  **Two equivalent-mutant declarations this same change falsified** were left standing until a
+  twin-grep found them, and both are now retired. `facts_flowerparts_e2e.rs` still declared that
+  "every row on this table cites the envelope's own URL" and that dropping one "cannot be killed" —
+  that file now has **zero** row locators. And `anatomy/respiratory-parts.adj`'s HEADER still
+  called the lungs-row coincidence a live equivalent mutant while its own table comment, fifteen
+  lines below, already recorded that the row inherits: a provenance artifact contradicting itself
+  about provenance. Both now record the history in the past tense rather than asserting it.
+
+  Counted on this branch: flower-parts 0 row locators (7 rows), respiratory-parts 7 (8 rows — the
+  lungs row inherits), scientific-method-step 0, brain-parts 2 of 15.
+
   Also corrected in the spec: §2 still called per-row provenance "a documented future extension"
   while §6's own capability table records RS-5e as delivered.
 

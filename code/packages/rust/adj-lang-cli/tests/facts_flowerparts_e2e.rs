@@ -138,11 +138,15 @@ fn assert_part(tag: &str, part: &str, function: &str, span: &str) {
         out.contains(&format!("\"F\":\"{function}\"")),
         "{part} binds {function}: {out}"
     );
-    // EQUIVALENT MUTANT, DECLARED HERE rather than only in a changelog: every
-    // row on this table cites the envelope's own URL, and `row_provenance`
-    // assigns `locator` only when the row supplies one — so DROPPING a row's
-    // locator produces byte-identical output and cannot be killed. CHANGING
-    // one still is, by the `PAGE` needle below.
+    // THERE IS NOTHING TO DECLARE HERE ANY MORE. This comment used to declare
+    // an equivalent mutant: every row cited the envelope's own URL, and
+    // `row_provenance` assigns `locator` only when the row supplies one, so
+    // DROPPING a row's locator produced byte-identical output and could not
+    // be killed. Those seven duplicated locators are gone — the rule
+    // `ADJ-TABLES.md` §4 states is to restate a row locator only when its
+    // page DIFFERS from the envelope's — so a row that has no locator cannot
+    // have one dropped. ADDING one is caught structurally, and CHANGING the
+    // envelope's is caught by the `PAGE` needle below.
     assert!(
         out.contains(&format!(
             "\"source\":\"{span}\",\"locator\":\"{PAGE}\",\"trust\":\"authoritative\""
