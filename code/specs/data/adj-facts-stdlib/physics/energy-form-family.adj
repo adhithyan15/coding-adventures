@@ -106,6 +106,13 @@
 % a `<p>`, none names another row's form, and — the check that keeps them
 % honestly `cites` — none mentions `potential` or `kinetic`.
 %
+% ONE SPAN IS EXACT AGAINST RENDERED TEXT RATHER THAN AGAINST THE HTML
+% BYTES, and the difference is worth one clause: the NUCLEAR sentence's
+% em dash is written `&mdash;` in the page source and stored here as
+% U+2014. Every other span is pure ASCII and identical either way. So
+% "quoted character-for-character" is true of what a reader sees, not of
+% the fetched markup.
+%
 % An ADJ `table` carries ONE provenance envelope, and the `source`/`locator`/
 % `trust` below hold that single classification sentence — the span that
 % fixes the two-family split every row draws from. It names no row key, so it

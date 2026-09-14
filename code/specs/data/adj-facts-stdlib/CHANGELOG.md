@@ -34,8 +34,12 @@ landed and why, not a semver-tracked API.
   allowing it. The envelope is unchanged and was already right: it names no row key.
 
   The old citation assertion — `contains("eia.gov") && contains("\"trust\":\"authoritative\"")` — was
-  the #15139 two-loose-needles shape, the **third** table in this cascade found carrying it; it is
-  now one contiguous span. 10 of 10 mutants killed, green baseline before and after, file verified
+  the #15139 two-loose-needles shape, now one contiguous span here. **That shape is not rare and
+  calling this "the third found" would mislead:** measured over `code/packages/rust/adj-lang-cli/
+  tests/`, with the needle *a single assert of* `contains(X) && contains("\"trust\":…)`, **321 of
+  the test files carry it, 323 occurrences**. This change fixes one of them. In `circuit-parts`
+  that exact shape let a locator naming a file which never existed be swapped for an archive URL
+  with no test noticing, because the host string is a substring of both. 10 of 10 mutants killed, green baseline before and after, file verified
   byte-identical afterwards. Local scratch harness, so that count is not reproducible from the repo.
 
 - `physics/circuit-parts.adj` — **the locator named a file that never existed**, and the table is

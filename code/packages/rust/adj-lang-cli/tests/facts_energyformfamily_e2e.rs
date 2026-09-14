@@ -178,7 +178,7 @@ fn every_form_is_corroborated_by_the_pages_definition_of_it() {
         // says nothing about the family.
         assert!(
             out.contains(&format!(
-                "\"source\":\"{ENVELOPE}\",\"locator\":\"{LOCATOR}\",\"trust\":\"authoritative\",\"corroborations\":[{{\"source\":\"{span}\""
+                "\"source\":\"{ENVELOPE}\",\"locator\":\"{LOCATOR}\",\"trust\":\"authoritative\",\"corroborations\":[{{\"source\":\"{span}\",\"locator\":\"{LOCATOR}\"}}]"
             )),
             "{form}: the envelope stays primary and its own definition corroborates: {out}"
         );
@@ -212,19 +212,35 @@ fn no_row_carries_a_source_because_no_span_states_a_family() {
         8,
         "each row carries exactly one corroboration"
     );
+    // INDENTATION-INSENSITIVE. This counted `\n        source "` -- eight
+    // spaces -- and a row `source` indented TWELVE parses fine and replaces
+    // the envelope as that answer's primary source, invisible to the count.
+    // Counting every `source` line by its trimmed prefix leaves exactly one:
+    // the envelope's.
+    let source_lines: Vec<&str> = body
+        .lines()
+        .filter(|l| l.trim_start().starts_with("source \""))
+        .collect();
     assert_eq!(
-        body.matches("\n        source \"").count(),
-        0,
-        "NO row carries a source -- no span on the page states a family"
+        source_lines.len(),
+        1,
+        "exactly one `source` line in the table -- the envelope's; no row \
+         carries one, because no span on the page states a family: \
+         {source_lines:?}"
     );
 
     // SEMANTIC, NOT ONLY A TEXT COUNT. An indentation match alone would miss
     // a row `source` written at any other depth, so the envelope is asserted
     // to remain the primary warrant on a real answer too.
+    // AND THE WHOLE RUN, not a bare `"source":"…"` substring -- which the
+    // corroboration shape `{"source":"…","locator":"…"}` also satisfies, so
+    // the old arm could not tell a primary from a corroboration.
     let out = ask("nosource", "energy_form_family(nuclear, $F)");
     assert!(
-        out.contains(&format!("\"source\":\"{ENVELOPE}\"")),
-        "the envelope is still the primary source on an answer: {out}"
+        out.contains(&format!(
+            "\"source\":\"{ENVELOPE}\",\"locator\":\"{LOCATOR}\",\"trust\":\"authoritative\""
+        )),
+        "the envelope is still the PRIMARY source on an answer: {out}"
     );
 }
 
@@ -239,13 +255,60 @@ fn no_row_span_states_a_family_which_is_why_they_are_cites() {
         .expect("read shipped energy-form-family.adj");
     let body = &adj[adj.find("table energy_form_family").expect("table")..];
 
-    let spans: Vec<&str> = body
+    // ESCAPE-AWARE. `split('"').next()` stops at the first quote, escaped
+    // or not -- and ADJ's STRING token permits escapes, with sibling tables
+    // in this suite already shipping spans that contain `\\"`. None of these
+    // eight does today, so the naive parse was correct NOW; but this test is
+    // the tripwire for a FUTURE span, and one that truncates silently on the
+    // very edit it exists to catch is worse than none.
+    // CHARACTERS, NOT BYTES. A first version of this walked `as_bytes()` and
+    // sliced `rest[i..]` at the byte offset, which PANICS when the offset
+    // lands inside a multi-byte character -- and the nuclear span carries a
+    // U+2014 em dash. Fixing a truncation bug by introducing a panic is not
+    // an improvement. `char_indices()` does the whole job.
+    //
+    // Two forms are kept: RAW kept its escapes, so it round-trips against
+    // the file; UNESCAPED is what the family check reads, so a future `\\"`
+    // cannot hide the word `kinetic` from it.
+    let spans: Vec<(String, String)> = body
         .lines()
         .filter_map(|l| l.trim().strip_prefix("cites \""))
-        .map(|r| r.split('"').next().expect("span"))
+        .map(|rest| {
+            let mut raw = String::new();
+            let mut unescaped = String::new();
+            let mut esc = false;
+            for ch in rest.chars() {
+                if esc {
+                    esc = false;
+                    raw.push(ch);
+                    unescaped.push(ch);
+                    continue;
+                }
+                match ch {
+                    '\\' => {
+                        esc = true;
+                        raw.push(ch);
+                    }
+                    '"' => break,
+                    _ => {
+                        raw.push(ch);
+                        unescaped.push(ch);
+                    }
+                }
+            }
+            (raw, unescaped)
+        })
         .collect();
     assert_eq!(spans.len(), 8, "eight row spans read: {spans:?}");
-    for span in &spans {
+    // THE PARSE IS EXACT: each raw span round-trips to the line it came
+    // from, so a future escape cannot quietly shorten what is checked.
+    for (raw, _) in &spans {
+        assert!(
+            body.contains(&format!("cites \"{raw}\"")),
+            "the extracted span is the whole literal: {raw:?}"
+        );
+    }
+    for (_, span) in &spans {
         let low = span.to_lowercase();
         assert!(
             !low.contains("potential") && !low.contains("kinetic"),
@@ -255,7 +318,7 @@ fn no_row_span_states_a_family_which_is_why_they_are_cites() {
     }
     // And they are all distinct, so a single-row truncation cannot hide
     // behind a sibling's copy.
-    let mut uniq = spans.clone();
+    let mut uniq: Vec<&String> = spans.iter().map(|(_, u)| u).collect();
     uniq.sort_unstable();
     uniq.dedup();
     assert_eq!(uniq.len(), 8, "all eight definitions are distinct: {spans:?}");
