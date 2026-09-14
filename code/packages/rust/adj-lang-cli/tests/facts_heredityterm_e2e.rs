@@ -166,6 +166,19 @@ fn assert_term(tag: &str, term: &str, meaning: &str, span: &str, page: &str) {
         )),
         "{term} is defined by its own glossary entry, on its own page: {out}"
     );
+    // THE PAIRING ITSELF, asserted rather than assumed. The six spans were
+    // promoted from `cites` that happened to be in row order; this is what
+    // makes "in row order" a checked property instead of a lucky one. It lived
+    // in the one-shot conversion script, where it ran once; review pointed out
+    // the changelog described it as if it ran on every build. Now it does.
+    assert!(
+        span.to_lowercase().contains(term),
+        "{term}'s own span names it: {span}"
+    );
+    assert!(
+        page.to_lowercase().contains(&term[..6.min(term.len())]),
+        "{term}'s own page is named for it: {page}"
+    );
 }
 
 /// #14986. The GENE sentence was this table's `source` — the field that carries
@@ -290,6 +303,24 @@ fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
         .expect("read shipped heredity-term.adj");
     // Pin the envelope through its locator VALUE and tier, not just its
     // presence (#15183) — no row inherits the envelope's locator here.
+    // THE `columns` LINE. Column names are positional and never reach the
+    // output, so renaming them is invisible to every assertion above — it was
+    // the one mutant that survived this table's harness, and an earlier draft
+    // of the conversion script shipped exactly that rename before a diff
+    // against origin/main caught it.
+    assert!(
+        adj.contains("    columns term, definition"),
+        "the shipped column names are unchanged"
+    );
+    // THE `columns` LINE. Column names are positional and never reach the
+    // output, so renaming them is invisible to every assertion above — it was
+    // the one mutant that survived this table's harness, and an earlier draft
+    // of the conversion script shipped exactly that rename before a diff
+    // against origin/main caught it.
+    assert!(
+        adj.contains("    columns term, definition"),
+        "the shipped column names are unchanged"
+    );
     assert!(
         adj.contains(
             "    source \"Genetics is the branch of biology concerned with the study of inheritance, including the interplay of genes, DNA variation and their interactions with environmental factors.\"\n    locator \"https://www.genome.gov/genetics-glossary/Genetics\"\n    trust authoritative"

@@ -10,8 +10,9 @@ landed and why, not a semver-tracked API.
   term each. The GENE sentence was this table's `source`, the field that carries the tier, for
   every row, so `? heredity_term(phenotype, $D)` came back proved by *"The gene is considered
   the basic unit of inheritance."* **The header said so in its own words** — the envelope held
-  *"the strongest single span (the `gene` row's text, which fixes THE FIRST ROW)"* — an
-  accurate description of a defect. Six of the seven rows were in that position.
+  *"the strongest single span (the `gene` row's text, which fixes the first row)"* — an
+  accurate description of a defect, with the emphasis on **the first row** added here rather
+  than quoted. Six of the seven rows were in that position.
 
   **The six `cites` are promoted, not dropped**: each was already in the file with its own
   glossary URL, in row order, and is now the `source` of the row it defines, at the envelope's
@@ -22,8 +23,10 @@ landed and why, not a semver-tracked API.
 
   All seven spans were verified against the fetched glossary pages before writing, read out of
   the shipped file rather than retyped, each with a negative arm (final word altered) that was
-  absent from every page. 7/7 verbatim. The row-to-warrant pairing is **asserted, not assumed**:
-  each row's key must appear both in the span it is given and in that span's locator.
+  absent from every page. 7/7 verbatim. The row-to-warrant pairing is **asserted, not assumed** —
+  each row's key must appear both in the span it is given and in that span's locator, a check
+  that review correctly pointed out was living in the one-shot conversion script and is now
+  inside `assert_term`, running on every build.
 
   `facts_heredityterm_e2e.rs`: 6 tests. The whole-chain `HEREDITY_TERM_PIN` is replaced — it
   ran from the bindings through five `corroborations` entries that are now row `source`s. Its

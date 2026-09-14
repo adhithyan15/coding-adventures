@@ -97,11 +97,14 @@
 % `{ ... }` block (ADJ-TABLES RS-5e). Seven rows, seven glossary pages, one
 % term each.
 %
-% WHAT #14986 CHANGED. This header used to read: "An ADJ `table` carries ONE
-% provenance envelope, so `source`/`locator`/`trust` below hold the strongest
-% single span (the `gene` row's text, which fixes THE FIRST ROW); every OTHER
-% row's own verbatim text is quoted above and additionally carried as its own
-% `cites` entry below." Accurate, and a description of a defect: `source` is
+% WHAT #14986 CHANGED. This header used to read, verbatim: "An ADJ `table`
+% carries ONE provenance envelope, so `source`/`locator`/`trust` below hold the
+% strongest single span (the `gene` row's text, which fixes the first row);
+% every OTHER row's own verbatim text is quoted above and additionally carried
+% as its own `cites` entry below, so each term remains independently
+% checkable." READ THE CLAUSE "which fixes the first row" — the emphasis is
+% added here, the words are the file's own. Accurate, and a description of a
+% defect: `source` is
 % the field that carries the tier, so a recall of `phenotype` came back proved
 % by "The gene is considered the basic unit of inheritance." Six of the seven
 % rows were in that position. Their evidence was already in the file, as
