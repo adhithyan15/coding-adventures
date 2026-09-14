@@ -362,3 +362,77 @@ fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
         "no corroboration survives at table level: each is now a row's own source"
     );
 }
+
+/// Parse `(row key, its own `source`)` out of a shipped `.adj`.
+///
+/// The full two-column key: column 1 alone is not a row identity. A first pass
+/// at the #15193 census keyed on column 1 and printed brain-parts as
+/// `brainstem+brainstem+…`, because ten rows there share that part and differ
+/// only in the function.
+fn row_spans(rel: &str) -> Vec<(String, String)> {
+    let adj = std::fs::read_to_string(facts_stdlib().join(rel))
+        .unwrap_or_else(|e| panic!("read shipped {rel}: {e}"));
+    let mut out: Vec<(String, String)> = Vec::new();
+    let mut key: Option<String> = None;
+    for line in adj.lines() {
+        if let Some(rest) = line.strip_prefix("    row (") {
+            key = rest.split(')').next().map(|k| {
+                k.split(',').map(|p| p.trim()).collect::<Vec<_>>().join(", ")
+            });
+        } else if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            let span = rest.trim_end_matches(0x22 as char).to_string();
+            out.push((key.clone().expect("a row precedes every source"), span));
+        }
+    }
+    out
+}
+
+/// The groups of rows that share one span, in first-appearance order.
+fn sharing_groups(pairs: &[(String, String)]) -> Vec<Vec<String>> {
+    let mut order: Vec<String> = Vec::new();
+    for (_, span) in pairs {
+        if !order.contains(span) {
+            order.push(span.clone());
+        }
+    }
+    order
+        .iter()
+        .map(|span| {
+            pairs
+                .iter()
+                .filter(|(_, s)| s == span)
+                .map(|(k, _)| k.clone())
+                .collect::<Vec<_>>()
+        })
+        .filter(|g| g.len() > 1)
+        .collect()
+}
+
+/// #15193. The sharing structure of this table, asserted against the SHIPPED
+/// FILE rather than described in a comment.
+///
+/// Five element families, four of six rows each and one of three. Every
+/// row here shares its sentence with its family -- no row stands alone.
+#[test]
+fn the_shared_spans_are_exactly_the_declared_ones() {
+    let pairs = row_spans("chemistry/element-groups.adj");
+    assert_eq!(pairs.len(), 27, "every row carries its own source: {pairs:?}");
+    let groups = sharing_groups(&pairs);
+    let expected: Vec<Vec<&str>> = vec![
+        vec!["lithium, alkali_metal", "sodium, alkali_metal", "potassium, alkali_metal", "rubidium, alkali_metal", "caesium, alkali_metal", "francium, alkali_metal"],
+        vec!["beryllium, alkaline_earth_metal", "magnesium, alkaline_earth_metal", "calcium, alkaline_earth_metal", "strontium, alkaline_earth_metal", "barium, alkaline_earth_metal", "radium, alkaline_earth_metal"],
+        vec!["fluorine, halogen", "chlorine, halogen", "bromine, halogen", "iodine, halogen", "astatine, halogen", "tennessine, halogen"],
+        vec!["helium, noble_gas", "neon, noble_gas", "argon, noble_gas", "krypton, noble_gas", "xenon, noble_gas", "radon, noble_gas"],
+        vec!["iron, transition_metal", "nickel, transition_metal", "cobalt, transition_metal"],
+    ];
+    assert_eq!(
+        groups, expected,
+        "the shared sentences are shared by exactly these rows: {groups:?}"
+    );
+    let shared: usize = groups.iter().map(|g| g.len()).sum();
+    assert_eq!(
+        pairs.len() - shared,
+        0,
+        "and 0 rows have a sentence to themselves: {groups:?}"
+    );
+}
