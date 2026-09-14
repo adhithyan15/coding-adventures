@@ -166,19 +166,65 @@ fn assert_term(tag: &str, term: &str, meaning: &str, span: &str, page: &str) {
         )),
         "{term} is defined by its own glossary entry, on its own page: {out}"
     );
-    // THE PAIRING ITSELF, asserted rather than assumed. The six spans were
-    // promoted from `cites` that happened to be in row order; this is what
-    // makes "in row order" a checked property instead of a lucky one. It lived
-    // in the one-shot conversion script, where it ran once; review pointed out
-    // the changelog described it as if it ran on every build. Now it does.
+    // TWO NECESSARY CONDITIONS, NEITHER SUFFICIENT — and an earlier comment
+    // here called them "THE PAIRING ITSELF, asserted rather than assumed",
+    // which was more than they do. Measured against the shipped file:
+    //
+    //   * FOUR OF SEVEN spans name another row's key. The `dominant` span
+    //     names gene, allele AND recessive; `recessive` names gene, allele and
+    //     trait; `phenotype` names trait; `trait` names gene. So the span test
+    //     below is satisfied by several WRONG pairings.
+    //   * The locator test is weaker still. Every URL here is
+    //     `https://www.genome.gov/genetics-glossary/...`, so the six-character
+    //     prefix `gene` matches ALL SIX other locators through "genome" and
+    //     "genetics". For that row it is very nearly vacuous.
+    //
+    // What actually pins a row is the `source`/`locator` equality above,
+    // against real CLI output, under the one-citation gate. What makes "the
+    // `cites` were in row order" a CHECKED fact rather than a lucky one is
+    // `the_seven_rows_have_seven_distinct_warrants`, which reads the file.
     assert!(
         span.to_lowercase().contains(term),
-        "{term}'s own span names it: {span}"
+        "{term}'s own span at least names it: {span}"
     );
     assert!(
         page.to_lowercase().contains(&term[..6.min(term.len())]),
-        "{term}'s own page is named for it: {page}"
+        "{term}'s own page at least mentions it: {page}"
     );
+}
+
+/// The property the two checks above cannot supply, read out of the SHIPPED
+/// FILE rather than compared between test literals.
+///
+/// Seven rows, seven distinct spans, seven distinct locators — one glossary
+/// entry each. If a future edit gave two rows the same warrant, that is the
+/// shape that hid five unpinned rows in `skeleton-bones` (#15171), and it would
+/// redden here even if every per-row needle were updated to match.
+#[test]
+fn the_seven_rows_have_seven_distinct_warrants() {
+    let adj = std::fs::read_to_string(facts_stdlib().join("biology/heredity-term.adj"))
+        .expect("read shipped heredity-term.adj");
+    let mut spans: Vec<String> = Vec::new();
+    let mut locators: Vec<String> = Vec::new();
+    for line in adj.lines() {
+        if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            spans.push(rest.trim_end_matches(0x22 as char).to_string());
+        } else if let Some(rest) = line.strip_prefix(r#"        locator ""#) {
+            locators.push(rest.trim_end_matches(0x22 as char).to_string());
+        }
+    }
+    assert_eq!(spans.len(), 7, "seven row sources parsed: {spans:?}");
+    assert_eq!(locators.len(), 7, "seven row locators parsed: {locators:?}");
+
+    let mut uniq_spans = spans.clone();
+    uniq_spans.sort();
+    uniq_spans.dedup();
+    assert_eq!(uniq_spans.len(), 7, "no two rows share a span: {spans:?}");
+
+    let mut uniq_locs = locators.clone();
+    uniq_locs.sort();
+    uniq_locs.dedup();
+    assert_eq!(uniq_locs.len(), 7, "no two rows share a page: {locators:?}");
 }
 
 /// #14986. The GENE sentence was this table's `source` — the field that carries
