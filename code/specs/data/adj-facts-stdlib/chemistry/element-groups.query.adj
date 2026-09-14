@@ -5,8 +5,11 @@
 % The shape a learner (or an LLM) produces to ANSWER "what family is sodium
 % in?": it states no chemistry fact — it only `import`s the grounded table and
 % asks binding queries. The engine resolves each `?` against the
-% `element_group_family` rows and returns the family + the table's
-% source/locator/trust. The fourth query runs the relation BACKWARD (bind the
+% `element_group_family` rows and returns the family + THAT ROW'S OWN
+% source/locator (RS-5e), at the table's shared trust tier. Before #14986 one
+% envelope span -- the alkali-metal sentence -- came back as the warrant for all
+% 27 rows, including the halogen and transition-metal queries below, which it
+% names no element of. The fourth query runs the relation BACKWARD (bind the
 % family noble_gas, recall EVERY element in it — as of this cycle's extension,
 % helium ; neon ; argon ; krypton ; xenon ; radon). Gold is not in the table, so
 % a recall on it abstains honestly — the engine never invents a family. The
