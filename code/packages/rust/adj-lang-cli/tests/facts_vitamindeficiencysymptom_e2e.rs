@@ -105,7 +105,14 @@ fn vitamin_deficiency_symptom_abstains_on_vitamin_c() {
     );
 }
 
-const VITAMIN_DEFICIENCY_SYMPTOM_PIN: &str = r#""bindings":{"Symptom":"inability_to_see_in_low_light"},"citations":[{"source":"Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn’t treated.","locator":"https://ods.od.nih.gov/factsheets/VitaminA-Consumer/","trust":"authoritative""#;
+// WIDENED WITH THE SPAN IT PINS. The old span — "Xerophthalmia is
+// the inability to see in low light…" — states the SYMPTOM and
+// never names vitamin A, so on its own it did not warrant
+// `(vitamin_a, inability_to_see_in_low_light)`. The page's
+// preceding sentence supplies the link and is contiguous. The pin
+// moves with the span; keeping the span to satisfy the pin would
+// be the tail wagging the dog.
+const VITAMIN_DEFICIENCY_SYMPTOM_PIN: &str = r#""bindings":{"Symptom":"inability_to_see_in_low_light"},"citations":[{"source":"The most common sign of vitamin A deficiency is an eye condition called xerophthalmia. Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn’t treated.","locator":"https://ods.od.nih.gov/factsheets/VitaminA-Consumer/","trust":"authoritative""#;
 
 #[test]
 fn vitamin_deficiency_symptom_citation_matches_its_page_glyph_for_glyph() {
@@ -121,12 +128,19 @@ fn vitamin_deficiency_symptom_citation_matches_its_page_glyph_for_glyph() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
-    // THIS PIN QUERIES vitamin_a, NOT vitamin_d. The table ships ONE envelope
-    // for five rows, and that envelope is the xerophthalmia/night-blindness
-    // sentence -- which grounds vitamin_a and NOT vitamin_d. Pinning vitamin_d
-    // would pair an answer about bone deformity with a citation about vision,
-    // and freeze it in a test. That is #14124's defect class; the one-envelope
-    // shape here is pre-existing and tracked there.
+    // THIS PIN QUERIES vitamin_a, and the reason it had to is now gone.
+    //
+    // It used to read: "The table ships ONE envelope for five rows, and that
+    // envelope is the xerophthalmia/night-blindness sentence -- which grounds
+    // vitamin_a and NOT vitamin_d. Pinning vitamin_d would pair an answer
+    // about bone deformity with a citation about vision, and freeze it in a
+    // test. That is #14124's defect class; the one-envelope shape here is
+    // pre-existing and tracked there."
+    //
+    // Since #14986 every row carries the fact sheet that states it, so
+    // `vitamin_d` can be pinned to its own rickets sentence — and is, below.
+    // The test that could only safely query one row is the shape this
+    // conversion removes.
     //
     // This site was reported CLEAN by installment 3a's collector, which
     // could not complete TLS to its host and swallowed the error -- so an
@@ -135,5 +149,152 @@ fn vitamin_deficiency_symptom_citation_matches_its_page_glyph_for_glyph() {
     assert!(
         out.contains(VITAMIN_DEFICIENCY_SYMPTOM_PIN),
         "the vitamin deficiency symptom citation matches its page: {out}"
+    );
+}
+
+const ODS: &str = "https://ods.od.nih.gov/factsheets/";
+
+/// Assert one row's warrant, binding the VITAMIN so exactly one row answers.
+fn assert_vitamin(tag: &str, vitamin: &str, symptom: &str, span: &str, sheet: &str) {
+    let dir = scratch(tag);
+    place_lib(&dir);
+    std::fs::write(
+        dir.join("case.adj"),
+        format!(
+            "import \"vitamin-deficiency-symptom.adj\"\n? vitamin_deficiency_symptom({vitamin}, $S)\n"
+        ),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        1,
+        "exactly one row for {vitamin}, so every needle below is its own: {out}"
+    );
+    assert!(
+        out.contains(&format!("\"S\":\"{symptom}\"")),
+        "{vitamin} binds {symptom}: {out}"
+    );
+    assert!(
+        out.contains(&format!(
+            "\"source\":\"{span}\",\"locator\":\"{ODS}{sheet}\",\"trust\":\"authoritative\""
+        )),
+        "{vitamin} is warranted by its own fact sheet's sentence: {out}"
+    );
+}
+
+/// #14986, and the fix for the #14124 note this file already carried. The
+/// VITAMIN-A span was this table's `source` for all five rows, so a recall of
+/// `vitamin_b12` came back proved by a sentence about xerophthalmia.
+///
+/// Five rows, five NIH ODS fact sheets, one vitamin each — the other four
+/// spans were already in the file as untiered `cites`, in row order.
+#[test]
+fn every_vitamin_carries_its_own_fact_sheet() {
+    assert_vitamin(
+        "vdva", "vitamin_a", "inability_to_see_in_low_light",
+        "The most common sign of vitamin A deficiency is an eye condition called xerophthalmia. Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn\u{2019}t treated.",
+        "VitaminA-Consumer/",
+    );
+    assert_vitamin(
+        "vdvd", "vitamin_d", "soft_weak_deformed_painful_bones",
+        "In children, vitamin D deficiency causes rickets, a disease in which the bones become soft, weak, deformed, and painful.",
+        "VitaminD-Consumer/",
+    );
+    assert_vitamin(
+        "vdb1", "vitamin_b1", "tingling_and_numbness_in_feet_and_hands",
+        "Severe thiamin deficiency leads to a disease called beriberi with the added symptoms of tingling and numbness in the feet and hands, loss of muscle, and poor reflexes.",
+        "Thiamin-Consumer/",
+    );
+    assert_vitamin(
+        "vdb9", "vitamin_b9", "weakness_and_fatigue",
+        "Getting too little folate can result in megaloblastic anemia, a blood disorder that causes weakness, fatigue, trouble concentrating, irritability, headache, heart palpitations, and shortness of breath.",
+        "Folate-Consumer/",
+    );
+    assert_vitamin(
+        "vdb12", "vitamin_b12", "tired_and_weak",
+        "Vitamin B12 also helps prevent megaloblastic anemia, a blood condition that makes people tired and weak.",
+        "VitaminB12-Consumer/",
+    );
+}
+
+/// THE WIDENING, and why the pairing check is worth running.
+///
+/// The shipped vitamin-A span stated the SYMPTOM and never named vitamin A, so
+/// on its own it did not warrant `(vitamin_a, inability_to_see_in_low_light)` —
+/// the link came from the page it sat on, not from the quoted run. The page's
+/// preceding sentence supplies it and is contiguous.
+///
+/// The span also carries a CURLY apostrophe (U+2019) in "isn't". An ASCII
+/// normalisation would make it stop being the page's bytes.
+#[test]
+fn the_vitamin_a_span_names_the_vitamin_and_keeps_its_curly_apostrophe() {
+    let adj = std::fs::read_to_string(
+        facts_stdlib().join("biology/vitamin-deficiency-symptom.adj"),
+    )
+    .expect("read shipped vitamin-deficiency-symptom.adj");
+    assert!(
+        adj.contains("The most common sign of vitamin A deficiency"),
+        "the vitamin-A span names the vitamin, not only the disease"
+    );
+    assert!(
+        adj.contains("if it isn\u{2019}t treated."),
+        "and keeps the page's curly apostrophe"
+    );
+    // SCOPED TO THE ROW'S source LINE, not the whole file. The first form
+    // forbade the ASCII spelling ANYWHERE in the .adj -- and then fired on the
+    // header comment that quotes the old span while explaining what changed.
+    // It was right to fire: that quote had been typed with an ASCII
+    // apostrophe the original never had. Both were fixed -- the quote, and the
+    // assertion that could not tell a machine value from prose about it.
+    assert!(
+        !adj.contains("        source \"Xerophthalmia"),
+        "no row still carries the narrow symptom-only span"
+    );
+    for line in adj.lines() {
+        if line.starts_with("        source \"") {
+            assert!(
+                !line.contains("isn't"),
+                "no row source uses the ASCII apostrophe: {line}"
+            );
+        }
+    }
+}
+
+/// #15193. Five rows, five distinct spans, five distinct fact sheets — no row
+/// shares a warrant with another. Asserted against the SHIPPED FILE.
+#[test]
+fn no_two_rows_share_a_span_or_a_page() {
+    let adj = std::fs::read_to_string(
+        facts_stdlib().join("biology/vitamin-deficiency-symptom.adj"),
+    )
+    .expect("read shipped vitamin-deficiency-symptom.adj");
+    let mut spans: Vec<String> = Vec::new();
+    let mut locators: Vec<String> = Vec::new();
+    for line in adj.lines() {
+        if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            spans.push(rest.trim_end_matches(0x22 as char).to_string());
+        } else if let Some(rest) = line.strip_prefix(r#"        locator ""#) {
+            locators.push(rest.trim_end_matches(0x22 as char).to_string());
+        }
+    }
+    assert_eq!(spans.len(), 5, "five row sources: {spans:?}");
+    assert_eq!(locators.len(), 5, "five row locators: {locators:?}");
+    let mut us = spans.clone();
+    us.sort();
+    us.dedup();
+    assert_eq!(us.len(), 5, "no two rows share a span: {spans:?}");
+    let mut ul = locators.clone();
+    ul.sort();
+    ul.dedup();
+    assert_eq!(ul.len(), 5, "no two rows share a fact sheet: {locators:?}");
+    assert!(
+        !adj.contains("\n    cites \""),
+        "no corroboration survives at table level: each is now a row's own source"
+    );
+    assert!(
+        adj.contains("    columns vitamin, symptom"),
+        "the shipped column names are unchanged"
     );
 }
