@@ -172,10 +172,13 @@ landed and why, not a semver-tracked API.
 
   All seven spans were verified against the fetched glossary pages before writing, read out of
   the shipped file rather than retyped, each with a negative arm (final word altered) that was
-  absent from every page. 7/7 verbatim. The row-to-warrant pairing is **asserted, not assumed** —
-  each row's key must appear both in the span it is given and in that span's locator, a check
-  that review correctly pointed out was living in the one-shot conversion script and is now
-  inside `assert_term`, running on every build.
+  absent from every page. 7/7 verbatim. The row-to-warrant pairing has two **necessary but not
+  sufficient** checks inside `assert_term` — each row's key must appear in the span it is given
+  and in that span's locator. Measured: four of the seven spans name another row's key, and
+  every URL here is `genome.gov/genetics-glossary/...`, so the prefix `gene` matches all six
+  other locators. What makes "the `cites` were in row order" a checked fact rather than a lucky
+  one is a separate test that reads the shipped file and asserts seven distinct spans and seven
+  distinct locators.
 
   `facts_heredityterm_e2e.rs`: 6 tests. The whole-chain `HEREDITY_TERM_PIN` is replaced — it
   ran from the bindings through five `corroborations` entries that are now row `source`s. Its
