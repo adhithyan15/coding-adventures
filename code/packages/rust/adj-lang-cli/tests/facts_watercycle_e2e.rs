@@ -7,6 +7,11 @@
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+/// The envelope sentence and locator, named once so the per-row pin below
+/// binds the CLI's real output rather than a restatement of it.
+const ENVELOPE: &str = "The water cycle describes how Earth's water is not only always changing forms, between liquid (rain), solid (ice), and gas (vapor), but also moving on, above, and in the Earth.";
+const LOCATOR: &str = "https://water.usgs.gov/edu/watercycle-kids-beg.html";
+
 fn facts_stdlib() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../../../specs/data/adj-facts-stdlib")
@@ -69,6 +74,14 @@ fn water_cycle_recall_binds_step_number_with_citation() {
 
 /// Helper: run one query against the shipped table and return stdout.
 fn ask(tag: &str, query: &str) -> String {
+    // `tag` reaches a path component, and one caller builds it from a row key
+    // read out of the raw `.adj` bytes rather than through the grammar. The
+    // grammar makes a traversal unreachable; this makes that not depend on
+    // the grammar.
+    assert!(
+        tag.chars().all(|c| c.is_ascii_alphanumeric() || c == '_'),
+        "scratch tags are path components: {tag:?}"
+    );
     let dir = scratch(tag);
     let src = facts_stdlib().join("earth-science/water-cycle.adj");
     std::fs::copy(&src, dir.join("water-cycle.adj")).expect("copy shipped water-cycle.adj");
@@ -162,11 +175,20 @@ fn each_stage_is_corroborated_by_the_sentence_that_names_it() {
         // this table: the sentence says the stage belongs to the cycle, and
         // says nothing about its step NUMBER, which no sentence on the page
         // states. So it is pinned in the `corroborations` array.
+        // ONE CONTIGUOUS SPAN BINDING PRIMARY TO CORROBORATION. Review
+        // found the "no row carries a `source`" guard was an INDENTATION
+        // match on the `.adj` -- a row `source` at any other indentation
+        // evaded it, evaded the four-space table filter too, and left the
+        // `cites` count at five, while NOTHING asserted that the emitted
+        // PRIMARY source is still the envelope. That is the whole claim of
+        // this table's shape, so it is asserted here, on the CLI's actual
+        // output, per row: envelope source, envelope locator, envelope
+        // trust, then this row's own sentence as the first corroboration.
         assert!(
             out.contains(&format!(
-                "\"corroborations\":[{{\"source\":\"{sentence}\"",
+                "\"source\":\"{ENVELOPE}\",\"locator\":\"{LOCATOR}\",\"trust\":\"authoritative\",\"corroborations\":[{{\"source\":\"{sentence}\"",
             )),
-            "{stage} is corroborated by the sentence that names it: {out}"
+            "{stage}: the envelope stays primary and its own sentence corroborates: {out}"
         );
     }
 }
@@ -223,11 +245,14 @@ fn no_row_carries_a_source_and_that_zero_is_deliberate() {
         "NO row carries a source -- no span on the page states a step number"
     );
 
-    // The envelope, derived totally rather than positionally so a second
-    // table-level source cannot hide behind the first.
+    // The envelope, derived totally rather than positionally. It is the
+    // `len() == 1` below that stops a second table-level source hiding
+    // behind the first -- a `!starts_with("     ")` conjunct sat here and
+    // was credited with that work, but a line starting with four spaces
+    // then `s` can never start with five, so it could never fire.
     let table_sources: Vec<&str> = adj
         .lines()
-        .filter(|l| l.starts_with("    source \"") && !l.starts_with("     "))
+        .filter(|l| l.starts_with("    source \""))
         .collect();
     assert_eq!(
         table_sources.len(),

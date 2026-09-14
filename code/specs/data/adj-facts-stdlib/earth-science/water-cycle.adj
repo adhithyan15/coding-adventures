@@ -3,7 +3,10 @@
 % EARTH-SCIENCE).
 % ============================================================================
 % An early earth-science fact every young student meets: water is always on the
-% move, and the trip repeats in the same order. The Sun warms water so it rises
+% move, and the trip repeats in the same order. (That ordering is an
+% INFERENCE from how the source's prose chains stage to stage, not something
+% the source states — see the provenance note below, which is the most
+% important thing to know about this table.) The Sun warms water so it rises
 % as invisible vapor, the vapor cools into clouds, the clouds rain or snow it
 % back down, that water runs downhill, and some soaks underground — then the Sun
 % lifts it up again. Recall is a binding query:
@@ -28,12 +31,27 @@
 % *** THE PAGE DOES NOT STATE THE STEP NUMBERS, AND THAT IS THE MOST
 % IMPORTANT THING TO KNOW ABOUT THIS TABLE. *** The second column is an
 % INTEGER, and no sentence on the cited page assigns a number to a stage.
-% Measured on 2026-09-14, with a control that can fail: the ordinal pattern
-% matches synthetic probes 3 of 3, so a zero is a real zero; the page has
-% THREE sentences containing any digit at all ("oceans cover 70% of the
-% Earth's surface", a CSS font-size rule, and the footer URL), none of which
-% numbers a stage; and the words "order", "begins", "next" and "follow"
-% occur ZERO times on the page.
+% Measured on 2026-09-14, and stated so a reader can re-run it. THE PAGE
+% HAS NO ORDINAL VOCABULARY AT ALL: `first`, `second`, `third`, `fourth`,
+% `fifth`, `step`, `order`, `begins`, `next` and `follow` are each ZERO
+% occurrences — zero even as SUBSTRINGS, so this is not a word-boundary
+% artifact. That is checkable straight from the page, with no harness.
+%
+% Digits are almost as scarce, and the extraction rule matters, so here it
+% is: splitting the whole tag-stripped page on sentence punctuation and
+% RETAINING `<script>`/`<style>` text gives THREE "sentences" containing any
+% digit — the `<head>` blob (the CSS rule together with every inline script
+% body), "oceans cover 70% of the Earth's surface", and the footer block,
+% whose digits are `Page Last Modified: Wednesday, 02-Apr-2025 16:43:33 EDT`.
+% DROPPING script and style text first gives TWO. Under either rule, none
+% numbers a stage.
+%
+% (An earlier wording of this paragraph cited "a CSS font-size rule" and
+% "the footer URL". The first was the whole head blob, scripts included; the
+% second is wrong outright — the URL `watercycle-kids-beg.html` contains no
+% digit. It also leaned on a 3-of-3 synthetic probe run from a harness that
+% ships nowhere, which is exactly the unstated-rule defect this header
+% faults two paragraphs up.)
 %
 % The ordering is an INFERENCE from the prose handoff chain — evaporation
 % lifts vapor; "This is condensation, the opposite of evaporation"; the
@@ -52,12 +70,20 @@
 % fixing it.
 %
 % AN EARLIER WORDING OF THIS HEADER SAID THE PAGE "describes them in this
-% process order". IT DOES NOT. The page's own `<h3>` sections run
+% process order". IT DOES NOT. The page's six DIAGRAM SECTION headings run
 % Condensation, Evaporation, Groundwater, Precipitation, Runoff, The Sun —
 % which is ALPHABETICAL, and sorting that list alphabetically returns it
 % unchanged. The table's order is not the page's order. The handoff half of
 % that sentence was true and is kept above; the ordering half was not and is
 % deleted.
+%
+% SIX, NOT SEVEN: the page carries a SEVENTH `<h3>`, and it is the FIRST in
+% source order — the sidebar's "Versions available:", which heads the
+% Beginner/Intermediate/Advanced links and is not a diagram section. Include
+% it and the list is no longer sorted, so a reader running the obvious check
+% would get a different answer than this paragraph predicts. Saying which
+% six is the difference between a claim that can be re-run and one that
+% cannot.
 %
 % WHAT *IS* FIXED HERE, because it needed no undecided machinery:
 %
