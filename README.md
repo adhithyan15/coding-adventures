@@ -328,7 +328,8 @@ See [Engram](./code/specs/engram-app.md) and the
 |-- .github/workflows CI, CodeQL, safety, publishing, releases, and deployment
 |-- CHANGELOG.md      monorepo-level notable changes
 |-- CLAUDE.md         repository policy and working conventions
-\-- lessons.md        accumulated engineering failures and durable fixes
+\-- lessons.d/        accumulated engineering failures and durable fixes,
+                     one lesson per file (see its `_meta.md`)
 ```
 
 Package inventory buckets currently recognize C, C++, C#, Dart, Elixir, F#,
@@ -444,8 +445,8 @@ for most package code.
 
 ## Working in the Repository
 
-Read [`CLAUDE.md`](./CLAUDE.md) and [`lessons.md`](./lessons.md) before making
-changes. The recurring workflow is:
+Read [`CLAUDE.md`](./CLAUDE.md) and [`lessons.d/`](./lessons.d/_meta.md) before
+making changes. The recurring workflow is:
 
 1. Fetch the latest `origin/main`.
 2. Create a feature branch, preferably in a fresh worktree.
@@ -493,7 +494,7 @@ Choose a path based on what you want to understand:
 | Learning-content backlog | [Learning coverage roadmap](./code/learning/ROADMAP.md) |
 | Vault/security architecture | [Vault master spec](./code/specs/VLT00-vault-master.md) |
 | Dependency planning | [Kahn's algorithm](./code/learning/algorithms/kahns-algorithm.md) and [build-tool README](./code/programs/go/build-tool/README.md) |
-| Current engineering pitfalls | [Lessons learned](./lessons.md) |
+| Current engineering pitfalls | [Lessons learned](./lessons.d/_meta.md) |
 
 The [learning index](./code/learning/README.md) collects the teaching-oriented
 material by subject.

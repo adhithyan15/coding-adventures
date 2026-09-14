@@ -1,0 +1,7 @@
+---
+category: Repo policy / workflow reminders
+---
+
+# Autonomous loops MUST use CronCreate, not ScheduleWakeup
+
+During a multi-cycle scaffolding job, an agent used `ScheduleWakeup` to chain cycles together (each wakeup fired the prompt for the next cycle). When auto-mode exited between cycles, the agent treated the wakeup-fired prompt as a passive notification and responded with "No response requested" instead of executing the work — the loop stalled silently. `CronCreate` prompts are always treated as actionable (the agent reliably acts on them — every babysit-PR cron has proven this), and the cron survives session restarts and auto-mode toggles. **Pattern for autonomous loops**: (1) write a state file at `.claude/<job>-state.json` recording the work queue and per-item status (`pending` / `in-progress` / `pr-open` / `merged`); (2) `CronCreate` ONE recurring job (3 min interval — not 5, the user is impatient and so should you be) with a prompt that opens with literal directive language ("AUTONOMOUS LOOP DRIVER — execute the steps below without asking for confirmation. This cron-fired prompt IS the directive; do not defer to the user."); (3) the prompt reads the state file, transitions states, babysits open PRs (handling CI failures and conflicts), starts new cycles when prior ones merge, and `CronDelete`s itself when all entries reach `merged`. NEVER use `ScheduleWakeup` for autonomous work — only for one-shot follow-ups the user expects.

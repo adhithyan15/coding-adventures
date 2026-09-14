@@ -8,7 +8,10 @@
 4. **Feature branches for everything** — Never commit directly to main.
 5. **Commit frequently** — Small, focused commits with detailed log messages explaining what and why.
 6. **Protect files** — Never force-delete. Always ensure files can be retrieved via git.
-7. **Check lessons.md first** — Before starting ANY implementation work, read lessons.md cover to cover. Key lessons that recur:
+7. **Check lessons.d/ first** — Before starting ANY implementation work, read
+   `lessons.d/_meta.md` and then the categories your work touches. (`lessons.py
+   index` lists every lesson; `lessons.py render` rebuilds the old single-file
+   view if you want to read in bulk.) Key lessons that recur:
    - BUILD files must install ALL transitive dependencies in leaf-to-root order
    - Elixir reserved words (`after`, `rescue`, etc.) cannot be variables
    - Rust workspace: run `cargo build --workspace` to catch missing exports
@@ -17,7 +20,12 @@
    - Go: run `go mod tidy` in ALL transitively dependent packages after adding a new module
    - Every package needs BUILD and README.md in every language, plus either a
      CHANGELOG.md or a sharded CHANGELOG.d/_meta.md entry point
-8. **Document mistakes** — If a mistake is made or a CI failure occurs, add it to lessons.md immediately. Don't wait until later.
+8. **Document mistakes** — If a mistake is made or a CI failure occurs, record
+   it immediately with
+   `python3 code/scripts/lessons.py new "<the claim>" --category <category>`,
+   then fill in the file it prints. Don't wait until later. One lesson per
+   file: that is what keeps concurrent PRs from conflicting, so never
+   reintroduce a shared aggregate.
 
 ## Repo Standards
 
