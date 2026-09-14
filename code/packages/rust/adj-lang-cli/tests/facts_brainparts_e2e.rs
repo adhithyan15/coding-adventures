@@ -355,15 +355,35 @@ fn the_shared_spans_are_exactly_the_declared_ones() {
     // tests that noticed the changed citation, never by the rule.
     let adj_text = std::fs::read_to_string(facts_stdlib().join("anatomy/brain-parts.adj"))
         .expect("read shipped brain-parts.adj");
-    // THE ENVELOPE LOCATOR IS READ FROM THE FILE, not typed. A first version
-    // hardcoded the SEER brain page from memory of an earlier state of this
-    // table; the envelope is actually the StatPearls physiology chapter, and
-    // the guard failed against a file that was correct. Deriving it cannot
-    // drift.
-    let envelope = adj_text
+    // THE ENVELOPE LOCATOR IS DERIVED TOTALLY, not positionally. An earlier
+    // form took the FIRST four-space `locator` line -- and review showed a row
+    // locator written with four spaces instead of eight is accepted by the
+    // parser, shipped as that answer's locator, AND adopted by this guard as
+    // "the envelope", so the guard passed on exactly the mutation it exists
+    // for. Requiring EXACTLY ONE four-space locator, and every locator line to
+    // be indented four or eight, makes that mutation reddening rather than
+    // invisible.
+    let table_locators: Vec<&str> = adj_text
         .lines()
-        .find_map(|l| l.strip_prefix(r#"    locator ""#))
-        .expect("the table has an envelope locator")
+        .filter(|l| l.starts_with("    locator \"") && !l.starts_with("     "))
+        .collect();
+    assert_eq!(
+        table_locators.len(),
+        1,
+        "exactly one table-level locator: {table_locators:?}"
+    );
+    for l in adj_text.lines() {
+        if l.trim_start().starts_with("locator \"") {
+            let indent = l.len() - l.trim_start().len();
+            assert!(
+                indent == 4 || indent == 8,
+                "every locator line is indented 4 (table) or 8 (row): {l:?}"
+            );
+        }
+    }
+    let envelope = table_locators[0]
+        .trim_start()
+        .trim_start_matches("locator \"")
         .trim_end_matches(0x22 as char);
     let row_locators: Vec<&str> = adj_text
         .lines()

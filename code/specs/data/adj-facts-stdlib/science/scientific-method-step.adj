@@ -91,7 +91,9 @@
 %
 % EVERY ROW CARRIES ITS OWN SPAN, below, in the row's `{ ... }` block
 % (ADJ-TABLES RS-5e). All eight spans are on the one NASA Space Place
-% page, and each row spells that locator out rather than inheriting it.
+% page, and every row INHERITS it — the rule
+% `geography/reference-lines.adj` states: restate a row locator only when
+% its page DIFFERS from the envelope's.
 % What was wrong until #14986 was the SPAN, not the page -- which is why
 % a citation assertion over the hostname could not have caught it.
 %
@@ -189,7 +191,8 @@ table scientific_method_step {
 
     % Each row carries the sentence that states ITS OWN step. All
     % eight spans are on the one NASA Space Place page, and each row
-    % spells that locator out rather than inheriting it. What was wrong
+    % INHERITS it (restating is for rows whose page differs). What was
+    % wrong
     % until #14986 was the SPAN, not the page: every row was warranted
     % by the STEP 1 sentence.
     %

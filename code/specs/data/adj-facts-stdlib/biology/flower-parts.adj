@@ -130,7 +130,9 @@ table flower_part_function {
 
     % Each row carries the sentence that states ITS OWN function.
     % All eight spans are on the one Illinois Extension page, and
-    % each row spells that locator out rather than inheriting it.
+    % every row INHERITS it — the rule `geography/reference-lines.adj`
+    % states: restate a row locator only when its page DIFFERS from the
+    % envelope's.
     % Until #14986 every row carried the PETAL sentence.
     %
     % `stamen` and `pistil` SHARE one sentence — the page fixes both

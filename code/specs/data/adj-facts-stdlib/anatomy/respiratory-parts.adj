@@ -148,8 +148,11 @@ table part_function {
     % Each row carries the SEER sentence that states its function, and the
     % page that sentence is on — SIX pages for eight rows (larynx.html and
     % bronchi.html each carry two). One of the six is the module index, which
-    % is also the envelope's locator: the LUNGS row cites it for a different
-    % sentence, so dropping that row's locator changes nothing observable.
+    % is also the envelope's locator, so the LUNGS row INHERITS rather than
+    % restating — the rule `geography/reference-lines.adj` states. Until that
+    % rule was applied here, that row repeated the URL and its harness had to
+    % DECLARE "drop the lungs locator" an equivalent mutant; there is nothing
+    % to declare now, because the row has no locator to drop.
     % Until #14986 all eight carried the NOSE sentence, which the
     % header described accurately as fixing the FIRST row.
     row (nose, traps_particles) {
