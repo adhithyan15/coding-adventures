@@ -20,28 +20,98 @@
 % The `step_number` value is a NUMBER, so a recalled step composes into arithmetic
 % (how many steps from evaporation to precipitation? 3 − 1 = 2).
 %
-% Provenance: the USGS Water Science School beginner diagram for kids names these
-% stages and describes them in this process order — each stage's text hands off to
-% the next (evaporation lifts vapor; "This is condensation, the opposite of
-% evaporation"; the cloud droplets "fall to Earth as precipitation"; when rain/snow
-% melts "it flows downhill ... This is called runoff"; "Some precipitation and
-% runoff soaks into the ground to become groundwater"). The citable artifact is that
-% USGS page at the `locator`, and every stage below is confirmed by its own section
-% there. `trust authoritative` — a U.S. Geological Survey (.gov) primary reference.
-% Nothing here is asserted from memory. (See ../README.md;
-% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% Provenance: the USGS Water Science School beginner diagram for kids names
+% each of these stages and gives each one its own section. `trust
+% authoritative` — a U.S. Geological Survey (.gov) primary reference. Nothing
+% here is asserted from memory.
+%
+% *** THE PAGE DOES NOT STATE THE STEP NUMBERS, AND THAT IS THE MOST
+% IMPORTANT THING TO KNOW ABOUT THIS TABLE. *** The second column is an
+% INTEGER, and no sentence on the cited page assigns a number to a stage.
+% Measured on 2026-09-14, with a control that can fail: the ordinal pattern
+% matches synthetic probes 3 of 3, so a zero is a real zero; the page has
+% THREE sentences containing any digit at all ("oceans cover 70% of the
+% Earth's surface", a CSS font-size rule, and the footer URL), none of which
+% numbers a stage; and the words "order", "begins", "next" and "follow"
+% occur ZERO times on the page.
+%
+% The ordering is an INFERENCE from the prose handoff chain — evaporation
+% lifts vapor; "This is condensation, the opposite of evaporation"; the
+% cloud droplets "fall to Earth as precipitation"; "When rain hits the land
+% or snow melts, it flows downhill ... This is called runoff"; "Some
+% precipitation and runoff soaks into the ground to become groundwater". The
+% chain is real and it is in the text. What it is NOT is a statement of five
+% integers.
+%
+% SO THIS TABLE IS DELIBERATELY *NOT* CONVERTED TO PER-ROW `source`
+% (ADJ-TABLES RS-5e, issue #14986), unlike its sibling
+% `water-movement-route.adj`. A per-row `source` asserts "this span warrants
+% this row", and none of these spans warrants an integer. Attaching one
+% would make the file LOOK better warranted while claiming more than was
+% measured, which is the defect #14986 exists to remove, not an instance of
+% fixing it.
+%
+% AN EARLIER WORDING OF THIS HEADER SAID THE PAGE "describes them in this
+% process order". IT DOES NOT. The page's own `<h3>` sections run
+% Condensation, Evaporation, Groundwater, Precipitation, Runoff, The Sun —
+% which is ALPHABETICAL, and sorting that list alphabetically returns it
+% unchanged. The table's order is not the page's order. The handoff half of
+% that sentence was true and is kept above; the ordering half was not and is
+% deleted.
+%
+% WHAT *IS* FIXED HERE, because it needed no undecided machinery:
+%
+%   - The envelope `source` used to be the EVAPORATION sentence, so
+%     `? water_cycle_stage(runoff, $N)` came back warranted by a sentence
+%     about the sun evaporating water. Four of the five rows were in that
+%     position. It is now the page's own framing sentence, which names NO
+%     stage and so mis-warrants none of them.
+%   - Each row now carries a row-level `cites` — a CORROBORATION, and
+%     deliberately not a `source` — holding the sentence that names its own
+%     stage. That is the strongest honest thing available: the sentence
+%     corroborates that the stage belongs to this cycle, and says nothing
+%     about its number.
+%
+% ONE OVERLAP WORTH RECORDING, because it is the pairing trap here: the
+% GROUNDWATER sentence names THREE stages — precipitation, runoff and
+% groundwater. "The span mentions the key" would therefore hand the
+% precipitation or runoff row the groundwater sentence. The EVAPORATION
+% sentence names its stage only by the VERB ("evaporate"), not the noun, so
+% a mention test would also miss it entirely. Both are pinned per row.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table water_cycle_stage {
     columns stage, step_number
 
-    row (evaporation, 1)
-    row (condensation, 2)
-    row (precipitation, 3)
-    row (runoff, 4)
-    row (groundwater, 5)
+    % Each row CITES the sentence that names its stage. `cites`, not
+    % `source`: a corroboration says this stage belongs to the cycle the
+    % envelope frames, which is true, whereas a `source` would say the
+    % span warrants the row -- including its step number, which no
+    % sentence on the page states.
+    row (evaporation, 1) {
+        cites "The sun causes liquid water to evaporate, or turn from a liquid to a gas (water vapor)." locator "https://water.usgs.gov/edu/watercycle-kids-beg.html"
+    }
+    row (condensation, 2) {
+        cites "This is condensation, the opposite of evaporation." locator "https://water.usgs.gov/edu/watercycle-kids-beg.html"
+    }
+    row (precipitation, 3) {
+        cites "When they get heavy enough, they fall to Earth as precipitation, such as rain and snow." locator "https://water.usgs.gov/edu/watercycle-kids-beg.html"
+    }
+    row (runoff, 4) {
+        cites "This is called runoff, which provides water to rivers, lakes, and the oceans." locator "https://water.usgs.gov/edu/watercycle-kids-beg.html"
+    }
+    row (groundwater, 5) {
+        cites "Some precipitation and runoff soaks into the ground to become groundwater." locator "https://water.usgs.gov/edu/watercycle-kids-beg.html"
+    }
 
-    source "The sun causes liquid water to evaporate, or turn from a liquid to a gas (water vapor)."
+    % THE ENVELOPE NAMES NO STAGE, which is what makes it safe in a
+    % required slot: it cannot mis-warrant a row, because it mentions
+    % none of them. It was the EVAPORATION sentence until 2026-09-14,
+    % which mis-warranted the other four.
+    source "The water cycle describes how Earth's water is not only always changing forms, between liquid (rain), solid (ice), and gas (vapor), but also moving on, above, and in the Earth."
     locator "https://water.usgs.gov/edu/watercycle-kids-beg.html"
     trust authoritative
 }
