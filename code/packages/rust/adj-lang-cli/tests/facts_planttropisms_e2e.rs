@@ -268,14 +268,29 @@ fn the_framing_envelope_never_reaches_an_answer() {
     // true of the OUTPUT and need not be true of the FILE: read the shipped
     // `.adj` and assert the span literally, so a drift from the page is a
     // test failure rather than a disclosed gap.
+    //
+    // AND THE PIN RUNS TO THE TIER, not to `\n    locator`. The shorter form
+    // shipped here and in two sibling entries: it asserts that a locator
+    // follows the envelope source, never what that locator is.
+    //
+    // MEASURED, and it corrected the reason for writing this. The short pin
+    // does NOT let a repointed envelope through this table: no row here
+    // overrides `locator` or `trust`, so both are inherited by all twelve rows
+    // and reach every answer, where `assert_tropism` already pins them. The
+    // hole WAS real in `brain-parts` (#15181), where all fifteen rows carry
+    // their own locator and the envelope's reaches nothing — review found it
+    // there and it is pinned this same way there now, on main.
+    //
+    // What this pin defends is the shape this table is moving toward. Give
+    // every row its own locator — a refactor with identical output — and then
+    // repoint the envelope: the short pin SURVIVES that, this one KILLS it.
     let adj = std::fs::read_to_string(
         facts_stdlib().join("biology/plant-tropisms.adj"),
     )
     .expect("read shipped plant-tropisms.adj");
     assert!(
         adj.contains(
-            "    source \"In biology, a tropism is a phenomenon indicating the growth or turning movement of an organism, usually a plant, in response to an environmental stimulus.\"
-    locator"
+            "    source \"In biology, a tropism is a phenomenon indicating the growth or turning movement of an organism, usually a plant, in response to an environmental stimulus.\"\n    locator \"https://en.wikipedia.org/wiki/Tropism\"\n    trust consensus"
         ),
         "the envelope carries the page's definition of a tropism, verbatim"
     );
