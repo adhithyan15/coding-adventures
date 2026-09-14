@@ -14,7 +14,8 @@
 %     ? brain_part_function(cerebellum, $Job)   % coordination_of_voluntary_movement
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `brain_part_function(part, function)` carrying the table's citation,
+% relation `brain_part_function(part, function)` carrying THAT ROW'S
+% OWN citation (RS-5e — before #14986 it was the table's single envelope),
 % so the lookup above is the ordinary SLD binding query — the engine returns the
 % function WITH its source, on the CPU, with zero model calls, and abstains on
 % anything that is not one of these parts (it never invents a job).
@@ -67,84 +68,134 @@
 % about a stroke localized to the cerebellum or a brainstem bleed.
 %
 % ---------------------------------------------------------------------------
-% Provenance (nothing here is asserted from memory — every part→function pair
-% was read out of a fetched U.S. government / NIH page this session, and any
-% pair that could not be grounded there was dropped). Each function token below
-% is quoted inside the verbatim source sentence so any reader can re-check it:
+% Provenance. EVERY ROW CARRIES ITS OWN SPAN AND ITS OWN LOCATOR, below, in the
+% row's `{ ... }` block (ADJ-TABLES RS-5e) — read those, not a restatement here.
+% Three pages, all primary U.S. government references (NCI SEER Training and two
+% NIH/NLM StatPearls chapters), so `trust authoritative`.
 %
-%   cerebrum → conscious_activity
-%     https://training.seer.cancer.gov/brain/tumors/anatomy/brain.html
-%     (U.S. National Cancer Institute, NCI SEER Training Modules)
-%     "The cerebrum is the part of the brain that receives and processes
-%      conscious sensation, generates thought, and controls conscious activity."
+% WHAT #14986 CHANGED, and it is the sharpest mis-citation in this cascade after
+% `biology/skeleton-bones.adj`. The CEREBRUM sentence was this table's `source`
+% — the field that carries the tier — for ALL FIFTEEN rows, on a SEER page
+% that, measured:
 %
-%   cerebellum → coordination_of_voluntary_movement
-%     https://www.ncbi.nlm.nih.gov/books/NBK551718/
-%     (NIH / U.S. National Library of Medicine, StatPearls "Physiology, Brain")
-%     "The cerebellum controls the coordination of voluntary movement and
-%      receives sensory information from the brain and spinal cord to fine-tune
-%      the precision and accuracy of motor activity."
+%   * contains NO brain-stem function at all (its only brain stem sentence is
+%     anatomical: "continuous with the spinal cord and comprising the medulla
+%     oblongata, pons, midbrain, and parts of the hypothalamus");
+%   * contains NO thalamus sentence — the string "thalamus" occurs there only
+%     inside "hypothalamus";
+%   * contains the word "hippocampus" ZERO times.
 %
-%   brainstem → breathing
-%     https://www.ncbi.nlm.nih.gov/books/NBK551718/
-%     (NIH / NLM, StatPearls "Physiology, Brain")
-%     "The brainstem houses the principal centers that perform autonomic
-%      functions such as breathing, temperature regulation, respiration, heart
-%      rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and
-%      swallowing."
+% So thirteen of the fifteen rows were warranted by a sentence from a page that
+% cannot support them. Their real evidence was already in the file, one line
+% below, as untiered `cites` on the two StatPearls chapters.
 %
-%   hypothalamus → hunger
-%     https://www.ncbi.nlm.nih.gov/books/NBK551718/
-%     (NIH / NLM, StatPearls "Physiology, Brain")
-%     "The hypothalamus controls hunger, thirst, and sleep."
+% THE ENVELOPE IS NOW A FRAMING SPAN: "The 3 main parts of the human brain are
+% the cerebrum, cerebellum, and brainstem." It names three parts and NO
+% function, so it warrants none of the fifteen (part, function) rows.
 %
-%   thalamus → relays
-%     https://www.ncbi.nlm.nih.gov/books/NBK551718/
-%     (NIH / NLM, StatPearls "Physiology, Brain")
-%     "Sensory neurons bring sensory input from the body to the thalamus, which
-%      relays this information to the cerebrum."
+% TEN ROWS SHARE THE BRAINSTEM SENTENCE, which lists ten autonomic functions.
+% Each row carries its own copy and each is pinned individually. (A draft of
+% this header said NINE, 52 lines below a line of this same file that already
+% said TEN.)
 %
-%   hippocampus → memory
-%     https://www.ncbi.nlm.nih.gov/books/NBK482171/
-%     (NIH / NLM, StatPearls "Neuroanatomy, Hippocampus")
-%     "The hippocampus is the "flash drive" of the human brain and is often
-%      associated with memory consolidation and decision-making"
+% ONE SPAN IS NOT SUBJECT-INITIAL, and that is fine: the thalamus row's warrant
+% is "Sensory neurons bring sensory input from the body to the thalamus, which
+% relays this information to the cerebrum." Its grammatical subject is the
+% neurons, not the thalamus — but it states the relation the row asserts, which
+% is what a warrant has to do. A pairing script that required subject position
+% rejected it, and the script was wrong, not the sentence.
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the NCI SEER Training sentence
-% that fixes the first row (cerebrum → conscious_activity). Every OTHER row's
-% per-fact source and verbatim span is listed above, so each pair remains
-% independently checkable. All three sources are primary U.S. government / NIH
-% references (NCI SEER Training; NIH / NLM StatPearls), so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
-% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table brain_part_function {
     columns brain_part, function
 
-    row (cerebrum, conscious_activity)
-    row (cerebellum, coordination_of_voluntary_movement)
-    row (brainstem, breathing)
-    row (brainstem, temperature_regulation)
-    row (brainstem, respiration)
-    row (brainstem, heart_rate)
-    row (brainstem, wake_sleep_cycles)
-    row (brainstem, coughing)
-    row (brainstem, sneezing)
-    row (brainstem, digestion)
-    row (brainstem, vomiting)
-    row (brainstem, swallowing)
-    row (hypothalamus, hunger)
-    row (thalamus, relays)
-    row (hippocampus, memory)
+    row (cerebrum, conscious_activity) {
+        % This sentence was the table's envelope, so it warranted all
+        % fifteen rows -- including thirteen whose subject its page
+        % never mentions.
+        source "The cerebrum is the part of the brain that receives and processes conscious sensation, generates thought, and controls conscious activity."
+        locator "https://training.seer.cancer.gov/brain/tumors/anatomy/brain.html"
+    }
+    row (cerebellum, coordination_of_voluntary_movement) {
+        source "The cerebellum controls the coordination of voluntary movement and receives sensory information from the brain and spinal cord to fine-tune the precision and accuracy of motor activity."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (brainstem, breathing) {
+        % TEN rows share this one sentence: it lists ten autonomic
+        % functions. Each row carries its own copy so any one can be
+        % checked, or broken, alone.
+        %
+        % The SEER page in the old envelope has no brain-stem FUNCTION
+        % at all -- its only brain stem sentence is anatomical. This
+        % sentence, from StatPearls, was a table-level `cites`.
+        source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (brainstem, temperature_regulation) {
+        source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (brainstem, respiration) {
+        source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (brainstem, heart_rate) {
+        source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (brainstem, wake_sleep_cycles) {
+        source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (brainstem, coughing) {
+        source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (brainstem, sneezing) {
+        source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (brainstem, digestion) {
+        source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (brainstem, vomiting) {
+        source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (brainstem, swallowing) {
+        source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (hypothalamus, hunger) {
+        source "The hypothalamus controls hunger, thirst, and sleep."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (thalamus, relays) {
+        % PROMOTED from a table-level `cites`. On the old envelope's
+        % SEER page the string "thalamus" occurs only inside
+        % "hypothalamus"; there is no thalamus sentence there.
+        source "Sensory neurons bring sensory input from the body to the thalamus, which relays this information to the cerebrum."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
+    }
+    row (hippocampus, memory) {
+        % PROMOTED from a table-level `cites`. The word "hippocampus"
+        % occurs ZERO times on the old envelope's SEER page.
+        source "The hippocampus is the \"flash drive\" of the human brain and is often associated with memory consolidation and decision-making, but it is far more complex in structure and function than a flash drive."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK482171/"
+    }
 
-    source "The cerebrum is the part of the brain that receives and processes conscious sensation, generates thought, and controls conscious activity."
-    locator "https://training.seer.cancer.gov/brain/tumors/anatomy/brain.html"
+    % The envelope is the FRAMING span -- the page's one-sentence
+    % statement of what the brain is made OF. It names three parts and
+    % NO function, so it warrants none of the fifteen (part, function)
+    % rows. Until #14986 the envelope was the CEREBRUM row's own
+    % sentence, standing as the tiered warrant for fourteen rows it
+    % does not state -- thirteen of them from a page that never
+    % mentions their subject at all.
+    source "The 3 main parts of the human brain are the cerebrum, cerebellum, and brainstem."
+    locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     trust authoritative
-    cites "The cerebellum controls the coordination of voluntary movement and receives sensory information from the brain and spinal cord to fine-tune the precision and accuracy of motor activity." locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
-    cites "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing." locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
-    cites "The hypothalamus controls hunger, thirst, and sleep." locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
-    cites "Sensory neurons bring sensory input from the body to the thalamus, which relays this information to the cerebrum." locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
-    cites "The hippocampus is the \"flash drive\" of the human brain and is often associated with memory consolidation and decision-making, but it is far more complex in structure and function than a flash drive." locator "https://www.ncbi.nlm.nih.gov/books/NBK482171/"
 }
