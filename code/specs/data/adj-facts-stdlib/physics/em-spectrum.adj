@@ -82,8 +82,11 @@
 %   visible -> eyes
 %     https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html
 %     (NASA Goddard Space Flight Center — Imagine the Universe!)
-%     "Our eyes detect visible light. Fireflies, light bulbs, and stars all emit
-%      visible light."
+%     "Our eyes detect visible light."
+%     (The page continues "Fireflies, light bulbs, and stars all emit visible
+%      light."; the ROW ships only the first sentence, which is the one that
+%      states the use. An earlier version of this listing quoted both, so the
+%      header and the shipped span disagreed about which span warrants the row.)
 %
 %   ultraviolet -> tanning
 %     https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html
@@ -102,13 +105,35 @@
 %     (NASA Goddard Space Flight Center — Imagine the Universe!)
 %     "Doctors use gamma-ray imaging to see inside your body."
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the NASA statement that fixes the
-% first row (radio -> radio_stations). Every OTHER row's per-fact source and
-% verbatim span is listed above, so each use remains independently checkable. All
-% seven rows come from the SAME primary source, NASA Goddard Space Flight
+% EACH ROW CARRIES ITS OWN SPAN as its primary warrant (ADJ-TABLES RS-5e), and
+% the `source`/`locator`/`trust` envelope below holds the page's FRAMING
+% sentence, which names no band. THE SPANS IN THE TABLE ARE THE AUTHORITY; the
+% listing above is commentary, and where the two differ the table wins.
+%
+% Until issue #14986 was applied here, this paragraph read: "An ADJ `table`
+% carries ONE provenance envelope, so the `source`/`locator`/`trust` below hold
+% the single cleanest span: the NASA statement that fixes the first row (radio
+% -> radio_stations). Every OTHER row's per-fact source and verbatim span is
+% listed above." That was true of the old shape and is false of this one, and
+% an auditor reading top-down met it before reaching the table. A provenance
+% artifact whose prose contradicts its data is the exact failure mode RS-5e
+% exists to remove, so it is recorded here rather than quietly overwritten.
+%
+% All seven rows come from the SAME primary source, NASA Goddard Space Flight
 % Center's "Imagine the Universe!" education page (imagine.gsfc.nasa.gov), a
-% primary U.S. government teaching resource, so `trust authoritative`.
+% primary U.S. government teaching resource, so `trust authoritative`. No row
+% restates `locator`: every span is on that one page, which is the rule
+% ADJ-TABLES.md §4 states.
+%
+% "VERBATIM" HERE IS CONDITIONAL ON ONE STRIPPING RULE, and it should be stated
+% rather than assumed: three of the eight spans straddle an inline
+% `<a class="glossaryDef">` anchor in the page source — the ENVELOPE ("EM
+% spectrum"), the MICROWAVE span ("astronomers", "galaxies") and the VISIBLE
+% span ("light"). The anchors wrap plain text, so stripping tags with NO
+% separator reproduces the page's own characters exactly; the other five spans
+% are contiguous in the raw bytes. Checked 2026-09-14 (HTTP 200): all eight
+% occur exactly once each, wholly inside one `<p>`, and a fabricated control
+% sentence is reported absent by the same comparison.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -123,12 +148,24 @@ table band_use {
     % sentence about radio stations. Six of the seven were in that
     % position.
     %
-    % NO CROSS-ROW OVERLAP, which is unusual in this cascade and worth
-    % recording: measured against the page's own wording for each key
-    % (`x_ray` is "X-rays", `gamma_ray` is "gamma-ray"), each of the
-    % seven spans names its own band and NO other. There is therefore no
-    % pairing trap here of the kind `anatomy/eye-parts.adj` and
-    % `earth-science/water-cycle.adj` both carry.
+    % NO CROSS-ROW OVERLAP: measured against the page's own wording for
+    % each key (`x_ray` is "X-rays", `gamma_ray` is "gamma-ray"), each of
+    % the seven spans names its own band and NO other. There is therefore
+    % no pairing trap here of the kind `anatomy/eye-parts.adj` carries,
+    % where the LENS sentence names the cornea and the retina, the
+    % OPTIC-NERVE sentence names the retina, and the IRIS sentence names
+    % the pupil.
+    %
+    % (An earlier wording called this "unusual in this cascade". IT IS
+    % NOT, and the claim was made without looking. Surveying the
+    % converted files: eleven others already have all-distinct spans, and
+    % `biology/plant-tropisms.adj`, `physics/energy-forms.adj` and
+    % `science/scientific-method-step.adj` also have zero cross-naming.
+    % The contrast with `eye-parts` is real; the rarity was not. Note too
+    % that `earth-science/water-cycle.adj` is NOT a
+    % converted-but-overlapping table — it has no row-level blocks at
+    % all, and is blocked for a different reason: its value is an integer
+    % that no span on its page states.)
     %
     % NO ROW RESTATES `locator`: all seven sentences are on the one page
     % the envelope names, which is the rule `geography/reference-lines.adj`

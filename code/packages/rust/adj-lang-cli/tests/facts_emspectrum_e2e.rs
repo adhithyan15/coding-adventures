@@ -207,14 +207,54 @@ fn every_row_carries_its_own_distinct_span_and_none_restates_the_locator() {
         .collect();
     assert_eq!(spans.len(), 7, "every row carries its own source block");
 
-    // ALL SEVEN DISTINCT. This is the one table in the cascade with no shared
-    // span, so it is asserted rather than merely described in a comment -- and
-    // it means a single-row truncation cannot hide behind a sibling's copy,
-    // which is what let a mutant survive in `water-movement-route`.
+    // TWO DIFFERENT PROPERTIES, and only the first used to be asserted while
+    // the CHANGELOG claimed the second.
+    //
+    // (a) NO TWO ROWS CARRY THE IDENTICAL SPAN. String dedup. This is what
+    //     stops a single-row truncation hiding behind a sibling's copy of the
+    //     same sentence, which is what let a mutant survive in
+    //     `water-movement-route`.
+    let keys: Vec<String> = body
+        .lines()
+        .filter_map(|l| l.trim_start().strip_prefix("row ("))
+        .map(|r| r.split(',').next().expect("row key").trim().to_lowercase())
+        .collect();
+    assert_eq!(keys.len(), 7, "seven row keys read: {keys:?}");
+    let ordered = spans.clone();
     let before = spans.len();
     spans.sort_unstable();
     spans.dedup();
     assert_eq!(spans.len(), before, "all seven spans are distinct: {spans:?}");
+
+    // (b) NO SPAN NAMES ANOTHER ROW'S BAND. This is the property the header
+    //     actually argues for, and nothing asserted it: string dedup says
+    //     nothing about a span that mentions a sibling. Checked in the PAGE'S
+    //     wording, because `x_ray` is written "X-rays" and `gamma_ray` is
+    //     written "gamma-ray" -- an atom-only scan would miss both.
+    for (i, span) in ordered.iter().enumerate() {
+        let low = span.to_lowercase();
+        for (j, key) in keys.iter().enumerate() {
+            if i == j {
+                continue;
+            }
+            for form in [key.replace('_', " "), key.replace('_', "-"), key.clone()] {
+                assert!(
+                    !low.contains(&form),
+                    "the {} span must name no other band, but names {form:?}: {span:?}",
+                    keys[i]
+                );
+            }
+        }
+        // And it DOES name its own -- otherwise the loop above would pass
+        // vacuously on a table whose spans mention no bands at all.
+        let own = &keys[i];
+        assert!(
+            [own.replace('_', " "), own.replace('_', "-"), own.clone()]
+                .iter()
+                .any(|f| low.contains(f)),
+            "the {own} span must name its own band: {span:?}"
+        );
+    }
 
     // TOTAL DERIVATIONS, not positional ones.
     let table_sources: Vec<&str> = adj
@@ -227,10 +267,22 @@ fn every_row_carries_its_own_distinct_span_and_none_restates_the_locator() {
         .filter(|l| l.starts_with("    locator \""))
         .collect();
     assert_eq!(table_locators.len(), 1, "exactly one table-level locator");
+    // MATCH ON THE TOKEN, not on `locator "` as one string. The old form
+    // missed `locator  "…"` with two spaces -- which escaped BOTH this arm
+    // and the four-space filter above -- and an inline `row (…) { locator
+    // "…" }`, whose `trim_start()` yields `row (`.
     for l in adj.lines() {
-        if l.trim_start().starts_with("locator \"") {
+        if l.split_whitespace().next() == Some("locator") {
             let indent = l.len() - l.trim_start().len();
             assert_eq!(indent, 4, "the only locator is the table's: {l:?}");
+        }
+    }
+    for l in body.lines() {
+        if l.contains("row (") && l.contains('{') {
+            assert!(
+                !l.contains("locator"),
+                "no row states a locator inline either: {l:?}"
+            );
         }
     }
 
@@ -251,7 +303,22 @@ fn the_envelope_names_no_band_in_the_pages_own_wording() {
     let adj = std::fs::read_to_string(facts_stdlib().join("physics/em-spectrum.adj"))
         .expect("read shipped em-spectrum.adj");
     let body = &adj[adj.find("table band_use").expect("table")..];
-    let envelope = ENVELOPE.to_lowercase();
+    // READ FROM THE FILE, NOT FROM THE CONST. This used to test
+    // `ENVELOPE.to_lowercase()` while harvesting the keys from the `.adj`, so
+    // a mutant editing the shipped envelope to name X-rays was not killed
+    // here at all -- it was killed by the `assert_eq!(envelope, ENVELOPE)` in
+    // the other test, and this one only caught a COORDINATED edit to both.
+    // Reading the file makes it buy what its name promises.
+    let table_sources: Vec<&str> = adj
+        .lines()
+        .filter(|l| l.starts_with("    source \""))
+        .collect();
+    assert_eq!(table_sources.len(), 1, "exactly one table-level source");
+    let envelope = table_sources[0]
+        .trim_start()
+        .trim_start_matches("source \"")
+        .trim_end_matches(0x22 as char)
+        .to_lowercase();
 
     let mut keys = 0;
     for line in body.lines() {
