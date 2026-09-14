@@ -51,9 +51,13 @@
 % THE LOCATOR NOW POINTS AT A FETCHABLE CAPTURE of that correct file. The
 % live URL is 404 today (the whole folder is gone), so pointing at it would
 % restore a correct-but-unfetchable address; the capture was verified at
-% HTTP 200, 449,715 bytes, names the original URL inside it, and pins a
-% date. This is an address a reader can open — NOT a content hash, and
-% nothing here claims more than `source_labeled`.
+% HTTP 200, 449,715 bytes. The capture's Memento response headers name the
+% original URL (`Link: <...circuit_components.pdf>; rel="original"`) and pin
+% the date (`Memento-Datetime: Thu, 17 Nov 2022 21:26:30 GMT`). An earlier
+% wording here said the capture "names the original URL inside it" — it does
+% not; the string `k12maker` occurs zero times in the captured bytes, and the
+% headers are what carry that. This is an address a reader can open — NOT a
+% content hash, and nothing here claims more than `source_labeled`.
 %
 % "VERBATIM" IS WEAKER HERE THAN FOR THIS CASCADE'S HTML TABLES, and saying
 % so is the point: the source is a PDF whose text layout wraps sentences
@@ -78,9 +82,19 @@
 %
 % ---------------------------------------------------------------------------
 % Provenance (nothing here is asserted from memory — every part→role pair below
-% was read out of one fetched MIT K-12 Maker "Circuit Basics and Components"
-% teaching handout, and any pair whose role could not be verified there would
-% have been dropped). Each pair, with the verbatim span that states it:
+% was read out of one fetched MIT K-12 Maker "Circuit Components" teaching
+% handout, and any pair whose role could not be verified there would have been
+% dropped).
+%
+% THAT TITLE WAS ALSO CONFLATED, and it survived the first pass of this fix.
+% It read "Circuit Basics and Components" — a title that occurs ZERO times in
+% either PDF. `circuit_components.pdf` is titled "Circuit Components" and
+% `circuit_basics.pdf` is "Circuit Basics". The same run-together mistake as
+% the filename, thirty-five lines above the paragraph that corrects the
+% filename, found only because a reviewer grepped the prose for the twin of
+% the URL I had already fixed.
+%
+% Each pair, with the span that states it (whitespace-collapsed — see above):
 %
 %   battery → provides_dc_power
 %     "Battery: A device that converts chemical energy into electrical energy
@@ -91,8 +105,14 @@
 %      current, such as wire, alligator clips, or copper tape."
 %
 %   switch → opens_or_closes
-%     "This switch serves as an On/Off switch in a circuit. The handle moves
-%      side to side to open or close the circuit."
+%     "The handle moves side to side to open or close the circuit."
+%     (This entry used to open with "This switch serves as an On/Off switch in
+%      a circuit." — a sentence that occurs ZERO times in either PDF, inside a
+%      block headed "the verbatim span". The source's own wording is
+%      ungrammatical: "Toggle SPST switches are often serve as an On/Off
+%      switches in a circuit." Somewhere it was silently tidied into something
+%      that reads well and was never written. The SHIPPED ROW was always the
+%      second sentence, which is verbatim; only this listing overstated.)
 %
 %   lamp → converts_to_light
 %     "Lamp: This traditional device converts electrical energy into light (and

@@ -183,7 +183,7 @@ per rotation, in parallel):
 | `physics/` | temperature reference point → the value NIST fixes it at (water_boils_celsius → 100, absolute_zero_kelvin → 0) | NIST (authoritative) |
 | `physics/` | magnetic pole pairing → interaction (like_poles → repel, opposite_poles → attract) | NASA Heliophysics Education (authoritative) |
 | `physics/` | Additive primary colors of light — red → white, green → white, blue → white (the three RGB primaries that combine to make white light) | HyperPhysics, Georgia State University (authoritative) |
-| `physics/` | Basic parts of a simple electric circuit → the role each performs (e.g. `battery` → `provides_dc_power`, `wire` → `carries_current`, `switch` → `opens_or_closes`) | MIT K-12 Maker "Circuit Basics and Components" (consensus) |
+| `physics/` | Basic parts of a simple electric circuit → the role each performs (e.g. `battery` → `provides_dc_power`, `wire` → `carries_current`, `switch` → `opens_or_closes`) | MIT K-12 Maker "Circuit Components" (consensus) |
 | `physics/` | common energy source → whether renewable or nonrenewable (solar → renewable, coal → nonrenewable, nuclear → nonrenewable) | U.S. EIA Energy Explained (authoritative) |
 | `physics/` | perceived sound property → physical wave quantity it corresponds to (pitch → frequency, loudness → amplitude, timbre → waveform) | Physics LibreTexts (consensus) |
 | `physics/` | optical element → how it acts on parallel light (convex_lens → converges_light, concave_lens → diverges_light, convex_mirror → diverges_light) | OpenStax University Physics / College Physics via Physics LibreTexts (consensus) |

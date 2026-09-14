@@ -43,10 +43,32 @@ landed and why, not a semver-tracked API.
   regression guard forbidding the conflated filename **as a locator value** — narrowed from "
   anywhere in the file", because the header now quotes it while explaining the defect.
 
-  Writing that guard bluntly first is what found a **stale provenance listing two hundred lines
+  Writing that guard bluntly first is what found a **stale provenance listing seventy-five lines
   below**, still naming the dead URL as "the same primary source" and still describing the
-  pre-conversion design. Same prose-contradicts-data defect as `em-spectrum`.
+  pre-conversion design. Same prose-contradicts-data defect as `em-spectrum`. (An earlier wording
+  said "two hundred lines below". The file is 180 lines long, so nothing in it can be.)
 
+  **Security review then found the twin that sweep missed.** The provenance block still
+  attributed the pairs to a handout titled *"Circuit Basics and Components"* — a title occurring
+  **zero times in either PDF** (`circuit_components.pdf` is "Circuit Components",
+  `circuit_basics.pdf` is "Circuit Basics"). The same run-together mistake as the filename, thirty
+  five lines above the paragraph that corrects the filename: I swept the URL and never grepped the
+  prose for its twin. Review also found a **non-verbatim quote inside a block headed "the verbatim
+  span"** — the `switch` entry opened with *"This switch serves as an On/Off switch in a
+  circuit."*, which occurs zero times in either PDF; the source's own wording is ungrammatical
+  (*"Toggle SPST switches are often serve as an On/Off switches in a circuit."*) and was silently
+  tidied at some point into something that reads well and was never written. The **shipped row was
+  always the verbatim second sentence**; only the listing overstated. And the claim that the
+  capture "names the original URL inside it" is false — `k12maker` occurs zero times in the
+  captured bytes; the Memento response headers carry that.
+
+  8 of 8 mutants killed, green baseline before and after, file verified byte-identical
+  afterwards; both controls behaved as intended — the positive one (a phrase certain to be in the
+  document) and the negative one (a fabricated sentence). Local scratch harness, so that count is
+  not reproducible from the repo. Security review independently built its own 13 mutants and
+  killed 13, and independently confirmed the CDX result with a folder-level control (3,244 rows
+  captured under that directory, **zero** for the conflated filename) — so the absence is a real
+  absence and not a gap in the index.
   8 of 8 mutants killed, green baseline before and after, file verified byte-identical afterwards.
   Local scratch harness, so that count is not reproducible from the repo.
 - **The last five converted tables gained a structural test of their own** (#15193). That issue

@@ -178,6 +178,20 @@ fn the_envelope_span_reaches_no_answer_beyond_the_battery_row() {
         2,
         "the envelope span reaches exactly one answer -- the battery row's: {out}"
     );
+    // THE COUNT ALONE HAS A BLIND SPOT, so this test does not rest on it.
+    // The envelope and the battery row's span are the SAME STRING, so
+    // deleting only the battery row's block leaves the count at 2 -- the
+    // envelope would simply be covering that row again, which is the shape
+    // this test exists to rule out. The structural test catches it by
+    // counting source blocks; asserting it here too means this test stands
+    // on its own.
+    let adj = std::fs::read_to_string(facts_stdlib().join("physics/circuit-parts.adj"))
+        .expect("read shipped circuit-parts.adj");
+    assert_eq!(
+        adj.matches("\n        source \"").count(),
+        7,
+        "all seven rows still carry their own source block"
+    );
     // POSITIVE CONTROL: the other six spans are each emitted twice, so the
     // count above is a measurement and not a program that printed nothing.
     for (part, _, span) in PARTS {
