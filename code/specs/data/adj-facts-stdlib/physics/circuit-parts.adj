@@ -35,6 +35,33 @@
 %
 %     ? circuit_part_role($Part, carries_current)   % wire
 %
+% *** THE LOCATOR THIS TABLE SHIPPED NAMED A FILE THAT NEVER EXISTED, and
+% that is worth recording rather than quietly fixing. *** It read
+% `.../circuit_basics_and_components.pdf`. That 404s, and the Wayback CDX
+% index holds NO capture of it at any time — while TWO separate files in the
+% same folder, `circuit_basics.pdf` and `circuit_components.pdf`, both
+% returned 200 and are archived. The shipped name is those two run together.
+% A dead link is a page that went away; this was an address that was never
+% right, and #15199 recorded it as the former.
+%
+% THE QUOTE WAS SOUND ALL ALONG. The shipped span occurs in
+% `circuit_components.pdf`, which defines all seven parts, so the sentence
+% really was taken from a real document and only the address was wrong.
+%
+% THE LOCATOR NOW POINTS AT A FETCHABLE CAPTURE of that correct file. The
+% live URL is 404 today (the whole folder is gone), so pointing at it would
+% restore a correct-but-unfetchable address; the capture was verified at
+% HTTP 200, 449,715 bytes, names the original URL inside it, and pins a
+% date. This is an address a reader can open — NOT a content hash, and
+% nothing here claims more than `source_labeled`.
+%
+% "VERBATIM" IS WEAKER HERE THAN FOR THIS CASCADE'S HTML TABLES, and saying
+% so is the point: the source is a PDF whose text layout wraps sentences
+% across lines, so each span below matches only after WHITESPACE COLLAPSING.
+% Measured 2026-09-14 against the captured file: each of the seven occurs
+% EXACTLY ONCE, none names another row's key, and a fabricated control
+% sentence is reported absent by the same comparison.
+%
 % A word that is NOT one of these basic parts — `capacitor`, `transistor`,
 % `rock` — is deliberately NOT a row, so a circuit-part recall ABSTAINS on it
 % rather than inventing a role. That honest-abstention property is what makes
@@ -83,16 +110,24 @@
 %      current goes through in the correct direction, as indicated by the
 %      'arrow' in the symbol."
 %
-% All spans are the same primary source:
-%   http://k12maker.mit.edu/uploads/9/7/5/8/97583140/circuit_basics_and_components.pdf
-%   (MIT K-12 Maker — "Circuit Basics and Components")
+% All spans are the same primary source, and it is `circuit_components.pdf`
+% — NOT the conflated `circuit_basics_and_components.pdf` this listing used
+% to name, which never existed:
+%   https://k12maker.mit.edu/uploads/9/7/5/8/97583140/circuit_components.pdf
+%   (MIT K-12 Maker — "Circuit Components")
+% cited through the capture at the `locator` below, because the live address
+% is 404 today.
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the statement that fixes the
-% first row (battery → provides_dc_power). Every OTHER row's verbatim span is
-% listed above, so each role remains independently checkable. The source is a
-% university (MIT) STEM-outreach teaching handout — a teaching summary, not a
-% primary standards reference — so `trust consensus`.
+% EACH ROW CARRIES ITS OWN SPAN as its primary warrant (ADJ-TABLES RS-5e).
+% This paragraph used to read "An ADJ `table` carries ONE provenance
+% envelope, so the `source`/`locator`/`trust` below hold the single cleanest
+% span ... Every OTHER row's verbatim span is listed above" — true of the old
+% shape, false of this one, and an auditor reading top-down met it before
+% reaching the table. THE SPANS IN THE TABLE ARE THE AUTHORITY; this listing
+% is commentary, and where the two differ the table wins.
+%
+% The source is a university (MIT) STEM-outreach teaching handout — a
+% teaching summary, not a primary standards reference — so `trust consensus`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -100,15 +135,46 @@
 table circuit_part_role {
     columns part, role
 
-    row (battery, provides_dc_power)
-    row (wire, carries_current)
-    row (switch, opens_or_closes)
-    row (lamp, converts_to_light)
-    row (resistor, slows_current)
-    row (motor, converts_to_motion)
-    row (led, gives_off_light)
+    % Each row carries the sentence that DEFINES ITS OWN PART. Until
+    % issue #14986 was applied here, the BATTERY sentence was the
+    % envelope `source` and therefore the warrant for all seven rows, so
+    % `? circuit_part_role(resistor, $R)` came back proved by a sentence
+    % about batteries. Six of the seven were in that position.
+    %
+    % The WIRE row's span defines `Conductor` and names wire as an
+    % example of one -- that is the page's own wording, and the row is
+    % `wire` because that is the word a beginner brings. Measured: each
+    % of the seven spans occurs EXACTLY ONCE in the document and names
+    % no other row's key.
+    row (battery, provides_dc_power) {
+        source "Battery: A device that converts chemical energy into electrical energy and provides direct current (DC) power."
+    }
+    row (wire, carries_current) {
+        source "Conductor: Any material, usually metal, that carries an electrical current, such as wire, alligator clips, or copper tape."
+    }
+    row (switch, opens_or_closes) {
+        source "The handle moves side to side to open or close the circuit."
+    }
+    row (lamp, converts_to_light) {
+        source "Lamp: This traditional device converts electrical energy into light (and lots of heat) using a resistive filament."
+    }
+    row (resistor, slows_current) {
+        source "Resistor: Electronic component that slows the flow of electricity."
+    }
+    row (motor, converts_to_motion) {
+        source "Motor: There are many types of electric motors, but all convert electrical energy into rotary motion of an output shaft."
+    }
+    row (led, gives_off_light) {
+        source "LED: Light Emitting Diodes are components that give off light when current goes through in the correct direction, as indicated by the “arrow” in the symbol."
+    }
 
+    % THE ENVELOPE KEEPS THE BATTERY SPAN, disclosed rather than dressed
+    % up as framing: this document is a definition table with no prose
+    % framing it, so there is no sentence that covers the whole relation.
+    % An envelope `source` is REQUIRED, so the span stays; every row
+    % overrides it, so it reaches no answer, and `battery` carries its
+    % own copy.
     source "Battery: A device that converts chemical energy into electrical energy and provides direct current (DC) power."
-    locator "http://k12maker.mit.edu/uploads/9/7/5/8/97583140/circuit_basics_and_components.pdf"
+    locator "https://web.archive.org/web/20221117212630if_/https://k12maker.mit.edu/uploads/9/7/5/8/97583140/circuit_components.pdf"
     trust consensus
 }
