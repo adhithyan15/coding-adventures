@@ -273,8 +273,29 @@ fn parse_rows(adj: &str) -> Vec<(String, Vec<String>, Vec<String>, Vec<String>)>
             if !rest_trim.starts_with('"') {
                 continue;
             }
+            // ESCAPE-AWARE. Taking the next `"` truncates a span at its
+            // first `\\"` and inverts the quote state for the rest of the
+            // line. No span in this file carries one, but
+            // `anatomy/brain-parts.adj` does, and this parser is the kind of
+            // thing that gets copied.
             let body = &rest_trim[1..];
-            if let Some(end) = body.find('"') {
+            let mut end = None;
+            let mut esc = false;
+            for (n, &c) in body.as_bytes().iter().enumerate() {
+                if esc {
+                    esc = false;
+                    continue;
+                }
+                match c {
+                    b'\\' => esc = true,
+                    b'"' => {
+                        end = Some(n);
+                        break;
+                    }
+                    _ => {}
+                }
+            }
+            if let Some(end) = end {
                 out.push(body[..end].to_string());
                 rest = &body[end + 1..];
             } else {
@@ -284,11 +305,21 @@ fn parse_rows(adj: &str) -> Vec<(String, Vec<String>, Vec<String>, Vec<String>)>
         out
     }
     fn bare_after(hay: &str, key: &str) -> Vec<String> {
-        hay.split_whitespace()
-            .collect::<Vec<_>>()
-            .windows(2)
-            .filter(|w| w[0] == key)
-            .map(|w| w[1].trim_end_matches('}').trim().to_string())
+        // `%` COMMENT LINES ARE SKIPPED. Scanning the whole body picks the
+        // keyword out of prose: one block here discusses `trust inferred` in
+        // a comment and is missed only because a backtick makes the token
+        // `` `trust ``. Deleting those backticks would start failing this
+        // test on an unchanged fact.
+        hay.lines()
+            .filter(|l| !l.trim_start().starts_with('%'))
+            .flat_map(|l| {
+                l.split_whitespace()
+                    .collect::<Vec<_>>()
+                    .windows(2)
+                    .filter(|w| w[0] == key)
+                    .map(|w| w[1].trim_end_matches('}').trim().to_string())
+                    .collect::<Vec<_>>()
+            })
             .collect()
     }
 
@@ -308,9 +339,15 @@ fn parse_rows(adj: &str) -> Vec<(String, Vec<String>, Vec<String>, Vec<String>)>
         let close = {
             let b = rest.as_bytes();
             let mut in_q = false;
+            let mut esc = false;
             let mut at = None;
             for (n, &c) in b.iter().enumerate() {
+                if esc {
+                    esc = false;
+                    continue;
+                }
                 match c {
+                    b'\\' if in_q => esc = true,
                     b'"' => in_q = !in_q,
                     b')' if !in_q => {
                         at = Some(n);
@@ -340,9 +377,15 @@ fn parse_rows(adj: &str) -> Vec<(String, Vec<String>, Vec<String>, Vec<String>)>
         let closes_here = {
             let b = after.as_bytes();
             let mut in_q = false;
+            let mut esc = false;
             let mut found = false;
             for &c in b {
+                if esc {
+                    esc = false;
+                    continue;
+                }
                 match c {
+                    b'\\' if in_q => esc = true,
                     b'"' => in_q = !in_q,
                     b'}' if !in_q => {
                         found = true;
@@ -373,15 +416,23 @@ fn parse_rows(adj: &str) -> Vec<(String, Vec<String>, Vec<String>, Vec<String>)>
         let cites_locs = {
             let mut out = Vec::new();
             let mut rest = body.as_str();
+            // BOUNDED BY THE NEXT NEWLINE, not by "the rest of the body".
+            // Searching the remainder means a `cites` written without its
+            // mandatory locator would steal the NEXT line's locator -- which
+            // could be the row's own override.
             while let Some(at) = rest.find("cites ") {
                 rest = &rest[at + 6..];
-                for l in quoted_after(rest, "locator").into_iter().take(1) {
+                let line_end = rest.find('\n').unwrap_or(rest.len());
+                for l in quoted_after(&rest[..line_end], "locator")
+                    .into_iter()
+                    .take(1)
+                {
                     out.push(l);
                 }
-                match rest.find('\n') {
-                    Some(n) => rest = &rest[n..],
-                    None => break,
+                if line_end >= rest.len() {
+                    break;
                 }
+                rest = &rest[line_end..];
             }
             out
         };
@@ -459,11 +510,22 @@ fn planet_order_asserts_its_own_span_and_trust_structure() {
     // test parses them properly rather than with an eight-space prefix: that
     // needle reads ZERO spans here and would make every assertion above pass
     // over an empty list.
+    // COUNT THE INLINE ROW BLOCKS, not every `}` in the file. This was
+    // `assert_eq!(adj.matches("}").count() >= 7, true, ...)`, which was two
+    // defects at once: it is a clippy `bool_assert_comparison` error under
+    // the repo's `cargo clippy --all-targets -- -D warnings` gate (a green
+    // `cargo test` says nothing about that), and it was INERT -- the file has
+    // nine `}`, and reflowing all eight rows to multi-line, the exact
+    // regression the message claims to guard, still leaves nine.
+    let inline_rows = adj
+        .lines()
+        .filter(|l| l.starts_with("    row (") && l.contains('}'))
+        .count();
     assert_eq!(
-        adj.matches("}").count() >= 7,
-        true,
-        "the inline blocks are still inline; if they were reflowed this test \
-         should be re-read rather than silently still passing"
+        inline_rows, 7,
+        "seven of the eight row blocks are written inline; if they were \
+         reflowed this parser must be re-read rather than silently still \
+         passing"
     );
 
     // ONE ROW IS AT A DIFFERENT TRUST TIER, and it is the one the page does
