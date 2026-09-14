@@ -175,9 +175,22 @@ fn no_two_rows_share_a_span() {
     uniq.sort();
     uniq.dedup();
     assert_eq!(uniq.len(), 6, "and no two rows share one: {spans:?}");
+    // NO ROW OVERRIDES `locator` — all six inherit the envelope's, per the
+    // rule `geography/reference-lines.adj` states. The pupil row DOES contain
+    // the word `locator`, on its `cites` line, where the grammar makes it
+    // mandatory (`Annotation::Cites { source, locator }`); that is a
+    // corroboration's own address, not an override of the row's, which is why
+    // this scan matches a `locator` LINE and not the word.
     assert!(
         locators.is_empty(),
-        "no row carries its own locator; all inherit the envelope's: {locators:?}"
+        "no row overrides the envelope's locator: {locators:?}"
+    );
+    // And the pupil row's second span reaches its answer: its function takes
+    // two sentences, and the iris one says what the pupil lets in is
+    // controlled.
+    assert!(
+        adj.contains("        cites \"The iris (the colored part of the eye) controls how much light the pupil lets in.\""),
+        "the pupil row carries the iris sentence as a corroboration"
     );
     assert!(
         adj.contains("    columns part, function"),
