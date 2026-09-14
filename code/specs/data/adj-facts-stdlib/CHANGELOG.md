@@ -42,7 +42,9 @@ landed and why, not a semver-tracked API.
   rows are now pinned individually **with their tier**, the three hand-bone rows get a
   dedicated test asserting they never return `authoritative`, and the pairing is asserted
   rather than assumed — each row's count must appear in the span that is supposed to state it,
-  in numeral or word form. **That assertion found a real gap on its first run**: the
+  in numeral or word form (with one stated limit: the hand sentence carries 27, 8, 5 and 14, so
+  for those three rows this check is satisfied by any of the four, and what separates them is
+  the binding assertion under the one-citation gate). **That assertion found a real gap on its first run**: the
   heart-chambers span writes "four", not "4". 18 of 18 mutants killed, baseline green.
 - `anatomy/respiratory-parts.adj` — all 8 rows converted to per-row provenance (RS-5e,
   #14986). The NOSE sentence was this table's `source`, the field that carries the tier, for

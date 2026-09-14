@@ -64,23 +64,45 @@ fn anatomy_body_counts_recall_binds_count_with_citation() {
     // produced — it could not tell the rib answer citing StatPearls from the
     // rib answer citing a sentence about chromosomes. Since #14986 these four
     // answers span four different pages.
+    // BOUND, not two loose needles over a five-query output. The first draft
+    // of this repair asserted `contains("genome.gov")` and
+    // `contains("\"trust\":\"authoritative\"")` separately and captioned the pair
+    // "the chromosome answer" — but four of the five rows here are
+    // `authoritative`, so the tier needle was satisfied by the rib, heart or
+    // bone answer. That is the same unbound-needle shape this comment block
+    // exists to record.
     assert!(
-        out.contains("genome.gov") && out.contains("\"trust\":\"authoritative\""),
+        out.contains(
+            "\"source\":\"Humans have 22 pairs of numbered chromosomes (autosomes) and one pair of sex chromosomes (XX or XY), for a total of 46.\",\"locator\":\"https://www.genome.gov/genetics-glossary/Chromosome\",\"trust\":\"authoritative\""
+        ),
         "the chromosome answer cites NHGRI at the authoritative tier: {out}"
     );
-    for page in [
-        "https://www.nhlbi.nih.gov/health/heart/anatomy",
-        "https://www.ncbi.nlm.nih.gov/books/NBK538328/",
-        "https://www.ncbi.nlm.nih.gov/books/NBK537199/",
+    for (span, page) in [
+        (
+            "It has four hollow chambers surrounded by muscle and other heart tissue.",
+            "https://www.nhlbi.nih.gov/health/heart/anatomy",
+        ),
+        (
+            "Generally, there are twelve pairs of ribs.",
+            "https://www.ncbi.nlm.nih.gov/books/NBK538328/",
+        ),
+        (
+            "Human infants typically have 270 bones, fusing into around 206 in the human adult.",
+            "https://www.ncbi.nlm.nih.gov/books/NBK537199/",
+        ),
     ] {
         assert!(
-            out.contains(page),
-            "an answer here cites {page}, which states it: {out}"
+            out.contains(&format!("\"source\":\"{span}\",\"locator\":\"{page}\"")),
+            "the answer warranted by {span} cites {page}: {out}"
         );
     }
-    assert!(
-        !out.contains("for a total of 46.\",\"locator\":\"https://www.ncbi"),
-        "and the chromosome sentence never warrants a row on another page: {out}"
+    // COUNTED, not forbidden under one URL prefix. The first form banned the
+    // chromosome sentence only beside an `ncbi` locator, so re-attaching it to
+    // the NHLBI or SEER page walked straight through.
+    assert_eq!(
+        out.matches("for a total of 46.").count(),
+        2,
+        "the chromosome sentence warrants one row here and no other: {out}"
     );
     // "spleens" is not a structure in the table — honest abstention, never a
     // fabricated count.
@@ -146,10 +168,19 @@ fn assert_count(tag: &str, structure: &str, n: &str, span: &str, locator: &str, 
         "{structure} is warranted by the sentence that states its count, on the page \
          that carries it, at the tier that page earns: {out}"
     );
-    // The pairing, asserted rather than assumed: the count this row claims has
-    // to appear in the span that is supposed to state it. Six of these spans
-    // write the number as a numeral; three write it as a word, so both forms
-    // are accepted and the words are listed rather than guessed at.
+    // The pairing: the count this row claims has to appear in the span that is
+    // supposed to state it. `span` is tied to the shipped row by the needle
+    // above and `n` by the binding, so this is a property of the FILE, not of
+    // the test's own constants.
+    //
+    // ITS LIMIT, stated rather than left to be discovered: the hand sentence
+    // carries 27, 8, 5 AND 14, so for the three hand-bone rows this check is
+    // satisfied by any of those four numbers. What actually separates them is
+    // `out.contains("\"N\":\"{n}\"")` under the one-citation gate above.
+    //
+    // Six of these spans write the number as a numeral; three write it as a
+    // word, so both forms are accepted and the words are listed rather than
+    // guessed at.
     let word = match n {
         "2" => "pair",     // "the pair of" / "The paired kidneys"
         "4" => "four",     // "It has four hollow chambers"
@@ -315,11 +346,68 @@ fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
         ),
         "the envelope carries the module's framing sentence, verbatim"
     );
-    // An envelope `source` is REQUIRED — an envelope with only `locator` and
-    // `trust` is rejected with `Lower(TableMissingProvenance)`, established by
-    // running it. So the framing span is not removable.
+    // The `columns` line. Column names are positional and never reach the
+    // output, so renaming them is invisible to every assertion above.
     assert!(
         adj.contains("    columns structure, count"),
         "the shipped column names are unchanged"
     );
 }
+
+/// An envelope `source` is REQUIRED, so the framing span above is not
+/// removable — someone cannot "fix" the framing-span pattern by deleting it.
+///
+/// This was asserted in prose in three places (the `.adj` header, the
+/// CHANGELOG, and a comment here) and exercised nowhere, which review caught.
+/// A claim established by running it once, in a session, is not a claim the
+/// repository holds. Now it runs.
+#[test]
+fn a_table_envelope_without_a_source_is_rejected() {
+    let dir = scratch("bcnosource");
+    std::fs::write(dir.join("case.adj"), NO_ENVELOPE_SOURCE).unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(!ok, "a sourceless envelope must not lower: {out}");
+    assert!(
+        out.contains("TableMissingProvenance"),
+        "and it is rejected for the missing envelope source specifically: {out}"
+    );
+    // POSITIVE CONTROL: the SAME table with an envelope source lowers and
+    // answers. Without it, a program that failed for any other reason — a typo
+    // in the table, a bad query — would read as a pass.
+    let dir = scratch("bcwithsource");
+    std::fs::write(dir.join("case.adj"), WITH_ENVELOPE_SOURCE).unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "the same table with an envelope source lowers: {out}");
+    assert!(out.contains("\"N\":\"1\""), "and answers: {out}");
+}
+
+const NO_ENVELOPE_SOURCE: &str = r#"table probe_count {
+    columns structure, count
+
+    row (alpha, 1) {
+        source "Alpha sentence."
+        locator "https://example.gov/a"
+    }
+
+    locator "https://example.gov/frame"
+    trust authoritative
+}
+
+? probe_count(alpha, $N)
+"#;
+
+const WITH_ENVELOPE_SOURCE: &str = r#"table probe_count {
+    columns structure, count
+
+    row (alpha, 1) {
+        source "Alpha sentence."
+        locator "https://example.gov/a"
+    }
+
+    source "Framing sentence."
+    locator "https://example.gov/frame"
+    trust authoritative
+}
+
+? probe_count(alpha, $N)
+"#;
