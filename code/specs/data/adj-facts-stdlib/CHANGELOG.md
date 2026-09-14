@@ -86,6 +86,25 @@ landed and why, not a semver-tracked API.
   was real. After the fix, every remaining hit is a record or accurate; **none asserts the old
   design**.
 
+  **A second recurring class was swept for too** — a header that QUOTES a span differently from
+  what the table ships, found by review in `circuit-parts` (a sentence occurring zero times on the
+  page) and in `heart-valves` (a truncation with an invented terminal period).
+
+  The first needle was useless: "any header quote that is not a shipped span" flagged **30 of 30**
+  converted tables with 120 hits, because it caught ellipsis-marked abbreviations, atom names,
+  column labels and quotes of other documents. Narrowed to the actual defect shape — a quote
+  **presented as a complete sentence** (initial capital, terminal punctuation, no ellipsis, 40+
+  characters) that the table does not ship — it reports **8 tables, 12 hits**.
+
+  Opening all twelve: most are benign (a rhetorical question in a header; correction-paragraphs
+  that quote the old wording; a sentence about a row the table deliberately excludes, in
+  `energy-forms`; a prefix flagged as partial). **One was real**, in
+  `physics/circuit-parts.adj`: the header rendered the LED span's `'arrow'` with straight quotes
+  where the page and the shipped row have curly `“arrow”` — same length, one character class
+  different, inside a header promising the spans character-for-character. A typographic
+  normalization is the same defect as the other two, one notch quieter. Fixed; the sweep now
+  reports 11 hits, none of them a mismatch with the page.
+
   9 of 9 mutants killed, green baseline before and after, file verified byte-identical afterwards.
   Local scratch harness, so that count is not reproducible from the repo.
 

@@ -128,7 +128,7 @@
 %   led → gives_off_light
 %     "LED: Light Emitting Diodes are components that give off light when
 %      current goes through in the correct direction, as indicated by the
-%      'arrow' in the symbol."
+%      “arrow” in the symbol."
 %
 % All spans are the same primary source, and it is `circuit_components.pdf`
 % — NOT the conflated `circuit_basics_and_components.pdf` this listing used
