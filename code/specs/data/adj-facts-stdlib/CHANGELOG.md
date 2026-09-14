@@ -7,10 +7,12 @@ landed and why, not a semver-tracked API.
 
 - **The last five converted tables gained a structural test of their own** (#15193). That issue
   recorded "2 of 17" on 2026-09-14; re-measured with an inline-aware parser on a branch merging
-  `origin/main` with the four open per-row PRs, it is **21 of 26**. (On this branch alone, without those PRs, it is
-  20 of 25 — the two numbers differ by `physics/em-spectrum.adj`, converted in an unmerged PR.
-  Each is labelled with the tree it was counted on rather than presented as one figure.) These
-  are the five that were not: `anatomy/body-counts.adj` (9 rows), `astronomy/planets.adj` (8), `biology/kingdoms.adj`
+  `origin/main` with the four open per-row PRs, it is **21 of 26**. (On this branch alone, without those PRs, it was 20 of 25
+  before this change — the denominators differ by `physics/em-spectrum.adj` and
+  `earth-science/water-cycle.adj`, converted in unmerged PRs. Each number is labelled with the
+  tree it was counted on rather than presented as one figure.) **After this change, measured on
+  this branch: 25 of 25** — every converted table asserts its own span structure. These are the
+  five that did not: `anatomy/body-counts.adj` (9 rows), `astronomy/planets.adj` (8), `biology/kingdoms.adj`
   (22), `metrology/si-base-units.adj` (7), `science/scientific-method-step.adj` (7).
 
   **The parser being inline-aware is the point, not a detail.** Three of the five write their row
