@@ -220,14 +220,19 @@ fn the_two_variant_heads_carry_the_pages_own_wording() {
 /// so nobody trims further.
 #[test]
 fn spans_stop_before_the_pages_reference_markers() {
-    let out = assert_tropism(
+    // (A `!out.contains("...chemicals[8]")` line stood here, and the binding
+    // it read went with it. It could never fire: the exact
+    // `"source":"...chemicals","locator":...` needle inside `assert_tropism`
+    // already excludes the bracketed form, and there is one citation in the
+    // output. An assertion never observed to fire is decoration.
+    //
+    // Leaving `let out = ...` behind broke CI, which denies warnings where a
+    // local `cargo test` does not. Deleting an assertion means deleting what
+    // fed it.)
+    assert_tropism(
         "trchemo", "chemotropism", "chemicals",
         "Chemotropism: the movement or growth in response to chemicals",
     );
-    // (A `!out.contains("...chemicals[8]")` line stood here. It could never
-    // fire: the exact `"source":"...chemicals","locator":...` needle above
-    // already excludes the bracketed form, and there is one citation in the
-    // output. An assertion never observed to fire is decoration.)
 }
 
 /// The envelope is the page's definition of a tropism. It warrants no row; its
