@@ -194,13 +194,27 @@ fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
         !out.contains("Many forms of energy exist"),
         "the framing span warrants no row: {out}"
     );
+    // THE PIN RUNS TO THE TIER, not to `\n    locator`. The shorter form
+    // shipped here and in two sibling entries: it asserts that a locator
+    // follows the envelope source, never what that locator is.
+    //
+    // MEASURED, and it corrected the reason for writing this. The short pin
+    // does NOT let a repointed envelope through this table: no row here
+    // overrides `locator` or `trust`, so both are inherited by all eight rows
+    // and reach every answer, where the per-row citation assertions already
+    // pin them. The hole is real in `brain-parts` (#15181), where all fifteen
+    // rows carry their own locator and the envelope's reaches nothing.
+    //
+    // What this pin defends is the shape this table is moving toward. Give
+    // every row its own locator — a refactor with identical output — and then
+    // repoint the envelope: the short pin SURVIVES that, this one KILLS it.
     let adj = std::fs::read_to_string(
         facts_stdlib().join("physics/energy-forms.adj"),
     )
     .expect("read shipped energy-forms.adj");
     assert!(
         adj.contains(
-            "    source \"Many forms of energy exist, but energy is either potential energy or kinetic energy.\"\n    locator"
+            "    source \"Many forms of energy exist, but energy is either potential energy or kinetic energy.\"\n    locator \"https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php\"\n    trust authoritative"
         ),
         "the envelope carries the page's framing sentence, verbatim"
     );
