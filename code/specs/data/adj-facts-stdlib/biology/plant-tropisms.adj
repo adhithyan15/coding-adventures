@@ -16,7 +16,8 @@
 %     ? tropism_stimulus(phototropism, $Stimulus)      % light
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `tropism_stimulus(tropism, stimulus)` carrying the table's citation,
+% relation `tropism_stimulus(tropism, stimulus)` carrying THAT ROW'S OWN
+% citation (RS-5e — before #14986 it was the table's single envelope),
 % so the lookup above is the ordinary SLD binding query — the engine returns the
 % stimulus WITH its source, on the CPU, with zero model calls, and abstains on a
 % word that is not one of these tropisms (it never invents a stimulus).
@@ -72,77 +73,40 @@
 % quoted span.)
 %
 % ---------------------------------------------------------------------------
-% Provenance (nothing here is asserted from memory — every tropism→stimulus pair
-% below was read out of a fetched Wikipedia "Tropism" article, and any pair
-% whose stimulus could not be verified there would have been dropped). Each pair,
-% with the source it was copied from and the verbatim span that states it:
+% Provenance. EVERY ROW CARRIES ITS OWN DEFINITION LINE, below, in the row's
+% `{ ... }` block (ADJ-TABLES RS-5e) — read those, not a restatement here. One
+% page, one tier, so no row restates `locator` or `trust`. The source is a
+% Wikipedia article, a teaching-quality encyclopedia summary rather than a
+% primary reference, so `trust consensus`.
 %
-%   phototropism → light
-%     https://en.wikipedia.org/wiki/Tropism
-%     "Phototropism: movement or growth in response to lights or colors of light"
+% WHAT #14986 CHANGED. The envelope was the PHOTOTROPISM line, so a recall of
+% `traumatotropism` came back warranted by a sentence about light. The envelope
+% now carries the page's DEFINITION of a tropism, which warrants no row.
 %
-%   gravitropism → gravity
-%     https://en.wikipedia.org/wiki/Tropism
-%     "Gravitropism (sometimes referred to as geotropism): is movement or growth
-%      in response to gravity"
+% IS EACH LINE ONE ELEMENT, OR A WELD? Checked before anything was built on
+% them, because "Term: definition" is the shape that usually means a `<dt>`
+% and a `<dd>` joined by an extractor. Here it is not: each definition is ONE
+% rendered line — a single block element with inline markup inside it — so
+% quoting it quotes one element. (A raw-HTML grep for a phrase finds nothing,
+% because the markup sits between the words. That zero is the instrument, not
+% the page.)
 %
-%   thigmotropism → touch
-%     https://en.wikipedia.org/wiki/Tropism
-%     "Thigmotropism: movement or growth in response to touch or contact"
+% TWO VARIANT HEADS, kept as the page writes them:
 %
-%   hydrotropism → water
-%     https://en.wikipedia.org/wiki/Tropism
-%     "Hydrotropism: movement or growth in response to water; in plants, the root
-%      cap senses differences in water moisture in the soil, and signals cellular
-%      changes that cause the root to curve towards the area of higher moisture"
+%   gravitropism    "Gravitropism (sometimes referred to as geotropism): is
+%                    movement or growth in response to gravity"
+%   electrotropism  "Electrotropism, or galvanotropism: the movement or growth
+%                    in response to an electric field"
 %
-%   chemotropism → chemicals
-%     https://en.wikipedia.org/wiki/Tropism
-%     "Chemotropism: the movement or growth in response to chemicals"
+%   A probe that required a bare "Gravitropism:" head reported both rows as
+%   having no definition line at all. That was the probe's prefix test.
 %
-%   aerotropism → wind
-%     https://en.wikipedia.org/wiki/Tropism
-%     "Aerotropism: the growth of plants towards or away from a source of wind"
+% REFERENCE MARKERS ARE TRIMMED. The rendered line for chemotropism ends
+% "...in response to chemicals[8]"; the [8] is a footnote superscript. Each
+% span stops at the last word before the first bracket, which leaves a verbatim
+% PREFIX of the page's own line — nothing reworded, and what is dropped is a
+% marker, never content. A mutant that restores the bracket reddens.
 %
-%   electrotropism → electric_field
-%     https://en.wikipedia.org/wiki/Tropism
-%     "Electrotropism/Galvanotropism: the movement or growth in response to an
-%      electric field"
-%
-%   heliotropism → sun_direction
-%     https://en.wikipedia.org/wiki/Tropism
-%     "Heliotropism: the diurnal motion or seasonal motion of plant parts in
-%      response to the direction of the Sun, (e.g. the sunflower)"
-%
-%   magnetotropism → magnetic_fields
-%     https://en.wikipedia.org/wiki/Tropism
-%     "Magnetotropism: movement or growth in response to magnetic fields"
-%
-%   selenotropism → moon_direction
-%     https://en.wikipedia.org/wiki/Tropism
-%     "Selenotropism: motion of plant parts in response to the direction of
-%      the Moon"
-%
-%   thermotropism → temperature
-%     https://en.wikipedia.org/wiki/Tropism
-%     "Thermotropism: movement or growth in response to temperature"
-%
-%   traumatotropism → wounding
-%     https://en.wikipedia.org/wiki/Tropism
-%     "Traumatotropism: orientation deviation after suffering a wounding"
-%
-% (The naming principle itself is stated in the article's lead — "Tropisms are
-% usually named for the stimulus involved; for example, a phototropism is a
-% movement to the light source" — which is why the tropism name and its stimulus
-% travel together.)
-%
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the Wikipedia statement that fixes
-% the first row (phototropism → light). Every OTHER row's per-fact source and
-% verbatim span is listed above, so each stimulus remains independently
-% checkable. The source is the Wikipedia "Tropism" article — a teaching-quality
-% consensus encyclopedia summary, not a primary government/university source — so
-% `trust consensus`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -150,20 +114,58 @@
 table tropism_stimulus {
     columns tropism, stimulus
 
-    row (phototropism, light)
-    row (gravitropism, gravity)
-    row (thigmotropism, touch)
-    row (hydrotropism, water)
-    row (chemotropism, chemicals)
-    row (aerotropism, wind)
-    row (electrotropism, electric_field)
-    row (heliotropism, sun_direction)
-    row (magnetotropism, magnetic_fields)
-    row (selenotropism, moon_direction)
-    row (thermotropism, temperature)
-    row (traumatotropism, wounding)
+    row (phototropism, light) {
+        % This line was the table's whole envelope, so it warranted
+        % the other eleven rows too.
+        source "Phototropism: movement or growth in response to lights or colors of light"
+    }
+    row (gravitropism, gravity) {
+        % The page's head here is "Gravitropism (sometimes referred
+        % to as geotropism):", not a bare "Gravitropism:". A probe
+        % that required the bare form reported this row as having no
+        % definition line at all -- the probe, not the page.
+        source "Gravitropism (sometimes referred to as geotropism): is movement or growth in response to gravity"
+    }
+    row (thigmotropism, touch) {
+        source "Thigmotropism: movement or growth in response to touch or contact"
+    }
+    row (hydrotropism, water) {
+        source "Hydrotropism: movement or growth in response to water; in plants, the root cap senses differences in water moisture in the soil, and signals cellular changes that cause the root to curve towards the area of higher moisture"
+    }
+    row (chemotropism, chemicals) {
+        % Every span in this table stops before the page's reference
+        % markers ([8] here). That leaves a verbatim PREFIX of the
+        % page's own line: nothing reworded, and what is dropped is a
+        % footnote marker, never content.
+        source "Chemotropism: the movement or growth in response to chemicals"
+    }
+    row (aerotropism, wind) {
+        source "Aerotropism: the growth of plants towards or away from a source of wind"
+    }
+    row (electrotropism, electric_field) {
+        % Variant head again: "Electrotropism, or galvanotropism:".
+        source "Electrotropism, or galvanotropism: the movement or growth in response to an electric field"
+    }
+    row (heliotropism, sun_direction) {
+        source "Heliotropism: the diurnal motion or seasonal motion of plant parts in response to the direction of the Sun, (e.g. the sunflower)"
+    }
+    row (magnetotropism, magnetic_fields) {
+        source "Magnetotropism: movement or growth in response to magnetic fields"
+    }
+    row (selenotropism, moon_direction) {
+        source "Selenotropism: motion of plant parts in response to the direction of the Moon"
+    }
+    row (thermotropism, temperature) {
+        source "Thermotropism: movement or growth in response to temperature"
+    }
+    row (traumatotropism, wounding) {
+        source "Traumatotropism: orientation deviation after suffering a wounding"
+    }
 
-    source "Phototropism: movement or growth in response to lights or colors of light"
+    % The envelope is the FRAMING span -- the page's definition of what a
+    % tropism IS. It defends the TABLE and warrants no row. Until #14986
+    % it was the PHOTOTROPISM row's own line.
+    source "In biology, a tropism is a phenomenon indicating the growth or turning movement of an organism, usually a plant, in response to an environmental stimulus."
     locator "https://en.wikipedia.org/wiki/Tropism"
     trust consensus
 }

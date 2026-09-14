@@ -114,3 +114,147 @@ fn biology_plant_tropisms_extension_recalls_the_newly_added_rows() {
         "inotropism abstains (wrong domain): {out}"
     );
 }
+
+const TROPISM_LOCATOR: &str = "https://en.wikipedia.org/wiki/Tropism";
+
+/// Assert one row carries its own definition line, in a program returning only
+/// that row. Each tropism names exactly one row, so a single-answer query is
+/// available here — unlike `speleothem-substrate` (#15175), where two rows
+/// share a substrate and the needle had to span from binding into citation.
+fn assert_tropism(tag: &str, tropism: &str, stimulus: &str, span: &str) -> String {
+    let dir = scratch(tag);
+    std::fs::copy(
+        facts_stdlib().join("biology/plant-tropisms.adj"),
+        dir.join("plant-tropisms.adj"),
+    )
+    .expect("copy shipped plant-tropisms.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"plant-tropisms.adj\"\n? tropism_stimulus({tropism}, $S)\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        1,
+        "exactly one row for {tropism}, so every needle below is its own: {out}"
+    );
+    assert!(
+        out.contains(&format!("\"S\":\"{stimulus}\"")),
+        "{tropism} binds {stimulus}: {out}"
+    );
+    assert!(
+        out.contains(&format!(
+            "\"source\":\"{span}\",\"locator\":\"{TROPISM_LOCATOR}\",\"trust\":\"consensus\""
+        )),
+        "{tropism} carries its own definition line: {out}"
+    );
+    out
+}
+
+/// #14986: the envelope was the PHOTOTROPISM definition, so a recall of
+/// `traumatotropism` came back warranted by a sentence about light. All twelve
+/// rows are pinned individually — the same table shape where, in
+/// `skeleton-bones` (#15171), testing one row per shared span left five rows
+/// pinned by nothing.
+#[test]
+fn every_tropism_row_carries_its_own_definition_line() {
+    assert_tropism(
+        "trphoto", "phototropism", "light",
+        "Phototropism: movement or growth in response to lights or colors of light",
+    );
+    assert_tropism(
+        "trthigmo", "thigmotropism", "touch",
+        "Thigmotropism: movement or growth in response to touch or contact",
+    );
+    assert_tropism(
+        "trhydro", "hydrotropism", "water",
+        "Hydrotropism: movement or growth in response to water; in plants, the root cap senses differences in water moisture in the soil, and signals cellular changes that cause the root to curve towards the area of higher moisture",
+    );
+    assert_tropism(
+        "traero", "aerotropism", "wind",
+        "Aerotropism: the growth of plants towards or away from a source of wind",
+    );
+    assert_tropism(
+        "trhelio", "heliotropism", "sun_direction",
+        "Heliotropism: the diurnal motion or seasonal motion of plant parts in response to the direction of the Sun, (e.g. the sunflower)",
+    );
+    assert_tropism(
+        "trmagneto", "magnetotropism", "magnetic_fields",
+        "Magnetotropism: movement or growth in response to magnetic fields",
+    );
+    assert_tropism(
+        "trseleno", "selenotropism", "moon_direction",
+        "Selenotropism: motion of plant parts in response to the direction of the Moon",
+    );
+    assert_tropism(
+        "trthermo", "thermotropism", "temperature",
+        "Thermotropism: movement or growth in response to temperature",
+    );
+    assert_tropism(
+        "trtrauma", "traumatotropism", "wounding",
+        "Traumatotropism: orientation deviation after suffering a wounding",
+    );
+}
+
+/// Two rows whose definition line does NOT open with a bare `Tropism:` head.
+/// A probe that required the bare form reported both as having no definition
+/// line at all, which was the probe's prefix test and not the page.
+#[test]
+fn the_two_variant_heads_carry_the_pages_own_wording() {
+    assert_tropism(
+        "trgravi", "gravitropism", "gravity",
+        "Gravitropism (sometimes referred to as geotropism): is movement or growth in response to gravity",
+    );
+    assert_tropism(
+        "trelectro", "electrotropism", "electric_field",
+        "Electrotropism, or galvanotropism: the movement or growth in response to an electric field",
+    );
+}
+
+/// Every span stops before the page's reference markers — `chemicals[8]`
+/// becomes `chemicals`. That leaves a verbatim PREFIX of the page's own line:
+/// nothing reworded, and what is dropped is a footnote marker, never content.
+/// Pinned so nobody "restores" a bracket that is not part of the sentence, and
+/// so nobody trims further.
+#[test]
+fn spans_stop_before_the_pages_reference_markers() {
+    let out = assert_tropism(
+        "trchemo", "chemotropism", "chemicals",
+        "Chemotropism: the movement or growth in response to chemicals",
+    );
+    assert!(
+        !out.contains("in response to chemicals[8]"),
+        "the reference marker is not part of the citation: {out}"
+    );
+}
+
+/// The envelope is the page's definition of a tropism. It warrants no row; its
+/// wording is unreachable from any answer once every row overrides `source`,
+/// which is disclosed rather than implied.
+#[test]
+fn the_framing_envelope_never_reaches_an_answer() {
+    let dir = scratch("trenvelope");
+    std::fs::copy(
+        facts_stdlib().join("biology/plant-tropisms.adj"),
+        dir.join("plant-tropisms.adj"),
+    )
+    .expect("copy shipped plant-tropisms.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"plant-tropisms.adj\"\n? tropism_stimulus($T, $S)\n",
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        12,
+        "all twelve rows answer: {out}"
+    );
+    assert!(
+        !out.contains("In biology, a tropism is a phenomenon"),
+        "the framing span warrants no row: {out}"
+    );
+}
