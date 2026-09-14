@@ -224,10 +224,10 @@ fn spans_stop_before_the_pages_reference_markers() {
         "trchemo", "chemotropism", "chemicals",
         "Chemotropism: the movement or growth in response to chemicals",
     );
-    assert!(
-        !out.contains("in response to chemicals[8]"),
-        "the reference marker is not part of the citation: {out}"
-    );
+    // (A `!out.contains("...chemicals[8]")` line stood here. It could never
+    // fire: the exact `"source":"...chemicals","locator":...` needle above
+    // already excludes the bracketed form, and there is one citation in the
+    // output. An assertion never observed to fire is decoration.)
 }
 
 /// The envelope is the page's definition of a tropism. It warrants no row; its
@@ -256,5 +256,22 @@ fn the_framing_envelope_never_reaches_an_answer() {
     assert!(
         !out.contains("In biology, a tropism is a phenomenon"),
         "the framing span warrants no row: {out}"
+    );
+
+    // AND PIN ITS WORDING. Every sibling entry in this cascade disclosed the
+    // envelope's text as unpinnable, because no answer carries it. That is
+    // true of the OUTPUT and need not be true of the FILE: read the shipped
+    // `.adj` and assert the span literally, so a drift from the page is a
+    // test failure rather than a disclosed gap.
+    let adj = std::fs::read_to_string(
+        facts_stdlib().join("biology/plant-tropisms.adj"),
+    )
+    .expect("read shipped plant-tropisms.adj");
+    assert!(
+        adj.contains(
+            "    source \"In biology, a tropism is a phenomenon indicating the growth or turning movement of an organism, usually a plant, in response to an environmental stimulus.\"
+    locator"
+        ),
+        "the envelope carries the page's definition of a tropism, verbatim"
     );
 }

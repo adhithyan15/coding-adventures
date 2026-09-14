@@ -40,12 +40,18 @@
 %     thermotropism    temperature      growth responds to temperature
 %     traumatotropism  wounding         orientation shifts after a wounding
 %
-% EXTENDED this cycle from 5 to 12 rows: the SAME already-cited Wikipedia
-% "Tropism" article's own "Types of tropism" list names seven MORE tropisms
-% beyond the original five, each with its own clean single-fact definition
-% sentence, WebFetch-verified (including a targeted second pass re-fetching
-% all seven new terms' raw definition text directly) before writing — zero
-% new source page needed.
+% EXTENDED from 5 to 12 rows: the SAME already-cited Wikipedia "Tropism"
+% article's own "Types of tropism" list names seven MORE tropisms beyond the
+% original five, each with its own single-fact definition line — zero new
+% source page needed.
+%
+% That extension claimed to be "WebFetch-verified, including a targeted second
+% pass re-fetching all seven new terms' raw definition text directly". #14986
+% checked the spans against a raw extraction and found that pass had produced
+% at least one quote the page does not contain: it rendered
+% "Electrotropism/Galvanotropism:" where the article says "Electrotropism, or
+% galvanotropism:". The boast is removed rather than restated; the spans are
+% now per-row, taken from a raw extraction, and pinned individually.
 %
 % The query also runs BACKWARD — bind a stimulus and recall its tropism:
 %

@@ -29,6 +29,13 @@ landed and why, not a semver-tracked API.
     movement…"* and *"Electrotropism, or galvanotropism: the movement…"*. A probe that required a bare
     `Gravitropism:` head reported both rows as having **no definition line at all** — the probe's
     prefix test, not the page. A mutant that normalises the head to the bare form reddens.
+
+    For electrotropism the probe was not the only problem. **The header's shipped quote was
+    non-verbatim**: it read *"Electrotropism/Galvanotropism: the movement…"*, a form that occurs zero
+    times on the page, raw or rendered, under a header promising "the verbatim span that states it".
+    So this row is a repair, not just a move. The header's claim that those seven rows were
+    "WebFetch-verified, including a targeted second pass re-fetching all seven new terms' raw
+    definition text directly" is removed rather than restated — that pass is what produced the quote.
   - **Reference markers trimmed.** The chemotropism line ends *"…in response to chemicals[8]"*; every
     span stops at the last word before the first bracket. That leaves a verbatim PREFIX of the page's
     own line — nothing reworded, and what is dropped is a footnote marker, never content. A mutant
@@ -36,11 +43,23 @@ landed and why, not a semver-tracked API.
 
   ### Pins
 
-  **18 of 18 mutants killed, two controls counted separately.** All twelve rows broken one at a time;
-  warranting `traumatotropism` with the phototropism line; restoring the `[8]`; normalising the
-  gravitropism head; rebinding a stimulus; dropping a row's source so it inherits the envelope;
-  repointing the locator. Controls: unmutated green, fabricated envelope green — disclosed, since
-  every row overrides `source`. The `trust` gap disclosed in the entries below applies unchanged.
+  **19 of 19 mutants killed, one control.** All twelve rows broken one at a time; warranting
+  `traumatotropism` with the phototropism line; restoring the `[8]`; normalising the gravitropism
+  head; rebinding a stimulus; dropping a row's source so it inherits the envelope; repointing the
+  locator. The control is the unmutated file.
+
+  ### The envelope gap every prior entry disclosed is closed here
+
+  Six entries in this cascade have said the same thing: once every row overrides `source`, the
+  envelope's wording is unreachable from any answer, so fabricating it leaves the suite green —
+  disclosed rather than implied. True of the **output**, and needlessly true of the **file**. The
+  envelope test now reads the shipped `.adj` and asserts the span literally, so a drift from the page
+  is a failure rather than a disclosed gap. That mutant is the 19th kill, not a control.
+
+  **And the `trust` gap does NOT apply here** — a sentence claiming it did was written before it was
+  checked. This table declares `consensus`, which is not `lower.rs:2622`'s `Authoritative` default, so
+  **deleting the envelope's `trust` line reddens all six tests**. Inheritance is pinned here, not
+  assumed. Measured both ways: deleting reddens, and flipping the tier to `authoritative` reddens.
 
   ### Three of my own errors, each caught by a guard rather than by care
 
