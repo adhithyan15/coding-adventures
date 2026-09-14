@@ -138,21 +138,82 @@ fn assert_part(tag: &str, part: &str, function: &str, span: &str) {
         out.contains(&format!("\"F\":\"{function}\"")),
         "{part} binds {function}: {out}"
     );
+    // EQUIVALENT MUTANT, DECLARED HERE rather than only in a changelog: every
+    // row on this table cites the envelope's own URL, and `row_provenance`
+    // assigns `locator` only when the row supplies one — so DROPPING a row's
+    // locator produces byte-identical output and cannot be killed. CHANGING
+    // one still is, by the `PAGE` needle below.
     assert!(
         out.contains(&format!(
             "\"source\":\"{span}\",\"locator\":\"{PAGE}\",\"trust\":\"authoritative\""
         )),
         "{part} is warranted by the sentence that states its function: {out}"
     );
-    // The pairing, asserted rather than assumed: the sentence given to this row
-    // has to name the part. Plurals allowed (`Petals`, `Sepals`, `anthers`);
-    // a looser substring test is NOT used, because "pistil" occurs inside the
-    // stigma sentence and would let the wrong row pass.
+    // A NECESSARY CONDITION, AND NOT A SUFFICIENT ONE. The sentence given to
+    // this row has to name the part.
+    //
+    // An earlier comment here claimed the opposite of what this code does: it
+    // said "a looser substring test is NOT used, because \"pistil\" occurs
+    // inside the stigma sentence and would let the wrong row pass". This IS
+    // that substring test, and "pistil" does occur in the stigma sentence, so
+    // this check cannot by itself reject a wrong pairing. Both arguments also
+    // arrive from the same call site, so it never reads the shipped file.
+    //
+    // What actually pins the row is the `source`-equality assertion above,
+    // against real CLI output, under the one-citation gate. The structural
+    // check in `the_only_shared_span_is_the_declared_one` is what reads the
+    // file.
     let lower = span.to_lowercase();
     assert!(
-        lower.contains(part) ,
-        "{part}'s own span names it: {span}"
+        lower.contains(part),
+        "{part}'s own span at least names it: {span}"
     );
+}
+
+/// The property the pairing check above cannot provide, read out of the
+/// SHIPPED FILE rather than compared between two test literals.
+///
+/// Exactly one span is shared, by exactly `stamen` and `pistil`. Everything
+/// else is one row, one sentence. If a future edit gives two rows the same
+/// warrant — the shape that hid five unpinned rows in `skeleton-bones`
+/// (#15171) — this reddens and names them.
+#[test]
+fn the_only_shared_span_is_the_declared_one() {
+    let adj = std::fs::read_to_string(facts_stdlib().join("biology/flower-parts.adj"))
+        .expect("read shipped flower-parts.adj");
+    let mut pairs: Vec<(String, String)> = Vec::new();
+    let mut key: Option<String> = None;
+    for line in adj.lines() {
+        if let Some(rest) = line.strip_prefix("    row (") {
+            key = rest.split(',').next().map(|k| k.trim().to_string());
+        } else if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            let span = rest.trim_end_matches(0x22 as char).to_string();
+            pairs.push((key.clone().expect("a row precedes every source"), span));
+        }
+    }
+    assert_eq!(pairs.len(), 7, "seven row sources parsed: {pairs:?}");
+
+    let mut shared: Vec<(String, Vec<String>)> = Vec::new();
+    for (_, span) in &pairs {
+        if shared.iter().any(|(s, _)| s == span) {
+            continue;
+        }
+        let owners: Vec<String> = pairs
+            .iter()
+            .filter(|(_, s)| s == span)
+            .map(|(k, _)| k.clone())
+            .collect();
+        if owners.len() > 1 {
+            shared.push((span.clone(), owners));
+        }
+    }
+    assert_eq!(shared.len(), 1, "exactly one span is shared: {shared:?}");
+    assert_eq!(
+        shared[0].1,
+        vec!["stamen".to_string(), "pistil".to_string()],
+        "and it is shared by stamen and pistil, the pair the page fixes in one clause"
+    );
+    assert_eq!(shared[0].0, STAMEN_PISTIL, "and it is that clause");
 }
 
 /// #14986. The PETAL sentence was this table's `source` — the field that

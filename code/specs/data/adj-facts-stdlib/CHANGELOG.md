@@ -28,11 +28,18 @@ landed and why, not a semver-tracked API.
   separately. The envelope becomes a FRAMING span that names no part — checked against all
   seven row keys, not assumed.
 
-  `facts_flowerparts_e2e.rs`: 4 tests. The pairing is asserted rather than assumed — each row's
-  sentence must name the part — and deliberately NOT as a loose substring, because "pistil"
-  occurs inside the stigma sentence and would let the wrong row pass. 15 of 16 mutants killed;
-  the single survivor is **declared in the harness in advance** as equivalent (every row here
-  cites the envelope's own URL, so dropping a row's locator changes nothing observable).
+  `facts_flowerparts_e2e.rs`: 5 tests. **A claim here had to be corrected against its own
+  code.** The pairing check was documented as deliberately not a loose substring test "because
+  'pistil' occurs inside the stigma sentence" — and it *is* that substring test, which admits
+  exactly that hazard. It is now labelled what it is: necessary, not sufficient. The property
+  it was reaching for is supplied instead by a new test that reads the shipped `.adj`, parses
+  its row blocks, and asserts that exactly one span is shared and that it is shared by exactly
+  `stamen` and `pistil` — a check against the file rather than between two test literals.
+
+  15 of 16 mutants killed; the single survivor is equivalent — every row here cites the
+  envelope's own URL and `row_provenance` assigns `locator` only when a row supplies one, so
+  dropping one yields byte-identical output. That declaration now sits **in the harness**,
+  beside the assertion it is about, rather than only in this entry.
 
 - `science/scientific-method-step.adj` — all 7 rows converted to per-row provenance (RS-5e,
   #14986). The STEP 1 sentence was this table's `source`, the field that carries the tier, for
