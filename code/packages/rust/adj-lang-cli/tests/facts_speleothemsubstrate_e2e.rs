@@ -114,8 +114,9 @@ fn the_citation_carries_its_own_pronoun_antecedent() {
     assert!(ok, "cli should succeed: {out}");
     // The substrate sentence begins "They typically grow on other
     // speleothems...". Cited alone its subject is a bare pronoun and a
-    // reader could not tell who "They" is. The envelope therefore quotes
-    // the two CONTIGUOUS sentences as one string -- still verbatim, and
+    // reader could not tell who "They" is. The HELICTITE ROWS' `source`
+    // therefore quotes the two CONTIGUOUS sentences as one string -- it was
+    // the table envelope until #14986 -- still verbatim, and
     // self-contained. A citation that cannot be read without the page open
     // is not doing its job.
     //
@@ -333,10 +334,14 @@ fn all_eleven_rows_carry_their_own_span() {
     }
 }
 
-/// The envelope now carries the page's framing sentence about WHERE
-/// speleothems form. It warrants no row; its wording is unreachable from any
-/// answer once every row overrides `source`, which is disclosed rather than
-/// implied.
+/// The envelope now carries the page's own DEFINITION of a speleothem. It
+/// warrants no row; its wording is unreachable from any answer once every row
+/// overrides `source`, which is disclosed rather than implied.
+///
+/// A first version used "In general, however, one thing caves do have in
+/// common is where speleothems form." Review read it in context: on the page
+/// that sentence introduces the water-table zone, not the substrate, and its
+/// leading connective has no antecedent inside the quote.
 #[test]
 fn the_framing_envelope_never_reaches_an_answer() {
     let dir = scratch("spelenvelope");
@@ -358,7 +363,7 @@ fn the_framing_envelope_never_reaches_an_answer() {
         "all eleven rows answer: {out}"
     );
     assert!(
-        !out.contains("one thing caves do have in common"),
+        !out.contains("The term speleothem refers to the mode of occurrence"),
         "the framing span warrants no row: {out}"
     );
 }

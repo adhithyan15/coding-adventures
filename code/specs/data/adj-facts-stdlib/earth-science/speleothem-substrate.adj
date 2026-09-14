@@ -50,17 +50,20 @@
 % `frostwork` is a second member and the relation is a real axis rather
 % than a wrapper around one sentence.
 %
-% Provenance: three sentences from the U.S. National Park Service's
-% "Speleothems" page.
+% Provenance: FOUR sentences from the U.S. National Park Service's
+% "Speleothems" page — one per speleothem in the rows, plus the framing
+% definition in the envelope.
 %
-%   - The `source` envelope quotes TWO CONTIGUOUS SENTENCES as one string.
-%     That is deliberate. The second begins "They typically grow on other
-%     speleothems…", and cited alone its subject is a bare pronoun — a
+%   - The HELICTITE ROWS' `source` quotes TWO CONTIGUOUS SENTENCES as one
+%     string. That is deliberate. The second begins "They typically grow on
+%     other speleothems…", and cited alone its subject is a bare pronoun — a
 %     reader could not tell who "They" refers to. The two sentences are
 %     adjacent in the article, so quoting the pair is still verbatim and
 %     makes the citation self-contained. A citation that cannot be read
 %     without the page open is not doing its job.
-%   - The `cites` corroboration carries the frostwork sentence.
+%   - The FROSTWORK ROWS' `source` is the page's frostwork sentence. Until
+%     #14986 it was a table-level `cites`; there is no `cites` in this file
+%     now.
 %
 % HEDGE PLACEMENT, three qualifiers, each placed by the settled rule:
 %
@@ -183,10 +186,18 @@ table speleothem_substrate {
         source "Frostwork can also be found on stalactites, walls, ceilings, ledges, and less occasionally on floors (Hill, 1997)."
     }
 
-    % The envelope is the FRAMING span -- it defends the TABLE (that
-    % where a speleothem forms is a fact about it) and warrants no
-    % row. Until #14986 it was the HELICTITE row's own sentence.
-    source "In general, however, one thing caves do have in common is where speleothems form."
+    % The envelope is the FRAMING span -- the page's own definition of
+    % what a speleothem IS. It defends the TABLE and warrants no row.
+    % Until #14986 it was the HELICTITE rows' own sentence.
+    %
+    % A first version used "In general, however, one thing caves do have
+    % in common is where speleothems form." Security review read it in
+    % context: on the page that sentence introduces the WATER-TABLE ZONE
+    % ("...not possible until caves are above the water table in the zone
+    % of aeration"), not the substrate this table records -- and its
+    % leading "In general, however," has no antecedent inside the quote,
+    % which is the defect this file's own header argues against above.
+    source "The term speleothem refers to the mode of occurrence of a mineral—i.e., its morphology or how it looks—in a cave, not its composition (Hill, 1997)."
     locator "https://www.nps.gov/subjects/caves/speleothems.htm"
     trust authoritative
 }

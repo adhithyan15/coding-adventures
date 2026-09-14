@@ -15,6 +15,12 @@ landed and why, not a semver-tracked API.
   the tier must be the sentence that supports the row.** Nothing was fetched and no span was widened —
   both sentences already name their own speleothem. The `cites` became the frostwork rows' `source`.
 
+  The envelope now carries the page's own DEFINITION of a speleothem. A draft used *"In general,
+  however, one thing caves do have in common is where speleothems form."*; review read it in context
+  and found that on the page it introduces the **water-table zone**, not the substrate — and that its
+  leading connective has no antecedent inside the quote, the defect this file's own header argues
+  against.
+
   ### The header had recorded this as a display quirk
 
   It read: *"Provenance is TABLE-level, so all eleven rows carry both sentences and `--explain` shows
@@ -45,13 +51,26 @@ landed and why, not a semver-tracked API.
   locator. Controls: unmutated green, fabricated envelope green — disclosed, since every row overrides
   `source`.
 
+  **The `trust` gap, disclosed as in the sibling entries and adjudicated against this file:** changing
+  the envelope to `trust consensus` reddens the suite (inheritance is real, all eleven rows inherit),
+  but *deleting* the envelope's `trust authoritative` line leaves it green, because `lower.rs:2622`
+  defaults an envelope carrying a `source` to `Authoritative`. So the `"trust":"authoritative"` in
+  every needle cannot tell inheritance from that default.
+
   The harness anchored per-row mutants on the row header immediately followed by its `source` line,
   which **missed the first row of each speleothem** — those carry an explanatory comment in between.
-  The assert caught it as a harness bug rather than reporting eleven surviving mutants; anchors are
-  now whole `row … { … }` blocks. **Fourth anchor miss of this family** — counted in this file:
-  `rainforest-layer` and `atmosphere-layers` (both of which produced false "surviving mutant"
-  reports), `joint-types` below (caught by the assert), and this one (also caught by the assert). The
-  assert is doing the work the discipline used to have to.
+  The assert caught it as a harness bug; anchors are now whole `row … { … }` blocks.
+
+  A draft of this paragraph said that miss would have reported "eleven surviving mutants". Counted on
+  the shipped file: **two**. Nine of the eleven row blocks open with `source` on the line after the
+  header, so the naive anchor matched them; only `helictite/cave_ceiling` and `frostwork/stalactite`
+  carry a comment in between.
+
+  **Fourth anchor miss of this family**, counted in this file: `rainforest-layer` and
+  `atmosphere-layers` (both produced false "surviving mutant" reports), `hormone-glands` below
+  (caught by its assert), and this one. A draft named `joint-types` as the third — that entry's
+  harness defect was the sibling-row MASKING bug, a different fault, and it was not caught by an
+  assert.
 
 - **#14986: fifteen bones, twelve of which their own citation never mentions.**
   `biology/skeleton-bones.adj` warranted every row with the FEMUR row's sentence, on a MedlinePlus
