@@ -252,3 +252,237 @@ fn astronomy_planets_envelope_never_reaches_an_answer() {
         "the framing span warrants no row -- every row overrides it: {out}"
     );
 }
+
+/// Row blocks, parsed the way the grammar writes them: `{ ... }` may sit
+/// inline on the `row (...)` line or open a multi-line block. Returns one
+/// `(key, spans, locator_overrides, trust_overrides)` tuple per row.
+///
+/// AN EIGHT-SPACE `strip_prefix` WOULD READ NOTHING FROM AN INLINE BLOCK and
+/// would not fail — it would return an empty list and every assertion over
+/// it would pass. That is exactly how three tables came to be miscounted in
+/// the #14986 census, so this parser handles both forms and every caller
+/// asserts the parse found what it expected before asserting anything else.
+#[allow(clippy::type_complexity)]
+fn parse_rows(adj: &str) -> Vec<(String, Vec<String>, Vec<String>, Vec<String>)> {
+    fn quoted_after(hay: &str, key: &str) -> Vec<String> {
+        let mut out = Vec::new();
+        let mut rest = hay;
+        while let Some(at) = rest.find(key) {
+            rest = &rest[at + key.len()..];
+            let rest_trim = rest.trim_start();
+            if !rest_trim.starts_with('"') {
+                continue;
+            }
+            let body = &rest_trim[1..];
+            if let Some(end) = body.find('"') {
+                out.push(body[..end].to_string());
+                rest = &body[end + 1..];
+            } else {
+                break;
+            }
+        }
+        out
+    }
+    fn bare_after(hay: &str, key: &str) -> Vec<String> {
+        hay.split_whitespace()
+            .collect::<Vec<_>>()
+            .windows(2)
+            .filter(|w| w[0] == key)
+            .map(|w| w[1].trim_end_matches('}').trim().to_string())
+            .collect()
+    }
+
+    let mut rows = Vec::new();
+    let lines: Vec<&str> = adj.lines().collect();
+    let mut i = 0;
+    while i < lines.len() {
+        let line = lines[i];
+        let Some(rest) = line.strip_prefix("    row (") else {
+            i += 1;
+            continue;
+        };
+        // QUOTE-AWARE. A row item may be a quoted string and a span may
+        // contain `)` or `}` -- `row (length, meter, "m") { source "Length -
+        // meter (m)" }` broke a naive `split(')')`, which ended the tuple
+        // inside the span and swallowed the rest of the table into one row.
+        let close = {
+            let b = rest.as_bytes();
+            let mut in_q = false;
+            let mut at = None;
+            for (n, &c) in b.iter().enumerate() {
+                match c {
+                    b'"' => in_q = !in_q,
+                    b')' if !in_q => {
+                        at = Some(n);
+                        break;
+                    }
+                    _ => {}
+                }
+            }
+            at.unwrap_or(rest.len())
+        };
+        let key = rest[..close]
+            .split(',')
+            .next()
+            .unwrap_or("")
+            .trim()
+            .to_string();
+        let after = if close < rest.len() {
+            &rest[close + 1..]
+        } else {
+            ""
+        };
+        if !after.trim_start().starts_with('{') {
+            rows.push((key, Vec::new(), Vec::new(), Vec::new()));
+            i += 1;
+            continue;
+        }
+        let closes_here = {
+            let b = after.as_bytes();
+            let mut in_q = false;
+            let mut found = false;
+            for &c in b {
+                match c {
+                    b'"' => in_q = !in_q,
+                    b'}' if !in_q => {
+                        found = true;
+                        break;
+                    }
+                    _ => {}
+                }
+            }
+            found
+        };
+        let mut body = String::new();
+        if closes_here {
+            body.push_str(after);
+            i += 1;
+        } else {
+            body.push_str(after);
+            i += 1;
+            while i < lines.len() && !lines[i].starts_with("    }") {
+                body.push('\n');
+                body.push_str(lines[i]);
+                i += 1;
+            }
+            i += 1;
+        }
+        // `cites "..." locator "..."` carries a MANDATORY locator that is the
+        // corroboration's own address, not an override of the row's — so the
+        // locator list drops any that follows a `cites`.
+        let cites_locs = {
+            let mut out = Vec::new();
+            let mut rest = body.as_str();
+            while let Some(at) = rest.find("cites ") {
+                rest = &rest[at + 6..];
+                for l in quoted_after(rest, "locator").into_iter().take(1) {
+                    out.push(l);
+                }
+                match rest.find('\n') {
+                    Some(n) => rest = &rest[n..],
+                    None => break,
+                }
+            }
+            out
+        };
+        let mut locs = quoted_after(&body, "locator");
+        for c in &cites_locs {
+            if let Some(p) = locs.iter().position(|x| x == c) {
+                locs.remove(p);
+            }
+        }
+        rows.push((
+            key,
+            quoted_after(&body, "source"),
+            locs,
+            bare_after(&body, "trust"),
+        ));
+    }
+    rows
+}
+
+/// The table envelope, derived totally rather than positionally: exactly one
+/// four-space `source` and one four-space `locator`.
+fn envelope(adj: &str) -> (String, String) {
+    let pick = |kw: &str| -> String {
+        let hits: Vec<&str> = adj
+            .lines()
+            .filter(|l| l.split_whitespace().next() == Some(kw))
+            .filter(|l| l.starts_with("    ") && !l.starts_with("     "))
+            .collect();
+        assert_eq!(hits.len(), 1, "exactly one table-level {kw}: {hits:?}");
+        hits[0]
+            .trim()
+            .trim_start_matches(kw)
+            .trim()
+            .trim_matches(0x22 as char)
+            .to_string()
+    };
+    (pick("source"), pick("locator"))
+}
+
+#[test]
+fn planet_order_asserts_its_own_span_and_trust_structure() {
+    // STRUCTURAL, READ FROM THE SHIPPED FILE. #15193 recorded that only 2 of
+    // 17 converted tables asserted their own span structure; re-measured with
+    // an inline-aware parser it was 21 of 26, and this table was one of the
+    // five without.
+    let adj = std::fs::read_to_string(facts_stdlib().join("astronomy/planets.adj"))
+        .expect("read shipped planets.adj");
+    let rows = parse_rows(&adj);
+    let (env_source, env_locator) = envelope(&adj);
+    let _ = (&env_source, &env_locator);
+
+    // THE PARSE FOUND WHAT IT EXPECTED, asserted BEFORE anything is asserted
+    // about the contents. A parser that silently read nothing would make
+    // every check below pass over an empty list.
+    assert_eq!(rows.len(), 8, "8 rows");
+    let spans: Vec<String> = rows.iter().flat_map(|r| r.1.clone()).collect();
+    assert_eq!(spans.len(), 8, "8 row spans: {spans:?}");
+
+    let mut counts: std::collections::BTreeMap<&String, usize> =
+        std::collections::BTreeMap::new();
+    for s in &spans {
+        *counts.entry(s).or_insert(0) += 1;
+    }
+    assert_eq!(counts.len(), 8, "8 distinct spans: {counts:?}");
+    let mut sizes: Vec<usize> = counts.values().copied().collect();
+    sizes.sort_unstable_by(|a, b| b.cmp(a));
+    assert_eq!(sizes, vec![1, 1, 1, 1, 1, 1, 1, 1], "the span multiset: {counts:?}");
+
+    let locators: Vec<String> = rows.iter().flat_map(|r| r.2.clone()).collect();
+    assert_eq!(locators.len(), 0, "row locator overrides: {locators:?}");
+
+    assert!(adj.contains("    columns planet, order_from_sun"), "the shipped column names are unchanged");
+
+    // SEVEN OF THE EIGHT ROW BLOCKS ARE WRITTEN INLINE, which is why this
+    // test parses them properly rather than with an eight-space prefix: that
+    // needle reads ZERO spans here and would make every assertion above pass
+    // over an empty list.
+    assert_eq!(
+        adj.matches("}").count() >= 7,
+        true,
+        "the inline blocks are still inline; if they were reflowed this test \
+         should be re-read rather than silently still passing"
+    );
+
+    // ONE ROW IS AT A DIFFERENT TRUST TIER, and it is the one the page does
+    // not state literally. Mercury's position is read off "nearest to the
+    // Sun" plus the ordering of a second span, so it ships `trust inferred`
+    // while its seven siblings inherit `authoritative` from the envelope.
+    let tiers: Vec<(String, Vec<String>)> =
+        rows.iter().map(|r| (r.0.clone(), r.3.clone())).collect();
+    let overridden: Vec<&(String, Vec<String>)> =
+        tiers.iter().filter(|(_, t)| !t.is_empty()).collect();
+    assert_eq!(
+        overridden.len(),
+        1,
+        "exactly one row overrides trust: {overridden:?}"
+    );
+    assert_eq!(overridden[0].0, "mercury", "and it is mercury: {overridden:?}");
+    assert_eq!(
+        overridden[0].1,
+        vec!["inferred".to_string()],
+        "at the inferred tier, because that row is read off rather than stated"
+    );
+}
