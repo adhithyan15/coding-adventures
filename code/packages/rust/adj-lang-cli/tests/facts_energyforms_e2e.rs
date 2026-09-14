@@ -202,8 +202,9 @@ fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
     // does NOT let a repointed envelope through this table: no row here
     // overrides `locator` or `trust`, so both are inherited by all eight rows
     // and reach every answer, where the per-row citation assertions already
-    // pin them. The hole is real in `brain-parts` (#15181), where all fifteen
-    // rows carry their own locator and the envelope's reaches nothing.
+    // pin them. The hole WAS real in `brain-parts` (#15181), where all fifteen
+    // rows carry their own locator and the envelope's reaches nothing — review
+    // found it there and it is pinned this same way there now, on main.
     //
     // What this pin defends is the shape this table is moving toward. Give
     // every row its own locator — a refactor with identical output — and then
