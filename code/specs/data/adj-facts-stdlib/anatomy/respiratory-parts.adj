@@ -106,13 +106,38 @@
 %     "During inspiration, the diaphragm contracts and the thoracic cavity
 %      increases in volume."
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the SEER statement that fixes the
-% first row (nose → traps_particles). Every OTHER row's per-fact source and
-% verbatim span is listed above, so each function remains independently
-% checkable. All sources are the NCI SEER Training Modules, a primary U.S.
-% government (National Cancer Institute) teaching resource, so `trust
-% authoritative`.
+% EVERY ROW NOW CARRIES ITS OWN SPAN AND ITS OWN LOCATOR, below, in the row's
+% `{ ... }` block (ADJ-TABLES RS-5e). The eight quotes above are the same eight,
+% kept here only as a wrapped, readable index — the machine values are in the
+% rows, and a reader checking provenance should read those.
+%
+% WHAT #14986 CHANGED. This header used to end: "An ADJ `table` carries ONE
+% provenance envelope, so the `source`/`locator`/`trust` below hold the single
+% cleanest span: the SEER statement that fixes the FIRST ROW (nose →
+% traps_particles)." That was an accurate description of a defect. `source` is
+% the field that carries the tier, so all eight rows were warranted by a
+% sentence about NOSE HAIRS: `? part_function(diaphragm, $F)` came back proved
+% by "Nose hairs at the entrance to the nose trap large inhaled particles."
+% Seven of the eight rows were in that position, and their real evidence was
+% already in this file, in the comment block above, where no query could reach
+% it.
+%
+% THE ENVELOPE IS NOW A FRAMING SPAN: "Respiration is the sequence of events
+% that results in the exchange of oxygen and carbon dioxide between the
+% atmosphere and the body cells." It names no part of the tract — not the nose,
+% not the lungs — so it warrants none of the eight rows.
+%
+% SIX PAGES FOR EIGHT ROWS. `larynx.html` states both the larynx and the
+% trachea; `bronchi.html` states both the bronchi and the alveoli. One of the
+% six is the module index, which is ALSO the envelope's locator — the lungs row
+% cites it for a different sentence. That coincidence is recorded at the table
+% because it makes one otherwise-obvious mutation an equivalent mutant: dropping
+% the lungs row's locator changes nothing observable, since what it would
+% inherit is the same URL.
+%
+% All sources are the NCI SEER Training Modules, a primary U.S. government
+% (National Cancer Institute) teaching resource, so one shared `trust
+% authoritative` on the envelope.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -120,16 +145,52 @@
 table part_function {
     columns part, function
 
-    row (nose, traps_particles)
-    row (pharynx, passes_air)
-    row (larynx, human_speech)
-    row (trachea, main_airway)
-    row (bronchi, branch_to_alveoli)
-    row (lungs, external_respiration)
-    row (alveoli, gas_exchange)
-    row (diaphragm, contracts_inspiration)
+    % Each row carries the SEER sentence that states its function, and the
+    % page that sentence is on — SIX pages for eight rows (larynx.html and
+    % bronchi.html each carry two). One of the six is the module index, which
+    % is also the envelope's locator: the LUNGS row cites it for a different
+    % sentence, so dropping that row's locator changes nothing observable.
+    % Until #14986 all eight carried the NOSE sentence, which the
+    % header described accurately as fixing the FIRST row.
+    row (nose, traps_particles) {
+        source "Nose hairs at the entrance to the nose trap large inhaled particles."
+        locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/nose.html"
+    }
+    row (pharynx, passes_air) {
+        source "The upper part of the pharynx (throat) lets only air pass through."
+        locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/pharynx.html"
+    }
+    row (larynx, human_speech) {
+        source "The larynx plays an essential role in human speech."
+        locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/larynx.html"
+    }
+    row (trachea, main_airway) {
+        source "The trachea, commonly called the windpipe, is the main airway to the lungs."
+        locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/larynx.html"
+    }
+    row (bronchi, branch_to_alveoli) {
+        source "The bronchi branch into smaller and smaller passageways until they terminate in tiny air sacs called alveoli."
+        locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/bronchi.html"
+    }
+    row (lungs, external_respiration) {
+        source "After this, there is an exchange of gases between the lungs and the blood. This is called external respiration."
+        locator "https://training.seer.cancer.gov/anatomy/respiratory/"
+    }
+    row (alveoli, gas_exchange) {
+        source "Exchange of gases between the air in the lungs and the blood in the capillaries occurs across the walls of the alveolar ducts and alveoli."
+        locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/bronchi.html"
+    }
+    row (diaphragm, contracts_inspiration) {
+        source "During inspiration, the diaphragm contracts and the thoracic cavity increases in volume."
+        locator "https://training.seer.cancer.gov/anatomy/respiratory/mechanics.html"
+    }
 
-    source "Nose hairs at the entrance to the nose trap large inhaled particles."
-    locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/nose.html"
+    % THE ENVELOPE IS A FRAMING SPAN: the module's definition of
+    % respiration. It names no part of the tract — not the nose, not the
+    % lungs — so it warrants none of the eight rows. Every row overrides
+    % `source` and `locator`; `trust` is inherited, one tier for all SIX
+    % SEER pages.
+    source "Respiration is the sequence of events that results in the exchange of oxygen and carbon dioxide between the atmosphere and the body cells."
+    locator "https://training.seer.cancer.gov/anatomy/respiratory/"
     trust authoritative
 }
