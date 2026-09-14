@@ -5,6 +5,35 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `biology/flower-parts.adj` — all 7 rows converted to per-row provenance (RS-5e, #14986).
+  The PETAL sentence was this table's `source`, the field that carries the tier, for every row,
+  so `? flower_part_function(ovary, $F)` came back proved by *"Petals attract pollinators and
+  are usually the reason why we buy and enjoy flowers."* **The header said so in its own
+  words** — the envelope held *"the single cleanest span: the Illinois Extension statement that
+  fixes the FIRST ROW"*.
+
+  **Every span here is on the same page**, so the locator was never wrong and a hostname
+  assertion could never have caught this — only the span was. That is why the shipped test
+  passed unchanged through the conversion, and it is recorded in the test as such.
+
+  **Block structure was checked before any span was cut.** This page's whole content sits in
+  one `<td>` of a LAYOUT table and the prose inside is ordinary sentences, so sentence-level
+  spans are legitimate: the table markup is layout, not semantics. That check exists because
+  flattened text hides the difference — see the correction on #15185, where a span that read as
+  a cut sentence turned out to be a complete paragraph followed by an ordered list.
+
+  All eight spans (seven warrants + the framing envelope) confirmed verbatim, each occurring
+  **exactly once**, each with a negative arm absent. Two rows share one sentence (`stamen` and
+  `pistil` are fixed in the same clause), so each carries its own copy and each is pinned
+  separately. The envelope becomes a FRAMING span that names no part — checked against all
+  seven row keys, not assumed.
+
+  `facts_flowerparts_e2e.rs`: 4 tests. The pairing is asserted rather than assumed — each row's
+  sentence must name the part — and deliberately NOT as a loose substring, because "pistil"
+  occurs inside the stigma sentence and would let the wrong row pass. 15 of 16 mutants killed;
+  the single survivor is **declared in the harness in advance** as equivalent (every row here
+  cites the envelope's own URL, so dropping a row's locator changes nothing observable).
+
 - `science/scientific-method-step.adj` — all 7 rows converted to per-row provenance (RS-5e,
   #14986). The STEP 1 sentence was this table's `source`, the field that carries the tier, for
   every row, so `? scientific_method_step(step_6, $D)` came back proved by *"Ask a question or
