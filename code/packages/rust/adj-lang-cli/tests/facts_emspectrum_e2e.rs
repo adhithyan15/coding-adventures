@@ -70,13 +70,201 @@ fn physics_em_spectrum_recall_binds_use_with_citation() {
         out.contains("\"Band\":\"infrared\""),
         "night_vision → infrared (reverse recall): {out}"
     );
-    // The answer carries the NASA Imagine the Universe! citation as its proof, at
-    // the `authoritative` trust tier for a primary U.S. government source.
+    // ONE CONTIGUOUS SPAN, not two loose substrings. `contains(host) &&
+    // contains(trust)` was here, and that is the #15139 shape: two halves
+    // satisfiable by different parts of the output, which drift apart the
+    // moment one of them moves. This pins the RADIO row's whole warrant --
+    // and note the source is now radio's OWN sentence, not the table's.
     assert!(
-        out.contains("imagine.gsfc.nasa.gov") && out.contains("\"trust\":\"authoritative\""),
-        "carries the source citation: {out}"
+        out.contains(
+            "\"source\":\"Your radio captures radio waves emitted by radio stations, bringing your favorite tunes.\",\"locator\":\"https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html\",\"trust\":\"authoritative\",\"corroborations\":[]"
+        ),
+        "the radio row's whole warrant, contiguous: {out}"
     );
     // Sound is a mechanical wave, not one of the seven EM bands — honest
     // abstention, never a fabricated use.
     assert!(out.contains("\"abstained\":true"), "sound abstains: {out}");
+}
+
+/// The envelope sentence and locator, named once so the pins below bind the
+/// CLI's real output rather than a restatement of it.
+const ENVELOPE: &str = "The image below shows where you might encounter each portion of the EM spectrum in your day-to-day life.";
+const LOCATOR: &str = "https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html";
+
+/// Run one query against the shipped table and return stdout.
+fn ask(tag: &str, query: &str) -> String {
+    assert!(
+        tag.chars().all(|c| c.is_ascii_alphanumeric() || c == '_'),
+        "scratch tags are path components: {tag:?}"
+    );
+    let dir = scratch(tag);
+    let src = facts_stdlib().join("physics/em-spectrum.adj");
+    std::fs::copy(&src, dir.join("em-spectrum.adj")).expect("copy shipped em-spectrum.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"em-spectrum.adj\"\n? {query}\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    out
+}
+
+const BANDS: [(&str, &str, &str); 7] = [
+        ("radio", "radio_stations", "Your radio captures radio waves emitted by radio stations, bringing your favorite tunes."),
+        ("microwave", "cooking", "Microwave radiation will cook your popcorn in just a few minutes, but is also used by astronomers to learn about the structure of nearby galaxies."),
+        ("infrared", "night_vision", "Night vision goggles pick up the infrared light emitted by our skin and objects with heat."),
+        ("visible", "eyes", "Our eyes detect visible light."),
+        ("ultraviolet", "tanning", "Ultraviolet radiation is emitted by the Sun and are the reason skin tans and burns."),
+        ("x_ray", "teeth", "A dentist uses X-rays to image your teeth, and airport security uses them to see through your bag."),
+        ("gamma_ray", "medical_imaging", "Doctors use gamma-ray imaging to see inside your body."),
+];
+
+#[test]
+fn every_band_is_warranted_by_the_sentence_that_names_it() {
+    // THIS IS THE CHANGE. The RADIO sentence used to be the envelope `source`
+    // and therefore the primary warrant for all seven rows, so
+    // `? band_use(x_ray, $A)` came back proved by a sentence about radio
+    // stations. Six of the seven were in that position.
+    for (band, application, sentence) in BANDS {
+        let out = ask(&format!("warrant_{band}"), &format!("band_use({band}, $A)"));
+        // ONE ANSWER, ASSERTED. A query binding several answers would carry
+        // other rows' sentences in the same stdout, so the negative arm below
+        // would measure nothing (#15164).
+        assert_eq!(
+            out.matches("\"citations\":[").count(),
+            1,
+            "exactly one answer for {band}: {out}"
+        );
+        assert!(
+            out.contains(&format!("\"A\":\"{application}\"")),
+            "{band} still binds {application}: {out}"
+        );
+        // SEMANTIC, NOT A FILE TEXT MATCH: the whole warrant as one run of
+        // bytes, so the row's own sentence is pinned as its PRIMARY source
+        // together with the locator and tier it inherits.
+        assert!(
+            out.contains(&format!(
+                "\"source\":\"{sentence}\",\"locator\":\"{LOCATOR}\",\"trust\":\"authoritative\",\"corroborations\":[]"
+            )),
+            "{band}'s warrant is its own sentence, whole: {out}"
+        );
+        // THE NEGATIVE ARM. The radio sentence must not reach any other
+        // answer -- it reached all seven before this change.
+        if band != "radio" {
+            assert!(
+                !out.contains(
+                    "Your radio captures radio waves emitted by radio stations, bringing your favorite tunes."
+                ),
+                "the radio sentence must not warrant {band}: {out}"
+            );
+        }
+    }
+}
+
+#[test]
+fn the_envelope_framing_sentence_reaches_no_answer() {
+    // All seven rows override `source`, so the framing sentence is emitted
+    // ZERO times. THE ZERO IS THE INSTRUMENT: the sharpest available form of
+    // "the envelope mis-warrants no row", and it reddens the moment a row
+    // loses its block and falls back to the envelope.
+    let out = ask("framing", "band_use($B, $A)");
+    assert_eq!(
+        out.matches(ENVELOPE).count(),
+        0,
+        "the framing sentence warrants no answer: {out}"
+    );
+    // POSITIVE CONTROL, because a zero proves nothing about a program that
+    // printed nothing. Seven rows, and provenance is emitted twice per answer
+    // (once under `citations`, once under `steps`).
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        7,
+        "all seven rows answered: {out}"
+    );
+    for (band, _, sentence) in BANDS {
+        assert_eq!(
+            out.matches(sentence).count(),
+            2,
+            "{band}'s span appears once per citations and once per steps: {out}"
+        );
+    }
+}
+
+#[test]
+fn every_row_carries_its_own_distinct_span_and_none_restates_the_locator() {
+    // STRUCTURAL, AND IT READS THE SHIPPED FILE, so one side of each
+    // comparison is the artifact rather than another literal in this test.
+    let adj = std::fs::read_to_string(facts_stdlib().join("physics/em-spectrum.adj"))
+        .expect("read shipped em-spectrum.adj");
+    let body = &adj[adj.find("table band_use").expect("table")..];
+
+    assert_eq!(body.matches("\n    row (").count(), 7, "seven rows");
+    let mut spans: Vec<&str> = body
+        .lines()
+        .filter_map(|l| l.strip_prefix("        source \""))
+        .map(|r| r.trim_end_matches(0x22 as char))
+        .collect();
+    assert_eq!(spans.len(), 7, "every row carries its own source block");
+
+    // ALL SEVEN DISTINCT. This is the one table in the cascade with no shared
+    // span, so it is asserted rather than merely described in a comment -- and
+    // it means a single-row truncation cannot hide behind a sibling's copy,
+    // which is what let a mutant survive in `water-movement-route`.
+    let before = spans.len();
+    spans.sort_unstable();
+    spans.dedup();
+    assert_eq!(spans.len(), before, "all seven spans are distinct: {spans:?}");
+
+    // TOTAL DERIVATIONS, not positional ones.
+    let table_sources: Vec<&str> = adj
+        .lines()
+        .filter(|l| l.starts_with("    source \""))
+        .collect();
+    assert_eq!(table_sources.len(), 1, "exactly one table-level source");
+    let table_locators: Vec<&str> = adj
+        .lines()
+        .filter(|l| l.starts_with("    locator \""))
+        .collect();
+    assert_eq!(table_locators.len(), 1, "exactly one table-level locator");
+    for l in adj.lines() {
+        if l.trim_start().starts_with("locator \"") {
+            let indent = l.len() - l.trim_start().len();
+            assert_eq!(indent, 4, "the only locator is the table's: {l:?}");
+        }
+    }
+
+    let envelope = table_sources[0]
+        .trim_start()
+        .trim_start_matches("source \"")
+        .trim_end_matches(0x22 as char);
+    assert_eq!(envelope, ENVELOPE, "the framing slot, verbatim");
+}
+
+#[test]
+fn the_envelope_names_no_band_in_the_pages_own_wording() {
+    // A KEY-ONLY CHECK WOULD NOT BE ENOUGH. The page writes `x_ray` as
+    // "X-rays" and `gamma_ray` as "gamma-ray", so a framing sentence naming
+    // X-rays would pass a scan for the atom `x_ray` while plainly naming a
+    // band. Both forms are checked, and the keys are read from the table so a
+    // new row re-checks the envelope automatically.
+    let adj = std::fs::read_to_string(facts_stdlib().join("physics/em-spectrum.adj"))
+        .expect("read shipped em-spectrum.adj");
+    let body = &adj[adj.find("table band_use").expect("table")..];
+    let envelope = ENVELOPE.to_lowercase();
+
+    let mut keys = 0;
+    for line in body.lines() {
+        if let Some(rest) = line.trim_start().strip_prefix("row (") {
+            let key = rest.split(',').next().expect("row key").trim().to_lowercase();
+            keys += 1;
+            for form in [key.replace('_', " "), key.replace('_', "-"), key.clone()] {
+                assert!(
+                    !envelope.contains(&form),
+                    "the framing sentence must name no band, but names {form:?}"
+                );
+            }
+        }
+    }
+    assert_eq!(keys, 7, "all seven keys were actually checked");
 }

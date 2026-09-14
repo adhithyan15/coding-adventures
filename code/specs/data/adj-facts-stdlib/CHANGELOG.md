@@ -5,6 +5,41 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `physics/em-spectrum.adj` — all 7 rows converted to per-row provenance (RS-5e, #14986). The
+  RADIO sentence was this table's `source`, the field that carries the tier, for every row, so
+  `? band_use(x_ray, $A)` came back proved by *"Your radio captures radio waves emitted by radio
+  stations, bringing your favorite tunes."* — **a sentence about radio stations, warranting a
+  claim about dental X-rays.** Six of the seven rows were in that position; each now carries the
+  sentence that names its own band and its own use.
+
+  **No cross-row overlap at all, which is unique in this cascade so far** — and it is asserted,
+  not just described: each of the seven spans names its own band and no other, measured against
+  the page's own wording for each key. `anatomy/eye-parts.adj` has three sentences that name
+  more than one part and `earth-science/water-cycle.adj` has a sentence naming three stages; this
+  table has none, so there is no pairing trap here and a single-row truncation cannot hide behind
+  a sibling's copy of the same span.
+
+  **The envelope becomes the page's own introduction to precisely this list** — *"The image below
+  shows where you might encounter each portion of the EM spectrum in your day-to-day life."* — so
+  it frames exactly what the table records while naming no band. All seven rows override it, so
+  the framing sentence reaches zero answers, asserted as a count with a positive control.
+
+  **The envelope check uses the page's wording, not the atoms**, and that is load-bearing: the
+  page writes `x_ray` as "X-rays" and `gamma_ray` as "gamma-ray", so a framing sentence naming
+  X-rays would sail past a scan for the atom `x_ray` while plainly naming a band. A mutant doing
+  exactly that is killed by this check and by nothing else.
+
+  The old citation assertion — `contains("imagine.gsfc.nasa.gov") &&
+  contains("\"trust\":\"authoritative\"")` — was the #15139 shape, two halves satisfiable by
+  different parts of the output; it is now one contiguous span, and the source it pins is radio's
+  own sentence rather than the table's.
+
+  Source verified by **raw extraction** (2026-09-14, HTTP 200): all seven spans verbatim, each in
+  exactly one `<p>`, a fabricated control sentence reported absent by the same comparison. 12 of
+  12 mutants killed, green baseline before and after — including the three shapes that SURVIVED
+  their sibling suites before the guards were widened (a single-row truncation, a misindented row
+  field, and a fabricated envelope). Local scratch harness, so that count is not reproducible from
+  the repo.
 - `earth-science/water-cycle.adj` — **a false claim deleted, and an envelope that
   mis-warranted 4 of 5 rows replaced.** This table is *deliberately not* converted to per-row
   `source` (RS-5e, #14986), and the measurement is the reason.
