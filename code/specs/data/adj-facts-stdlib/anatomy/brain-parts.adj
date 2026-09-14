@@ -93,9 +93,10 @@
 % the cerebrum, cerebellum, and brainstem." It names three parts and NO
 % function, so it warrants none of the fifteen (part, function) rows.
 %
-% NINE ROWS SHARE THE BRAINSTEM SENTENCE, which lists nine autonomic functions
-% (a tenth, swallowing, is the fifteenth row). Each row carries its own copy and
-% each is pinned individually.
+% TEN ROWS SHARE THE BRAINSTEM SENTENCE, which lists ten autonomic functions.
+% Each row carries its own copy and each is pinned individually. (A draft of
+% this header said NINE, 52 lines below a line of this same file that already
+% said TEN.)
 %
 % ONE SPAN IS NOT SUBJECT-INITIAL, and that is fine: the thalamus row's warrant
 % is "Sensory neurons bring sensory input from the body to the thalamus, which
@@ -123,7 +124,7 @@ table brain_part_function {
         locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (brainstem, breathing) {
-        % NINE rows share this one sentence: it lists nine autonomic
+        % TEN rows share this one sentence: it lists ten autonomic
         % functions. Each row carries its own copy so any one can be
         % checked, or broken, alone.
         %

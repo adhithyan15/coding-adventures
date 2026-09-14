@@ -136,7 +136,7 @@ const BRAINSTEM_SPAN: &str = "The brainstem houses the principal centers that pe
 
 /// Assert one row's warrant, binding the FUNCTION so exactly one row answers.
 ///
-/// Binding the part would return nine rows for `brainstem`, and a whole-stdout
+/// Binding the part would return ten rows for `brainstem`, and a whole-stdout
 /// `contains` is then satisfied by any sibling's intact copy — the masking
 /// defect found in `joint-types` (#15164). Every function in this table is
 /// unique to one row, so the function direction is single-answer.
@@ -210,11 +210,11 @@ fn every_row_cites_a_page_that_states_it() {
     );
 }
 
-/// NINE rows share the brainstem sentence — it lists nine autonomic functions.
+/// TEN rows share the brainstem sentence — it lists ten autonomic functions.
 /// Each is pinned separately: one broken copy behind eight intact ones is the
 /// failure `skeleton-bones` shipped and every entry since has designed out.
 #[test]
-fn all_nine_brainstem_functions_carry_their_own_copy() {
+fn all_ten_brainstem_functions_carry_their_own_copy() {
     for (tag, function) in [
         ("bs1", "breathing"),
         ("bs2", "temperature_regulation"),
@@ -225,11 +225,10 @@ fn all_nine_brainstem_functions_carry_their_own_copy() {
         ("bs7", "sneezing"),
         ("bs8", "digestion"),
         ("bs9", "vomiting"),
+        ("bs10", "swallowing"),
     ] {
         assert_part(tag, function, "brainstem", BRAINSTEM_SPAN, PHYSIOLOGY_BRAIN);
     }
-    // `swallowing` too — the tenth name in the sentence and the fifteenth row.
-    assert_part("bs10", "swallowing", "brainstem", BRAINSTEM_SPAN, PHYSIOLOGY_BRAIN);
 }
 
 /// The envelope is the framing sentence — three parts, no function — so it
@@ -272,7 +271,7 @@ fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
     .expect("read shipped brain-parts.adj");
     assert!(
         adj.contains(
-            "    source \"The 3 main parts of the human brain are the cerebrum, cerebellum, and brainstem.\"\n    locator"
+            "    source \"The 3 main parts of the human brain are the cerebrum, cerebellum, and brainstem.\"\n    locator \"https://www.ncbi.nlm.nih.gov/books/NBK551718/\"\n    trust authoritative"
         ),
         "the envelope carries the framing sentence, verbatim"
     );
