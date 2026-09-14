@@ -53,6 +53,17 @@ landed and why, not a semver-tracked API.
   after. It did not cover the envelope-span case above, which is why review found it and the
   harness did not.
 
+  A second review round found four more, all now applied: the table-level source was taken
+  positionally while the locator check was total, so a second envelope source would have been
+  invisible; the envelope was lowercased while the row key it is compared against was not, so
+  the no-row-key check would have gone vacuous on the first capitalised key; a nine-space
+  filter was documented as load-bearing when it could never exclude anything; and **a
+  re-measured sentence count was deleted rather than defended** -- it had been offered to fault
+  the header original 84-substantive-sentences figure for having no recorded rule, and then
+  turned out to depend on an unrecorded rule of its own that review could not reproduce (six
+  plausible rules give 73 to 77). Nothing replaces it; the sentence count is simply not
+  something this change measured.
+
   Source re-verified by **raw extraction** (2026-09-14, HTTP 200; 95,733 bytes on disk, 95,701
   Unicode characters), not a fetch summary: all three route sentences occur verbatim after tag-stripping that reproduces the
   page's punctuation, all three inside `<p>` blocks, and a fabricated control sentence is

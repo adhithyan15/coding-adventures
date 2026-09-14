@@ -72,10 +72,18 @@
 % THAT 84 IS THE ORIGINAL EXTRACTION'S FIGURE AND WAS NOT RE-MEASURED
 % by the 2026-09-14 re-extraction below, which is worth saying plainly
 % because it sits directly above a paragraph headed MEASURED, NOT
-% ASSUMED. Re-counting on 2026-09-14 gives 79 sentences of 40 or more
-% characters. That is NOT a correction: the rule behind the 84 was
-% never recorded, so the two numbers are not comparable, and 79 is
-% reported as what THIS count counted rather than as a replacement.
+% ASSUMED. The rule behind it was never recorded, so it cannot be
+% checked and is left standing as that extraction's own figure.
+%
+% A REPLACEMENT COUNT WAS OFFERED HERE AND HAS BEEN DELETED. It said 79
+% sentences of 40 or more characters. Review could not reproduce it:
+% six plausible prose-extraction rules give 73 to 77, and the only rule
+% reaching 79 skips `<script>`/`<style>` stripping, so its first
+% "sentence" is the analytics bootstrap. A number offered to fault
+% another number for having no recorded rule, which then turns out to
+% depend on an unrecorded rule of its own, is worth less than no number.
+% Nothing replaces it: the sentence count is simply not a thing this
+% change measured.
 %
 % PROVENANCE IS PER-ROW (ADJ-TABLES RS-5e), and with three sentences that
 % is the whole point. Each row carries, in its own `row { source ... }`

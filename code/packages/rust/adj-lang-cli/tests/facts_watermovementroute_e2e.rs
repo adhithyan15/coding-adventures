@@ -389,11 +389,14 @@ fn every_row_carries_its_own_span_and_none_restates_the_locator() {
     // row's span survived the whole suite before this existed, because the
     // only full-sentence pin in the file was on `runoff`.
     // EIGHT SPACES EXACTLY, which is what makes this a ROW span and not the
-    // envelope's. A trimmed prefix read nine spans, not eight: it swept up
-    // the four-space envelope source as if it were a ninth row.
+    // envelope's -- and the `strip_prefix` below does that by itself, since
+    // a line indented any further has a space where it needs an `s`. A
+    // trimmed prefix read nine spans, not eight: it swept up the four-space
+    // envelope source as if it were a ninth row. (A nine-space `filter` sat
+    // here as well, described as the load-bearing guard; it could never
+    // exclude anything the `strip_prefix` accepts, so it is gone.)
     let mut spans: Vec<&str> = body
         .lines()
-        .filter(|l| !l.starts_with("         "))
         .filter_map(|l| l.strip_prefix("        source \""))
         .map(|r| r.trim_end_matches(0x22 as char))
         .collect();
@@ -457,10 +460,20 @@ fn every_row_carries_its_own_span_and_none_restates_the_locator() {
     // framing sentence safe in a required slot, and it is checked against
     // the keys READ FROM THE TABLE rather than a typed list, so adding a
     // ninth row re-checks the envelope automatically.
-    let envelope_raw = adj
+    // TOTAL, THE SAME WAY THE LOCATOR CHECK IS. Taking the FIRST four-space
+    // `source` line would leave a SECOND table-level source invisible --
+    // the asymmetry review found between these two guards, one of which had
+    // already been made total and the other not.
+    let table_sources: Vec<&str> = adj
         .lines()
-        .find(|l| l.starts_with("    source \""))
-        .expect("envelope source")
+        .filter(|l| l.starts_with("    source \"") && !l.starts_with("     "))
+        .collect();
+    assert_eq!(
+        table_sources.len(),
+        1,
+        "exactly one table-level source: {table_sources:?}"
+    );
+    let envelope_raw = table_sources[0]
         .trim_start()
         .trim_start_matches("source \"")
         .trim_end_matches(0x22 as char);
@@ -481,7 +494,17 @@ fn every_row_carries_its_own_span_and_none_restates_the_locator() {
     for line in body.lines() {
         let line = line.trim_start();
         if let Some(rest) = line.strip_prefix("row (") {
-            let key = rest.split(',').next().expect("row key").replace('_', " ");
+            // FOLDED ON BOTH SIDES. `envelope` is lowercased, so the key
+            // has to be too -- otherwise this guard goes silently vacuous
+            // the day a row key carries a capital letter, which is the
+            // same silent-degradation shape already fixed once in this
+            // file.
+            let key = rest
+                .split(',')
+                .next()
+                .expect("row key")
+                .replace('_', " ")
+                .to_lowercase();
             keys += 1;
             assert!(
                 !envelope.contains(&key),
