@@ -39,7 +39,21 @@ landed and why, not a semver-tracked API.
   span literally, as #15176 established.
 
   Measured: all eight spans and the framing sentence occur **exactly once** on the cached page, each
-  row span names its form and contains its token, near-miss controls score zero. The suite was run
+  row span names its form and contains its token, near-miss controls score zero.
+
+  ### One abstention that is not honest, disclosed rather than left
+
+  Security review found it: the page names **nine** forms and this table has eight. `sound` abstains
+  even though the same page defines it, once, in prose — *"Sound is energy moving through substances
+  in longitudinal (compression or rarefaction) waves."* That is a false negative against the table's
+  own source, and the file's header presented its abstention behaviour as honest without saying so.
+  The sibling `energy-form-family.adj` already discloses the same gap.
+
+  The header now states it. **Adding the row is not folded in**: it changes what this table claims,
+  which does not belong in a provenance conversion, so it is filed instead.
+
+  Also from review: a pre-existing `out.contains("eia.gov")` would have accepted
+  `www.eia.gov.evil.example`; it now pins the full locator, which the row assertions already did. The suite was run
   with `RUSTFLAGS="-Dwarnings"`, which is how CI compiles it — a local `cargo test` does not, and
   #15176 failed five jobs on a warning that a plain local run had reported as green.
 

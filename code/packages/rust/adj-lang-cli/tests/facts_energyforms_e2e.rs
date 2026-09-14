@@ -70,7 +70,7 @@ fn physics_energy_forms_recall_binds_token_with_citation() {
     );
     // The answer carries the EIA locator + trust tier as its proof.
     assert!(
-        out.contains("eia.gov") && out.contains("\"trust\":\"authoritative\""),
+        out.contains(EIA_LOCATOR) && out.contains("\"trust\":\"authoritative\""),
         "carries the source citation: {out}"
     );
     // Magnetic energy is NOT one of the enumerated forms — honest abstention.

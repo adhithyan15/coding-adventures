@@ -48,6 +48,15 @@
 % recall on it ABSTAINS rather than inventing a token. That honest-abstention
 % property is what makes the table safe to reason from.
 %
+% ONE ABSTENTION HERE IS NOT HONEST, AND IS DISCLOSED RATHER THAN QUIETLY LEFT.
+% The page names NINE forms; this table has eight. `sound` abstains even though
+% the same page defines it, once, in prose: "Sound is energy moving through
+% substances in longitudinal (compression or rarefaction) waves." That is a
+% false negative against this table's OWN source, not a limit of the source.
+% The sibling `energy-form-family.adj` already discloses the same gap. Adding
+% the row is ordinary work and is tracked separately — it is a change to what
+% this table CLAIMS, which does not belong in a provenance conversion.
+%
 % ---------------------------------------------------------------------------
 % Provenance. EVERY ROW CARRIES ITS OWN DEFINING SENTENCE, below, in the row's
 % `{ ... }` block (ADJ-TABLES RS-5e) — read those, not a restatement here. One
