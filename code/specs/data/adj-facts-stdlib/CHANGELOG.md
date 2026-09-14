@@ -5,6 +5,44 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `anatomy/heart-valves.adj` — all 4 rows converted to per-row provenance (RS-5e, #14986), and
+  **two of them ship at `trust inferred` because the page does not state their value outright.**
+
+  Every row was warranted by the TRICUSPID sentence, so `? valve_separates(aortic, $B)` came back
+  proved by *"The right atrioventricular valve is the tricuspid valve."* Three of the four were in
+  that position.
+
+  **Two kinds of row, and the tier is where the difference shows.**
+
+  *READ* — `pulmonary` and `aortic`. One sentence names the valve **and both chambers**: *"The
+  valve between the right ventricle and pulmonary trunk is the pulmonary semilunar valve."*
+  Nothing is reasoned, so these inherit the envelope's `authoritative`.
+
+  *REASONED* — `tricuspid` and `mitral`. Their sentences name the valve and call it right/left
+  **atrioventricular**; neither names a chamber. The boundary is reached by combining that with a
+  second span — *"The valves between the atria and ventricles are called atrioventricular valves
+  …"* — so these ship `source` + `cites` at **`trust inferred`**, the shape
+  `geography/reference-lines.adj` already uses. Shipping them at `authoritative` would claim the
+  page states something it does not.
+
+  **The assertion that makes this real binds the TIER TO THE SPAN in one contiguous run.**
+  Checking the tier and the span separately would pass on either kind of row, because
+  `authoritative` appears in the output either way — it is the envelope's tier. Three tier mutants
+  are killed by it: promoting a reasoned row, downgrading a read one, and **swapping both pairs**,
+  which leaves the counts at two and two and still dies.
+
+  Measured 2026-09-14 (HTTP 200, 46,225 chars), with the shipped envelope found verbatim as a
+  positive control and a fabricated sentence absent as a negative one: all five spans occur
+  **exactly once**, each inside a `<p>`.
+
+  The old citation assertion — `contains("training.seer.cancer.gov/…") &&
+  contains("\"trust\":\"authoritative\"")` — was the #15209 two-loose-needles shape, the **fourth**
+  table in this cascade I have had to fix it in; #15209 measures 321 test files carrying it. Here
+  it was worse than weak: it could not distinguish this table's two kinds of row at all.
+
+  9 of 9 mutants killed, green baseline before and after, file verified byte-identical afterwards.
+  Local scratch harness, so that count is not reproducible from the repo.
+
 - `physics/energy-form-family.adj` — **eight rows that carried no span of their own now cite the
   page's own definition of their form**, and the table is deliberately *not* converted to per-row
   `source` (#14986). The measurement is the reason.

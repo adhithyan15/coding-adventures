@@ -94,11 +94,43 @@
 table valve_separates {
     columns valve, boundary
 
-    row (tricuspid, right_atrium_and_right_ventricle)   % "The right atrioventricular valve is the tricuspid valve." + AV = between atria and ventricles
-    row (mitral, left_atrium_and_left_ventricle)        % "The left atrioventricular valve is the bicuspid, or mitral, valve." + AV = between atria and ventricles
-    row (pulmonary, right_ventricle_and_pulmonary_trunk) % "The valve between the right ventricle and pulmonary trunk is the pulmonary semilunar valve."
-    row (aortic, left_ventricle_and_aorta)              % "The valve between the left ventricle and the aorta is the aortic semilunar valve."
+    % TWO ROWS ARE READ AND TWO ARE REASONED, and the tier is where that
+    % shows. Until issue #14986 was applied here every row was warranted
+    % by the TRICUSPID sentence, so a query about the aortic valve came
+    % back proved by a sentence about the tricuspid one; three of the
+    % four were in that position.
+    %
+    % REASONED (`trust inferred`): the tricuspid and mitral sentences name
+    % the valve and call it right/left ATRIOVENTRICULAR. Neither names a
+    % chamber. The boundary is reached by combining that with the second
+    % span below, which says what an atrioventricular valve sits between.
+    % Two spans, one conclusion — the shape
+    % `geography/reference-lines.adj` already uses. Shipping these at
+    % `authoritative` would claim the page states something it does not.
+    row (tricuspid, right_atrium_and_right_ventricle) {
+        source "The right atrioventricular valve is the tricuspid valve."
+        trust inferred
+        cites "The valves between the atria and ventricles are called atrioventricular valves (also called cuspid valves), while those at the bases of the large vessels leaving the ventricles are called semilunar valves." locator "https://training.seer.cancer.gov/anatomy/cardiovascular/heart/structure.html"
+    }
+    row (mitral, left_atrium_and_left_ventricle) {
+        source "The left atrioventricular valve is the bicuspid, or mitral, valve."
+        trust inferred
+        cites "The valves between the atria and ventricles are called atrioventricular valves (also called cuspid valves), while those at the bases of the large vessels leaving the ventricles are called semilunar valves." locator "https://training.seer.cancer.gov/anatomy/cardiovascular/heart/structure.html"
+    }
 
+    % READ (envelope tier inherited): one sentence names the valve AND
+    % both chambers, so nothing is reasoned and nothing is downgraded.
+    row (pulmonary, right_ventricle_and_pulmonary_trunk) {
+        source "The valve between the right ventricle and pulmonary trunk is the pulmonary semilunar valve."
+    }
+    row (aortic, left_ventricle_and_aorta) {
+        source "The valve between the left ventricle and the aorta is the aortic semilunar valve."
+    }
+
+    % THE ENVELOPE KEEPS THE TRICUSPID SPAN, disclosed rather than dressed
+    % up as framing: this page has no sentence framing the four valves as
+    % a set, and an envelope `source` is REQUIRED. Every row overrides it,
+    % so it reaches answers only through the tricuspid row's own copy.
     source "The right atrioventricular valve is the tricuspid valve."
     locator "https://training.seer.cancer.gov/anatomy/cardiovascular/heart/structure.html"
     trust authoritative

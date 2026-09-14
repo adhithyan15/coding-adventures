@@ -65,13 +65,202 @@ fn anatomy_heart_valves_recall_binds_boundary_with_citation() {
         out.contains("\"V\":\"aortic\""),
         "left_ventricle_and_aorta → aortic (reverse recall): {out}"
     );
-    // The answer carries the NCI SEER Training citation as its proof.
+    // ONE CONTIGUOUS SPAN, and it now pins a READ row so the tier means
+    // something. `contains(host) && contains("\"trust\":\"authoritative\"")`
+    // was here -- the #15209 two-loose-needles shape, and it could not
+    // distinguish this table's two kinds of row at all, because
+    // `authoritative` appears in the output either way on the envelope.
     assert!(
-        out.contains("training.seer.cancer.gov/anatomy/cardiovascular/heart/structure.html")
-            && out.contains("\"trust\":\"authoritative\""),
-        "carries the source citation: {out}"
+        out.contains(
+            "\"source\":\"The valve between the right ventricle and pulmonary trunk is the pulmonary semilunar valve.\",\"locator\":\"https://training.seer.cancer.gov/anatomy/cardiovascular/heart/structure.html\",\"trust\":\"authoritative\",\"corroborations\":[]"
+        ),
+        "the pulmonary row is READ: one span, envelope tier, no corroboration: {out}"
     );
     // The eustachian valve is not one of the four cardiac valves in this table —
     // honest abstention, never a fabricated boundary.
     assert!(out.contains("\"abstained\":true"), "eustachian abstains: {out}");
+}
+
+const LOCATOR: &str = "https://training.seer.cancer.gov/anatomy/cardiovascular/heart/structure.html";
+const AV_SPAN: &str = "The valves between the atria and ventricles are called atrioventricular valves (also called cuspid valves), while those at the bases of the large vessels leaving the ventricles are called semilunar valves.";
+
+/// (valve, boundary, its own span, tier, whether it corroborates with AV_SPAN)
+const VALVES: [(&str, &str, &str, &str, bool); 4] = [
+    (
+        "tricuspid",
+        "right_atrium_and_right_ventricle",
+        "The right atrioventricular valve is the tricuspid valve.",
+        "inferred",
+        true,
+    ),
+    (
+        "mitral",
+        "left_atrium_and_left_ventricle",
+        "The left atrioventricular valve is the bicuspid, or mitral, valve.",
+        "inferred",
+        true,
+    ),
+    (
+        "pulmonary",
+        "right_ventricle_and_pulmonary_trunk",
+        "The valve between the right ventricle and pulmonary trunk is the pulmonary semilunar valve.",
+        "authoritative",
+        false,
+    ),
+    (
+        "aortic",
+        "left_ventricle_and_aorta",
+        "The valve between the left ventricle and the aorta is the aortic semilunar valve.",
+        "authoritative",
+        false,
+    ),
+];
+
+fn ask(tag: &str, query: &str) -> String {
+    assert!(
+        tag.chars().all(|c| c.is_ascii_alphanumeric() || c == '_'),
+        "scratch tags are path components: {tag:?}"
+    );
+    let dir = scratch(tag);
+    let src = facts_stdlib().join("anatomy/heart-valves.adj");
+    std::fs::copy(&src, dir.join("heart-valves.adj")).expect("copy shipped heart-valves.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"heart-valves.adj\"\n? {query}\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    out
+}
+
+#[test]
+fn each_valve_carries_its_own_span_at_the_tier_that_span_earns() {
+    // THE HEART OF THIS TABLE. Until #14986 was applied here every row was
+    // warranted by the TRICUSPID sentence -- three of the four by a sentence
+    // about a different valve.
+    //
+    // The pin below is ONE CONTIGUOUS RUN binding source, locator and TIER.
+    // That is what makes the two kinds of row distinguishable: promoting a
+    // reasoned row to `authoritative` changes these bytes. Checking the tier
+    // and the span separately would pass on either row.
+    for (valve, boundary, span, tier, corroborates) in VALVES {
+        let out = ask(&format!("tier_{valve}"), &format!("valve_separates({valve}, $B)"));
+        assert_eq!(
+            out.matches("\"citations\":[").count(),
+            1,
+            "exactly one answer for {valve}, so the absences below are about it: {out}"
+        );
+        assert!(
+            out.contains(&format!("\"B\":\"{boundary}\"")),
+            "{valve} still binds {boundary}: {out}"
+        );
+        let tail = if corroborates {
+            format!("\"corroborations\":[{{\"source\":\"{AV_SPAN}\",\"locator\":\"{LOCATOR}\"}}]")
+        } else {
+            "\"corroborations\":[]".to_string()
+        };
+        assert!(
+            out.contains(&format!(
+                "\"source\":\"{span}\",\"locator\":\"{LOCATOR}\",\"trust\":\"{tier}\",{tail}"
+            )),
+            "{valve}: own span at tier {tier}, corroborated={corroborates}: {out}"
+        );
+        // NEGATIVE ARM: no other valve's sentence reaches this answer. The
+        // tricuspid sentence reached all four before this change.
+        for (other, _, other_span, _, _) in VALVES {
+            if other != valve {
+                assert!(
+                    !out.contains(other_span),
+                    "the {other} sentence must not reach the {valve} answer: {out}"
+                );
+            }
+        }
+    }
+}
+
+#[test]
+fn a_read_row_is_never_downgraded_and_a_reasoned_row_is_never_promoted() {
+    // THE HONEST TIER, asserted in both directions. A reasoned row shipped at
+    // `authoritative` would claim the page STATES the boundary; it does not,
+    // it states that the valve is atrioventricular and, separately, what an
+    // atrioventricular valve sits between. A read row shipped at `inferred`
+    // would understate a sentence that names the valve and both chambers.
+    for (valve, _, _, tier, corroborates) in VALVES {
+        let out = ask(&format!("tiers_{valve}"), &format!("valve_separates({valve}, $B)"));
+        let wrong = if tier == "inferred" { "authoritative" } else { "inferred" };
+        assert!(
+            out.contains(&format!("\"trust\":\"{tier}\"")),
+            "{valve} is at {tier}: {out}"
+        );
+        // The envelope's own tier is `authoritative`, so a bare
+        // `!contains("authoritative")` would be wrong on every answer. The
+        // tier is checked bound to THIS row's span instead.
+        assert!(
+            !out.contains(&format!("\"trust\":\"{wrong}\",\"corroborations\"")),
+            "{valve} must not also appear at {wrong}: {out}"
+        );
+        assert_eq!(
+            out.contains(AV_SPAN),
+            corroborates,
+            "{valve} corroborates with the atrioventricular definition: {corroborates}: {out}"
+        );
+    }
+}
+
+#[test]
+fn the_table_ships_two_reasoned_rows_and_two_read_rows() {
+    // STRUCTURAL, READ FROM THE SHIPPED FILE. The split is the design, so a
+    // future edit that quietly makes every row `inferred` -- or none --
+    // should fail here rather than pass as a wash.
+    let adj = std::fs::read_to_string(facts_stdlib().join("anatomy/heart-valves.adj"))
+        .expect("read shipped heart-valves.adj");
+    let body = &adj[adj.find("table valve_separates").expect("table")..];
+
+    assert_eq!(body.matches("\n    row (").count(), 4, "four rows");
+    assert_eq!(
+        body.matches("\n        source \"").count(),
+        4,
+        "every row carries its own source block"
+    );
+    assert_eq!(
+        body.lines()
+            .filter(|l| l.trim() == "trust inferred")
+            .count(),
+        2,
+        "exactly two rows are reasoned"
+    );
+    assert_eq!(
+        body.matches("\n        cites \"").count(),
+        2,
+        "and exactly those two carry a second span"
+    );
+    // The `cites` locator is the corroboration's own mandatory address, not
+    // a row locator override -- of which there are none, because every span
+    // is on the one page the envelope names.
+    assert_eq!(
+        body.matches("\n        locator \"").count(),
+        0,
+        "no row overrides the locator"
+    );
+
+    // AND THE REASONED ROWS ARE THE RIGHT TWO. Counting two of each would
+    // pass if the tiers were swapped onto the wrong pair.
+    for (valve, tier) in [
+        ("tricuspid", "inferred"),
+        ("mitral", "inferred"),
+        ("pulmonary", "authoritative"),
+        ("aortic", "authoritative"),
+    ] {
+        let start = body
+            .find(&format!("row ({valve},"))
+            .unwrap_or_else(|| panic!("row for {valve}"));
+        let block_end = body[start..].find("\n    }").unwrap_or(0) + start;
+        let block = &body[start..block_end];
+        assert_eq!(
+            block.contains("trust inferred"),
+            tier == "inferred",
+            "{valve} is {tier}: {block}"
+        );
+    }
 }
