@@ -77,9 +77,39 @@
 % energy" list (Radiant energy, Thermal energy, Motion energy, Sound,
 % Electrical energy).
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% *** THE PAGE DOES NOT STATE ANY ROW'S FAMILY IN A SENTENCE, and that is
+% the most important thing to know about this table. *** The classification
+% is the page's own STRUCTURE: a "Potential energy" heading with four forms
+% listed under it, a "Kinetic energy" heading with the rest. Measured
+% 2026-09-14 against the cited page (HTTP 200, 75,012 chars), with the
+% envelope sentence found verbatim as a positive control and a fabricated
+% sentence reported absent as a negative one: for SEVEN of the eight forms
+% there is NO sentence naming both the form and a family. The eighth,
+% `motion`, is a false positive — "Kinetic energy is the motion of waves,
+% electrons, atoms, molecules, substances, and objects." defines kinetic
+% energy and happens to contain the word "motion"; it does not say motion
+% energy is kinetic.
+%
+% SO THIS TABLE IS DELIBERATELY *NOT* CONVERTED TO PER-ROW `source`
+% (ADJ-TABLES RS-5e, issue #14986), for the same reason as
+% `earth-science/water-cycle.adj`: a `source` asserts that the span warrants
+% the row, and no span here warrants a family. Membership in a list under a
+% heading is also the held "is a list item a verbatim span?" question of
+% issue #13934.
+%
+% WHAT EACH ROW DOES CARRY, added 2026-09-14, is the page's own DEFINITION of
+% its form as a row-level `cites` — a corroboration. Before this, seven of
+% the eight rows carried no span of their own at all: a query about
+% `chemical` came back with only the two-family sentence. It now also
+% carries "Chemical energy is energy stored in the bonds of atoms and
+% molecules." Each of the eight occurs EXACTLY ONCE on the page, each inside
+% a `<p>`, none names another row's form, and — the check that keeps them
+% honestly `cites` — none mentions `potential` or `kinetic`.
+%
+% An ADJ `table` carries ONE provenance envelope, and the `source`/`locator`/
 % `trust` below hold that single classification sentence — the span that
-% fixes the two-family split every row draws from. The source is a primary
+% fixes the two-family split every row draws from. It names no row key, so it
+% mis-warrants nothing, and it is unchanged by this edit. The source is a primary
 % U.S. government EIA education page (eia.gov), the same tier
 % `energy-forms.adj` already uses, so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
@@ -89,15 +119,45 @@
 table energy_form_family {
     columns form, family
 
-    row (chemical, potential)
-    row (mechanical, potential)
-    row (nuclear, potential)
-    row (gravitational, potential)
-    row (radiant, kinetic)
-    row (thermal, kinetic)
-    row (motion, kinetic)
-    row (electrical, kinetic)
+    % Each row CITES the page's own definition of its form. `cites`, not
+    % `source`: the definition says what chemical energy IS and says
+    % nothing about whether it is POTENTIAL or KINETIC. The family comes
+    % from which HEADING the form is listed under, and no sentence on the
+    % page states it — measured, 7 of the 8 forms have no sentence naming
+    % both the form and a family, and the eighth is a false positive.
+    %
+    % So this table is deliberately NOT converted to per-row `source`
+    % (ADJ-TABLES RS-5e, issue #14986). A `source` asserts that the span
+    % warrants the row; none of these warrants a family.
+    row (chemical, potential) {
+        cites "Chemical energy is energy stored in the bonds of atoms and molecules." locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+    }
+    row (mechanical, potential) {
+        cites "Mechanical energy is energy stored in objects by tension." locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+    }
+    row (nuclear, potential) {
+        cites "Nuclear energy is energy stored in the nucleus of an atom—the energy that holds the nucleus together." locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+    }
+    row (gravitational, potential) {
+        cites "Gravitational energy is energy stored in an object's height." locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+    }
+    row (radiant, kinetic) {
+        cites "Radiant energy is electromagnetic energy that travels in transverse waves." locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+    }
+    row (thermal, kinetic) {
+        cites "Thermal energy, or heat, is the energy that comes from atoms and molecules moving in a substance." locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+    }
+    row (motion, kinetic) {
+        cites "Motion energy is energy stored in moving objects." locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+    }
+    row (electrical, kinetic) {
+        cites "Electrical energy is delivered by tiny, charged particles, called electrons, that typically move through a wire." locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+    }
 
+    % THE ENVELOPE IS UNCHANGED AND IS ALREADY THE RIGHT SPAN: it names
+    % no row key and states the two-family split every row draws from.
+    % Nothing here mis-warranted a row; the gap this change closes is
+    % that seven of the eight rows carried no span of their own at all.
     source "Many forms of energy exist, but energy is either potential energy or kinetic energy."
     locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
     trust authoritative
