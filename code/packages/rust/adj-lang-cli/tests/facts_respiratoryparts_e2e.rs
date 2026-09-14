@@ -71,13 +71,208 @@ fn anatomy_respiratory_parts_recall_binds_function_with_citation() {
         out.contains("\"Part\":\"alveoli\""),
         "gas_exchange → alveoli (reverse recall): {out}"
     );
-    // The answer carries the NCI SEER Training Modules citation as its proof, at
-    // the `authoritative` trust tier for a primary U.S. government source.
+    // THIS ASSERTION WAS THE DEFECT IN TEST FORM. `training.seer.cancer.gov`
+    // is satisfied by ANY page on the site, so it held equally well when all
+    // eight rows carried the NOSE sentence — it could not tell the diaphragm's
+    // answer citing the mechanics page from the diaphragm's answer citing a
+    // sentence about nose hairs. It is the reason this conversion broke no
+    // test until the per-row pins below were added.
     assert!(
         out.contains("training.seer.cancer.gov") && out.contains("\"trust\":\"authoritative\""),
-        "carries the source citation: {out}"
+        "carries a SEER citation at the authoritative tier: {out}"
+    );
+    // Since #14986 these four answers span four DIFFERENT SEER pages.
+    for page in [
+        "respiratory/passages/larynx.html",
+        "respiratory/mechanics.html",
+        "respiratory/passages/bronchi.html",
+    ] {
+        assert!(
+            out.contains(page),
+            "an answer here cites {page}, which states it: {out}"
+        );
+    }
+    assert!(
+        !out.contains("Nose hairs at the entrance"),
+        "and none of these four answers is warranted by the nose sentence, \
+         which was the envelope for all eight rows until #14986: {out}"
     );
     // The stomach is a digestive organ, not a respiratory part — honest
     // abstention, never a fabricated function.
     assert!(out.contains("\"abstained\":true"), "stomach abstains: {out}");
+}
+
+const SEER: &str = "https://training.seer.cancer.gov/anatomy/respiratory/";
+
+/// Assert one row's warrant, binding the PART so exactly one row answers.
+///
+/// Every part and every function in this table is unique to one row, so either
+/// direction is single-answer here. Binding the part is still the safer habit:
+/// where a key repeats, a whole-stdout `contains` is satisfied by an intact
+/// sibling's copy, which is the masking defect found in `joint-types` (#15164).
+fn assert_part(tag: &str, part: &str, function: &str, span: &str, page: &str) {
+    let dir = scratch(tag);
+    std::fs::copy(
+        facts_stdlib().join("anatomy/respiratory-parts.adj"),
+        dir.join("respiratory-parts.adj"),
+    )
+    .expect("copy shipped respiratory-parts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"respiratory-parts.adj\"\n? part_function({part}, $F)\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        1,
+        "exactly one row for {part}, so every needle below is its own: {out}"
+    );
+    assert!(
+        out.contains(&format!("\"F\":\"{function}\"")),
+        "{part} binds {function}: {out}"
+    );
+    assert!(
+        out.contains(&format!(
+            "\"source\":\"{span}\",\"locator\":\"{SEER}{page}\",\"trust\":\"authoritative\""
+        )),
+        "{part} is warranted by the sentence that states its function, on the page \
+         that carries it: {out}"
+    );
+}
+
+/// #14986. The NOSE sentence was this table's `source` — the field that carries
+/// the tier — for all eight rows, so a recall of the diaphragm came back proved
+/// by "Nose hairs at the entrance to the nose trap large inhaled particles."
+/// The header said as much in its own words: the envelope held "the single
+/// cleanest span: the SEER statement that fixes the FIRST row".
+///
+/// All eight rows are pinned here. Their evidence was already in the file, in a
+/// comment block no query could reach.
+#[test]
+fn every_row_carries_the_sentence_that_states_its_function() {
+    assert_part(
+        "rpnose", "nose", "traps_particles",
+        "Nose hairs at the entrance to the nose trap large inhaled particles.",
+        "passages/nose.html",
+    );
+    assert_part(
+        "rppharynx", "pharynx", "passes_air",
+        "The upper part of the pharynx (throat) lets only air pass through.",
+        "passages/pharynx.html",
+    );
+    assert_part(
+        "rplarynx", "larynx", "human_speech",
+        "The larynx plays an essential role in human speech.",
+        "passages/larynx.html",
+    );
+    assert_part(
+        "rptrachea", "trachea", "main_airway",
+        "The trachea, commonly called the windpipe, is the main airway to the lungs.",
+        "passages/larynx.html",
+    );
+    assert_part(
+        "rpbronchi", "bronchi", "branch_to_alveoli",
+        "The bronchi branch into smaller and smaller passageways until they terminate in tiny air sacs called alveoli.",
+        "passages/bronchi.html",
+    );
+    assert_part(
+        "rplungs", "lungs", "external_respiration",
+        "After this, there is an exchange of gases between the lungs and the blood. This is called external respiration.",
+        "",
+    );
+    assert_part(
+        "rpalveoli", "alveoli", "gas_exchange",
+        "Exchange of gases between the air in the lungs and the blood in the capillaries occurs across the walls of the alveolar ducts and alveoli.",
+        "passages/bronchi.html",
+    );
+    assert_part(
+        "rpdiaphragm", "diaphragm", "contracts_inspiration",
+        "During inspiration, the diaphragm contracts and the thoracic cavity increases in volume.",
+        "mechanics.html",
+    );
+}
+
+/// Two pages each state TWO rows, so two spans have a sibling that must not be
+/// able to stand in for them. `assert_part` above queries one row at a time, so
+/// each of those four spans is asserted in output where its sibling is absent —
+/// the failure `skeleton-bones` (#15171) shipped by testing one row per shared
+/// page.
+#[test]
+fn the_two_shared_pages_do_not_let_one_row_cover_the_other() {
+    for (tag, part, function) in [
+        ("sh1", "larynx", "human_speech"),
+        ("sh2", "trachea", "main_airway"),
+    ] {
+        let dir = scratch(tag);
+        std::fs::copy(
+            facts_stdlib().join("anatomy/respiratory-parts.adj"),
+            dir.join("respiratory-parts.adj"),
+        )
+        .expect("copy shipped respiratory-parts.adj");
+        std::fs::write(
+            dir.join("case.adj"),
+            format!("import \"respiratory-parts.adj\"\n? part_function({part}, $F)\n"),
+        )
+        .unwrap();
+        let (ok, out) = run(&dir.join("case.adj"));
+        assert!(ok, "cli should succeed: {out}");
+        assert!(
+            out.contains(&format!("\"F\":\"{function}\"")),
+            "{part} binds {function}: {out}"
+        );
+        // The OTHER row on the same page is absent from this answer, so the
+        // span asserted for this row cannot have come from its sibling.
+        let other = if part == "larynx" { "windpipe" } else { "human speech" };
+        assert!(
+            !out.contains(other),
+            "{part}'s answer carries no trace of the other row on larynx.html: {out}"
+        );
+    }
+}
+
+/// The envelope is the module's definition of respiration. It names no part of
+/// the tract, so it warrants none of the eight rows.
+#[test]
+fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
+    let dir = scratch("rpenvelope");
+    std::fs::copy(
+        facts_stdlib().join("anatomy/respiratory-parts.adj"),
+        dir.join("respiratory-parts.adj"),
+    )
+    .expect("copy shipped respiratory-parts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"respiratory-parts.adj\"\n? part_function($P, $F)\n",
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        8,
+        "all eight rows answer: {out}"
+    );
+    assert!(
+        !out.contains("Respiration is the sequence of events"),
+        "the framing span warrants no row: {out}"
+    );
+    // The nose sentence now warrants exactly ONE row where it used to be the
+    // `source` on all eight. Twice: once under `citations`, once under `steps`.
+    assert_eq!(
+        out.matches("Nose hairs at the entrance").count(),
+        2,
+        "the nose sentence warrants the nose row and nothing else: {out}"
+    );
+    // AND PIN THE ENVELOPE ITSELF — source, locator AND tier. A pin stopping at
+    // `\n    locator` asserts only that a locator follows (#15183).
+    let adj = std::fs::read_to_string(facts_stdlib().join("anatomy/respiratory-parts.adj"))
+        .expect("read shipped respiratory-parts.adj");
+    assert!(
+        adj.contains(
+            "    source \"Respiration is the sequence of events that results in the exchange of oxygen and carbon dioxide between the atmosphere and the body cells.\"\n    locator \"https://training.seer.cancer.gov/anatomy/respiratory/\"\n    trust authoritative"
+        ),
+        "the envelope carries the module's definition of respiration, verbatim"
+    );
 }
