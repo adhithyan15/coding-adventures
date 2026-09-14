@@ -61,6 +61,37 @@
 % half of each already-verified quote. `trust authoritative` — the same
 % tier `vitamins.adj` already carries (NIH ODS, a primary U.S. government
 % consumer fact sheet).
+%
+% EVERY ROW CARRIES ITS OWN SPAN AND ITS OWN LOCATOR, below, in the row's
+% `{ ... }` block (ADJ-TABLES RS-5e). Five rows, five NIH ODS fact sheets, one
+% vitamin each.
+%
+% WHAT #14986 CHANGED, and this file's own e2e test had already written down
+% the defect and its tracking issue: "The table ships ONE envelope for five
+% rows, and that envelope is the xerophthalmia/night-blindness sentence --
+% which grounds vitamin_a and NOT vitamin_d. Pinning vitamin_d would pair an
+% answer about bone deformity with a citation about vision, and freeze it in a
+% test. That is #14124's defect class." The other four spans were already in
+% this file as untiered `cites`, each with its own fact-sheet URL, in row
+% order.
+%
+% ONE SPAN WAS WIDENED, and the pairing check is what found it. The shipped
+% vitamin-A span was "Xerophthalmia is the inability to see in low light, and
+% it can lead to blindness if it isn’t treated." -- which states the SYMPTOM
+% and never names vitamin A, so on its own it did not warrant
+% `(vitamin_a, inability_to_see_in_low_light)`; the link came from the page it
+% sat on rather than from the quoted run. The page's preceding sentence
+% supplies it and is contiguous: "The most common sign of vitamin A deficiency
+% is an eye condition called xerophthalmia."
+%
+% THE VITAMIN NAMES DIFFER FROM THE ATOM LABELS on two pages, which is why the
+% pairing check uses a STATED mapping rather than the row key: `vitamin_b1` is
+% "thiamin" on its sheet and `vitamin_b9` is "folate". A key-in-span test would
+% have reported both as unwarranted.
+%
+% THE SPAN CARRIES A CURLY APOSTROPHE (U+2019) in "isn't". An ASCII
+% normalisation would make it stop being the page's bytes, so it is pinned and
+% breaking it is one of this table's mutants.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -68,18 +99,42 @@
 table vitamin_deficiency_symptom {
     columns vitamin, symptom
 
-    row (vitamin_a, inability_to_see_in_low_light)              % NIH: "Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn’t treated."
-    row (vitamin_d, soft_weak_deformed_painful_bones)            % NIH: "vitamin D deficiency causes rickets, a disease in which the bones become soft, weak, deformed, and painful."
-    row (vitamin_b1, tingling_and_numbness_in_feet_and_hands)    % NIH: "beriberi with the added symptoms of tingling and numbness in the feet and hands, loss of muscle, and poor reflexes."
-    row (vitamin_b9, weakness_and_fatigue)                       % NIH: "megaloblastic anemia, a blood disorder that causes weakness, fatigue, trouble concentrating, irritability, headache, heart palpitations, and shortness of breath."
-    row (vitamin_b12, tired_and_weak)                            % NIH: "megaloblastic anemia, a blood condition that makes people tired and weak."
+    % Each row carries the sentence that states ITS OWN deficiency
+    % symptom, and that sentence's own NIH ODS fact sheet — five rows,
+    % five pages, one vitamin each. Until #14986 all five carried the
+    % VITAMIN-A span; the other four were already here as untiered
+    % `cites`, in this same order.
+    row (vitamin_a, inability_to_see_in_low_light) {
+        source "The most common sign of vitamin A deficiency is an eye condition called xerophthalmia. Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn’t treated."
+        locator "https://ods.od.nih.gov/factsheets/VitaminA-Consumer/"
+    }
+    row (vitamin_d, soft_weak_deformed_painful_bones) {
+        source "In children, vitamin D deficiency causes rickets, a disease in which the bones become soft, weak, deformed, and painful."
+        locator "https://ods.od.nih.gov/factsheets/VitaminD-Consumer/"
+    }
+    row (vitamin_b1, tingling_and_numbness_in_feet_and_hands) {
+        source "Severe thiamin deficiency leads to a disease called beriberi with the added symptoms of tingling and numbness in the feet and hands, loss of muscle, and poor reflexes."
+        locator "https://ods.od.nih.gov/factsheets/Thiamin-Consumer/"
+    }
+    row (vitamin_b9, weakness_and_fatigue) {
+        source "Getting too little folate can result in megaloblastic anemia, a blood disorder that causes weakness, fatigue, trouble concentrating, irritability, headache, heart palpitations, and shortness of breath."
+        locator "https://ods.od.nih.gov/factsheets/Folate-Consumer/"
+    }
+    row (vitamin_b12, tired_and_weak) {
+        source "Vitamin B12 also helps prevent megaloblastic anemia, a blood condition that makes people tired and weak."
+        locator "https://ods.od.nih.gov/factsheets/VitaminB12-Consumer/"
+    }
 
-    source "Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn’t treated."
+    % THE ENVELOPE KEEPS THE VITAMIN-A SPAN, and that is disclosed rather
+    % than dressed up as framing: each row here cites a DIFFERENT fact
+    % sheet, and no one of those pages frames the table as a whole. An
+    % envelope `source` is REQUIRED — an envelope carrying only `locator`
+    % and `trust` is rejected with `Lower(TableMissingProvenance)`,
+    % established by running it — so the span stays. Every row overrides
+    % `source`, so it reaches no answer, and `vitamin_a` carries its own
+    % copy. What this cascade requires is that the envelope not
+    % MIS-WARRANT a row, and that holds.
+    source "The most common sign of vitamin A deficiency is an eye condition called xerophthalmia. Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn’t treated."
     locator "https://ods.od.nih.gov/factsheets/VitaminA-Consumer/"
     trust authoritative
-
-    cites "In children, vitamin D deficiency causes rickets, a disease in which the bones become soft, weak, deformed, and painful." locator "https://ods.od.nih.gov/factsheets/VitaminD-Consumer/"
-    cites "Severe thiamin deficiency leads to a disease called beriberi with the added symptoms of tingling and numbness in the feet and hands, loss of muscle, and poor reflexes." locator "https://ods.od.nih.gov/factsheets/Thiamin-Consumer/"
-    cites "Getting too little folate can result in megaloblastic anemia, a blood disorder that causes weakness, fatigue, trouble concentrating, irritability, headache, heart palpitations, and shortness of breath." locator "https://ods.od.nih.gov/factsheets/Folate-Consumer/"
-    cites "Vitamin B12 also helps prevent megaloblastic anemia, a blood condition that makes people tired and weak." locator "https://ods.od.nih.gov/factsheets/VitaminB12-Consumer/"
 }
