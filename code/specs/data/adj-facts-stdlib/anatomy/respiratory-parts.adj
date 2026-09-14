@@ -188,7 +188,7 @@ table part_function {
     % THE ENVELOPE IS A FRAMING SPAN: the module's definition of
     % respiration. It names no part of the tract — not the nose, not the
     % lungs — so it warrants none of the eight rows. Every row overrides
-    % `source` and `locator`; `trust` is inherited, one tier for all five
+    % `source` and `locator`; `trust` is inherited, one tier for all SIX
     % SEER pages.
     source "Respiration is the sequence of events that results in the exchange of oxygen and carbon dioxide between the atmosphere and the body cells."
     locator "https://training.seer.cancer.gov/anatomy/respiratory/"

@@ -81,7 +81,9 @@ fn anatomy_respiratory_parts_recall_binds_function_with_citation() {
         out.contains("training.seer.cancer.gov") && out.contains("\"trust\":\"authoritative\""),
         "carries a SEER citation at the authoritative tier: {out}"
     );
-    // Since #14986 these four answers span four DIFFERENT SEER pages.
+    // Since #14986 these four answers span THREE different SEER pages —
+    // trachea and larynx are both on larynx.html, which is why the loop
+    // below iterates three and not four.
     for page in [
         "respiratory/passages/larynx.html",
         "respiratory/mechanics.html",
@@ -201,9 +203,14 @@ fn every_row_carries_the_sentence_that_states_its_function() {
 /// page.
 #[test]
 fn the_two_shared_pages_do_not_let_one_row_cover_the_other() {
-    for (tag, part, function) in [
-        ("sh1", "larynx", "human_speech"),
-        ("sh2", "trachea", "main_airway"),
+    // (tag, part, function, a phrase from the OTHER row on the same page,
+    //  that page). Review found this loop covering only the larynx pair while
+    // its name, its doc comment and the changelog all said TWO shared pages.
+    for (tag, part, function, other, page) in [
+        ("sh1", "larynx", "human_speech", "windpipe", "larynx.html"),
+        ("sh2", "trachea", "main_airway", "human speech", "larynx.html"),
+        ("sh3", "bronchi", "branch_to_alveoli", "alveolar ducts", "bronchi.html"),
+        ("sh4", "alveoli", "gas_exchange", "smaller and smaller passageways", "bronchi.html"),
     ] {
         let dir = scratch(tag);
         std::fs::copy(
@@ -223,11 +230,13 @@ fn the_two_shared_pages_do_not_let_one_row_cover_the_other() {
             "{part} binds {function}: {out}"
         );
         // The OTHER row on the same page is absent from this answer, so the
-        // span asserted for this row cannot have come from its sibling.
-        let other = if part == "larynx" { "windpipe" } else { "human speech" };
+        // span asserted for this row cannot have come from its sibling. The
+        // page name is carried per case rather than hardcoded: the earlier form
+        // said "larynx.html" unconditionally, so adding the bronchi pair would
+        // have printed the wrong file on failure.
         assert!(
             !out.contains(other),
-            "{part}'s answer carries no trace of the other row on larynx.html: {out}"
+            "{part}'s answer carries no trace of the other row on {page}: {out}"
         );
     }
 }
