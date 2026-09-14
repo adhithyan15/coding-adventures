@@ -33,33 +33,29 @@
 %     drapery            cave_bacon_when_...            (4) bacon condition
 %
 % *** A LIMITATION OF THIS TABLE IN PARTICULAR, STATED UP FRONT. ***
-% Provenance in this stdlib is attached at TABLE level: the `source`
-% envelope and every `cites` corroboration cover EVERY row. Most tables
-% here are grounded in one or two sentences, so that is harmless. This one
-% is grounded in FOUR, covering four unrelated speleothems — so an answer
-% about `column` also carries the coralloid, flowstone and bacon sentences,
-% only one of which grounds it. In the JSON output nothing cited is false,
-% and the grounding sentence is always among them, but the reader has to
-% match sentence to row themselves.
+% PROVENANCE IS PER-ROW (ADJ-TABLES RS-5e, #14986). Each row carries the
+% sentence that states ITS name; `locator` and `trust` are inherited, since all
+% four sentences come from this one page at one tier.
 %
-% IN `--explain` OUTPUT IT IS SHARPER THAN THAT, and worth knowing before
-% trusting that view. Explain renders only the PRIMARY `source` and drops
-% corroborations entirely, so the `corallite` row is displayed under the
-% column/pillar sentence — a sentence that does not ground it. That is a
-% property of every multi-sentence table in this stdlib, not of this one:
-% `heredity-term.adj` (6 corroborations, 7 rows), `bill-stage-successor.adj`
-% (6, 7) and `checks-and-balances.adj` (4, 5) all behave the same way. It is
-% filed rather than worked around here, because fixing it means changing
-% how explain renders provenance for a dozen shipped libraries at once.
-% Until then, THE JSON OUTPUT IS THE AUTHORITATIVE VIEW and `--explain` is
-% a summary that can attribute a row to the wrong sentence.
+% This header used to carry a long note explaining the limitation instead, and
+% it ended: "Row-level provenance is filed as issue #13893; when it lands, this
+% header should be revisited and the note deleted rather than left to rot."
+% It landed. This is that deletion.
 %
-% The alternative was four single-purpose tables, which would fragment one
-% lookup ("what else is this called?") into four and make the backward
-% query — the useful one — impossible to ask in a single goal. One table
-% with a stated limitation is the better trade. Row-level provenance is
-% filed as issue #13893; when it lands, this header should be revisited
-% and the note deleted rather than left to rot.
+% What the note said, for the record: the table's four sentences cover four
+% unrelated speleothems, so an answer about `column` also carried the coralloid,
+% waterfall and bacon sentences, "only one of which grounds it", and the reader
+% had to match sentence to row. It called that harmless in JSON because nothing
+% cited was false. That was too kind to it: the COLUMN sentence was the `source`
+% — the field that carries the trust tier — for all eight rows, so a `corallite`
+% answer was not merely accompanied by the wrong sentence, it was warranted by
+% one. The `--explain` renderer made it visible (#13898, still open, and now
+% irrelevant here: there are no corroborations left to drop).
+%
+% The note's other claim still stands and is worth keeping: the alternative was
+% four single-purpose tables, which would fragment one lookup ("what else is
+% this called?") into four and make the backward query — the useful one —
+% impossible to ask in a single goal.
 %
 % `trust authoritative` — the National Park Service is a first-party .gov
 % publisher, the same source the six sibling cave/karst libraries cite.
@@ -105,19 +101,47 @@
 table speleothem_alt_name {
     columns speleothem, alt_name
 
-    row (column, pillar)
-    row (coralloid, corallite)
-    row (frozen_waterfall, petrified_waterfall)
-    row (frozen_waterfall, cascades)
-    row (frozen_waterfall, rivers)
-    row (frozen_waterfall, glaciers)
-    row (frozen_waterfall, organ_pipes)
-    row (drapery, cave_bacon_when_characteristic_layers_present)
+    row (column, pillar) {
+        % This sentence was the table's envelope, so it also
+        % warranted the seven rows that are not about columns.
+        source "When a stalagmite grows together with its counterpart feeder stalactite, a new speleothem is formed: a column or pillar."
+    }
+    row (coralloid, corallite) {
+        % PROMOTED from a table-level `cites`. Note the page offers
+        % "cave popcorn" here as a synonym and elsewhere as a MEMBER
+        % of coralloids; that conflict is why `cave_popcorn` has no
+        % row, and the conflicting sentence is not this row's warrant.
+        source "Coralloid (or corallite or cave popcorn) is a catchall term describing knobby, nodular, botryoidal, or corallike speleothems."
+    }
+    row (frozen_waterfall, petrified_waterfall) {
+        % PROMOTED from a table-level `cites`. FIVE rows share this
+        % one sentence -- it lists five alternative names -- and each
+        % carries its own copy so any one can be checked alone.
+        source "The most common of these is the petrified or frozen waterfall, also referred to as cascades, rivers, glaciers, or organ pipes."
+    }
+    row (frozen_waterfall, cascades) {
+        source "The most common of these is the petrified or frozen waterfall, also referred to as cascades, rivers, glaciers, or organ pipes."
+    }
+    row (frozen_waterfall, rivers) {
+        source "The most common of these is the petrified or frozen waterfall, also referred to as cascades, rivers, glaciers, or organ pipes."
+    }
+    row (frozen_waterfall, glaciers) {
+        source "The most common of these is the petrified or frozen waterfall, also referred to as cascades, rivers, glaciers, or organ pipes."
+    }
+    row (frozen_waterfall, organ_pipes) {
+        source "The most common of these is the petrified or frozen waterfall, also referred to as cascades, rivers, glaciers, or organ pipes."
+    }
+    row (drapery, cave_bacon_when_characteristic_layers_present) {
+        % PROMOTED from a table-level `cites`. The condition rides in
+        % the atom (`..._when_characteristic_layers_present`) because
+        % the sentence makes the name conditional.
+        source "Cave Bacon forms on slanted surfaces, and is called \"bacon\" instead of drapery, when the characteristic layers are present."
+    }
 
-    source "When a stalagmite grows together with its counterpart feeder stalactite, a new speleothem is formed: a column or pillar."
+    % The envelope is the FRAMING span -- that this domain HAS many
+    % names, which is what the table is about. It warrants no row.
+    % Until #14986 it was the COLUMN row's own sentence.
+    source "Cave Minerals of the World (Hill, 1997) refers to 38 different types of speleothems and numerous subtypes and varieties."
     locator "https://www.nps.gov/subjects/caves/speleothems.htm"
     trust authoritative
-    cites "Coralloid (or corallite or cave popcorn) is a catchall term describing knobby, nodular, botryoidal, or corallike speleothems." locator "https://www.nps.gov/subjects/caves/speleothems.htm"
-    cites "The most common of these is the petrified or frozen waterfall, also referred to as cascades, rivers, glaciers, or organ pipes." locator "https://www.nps.gov/subjects/caves/speleothems.htm"
-    cites "Cave Bacon forms on slanted surfaces, and is called \"bacon\" instead of drapery, when the characteristic layers are present." locator "https://www.nps.gov/subjects/caves/speleothems.htm"
 }

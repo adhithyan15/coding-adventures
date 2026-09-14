@@ -5,6 +5,45 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- **#14986: a header that asked to be deleted when this landed, and the note that was too kind to itself.**
+  `earth-science/speleothem-alt-name.adj` held all four justifying sentences already — the COLUMN one
+  as the envelope `source`, the other three as table-level `cites`. So every row carried all four, and
+  the seven rows that are not about columns were warranted, **in the field that carries the tier**, by
+  a sentence about a stalagmite meeting a stalactite.
+
+  ### The file had filed its own bug, and understated it
+
+  Its header carried a long note ending: *"Row-level provenance is filed as issue #13893; when it
+  lands, this header should be revisited and the note deleted rather than left to rot."* It landed.
+  This is that deletion.
+
+  But the note called the problem **harmless in JSON** — *"nothing cited is false, and the grounding
+  sentence is always among them, but the reader has to match sentence to row themselves"* — and that
+  was too kind to it. The column sentence was the `source` for all eight rows, so a `corallite` answer
+  was not merely *accompanied* by an unrelated sentence: it was **warranted** by one. The note framed a
+  wrong warrant as a presentation inconvenience. (#13898, the `--explain` renderer, stays open and is
+  now irrelevant to this file: there are no corroborations left to drop.)
+
+  The note's other claim survives and is kept: four single-purpose tables would fragment one lookup
+  into four and make the backward query — the useful one — unaskable in a single goal.
+
+  ### Pins
+
+  **14 of 14 mutants killed, one control.** All eight rows broken one at a time — including **each of
+  the five that share the frozen-waterfall sentence**, since one broken copy behind four intact ones
+  is the failure `skeleton-bones` (#15171) shipped and `speleothem-substrate` (#15175) designed out.
+  Plus warranting the coralloid row with the column sentence, restoring the old table-level `cites`,
+  rebinding an alt name, dropping a row's source, repointing the locator, and fabricating the
+  envelope — a kill, because the envelope's wording is pinned against the shipped file (#15176).
+
+  Queries bind the ALT NAME, which is unique per row; binding the speleothem would return five rows
+  for `frozen_waterfall` and let a needle be satisfied by a sibling's intact copy.
+
+  Measured: all four row spans and the framing sentence occur **exactly once** on the NPS page;
+  near-miss controls score zero. Suite run with `RUSTFLAGS="-Dwarnings"`, the way CI compiles it.
+
+  The README row for this table stated the same limitation and is updated rather than left behind.
+
 - **#14986: eight energy forms, all warranted by the definition of chemical energy.**
   `physics/energy-forms.adj` carried the CHEMICAL sentence as its envelope, so a recall of
   `electrical` came back proved by *"Chemical energy is energy stored in the bonds of atoms and
