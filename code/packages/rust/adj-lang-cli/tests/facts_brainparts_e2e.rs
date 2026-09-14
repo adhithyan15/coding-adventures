@@ -346,4 +346,39 @@ fn the_shared_spans_are_exactly_the_declared_ones() {
         5,
         "and 5 rows have a sentence to themselves: {groups:?}"
     );
+    // THE LOCATOR RULE. `reference-lines.adj` ships it: restate a row locator
+    // when its page DIFFERS from the envelope's, inherit when it is the same.
+    // Two rows here are on other pages and keep theirs; thirteen inherit.
+    //
+    // Added because the deletion that made this true was not self-guarding:
+    // re-adding the envelope's URL to a row was caught only incidentally, by
+    // tests that noticed the changed citation, never by the rule.
+    let adj_text = std::fs::read_to_string(facts_stdlib().join("anatomy/brain-parts.adj"))
+        .expect("read shipped brain-parts.adj");
+    // THE ENVELOPE LOCATOR IS READ FROM THE FILE, not typed. A first version
+    // hardcoded the SEER brain page from memory of an earlier state of this
+    // table; the envelope is actually the StatPearls physiology chapter, and
+    // the guard failed against a file that was correct. Deriving it cannot
+    // drift.
+    let envelope = adj_text
+        .lines()
+        .find_map(|l| l.strip_prefix(r#"    locator ""#))
+        .expect("the table has an envelope locator")
+        .trim_end_matches(0x22 as char);
+    let row_locators: Vec<&str> = adj_text
+        .lines()
+        .filter_map(|l| l.strip_prefix(r#"        locator ""#))
+        .collect();
+    assert_eq!(
+        row_locators.len(),
+        2,
+        "two rows are on other pages and restate: {row_locators:?}"
+    );
+    for l in &row_locators {
+        assert_ne!(
+            l.trim_end_matches(0x22 as char),
+            envelope,
+            "no row restates the envelope's own page: {row_locators:?}"
+        );
+    }
 }

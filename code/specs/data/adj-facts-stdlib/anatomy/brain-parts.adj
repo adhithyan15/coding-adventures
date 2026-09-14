@@ -121,7 +121,6 @@ table brain_part_function {
     }
     row (cerebellum, coordination_of_voluntary_movement) {
         source "The cerebellum controls the coordination of voluntary movement and receives sensory information from the brain and spinal cord to fine-tune the precision and accuracy of motor activity."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (brainstem, breathing) {
         % TEN rows share this one sentence: it lists ten autonomic
@@ -132,54 +131,42 @@ table brain_part_function {
         % at all -- its only brain stem sentence is anatomical. This
         % sentence, from StatPearls, was a table-level `cites`.
         source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (brainstem, temperature_regulation) {
         source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (brainstem, respiration) {
         source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (brainstem, heart_rate) {
         source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (brainstem, wake_sleep_cycles) {
         source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (brainstem, coughing) {
         source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (brainstem, sneezing) {
         source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (brainstem, digestion) {
         source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (brainstem, vomiting) {
         source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (brainstem, swallowing) {
         source "The brainstem houses the principal centers that perform autonomic functions such as breathing, temperature regulation, respiration, heart rate, wake-sleep cycles, coughing, sneezing, digestion, vomiting, and swallowing."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (hypothalamus, hunger) {
         source "The hypothalamus controls hunger, thirst, and sleep."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (thalamus, relays) {
         % PROMOTED from a table-level `cites`. On the old envelope's
         % SEER page the string "thalamus" occurs only inside
         % "hypothalamus"; there is no thalamus sentence there.
         source "Sensory neurons bring sensory input from the body to the thalamus, which relays this information to the cerebrum."
-        locator "https://www.ncbi.nlm.nih.gov/books/NBK551718/"
     }
     row (hippocampus, memory) {
         % PROMOTED from a table-level `cites`. The word "hippocampus"

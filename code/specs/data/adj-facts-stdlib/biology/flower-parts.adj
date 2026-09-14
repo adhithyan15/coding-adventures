@@ -138,31 +138,24 @@ table flower_part_function {
     % pinned separately.
     row (petal, attract_pollinators) {
         source "Petals attract pollinators and are usually the reason why we buy and enjoy flowers."
-        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
     }
     row (sepal, protect) {
         source "Sepals help protect the developing bud."
-        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
     }
     row (stamen, male) {
         source "The main flower parts are the male part called the stamen and the female part called the pistil."
-        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
     }
     row (pistil, female) {
         source "The main flower parts are the male part called the stamen and the female part called the pistil."
-        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
     }
     row (anther, carry_pollen) {
         source "The anthers carry the pollen."
-        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
     }
     row (stigma, traps_pollen) {
         source "The stigma is the sticky surface at the top of the pistil; it traps and holds the pollen."
-        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
     }
     row (ovary, contains_ovules) {
         source "The style leads down to the ovary that contains the ovules."
-        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
     }
 
     % THE ENVELOPE IS A FRAMING SPAN: the page's own sentence saying a

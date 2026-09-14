@@ -320,11 +320,35 @@ fn no_two_rows_share_a_span() {
         8,
         "and no two rows share one: {spans:?}"
     );
-    // The rows DO carry locators, and there are fewer of them than rows —
-    // two pages state two rows each.
-    assert_eq!(locators.len(), 8, "every row carries a locator: {locators:?}");
+    // THE LOCATOR RULE, asserted rather than a bare count. `reference-lines`
+    // ships it: restate a row locator when its page DIFFERS from the
+    // envelope's, inherit when it is the same.
+    //
+    // Seven rows are on other pages and restate. The LUNGS row's page IS the
+    // module index the envelope cites, so it inherits — which is also why the
+    // old harness had to declare "drop the lungs locator" an equivalent
+    // mutant. There is nothing to declare now.
+    //
+    // The earlier form asserted `locators.len() == 8`, and would have passed
+    // if a row restated the envelope's URL again. This one cannot.
+    let envelope = "https://training.seer.cancer.gov/anatomy/respiratory/";
+    assert_eq!(
+        locators.len(),
+        7,
+        "seven rows restate a locator; the lungs row inherits: {locators:?}"
+    );
+    for l in &locators {
+        assert_ne!(
+            l, envelope,
+            "no row restates the envelope's own page: {locators:?}"
+        );
+    }
     let mut uniq_locs = locators.clone();
     uniq_locs.sort();
     uniq_locs.dedup();
-    assert_eq!(uniq_locs.len(), 6, "across 6 distinct pages: {locators:?}");
+    assert_eq!(
+        uniq_locs.len(),
+        5,
+        "across 5 distinct pages, two of which state two rows each: {locators:?}"
+    );
 }

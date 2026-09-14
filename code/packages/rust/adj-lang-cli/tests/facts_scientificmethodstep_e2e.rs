@@ -319,4 +319,18 @@ fn the_envelope_span_reaches_no_answer_beyond_step_one_and_is_pinned() {
          the sources of the rows they state, and the one that is still a \
          corroboration sits on step_2's row"
     );
+    // THE LOCATOR RULE. `reference-lines.adj` ships it: restate a row locator
+    // when its page DIFFERS from the envelope's, inherit when it is the same.
+    // Every span here is on the one page, so NO row may carry a locator.
+    //
+    // Added because the deletion that made this true was not self-guarding:
+    // re-adding the envelope's URL to a row passed the entire suite.
+    let row_locators: Vec<&str> = adj
+        .lines()
+        .filter_map(|l| l.strip_prefix(r#"        locator ""#))
+        .collect();
+    assert!(
+        row_locators.is_empty(),
+        "no row carries its own locator; all inherit the envelope's: {row_locators:?}"
+    );
 }

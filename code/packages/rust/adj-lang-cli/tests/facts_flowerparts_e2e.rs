@@ -214,6 +214,20 @@ fn the_only_shared_span_is_the_declared_one() {
         "and it is shared by stamen and pistil, the pair the page fixes in one clause"
     );
     assert_eq!(shared[0].0, STAMEN_PISTIL, "and it is that clause");
+    // THE LOCATOR RULE. `reference-lines.adj` ships it: restate a row locator
+    // when its page DIFFERS from the envelope's, inherit when it is the same.
+    // Every span here is on the one page, so NO row may carry a locator.
+    //
+    // Added because the deletion that made this true was not self-guarding:
+    // re-adding the envelope's URL to a row passed the entire suite.
+    let row_locators: Vec<&str> = adj
+        .lines()
+        .filter_map(|l| l.strip_prefix(r#"        locator ""#))
+        .collect();
+    assert!(
+        row_locators.is_empty(),
+        "no row carries its own locator; all inherit the envelope's: {row_locators:?}"
+    );
 }
 
 /// #14986. The PETAL sentence was this table's `source` — the field that

@@ -174,7 +174,6 @@ table part_function {
     }
     row (lungs, external_respiration) {
         source "After this, there is an exchange of gases between the lungs and the blood. This is called external respiration."
-        locator "https://training.seer.cancer.gov/anatomy/respiratory/"
     }
     row (alveoli, gas_exchange) {
         source "Exchange of gases between the air in the lungs and the blood in the capillaries occurs across the walls of the alveolar ducts and alveoli."
