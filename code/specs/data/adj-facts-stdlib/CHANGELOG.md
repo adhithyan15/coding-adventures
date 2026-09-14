@@ -5,6 +5,34 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `biology/heredity-term.adj` — all 7 rows converted to per-row provenance (RS-5e, #14986),
+  and the cleanest case in this cascade so far: seven rows, seven NHGRI glossary pages, one
+  term each. The GENE sentence was this table's `source`, the field that carries the tier, for
+  every row, so `? heredity_term(phenotype, $D)` came back proved by *"The gene is considered
+  the basic unit of inheritance."* **The header said so in its own words** — the envelope held
+  *"the strongest single span (the `gene` row's text, which fixes THE FIRST ROW)"* — an
+  accurate description of a defect. Six of the seven rows were in that position.
+
+  **The six `cites` are promoted, not dropped**: each was already in the file with its own
+  glossary URL, in row order, and is now the `source` of the row it defines, at the envelope's
+  tier instead of untiered. Nothing had to be found here; it had to be attached. The envelope
+  becomes a FRAMING span (the glossary's definition of genetics), which mentions genes — said
+  plainly rather than claimed otherwise — but states nothing that warrants any of the seven
+  rows.
+
+  All seven spans were verified against the fetched glossary pages before writing, read out of
+  the shipped file rather than retyped, each with a negative arm (final word altered) that was
+  absent from every page. 7/7 verbatim. The row-to-warrant pairing is **asserted, not assumed**:
+  each row's key must appear both in the span it is given and in that span's locator.
+
+  `facts_heredityterm_e2e.rs`: 6 tests. The whole-chain `HEREDITY_TERM_PIN` is replaced — it
+  ran from the bindings through five `corroborations` entries that are now row `source`s. Its
+  own comment warned that *"a corroboration pin bound to the wrong entry is unique, anchored,
+  and tests nothing"*; a chain pin that outlives its corroborations is that hazard one step
+  later. What it existed to protect is kept as its own test: the phenotype span carries a CURLY
+  apostrophe (U+2019) in `individual’s`, and normalising it to ASCII is one of the mutants.
+  15 of 15 mutants killed, baseline green.
+
 - `chemistry/element-groups.adj` — all 27 rows converted to per-row provenance (RS-5e,
   #14986). The ALKALI-METAL sentence was this table's `source`, the field that carries the
   tier, for every row; it names lithium through francium and no other element, so
