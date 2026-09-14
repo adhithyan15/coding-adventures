@@ -354,8 +354,11 @@ fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
     // The three `cites` were PROMOTED into the rows they warrant, not dropped:
     // every span that was a corroboration is asserted above as some row's own
     // `source`, at the envelope's tier rather than untiered.
+    // Indentation-INSENSITIVE: an earlier form matched a literal four-space
+    // `"    cites "`, which a re-added corroboration at any other indent would
+    // have slipped straight past.
     assert!(
-        !adj.contains("    cites "),
+        !adj.contains("cites \""),
         "no corroboration survives at table level: each is now a row's own source"
     );
 }
