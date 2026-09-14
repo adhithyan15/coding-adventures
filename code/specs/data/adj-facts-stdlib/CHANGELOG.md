@@ -68,6 +68,24 @@ landed and why, not a semver-tracked API.
   so the assertion named "the reasoned rows are the right two" could have passed while asserting
   nothing about them.
 
+  **The stale-header defect was then swept for, rather than waiting for a fourth review to find
+  it** — and the sweep's one real hit was a leftover I had created an hour earlier in this very
+  file. Fixing the paragraph review flagged, I ended my replacement with *"The retained envelope
+  holds the single strongest span"* — stitching new prose onto the old sentence and leaving the
+  rest of the old paragraph standing. The file still said every other row's span was merely
+  "listed above", and still closed with a bare *"so `trust authoritative`"* for a table half of
+  which now ships `inferred`.
+
+  Scope of the sweep: **30 converted tables**, needle = header phrases asserting the
+  single-envelope design (the wordings from the three known cases plus variants — a lower bound,
+  since a header can be stale in wording not listed). Six matched; opening all six, three **quote**
+  the old wording while correcting it (`em-spectrum`, `circuit-parts`, `heredity-term`), one is
+  **accurate as written** (`energy-form-family` genuinely has one envelope — no row carries a
+  `source`), one was a false positive whose correction marker sat outside my context window
+  (`body-counts`, which says *"The paragraph that stood here read:"* and then quotes it), and one
+  was real. After the fix, every remaining hit is a record or accurate; **none asserts the old
+  design**.
+
   9 of 9 mutants killed, green baseline before and after, file verified byte-identical afterwards.
   Local scratch harness, so that count is not reproducible from the repo.
 

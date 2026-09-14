@@ -111,11 +111,26 @@
 % reproduces the page's characters exactly. The other two are contiguous in
 % the raw bytes.
 %
-% The retained envelope holds the single strongest span: the SEER sentence that names the
-% first row's valve (tricuspid → the right atrioventricular valve). Every OTHER
-% row's per-fact source and verbatim span is listed above, so each boundary
-% remains independently checkable. The source is a primary U.S. government NCI
-% reference (training.seer.cancer.gov), so `trust authoritative`.
+% THE RETAINED ENVELOPE holds the tricuspid sentence, and it is retained only
+% because an envelope `source` is REQUIRED -- this page has no sentence
+% framing the four valves as a set. Every row overrides it, so it reaches
+% answers only through the tricuspid row's own copy.
+%
+% EVERY ROW'S SPAN IS IN THE TABLE, not "listed above": the listing in this
+% header is commentary and the table is the authority. The source is a
+% primary U.S. government NCI reference (training.seer.cancer.gov), so the
+% ENVELOPE is `trust authoritative` -- but two of the four rows override that
+% with `trust inferred`, and saying "so `trust authoritative`" without that
+% qualification is what the sentence here used to do.
+%
+% (This paragraph was itself the defect one more time. Review found the
+% single-envelope wording two paragraphs up; I rewrote that one and ENDED my
+% replacement with "The retained envelope holds the single strongest span",
+% stitching new prose onto the old sentence and leaving the rest of the old
+% paragraph standing -- so the file still claimed every other row's span was
+% merely listed above, and still closed with a bare `authoritative`. A sweep
+% of all 30 converted tables for that wording found exactly one stale header:
+% this one.)
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
