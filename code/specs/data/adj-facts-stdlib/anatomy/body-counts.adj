@@ -84,14 +84,58 @@
 %   `authoritative` envelope trust, exactly as `hand-bones.adj` itself
 %   already documents for the same sentence.
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single strongest span: the explicitly numeric NHGRI
-% statement that fixes the first row (chromosomes → 46). Every OTHER row's
-% per-fact source, verbatim span, and real trust tier is listed above, so
-% each count remains independently checkable. Six of the nine sources are
-% primary U.S. government / NIH references (`trust authoritative`); the
-% three hand-bone-group rows are `consensus`-tier per their own IQWiG
-% source, as noted above.
+% EVERY ROW CARRIES ITS OWN SPAN, ITS OWN LOCATOR, AND — where it differs —
+% ITS OWN TIER, below, in the row's `{ ... }` block (ADJ-TABLES RS-5e). Nine
+% rows, seven pages.
+%
+% WHAT #14986 CHANGED HERE, and this table's defect is sharper than its
+% siblings'. The paragraph that stood here read: "An ADJ `table` carries ONE
+% provenance envelope, so the `source`/`locator`/`trust` below hold the single
+% strongest span: the explicitly numeric NHGRI statement that fixes the first
+% row (chromosomes → 46). Every OTHER row's per-fact source, verbatim span, and
+% real trust tier is listed above, so each count remains independently
+% checkable. Six of the nine sources are primary U.S. government / NIH
+% references (`trust authoritative`); the three hand-bone-group rows are
+% `consensus`-tier per their own IQWiG source, as noted above."
+%
+% Two defects in one paragraph:
+%
+%   1. THE SPAN. `source` is the field that carries the tier, so all nine rows
+%      were warranted by a sentence that counts CHROMOSOMES. A recall of
+%      `pairs_of_ribs` came back proved by "Humans have 22 pairs of numbered
+%      chromosomes ... for a total of 46."
+%
+%   2. THE TIER, and this one the file DECLARED and then contradicted. It says
+%      plainly that the three hand-bone rows "are `consensus`-tier, one rung
+%      below the table's `authoritative` envelope trust" — and shipped
+%      `authoritative` on them, because one envelope imposes one tier. The e2e
+%      test that queried exactly those three rows asserted only their NUMBERS,
+%      so nothing caught it. They now carry `trust consensus` in the row, which
+%      is what a query returns.
+%
+% TWO FACTS ABOUT ROW/ENVELOPE PROVENANCE, ESTABLISHED BY RUNNING IT rather
+% than by reading the lowering code:
+%
+%   * a row's `trust` DOES override the envelope's, per row;
+%   * an envelope `source` is REQUIRED — an envelope carrying only `locator`
+%     and `trust` is rejected with `Lower(TableMissingProvenance)`. The framing
+%     span below is not a stylistic choice.
+%
+% THE ENVELOPE IS NOW A FRAMING SPAN: the SEER module's opening description of
+% the body as billions of smaller structures. It states no count of anything
+% this table counts, so it warrants none of the nine rows. It ends on the
+% page's own colon, where that sentence hands off to the list of the four
+% kinds — the page's boundary, not a cut.
+%
+% ONE SPAN WAS WIDENED. The lungs row quoted "the pair of spongy, pinkish-gray
+% organs in your chest" — opening mid-sentence, so the quoted run never said
+% whose, or that it was about lungs at all. The page's full sentence is
+% contiguous: "Your lungs are the pair of spongy, pinkish-gray organs in your
+% chest." Same class as the truncation triage in #15185.
+%
+% THREE ROWS SHARE THE HAND SENTENCE, so each carries its own copy and each is
+% pinned individually: one broken copy behind two intact ones is the failure
+% `biology/skeleton-bones.adj` shipped.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -99,17 +143,62 @@
 table body_count {
     columns structure, count
 
-    row (chromosomes, 46)
-    row (bones_in_adult_body, 206)
-    row (heart_chambers, 4)
-    row (lungs, 2)
-    row (pairs_of_ribs, 12)
-    row (kidneys, 2)
-    row (carpals, 8)
-    row (metacarpals, 5)
-    row (phalanges, 14)
+    % Each row carries the sentence that STATES ITS COUNT, that
+    % sentence's page, and — for the three hand-bone rows — its own
+    % TIER. Until #14986 one envelope imposed the chromosome sentence
+    % and `trust authoritative` on all nine, while this file's header
+    % already said the hand-bone rows are honestly `consensus`.
+    row (chromosomes, 46) {
+        source "Humans have 22 pairs of numbered chromosomes (autosomes) and one pair of sex chromosomes (XX or XY), for a total of 46."
+        locator "https://www.genome.gov/genetics-glossary/Chromosome"
+    }
+    row (bones_in_adult_body, 206) {
+        source "Human infants typically have 270 bones, fusing into around 206 in the human adult."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK537199/"
+    }
+    row (heart_chambers, 4) {
+        source "It has four hollow chambers surrounded by muscle and other heart tissue."
+        locator "https://www.nhlbi.nih.gov/health/heart/anatomy"
+    }
+    row (lungs, 2) {
+        source "Your lungs are the pair of spongy, pinkish-gray organs in your chest."
+        locator "https://www.nhlbi.nih.gov/health/lungs"
+    }
+    row (pairs_of_ribs, 12) {
+        source "Generally, there are twelve pairs of ribs."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK538328/"
+    }
+    row (kidneys, 2) {
+        source "The paired kidneys are located between the twelfth thoracic and third lumbar vertebrae, one on each side of the vertebral column."
+        locator "https://training.seer.cancer.gov/anatomy/urinary/components/kidney.html"
+    }
+    row (carpals, 8) {
+        source "The human hand is made up of a total of 27 individual bones: 8 carpal bones (in the base of the hand), 5 metacarpal bones (in the middle part of the hand) and 14 phalanges (finger bones) are connected by joints and ligaments."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK279362/"
+        trust consensus
+    }
+    row (metacarpals, 5) {
+        source "The human hand is made up of a total of 27 individual bones: 8 carpal bones (in the base of the hand), 5 metacarpal bones (in the middle part of the hand) and 14 phalanges (finger bones) are connected by joints and ligaments."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK279362/"
+        trust consensus
+    }
+    row (phalanges, 14) {
+        source "The human hand is made up of a total of 27 individual bones: 8 carpal bones (in the base of the hand), 5 metacarpal bones (in the middle part of the hand) and 14 phalanges (finger bones) are connected by joints and ligaments."
+        locator "https://www.ncbi.nlm.nih.gov/books/NBK279362/"
+        trust consensus
+    }
 
-    source "Humans have 22 pairs of numbered chromosomes (autosomes) and one pair of sex chromosomes (XX or XY), for a total of 46."
-    locator "https://www.genome.gov/genetics-glossary/Chromosome"
+    % THE ENVELOPE IS A FRAMING SPAN: the SEER module's opening
+    % description of the body as many smaller structures. It states no
+    % COUNT of anything this table counts, so it warrants none of the nine
+    % rows. It ends on the page's own colon, where the sentence hands off
+    % to the list of the four kinds — the page's boundary, not a cut.
+    %
+    % An envelope `source` is REQUIRED, established by running it: an
+    % envelope with only `locator` and `trust` is rejected with
+    % `Lower(TableMissingProvenance)`. The framing span is not a style
+    % choice.
+    source "The human body is a single structure but it is made up of billions of smaller structures of four major kinds:"
+    locator "https://training.seer.cancer.gov/anatomy/body/"
     trust authoritative
 }
