@@ -91,34 +91,83 @@
 % "Talking Glossary of Genomic and Genetic Terms" at genome.gov — the SAME
 % primary U.S. government genetics reference `biology/dna-base-pairs.adj`
 % and `biology/cell-division-genetic-outcome.adj` already cite, hence
-% `trust authoritative` (matching their tier, not `consensus`). An ADJ
-% `table` carries ONE provenance envelope, so `source`/`locator`/`trust`
-% below hold the strongest single span (the `gene` row's text, which fixes
-% the first row); every OTHER row's own verbatim text is quoted above and
-% additionally carried as its own `cites` entry below, so each term remains
-% independently checkable. (See ../README.md; feedback_nothing_human_authored,
+% `trust authoritative` (matching their tier, not `consensus`).
+%
+% EVERY ROW CARRIES ITS OWN SPAN AND ITS OWN LOCATOR, below, in the row's
+% `{ ... }` block (ADJ-TABLES RS-5e). Seven rows, seven glossary pages, one
+% term each.
+%
+% WHAT #14986 CHANGED. This header used to read, verbatim: "An ADJ `table`
+% carries ONE provenance envelope, so `source`/`locator`/`trust` below hold the
+% strongest single span (the `gene` row's text, which fixes the first row);
+% every OTHER row's own verbatim text is quoted above and additionally carried
+% as its own `cites` entry below, so each term remains independently
+% checkable." READ THE CLAUSE "which fixes the first row" — the emphasis is
+% added here, the words are the file's own. Accurate, and a description of a
+% defect: `source` is
+% the field that carries the tier, so a recall of `phenotype` came back proved
+% by "The gene is considered the basic unit of inheritance." Six of the seven
+% rows were in that position. Their evidence was already in the file, as
+% untiered `cites`, IN ROW ORDER — nothing had to be found here, it had to be
+% attached, and the six `cites` are PROMOTED rather than dropped: each is now
+% the `source` of the row it defines, at the envelope's tier.
+%
+% THE ENVELOPE IS NOW A FRAMING SPAN: the glossary's own definition of
+% genetics. It MENTIONS genes — said plainly rather than claimed otherwise —
+% but it does not say what a gene IS to inheritance, and says nothing about the
+% other six terms, so it warrants none of the seven rows.
+%
+% ONE SPAN IS GLYPH-SENSITIVE. The phenotype sentence carries a CURLY
+% apostrophe (U+2019) in "individual’s", not the ASCII `'`. An "apostrophe fix"
+% would make the span stop being the page's bytes, so it is pinned, and
+% breaking it is one of this table's mutants. (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
 
 table heredity_term {
     columns term, definition
 
-    row (gene, basic_unit_of_inheritance)
-    row (allele, one_of_two_or_more_versions_of_dna_sequence_at_a_given_genomic_location)
-    row (dominant, one_allele_is_expressed_and_the_effect_of_the_other_allele_is_masked)
-    row (recessive, both_alleles_must_be_present_to_express_the_trait)
-    row (genotype, a_scoring_of_the_type_of_variant_present_at_a_given_location_in_the_genome)
-    row (phenotype, an_individuals_observable_traits)
-    row (trait, a_specific_characteristic_of_an_individual)
+    % Each row carries the NHGRI glossary sentence that DEFINES its
+    % own term, and that term's own glossary page — seven rows, seven
+    % pages, one term each. Until #14986 all seven carried the GENE
+    % sentence; the other six spans were already in this file, as
+    % untiered `cites`, in this same order.
+    row (gene, basic_unit_of_inheritance) {
+        source "The gene is considered the basic unit of inheritance."
+        locator "https://www.genome.gov/genetics-glossary/Gene"
+    }
+    row (allele, one_of_two_or_more_versions_of_dna_sequence_at_a_given_genomic_location) {
+        source "An allele is one of two or more versions of DNA sequence (a single base or a segment of bases) at a given genomic location."
+        locator "https://www.genome.gov/genetics-glossary/Allele"
+    }
+    row (dominant, one_allele_is_expressed_and_the_effect_of_the_other_allele_is_masked) {
+        source "If the alleles of a gene are different, one allele will be expressed; it is the dominant gene. The effect of the other allele, called recessive, is masked."
+        locator "https://www.genome.gov/genetics-glossary/Dominant"
+    }
+    row (recessive, both_alleles_must_be_present_to_express_the_trait) {
+        source "In the case of a recessive trait, the alleles of the trait-causing gene are the same, and both (recessive) alleles must be present to express the trait."
+        locator "https://www.genome.gov/genetics-glossary/Recessive-Traits-Alleles"
+    }
+    row (genotype, a_scoring_of_the_type_of_variant_present_at_a_given_location_in_the_genome) {
+        source "A genotype is a scoring of the type of variant present at a given location (i.e., a locus) in the genome."
+        locator "https://www.genome.gov/genetics-glossary/genotype"
+    }
+    row (phenotype, an_individuals_observable_traits) {
+        source "Phenotype refers to an individual’s observable traits, such as height, eye color and blood type."
+        locator "https://www.genome.gov/genetics-glossary/Phenotype"
+    }
+    row (trait, a_specific_characteristic_of_an_individual) {
+        source "A trait, as related to genetics, is a specific characteristic of an individual."
+        locator "https://www.genome.gov/genetics-glossary/Trait"
+    }
 
-    source "The gene is considered the basic unit of inheritance."
-    locator "https://www.genome.gov/genetics-glossary/Gene"
+    % THE ENVELOPE IS A FRAMING SPAN: the glossary's definition of
+    % genetics. It MENTIONS genes — stated plainly rather than claimed
+    % otherwise — but it does not say what a gene IS to inheritance, and
+    % it says nothing at all about the other six terms, so it warrants
+    % none of the seven rows. Every row overrides `source` and `locator`;
+    % `trust` is inherited, one tier for all eight NHGRI pages.
+    source "Genetics is the branch of biology concerned with the study of inheritance, including the interplay of genes, DNA variation and their interactions with environmental factors."
+    locator "https://www.genome.gov/genetics-glossary/Genetics"
     trust authoritative
-
-    cites "An allele is one of two or more versions of DNA sequence (a single base or a segment of bases) at a given genomic location." locator "https://www.genome.gov/genetics-glossary/Allele"
-    cites "If the alleles of a gene are different, one allele will be expressed; it is the dominant gene. The effect of the other allele, called recessive, is masked." locator "https://www.genome.gov/genetics-glossary/Dominant"
-    cites "In the case of a recessive trait, the alleles of the trait-causing gene are the same, and both (recessive) alleles must be present to express the trait." locator "https://www.genome.gov/genetics-glossary/Recessive-Traits-Alleles"
-    cites "A genotype is a scoring of the type of variant present at a given location (i.e., a locus) in the genome." locator "https://www.genome.gov/genetics-glossary/genotype"
-    cites "Phenotype refers to an individual’s observable traits, such as height, eye color and blood type." locator "https://www.genome.gov/genetics-glossary/Phenotype"
-    cites "A trait, as related to genetics, is a specific characteristic of an individual." locator "https://www.genome.gov/genetics-glossary/Trait"
 }
