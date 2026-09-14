@@ -346,4 +346,59 @@ fn the_shared_spans_are_exactly_the_declared_ones() {
         5,
         "and 5 rows have a sentence to themselves: {groups:?}"
     );
+    // THE LOCATOR RULE. `reference-lines.adj` ships it: restate a row locator
+    // when its page DIFFERS from the envelope's, inherit when it is the same.
+    // Two rows here are on other pages and keep theirs; thirteen inherit.
+    //
+    // Added because the deletion that made this true was not self-guarding:
+    // re-adding the envelope's URL to a row was caught only incidentally, by
+    // tests that noticed the changed citation, never by the rule.
+    let adj_text = std::fs::read_to_string(facts_stdlib().join("anatomy/brain-parts.adj"))
+        .expect("read shipped brain-parts.adj");
+    // THE ENVELOPE LOCATOR IS DERIVED TOTALLY, not positionally. An earlier
+    // form took the FIRST four-space `locator` line -- and review showed a row
+    // locator written with four spaces instead of eight is accepted by the
+    // parser, shipped as that answer's locator, AND adopted by this guard as
+    // "the envelope", so the guard passed on exactly the mutation it exists
+    // for. Requiring EXACTLY ONE four-space locator, and every locator line to
+    // be indented four or eight, makes that mutation reddening rather than
+    // invisible.
+    let table_locators: Vec<&str> = adj_text
+        .lines()
+        .filter(|l| l.starts_with("    locator \"") && !l.starts_with("     "))
+        .collect();
+    assert_eq!(
+        table_locators.len(),
+        1,
+        "exactly one table-level locator: {table_locators:?}"
+    );
+    for l in adj_text.lines() {
+        if l.trim_start().starts_with("locator \"") {
+            let indent = l.len() - l.trim_start().len();
+            assert!(
+                indent == 4 || indent == 8,
+                "every locator line is indented 4 (table) or 8 (row): {l:?}"
+            );
+        }
+    }
+    let envelope = table_locators[0]
+        .trim_start()
+        .trim_start_matches("locator \"")
+        .trim_end_matches(0x22 as char);
+    let row_locators: Vec<&str> = adj_text
+        .lines()
+        .filter_map(|l| l.strip_prefix(r#"        locator ""#))
+        .collect();
+    assert_eq!(
+        row_locators.len(),
+        2,
+        "two rows are on other pages and restate: {row_locators:?}"
+    );
+    for l in &row_locators {
+        assert_ne!(
+            l.trim_end_matches(0x22 as char),
+            envelope,
+            "no row restates the envelope's own page: {row_locators:?}"
+        );
+    }
 }

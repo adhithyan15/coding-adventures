@@ -91,7 +91,9 @@
 %
 % EVERY ROW CARRIES ITS OWN SPAN, below, in the row's `{ ... }` block
 % (ADJ-TABLES RS-5e). All eight spans are on the one NASA Space Place
-% page, and each row spells that locator out rather than inheriting it.
+% page, and every row INHERITS it — the rule
+% `geography/reference-lines.adj` states: restate a row locator only when
+% its page DIFFERS from the envelope's.
 % What was wrong until #14986 was the SPAN, not the page -- which is why
 % a citation assertion over the hostname could not have caught it.
 %
@@ -189,7 +191,8 @@ table scientific_method_step {
 
     % Each row carries the sentence that states ITS OWN step. All
     % eight spans are on the one NASA Space Place page, and each row
-    % spells that locator out rather than inheriting it. What was wrong
+    % INHERITS it (restating is for rows whose page differs). What was
+    % wrong
     % until #14986 was the SPAN, not the page: every row was warranted
     % by the STEP 1 sentence.
     %
@@ -199,32 +202,25 @@ table scientific_method_step {
     % answer and no other. Verified by running it.
     row (step_1, ask_a_question_or_state_a_hypothesis) {
         source "Ask a question or make a statement that you can test by an experiment. This statement is called a hypothesis."
-        locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
     }
     row (step_2, define_variables_and_controls) {
         source "Define the parts of your experiment that will change. These are called variables."
-        locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
         cites "Define the parts of your experiment that will not change. These are called controls." locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
     }
     row (step_3, research_what_is_already_known) {
         source "Find out what people have already said or written about the subject."
-        locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
     }
     row (step_4, design_the_experiment) {
         source "Think of an experiment to test the hypothesis."
-        locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
     }
     row (step_5, do_the_experiment_and_record_the_data) {
         source "Now do the experiment and carefully record the data."
-        locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
     }
     row (step_6, analyze_the_data) {
         source "Figure out what the data means."
-        locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
     }
     row (step_7, draw_conclusions_and_write_a_report) {
         source "Draw conclusions and write a report."
-        locator "https://spaceplace.nasa.gov/review/science-fair/scientific-method.html"
     }
 
     % THE ENVELOPE IS NOT A FRAMING SPAN, and that is disclosed rather

@@ -320,11 +320,66 @@ fn no_two_rows_share_a_span() {
         8,
         "and no two rows share one: {spans:?}"
     );
-    // The rows DO carry locators, and there are fewer of them than rows —
-    // two pages state two rows each.
-    assert_eq!(locators.len(), 8, "every row carries a locator: {locators:?}");
+    // THE LOCATOR RULE, asserted rather than a bare count. `reference-lines`
+    // ships it: restate a row locator when its page DIFFERS from the
+    // envelope's, inherit when it is the same.
+    //
+    // Seven rows are on other pages and restate. The LUNGS row's page IS the
+    // module index the envelope cites, so it inherits — which is also why the
+    // old harness had to declare "drop the lungs locator" an equivalent
+    // mutant. There is nothing to declare now.
+    //
+    // The earlier form asserted `locators.len() == 8`, and would have passed
+    // if a row restated the envelope's URL again. This one cannot.
+    let adj = std::fs::read_to_string(facts_stdlib().join("anatomy/respiratory-parts.adj"))
+        .expect("read shipped respiratory-parts.adj");
+    // THE ENVELOPE LOCATOR IS DERIVED TOTALLY, not positionally. An earlier
+    // form took the FIRST four-space `locator` line -- and review showed a row
+    // locator written with four spaces instead of eight is accepted by the
+    // parser, shipped as that answer's locator, AND adopted by this guard as
+    // "the envelope", so the guard passed on exactly the mutation it exists
+    // for. Requiring EXACTLY ONE four-space locator, and every locator line to
+    // be indented four or eight, makes that mutation reddening rather than
+    // invisible.
+    let table_locators: Vec<&str> = adj
+        .lines()
+        .filter(|l| l.starts_with("    locator \"") && !l.starts_with("     "))
+        .collect();
+    assert_eq!(
+        table_locators.len(),
+        1,
+        "exactly one table-level locator: {table_locators:?}"
+    );
+    for l in adj.lines() {
+        if l.trim_start().starts_with("locator \"") {
+            let indent = l.len() - l.trim_start().len();
+            assert!(
+                indent == 4 || indent == 8,
+                "every locator line is indented 4 (table) or 8 (row): {l:?}"
+            );
+        }
+    }
+    let envelope = table_locators[0]
+        .trim_start()
+        .trim_start_matches("locator \"")
+        .trim_end_matches(0x22 as char);
+    assert_eq!(
+        locators.len(),
+        7,
+        "seven rows restate a locator; the lungs row inherits: {locators:?}"
+    );
+    for l in &locators {
+        assert_ne!(
+            l, envelope,
+            "no row restates the envelope's own page: {locators:?}"
+        );
+    }
     let mut uniq_locs = locators.clone();
     uniq_locs.sort();
     uniq_locs.dedup();
-    assert_eq!(uniq_locs.len(), 6, "across 6 distinct pages: {locators:?}");
+    assert_eq!(
+        uniq_locs.len(),
+        5,
+        "across 5 distinct pages, two of which state two rows each: {locators:?}"
+    );
 }

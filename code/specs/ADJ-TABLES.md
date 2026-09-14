@@ -95,7 +95,10 @@ exactly as before (inherits the whole envelope), so every existing table is unch
 - **`row (…)`**: one row; items are exact numbers or atoms, positionally bound to columns.
 - **`{ annotation }`**: the shared `source "…" locator "…" trust <tier>` provenance envelope
   (identical to `relate`/`formula`). Attached to the whole table; a shipped table must carry
-  a non-empty `source`. (Per-row provenance is a documented future extension; §6.)
+  a non-empty `source` — an envelope with only `locator` and `trust` is rejected with
+  `TableMissingProvenance`. (Per-row provenance is **delivered** by RS-5e, above; §6's
+  capability table records it. An earlier wording here called it "a documented future
+  extension", which contradicted §6 one page away.)
 
 ---
 
@@ -221,6 +224,23 @@ same exact-`BigRational` arithmetic, and the same per-row citation path.
 - This is what makes the audit trail honest at the table level: *every asserted fact quotes the
   byte span that supports **it***. A row without a block still inherits the envelope, so tables
   authored before RS-5e keep working unchanged.
+- **A row restates `locator` only when its page DIFFERS from the envelope's** — otherwise it
+  inherits. Same for `trust`. This is the convention §RS-5e's own example above already follows,
+  and `geography/reference-lines.adj` states it in terms; it is written down here because the
+  stdlib was deciding it per table (issue #15197) and drifting both ways.
+
+  The reason is not tidiness. A row `locator` equal to the envelope's is a **no-op**:
+  `row_provenance` assigns `prov.locator` only when the row supplies one, so dropping such a line
+  produces **byte-identical** output — verified by execution, not argued. That makes the
+  duplicated literal something **no test can distinguish from its own absence**, so every
+  single-page table's mutation harness has to *declare* "drop a row's locator" an equivalent
+  mutant: bookkeeping that exists only because of the duplication. Inheriting instead makes
+  "this table is single-page" structurally visible — a test can assert the row-locator count is
+  zero — rather than a fact a reader has to establish by comparing N copies of a URL.
+
+  A row whose span genuinely lives on another page **must** restate `locator`, and that is the
+  case the rule is shaped around: after this convention, a row locator *means* "not the envelope's
+  page", and carries information wherever it appears.
 - **How a table appears in the audit trail (RS-4).** `ADJ-REASON-MATH.md` §E — the normative
   audit-trail contract — gives tables two of its step kinds: `FromTableRow { table, row_index }`
   for an exact hit and `FromRangeBracket { table, key, matched_key, mode }` for a bracket select.
