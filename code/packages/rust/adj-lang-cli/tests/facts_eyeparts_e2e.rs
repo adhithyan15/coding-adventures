@@ -80,3 +80,151 @@ fn anatomy_eye_parts_recall_binds_function_with_citation() {
         "unknown part abstains: {out}"
     );
 }
+
+const NEI: &str = "https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work";
+
+/// Assert one row's warrant, binding the PART so exactly one row answers.
+///
+/// No row carries a `locator`, so every answer's locator is the envelope's —
+/// which is asserted here as part of the needle, not assumed.
+fn assert_part(tag: &str, part: &str, function: &str, span: &str) {
+    let dir = scratch(tag);
+    std::fs::copy(
+        facts_stdlib().join("anatomy/eye-parts.adj"),
+        dir.join("eye-parts.adj"),
+    )
+    .expect("copy shipped eye-parts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"eye-parts.adj\"\n? eye_part_function({part}, $F)\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        1,
+        "exactly one row for {part}, so every needle below is its own: {out}"
+    );
+    assert!(
+        out.contains(&format!("\"F\":\"{function}\"")),
+        "{part} binds {function}: {out}"
+    );
+    assert!(
+        out.contains(&format!(
+            "\"source\":\"{span}\",\"locator\":\"{NEI}\",\"trust\":\"authoritative\""
+        )),
+        "{part} is warranted by the sentence that states its job: {out}"
+    );
+}
+
+/// #14986. The CORNEA sentence was this table's `source` — the field that
+/// carries the tier — for all six rows, so a recall of `optic_nerve` came back
+/// proved by *"The cornea is shaped like a dome and bends light to help the eye
+/// focus."*
+///
+/// Every sentence is on the SAME page, so the locator was never wrong here and
+/// a hostname assertion could never have caught it — only the span was.
+#[test]
+fn every_part_carries_the_sentence_that_states_its_job() {
+    assert_part(
+        "epcornea", "cornea", "bends_light",
+        "The cornea is shaped like a dome and bends light to help the eye focus.",
+    );
+    assert_part(
+        "eppupil", "pupil", "lets_in_light",
+        "Some of this light enters the eye through an opening called the pupil (PYOO-pul).",
+    );
+    assert_part(
+        "epiris", "iris", "controls_light",
+        "The iris (the colored part of the eye) controls how much light the pupil lets in.",
+    );
+    assert_part(
+        "eplens", "lens", "focuses_light",
+        "The lens works together with the cornea to focus light correctly on the retina.",
+    );
+    assert_part(
+        "epretina", "retina", "turns_light_into_signals",
+        "When light hits the retina (a light-sensitive layer of tissue at the back of the eye), special cells called photoreceptors turn the light into electrical signals.",
+    );
+    assert_part(
+        "epoptic", "optic_nerve", "carries_signals_to_brain",
+        "These electrical signals travel from the retina through the optic nerve to the brain.",
+    );
+}
+
+/// #15193. NO ROW HERE SHARES A SPAN, and no row carries a `locator` —
+/// asserted against the SHIPPED FILE. The second half is what makes "one page"
+/// a checked fact rather than a paragraph: a row-level locator appearing here
+/// would mean the table had quietly become multi-page.
+#[test]
+fn no_two_rows_share_a_span() {
+    let adj = std::fs::read_to_string(facts_stdlib().join("anatomy/eye-parts.adj"))
+        .expect("read shipped eye-parts.adj");
+    let mut spans: Vec<String> = Vec::new();
+    let mut locators: Vec<String> = Vec::new();
+    for line in adj.lines() {
+        if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            spans.push(rest.trim_end_matches(0x22 as char).to_string());
+        } else if let Some(rest) = line.strip_prefix(r#"        locator ""#) {
+            locators.push(rest.trim_end_matches(0x22 as char).to_string());
+        }
+    }
+    assert_eq!(spans.len(), 6, "every row carries its own source: {spans:?}");
+    let mut uniq = spans.clone();
+    uniq.sort();
+    uniq.dedup();
+    assert_eq!(uniq.len(), 6, "and no two rows share one: {spans:?}");
+    assert!(
+        locators.is_empty(),
+        "no row carries its own locator; all inherit the envelope's: {locators:?}"
+    );
+    assert!(
+        adj.contains("    columns part, function"),
+        "the shipped column names are unchanged"
+    );
+}
+
+/// The envelope is the page's own opening sentence. It names NO part —
+/// checked against all six row keys, not assumed — so it warrants none of the
+/// six rows.
+#[test]
+fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
+    let dir = scratch("epenvelope");
+    std::fs::copy(
+        facts_stdlib().join("anatomy/eye-parts.adj"),
+        dir.join("eye-parts.adj"),
+    )
+    .expect("copy shipped eye-parts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"eye-parts.adj\"\n? eye_part_function($P, $F)\n",
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        6,
+        "all six rows answer: {out}"
+    );
+    assert!(
+        !out.contains("work together to help you see"),
+        "the framing span warrants no row: {out}"
+    );
+    // The cornea sentence warrants exactly ONE row where it used to be the
+    // `source` on all six — 12 occurrences across citations and steps, now 2.
+    assert_eq!(
+        out.matches("shaped like a dome").count(),
+        2,
+        "the cornea sentence warrants the cornea row and nothing else: {out}"
+    );
+    let adj = std::fs::read_to_string(facts_stdlib().join("anatomy/eye-parts.adj"))
+        .expect("read shipped eye-parts.adj");
+    assert!(
+        adj.contains(
+            "    source \"All the different parts of your eyes work together to help you see.\"\n    locator \"https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work\"\n    trust authoritative"
+        ),
+        "the envelope carries the page's opening sentence, verbatim"
+    );
+}
