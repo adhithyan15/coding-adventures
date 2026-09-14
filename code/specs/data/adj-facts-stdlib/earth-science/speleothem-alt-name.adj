@@ -21,18 +21,19 @@
 % meteors").
 %
 % Provenance: four sentences from the U.S. National Park Service's
-% "Speleothems" page, one per name group.
+% "Speleothems" page, one per name group, plus a framing sentence as
+% the table envelope, which warrants no row.
 %
 %     speleothem         alt_name(s)                    grounding sentence
 %     ----------------   ----------------------------   ------------------
 %     column             pillar                         (1) formation
 %     coralloid          corallite                      (2) catchall
-%     frozen_waterfall   petrified_waterfall,           (3) flowstone forms
+%     frozen_waterfall   petrified_waterfall,           (3) waterfall names
 %                        cascades, rivers,
 %                        glaciers, organ_pipes
 %     drapery            cave_bacon_when_...            (4) bacon condition
 %
-% *** A LIMITATION OF THIS TABLE IN PARTICULAR, STATED UP FRONT. ***
+% *** PROVENANCE IN THIS TABLE IS PER-ROW. ***
 % PROVENANCE IS PER-ROW (ADJ-TABLES RS-5e, #14986). Each row carries the
 % sentence that states ITS name; `locator` and `trust` are inherited, since all
 % four sentences come from this one page at one tier.
@@ -110,7 +111,8 @@ table speleothem_alt_name {
         % PROMOTED from a table-level `cites`. Note the page offers
         % "cave popcorn" here as a synonym and elsewhere as a MEMBER
         % of coralloids; that conflict is why `cave_popcorn` has no
-        % row, and the conflicting sentence is not this row's warrant.
+        % row -- and note the conflict is with a LATER sentence, not
+        % this one, so the corallite warrant is untouched by it.
         source "Coralloid (or corallite or cave popcorn) is a catchall term describing knobby, nodular, botryoidal, or corallike speleothems."
     }
     row (frozen_waterfall, petrified_waterfall) {
@@ -138,9 +140,15 @@ table speleothem_alt_name {
         source "Cave Bacon forms on slanted surfaces, and is called \"bacon\" instead of drapery, when the characteristic layers are present."
     }
 
-    % The envelope is the FRAMING span -- that this domain HAS many
-    % names, which is what the table is about. It warrants no row.
-    % Until #14986 it was the COLUMN row's own sentence.
+    % The envelope is a FRAMING span about the size of the speleothem
+    % vocabulary -- 38 types plus subtypes and varieties. It names no
+    % speleothem and no alternative name, so it warrants no row.
+    %
+    % A first gloss called it "that this domain HAS many names". The
+    % sentence counts TYPES, not names -- taxonomy, not nomenclature --
+    % and a gloss that overstates its own citation is the defect this
+    % file exists to demonstrate. Until #14986 the envelope was the
+    % COLUMN row's own sentence.
     source "Cave Minerals of the World (Hill, 1997) refers to 38 different types of speleothems and numerous subtypes and varieties."
     locator "https://www.nps.gov/subjects/caves/speleothems.htm"
     trust authoritative

@@ -44,6 +44,27 @@ landed and why, not a semver-tracked API.
 
   The README row for this table stated the same limitation and is updated rather than left behind.
 
+  ### A pre-existing assertion that proves less than its message claims
+
+  Review measured it: `a_frozen_waterfall_answers_to_five_other_names` does a whole-stdout `contains`
+  over a **five-answer** query, and it did **not** fire when one copy of the shared sentence was
+  broken, or silently edited ("most common" → "least common"). Only the new per-row test killed those.
+  The old assertion is left in place — it still checks the five bindings, which is what its name says —
+  but it is not what pins the spans, and the new helper's doc comment records why.
+
+  ### And the note's deletion left its own banner behind
+
+  Review caught it: the removed limitation note's headline, `*** A LIMITATION OF THIS TABLE IN
+  PARTICULAR, STATED UP FRONT. ***`, survived directly above the paragraph announcing that the
+  limitation is gone. The one line of the note not rewritten was the line that announced it — "left to
+  rot" in the exact file whose header asked not to be.
+
+  Four other comment defects came out of the same review, and one is worth naming because it is this
+  cascade's own discipline turned inward: the envelope gloss said the framing sentence shows "that
+  this domain HAS many names", while the sentence counts *"38 different **types** … subtypes and
+  varieties"* — taxonomy, not nomenclature. **A gloss that overstates its own citation**, in the file
+  that exists to stop exactly that.
+
 - **#14986: eight energy forms, all warranted by the definition of chemical energy.**
   `physics/energy-forms.adj` carried the CHEMICAL sentence as its envelope, so a recall of
   `electrical` came back proved by *"Chemical energy is energy stored in the bonds of atoms and
