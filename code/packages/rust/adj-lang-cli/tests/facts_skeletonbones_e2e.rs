@@ -259,3 +259,80 @@ fn no_answer_cites_the_framing_page_or_leaks_the_framing_span() {
         "the leg page warrants the three leg rows and nothing else: {out}"
     );
 }
+
+/// Parse `(row key, its own `source`)` out of a shipped `.adj`.
+///
+/// The full two-column key: column 1 alone is not a row identity. A first pass
+/// at the #15193 census keyed on column 1 and printed brain-parts as
+/// `brainstem+brainstem+…`, because ten rows there share that part and differ
+/// only in the function.
+fn row_spans(rel: &str) -> Vec<(String, String)> {
+    let adj = std::fs::read_to_string(facts_stdlib().join(rel))
+        .unwrap_or_else(|e| panic!("read shipped {rel}: {e}"));
+    let mut out: Vec<(String, String)> = Vec::new();
+    let mut key: Option<String> = None;
+    for line in adj.lines() {
+        if let Some(rest) = line.strip_prefix("    row (") {
+            key = rest.split(')').next().map(|k| {
+                k.split(',').map(|p| p.trim()).collect::<Vec<_>>().join(", ")
+            });
+        } else if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            let span = rest.trim_end_matches(0x22 as char).to_string();
+            out.push((key.clone().expect("a row precedes every source"), span));
+        }
+    }
+    out
+}
+
+/// The groups of rows that share one span, each group sorted by appearance,
+/// the groups themselves in first-appearance order.
+fn sharing_groups(pairs: &[(String, String)]) -> Vec<Vec<String>> {
+    let mut order: Vec<String> = Vec::new();
+    for (_, span) in pairs {
+        if !order.contains(span) {
+            order.push(span.clone());
+        }
+    }
+    order
+        .iter()
+        .map(|span| {
+            pairs
+                .iter()
+                .filter(|(_, s)| s == span)
+                .map(|(k, _)| k.clone())
+                .collect::<Vec<_>>()
+        })
+        .filter(|g| g.len() > 1)
+        .collect()
+}
+
+/// #15193. The sharing structure of this table, asserted against the SHIPPED
+/// FILE rather than described in a comment.
+///
+/// This is the table whose original defect (#15171) was five rows pinned by
+/// nothing behind one shared span — and until now nothing asserted which rows
+/// share which span, so the same shape could return silently.
+#[test]
+fn the_shared_spans_are_exactly_the_declared_ones() {
+    let pairs = row_spans("biology/skeleton-bones.adj");
+    assert_eq!(pairs.len(), 15, "fifteen rows carry their own source: {pairs:?}");
+    let groups = sharing_groups(&pairs);
+    let expected: Vec<Vec<&str>> = vec![
+        vec!["tibia, leg", "fibula, leg"],
+        vec!["humerus, arm", "radius, arm", "ulna, arm"],
+        vec!["clavicle, shoulder", "scapula, shoulder"],
+        vec!["sternum, chest", "ribs, chest"],
+        vec!["frontal, skull", "parietal, skull", "temporal, skull", "occipital, skull"],
+    ];
+    assert_eq!(
+        groups, expected,
+        "five sentences are shared, by exactly these rows: {groups:?}"
+    );
+    // And the rows NOT in any group each stand alone.
+    let shared: usize = groups.iter().map(|g| g.len()).sum();
+    assert_eq!(
+        pairs.len() - shared,
+        2,
+        "two rows (femur and patella) have a sentence to themselves: {groups:?}"
+    );
+}
