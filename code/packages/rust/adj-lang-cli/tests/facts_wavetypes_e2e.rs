@@ -147,12 +147,16 @@ fn assert_wave(tag: &str, wave: &str, family: &str, span: &str) {
         out.contains(&format!("\"F\":\"{family}\"")),
         "{wave} binds {family}: {out}"
     );
-    // EQUIVALENT MUTANT, DECLARED HERE rather than only in a changelog —
-    // review caught the same omission one table earlier (#15191). Every row on
-    // this table repeats the envelope's own URL, and `row_provenance` assigns
-    // `locator` only when a row supplies one, so DROPPING a row's locator
-    // produces byte-identical output and cannot be killed. CHANGING one is
-    // still killed, by the `{PAGE}` needle below.
+    // NO ROW CARRIES A LOCATOR, so this needle's `{PAGE}` is the ENVELOPE's,
+    // inherited by every row. That follows the rule `reference-lines.adj`
+    // already ships: restate a row locator when its page DIFFERS from the
+    // envelope's, inherit when it is the same.
+    //
+    // An earlier form of this table repeated the URL on all ten rows, which
+    // forced the harness to DECLARE an equivalent mutant — "drop a row's
+    // locator" produced byte-identical output and could not be killed. There
+    // is nothing to declare now: a row that has no locator cannot have one
+    // dropped, and ADDING one is caught by `no_two_rows_share_a_span`.
     assert!(
         out.contains(&format!(
             "\"source\":\"{span}\",\"locator\":\"{PAGE}\",\"trust\":\"authoritative\""

@@ -137,43 +137,33 @@ table wave_family {
     % electromagnetic band at all.
     row (water, mechanical) {
         source "Water waves, sound waves, and waves on a rope are all examples of mechanical waves."
-        locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
     }
     row (sound, mechanical) {
         source "Water waves, sound waves, and waves on a rope are all examples of mechanical waves."
-        locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
     }
     row (rope, mechanical) {
         source "Water waves, sound waves, and waves on a rope are all examples of mechanical waves."
-        locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
     }
     row (gamma, electromagnetic) {
         source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
-        locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
     }
     row (xray, electromagnetic) {
         source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
-        locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
     }
     row (ultraviolet, electromagnetic) {
         source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
-        locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
     }
     row (visible_light, electromagnetic) {
         source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
-        locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
     }
     row (infrared, electromagnetic) {
         source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
-        locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
     }
     row (microwave, electromagnetic) {
         source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
-        locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
     }
     row (radio, electromagnetic) {
         source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
-        locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
     }
 
     % THE ENVELOPE IS THE MECHANICAL-WAVE DEFINITION, and that choice is

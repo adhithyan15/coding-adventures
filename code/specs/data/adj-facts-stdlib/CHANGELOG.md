@@ -30,6 +30,12 @@ landed and why, not a semver-tracked API.
   figure captions, ordinary prose, no list items.
 
   `facts_wavetypes_e2e.rs`: adds 3 tests (5 total), including the #15193 structural check (three mechanical
+  rows, seven electromagnetic, no row with a third sentence). 18 of 19 mutants killed; **no survivor, and nothing to declare**: the ten rows
+  no longer repeat the envelope's URL, so the unkillable "drop a row's locator" mutant does not
+  exist. Review raised that redundancy and I deferred it to #15197 as an open convention
+  question — it was not open. `geography/reference-lines.adj` already ships the rule (restate
+  when the row's page DIFFERS from the envelope's, inherit when it is the same), and every row
+  here is on the one NASA page.
   rows, seven electromagnetic, no row with a third sentence). 18 of 19 mutants killed; the
   single survivor is equivalent — every row repeats the envelope's own URL, so a dropped row
   locator is byte-identical while a changed one still dies. **That declaration now ships in the
