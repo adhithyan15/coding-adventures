@@ -83,11 +83,43 @@
 %   ovary → contains_ovules
 %     "The style leads down to the ovary that contains the ovules."
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the Illinois Extension statement
-% that fixes the first row (petal → attract_pollinators). Every OTHER row's
-% verbatim span is listed above, so each function remains independently
-% checkable. The source is a University of Illinois Extension botany teaching
+% EVERY ROW CARRIES ITS OWN SPAN, below, in the row's `{ ... }` block
+% (ADJ-TABLES RS-5e). The seven spans above are the same seven, kept here as a
+% readable index -- the machine values are in the rows.
+%
+% WHAT #14986 CHANGED. This paragraph read: "An ADJ `table` carries ONE
+% provenance envelope, so the `source`/`locator`/`trust` below hold the single
+% cleanest span: the Illinois Extension statement that fixes the FIRST ROW
+% (petal -> attract_pollinators)." Accurate, and a description of a defect:
+% `source` is the field that carries the tier, so a recall of `ovary` came back
+% proved by "Petals attract pollinators and are usually the reason why we buy
+% and enjoy flowers."
+%
+% EVERY SPAN HERE IS ON THE SAME PAGE, so the locator was never wrong and a
+% hostname assertion could never have caught this -- only the span was wrong.
+% That is why the shipped test passed unchanged through the conversion.
+%
+% BLOCK STRUCTURE WAS CHECKED BEFORE ANY SPAN WAS CUT. This page's whole
+% content sits in ONE `<td>` of a LAYOUT table, and the prose inside it is
+% ordinary sentences. So sentence-level spans are legitimate here: the table
+% markup is layout, not semantics. (The check exists because flattened text
+% hides the difference -- on a different page it read as prose and was in fact
+% a paragraph followed by an ordered list, which is a different question
+% entirely.) The heading "Flower Parts" is an `<h2>` immediately before the
+% first sentence, so the flattened text reads "Flower Parts Flowers are
+% important in making seeds."; no span starts there.
+%
+% TWO ROWS SHARE ONE SENTENCE: `stamen` and `pistil` are both fixed by "The
+% main flower parts are the male part called the stamen and the female part
+% called the pistil." Each carries its own copy and each is pinned separately.
+%
+% THE ENVELOPE IS A FRAMING SPAN: "Flowers can be made up of different parts,
+% but there are some parts that are basic equipment." It names NO part --
+% checked against all seven row keys, not assumed -- so it warrants none of the
+% seven rows.
+%
+% All eight spans were confirmed verbatim on the page, each occurring EXACTLY
+% ONCE, each with a negative arm (final word altered) absent. The source is a University of Illinois Extension botany teaching
 % page (a .edu-primary Cooperative Extension resource), so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
@@ -96,15 +128,47 @@
 table flower_part_function {
     columns part, function
 
-    row (petal, attract_pollinators)
-    row (sepal, protect)
-    row (stamen, male)
-    row (pistil, female)
-    row (anther, carry_pollen)
-    row (stigma, traps_pollen)
-    row (ovary, contains_ovules)
+    % Each row carries the sentence that states ITS OWN function.
+    % All eight spans are on the one Illinois Extension page, and
+    % each row spells that locator out rather than inheriting it.
+    % Until #14986 every row carried the PETAL sentence.
+    %
+    % `stamen` and `pistil` SHARE one sentence — the page fixes both
+    % in the same clause — so each carries its own copy and each is
+    % pinned separately.
+    row (petal, attract_pollinators) {
+        source "Petals attract pollinators and are usually the reason why we buy and enjoy flowers."
+        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
+    }
+    row (sepal, protect) {
+        source "Sepals help protect the developing bud."
+        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
+    }
+    row (stamen, male) {
+        source "The main flower parts are the male part called the stamen and the female part called the pistil."
+        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
+    }
+    row (pistil, female) {
+        source "The main flower parts are the male part called the stamen and the female part called the pistil."
+        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
+    }
+    row (anther, carry_pollen) {
+        source "The anthers carry the pollen."
+        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
+    }
+    row (stigma, traps_pollen) {
+        source "The stigma is the sticky surface at the top of the pistil; it traps and holds the pollen."
+        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
+    }
+    row (ovary, contains_ovules) {
+        source "The style leads down to the ovary that contains the ovules."
+        locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
+    }
 
-    source "Petals attract pollinators and are usually the reason why we buy and enjoy flowers."
+    % THE ENVELOPE IS A FRAMING SPAN: the page's own sentence saying a
+    % flower has some parts that are basic equipment. It names NO part —
+    % checked, not assumed — so it warrants none of the seven rows.
+    source "Flowers can be made up of different parts, but there are some parts that are basic equipment."
     locator "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html"
     trust authoritative
 }
