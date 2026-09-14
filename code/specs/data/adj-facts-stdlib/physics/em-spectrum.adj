@@ -116,15 +116,49 @@
 table band_use {
     columns band, application
 
-    row (radio, radio_stations)
-    row (microwave, cooking)
-    row (infrared, night_vision)
-    row (visible, eyes)
-    row (ultraviolet, tanning)
-    row (x_ray, teeth)
-    row (gamma_ray, medical_imaging)
+    % Each row carries the sentence that names ITS OWN BAND AND ITS USE.
+    % Until issue #14986 was applied here, the RADIO
+    % sentence was the envelope `source` and therefore the warrant for
+    % all seven rows -- so `? band_use(x_ray, $A)` came back proved by a
+    % sentence about radio stations. Six of the seven were in that
+    % position.
+    %
+    % NO CROSS-ROW OVERLAP, which is unusual in this cascade and worth
+    % recording: measured against the page's own wording for each key
+    % (`x_ray` is "X-rays", `gamma_ray` is "gamma-ray"), each of the
+    % seven spans names its own band and NO other. There is therefore no
+    % pairing trap here of the kind `anatomy/eye-parts.adj` and
+    % `earth-science/water-cycle.adj` both carry.
+    %
+    % NO ROW RESTATES `locator`: all seven sentences are on the one page
+    % the envelope names, which is the rule `geography/reference-lines.adj`
+    % states.
+    row (radio, radio_stations) {
+        source "Your radio captures radio waves emitted by radio stations, bringing your favorite tunes."
+    }
+    row (microwave, cooking) {
+        source "Microwave radiation will cook your popcorn in just a few minutes, but is also used by astronomers to learn about the structure of nearby galaxies."
+    }
+    row (infrared, night_vision) {
+        source "Night vision goggles pick up the infrared light emitted by our skin and objects with heat."
+    }
+    row (visible, eyes) {
+        source "Our eyes detect visible light."
+    }
+    row (ultraviolet, tanning) {
+        source "Ultraviolet radiation is emitted by the Sun and are the reason skin tans and burns."
+    }
+    row (x_ray, teeth) {
+        source "A dentist uses X-rays to image your teeth, and airport security uses them to see through your bag."
+    }
+    row (gamma_ray, medical_imaging) {
+        source "Doctors use gamma-ray imaging to see inside your body."
+    }
 
-    source "Your radio captures radio waves emitted by radio stations, bringing your favorite tunes."
+    % THE ENVELOPE IS THE PAGE'S OWN INTRODUCTION TO PRECISELY THIS LIST,
+    % and it names no band, so it cannot mis-warrant a row. Checked
+    % against all seven row keys in the page's own wording.
+    source "The image below shows where you might encounter each portion of the EM spectrum in your day-to-day life."
     locator "https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html"
     trust authoritative
 }
