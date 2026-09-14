@@ -106,7 +106,6 @@ table vitamin_deficiency_symptom {
     % `cites`, in this same order.
     row (vitamin_a, inability_to_see_in_low_light) {
         source "The most common sign of vitamin A deficiency is an eye condition called xerophthalmia. Xerophthalmia is the inability to see in low light, and it can lead to blindness if it isn’t treated."
-        locator "https://ods.od.nih.gov/factsheets/VitaminA-Consumer/"
     }
     row (vitamin_d, soft_weak_deformed_painful_bones) {
         source "In children, vitamin D deficiency causes rickets, a disease in which the bones become soft, weak, deformed, and painful."

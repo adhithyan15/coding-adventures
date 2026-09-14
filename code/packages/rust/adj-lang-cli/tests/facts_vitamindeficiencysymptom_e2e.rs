@@ -270,25 +270,64 @@ fn no_two_rows_share_a_span_or_a_page() {
         facts_stdlib().join("biology/vitamin-deficiency-symptom.adj"),
     )
     .expect("read shipped vitamin-deficiency-symptom.adj");
+    // EACH ROW'S *EFFECTIVE* PAGE, not the count of locator lines. This used
+    // to assert `locators.len() == 5` -- a PROXY for the property this test
+    // is named after. It measured how the file is WRITTEN rather than what
+    // page each row RESOLVES to, so it went red when the vitamin-A row
+    // stopped restating the envelope's own URL: a change that altered no
+    // row's page at all, and produced byte-identical CLI output.
+    //
+    // A row's effective page is its own `locator` when it has one and the
+    // envelope's otherwise, which is exactly what `row_provenance` does.
+    let envelope_locator = adj
+        .lines()
+        .find_map(|l| l.strip_prefix(r#"    locator ""#))
+        .expect("envelope locator")
+        .trim_end_matches(0x22 as char)
+        .to_string();
+
     let mut spans: Vec<String> = Vec::new();
-    let mut locators: Vec<String> = Vec::new();
+    let mut pages: Vec<String> = Vec::new();
+    let mut pending: Option<String> = None;
     for line in adj.lines() {
         if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            if pending.is_some() {
+                pages.push(pending.take().expect("previous row's page"));
+            }
             spans.push(rest.trim_end_matches(0x22 as char).to_string());
+            pending = Some(envelope_locator.clone());
         } else if let Some(rest) = line.strip_prefix(r#"        locator ""#) {
-            locators.push(rest.trim_end_matches(0x22 as char).to_string());
+            assert!(pending.is_some(), "a row locator precedes no row source");
+            pending = Some(rest.trim_end_matches(0x22 as char).to_string());
         }
     }
+    if let Some(last) = pending.take() {
+        pages.push(last);
+    }
+
     assert_eq!(spans.len(), 5, "five row sources: {spans:?}");
-    assert_eq!(locators.len(), 5, "five row locators: {locators:?}");
+    assert_eq!(pages.len(), 5, "one effective page per row: {pages:?}");
     let mut us = spans.clone();
     us.sort();
     us.dedup();
     assert_eq!(us.len(), 5, "no two rows share a span: {spans:?}");
-    let mut ul = locators.clone();
-    ul.sort();
-    ul.dedup();
-    assert_eq!(ul.len(), 5, "no two rows share a fact sheet: {locators:?}");
+    let mut up = pages.clone();
+    up.sort();
+    up.dedup();
+    assert_eq!(up.len(), 5, "no two rows share a fact sheet: {pages:?}");
+    // AND THE CONVENTION IS OBSERVED: a row restates `locator` only when its
+    // page differs from the envelope's (ADJ-TABLES.md §4). Four of these
+    // five do differ; the fifth is the vitamin-A row, whose page IS the
+    // envelope's, so it inherits.
+    assert_eq!(
+        adj.matches("\n        locator \"").count(),
+        4,
+        "four rows restate a locator; the one on the envelope's own page inherits"
+    );
+    assert!(
+        pages.contains(&envelope_locator),
+        "and the inheriting row still resolves to the envelope's page: {pages:?}"
+    );
     assert!(
         !adj.contains("\n    cites \""),
         "no corroboration survives at table level: each is now a row's own source"
