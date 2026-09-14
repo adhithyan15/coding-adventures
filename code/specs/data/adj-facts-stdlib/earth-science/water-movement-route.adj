@@ -69,16 +69,52 @@
 % CONTENT-verified by RAW TEXT EXTRACTION (HTTP 200, 84 substantive
 % sentences, zero soft-404 markers), never from a fetch summary.
 %
-% PROVENANCE IS TABLE-LEVEL, and with three sentences that is worth
-% stating. The `source` envelope and both `cites` corroborations cover
-% EVERY row, so an answer about `runoff` also carries the atmosphere and
-% ground sentences, only one of which grounds it. Nothing cited is false
-% and the grounding sentence is always among them, but the reader has to
-% match sentence to row. In `--explain`, which renders only the primary
-% source and drops corroborations, the `runoff` row displays under the
-% ATMOSPHERE sentence — which does not ground it. That is a property of
-% every multi-sentence table in this stdlib, tracked as issue #13898; THE
-% JSON OUTPUT IS THE AUTHORITATIVE VIEW.
+% THAT 84 IS THE ORIGINAL EXTRACTION'S FIGURE AND WAS NOT RE-MEASURED
+% by the 2026-09-14 re-extraction below, which is worth saying plainly
+% because it sits directly above a paragraph headed MEASURED, NOT
+% ASSUMED. Re-counting on 2026-09-14 gives 79 sentences of 40 or more
+% characters. That is NOT a correction: the rule behind the 84 was
+% never recorded, so the two numbers are not comparable, and 79 is
+% reported as what THIS count counted rather than as a replacement.
+%
+% PROVENANCE IS PER-ROW (ADJ-TABLES RS-5e), and with three sentences that
+% is the whole point. Each row carries, in its own `row { source ... }`
+% block, the sentence that LISTS IT. An answer about `runoff` now ships the
+% SURFACE sentence as its primary source, and the atmosphere sentence does
+% not reach it at all.
+%
+% Until this change, provenance was table-level: the `source` envelope was
+% the ATMOSPHERE sentence and the other two were `cites` corroborations, so
+% every row carried all three and `runoff` was warranted, as its PRIMARY
+% source, by a sentence that does not mention runoff. In `--explain`, which
+% renders the primary source and drops corroborations, the runoff row
+% displayed under the atmosphere sentence. Nothing cited was false and the
+% grounding sentence was always among the three, but matching sentence to
+% row was left to the reader. That is issue #14986, and for THIS table it is
+% now fixed; the claim is about this file and no other.
+%
+% THREE ROWS SHARE A SENTENCE, and that is honest rather than a compromise:
+% the atmosphere sentence lists evaporation, evapotranspiration AND
+% precipitation by name, so it grounds each of those three rows equally.
+% Sharing a span is only a defect when the span does not name the row.
+%
+% THE ENVELOPE IS A FRAMING SENTENCE — "The water cycle describes where
+% water is on Earth and how it moves." — chosen because it names NONE of
+% the eight row keys and so cannot mis-warrant any of them. `source` is a
+% REQUIRED envelope field (an envelope carrying only `locator` and `trust`
+% is rejected with `TableMissingProvenance`), so the slot must be filled by
+% something; filling it with one of the three route sentences is exactly
+% what produced the defect above.
+%
+% MEASURED, NOT ASSUMED. Re-extracted 2026-09-14 (HTTP 200; 95,733
+% bytes on disk, 95,701 Unicode characters — the two are stated
+% separately because one line below this one says `byte-faithful`, and
+% an earlier wording labelled the CHARACTER count as bytes):
+% all three route sentences occur verbatim, all three inside `<p>` blocks,
+% and a fabricated control sentence is reported absent by the same
+% comparison. The three are CONSECUTIVE sentences of ONE `<p>` — which is
+% what "three parallel sentences" above had always asserted and never
+% shown.
 %
 % ONE EXTRACTION HAZARD WORTH RECORDING, because it nearly put a wrong
 % string in the `source` envelope. The three sentences wrap each process
@@ -115,20 +151,49 @@
 table water_movement_route {
     columns process, route
 
-    row (evaporation, between_atmosphere_and_surface)
-    row (evapotranspiration, between_atmosphere_and_surface)
-    row (precipitation, between_atmosphere_and_surface)
+    % Each row carries the sentence that LISTS IT BY NAME. The three
+    % sentences are consecutive sentences of one paragraph, and each
+    % names every process on its own route, so three rows sharing the
+    % atmosphere sentence are each warranted by it -- not approximated
+    % by it. NO ROW RESTATES `locator`: every sentence is on the one
+    % page the envelope names, and the rule
+    % `geography/reference-lines.adj` states is to restate a row locator
+    % only when its page DIFFERS from the envelope's.
+    row (evaporation, between_atmosphere_and_surface) {
+        source "Water moves between the atmosphere and the surface through evaporation, evapotranspiration, and precipitation."
+    }
+    row (evapotranspiration, between_atmosphere_and_surface) {
+        source "Water moves between the atmosphere and the surface through evaporation, evapotranspiration, and precipitation."
+    }
+    row (precipitation, between_atmosphere_and_surface) {
+        source "Water moves between the atmosphere and the surface through evaporation, evapotranspiration, and precipitation."
+    }
 
-    row (snowmelt, across_the_surface)
-    row (runoff, across_the_surface)
-    row (streamflow, across_the_surface)
+    row (snowmelt, across_the_surface) {
+        source "Water moves across the surface through snowmelt, runoff, and streamflow."
+    }
+    row (runoff, across_the_surface) {
+        source "Water moves across the surface through snowmelt, runoff, and streamflow."
+    }
+    row (streamflow, across_the_surface) {
+        source "Water moves across the surface through snowmelt, runoff, and streamflow."
+    }
 
-    row (infiltration, into_the_ground)
-    row (groundwater_recharge, into_the_ground)
+    row (infiltration, into_the_ground) {
+        source "Water moves into the ground through infiltration and groundwater recharge."
+    }
+    row (groundwater_recharge, into_the_ground) {
+        source "Water moves into the ground through infiltration and groundwater recharge."
+    }
 
-    source "Water moves between the atmosphere and the surface through evaporation, evapotranspiration, and precipitation."
+    % THE ENVELOPE NAMES NO PROCESS, which is the property that makes it
+    % safe in the framing slot: it cannot mis-warrant a row, because it
+    % mentions none of them. Checked against all eight row keys in the
+    % page's own wording. This sentence occurs twice in the page TEXT,
+    % both times in narrative `<p>` blocks — and four times in the raw
+    % HTML, because the other two are the `<meta name="description">`
+    % and `<meta property="og:description">` tags.
+    source "The water cycle describes where water is on Earth and how it moves."
     locator "https://www.usgs.gov/water-science-school/water-cycle"
     trust authoritative
-    cites "Water moves across the surface through snowmelt, runoff, and streamflow." locator "https://www.usgs.gov/water-science-school/water-cycle"
-    cites "Water moves into the ground through infiltration and groundwater recharge." locator "https://www.usgs.gov/water-science-school/water-cycle"
 }
