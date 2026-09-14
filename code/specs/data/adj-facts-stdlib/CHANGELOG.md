@@ -22,12 +22,19 @@ landed and why, not a semver-tracked API.
   not mis-warrant a row, and this sentence names no specific wave — checked against all ten row
   keys **in the page's own wording**, where `xray` is "X-rays" and `rope` is "waves on a rope".
 
-  All three spans confirmed verbatim, each occurring exactly once, each with a negative arm
-  absent. Block structure checked first: the membership sentences are the tails of two `<p>`
+  All three spans confirmed verbatim, each with a negative arm absent. The two
+  membership sentences occur exactly once in the document; the definition sentence occurs once
+  in the page's prose and four more times in `<head>` metadata (meta/og/twitter descriptions
+  and JSON-LD), all copies of the same caption — "exactly once" was the first wording and is
+  true of the prose, not of the document. Block structure checked first: the membership sentences are the tails of two `<p>`
   figure captions, ordinary prose, no list items.
 
-  `facts_wavetypes_e2e.rs`: 3 tests, including the #15193 structural check (three mechanical
+  `facts_wavetypes_e2e.rs`: adds 3 tests (5 total), including the #15193 structural check (three mechanical
   rows, seven electromagnetic, no row with a third sentence). 18 of 19 mutants killed; the
+  single survivor is equivalent — every row repeats the envelope's own URL, so a dropped row
+  locator is byte-identical while a changed one still dies. **That declaration now ships in the
+  harness**, beside the assertion it concerns; review caught the same omission one table
+  earlier (#15191), where it had lived only in the changelog.
   single survivor is declared in the harness in advance as equivalent — every row cites the
   envelope's own URL, so a dropped row locator is byte-identical while a changed one still
   dies.

@@ -147,6 +147,12 @@ fn assert_wave(tag: &str, wave: &str, family: &str, span: &str) {
         out.contains(&format!("\"F\":\"{family}\"")),
         "{wave} binds {family}: {out}"
     );
+    // EQUIVALENT MUTANT, DECLARED HERE rather than only in a changelog —
+    // review caught the same omission one table earlier (#15191). Every row on
+    // this table repeats the envelope's own URL, and `row_provenance` assigns
+    // `locator` only when a row supplies one, so DROPPING a row's locator
+    // produces byte-identical output and cannot be killed. CHANGING one is
+    // still killed, by the `{PAGE}` needle below.
     assert!(
         out.contains(&format!(
             "\"source\":\"{span}\",\"locator\":\"{PAGE}\",\"trust\":\"authoritative\""

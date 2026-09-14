@@ -115,8 +115,13 @@
 % names no specific wave -- checked against all ten row keys in the page's own
 % wording, where `xray` is "X-rays" and `rope` is "waves on a rope".
 %
-% All three spans were confirmed verbatim on the page, each occurring EXACTLY
-% ONCE, each with a negative arm (final word altered) absent.
+% All three spans were confirmed verbatim on the page, each with a negative arm
+% (final word altered) absent. The two MEMBERSHIP sentences occur exactly once
+% in the whole document. The DEFINITION sentence occurs once in the page's
+% prose and four more times in `<head>` metadata -- meta description,
+% og:description, twitter:description and the JSON-LD description, all copies
+% of the same caption. Stated because "exactly once" was the first wording and
+% it is true of the prose, not of the document.
 %
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
