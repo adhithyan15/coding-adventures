@@ -9,8 +9,8 @@ landed and why, not a semver-tracked API.
   #14986). The STEP 1 sentence was this table's `source`, the field that carries the tier, for
   every row, so `? scientific_method_step(step_6, $D)` came back proved by *"Ask a question or
   make a statement that you can test by an experiment. This statement is called a hypothesis."*
-  All eight spans are on the one NASA Space Place page, so **the locator was never wrong here —
-  only the span**, which is why this table's citation assertion never noticed.
+  All eight spans are on the one NASA Space Place page and each row spells that locator out
+  rather than inheriting it, so **the locator was never wrong here — only the span**, which is why this table's citation assertion never noticed.
 
   **Measured against the pre-change file by running it**: the step-1 sentence occurred **14**
   times in a full-table query (seven answers, twice each — once under `citations`, once under
@@ -22,8 +22,10 @@ landed and why, not a semver-tracked API.
   `corroborations` entry on that row's answer and no other. Established by running it.
 
   **The envelope is NOT a framing span here, and that is disclosed rather than dressed up.**
-  This page has no sentence that frames the method without *being* one of the steps — its only
-  non-step text is the heading and a worked kitten example. An envelope `source` is required
+  Narrowed to what was checked: no sentence *outside the seven `Step N.` labels* frames the
+  method, and the non-step text is **two** headings — "Steps in Scientific Method" and "One Way
+  to Do Science...", the second of which the file's own header already named — plus a worked
+  kitten example. An envelope `source` is required
   (an envelope carrying only `locator` and `trust` is rejected with
   `Lower(TableMissingProvenance)`), so the envelope keeps the step-1 sentence; every row
   overrides `source`, so it reaches no answer, and `step_1` carries its own copy. What this

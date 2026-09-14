@@ -259,9 +259,10 @@ fn the_two_part_step_carries_both_of_its_sentences() {
 }
 
 /// The envelope is NOT a framing span here, and that is disclosed rather than
-/// dressed up. This NASA page has no sentence that frames the method without
-/// BEING one of the steps — its only non-step text is the heading and a worked
-/// kitten example. An envelope `source` is REQUIRED, so the envelope keeps the
+/// dressed up. Narrowed to what was checked: no sentence OUTSIDE the
+/// seven `Step N.` labels frames the method. The non-step text is TWO
+/// headings — "Steps in Scientific Method" and "One Way to Do
+/// Science..." — and a worked kitten example. An envelope `source` is REQUIRED, so the envelope keeps the
 /// step-1 sentence; every row overrides `source`, so it reaches no answer, and
 /// `step_1` carries its own copy.
 #[test]
