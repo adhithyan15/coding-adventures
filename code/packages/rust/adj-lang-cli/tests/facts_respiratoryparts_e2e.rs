@@ -285,3 +285,46 @@ fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
         "the envelope carries the module's definition of respiration, verbatim"
     );
 }
+
+/// Parse every row-level `source` and `locator` out of a shipped `.adj`.
+fn row_fields(rel: &str) -> (Vec<String>, Vec<String>) {
+    let adj = std::fs::read_to_string(facts_stdlib().join(rel))
+        .unwrap_or_else(|e| panic!("read shipped {rel}: {e}"));
+    let mut spans: Vec<String> = Vec::new();
+    let mut locators: Vec<String> = Vec::new();
+    for line in adj.lines() {
+        if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            spans.push(rest.trim_end_matches(0x22 as char).to_string());
+        } else if let Some(rest) = line.strip_prefix(r#"        locator ""#) {
+            locators.push(rest.trim_end_matches(0x22 as char).to_string());
+        }
+    }
+    (spans, locators)
+}
+
+/// #15193. NO ROW HERE SHARES A SPAN — asserted against the SHIPPED FILE, the
+/// same way the sharing tables assert which rows share one.
+///
+/// Eight rows, eight sentences, SIX pages: `larynx.html` states both the
+/// larynx and the trachea, `bronchi.html` both the bronchi and the
+/// alveoli.
+#[test]
+fn no_two_rows_share_a_span() {
+    let (spans, locators) = row_fields("anatomy/respiratory-parts.adj");
+    assert_eq!(spans.len(), 8, "every row carries its own source: {spans:?}");
+    let mut uniq = spans.clone();
+    uniq.sort();
+    uniq.dedup();
+    assert_eq!(
+        uniq.len(),
+        8,
+        "and no two rows share one: {spans:?}"
+    );
+    // The rows DO carry locators, and there are fewer of them than rows —
+    // two pages state two rows each.
+    assert_eq!(locators.len(), 8, "every row carries a locator: {locators:?}");
+    let mut uniq_locs = locators.clone();
+    uniq_locs.sort();
+    uniq_locs.dedup();
+    assert_eq!(uniq_locs.len(), 6, "across 6 distinct pages: {locators:?}");
+}

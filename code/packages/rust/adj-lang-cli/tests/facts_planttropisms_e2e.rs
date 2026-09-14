@@ -295,3 +295,45 @@ fn the_framing_envelope_never_reaches_an_answer() {
         "the envelope carries the page's definition of a tropism, verbatim"
     );
 }
+
+/// Parse every row-level `source` and `locator` out of a shipped `.adj`.
+fn row_fields(rel: &str) -> (Vec<String>, Vec<String>) {
+    let adj = std::fs::read_to_string(facts_stdlib().join(rel))
+        .unwrap_or_else(|e| panic!("read shipped {rel}: {e}"));
+    let mut spans: Vec<String> = Vec::new();
+    let mut locators: Vec<String> = Vec::new();
+    for line in adj.lines() {
+        if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            spans.push(rest.trim_end_matches(0x22 as char).to_string());
+        } else if let Some(rest) = line.strip_prefix(r#"        locator ""#) {
+            locators.push(rest.trim_end_matches(0x22 as char).to_string());
+        }
+    }
+    (spans, locators)
+}
+
+/// #15193. NO ROW HERE SHARES A SPAN — asserted against the SHIPPED FILE, the
+/// same way the sharing tables assert which rows share one.
+///
+/// Twelve rows, twelve definition lines, ONE page — no row carries a
+/// `locator`, so every row inherits the envelope's.
+#[test]
+fn no_two_rows_share_a_span() {
+    let (spans, locators) = row_fields("biology/plant-tropisms.adj");
+    assert_eq!(spans.len(), 12, "every row carries its own source: {spans:?}");
+    let mut uniq = spans.clone();
+    uniq.sort();
+    uniq.dedup();
+    assert_eq!(
+        uniq.len(),
+        12,
+        "and no two rows share one: {spans:?}"
+    );
+    // ONE PAGE, and the file says so once: no row carries a `locator`, so
+    // every row inherits the envelope's. Pinned because a row-level locator
+    // appearing here would mean this table had quietly become multi-page.
+    assert!(
+        locators.is_empty(),
+        "no row carries its own locator; all inherit the envelope's: {locators:?}"
+    );
+}
