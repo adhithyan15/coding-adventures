@@ -60,8 +60,12 @@
 % atrioventricular boundaries are fixed by chaining the defining sentence with
 % the naming sentence:
 %
-%   (defining) "The valves between the atria and ventricles are called
-%    atrioventricular valves (also called cuspid valves)."
+%   (defining) "The valves between the atria and ventricles are called atrioventricular valves (also called cuspid valves), while those at the bases of the large vessels leaving the ventricles are called semilunar valves."
+%     Quoted whole. An earlier rendering here stopped after "(also called
+%     cuspid valves)." and added a period the page does not have -- a string
+%     that occurs ZERO times on it -- while the rows below cite the full
+%     sentence. Two renderings of one span, fifty lines apart, one of them
+%     fabricated, under a heading promising character-for-character.
 %
 %   tricuspid → right_atrium_and_right_ventricle
 %     "The right atrioventricular valve is the tricuspid valve."
@@ -81,8 +85,33 @@
 %     "The valve between the left ventricle and the aorta is the aortic
 %      semilunar valve."
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single strongest span: the SEER sentence that names the
+% *** EACH ROW CARRIES ITS OWN SPAN, AND TWO OF THE FOUR SHIP AT A LOWER
+% TIER. *** `pulmonary` and `aortic` are READ: one sentence names the valve
+% and both chambers, so they inherit the envelope's `authoritative`.
+% `tricuspid` and `mitral` are REASONED: their sentences name the valve and
+% call it right/left atrioventricular but name NO chamber, so the boundary
+% needs the defining sentence above as a second span, and those two ship
+% `trust inferred`. Shipping them at `authoritative` would claim the page
+% states something it does not.
+%
+% This paragraph used to read "An ADJ `table` carries ONE provenance
+% envelope, so the source/locator/trust below hold the single strongest
+% span ... so `trust authoritative`" -- true of the old shape, false of this
+% one, and it asserted `authoritative` for a table half of which no longer
+% ships at that tier. The same stale-header defect was found by review in
+% `physics/em-spectrum.adj` and `physics/circuit-parts.adj`; this is the
+% third, and the first two are recorded in the CHANGELOG. THE TABLE IS THE
+% AUTHORITY; this header is commentary.
+%
+% "CHARACTER-FOR-CHARACTER" IS CONDITIONAL ON ONE STRIPPING RULE for three
+% of the five spans -- the pulmonary, aortic and tricuspid sentences are
+% interrupted in the raw HTML by inline `<a class='glossaryTerm'>` anchors,
+% so their raw-byte count is zero and they are verbatim only after tags are
+% stripped with NO separator. The anchors wrap plain text, so the strip
+% reproduces the page's characters exactly. The other two are contiguous in
+% the raw bytes.
+%
+% The retained envelope holds the single strongest span: the SEER sentence that names the
 % first row's valve (tricuspid → the right atrioventricular valve). Every OTHER
 % row's per-fact source and verbatim span is listed above, so each boundary
 % remains independently checkable. The source is a primary U.S. government NCI

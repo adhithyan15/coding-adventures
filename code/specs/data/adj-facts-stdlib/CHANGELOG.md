@@ -25,20 +25,48 @@ landed and why, not a semver-tracked API.
   `geography/reference-lines.adj` already uses. Shipping them at `authoritative` would claim the
   page states something it does not.
 
-  **The assertion that makes this real binds the TIER TO THE SPAN in one contiguous run.**
-  Checking the tier and the span separately would pass on either kind of row, because
-  `authoritative` appears in the output either way — it is the envelope's tier. Three tier mutants
-  are killed by it: promoting a reasoned row, downgrading a read one, and **swapping both pairs**,
-  which leaves the counts at two and two and still dies.
+  **The assertion that makes this real binds the TIER TO THE SPAN in one contiguous run.** Three
+  tier mutants die on it: promoting a reasoned row, downgrading a read one, and **swapping both
+  pairs**, which leaves the counts at two and two and still fails.
+
+  **The reason I first gave for that pin was wrong, and review measured it.** I wrote that
+  checking tier and span separately "would pass on either kind of row, because `authoritative`
+  appears in the output either way — it is the envelope's tier". It does not. The envelope is not
+  a fact and every row overrides `source`, so on a single-valve query the envelope's tier never
+  reaches stdout. Measured directly, per query: `tricuspid` and `mitral` contain `authoritative`
+  **0** times; `pulmonary` and `aortic` contain `inferred` **0** times. The claim holds only of
+  the pre-existing multi-query test, which runs four queries in one program so both tiers appear —
+  and that is where the two-loose-needles weakness actually bit. The contiguous pin is still the
+  right assertion; the justification was overstated, and the **stronger** `!contains(wrong_tier)`
+  arm that an earlier comment talked itself out of is now asserted outright.
 
   Measured 2026-09-14 (HTTP 200, 46,225 chars), with the shipped envelope found verbatim as a
   positive control and a fabricated sentence absent as a negative one: all five spans occur
-  **exactly once**, each inside a `<p>`.
+  **exactly once**, each inside a `<p>`. **"Verbatim" is conditional on one stripping rule for
+  three of the five** — the pulmonary, aortic and tricuspid sentences are interrupted in the raw
+  HTML by inline `<a class='glossaryTerm'>` anchors, so their raw-byte count is zero and they match
+  only after tags are stripped with no separator. The anchors wrap plain text, so the strip
+  reproduces the page's characters exactly; the other two are contiguous in the raw bytes.
 
   The old citation assertion — `contains("training.seer.cancer.gov/…") &&
-  contains("\"trust\":\"authoritative\"")` — was the #15209 two-loose-needles shape, the **fourth**
-  table in this cascade I have had to fix it in; #15209 measures 321 test files carrying it. Here
-  it was worse than weak: it could not distinguish this table's two kinds of row at all.
+  contains("\"trust\":\"authoritative\"")` — was the #15209 two-loose-needles shape; #15209 measures
+  **321 test files, 323 occurrences** carrying it. This is the fourth fixed *of the set that issue
+  tracks* (`em-spectrum`, `circuit-parts`, `energy-form-family`); a fifth instance was also fixed
+  in `earth-science/water-cycle.adj`, recorded further down this file, so "fourth" is an accounting
+  of #15209's list rather than of the repo.
+
+  **Review then found the stale-header defect for the third time in this cascade.** The
+  top-of-file provenance block still described the pre-conversion design and still asserted
+  `trust authoritative` for a table half of which no longer ships at that tier — the same defect
+  found in `em-spectrum` and `circuit-parts`, both recorded in this file. I fixed it twice and did
+  not grep for it here. It also carried a **truncated quote under a heading promising
+  character-for-character**: the atrioventricular sentence rendered as ending after "(also called
+  cuspid valves)." with a period the page does not have, a string occurring **zero** times on it,
+  while the rows fifty lines below cite the full sentence. Both corrected. And one structural
+  check used `unwrap_or(0)`, which turns a missing closing brace into an empty block — and an
+  empty block satisfies `!contains("trust inferred")`, the expected value for the two read rows,
+  so the assertion named "the reasoned rows are the right two" could have passed while asserting
+  nothing about them.
 
   9 of 9 mutants killed, green baseline before and after, file verified byte-identical afterwards.
   Local scratch harness, so that count is not reproducible from the repo.

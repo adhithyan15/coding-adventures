@@ -193,12 +193,17 @@ fn a_read_row_is_never_downgraded_and_a_reasoned_row_is_never_promoted() {
             out.contains(&format!("\"trust\":\"{tier}\"")),
             "{valve} is at {tier}: {out}"
         );
-        // The envelope's own tier is `authoritative`, so a bare
-        // `!contains("authoritative")` would be wrong on every answer. The
-        // tier is checked bound to THIS row's span instead.
+        // THE STRONGER ARM IS AVAILABLE HERE, and an earlier comment
+        // talked itself out of it on a premise that is false for THIS test:
+        // it said the envelope's `authoritative` appears in the output
+        // either way. It does not. The envelope is not a fact, and every row
+        // overrides `source`, so on a single-valve query the envelope's tier
+        // never reaches stdout -- measured, the tricuspid query contains
+        // `authoritative` zero times and the pulmonary query contains
+        // `inferred` zero times. So the wrong tier must be absent outright.
         assert!(
-            !out.contains(&format!("\"trust\":\"{wrong}\",\"corroborations\"")),
-            "{valve} must not also appear at {wrong}: {out}"
+            !out.contains(&format!("\"trust\":\"{wrong}\"")),
+            "{valve} must not appear at {wrong} at all: {out}"
         );
         assert_eq!(
             out.contains(AV_SPAN),
@@ -218,10 +223,19 @@ fn the_table_ships_two_reasoned_rows_and_two_read_rows() {
     let body = &adj[adj.find("table valve_separates").expect("table")..];
 
     assert_eq!(body.matches("\n    row (").count(), 4, "four rows");
+    // INDENTATION-INSENSITIVE. `"\n        source \""` matches only at
+    // exactly eight spaces, and a row field at seven or nine evades it --
+    // the shape that was the water-cycle review's main finding one entry
+    // ago. Counting by trimmed prefix leaves the envelope's line plus one
+    // per row.
+    let source_lines: Vec<&str> = body
+        .lines()
+        .filter(|l| l.trim_start().starts_with("source \""))
+        .collect();
     assert_eq!(
-        body.matches("\n        source \"").count(),
-        4,
-        "every row carries its own source block"
+        source_lines.len(),
+        5,
+        "four row sources plus the envelope's: {source_lines:?}"
     );
     assert_eq!(
         body.lines()
@@ -238,10 +252,14 @@ fn the_table_ships_two_reasoned_rows_and_two_read_rows() {
     // The `cites` locator is the corroboration's own mandatory address, not
     // a row locator override -- of which there are none, because every span
     // is on the one page the envelope names.
-    assert_eq!(
-        body.matches("\n        locator \"").count(),
-        0,
-        "no row overrides the locator"
+    let row_locators: Vec<&str> = body
+        .lines()
+        .filter(|l| l.trim_start().starts_with("locator \""))
+        .filter(|l| !l.starts_with("    locator \""))
+        .collect();
+    assert!(
+        row_locators.is_empty(),
+        "no row overrides the locator at any indentation: {row_locators:?}"
     );
 
     // AND THE REASONED ROWS ARE THE RIGHT TWO. Counting two of each would
@@ -255,7 +273,15 @@ fn the_table_ships_two_reasoned_rows_and_two_read_rows() {
         let start = body
             .find(&format!("row ({valve},"))
             .unwrap_or_else(|| panic!("row for {valve}"));
-        let block_end = body[start..].find("\n    }").unwrap_or(0) + start;
+        // NOT `unwrap_or(0)`. An empty block satisfies
+        // `!contains("trust inferred")`, which is the EXPECTED value for the
+        // two read rows -- so a missing closing brace would make the
+        // assertion named "the reasoned rows are the right two" pass while
+        // asserting nothing about them.
+        let block_end = body[start..]
+            .find("\n    }")
+            .unwrap_or_else(|| panic!("row block for {valve} must close"))
+            + start;
         let block = &body[start..block_end];
         assert_eq!(
             block.contains("trust inferred"),
