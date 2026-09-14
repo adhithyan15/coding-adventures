@@ -76,3 +76,132 @@ fn physics_energy_forms_recall_binds_token_with_citation() {
     // Magnetic energy is NOT one of the enumerated forms — honest abstention.
     assert!(out.contains("\"abstained\":true"), "magnetic abstains: {out}");
 }
+
+const EIA_LOCATOR: &str =
+    "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php";
+
+/// Assert one row carries its own defining sentence, in a program returning
+/// only that row. Each form names exactly one row, so a one-answer query is
+/// available here.
+fn assert_form(tag: &str, form: &str, token: &str, span: &str) {
+    let dir = scratch(tag);
+    std::fs::copy(
+        facts_stdlib().join("physics/energy-forms.adj"),
+        dir.join("energy-forms.adj"),
+    )
+    .expect("copy shipped energy-forms.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"energy-forms.adj\"\n? energy_form_token({form}, $T)\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        1,
+        "exactly one row for {form}, so every needle below is its own: {out}"
+    );
+    assert!(
+        out.contains(&format!("\"T\":\"{token}\"")),
+        "{form} binds {token}: {out}"
+    );
+    assert!(
+        out.contains(&format!(
+            "\"source\":\"{span}\",\"locator\":\"{EIA_LOCATOR}\",\"trust\":\"authoritative\""
+        )),
+        "{form} carries its own defining sentence: {out}"
+    );
+}
+
+/// #14986: the envelope was the CHEMICAL sentence, so a recall of `electrical`
+/// came back proved by *"Chemical energy is energy stored in the bonds of
+/// atoms and molecules."*
+///
+/// SAME PAGE, DIFFERENT ANSWER FROM ITS SIBLING. `energy-form-family.adj`
+/// cites this page too and is NOT convertible — there the potential/kinetic
+/// grouping lives in a section heading and no sentence assigns a form to a
+/// family. This table asks what each form IS, which the page states in prose.
+#[test]
+fn every_form_row_carries_its_own_defining_sentence() {
+    assert_form(
+        "efchem", "chemical", "bonds",
+        "Chemical energy is energy stored in the bonds of atoms and molecules.",
+    );
+    assert_form(
+        "efmech", "mechanical", "tension",
+        "Mechanical energy is energy stored in objects by tension.",
+    );
+    assert_form(
+        "efnuc", "nuclear", "nucleus",
+        "Nuclear energy is energy stored in the nucleus of an atom—the energy that holds the nucleus together.",
+    );
+    assert_form(
+        "efgrav", "gravitational", "height",
+        "Gravitational energy is energy stored in an object's height.",
+    );
+    assert_form(
+        "efrad", "radiant", "electromagnetic",
+        "Radiant energy is electromagnetic energy that travels in transverse waves.",
+    );
+    assert_form(
+        "efmotion", "motion", "moving",
+        "Motion energy is energy stored in moving objects.",
+    );
+    assert_form(
+        "efelec", "electrical", "electrons",
+        "Electrical energy is delivered by tiny, charged particles, called electrons, that typically move through a wire.",
+    );
+}
+
+/// The page writes *"Thermal energy, or heat, is…"*, not *"Thermal energy
+/// is…"*. A probe that required the plain head reported this row as having no
+/// defining sentence at all — the probe's prefix test, not the page. Same
+/// shape as `gravitropism` and `electrotropism` in `plant-tropisms` (#15176),
+/// and pinned here so nobody "normalises" the head the page does not use.
+#[test]
+fn the_thermal_row_keeps_the_pages_variant_head() {
+    assert_form(
+        "eftherm", "thermal", "heat",
+        "Thermal energy, or heat, is the energy that comes from atoms and molecules moving in a substance.",
+    );
+}
+
+/// The envelope is the framing sentence. It warrants no row — and its WORDING
+/// is pinned against the shipped file, not merely disclosed as unreachable,
+/// the way `plant-tropisms` (#15176) closed that gap.
+#[test]
+fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
+    let dir = scratch("efenvelope");
+    std::fs::copy(
+        facts_stdlib().join("physics/energy-forms.adj"),
+        dir.join("energy-forms.adj"),
+    )
+    .expect("copy shipped energy-forms.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"energy-forms.adj\"\n? energy_form_token($F, $T)\n",
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        8,
+        "all eight rows answer: {out}"
+    );
+    assert!(
+        !out.contains("Many forms of energy exist"),
+        "the framing span warrants no row: {out}"
+    );
+    let adj = std::fs::read_to_string(
+        facts_stdlib().join("physics/energy-forms.adj"),
+    )
+    .expect("read shipped energy-forms.adj");
+    assert!(
+        adj.contains(
+            "    source \"Many forms of energy exist, but energy is either potential energy or kinetic energy.\"\n    locator"
+        ),
+        "the envelope carries the page's framing sentence, verbatim"
+    );
+}

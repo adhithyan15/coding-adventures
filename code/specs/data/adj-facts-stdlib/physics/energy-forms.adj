@@ -12,7 +12,8 @@
 %     ? energy_form_token(chemical, $T)      % bonds
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `energy_form_token(form, token)` carrying the table's citation, so
+% relation `energy_form_token(form, token)` carrying THAT ROW'S OWN
+% citation (RS-5e — before #14986 it was the table's single envelope), so
 % the lookup above is the ordinary SLD binding query — the engine returns the
 % defining token WITH its source, on the CPU, with zero model calls, and
 % abstains on anything that is not one of the enumerated forms.
@@ -48,64 +49,76 @@
 % property is what makes the table safe to reason from.
 %
 % ---------------------------------------------------------------------------
-% Provenance (nothing here is asserted from memory — every form→token pair was
-% read out of a fetched U.S. Energy Information Administration page this session,
-% and any form whose token could not be found verbatim in its own definition
-% sentence would have been dropped). All eight tokens come from the SAME primary
-% U.S. government source, the EIA "Energy Explained — Forms of energy" page
-% (eia.gov/energyexplained/what-is-energy/forms-of-energy.php), each definition
-% sentence quoted here character-for-character so any reader can re-check it:
+% Provenance. EVERY ROW CARRIES ITS OWN DEFINING SENTENCE, below, in the row's
+% `{ ... }` block (ADJ-TABLES RS-5e) — read those, not a restatement here. One
+% page, one tier: the U.S. Energy Information Administration's "Forms of
+% energy" explainer, a primary U.S. government source, so `trust authoritative`.
 %
-%   chemical → bonds
-%     "Chemical energy is energy stored in the bonds of atoms and molecules."
+% WHAT #14986 CHANGED. The envelope was the CHEMICAL sentence, so a recall of
+% `electrical` came back warranted by a sentence about the bonds of atoms and
+% molecules. The envelope now carries the page's framing sentence, which
+% warrants no row — and the test pins its WORDING against this file, rather
+% than disclosing it as unreachable the way the earlier entries in this cascade
+% had to.
 %
-%   mechanical → tension
-%     "Mechanical energy is energy stored in objects by tension."
+% SAME PAGE, DIFFERENT ANSWER FROM ITS SIBLING. `physics/energy-form-family.adj`
+% cites this same page and is NOT convertible: there the potential/kinetic
+% grouping lives in a SECTION HEADING and no sentence assigns a form to a
+% family, so its rows would need `trust inferred` or a very long contiguous
+% quote. That is recorded on #15139. This table asks what each form IS, which
+% the page states in prose, one sentence per form. The question is per table,
+% not per page.
 %
-%   nuclear → nucleus
-%     "Nuclear energy is energy stored in the nucleus of an atom—the energy that
-%      holds the nucleus together."
+% ONE VARIANT HEAD, kept as the page writes it: "Thermal energy, or heat, is
+% the energy that comes from atoms and molecules moving in a substance." A
+% probe that required a plain "Thermal energy is..." reported this row as
+% having no defining sentence at all — the probe's prefix test, not the page.
+% A mutant that normalises the head reddens.
 %
-%   gravitational → height
-%     "Gravitational energy is energy stored in an object's height."
-%
-%   radiant → electromagnetic
-%     "Radiant energy is electromagnetic energy that travels in transverse waves."
-%
-%   thermal → heat
-%     "Thermal energy, or heat, is the energy that comes from atoms and molecules
-%      moving in a substance."
-%
-%   motion → moving
-%     "Motion energy is energy stored in moving objects."
-%
-%   electrical → electrons
-%     "Electrical energy is delivered by tiny, charged particles, called
-%      electrons, that typically move through a wire."
-%
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single strongest span: the EIA sentence that fixes the
-% first row (chemical → bonds). Every OTHER row's per-fact source and verbatim
-% span is listed above, so each token remains independently checkable. The
-% source is a primary U.S. government EIA education page (eia.gov), so
-% `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
-% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table energy_form_token {
     columns form, token
 
-    row (chemical, bonds)
-    row (mechanical, tension)
-    row (nuclear, nucleus)
-    row (gravitational, height)
-    row (radiant, electromagnetic)
-    row (thermal, heat)
-    row (motion, moving)
-    row (electrical, electrons)
+    row (chemical, bonds) {
+        % This sentence was the table's whole envelope, so it also
+        % warranted the seven rows below it.
+        source "Chemical energy is energy stored in the bonds of atoms and molecules."
+    }
+    row (mechanical, tension) {
+        source "Mechanical energy is energy stored in objects by tension."
+    }
+    row (nuclear, nucleus) {
+        source "Nuclear energy is energy stored in the nucleus of an atom—the energy that holds the nucleus together."
+    }
+    row (gravitational, height) {
+        source "Gravitational energy is energy stored in an object's height."
+    }
+    row (radiant, electromagnetic) {
+        source "Radiant energy is electromagnetic energy that travels in transverse waves."
+    }
+    row (thermal, heat) {
+        % Variant head: the page writes "Thermal energy, or heat,
+        % is...", not "Thermal energy is...". A probe that required
+        % the plain form reported this row as having no defining
+        % sentence -- the probe's prefix test, not the page. Same
+        % shape as gravitropism and electrotropism in
+        % biology/plant-tropisms.adj (#15176).
+        source "Thermal energy, or heat, is the energy that comes from atoms and molecules moving in a substance."
+    }
+    row (motion, moving) {
+        source "Motion energy is energy stored in moving objects."
+    }
+    row (electrical, electrons) {
+        source "Electrical energy is delivered by tiny, charged particles, called electrons, that typically move through a wire."
+    }
 
-    source "Chemical energy is energy stored in the bonds of atoms and molecules."
+    % The envelope is the FRAMING span -- that energy comes in many
+    % forms at all. It defends the TABLE and warrants no row. Until
+    % #14986 it was the CHEMICAL row's own sentence.
+    source "Many forms of energy exist, but energy is either potential energy or kinetic energy."
     locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
     trust authoritative
 }

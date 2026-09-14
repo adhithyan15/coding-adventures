@@ -5,6 +5,44 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- **#14986: eight energy forms, all warranted by the definition of chemical energy.**
+  `physics/energy-forms.adj` carried the CHEMICAL sentence as its envelope, so a recall of
+  `electrical` came back proved by *"Chemical energy is energy stored in the bonds of atoms and
+  molecules."* Each row now carries its own defining sentence. One page, so no row restates `locator`
+  or `trust`.
+
+  ### The same page, and the opposite answer for its sibling
+
+  `physics/energy-form-family.adj` cites this exact page and is **not** convertible: there the
+  potential/kinetic grouping lives in a SECTION HEADING, and no sentence assigns a form to a family
+  (measured and recorded on #15139, which is why that table was withdrawn from the convertible
+  queue). This table asks what each form **is**, which the page states in prose, one sentence per
+  form.
+
+  Worth stating because the earlier triage kept trying to classify by page or by envelope shape: the
+  question is per **table**, not per page. The same article can ground one relation in prose and leave
+  another to a heading.
+
+  ### One variant head
+
+  *"Thermal energy, or heat, is the energy that comes from atoms and molecules moving in a
+  substance."* — not *"Thermal energy is…"*. A probe requiring the plain head reported the row as
+  having no defining sentence at all, the same prefix-test failure as `gravitropism` and
+  `electrotropism` in #15176. A mutant that normalises the head reddens.
+
+  ### Pins
+
+  **14 of 14 mutants killed, one control** (the unmutated file): all eight rows broken one at a time,
+  warranting `electrical` with the chemical sentence, normalising the thermal head, rebinding a token,
+  dropping a row's source, repointing the locator, and **fabricating the envelope** — which is a kill
+  here rather than a disclosed gap, because the envelope test reads the shipped `.adj` and asserts the
+  span literally, as #15176 established.
+
+  Measured: all eight spans and the framing sentence occur **exactly once** on the cached page, each
+  row span names its form and contains its token, near-miss controls score zero. The suite was run
+  with `RUSTFLAGS="-Dwarnings"`, which is how CI compiles it — a local `cargo test` does not, and
+  #15176 failed five jobs on a warning that a plain local run had reported as green.
+
 - **#14986: twelve tropisms, each warranted by the definition of phototropism.**
   `biology/plant-tropisms.adj` carried the PHOTOTROPISM line as its envelope, so a recall of
   `traumatotropism` came back proved by *"Phototropism: movement or growth in response to lights or
