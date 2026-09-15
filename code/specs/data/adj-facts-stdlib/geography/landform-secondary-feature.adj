@@ -54,12 +54,22 @@
 %
 %     ? landform_secondary_feature($Landform, continuous_slope_at_bottom)   % canyon
 %
-% Provenance: reproduces, byte-for-byte, the SAME five spans already quoted
-% inside `landforms.adj`'s own header, from the SAME USGS-hosted Feature
-% Type Thesaurus page that table already cites — no new WebFetch, only a
-% different schema decoding the structural-clause half of each
-% already-verified quote. `trust authoritative` — the same tier
-% `landforms.adj` already carries (USGS, a U.S. federal .gov source).
+% Provenance: the four definitions come from the USGS-hosted Alexandria
+% Digital Library Feature Type Thesaurus page that `landforms.adj` also cites.
+% EACH ROW CITES ITS OWN LANDFORM'S DEFINITION (ADJ-TABLES RS-5e, #14986).
+% Until 2026-09-15 the table held valley's definition as its one envelope and
+% attached the other three as table-level `cites`, so every answer carried
+% all four definitions and was primarily sourced to valley's. On the page
+% each definition is a <span class="scope"> under a separate term link and
+% never names its landform, so a definition corroborates its row and does not
+% warrant it on its own. The envelope is now the thesaurus's own description,
+% "Types of named geographic features.", from the italic line under its
+% title. Measured 2026-09-15: each definition and the envelope occur exactly
+% once in the page's visible text. (The valley definition's apostrophe is
+% `&#039;` in the HTML, which renders as the straight one shipped here.)
+% `trust authoritative` — USGS, a U.S. federal .gov source. This header used
+% to say the spans were reproduced "byte-for-byte" with "no new WebFetch";
+% the check above is a raw fetch, and it replaces that claim.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -67,17 +77,33 @@
 table landform_secondary_feature {
     columns landform, feature
 
-    row (valley, contains_stream_with_outlet)     % USGS Feature Type Thesaurus
-    row (plateau, bounded_by_abrupt_descent)       % USGS Feature Type Thesaurus
-    row (canyon, continuous_slope_at_bottom)       % USGS Feature Type Thesaurus
-    row (canyon, steep_sides)                      % USGS Feature Type Thesaurus
-    row (plain, uniform_slope)                     % USGS Feature Type Thesaurus
+    % Each row CITES the thesaurus's own definition of its landform.
+    % `cites`, not `source`: on the page the landform is a separate
+    % term link and the definition a <span> beneath it that never
+    % names the landform -- #13934's held question, decided as in
+    % `physics/energy-form-family.adj`. Both canyon rows cite the one
+    % canyon definition, which states both features.
+    row (valley, contains_stream_with_outlet) {
+        cites "Low-lying land bordered by higher ground; especially elongate, relatively large gently sloping depressions of the Earth's surface, commonly situated between two mountains or between ranges of hills or mountains, and often containing a stream with an outlet." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    }
+    row (plateau, bounded_by_abrupt_descent) {
+        cites "Comparatively flat areas of great extent and elevation; specif. extensive land regions considerably above the adjacent country or above sea level; commonly limited on at least one side by an abrupt descent, have flat or nearly smooth surfaces but are often dissected by deep valleys and surmounted by high hills or mountains, and have a large part of their total surface at or near the summit level." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    }
+    row (canyon, continuous_slope_at_bottom) {
+        cites "Relatively narrow, deep depressions with steep sides, the bottom of which generally has a continuous slope" locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    }
+    row (canyon, steep_sides) {
+        cites "Relatively narrow, deep depressions with steep sides, the bottom of which generally has a continuous slope" locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    }
+    row (plain, uniform_slope) {
+        cites "Regions of general uniform slope, comparatively level and of considerable extent." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    }
 
-    source "Low-lying land bordered by higher ground; especially elongate, relatively large gently sloping depressions of the Earth's surface, commonly situated between two mountains or between ranges of hills or mountains, and often containing a stream with an outlet."
+    % THE ENVELOPE WAS VALLEY'S OWN DEFINITION, and three table-level
+    % `cites` attached every other definition to every answer. It is
+    % now the thesaurus's own description of what it lists, which
+    % names no landform and warrants no single row.
+    source "Types of named geographic features."
     locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
     trust authoritative
-
-    cites "Comparatively flat areas of great extent and elevation; specif. extensive land regions considerably above the adjacent country or above sea level; commonly limited on at least one side by an abrupt descent, have flat or nearly smooth surfaces but are often dissected by deep valleys and surmounted by high hills or mountains, and have a large part of their total surface at or near the summit level." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
-    cites "Relatively narrow, deep depressions with steep sides, the bottom of which generally has a continuous slope" locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
-    cites "Regions of general uniform slope, comparatively level and of considerable extent." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
 }
