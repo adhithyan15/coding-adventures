@@ -8,6 +8,38 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added -- Qt reports the style properties its lowering drops (#12022)
+
+Qt reported nothing, so an empty `styleDegradations` meant "nobody looked"
+rather than "nothing was lost". Across the four Mosaic product packages it now
+reports **649** dropped properties that previously vanished in silence:
+VisiCalc 89, Venture 16, Engram 188, Trestle 356. Not one line of emitted QML
+changes (1,014,098 bytes, byte-identical before and after).
+
+Derived by running the REAL emit with read-recording armed and reporting what
+nothing asked for -- never by diffing against a list of "properties Qt
+supports". A hand-maintained list is wrong the first time someone adds an arm
+and forgets it, which is the drift #12022 exists to stop.
+
+That is affordable here because of a property of this emitter: **every** style
+read funnels through `style_prop` (`style_prop_any` delegates to it rather
+than searching itself). One recording point at the top of that one function
+sees all 83 read sites, including any added later -- so a property that gains
+support tomorrow stops being reported the moment its `style_prop` call lands,
+with no second place to update.
+
+Reads are attributed to a part by the address of its props vector, captured in
+`PartStyleMap::insert` while the vector still exists: `style_prop` is handed a
+slice and never learns a part name, and the vector is gone by the time anyone
+asks what was dropped.
+
+**A part the emit never asked about is not reported.** Nothing in the layout
+rendered it, so its properties never had a chance to be dropped, and blaming
+the emitter for a stylesheet entry the component does not use would be a false
+positive -- one that matters, because #12022 ends in a hard gate. Scoping to
+visited parts removed 107 such false positives; before it, `color` alone was
+reported 41 times on Trestle while Qt renders it correctly.
+
 ### Fixed -- two writers could assign one QML property, failing the build (#15155)
 
 A QML object may assign a property exactly once. `Property value set

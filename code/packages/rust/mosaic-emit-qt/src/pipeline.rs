@@ -94,7 +94,7 @@
 //! never consults `implicitWidth` — which is why this went unnoticed for
 //! so long: the in-tree Qt host does exactly that.
 
-use std::cell::Cell;
+use std::cell::{Cell, RefCell};
 use std::fmt::Write as _;
 use std::rc::Rc;
 
@@ -769,6 +769,11 @@ impl PartStyleMap {
     }
 
     fn insert(&mut self, key: String, value: Vec<StyleProp>) -> Option<Vec<StyleProp>> {
+        // #12022 -- tie this part's props to their address WHILE THEY EXIST.
+        // `style_prop` can only record an address, and this vector is dropped
+        // when the emit returns, so the name and the declared props have to be
+        // captured here or the reads can never be attributed to a part.
+        record_part_props(&key, &value);
         self.entries.insert(key, value)
     }
 
@@ -1087,8 +1092,246 @@ fn qml_text_align(v: &str) -> Option<&'static str> {
     }
 }
 
+thread_local! {
+    /// Property names the emitter ASKED FOR, keyed by the identity of the
+    /// props slice it asked against. `None` -- the value during every
+    /// ordinary emit -- means recording is off and reads cost one branch.
+    ///
+    /// Keyed by address rather than by part name because [`style_prop`]
+    /// never learns a part name: it is handed a slice. Each part's props
+    /// live in one `Vec<StyleProp>` owned by [`PartStyleMap`] for the whole
+    /// emit, so the vector's address identifies the part unambiguously
+    /// while that map is alive -- which is exactly the window in which
+    /// recording is armed.
+    static STYLE_READS: RefCell<Option<HashMap<usize, HashSet<String>>>> =
+        const { RefCell::new(None) };
+}
+
+/// Arms style-read recording for as long as it is held (#12022).
+///
+/// `Drop` disarms even if the emit panics, so a failed emit cannot leave
+/// recording on for whatever this thread does next.
+struct StyleReadRecorder;
+
+impl StyleReadRecorder {
+    fn arm() -> Self {
+        // Nesting would clobber the outer recording and hand it back empty,
+        // reporting "nothing dropped" for a component never measured -- the
+        // silent zero this feature exists to abolish. Nothing in-tree
+        // re-enters, so this is a tripwire on a future caller.
+        debug_assert!(
+            STYLE_READS.with(|reads| reads.borrow().is_none()),
+            "style-read recording is already armed; nesting would silently \
+             empty the outer recording",
+        );
+        STYLE_READS.with(|reads| *reads.borrow_mut() = Some(HashMap::new()));
+        PART_PROPS.with(|parts| *parts.borrow_mut() = Some(Vec::new()));
+        StyleReadRecorder
+    }
+
+    /// The reads observed since arming, by props-slice address.
+    fn take(&self) -> HashMap<usize, HashSet<String>> {
+        STYLE_READS
+            .with(|reads| reads.borrow_mut().take())
+            .unwrap_or_default()
+    }
+
+    /// The parts captured since arming, with their declared props.
+    fn take_parts(&self) -> Vec<RecordedPart> {
+        PART_PROPS
+            .with(|parts| parts.borrow_mut().take())
+            .unwrap_or_default()
+    }
+}
+
+impl Drop for StyleReadRecorder {
+    fn drop(&mut self) {
+        STYLE_READS.with(|reads| *reads.borrow_mut() = None);
+        PART_PROPS.with(|parts| *parts.borrow_mut() = None);
+    }
+}
+
+/// Note that the emitter asked `props` about `name`.
+///
+/// Records the name ASKED, not the property found. That is the whole
+/// point: a property is dropped when nothing ever asked for it, and a
+/// question with no answer ("is there a `border-radius`?") still proves the
+/// emitter would have honoured one.
+fn record_style_read(props: &[StyleProp], name: &str) {
+    STYLE_READS.with(|reads| {
+        if let Some(seen) = reads.borrow_mut().as_mut() {
+            seen.entry(props.as_ptr() as usize)
+                .or_default()
+                .insert(name.to_string());
+        }
+    });
+}
+
+thread_local! {
+    /// Each part's name and declared props, captured as [`PartStyleMap`]
+    /// takes ownership of them, keyed the same way [`STYLE_READS`] keys its
+    /// reads: by the address of the props vector.
+    ///
+    /// Needed because the vector is gone by the time anyone asks what was
+    /// dropped -- the emit owns it and returns a `String`.
+    static PART_PROPS: RefCell<Option<Vec<RecordedPart>>> = const { RefCell::new(None) };
+}
+
+/// One part's declared style, captured during a recorded emit.
+struct RecordedPart {
+    name: String,
+    addr: usize,
+    props: Vec<(String, String)>,
+}
+
+/// Note a part's declared props, if recording is armed.
+fn record_part_props(name: &str, props: &[StyleProp]) {
+    // Every empty `Vec` shares one aligned-dangling address, so recording them
+    // would let a read against ANY empty slice mark ALL of them as reached.
+    // They have nothing to report either way.
+    if props.is_empty() {
+        return;
+    }
+    let addr = props.as_ptr() as usize;
+    PART_PROPS.with(|parts| {
+        if let Some(seen) = parts.borrow_mut().as_mut() {
+            // Re-declaring a part makes `insert` return the displaced vector,
+            // which the caller drops -- and the allocator may hand that very
+            // address to a later part. The earlier entry is dead by
+            // definition: drop it, or its declared props get matched against
+            // the LIVE part's reads and reported under the dead part's name.
+            // #12022 ends in a hard gate, so that false positive would fail a
+            // build over a property this emitter lowers correctly.
+            seen.retain(|p| p.addr != addr);
+            seen.push(RecordedPart {
+                name: name.to_string(),
+                addr,
+                props: props
+                    .iter()
+                    .map(|p| (p.name.clone(), p.value.clone()))
+                    .collect(),
+            });
+        }
+    });
+}
+
+/// One authored style property the Qt emitter never looked at.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DroppedStyleProperty {
+    pub part: String,
+    pub name: String,
+    pub value: String,
+    pub reason: String,
+}
+
+/// Every property, across every part, that Qt lowering drops (#12022).
+///
+/// Derived by running the REAL emit with read-recording armed and reporting
+/// what nothing asked for -- not by diffing against a list of "properties Qt
+/// supports". A hand-maintained list is wrong the first time someone adds an
+/// arm and forgets to update it, and #12022 exists precisely because nobody
+/// notices that kind of drift.
+///
+/// This is why the recording sits in [`style_prop`]: every style read in this
+/// emitter funnels through that one function, so a property that gains support
+/// tomorrow stops being reported the moment its `style_prop` call lands, with
+/// no second place to update.
+///
+/// Until this existed Qt reported nothing, so an empty `styleDegradations`
+/// meant "nobody looked" rather than "nothing was lost".
+///
+/// A failed emit yields no report rather than a wrong one: if the component
+/// could not be emitted, nothing can be concluded about what its emit would
+/// have read.
+pub fn dropped_style_properties(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+) -> Vec<DroppedStyleProperty> {
+    let recorder = StyleReadRecorder::arm();
+    let emitted = from_pipeline_with_runtime_policy(interface, layout, style, false);
+    let reads = recorder.take();
+    let parts = recorder.take_parts();
+    drop(recorder);
+    if emitted.is_err() {
+        return Vec::new();
+    }
+
+    let mut out: Vec<DroppedStyleProperty> = Vec::new();
+    let mut seen: HashSet<(String, String)> = HashSet::new();
+    for part in parts {
+        // A part the emit NEVER ASKED ABOUT is not a lowering failure. It
+        // means nothing in the layout rendered that part, so its properties
+        // never had a chance to be dropped -- reporting them would blame the
+        // emitter for a stylesheet entry the component simply does not use,
+        // and #12022 ends in a HARD GATE where that false positive would fail
+        // a build over properties the emitter handles perfectly well.
+        //
+        // Asking about even one property proves the emit reached this part,
+        // and from there an unread property IS a genuine drop.
+        let Some(asked) = reads.get(&part.addr) else {
+            continue;
+        };
+        for (name, value) in part.props {
+            if asked.contains(&name) {
+                continue;
+            }
+            if !seen.insert((part.name.clone(), name.clone())) {
+                continue;
+            }
+            out.push(DroppedStyleProperty {
+                reason: qt_drop_reason(&name).to_string(),
+                part: part.name.clone(),
+                name,
+                value,
+            });
+        }
+    }
+    out.sort_by(|a, b| (&a.part, &a.name).cmp(&(&b.part, &b.name)));
+    out
+}
+
+/// Why a property has no Qt lowering, in terms a reader can act on.
+///
+/// Generic text would make the report unreadable at the scale this reports
+/// at. These are genuinely different problems: some want a QML property that
+/// exists, some need the parent to lay out differently, and some have no QML
+/// concept at all.
+fn qt_drop_reason(name: &str) -> &'static str {
+    match name {
+        "box-shadow" | "elevation" => {
+            "QML has no shadow property on Item; this needs a DropShadow effect \
+             from Qt5Compat.GraphicalEffects or a hand-drawn Rectangle beneath"
+        }
+        "flex-grow" | "flex-shrink" | "flex" => {
+            "Qt distributes space with Layout.fillWidth / Layout.preferredWidth \
+             inside a RowLayout or ColumnLayout, chosen where the child is \
+             built rather than applied to a finished element"
+        }
+        "position" | "top" | "left" | "right" | "bottom" | "z-index" => {
+            "QML positions with anchors or explicit x/y, which the parent owns; \
+             a plain element cannot place itself"
+        }
+        "display" | "flex-direction" | "flex-wrap" => {
+            "Qt expresses this through the container chosen (RowLayout, \
+             ColumnLayout, Flow, GridLayout) rather than any property on one"
+        }
+        "border-style" | "border-collapse" | "outline" => {
+            "no QML equivalent; Rectangle.border takes a width and a colour only"
+        }
+        _ => "no Qt lowering yet: nothing in this emitter reads this property",
+    }
+}
+
 /// Find the first prop named `name` in a base/state prop list.
+///
+///
+/// EVERY style read in this emitter funnels through here -- `style_prop_any`
+/// delegates to it rather than searching itself -- which is what lets a
+/// single recording point at the top of this function see all of them,
+/// including ones added later.
 fn style_prop<'p>(props: &'p [StyleProp], name: &str) -> Option<&'p str> {
+    record_style_read(props, name);
     props
         .iter()
         .find(|p| p.name == name)

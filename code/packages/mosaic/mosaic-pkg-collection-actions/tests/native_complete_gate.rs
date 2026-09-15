@@ -75,7 +75,21 @@ const NATIVE_BACKENDS: &[Backend] = &[
 /// suite also asserts no UNLISTED drop appears, so an entry is still required
 /// the moment one does -- including a `gap` on a `Box`, `Stack` or
 /// `HostScroll`, which really is discarded and really is still reported.
-const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[];
+const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[    // ---- Qt (#15245) ----
+    //
+    // These became visible the moment Qt started reporting its drops in
+    // #15245. They are PRE-EXISTING gaps, not regressions: this package has
+    // been rendering without them on Qt since the parts were authored, and
+    // nothing could see them because the backend reported no drops at all.
+    //
+    // Pinned so the gate stays honest, NOT to bless them -- see this list's
+    // doc comment on how a stale pin turns into a standing licence.
+    //
+    // #15247 -- `qml_padding` reads ONE value and fans it to all four
+    // edges, so any longhand beyond the one it picks is lost.
+    (Backend::Qt, "padding"),
+    (Backend::Qt, "padding-bottom"),
+];
 
 fn package_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))

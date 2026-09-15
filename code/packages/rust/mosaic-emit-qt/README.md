@@ -206,6 +206,38 @@ do **not** use `StackLayout` from `QtQuick.Layouts` — its semantics are
 "show one child at a time, switch with `currentIndex`", which is a
 *navigation* primitive, not a Z-axis overlay.
 
+## Reporting what lowering drops
+
+`dropped_style_properties(interface, layout, style)` returns every authored
+style property this emitter did not lower, as `DroppedStyleProperty { part,
+name, value, reason }`. `mosaic-package-artifact-builder` calls it and writes
+the result into `mosaic-degradations.json` as `styleDegradations` (#12022).
+
+It is derived, not listed. The function runs the **real emit** with read
+recording armed and reports whatever nothing asked for. There is deliberately
+no table of "properties Qt supports" to keep in step with the code: such a list
+is wrong the first time someone adds a lowering arm and forgets to update it,
+and that drift is the whole reason the reporting was needed.
+
+This works because every style read in this emitter funnels through one
+function, `style_prop` — `style_prop_any` delegates to it rather than searching
+the slice itself. A single recording point there observes all of them, so a
+property that gains support tomorrow stops being reported the moment its
+`style_prop` call lands.
+
+Two consequences worth knowing:
+
+- **A part the emit never asked about is not reported.** Nothing in the layout
+  rendered it, so its properties never had the chance to be dropped. Reporting
+  them would blame this emitter for a stylesheet entry the component does not
+  use.
+- **A question with no answer still counts as support.** The name asked for is
+  recorded, not the property found, so asking "is there a `border-radius`?" and
+  finding none proves the emitter would have honoured one.
+
+Recording costs one branch per read during an ordinary emit and is otherwise
+inert; emitted QML is byte-identical with it compiled in.
+
 ## Slot type → QML property type
 
 | `SlotType`        | QML `property` type | Default literal |
