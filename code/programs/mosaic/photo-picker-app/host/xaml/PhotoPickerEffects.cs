@@ -179,13 +179,14 @@ public static class PhotoPickerEffects
                 return;
             }
 
-            // Reject an oversized pick before reading it into memory -- the
-            // read-then-base64-encode path below holds the raw bytes and
-            // the encoded string at once (~1.33x), and the app decodes the
-            // string again on its side (UI59 security review finding 1):
-            // an unbounded read lets a single pick cost several times the
-            // file's own size in memory, on a value the host does not
-            // control (the user's own filesystem).
+            // Reject an oversized pick before reading it into memory -- a
+            // fast, exact-size failure message for the common case. This
+            // alone is only a pre-check, not an enforced ceiling: the file
+            // could grow between this check and the read below (a
+            // concurrently-written file, a retargeted reparse point), so
+            // ReadAllBytesAsync enforces the same cap again, authoritatively,
+            // while actually reading (round-2 security review: relying on
+            // GetBasicPropertiesAsync().Size alone is TOCTOU).
             var properties = await file.GetBasicPropertiesAsync();
             if (properties.Size > MaxPickedFileBytes)
             {
@@ -196,7 +197,7 @@ public static class PhotoPickerEffects
                 return;
             }
 
-            var bytes = await ReadAllBytesAsync(file);
+            var bytes = await ReadAllBytesAsync(file, MaxPickedFileBytes);
             var mimeType = ExtensionMimeTypes.TryGetValue(file.FileType, out var known)
                 ? known
                 : "application/octet-stream";
@@ -225,11 +226,28 @@ public static class PhotoPickerEffects
         }
     }
 
-    private static async Task<byte[]> ReadAllBytesAsync(StorageFile file)
+    // Enforces `maxBytes` on the read itself, not just on the
+    // pre-flight `GetBasicPropertiesAsync().Size` check above -- that
+    // check alone is TOCTOU (the file can grow between the check and
+    // this read); throwing mid-copy once the cap is exceeded means the
+    // limit holds even then, at the cost of the partial read already
+    // done (bounded by definition, so bounded waste).
+    private static async Task<byte[]> ReadAllBytesAsync(StorageFile file, ulong maxBytes)
     {
         using var stream = await file.OpenStreamForReadAsync();
         using var memory = new MemoryStream();
-        await stream.CopyToAsync(memory);
+        var buffer = new byte[81920];
+        ulong total = 0;
+        int read;
+        while ((read = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+        {
+            total += (ulong)read;
+            if (total > maxBytes)
+            {
+                throw new IOException($"File exceeded the {maxBytes}-byte limit while reading.");
+            }
+            memory.Write(buffer, 0, read);
+        }
         return memory.ToArray();
     }
 }

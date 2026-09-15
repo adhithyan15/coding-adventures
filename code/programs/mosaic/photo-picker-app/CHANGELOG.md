@@ -43,7 +43,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `StorageFile.GetBasicPropertiesAsync().Size` against a 50 MiB cap
   and completes the effect as `failed` before reading, rather than
   after. This is exactly the concern `UI59` §6 acceptance gate 4
-  flagged as worth a specific look.
+  flagged as worth a specific look. A round-2 review pass found the
+  pre-check alone was TOCTOU (the file can grow between the check and
+  the read) — `ReadAllBytesAsync` now enforces the same cap while
+  actually copying, not only beforehand.
 - **Raw exception messages in `failed.message`.** Any exception
   (including `UnauthorizedAccessException`, whose `.Message`
   routinely embeds the full local filesystem path) was surfaced
