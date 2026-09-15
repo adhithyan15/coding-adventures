@@ -52,12 +52,29 @@
 % passageway, never an action verb comparable to "amplify" -- correctly
 % abstains rather than inventing a function for it.
 %
-% Provenance: reproduces, byte-for-byte, the SAME two spans already quoted
-% inside `ear-parts.adj`'s own header, from the SAME NIDCD "How Do We
-% Hear?" page that table already cites -- no new WebFetch, only a
-% different schema decoding a part of that already-verified quote.
-% `trust authoritative` -- the same tier the parent table already carries
-% (NIDCD is a primary U.S. government NIH institute).
+% Provenance: the SAME NIDCD "How Do We Hear?" page `ear-parts.adj` cites.
+% This paragraph used to say the spans were reproduced "byte-for-byte" with
+% "no new WebFetch"; they are now measured against the page itself.
+%
+% NO SINGLE SENTENCE NAMES AN OSSICLE AND WHAT IT DOES (ADJ-TABLES RS-5e,
+% #14986). The envelope used to be the amplify sentence, the primary source
+% of all three answers, and it names no ossicle. The chain takes three
+% sentences: the eardrum sends vibrations "to three tiny bones in the middle
+% ear"; "These bones are called the malleus, incus, and stapes."; and "The
+% bones in the middle ear amplify". So each ossicle row `cites` all three,
+% in page order, and the envelope -- now the page's framing sentence, which
+% names no ossicle and no function -- is the primary source of every row:
+%
+%     "Hearing depends on a series of complex steps that change sound waves
+%      in the air into electrical signals."
+%
+% Measured 2026-09-15 with inline tags removed without a space and only ASCII
+% whitespace collapsed (HTTP 200; a nonsense path on the same host returns
+% 404): the three chained sentences each occur exactly once, inside `<li>`
+% items, and the framing sentence once, inside a `<p>`. Every row's page is
+% the envelope's, so no row restates `locator` or `trust`. `trust
+% authoritative` -- the same tier the parent table carries (NIDCD is a
+% primary U.S. government NIH institute).
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -65,11 +82,26 @@
 table ear_structure_function {
     columns structure, function
 
-    row (malleus, amplifies_sound)
-    row (incus, amplifies_sound)
-    row (stapes, amplifies_sound)
+    row (malleus, amplifies_sound) {
+        cites "The eardrum vibrates from the incoming sound waves and sends these vibrations to three tiny bones in the middle ear." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+        cites "These bones are called the malleus, incus, and stapes." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+        cites "The bones in the middle ear amplify, or increase, the sound vibrations and send them to the cochlea, a snail-shaped structure filled with fluid, in the inner ear." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+    }
+    row (incus, amplifies_sound) {
+        cites "The eardrum vibrates from the incoming sound waves and sends these vibrations to three tiny bones in the middle ear." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+        cites "These bones are called the malleus, incus, and stapes." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+        cites "The bones in the middle ear amplify, or increase, the sound vibrations and send them to the cochlea, a snail-shaped structure filled with fluid, in the inner ear." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+    }
+    row (stapes, amplifies_sound) {
+        cites "The eardrum vibrates from the incoming sound waves and sends these vibrations to three tiny bones in the middle ear." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+        cites "These bones are called the malleus, incus, and stapes." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+        cites "The bones in the middle ear amplify, or increase, the sound vibrations and send them to the cochlea, a snail-shaped structure filled with fluid, in the inner ear." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+    }
 
-    source "The bones in the middle ear amplify, or increase, the sound vibrations and send them to the cochlea, a snail-shaped structure filled with fluid, in the inner ear."
+    % THE ENVELOPE WAS THE AMPLIFY SENTENCE, the primary source of all three
+    % answers. It is now the page's framing sentence, which names no ossicle
+    % and no function, and it is the primary source of every row.
+    source "Hearing depends on a series of complex steps that change sound waves in the air into electrical signals."
     locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
     trust authoritative
 }
