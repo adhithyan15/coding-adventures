@@ -661,7 +661,7 @@ pub fn lower_iir_to_beam(
     let import_atomics_put = imports.intern(atomics_atom, atom_put, 3); // atomics:put/3
     let import_atomics_get = imports.intern(atomics_atom, atom_get, 2); // atomics:get/2
 
-    // ── BEAM04: mutable memory for f64-typed arrays — the `:ets` module ───
+    // ── BEAM04/BEAM06: mutable memory for f64/str-typed arrays — `:ets` ────
     //
     // `:atomics` above cannot hold `f64` cells: it is a fixed-size array of
     // 64-bit INTEGERS only, so `atomics:put(Ref, I, 40.0)` raises `badarg`
@@ -675,10 +675,23 @@ pub fn lower_iir_to_beam(
     // op below is an ordinary `call_ext`/`put_list`, the same shapes
     // `math:*`/`call_closure` already use).
     //
-    // BASIC arrays are `array<f64>` (BA7-1b routes every scalar numeric
-    // value through the shared f64 track), so every `alloc_array`/
+    // BASIC numeric arrays are `array<f64>` (BA7-1b routes every scalar
+    // numeric value through the shared f64 track), so every `alloc_array`/
     // `array_set`/`array_get` with `type_hint == "array<f64>"`/`"f64"`
     // dispatches to this substrate instead of `:atomics`.
+    //
+    // BEAM06 extends the SAME substrate, completely unchanged, to
+    // `type_hint == "array<str>"`/`"str"` (BASIC's `DIM A$(n)` string
+    // arrays and its mixed numeric/string `DATA` pool's string pool —
+    // `dartmouth-basic-iir-compiler`'s E4d-BA-arr lowering). This needed
+    // ZERO new representation work: a `str` value is already an ordinary
+    // Erlang character list (see the `"str_const"` arm below), and `:ets`
+    // stores arbitrary Erlang terms natively — a string element is no
+    // different from a float element as far as `ets:insert`/
+    // `ets:lookup_element` are concerned. Confirmed directly on real `erl`
+    // (round-trip, overwrite, concatenation of two round-tripped array
+    // elements, and the empty-string edge case) — see
+    // `code/specs/BEAM06-string-array-representation.md`.
     //
     // `ets:new/2` needs no size argument (unlike `atomics:new/2`) — ets
     // tables grow dynamically, so `alloc_array`'s length source is simply
@@ -3131,11 +3144,11 @@ pub fn lower_iir_to_beam(
                 //
                 //   x0 = N ; x1 = [] ; call_ext 2 atomics:new/2 ; dest = x0
                 //
-                // EXCEPT `alloc_array` with `type_hint == "array<f64>"`
-                // (BEAM04): that path allocates an `:ets` table instead (see
-                // the module-setup comment above) — `ets:new/2` takes no size
-                // argument, so the length source `N` is validated for shape
-                // but otherwise unused.
+                // EXCEPT `alloc_array` with `type_hint == "array<f64>"` or
+                // `"array<str>"` (BEAM04/BEAM06): that path allocates an
+                // `:ets` table instead (see the module-setup comment above)
+                // — `ets:new/2` takes no size argument, so the length source
+                // `N` is validated for shape but otherwise unused.
                 "alloc_bytes" | "alloc_array" => {
                     let rd = match &instr.dest {
                         Some(name) => var_reg!(name),
@@ -3144,9 +3157,11 @@ pub fn lower_iir_to_beam(
                             detail: format!("{} must have a dest", instr.op),
                         }),
                     };
-                    if instr.op == "alloc_array" && instr.type_hint == "array<f64>" {
-                        // BEAM04: ets-backed float array — see the `:ets`
-                        // module-setup comment above.
+                    if instr.op == "alloc_array"
+                        && matches!(instr.type_hint.as_str(), "array<f64>" | "array<str>")
+                    {
+                        // BEAM04/BEAM06: ets-backed float/string array — see
+                        // the `:ets` module-setup comment above.
                         let _ = get_src!(instr, 0); // shape check only; size is unused
                         let cur_idx = instr_idx - 1;
                         save_live_across_imported_call!(cur_idx);
@@ -3205,9 +3220,16 @@ pub fn lower_iir_to_beam(
                 // staging registers cannot be collected out from under us even
                 // though they hold the `atomics` reference.
                 "store_byte" | "array_set" => {
-                    if instr.op == "array_set" && instr.type_hint == "f64" {
-                        // BEAM04: array_set on an ets-backed float array — see
-                        // the `:ets` module-setup comment above.
+                    if instr.op == "array_set"
+                        && matches!(instr.type_hint.as_str(), "f64" | "str")
+                    {
+                        // BEAM04/BEAM06: array_set on an ets-backed
+                        // float/string array — see the `:ets` module-setup
+                        // comment above. The instruction sequence is
+                        // identical regardless of element type: `:ets`
+                        // stores whatever term `Val` holds, a character
+                        // list for `str` exactly as much as a boxed float
+                        // for `f64`.
                         let r_ref = operand_reg!(get_src!(instr, 0));
                         let r_idx = operand_reg!(get_src!(instr, 1));
                         let r_val = operand_reg!(get_src!(instr, 2));
@@ -3217,8 +3239,8 @@ pub fn lower_iir_to_beam(
                             return Err(IIRBeamError::UnsupportedOp {
                                 function: fn_name.clone(),
                                 op: format!(
-                                    "array_set (f64/ets): needs 4 scratch registers but only {} \
-                                     remain below x255",
+                                    "array_set (f64/str via ets): needs 4 scratch registers but \
+                                     only {} remain below x255",
                                     255u16 - meta.next_reg as u16
                                 ),
                             });
@@ -3391,13 +3413,17 @@ pub fn lower_iir_to_beam(
                             detail: format!("{} must have a dest", instr.op),
                         }),
                     };
-                    if instr.op == "array_get" && instr.type_hint == "f64" {
-                        // BEAM04: array_get on an ets-backed float array —
-                        // see the `:ets` module-setup comment above.
-                        // `ets:lookup_element(Tab, Idx, 2)` returns the value
-                        // directly (position 2 of the `{Idx, Val}` tuple) —
-                        // no list/tuple destructuring needed on this path,
-                        // unlike the `atomics` branch's index-only +1 below.
+                    if instr.op == "array_get"
+                        && matches!(instr.type_hint.as_str(), "f64" | "str")
+                    {
+                        // BEAM04/BEAM06: array_get on an ets-backed
+                        // float/string array — see the `:ets` module-setup
+                        // comment above. `ets:lookup_element(Tab, Idx, 2)`
+                        // returns the value directly (position 2 of the
+                        // `{Idx, Val}` tuple) — no list/tuple destructuring
+                        // needed on this path, unlike the `atomics` branch's
+                        // index-only +1 below. Identical for `str` and
+                        // `f64`: `:ets` returns whatever term was stored.
                         let r_ref = operand_reg!(get_src!(instr, 0));
                         let r_idx = operand_reg!(get_src!(instr, 1));
 
@@ -3406,8 +3432,8 @@ pub fn lower_iir_to_beam(
                             return Err(IIRBeamError::UnsupportedOp {
                                 function: fn_name.clone(),
                                 op: format!(
-                                    "array_get (f64/ets): needs 3 scratch registers but only {} \
-                                     remain below x255",
+                                    "array_get (f64/str via ets): needs 3 scratch registers but \
+                                     only {} remain below x255",
                                     255u16 - meta.next_reg as u16
                                 ),
                             });

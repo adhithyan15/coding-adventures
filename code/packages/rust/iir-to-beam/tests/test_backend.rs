@@ -4143,6 +4143,198 @@ fn test_99_real_erl_mov_ref_lispy_pair_lowers_correctly() {
     );
 }
 
+// ===========================================================================
+// 100-102. BEAM06: `str`-typed array elements reuse BEAM04's `:ets`
+// substrate unmodified — see `code/specs/BEAM06-string-array-representation.md`
+// ===========================================================================
+
+/// Pure instruction-shape proof, mirroring `test_94_f64_array_ops_use_ets_
+/// not_atomics` exactly but for `type_hint == "array<str>"`/`"str"`: an
+/// all-string-array module's emitted `call_ext`s must target
+/// `ets:{new,insert,lookup_element}`/`erlang:list_to_tuple/1` and NONE must
+/// target `atomics:{new,put,get}` — checking the actual `call_ext` operands,
+/// not just import-table presence (every import is pre-registered
+/// unconditionally at module setup). `test_101`/`test_102` below prove
+/// actual execution on real Erlang.
+#[test]
+fn test_100_str_array_ops_use_ets_not_atomics() {
+    let m = make_module_fn("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+        IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], "array<str>"),
+        IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("str_const", Some("v".into()), vec![Operand::Str("HI".into())], "str"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("p".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "str"),
+        IIRInstr::new("array_get", Some("r".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i0".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("r".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "str array module must pass validation: {errs:?}");
+
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+
+    let import_idx = |module: &str, func: &str, arity: u32| -> Option<usize> {
+        beam.imports.iter().position(|imp| {
+            let m = beam.atoms.get(imp.module_atom_index as usize - 1).map(String::as_str);
+            let f = beam.atoms.get(imp.function_atom_index as usize - 1).map(String::as_str);
+            m == Some(module) && f == Some(func) && imp.arity == arity
+        })
+    };
+    let called_import_indices: std::collections::HashSet<u64> = beam.instructions.iter()
+        .filter(|i| i.opcode == OP_CALL_EXT)
+        .map(|i| i.operands[1].value)
+        .collect();
+    let is_called = |module: &str, func: &str, arity: u32| -> bool {
+        match import_idx(module, func, arity) {
+            Some(idx) => called_import_indices.contains(&(idx as u64)),
+            None => false,
+        }
+    };
+
+    assert!(is_called("ets", "new", 2), "must call_ext ets:new/2");
+    assert!(is_called("ets", "insert", 2), "must call_ext ets:insert/2");
+    assert!(is_called("ets", "lookup_element", 3), "must call_ext ets:lookup_element/3");
+    assert!(is_called("erlang", "list_to_tuple", 1), "must call_ext erlang:list_to_tuple/1");
+    assert!(!is_called("atomics", "new", 2),
+        "an all-str array module must NOT call_ext atomics:new/2");
+    assert!(!is_called("atomics", "put", 3),
+        "an all-str array module must NOT call_ext atomics:put/3");
+    assert!(!is_called("atomics", "get", 2),
+        "an all-str array module must NOT call_ext atomics:get/2");
+}
+
+/// End-to-end: the exact shape of the promoted `10 DIM A$(2)\n20 LET A$(0) =
+/// "O"\n30 LET A$(1) = "K"\n40 PRINT A$(0) + A$(1)` corpus row —
+/// `alloc_array` (`array<str>`), two `str`-typed `array_set`s, two
+/// `array_get`s, `str_concat` — executed on real Erlang. This is the row
+/// that fails BEAM VALIDATION outright before this slice
+/// (`UnsupportedType: ... op "array_set" has type_hint "str"`); after this
+/// slice it must run and print `OK`.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_101_real_erl_string_array_set_get_roundtrip() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+        IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], "array<str>"),
+        IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("i1".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("str_const", Some("vo".into()), vec![Operand::Str("O".into())], "str"),
+        IIRInstr::new("str_const", Some("vk".into()), vec![Operand::Str("K".into())], "str"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("p".into()), Operand::Var("i0".into()), Operand::Var("vo".into())], "str"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("p".into()), Operand::Var("i1".into()), Operand::Var("vk".into())], "str"),
+        IIRInstr::new("array_get", Some("a0".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i0".into())], "str"),
+        IIRInstr::new("array_get", Some("a1".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i1".into())], "str"),
+        IIRInstr::new("str_concat", Some("s".into()),
+            vec![Operand::Var("a0".into()), Operand::Var("a1".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "string array roundtrip module must pass validation: {errs:?}");
+
+    let beam_cfg = IIRBeamConfig::new("iir_string_array_roundtrip_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+
+    let tmp = std::env::temp_dir()
+        .join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create iir_to_beam_tests temp dir");
+    let beam_path = tmp.join("iir_string_array_roundtrip_test.beam");
+    std::fs::write(&beam_path, &bytes).expect("write iir_string_array_roundtrip_test.beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("iir_string_array_roundtrip_test:main(),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(
+        output.status.success(),
+        "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "OK",
+        "two round-tripped array elements concatenated must print \"OK\", proving the two \
+         element slots are distinct and survive a store→load round-trip through :ets");
+}
+
+/// End-to-end: `array_set` on the SAME string-array index twice must
+/// overwrite (not duplicate) — proving `ets:insert/2` replaces an existing
+/// key for `str` values exactly as `test_96_real_erl_float_array_overwrite`
+/// already proved for `f64` values. Sets index 0 to `"lo"`, then `"hi"`, and
+/// reads back `"hi"`.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_102_real_erl_string_array_overwrite() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], "array<str>"),
+        IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("str_const", Some("v1".into()), vec![Operand::Str("lo".into())], "str"),
+        IIRInstr::new("str_const", Some("v2".into()), vec![Operand::Str("hi".into())], "str"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("p".into()), Operand::Var("i0".into()), Operand::Var("v1".into())], "str"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("p".into()), Operand::Var("i0".into()), Operand::Var("v2".into())], "str"),
+        IIRInstr::new("array_get", Some("r".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i0".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("r".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "string array overwrite module must pass validation: {errs:?}");
+
+    let beam_cfg = IIRBeamConfig::new("iir_string_array_overwrite_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+
+    let tmp = std::env::temp_dir()
+        .join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create iir_to_beam_tests temp dir");
+    let beam_path = tmp.join("iir_string_array_overwrite_test.beam");
+    std::fs::write(&beam_path, &bytes).expect("write iir_string_array_overwrite_test.beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("iir_string_array_overwrite_test:main(),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(
+        output.status.success(),
+        "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "hi",
+        "array_set on the same string-array index must overwrite, not duplicate");
+}
+
 #[test]
 fn narrow_operations_mask_but_i64_remains_unbounded() {
     for op in ["add", "sub", "mul", "neg", "not", "and", "or", "xor", "shl", "shr"] {

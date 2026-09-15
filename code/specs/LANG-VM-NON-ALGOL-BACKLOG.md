@@ -8,6 +8,122 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## BEAM06 — Dartmouth BASIC BEAM: `str`-typed array element representation, 45/51 (selected after the VM-041 follow-up)
+
+`git fetch origin && git merge origin/main` fast-forwarded cleanly onto the
+VM-041 follow-up merge (below). `gh pr list --state open --limit 50` showed
+no other LANG-VM-related PR in flight, and specifically nothing touching
+`iir-to-beam`, `dartmouth-basic-iir-compiler`, or Dartmouth BASIC BEAM
+support.
+
+The VM-041 follow-up's own trailing note left the non-ALGOL BEAM backlog
+down to EXACTLY three Dartmouth BASIC gaps, each framed as a genuine,
+unscoped DESIGN question: 5 `INPUT` rows (VM-060b, out of scope per this
+task's own instructions), `RND` (VM-018, out of scope), and 2 string-
+array/mixed-`DATA` rows blocked on `iir-to-beam` having "no `str`-typed
+array element representation at all." This slice picked the third — the
+only one of the three that was not actually unscoped, once investigated —
+and, per this task's own instructions, researched it via a dedicated spec
+before implementing, mirroring BEAM04's own float-array-representation
+precedent exactly.
+
+### Research: does the existing `:ets` substrate already work for strings?
+
+Rather than assuming new design work was needed (BEAM04 had framed this as
+needing "a BEAM representation for a *heterogeneous* element type"), the
+first step was checking whether BEAM04's existing `:ets`-backed array
+substrate already worked for `str` elements unmodified — the same "does the
+existing capability already cover this" check that found `neg`(f64) needed
+zero new code in an earlier slice.
+
+`str_const`'s existing scalar lowering (`iir-to-beam/src/lower.rs`) answered
+the representation question directly: a v1 BEAM `str` value is already an
+ordinary Erlang character list (`[byte, ...]`, built via `put_list`) — not
+a handle, not a boxed reference. `:ets` stores arbitrary Erlang terms
+natively (unlike `:atomics`, which is fixed-width 64-bit integers only), so
+a character list is exactly as native to `:ets` as a float. Confirmed
+directly on real `erl` (OTP 17.0.5, this host) with a standalone probe
+mirroring `iir-to-beam`'s *exact* `array_set`/`array_get` instruction shape
+byte-for-byte (`erlang:list_to_tuple([Idx, Val])` + `ets:insert/2` to
+write, `ets:lookup_element/3` to read): round-trip, overwrite, concatenation
+of two round-tripped elements, and the empty-string edge case (BEAM nil)
+all passed — `ALL PROBES PASSED`.
+
+Separately, BEAM04's "heterogeneous element" framing was traced directly
+against `dartmouth-basic-iir-compiler`'s actual mixed-`DATA` lowering
+(`emit_data_pool_init`/`emit_data_value`) and found not to apply: BASIC's
+`DATA` pool materializes THREE separate parallel typed arrays (an
+`array<i64>` kind-tag array, an `array<f64>` numeric-value array, an
+`array<str>` string-value array) — never one array holding mixed element
+types. Every `READ` checks the runtime kind tag, then reads from the
+*statically*-chosen typed pool array. So no tagged/variant element
+representation was needed anywhere in this backend, closing off the one
+direction that might have made this a genuinely bigger item.
+
+### Fix: widen the existing `:ets`-dispatch condition, nothing else
+
+`iir-to-beam`'s `alloc_array`/`array_set`/`array_get` `:ets`-dispatch
+conditions (`type_hint == "array<f64>"`/`"f64"`) each widened to also match
+`"array<str>"`/`"str"`. The emitted BEAM instructions are byte-for-byte
+identical to the existing float-array path — no branch on element type
+inside the lowering itself. `validate.rs`'s Check 4 (`type_hint == "str"`
+rejected unless the op is in a short allow-list) gained `"array_set"`/
+`"array_get"`, mirroring the existing `str_const`/`str_concat`/`str_slice`/
+`call`/`ret`/`mov` entries — `alloc_array`'s `"array<str>"` type_hint was
+never rejected in the first place (Check 4 only matches the exact string
+`"str"`). Zero new BEAM opcodes; `ir-to-beam` (the encoder) untouched.
+
+Full research and decision write-up:
+`code/specs/BEAM06-string-array-representation.md`.
+
+### Validation
+
+`iir-to-beam` 0.14.0 → 0.15.0: new unit test
+`test_100_str_array_ops_use_ets_not_atomics` (instruction-shape: confirms
+an all-`str`-array module's emitted `call_ext`s target `ets:*`/
+`erlang:list_to_tuple/1` and none target `atomics:*`), plus two real-`erl`
+tests — `test_101_real_erl_string_array_set_get_roundtrip` (the promoted
+`DIM A$(2)` row's exact shape, prints `OK`) and
+`test_102_real_erl_string_array_overwrite` (re-`array_set` at the same
+index replaces, not duplicates, for `str` values exactly as
+`test_96_real_erl_float_array_overwrite` already proved for `f64` values).
+105 tests total (up from 102), all green; `cargo clippy -p iir-to-beam
+--all-targets -- -D warnings` clean.
+
+`lang-aot` 0.343.0 → 0.344.0: both Dartmouth BASIC rows VM-LOOP-24/BEAM04
+left deferred on this exact gap — `DIM A$(2)` (plain string array) and the
+mixed numeric/string `DATA`/`READ`/`RESTORE` row — promoted to declare
+`Beam` via a new dedicated `portable_text_stdout_dartmouth_basic_beam_
+string_arrays` test, each row executed against real `erl` before
+promotion. `feature_coverage_doc_counts_match_programs_source` updated
+(Dartmouth BASIC tuple `(51, 400)` → `(51, 402)`); `LANG-VM-FEATURE-
+COVERAGE.md`'s Dartmouth BASIC row and grand-total prose (1665 → 1667)
+updated to match. The broader `portable_text_stdout_` test group (36
+tests), `t7_differential_random_basic_` group (4 tests), and
+`feature_coverage_doc_counts_match_programs_source` all pass. A full
+`non_algol_matrix_every_proven_cell_agrees` capstone rerun was attempted
+but hit a pre-existing, unrelated failure (a Windows `erl` 17.0.5 access
+violation, exit `-1073741819`, on an unrelated exponent-formatting row —
+`10 PRINT 1.234567...`) — confirmed to reproduce byte-for-byte identically
+on baseline `origin/main` code with this slice's changes stashed out, so it
+is pre-existing local-host flakiness, not a regression from this slice.
+This matches every prior BEAM03/VM-LOOP-24/BEAM04/VM-041 slice's own
+precedent of not claiming a full capstone rerun as executed evidence for
+this backlog.
+
+**Dartmouth BASIC now declares 45/51 rows on `Beam`.** Only 6 rows remain
+undeclared: the 5 `INPUT` rows (VM-060b) and `RND` (VM-018) — both
+genuinely unscoped design questions, not probe-and-promote items. This
+closes out every non-ALGOL BEAM gap in this backlog that does not require a
+new, out-of-scope architectural decision. **Reprioritize after this
+merges:** the non-ALGOL BEAM backlog has no remaining "probe before
+declaring" or bounded-research items left — VM-060b (BEAM host input,
+unblocking 5 BASIC + 4 FLOW-MATIC rows at once) and VM-018 (RND's module-
+global design) are the only two items left, and both are genuinely
+unscoped product/architecture questions a future slice should scope
+properly before attempting, exactly as this task's own scope-boundary
+section anticipated.
+
 ## VM-041 follow-up — Twig BEAM: `match`/`union` fusion gap pinned down and closed, Twig 49/49 (selected after VM-041 first cut)
 
 `git fetch origin && git merge origin/main` fast-forwarded cleanly onto the
