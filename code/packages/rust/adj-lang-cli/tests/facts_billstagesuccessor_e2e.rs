@@ -21,6 +21,14 @@
 //! linear: `president_considers` has no successor, because from there the
 //! prose branches into sign / veto / pocket veto and a successor relation
 //! cannot honestly pick one. 0 answer-time model calls.
+//!
+//! EACH ROW CARRIES ITS OWN HOP (RS-5e, #14986). The envelope used to be the
+//! first transition sentence and every answer carried all seven sentences, so
+//! the answer to "what follows introduction?" cited "The president then
+//! considers the bill." -- and a test below asserted exactly that. Each hop now
+//! carries only the sentence(s) naming its two stages; where a sentence points
+//! back ("then", "that chamber", "If it passes"), the row carries the sentence
+//! it points to, as a second sentence of its span or as a corroboration.
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -108,7 +116,7 @@ fn bill_stage_successor_walks_the_whole_linear_chain() {
 }
 
 #[test]
-fn bill_stage_successor_carries_every_transition_sentence() {
+fn the_introduced_hop_carries_its_own_sentence_and_no_other_hops() {
     let dir = scratch("cites");
     place(&dir, &["bill-stage-successor.adj"]);
     std::fs::write(
@@ -120,27 +128,15 @@ fn bill_stage_successor_carries_every_transition_sentence() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
-    // Seven rows come from seven different sentences: one `source` plus six
-    // `cites`. Each row must stay auditable back to the sentence whose
-    // connective states that particular hop.
-    for sentence in [
-        "Once a bill is introduced, it is assigned to a committee",
-        "The bill is then put before that chamber to be voted on.",
-        "If the bill passes one body of Congress, it goes to the other body",
-        "Once both bodies vote to accept a bill, they must work out any differences",
-        "Then both chambers vote on the same version of the bill.",
-        "If it passes, they present it to the president.",
-        "The president then considers the bill.",
-    ] {
-        assert!(
-            out.contains(sentence),
-            "transition sentence carried: {sentence}: {out}"
-        );
+    // This test used to assert the OPPOSITE: that the answer to "what follows
+    // introduction?" carried all seven transition sentences, which was the
+    // #14986 defect (every answer cited every hop). The introduced hop now
+    // carries exactly its own sentence, whole, and no other hop's.
+    assert_eq!(out.matches("\"citations\":[").count(), 1, "one answer: {out}");
+    assert!(out.contains(&only_citation(S1, None)), "the introduced hop carries only its own sentence: {out}");
+    for other in [S2, S3, S4, S5, S6, S7] {
+        assert!(!out.contains(other), "another hop's sentence must not reach the introduced answer: {other}: {out}");
     }
-    assert!(
-        out.contains("usa.gov/how-laws-are-made") && out.contains("\"trust\":\"authoritative\""),
-        "carries the USA.gov citation: {out}"
-    );
 }
 
 #[test]
@@ -198,5 +194,115 @@ fn bill_stage_successor_stops_where_the_source_stops_being_linear() {
             !out.contains(&format!("bill_stage_successor(president_considers, {outcome})")),
             "must not pick one branch outcome as THE successor ({outcome}): {out}"
         );
+    }
+}
+
+const LOCATOR: &str = "https://www.usa.gov/how-laws-are-made";
+const ENVELOPE: &str = "Congress is the lawmaking branch of the federal government.";
+const S1: &str = "Once a bill is introduced, it is assigned to a committee whose members will research, discuss, and make changes to the bill.";
+const S2: &str = "The bill is then put before that chamber to be voted on.";
+const S3: &str = "If the bill passes one body of Congress, it goes to the other body to go through a similar process of research, discussion, changes, and voting.";
+const S4: &str = "Once both bodies vote to accept a bill, they must work out any differences between the two versions.";
+const S5: &str = "Then both chambers vote on the same version of the bill.";
+const S6: &str = "If it passes, they present it to the president.";
+const S7: &str = "The president then considers the bill.";
+
+/// (stage, next stage, that row's source span, the span it cites if any)
+fn hops() -> Vec<(&'static str, &'static str, String, Option<&'static str>)> {
+    vec![
+        ("introduced", "committee_review", S1.to_string(), None),
+        ("committee_review", "first_chamber_vote", S2.to_string(), Some(S1)),
+        ("first_chamber_vote", "second_chamber_process", S3.to_string(), None),
+        ("second_chamber_process", "reconcile_differences", S4.to_string(), None),
+        ("reconcile_differences", "vote_on_same_version", format!("{S4} {S5}"), None),
+        ("vote_on_same_version", "presented_to_president", format!("{S5} {S6}"), None),
+        ("presented_to_president", "president_considers", S7.to_string(), Some(S6)),
+    ]
+}
+
+/// The whole citations array of a one-citation answer, as one contiguous run.
+fn only_citation(span: &str, cited: Option<&str>) -> String {
+    let corr = match cited {
+        Some(c) => format!("{{\"source\":\"{c}\",\"locator\":\"{LOCATOR}\"}}"),
+        None => String::new(),
+    };
+    format!("\"citations\":[{{\"source\":\"{span}\",\"locator\":\"{LOCATOR}\",\"trust\":\"authoritative\",\"corroborations\":[{corr}]}}]")
+}
+
+fn shipped_table() -> String {
+    let adj = std::fs::read_to_string(facts_stdlib().join("civics/bill-stage-successor.adj"))
+        .expect("read shipped bill-stage-successor.adj");
+    adj[adj.find("table bill_stage_successor").expect("table")..].to_string()
+}
+
+#[test]
+fn every_hop_answer_carries_only_the_sentences_that_name_that_hop() {
+    for (stage, next, span, cited) in hops() {
+        let dir = scratch(&format!("hop_{stage}"));
+        place(&dir, &["bill-stage-successor.adj"]);
+        std::fs::write(
+            dir.join("case.adj"),
+            format!("import \"bill-stage-successor.adj\"\n? bill_stage_successor({stage}, $N)\n"),
+        )
+        .unwrap();
+        let (ok, out) = run(&dir.join("case.adj"));
+        assert!(ok, "cli should succeed: {out}");
+        assert_eq!(out.matches("\"citations\":[").count(), 1, "one answer for {stage}: {out}");
+        assert!(out.contains(&format!("\"N\":\"{next}\"")), "{stage} -> {next}: {out}");
+        assert!(out.contains(&only_citation(&span, cited)), "{stage}: its own span, whole, and the only citation: {out}");
+        // No sentence outside this hop's span and corroboration reaches it.
+        for other in [S1, S2, S3, S4, S5, S6, S7] {
+            if !span.contains(other) && cited != Some(other) {
+                assert!(!out.contains(other), "a sentence from another hop must not reach {stage}: {other}: {out}");
+            }
+        }
+        assert!(!out.contains(ENVELOPE), "the envelope is not primary for {stage}: {out}");
+    }
+}
+
+#[test]
+fn the_backward_pointing_hops_carry_the_sentence_they_point_back_to() {
+    // "The bill is then put before that chamber" names no committee, and "The
+    // president then considers the bill" names no presentation; each row cites
+    // the sentence that ends the previous list item. "Then both chambers vote"
+    // and "If it passes" need the sentence just before them in the same item,
+    // so those rows carry the two sentences together.
+    let body = shipped_table();
+    assert!(body.contains(&format!(
+        "    row (committee_review, first_chamber_vote) {{\n        source \"{S2}\"\n        cites \"{S1}\" locator \"{LOCATOR}\"\n    }}"
+    )));
+    assert!(body.contains(&format!(
+        "    row (presented_to_president, president_considers) {{\n        source \"{S7}\"\n        cites \"{S6}\" locator \"{LOCATOR}\"\n    }}"
+    )));
+    assert!(body.contains(&format!("        source \"{S4} {S5}\"\n")));
+    assert!(body.contains(&format!("        source \"{S5} {S6}\"\n")));
+    assert!(!body.contains(&format!("        source \"{S5}\"\n")), "no row is warranted by 'Then both chambers vote' alone");
+    assert!(!body.contains(&format!("        source \"{S6}\"\n")), "no row is warranted by 'If it passes' alone");
+}
+
+#[test]
+fn the_table_shape_matches_the_measured_rows() {
+    // Every row overrides the envelope, so the envelope's wording reaches no
+    // answer; this file-shape test is what pins it.
+    let body = shipped_table();
+    assert_eq!(body.matches("\n        source \"").count(), 7, "seven row sources");
+    assert_eq!(body.matches("\n        cites \"").count(), 2, "two row corroborations");
+    assert!(!body.contains("\n    cites "), "no table-level corroboration");
+    assert!(
+        !body.contains("\n        locator ") && !body.contains("\n        trust "),
+        "no row restates a locator line or trust"
+    );
+    assert!(
+        body.contains(&format!("\n    source \"{ENVELOPE}\"\n    locator \"{LOCATOR}\"\n    trust authoritative\n")),
+        "the envelope is the page's framing sentence"
+    );
+    assert!(!body.contains(&format!("\n    source \"{S1}\"\n    locator")), "not the first transition sentence as the envelope again");
+    let shipped_envelope = body
+        .lines()
+        .find(|l| l.starts_with("    source \""))
+        .expect("the table has an envelope source line")
+        .to_lowercase();
+    for word in ["bill", "committee", "introduc", "chamber", "vote", "president", "version"] {
+        assert!(!shipped_envelope.contains(word), "the shipped envelope must name no stage, but contains {word:?}");
     }
 }
