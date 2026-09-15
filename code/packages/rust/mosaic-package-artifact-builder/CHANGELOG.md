@@ -104,6 +104,30 @@ build script and that file has a migration in flight.
 
 ## Unreleased
 
+### Fixed -- a percentage `border-radius` is resolved against the part's box (#15225)
+
+Every backend lowers `border-radius` through a pixel parser -- Compose
+`RoundedCornerShape(N.dp)`, SwiftUI `.cornerRadius(N)`, Qt `radius: N`, XAML
+`CornerRadius="N"`, Flutter `BorderRadius.circular(N)` -- so `50%` matched
+none of them and was dropped.
+
+Trestle authors it **six times per theme**, and every one rendered as a
+SQUARE on the five native backends: both pill status dots, the progress
+ring's fill and hole, and both theme-toggle buttons. A progress ring drawn
+as a square is not a subtle defect.
+
+Resolved here for the same reason as `currentColor`: the answer is
+arithmetic over the authored box, not a property of any target language.
+
+**Only a square box with literal sides is resolved.** A percentage radius on
+a non-square box is an ellipse, which none of these frameworks expresses as
+a plain corner radius, and a content-sized box has no pixel value to resolve
+against at emit time. Both are left exactly as authored -- the web keeps
+resolving them natively, the native backends keep dropping them, and neither
+is ever silently wrong. A malformed percentage is declined rather than
+coerced to `0`, because a zero radius is a square, which is the bug itself.
+
+
 ### Fixed -- `currentColor` is resolved against the inherited text colour (#15169)
 
 `currentColor` means "whatever `color` is in effect here". CSS resolves it

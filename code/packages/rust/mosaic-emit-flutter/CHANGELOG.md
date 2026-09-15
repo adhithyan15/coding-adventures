@@ -5,6 +5,25 @@ this file.
 
 ## [Unreleased]
 
+### Fixed -- `emit_styled_box` never applied `border-radius` (#15225)
+
+This builder assembled its `BoxDecoration` from background, border and
+elevation and simply never looked at the radius, so a styled box came out
+SQUARE on Flutter however it was authored -- a plain `border-radius: 8` was
+dropped here just as surely as a percentage one.
+
+The same property visibly works elsewhere in the same file because
+`emit_container` does read it. Two writers, and only one of them had it.
+
+**This is not scoped to the percentage case.** Measured across the products:
+engram-app gains 24 radii it was silently losing, and task-app 17, none of
+which involve a percentage at all. Every changed line is the same
+`BoxDecoration` with a radius inserted -- verified by stripping the
+insertion and asserting the line is then byte-identical to before.
+
+An unreadable radius is dropped rather than coerced to `0`, since a zero
+radius is a square.
+
 ### Fixed -- a negative length reached four unguarded `BorderSide` writers (#15160)
 
 Flutter's `BorderSide` constructor is `assert(width >= 0.0)`, so a negative

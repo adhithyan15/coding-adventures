@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+### Fixed -- the round elements are round again on every backend (#15225)
+
+Six parts per theme author `border-radius: 50%` and every one rendered as a
+square on Compose, Flutter, SwiftUI, Qt and XAML: both pill status dots, the
+progress ring's fill and hole, and both theme-toggle buttons.
+
+Nothing changed in this app -- the percentage is now resolved during
+composition against each part's own box (6px becomes 3, 34px becomes 17,
+24px becomes 12).
+
+Verified by rendering. The status dot's 6x6 block in the Compose
+screenshot, before and after (`#` exactly the dot colour, `+` an
+antialiased edge, `.` background):
+
+```
+    ######        ..++..
+    ######        .####.
+    ######        +####+
+    ######        +####+
+    ######        .####.
+    ######        ..++..
+```
+
+Diffing the two renders finds exactly three changed regions, and all three
+are elements that authored `50%`: the 6x6 dot, the 24x24 ring hole, and the
+theme toggles. Nothing else moved.
+
 ### Fixed -- the pill status dot now renders on every backend (#15169)
 
 The dot is authored `background: currentColor` so it always matches whichever

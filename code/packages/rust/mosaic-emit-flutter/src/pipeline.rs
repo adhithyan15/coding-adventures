@@ -4104,6 +4104,18 @@ fn emit_styled_box(
             }),
         );
     }
+    // #15225 -- `border-radius`. This builder read background, border and
+    // elevation and simply never looked at the radius, so a styled box was
+    // square on Flutter however it was authored -- a NUMERIC radius was
+    // dropped here just as surely as a percentage one. `emit_container`
+    // handles it, which is why the same property works elsewhere in the
+    // same file: two writers, and only one of them had it.
+    //
+    // Emitted after the border so the argument order matches
+    // `emit_container`'s, keeping the two writers' output comparable.
+    if let Some(radius) = base.get("border-radius").and_then(|v| strict_pixel_length(v)) {
+        deco_parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
+    }
     // UI41, #12028 item 1 — base props only (see `elevation_tier`'s doc
     // comment).
     if let Some(tier) = elevation_tier(&base) {
@@ -14356,6 +14368,66 @@ mod host_input_style_tests {
 #[cfg(test)]
 mod negative_length_tests {
     use super::*;
+
+    /// #15225 -- `emit_styled_box` built its `BoxDecoration` from
+    /// background, border and elevation and never looked at the radius, so
+    /// a styled box was SQUARE on Flutter however it was authored. A
+    /// NUMERIC radius was dropped here just as surely as a percentage one,
+    /// which is why the same property visibly works elsewhere in the same
+    /// file: `emit_container` handles it, and only one of the two writers
+    /// had it.
+    #[test]
+    fn a_styled_box_carries_its_border_radius() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        let m = MosmodelComponent {
+            component: "X".to_string(),
+            slots: vec![],
+            emits: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("dot".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "dot".to_string(),
+                base: vec![
+                    prop("width", "6"),
+                    prop("height", "6"),
+                    prop("background", "#6fb489"),
+                    prop("border-radius", "3"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &style).expect("emits").output;
+        assert!(
+            out.contains("borderRadius: BorderRadius.circular(3)"),
+            "the styled box must carry its radius: {out}"
+        );
+        // and an unreadable radius is dropped rather than becoming 0, since
+        // a 0 radius is a square -- the very bug being fixed
+        let mut square = style.clone();
+        square.parts[0].base.pop();
+        square.parts[0].base.push(prop("border-radius", "50%"));
+        let out2 = from_pipeline(&m, &l, &square).expect("emits").output;
+        assert!(
+            !out2.contains("BorderRadius.circular(0)"),
+            "an unresolved percentage must not become a zero radius: {out2}"
+        );
+    }
 
     #[test]
     fn a_negative_length_falls_back_rather_than_reaching_dart() {
