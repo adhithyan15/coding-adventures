@@ -130,7 +130,7 @@ Learner copy comes first.
   // the LIST rather than only the count is what stops the trade -- completing
   // one track while regressing another leaves the count untouched.
   // ---------------------------------------------------------------------------
-  it("never loses a track that proves the pre-A1 writing ladder", () => {
+  it("keeps EVERY registered track proving the pre-A1 writing ladder", () => {
     const { registry, lessons, curricula, spine: realSpine } = loadEverything();
     const report = measureWritingStages(
       loadAssessmentPolicy(),
@@ -145,19 +145,43 @@ Learner copy comes first.
       .map((track) => track.language)
       .sort();
 
-    // 15 -> 19: german, italian, persian and portuguese each proved observe-trace
-    // and guided-copy and stopped there. Each gained a delayed copy with the
-    // model covered and a dictation from the sound, on the word or letter it
-    // already had -- the stages measure what the hand is asked to do, not how
-    // much language is on the page.
-    expect(report.summary.tracksCompleteAtPreA1).toBeGreaterThanOrEqual(19);
+    // 15 -> 19 -> 23, across four PRs, and this assertion was tightened twice as
+    // they landed. It began as `>= 19` with a list of the four tracks still
+    // allowed to fail, because at the time four still did.
+    //
+    // Both halves of that shape are now wrong, and in the direction that matters:
+    // a floor of 19 against a true value of 23 is four tracks of silent headroom,
+    // and an allow-list naming tracks that have since been fixed is a licence
+    // nobody is forced to hand back. A ratchet left slack after the work lands
+    // stops being a ratchet.
+    //
+    // Derived from the registry rather than written as 23, so it cannot go stale
+    // the way the literal did. Adding a 24th track fails this until that track
+    // has a ladder, which is the correct answer and not an inconvenience: the
+    // point of the gate is that the corpus-wide property holds, not that some
+    // number was true once.
+    expect(incomplete).toEqual([]);
+    expect(report.summary.tracksCompleteAtPreA1).toBe(registry.languages.length);
+  }, 30_000);
 
-    // The four that remain have NO stage evidence at all, not a partial ladder:
-    // between them they hold 223 script lessons and not one writing-stage
-    // directive, which is a different and larger piece of work than this was.
-    // A track may leave this list; none may join it.
-    for (const language of incomplete) {
-      expect(["bengali", "kannada", "sanskrit", "telugu"]).toContain(language);
-    }
+  // ---------------------------------------------------------------------------
+  // The pre-A1 rung is complete; A1 through C2 are not, and nothing watched the
+  // remainder at all. `missingTrackLevelStages` is the plan's largest single
+  // family and it fell 519 -> 351 while the pre-A1 work landed -- a 168-point
+  // move that no assertion would have noticed in either direction.
+  //
+  // A ceiling rather than a pin: it may only fall. Pinning it exactly would make
+  // every unrelated tranche that happens to add a staged lesson edit this line.
+  // ---------------------------------------------------------------------------
+  it("never grows the remaining writing-stage debt above A1", () => {
+    const { registry, lessons, curricula, spine: realSpine } = loadEverything();
+    const report = measureWritingStages(
+      loadAssessmentPolicy(),
+      registry.languages.map((track) => track.id),
+      lessons,
+      curricula,
+      realSpine,
+    );
+    expect(report.summary.missingTrackLevelStages).toBeLessThanOrEqual(351);
   }, 30_000);
 });
