@@ -3131,6 +3131,15 @@ fn emit_for_spread(
     // `columnWidths[<idx>]`. Only meaningful when an `index:` binding is
     // present and the table carries a column-widths slot.
     let body_ctx = TableCtx {
+        // #15166 -- the threaded style is TEXT, and a `For` REBINDS the
+        // identifiers inside it. Carrying it across would both change this
+        // loop's shape (the emitters choose `(_)` vs `(item)` by scanning
+        // the emitted body for those identifiers) and make the input's copy
+        // evaluate a predicate against the loop's binding while the
+        // enclosing merge evaluates it against the outer one -- so the
+        // editor and the cell would disagree at runtime. `emit_host_table`
+        // resets it for the same reason.
+        inherited_text_style: None,
         cell_index: match (&index_name, ctx.column_widths_slot) {
             (Some(idx), Some(_)) => Some(idx.as_str()),
             _ => ctx.cell_index,
@@ -3289,6 +3298,15 @@ fn emit_for_dart(
     // `index:` — optional, always a Keyword when present.
     let index_name = find_keyword_prop(node, "index").map(to_camel_case_first_lower);
     let body_ctx = TableCtx {
+        // #15166 -- the threaded style is TEXT, and a `For` REBINDS the
+        // identifiers inside it. Carrying it across would both change this
+        // loop's shape (the emitters choose `(_)` vs `(item)` by scanning
+        // the emitted body for those identifiers) and make the input's copy
+        // evaluate a predicate against the loop's binding while the
+        // enclosing merge evaluates it against the outer one -- so the
+        // editor and the cell would disagree at runtime. `emit_host_table`
+        // resets it for the same reason.
+        inherited_text_style: None,
         for_item: Some(as_name.as_str()),
         for_index: index_name.as_deref().or(ctx.for_index),
         ..ctx
@@ -4227,7 +4245,34 @@ fn emit_styled_box(
     // down. A Flutter `TextField` does not inherit the
     // `DefaultTextStyle.merge` written below it; an input authoring
     // `font: inherit` has no other way to follow the text around it.
-    let inherited_text_style = text_style_parts.join(", ");
+    //
+    // Built SEPARATELY from the merge copy, and validated the way
+    // `host_input_text_style_arg` validates an input's own font. The merge
+    // reads `font-size` through `parse_pixel_value`, whose contract is "0
+    // on anything unreadable" -- harmless for a `Text`, which the theme
+    // still sizes, but on a `TextField` `fontSize: 0` is an editor the user
+    // cannot see or place a cursor in. That is the exact invariant
+    // `inherit_is_dropped_rather_than_invented` pins for the explicit path,
+    // and threading the merge copy verbatim would have walked around it.
+    // An unregistered font family means nothing to Flutter, so the same
+    // allow-list applies.
+    let mut inherited_parts: Vec<String> = vec![format!("color: {text_color_expr}")];
+    if let Some(family) = font_family.and_then(|f| match f.trim() {
+        "monospace" => Some("\"monospace\""),
+        "serif" => Some("\"serif\""),
+        "sans-serif" => Some("\"sans-serif\""),
+        _ => None,
+    }) {
+        inherited_parts.push(format!("fontFamily: {family}"));
+    }
+    if let Some(size) = base
+        .get("font-size")
+        .and_then(|v| strict_pixel_length(v))
+        .or_else(|| ctx.sheet_font_size.and_then(strict_pixel_length))
+    {
+        inherited_parts.push(format!("fontSize: {size}"));
+    }
+    let inherited_text_style = inherited_parts.join(", ");
     let ctx = TableCtx {
         inherited_text_style: Some(inherited_text_style.as_str()),
         ..ctx
@@ -14488,10 +14533,19 @@ mod host_input_style_tests {
             from_pipeline(&m, &l, &style).expect("emits").output
         }
 
+        // Assert on the TEXTFIELD's own slice. Asserting over the whole
+        // output matched the `DefaultTextStyle.merge` line, which has always
+        // contained that byte sequence -- so the test passed with the entire
+        // feature reverted. Fourth vacuous assertion in this area; the
+        // negative half below was the only thing pinning anything.
         let asked = emit("font: inherit");
+        let asked_field = asked
+            .split("TextField(")
+            .nth(1)
+            .expect("a TextField is emitted");
         assert!(
-            asked.contains("style: TextStyle(color: const Color(0xFFE3EEE4), fontSize: 13)"),
-            "an input asking to inherit must carry the cell's style: {asked}"
+            asked_field.contains("style: TextStyle(color: const Color(0xFFE3EEE4), fontSize: 13)"),
+            "an input asking to inherit must carry the cell's style: {asked_field}"
         );
 
         let did_not_ask = emit("");
@@ -14503,6 +14557,69 @@ mod host_input_style_tests {
             !field.contains("style: TextStyle"),
             "an input that did not ask must NOT be given the enclosing style: {field}"
         );
+    }
+
+    /// An UNREADABLE enclosing font-size must not reach the input as
+    /// `fontSize: 0`.
+    ///
+    /// The merge copy reads `font-size` through `parse_pixel_value`, whose
+    /// contract is "0 on anything unreadable" -- harmless for a `Text`,
+    /// which the theme still sizes, but on a `TextField` a zero size is an
+    /// editor the user cannot see or place a cursor in. Threading the merge
+    /// copy verbatim walked straight around the invariant
+    /// `inherit_is_dropped_rather_than_invented` pins for the explicit path.
+    #[test]
+    fn an_unreadable_inherited_font_size_is_not_threaded_as_zero() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        for bad in ["90%", "0.9rem", "inherit", "large", "-4px"] {
+            let m = MosmodelComponent {
+                component: "X".to_string(),
+                slots: vec![],
+                emits: vec![],
+            };
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: "Box".to_string(),
+                    part_name: Some("cell".to_string()),
+                    props: vec![],
+                    children: vec![LayoutNode {
+                        tag: "HostInput".to_string(),
+                        part_name: Some("editor".to_string()),
+                        props: vec![],
+                        children: vec![],
+                    }],
+                },
+            };
+            let style = StyleDef {
+                component_name: "X".to_string(),
+                parts: vec![
+                    PartStyle {
+                        name: "cell".to_string(),
+                        base: vec![prop("font-size", bad), prop("background", "#1e1e1e")],
+                        transitions: vec![],
+                        states: vec![],
+                    },
+                    PartStyle {
+                        name: "editor".to_string(),
+                        base: vec![prop("font", "inherit")],
+                        transitions: vec![],
+                        states: vec![],
+                    },
+                ],
+            };
+            let out = from_pipeline(&m, &l, &style).expect("emits").output;
+            let field = out.split("TextField(").nth(1).expect("a TextField");
+            assert!(
+                !field.contains("fontSize: 0"),
+                "`{bad}` reached the editor as a zero size: {field}"
+            );
+        }
     }
 
     /// A NEGATIVE width must not reach `BorderSide`. Its constructor
