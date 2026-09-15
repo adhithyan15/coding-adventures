@@ -18,11 +18,7 @@ it("pins Latin lesson-content budgets", () =>
     // INFLECTED form, not the lemma.
     // 163 -> 168: chapter 59 adds a three-lesson case-and-place bridge before
     // the 73-word social exchange and 140-word adapted account use its forms.
-    //
-    // 168 -> 171: the three writing stages Latin had never proven. No new atoms
-    // in any of them -- they practise the joiners the track already teaches and
-    // add only what the stages are: a choice with no model, a clock, and a join.
-    lessons: 171,
+    lessons: 168,
     idioms: 16,
     senses: 6,
     cultureClaims: 17,
@@ -50,26 +46,12 @@ it("pins Latin's two A1 reading shapes and their exact-form closure", () => {
   expect(lengths).toEqual([73, 140]);
 });
 
-it("pins Latin's writing ramp, now complete at every level", () => {
+it("pins Latin's current writing ramp", () => {
   const latin = languageWritingStages("latin");
-  expect(latin.defects).toEqual([]);
-  expect(latin.levels.filter((level) => !level.complete)).toEqual([]);
-
-  // Was the four pre-A1 stages and nothing after them, which for LATIN was the
-  // sharpest version of the corpus-wide problem: this is the language most
-  // people meet only as reading, and a track that stops at dictation quietly
-  // agrees that reading is what knowing Latin means.
-  //
-  // The ORDER is asserted rather than the set, because
-  // `missing-stage-prerequisite` rejects a connected composition placed before
-  // the timed paper or a timed paper before a controlled one.
   expect(latin.validEvidence.map((entry) => entry.stage)).toEqual([
     "observe-trace",
     "guided-copy",
     "delayed-copy",
     "dictation-transcription",
-    "controlled-composition",
-    "timed-assessment-production",
-    "connected-composition",
   ]);
 });

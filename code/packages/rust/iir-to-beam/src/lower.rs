@@ -3780,23 +3780,6 @@ pub fn lower_iir_to_beam(
                     // Move caps (r1) → x0, args (r2) → x1; result lands in x0.
                     // Note: r0 (fn_atom) is untouched by this call since r0 >=
                     // meta.next_reg which is always > 2 for any real function.
-                    //
-                    // This arm emits TWO call_ext instructions (erlang:'++'/2
-                    // here, then erlang:apply/3 below). Any SSA variable live
-                    // across THIS IIR `call_closure` instruction must be saved
-                    // to its Y-register slot before either call clobbers the
-                    // X-register bank, and restored only after both calls are
-                    // done — one save/restore pair spanning both call_ext
-                    // emissions, exactly like the `array_set` (f64/ets) arm's
-                    // single pair spanning its `list_to_tuple`+`ets:insert`
-                    // pair above. `cur_idx` indexes the single `live_across`
-                    // entry computed for this instruction (see the "EVERY op
-                    // that emits a call_ext must be listed here" comment at
-                    // the `live_across` match, which already lists
-                    // `call_closure` — this arm was the one place that never
-                    // read it back out).
-                    let cur_idx = instr_idx - 1;
-                    save_live_across_imported_call!(cur_idx);
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                         BEAMOperand::x(r1),
                         BEAMOperand::x(0),
@@ -3834,19 +3817,13 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::u(import_apply as u64),
                     ]));
 
-                    // Move result from x0 into dest register — BEFORE restoring
-                    // saved live variables, mirroring the `alloc_array` arm's
-                    // ordering: `restore_live_across_imported_call!` moves
-                    // Y-slots back into their original X registers, which
-                    // could include x0 itself, so the call result must be
-                    // captured into `r_dest` first.
+                    // Move result from x0 into dest register.
                     if r_dest != 0 {
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(0),
                             BEAMOperand::x(r_dest),
                         ]));
                     }
-                    restore_live_across_imported_call!(cur_idx);
                 }
 
                 // ── Unsupported ops ──────────────────────────────────────────

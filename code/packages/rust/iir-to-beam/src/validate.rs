@@ -52,7 +52,6 @@
 //! | `field_load` | any (type_hint is `"ref<any>"` or similar) |
 //! | `field_store` | any (type_hint is `"void"`) |
 //! | `is_null` | `type_hint == "bool"` |
-//! | `mov` | any `ref<…>` type_hint (VM-041 — a plain register copy of a heap pointer, same as the `"str"` exception) |
 //!
 //! These ops are lowered to BEAM instructions by `lower.rs`:
 //! - `alloc` + adjacent `field_store`s → `put_list`
@@ -345,29 +344,6 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                     // field_store void — write head or tail into a fresh cons cell.
                     // Consumed by the put_list pattern along with its preceding alloc.
                     "field_store" if instr.type_hint == "void" => true,
-
-                    // mov ref<…> — a plain register-to-register copy of a heap
-                    // pointer. VM-041: Twig's `match`/`if` compile a "phi via
-                    // mutable variable" pattern — each arm's `emit_move`
-                    // (`twig-ir-compiler::compiler.rs`) writes into a shared
-                    // result variable with a typed `mov`, using the SOURCE
-                    // value's own inferred type as the mov's type_hint. When a
-                    // `union` variant constructor's cons cell (or a value that
-                    // started life as `box`/`unbox`, which
-                    // `concretize_scalar_any_for_beam` renames to `mov` without
-                    // touching its type_hint — see `lang-aot::lib.rs`) is one of
-                    // the arms, that type_hint is `ref<LispyPair>`, not a
-                    // scalar. `lower.rs`'s `"mov"` arm already lowers this
-                    // correctly for ANY type_hint (it is an unconditional
-                    // `{operand} -> {x,rd}` BEAM `move`, agnostic to what the
-                    // register holds — see the `integer_operand!` macro, which
-                    // resolves a `Var` source to its x-register regardless of
-                    // type); this validator was simply never told to accept the
-                    // ref-typed case, even though `"mov"` was already accepted
-                    // for the analogous `"str"` type_hint case above. Confirmed
-                    // safe against real `erl`:
-                    // `test_99_real_erl_mov_ref_lispy_pair_lowers_correctly`.
-                    "mov" => true,
 
                     _ => false,
                 };

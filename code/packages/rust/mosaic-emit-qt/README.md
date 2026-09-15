@@ -39,6 +39,19 @@ order; explicit `state-when-*` structural and interaction layers apply after
 them. The resulting nested bindings are shared by generic styled containers
 and specialized `HostButton` backgrounds.
 
+Which properties actually follow a state layer is worth stating exactly, because
+the answer used to be narrower than this paragraph implied. `background`,
+`opacity`, `color`, `border-color`, `border-width` and `border-radius` do, at all
+four places this emitter assembles a `Rectangle`'s paint properties. `width` and
+`height` do **not** on a `Stack`, which lowers to a QML `Item` built elsewhere
+(#15277), and host controls do not vary `font-size` (#15254).
+
+Note that a value's unit decides which builder can see it. `conditional_px_expr`
+reads `2px`; `conditional_number_expr` rejects anything carrying a unit and is
+for bare numbers like `opacity`. Routing a px-valued property through the number
+builder silently drops every override and yields a conditional expression made
+only of the base -- a constant that compiles and renders wrongly.
+
 ## Output file structure
 
 For a component named `ProfileCard` with slots `display-name: text` and
