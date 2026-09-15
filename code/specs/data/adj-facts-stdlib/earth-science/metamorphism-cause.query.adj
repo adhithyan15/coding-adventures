@@ -5,8 +5,10 @@
 % The shape a learner (or an LLM) produces to ANSWER "what does heat do to
 % rock?": it states no fact of its own — it only `import`s the grounded
 % table and asks binding queries. The engine resolves each `?` against the
-% `metamorphism_cause` rows and returns the effect + the table's own
-% source/locator/trust. A cause the table does not carry abstains
+% `metamorphism_cause` rows and returns the effect + the ROW's own cause
+% sentence, corroborated by the sentence stating what metamorphism does,
+% with the table's locator and trust inherited. A cause the table does not
+% carry abstains
 % honestly — the engine never invents a cause of metamorphism.
 %
 % Run (from this directory so the relative import resolves):
