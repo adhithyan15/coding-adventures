@@ -822,7 +822,19 @@ fn resolve_percentage_border_radius(style: &mut mosstyle_compiler::StyleDef) {
                 continue;
             }
             if let Some(fraction) = percentage_fraction(&prop.value) {
-                let resolved = side * fraction;
+                // CSS's overlap rule scales adjacent radii so a radius can
+                // never exceed half the side -- `border-radius: 100%` on a
+                // square renders exactly as `50%`. Compose, SwiftUI and QML
+                // clamp for us; XAML does not, so clamping here keeps the
+                // backends agreeing rather than leaving one at double.
+                let resolved = (side * fraction).min(side / 2.0);
+                // Rounded to a sane pixel precision. f64 `Display` never
+                // uses exponent notation in EITHER direction, so an
+                // unrounded product is both ugly (`0.30000000000000004`
+                // from a 3px box at 10%) and, for a subnormal side, a
+                // several-hundred-character literal shipped to every
+                // backend.
+                let resolved = (resolved * 1000.0).round() / 1000.0;
                 prop.value = format!("{resolved}");
             }
         }
@@ -847,6 +859,14 @@ fn square_side(part: &mosstyle_compiler::PartStyle) -> Option<f64> {
 fn literal_length(value: &str) -> Option<f64> {
     let v = value.trim();
     let v = v.strip_suffix("px").unwrap_or(v).trim();
+    // The same character class the STRICTEST backend length parser accepts
+    // (Compose's `px_or_none` is digits, `.` and `-`). `6e0` and `+6`
+    // parse as f64 here but are DROPPED by that emitter, which would leave
+    // a box sized by its content carrying a radius resolved against a
+    // width it never applied.
+    if v.is_empty() || !v.bytes().all(|b| b.is_ascii_digit() || b == b'.' || b == b'-') {
+        return None;
+    }
     v.parse::<f64>()
         .ok()
         .filter(|f| f.is_finite() && *f >= 0.0 && f.abs() <= 9_007_199_254_740_992.0)
@@ -15686,6 +15706,66 @@ mod percentage_radius_tests {
             ]);
             resolve_percentage_border_radius(&mut s);
             assert_eq!(radius_of(&s), bad, "`{bad}` must be left as authored");
+        }
+    }
+
+    /// CSS clamps a radius to half the side (the overlap rule), so `100%`
+    /// on a square renders exactly as `50%`. Compose, SwiftUI and QML clamp
+    /// for us; XAML does not, so resolving `100%` to the full side would
+    /// leave one backend at double the others.
+    #[test]
+    fn a_radius_is_clamped_to_half_the_side() {
+        let mut s = style_with(vec![
+            prop("width", "20"),
+            prop("height", "20"),
+            prop("border-radius", "100%"),
+        ]);
+        resolve_percentage_border_radius(&mut s);
+        assert_eq!(radius_of(&s), "10");
+    }
+
+    /// The product is rounded. f64 `Display` never uses exponent notation in
+    /// either direction, so an unrounded value is either ugly or enormous:
+    /// a 3px box at 10% gives `0.30000000000000004`, and a subnormal side
+    /// gives a several-hundred-character literal shipped to every backend.
+    #[test]
+    fn the_resolved_radius_is_rounded_to_a_sane_precision() {
+        let mut s = style_with(vec![
+            prop("width", "3"),
+            prop("height", "3"),
+            prop("border-radius", "10%"),
+        ]);
+        resolve_percentage_border_radius(&mut s);
+        assert_eq!(radius_of(&s), "0.3");
+        assert!(radius_of(&s).len() < 8);
+
+        let mut tiny = style_with(vec![
+            prop("width", "1e-300"),
+            prop("height", "1e-300"),
+            prop("border-radius", "50%"),
+        ]);
+        resolve_percentage_border_radius(&mut tiny);
+        assert!(
+            radius_of(&tiny).len() < 12,
+            "a subnormal side must not ship a 300-character literal: {}",
+            radius_of(&tiny)
+        );
+    }
+
+    /// A length the STRICTEST backend parser rejects must not be used as a
+    /// side. Compose's `px_or_none` is a digits/`.`/`-` character check, so
+    /// `6e0` is dropped there and the box ends up sized by its content --
+    /// while a radius resolved against 6 would already be baked in.
+    #[test]
+    fn a_side_no_backend_would_apply_is_not_used() {
+        for side in ["6e0", "+6", "6 px x", "1_0"] {
+            let mut s = style_with(vec![
+                prop("width", side),
+                prop("height", side),
+                prop("border-radius", "50%"),
+            ]);
+            resolve_percentage_border_radius(&mut s);
+            assert_eq!(radius_of(&s), "50%", "`{side}` must not be used as a side");
         }
     }
 

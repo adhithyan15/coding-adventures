@@ -4113,8 +4113,23 @@ fn emit_styled_box(
     //
     // Emitted after the border so the argument order matches
     // `emit_container`'s, keeping the two writers' output comparable.
-    if let Some(radius) = base.get("border-radius").and_then(|v| strict_pixel_length(v)) {
-        deco_parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
+    // NOT paired with a per-edge border. Flutter's `Border.paint` throws
+    // "A borderRadius can only be given on borders with uniform colors"
+    // the moment a non-uniform `Border(...)` carries a radius, and asserts
+    // separately on a hairline side -- taking out the widget and everything
+    // above it in any debug or profile build. `per_edge_border_expr` emits
+    // exactly that non-uniform form, and it can also emit a `width: 0`
+    // side for an edge whose authored width was unreadable.
+    //
+    // Before #15225 this builder emitted no radius at all, so the pairing
+    // was unreachable; adding one without this gate turns an authored
+    // per-edge border plus a radius into a runtime crash. A uniform border
+    // is fine, which is the case every product actually authors.
+    let uniform_border = per_edge_border_expr(&base).is_none();
+    if uniform_border {
+        if let Some(radius) = base.get("border-radius").and_then(|v| strict_pixel_length(v)) {
+            deco_parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
+        }
     }
     // UI41, #12028 item 1 — base props only (see `elevation_tier`'s doc
     // comment).
@@ -14417,15 +14432,42 @@ mod negative_length_tests {
             out.contains("borderRadius: BorderRadius.circular(3)"),
             "the styled box must carry its radius: {out}"
         );
-        // and an unreadable radius is dropped rather than becoming 0, since
-        // a 0 radius is a square -- the very bug being fixed
-        let mut square = style.clone();
-        square.parts[0].base.pop();
-        square.parts[0].base.push(prop("border-radius", "50%"));
-        let out2 = from_pipeline(&m, &l, &square).expect("emits").output;
+        // An unreadable radius is dropped rather than becoming 0, since a 0
+        // radius is a square -- the very bug being fixed. Asserted on the
+        // VALIDATOR, because asserting `!out.contains("circular(0)")` on the
+        // emitted text cannot fail under any implementation of the line
+        // above: `strict_pixel_length("50%")` returns None, so `Some(0.0)`
+        // is unreachable and the assertion reads as coverage it never had.
+        assert_eq!(strict_pixel_length("50%"), None);
+        assert_eq!(strict_pixel_length("auto"), None);
+        let mut unresolved = style.clone();
+        unresolved.parts[0].base.pop();
+        unresolved.parts[0].base.push(prop("border-radius", "50%"));
+        let out2 = from_pipeline(&m, &l, &unresolved).expect("emits").output;
         assert!(
-            !out2.contains("BorderRadius.circular(0)"),
-            "an unresolved percentage must not become a zero radius: {out2}"
+            !out2.contains("borderRadius"),
+            "an unresolved percentage must emit no radius at all: {out2}"
+        );
+
+        // A RADIUS IS NEVER PAIRED WITH A PER-EDGE BORDER. Flutter's
+        // `Border.paint` throws "A borderRadius can only be given on borders
+        // with uniform colors", so this combination is a runtime crash that
+        // takes out the widget and its ancestry.
+        let mut per_edge = style.clone();
+        per_edge.parts[0].base.extend([
+            prop("border-top-width", "1"),
+            prop("border-top-color", "#ff0000"),
+            prop("border-bottom-width", "2"),
+            prop("border-bottom-color", "#00ff00"),
+        ]);
+        let out3 = from_pipeline(&m, &l, &per_edge).expect("emits").output;
+        assert!(
+            out3.contains("border: Border("),
+            "the fixture should still produce a per-edge border: {out3}"
+        );
+        assert!(
+            !out3.contains("borderRadius"),
+            "a per-edge border must suppress the radius, or Flutter throws at paint: {out3}"
         );
     }
 

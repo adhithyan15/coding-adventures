@@ -127,6 +127,21 @@ resolving them natively, the native backends keep dropping them, and neither
 is ever silently wrong. A malformed percentage is declined rather than
 coerced to `0`, because a zero radius is a square, which is the bug itself.
 
+Three details the arithmetic needs to be right about:
+
+- **Clamped to half the side.** CSS's overlap rule scales adjacent radii, so
+  `border-radius: 100%` on a square renders exactly as `50%`. Compose,
+  SwiftUI and QML clamp for us; XAML does not, so resolving to the full side
+  would leave one backend at double the others.
+- **Rounded.** f64 `Display` never uses exponent notation in *either*
+  direction, so an unrounded product is either ugly (`0.30000000000000004`
+  from a 3px box at 10%) or enormous -- a subnormal side produces a
+  several-hundred-character literal shipped to every backend.
+- **The side must be a length every backend accepts.** `6e0` parses as a
+  float but is dropped by Compose's character-class parser, which would
+  leave a content-sized box carrying a radius resolved against a width it
+  never applied.
+
 
 ### Fixed -- `currentColor` is resolved against the inherited text colour (#15169)
 
