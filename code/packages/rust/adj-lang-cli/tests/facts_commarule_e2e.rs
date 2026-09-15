@@ -155,8 +155,15 @@ fn the_but_row_carries_the_pages_closing_colon() {
     // verbatim; on the page it ends in a colon that introduces an example
     // pair, and the period form occurs zero times.
     let body = shipped_table();
-    assert!(BUT.ends_with("independent clauses:"), "the but sentence ends in the page's colon");
-    assert!(!body.contains("joining two independent clauses.\""), "no period form in the table");
+    assert!(
+        body.contains("        source \"Use a comma before the coordinating conjunction but if it is joining two independent clauses:\"\n"),
+        "the shipped but row ends in the page's colon"
+    );
+    let adj = std::fs::read_to_string(facts_stdlib().join("language/comma-rule.adj")).unwrap();
+    assert!(
+        !adj.contains("joining two independent clauses.\""),
+        "no period form anywhere in the file, header included"
+    );
 }
 
 #[test]

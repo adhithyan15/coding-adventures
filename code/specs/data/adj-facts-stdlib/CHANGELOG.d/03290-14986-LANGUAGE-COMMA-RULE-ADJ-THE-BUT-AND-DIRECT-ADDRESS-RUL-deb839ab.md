@@ -5,8 +5,9 @@
   ### What each row carries now
 
   Measured 2026-09-15 on Grammarly's comma article (HTTP 200; a nonsense path on the same host returns
-  404), with inline tags removed without a space and only ASCII whitespace collapsed. The nonsense
-  page holds none of the sentences below.
+  404), with `<script>` and `<style>` data set aside, inline tags removed without a space, and only
+  ASCII whitespace collapsed. The page's embedded script data repeats the sentences below; those
+  copies are not counted, and the counts are of the rendered markup. The nonsense page holds none of the sentences below.
   - **Every row takes its own sentence as a `source`.** Each of the three sentences names its rule and
     what it says to do, and each occurs **exactly once**, inside a `<p>`.
   - **The envelope** is now the article's *"There are lots of rules about comma usage, and often the
@@ -20,8 +21,8 @@
   The header's truth table, which calls its quotes verbatim, ends the but sentence with a **period**.
   The page ends it with a **colon** that introduces an example pair, and the period form occurs zero
   times. The row carries the page's colon form. It is still a whole instruction naming the rule and
-  its action, so it takes a `source` rather than being split into `cites`. The header's quote is kept
-  and a note says it isn't verbatim. The authoring note ("WebFetch-verified twice", each quote a
+  its action, so it takes a `source` rather than being split into `cites`. The header's quote now
+  carries the colon too, and a note records the correction. The authoring note ("WebFetch-verified twice", each quote a
   "complete, standalone rule sentence") is marked as superseded.
 
   ### Pins
@@ -31,7 +32,8 @@
   answer whose citations array holds exactly the series row's whole contiguous citation. Added:
   - every rule's answer is one answer whose citations array holds exactly its own sentence's citation,
     with no other rule's sentence and not the envelope;
-  - the but row ends in the page's colon, and the period form is not in the table;
+  - the shipped but row ends in the page's colon, and the period form is nowhere in the file, header
+    included;
   - a table-shape test.
 
   **9 of 9 mutants killed, two controls:**
