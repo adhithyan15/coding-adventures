@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 45,
+  "output": "arabic/book/chapters/ch45-ar-arbaa-sutur.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

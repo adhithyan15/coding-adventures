@@ -1,0 +1,13 @@
+{
+  "id": "AR-EXT-043-WRITING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can write my own Arabic line, produce writing at my ceiling under the clock, and join four lines with the attached and-letter and the because-word.",
+  "prerequisites": [],
+  "lessons": [
+    "AR-W02-satri-al-khass",
+    "AR-W03-maa-al-saaa",
+    "AR-W04-arbaa-sutur"
+  ]
+}
