@@ -886,7 +886,11 @@ fn declared_colours(style: &mosstyle_compiler::StyleDef) -> HashMap<String, Inhe
             .any(|p| p.states.iter().any(|s| s.props.iter().any(|q| q.name == "color")));
         let mut bases: Vec<&str> = instances
             .iter()
-            .filter_map(|p| p.base.iter().find(|q| q.name == "color"))
+            // LAST wins, matching every emitter: `PartStyle::base` is a Vec
+            // with no de-duplication, and CSS declaration order means
+            // `color: #aaa; color: #bbb` renders `#bbb`. Taking the first
+            // pinned a colour that never renders.
+            .filter_map(|p| p.base.iter().rev().find(|q| q.name == "color"))
             .map(|q| q.value.trim())
             .filter(|v| !is_current_color(v))
             .collect();
@@ -939,10 +943,23 @@ fn colour_literal(value: &str) -> Option<String> {
         let ok = matches!(hex.len(), 3 | 4 | 6 | 8) && hex.bytes().all(|b| b.is_ascii_hexdigit());
         return ok.then(|| v.to_string());
     }
+    // The CSS-WIDE KEYWORDS are not colours. They are live CSS whose meaning
+    // depends on the property they sit on, so copying one between properties
+    // changes what it says: `color: inherit` copied onto a child's
+    // `background` becomes "inherit the parent's BACKGROUND", which is a
+    // rendering change on the very backends that already handled this
+    // correctly. (#15141 is the same keywords mis-lowered a different way.)
+    let lower = v.to_ascii_lowercase();
+    if matches!(
+        lower.as_str(),
+        "inherit" | "initial" | "unset" | "revert" | "revert-layer" | "none" | "currentcolor"
+    ) {
+        return None;
+    }
     // A bare CSS colour keyword: letters only, so it cannot carry punctuation
     // into any sink. Length-capped because no real keyword is near it.
     let named = v.len() <= 24 && v.bytes().all(|b| b.is_ascii_alphabetic());
-    named.then(|| v.to_ascii_lowercase())
+    named.then_some(lower)
 }
 
 fn is_current_color(value: &str) -> bool {
@@ -967,14 +984,27 @@ fn walk_inherited_color(
 ) {
     let mut child_colour = inherited;
     if let Some(part) = node.part_name.as_deref() {
+        // The node's OWN colour first. CSS resolves `currentColor` against
+        // the element's own computed `color`, falling back to the inherited
+        // one only when the element declares none -- so a part that sets
+        // both `color` and `background: currentColor` paints its background
+        // its own text colour, not its parent's.
+        //
+        // Recording `inherited` here instead was wrong twice over: it pinned
+        // the parent's colour on such a part (a silent rendering change on
+        // html and react, which get this right natively), and an
+        // `Unresolvable` part did not decline its OWN resolution -- only its
+        // subtree's -- so a part whose colour varies by state still got a
+        // literal that is wrong in every state.
+        let effective = match declared.get(part) {
+            Some(InheritedColour::Literal(own)) => Some(own.as_str()),
+            Some(InheritedColour::Unresolvable) => None,
+            None => inherited,
+        };
         seen.entry(part.to_string())
             .or_default()
-            .push(inherited.map(str::to_string));
-        match declared.get(part) {
-            Some(InheritedColour::Literal(own)) => child_colour = Some(own.as_str()),
-            Some(InheritedColour::Unresolvable) => child_colour = None,
-            None => {}
-        }
+            .push(effective.map(str::to_string));
+        child_colour = effective;
     }
     for child in &node.children {
         walk_inherited_color(child, child_colour, declared, seen);
@@ -15152,16 +15182,67 @@ mod current_color_tests {
         assert_eq!(value_of(&s, "pill-dot-ok", "background"), "#6fb489");
     }
 
-    /// A part's own `color` applies to its SUBTREE, not to itself.
+    /// A part resolves against its OWN `color` when it declares one.
+    ///
+    /// This test previously asserted the opposite, and passed for the wrong
+    /// reason: its only node was the ROOT, so there was no inherited colour
+    /// and the value stayed `currentColor` regardless. With a parent present
+    /// the old model pinned the PARENT's colour, which is not what CSS does
+    /// and is a silent rendering change on html and react.
     #[test]
-    fn a_parts_own_colour_does_not_resolve_its_own_current_color() {
-        let layout = node("solo", vec![]);
-        let mut s = style(vec![part(
-            "solo",
-            vec![prop("color", "#112233"), prop("background", "currentColor")],
-        )]);
+    fn a_part_resolves_against_its_own_colour_before_the_inherited_one() {
+        let layout = node("pill", vec![node("dot", vec![])]);
+        let mut s = style(vec![
+            part("pill", vec![prop("color", "#6fb489")]),
+            part(
+                "dot",
+                vec![prop("color", "#ff0000"), prop("background", "currentColor")],
+            ),
+        ]);
         resolve_current_color(&layout, &mut s);
-        assert_eq!(value_of(&s, "solo", "background"), "currentColor");
+        assert_eq!(
+            value_of(&s, "dot", "background"),
+            "#ff0000",
+            "its own colour wins over the inherited one, as CSS does"
+        );
+    }
+
+    /// And a part whose OWN colour varies by state declines for itself, not
+    /// merely for its subtree -- otherwise it takes the parent's literal,
+    /// which is wrong in every state.
+    #[test]
+    fn a_part_with_its_own_state_dependent_colour_declines_for_itself() {
+        let layout = node("pill", vec![node("dot", vec![])]);
+        let mut s = style(vec![
+            part("pill", vec![prop("color", "#aaaaaa")]),
+            part_with_state(
+                "dot",
+                vec![prop("color", "#111111"), prop("background", "currentColor")],
+                vec![prop("color", "#222222")],
+            ),
+        ]);
+        resolve_current_color(&layout, &mut s);
+        assert_eq!(
+            value_of(&s, "dot", "background"),
+            "currentColor",
+            "a state-dependent own colour must not fall back to the parent's"
+        );
+    }
+
+    /// Emitters apply LAST-wins for duplicate declarations, so the pass must
+    /// too. Taking the first pinned a colour that never renders.
+    #[test]
+    fn a_duplicate_colour_declaration_uses_the_one_that_renders() {
+        let layout = node("pill", vec![node("dot", vec![])]);
+        let mut s = style(vec![
+            part(
+                "pill",
+                vec![prop("color", "#aaaaaa"), prop("color", "#bbbbbb")],
+            ),
+            part("dot", vec![prop("background", "currentColor")]),
+        ]);
+        resolve_current_color(&layout, &mut s);
+        assert_eq!(value_of(&s, "dot", "background"), "#bbbbbb");
     }
 
     /// Two different inherited colours: no literal serves both.
@@ -15263,6 +15344,14 @@ mod current_color_tests {
             "var(--x)",
             "",
             "#12345",
+            // CSS-wide keywords are live CSS whose meaning depends on the
+            // property they land on: `background: inherit` means "inherit
+            // the parent's BACKGROUND", not "the pill's text colour".
+            "inherit",
+            "initial",
+            "unset",
+            "revert",
+            "none",
         ] {
             let layout = node("pill", vec![node("dot", vec![])]);
             let mut s = style(vec![

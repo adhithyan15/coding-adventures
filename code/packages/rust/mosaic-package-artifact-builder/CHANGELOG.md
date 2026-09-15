@@ -139,6 +139,16 @@ unquoted `fill={...}`, so the default `$color-border` token
 component stops compiling. That sink is a defect in its own right, reachable
 without this pass; declining here means this pass cannot trigger it.
 
+A part resolves against its **own** `color` when it declares one, falling
+back to the inherited one only when it does not -- which is what CSS does.
+Recording the inherited colour unconditionally pinned the *parent's* colour
+on such a part, and meant a part whose own colour varies by state declined
+only for its subtree, not for itself.
+
+Duplicate declarations follow **last-wins**, matching every emitter:
+`part p { color: #aaa; color: #bbb }` renders `#bbb`, so taking the first
+pinned a colour that never renders.
+
 **Ambiguity is left unresolved, not guessed.** These cases are deliberately
 declined, each with a test:
 
