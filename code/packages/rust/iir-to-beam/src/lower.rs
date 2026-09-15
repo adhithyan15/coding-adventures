@@ -578,6 +578,21 @@ pub fn lower_iir_to_beam(
     let import_float = imports.intern(erlang_atom, atom_float, 1); // erlang:float/1
     let import_trunc = imports.intern(erlang_atom, atom_trunc, 1); // erlang:trunc/1
 
+    // ── BEAM03 continuation: f64_pow via math:pow/2 ────────────────────────
+    //
+    // `math:pow/2` is an ORDINARY Erlang function, not a loader-recognized
+    // guard BIF (confirmed by reading `beam_asm.erl`'s guard-BIF table, which
+    // lists only `erlang:*` names, and by disassembling a real compiled call
+    // to `math:pow/2` with `erlc -S`, which emits `call_ext`/`call_ext_only`,
+    // never `gc_bif2`). So — unlike `int_to_real`/`real_to_int_trunc` just
+    // above, which ARE guard BIFs — `f64_pow` cannot use the gc_bif1/gc_bif2
+    // opcodes at all; it goes through `call_ext` the same way `str_concat`
+    // (`erlang:'++'/2`) and `str_index` (`lists:nth/2`) already do. See
+    // BEAM03-float-lowering.md §8.2.
+    let math_atom = atoms.intern("math");
+    let atom_pow  = atoms.intern("pow");
+    let import_pow = imports.intern(math_atom, atom_pow, 2); // math:pow/2
+
     // ── BEAM03: module literal table (float constants) ────────────────────
     let mut literal_pool = LiteralPool::new();
 
@@ -976,6 +991,10 @@ pub fn lower_iir_to_beam(
                     // `str_index` emits `lists:nth/2` via call_ext (see
                     // `import_nth` above) — the same reasoning applies.
                     | "str_index"
+                    // BEAM03 continuation: `f64_pow` emits `math:pow/2` via
+                    // call_ext (see `import_pow` above) — `math:pow/2` is not
+                    // a guard BIF, so it cannot use gc_bif2 like add/sub/mul.
+                    | "f64_pow"
             ) && !(instr.op == "call_builtin" && matches!(instr.srcs.first(),
                 Some(Operand::Var(name)) if name == "putchar")) {
                 continue;
@@ -2020,6 +2039,71 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(r),
                         BEAMOperand::x(rd),
                     ]));
+                }
+
+                // ── f64_pow → math:pow/2 (BEAM03 continuation) ──────────────
+                //
+                // `math:pow/2` is NOT a guard BIF (see the `import_pow`
+                // comment above), so — unlike int_to_real/real_to_int_trunc
+                // just above — this cannot be a gc_bif1/gc_bif2. It goes
+                // through `call_ext` the same way str_index's `lists:nth/2`
+                // call does: stage both operands into scratch registers ABOVE
+                // `next_reg` first (the same parallel-move-hazard reasoning
+                // as str_index/str_slice — moving straight into x0/x1 can
+                // clobber a source register still needed for the other slot
+                // when an operand already sits in x0 or x1), then move the
+                // staged copies into x0/x1, call, and move the result to
+                // `rd`. See BEAM03-float-lowering.md §8.2.
+                "f64_pow" => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "f64_pow must have a dest".into(),
+                        }),
+                    };
+                    let base_reg = operand_reg!(get_src!(instr, 0));
+                    let exp_reg = operand_reg!(get_src!(instr, 1));
+
+                    // Scratch registers are u8 and the bank tops out at 255;
+                    // guard the same way str_index/str_slice do.
+                    let top = meta.next_reg.checked_add(1).filter(|t| *t < 255);
+                    let Some(_) = top else {
+                        return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!(
+                                "f64_pow: needs 2 scratch registers but only {} remain below x255",
+                                255u16 - meta.next_reg as u16
+                            ),
+                        });
+                    };
+                    let s_base = meta.next_reg;
+                    let s_exp = meta.next_reg + 1;
+                    let cur_idx = instr_idx - 1;
+
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(base_reg), BEAMOperand::x(s_base),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(exp_reg), BEAMOperand::x(s_exp),
+                    ]));
+
+                    save_live_across_imported_call!(cur_idx);
+                    for (from, to) in [(s_base, 0u8), (s_exp, 1u8)] {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(from), BEAMOperand::x(to),
+                        ]));
+                    }
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2),
+                        BEAMOperand::u(import_pow as u64),
+                    ]));
+                    if rd != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(rd),
+                        ]));
+                    }
+                    restore_live_across_imported_call!(cur_idx);
                 }
 
                 // ── Unary arithmetic: neg, not ──────────────────────────────

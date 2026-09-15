@@ -5146,12 +5146,19 @@ const PROGRAMS: &[Prog] = &[
     // Dartmouth BASIC — `ABS` (absolute value) built-in (LANG-FULL BA-builtins).
     // ABS(X) is lowered inline: if X < 0 then −X else X (store-per-branch,
     // same pattern as ALGOL abs).  ABS(-42) → 42.0, printed as `42`.
+    //
+    // BEAM03 continuation: this is the minimal existing proof for `neg`(f64)
+    // — `emit_unary` emits one `neg` for the literal `-42` itself, and
+    // ABS's own inline `if X < 0 then -X else X` emits a SECOND, independent
+    // `neg` inside the taken branch, so this one row exercises `neg`(f64)
+    // twice through the same `__basic_print_real` path BEAM03's first slice
+    // already proved. See BEAM03-float-lowering.md §8.4.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT ABS(-42)\n20 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — `SGN` (signum) built-in (LANG-FULL BA-builtins).
     // SGN(X) = 1.0 if X > 0, −1.0 if X < 0, 0.0 if X = 0.  Lowered
@@ -5189,12 +5196,19 @@ const PROGRAMS: &[Prog] = &[
     // (no decimal point when fractional part is zero).  Non-integer exponent exercises
     // the new runtime pow path; the literal-integer fast path stays for whole-number
     // exponents so this cell is the minimal proof of the general case.
+    //
+    // BEAM03 continuation: the minimal existing proof for `f64_pow` — the
+    // literal-integer-exponent fast path (repeated `mul`, already supported)
+    // only fires for exponents `literal_integer_exponent` recognizes as a
+    // nonnegative integer; `0.5` falls through to the general `f64_pow`
+    // runtime call (`math:pow/2` via `call_ext`). See
+    // BEAM03-float-lowering.md §8.4.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT 4 ^ 0.5\n20 END\n",
         expect: Expect::Stdout("2"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — scalar `INPUT` statement (LANG-FULL BA-INPUT). `INPUT X`
     // reads one line from stdin, parses it as an integer, and stores the result in
@@ -9361,7 +9375,11 @@ fn matrix_every_proven_cell_agrees() {
 /// Dartmouth BASIC's expected cell count changed again after `iir-to-beam`
 /// gained f64 lowering (375 → 377, BEAM03): the two numeric-baseline rows
 /// deferred by the pure-string family slice above gained a real, `erl`-proven
-/// `Beam` declaration.
+/// `Beam` declaration. It changed again (377 → 379, BEAM03 continuation)
+/// once `iir-to-beam` gained `neg`(f64) and `f64_pow`: the `ABS(-42)` row
+/// (exercising `neg`(f64) twice) and the `4 ^ 0.5` row (exercising the
+/// general runtime `f64_pow` path) each gained a real, `erl`-proven `Beam`
+/// declaration.
 ///
 /// COBOL-60's expected cell count changed again after VM-040's boolean/
 /// EVALUATE slice (422 → 426) and again in this slice (426 → 430): four more
@@ -9391,7 +9409,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Twig, 49, 363),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 45),
-        (Language::DartmouthBasic, 51, 377),
+        (Language::DartmouthBasic, 51, 379),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
         (Language::Cobol60, 58, 464),
@@ -15933,4 +15951,38 @@ fn portable_text_stdout_dartmouth_basic_beam_numeric_baseline() {
     }
     assert_eq!(executed, 2);
     eprintln!("Dartmouth BASIC BEAM numeric baseline: {executed} programs executed");
+}
+
+// BEAM03 continuation: `neg`(f64) (proven via ABS's inline conditional
+// negation) and `f64_pow` (proven via the general `^` runtime-pow path),
+// promoted once `iir-to-beam` gained these two lowerings — see
+// BEAM03-float-lowering.md §8. Matched by exact source text rather than
+// position: unlike the numeric-baseline pair above (which are the first two
+// DartmouthBasic rows), these two are not adjacent to each other or to any
+// other BEAM-declared row (SGN/ATN/TAN sit between ABS and the `^` row), so
+// a `skip`/`take` position would be fragile to reordering.
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_neg_and_pow() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM neg(f64)/f64_pow: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, &str)] = &[
+        ("10 PRINT ABS(-42)\n20 END\n", "42"),
+        ("10 PRINT 4 ^ 0.5\n20 END\n", "2"),
+    ];
+    let mut executed = 0;
+    for (src, stdout) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::DartmouthBasic && p.src == *src)
+            .unwrap_or_else(|| panic!("DartmouthBasic row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected BASIC row must declare Beam");
+        assert!(matches!(program.expect, Expect::Stdout(value) if value == *stdout),
+            "selected BASIC expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 2);
+    eprintln!("Dartmouth BASIC BEAM neg(f64)/f64_pow: {executed} programs executed");
 }
