@@ -1,0 +1,19 @@
+{
+  "chapter": 44,
+  "title": "Writing --- With A Clock",
+  "label": "ch:ar-maa-al-saaa",
+  "canDo": "I can produce Arabic writing at my own ceiling inside the target's twenty-to-twenty-five minutes, knowing that the test adapts to what I write.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "AR-W03-maa-al-saaa",
+    "kind": "task",
+    "summary": "Complete AR-W03-maa-al-saaa: twenty minutes at the top of what you can actually do, rather than a rehearsed answer to a paper that does not exist.",
+    "assesses": [
+      "AR-LEX-C38-WA-01",
+      "AR-LEX-C38-LAKIN-01"
+    ],
+    "note": "The target is adaptive and reports a benchmark level per skill rather than a pass mark, so there is no fixed paper to rehearse and a weak answer lowers the ceiling of every question after it. The A1 claim is the project's own mapping, stated in the contract, not something the test awards."
+  }
+}

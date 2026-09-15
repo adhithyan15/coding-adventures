@@ -29,7 +29,12 @@ it("pins Arabic lesson-content budgets", () =>
     // words, six familiar lines and one connected encounter. It introduces no
     // vocabulary, idiom, sense or culture claim; it removes romanization in
     // three gentle steps and keeps ALPT's unpublished stimulus length honest.
-    lessons: 126,
+    //
+    // 126 -> 129: the three writing stages Arabic had never proven, on the
+    // SPINE-SAY-WHY node where li-anna already lives. No new atoms in any of
+    // them -- they practise wa, lakin and li-anna, which the track already
+    // teaches, and add only what the stages themselves are.
+    lessons: 129,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

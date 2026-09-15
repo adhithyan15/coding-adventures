@@ -54,7 +54,7 @@
 % pair below was read out of ONE fetched USGS-hosted source, the Alexandria
 % Digital Library Feature Type Thesaurus served at apps.usgs.gov, and any pair
 % whose descriptor could not be verified there would have been dropped). Each
-% pair, with the verbatim span that states it (all on the one thesaurus page):
+% pair, with the verbatim definition it cites (all on the one thesaurus page):
 %
 %   mountain → projects_above_surroundings
 %     "Landmasses that project conspicuously above their surroundings."
@@ -85,13 +85,23 @@
 % drag the whole table down to a lower trust tier, the hill row is dropped, per
 % the honest-drop discipline.
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the thesaurus statement that
-% fixes the first row (mountain → projects_above_surroundings). Every OTHER
-% row's verbatim span is listed above, and all of them live on the SAME
-% USGS-hosted thesaurus page named in `locator`, so each descriptor remains
-% independently checkable. The source is served by the U.S. Geological Survey
-% (a primary U.S. government resource), so `trust authoritative`.
+% EACH ROW CITES ITS OWN LANDFORM'S DEFINITION (ADJ-TABLES RS-5e, #14986).
+% This paragraph used to say that an ADJ `table` carries ONE provenance
+% envelope, and so held mountain's definition as the envelope while listing
+% the other four only in comments. The language has per-row blocks, and that
+% envelope was the primary source of the valley, plateau, plain and canyon
+% answers, none of which it describes.
+%
+% `cites`, not `source`: on the page each definition is a <span class="scope">
+% under a separate term link ("mountains", "valleys", ...) and never names its
+% landform, so a definition corroborates its row and does not warrant it on
+% its own -- #13934's held question, decided as in
+% `landform-secondary-feature.adj`, which cites the same page. The envelope is
+% now the thesaurus's own description, "Types of named geographic features.",
+% from the italic line under its title, which names no landform. Measured
+% 2026-09-15: each definition and the envelope occur exactly once in the
+% page's visible text. The source is served by the U.S. Geological Survey (a
+% primary U.S. government resource), so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -99,13 +109,29 @@
 table landform_description {
     columns landform, description
 
-    row (mountain, projects_above_surroundings)
-    row (valley, low_between_mountains)
-    row (plateau, flat_elevated)
-    row (plain, comparatively_level)
-    row (canyon, deep_narrow)
+    % Each row CITES the thesaurus's own definition of its landform.
+    % `cites`, not `source`: the definition sits under a separate term
+    % link and never names the landform (#13934's held question).
+    row (mountain, projects_above_surroundings) {
+        cites "Landmasses that project conspicuously above their surroundings." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    }
+    row (valley, low_between_mountains) {
+        cites "Low-lying land bordered by higher ground; especially elongate, relatively large gently sloping depressions of the Earth's surface, commonly situated between two mountains or between ranges of hills or mountains, and often containing a stream with an outlet." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    }
+    row (plateau, flat_elevated) {
+        cites "Comparatively flat areas of great extent and elevation; specif. extensive land regions considerably above the adjacent country or above sea level; commonly limited on at least one side by an abrupt descent, have flat or nearly smooth surfaces but are often dissected by deep valleys and surmounted by high hills or mountains, and have a large part of their total surface at or near the summit level." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    }
+    row (plain, comparatively_level) {
+        cites "Regions of general uniform slope, comparatively level and of considerable extent." locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    }
+    row (canyon, deep_narrow) {
+        cites "Relatively narrow, deep depressions with steep sides, the bottom of which generally has a continuous slope" locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
+    }
 
-    source "Landmasses that project conspicuously above their surroundings."
+    % THE ENVELOPE WAS MOUNTAIN'S OWN DEFINITION, and so the primary
+    % source of every other answer. It is now the thesaurus's own
+    % description of what it lists, which names no landform.
+    source "Types of named geographic features."
     locator "https://apps.usgs.gov/thesaurus/thesaurus-full.php?thcode=3"
     trust authoritative
 }

@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:0d9726a407482c8f",
+  "lessonIds": [
+    "AR-W02-satri-al-khass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch43.txt",
+  "json": "arabic/narration/ch43.json",
+  "textHash": "fnv1a64:e23beaed9e3498a6",
+  "jsonHash": "fnv1a64:362583bfce49a562",
+  "findings": []
+}

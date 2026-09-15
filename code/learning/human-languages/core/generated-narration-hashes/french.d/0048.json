@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:6a4343fd011f76c9",
+  "lessonIds": [
+    "FR-W04-quatre-lignes"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "french/narration/ch48.txt",
+  "json": "french/narration/ch48.json",
+  "textHash": "fnv1a64:58ada7ff51b487aa",
+  "jsonHash": "fnv1a64:69956eca954b5b3c",
+  "findings": []
+}

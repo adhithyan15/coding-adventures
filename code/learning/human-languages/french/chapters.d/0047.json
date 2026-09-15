@@ -1,0 +1,19 @@
+{
+  "chapter": 47,
+  "title": "Writing --- With A Clock",
+  "label": "ch:fr-avec-la-montre",
+  "canDo": "I can complete the DELF A1 writing paper's two parts inside its published thirty minutes, and write past the forty-word floor rather than up to it.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FR-W03-avec-la-montre",
+    "kind": "task",
+    "summary": "Complete FR-W03-avec-la-montre: ten minutes for the form and twenty for the message, then count the words against a floor that has no ceiling.",
+    "assesses": [
+      "FR-LEX-ET-01",
+      "FR-GRAM-SVO-01"
+    ],
+    "note": "Timing and the forty-word minimum are read out of french/task-shapes/a1.json. The eliminatory rule the lesson ends on is DELF's own: 50/100 overall, and any single skill below 5/25 fails the candidate regardless of the total."
+  }
+}

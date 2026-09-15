@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "FR-W03-avec-la-montre",
+    "language": "french",
+    "chapter": 47,
+    "sequence": 1790,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fc8e44a9e960c006",
+    "detachableSegments": [
+      "Writing — timed production"
+    ]
+  },
+  "findings": []
+}

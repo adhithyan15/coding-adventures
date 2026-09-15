@@ -1,0 +1,21 @@
+{
+  "chapter": 48,
+  "title": "Writing --- Four Lines, And The Joiner That Moves Nothing",
+  "label": "ch:fr-quatre-lignes",
+  "canDo": "I can write four connected lines to a named reader, joining with et and mais and giving a reason with parce que, keeping ordinary word order after it.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FR-W04-quatre-lignes",
+    "kind": "task",
+    "summary": "Complete FR-W04-quatre-lignes: four lines to one reader, at least one joined with et or mais and one with parce que, then check the words after parce que are in ordinary order.",
+    "assesses": [
+      "FR-LEX-ET-01",
+      "FR-LEX-MAIS-03",
+      "FR-LEX-PARCEQUE-01",
+      "FR-GRAM-SVO-01"
+    ],
+    "note": "The contrast is the teaching: German's weil drags the verb to the end and French's parce que touches nothing. That makes French easier to write and harder to hear -- only the two words mark the join, which is why they are written in full."
+  }
+}

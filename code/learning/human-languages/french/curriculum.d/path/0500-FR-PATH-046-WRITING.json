@@ -1,0 +1,14 @@
+{
+  "id": "FR-PATH-046-WRITING",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "FR-W02-ma-propre-ligne",
+    "FR-W03-avec-la-montre",
+    "FR-W04-quatre-lignes"
+  ],
+  "before": [],
+  "inline": [
+    "FR-EXT-046-WRITING"
+  ],
+  "after": []
+}
