@@ -2075,6 +2075,20 @@ struct TableCtx<'a> {
     /// so cells fall back to the sheet's `color` / `font-family` /
     /// `font-size` instead of `null`. Each is the already-lowered Dart
     /// expression (`const Color(0xFFCCCCCC)`) or family/size literal.
+    /// #15166 -- the `TextStyle(..)` ARGUMENTS the enclosing styled box is
+    /// about to apply via `DefaultTextStyle.merge`.
+    ///
+    /// A Flutter `TextField` does NOT inherit `DefaultTextStyle` the way a
+    /// `Text` does -- it falls back to the Material theme -- so an input
+    /// authoring `font: inherit` had no way to follow the text around it,
+    /// and the grid's inline editor sat 4px taller than its display row
+    /// rather than the 1px an explicit font reaches.
+    ///
+    /// Threaded rather than resolved at the input, because only the
+    /// enclosing box knows what it merged. `DefaultTextStyle.of(context)`
+    /// cannot substitute: the `context` in scope at the input is the
+    /// widget's own, which sits ABOVE the merge the emitter just wrote.
+    inherited_text_style: Option<&'a str>,
     sheet_text_color: Option<&'a str>,
     sheet_font_family: Option<&'a str>,
     sheet_font_size: Option<&'a str>,
@@ -2423,14 +2437,7 @@ fn emit_widget_tree_inner(
     // Flutter build had no notes input at all while reporting ZERO
     // degradations.
     if node.tag == "HostInput" || node.tag == "Input" {
-        return emit_host_input(
-            node,
-            indent,
-            part_styles,
-            component,
-            emits,
-            ctx.direct_row_child,
-        );
+        return emit_host_input(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostButton" {
         return emit_host_button(node, indent, part_styles, component, emits, ctx);
@@ -4186,6 +4193,46 @@ fn emit_styled_box(
 
     // --- Child, wrapped in a per-state text colour -------------------
     //
+    // Text colour: the part's own base `color`, else the sheet's
+    // inherited `color` (threaded via [`TableCtx`]), with the
+    // per-state overrides folded on top. A `TextStyle` whose `color:`
+    // is a runtime ternary can't be `const`.
+    let base_text = base
+        .get("color")
+        .and_then(|v| css_color_to_dart(v))
+        .or_else(|| ctx.sheet_text_color.map(str::to_string))
+        .unwrap_or_else(|| "null".to_string());
+    let text_color_expr = state_color_expr(&layers, |l| l.text_color.as_ref(), &base_text);
+
+    // Font family / size: the part's own, else the sheet's (the
+    // VisiCalc monospace 12px lives on the `sheet` part, not the cell).
+    let font_family = base
+        .get("font-family")
+        .map(String::as_str)
+        .or(ctx.sheet_font_family);
+    let font_size = base
+        .get("font-size")
+        .map(|v| parse_pixel_value(v))
+        .or_else(|| ctx.sheet_font_size.map(str::to_string));
+
+    let mut text_style_parts: Vec<String> = vec![format!("color: {text_color_expr}")];
+    if let Some(ff) = font_family {
+        text_style_parts.push(format!("fontFamily: \"{}\"", escape_dart_string(ff)));
+    }
+    if let Some(fs) = font_size {
+        text_style_parts.push(format!("fontSize: {fs}"));
+    }
+
+    // #15166 -- computed BEFORE the child is emitted, so it can be threaded
+    // down. A Flutter `TextField` does not inherit the
+    // `DefaultTextStyle.merge` written below it; an input authoring
+    // `font: inherit` has no other way to follow the text around it.
+    let inherited_text_style = text_style_parts.join(", ");
+    let ctx = TableCtx {
+        inherited_text_style: Some(inherited_text_style.as_str()),
+        ..ctx
+    };
+
     // The Box [cell] body is an `If (is-editing) { HostInput } Else
     // { Text }` pair — exactly one rendered widget after fusing. Detect
     // the leading `If` (+ optional `Else`) and emit the single ternary
@@ -4231,35 +4278,6 @@ fn emit_styled_box(
     };
     let inner_child = inner_child.trim_start();
 
-    // Text colour: the part's own base `color`, else the sheet's
-    // inherited `color` (threaded via [`TableCtx`]), with the
-    // per-state overrides folded on top. A `TextStyle` whose `color:`
-    // is a runtime ternary can't be `const`.
-    let base_text = base
-        .get("color")
-        .and_then(|v| css_color_to_dart(v))
-        .or_else(|| ctx.sheet_text_color.map(str::to_string))
-        .unwrap_or_else(|| "null".to_string());
-    let text_color_expr = state_color_expr(&layers, |l| l.text_color.as_ref(), &base_text);
-
-    // Font family / size: the part's own, else the sheet's (the
-    // VisiCalc monospace 12px lives on the `sheet` part, not the cell).
-    let font_family = base
-        .get("font-family")
-        .map(String::as_str)
-        .or(ctx.sheet_font_family);
-    let font_size = base
-        .get("font-size")
-        .map(|v| parse_pixel_value(v))
-        .or_else(|| ctx.sheet_font_size.map(str::to_string));
-
-    let mut text_style_parts: Vec<String> = vec![format!("color: {text_color_expr}")];
-    if let Some(ff) = font_family {
-        text_style_parts.push(format!("fontFamily: \"{}\"", escape_dart_string(ff)));
-    }
-    if let Some(fs) = font_size {
-        text_style_parts.push(format!("fontSize: {fs}"));
-    }
     let child_expr = format!(
         "DefaultTextStyle.merge(style: TextStyle({}), child: {inner_child})",
         text_style_parts.join(", ")
@@ -4363,8 +4381,9 @@ fn emit_host_input(
     part_styles: &HashMap<String, String>,
     component: &str,
     emits: &[EmitDecl],
-    direct_row_child: bool,
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
+    let direct_row_child = ctx.direct_row_child;
     let pad = " ".repeat(indent);
     let field_pad = if direct_row_child {
         " ".repeat(indent + 2)
@@ -4446,6 +4465,17 @@ fn emit_host_input(
     }
     if let Some(text_style) = host_input_text_style_arg(node, part_styles) {
         writeln!(out, "{input_pad}  style: {text_style},").unwrap();
+    } else if let Some(inherited) = inherits_enclosing_font(node, part_styles)
+        .then_some(ctx.inherited_text_style)
+        .flatten()
+    {
+        // #15166 -- the author wrote `font: inherit`, and a `TextField` has
+        // no way to honour that: it does NOT read the enclosing
+        // `DefaultTextStyle` the way a `Text` does, so it silently renders
+        // at the Material theme's font instead of the text beside it. The
+        // enclosing styled box computed the style it merged; this is that
+        // same expression, handed to the input directly.
+        writeln!(out, "{input_pad}  style: TextStyle({inherited}),").unwrap();
     }
 
     if let Some(read_only) = bool_prop_expression(node, "read-only")? {
@@ -4547,6 +4577,25 @@ fn strict_pixel_length(s: &str) -> Option<f64> {
         // source from a legal input, which is the invariant the tests
         // assert. Same normalisation as `parse_pixel_value`.
         .map(|f| if f == 0.0 { 0.0 } else { f })
+}
+
+/// Did this part ask to inherit the surrounding font? (#15166)
+///
+/// Only an explicit `inherit` counts. CSS does NOT give a text input the
+/// surrounding font by default -- which is exactly why `font: inherit` is a
+/// standard reset -- so applying the enclosing style to every unstyled input
+/// would diverge from the web backends rather than agree with them.
+fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
+    let Some(part) = node.part_name.as_deref() else {
+        return false;
+    };
+    let Some(style) = part_styles.get(part) else {
+        return false;
+    };
+    parse_style_props(style).iter().any(|(name, value)| {
+        (name == "font" || name.starts_with("font-"))
+            && value.trim().eq_ignore_ascii_case("inherit")
+    })
 }
 
 /// #15142 -- lower a `HostInput`'s part style into its `InputDecoration`.
@@ -6250,6 +6299,7 @@ fn emit_host_table(
         cell_index: parent_ctx.cell_index,
         for_item: parent_ctx.for_item,
         for_index: parent_ctx.for_index,
+        inherited_text_style: None,
         sheet_text_color: sheet_text_color.as_deref(),
         sheet_font_family: sheet_font_family.as_deref(),
         sheet_font_size: sheet_font_size.as_deref(),
@@ -14299,6 +14349,159 @@ mod host_input_style_tests {
         assert_eq!(
             got,
             "TextStyle(color: const Color(0xFFE3EEE4), fontSize: 13, fontFamily: \"monospace\")"
+        );
+    }
+
+    /// #15166 -- `font: inherit` reaches the TextField.
+    ///
+    /// A Flutter `TextField` does NOT read the enclosing `DefaultTextStyle`
+    /// the way a `Text` does, so an input authoring `font: inherit` rendered
+    /// at the Material theme's font instead of the text beside it. Measured
+    /// in a real `flutter test` with a real font, inside the cell's own text
+    /// context:
+    ///
+    ///   display Text                19.0
+    ///   editor without the font     24.0   (+5)
+    ///   editor with it              20.0   (+1)
+    #[test]
+    fn an_input_asking_to_inherit_gets_the_enclosing_style() {
+        let node = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("cell-editor".to_string()),
+            props: vec![],
+            children: vec![],
+        };
+        let mut styles = HashMap::new();
+        styles.insert(
+            "cell-editor".to_string(),
+            "padding: 0px; border: 0px; font: inherit".to_string(),
+        );
+        assert!(
+            inherits_enclosing_font(&node, &styles),
+            "`font: inherit` must be recognised as asking to inherit"
+        );
+        // and the shorthand's long forms
+        for authored in ["font-family: inherit", "font-size: inherit", "font: INHERIT"] {
+            let mut s2 = HashMap::new();
+            s2.insert("cell-editor".to_string(), authored.to_string());
+            assert!(inherits_enclosing_font(&node, &s2), "`{authored}`");
+        }
+    }
+
+    /// ONLY an explicit `inherit` counts. CSS does not give a text input the
+    /// surrounding font by default -- which is exactly why `font: inherit`
+    /// is a standard reset -- so applying the enclosing style to every
+    /// unstyled input would diverge from the web backends rather than agree
+    /// with them.
+    #[test]
+    fn an_input_that_did_not_ask_does_not_inherit() {
+        let node = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("plain".to_string()),
+            props: vec![],
+            children: vec![],
+        };
+        for authored in [
+            "padding: 4px",
+            "font-size: 13px",
+            "font-family: monospace",
+            "color: #fff",
+        ] {
+            let mut styles = HashMap::new();
+            styles.insert("plain".to_string(), authored.to_string());
+            assert!(
+                !inherits_enclosing_font(&node, &styles),
+                "`{authored}` did not ask to inherit"
+            );
+        }
+        // and a part with no style at all, or no part name
+        assert!(!inherits_enclosing_font(&node, &HashMap::new()));
+        let anon = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![],
+        };
+        assert!(!inherits_enclosing_font(&anon, &HashMap::new()));
+    }
+
+    /// THE CALL SITE, not just the predicate. Both tests above call
+    /// `inherits_enclosing_font` directly and keep passing if the gate is
+    /// deleted from `emit_host_input` -- verified by deleting it. A guard
+    /// has to be pinned where it is WIRED, which is the third time that has
+    /// bitten in this file.
+    #[test]
+    fn the_emitted_input_honours_the_gate() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        fn emit(editor_style: &str) -> String {
+            let m = MosmodelComponent {
+                component: "X".to_string(),
+                slots: vec![],
+                emits: vec![],
+            };
+            // a styled cell (which merges a text style) wrapping an input
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: "Box".to_string(),
+                    part_name: Some("cell".to_string()),
+                    props: vec![],
+                    children: vec![LayoutNode {
+                        tag: "HostInput".to_string(),
+                        part_name: Some("editor".to_string()),
+                        props: vec![],
+                        children: vec![],
+                    }],
+                },
+            };
+            let mut editor_base = vec![prop("padding", "0px")];
+            if !editor_style.is_empty() {
+                let (name, value) = editor_style.split_once(':').expect("name: value");
+                editor_base.push(prop(name.trim(), value.trim()));
+            }
+            let style = StyleDef {
+                component_name: "X".to_string(),
+                parts: vec![
+                    PartStyle {
+                        name: "cell".to_string(),
+                        base: vec![
+                            prop("color", "#e3eee4"),
+                            prop("font-size", "13"),
+                            prop("background", "#1e1e1e"),
+                        ],
+                        transitions: vec![],
+                        states: vec![],
+                    },
+                    PartStyle {
+                        name: "editor".to_string(),
+                        base: editor_base,
+                        transitions: vec![],
+                        states: vec![],
+                    },
+                ],
+            };
+            from_pipeline(&m, &l, &style).expect("emits").output
+        }
+
+        let asked = emit("font: inherit");
+        assert!(
+            asked.contains("style: TextStyle(color: const Color(0xFFE3EEE4), fontSize: 13)"),
+            "an input asking to inherit must carry the cell's style: {asked}"
+        );
+
+        let did_not_ask = emit("");
+        let field = did_not_ask
+            .split("TextField(")
+            .nth(1)
+            .expect("a TextField is emitted");
+        assert!(
+            !field.contains("style: TextStyle"),
+            "an input that did not ask must NOT be given the enclosing style: {field}"
         );
     }
 
