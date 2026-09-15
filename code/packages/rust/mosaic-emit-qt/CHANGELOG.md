@@ -8,6 +8,52 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed -- a state layer changed the background but never the border (#15275)
+
+`background` and `opacity` were built as conditional expressions over a
+part's state layers. `border-color`, `border-width` and `border-radius`
+were read from the base part alone.
+
+So a variant changed the fill and left the outline behind. In
+`mosaic-pkg-toolkit` every Alert and every Toast emitted
+`border.color: "#055160"` -- the `info` variant's border -- whatever its
+`variant`, while the background beside it changed correctly. A `danger`
+alert wore an `info` border. Button and Input author `border-radius` per
+size and rendered every size with the base corner.
+
+Qt assembles a Rectangle's paint properties in **four** places, and this
+was wrong in a different way in each. All four now route the three
+border properties through the same conditional builders `background`
+already used.
+
+A second defect was found while fixing the first, and it is the more
+interesting one. `conditional_number_expr` converts a layer's value with
+`qml_number_or_none`, which **rejects any value carrying a unit**.
+Routing `border-width` and `border-radius` through it silently skipped
+every `2px` override and produced a conditional expression made only of
+the base -- a constant that compiles, renders, and is wrong. The new
+`conditional_px_expr` converts with `qml_px_or_none`; both now delegate
+to one shared body whose only difference is the converter.
+
+That bug survived a green test run and a green package gate. What caught
+it was a test asserting the exact emitted string, which is the only
+instrument that can tell "the expression was built" from "the expression
+was built out of nothing".
+
+Measured on `mosaic-pkg-toolkit`: unexpected Qt style drops 60 -> 38.
+The four product programs' generated QML is **byte-identical** to
+`origin/main` -- none of them authors a state-varying border, so this
+reaches the toolkit package and nothing else.
+
+**What this does not do.** `Stack` lowers to a QML `Item` built
+elsewhere, and still ignores state layers entirely -- Spinner's three
+sizes all render at the base's 24px (#15277). `Text` parts still cannot
+paint a background or border at all (#15276). Host controls still drop
+`font-size` (#15254). Extending the Rectangle path to `width`/`height`
+was tried and changed zero bytes of output, so it was reverted rather
+than shipped as an unexercised fix.
+
+
 ### Fixed -- the CSS `border` shorthand reached nothing, so VisiCalc had no borders
 
 Every reader in this emitter asks for `border-width` / `border-color`. Nothing

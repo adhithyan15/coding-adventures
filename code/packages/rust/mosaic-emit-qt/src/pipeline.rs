@@ -1088,15 +1088,16 @@ impl CellTextStyle {
 /// numbers ever reach a QML attribute position.
 fn qml_px_or_none(v: &str) -> Option<String> {
     let stripped = v.trim().strip_suffix("px").unwrap_or(v.trim());
-    if !stripped.is_empty()
-        && stripped
-            .chars()
-            .all(|c| c.is_ascii_digit() || c == '.' || c == '-')
-    {
-        Some(stripped.to_string())
-    } else {
-        None
-    }
+    // The character-set check alone admitted `1.2.3`, `-` and `--`: inside the
+    // allowed alphabet, so unable to inject, but not numbers either. That was
+    // survivable while the result only ever landed in `radius: 1.2.3`, where
+    // the broken QML is one line and a human reads it immediately. It stopped
+    // being survivable when these values gained a second home inside a
+    // conditional expression, so the parse is now the check. Verified to
+    // change nothing: loose and strict produce byte-identical output for all
+    // four product programs and the toolkit package.
+    stripped.parse::<f64>().ok().filter(|n| n.is_finite())?;
+    Some(stripped.to_string())
 }
 
 fn font_size_prop(node: &LayoutNode) -> Option<&LayoutPropValue> {
@@ -1529,11 +1530,41 @@ fn conditional_number_expr(
     name: &str,
     default: &str,
 ) -> Option<String> {
+    conditional_scalar_expr(base, layers, name, default, qml_number_or_none)
+}
+
+/// The px-valued twin of [`conditional_number_expr`].
+///
+/// These must stay separate because the converter is what decides whether a
+/// layer's override is seen at all. `qml_number_or_none` rejects any value
+/// carrying a unit, so routing `border-width` or `border-radius` through it
+/// silently skipped every `2px` override and produced a conditional
+/// expression made only of the base -- a constant that compiles, renders, and
+/// is wrong. That is a whole class of bug this emitter can express: reusing a
+/// helper whose converter does not match the property's unit.
+fn conditional_px_expr(
+    base: Option<String>,
+    layers: &[StateLayer<'_>],
+    name: &str,
+    default: &str,
+) -> Option<String> {
+    conditional_scalar_expr(base, layers, name, default, qml_px_or_none)
+}
+
+/// Shared body of the two scalar builders above. `convert` is the whole
+/// difference between them.
+fn conditional_scalar_expr(
+    base: Option<String>,
+    layers: &[StateLayer<'_>],
+    name: &str,
+    default: &str,
+    convert: fn(&str) -> Option<String>,
+) -> Option<String> {
     let overrides: Vec<(&str, String)> = layers
         .iter()
         .filter_map(|layer| {
             style_prop(layer.props, name)
-                .and_then(qml_number_or_none)
+                .and_then(convert)
                 .map(|value| (layer.cond_expr.as_str(), value))
         })
         .collect();
@@ -1616,15 +1647,28 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
         rect_lines.push(format!("Layout.minimumHeight: {min_height}"));
     }
 
-    // --- Border -------------------------------------------------------
-    if let Some(bw) = style_prop(base, "border-width").and_then(qml_px_or_none) {
-        rect_lines.push(format!("border.width: {bw}"));
+    // --- Border (conditional on state) --------------------------------
+    // State-aware for the same reason `color` below is. Read from `base`
+    // alone, a variant's border was the BASE variant's border: every Alert
+    // and every Toast in the toolkit rendered `border.color: "#055160"`
+    // whatever its `variant`, so a `danger` alert wore the `info` border
+    // while its background correctly changed colour underneath it. The
+    // background was conditional here and the border was not, which is the
+    // drift this whole builder exists to prevent.
+    let base_border_width = style_prop(base, "border-width").and_then(qml_px_or_none);
+    if let Some(expr) = conditional_px_expr(base_border_width, &state_layers, "border-width", "0")
+    {
+        rect_lines.push(format!("border.width: {expr}"));
     }
-    if let Some(bc) = style_prop(base, "border-color").and_then(qml_hex_color_or_none) {
-        rect_lines.push(format!("border.color: \"{bc}\""));
+    let base_border_color = style_prop(base, "border-color").and_then(qml_hex_color_or_none);
+    if let Some(expr) =
+        conditional_color_expr(base_border_color, &state_layers, &["border-color"], "transparent")
+    {
+        rect_lines.push(format!("border.color: {expr}"));
     }
-    if let Some(radius) = style_prop(base, "border-radius").and_then(qml_px_or_none) {
-        rect_lines.push(format!("radius: {radius}"));
+    let base_radius = style_prop(base, "border-radius").and_then(qml_px_or_none);
+    if let Some(expr) = conditional_px_expr(base_radius, &state_layers, "border-radius", "0") {
+        rect_lines.push(format!("radius: {expr}"));
     }
 
     // --- Background (conditional on state) ----------------------------
@@ -1911,7 +1955,8 @@ fn qml_rectangle_paint_lines_with_states(
         lines.push(format!("color: {background}"));
     }
 
-    if let Some(radius) = style_prop(base, "border-radius").and_then(qml_px_or_none) {
+    let base_radius = style_prop(base, "border-radius").and_then(qml_px_or_none);
+    if let Some(radius) = conditional_px_expr(base_radius, layers, "border-radius", "0") {
         lines.push(format!("radius: {radius}"));
     }
     let base_border = style_prop(base, "border-color").and_then(qml_hex_color_or_none);
@@ -1920,7 +1965,13 @@ fn qml_rectangle_paint_lines_with_states(
     {
         lines.push(format!("border.color: {border}"));
     }
-    if let Some(border_width) = style_prop(base, "border-width").and_then(qml_px_or_none) {
+    // Conditional for the same reason the colour above is: a state that
+    // thickens or removes a border is as ordinary as one that recolours it,
+    // and a base-only width silently pinned every state to the base's.
+    let base_border_width = style_prop(base, "border-width").and_then(qml_px_or_none);
+    if let Some(border_width) =
+        conditional_px_expr(base_border_width, layers, "border-width", "0")
+    {
         lines.push(format!("border.width: {border_width}"));
     }
     // `opacity` is an Item property, so it composites the element AND its
@@ -4787,8 +4838,24 @@ fn host_control_style_qml_lines(
         &["border-color"],
         "transparent",
     );
-    let border_width = style_prop(base, "border-width").and_then(qml_px_or_none);
-    let radius = style_prop(base, "border-radius").and_then(qml_px_or_none);
+    // Conditional for the same reason `border_color` above already is. This
+    // is the FOURTH place Qt assembles a Rectangle's paint properties, and
+    // wiring a property into three of them is how this emitter has silently
+    // dropped things before -- see the note on `opacity` in the styled-box
+    // builder. Button and Input author `border-radius` per size variant, and
+    // read from the base alone every size rendered with the base's corner.
+    let border_width = conditional_px_expr(
+        style_prop(base, "border-width").and_then(qml_px_or_none),
+        &state_layers,
+        "border-width",
+        "0",
+    );
+    let radius = conditional_px_expr(
+        style_prop(base, "border-radius").and_then(qml_px_or_none),
+        &state_layers,
+        "border-radius",
+        "0",
+    );
     if caps.background
         && (background.is_some()
             || border_color.is_some()
@@ -14341,6 +14408,93 @@ mod tests {
         assert!(
             out.contains("font.pixelSize: 13"),
             "fractional inherited font size must lower to a Qt integer:\n{out}"
+        );
+    }
+
+    /// A state that changes the BORDER changes the border.
+    ///
+    /// `background` was conditional on state here and `border-color`,
+    /// `border-width` and `border-radius` were not, so they were read from the
+    /// base part alone. In the toolkit that meant every Alert and every Toast
+    /// rendered `border.color: "#055160"` -- the `info` variant's border --
+    /// whatever its `variant`, while the background beside it changed colour
+    /// correctly. A `danger` alert wore an `info` border.
+    ///
+    /// The package gate cannot catch a regression here: its pins are
+    /// (backend, property) pairs, and `border-color` has to stay pinned for
+    /// the unrelated `Text`-part gap (#15276), so a pin that must exist would
+    /// also license this coming back. Hence a direct test at the emitter.
+    #[test]
+    fn a_state_layer_reaches_the_border_and_not_only_the_background() {
+        let model = component(
+            "BorderedBox",
+            vec![slot(
+                "variant",
+                SlotType::OneOf(vec!["info".to_string(), "danger".to_string()]),
+                true,
+            )],
+            vec![],
+        );
+        let layout = LayoutDef {
+            component_name: "BorderedBox".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: Some("shell".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "BorderedBox".to_string(),
+            parts: vec![PartStyle {
+                name: "shell".to_string(),
+                base: vec![
+                    sp("background", "#032830"),
+                    sp("border-color", "#055160"),
+                    sp("border-width", "1px"),
+                    sp("border-radius", "4px"),
+                ],
+                transitions: vec![],
+                states: vec![StateStyle {
+                    slot: Some("variant".to_string()),
+                    slot_is_bool: false,
+                    state: "danger".to_string(),
+                    transitions: vec![],
+                    props: vec![
+                        sp("background", "#2c0b0e"),
+                        sp("border-color", "#842029"),
+                        sp("border-width", "2px"),
+                        sp("border-radius", "8px"),
+                    ],
+                }],
+            }],
+        };
+
+        let out = from_pipeline(&model, &layout, &style)
+            .expect("emit ok")
+            .output;
+
+        for (property, expected) in [
+            ("color", "( (variant === \"danger\") ) ? \"#2c0b0e\" : \"#032830\""),
+            (
+                "border.color",
+                "( (variant === \"danger\") ) ? \"#842029\" : \"#055160\"",
+            ),
+            ("border.width", "( (variant === \"danger\") ) ? 2 : 1"),
+            ("radius", "( (variant === \"danger\") ) ? 8 : 4"),
+        ] {
+            let line = format!("{property}: {expected}");
+            assert!(
+                out.contains(&line),
+                "`{property}` did not follow the state layer -- expected\n  {line}\ngot:\n{out}"
+            );
+        }
+
+        // The failure this replaced emitted a bare constant. Naming it
+        // directly keeps the test honest if the expression format changes.
+        assert!(
+            !out.contains("border.color: \"#055160\"\n"),
+            "border.color is still a base-only constant:\n{out}"
         );
     }
 
