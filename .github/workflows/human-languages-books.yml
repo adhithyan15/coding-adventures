@@ -90,6 +90,7 @@ jobs:
               'code/programs/typescript/language-ladder/CHANGELOG.d/*.md'
               'code/packages/rust/lang-aot/CHANGELOG.d/*.md'
               'code/packages/rust/algol-iir-compiler/CHANGELOG.d/*.md'
+              'code/specs/data/adj-facts-stdlib/CHANGELOG.d/*.md'
             )
             # The migration PR must replace the one provisional Script Ductus
             # fragment while establishing its strict plan. The migration base is
@@ -125,7 +126,8 @@ jobs:
             code/packages/typescript/script-ductus/CHANGELOG.md \
             code/programs/typescript/language-ladder/CHANGELOG.md \
             code/packages/rust/lang-aot/CHANGELOG.md \
-            code/packages/rust/algol-iir-compiler/CHANGELOG.md)
+            code/packages/rust/algol-iir-compiler/CHANGELOG.md \
+            code/specs/data/adj-facts-stdlib/CHANGELOG.md)
           if [ -n "$tracked_doc_monoliths" ]; then
             echo "::error::Generated Markdown aggregates must remain untracked:"
             printf '%s\n' "$tracked_doc_monoliths"
