@@ -25,7 +25,7 @@ Two things make it hard to see:
 - **CI mostly does not catch it.** The append-only shard guard flagged 2 of
   the 61; nothing would have flagged the other 59.
 
-## Do not diagnose it with `git diff main branch`
+**Do not diagnose it with `git diff main branch`.**
 
 That diff counts files main ADDED after the branch point as deletions, so a
 perfectly healthy branch looks catastrophic. It made a second PR in the same
@@ -38,7 +38,7 @@ The honest check is the commit against ITS OWN parent:
 
 Zero deletions there means the branch is fine. Deletions there are yours.
 
-## What to do instead
+**What to do instead**
 
 - To squash: `git reset --soft $(git merge-base origin/main HEAD)` -- the
   merge base, never the moving branch tip.
