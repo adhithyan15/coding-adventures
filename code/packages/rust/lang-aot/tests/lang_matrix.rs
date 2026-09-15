@@ -465,24 +465,44 @@ const PROGRAMS: &[Prog] = &[
     // `=`/`+`/`-`/`*` builtins the tag-test and arms use — so union `match` runs on
     // **all seven engines**. (`match` here needs no `is_null`, so no nil-handle
     // disambiguation is required; that is only for list `null?`.)
+    // **VM-041 (BEAM05 follow-up) — the `Beam` column, closing Twig to 49/49.**
+    // `emit_union_def`'s per-field cons cell used to emit `alloc`, then `box`
+    // (boxing the field for the tagged backends' match/unbox round-trip), THEN
+    // the two `field_store`s — the interleaved `box` broke `iir-to-beam`'s
+    // `alloc`+`field_store`+`field_store` → `put_list` fusion look-ahead
+    // (adjacency-only, not a general scan), which made every `match`/`union`
+    // Twig program fail BEAM lowering. Fixed by hoisting `box` to before
+    // `alloc` (no data dependency between them — `box` only reads the field
+    // value, not the freshly allocated cell register), restoring adjacency;
+    // mirrors the same function's tag/head cons cell, which already computed
+    // its `box` before its own `alloc`. See
+    // `twig-ir-compiler`'s `union_constructor_alloc_immediately_followed_by_
+    // its_two_field_stores` test and `LANG-VM-NON-ALGOL-BACKLOG.md`'s VM-041
+    // section for the full pinned-down shape and real-`erl` proof.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-6: matching the SECOND variant (`None`) proves the tag dispatch
     // actually discriminates — the boxed-bool branch takes the right arm, not
     // always the first. `(match (None) ((Some v) v) ((None) 42))` = 42. This is the
     // cell the raw-tag bug broke on the tagged backends (`unbox(raw 1)=0`); E6d-6b's
     // boxed tag fixes it. Runs on all seven engines (Clr via E6d-6c, Vm/Jit above).
+    // VM-041: the SECOND variant's match arm exercises the same `None`
+    // constructor (no fields — its cons chain has no per-field cell, only the
+    // tag/head cell, which was never interleaved) plus the tag-dispatch `=`
+    // comparison on `Beam`; both were already proven working on `Beam` by the
+    // `Some` row above, this row proves discrimination (not always the first
+    // arm) end to end.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-8: dynamic globals on the code-gen backends.** A value global
     // `g` that is *forward-referenced* (read inside `f` before its `define`) is
@@ -9435,23 +9455,33 @@ fn matrix_every_proven_cell_agrees() {
 /// variable survives across a `call_closure` call), a probe-first sweep of
 /// EVERY not-yet-`Beam` Twig row (29 of 49) found 27 that already ran
 /// correctly with zero further lowering changes — including the two closure
-/// rows the fix directly protects. One row's blocker (`match`/`union`) was
-/// also *partly* diagnosed: `iir-to-beam`'s validator rejected a `mov` op
-/// carrying a `ref<LispyPair>` type_hint even though `lower.rs`'s `"mov"`
-/// arm already lowers it correctly for any type (an unconditional
-/// register-to-register `move`); relaxing the validator (mirroring the
-/// existing `"str"`-type_hint exception) is safe and tested
-/// (`test_99_real_erl_mov_ref_lispy_pair_lowers_correctly` in
-/// `iir-to-beam`'s suite) but is NOT by itself sufficient — the two
-/// `match`/`union` rows still fail with a SEPARATE, deeper error
-/// (`field_store: found outside of alloc+field_store+field_store pattern`)
-/// once validation passes, in the synthesized union-variant constructor
-/// function. That is a real, still-open design/implementation gap (the
-/// `alloc`+2×`field_store` → `put_list` fusion only recognizes the three
-/// instructions immediately adjacent; the union-variant constructor
-/// interleaves a `mov` between them) — left deferred, NOT forced. See
-/// `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-041" section for the full probe
-/// transcript and the exact remaining gap description.
+/// rows the fix directly protects. The remaining 2 (`match`/`union`) needed
+/// two further fixes, landed in this same VM-041 arc: (1) `iir-to-beam`'s
+/// validator rejected a `mov` op carrying a `ref<LispyPair>` type_hint even
+/// though `lower.rs`'s `"mov"` arm already lowers it correctly for any type
+/// (an unconditional register-to-register `move`) — relaxed to mirror the
+/// existing `"str"`-type_hint exception, proven by
+/// `test_99_real_erl_mov_ref_lispy_pair_lowers_correctly` in `iir-to-beam`'s
+/// suite; (2) a SEPARATE, deeper gap in the synthesized union-variant
+/// constructor: `twig-ir-compiler::emit_union_def`'s per-field cons cell
+/// emitted `alloc`, then a `box` (E6d-6b: boxing the field for the tagged
+/// backends' round-trip), THEN the two `field_store`s — the interleaved
+/// `box` broke `iir-to-beam`'s `alloc`+2×`field_store` → `put_list` fusion,
+/// which only recognizes the three instructions when textually adjacent (a
+/// `[idx]`/`[idx+1]` look-ahead peek, not a general scan). Pinned down by
+/// direct IIR inspection to be exactly `[alloc, box, field_store,
+/// field_store]` — the `box` sits between `alloc` and the FIRST
+/// `field_store`. Fixed by hoisting the `box` above the `alloc` in
+/// `twig-ir-compiler` (not by teaching `iir-to-beam` to tolerate
+/// interleaving): `box` has no data dependency on the freshly allocated cell
+/// register, so the reorder is a pure no-op on every other backend and
+/// mirrors this same function's tag/head cons cell, which already boxed
+/// before allocating. Proven by `twig-ir-compiler`'s
+/// `union_constructor_alloc_immediately_followed_by_its_two_field_stores`
+/// (adjacency, direct on the IIR) and `lang-aot`'s `twig_beam_match_union`
+/// (full pipeline, real `erl`, both promoted rows) — Twig is now **49/49**
+/// on `Beam`. See `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-041" section for the
+/// full probe transcript and this follow-up's pinned-down shape.
 #[test]
 fn feature_coverage_doc_counts_match_programs_source() {
     fn rows_and_cells(lang: Language) -> (usize, usize) {
@@ -9464,7 +9494,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
     // (language, expected rows, expected total declared cells — all backends
     // including Beam). Order matches the doc table.
     let expected = [
-        (Language::Twig, 49, 390),
+        (Language::Twig, 49, 392),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 45),
         (Language::DartmouthBasic, 51, 400),
@@ -16319,4 +16349,66 @@ fn twig_beam_string_ops() {
 
     assert_eq!(executed, 19);
     eprintln!("Twig BEAM string ops: {executed} programs executed");
+}
+
+// VM-041 follow-up (BEAM05 §3.2 / this slice): the `match`/`union` fusion
+// gap, pinned down and fixed. `iir-to-beam`'s `alloc`+`field_store`+
+// `field_store` → `put_list` fusion only recognizes the three instructions
+// when textually adjacent; `twig-ir-compiler::emit_union_def`'s per-field
+// cons cell used to emit `alloc`, then a `box` (E6d-6b: boxing the field for
+// the tagged backends' `match`/`unbox` round-trip), THEN the two
+// `field_store`s — confirmed by direct IIR inspection (a scratch probe
+// dumping the `Some` constructor's instruction list, discarded before this
+// PR) to be `[alloc, box, field_store, field_store]`, i.e. the `box` sits
+// between `alloc` and the FIRST `field_store` (not between the two
+// `field_store`s, as BEAM05 §3.2 had left unpinned). Every other Twig BEAM
+// row was already proven (VM-041's first cut, 47/49); these were the only 2
+// still undeclared.
+//
+// Fixed in `twig-ir-compiler` (not `iir-to-beam`): hoisted the `box` to
+// before the `alloc` in `emit_union_def`'s per-field loop. `box` only reads
+// the field value — it has no data dependency on the freshly allocated cell
+// register — so the reorder changes no semantics on any of the five other
+// backends (record/union constructors on WASM/JVM/CLR/NativeAot/LLVM/Vm/Jit
+// all still pass their existing `lang_matrix` rows unchanged) and merely
+// restores the `alloc, field_store, field_store` adjacency `iir-to-beam`'s
+// fusion look-ahead requires — exactly mirroring this same function's
+// tag/head cons cell, which already computed its own `box` before its
+// `alloc`. Chosen over teaching the fusion look-ahead itself to tolerate
+// interleaved instructions: the concrete case has exactly one interleaved
+// instruction shape (a `box` with no aliasing to the alloc'd cell), so a
+// general N-instruction-skip scanner in `iir-to-beam` would be strictly more
+// machinery for the same proven outcome, touching the backend every OTHER
+// frontend also relies on instead of the one crate that produced the gap.
+//
+// Proven correct (not just "compiles"): `twig-ir-compiler`'s
+// `union_constructor_alloc_immediately_followed_by_its_two_field_stores`
+// asserts the adjacency directly on the emitted IIR; this test proves the
+// full pipeline — source → IIR → BEAM bytes → real `erl` execution — for
+// both promoted rows, closing Twig to **49/49** BEAM rows (the last 2 of the
+// original 49).
+#[test]
+fn twig_beam_match_union() {
+    if !erl_ok() {
+        eprintln!("SKIP Twig BEAM match/union: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, i32)] = &[
+        ("(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))", 42),
+        ("(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))", 42),
+    ];
+    let mut executed = 0;
+    for (src, exit_code) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::Twig && p.src == *src)
+            .unwrap_or_else(|| panic!("Twig row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected Twig row must declare Beam");
+        assert!(matches!(program.expect, Expect::Exit(n) if n == *exit_code),
+            "selected Twig expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Twig");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 2);
+    eprintln!("Twig BEAM match/union: {executed} programs executed (Twig now 49/49 on Beam)");
 }

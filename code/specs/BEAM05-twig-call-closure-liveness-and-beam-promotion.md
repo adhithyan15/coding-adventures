@@ -1,6 +1,8 @@
 # BEAM05 — Twig `call_closure` liveness fix and BEAM probe-first promotion
 
-**Status:** Delivered — this slice (VM-041, first cut).
+**Status:** Delivered — first cut (§1–§5) plus a direct follow-up (§6) that
+closes the `match`/`union` gap §3.2/§5 left deferred. Twig is now **49/49**
+on `Beam`.
 **Depends on:** `BEAM03-float-lowering.md` (f64 scalar lowering — unrelated
 but shares the `call_ext` liveness discipline this spec extends),
 `BEAM04-float-array-representation.md` (the immediately prior slice in this
@@ -252,10 +254,14 @@ selected this work explicitly said not to force it.
 - `code/specs/LANG-VM-FEATURE-COVERAGE.md`: Twig row and grand-total prose
   updated to match (363 → 390 Twig cells; 1636 → 1663 grand total).
 
-## 5. Explicitly out of scope / deferred
+## 5. Explicitly out of scope / deferred (at first-cut time — see §6, now closed)
 
 - `match`/`union` (2 Twig rows) — the `alloc`+`field_store` fusion-adjacency
-  gap described in §3.2. Not attempted.
+  gap described in §3.2. Not attempted at first-cut time. **Closed by the §6
+  follow-up in this same spec** (same PR sequence): the exact interleaving
+  was pinned down (a `box`, not a `mov`, between `alloc` and the first
+  `field_store`) and fixed by reordering `twig-ir-compiler`'s codegen. Twig
+  is now 49/49 on `Beam`.
 - Twig's remaining non-BEAM gaps outside this backlog's non-ALGOL scope are
   unaffected (this slice touches only `iir-to-beam`/`lang_matrix.rs`
   BEAM-column declarations).
@@ -263,3 +269,161 @@ selected this work explicitly said not to force it.
   claimed, matching every prior BEAM03/VM-LOOP-24/BEAM04 slice's own
   precedent — the two dedicated tests plus the full `iir-to-beam` suite
   (including the two new real-`erl` tests) are the executed evidence.
+
+## 6. Follow-up — pinning down and closing the `match`/`union` fusion gap
+
+§3.2 left the exact interleaving point unpinned ("exact position not yet
+pinned down further, since this slice deliberately did not force a fix
+here"). This follow-up slice pins it down and closes it, per the same "probe
+before declaring" discipline.
+
+### 6.1 Pinning down the exact shape
+
+Compiled the `match`/`union` corpus program
+(`(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))`)
+through `lang_aot::compile_source_to_iir` and dumped the synthesized `Some`
+constructor function's instruction list directly (a scratch probe test,
+`code/packages/rust/lang-aot/tests/scratch_union_probe.rs`, discarded before
+this PR — not part of the permanent suite). The actual sequence, BEFORE this
+follow-up's fix:
+
+```text
+[0] const  _nil1              : ref<LispyPair>   (= 0, the nil sentinel)
+[1] alloc  _cell2              : ref<LispyPair>   (the field's cons cell)
+[2] box    _fbox3 = box(v)     : ref<any>          <-- INTERLEAVED
+[3] field_store _cell2, 0, _fbox3 : void
+[4] field_store _cell2, 1, _nil1  : void
+[5] const  _tag4  = 0          : i64               (the variant's tag)
+[6] box    _tbox5 = box(_tag4) : ref<any>
+[7] alloc  _head6              : ref<LispyPair>   (the tag/head cons cell)
+[8] field_store _head6, 0, _tbox5 : void
+[9] field_store _head6, 1, _cell2 : void
+[10] ret   _head6              : ref<LispyPair>
+```
+
+This pins down BOTH open questions §3.2 left unresolved:
+
+1. **The interleaved instruction is a `box`, not a `mov`** as §3.2's own
+   note had guessed (that guess was written before this slice's direct
+   inspection; the `mov`-related validator gap fixed in §3.2/§4 is real and
+   separate — it fires on the `if`/`match` arm-merge phi, not here).
+2. **It sits between `alloc` and the FIRST `field_store`** (index `[1]` and
+   `[3]`), not between the two `field_store`s. The SECOND cons cell built by
+   this same function — the tag/head cell at `[7]`–`[9]` — has NO
+   interleaving at all: its `box` (`[6]`) already runs before its `alloc`
+   (`[7]`), because `twig-ir-compiler::emit_union_def` happens to compute
+   `tag_boxed` before `alloc_head` in source order. Only the PER-FIELD loop
+   (`emit_union_def`'s `for field_name in params.iter().rev()`) has the
+   `alloc`-before-`box` ordering that breaks fusion. (The record constructor,
+   `emit_record_def`, stores fields raw/unboxed — no `box` at all — so it was
+   never affected either.)
+
+Root cause: `twig-ir-compiler::compiler.rs`'s `emit_union_def`, in its
+per-field loop, computed `alloc` (the cons cell), THEN `box` (E6d-6b: boxing
+the field value so `match`'s `field_load` + `unbox` round-trips on the tagged
+backends), THEN the two `field_store`s. `iir-to-beam`'s fusion look-ahead
+(`lower.rs`'s `"alloc" if instr.type_hint == "ref<LispyPair>"` arm) peeks
+ONLY at `func.instructions[instr_idx]` and `[instr_idx + 1]` — the next two
+instructions after the `alloc`, unconditionally — so an intervening `box`
+instruction is read as if it were the first `field_store`, its `op` field
+compared against `"field_store"` and found not to match, and the whole
+lookahead falls through to the "isolated alloc" fallback (a placeholder
+`nil` move). The REAL first `field_store` (now three slots later than the
+look-ahead expects) is then visited on its own in the next loop iteration,
+where a dedicated guard rejects any `field_store` not immediately consumed by
+an `alloc`'s look-ahead — producing exactly the `UnsupportedOp` error
+`match`/`union` was failing with.
+
+### 6.2 Fix chosen: reorder `twig-ir-compiler`'s codegen (option 2 from the
+task), not `iir-to-beam`'s fusion look-ahead (option 1)
+
+`box(field_name)` reads only the field value passed into the constructor —
+it has no data dependency on `cell`, the fresh register `alloc` allocates.
+Hoisting the `box` emission to BEFORE the `alloc` emission (source order)
+produces exactly `[box, alloc, field_store, field_store]`, restoring the
+`alloc`/`field_store`/`field_store` adjacency `iir-to-beam`'s look-ahead
+requires, with **zero change to `iir-to-beam` or any other backend's
+lowering**. This is a pure reorder of two independent SSA instructions: no
+new register, no new op, no change to any instruction's operands — so it is
+a no-op on every one of the other five backends (WASM/JVM/CLR/NativeAot/LLVM)
+plus the two interpreter engines (Vm/Jit), all of which already ran this
+exact constructor unchanged before this fix. It also exactly mirrors this
+same function's OWN tag/head cons cell a few lines below, which already
+computes its `box` before its `alloc` — so after this fix, both cons cells
+`emit_union_def` builds follow one consistent "box first" convention, rather
+than the per-field loop being the sole outlier.
+
+This was chosen over teaching `iir-to-beam`'s fusion look-ahead to tolerate
+(skip past) intervening non-`field_store` instructions — the alternative the
+task explicitly offered. §6.1 shows the concrete case has exactly ONE
+interleaved-instruction shape (a `box` with no register aliasing to the
+`alloc`'d cell), not an open-ended set. A general "skip N non-conflicting
+instructions while scanning for the fusion triple" scanner in `iir-to-beam`
+would be strictly more code, in the shared backend every non-ALGOL frontend
+depends on, to reach the exact same outcome a two-line reorder in the one
+crate that produces the interleaving already achieves — over-engineering
+this task's own instructions explicitly warn against ("don't over-engineer a
+general 'skip N instructions' scanner if the concrete case only ever has one
+specific interleaved instruction shape").
+
+### 6.3 Proof
+
+- `twig-ir-compiler`'s new
+  `union_constructor_alloc_immediately_followed_by_its_two_field_stores`
+  test (`tests/backend_compat.rs`) asserts, directly on the emitted IIR, that
+  every `alloc ref<LispyPair>` instruction in the `Some` constructor is
+  IMMEDIATELY followed by its car `field_store` (index 0) and then its cdr
+  `field_store` (index 1) — the exact adjacency `iir-to-beam`'s fusion
+  requires — for both cons cells the constructor builds (2 allocs checked).
+  Confirmed this fails without the fix (rerun with the reorder temporarily
+  reverted: the per-field cell's `alloc` is followed by `box`, not
+  `field_store`, so the assertion fires with a clear message naming the
+  interleaving instruction) before restoring the fix.
+- `twig-ir-compiler`'s existing `union_constructor_boxes_tag_and_fields` test
+  continues to pass unchanged — the reorder does not affect WHAT is boxed,
+  only the instruction order, so the boxing invariant that test checks is
+  untouched.
+- `lang-aot`'s new `twig_beam_match_union` test (`tests/lang_matrix.rs`)
+  compiles both promoted corpus rows through the FULL pipeline
+  (`compile_source_to_beam`) and executes the resulting `.beam` bytes on
+  real `erl`: `(match (Some 42) ((Some v) v) ((None) 0))` → 42, and
+  `(match (None) ((Some v) v) ((None) 42))` → 42 (the second proving tag
+  dispatch actually discriminates, not just the first arm). Both rows
+  promoted to declare `Beam` in `lang_matrix.rs`'s `PROGRAMS` only after this
+  test ran green against real `erl`, per this backlog's "probe before
+  declaring, promote only proven cells" discipline.
+- Full `iir-to-beam` suite (102 unit/integration + 23 lib + 5 doc tests) and
+  full `twig-ir-compiler` suite (103 lib + 26 + 7 + 6 doc tests) re-run
+  green after the fix — confirming zero regression on either crate's
+  existing coverage. `cargo clippy -p twig-ir-compiler -p lang-aot
+  --all-targets -- -D warnings` is clean.
+
+### 6.4 Contract (what changed, this follow-up)
+
+- `twig-ir-compiler/src/compiler.rs`: `emit_union_def`'s per-field loop now
+  emits `box` before `alloc` (was: `alloc` then `box`). `iir-to-beam` is
+  UNCHANGED by this follow-up.
+- `twig-ir-compiler/tests/backend_compat.rs`:
+  `union_constructor_alloc_immediately_followed_by_its_two_field_stores`.
+- `lang-aot/tests/lang_matrix.rs`: both `match`/`union` Twig rows promoted to
+  declare `Beam` (47/49 → **49/49**, Twig now complete on BEAM); new
+  dedicated test `twig_beam_match_union`;
+  `feature_coverage_doc_counts_match_programs_source`'s Twig tuple updated
+  `(49, 390)` → `(49, 392)`.
+- `code/specs/LANG-VM-FEATURE-COVERAGE.md`: Twig row (all 49/49 cells BEAM),
+  grand-total prose (1663 → 1665 declared cells), and a new paragraph
+  documenting this follow-up's pinned-down shape and fix.
+- `code/specs/LANG-VM-NON-ALGOL-BACKLOG.md`: new top section (this
+  follow-up) with the full investigation, reprioritizing the backlog now
+  that Twig is fully closed.
+
+### 6.5 What is now the only remaining non-ALGOL BEAM gap
+
+With Twig at 49/49, COBOL-60 at 58/58, Nib/Oct/FLOW-MATIC/Brainfuck fully
+proven per their own rows in `LANG-VM-FEATURE-COVERAGE.md`, the ONLY
+remaining non-ALGOL BEAM gap in the whole backlog is Dartmouth BASIC's 8
+still-undeclared rows: 5 `INPUT` rows (blocked on the unscoped BEAM
+host-input design, VM-060b), 2 string-array/mixed-`DATA` rows (blocked on a
+separate `str`-typed-array-element BEAM representation question — `iir-to-
+beam` has none at all), and `RND` (blocked on VM-018's still-open
+DEF-FN-and-module-global-chain design question).

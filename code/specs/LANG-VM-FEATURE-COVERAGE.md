@@ -24,7 +24,7 @@ refusal also does not imply the complete driver refuses that feature.
 
 | Frontend | Unified rows | Declared cells (all backends, Beam included) | Additional proof boundary |
 |---|---:|---:|---|
-| Twig | 49 | 390 | 47 of those cells are BEAM (VM-041); dedicated heap/closure/string tests |
+| Twig | 49 | 392 | All 49 of those cells are BEAM (VM-041 + this follow-up: `match`/`union` fusion fix); dedicated heap/closure/string/union tests |
 | Nib | 26 | 208 | All eight columns including real BEAM u4/u8 and BCD storage |
 | Brainfuck | 6 | 45 | Dedicated WASM/JVM/CLR and JIT execution; 3 of 6 rows also real BEAM (VM-042) |
 | Dartmouth BASIC | 51 | 400 | 43 of those cells are BEAM (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins + 4 arrays/DATA, BEAM03/VM-LOOP-24/BEAM04); random differential suite and frontend JIT tests |
@@ -35,7 +35,7 @@ refusal also does not imply the complete driver refuses that feature.
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1663
+The normal non-ALGOL capstone therefore declares 210 programs and 1665
 declared cells (sum of the non-ALGOL rows above). At VM-061 this matched a
 fresh `non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells
 exercised plus 210 skipped (missing local `ilasm`) = 1548. VM-042 then added
@@ -244,6 +244,34 @@ union-variant constructor interleaves a `mov` between them. Twig now
 declares 47/49 rows on Beam (363 → 390 declared cells); only tagged-union
 pattern matching remains.
 
+A direct follow-up then pinned down and closed that exact gap. Compiling the
+`match`/`union` corpus row through `compile_source_to_iir` and dumping the
+`Some` constructor's IIR (a scratch probe, discarded before the PR) showed
+the interleaved instruction is a **`box`**, not the `mov` guessed at above —
+and it sits between `alloc` and the FIRST `field_store`, not between the two
+`field_store`s: `twig-ir-compiler::emit_union_def`'s per-field cons-cell loop
+emits `alloc`, then `box` (E6d-6b: boxing the field for the tagged backends'
+`match`/`unbox` round-trip), THEN the two `field_store`s. Of the two fix
+directions the backlog left open — teaching `iir-to-beam`'s fusion
+look-ahead to tolerate interleaving, or changing the union-variant
+constructor's own codegen — the codegen fix was chosen: `box` has no data
+dependency on the freshly allocated cell register (it only reads the field
+value), so hoisting it to before the `alloc` changes no semantics on any
+backend and merely restores the adjacency the fusion needs, exactly
+mirroring this same function's tag/head cons cell a few lines below, which
+already computed its own `box` before its `alloc`. This is strictly less
+machinery than a general N-instruction-skip scanner in `iir-to-beam` (a
+backend every other frontend also depends on) for a concrete case with
+exactly one interleaved-instruction shape. Proven by
+`twig-ir-compiler`'s new `union_constructor_alloc_immediately_followed_by_
+its_two_field_stores` test (adjacency, direct on the emitted IIR) and
+`lang-aot`'s new `twig_beam_match_union` test (full pipeline, real `erl`,
+both promoted rows). Twig now declares **49/49** rows on Beam (390 → 392
+declared cells) — fully complete. Combined with COBOL-60 (58/58) and Nib/Oct
+(already full), Twig closing to 49/49 leaves Dartmouth BASIC's remaining 8
+design-blocked rows (5 `INPUT` rows on VM-060b, 2 string-array/mixed-`DATA`
+rows, `RND` on VM-018) as the ONLY non-ALGOL BEAM gap left in this backlog.
+
 The "Declared cells" column counts every backend a
 row proves, Beam included — the convention Nib, Oct, FLOW-MATIC and
 COBOL-60's numbers already used. Twig was the one holdout at VM-061: its old
@@ -276,7 +304,7 @@ tenth universal backend.
 
 | Frontend/source | Implemented family and current executable evidence | Boundary and next work |
 |---|---|---|
-| [Twig lowerer](../packages/rust/twig-ir-compiler/src/compiler.rs) | Scalars, variadic arithmetic, lexical bindings, calls, cons/list operations, symbols, globals, records/unions, closures and source-inferred strings. Unified rows cover heap arithmetic, list helpers, quote equality, records/match, forward and boxed globals, capturing closures, literal/local/parameter strings and a bounds trap. | BEAM covers 20 selected rows, not all strings/records/closures. Dynamic or captured/reassigned strings exceed the source-local fast path. VM-040 inventories the remaining BEAM families; VM-041 isolates dynamic-string lowering from existing literal metadata. |
+| [Twig lowerer](../packages/rust/twig-ir-compiler/src/compiler.rs) | Scalars, variadic arithmetic, lexical bindings, calls, cons/list operations, symbols, globals, records/unions, closures and source-inferred strings. Unified rows cover heap arithmetic, list helpers, quote equality, records/match, forward and boxed globals, capturing closures, literal/local/parameter strings and a bounds trap. | BEAM covers all 49/49 rows (VM-041's call_closure-liveness fix + probe-first sweep, then this follow-up's union-variant `alloc`/`box`/`field_store` reorder for the `match`/`union` fusion gap). Twig has no further BEAM gaps in this backlog. |
 | [Nib lowerer](../packages/rust/nib-iir-compiler/src/lib.rs) | Integer arithmetic, narrow masking, wrapping/saturating addition, bitwise/logical operations, branches/loops, calls, const/static initialization and BCD storage. Unified rows execute standard-backend cases. [JIT tests](../packages/rust/nib-iir-compiler/tests/jit_e2e.rs) independently exercise compiled functions. | Standard-target parity does not establish 4004 arithmetic/control-flow fidelity. Existing VM-028 owns that audit; VM-012 proves only its landed BCD storage slice. BEAM remains undeclared (VM-040). |
 | [Brainfuck compiler](../packages/rust/brainfuck-iir-compiler/src/compiler.rs) | All eight commands, wrapped tape cells/pointer movement, nested loops and input/EOF. Unified rows plus [WASM](../packages/rust/brainfuck-iir-compiler/tests/wasm_e2e.rs), [JVM](../packages/rust/brainfuck-iir-compiler/tests/jvm_e2e.rs), [CLR](../packages/rust/brainfuck-iir-compiler/tests/clr_e2e.rs) and [JIT](../packages/rust/brainfuck-iir-compiler/tests/jit_smoke.rs) execution. | VM-042/VM-D031: the frontend README's "BEAM tape support intentionally excluded" claim was stale — `iir-to-beam`'s `:atomics`-backed mutable memory (added for this exact purpose) already lowers tape mutation and `.`; a real `erl` probe promoted the 3 non-input rows to a real Beam cell each. `,` still refuses explicitly (no `getchar` builtin), pinned by `call_builtin_getchar_rejected_but_putchar_accepted`; that gap is host input (VM-060b), shared with every other frontend's BEAM input rows, not a Brainfuck- or tape-specific limitation. |
 | [BASIC lowerer](../packages/rust/dartmouth-basic-iir-compiler/src/lib.rs) | f64 arithmetic/general power/transcendentals, deterministic RND, scalar/string input and output, branches, FOR, GOSUB/RETURN, DEF FN, numeric/string arrays, mixed DATA/READ/RESTORE. All 51 rows declare at least seven columns; 43 rows (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins + 4 arrays/DATA, BEAM03/VM-LOOP-24/BEAM04) also declare BEAM; random differential tests supplement fixed results. | DEF FN global access and historical print zones are frontend semantics, not already-implemented parity. The remaining ~8 numeric/`INPUT` rows still lack BEAM: the 5 `INPUT` rows need the unscoped BEAM host-input design (VM-060b); string-typed arrays and mixed numeric/string `DATA` (2 rows) need a BEAM `str`-typed array element representation (`iir-to-beam` has none at all — a separate, larger gap than the float-array storage question BEAM04 already closed); `RND` (1 row) needs the still-open "DEF-FN-and-module-global chain" design question from VM-018. Two-dimensional numeric DIM already has a seven-column matrix proof; the stale one-dimensional-only README wording is corrected in this audit. |
