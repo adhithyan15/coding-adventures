@@ -114,8 +114,9 @@ fn the_citation_carries_its_own_pronoun_antecedent() {
     assert!(ok, "cli should succeed: {out}");
     // The substrate sentence begins "They typically grow on other
     // speleothems...". Cited alone its subject is a bare pronoun and a
-    // reader could not tell who "They" is. The envelope therefore quotes
-    // the two CONTIGUOUS sentences as one string -- still verbatim, and
+    // reader could not tell who "They" is. The HELICTITE ROWS' `source`
+    // therefore quotes the two CONTIGUOUS sentences as one string -- it was
+    // the table envelope until #14986 -- still verbatim, and
     // self-contained. A citation that cannot be read without the page open
     // is not doing its job.
     //
@@ -229,4 +230,211 @@ fn speleothem_substrate_abstains_where_the_source_names_no_substrate() {
         out.contains("\"abstained\":true") && out.contains("\"reason\":\"no_grounded_support\""),
         "a surface shape is not a substrate value: {out}"
     );
+}
+
+const SPEL_LOCATOR: &str = "https://www.nps.gov/subjects/caves/speleothems.htm";
+const HELICTITE_SPAN: &str = "Helictites grow on cave ceilings, walls, and less often on cave floors. They typically grow on other speleothems, such as carbonate coatings, crusts, and sometimes on soda straws.";
+const FROSTWORK_SPAN: &str = "Frostwork can also be found on stalactites, walls, ceilings, ledges, and less occasionally on floors (Hill, 1997).";
+
+/// Assert a row's warrant with a needle that SPANS from the binding into the
+/// citation, so the span provably belongs to the row that bound it.
+///
+/// Two dead ends preceded this shape, and both are worth recording:
+///
+/// 1. A fully-ground query (`speleothem_substrate(frostwork, ledge)`) emits no
+///    `citations` at all — the engine ranks it as a hypothesis rather than
+///    recalling it. An assertion counting citation blocks failed with zero.
+/// 2. Binding only the speleothem returns six rows for `helictite`, and a
+///    whole-stdout `contains` is then satisfied by any sibling's intact copy —
+///    the masking defect mutation found in `anatomy/joint-types.adj` (#15164).
+///
+/// Binding the SUBSTRATE and spanning binding→citation avoids both: the needle
+/// cannot match an answer that bound a different speleothem, even when both
+/// answers are in the same output.
+fn assert_warrant(tag: &str, substrate: &str, speleothem: &str, span: &str) -> String {
+    let dir = scratch(tag);
+    std::fs::copy(
+        facts_stdlib().join("earth-science/speleothem-substrate.adj"),
+        dir.join("speleothem-substrate.adj"),
+    )
+    .expect("copy shipped speleothem-substrate.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"speleothem-substrate.adj\"\n? speleothem_substrate($S, {substrate})\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert!(
+        out.contains(&format!(
+            "\"bindings\":{{\"S\":\"{speleothem}\"}},\"citations\":[{{\"source\":\"{span}\",\"locator\":\"{SPEL_LOCATOR}\",\"trust\":\"authoritative\"",
+        )),
+        "{speleothem}/{substrate}: the span belongs to the row that bound it: {out}"
+    );
+    out
+}
+
+/// #14986. This table held BOTH justifying sentences already — the helictite
+/// one as the envelope `source`, the frostwork one as a table-level `cites` —
+/// so every row got both, and the five FROSTWORK rows were warranted by a
+/// sentence about helictites, with their real evidence demoted to an untiered
+/// corroboration.
+///
+/// That is what the atmosphere review (#15137) rejected in the other
+/// direction: the field carrying the TIER must be the sentence that supports
+/// the row. No new source and no widening were needed — both sentences already
+/// name their own speleothem.
+#[test]
+fn each_row_is_warranted_by_its_own_speleothems_sentence() {
+    // `ledge` is frostwork's alone, so this output has exactly one answer.
+    let out = assert_warrant("spelledge", "ledge", "frostwork", FROSTWORK_SPAN);
+    assert!(
+        !out.contains("Helictites grow on cave ceilings"),
+        "a frostwork row is no longer proved by a sentence about helictites: {out}"
+    );
+    // No corroboration: the warrant IS the supporting sentence now. Twice —
+    // provenance is emitted under `citations` and again under `steps`.
+    assert_eq!(
+        out.matches("\"corroborations\":[]").count(),
+        2,
+        "the row's own sentence is its warrant, so nothing corroborates: {out}"
+    );
+
+    let out = assert_warrant("spelstraw", "soda_straw_sometimes", "helictite", HELICTITE_SPAN);
+    assert!(
+        !out.contains("Frostwork can also be found"),
+        "and the frostwork sentence no longer reaches a helictite answer: {out}"
+    );
+}
+
+/// All eleven rows, each pinned by a binding→citation needle. `cave_wall` and
+/// `cave_ceiling` belong to BOTH speleothems and return two answers; the
+/// spanning needle still distinguishes them, which is the property that makes
+/// this shape worth using over a count.
+#[test]
+fn all_eleven_rows_carry_their_own_span() {
+    for (tag, sub) in [
+        ("h1", "cave_ceiling"),
+        ("h2", "cave_wall"),
+        ("h3", "cave_floor_less_often"),
+        ("h4", "carbonate_coating"),
+        ("h5", "crust"),
+        ("h6", "soda_straw_sometimes"),
+    ] {
+        assert_warrant(tag, sub, "helictite", HELICTITE_SPAN);
+    }
+    for (tag, sub) in [
+        ("f1", "stalactite"),
+        ("f2", "cave_wall"),
+        ("f3", "cave_ceiling"),
+        ("f4", "ledge"),
+        ("f5", "cave_floor_less_occasionally"),
+    ] {
+        assert_warrant(tag, sub, "frostwork", FROSTWORK_SPAN);
+    }
+}
+
+/// The envelope now carries the page's own DEFINITION of a speleothem. It
+/// warrants no row; its wording is unreachable from any answer once every row
+/// overrides `source`, which is disclosed rather than implied.
+///
+/// A first version used "In general, however, one thing caves do have in
+/// common is where speleothems form." Review read it in context: on the page
+/// that sentence introduces the water-table zone, not the substrate, and its
+/// leading connective has no antecedent inside the quote.
+#[test]
+fn the_framing_envelope_never_reaches_an_answer() {
+    let dir = scratch("spelenvelope");
+    std::fs::copy(
+        facts_stdlib().join("earth-science/speleothem-substrate.adj"),
+        dir.join("speleothem-substrate.adj"),
+    )
+    .expect("copy shipped speleothem-substrate.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"speleothem-substrate.adj\"\n? speleothem_substrate($S, $B)\n",
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        11,
+        "all eleven rows answer: {out}"
+    );
+    assert!(
+        !out.contains("The term speleothem refers to the mode of occurrence"),
+        "the framing span warrants no row: {out}"
+    );
+}
+
+/// Parse `(row key, its own `source`)` out of a shipped `.adj`.
+///
+/// The full two-column key: column 1 alone is not a row identity. A first pass
+/// at the #15193 census keyed on column 1 and printed brain-parts as
+/// `brainstem+brainstem+…`, because ten rows there share that part and differ
+/// only in the function.
+fn row_spans(rel: &str) -> Vec<(String, String)> {
+    let adj = std::fs::read_to_string(facts_stdlib().join(rel))
+        .unwrap_or_else(|e| panic!("read shipped {rel}: {e}"));
+    let mut out: Vec<(String, String)> = Vec::new();
+    let mut key: Option<String> = None;
+    for line in adj.lines() {
+        if let Some(rest) = line.strip_prefix("    row (") {
+            key = rest.split(')').next().map(|k| {
+                k.split(',').map(|p| p.trim()).collect::<Vec<_>>().join(", ")
+            });
+        } else if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            let span = rest.trim_end_matches(0x22 as char).to_string();
+            out.push((key.clone().expect("a row precedes every source"), span));
+        }
+    }
+    out
+}
+
+/// The groups of rows that share one span, each group sorted by appearance,
+/// the groups themselves in first-appearance order.
+fn sharing_groups(pairs: &[(String, String)]) -> Vec<Vec<String>> {
+    let mut order: Vec<String> = Vec::new();
+    for (_, span) in pairs {
+        if !order.contains(span) {
+            order.push(span.clone());
+        }
+    }
+    order
+        .iter()
+        .map(|span| {
+            pairs
+                .iter()
+                .filter(|(_, s)| s == span)
+                .map(|(k, _)| k.clone())
+                .collect::<Vec<_>>()
+        })
+        .filter(|g| g.len() > 1)
+        .collect()
+}
+
+/// #15193. The sharing structure of this table, asserted against the SHIPPED
+/// FILE rather than described in a comment.
+///
+/// Eleven rows, TWO spans — the most concentrated sharing in the converted
+/// set. Six rows behind the helictite sentence, five behind the frostwork one.
+/// Nothing asserted that until now.
+#[test]
+fn the_shared_spans_are_exactly_the_declared_ones() {
+    let pairs = row_spans("earth-science/speleothem-substrate.adj");
+    assert_eq!(pairs.len(), 11, "eleven rows carry their own source: {pairs:?}");
+    let groups = sharing_groups(&pairs);
+    assert_eq!(groups.len(), 2, "exactly two shared sentences: {groups:?}");
+    assert_eq!(groups[0].len(), 6, "six helictite rows: {groups:?}");
+    assert_eq!(groups[1].len(), 5, "five frostwork rows: {groups:?}");
+    for k in &groups[0] {
+        assert!(k.starts_with("helictite, "), "group 1 is the helictite rows: {k}");
+    }
+    for k in &groups[1] {
+        assert!(k.starts_with("frostwork, "), "group 2 is the frostwork rows: {k}");
+    }
+    // Every row is in a group: this table has no row with a sentence of its own.
+    let shared: usize = groups.iter().map(|g| g.len()).sum();
+    assert_eq!(shared, pairs.len(), "no row stands alone here: {groups:?}");
 }

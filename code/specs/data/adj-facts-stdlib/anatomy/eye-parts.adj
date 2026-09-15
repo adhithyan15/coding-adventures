@@ -63,9 +63,14 @@
 %     "The cornea is shaped like a dome and bends light to help the eye focus."
 %
 %   pupil → lets_in_light
-%     "Some of this light enters the eye through an opening called the pupil"
-%     (its function, the opening light gets in by, is fixed together with the
-%      iris span below: "controls how much light the pupil lets in")
+%     "Some of this light enters the eye through an opening called the pupil
+%      (PYOO-pul)."
+%     Its function takes TWO spans -- that one says light enters through the
+%     pupil, and the IRIS sentence says what the pupil lets in is controlled.
+%     The row therefore carries the iris sentence as a row-level `cites`, the
+%     way `geography/reference-lines.adj` does for a row whose warrant needs two
+%     spans. Before that, this header said the two were "fixed together" while
+%     the row shipped only one, so the prose and the machine value disagreed.
 %
 %   iris → controls_light
 %     "The iris (the colored part of the eye) controls how much light the pupil
@@ -88,11 +93,52 @@
 % page, so they are deliberately not rows — the table states only the six parts
 % whose function the source spells out.)
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the NEI sentence that fixes the
-% first row (cornea → bends_light). Every OTHER row's per-fact source span is
-% listed above, so each pair remains independently checkable. NEI is a primary
-% U.S. government NIH institute, so `trust authoritative`.
+% EVERY ROW CARRIES ITS OWN SPAN, below, in the row's `{ ... }` block
+% (ADJ-TABLES RS-5e). Six rows, six distinct sentences, ONE page -- so no row
+% carries a `locator` and every row inherits the envelope's, which is the form
+% RS-5e's own example uses.
+%
+% WHAT #14986 CHANGED. The CORNEA sentence was this table's `source` -- the
+% field that carries the tier -- for all six rows, so
+% `? eye_part_function(optic_nerve, $F)` came back proved by "The cornea is
+% shaped like a dome and bends light to help the eye focus."
+%
+% EVERY SENTENCE IS ON THE SAME PAGE, so the locator was never wrong here and a
+% hostname assertion could never have caught this -- only the span was.
+%
+% BLOCK STRUCTURE WAS CHECKED BEFORE ANY SPAN WAS CUT: the page has TEN `<p>`
+% and twenty-nine `<li>`, and inside `<main>` it has FOUR `<p>` and ZERO `<li>`.
+% Every sentence used here comes from one of three narrative `<p>` paragraphs
+% tracing the path light takes; the `<li>` blocks are site navigation.
+%
+% (An earlier wording said SIX `<p>`. That number came from counting `<p ` --
+% with a trailing space -- which misses every BARE `<p>`, and the three
+% narrative paragraphs are bare. The conclusion held; the measurement offered
+% as its warrant did not.) Sentence-level spans are legitimate here, measured rather
+% than assumed. (The check exists because flattened text hides the difference --
+% on the SEER cell-cycle page a span that read as a cut sentence turned out to
+% be a complete paragraph followed by an ordered list.)
+%
+% THE ENVELOPE IS A FRAMING SPAN: the page's own opening sentence. It names NO
+% part -- checked against all six row keys -- so it warrants none of the six
+% rows.
+%
+% THREE SENTENCES NAME MORE THAN ONE PART, which is why "the span mentions the
+% key" is not on its own a sufficient pairing test: the LENS sentence names the
+% cornea and the retina, the OPTIC-NERVE sentence names the retina, and the
+% IRIS sentence names the pupil. Giving the cornea row the lens sentence would
+% pass a mention test; so would giving the pupil row the iris sentence, and
+% that is the sharpest case here because the pupil's own span is the weakest of
+% the six. All are caught by the source-equality pin, and the swaps are
+% mutants.
+%
+% (An earlier wording said TWO and omitted the iris/pupil overlap -- the one
+% that matters most.)
+%
+% All seven spans (six warrants plus the framing envelope) were confirmed
+% verbatim on the page, each occurring EXACTLY ONCE, each with a negative arm
+% (final word altered) absent, and all six row spans distinct.
+%
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -100,14 +146,39 @@
 table eye_part_function {
     columns part, function
 
-    row (cornea, bends_light)
-    row (pupil, lets_in_light)
-    row (iris, controls_light)
-    row (lens, focuses_light)
-    row (retina, turns_light_into_signals)
-    row (optic_nerve, carries_signals_to_brain)
+    % Each row carries the sentence that states ITS OWN job, from the
+    % three narrative paragraphs on the one NEI page that trace the
+    % path light takes. Six rows, six distinct sentences. Until
+    % #14986 every row carried the CORNEA sentence.
+    row (cornea, bends_light) {
+        source "The cornea is shaped like a dome and bends light to help the eye focus."
+    }
+    row (pupil, lets_in_light) {
+        source "Some of this light enters the eye through an opening called the pupil (PYOO-pul)."
+        cites "The iris (the colored part of the eye) controls how much light the pupil lets in." locator "https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work"
+    }
+    row (iris, controls_light) {
+        source "The iris (the colored part of the eye) controls how much light the pupil lets in."
+    }
+    row (lens, focuses_light) {
+        source "The lens works together with the cornea to focus light correctly on the retina."
+    }
+    row (retina, turns_light_into_signals) {
+        source "When light hits the retina (a light-sensitive layer of tissue at the back of the eye), special cells called photoreceptors turn the light into electrical signals."
+    }
+    row (optic_nerve, carries_signals_to_brain) {
+        source "These electrical signals travel from the retina through the optic nerve to the brain."
+    }
 
-    source "The cornea is shaped like a dome and bends light to help the eye focus."
+    % THE ENVELOPE IS A FRAMING SPAN: the page's own opening sentence. It
+    % names NO part — checked against all six row keys — so it warrants
+    % none of the six rows.
+    %
+    % NO ROW CARRIES A LOCATOR: all six sentences are on this one page, so
+    % every row inherits the envelope's, which is what ADJ-TABLES RS-5e's
+    % own example does. (#15197 asks whether the cascade should settle on
+    % that form everywhere; this table takes it because the page is one.)
+    source "All the different parts of your eyes work together to help you see."
     locator "https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work"
     trust authoritative
 }

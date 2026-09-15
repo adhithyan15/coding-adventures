@@ -59,10 +59,50 @@ fn anatomy_body_counts_recall_binds_count_with_citation() {
         out.contains("\"S\":\"bones_in_adult_body\""),
         "206 → bones_in_adult_body (reverse recall): {out}"
     );
-    // The answer carries the NHGRI genome.gov citation as its proof.
+    // THIS ASSERTION WAS THE DEFECT IN TEST FORM. `genome.gov` was the
+    // envelope locator on all nine rows, so it held for any answer the table
+    // produced — it could not tell the rib answer citing StatPearls from the
+    // rib answer citing a sentence about chromosomes. Since #14986 these four
+    // answers span four different pages.
+    // BOUND, not two loose needles over a five-query output. The first draft
+    // of this repair asserted `contains("genome.gov")` and
+    // `contains("\"trust\":\"authoritative\"")` separately and captioned the pair
+    // "the chromosome answer" — but four of the five rows here are
+    // `authoritative`, so the tier needle was satisfied by the rib, heart or
+    // bone answer. That is the same unbound-needle shape this comment block
+    // exists to record.
     assert!(
-        out.contains("genome.gov") && out.contains("\"trust\":\"authoritative\""),
-        "carries the source citation: {out}"
+        out.contains(
+            "\"source\":\"Humans have 22 pairs of numbered chromosomes (autosomes) and one pair of sex chromosomes (XX or XY), for a total of 46.\",\"locator\":\"https://www.genome.gov/genetics-glossary/Chromosome\",\"trust\":\"authoritative\""
+        ),
+        "the chromosome answer cites NHGRI at the authoritative tier: {out}"
+    );
+    for (span, page) in [
+        (
+            "It has four hollow chambers surrounded by muscle and other heart tissue.",
+            "https://www.nhlbi.nih.gov/health/heart/anatomy",
+        ),
+        (
+            "Generally, there are twelve pairs of ribs.",
+            "https://www.ncbi.nlm.nih.gov/books/NBK538328/",
+        ),
+        (
+            "Human infants typically have 270 bones, fusing into around 206 in the human adult.",
+            "https://www.ncbi.nlm.nih.gov/books/NBK537199/",
+        ),
+    ] {
+        assert!(
+            out.contains(&format!("\"source\":\"{span}\",\"locator\":\"{page}\"")),
+            "the answer warranted by {span} cites {page}: {out}"
+        );
+    }
+    // COUNTED, not forbidden under one URL prefix. The first form banned the
+    // chromosome sentence only beside an `ncbi` locator, so re-attaching it to
+    // the NHLBI or SEER page walked straight through.
+    assert_eq!(
+        out.matches("for a total of 46.").count(),
+        2,
+        "the chromosome sentence warrants one row here and no other: {out}"
     );
     // "spleens" is not a structure in the table — honest abstention, never a
     // fabricated count.
@@ -94,4 +134,573 @@ fn anatomy_body_counts_hand_bone_group_extension() {
     assert!(out.contains("\"N\":\"8\""), "carpals → 8: {out}");
     assert!(out.contains("\"N\":\"5\""), "metacarpals → 5: {out}");
     assert!(out.contains("\"N\":\"14\""), "phalanges → 14: {out}");
+}
+
+/// Assert one row's warrant AND ITS TIER, binding the structure so exactly one
+/// row answers. Every structure in this table names one row.
+fn assert_count(tag: &str, structure: &str, n: &str, span: &str, locator: &str, tier: &str) {
+    let dir = scratch(tag);
+    std::fs::copy(
+        facts_stdlib().join("anatomy/body-counts.adj"),
+        dir.join("body-counts.adj"),
+    )
+    .expect("copy shipped body-counts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"body-counts.adj\"\n? body_count({structure}, $N)\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        1,
+        "exactly one row for {structure}, so every needle below is its own: {out}"
+    );
+    assert!(
+        out.contains(&format!("\"N\":\"{n}\"")),
+        "{structure} binds {n}: {out}"
+    );
+    assert!(
+        out.contains(&format!(
+            "\"source\":\"{span}\",\"locator\":\"{locator}\",\"trust\":\"{tier}\""
+        )),
+        "{structure} is warranted by the sentence that states its count, on the page \
+         that carries it, at the tier that page earns: {out}"
+    );
+    // The pairing: the count this row claims has to appear in the span that is
+    // supposed to state it. `span` is tied to the shipped row by the needle
+    // above and `n` by the binding, so this is a property of the FILE, not of
+    // the test's own constants.
+    //
+    // ITS LIMIT, stated rather than left to be discovered: the hand sentence
+    // carries 27, 8, 5 AND 14, so for the three hand-bone rows this check is
+    // satisfied by any of those four numbers. What actually separates them is
+    // `out.contains("\"N\":\"{n}\"")` under the one-citation gate above.
+    //
+    // Six of these spans write the number as a numeral; three write it as a
+    // word, so both forms are accepted and the words are listed rather than
+    // guessed at.
+    let word = match n {
+        "2" => "pair",     // "the pair of" / "The paired kidneys"
+        "4" => "four",     // "It has four hollow chambers"
+        "12" => "twelve",  // "there are twelve pairs of ribs"
+        _ => n,            // 46, 206, 8, 5, 14 are numerals on their pages
+    };
+    assert!(
+        span.contains(n) || span.contains(word),
+        "{structure}'s span states its count: {span}"
+    );
+}
+
+const NHGRI: &str = "https://www.genome.gov/genetics-glossary/Chromosome";
+const BONES: &str = "https://www.ncbi.nlm.nih.gov/books/NBK537199/";
+const HEART: &str = "https://www.nhlbi.nih.gov/health/heart/anatomy";
+const LUNGS: &str = "https://www.nhlbi.nih.gov/health/lungs";
+const RIBS: &str = "https://www.ncbi.nlm.nih.gov/books/NBK538328/";
+const KIDNEY: &str = "https://training.seer.cancer.gov/anatomy/urinary/components/kidney.html";
+const HAND: &str = "https://www.ncbi.nlm.nih.gov/books/NBK279362/";
+const HAND_SPAN: &str = "The human hand is made up of a total of 27 individual bones: 8 carpal bones (in the base of the hand), 5 metacarpal bones (in the middle part of the hand) and 14 phalanges (finger bones) are connected by joints and ligaments.";
+
+/// #14986. The CHROMOSOME sentence was this table's `source` — the field that
+/// carries the tier — for all nine rows, so a recall of `pairs_of_ribs` came
+/// back proved by a sentence that counts chromosomes.
+#[test]
+fn every_count_is_stated_by_the_sentence_that_warrants_it() {
+    assert_count(
+        "bcchrom", "chromosomes", "46",
+        "Humans have 22 pairs of numbered chromosomes (autosomes) and one pair of sex chromosomes (XX or XY), for a total of 46.",
+        NHGRI, "authoritative",
+    );
+    assert_count(
+        "bcbones", "bones_in_adult_body", "206",
+        "Human infants typically have 270 bones, fusing into around 206 in the human adult.",
+        BONES, "authoritative",
+    );
+    assert_count(
+        "bcheart", "heart_chambers", "4",
+        "It has four hollow chambers surrounded by muscle and other heart tissue.",
+        HEART, "authoritative",
+    );
+    assert_count(
+        "bcribs", "pairs_of_ribs", "12",
+        "Generally, there are twelve pairs of ribs.",
+        RIBS, "authoritative",
+    );
+    assert_count(
+        "bckidney", "kidneys", "2",
+        "The paired kidneys are located between the twelfth thoracic and third lumbar vertebrae, one on each side of the vertebral column.",
+        KIDNEY, "authoritative",
+    );
+}
+
+/// THE TIER DEFECT, and the sharpest finding in this table. One envelope
+/// imposes one `trust` on every row, and this file's header already said that
+/// tier is wrong for three of them:
+///
+/// > Unlike the other six rows, this source is a patient-education / teaching
+/// > summary (IQWiG), not a primary government anatomy authority — so these
+/// > three rows are honestly `consensus`-tier, one rung below the table's
+/// > `authoritative` envelope trust
+///
+/// The file said `consensus` in a comment and shipped `authoritative` in the
+/// machine value, and the test that queried these three rows asserted only
+/// their NUMBERS, so nothing caught it. RS-5e rows override `trust` per row —
+/// established by running it, not by reading the lowering code.
+#[test]
+fn the_three_hand_bone_rows_carry_the_consensus_tier_their_source_earns() {
+    for (tag, group, n) in [
+        ("bccarp", "carpals", "8"),
+        ("bcmeta", "metacarpals", "5"),
+        ("bcphal", "phalanges", "14"),
+    ] {
+        assert_count(tag, group, n, HAND_SPAN, HAND, "consensus");
+    }
+    // And NOT the envelope's tier. Asserted per row, in output where no other
+    // row's citation is present, so an `authoritative` elsewhere cannot mask it.
+    for (tag, group) in [("bccarpN", "carpals"), ("bcmetaN", "metacarpals"), ("bcphalN", "phalanges")] {
+        let dir = scratch(tag);
+        std::fs::copy(
+            facts_stdlib().join("anatomy/body-counts.adj"),
+            dir.join("body-counts.adj"),
+        )
+        .expect("copy shipped body-counts.adj");
+        std::fs::write(
+            dir.join("case.adj"),
+            format!("import \"body-counts.adj\"\n? body_count({group}, $N)\n"),
+        )
+        .unwrap();
+        let (ok, out) = run(&dir.join("case.adj"));
+        assert!(ok, "cli should succeed: {out}");
+        assert!(
+            !out.contains("\"trust\":\"authoritative\""),
+            "{group} never returns the envelope's tier: {out}"
+        );
+    }
+}
+
+/// The lungs span opened MID-SENTENCE — "the pair of spongy, pinkish-gray
+/// organs in your chest" — so the quoted run never said whose, or that it was
+/// about lungs at all. The page's full sentence is contiguous and is quoted
+/// whole. Same class as #15185.
+#[test]
+fn the_lungs_span_is_no_longer_a_mid_sentence_fragment() {
+    assert_count(
+        "bclungs", "lungs", "2",
+        "Your lungs are the pair of spongy, pinkish-gray organs in your chest.",
+        LUNGS, "authoritative",
+    );
+    let adj = std::fs::read_to_string(facts_stdlib().join("anatomy/body-counts.adj"))
+        .expect("read shipped body-counts.adj");
+    assert!(
+        !adj.contains("source \"the pair of spongy"),
+        "no row opens on the bare fragment"
+    );
+}
+
+/// The envelope is the SEER module's opening description of the body as many
+/// smaller structures. It states no count of anything this table counts, so it
+/// warrants none of the nine rows.
+#[test]
+fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
+    let dir = scratch("bcenvelope");
+    std::fs::copy(
+        facts_stdlib().join("anatomy/body-counts.adj"),
+        dir.join("body-counts.adj"),
+    )
+    .expect("copy shipped body-counts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"body-counts.adj\"\n? body_count($S, $N)\n",
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        9,
+        "all nine rows answer: {out}"
+    );
+    assert!(
+        !out.contains("The human body is a single structure"),
+        "the framing span warrants no row: {out}"
+    );
+    // The chromosome sentence warrants exactly ONE row where it used to be the
+    // `source` on all nine. Twice: citations and steps.
+    assert_eq!(
+        out.matches("for a total of 46.").count(),
+        2,
+        "the chromosome sentence warrants the chromosome row and nothing else: {out}"
+    );
+    // The hand sentence warrants exactly THREE rows — the only shared span here.
+    assert_eq!(
+        out.matches(HAND_SPAN).count(),
+        6,
+        "the hand sentence warrants its three rows and no others: {out}"
+    );
+    let adj = std::fs::read_to_string(facts_stdlib().join("anatomy/body-counts.adj"))
+        .expect("read shipped body-counts.adj");
+    assert!(
+        adj.contains(
+            "    source \"The human body is a single structure but it is made up of billions of smaller structures of four major kinds:\"\n    locator \"https://training.seer.cancer.gov/anatomy/body/\"\n    trust authoritative"
+        ),
+        "the envelope carries the module's framing sentence, verbatim"
+    );
+    // The `columns` line. Column names are positional and never reach the
+    // output, so renaming them is invisible to every assertion above.
+    assert!(
+        adj.contains("    columns structure, count"),
+        "the shipped column names are unchanged"
+    );
+}
+
+/// An envelope `source` is REQUIRED, so the framing span above is not
+/// removable — someone cannot "fix" the framing-span pattern by deleting it.
+///
+/// This was asserted in prose in three places (the `.adj` header, the
+/// CHANGELOG, and a comment here) and exercised nowhere, which review caught.
+/// A claim established by running it once, in a session, is not a claim the
+/// repository holds. Now it runs.
+#[test]
+fn a_table_envelope_without_a_source_is_rejected() {
+    let dir = scratch("bcnosource");
+    std::fs::write(dir.join("case.adj"), NO_ENVELOPE_SOURCE).unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(!ok, "a sourceless envelope must not lower: {out}");
+    assert!(
+        out.contains("TableMissingProvenance"),
+        "and it is rejected for the missing envelope source specifically: {out}"
+    );
+    // POSITIVE CONTROL: the SAME table with an envelope source lowers and
+    // answers. Without it, a program that failed for any other reason — a typo
+    // in the table, a bad query — would read as a pass.
+    let dir = scratch("bcwithsource");
+    std::fs::write(dir.join("case.adj"), WITH_ENVELOPE_SOURCE).unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "the same table with an envelope source lowers: {out}");
+    assert!(out.contains("\"N\":\"1\""), "and answers: {out}");
+}
+
+const NO_ENVELOPE_SOURCE: &str = r#"table probe_count {
+    columns structure, count
+
+    row (alpha, 1) {
+        source "Alpha sentence."
+        locator "https://example.gov/a"
+    }
+
+    locator "https://example.gov/frame"
+    trust authoritative
+}
+
+? probe_count(alpha, $N)
+"#;
+
+const WITH_ENVELOPE_SOURCE: &str = r#"table probe_count {
+    columns structure, count
+
+    row (alpha, 1) {
+        source "Alpha sentence."
+        locator "https://example.gov/a"
+    }
+
+    source "Framing sentence."
+    locator "https://example.gov/frame"
+    trust authoritative
+}
+
+? probe_count(alpha, $N)
+"#;
+
+/// Row blocks, parsed the way the grammar writes them: `{ ... }` may sit
+/// inline on the `row (...)` line or open a multi-line block. Returns one
+/// `(key, spans, locator_overrides, trust_overrides)` tuple per row.
+///
+/// AN EIGHT-SPACE `strip_prefix` WOULD READ NOTHING FROM AN INLINE BLOCK and
+/// would not fail — it would return an empty list and every assertion over
+/// it would pass. That is exactly how three tables came to be miscounted in
+/// the #14986 census, so this parser handles both forms and every caller
+/// asserts the parse found what it expected before asserting anything else.
+#[allow(clippy::type_complexity)]
+fn parse_rows(adj: &str) -> Vec<(String, Vec<String>, Vec<String>, Vec<String>)> {
+    fn quoted_after(hay: &str, key: &str) -> Vec<String> {
+        let mut out = Vec::new();
+        let mut rest = hay;
+        while let Some(at) = rest.find(key) {
+            rest = &rest[at + key.len()..];
+            let rest_trim = rest.trim_start();
+            if !rest_trim.starts_with('"') {
+                continue;
+            }
+            // ESCAPE-AWARE. Taking the next `"` truncates a span at its
+            // first `\\"` and inverts the quote state for the rest of the
+            // line. No span in this file carries one, but
+            // `anatomy/brain-parts.adj` does, and this parser is the kind of
+            // thing that gets copied.
+            let body = &rest_trim[1..];
+            let mut end = None;
+            let mut esc = false;
+            for (n, &c) in body.as_bytes().iter().enumerate() {
+                if esc {
+                    esc = false;
+                    continue;
+                }
+                match c {
+                    b'\\' => esc = true,
+                    b'"' => {
+                        end = Some(n);
+                        break;
+                    }
+                    _ => {}
+                }
+            }
+            if let Some(end) = end {
+                out.push(body[..end].to_string());
+                rest = &body[end + 1..];
+            } else {
+                break;
+            }
+        }
+        out
+    }
+    fn bare_after(hay: &str, key: &str) -> Vec<String> {
+        // `%` COMMENT LINES ARE SKIPPED. Scanning the whole body picks the
+        // keyword out of prose: one block here discusses `trust inferred` in
+        // a comment and is missed only because a backtick makes the token
+        // `` `trust ``. Deleting those backticks would start failing this
+        // test on an unchanged fact.
+        hay.lines()
+            .filter(|l| !l.trim_start().starts_with('%'))
+            .flat_map(|l| {
+                l.split_whitespace()
+                    .collect::<Vec<_>>()
+                    .windows(2)
+                    .filter(|w| w[0] == key)
+                    .map(|w| w[1].trim_end_matches('}').trim().to_string())
+                    .collect::<Vec<_>>()
+            })
+            .collect()
+    }
+
+    let mut rows = Vec::new();
+    let lines: Vec<&str> = adj.lines().collect();
+    let mut i = 0;
+    while i < lines.len() {
+        let line = lines[i];
+        let Some(rest) = line.strip_prefix("    row (") else {
+            i += 1;
+            continue;
+        };
+        // QUOTE-AWARE. A row item may be a quoted string and a span may
+        // contain `)` or `}` -- `row (length, meter, "m") { source "Length -
+        // meter (m)" }` broke a naive `split(')')`, which ended the tuple
+        // inside the span and swallowed the rest of the table into one row.
+        let close = {
+            let b = rest.as_bytes();
+            let mut in_q = false;
+            let mut esc = false;
+            let mut at = None;
+            for (n, &c) in b.iter().enumerate() {
+                if esc {
+                    esc = false;
+                    continue;
+                }
+                match c {
+                    b'\\' if in_q => esc = true,
+                    b'"' => in_q = !in_q,
+                    b')' if !in_q => {
+                        at = Some(n);
+                        break;
+                    }
+                    _ => {}
+                }
+            }
+            at.unwrap_or(rest.len())
+        };
+        let key = rest[..close]
+            .split(',')
+            .next()
+            .unwrap_or("")
+            .trim()
+            .to_string();
+        let after = if close < rest.len() {
+            &rest[close + 1..]
+        } else {
+            ""
+        };
+        if !after.trim_start().starts_with('{') {
+            rows.push((key, Vec::new(), Vec::new(), Vec::new()));
+            i += 1;
+            continue;
+        }
+        let closes_here = {
+            let b = after.as_bytes();
+            let mut in_q = false;
+            let mut esc = false;
+            let mut found = false;
+            for &c in b {
+                if esc {
+                    esc = false;
+                    continue;
+                }
+                match c {
+                    b'\\' if in_q => esc = true,
+                    b'"' => in_q = !in_q,
+                    b'}' if !in_q => {
+                        found = true;
+                        break;
+                    }
+                    _ => {}
+                }
+            }
+            found
+        };
+        let mut body = String::new();
+        if closes_here {
+            body.push_str(after);
+            i += 1;
+        } else {
+            body.push_str(after);
+            i += 1;
+            while i < lines.len() && !lines[i].starts_with("    }") {
+                body.push('\n');
+                body.push_str(lines[i]);
+                i += 1;
+            }
+            i += 1;
+        }
+        // `cites "..." locator "..."` carries a MANDATORY locator that is the
+        // corroboration's own address, not an override of the row's — so the
+        // locator list drops any that follows a `cites`.
+        let cites_locs = {
+            let mut out = Vec::new();
+            let mut rest = body.as_str();
+            // BOUNDED BY THE NEXT NEWLINE, not by "the rest of the body".
+            // Searching the remainder means a `cites` written without its
+            // mandatory locator would steal the NEXT line's locator -- which
+            // could be the row's own override.
+            while let Some(at) = rest.find("cites ") {
+                rest = &rest[at + 6..];
+                let line_end = rest.find('\n').unwrap_or(rest.len());
+                for l in quoted_after(&rest[..line_end], "locator")
+                    .into_iter()
+                    .take(1)
+                {
+                    out.push(l);
+                }
+                if line_end >= rest.len() {
+                    break;
+                }
+                rest = &rest[line_end..];
+            }
+            out
+        };
+        let mut locs = quoted_after(&body, "locator");
+        for c in &cites_locs {
+            if let Some(p) = locs.iter().position(|x| x == c) {
+                locs.remove(p);
+            }
+        }
+        rows.push((
+            key,
+            quoted_after(&body, "source"),
+            locs,
+            bare_after(&body, "trust"),
+        ));
+    }
+    rows
+}
+
+/// The table envelope, derived totally rather than positionally: exactly one
+/// four-space `source` and one four-space `locator`.
+fn envelope(adj: &str) -> (String, String) {
+    let pick = |kw: &str| -> String {
+        let hits: Vec<&str> = adj
+            .lines()
+            .filter(|l| l.split_whitespace().next() == Some(kw))
+            .filter(|l| l.starts_with("    ") && !l.starts_with("     "))
+            .collect();
+        assert_eq!(hits.len(), 1, "exactly one table-level {kw}: {hits:?}");
+        hits[0]
+            .trim()
+            .trim_start_matches(kw)
+            .trim()
+            .trim_matches(0x22 as char)
+            .to_string()
+    };
+    (pick("source"), pick("locator"))
+}
+
+#[test]
+fn body_counts_asserts_its_own_span_and_page_structure() {
+    // STRUCTURAL, READ FROM THE SHIPPED FILE. #15193 recorded that only 2 of
+    // 17 converted tables asserted their own span structure; re-measured with
+    // an inline-aware parser it was 21 of 26, and this table was one of the
+    // five without.
+    let adj = std::fs::read_to_string(facts_stdlib().join("anatomy/body-counts.adj"))
+        .expect("read shipped body-counts.adj");
+    let rows = parse_rows(&adj);
+    let (env_source, env_locator) = envelope(&adj);
+    let _ = (&env_source, &env_locator);
+
+    // THE PARSE FOUND WHAT IT EXPECTED, asserted BEFORE anything is asserted
+    // about the contents. A parser that silently read nothing would make
+    // every check below pass over an empty list.
+    assert_eq!(rows.len(), 9, "9 rows");
+    let spans: Vec<String> = rows.iter().flat_map(|r| r.1.clone()).collect();
+    assert_eq!(spans.len(), 9, "9 row spans: {spans:?}");
+
+    let mut counts: std::collections::BTreeMap<&String, usize> =
+        std::collections::BTreeMap::new();
+    for s in &spans {
+        *counts.entry(s).or_insert(0) += 1;
+    }
+    assert_eq!(counts.len(), 7, "7 distinct spans: {counts:?}");
+    let mut sizes: Vec<usize> = counts.values().copied().collect();
+    sizes.sort_unstable_by(|a, b| b.cmp(a));
+    assert_eq!(sizes, vec![3, 1, 1, 1, 1, 1, 1], "the span multiset: {counts:?}");
+
+    let locators: Vec<String> = rows.iter().flat_map(|r| r.2.clone()).collect();
+    assert_eq!(locators.len(), 9, "row locator overrides: {locators:?}");
+
+    assert!(adj.contains("    columns structure, count"), "the shipped column names are unchanged");
+
+    // NINE ROWS, NINE DIFFERENT PAGES. Every row overrides `locator`, and
+    // none of the nine restates the envelope's — this is a genuinely
+    // multi-page table, which is the case ADJ-TABLES.md §4 says a row
+    // locator is FOR.
+    let pages: Vec<String> = rows.iter().flat_map(|r| r.2.clone()).collect();
+    assert_eq!(pages.len(), 9, "nine row locator overrides: {pages:?}");
+    assert!(
+        pages.iter().all(|p| *p != env_locator),
+        "no row restates the envelope's page: {pages:?}"
+    );
+    // SEVEN PAGES, NOT NINE, and the reason is the structure worth pinning:
+    // the three hand-bone rows share a span AND share its page, so the page
+    // multiset MATCHES the span multiset exactly. One span, one page. I first
+    // asserted nine distinct pages here and the assertion fired on the real
+    // file, which is what it is for.
+    let mut uniq_pages = pages.clone();
+    uniq_pages.sort();
+    uniq_pages.dedup();
+    assert_eq!(
+        uniq_pages.len(),
+        counts.len(),
+        "each distinct span has exactly one page: {uniq_pages:?} vs {counts:?}"
+    );
+    for (span, n) in &counts {
+        let its_pages: Vec<String> = rows
+            .iter()
+            .filter(|r| r.1.first() == Some(span))
+            .flat_map(|r| r.2.clone())
+            .collect();
+        let mut u = its_pages.clone();
+        u.sort();
+        u.dedup();
+        assert_eq!(
+            u.len(),
+            1,
+            "the {n} rows on this span all cite one page: {span:?} -> {its_pages:?}"
+        );
+    }
 }

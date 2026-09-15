@@ -22,7 +22,7 @@
 %
 %     ? element_group_family($E, noble_gas)     % helium — first gas in the family
 %
-% The twenty-eight elements, grouped by family (a little truth table — read
+% The twenty-seven elements, grouped by family (a little truth table — read
 % down each family to see which elements share a column and therefore behave
 % alike):
 %
@@ -56,7 +56,7 @@
 %     nickel       transition_metal        the d-block, Groups 3–12
 %     cobalt       transition_metal        the d-block, Groups 3–12 (added this cycle)
 %
-% EXTENDED this cycle from 14 to 28 rows: each family's own cited Wikipedia
+% EXTENDED an earlier cycle from 14 to 27 rows: each family's own cited Wikipedia
 % sentence, already quoted in full below, named MORE member elements than had
 % ever been turned into rows — only the first three of each family had been.
 % Every new row is a pure addition sharing an existing family key, the same
@@ -67,7 +67,7 @@
 % every other name in the same sentences does — a considered exclusion, not an
 % oversight.
 %
-% An element that is not one of these twenty-eight — gold, carbon, uranium —
+% An element that is not one of these twenty-seven — gold, carbon, uranium —
 % has no row, so a recall on it ABSTAINS rather than inventing a family. That
 % honest-abstention property is what makes the table safe to reason from.
 %
@@ -76,60 +76,65 @@
 % interpretation the source does not support.
 %
 % ---------------------------------------------------------------------------
-% Provenance (nothing here is asserted from memory — every element→family pair
-% was read out of a fetched reference page this session, and any element that
-% could not be grounded there was dropped). The fourteen rows are fixed by FIVE
-% Wikipedia family articles, each of which names its member elements in the
-% opening text; each membership span is quoted here character-for-character so
-% any reader can re-check it:
+% Provenance. EVERY ROW CARRIES ITS OWN SPAN AND ITS OWN LOCATOR, below, in the
+% row's `{ ... }` block (ADJ-TABLES RS-5e) — read those, not a restatement here.
+% Six Wikipedia articles, all secondary encyclopedia references, so one shared
+% `trust consensus` on the envelope.
 %
-%   alkali_metal (lithium, sodium, potassium, rubidium, caesium, francium)
-%     "The alkali metals consist of the chemical elements lithium (Li), sodium
-%      (Na), potassium (K), rubidium (Rb), caesium (Cs), and francium (Fr)."
-%     — https://en.wikipedia.org/wiki/Alkali_metal
+% WHAT #14986 CHANGED HERE. The ALKALI-METAL sentence was this table's `source`
+% — the field that carries the tier — for ALL 27 rows. It names lithium through
+% francium and no other element, so `row (helium, noble_gas)` came back proved
+% by a sentence that mentions no gas, on a page about a different family. The
+% evidence for the other 21 rows was already in the file: three families as
+% untiered `cites`, and the transition metals only in a comment.
 %
-%   alkaline_earth_metal (beryllium, magnesium, calcium, strontium, barium,
-%   radium)
-%     "They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr),
-%      barium (Ba), and radium (Ra)."
-%     — https://en.wikipedia.org/wiki/Alkaline_earth_metal
+% FOUR SPAN DEFECTS WERE MEASURED AGAINST THE RENDERED PAGES while doing it,
+% each read out of the page this cycle rather than argued from the file:
 %
-%   halogen (fluorine, chlorine, bromine, iodine, astatine, tennessine)
-%     "The halogens are a group in the periodic table consisting of six
-%      chemically related elements, fluorine (F), chlorine (Cl), bromine (Br),
-%      iodine (I), and the radioactive elements astatine (At) and tennessine
-%      (Ts), though some authors[1] would exclude tennessine as its chemistry
-%      is unknown and is theoretically expected to be more like that of
-%      gallium."
-%     (the previous form put a COLON where the page has a COMMA, and TRUNCATED
-%      immediately before the clause saying some authors EXCLUDE TENNESSINE --
-%      while this table ships `row (tennessine, halogen)`. Where the page
-%      qualifies its own claim, the qualification is part of the evidence.)
-%     — https://en.wikipedia.org/wiki/Halogen
+%   1. THE ALKALI SPAN DID NOT OCCUR ON ITS OWN PAGE. The lead renders
+%      "... potassium (K),[note 1] rubidium (Rb), caesium (Cs),[note 2] and
+%      francium (Fr)." — the shipped span dropped BOTH note markers, making it
+%      text the page never displays as one run. This file already recorded that
+%      exact defect twice, for the noble-gas span ("ELIDED the parenthetical
+%      with '...' — a constructed span") and the halogen one ("The `[1]` is a
+%      real rendered footnote marker and stays"). It was caught on two spans and
+%      missed on the one warranting the whole table.
 %
-%   noble_gas (helium, neon, argon, krypton, xenon, radon)
-%     "The noble gases (historically the inert gases, sometimes referred to as
-%      aerogens[1]) are the members of group 18 of the periodic table: helium
-%      (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn) and,
-%      in some cases, oganesson (Og)." — oganesson excluded; see the
-%      considered-exclusion note above.
-%     (the previous form ELIDED the parenthetical with "..." -- a constructed
-%      span, text the page never displays as one run. The `[1]` is a real
-%      rendered footnote marker and stays.)
-%     — https://en.wikipedia.org/wiki/Noble_gas
+%   2. THE TRANSITION-METAL SPAN WAS TRUNCATED MID-CLAIM. The page reads
+%      "... are transition metals (iron, cobalt and nickel) or inner transition
+%      metals (gadolinium)." Cutting at "(iron, cobalt and nickel)" turns the
+%      page's "A or B" into a bare "A" — a STRONGER claim than it makes. The
+%      halogen note in this same file records fixing exactly this.
 %
-%   transition_metal (iron, nickel, cobalt)
-%     "All of the elements that are ferromagnetic near room temperature are
-%      transition metals (iron, cobalt and nickel)."
-%     — https://en.wikipedia.org/wiki/Transition_metal
+%      A shipped test comment said this sentence "is not on the live page under
+%      any extractor fix". Measured this cycle: the FULL sentence is verbatim on
+%      the page and the TRUNCATED one is not. The earlier probe searched for the
+%      truncation, so the truncation is what it failed to find — the defect
+%      reporting itself as evidence that no source existed.
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single strongest span: the alkali-metal sentence that
-% fixes the first rows (lithium/sodium/potassium → alkali_metal). Every OTHER
-% family's membership span and URL is listed above, so each element→family pair
-% remains independently checkable. Wikipedia is a SECONDARY reference (an
-% encyclopedia, not a primary standards body), so `trust consensus` — the honest
-% tier for an encyclopedia, per the standard-library trust convention.
+%   3. THE ALKALINE-EARTH SPAN OPENED ON A PRONOUN. "They are beryllium (Be),
+%      ..." — the antecedent sat OFF the span, so the quoted run alone never
+%      said WHICH group those six elements are. The preceding sentence is
+%      contiguous on the page, so both together are still one verbatim run, and
+%      are now quoted as one.
+%
+%   4. THE HEADER'S ROW COUNT WAS WRONG IN THREE PLACES. It said twenty-eight;
+%      the table has 27 rows (6 + 6 + 6 + 6 + 3), which the header's own truth
+%      table above also lists as 27 lines.
+%
+% THE ENVELOPE IS NOW A FRAMING SPAN: "In chemistry, a group (also known as a
+% family)[1] is a column of elements in the periodic table of the chemical
+% elements." It defines the table's own `family` column and names no element, so
+% it warrants none of the 27 rows.
+%
+% THE THREE `cites` ARE GONE, PROMOTED not dropped. Each was the membership
+% sentence of a family whose rows now carry it as their own `source` — at the
+% envelope's tier instead of untiered, and attached to the rows it actually
+% warrants instead of hanging off every answer in the table.
+%
+% SIX ROWS PER FAMILY SHARE ONE SENTENCE (three for the transition metals), so
+% each row carries its own copy and each is pinned individually: one broken copy
+% behind five intact ones is the failure `biology/skeleton-bones.adj` shipped.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -137,38 +142,140 @@
 table element_group_family {
     columns element, family
 
-    row (lithium, alkali_metal)
-    row (sodium, alkali_metal)
-    row (potassium, alkali_metal)
-    row (rubidium, alkali_metal)
-    row (caesium, alkali_metal)
-    row (francium, alkali_metal)
-    row (beryllium, alkaline_earth_metal)
-    row (magnesium, alkaline_earth_metal)
-    row (calcium, alkaline_earth_metal)
-    row (strontium, alkaline_earth_metal)
-    row (barium, alkaline_earth_metal)
-    row (radium, alkaline_earth_metal)
-    row (fluorine, halogen)
-    row (chlorine, halogen)
-    row (bromine, halogen)
-    row (iodine, halogen)
-    row (astatine, halogen)
-    row (tennessine, halogen)
-    row (helium, noble_gas)
-    row (neon, noble_gas)
-    row (argon, noble_gas)
-    row (krypton, noble_gas)
-    row (xenon, noble_gas)
-    row (radon, noble_gas)
-    row (iron, transition_metal)
-    row (nickel, transition_metal)
-    row (cobalt, transition_metal)
+    % alkali_metal — 6 rows, all warranted by the ONE sentence that
+    % names them. Each row carries its own copy, so breaking
+    % one copy cannot hide behind an intact sibling's.
+    row (lithium, alkali_metal) {
+        source "The alkali metals consist of the chemical elements lithium (Li), sodium (Na), potassium (K),[note 1] rubidium (Rb), caesium (Cs),[note 2] and francium (Fr)."
+        locator "https://en.wikipedia.org/wiki/Alkali_metal"
+    }
+    row (sodium, alkali_metal) {
+        source "The alkali metals consist of the chemical elements lithium (Li), sodium (Na), potassium (K),[note 1] rubidium (Rb), caesium (Cs),[note 2] and francium (Fr)."
+        locator "https://en.wikipedia.org/wiki/Alkali_metal"
+    }
+    row (potassium, alkali_metal) {
+        source "The alkali metals consist of the chemical elements lithium (Li), sodium (Na), potassium (K),[note 1] rubidium (Rb), caesium (Cs),[note 2] and francium (Fr)."
+        locator "https://en.wikipedia.org/wiki/Alkali_metal"
+    }
+    row (rubidium, alkali_metal) {
+        source "The alkali metals consist of the chemical elements lithium (Li), sodium (Na), potassium (K),[note 1] rubidium (Rb), caesium (Cs),[note 2] and francium (Fr)."
+        locator "https://en.wikipedia.org/wiki/Alkali_metal"
+    }
+    row (caesium, alkali_metal) {
+        source "The alkali metals consist of the chemical elements lithium (Li), sodium (Na), potassium (K),[note 1] rubidium (Rb), caesium (Cs),[note 2] and francium (Fr)."
+        locator "https://en.wikipedia.org/wiki/Alkali_metal"
+    }
+    row (francium, alkali_metal) {
+        source "The alkali metals consist of the chemical elements lithium (Li), sodium (Na), potassium (K),[note 1] rubidium (Rb), caesium (Cs),[note 2] and francium (Fr)."
+        locator "https://en.wikipedia.org/wiki/Alkali_metal"
+    }
 
-    source "The alkali metals consist of the chemical elements lithium (Li), sodium (Na), potassium (K), rubidium (Rb), caesium (Cs), and francium (Fr)."
-    locator "https://en.wikipedia.org/wiki/Alkali_metal"
+    % alkaline_earth_metal — 6 rows, all warranted by the ONE sentence that
+    % names them. Each row carries its own copy, so breaking
+    % one copy cannot hide behind an intact sibling's.
+    row (beryllium, alkaline_earth_metal) {
+        source "The alkaline earth metals are six chemical elements in group 2 of the periodic table. They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr), barium (Ba), and radium (Ra)."
+        locator "https://en.wikipedia.org/wiki/Alkaline_earth_metal"
+    }
+    row (magnesium, alkaline_earth_metal) {
+        source "The alkaline earth metals are six chemical elements in group 2 of the periodic table. They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr), barium (Ba), and radium (Ra)."
+        locator "https://en.wikipedia.org/wiki/Alkaline_earth_metal"
+    }
+    row (calcium, alkaline_earth_metal) {
+        source "The alkaline earth metals are six chemical elements in group 2 of the periodic table. They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr), barium (Ba), and radium (Ra)."
+        locator "https://en.wikipedia.org/wiki/Alkaline_earth_metal"
+    }
+    row (strontium, alkaline_earth_metal) {
+        source "The alkaline earth metals are six chemical elements in group 2 of the periodic table. They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr), barium (Ba), and radium (Ra)."
+        locator "https://en.wikipedia.org/wiki/Alkaline_earth_metal"
+    }
+    row (barium, alkaline_earth_metal) {
+        source "The alkaline earth metals are six chemical elements in group 2 of the periodic table. They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr), barium (Ba), and radium (Ra)."
+        locator "https://en.wikipedia.org/wiki/Alkaline_earth_metal"
+    }
+    row (radium, alkaline_earth_metal) {
+        source "The alkaline earth metals are six chemical elements in group 2 of the periodic table. They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr), barium (Ba), and radium (Ra)."
+        locator "https://en.wikipedia.org/wiki/Alkaline_earth_metal"
+    }
+
+    % halogen — 6 rows, all warranted by the ONE sentence that
+    % names them. Each row carries its own copy, so breaking
+    % one copy cannot hide behind an intact sibling's.
+    row (fluorine, halogen) {
+        source "The halogens are a group in the periodic table consisting of six chemically related elements, fluorine (F), chlorine (Cl), bromine (Br), iodine (I), and the radioactive elements astatine (At) and tennessine (Ts), though some authors[1] would exclude tennessine as its chemistry is unknown and is theoretically expected to be more like that of gallium."
+        locator "https://en.wikipedia.org/wiki/Halogen"
+    }
+    row (chlorine, halogen) {
+        source "The halogens are a group in the periodic table consisting of six chemically related elements, fluorine (F), chlorine (Cl), bromine (Br), iodine (I), and the radioactive elements astatine (At) and tennessine (Ts), though some authors[1] would exclude tennessine as its chemistry is unknown and is theoretically expected to be more like that of gallium."
+        locator "https://en.wikipedia.org/wiki/Halogen"
+    }
+    row (bromine, halogen) {
+        source "The halogens are a group in the periodic table consisting of six chemically related elements, fluorine (F), chlorine (Cl), bromine (Br), iodine (I), and the radioactive elements astatine (At) and tennessine (Ts), though some authors[1] would exclude tennessine as its chemistry is unknown and is theoretically expected to be more like that of gallium."
+        locator "https://en.wikipedia.org/wiki/Halogen"
+    }
+    row (iodine, halogen) {
+        source "The halogens are a group in the periodic table consisting of six chemically related elements, fluorine (F), chlorine (Cl), bromine (Br), iodine (I), and the radioactive elements astatine (At) and tennessine (Ts), though some authors[1] would exclude tennessine as its chemistry is unknown and is theoretically expected to be more like that of gallium."
+        locator "https://en.wikipedia.org/wiki/Halogen"
+    }
+    row (astatine, halogen) {
+        source "The halogens are a group in the periodic table consisting of six chemically related elements, fluorine (F), chlorine (Cl), bromine (Br), iodine (I), and the radioactive elements astatine (At) and tennessine (Ts), though some authors[1] would exclude tennessine as its chemistry is unknown and is theoretically expected to be more like that of gallium."
+        locator "https://en.wikipedia.org/wiki/Halogen"
+    }
+    row (tennessine, halogen) {
+        source "The halogens are a group in the periodic table consisting of six chemically related elements, fluorine (F), chlorine (Cl), bromine (Br), iodine (I), and the radioactive elements astatine (At) and tennessine (Ts), though some authors[1] would exclude tennessine as its chemistry is unknown and is theoretically expected to be more like that of gallium."
+        locator "https://en.wikipedia.org/wiki/Halogen"
+    }
+
+    % noble_gas — 6 rows, all warranted by the ONE sentence that
+    % names them. Each row carries its own copy, so breaking
+    % one copy cannot hide behind an intact sibling's.
+    row (helium, noble_gas) {
+        source "The noble gases (historically the inert gases, sometimes referred to as aerogens[1]) are the members of group 18 of the periodic table: helium (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn) and, in some cases, oganesson (Og)."
+        locator "https://en.wikipedia.org/wiki/Noble_gas"
+    }
+    row (neon, noble_gas) {
+        source "The noble gases (historically the inert gases, sometimes referred to as aerogens[1]) are the members of group 18 of the periodic table: helium (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn) and, in some cases, oganesson (Og)."
+        locator "https://en.wikipedia.org/wiki/Noble_gas"
+    }
+    row (argon, noble_gas) {
+        source "The noble gases (historically the inert gases, sometimes referred to as aerogens[1]) are the members of group 18 of the periodic table: helium (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn) and, in some cases, oganesson (Og)."
+        locator "https://en.wikipedia.org/wiki/Noble_gas"
+    }
+    row (krypton, noble_gas) {
+        source "The noble gases (historically the inert gases, sometimes referred to as aerogens[1]) are the members of group 18 of the periodic table: helium (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn) and, in some cases, oganesson (Og)."
+        locator "https://en.wikipedia.org/wiki/Noble_gas"
+    }
+    row (xenon, noble_gas) {
+        source "The noble gases (historically the inert gases, sometimes referred to as aerogens[1]) are the members of group 18 of the periodic table: helium (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn) and, in some cases, oganesson (Og)."
+        locator "https://en.wikipedia.org/wiki/Noble_gas"
+    }
+    row (radon, noble_gas) {
+        source "The noble gases (historically the inert gases, sometimes referred to as aerogens[1]) are the members of group 18 of the periodic table: helium (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn) and, in some cases, oganesson (Og)."
+        locator "https://en.wikipedia.org/wiki/Noble_gas"
+    }
+
+    % transition_metal — 3 rows, all warranted by the ONE sentence that
+    % names them. Each row carries its own copy, so breaking
+    % one copy cannot hide behind an intact sibling's.
+    row (iron, transition_metal) {
+        source "All of the elements that are ferromagnetic near room temperature are transition metals (iron, cobalt and nickel) or inner transition metals (gadolinium)."
+        locator "https://en.wikipedia.org/wiki/Transition_metal"
+    }
+    row (nickel, transition_metal) {
+        source "All of the elements that are ferromagnetic near room temperature are transition metals (iron, cobalt and nickel) or inner transition metals (gadolinium)."
+        locator "https://en.wikipedia.org/wiki/Transition_metal"
+    }
+    row (cobalt, transition_metal) {
+        source "All of the elements that are ferromagnetic near room temperature are transition metals (iron, cobalt and nickel) or inner transition metals (gadolinium)."
+        locator "https://en.wikipedia.org/wiki/Transition_metal"
+    }
+
+    % THE ENVELOPE IS A FRAMING SPAN. It defines what a periodic-table
+    % group/family IS — the table's own `family` column — and names no
+    % element, so it warrants none of the 27 rows. Every row overrides
+    % `source` and `locator` above; `trust` is inherited, one tier for
+    % all six Wikipedia articles.
+    source "In chemistry, a group (also known as a family)[1] is a column of elements in the periodic table of the chemical elements."
+    locator "https://en.wikipedia.org/wiki/Group_(periodic_table)"
     trust consensus
-    cites "They are beryllium (Be), magnesium (Mg), calcium (Ca), strontium (Sr), barium (Ba), and radium (Ra)." locator "https://en.wikipedia.org/wiki/Alkaline_earth_metal"
-    cites "The halogens are a group in the periodic table consisting of six chemically related elements, fluorine (F), chlorine (Cl), bromine (Br), iodine (I), and the radioactive elements astatine (At) and tennessine (Ts), though some authors[1] would exclude tennessine as its chemistry is unknown and is theoretically expected to be more like that of gallium." locator "https://en.wikipedia.org/wiki/Halogen"
-    cites "The noble gases (historically the inert gases, sometimes referred to as aerogens[1]) are the members of group 18 of the periodic table: helium (He), neon (Ne), argon (Ar), krypton (Kr), xenon (Xe), radon (Rn) and, in some cases, oganesson (Og)." locator "https://en.wikipedia.org/wiki/Noble_gas"
 }

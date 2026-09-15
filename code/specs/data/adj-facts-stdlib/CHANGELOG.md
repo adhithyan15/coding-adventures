@@ -5,6 +5,1239 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `anatomy/heart-valves.adj` — all 4 rows converted to per-row provenance (RS-5e, #14986), and
+  **two of them ship at `trust inferred` because the page does not state their value outright.**
+
+  Every row was warranted by the TRICUSPID sentence, so `? valve_separates(aortic, $B)` came back
+  proved by *"The right atrioventricular valve is the tricuspid valve."* Three of the four were in
+  that position.
+
+  **Two kinds of row, and the tier is where the difference shows.**
+
+  *READ* — `pulmonary` and `aortic`. One sentence names the valve **and both chambers**: *"The
+  valve between the right ventricle and pulmonary trunk is the pulmonary semilunar valve."*
+  Nothing is reasoned, so these inherit the envelope's `authoritative`.
+
+  *REASONED* — `tricuspid` and `mitral`. Their sentences name the valve and call it right/left
+  **atrioventricular**; neither names a chamber. The boundary is reached by combining that with a
+  second span — *"The valves between the atria and ventricles are called atrioventricular valves
+  …"* — so these ship `source` + `cites` at **`trust inferred`**, the shape
+  `geography/reference-lines.adj` already uses. Shipping them at `authoritative` would claim the
+  page states something it does not.
+
+  **The assertion that makes this real binds the TIER TO THE SPAN in one contiguous run.** Three
+  tier mutants die on it: promoting a reasoned row, downgrading a read one, and **swapping both
+  pairs**, which leaves the counts at two and two and still fails.
+
+  **The reason I first gave for that pin was wrong, and review measured it.** I wrote that
+  checking tier and span separately "would pass on either kind of row, because `authoritative`
+  appears in the output either way — it is the envelope's tier". It does not. The envelope is not
+  a fact and every row overrides `source`, so on a single-valve query the envelope's tier never
+  reaches stdout. Measured directly, per query: `tricuspid` and `mitral` contain `authoritative`
+  **0** times; `pulmonary` and `aortic` contain `inferred` **0** times. The claim holds only of
+  the pre-existing multi-query test, which runs four queries in one program so both tiers appear —
+  and that is where the two-loose-needles weakness actually bit. The contiguous pin is still the
+  right assertion; the justification was overstated, and the **stronger** `!contains(wrong_tier)`
+  arm that an earlier comment talked itself out of is now asserted outright.
+
+  Measured 2026-09-14 (HTTP 200, 46,225 chars), with the shipped envelope found verbatim as a
+  positive control and a fabricated sentence absent as a negative one: all five spans occur
+  **exactly once**, each inside a `<p>`. **"Verbatim" is conditional on one stripping rule for
+  three of the five** — the pulmonary, aortic and tricuspid sentences are interrupted in the raw
+  HTML by inline `<a class='glossaryTerm'>` anchors, so their raw-byte count is zero and they match
+  only after tags are stripped with no separator. The anchors wrap plain text, so the strip
+  reproduces the page's characters exactly; the other two are contiguous in the raw bytes.
+
+  The old citation assertion — `contains("training.seer.cancer.gov/…") &&
+  contains("\"trust\":\"authoritative\"")` — was the #15209 two-loose-needles shape; #15209 measures
+  **321 test files, 323 occurrences** carrying it. This is the fourth fixed *of the set that issue
+  tracks* (`em-spectrum`, `circuit-parts`, `energy-form-family`); a fifth instance was also fixed
+  in `earth-science/water-cycle.adj`, recorded further down this file, so "fourth" is an accounting
+  of #15209's list rather than of the repo.
+
+  **Review then found the stale-header defect for the third time in this cascade.** The
+  top-of-file provenance block still described the pre-conversion design and still asserted
+  `trust authoritative` for a table half of which no longer ships at that tier — the same defect
+  found in `em-spectrum` and `circuit-parts`, both recorded in this file. I fixed it twice and did
+  not grep for it here. It also carried a **truncated quote under a heading promising
+  character-for-character**: the atrioventricular sentence rendered as ending after "(also called
+  cuspid valves)." with a period the page does not have, a string occurring **zero** times on it,
+  while the rows fifty lines below cite the full sentence. Both corrected. And one structural
+  check used `unwrap_or(0)`, which turns a missing closing brace into an empty block — and an
+  empty block satisfies `!contains("trust inferred")`, the expected value for the two read rows,
+  so the assertion named "the reasoned rows are the right two" could have passed while asserting
+  nothing about them.
+
+  **The stale-header defect was then swept for, rather than waiting for a fourth review to find
+  it** — and the sweep's one real hit was a leftover I had created an hour earlier in this very
+  file. Fixing the paragraph review flagged, I ended my replacement with *"The retained envelope
+  holds the single strongest span"* — stitching new prose onto the old sentence and leaving the
+  rest of the old paragraph standing. The file still said every other row's span was merely
+  "listed above", and still closed with a bare *"so `trust authoritative`"* for a table half of
+  which now ships `inferred`.
+
+  Scope of the sweep: **30 converted tables**, needle = header phrases asserting the
+  single-envelope design (the wordings from the three known cases plus variants — a lower bound,
+  since a header can be stale in wording not listed). Six matched; opening all six, three **quote**
+  the old wording while correcting it (`em-spectrum`, `circuit-parts`, `heredity-term`), one is
+  **accurate as written** (`energy-form-family` genuinely has one envelope — no row carries a
+  `source`), one was a false positive whose correction marker sat outside my context window
+  (`body-counts`, which says *"The paragraph that stood here read:"* and then quotes it), and one
+  was real. After the fix, every remaining hit is a record or accurate; **none asserts the old
+  design**.
+
+  **A second recurring class was swept for too** — a header that QUOTES a span differently from
+  what the table ships, found by review in `circuit-parts` (a sentence occurring zero times on the
+  page) and in `heart-valves` (a truncation with an invented terminal period).
+
+  The first needle was useless: "any header quote that is not a shipped span" flagged **30 of 30**
+  converted tables with 120 hits, because it caught ellipsis-marked abbreviations, atom names,
+  column labels and quotes of other documents. Narrowed to the actual defect shape — a quote
+  **presented as a complete sentence** (initial capital, terminal punctuation, no ellipsis, 40+
+  characters) that the table does not ship — it reports **8 tables, 12 hits**.
+
+  Opening all twelve: most are benign (a rhetorical question in a header; correction-paragraphs
+  that quote the old wording; a sentence about a row the table deliberately excludes, in
+  `energy-forms`; a prefix flagged as partial). **One was real**, in
+  `physics/circuit-parts.adj`: the header rendered the LED span's `'arrow'` with straight quotes
+  where the page and the shipped row have curly `“arrow”` — same length, one character class
+  different, inside a header promising the spans character-for-character. A typographic
+  normalization is the same defect as the other two, one notch quieter. Fixed; the sweep now
+  reports 11 hits, none of them a mismatch with the page.
+
+  9 of 9 mutants killed, green baseline before and after, file verified byte-identical afterwards.
+  Local scratch harness, so that count is not reproducible from the repo.
+
+- `physics/energy-form-family.adj` — **eight rows that carried no span of their own now cite the
+  page's own definition of their form**, and the table is deliberately *not* converted to per-row
+  `source` (#14986). The measurement is the reason.
+
+  **The page states no row's family in a sentence.** The value column is `potential` / `kinetic`,
+  and the cited EIA page assigns those by **structure**: a "Potential energy" heading with four
+  forms listed under it, a "Kinetic energy" heading with the rest. Measured 2026-09-14 (HTTP 200,
+  75,012 chars), with the envelope sentence found verbatim as a positive control and a fabricated
+  sentence reported absent as a negative one: for **seven of the eight** forms there is **no
+  sentence naming both the form and a family**. The eighth, `motion`, is a false positive — *"Kinetic
+  energy is the motion of waves, electrons, atoms, molecules, substances, and objects."* defines
+  kinetic energy and happens to contain the word "motion"; it does not say motion energy is kinetic.
+
+  A per-row `source` asserts that the span warrants the row. None of these warrants a family, so
+  attaching one would claim more than was measured — the same block `earth-science/water-cycle.adj`
+  carries, and list-under-a-heading is #13934's held question besides.
+
+  **What is fixed, needing no undecided machinery:** each row gains a row-level `cites` holding the
+  page's own definition. Before this, seven of the eight rows carried **no span of their own at
+  all** — a query about `chemical` came back with only the two-family sentence; it now also carries
+  *"Chemical energy is energy stored in the bonds of atoms and molecules."*
+
+  Each of the eight occurs **exactly once** on the page, each inside a `<p>`, none names another
+  row's form, and — the check that keeps them honestly `cites` — **none mentions `potential` or
+  `kinetic`**. That last property is asserted, not explained: if a future edit swaps in a span that
+  *does* state a family, the suite fails and says to reconsider conversion, rather than quietly
+  allowing it. The envelope is unchanged and was already right: it names no row key.
+
+  The old citation assertion — `contains("eia.gov") && contains("\"trust\":\"authoritative\"")` — was
+  the #15139 two-loose-needles shape, now one contiguous span here. **That shape is not rare and
+  calling this "the third found" would mislead:** measured over `code/packages/rust/adj-lang-cli/
+  tests/`, with the needle *a single assert of* `contains(X) && contains("\"trust\":…)`, **321 of
+  the test files carry it, 323 occurrences**. This change fixes one of them. In `circuit-parts`
+  that exact shape let a locator naming a file which never existed be swapped for an archive URL
+  with no test noticing, because the host string is a substring of both. 10 of 10 mutants killed, green baseline before and after, file verified
+  byte-identical afterwards. Local scratch harness, so that count is not reproducible from the repo.
+
+- `physics/circuit-parts.adj` — **the locator named a file that never existed**, and the table is
+  converted to per-row provenance (RS-5e, #14986) on the corrected source.
+
+  #15199 recorded this as the stdlib's one dead link: `.../circuit_basics_and_components.pdf`,
+  404 on both `http` and `https`. It is worse than dead. The Wayback CDX index holds **no capture
+  of that address at any time**, while **two** separate files in the same folder —
+  `circuit_basics.pdf` and `circuit_components.pdf` — both returned 200 and are archived. The
+  shipped filename is those two names run together. A dead link is a page that went away; this
+  was an address that was never right.
+
+  **The quote was sound all along.** The shipped span occurs in `circuit_components.pdf`, which
+  defines all seven parts. So the sentence really was taken from a real document, and only the
+  address recorded for it was wrong. The locator now points at a **verified capture** of that file
+  (HTTP 200, 449,715 bytes), because the live URL is 404 today and pointing at it would restore a
+  correct-but-unfetchable address. Nothing here claims more than `source_labeled` — this is an
+  address a reader can open, not a content hash.
+
+  **"Verbatim" is weaker here than for this cascade's HTML tables, and the file says so:** the
+  source is a PDF whose text layout wraps sentences across lines, so each span matches only after
+  whitespace collapsing. Measured against the captured file: each of the seven occurs **exactly
+  once**, none names another row's key, and a fabricated control sentence is reported absent by
+  the same comparison. Both controls behaved as intended.
+
+  All seven rows were warranted by the BATTERY sentence, so `? circuit_part_role(resistor, $R)`
+  came back proved by a sentence about batteries; six of the seven were in that position. Each row
+  now carries its own definition.
+
+  **The existing test passed unchanged through both changes, and that is the finding.** Its
+  citation assertion was `contains("k12maker.mit.edu") && contains("\"trust\":\"consensus\"")` —
+  the #15139 two-loose-needles shape — and `k12maker.mit.edu` is a substring of the archive URL as
+  well as the original, so swapping a never-existent address for a real capture moved nothing it
+  could see, and neither did converting one envelope span into seven row spans. It is now one
+  contiguous span including the whole locator, joined by four new tests: per-row warrants with a
+  negative arm on single-answer queries, the envelope reaching exactly one answer (the battery
+  row's own copy, so 2 occurrences and not 14), a structural read of the shipped file, and a named
+  regression guard forbidding the conflated filename **as a locator value** — narrowed from "
+  anywhere in the file", because the header now quotes it while explaining the defect.
+
+  Writing that guard bluntly first is what found a **stale provenance listing seventy-five lines
+  below**, still naming the dead URL as "the same primary source" and still describing the
+  pre-conversion design. Same prose-contradicts-data defect as `em-spectrum`. (An earlier wording
+  said "two hundred lines below". The file is 180 lines long, so nothing in it can be.)
+
+  **Security review then found the twin that sweep missed.** The provenance block still
+  attributed the pairs to a handout titled *"Circuit Basics and Components"* — a title occurring
+  **zero times in either PDF** (`circuit_components.pdf` is "Circuit Components",
+  `circuit_basics.pdf` is "Circuit Basics"). The same run-together mistake as the filename, thirty
+  five lines above the paragraph that corrects the filename: I swept the URL and never grepped the
+  prose for its twin. Review also found a **non-verbatim quote inside a block headed "the verbatim
+  span"** — the `switch` entry opened with *"This switch serves as an On/Off switch in a
+  circuit."*, which occurs zero times in either PDF; the source's own wording is ungrammatical
+  (*"Toggle SPST switches are often serve as an On/Off switches in a circuit."*) and was silently
+  tidied at some point into something that reads well and was never written. The **shipped row was
+  always the verbatim second sentence**; only the listing overstated. And the claim that the
+  capture "names the original URL inside it" is false — `k12maker` occurs zero times in the
+  captured bytes; the Memento response headers carry that.
+
+  8 of 8 mutants killed, green baseline before and after, file verified byte-identical
+  afterwards; both controls behaved as intended — the positive one (a phrase certain to be in the
+  document) and the negative one (a fabricated sentence). Local scratch harness, so that count is
+  not reproducible from the repo. Security review independently built its own 13 mutants and
+  killed 13, and independently confirmed the CDX result with a folder-level control (3,244 rows
+  captured under that directory, **zero** for the conflated filename) — so the absence is a real
+  absence and not a gap in the index.
+  8 of 8 mutants killed, green baseline before and after, file verified byte-identical afterwards.
+  Local scratch harness, so that count is not reproducible from the repo.
+- **The last five converted tables gained a structural test of their own** (#15193). That issue
+  recorded "2 of 17" on 2026-09-14; re-measured with an inline-aware parser on a branch merging
+  `origin/main` with the four open per-row PRs, it is **21 of 26**. (On this branch alone, without those PRs, it was 20 of 25
+  before this change — the denominators differ by `physics/em-spectrum.adj` and
+  `earth-science/water-cycle.adj`, converted in unmerged PRs. Each number is labelled with the
+  tree it was counted on rather than presented as one figure.) **After this change, measured on
+  this branch: 25 of 25** — every converted table asserts its own span structure. These are the
+  five that did not: `anatomy/body-counts.adj` (9 rows), `astronomy/planets.adj` (8), `biology/kingdoms.adj`
+  (22), `metrology/si-base-units.adj` (7), `science/scientific-method-step.adj` (7).
+
+  **The parser being inline-aware is the point, not a detail.** Three of the five write their row
+  blocks inline — `row (venus, 2) { source "..." }` — and an eight-space `strip_prefix` reads
+  **zero** spans from those files. Every census run for #14986 used that needle, which is how
+  `kingdoms` and `si-base-units` came to be published as *unconverted* when they were converted,
+  and how `planets` was reported with one row span instead of eight. A structural test written
+  with the same needle would not fail; it would go **silently vacuous**, reading an empty list and
+  finding nothing wrong with it. So every one of these tests asserts its parse found the expected
+  number of rows and spans **before** asserting anything about them — and that assertion earned
+  its place immediately: `si-base-units.adj` parsed as **one** row instead of seven, because the
+  row scan split on `)` and `row (length, meter, "m") { source "Length - meter (m)" }` contains
+  one inside the span. The scan is quote-aware now.
+
+  Each table gets the shape its own data has, because there is no single template: `kingdoms` is
+  22 rows over 5 spans grouped by kingdom, `planets` is 8 rows over 8 spans with exactly one row
+  at `trust inferred` (the one the page does not state literally), `body-counts` is 9 rows across
+  7 pages, `si-base-units` and `scientific-method-step` are 7 rows over 7 spans with no row
+  locators at all.
+
+  **Two assertions of mine fired on the real files and were wrong, not the files.** I asserted
+  `body-counts` had nine distinct pages; it has **seven**, because the three hand-bone rows share
+  a span *and* its page — so the assertion became the stronger and truer one, that the page
+  multiset matches the span multiset exactly. And a mutant that truncated one **inline**
+  `si-base-units` span survived everything: the count stayed 7 and the spans stayed distinct, and
+  only two of its seven rows were pinned by content anywhere. Those spans are short enough that a
+  truncation is cheap to ship, so all seven are now pinned by value.
+
+  **Security review found a CI-blocking error and, worse, that the assertion causing it was
+  inert.** `assert_eq!(adj.matches("}").count() >= 7, true, ...)` is a clippy
+  `bool_assert_comparison` error under the repo's `cargo clippy --all-targets -- -D warnings`
+  gate — which a green `cargo test` says nothing about, because this package's BUILD only runs
+  `cargo test`. And it checked nothing: `planets.adj` has NINE `}`, so reflowing all eight rows
+  to multi-line, the exact regression its message claimed to guard, would still leave nine. It
+  now counts inline row blocks directly and fires on a reflow. Verified with both controls: a
+  clean `cargo clippy --all-targets -- -D warnings` exits 0, and reintroducing a literal-bool
+  assert reproduces the error.
+
+  Review also found the scanners **desync on an escaped quote** — no span in these five files
+  carries one, but `anatomy/brain-parts.adj` does (`"the \"flash drive\" of the human brain"`),
+  and copying this parser there would truncate the span and invert the quote state for the rest
+  of the line: the silent-vacuity failure this change exists to prevent, one table over. Both
+  scanners are escape-aware now. Three smaller fixes: the `cites` locator scan was bounded to
+  its own line (searching the rest of the body, a `cites` missing its mandatory locator would
+  steal the row's own); `trust` is no longer read out of `%` comment prose; and a per-row span
+  count is asserted before an index that a 0/2/1/1/1/1/1 spread would have panicked on.
+
+  **24 of 24 mutants killed** across the five suites, each with a green baseline before and after
+  — including an inline-block truncation and an inline row locator, the two shapes that have
+  already defeated a guard in this series. Re-run after the parser changes above, since a kill
+  record does not survive a change to the thing doing the killing. Local scratch harness, so that
+  count is not reproducible from the repo.
+
+- `physics/em-spectrum.adj` — all 7 rows converted to per-row provenance (RS-5e, #14986). The
+  RADIO sentence was this table's `source`, the field that carries the tier, for every row, so
+  `? band_use(x_ray, $A)` came back proved by *"Your radio captures radio waves emitted by radio
+  stations, bringing your favorite tunes."* — **a sentence about radio stations, warranting a
+  claim about dental X-rays.** Six of the seven rows were in that position; each now carries the
+  sentence that names its own band and its own use.
+
+  **No cross-row overlap:** each of the seven spans names its own band and no other, measured
+  against the page's own wording for each key. `anatomy/eye-parts.adj` has three sentences that
+  name more than one part, so there is no pairing trap here and a single-row truncation cannot
+  hide behind a sibling's copy of the same span.
+
+  Two corrections from review, both to claims this entry made about itself. **It said the
+  property was "unique in this cascade so far". It is not** — eleven other converted files
+  already have all-distinct spans (including `biology/vitamin-deficiency-symptom.adj`, the entry
+  directly below this one), and `biology/plant-tropisms.adj`, `physics/energy-forms.adj` and
+  `science/scientific-method-step.adj` also have zero cross-naming. The claim was made without
+  looking. **And it said the property was "asserted, not just described" when the test asserted
+  something weaker:** `spans.dedup()` is string dedup — "no two rows carry the *identical* span"
+  — which says nothing about a span that *mentions* a sibling. The real check now runs, in the
+  page's wording, with an own-band arm so it cannot pass vacuously on spans that name no band at
+  all; two new mutants (a span reworded to name another band, and a span naming none) are killed
+  by it and by nothing else. `earth-science/water-cycle.adj` is also described correctly now: it
+  is an **unconverted** table blocked because its value is an integer no span states, not a
+  converted-but-overlapping one.
+
+  **The envelope becomes the page's own introduction to precisely this list** — *"The image below
+  shows where you might encounter each portion of the EM spectrum in your day-to-day life."* — so
+  it frames exactly what the table records while naming no band. All seven rows override it, so
+  the framing sentence reaches zero answers, asserted as a count with a positive control.
+
+  **The envelope check uses the page's wording, not the atoms**, and that is load-bearing: the
+  page writes `x_ray` as "X-rays" and `gamma_ray` as "gamma-ray", so a framing sentence naming
+  X-rays would sail past a scan for the atom `x_ray` while plainly naming a band.
+
+  Review found that check was **reading a test constant rather than the shipped file** — it
+  harvested the row keys from the `.adj` and then tested the hardcoded `ENVELOPE`, so the mutant
+  this entry credited it with killing was in fact killed by a different test's
+  `assert_eq!(envelope, ENVELOPE)`, and this one caught only a *coordinated* edit to both. It
+  now reads the envelope from the file, and the mutant is killed by the test named after it.
+
+  The old citation assertion — `contains("imagine.gsfc.nasa.gov") &&
+  contains("\"trust\":\"authoritative\"")` — was the #15139 shape, two halves satisfiable by
+  different parts of the output; it is now one contiguous span, and the source it pins is radio's
+  own sentence rather than the table's.
+
+  Source verified by **raw extraction** (2026-09-14, HTTP 200): all eight spans verbatim and
+  occurring exactly once, each wholly inside one `<p>`, with a fabricated control sentence
+  reported absent by the same comparison. **"Verbatim" is conditional on one stripping rule for
+  three of the eight**, and review was right that it needed saying: the envelope, the microwave
+  span and the visible span each straddle an inline `<a class="glossaryDef">` anchor. The anchors
+  wrap plain text, so stripping tags with no separator reproduces the page's characters exactly;
+  the other five are contiguous in the raw bytes.
+
+  The file header was also rewritten. It still described the **pre-conversion** design — "An ADJ
+  `table` carries ONE provenance envelope … the NASA statement that fixes the first row" — so an
+  auditor reading top-down met a false account of the file before reaching the table. It also
+  quoted the visible span with a second sentence the row does not ship. 14 of
+  14 mutants killed, green baseline before and after — including the three shapes that SURVIVED
+  their sibling suites before the guards were widened (a single-row truncation, a misindented row
+  field, and a fabricated envelope). Local scratch harness, so that count is not reproducible from
+  the repo.
+- `earth-science/water-cycle.adj` — **a false claim deleted, and an envelope that
+  mis-warranted 4 of 5 rows replaced.** This table is *deliberately not* converted to per-row
+  `source` (RS-5e, #14986), and the measurement is the reason.
+
+  **The page does not state the step numbers.** The second column is an INTEGER, and no
+  sentence on `https://water.usgs.gov/edu/watercycle-kids-beg.html` assigns a number to a
+  stage. Measured 2026-09-14, and stated so it can be re-run: **the page has no ordinal
+  vocabulary at all** — `first`, `second`, `third`, `fourth`, `fifth`, `step`, `order`,
+  `begins`, `next`, `follow` are each **0 occurrences**, zero even as *substrings*. Digits are
+  nearly as scarce, and the extraction rule matters, so: splitting the whole tag-stripped page
+  on sentence punctuation and **retaining** `<script>`/`<style>` text gives **3** "sentences"
+  with any digit — the `<head>` blob (CSS rule plus every inline script body), *"oceans cover
+  70% of the Earth's surface"*, and the footer block, whose digits are `Page Last Modified:
+  Wednesday, 02-Apr-2025 16:43:33 EDT`. **Dropping** script and style first gives **2**. Under
+  either rule, none numbers a stage.
+
+  A per-row `source` asserts "this span warrants this row". None of these spans warrants an
+  integer, so attaching one would make the file look better warranted while claiming more than
+  was measured — the defect #14986 exists to remove, not an instance of fixing it. The ordering
+  is an **inference** from the prose handoff chain, which is the shape still undecided.
+
+  **A false claim is deleted.** The header said the page "names these stages and describes them
+  in this process order". It does not: the page's **six diagram section headings** run
+  Condensation → Evaporation → Groundwater → Precipitation → Runoff → The Sun, which is
+  **alphabetical** (sorting that list returns it unchanged), and is not the table's order. The
+  *handoff* half of the claim is true and is kept; the *ordering* half is gone. Six, not seven:
+  the page carries a seventh `<h3>`, first in source order — the sidebar's *"Versions
+  available:"* — and including it makes the list unsorted, so naming which six is the
+  difference between a claim that can be re-run and one that cannot.
+
+  **What is fixed, needing no undecided machinery.** The envelope `source` was the EVAPORATION
+  sentence, so `? water_cycle_stage(runoff, $N)` came back warranted by a sentence about the
+  sun evaporating water — **four of the five rows were in that position**. It is now the page's
+  own framing sentence, which names no stage. Each row gains a row-level `cites` holding the
+  sentence that names its own stage: **`cites`, deliberately not `source`**, because the
+  sentence corroborates that the stage belongs to this cycle and says nothing about its number.
+
+  **A mutant survived, and it is the finding, not a footnote.** Renumbering `runoff` from 4 to
+  9 left the whole suite green — because every assertion in it is about provenance, and *no
+  citation can catch a wrong step number when no citation states one*. The remedy was neither a
+  smaller mutant nor a fake citation: the five pairs are now pinned to the **shipped artifact**,
+  in the `.adj` and in what the engine returns, with the test saying plainly that this is an
+  artifact pin and not a warrant.
+
+  **Security review then found the guard that mattered most was a text match.** "No row carries
+  a `source`" was implemented as a count of `\n        source "` in the `.adj` — so a row
+  `source` written at any indentation other than exactly eight spaces evaded it, evaded the
+  four-space table-level filter too, and left the `cites` count at five, while **nothing
+  anywhere asserted that a row's emitted primary `source` is still the envelope**. That is the
+  entire claim of this table's shape. It is now asserted semantically on the CLI's real output,
+  per row: one contiguous span binding envelope source + locator + trust to that row's own
+  sentence as first corroboration. Three new mutants — a row `source` at seven spaces, at nine
+  spaces, and one added *alongside* its `cites` so both counts stay correct — are killed by
+  that pin and by nothing else. Review also corrected two mislabelled digit-sentences, an
+  incomplete `<h3>` inventory, a dead filter conjunct, and added a path-component assert where
+  a row key read from raw `.adj` bytes reaches a temp-directory name.
+
+  12 of 12 mutants killed, green baseline before and after (local scratch harness, so that
+  count is not reproducible from the repo).
+
+  The suite also gains a pairing guard for the trap here: the groundwater sentence names
+  **three** stages (*"Some precipitation and runoff soaks into the ground to become
+  groundwater"*), so "the span mentions the key" would hand it to the precipitation or runoff
+  row. And the old citation assertion — `contains("water.usgs.gov") &&
+  contains("\"trust\":\"authoritative\"")` — was the #15139 shape, two halves satisfiable by
+  different parts of the output; it is now one contiguous span.
+- **The row-locator convention is written into `ADJ-TABLES.md` §4** (closes the first item of
+  #15197), and the shipped set is normalised to it: *a row restates `locator` only when its page
+  DIFFERS from the envelope's; otherwise it inherits.* This is what §RS-5e's own normative example
+  already did and its prose never said, and what `geography/reference-lines.adj` states in terms —
+  the stdlib was deciding it per table and drifting both ways.
+
+  The reason is not tidiness: a row `locator` equal to the envelope's is a **no-op**
+  (`row_provenance` assigns `prov.locator` only when the row supplies one), so the duplicated
+  literal is something **no test can distinguish from its own absence** — every single-page
+  table's harness had to *declare* "drop a row's locator" an equivalent mutant. Inheriting makes
+  "this table is single-page" structurally visible instead.
+
+  Measured after normalising: of 349 tables with a table-level locator, **306 carry zero row
+  locators, 6 carry one per row, and 3 are mixed** — mixed is normal for a genuinely multi-page
+  table, and `geography/reference-lines.adj`, the file that states the rule, is one of them.
+
+  One violation was left by a PR merged earlier the same day: `biology/vitamin-deficiency-symptom.adj`
+  had its vitamin-A row restating the envelope's own URL while its four siblings legitimately
+  differ. Dropping it produces **byte-identical** output, verified by running both. Its test then
+  failed on `locators.len() == 5` — an assertion that was a **proxy** for the property its own
+  name claims. Counting locator *lines* measures how a file is written, not what page each row
+  resolves to, so it reddened on a change that moved no row's page. It now computes each row's
+  **effective** page (its own locator if present, the envelope's otherwise) and asserts those five
+  are distinct: stronger, and independent of the convention.
+
+  **Two equivalent-mutant declarations this same change falsified** were left standing until a
+  twin-grep found them, and both are now retired. `facts_flowerparts_e2e.rs` still declared that
+  "every row on this table cites the envelope's own URL" and that dropping one "cannot be killed" —
+  that file now has **zero** row locators. And `anatomy/respiratory-parts.adj`'s HEADER still
+  called the lungs-row coincidence a live equivalent mutant while its own table comment, fifteen
+  lines below, already recorded that the row inherits: a provenance artifact contradicting itself
+  about provenance. Both now record the history in the past tense rather than asserting it.
+
+  Counted on this branch: flower-parts 0 row locators (7 rows), respiratory-parts 7 (8 rows — the
+  lungs row inherits), scientific-method-step 0, brain-parts 2 of 15.
+
+  Also corrected in the spec: §2 still called per-row provenance "a documented future extension"
+  while §6's own capability table records RS-5e as delivered.
+
+- **28 redundant row locators dropped** across `anatomy/brain-parts.adj` (13), `biology/flower-parts.adj`
+  (7), `science/scientific-method-step.adj` (7) and `anatomy/respiratory-parts.adj` (1), per the rule
+  `geography/reference-lines.adj` already ships: restate a row `locator` when its page DIFFERS from
+  the envelope's, inherit when it is the same. The rows that legitimately differ keep theirs —
+  brain-parts keeps 2, respiratory-parts keeps 7.
+
+  **No answer moved**, and that is the whole claim: `row_provenance` assigns `locator` only when a
+  row supplies one, so a row locator equal to the envelope's is a no-op. Proved per table by
+  running the full-table query against the pre-drop and post-drop files and requiring
+  **byte-identical** output. 4 of 4 identical.
+
+  **Dropping duplication is not the same as preventing it**, and the proof harness caught that:
+  re-adding the envelope URL to a row was originally caught only on `respiratory-parts`. On
+  `flower-parts` and `scientific-method-step` it passed the entire suite; on `brain-parts` it
+  reddened five unrelated tests that noticed the changed citation, but nothing asserting the
+  rule. So each table gained the guard its shape calls for — single-page tables assert NO row
+  locator; brain-parts asserts none equals the envelope's — and all four now redden.
+
+  Two harness defects surfaced on the way, both mine: the brain-parts guard hardcoded an
+  envelope URL from memory of an earlier state of the table and failed against a correct file
+  (it now **reads** the envelope from the file), and the proof harness expected a test name
+  `scientific-method-step` does not have, reporting a missing guard that was present.
+- `earth-science/water-movement-route.adj` — all 8 rows converted to per-row provenance
+  (RS-5e, #14986). Three USGS sentences grounded eight rows, and every row carried all three:
+  the ATMOSPHERE sentence as the envelope `source`, the other two as `cites`. So
+  `? water_movement_route(runoff, $R)` came back proved, as its **primary** source, by *"Water
+  moves between the atmosphere and the surface through evaporation, evapotranspiration, and
+  precipitation."* — **a sentence that does not mention runoff** — with the sentence that does
+  mention it demoted to a corroboration. In `--explain`, which renders the primary source and
+  drops corroborations, the runoff row displayed under a sentence that does not ground it.
+
+  Each row now carries the sentence that **lists it by name**: 3 rows on the atmosphere
+  sentence, 3 on the surface sentence, 2 on the ground sentence. Three rows sharing a span is
+  honest here rather than a compromise — each sentence names each of its own processes
+  explicitly. No row restates `locator`: all three sentences are on the one page the envelope
+  names, which is the rule `geography/reference-lines.adj` states.
+
+  **The envelope becomes the page's own framing sentence** — *"The water cycle describes where
+  water is on Earth and how it moves."* — chosen because it names **none** of the eight row
+  keys and so cannot mis-warrant any of them. `source` is a required envelope field, so the
+  slot has to be filled by something; filling it with one of the three route sentences is
+  exactly what produced the defect. All eight rows override it, so **the framing sentence now
+  reaches zero answers**, which the suite asserts as a count — it is the sharpest form of
+  "mis-warrants no row", and it reddens if any row loses its block and falls back.
+
+  **A mutant survived the first harness run, and the fix was to widen what is pinned, not to
+  narrow the mutant.** Truncating the SNOWMELT row's citation at a comma left the whole suite
+  green: the only full-sentence pin in the file was on `runoff`, and a **prefix** needle —
+  `"Water moves across the surface through"` — in this change's own first draft of the row
+  counts was satisfied by the truncated span. (That draft never shipped; the count is new here,
+  so this is a defect caught inside the change, not one being reported against `main`.) Same
+  class as #13916/#13918, one row over. The counts now use whole sentences, and a new
+  structural test pins the row spans **set-wise against the shipped `.adj`**: the distinct row
+  `source` values must be exactly the three sentences, carried by exactly 3 / 3 / 2 rows, and
+  nothing else.
+
+  **Security review then found the one field none of that covered:** the envelope sentence
+  itself had no assertion on its VALUE — one needle was a prefix inside an `assert_eq!(…, 0)`,
+  which stays 0 for any string, and the other only checked what the sentence does *not* say. A
+  fabricated framing sentence naming no process left all eight tests green. It is now pinned
+  verbatim. Review also found `contains("\"corroborations\":[]")` was satisfiable by any
+  unprovenanced block in stdout (the CLI's `UNRESOLVED_PROV` ends with exactly that text); the
+  runoff warrant is now pinned as one contiguous span of source + locator + trust + empty
+  corroborations.
+
+  A local mutant harness (scratch, not shipped — so **this count is not reproducible from the
+  repo**) runs 11 mutants against the suite, all killed, with a green baseline before and
+  after. It did not cover the envelope-span case above, which is why review found it and the
+  harness did not.
+
+  A second review round found four more, all now applied: the table-level source was taken
+  positionally while the locator check was total, so a second envelope source would have been
+  invisible; the envelope was lowercased while the row key it is compared against was not, so
+  the no-row-key check would have gone vacuous on the first capitalised key; a nine-space
+  filter was documented as load-bearing when it could never exclude anything; and **a
+  re-measured sentence count was deleted rather than defended** -- it had been offered to fault
+  the header original 84-substantive-sentences figure for having no recorded rule, and then
+  turned out to depend on an unrecorded rule of its own that review could not reproduce (six
+  plausible rules give 73 to 77). Nothing replaces it; the sentence count is simply not
+  something this change measured.
+
+  Source re-verified by **raw extraction** (2026-09-14, HTTP 200; 95,733 bytes on disk, 95,701
+  Unicode characters), not a fetch summary: all three route sentences occur verbatim after tag-stripping that reproduces the
+  page's punctuation, all three inside `<p>` blocks, and a fabricated control sentence is
+  reported absent by the same comparison. The three are **consecutive sentences of one `<p>`** —
+  which the header's "three parallel sentences" had asserted and never shown.
+
+  Scope: this file. Issue #13898 (`--explain` drops corroborations) no longer reaches this
+  table, because no row has corroborations any more; nothing here is claimed about other tables.
+
+- `biology/vitamin-deficiency-symptom.adj` — all 5 rows converted to per-row provenance
+  (RS-5e, #14986), which is also the fix for the **#14124 note this file's own test already
+  carried**: *"The table ships ONE envelope for five rows, and that envelope is the
+  xerophthalmia/night-blindness sentence — which grounds vitamin_a and NOT vitamin_d. Pinning
+  vitamin_d would pair an answer about bone deformity with a citation about vision, and freeze
+  it in a test."* Five rows, five NIH ODS fact sheets, one vitamin each; the other four spans
+  were already here as untiered `cites`, in row order.
+
+  **One span was widened, and the pairing check is what found it.** The shipped vitamin-A span
+  — *"Xerophthalmia is the inability to see in low light…"* — states the **symptom** and never
+  names vitamin A, so on its own it did not warrant `(vitamin_a,
+  inability_to_see_in_low_light)`; the link came from the page it sat on rather than from the
+  quoted run. The page's preceding sentence supplies it and is contiguous. **The pin moved with
+  the span**, rather than the span being kept to satisfy the pin.
+
+  **The vitamin names differ from the atom labels on two pages** — `vitamin_b1` is "thiamin"
+  and `vitamin_b9` is "folate" — so the pairing check uses a stated mapping rather than the row
+  key. A key-in-span test would have called both unwarranted, the same trap as `xray` being
+  "X-rays" in `wave-types`.
+
+  The span carries a **curly apostrophe (U+2019)** in "isn't"; ASCII-ifying it is a mutant.
+
+  `facts_vitamindeficiencysymptom_e2e.rs`: 7 tests, including the #15193 structural check (five
+  distinct spans, five distinct fact sheets, no table-level `cites`). **13 of 13 mutants
+  killed**, baseline green — including re-narrowing the vitamin-A span and ASCII-ifying the
+  apostrophe.
+- `anatomy/eye-parts.adj` — all 6 rows converted to per-row provenance (RS-5e, #14986). The
+  CORNEA sentence was this table's `source`, the field that carries the tier, for every row, so
+  `? eye_part_function(optic_nerve, $F)` came back proved by *"The cornea is shaped like a dome
+  and bends light to help the eye focus."* Every sentence is on the same NEI page, so the
+  locator was never wrong and a hostname assertion could never have caught it — only the span
+  was.
+
+  **No row carries a `locator`**: six sentences, one page, so every row inherits the envelope's,
+  which is the form ADJ-TABLES RS-5e's own example uses and the one #15197 asks whether the
+  cascade should adopt everywhere. A visible consequence: this table has **no equivalent
+  mutant to declare** — the "drop a row's locator" mutation does not exist, and the locator arm
+  is instead "ADD one", which the structural test kills.
+
+  **Two sentences name more than one part**, which is why "the span mentions the key" is not a
+  sufficient pairing test on its own: the LENS sentence names the cornea and the retina, and
+  the OPTIC-NERVE sentence names the retina. Giving the cornea row the lens sentence passes a
+  mention test — it is caught by the source-equality pin, and both swaps are mutants that die.
+
+  Block structure checked first: 6 `<p>` and 29 `<li>`, with every sentence used here coming
+  from one of three narrative paragraphs; the list items are site navigation. All seven spans
+  confirmed verbatim, each occurring exactly once, each with a negative arm absent, all six row
+  spans distinct.
+
+  `facts_eyeparts_e2e.rs`: adds 3 tests (4 total), including the #15193 structural check — six
+  distinct spans and **zero** row-level locators. 15 of 15 mutants killed, baseline green.
+- `physics/wave-types.adj` — all 10 rows converted to per-row provenance (RS-5e, #14986). The
+  MECHANICAL membership sentence was this table's `source`, the field that carries the tier,
+  for every row, so `? wave_family(gamma, $F)` came back proved by *"Water waves, sound waves,
+  and waves on a rope are all examples of mechanical waves."* — **a sentence that names no
+  electromagnetic band at all.** Seven of the ten rows were in that position; they now carry
+  the page's electromagnetic caption, which names all seven.
+
+  **Both sentences are on the same page**, so the locator was never wrong and a hostname
+  assertion could never have caught it — only the span was. That is why the shipped test passed
+  unchanged through the conversion, and it is recorded in the test as such.
+
+  The envelope becomes the mechanical-wave DEFINITION, and **that choice is disclosed rather
+  than dressed up as neutral framing**: this page frames each family separately and has no
+  sentence framing the table as a whole. What the framing slot requires is that the envelope
+  not mis-warrant a row, and this sentence names no specific wave — checked against all ten row
+  keys **in the page's own wording**, where `xray` is "X-rays" and `rope` is "waves on a rope".
+
+  All three spans confirmed verbatim, each with a negative arm absent. The two
+  membership sentences occur exactly once in the document; the definition sentence occurs once
+  in the page's prose and four more times in `<head>` metadata (meta/og/twitter descriptions
+  and JSON-LD), all copies of the same caption — "exactly once" was the first wording and is
+  true of the prose, not of the document. Block structure checked first: the membership sentences are the tails of two `<p>`
+  figure captions, ordinary prose, no list items.
+
+  `facts_wavetypes_e2e.rs`: adds 3 tests (5 total), including the #15193 structural check (three mechanical
+  rows, seven electromagnetic, no row with a third sentence). 18 of 19 mutants killed; **no survivor, and nothing to declare**: the ten rows
+  no longer repeat the envelope's URL, so the unkillable "drop a row's locator" mutant does not
+  exist. Review raised that redundancy and I deferred it to #15197 as an open convention
+  question — it was not open. `geography/reference-lines.adj` already ships the rule (restate
+  when the row's page DIFFERS from the envelope's, inherit when it is the same), and every row
+  here is on the one NASA page.
+  rows, seven electromagnetic, no row with a third sentence). 18 of 19 mutants killed; the
+  single survivor is equivalent — every row repeats the envelope's own URL, so a dropped row
+  locator is byte-identical while a changed one still dies. **That declaration now ships in the
+  harness**, beside the assertion it concerns; review caught the same omission one table
+  earlier (#15191), where it had lived only in the changelog.
+  single survivor is declared in the harness in advance as equivalent — every row cites the
+  envelope's own URL, so a dropped row locator is byte-identical while a changed one still
+  dies.
+- Six more e2e suites gain a test that reads the shipped `.adj` and asserts **which rows share a
+  span**, against a declared set (#15193): `brain-parts` (15 rows, 10 sharing the brainstem
+  sentence), `element-groups` (27 rows in 5 family groups, no row alone), `joint-types`,
+  `hormone-glands`, `speleothem-alt-name` (5 rows sharing the flowstone sentence) and
+  `reference-lines` (2 rows, 1 sentence).
+
+  With the two in the sibling entry, **8 of the 17 tables converted under #14986 now assert
+  their own sharing structure, up from 2 counted on 2026-09-14.** The remaining 7 share no span
+  at all — every row already has a distinct sentence — which needs a different assertion
+  (all-distinct) and is deliberately not lumped in here, so one generator's bug cannot pass as
+  coverage for two different properties.
+
+  **11 fire-proofs, 11 behaved as intended.** Each table gets a row made to JOIN a group it does
+  not belong to and a row made to LEAVE a declared group; `reference-lines` has only the LEAVE
+  arm, since with two rows and one sentence there is nowhere to join from. The harness names
+  the test that must redden, so a kill by some other assertion is reported as a failed
+  experiment rather than counted as success. Baselines green.
+- `facts_skeletonbones_e2e.rs` and `facts_speleothemsubstrate_e2e.rs` — each gains a test that
+  reads the shipped `.adj` and asserts **which rows share a span**, against a declared set
+  (#15193). Counted 2026-09-14: of the 17 tables converted under #14986, only 2 asserted their
+  own sharing structure. These are the two where getting it wrong costs most —
+  `skeleton-bones` is the table whose original defect was five rows pinned by nothing behind
+  one shared span (#15171), and `speleothem-substrate` puts 11 rows behind just 2 sentences.
+
+  The shape matters: one side of the comparison is the FILE. That is how these differ from the
+  per-row pairing checks corrected in #15191 and #15192, which compared two test literals to
+  each other and were documented as discriminators they could not be.
+
+  Proved to fire in **both** directions per table, not assumed — a row made to JOIN a group it
+  does not belong to, and a row made to LEAVE a declared group — with the specific test named
+  in each case so a kill by some other assertion is not counted as success. 4 of 4 reddened the
+  intended test; baselines green.
+- Six e2e suites where NO row shares a span gain the matching assertion (#15193, third batch):
+  `respiratory-parts`, `plant-tropisms`, `rainforest-layer`, `atmosphere-layers`,
+  `air-quality-index` and `energy-forms` now assert, against the shipped `.adj`, that every
+  row's sentence is distinct. For the five single-page tables that also means asserting that
+  **no row carries a `locator` at all** — which is what makes "one page" a checked fact rather
+  than a paragraph; a row-level locator appearing there would mean the table had quietly become
+  multi-page.
+
+  **`astronomy/planets.adj` is excluded, and why is stated**: it has ONE row, so "all spans
+  distinct" is true of it no matter what anyone edits. An assertion that cannot fail is
+  decoration.
+
+  **12 fire-proofs, 12 behaved as intended** — a duplicated span per table, plus an added
+  row-level locator (or, for `respiratory-parts` whose rows do carry locators, two pages
+  collapsed into one). The harness names the test that must redden, so a kill by one of the
+  five-plus other assertions in these suites is reported as a failed experiment rather than
+  counted as success.
+
+  With the sibling entries, **16 of the 17 tables converted under #14986 now assert their own
+  span structure, up from the 2 counted on 2026-09-14** — the seventeenth being `planets`,
+  excluded above. That count was recounted by enumerating the tables against the batches; a
+  first draft of this entry said 14.
+
+- `biology/flower-parts.adj` — all 7 rows converted to per-row provenance (RS-5e, #14986).
+  The PETAL sentence was this table's `source`, the field that carries the tier, for every row,
+  so `? flower_part_function(ovary, $F)` came back proved by *"Petals attract pollinators and
+  are usually the reason why we buy and enjoy flowers."* **The header said so in its own
+  words** — the envelope held *"the single cleanest span: the Illinois Extension statement that
+  fixes the FIRST ROW"*.
+
+  **Every span here is on the same page**, so the locator was never wrong and a hostname
+  assertion could never have caught this — only the span was. That is why the shipped test
+  passed unchanged through the conversion, and it is recorded in the test as such.
+
+  **Block structure was checked before any span was cut.** This page's whole content sits in
+  one `<td>` of a LAYOUT table and the prose inside is ordinary sentences, so sentence-level
+  spans are legitimate: the table markup is layout, not semantics. That check exists because
+  flattened text hides the difference — see the correction on #15185, where a span that read as
+  a cut sentence turned out to be a complete paragraph followed by an ordered list.
+
+  All eight spans (seven warrants + the framing envelope) confirmed verbatim, each occurring
+  **exactly once**, each with a negative arm absent. Two rows share one sentence (`stamen` and
+  `pistil` are fixed in the same clause), so each carries its own copy and each is pinned
+  separately. The envelope becomes a FRAMING span that names no part — checked against all
+  seven row keys, not assumed.
+
+  `facts_flowerparts_e2e.rs`: 5 tests. **A claim here had to be corrected against its own
+  code.** The pairing check was documented as deliberately not a loose substring test "because
+  'pistil' occurs inside the stigma sentence" — and it *is* that substring test, which admits
+  exactly that hazard. It is now labelled what it is: necessary, not sufficient. The property
+  it was reaching for is supplied instead by a new test that reads the shipped `.adj`, parses
+  its row blocks, and asserts that exactly one span is shared and that it is shared by exactly
+  `stamen` and `pistil` — a check against the file rather than between two test literals.
+
+  15 of 16 mutants killed; the single survivor is equivalent — every row here cites the
+  envelope's own URL and `row_provenance` assigns `locator` only when a row supplies one, so
+  dropping one yields byte-identical output. That declaration now sits **in the harness**,
+  beside the assertion it is about, rather than only in this entry.
+
+- `science/scientific-method-step.adj` — all 7 rows converted to per-row provenance (RS-5e,
+  #14986). The STEP 1 sentence was this table's `source`, the field that carries the tier, for
+  every row, so `? scientific_method_step(step_6, $D)` came back proved by *"Ask a question or
+  make a statement that you can test by an experiment. This statement is called a hypothesis."*
+  All eight spans are on the one NASA Space Place page and each row spells that locator out
+  rather than inheriting it, so **the locator was never wrong here — only the span**, which is why this table's citation assertion never noticed.
+
+  **Measured against the pre-change file by running it**: the step-1 sentence occurred **14**
+  times in a full-table query (seven answers, twice each — once under `citations`, once under
+  `steps`). It now occurs **twice**. The controls sentence went the same way, 14 to 2.
+
+  **One row needs two sentences.** `step_2` is `define_variables_and_controls` and the page
+  states variables and controls separately, so that row carries the variables sentence as
+  `source` and the controls sentence as a **row-level `cites`**, which emits as a
+  `corroborations` entry on that row's answer and no other. Established by running it.
+
+  **The envelope is NOT a framing span here, and that is disclosed rather than dressed up.**
+  Narrowed to what was checked: no sentence *outside the seven `Step N.` labels* frames the
+  method, and the non-step text is **two** headings — "Steps in Scientific Method" and "One Way
+  to Do Science...", the second of which the file's own header already named — plus a worked
+  kitten example. An envelope `source` is required
+  (an envelope carrying only `locator` and `trust` is rejected with
+  `Lower(TableMissingProvenance)`), so the envelope keeps the step-1 sentence; every row
+  overrides `source`, so it reaches no answer, and `step_1` carries its own copy. What this
+  cascade requires is that the envelope not MIS-WARRANT a row, and that holds without inventing
+  a second source page for a framing sentence this one does not contain.
+
+  `facts_scientificmethodstep_e2e.rs`: 6 tests. **The whole-chain pin from #13934 installment
+  4o is replaced, and what it protected is kept.** That pin ran from the step-1 `source`
+  through all seven `corroborations` and closed on the corroborations `]`, so a fabricated
+  `cites` could not be appended without reddening (#14735) — but those seven corroborations
+  *were* the other six rows' evidence, hung off every answer because one envelope carried them.
+  A chain pin cannot survive the chain being distributed. Each per-row needle now closes on
+  that row's own `corroborations` — `[]` for six rows, the controls entry for `step_2` — so an
+  appended `cites` still reddens, per row. Both directions are mutants and both are killed.
+
+  **A surviving mutant is a finding**: renaming the `columns` line survived the first full
+  harness run, because column names are positional and never reach the output — the same
+  survivor found in `heredity-term`. Pinned, and the harness then killed 16 of 16.
+- `anatomy/body-counts.adj` — all 9 rows converted to per-row provenance (RS-5e, #14986),
+  and **this table's defect is sharper than its siblings': the envelope imposed a TRUST TIER
+  the file's own header said was wrong.** Two defects in one paragraph:
+
+  1. **The span.** The CHROMOSOME sentence was this table's `source`, the field that carries
+     the tier, for every row, so `? body_count(pairs_of_ribs, $N)` came back proved by
+     *"Humans have 22 pairs of numbered chromosomes … for a total of 46."*
+  2. **The tier — declared, then contradicted.** The header says plainly that the three
+     hand-bone rows *"are `consensus`-tier, one rung below the table's `authoritative`
+     envelope trust"*, and the table shipped `authoritative` on them, because one envelope
+     imposes one tier. **The e2e test that queried exactly those three rows asserted only
+     their NUMBERS**, so nothing caught it. They now carry `trust consensus` in the row, which
+     is what a query returns.
+
+  Two facts about row/envelope provenance were **established by running them**, not by reading
+  the lowering code: a row's `trust` does override the envelope's, per row; and an envelope
+  `source` is REQUIRED — an envelope carrying only `locator` and `trust` is rejected with
+  `Lower(TableMissingProvenance)`, so the framing-span pattern this cascade uses is not a
+  stylistic choice.
+
+  All nine spans verified against their pages before writing, read out of the shipped header
+  rather than retyped, each with a negative arm (final word altered) absent from every page.
+  9/9 verbatim. **One span was widened**: the lungs row quoted `the pair of spongy,
+  pinkish-gray organs in your chest` — opening mid-sentence, so the quoted run never said
+  whose, or that it was about lungs at all. The page's full sentence is contiguous and is now
+  quoted whole (same class as the truncation triage in #15185, where this table's lungs span
+  is one of the 81 candidates the probe listed).
+
+  The envelope becomes a FRAMING span — the SEER module's opening description of the body as
+  billions of smaller structures — which states no count of anything this table counts.
+
+  `facts_anatomy_e2e.rs`: 6 tests. The citation assertion that let this conversion pass
+  unchanged is recorded as the defect in test form: `out.contains("genome.gov")` was the
+  envelope locator on all nine rows, so it held for any answer the table produced. All nine
+  rows are now pinned individually **with their tier**, the three hand-bone rows get a
+  dedicated test asserting they never return `authoritative`, and the pairing is asserted
+  rather than assumed — each row's count must appear in the span that is supposed to state it,
+  in numeral or word form (with one stated limit: the hand sentence carries 27, 8, 5 and 14, so
+  for those three rows this check is satisfied by any of the four, and what separates them is
+  the binding assertion under the one-citation gate). **That assertion found a real gap on its first run**: the
+  heart-chambers span writes "four", not "4". 18 of 18 mutants killed, baseline green.
+- `anatomy/respiratory-parts.adj` — all 8 rows converted to per-row provenance (RS-5e,
+  #14986). The NOSE sentence was this table's `source`, the field that carries the tier, for
+  every row, so `? part_function(diaphragm, $F)` came back proved by *"Nose hairs at the
+  entrance to the nose trap large inhaled particles."* **The header said so in its own
+  words** — *"An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/`trust`
+  below hold the single cleanest span: the SEER statement that fixes the FIRST row"* — an
+  accurate description of a defect. Seven of the eight rows were in that position, and their
+  real evidence was already in the file, in a comment block no query could reach. Each row now
+  carries its own `source` + `locator` at the envelope's tier.
+
+  **Six pages for eight rows**: `larynx.html` states both the larynx and the trachea,
+  `bronchi.html` states both the bronchi and the alveoli, and one of the six is the module
+  index that is ALSO the envelope's locator (the lungs row cites it for a different sentence).
+  That coincidence is recorded in the file because it makes one obvious mutation an
+  **equivalent** mutant rather than a gap.
+
+  All eight spans were verified against the fetched pages before writing — **read out of the
+  shipped header rather than retyped**, since a retyped span has drifted twice in this cascade
+  — with a negative arm (one word altered) that was absent from every page. 8/8 verbatim.
+
+  The envelope becomes a FRAMING span (the module's definition of respiration), which names no
+  part of the tract and warrants no row; it is pinned through its locator VALUE and tier, not
+  just its presence (#15183).
+
+  `facts_respiratoryparts_e2e.rs`: 4 tests. **The citation assertion that let this conversion
+  pass unchanged is recorded as the defect in test form** — `out.contains("training.seer.
+  cancer.gov")` is satisfied by any page on the site, so it held just as well when all eight
+  rows carried the nose sentence. All eight rows are now pinned individually in single-answer
+  queries, the two shared pages get a test asserting neither row can stand in for its sibling,
+  and the nose sentence is counted reaching exactly its own row (twice — once under
+  `citations`, once under `steps`) where it used to reach all eight. 17 of 18 mutants killed;
+  the single survivor is **declared in the harness in advance** as equivalent (dropping the
+  lungs row's locator leaves it inheriting the same URL).
+- `biology/heredity-term.adj` — all 7 rows converted to per-row provenance (RS-5e, #14986),
+  and the cleanest case in this cascade so far: seven rows, seven NHGRI glossary pages, one
+  term each. The GENE sentence was this table's `source`, the field that carries the tier, for
+  every row, so `? heredity_term(phenotype, $D)` came back proved by *"The gene is considered
+  the basic unit of inheritance."* **The header said so in its own words** — the envelope held
+  *"the strongest single span (the `gene` row's text, which fixes the first row)"* — an
+  accurate description of a defect, with the emphasis on **the first row** added here rather
+  than quoted. Six of the seven rows were in that position.
+
+  **The six `cites` are promoted, not dropped**: each was already in the file with its own
+  glossary URL, in row order, and is now the `source` of the row it defines, at the envelope's
+  tier instead of untiered. Nothing had to be found here; it had to be attached. The envelope
+  becomes a FRAMING span (the glossary's definition of genetics), which mentions genes — said
+  plainly rather than claimed otherwise — but states nothing that warrants any of the seven
+  rows.
+
+  All seven spans were verified against the fetched glossary pages before writing, read out of
+  the shipped file rather than retyped, each with a negative arm (final word altered) that was
+  absent from every page. 7/7 verbatim. The row-to-warrant pairing has two **necessary but not
+  sufficient** checks inside `assert_term` — each row's key must appear in the span it is given
+  and in that span's locator. Measured: four of the seven spans name another row's key, and
+  every URL here is `genome.gov/genetics-glossary/...`, so the prefix `gene` matches all six
+  other locators. What makes "the `cites` were in row order" a checked fact rather than a lucky
+  one is a separate test that reads the shipped file and asserts seven distinct spans and seven
+  distinct locators.
+
+  `facts_heredityterm_e2e.rs`: 6 tests. The whole-chain `HEREDITY_TERM_PIN` is replaced — it
+  ran from the bindings through five `corroborations` entries that are now row `source`s. Its
+  own comment warned that *"a corroboration pin bound to the wrong entry is unique, anchored,
+  and tests nothing"*; a chain pin that outlives its corroborations is that hazard one step
+  later. What it existed to protect is kept as its own test: the phenotype span carries a CURLY
+  apostrophe (U+2019) in `individual’s`, and normalising it to ASCII is one of the mutants.
+  15 of 15 mutants killed, baseline green.
+
+- `chemistry/element-groups.adj` — all 27 rows converted to per-row provenance (RS-5e,
+  #14986). The ALKALI-METAL sentence was this table's `source`, the field that carries the
+  tier, for every row; it names lithium through francium and no other element, so
+  `row (helium, noble_gas)` came back warranted by a sentence that mentions no gas, on a page
+  about a different family. Twenty-one of 27 rows were in that position. Their evidence was
+  already in the file — three families as untiered `cites`, the transition metals only in a
+  comment — and is now each row's own `source` + `locator`, at the envelope's tier. The
+  envelope becomes a FRAMING span (the definition of a periodic-table group) which names no
+  element and warrants no row; it is pinned in the test through its locator VALUE and tier,
+  not just its presence.
+
+  FOUR SPAN DEFECTS, each measured against the rendered page this cycle rather than argued
+  from the file:
+
+  1. **The alkali span did not occur on its own page.** The lead renders
+     `... potassium (K),[note 1] rubidium (Rb), caesium (Cs),[note 2] and francium (Fr).` —
+     the shipped span dropped BOTH note markers, making it text the page never displays as one
+     run. This file's own header already recorded that defect twice, for the noble-gas span
+     ("ELIDED the parenthetical with `...` — a constructed span") and the halogen one ("The
+     `[1]` is a real rendered footnote marker and stays"). Caught on two spans, missed on the
+     one warranting the whole table.
+  2. **The transition-metal span was truncated mid-claim.** The page reads `... are transition
+     metals (iron, cobalt and nickel) or inner transition metals (gadolinium).` Cutting at the
+     first disjunct turns the page's "A or B" into a bare "A" — a stronger claim than it makes.
+     A shipped test comment said this sentence "is not on the live page under any extractor
+     fix"; measured, the FULL sentence is verbatim on the page and the TRUNCATED one is not.
+     The earlier probe searched for the truncation, so the truncation is what it failed to
+     find — the defect reporting itself as evidence that no source existed.
+  3. **The alkaline-earth span opened on a pronoun** — `They are beryllium (Be), ...` — whose
+     antecedent sat off the span, so the quoted run never said which group those six elements
+     are. The preceding sentence is contiguous on the page; both are now quoted as one run.
+  4. **The header's row count was wrong in three places.** It said twenty-eight. The table has
+     27 rows (6+6+6+6+3), which the header's own truth table also lists as 27 lines.
+
+  `facts_elementgroups_e2e.rs`: 6 tests. All 27 rows pinned individually in single-answer
+  queries (binding the element, since binding the family returns six rows and a whole-stdout
+  `contains` is then satisfied by an intact sibling's copy — the masking defect from #15164).
+  Two whole-list corroboration pins are replaced: the tennessine caveat is now asserted on the
+  tennessine ROW the caveat is about, and each family's sentence is counted, reaching exactly
+  its own rows twice each (12/12/12/12/6) where one sentence used to reach all 27. 37 of 37
+  mutants killed, baseline green — every row's copy broken individually, plus re-dropping the
+  note markers, re-truncating the transition span, re-orphaning the pronoun, repointing the
+  envelope locator, and a fabricate-the-envelope arm.
+- Envelope pins in `facts_planttropisms_e2e.rs`, `facts_energyforms_e2e.rs` and
+  `facts_speleothemaltname_e2e.rs` now run through the envelope's `locator` VALUE and its
+  `trust` tier, where they stopped at `\n    locator` — asserting that a locator follows the
+  envelope source and never what that locator is. Security review found the short form on
+  `anatomy/brain-parts.adj` (#15181); these three entries are its siblings, and each of them
+  said it had "closed the envelope gap".
+
+  WHAT WAS ACTUALLY MEASURED, because the first reading of that finding was wrong and is
+  worth recording as such. The obvious mutant — repoint the envelope locator at an unrelated
+  shipped page — is **KILLED by the pins these three already shipped**, on all three tables,
+  along with a tier downgrade. It is killed for a reason none of the three states: no row in
+  any of them overrides `locator` or `trust`, so both envelope fields are inherited by every
+  row (12, 8 and 8) and reach every answer, where the existing per-row citation assertions
+  catch a repoint. `brain-parts` is the one table of the four where all fifteen rows supply
+  their own locator — which is exactly why its envelope locator reached no answer and went
+  unpinned there. The defect was real in the table review found it in, and was not live here.
+
+  So the mutant that shows these pins are load-bearing is a two-step one, and it is the shape
+  this cascade is moving every table toward: give each row the envelope's current locator (a
+  pure refactor — byte-identical output, and it is run as a control, green in both arms), then
+  repoint the envelope. SURVIVES the shipped pin, KILLS the repaired one, 3 of 3 tables. Nine
+  single-step mutants across the three tables (repoint, downgrade, and a fabricate-the-source
+  negative arm) kill under both, and are recorded here as what they are: not evidence for this
+  change.
+
+  No `.adj` content changed — this is test-side only, and the tiers, locators and spans it
+  pins are the ones already shipped.
+
+- **#14986: thirteen brain rows cited a page that never mentions them.**
+  `anatomy/brain-parts.adj` carried the CEREBRUM sentence as its `source` — the field that carries the
+  tier — for **all fifteen rows**, on a SEER page which, measured, contains **no brain-stem function
+  at all** (its only brain stem sentence is anatomical), **no thalamus sentence** (the string occurs
+  there only inside "hypothalamus"), and the word **"hippocampus" zero times**.
+
+  The evidence for those thirteen rows was already in the file, one line below, as five untiered
+  `cites` on two StatPearls chapters. Each row now carries its own span **and its own locator** —
+  three pages — and the envelope carries a framing sentence naming three parts and no function, so it
+  warrants none of the fifteen.
+
+  ### The test asserted the wrong page onto thirteen rows, and passed
+
+  `out.contains("training.seer.cancer.gov")` sat over a query set including the brainstem and the
+  hippocampus. It passed because the envelope's locator covered every row — which is exactly the
+  defect. It now pins each answer's own page, and asserts that these four answers cite SEER **not at
+  all**.
+
+  ### Pins
+
+  **21 of 21 mutants killed, one control.** All fifteen rows broken one at a time — **ten** of them
+  share the brainstem sentence — plus warranting a brainstem row with the cerebrum sentence on the SEER
+  page, repointing the hippocampus row at SEER, rebinding a function, dropping a row's locator, and
+  fabricating the envelope.
+
+  **One mutant survived first, and it was an equivalent mutant — for thirteen rows, not one.** Dropping
+  a row's own locator changes nothing for any row whose locator already equals the envelope's, and
+  **13 of the 15 do**: cerebellum, all ten brainstem rows, hypothalamus and thalamus all sit on
+  *Physiology, Brain*, which is also the envelope's page. The output is byte-identical, so this is not
+  a coverage gap. It bites only on `cerebrum` (SEER) and `hippocampus` (the hippocampus chapter);
+  re-aimed there, both die. A draft of this paragraph attributed the survival to the hypothalamus row
+  alone and called the split "one of three versus the other two" — measured, it is 13 versus 2.
+
+  ### The envelope's LOCATOR was unpinned, and only its source was
+
+  Review measured it: the envelope-pinning needle stopped at `
+    locator`, pinning that a locator
+  follows but never its value. Repointing the envelope locator at either other page **survived** — and
+  no other assertion could catch it, because every row overrides the envelope, so its locator reaches
+  no answer. Both of those now die. The sibling entries that "closed the envelope gap" (#15176 onward)
+  closed half of it.
+
+  ### The count was wrong in six places, and the file already said so
+
+  A draft wrote **nine** brainstem rows. There are **ten** — `brain-parts.adj:44`, fifty-two lines
+  above the paragraph that got it wrong, already said "always listed TEN autonomic functions". The
+  error reached the header, a row comment, two Rust doc comments, a test function's name, and this
+  entry. Review counted the rows.
+
+  ### Two guards fired on me while writing this
+
+  - The converter hardcoded a span-to-locator map and paired the cerebellum and brainstem sentences
+    with the **Hippocampus** chapter; the file pairs them with *Physiology, Brain*. Rewritten to read
+    the pairings out of the file. Same retyping failure as the drifted test span in #15176, caught
+    before it ran.
+  - Pairing spans to rows by "the span that names the part" was **ambiguous**: two spans name the
+    cerebrum, because the thalamus sentence ends *"…relays this information to the cerebrum."* Pairing
+    by earliest mention fixed that — and then over-fired, rejecting the thalamus span because its
+    grammatical subject is *"Sensory neurons"*. The span states the relation, which is what a warrant
+    must do; the rule was wrong, not the sentence. It is recorded in the header.
+
+- **#14986: a header that asked to be deleted when this landed, and the note that was too kind to itself.**
+  `earth-science/speleothem-alt-name.adj` held all four justifying sentences already — the COLUMN one
+  as the envelope `source`, the other three as table-level `cites`. So every row carried all four, and
+  the seven rows that are not about columns were warranted, **in the field that carries the tier**, by
+  a sentence about a stalagmite meeting a stalactite.
+
+  ### The file had filed its own bug, and understated it
+
+  Its header carried a long note ending: *"Row-level provenance is filed as issue #13893; when it
+  lands, this header should be revisited and the note deleted rather than left to rot."* It landed.
+  This is that deletion.
+
+  But the note called the problem **harmless in JSON** — *"nothing cited is false, and the grounding
+  sentence is always among them, but the reader has to match sentence to row themselves"* — and that
+  was too kind to it. The column sentence was the `source` for all eight rows, so a `corallite` answer
+  was not merely *accompanied* by an unrelated sentence: it was **warranted** by one. The note framed a
+  wrong warrant as a presentation inconvenience. (#13898, the `--explain` renderer, stays open and is
+  now irrelevant to this file: there are no corroborations left to drop.)
+
+  The note's other claim survives and is kept: four single-purpose tables would fragment one lookup
+  into four and make the backward query — the useful one — unaskable in a single goal.
+
+  ### Pins
+
+  **14 of 14 mutants killed, one control.** All eight rows broken one at a time — including **each of
+  the five that share the frozen-waterfall sentence**, since one broken copy behind four intact ones
+  is the failure `skeleton-bones` (#15171) shipped and `speleothem-substrate` (#15175) designed out.
+  Plus warranting the coralloid row with the column sentence, restoring the old table-level `cites`,
+  rebinding an alt name, dropping a row's source, repointing the locator, and fabricating the
+  envelope — a kill, because the envelope's wording is pinned against the shipped file (#15176).
+
+  Queries bind the ALT NAME, which is unique per row; binding the speleothem would return five rows
+  for `frozen_waterfall` and let a needle be satisfied by a sibling's intact copy.
+
+  Measured: all four row spans and the framing sentence occur **exactly once** on the NPS page;
+  near-miss controls score zero. Suite run with `RUSTFLAGS="-Dwarnings"`, the way CI compiles it.
+
+  The README row for this table stated the same limitation and is updated rather than left behind.
+
+  ### A pre-existing assertion that proves less than its message claims
+
+  Review measured it: `a_frozen_waterfall_answers_to_five_other_names` does a whole-stdout `contains`
+  over a **five-answer** query, and it did **not** fire when one copy of the shared sentence was
+  broken, or silently edited ("most common" → "least common"). Only the new per-row test killed those.
+  The old assertion is left in place — it still checks the five bindings, which is what its name says —
+  but it is not what pins the spans, and the new helper's doc comment records why.
+
+  ### And the note's deletion left its own banner behind
+
+  Review caught it: the removed limitation note's headline, `*** A LIMITATION OF THIS TABLE IN
+  PARTICULAR, STATED UP FRONT. ***`, survived directly above the paragraph announcing that the
+  limitation is gone. The one line of the note not rewritten was the line that announced it — "left to
+  rot" in the exact file whose header asked not to be.
+
+  Four other comment defects came out of the same review, and one is worth naming because it is this
+  cascade's own discipline turned inward: the envelope gloss said the framing sentence shows "that
+  this domain HAS many names", while the sentence counts *"38 different **types** … subtypes and
+  varieties"* — taxonomy, not nomenclature. **A gloss that overstates its own citation**, in the file
+  that exists to stop exactly that.
+
+- **#14986: eight energy forms, all warranted by the definition of chemical energy.**
+  `physics/energy-forms.adj` carried the CHEMICAL sentence as its envelope, so a recall of
+  `electrical` came back proved by *"Chemical energy is energy stored in the bonds of atoms and
+  molecules."* Each row now carries its own defining sentence. One page, so no row restates `locator`
+  or `trust`.
+
+  ### The same page, and the opposite answer for its sibling
+
+  `physics/energy-form-family.adj` cites this exact page and is **not** convertible: there the
+  potential/kinetic grouping lives in a SECTION HEADING, and no sentence assigns a form to a family
+  (measured and recorded on #15139, which is why that table was withdrawn from the convertible
+  queue). This table asks what each form **is**, which the page states in prose, one sentence per
+  form.
+
+  Worth stating because the earlier triage kept trying to classify by page or by envelope shape: the
+  question is per **table**, not per page. The same article can ground one relation in prose and leave
+  another to a heading.
+
+  ### One variant head
+
+  *"Thermal energy, or heat, is the energy that comes from atoms and molecules moving in a
+  substance."* — not *"Thermal energy is…"*. A probe requiring the plain head reported the row as
+  having no defining sentence at all, the same prefix-test failure as `gravitropism` and
+  `electrotropism` in #15176. A mutant that normalises the head reddens.
+
+  ### Pins
+
+  **14 of 14 mutants killed, one control** (the unmutated file): all eight rows broken one at a time,
+  warranting `electrical` with the chemical sentence, normalising the thermal head, rebinding a token,
+  dropping a row's source, repointing the locator, and **fabricating the envelope** — which is a kill
+  here rather than a disclosed gap, because the envelope test reads the shipped `.adj` and asserts the
+  span literally, as #15176 established.
+
+  Measured: all eight spans and the framing sentence occur **exactly once** on the cached page, each
+  row span names its form and contains its token, near-miss controls score zero.
+
+  ### One abstention that is not honest, disclosed rather than left
+
+  Security review found it: the page names **nine** forms and this table has eight. `sound` abstains
+  even though the same page defines it, once, in prose — *"Sound is energy moving through substances
+  in longitudinal (compression or rarefaction) waves."* That is a false negative against the table's
+  own source, and the file's header presented its abstention behaviour as honest without saying so.
+  The sibling `energy-form-family.adj` already discloses the same gap.
+
+  The header now states it. **Adding the row is not folded in**: it changes what this table claims,
+  which does not belong in a provenance conversion, so it is filed instead.
+
+  Also from review: a pre-existing `out.contains("eia.gov")` would have accepted
+  `www.eia.gov.evil.example`; it now pins the full locator, which the row assertions already did. The suite was run
+  with `RUSTFLAGS="-Dwarnings"`, which is how CI compiles it — a local `cargo test` does not, and
+  #15176 failed five jobs on a warning that a plain local run had reported as green.
+
+- **#14986: twelve tropisms, each warranted by the definition of phototropism.**
+  `biology/plant-tropisms.adj` carried the PHOTOTROPISM line as its envelope, so a recall of
+  `traumatotropism` came back proved by *"Phototropism: movement or growth in response to lights or
+  colors of light"*. Each row now carries its own definition line; the envelope carries the page's
+  definition of a **tropism**, which warrants no row. One page, so no row restates `locator` or
+  `trust`.
+
+  ### Is a "Term: definition" line one element, or a weld?
+
+  Checked before anything was built on it, because that shape is usually a `<dt>`/`<dd>` pair that an
+  extractor has joined — which would make it the held #13934 question, as it did for
+  `geography/landforms.adj` (a thesaurus: term line, definition line) and `language/idiom-meaning.adj`
+  (numbered heading, meaning beneath). Here it is **not**: each definition is ONE rendered line, a
+  single block element with inline markup inside it.
+
+  A raw-HTML grep for *"lights or colors"* finds **zero** occurrences, which looked alarming for
+  about a minute. The markup sits between the words; the zero was the instrument.
+
+  ### What the page's own wording forced
+
+  - **Two variant heads**, kept as written: *"Gravitropism (sometimes referred to as geotropism): is
+    movement…"* and *"Electrotropism, or galvanotropism: the movement…"*. A probe that required a bare
+    `Gravitropism:` head reported both rows as having **no definition line at all** — the probe's
+    prefix test, not the page. A mutant that normalises the head to the bare form reddens.
+
+    For electrotropism the probe was not the only problem. **The header's shipped quote was
+    non-verbatim**: it read *"Electrotropism/Galvanotropism: the movement…"*, a form that occurs zero
+    times on the page, raw or rendered, under a header promising "the verbatim span that states it".
+    So this row is a repair, not just a move. The header's claim that those seven rows were
+    "WebFetch-verified, including a targeted second pass re-fetching all seven new terms' raw
+    definition text directly" is removed rather than restated — that pass is what produced the quote.
+  - **Reference markers trimmed.** The chemotropism line ends *"…in response to chemicals[8]"*; every
+    span stops at the last word before the first bracket. That leaves a verbatim PREFIX of the page's
+    own line — nothing reworded, and what is dropped is a footnote marker, never content. A mutant
+    that restores the bracket reddens.
+
+  ### Pins
+
+  **19 of 19 mutants killed, one control.** All twelve rows broken one at a time; warranting
+  `traumatotropism` with the phototropism line; restoring the `[8]`; normalising the gravitropism
+  head; rebinding a stimulus; dropping a row's source so it inherits the envelope; repointing the
+  locator. The control is the unmutated file.
+
+  ### The envelope gap every prior entry disclosed is closed here
+
+  Six entries in this cascade have said the same thing: once every row overrides `source`, the
+  envelope's wording is unreachable from any answer, so fabricating it leaves the suite green —
+  disclosed rather than implied. True of the **output**, and needlessly true of the **file**. The
+  envelope test now reads the shipped `.adj` and asserts the span literally, so a drift from the page
+  is a failure rather than a disclosed gap. That mutant is the 19th kill, not a control.
+
+  **And the `trust` gap does NOT apply here** — a sentence claiming it did was written before it was
+  checked. This table declares `consensus`, which is not `lower.rs:2622`'s `Authoritative` default, so
+  **deleting the envelope's `trust` line reddens all six tests**. Inheritance is pinned here, not
+  assumed. Measured both ways: deleting reddens, and flipping the tier to `authoritative` reddens.
+
+  ### Three of my own errors, each caught by a guard rather than by care
+
+  1. **The substring anchor, again.** The converter replaced the envelope using a 4-space anchor,
+     which is a substring of the 8-space row line it had just written — so the framing span landed
+     inside the PHOTOTROPISM ROW. The `rainforest-layer` entry below records this exact bug
+     ("matched as a **substring** … Line anchored now"). Now anchored on the preceding newline.
+  2. **A span retyped instead of copied.** The hydrotropism needle in the test was typed from memory
+     and drifted from the shipped line; the test failed, and the fix takes every needle from the
+     `.adj` itself. The converter's own docstring warns against exactly this.
+  3. **A no-op mutant.** The per-row mutation replaced the word "response", which the aerotropism
+     line does not contain (*"Aerotropism: the growth of plants towards or away from a source of
+     wind"*) — so that mutant would have changed nothing and scored a free kill. The harness's
+     no-op assert caught it; mutations now alter the final word, whatever it is.
+
+- **#14986: the frostwork rows had their own sentence all along — as a corroboration.**
+  `earth-science/speleothem-substrate.adj` held BOTH justifying sentences already: the helictite one
+  as the envelope `source`, the frostwork one as a table-level `cites`. Every row carried both, so the
+  five FROSTWORK rows were warranted by a sentence about helictites, with their own evidence demoted
+  to an untiered corroboration.
+
+  That is what the atmosphere review rejected in the other direction (#15137): **the field carrying
+  the tier must be the sentence that supports the row.** Nothing was fetched and no span was widened —
+  both sentences already name their own speleothem. The `cites` became the frostwork rows' `source`.
+
+  The envelope now carries the page's own DEFINITION of a speleothem. A draft used *"In general,
+  however, one thing caves do have in common is where speleothems form."*; review read it in context
+  and found that on the page it introduces the **water-table zone**, not the substrate — and that its
+  leading connective has no antecedent inside the quote, the defect this file's own header argues
+  against.
+
+  ### The header had recorded this as a display quirk
+
+  It read: *"Provenance is TABLE-level, so all eleven rows carry both sentences and `--explain` shows
+  only the primary one — meaning the frostwork rows display under the helictite sentence there…
+  the JSON output is the authoritative view."* But the JSON was not a different view of the same
+  thing: there too, a frostwork row's `source` — the tiered field — was the helictite sentence. It
+  was not a rendering problem, it was the warrant. (#13898, the `--explain` renderer dropping
+  corroborations, stays open; this file simply no longer has corroborations to drop.)
+
+  ### Two dead ends in pinning it, both worth recording
+
+  1. A **fully-ground query** (`speleothem_substrate(frostwork, ledge)`) emits no `citations` at all —
+     the engine ranks it as a hypothesis instead of recalling it. The first assertion failed with zero
+     citation blocks, and the count was right.
+  2. Binding only the speleothem returns six rows for `helictite`, so a whole-stdout `contains` is
+     satisfied by any sibling's intact copy — the masking defect found in `joint-types` (#15164).
+
+  The shape that works: bind the SUBSTRATE and use a needle that **spans from the binding into the
+  citation** — `"bindings":{"S":"frostwork"},"citations":[{"source":"Frostwork can also…`. It cannot
+  match an answer that bound a different speleothem even when both are in the same output, which is
+  what `cave_wall` and `cave_ceiling` require: those two substrates belong to both speleothems.
+
+  ### Pins
+
+  **16 of 16 mutants killed, two controls counted separately.** Warranting a frostwork row with the
+  helictite sentence and the reverse; restoring the old table-level `cites`; **all eleven rows broken
+  one at a time**; dropping a row's source so it inherits the framing envelope; repointing the
+  locator. Controls: unmutated green, fabricated envelope green — disclosed, since every row overrides
+  `source`.
+
+  **The `trust` gap, disclosed as in the sibling entries and adjudicated against this file:** changing
+  the envelope to `trust consensus` reddens the suite (inheritance is real, all eleven rows inherit),
+  but *deleting* the envelope's `trust authoritative` line leaves it green, because `lower.rs:2622`
+  defaults an envelope carrying a `source` to `Authoritative`. So the `"trust":"authoritative"` in
+  every needle cannot tell inheritance from that default.
+
+  The harness anchored per-row mutants on the row header immediately followed by its `source` line,
+  which **missed the first row of each speleothem** — those carry an explanatory comment in between.
+  The assert caught it as a harness bug; anchors are now whole `row … { … }` blocks.
+
+  A draft of this paragraph said that miss would have reported "eleven surviving mutants". Counted on
+  the shipped file: **two**. Nine of the eleven row blocks open with `source` on the line after the
+  header, so the naive anchor matched them; only `helictite/cave_ceiling` and `frostwork/stalactite`
+  carry a comment in between.
+
+  **Fourth anchor miss of this family**, counted in this file: `rainforest-layer` and
+  `atmosphere-layers` (both produced false "surviving mutant" reports), `hormone-glands` below
+  (caught by its assert), and this one. A draft named `joint-types` as the third — that entry's
+  harness defect was the sibling-row MASKING bug, a different fault, and it was not caught by an
+  assert.
+
 - **#14986: fifteen bones, twelve of which their own citation never mentions.**
   `biology/skeleton-bones.adj` warranted every row with the FEMUR row's sentence, on a MedlinePlus
   **leg image page**. Measured against that page, **12 of the 15 bones do not appear on it at all** —

@@ -217,3 +217,225 @@ fn speleothem_alt_name_abstains_on_single_named_formations_and_on_members() {
         "a member of a category is not an alternative name for it: {out}"
     );
 }
+
+const NPS_LOCATOR: &str = "https://www.nps.gov/subjects/caves/speleothems.htm";
+const COLUMN_SPAN: &str = "When a stalagmite grows together with its counterpart feeder stalactite, a new speleothem is formed: a column or pillar.";
+const CORALLOID_SPAN: &str = "Coralloid (or corallite or cave popcorn) is a catchall term describing knobby, nodular, botryoidal, or corallike speleothems.";
+const WATERFALL_SPAN: &str = "The most common of these is the petrified or frozen waterfall, also referred to as cascades, rivers, glaciers, or organ pipes.";
+const BACON_SPAN: &str = "Cave Bacon forms on slanted surfaces, and is called \\\"bacon\\\" instead of drapery, when the characteristic layers are present.";
+
+/// Assert one row's warrant, binding the ALT NAME so exactly one row answers.
+///
+/// Binding the speleothem would return five rows for `frozen_waterfall`, and a
+/// whole-stdout `contains` is then satisfied by any sibling's intact copy —
+/// the masking defect mutation found in `joint-types` (#15164). Every alt name
+/// in this table is unique, so the alt-name direction is single-answer.
+fn assert_alt(tag: &str, alt: &str, speleothem: &str, span: &str) -> String {
+    let dir = scratch(tag);
+    std::fs::copy(
+        facts_stdlib().join("earth-science/speleothem-alt-name.adj"),
+        dir.join("speleothem-alt-name.adj"),
+    )
+    .expect("copy shipped speleothem-alt-name.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"speleothem-alt-name.adj\"\n? speleothem_alt_name($S, {alt})\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        1,
+        "exactly one row has the alt name {alt}: {out}"
+    );
+    assert!(
+        out.contains(&format!("\"S\":\"{speleothem}\"")),
+        "{alt} binds {speleothem}: {out}"
+    );
+    assert!(
+        out.contains(&format!(
+            "\"source\":\"{span}\",\"locator\":\"{NPS_LOCATOR}\",\"trust\":\"authoritative\""
+        )),
+        "{alt} is warranted by the sentence that states IT: {out}"
+    );
+    out
+}
+
+/// #14986. This table held all four justifying sentences already — the COLUMN
+/// one as the envelope `source`, the other three as table-level `cites` — so
+/// every row carried all four and the seven rows that are not about columns
+/// were warranted, in the field that carries the tier, by a sentence about a
+/// stalagmite meeting a stalactite.
+///
+/// The file's own header called that a limitation the reader must work around
+/// (#13893). It was not a reading problem: the JSON said the same thing.
+#[test]
+fn each_row_is_warranted_by_the_sentence_that_states_its_name() {
+    let out = assert_alt("altpillar", "pillar", "column", COLUMN_SPAN);
+    // The column row keeps its own sentence, and no longer drags the other
+    // three along. Twice, not once — `citations` and again under `steps`.
+    assert_eq!(
+        out.matches("\"corroborations\":[]").count(),
+        2,
+        "the row's own sentence is its warrant, so nothing corroborates: {out}"
+    );
+    assert!(
+        !out.contains("Coralloid (or corallite"),
+        "a column answer no longer carries the coralloid sentence: {out}"
+    );
+
+    let out = assert_alt("altcorallite", "corallite", "coralloid", CORALLOID_SPAN);
+    assert!(
+        !out.contains("When a stalagmite grows together"),
+        "a coralloid answer is no longer proved by the column sentence: {out}"
+    );
+
+    assert_alt(
+        "altbacon",
+        "cave_bacon_when_characteristic_layers_present",
+        "drapery",
+        BACON_SPAN,
+    );
+}
+
+/// FIVE rows share one sentence — it lists five alternative names for the
+/// frozen waterfall. Each carries its own copy, and each is pinned separately,
+/// because one broken copy hiding behind four intact ones is exactly the
+/// failure `skeleton-bones` (#15171) shipped and `speleothem-substrate`
+/// (#15175) designed out.
+#[test]
+fn all_five_frozen_waterfall_names_carry_their_own_copy() {
+    for (tag, alt) in [
+        ("wf1", "petrified_waterfall"),
+        ("wf2", "cascades"),
+        ("wf3", "rivers"),
+        ("wf4", "glaciers"),
+        ("wf5", "organ_pipes"),
+    ] {
+        assert_alt(tag, alt, "frozen_waterfall", WATERFALL_SPAN);
+    }
+}
+
+/// The envelope is the framing sentence, and its WORDING is pinned against the
+/// shipped file rather than disclosed as unreachable — the gap #15176 closed.
+#[test]
+fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
+    let dir = scratch("altenvelope");
+    std::fs::copy(
+        facts_stdlib().join("earth-science/speleothem-alt-name.adj"),
+        dir.join("speleothem-alt-name.adj"),
+    )
+    .expect("copy shipped speleothem-alt-name.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"speleothem-alt-name.adj\"\n? speleothem_alt_name($S, $A)\n",
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        8,
+        "all eight rows answer: {out}"
+    );
+    assert!(
+        !out.contains("Cave Minerals of the World"),
+        "the framing span warrants no row: {out}"
+    );
+    // THE PIN RUNS TO THE TIER, not to `\n    locator`. The shorter form
+    // shipped here and in two sibling entries: it asserts that a locator
+    // follows the envelope source, never what that locator is.
+    //
+    // MEASURED, and it corrected the reason for writing this. The short pin
+    // does NOT let a repointed envelope through this table: no row here
+    // overrides `locator` or `trust`, so both are inherited by all eight rows
+    // and reach every answer, where the per-row citation assertions already
+    // pin them. The hole WAS real in `brain-parts` (#15181), where all fifteen
+    // rows carry their own locator and the envelope's reaches nothing — review
+    // found it there and it is pinned this same way there now, on main.
+    //
+    // What this pin defends is the shape this table is moving toward. Give
+    // every row its own locator — a refactor with identical output — and then
+    // repoint the envelope: the short pin SURVIVES that, this one KILLS it.
+    let adj = std::fs::read_to_string(
+        facts_stdlib().join("earth-science/speleothem-alt-name.adj"),
+    )
+    .expect("read shipped speleothem-alt-name.adj");
+    assert!(
+        adj.contains(
+            "    source \"Cave Minerals of the World (Hill, 1997) refers to 38 different types of speleothems and numerous subtypes and varieties.\"\n    locator \"https://www.nps.gov/subjects/caves/speleothems.htm\"\n    trust authoritative"
+        ),
+        "the envelope carries the page's framing sentence, verbatim"
+    );
+}
+
+/// Parse `(row key, its own `source`)` out of a shipped `.adj`.
+///
+/// The full two-column key: column 1 alone is not a row identity. A first pass
+/// at the #15193 census keyed on column 1 and printed brain-parts as
+/// `brainstem+brainstem+…`, because ten rows there share that part and differ
+/// only in the function.
+fn row_spans(rel: &str) -> Vec<(String, String)> {
+    let adj = std::fs::read_to_string(facts_stdlib().join(rel))
+        .unwrap_or_else(|e| panic!("read shipped {rel}: {e}"));
+    let mut out: Vec<(String, String)> = Vec::new();
+    let mut key: Option<String> = None;
+    for line in adj.lines() {
+        if let Some(rest) = line.strip_prefix("    row (") {
+            key = rest.split(')').next().map(|k| {
+                k.split(',').map(|p| p.trim()).collect::<Vec<_>>().join(", ")
+            });
+        } else if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            let span = rest.trim_end_matches(0x22 as char).to_string();
+            out.push((key.clone().expect("a row precedes every source"), span));
+        }
+    }
+    out
+}
+
+/// The groups of rows that share one span, in first-appearance order.
+fn sharing_groups(pairs: &[(String, String)]) -> Vec<Vec<String>> {
+    let mut order: Vec<String> = Vec::new();
+    for (_, span) in pairs {
+        if !order.contains(span) {
+            order.push(span.clone());
+        }
+    }
+    order
+        .iter()
+        .map(|span| {
+            pairs
+                .iter()
+                .filter(|(_, s)| s == span)
+                .map(|(k, _)| k.clone())
+                .collect::<Vec<_>>()
+        })
+        .filter(|g| g.len() > 1)
+        .collect()
+}
+
+/// #15193. The sharing structure of this table, asserted against the SHIPPED
+/// FILE rather than described in a comment.
+///
+/// Five rows share the flowstone sentence, which lists five alternate
+/// names for the same formation.
+#[test]
+fn the_shared_spans_are_exactly_the_declared_ones() {
+    let pairs = row_spans("earth-science/speleothem-alt-name.adj");
+    assert_eq!(pairs.len(), 8, "every row carries its own source: {pairs:?}");
+    let groups = sharing_groups(&pairs);
+    let expected: Vec<Vec<&str>> = vec![
+        vec!["frozen_waterfall, petrified_waterfall", "frozen_waterfall, cascades", "frozen_waterfall, rivers", "frozen_waterfall, glaciers", "frozen_waterfall, organ_pipes"],
+    ];
+    assert_eq!(
+        groups, expected,
+        "the shared sentences are shared by exactly these rows: {groups:?}"
+    );
+    let shared: usize = groups.iter().map(|g| g.len()).sum();
+    assert_eq!(
+        pairs.len() - shared,
+        3,
+        "and 3 rows have a sentence to themselves: {groups:?}"
+    );
+}

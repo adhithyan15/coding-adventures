@@ -85,14 +85,244 @@ fn biology_flower_parts_recall_binds_function_with_citation() {
         out.contains("\"Part\":\"stamen\""),
         "male → stamen (reverse recall): {out}"
     );
-    // The answer carries the Illinois Extension citation as its proof, at the
-    // `authoritative` trust tier for a .edu-primary botany/extension source.
+    // THIS ASSERTION COULD NOT HAVE CAUGHT THE DEFECT. Every span on this
+    // table is on the same Illinois Extension page, so a hostname needle held
+    // just as well when all seven rows carried the PETAL sentence. Kept
+    // because the tier still matters; the per-row pins below are what bind a
+    // row to the sentence that states it.
     assert!(
         out.contains("web.extension.illinois.edu")
             && out.contains("\"trust\":\"authoritative\""),
-        "carries the source citation: {out}"
+        "carries a citation on the cited page, at the authoritative tier: {out}"
     );
+    // Since #14986 these answers carry FOUR different sentences, not one.
+    for span in [
+        "The anthers carry the pollen.",
+        "The style leads down to the ovary that contains the ovules.",
+        "The stigma is the sticky surface at the top of the pistil; it traps and holds the pollen.",
+    ] {
+        assert!(
+            out.contains(span),
+            "an answer here is warranted by {span}: {out}"
+        );
+    }
     // The leaf is a plant part, not a part of the flower — honest abstention,
     // never a fabricated function.
     assert!(out.contains("\"abstained\":true"), "leaf abstains: {out}");
+}
+
+const PAGE: &str = "https://web.extension.illinois.edu/gpe/case4/c4facts1a.html";
+const STAMEN_PISTIL: &str = "The main flower parts are the male part called the stamen and the female part called the pistil.";
+
+/// Assert one row's warrant, binding the PART so exactly one row answers.
+fn assert_part(tag: &str, part: &str, function: &str, span: &str) {
+    let dir = scratch(tag);
+    std::fs::copy(
+        facts_stdlib().join("biology/flower-parts.adj"),
+        dir.join("flower-parts.adj"),
+    )
+    .expect("copy shipped flower-parts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"flower-parts.adj\"\n? flower_part_function({part}, $F)\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        1,
+        "exactly one row for {part}, so every needle below is its own: {out}"
+    );
+    assert!(
+        out.contains(&format!("\"F\":\"{function}\"")),
+        "{part} binds {function}: {out}"
+    );
+    // THERE IS NOTHING TO DECLARE HERE ANY MORE. This comment used to declare
+    // an equivalent mutant: every row cited the envelope's own URL, and
+    // `row_provenance` assigns `locator` only when the row supplies one, so
+    // DROPPING a row's locator produced byte-identical output and could not
+    // be killed. Those seven duplicated locators are gone — the rule
+    // `ADJ-TABLES.md` §4 states is to restate a row locator only when its
+    // page DIFFERS from the envelope's — so a row that has no locator cannot
+    // have one dropped. ADDING one is caught structurally, and CHANGING the
+    // envelope's is caught by the `PAGE` needle below.
+    assert!(
+        out.contains(&format!(
+            "\"source\":\"{span}\",\"locator\":\"{PAGE}\",\"trust\":\"authoritative\""
+        )),
+        "{part} is warranted by the sentence that states its function: {out}"
+    );
+    // A NECESSARY CONDITION, AND NOT A SUFFICIENT ONE. The sentence given to
+    // this row has to name the part.
+    //
+    // An earlier comment here claimed the opposite of what this code does: it
+    // said "a looser substring test is NOT used, because \"pistil\" occurs
+    // inside the stigma sentence and would let the wrong row pass". This IS
+    // that substring test, and "pistil" does occur in the stigma sentence, so
+    // this check cannot by itself reject a wrong pairing. Both arguments also
+    // arrive from the same call site, so it never reads the shipped file.
+    //
+    // What actually pins the row is the `source`-equality assertion above,
+    // against real CLI output, under the one-citation gate. The structural
+    // check in `the_only_shared_span_is_the_declared_one` is what reads the
+    // file.
+    let lower = span.to_lowercase();
+    assert!(
+        lower.contains(part),
+        "{part}'s own span at least names it: {span}"
+    );
+}
+
+/// The property the pairing check above cannot provide, read out of the
+/// SHIPPED FILE rather than compared between two test literals.
+///
+/// Exactly one span is shared, by exactly `stamen` and `pistil`. Everything
+/// else is one row, one sentence. If a future edit gives two rows the same
+/// warrant — the shape that hid five unpinned rows in `skeleton-bones`
+/// (#15171) — this reddens and names them.
+#[test]
+fn the_only_shared_span_is_the_declared_one() {
+    let adj = std::fs::read_to_string(facts_stdlib().join("biology/flower-parts.adj"))
+        .expect("read shipped flower-parts.adj");
+    let mut pairs: Vec<(String, String)> = Vec::new();
+    let mut key: Option<String> = None;
+    for line in adj.lines() {
+        if let Some(rest) = line.strip_prefix("    row (") {
+            key = rest.split(',').next().map(|k| k.trim().to_string());
+        } else if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            let span = rest.trim_end_matches(0x22 as char).to_string();
+            pairs.push((key.clone().expect("a row precedes every source"), span));
+        }
+    }
+    assert_eq!(pairs.len(), 7, "seven row sources parsed: {pairs:?}");
+
+    let mut shared: Vec<(String, Vec<String>)> = Vec::new();
+    for (_, span) in &pairs {
+        if shared.iter().any(|(s, _)| s == span) {
+            continue;
+        }
+        let owners: Vec<String> = pairs
+            .iter()
+            .filter(|(_, s)| s == span)
+            .map(|(k, _)| k.clone())
+            .collect();
+        if owners.len() > 1 {
+            shared.push((span.clone(), owners));
+        }
+    }
+    assert_eq!(shared.len(), 1, "exactly one span is shared: {shared:?}");
+    assert_eq!(
+        shared[0].1,
+        vec!["stamen".to_string(), "pistil".to_string()],
+        "and it is shared by stamen and pistil, the pair the page fixes in one clause"
+    );
+    assert_eq!(shared[0].0, STAMEN_PISTIL, "and it is that clause");
+    // THE LOCATOR RULE. `reference-lines.adj` ships it: restate a row locator
+    // when its page DIFFERS from the envelope's, inherit when it is the same.
+    // Every span here is on the one page, so NO row may carry a locator.
+    //
+    // Added because the deletion that made this true was not self-guarding:
+    // re-adding the envelope's URL to a row passed the entire suite.
+    let row_locators: Vec<&str> = adj
+        .lines()
+        .filter_map(|l| l.strip_prefix(r#"        locator ""#))
+        .collect();
+    assert!(
+        row_locators.is_empty(),
+        "no row carries its own locator; all inherit the envelope's: {row_locators:?}"
+    );
+}
+
+/// #14986. The PETAL sentence was this table's `source` — the field that
+/// carries the tier — for all seven rows, so a recall of `ovary` came back
+/// proved by *"Petals attract pollinators and are usually the reason why we buy
+/// and enjoy flowers."*
+///
+/// Every span here is on the SAME page, so the locator was never wrong and a
+/// hostname assertion could never have caught it — only the span was wrong.
+#[test]
+fn every_part_carries_the_sentence_that_states_its_function() {
+    assert_part(
+        "fppetal", "petal", "attract_pollinators",
+        "Petals attract pollinators and are usually the reason why we buy and enjoy flowers.",
+    );
+    assert_part("fpsepal", "sepal", "protect", "Sepals help protect the developing bud.");
+    assert_part("fpanther", "anther", "carry_pollen", "The anthers carry the pollen.");
+    assert_part(
+        "fpstigma", "stigma", "traps_pollen",
+        "The stigma is the sticky surface at the top of the pistil; it traps and holds the pollen.",
+    );
+    assert_part(
+        "fpovary", "ovary", "contains_ovules",
+        "The style leads down to the ovary that contains the ovules.",
+    );
+}
+
+/// TWO ROWS SHARE ONE SENTENCE. The page fixes `stamen` and `pistil` in the
+/// same clause, so each row carries its own copy and each is asserted in output
+/// where the other row is absent — the failure `skeleton-bones` (#15171)
+/// shipped by testing one row per shared span.
+#[test]
+fn the_two_rows_that_share_a_sentence_each_carry_their_own_copy() {
+    assert_part("fpstamen", "stamen", "male", STAMEN_PISTIL);
+    assert_part("fppistil", "pistil", "female", STAMEN_PISTIL);
+}
+
+/// The envelope is the page's own sentence saying a flower has some parts that
+/// are basic equipment. It names NO part — checked, not assumed — so it
+/// warrants none of the seven rows.
+#[test]
+fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
+    let dir = scratch("fpenvelope");
+    std::fs::copy(
+        facts_stdlib().join("biology/flower-parts.adj"),
+        dir.join("flower-parts.adj"),
+    )
+    .expect("copy shipped flower-parts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"flower-parts.adj\"\n? flower_part_function($P, $F)\n",
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        7,
+        "all seven rows answer: {out}"
+    );
+    assert!(
+        !out.contains("there are some parts that are basic equipment"),
+        "the framing span warrants no row: {out}"
+    );
+    // The petal sentence warrants exactly ONE row where it used to be the
+    // `source` on all seven — 14 occurrences across citations and steps, now 2.
+    assert_eq!(
+        out.matches("Petals attract pollinators").count(),
+        2,
+        "the petal sentence warrants the petal row and nothing else: {out}"
+    );
+    // The shared sentence warrants exactly TWO rows.
+    assert_eq!(
+        out.matches(STAMEN_PISTIL).count(),
+        4,
+        "the stamen/pistil sentence warrants its two rows and no others: {out}"
+    );
+    let adj = std::fs::read_to_string(facts_stdlib().join("biology/flower-parts.adj"))
+        .expect("read shipped flower-parts.adj");
+    assert!(
+        adj.contains(
+            "    source \"Flowers can be made up of different parts, but there are some parts that are basic equipment.\"\n    locator \"https://web.extension.illinois.edu/gpe/case4/c4facts1a.html\"\n    trust authoritative"
+        ),
+        "the envelope carries the page's framing sentence, verbatim"
+    );
+    // The `columns` line. A surviving mutant is a finding: renaming it is
+    // invisible to every assertion above, because column names are positional
+    // and never reach the output. Same survivor as `heredity-term` (#15188)
+    // and `scientific-method-step` (#15190).
+    assert!(
+        adj.contains("    columns part, function"),
+        "the shipped column names are unchanged"
+    );
 }

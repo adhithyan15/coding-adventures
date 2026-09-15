@@ -4,8 +4,11 @@
 % The shape a learner (or an LLM) produces to ANSWER "what does the cerebellum
 % do?": it states no anatomy fact of its own — it only `import`s the grounded
 % table and asks binding queries. The engine resolves each `?` against the
-% `brain_part_function` rows and returns EVERY function + the table's
-% source/locator/trust (as of this cycle's extension, a bound part can recall
+% `brain_part_function` rows and returns EVERY function together with THAT
+% ROW'S OWN source and locator — since #14986 each row carries both, and this
+% table's fifteen rows sit on THREE pages, of which the SEER page warrants
+% only the cerebrum. Only `trust` is inherited from the envelope. (A bound
+% part can recall
 % MULTIPLE functions — `brainstem` now recalls breathing ; temperature_regulation
 % ; respiration ; heart_rate ; wake_sleep_cycles ; coughing ; sneezing ;
 % digestion ; vomiting ; swallowing). The reverse-binding query runs the

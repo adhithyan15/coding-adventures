@@ -70,9 +70,194 @@ fn physics_energy_forms_recall_binds_token_with_citation() {
     );
     // The answer carries the EIA locator + trust tier as its proof.
     assert!(
-        out.contains("eia.gov") && out.contains("\"trust\":\"authoritative\""),
+        out.contains(EIA_LOCATOR) && out.contains("\"trust\":\"authoritative\""),
         "carries the source citation: {out}"
     );
     // Magnetic energy is NOT one of the enumerated forms — honest abstention.
     assert!(out.contains("\"abstained\":true"), "magnetic abstains: {out}");
+}
+
+const EIA_LOCATOR: &str =
+    "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php";
+
+/// Assert one row carries its own defining sentence, in a program returning
+/// only that row. Each form names exactly one row, so a one-answer query is
+/// available here.
+fn assert_form(tag: &str, form: &str, token: &str, span: &str) {
+    let dir = scratch(tag);
+    std::fs::copy(
+        facts_stdlib().join("physics/energy-forms.adj"),
+        dir.join("energy-forms.adj"),
+    )
+    .expect("copy shipped energy-forms.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        format!("import \"energy-forms.adj\"\n? energy_form_token({form}, $T)\n"),
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        1,
+        "exactly one row for {form}, so every needle below is its own: {out}"
+    );
+    assert!(
+        out.contains(&format!("\"T\":\"{token}\"")),
+        "{form} binds {token}: {out}"
+    );
+    assert!(
+        out.contains(&format!(
+            "\"source\":\"{span}\",\"locator\":\"{EIA_LOCATOR}\",\"trust\":\"authoritative\""
+        )),
+        "{form} carries its own defining sentence: {out}"
+    );
+}
+
+/// #14986: the envelope was the CHEMICAL sentence, so a recall of `electrical`
+/// came back proved by *"Chemical energy is energy stored in the bonds of
+/// atoms and molecules."*
+///
+/// SAME PAGE, DIFFERENT ANSWER FROM ITS SIBLING. `energy-form-family.adj`
+/// cites this page too and is NOT convertible — there the potential/kinetic
+/// grouping lives in a section heading and no sentence assigns a form to a
+/// family. This table asks what each form IS, which the page states in prose.
+#[test]
+fn every_form_row_carries_its_own_defining_sentence() {
+    assert_form(
+        "efchem", "chemical", "bonds",
+        "Chemical energy is energy stored in the bonds of atoms and molecules.",
+    );
+    assert_form(
+        "efmech", "mechanical", "tension",
+        "Mechanical energy is energy stored in objects by tension.",
+    );
+    assert_form(
+        "efnuc", "nuclear", "nucleus",
+        "Nuclear energy is energy stored in the nucleus of an atom—the energy that holds the nucleus together.",
+    );
+    assert_form(
+        "efgrav", "gravitational", "height",
+        "Gravitational energy is energy stored in an object's height.",
+    );
+    assert_form(
+        "efrad", "radiant", "electromagnetic",
+        "Radiant energy is electromagnetic energy that travels in transverse waves.",
+    );
+    assert_form(
+        "efmotion", "motion", "moving",
+        "Motion energy is energy stored in moving objects.",
+    );
+    assert_form(
+        "efelec", "electrical", "electrons",
+        "Electrical energy is delivered by tiny, charged particles, called electrons, that typically move through a wire.",
+    );
+}
+
+/// The page writes *"Thermal energy, or heat, is…"*, not *"Thermal energy
+/// is…"*. A probe that required the plain head reported this row as having no
+/// defining sentence at all — the probe's prefix test, not the page. Same
+/// shape as `gravitropism` and `electrotropism` in `plant-tropisms` (#15176),
+/// and pinned here so nobody "normalises" the head the page does not use.
+#[test]
+fn the_thermal_row_keeps_the_pages_variant_head() {
+    assert_form(
+        "eftherm", "thermal", "heat",
+        "Thermal energy, or heat, is the energy that comes from atoms and molecules moving in a substance.",
+    );
+}
+
+/// The envelope is the framing sentence. It warrants no row — and its WORDING
+/// is pinned against the shipped file, not merely disclosed as unreachable,
+/// the way `plant-tropisms` (#15176) closed that gap.
+#[test]
+fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
+    let dir = scratch("efenvelope");
+    std::fs::copy(
+        facts_stdlib().join("physics/energy-forms.adj"),
+        dir.join("energy-forms.adj"),
+    )
+    .expect("copy shipped energy-forms.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"energy-forms.adj\"\n? energy_form_token($F, $T)\n",
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    assert_eq!(
+        out.matches("\"citations\":[").count(),
+        8,
+        "all eight rows answer: {out}"
+    );
+    assert!(
+        !out.contains("Many forms of energy exist"),
+        "the framing span warrants no row: {out}"
+    );
+    // THE PIN RUNS TO THE TIER, not to `\n    locator`. The shorter form
+    // shipped here and in two sibling entries: it asserts that a locator
+    // follows the envelope source, never what that locator is.
+    //
+    // MEASURED, and it corrected the reason for writing this. The short pin
+    // does NOT let a repointed envelope through this table: no row here
+    // overrides `locator` or `trust`, so both are inherited by all eight rows
+    // and reach every answer, where the per-row citation assertions already
+    // pin them. The hole WAS real in `brain-parts` (#15181), where all fifteen
+    // rows carry their own locator and the envelope's reaches nothing — review
+    // found it there and it is pinned this same way there now, on main.
+    //
+    // What this pin defends is the shape this table is moving toward. Give
+    // every row its own locator — a refactor with identical output — and then
+    // repoint the envelope: the short pin SURVIVES that, this one KILLS it.
+    let adj = std::fs::read_to_string(
+        facts_stdlib().join("physics/energy-forms.adj"),
+    )
+    .expect("read shipped energy-forms.adj");
+    assert!(
+        adj.contains(
+            "    source \"Many forms of energy exist, but energy is either potential energy or kinetic energy.\"\n    locator \"https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php\"\n    trust authoritative"
+        ),
+        "the envelope carries the page's framing sentence, verbatim"
+    );
+}
+
+/// Parse every row-level `source` and `locator` out of a shipped `.adj`.
+fn row_fields(rel: &str) -> (Vec<String>, Vec<String>) {
+    let adj = std::fs::read_to_string(facts_stdlib().join(rel))
+        .unwrap_or_else(|e| panic!("read shipped {rel}: {e}"));
+    let mut spans: Vec<String> = Vec::new();
+    let mut locators: Vec<String> = Vec::new();
+    for line in adj.lines() {
+        if let Some(rest) = line.strip_prefix(r#"        source ""#) {
+            spans.push(rest.trim_end_matches(0x22 as char).to_string());
+        } else if let Some(rest) = line.strip_prefix(r#"        locator ""#) {
+            locators.push(rest.trim_end_matches(0x22 as char).to_string());
+        }
+    }
+    (spans, locators)
+}
+
+/// #15193. NO ROW HERE SHARES A SPAN — asserted against the SHIPPED FILE, the
+/// same way the sharing tables assert which rows share one.
+///
+/// Eight rows, eight defining sentences, one page.
+#[test]
+fn no_two_rows_share_a_span() {
+    let (spans, locators) = row_fields("physics/energy-forms.adj");
+    assert_eq!(spans.len(), 8, "every row carries its own source: {spans:?}");
+    let mut uniq = spans.clone();
+    uniq.sort();
+    uniq.dedup();
+    assert_eq!(
+        uniq.len(),
+        8,
+        "and no two rows share one: {spans:?}"
+    );
+    // ONE PAGE, and the file says so once: no row carries a `locator`, so
+    // every row inherits the envelope's. Pinned because a row-level locator
+    // appearing here would mean this table had quietly become multi-page.
+    assert!(
+        locators.is_empty(),
+        "no row carries its own locator; all inherit the envelope's: {locators:?}"
+    );
 }

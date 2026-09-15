@@ -86,11 +86,43 @@
 % and `opposites.adj`'s header-only extension pattern; this cycle it applies to
 % adding new KEYS (more waves) rather than more values per key.
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single strongest span: the NASA sentence that fixes the
-% three mechanical rows. The OTHER (electromagnetic) span is listed above, so
-% each row's family stays independently checkable. The source is a primary U.S.
-% government NASA education page (science.nasa.gov), so `trust authoritative`.
+% EVERY ROW CARRIES ITS OWN SPAN, below, in the row's `{ ... }` block
+% (ADJ-TABLES RS-5e). TWO sentences for ten rows, both on the one NASA page:
+% the mechanical caption names water, sound and rope; the electromagnetic
+% caption names all seven bands.
+%
+% WHAT #14986 CHANGED. The MECHANICAL membership sentence -- "Water waves,
+% sound waves, and waves on a rope are all examples of mechanical waves." --
+% was this table's `source`, the field that carries the tier, for ALL TEN rows.
+% So `? wave_family(gamma, $F)` came back proved by a sentence that names no
+% electromagnetic band at all. Seven of the ten rows were in that position.
+%
+% BOTH SENTENCES ARE ON THE SAME PAGE, so the locator was never wrong here and
+% a hostname assertion could never have caught it -- only the span was. That is
+% why this table's shipped test passed unchanged through the conversion.
+%
+% BLOCK STRUCTURE WAS CHECKED BEFORE ANY SPAN WAS CUT: the two membership
+% sentences are the tails of two `<p>` figure captions, and the definition
+% sentence opens one of them, after a "(Left) " marker that is NOT part of the
+% span. Ordinary prose, no list items. (The check exists because flattened text
+% hides the difference -- on the SEER cell-cycle page a span that read as a cut
+% sentence turned out to be a complete paragraph followed by an ordered list.)
+%
+% THE ENVELOPE IS THE MECHANICAL-WAVE DEFINITION, and that choice is DISCLOSED
+% rather than dressed up as neutral framing: this page frames each FAMILY
+% separately and has no sentence framing the table as a whole. What the framing
+% slot requires is that the envelope not MIS-WARRANT a row, and this sentence
+% names no specific wave -- checked against all ten row keys in the page's own
+% wording, where `xray` is "X-rays" and `rope` is "waves on a rope".
+%
+% All three spans were confirmed verbatim on the page, each with a negative arm
+% (final word altered) absent. The two MEMBERSHIP sentences occur exactly once
+% in the whole document. The DEFINITION sentence occurs once in the page's
+% prose and four more times in `<head>` metadata -- meta description,
+% og:description, twitter:description and the JSON-LD description, all copies
+% of the same caption. Stated because "exactly once" was the first wording and
+% it is true of the prose, not of the document.
+%
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -98,18 +130,50 @@
 table wave_family {
     columns wave, family
 
-    row (water, mechanical)
-    row (sound, mechanical)
-    row (rope, mechanical)
-    row (gamma, electromagnetic)
-    row (xray, electromagnetic)
-    row (ultraviolet, electromagnetic)
-    row (visible_light, electromagnetic)
-    row (infrared, electromagnetic)
-    row (microwave, electromagnetic)
-    row (radio, electromagnetic)
+    % Each row carries the sentence that NAMES IT. Two sentences, both on
+    % the one NASA page: the mechanical caption names water, sound and
+    % rope; the electromagnetic caption names all seven bands. Until
+    % #14986 all ten rows carried the MECHANICAL sentence, which names no
+    % electromagnetic band at all.
+    row (water, mechanical) {
+        source "Water waves, sound waves, and waves on a rope are all examples of mechanical waves."
+    }
+    row (sound, mechanical) {
+        source "Water waves, sound waves, and waves on a rope are all examples of mechanical waves."
+    }
+    row (rope, mechanical) {
+        source "Water waves, sound waves, and waves on a rope are all examples of mechanical waves."
+    }
+    row (gamma, electromagnetic) {
+        source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
+    }
+    row (xray, electromagnetic) {
+        source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
+    }
+    row (ultraviolet, electromagnetic) {
+        source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
+    }
+    row (visible_light, electromagnetic) {
+        source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
+    }
+    row (infrared, electromagnetic) {
+        source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
+    }
+    row (microwave, electromagnetic) {
+        source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
+    }
+    row (radio, electromagnetic) {
+        source "Light waves include all forms of electromagnetic radiation: gamma rays, X-rays, ultraviolet light, visible light, infrared light, microwaves, and radio waves."
+    }
 
-    source "Water waves, sound waves, and waves on a rope are all examples of mechanical waves."
+    % THE ENVELOPE IS THE MECHANICAL-WAVE DEFINITION, and that choice is
+    % disclosed rather than dressed up as neutral framing: this page
+    % frames each FAMILY separately and has no sentence framing the table
+    % as a whole. What the framing slot requires is that the envelope not
+    % MIS-WARRANT a row, and this sentence names no specific wave —
+    % checked against all ten row keys in the page's own wording, where
+    % `xray` is "X-rays" and `rope` is "waves on a rope".
+    source "A mechanical wave, also called a matter wave, is a propagation of energy through matter."
     locator "https://science.nasa.gov/asset/webb/electromagnetic-wave-light-wave-vs-mechanical-wave/"
     trust authoritative
 }

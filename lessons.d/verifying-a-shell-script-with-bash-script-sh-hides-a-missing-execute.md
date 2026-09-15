@@ -1,0 +1,3 @@
+# Verifying a shell script with `bash script.sh` hides a missing execute bit
+
+A new GitHub Actions step that invoked `code/.../build-web.sh` directly failed with exit **126** ("found but not executable") because the script was committed `100644`, while every local check had run it as `bash <script>` — which works regardless of mode. Two habits close it, and the working precedent in this repo uses both: invoke scripts through an explicit `bash <script>` in CI, and check `git ls-files -s <script>` shows `100755` when adding one. `chmod +x` alone is not enough — the mode has to reach the index (`git update-index --chmod=+x`), since a local chmod on an already-tracked file is not always staged.

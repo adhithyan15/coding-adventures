@@ -1,0 +1,3 @@
+# A process-free adapter's public helpers must enforce the same closed bounds as its top-level evaluator, and closed enums must fail before shortcuts
+
+The Ruby toolchain snapshot evaluator correctly metered every BUILD front, but its public declaration parser could still split an oversized direct string; it also let an unknown platform fall back to generic `BUILD` when force-full or empty selections should have rejected the snapshot first. Put byte/line checks before allocation in every public parse boundary, validate closed platform names before scheduling or force-full branches, and add direct hostile probes instead of relying only on schema-valid fixtures.
