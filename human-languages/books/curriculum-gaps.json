@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 6705,
+    "totalLessons": 6708,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -38,11 +38,11 @@
     "chapterPayoffsNotRepresentative": 87,
     "chapterGateCleanTracks": 10,
     "tracksWithoutWritingStageEvidence": 0,
-    "missingWritingStagePairs": 346,
+    "missingWritingStagePairs": 329,
     "invalidWritingStageEvidence": 0,
     "drivableLessons": 5372,
     "drivablePercent": 80,
-    "chaptersWithoutDrivablePrefix": 193,
+    "chaptersWithoutDrivablePrefix": 196,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -1769,7 +1769,10 @@
           49,
           50,
           51,
-          52
+          52,
+          53,
+          54,
+          55
         ],
         "bookChapters": [
           1,
@@ -1823,7 +1826,10 @@
           49,
           50,
           51,
-          52
+          52,
+          53,
+          54,
+          55
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3925,9 +3931,9 @@
       {
         "language": "german",
         "status": "version-2",
-        "lessonCount": 344,
+        "lessonCount": 347,
         "versions": {
-          "2": 344
+          "2": 347
         }
       },
       {
@@ -4731,8 +4737,8 @@
       },
       {
         "language": "german",
-        "bookChapters": 52,
-        "declaredChapters": 52,
+        "bookChapters": 55,
+        "declaredChapters": 55,
         "missingCapability": 0,
         "findings": 1,
         "clean": false
@@ -4883,8 +4889,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1502,
-      "declaredChapters": 1502,
+      "bookChapters": 1505,
+      "declaredChapters": 1505,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 87,
@@ -4896,10 +4902,10 @@
     }
   },
   "levels": {
-    "totalLessons": 6705,
+    "totalLessons": 6708,
     "byLevel": {
       "pre-A1": 3857,
-      "A1": 2141,
+      "A1": 2144,
       "A2": 623,
       "B1": 39,
       "B2": 17,
@@ -4971,10 +4977,10 @@
       },
       {
         "language": "german",
-        "lessonCount": 344,
+        "lessonCount": 347,
         "byLevel": {
           "pre-A1": 133,
-          "A1": 117,
+          "A1": 120,
           "A2": 94,
           "B1": 0,
           "B2": 0,
@@ -6007,9 +6013,9 @@
       },
       {
         "language": "german",
-        "lessonCount": 344,
+        "lessonCount": 347,
         "measurable": 344,
-        "unmeasurable": 0,
+        "unmeasurable": 3,
         "lessonViolations": 8,
         "chapterViolations": 5
       },
@@ -6552,7 +6558,7 @@
           "language": "german",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 344,
+          "lessonCount": 347,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -6760,7 +6766,7 @@
     "summary": {
       "lessonViolations": 40,
       "chapterViolations": 61,
-      "unmeasurableLessons": 60,
+      "unmeasurableLessons": 63,
       "measurablePercent": 99,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -9466,6 +9472,19 @@
         "revisits": 1
       },
       {
+        "atom": "GE-ETYMON-BITTE-04",
+        "language": "german",
+        "introducedBy": "GE-C19-bitte-requests",
+        "introducedAt": 264,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "GE-ETYMON-BITTE-BITTEN-02",
         "language": "german",
         "introducedBy": "GE-C03-bitte",
@@ -9516,6 +9535,19 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "GE-ETYMON-ENTSCHULDIGUNG-03",
+        "language": "german",
+        "introducedBy": "GE-C20-entschuldigung",
+        "introducedAt": 265,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
       },
       {
         "atom": "GE-ETYMON-FUENF-FIVE-02",
@@ -9713,6 +9745,19 @@
         "revisits": 3
       },
       {
+        "atom": "GE-ETYMON-REGNET-06",
+        "language": "german",
+        "introducedBy": "GE-C21-das-wetter",
+        "introducedAt": 266,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "GE-ETYMON-SECHS-SIX-02",
         "language": "german",
         "introducedBy": "GE-C06-sechs",
@@ -9808,6 +9853,19 @@
         "language": "german",
         "introducedBy": "GE-C06-vier",
         "introducedAt": 79,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-ETYMON-WETTER-03",
+        "language": "german",
+        "introducedBy": "GE-C21-das-wetter",
+        "introducedAt": 266,
         "missed": [
           "R1",
           "R2",
@@ -9947,6 +10005,19 @@
         "revisits": 0
       },
       {
+        "atom": "GE-LEX-ENTSCHULDIGUNG-02",
+        "language": "german",
+        "introducedBy": "GE-C20-entschuldigung",
+        "introducedAt": 265,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "GE-LEX-GUTEN-ABEND-01",
         "language": "german",
         "introducedBy": "GE-C01-guten-abend",
@@ -10055,6 +10126,19 @@
         "language": "german",
         "introducedBy": "GE-C01-gute-nacht",
         "introducedAt": 13,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-PRAGMATICS-SORRY-04",
+        "language": "german",
+        "introducedBy": "GE-C20-entschuldigung",
+        "introducedAt": 265,
         "missed": [
           "R1",
           "R2",
@@ -27189,18 +27273,6 @@
         "revisits": 1
       },
       {
-        "atom": "GE-ETYMON-BITTE-04",
-        "language": "german",
-        "introducedBy": "GE-C19-bitte-requests",
-        "introducedAt": 264,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-ETYMON-DANKE-DENKEN-02",
         "language": "german",
         "introducedBy": "GE-C03-danke",
@@ -27247,18 +27319,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "GE-ETYMON-ENTSCHULDIGUNG-03",
-        "language": "german",
-        "introducedBy": "GE-C20-entschuldigung",
-        "introducedAt": 265,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
       },
       {
         "atom": "GE-ETYMON-ES-02",
@@ -27441,18 +27501,6 @@
         "revisits": 1
       },
       {
-        "atom": "GE-ETYMON-REGNET-06",
-        "language": "german",
-        "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 266,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-ETYMON-SAMSTAG-SABBAT-01",
         "language": "german",
         "introducedBy": "GE-C07-samstag",
@@ -27463,18 +27511,6 @@
           "R4"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "GE-ETYMON-WETTER-03",
-        "language": "german",
-        "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 266,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
       },
       {
         "atom": "GE-ETYMON-WO-WHERE-02",
@@ -27837,18 +27873,6 @@
         "revisits": 2
       },
       {
-        "atom": "GE-LEX-ENTSCHULDIGUNG-02",
-        "language": "german",
-        "introducedBy": "GE-C20-entschuldigung",
-        "introducedAt": 265,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "GE-LEX-ES-GEHT-01",
         "language": "german",
         "introducedBy": "GE-C03-es-geht",
@@ -28053,6 +28077,18 @@
         "revisits": 2
       },
       {
+        "atom": "GE-LEX-REGNET-05",
+        "language": "german",
+        "introducedBy": "GE-C21-das-wetter",
+        "introducedAt": 266,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "GE-LEX-SABBAT-01",
         "language": "german",
         "introducedBy": "GE-C07-sabbat",
@@ -28209,16 +28245,16 @@
         "revisits": 2
       },
       {
-        "atom": "GE-PRAGMATICS-SORRY-04",
+        "atom": "GE-PHRASE-WASSER-BITTE-03",
         "language": "german",
-        "introducedBy": "GE-C20-entschuldigung",
-        "introducedAt": 265,
+        "introducedBy": "GE-C19-bitte-requests",
+        "introducedAt": 264,
         "missed": [
           "R1",
           "R2",
-          "R3"
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "GE-PRAGMATICS-WELLBEING-REGISTER-02",
@@ -45194,6 +45230,17 @@
         "revisits": 9
       },
       {
+        "atom": "GE-GRAMMAR-WEATHER-SEIN-04",
+        "language": "german",
+        "introducedBy": "GE-C21-das-wetter",
+        "introducedAt": 266,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "GE-GRAMMAR-WIR-EN-02",
         "language": "german",
         "introducedBy": "GE-C05-wir",
@@ -45286,6 +45333,17 @@
         "language": "german",
         "introducedBy": "GE-C03-bitte",
         "introducedAt": 29,
+        "missed": [
+          "R1",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GE-LEX-BITTE-PLEASE-02",
+        "language": "german",
+        "introducedBy": "GE-C19-bitte-requests",
+        "introducedAt": 264,
         "missed": [
           "R1",
           "R4"
@@ -45733,17 +45791,6 @@
         "revisits": 2
       },
       {
-        "atom": "GE-LEX-REGNET-05",
-        "language": "german",
-        "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 266,
-        "missed": [
-          "R1",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "GE-LEX-ROT-01",
         "language": "german",
         "introducedBy": "GE-C13-rot",
@@ -45884,7 +45931,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 7
+        "revisits": 10
       },
       {
         "atom": "GE-LEX-VIER-01",
@@ -46028,17 +46075,6 @@
           "R3"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "GE-PHRASE-WASSER-BITTE-03",
-        "language": "german",
-        "introducedBy": "GE-C19-bitte-requests",
-        "introducedAt": 264,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 2
       },
       {
         "atom": "GE-PRAGMATICS-DOCH-05",
@@ -67135,6 +67171,16 @@
         "revisits": 25
       },
       {
+        "atom": "GE-GRAMMAR-PARTIZIP-GE-EN-01",
+        "language": "german",
+        "introducedBy": "GE-C38-partizip-en",
+        "introducedAt": 339,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "GE-GRAMMAR-PARTIZIP-GE-T-01",
         "language": "german",
         "introducedBy": "GE-C15-partizip",
@@ -67245,16 +67291,6 @@
         "revisits": 2
       },
       {
-        "atom": "GE-GRAMMAR-WEATHER-SEIN-04",
-        "language": "german",
-        "introducedBy": "GE-C21-das-wetter",
-        "introducedAt": 266,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "GE-GRAMMAR-ZIFFER-PLUS-ZEHN-01",
         "language": "german",
         "introducedBy": "GE-C12-ziffer-plus-zehn",
@@ -67305,16 +67341,6 @@
         "revisits": 4
       },
       {
-        "atom": "GE-LEX-BITTE-PLEASE-02",
-        "language": "german",
-        "introducedBy": "GE-C19-bitte-requests",
-        "introducedAt": 264,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 4
-      },
-      {
         "atom": "GE-LEX-BROT-01",
         "language": "german",
         "introducedBy": "GE-C11-brot",
@@ -67333,6 +67359,16 @@
           "R3"
         ],
         "revisits": 18
+      },
+      {
+        "atom": "GE-LEX-DEIN-01",
+        "language": "german",
+        "introducedBy": "GE-C36-dein",
+        "introducedAt": 324,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 6
       },
       {
         "atom": "GE-LEX-DENKEN-02",
@@ -67482,7 +67518,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 7
+        "revisits": 9
       },
       {
         "atom": "GE-LEX-HEISSEN-02",
@@ -67543,6 +67579,16 @@
           "R3"
         ],
         "revisits": 5
+      },
+      {
+        "atom": "GE-LEX-IHR-HER-01",
+        "language": "german",
+        "introducedBy": "GE-C36-ihr-her",
+        "introducedAt": 326,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "GE-LEX-JA-02",
@@ -67795,6 +67841,16 @@
         "revisits": 5
       },
       {
+        "atom": "GE-LEX-SEIN-HIS-01",
+        "language": "german",
+        "introducedBy": "GE-C36-sein-his",
+        "introducedAt": 325,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "GE-LEX-SOMMER-01",
         "language": "german",
         "introducedBy": "GE-C09-sommer",
@@ -67823,6 +67879,16 @@
           "R3"
         ],
         "revisits": 10
+      },
+      {
+        "atom": "GE-LEX-WETTER-02",
+        "language": "german",
+        "introducedBy": "GE-C21-das-wetter",
+        "introducedAt": 266,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "GE-LEX-WO-01",
@@ -67873,6 +67939,26 @@
           "R3"
         ],
         "revisits": 5
+      },
+      {
+        "atom": "GE-SKILL-CONNECTED-READING",
+        "language": "german",
+        "introducedBy": "GE-C52-erste-lesung",
+        "introducedAt": 343,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GE-SKILL-READ-WORDS",
+        "language": "german",
+        "introducedBy": "GE-C52-words",
+        "introducedAt": 341,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "GE-SOUND-ARM-03",
@@ -87318,7 +87404,7 @@
       },
       {
         "language": "german",
-        "lessonCount": 344,
+        "lessonCount": 347,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
@@ -87516,10 +87602,10 @@
       "atomsNeverRevisited": 497,
       "neverRevisitedPercent": 6,
       "missedByWindow": {
-        "R1": 1690,
-        "R2": 3776,
-        "R3": 5335,
-        "R4": 3899
+        "R1": 1691,
+        "R2": 3778,
+        "R3": 5338,
+        "R4": 3910
       },
       "forwardReferences": 756
     }
@@ -92480,6 +92566,33 @@
             "stage": "guided-copy",
             "level": "pre-A1",
             "sequence": 185
+          },
+          {
+            "language": "german",
+            "lessonId": "GE-W02-eigene-zeile",
+            "blockIndex": 1,
+            "blockTitle": "Writing — controlled composition",
+            "stage": "controlled-composition",
+            "level": "A1",
+            "sequence": 1510
+          },
+          {
+            "language": "german",
+            "lessonId": "GE-W03-mit-der-uhr",
+            "blockIndex": 1,
+            "blockTitle": "Writing — timed production",
+            "stage": "timed-assessment-production",
+            "level": "A1",
+            "sequence": 1520
+          },
+          {
+            "language": "german",
+            "lessonId": "GE-W04-vier-zeilen",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A1",
+            "sequence": 1530
           }
         ],
         "validEvidence": [
@@ -92545,6 +92658,33 @@
             "stage": "guided-copy",
             "level": "pre-A1",
             "sequence": 185
+          },
+          {
+            "language": "german",
+            "lessonId": "GE-W02-eigene-zeile",
+            "blockIndex": 1,
+            "blockTitle": "Writing — controlled composition",
+            "stage": "controlled-composition",
+            "level": "A1",
+            "sequence": 1510
+          },
+          {
+            "language": "german",
+            "lessonId": "GE-W03-mit-der-uhr",
+            "blockIndex": 1,
+            "blockTitle": "Writing — timed production",
+            "stage": "timed-assessment-production",
+            "level": "A1",
+            "sequence": 1520
+          },
+          {
+            "language": "german",
+            "lessonId": "GE-W04-vier-zeilen",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A1",
+            "sequence": 1530
           }
         ],
         "defects": [],
@@ -92580,13 +92720,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "A2",
@@ -92603,14 +92743,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B1",
@@ -92627,14 +92766,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B2",
@@ -92651,14 +92789,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C1",
@@ -92675,14 +92812,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C2",
@@ -92699,14 +92835,13 @@
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription"
-            ],
-            "missingStages": [
+              "dictation-transcription",
               "controlled-composition",
-              "connected-composition",
-              "timed-assessment-production"
+              "timed-assessment-production",
+              "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           }
         ]
       },
@@ -107042,9 +107177,9 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 746,
+      "evidenceBlocks": 749,
       "invalidEvidenceBlocks": 0,
-      "missingTrackLevelStages": 346
+      "missingTrackLevelStages": 329
     }
   },
   "gentleRamp": {
@@ -107355,9 +107490,9 @@
       },
       {
         "language": "german",
-        "lessonCount": 344,
+        "lessonCount": 347,
         "atomMeasurableLessons": 344,
-        "atomMeasurementBlindLessons": 0,
+        "atomMeasurementBlindLessons": 3,
         "durationViolations": 0,
         "atomLessonSpikes": 8,
         "atomChapterSpikes": 5,
@@ -107373,15 +107508,15 @@
         "forwardReferences": 30,
         "atomsTaught": 515,
         "atomsNeverRevisited": 52,
-        "reinforcementWindowMisses": 967,
+        "reinforcementWindowMisses": 984,
         "reinforcementMissesByWindow": {
-          "R1": 152,
-          "R2": 259,
-          "R3": 320,
-          "R4": 236
+          "R1": 153,
+          "R2": 261,
+          "R3": 323,
+          "R4": 247
         },
         "payoffSurprises": 1,
-        "writingPracticeLessons": 7,
+        "writingPracticeLessons": 10,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -107402,7 +107537,7 @@
           {
             "language": "german",
             "kind": "reinforcement",
-            "count": 967,
+            "count": 984,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -107412,6 +107547,13 @@
             "count": 1,
             "unit": "chapter payoff finding(s)",
             "detail": "make each chapter payoff assess only taught, representative material"
+          },
+          {
+            "language": "german",
+            "kind": "measurement-blind",
+            "count": 3,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
         ],
         "next": {
@@ -109229,7 +109371,7 @@
       {
         "language": "german",
         "kind": "reinforcement",
-        "count": 967,
+        "count": 984,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -109507,6 +109649,13 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
+        "language": "german",
+        "kind": "measurement-blind",
+        "count": 3,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
         "language": "hindi",
         "kind": "measurement-blind",
         "count": 2,
@@ -109547,8 +109696,8 @@
       "tracksWithDetectedCliffs": 23,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 6,
-      "atomMeasurementBlindLessons": 60,
-      "findings": 110
+      "atomMeasurementBlindLessons": 63,
+      "findings": 111
     }
   },
   "levelGate": {
@@ -110150,12 +110299,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 6705,
+    "totalLessons": 6708,
     "voice": 4839,
     "sight": 713,
-    "pen": 1153,
+    "pen": 1156,
     "coreVoice": 5372,
-    "lessonsWithWritingSegments": 670,
+    "lessonsWithWritingSegments": 673,
     "drivablePercent": 80,
     "tracks": [
       {
@@ -112501,12 +112650,12 @@
       },
       {
         "language": "german",
-        "lessonCount": 344,
+        "lessonCount": 347,
         "voice": 331,
         "sight": 6,
-        "pen": 7,
+        "pen": 10,
         "coreVoice": 332,
-        "drivablePercent": 97,
+        "drivablePercent": 96,
         "drivablePrefixTotal": 300,
         "chapters": [
           {
@@ -113245,6 +113394,51 @@
             ],
             "drivablePrefix": 3,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "german",
+            "chapter": 53,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "GE-W02-eigene-zeile"
+          },
+          {
+            "language": "german",
+            "chapter": 54,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "GE-W03-mit-der-uhr"
+          },
+          {
+            "language": "german",
+            "chapter": 55,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "GE-W04-vier-zeilen"
           }
         ]
       },
@@ -132789,7 +132983,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 6705,
+    "lessons": 6708,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -132797,11 +132991,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 6705,
-    "measuredLessons": 3615,
-    "idiomMeasuredLessons": 3615,
-    "senseMeasuredLessons": 3615,
-    "cultureClaimMeasuredLessons": 3615,
+    "lessons": 6708,
+    "measuredLessons": 3618,
+    "idiomMeasuredLessons": 3618,
+    "senseMeasuredLessons": 3618,
+    "cultureClaimMeasuredLessons": 3618,
     "idioms": 101,
     "senses": 101,
     "cultureClaims": 207,
@@ -132810,18 +133004,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 6257,
-    "usesBeforeIntroduction": 20557,
-    "technicalUsesBeforeIntroduction": 5110,
-    "technicalLessons": 2848,
+    "lessonsUsingTerms": 6260,
+    "usesBeforeIntroduction": 20568,
+    "technicalUsesBeforeIntroduction": 5114,
+    "technicalLessons": 2850,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 1618
+        "lessons": 1619
       },
       {
         "term": "noun",
-        "lessons": 941
+        "lessons": 942
       },
       {
         "term": "adjective",
@@ -132842,12 +133036,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 6705,
+    "lessonsScanned": 6708,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1571,
+    "filesScanned": 1574,
     "mainCharacters": 132,
     "scriptCharacters": 799,
     "gaps": 0
