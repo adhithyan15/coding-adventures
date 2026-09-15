@@ -5,18 +5,19 @@
 % One of the first big ideas of optics, and a rung a PHYSICS agent reasons UP
 % from: when a light wave meets an object it does not just "hit" it — it does
 % one of a small handful of NAMED things, and each named behavior has a
-% characteristic effect the source states in plain words. "Reflection is when
+% characteristic effect the source states in plain words: reflection is when
 % light bounces off; refraction is when it changes direction crossing into a new
 % medium; absorption is when photons make atoms vibrate; diffraction is the
 % bending and spreading of waves around an obstacle; scattering is bouncing off
-% in a variety of directions." Before you can reason about a mirror, a lens, a
-% prism, or why the sky is blue you must first know WHICH of these behaviors is
-% happening. Recall is a binding query:
+% in a variety of directions. (That summary used to sit in quotation marks; it
+% is a paraphrase, not the page's words.) Before you can reason about a mirror,
+% a lens, a prism, or why the sky is blue you must first know WHICH of these
+% behaviors is happening. Recall is a binding query:
 %
 %     ? light_behavior(reflection, $Effect)      % bounces_off
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `light_behavior(behavior, effect)` carrying the table's citation, so
+% relation `light_behavior(behavior, effect)` carrying its row's citation, so
 % the lookup above is the ordinary SLD binding query — the engine returns the
 % effect WITH its source, on the CPU, with zero model calls, and abstains on a
 % word that is not one of these light behaviors (it never invents an effect).
@@ -84,17 +85,28 @@
 %     "Scattering occurs when light bounces off an object in a variety of
 %      directions."
 %
-% (The set itself is named on the same page's opening sentence — "When a light
-% wave encounters an object, they are either transmitted, reflected, absorbed,
-% refracted, polarized, diffracted, or scattered..." — another span of the same
-% primary NASA teaching resource. `transmission` is listed there but the page
-% gives it NO defining sentence of what it does to the light, so it is
-% deliberately DROPPED — never grounded from memory.)
+% (The set itself is named in the sentence after the envelope, the second of
+% the same paragraph; this used to say "the same page's opening sentence":
+% "When a light wave encounters an object, they are either transmitted,
+% reflected, absorbed, refracted, polarized, diffracted, or scattered..."
+% `transmission` is listed there, but the page gives it NO defining
+% sentence of what it does to the light, so it is deliberately DROPPED —
+% never grounded from memory.)
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the NASA statement that fixes the
-% first row (reflection → bounces_off). Every OTHER row's per-fact source and
-% verbatim span is listed above, so each effect remains independently checkable.
+% EACH ROW CARRIES ITS OWN SPAN (ADJ-TABLES RS-5e, #14986). This paragraph
+% used to say an ADJ `table` carries ONE provenance envelope, so the
+% reflection sentence was the `source` of all five answers while the other
+% spans were only listed above. Row blocks now let each row carry the span
+% quoted for it above. The envelope is now a framing sentence from the page,
+% which names no behavior and no effect:
+%
+%     "Light waves across the electromagnetic spectrum behave in similar ways."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the five row sentences and the envelope each occur
+% exactly once, each inside a `<p>`. Every row's page is the envelope's, so
+% no row restates a `locator` line or `trust` (ADJ-TABLES §4).
 % All sources are NASA Science, a primary U.S. government (NASA) teaching
 % resource, so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
@@ -104,13 +116,26 @@
 table light_behavior {
     columns behavior, effect
 
-    row (reflection, bounces_off)
-    row (refraction, changes_direction)
-    row (absorption, vibrate)
-    row (diffraction, bends_and_spreads)
-    row (scattering, variety_of_directions)
+    row (reflection, bounces_off) {
+        source "Reflection is when incident light (incoming light) hits an object and bounces off."
+    }
+    row (refraction, changes_direction) {
+        source "Refraction is when light waves change direction as they pass from one medium to another."
+    }
+    row (absorption, vibrate) {
+        source "Absorption occurs when photons from incident light hit atoms and molecules and cause them to vibrate."
+    }
+    row (diffraction, bends_and_spreads) {
+        source "Diffraction is the bending and spreading of waves around an obstacle."
+    }
+    row (scattering, variety_of_directions) {
+        source "Scattering occurs when light bounces off an object in a variety of directions."
+    }
 
-    source "Reflection is when incident light (incoming light) hits an object and bounces off."
+    % THE ENVELOPE WAS THE REFLECTION ROW'S OWN SENTENCE, the primary source of
+    % all five answers. It is now a framing sentence that names no behavior
+    % and no effect. Every row overrides it, so it reaches no answer.
+    source "Light waves across the electromagnetic spectrum behave in similar ways."
     locator "https://science.nasa.gov/ems/03_behaviors/"
     trust authoritative
 }
