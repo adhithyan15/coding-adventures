@@ -1,6 +1,35 @@
 # Changelog
 
-## Unreleased
+All notable changes to the `task-app` web program are documented here.
+
+## [Unreleased]
+
+Entries added after `task-app-v0.2.0` accumulate here until the next version is
+cut.
+
+### Fixed -- the release gate has been refusing this file since #15224
+
+`Release TaskApp`'s "Validate release identity" job has failed on every branch
+carrying a task-app change since 2026-09-15, with:
+
+```
+taskapp-release: changelog has an unbracketed Unreleased heading
+```
+
+`validate_changelog` requires exactly one `## [Unreleased]` section and
+rejects the unbracketed spelling outright. #15224 added a second, unbracketed
+`## Unreleased` at the top of this file -- above even the "All notable
+changes" preamble -- and #15230 then filed its entry under it. So the file
+had two roll-forward sections, the first of them malformed, and the gate
+refused the release.
+
+The entries are moved under the real `## [Unreleased]`, in order, with the
+preamble restored above it. No entry text changed: every non-blank line of
+the previous file is present, verified by sorted comparison.
+
+That job is not a required check, so nothing stopped while it was red -- the
+same shape as #15170, and the reason #15242 asks whether a non-required lane
+should be allowed to stay red in silence.
 
 ### Fixed -- the round elements are round again on every backend (#15225)
 
@@ -46,13 +75,6 @@ is a 6x6 dot to the pixel.
 **The dot is still square.** `border-radius: 50%` is dropped by all five
 native backends -- the same 36-pixel count proves it, since a circle would be
 about 28. Filed separately.
-
-All notable changes to the `task-app` web program are documented here.
-
-## [Unreleased]
-
-Entries added after `task-app-v0.2.0` accumulate here until the next version is
-cut.
 
 ## [0.2.0] - 2026-09-13
 
