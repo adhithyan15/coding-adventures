@@ -54,6 +54,8 @@
 % Barricades, and Gates"; the warning default from Section 2C.03 in Chapter
 % 2C, "Warning Signs And Object Markers". Each row carries its own sign's
 % sentence as its `source`, with that sentence's chapter as its `locator`.
+% (These section numbers predate #14986 and were not re-measured by it; the
+% chapter of each sentence was, below.)
 %
 % `trust authoritative` — the FHWA is the first-party federal publisher and
 % this is the standard itself. Both chapter pages (2B and 2C) were

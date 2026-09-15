@@ -53,7 +53,9 @@
 % the regulatory default (Section 2B.02), STOP (2B.05) and YIELD (2B.08);
 % Chapter 2C gives the warning default (2C.03) and the pennant exception
 % (2C.45). Each row carries its own sentence as its `source`, with that
-% sentence's chapter as its `locator`.
+% sentence's chapter as its `locator`. (Of these section numbers, only
+% 2B.02 was re-measured by #14986, from the page's own anchor, below; the
+% chapter of each sentence was.)
 %
 % Those section numbers matter to the argument rather than being decoration:
 % STOP and YIELD sit inside the REGULATORY chapter, which is what makes them
