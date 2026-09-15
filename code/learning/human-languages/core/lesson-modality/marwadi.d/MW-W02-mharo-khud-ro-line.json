@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W02-mharo-khud-ro-line",
+    "language": "marwadi",
+    "chapter": 41,
+    "sequence": 3450,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:99050d8b2f9d13f0",
+    "detachableSegments": [
+      "Writing — controlled composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

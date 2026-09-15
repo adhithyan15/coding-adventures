@@ -1,5 +1,34 @@
 # Changelog
 
+## Chapters 41–42 — the two writing stages Marwadi could honestly prove
+
+Two lessons, no new vocabulary, and Marwadi's **A1** writing rung is complete.
+
+**41 — my own line.** Controlled composition: the first writing step with
+nothing to reach for. The script check arrives with it — the line across the top
+belongs to the **word**, not to each letter, so it is drawn last and runs the
+whole way. One long stroke, not a row of short ones.
+
+**42 — with a clock.** Timed production on the numbers the contract publishes:
+**20 minutes**, two tasks, a six-to-eight-field form worth 40 points, a 30–40
+word message worth 60. The learner reads that split before writing, because the
+message is worth more and is shorter.
+
+## What is deliberately not here, and why
+
+`connected-composition` is the third stage this rung would need, and Marwadi
+cannot prove it yet. **The track teaches no conjunction at all** — no *and*, no
+*but*, no *because*, no *or*. Searched as headwords and again through every
+lesson body: nothing.
+
+A lesson asking for connected sentences would therefore be asking for something
+the book has not paid for. So A1 is complete and **A2 upward still fails on that
+one stage**, and the test says so beside the assertion rather than leaving the
+gap to be rediscovered.
+
+Teaching Marwadi its first joiner is a vocabulary tranche, not a writing-stage
+one, and it needs a source for the Rajasthani forms before it can be written.
+
 ## Reading — signs, a counter, and the whole bargain
 
 Chapter 40 is Marwadi's reading rung, and the first connected Devanagari the

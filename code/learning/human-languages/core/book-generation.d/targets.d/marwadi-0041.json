@@ -1,0 +1,7 @@
+{
+  "language": "marwadi",
+  "chapter": 41,
+  "output": "marwadi/book/chapters/ch41-mw-khud-ro-line.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mw"
+}

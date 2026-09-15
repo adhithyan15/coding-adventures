@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:a079c8adf346317a",
+  "lessonIds": [
+    "MW-W02-mharo-khud-ro-line"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "marwadi/narration/ch41.txt",
+  "json": "marwadi/narration/ch41.json",
+  "textHash": "fnv1a64:f34d3284debe8b3b",
+  "jsonHash": "fnv1a64:51050ab0d770bfc1",
+  "findings": []
+}

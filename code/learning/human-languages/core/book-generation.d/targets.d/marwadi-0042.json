@@ -1,0 +1,7 @@
+{
+  "language": "marwadi",
+  "chapter": 42,
+  "output": "marwadi/book/chapters/ch42-mw-ghadi-saathe.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mw"
+}
