@@ -1,0 +1,1 @@
+- Lower finite JFET `XTI` gate-current temperature exponents.

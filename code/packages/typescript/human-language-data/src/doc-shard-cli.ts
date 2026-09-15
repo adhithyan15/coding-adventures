@@ -223,6 +223,67 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     newestFirst: true,
     entryShape: "bullet",
   },
+
+  // The remaining contended package changelogs, migrated together rather than
+  // one per PR. Every sharding PR edits this list and the two guard lists in
+  // human-languages-books.yml, so they conflict with EACH OTHER and land
+  // strictly one at a time -- this work is itself serialized on a shared file,
+  // one level up from the problem it solves.
+  //
+  // `newestFirst` below is not copied from the plans above. For each of the
+  // seven, the last six commits insert at the SAME line: 3 for the heading-mode
+  // files, 5 for the bullet-mode ones.
+  {
+    // 166 `##` entries.
+    path: "code/packages/rust/mermaid-parser/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // 135 `##` entries AND 143 `###`. Split at level 2, so the level-3
+    // subsections ride inside their parent shard -- the documented behaviour,
+    // and the same choice Language Ladder made.
+    path: "code/packages/rust/wasm-conformance/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // 97 `##` entries.
+    path: "code/packages/rust/diagram-ir/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // 53 `##` entries.
+    path: "code/packages/rust/diagram-to-paint/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // 182 bullet entries under 10 `##` version markers. Under bullet mode a
+    // marker attaches to the end of the preceding entry's shard and returns to
+    // the same place on rejoin -- the "frozen version markers ride along"
+    // behaviour human-language-data already relies on, confirmed here by round
+    // trip rather than reasoned about.
+    path: "code/packages/rust/spice-netlist-parser/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
+  {
+    // 57 bullet entries under 9 `##` version markers.
+    path: "code/packages/rust/venture-browser-core/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
+  {
+    // 31 bullet entries under 1 `##` heading.
+    path: "code/packages/rust/oauth-broker/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
 ];
 
 /**

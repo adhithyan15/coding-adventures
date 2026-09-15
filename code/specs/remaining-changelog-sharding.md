@@ -65,10 +65,31 @@ rendered copy in the working tree — an ignored leftover that `git status` does
 not mention.
 
 So before turning seven more tracked files into generated ones, every committed
-reference to each path was searched for, by full path and by relative
-`](CHANGELOG.md` link from inside the owning package. **No tracked file
-references any of the seven.** There are no readers to fix, which is a
-measurement rather than an expectation.
+reference to each path was searched for.
+
+**The first search was wrong, and its wrongness is the more useful half.** It
+grepped the full repo-relative path — `code/packages/rust/wasm-conformance/
+CHANGELOG.md` — and reported no references at all. Review then named two specs
+that do reference it. They write the **short form**, `wasm-conformance/
+CHANGELOG.md`, which the full-path grep cannot match.
+
+That is searching for the shape you expect rather than enumerating the shapes a
+reference can take. The corrected search looks for `<package>/CHANGELOG.md`,
+which matches the short form and the full path alike, and finds **four
+references**, all to `wasm-conformance`:
+
+| file | references |
+|---|---:|
+| `code/specs/W29-wasm-extended-const.md` | 1 |
+| `code/specs/W31-wasm-generative-instantiation.md` | 3 |
+
+All four are prose pointers, not Markdown links, so nothing resolved through
+them — but each would have sent a reader to a file that no longer exists. They
+now point at `wasm-conformance/CHANGELOG.d/`, which is how HL23 handled the same
+problem for the documents it migrated.
+
+The other six have no readers. That is now a measurement rather than an
+expectation; the first time it was neither.
 
 ## Deliberately excluded
 
