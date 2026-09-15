@@ -193,6 +193,7 @@ members = [
     "engram-mosaic-app",
     "engram-core-wasm",
     "engram-wasm",
+    "photo-picker-mosaic-app",
     "html-lexer",
     "html-parser",
     "html-to-layout",

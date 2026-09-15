@@ -1,0 +1,19 @@
+// PhotoPickerApp.dark.msl — minimal style, dark theme.
+//
+// Identical layout metrics to the light theme; native host controls
+// (HostButton, Text) already pick up dark-mode colors from the platform,
+// so there's no color override needed here.
+
+style PhotoPickerApp {
+  part root {
+    padding : 16 ;
+  }
+  part status-row {
+    padding : 8 ;
+  }
+  part actions {
+    padding : 8 ;
+  }
+  part pick-btn {
+  }
+}

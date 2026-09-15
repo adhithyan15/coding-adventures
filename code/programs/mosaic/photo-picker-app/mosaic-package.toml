@@ -1,0 +1,35 @@
+[package]
+name = "photo-picker-app"
+version = "0.1.0"
+description = "Reference Mosaic app for UI59's files.open effect -- pick a photo, see its name/type/size"
+license = "MIT"
+
+[components]
+exports = ["PhotoPickerApp"]
+
+# XAML only in this slice (UI59 §2) -- Qt, Compose, and Flutter follow as
+# separate PRs, in the same order `[host_effects]` itself landed in. No
+# `[host_assets]` section: unlike Engram, this app has no legacy
+# hand-written host to retire -- it starts on `[host_effects]` directly.
+[host_effects]
+files = [
+  { backend = "xaml", source = "host/xaml/PhotoPickerEffects.cs", target = "PhotoPickerEffects.cs" },
+]
+handlers = [
+  # No `include`: the XAML emitter refuses one outright (every type in the
+  # assembly is already visible; `install` must be fully namespace-
+  # qualified instead) -- confirmed against `xaml_main_with_host_effects`'s
+  # own refusal message, not assumed from the `[host_assets]` precedent.
+  #
+  # Namespace is `PhotoPickerHost`, not `PhotoPickerApp` -- the generated
+  # component class is `Mosaic.Generated.PhotoPickerApp` (from this
+  # package's own `component PhotoPickerApp`), and the generated
+  # `Install();` call site lives inside `namespace Mosaic.Generated`, where
+  # an unqualified `PhotoPickerApp` would resolve to that class instead of
+  # a same-named handler namespace. Confirmed by a real `dotnet build`
+  # failure (CS0117) before this was caught.
+  { backend = "xaml", install = "PhotoPickerHost.PhotoPickerEffects.Install" },
+]
+
+[kernel]
+version = "1"
