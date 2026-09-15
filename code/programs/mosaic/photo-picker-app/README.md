@@ -14,8 +14,8 @@ how the effect result is rendered) lives in the separate
 `UI47`'s `[host_effects]` mechanism wires a package-declared handler
 into each backend's generated entry point, but until now no *generic*
 (non-Engram-specific) effect kind had a real handler on any backend.
-This package is that first one: XAML only in this slice (`UI59` §2) —
-Qt, Compose, and Flutter follow as separate PRs, in the same order
+This package is that first one: XAML and Qt so far (`UI59` §2) —
+Compose and Flutter follow as separate PRs, in the same order
 `[host_effects]` itself landed in.
 
 ## Layout
@@ -25,6 +25,7 @@ src/PhotoPickerApp.mil          -- interface: status/picking slots, onPickPhoto 
 src/PhotoPickerApp.mll          -- layout: status text + "Pick a Photo" button
 src/PhotoPickerApp.{light,dark}.msl -- styling (native controls pick up dark mode themselves)
 host/xaml/PhotoPickerEffects.cs -- the XAML files.open handler ([host_effects])
+host/qt/PhotoPickerEffects.{h,cpp} -- the Qt files.open handler ([host_effects])
 mosaic-package.toml             -- exports + [host_effects] wiring
 ```
 
@@ -57,6 +58,36 @@ reintroduce them:
   across the whole method. The filter-building one is named
   `candidateMimeType`.
 
+## The Qt handler
+
+`host/qt/PhotoPickerEffects.cpp`'s `installPhotoPickerEffects(MosaicHost
+&host)` connects to `MosaicHost::effectRequested` (`Qt::DirectConnection`
+— a queued connection would let the host's sweep fail the effect as
+unanswered before the dialog opened) and answers **inline** via
+`QFileDialog::getOpenFileName`, which blocks synchronously — no
+`deferEffect` needed, unlike XAML's necessarily-async picker. This
+mirrors Engram's own Qt effect handler (`installEngramEffects`) in
+structure, the one other real `[host_effects]` Qt handler in this repo.
+Full design rationale is documented inline in the file itself and in
+`UI59` §7.
+
+Two things this handler deliberately does differently from Engram's Qt
+precedent, both informed by `/security-review` findings against this
+same effect kind's XAML implementation (PR #15218):
+
+- **Bounded reads from the start.** Rather than checking
+  `QFileInfo::size()` once before opening the file (which XAML's first
+  cut did, and which `/security-review` found was TOCTOU — the check
+  and the read are separate operations, so a file growing in between
+  isn't actually bounded), the Qt handler reads in 64 KiB chunks and
+  fails the moment the running total exceeds the 50 MiB cap. There was
+  never a window where the check and the read could disagree.
+- **Generic `failed.message`.** Never a raw `QFile::errorString()` or
+  `std::exception::what()` — both can embed local filesystem paths,
+  and `failed.message` is app-visible data. `installEngramEffects`
+  does surface those directly for its own already-merged handler; this
+  one doesn't, applying the same lesson XAML's security review taught.
+
 ## Testing
 
 ```
@@ -64,23 +95,33 @@ cargo test
 ```
 
 `tests/package_compiles.rs` (mirrors `task-app`'s/`engram-app`'s own
-harness):
+harness), 4 tests:
 
 1. `.mil`/`.mll`/both `.msl` themes compile, and the component's
    slots/emits match what's expected.
 2. The manifest declares `PhotoPickerApp` as the sole export, the XAML
    `[host_effects]` file and handler exactly as documented (no
-   `include` — the XAML emitter refuses one outright), and that no
-   other backend (Qt/SwiftUI/Compose/Flutter) has a `[host_effects]`
-   entry yet.
+   `include` — the XAML emitter refuses one outright), the Qt
+   `[host_effects]` files (header + source) and handler (with
+   `include`), and that no other backend (SwiftUI/Compose/Flutter) has
+   a `[host_effects]` entry yet.
 3. `PhotoPickerEffects.cs` exists and declares `Install()`,
    `MosaicRuntimeHost.EffectHandler`, and the `"files.open"` kind
    string.
+4. `PhotoPickerEffects.h`/`.cpp` exist and declare
+   `installPhotoPickerEffects(MosaicHost &host)`, `effectRequested`,
+   and the `"files.open"` kind string.
 
-### Real build (manual, not part of `cargo test`)
+### Real builds (manual, not part of `cargo test`)
 
-Verified against a real `dotnet build` of the emitted
-`--profile native-complete` project — succeeds with 0 errors, 0
-warnings. Interactively exercising the native `FileOpenPicker` dialog
-itself isn't something this environment can automate; that gap is
-stated explicitly rather than silently skipped (`UI59` §5).
+- **XAML**: a real `dotnet build` of the emitted `--profile
+  native-complete` project — succeeds with 0 errors, 0 warnings.
+  Interactively exercising the native `FileOpenPicker` dialog itself
+  isn't something this environment can automate; that gap is stated
+  explicitly rather than silently skipped (`UI59` §5).
+- **Qt**: a real `cmake --build` (Ninja generator, MSVC 19.44 via
+  `vcvars64.bat`, Qt 6.8.1) of the emitted `--profile native-complete`
+  project — succeeds with 0 errors (the only warning is in the
+  generated `MosaicHost.cpp` template, not this package's own code).
+  Same limitation on interactively exercising `QFileDialog` (`UI59`
+  §8).
