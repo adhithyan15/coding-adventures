@@ -5061,11 +5061,109 @@ fn path_coordinate_expression(
     }
 }
 
+/// Look up one property in an already-serialized React style-object body.
+///
+/// #15221 -- this split on EVERY comma and colon, which is wrong the moment
+/// a value contains one, and values do: font stacks are comma-separated and
+/// `rgba(r,g,b,a)` is the shape of the default `$color-border` token.
+///
+/// The consequence was not cosmetic. [`path_paint_jsx`] writes whatever it
+/// recovers into an UNQUOTED JSX expression (`fill={...}`), so a fragment
+/// from inside somebody else's quoted value was read as the property being
+/// looked up:
+///
+/// ```text
+///   fontFamily: "x, background: (globalThis.pwn=1), y"
+///     -> fill={(globalThis.pwn=1)}
+/// ```
+///
+/// which is arbitrary JavaScript in an expression position, reached from an
+/// ordinary authored stylesheet. The same split truncated
+/// `background: "rgba(255,255,255,0.12)"` to `fill={"rgba(255}`, an
+/// unterminated literal that stops the generated component compiling.
+///
+/// Scanning at the top level only -- outside string literals -- closes both.
+/// Every value the emitter writes into this body is a well-formed JS literal
+/// or expression by construction, so a correct parse cannot recover anything
+/// that is not already valid in the position it lands in.
 fn react_style_property<'a>(style: &'a str, property: &str) -> Option<&'a str> {
-    style.split(',').find_map(|declaration| {
-        let (name, value) = declaration.trim().split_once(':')?;
+    top_level_declarations(style).find_map(|declaration| {
+        // A SPREAD yields nothing here without a special case for it: every
+        // state block is spliced in as `...((cond) ? { .. } : {})`, and with
+        // bracket depth tracked, that whole thing is ONE declaration with no
+        // top-level colon. An explicit `starts_with("...")` guard was tried
+        // and removed -- deleting it broke no test, because depth tracking
+        // already covers it, and a guard nothing can falsify reads as
+        // coverage it does not provide.
+        let (name, value) = split_first_top_level_colon(declaration)?;
         (name.trim() == property).then_some(value.trim())
     })
+}
+
+/// Split a style-object body on its top-level commas -- ignoring any inside
+/// a double-quoted string, and any nested inside brackets.
+///
+/// The body is NOT a flat declaration list. `build_part_style_map` splices
+/// state blocks in as `...((cond) ? { a: 1, b: 2 } : {})`, so a scanner that
+/// tracks only string literals treats the comma inside `{ .. }` as a
+/// separator and mines a conditional block for declarations -- recovering a
+/// value that should be conditional, together with the block's closing
+/// scaffolding, which closes the generated JSX expression early.
+fn top_level_declarations(style: &str) -> impl Iterator<Item = &str> {
+    let mut boundaries = vec![0usize];
+    let mut in_string = false;
+    let mut escaped = false;
+    let mut depth: i32 = 0;
+    for (idx, ch) in style.char_indices() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        match ch {
+            '\\' if in_string => escaped = true,
+            '"' => in_string = !in_string,
+            '(' | '[' | '{' if !in_string => depth += 1,
+            ')' | ']' | '}' if !in_string => depth -= 1,
+            ',' if !in_string && depth <= 0 => {
+                boundaries.push(idx);
+            }
+            _ => {}
+        }
+    }
+    boundaries.push(style.len());
+    let mut out = Vec::new();
+    for pair in boundaries.windows(2) {
+        let (a, b) = (pair[0], pair[1]);
+        let slice = &style[a..b];
+        out.push(slice.strip_prefix(',').unwrap_or(slice));
+    }
+    out.into_iter()
+}
+
+/// Split `name: value` at the FIRST colon that is not inside a string or
+/// nested in brackets, so a value containing one -- a URL, or a ternary --
+/// keeps it and cannot have its name mis-taken.
+fn split_first_top_level_colon(declaration: &str) -> Option<(&str, &str)> {
+    let mut in_string = false;
+    let mut escaped = false;
+    let mut depth: i32 = 0;
+    for (idx, ch) in declaration.char_indices() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        match ch {
+            '\\' if in_string => escaped = true,
+            '"' => in_string = !in_string,
+            '(' | '[' | '{' if !in_string => depth += 1,
+            ')' | ']' | '}' if !in_string => depth -= 1,
+            ':' if !in_string && depth <= 0 => {
+                return Some((&declaration[..idx], &declaration[idx + 1..]))
+            }
+            _ => {}
+        }
+    }
+    None
 }
 
 fn path_paint_jsx(part_style: &str) -> (String, String, String) {
@@ -12938,4 +13036,119 @@ mod tests {
         assert!(!out.contains("readOnly"), "got:\n{out}");
     }
 
+}
+
+// =====================================================================
+// #15221 -- a comma inside a style value must not be read as a property
+//
+// `path_paint_jsx` recovers `background` / `borderColor` / `borderWidth`
+// from an already-serialized React style-object body and writes each into
+// an UNQUOTED JSX expression container (`fill={...}`). Splitting that body
+// on every comma means a comma inside a quoted VALUE starts a new
+// "declaration", so a later fragment of someone else's value is read as
+// the property being looked up.
+//
+// That is arbitrary JavaScript in an expression position, from an
+// ordinary authored stylesheet -- and font stacks are comma-separated, so
+// the trigger is correct CSS rather than anything hostile.
+//
+// It also breaks legitimate input: the default `$color-border` token is
+// `rgba(255,255,255,0.12)`, which the naive split truncates to
+// `fill={"rgba(255}` -- an unterminated string literal that stops the
+// generated component compiling.
+// =====================================================================
+#[cfg(test)]
+mod path_paint_parsing_tests {
+    use super::*;
+
+    /// A comma inside a quoted value must not be mistaken for a
+    /// declaration separator.
+    #[test]
+    fn a_comma_inside_a_value_does_not_inject_a_property() {
+        let hostile = "fontFamily: \"x, background: (globalThis.pwn=1), y\"";
+        let (fill, _stroke, _width) = path_paint_jsx(hostile);
+        assert_eq!(
+            fill, "\"none\"",
+            "no `background` is declared here, so the default must survive: {fill}"
+        );
+        assert!(
+            !fill.contains("globalThis"),
+            "arbitrary JS reached an unquoted JSX expression: {fill}"
+        );
+    }
+
+    /// The same split truncates any value that legitimately contains a
+    /// comma. `rgba(...)` is the default `$color-border` token.
+    #[test]
+    fn a_comma_bearing_colour_survives_intact() {
+        let style = "background: \"rgba(255,255,255,0.12)\"";
+        let (fill, _, _) = path_paint_jsx(style);
+        assert_eq!(
+            fill, "{\"rgba(255,255,255,0.12)\"}",
+            "a valid rgba() must not be cut at its first comma: {fill}"
+        );
+    }
+
+    /// The ordinary cases still work.
+    #[test]
+    fn plain_declarations_still_resolve() {
+        let style = "background: \"#1e1e1e\", borderColor: \"#333\", borderWidth: 2";
+        let (fill, stroke, width) = path_paint_jsx(style);
+        assert_eq!(fill, "{\"#1e1e1e\"}");
+        assert_eq!(stroke, "{\"#333\"}");
+        assert_eq!(width, "{2}");
+    }
+
+    /// THE BODY IS NOT A FLAT LIST. `build_part_style_map` splices state
+    /// blocks in as NESTED object literals inside a spread:
+    ///
+    /// ```text
+    ///   background: "#111", ...((disabled) ? { opacity: 0.4, borderWidth: 9 } : {})
+    /// ```
+    ///
+    /// A scanner that knows about string literals but not bracket nesting
+    /// treats the comma inside `{ ... }` as a separator, so `borderWidth: 9`
+    /// is mined out of a CONDITIONAL block and painted unconditionally --
+    /// and the recovered text carries the block's closing scaffolding, which
+    /// closes the JSX expression early and stops the component compiling.
+    ///
+    /// Reached by ordinary authored mosstyle: any `Path` part with a
+    /// multi-property state block.
+    #[test]
+    fn a_nested_state_block_is_not_mined_for_declarations() {
+        let body = "background: \"#111\", ...((disabled) ? { opacity: 0.4, borderWidth: 9 } : {})";
+        let (fill, stroke, width) = path_paint_jsx(body);
+        assert_eq!(fill, "{\"#111\"}", "the base background still resolves");
+        assert_eq!(
+            width, "{1}",
+            "a state-conditional borderWidth must not be painted unconditionally: {width}"
+        );
+        assert!(
+            !width.contains('}') || width == "{1}",
+            "the recovered value must not carry the block's scaffolding: {width}"
+        );
+        assert_eq!(stroke, "\"currentColor\"");
+    }
+
+    /// A spread yields no property. This passes with or without an explicit
+    /// spread guard -- bracket depth alone is what makes it true -- so it is
+    /// a behavioural regression guard, not a pin on any one line.
+    #[test]
+    fn a_spread_is_never_mined_for_a_property() {
+        let body = "...(cond ? { background: \"#f00\" } : {})";
+        let (fill, _, _) = path_paint_jsx(body);
+        assert_eq!(
+            fill, "\"none\"",
+            "a conditional background must not become an unconditional fill: {fill}"
+        );
+    }
+
+    /// A declaration whose value contains a colon (a URL, say) must not
+    /// have its name mis-split either.
+    #[test]
+    fn a_colon_inside_a_value_does_not_split_the_name() {
+        let style = "background: \"url(https://example.test/a.png)\"";
+        let (fill, _, _) = path_paint_jsx(style);
+        assert_eq!(fill, "{\"url(https://example.test/a.png)\"}");
+    }
 }

@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+
+### Fixed -- a `;` inside a CSS value was read as a declaration separator (#15221)
+
+`emit_path_html` recovers `background`, `border-color` and `border-width`
+from a serialized declaration body. `css_value` split that body on every
+`;`, so a value containing one -- inside a quoted string, or a
+`url(data:image/svg+xml;base64,...)` -- started a new "declaration" and a
+fragment of it was recovered as the property being looked up.
+
+This is the twin of the React emitter's defect, found in the same review.
+It is milder here: what is recovered lands in QUOTED attributes through
+`escape_html_attr`, so the failure is a wrong or garbled paint attribute
+rather than injection. Fixed for parity all the same -- the parse was simply
+wrong, and a reader comparing the two emitters should not find one of them
+still doing it.
+
+The scan now honours quoted strings (both kinds), backslash escapes, and
+parenthesised functions. No product output changes.
+
 ### Changed — `HostScroll` honours its axis, and no longer scrolls both ways (UI61, #14854)
 
 `HostScroll` lowered to a bare `overflow: auto`, which scrolls **both** axes.
