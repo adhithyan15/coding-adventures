@@ -162,6 +162,49 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // `border-bottom-width`/`-color` pins beside it are gone: `.overlay`
     // draws the rule and the emitter learned it.
     (Backend::SwiftUI, "border-bottom-style"),
+    // ---- Qt (#15245) ----
+    //
+    // These became visible the moment Qt started reporting its drops in
+    // #15245. They are PRE-EXISTING gaps, not regressions: this package has
+    // been rendering without them on Qt since the parts were authored, and
+    // nothing could see them because the backend reported no drops at all.
+    //
+    // Pinned so the gate stays honest, NOT to bless them -- see this list's
+    // doc comment on how a stale pin turns into a standing licence.
+    //
+    // alignment is not threaded onto the element yet.
+    (Backend::Qt, "align"),
+    (Backend::Qt, "text-align"),
+    //
+    // Qt expresses this through the container chosen (RowLayout /
+    // ColumnLayout / Flow), not through a property on a built element.
+    (Backend::Qt, "align-items"),
+    (Backend::Qt, "flex-grow"),
+    (Backend::Qt, "flex-wrap"),
+    (Backend::Qt, "justify-content"),
+    //
+    // per-edge border halves are not lowered here.
+    (Backend::Qt, "border-bottom-color"),
+    (Backend::Qt, "border-bottom-style"),
+    (Backend::Qt, "border-bottom-width"),
+    //
+    // typography inherited onto a non-text container has nowhere to go.
+    (Backend::Qt, "color"),
+    (Backend::Qt, "font-family"),
+    //
+    // Qt lowers font size only where a primitive has native typography
+    // (`has_native_font_size`); other parts drop it.
+    (Backend::Qt, "font-size"),
+    //
+    // #15247 -- `qml_padding` reads ONE value and fans it to all four
+    // edges, so any longhand beyond the one it picks is lost.
+    (Backend::Qt, "padding"),
+    (Backend::Qt, "padding-bottom"),
+    (Backend::Qt, "padding-top"),
+    //
+    // a percentage width has no direct QML analogue; the emitter declines
+    // rather than collapsing it.
+    (Backend::Qt, "width"),
 ];
 
 #[test]
