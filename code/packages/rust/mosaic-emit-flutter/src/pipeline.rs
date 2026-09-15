@@ -2849,24 +2849,12 @@ fn emit_container(
     let base_foreground = props
         .get("color")
         .and_then(|value| css_color_to_dart(value));
-    let base_border_color = props
-        .get("border-color")
-        .and_then(|value| css_color_to_dart(value));
-    let base_border_width = props
-        .get("border-width")
-        .map(|value| parse_pixel_value(value));
     let base_padding = props.get("padding").map(|value| parse_pixel_value(value));
     let has_background =
         base_background.is_some() || state_layers.iter().any(|layer| layer.background.is_some());
     let has_foreground =
         base_foreground.is_some() || state_layers.iter().any(|layer| layer.text_color.is_some());
-    let has_border = base_border_width.is_some()
-        || state_layers
-            .iter()
-            .any(|layer| layer.border_width.is_some())
-        // UI79 -- a part whose ONLY border is per-edge must still take
-        // the decoration path, or the edge reaches nothing.
-        || per_edge_border_expr(&props).is_some();
+    let has_border = flutter_has_border(&props, &state_layers);
     // Asks about the SHORTHAND, the longhands and the state layers. It used
     // to ask only about the shorthand, so a part authoring nothing but
     // `padding-top`/`-left`/... was skipped here entirely and rendered with
@@ -2925,67 +2913,15 @@ fn emit_container(
             wrapper_args.push(format!("padding: {arg}"));
         }
         if has_background || has_border || elevation.is_some() {
-            let mut decoration: Vec<String> = Vec::new();
-            if has_background {
-                let background = state_color_expr(
+            let background = has_background.then(|| {
+                state_color_expr(
                     &state_layers,
                     |layer| layer.background.as_ref(),
                     base_background.as_deref().unwrap_or("Colors.transparent"),
-                );
-                decoration.push(format!("color: {background}"));
-            }
-            if has_border {
-                let border_color = state_color_expr(
-                    &state_layers,
-                    |layer| layer.border_color.as_ref(),
-                    base_border_color.as_deref().unwrap_or("Colors.transparent"),
-                );
-                let border_width = state_color_expr(
-                    &state_layers,
-                    |layer| layer.border_width.as_ref(),
-                    base_border_width.as_deref().unwrap_or("0"),
-                );
-                decoration.push(
-                    // UI79 -- a per-edge declaration replaces the
-                    // all-four form, filling unauthored sides from the
-                    // shorthand. This is the writer that actually runs
-                    // for a styled container; `emit_styled_box` has a
-                    // second one that does not.
-                    per_edge_border_expr(&props).unwrap_or_else(|| {
-                        format!("border: Border.all(color: {border_color}, width: {border_width})")
-                    }),
-                );
-            }
-            // #15225 fixed the missing `border-radius` in `emit_styled_box`
-            // only, and its comment asserted THIS writer already had one. It
-            // did not. This decoration read background, border and elevation
-            // and never looked at the radius, so every container-shaped part
-            // rendered square however it was authored -- Trestle's
-            // `task-card` (`border-radius: 13`) among them, emitting
-            // `BoxDecoration(color:.., border:.., boxShadow:..)` with no
-            // radius at all. Measured in the emitted Dart, not inferred from
-            // the source.
-            //
-            // Emitted after the border and before the shadow so the argument
-            // order matches the other writer's, keeping the two comparable.
-            //
-            // Gated exactly as the other writer gates it. Flutter's
-            // `Border.paint` throws "A borderRadius can only be given on
-            // borders with uniform colors" the moment a non-uniform
-            // `Border(...)` carries one, taking out the widget and everything
-            // above it in any debug or profile build -- and
-            // `per_edge_border_expr` emits precisely that non-uniform form.
-            if per_edge_border_expr(&props).is_none() {
-                if let Some(radius) = props
-                    .get("border-radius")
-                    .and_then(|value| strict_pixel_length(value))
-                {
-                    decoration.push(format!("borderRadius: BorderRadius.circular({radius})"));
-                }
-            }
-            if let Some(tier) = elevation {
-                decoration.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
-            }
+                )
+            });
+            let decoration =
+                flutter_decoration_parts(&props, &state_layers, background, elevation);
             wrapper_args.push(format!(
                 "decoration: BoxDecoration({})",
                 decoration.join(", ")
@@ -3593,6 +3529,103 @@ fn style_to_container_args(style_props: &str) -> String {
         }
     }
     parts.join(", ")
+}
+
+/// The `BoxDecoration(..)` arguments, in emission order, shared by BOTH of
+/// this emitter's box writers.
+///
+/// `emit_container` and `flutter_box_style` computed these separately, and
+/// every time the two drifted a product lost something:
+///
+///   - #15225: `border-radius` was taught to one writer and not the other.
+///   - #15246: the gap that survived it -- containers rendered square, and a
+///     comment in the FIXED writer claimed the other one handled it.
+///   - #15249: padding, wrong in two DIFFERENT ways at once (`EdgeInsets.all`
+///     collapsed it here, `symmetric(horizontal:)` dropped the vertical axis
+///     there).
+///
+/// Qt, XAML, SwiftUI and React each lower a part's box in one place, and none
+/// of them has had this class of bug. So the decoration now has one writer
+/// too, and a property taught to it is taught to both callers at once.
+///
+/// The background is passed in rather than computed here: the two callers
+/// genuinely disagree about it. `emit_container` omits `color:` entirely when
+/// nothing authored a background and defaults to `Colors.transparent`;
+/// `flutter_box_style` always emits it and defaults to `null`. Folding that
+/// into one rule would change what is emitted, which this refactor must not
+/// do -- so it stays the callers' business, and only the ORDER is shared.
+/// Does this part have a border to draw?
+///
+/// ONE expression, asked by both the wrapper gate in `emit_container` and the
+/// border arm of `flutter_decoration_parts`. They were separate and textually
+/// identical, which is precisely how #15225/#15246/#15249 happened: two copies
+/// of one question, and a change to either alone is a silent divergence. A
+/// reviewer flagged the substitution as unproven, and proving the two matched
+/// today would not stop them drifting tomorrow.
+fn flutter_has_border(props: &HashMap<String, String>, layers: &[StateLayer]) -> bool {
+    props.get("border-width").is_some()
+        || layers.iter().any(|layer| layer.border_width.is_some())
+        // UI79 -- a part whose ONLY border is per-edge must still take the
+        // decoration path, or the edge reaches nothing.
+        || per_edge_border_expr(props).is_some()
+}
+
+fn flutter_decoration_parts(
+    props: &HashMap<String, String>,
+    layers: &[StateLayer],
+    background: Option<String>,
+    elevation: Option<ElevationTier>,
+) -> Vec<String> {
+    let mut parts: Vec<String> = Vec::new();
+    if let Some(background) = background {
+        parts.push(format!("color: {background}"));
+    }
+
+    let base_border_color = props.get("border-color").and_then(|v| css_color_to_dart(v));
+    let base_border_width = props.get("border-width").map(|v| parse_pixel_value(v));
+    if flutter_has_border(props, layers) {
+        let border_color = state_color_expr(
+            layers,
+            |layer| layer.border_color.as_ref(),
+            base_border_color.as_deref().unwrap_or("Colors.transparent"),
+        );
+        let border_width = state_color_expr(
+            layers,
+            |layer| layer.border_width.as_ref(),
+            base_border_width.as_deref().unwrap_or("0"),
+        );
+        parts.push(
+            // UI79 -- a per-edge declaration replaces the all-four form for
+            // the whole border, filling unauthored sides from the shorthand.
+            per_edge_border_expr(props).unwrap_or_else(|| {
+                format!("border: Border.all(color: {border_color}, width: {border_width})")
+            }),
+        );
+    }
+
+    // Gated on a UNIFORM border. Flutter's `Border.paint` throws "A
+    // borderRadius can only be given on borders with uniform colors" the
+    // moment a non-uniform `Border(...)` carries one, taking out the widget
+    // and everything above it in any debug or profile build -- and
+    // `per_edge_border_expr` emits exactly that non-uniform form.
+    if per_edge_border_expr(props).is_none() {
+        if let Some(radius) = props
+            .get("border-radius")
+            .and_then(|value| strict_pixel_length(value))
+        {
+            parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
+        }
+    }
+
+    // Taken as a parameter, NOT recomputed. `emit_container`'s wrapper gate
+    // already tests its own `elevation` binding, so recomputing here would be
+    // two evaluations of one question -- the same shape as the border guard
+    // above, and the same shape that produced #15225/#15246/#15249. Proving
+    // they agree today is not the point; they cannot disagree tomorrow.
+    if let Some(tier) = elevation {
+        parts.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
+    }
+    parts
 }
 
 /// A part's padding resolved PER EDGE, the way CSS resolves it: a longhand
@@ -4244,64 +4277,8 @@ fn flutter_box_style(
         |l| l.background.as_ref(),
         base_bg.as_deref().unwrap_or("null"),
     );
-    let mut deco_parts: Vec<String> = vec![format!("color: {bg_expr}")];
-    let base_border_color = base.get("border-color").and_then(|v| css_color_to_dart(v));
-    let base_border_width = base.get("border-width").map(|v| parse_pixel_value(v));
-    if base_border_width.is_some()
-        || layers.iter().any(|layer| layer.border_width.is_some())
-        || per_edge_border_expr(base).is_some()
-    {
-        let border_color = state_color_expr(
-            layers,
-            |layer| layer.border_color.as_ref(),
-            base_border_color.as_deref().unwrap_or("Colors.transparent"),
-        );
-        let border_width = state_color_expr(
-            layers,
-            |layer| layer.border_width.as_ref(),
-            base_border_width.as_deref().unwrap_or("0"),
-        );
-        deco_parts.push(
-            // UI79 -- a per-edge declaration replaces the all-four form
-            // for the whole border, filling unauthored sides from the
-            // shorthand it just read.
-            per_edge_border_expr(base).unwrap_or_else(|| {
-                format!("border: Border.all(color: {border_color}, width: {border_width})")
-            }),
-        );
-    }
-    // #15225 -- `border-radius`. This builder read background, border and
-    // elevation and simply never looked at the radius, so a styled box was
-    // square on Flutter however it was authored -- a NUMERIC radius was
-    // dropped here just as surely as a percentage one. NEITHER writer
-    // had it: the claim once made here that `emit_container` handled the
-    // radius was wrong, and that writer was fixed separately.
-    //
-    // Emitted after the border so the argument order matches
-    // `emit_container`'s, keeping the two writers' output comparable.
-    // NOT paired with a per-edge border. Flutter's `Border.paint` throws
-    // "A borderRadius can only be given on borders with uniform colors"
-    // the moment a non-uniform `Border(...)` carries a radius, and asserts
-    // separately on a hairline side -- taking out the widget and everything
-    // above it in any debug or profile build. `per_edge_border_expr` emits
-    // exactly that non-uniform form, and it can also emit a `width: 0`
-    // side for an edge whose authored width was unreadable.
-    //
-    // Before #15225 this builder emitted no radius at all, so the pairing
-    // was unreachable; adding one without this gate turns an authored
-    // per-edge border plus a radius into a runtime crash. A uniform border
-    // is fine, which is the case every product actually authors.
-    let uniform_border = per_edge_border_expr(base).is_none();
-    if uniform_border {
-        if let Some(radius) = base.get("border-radius").and_then(|v| strict_pixel_length(v)) {
-            deco_parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
-        }
-    }
-    // UI41, #12028 item 1 — base props only (see `elevation_tier`'s doc
-    // comment).
-    if let Some(tier) = elevation_tier(base) {
-        deco_parts.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
-    }
+    let deco_parts =
+        flutter_decoration_parts(base, layers, Some(bg_expr), elevation_tier(base));
     args.push(format!(
         "decoration: BoxDecoration({})",
         deco_parts.join(", ")
