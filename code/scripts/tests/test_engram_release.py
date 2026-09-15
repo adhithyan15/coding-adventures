@@ -1420,9 +1420,25 @@ def _write_flutter_bundle(
     # Real container magic, because the check reads it: ELF, Mach-O, and PE.
     # A fixture with made-up bytes would exercise the filename match and skip
     # the part that distinguishes a library from a `.pdb`.
-    magic = {"linux": b"\x7fELF", "macos": b"\xcf\xfa\xed\xfe", "windows": b"MZ"}
+    #
+    # macOS is UNIVERSAL here, because a universal runtime is what the release
+    # actually produces: `flutter build macos --release` has no
+    # `--target-platform`, so it builds arm64 and x86_64 and `lipo`s them.
+    # A thin fixture is not a weaker stand-in for that, it is a DIFFERENT
+    # artifact -- and `_reject_thin_macos_flutter_engine` is entitled to refuse
+    # it. That check is gated on the engine STEM, so it lay dormant over these
+    # bundles until the `[host_effects]` migration renamed the stem to
+    # `mosaic_app`; the day it woke up it failed them on the fixture's own
+    # hand-written bytes, which say nothing about what a real build emits.
+    rest = b"\x00rest-of-the-library\x00"
+    thin_macho = b"\xcf\xfa\xed\xfe" + rest
+    payload = {
+        "linux": b"\x7fELF" + rest,
+        "macos": _fat_mach_o([thin_macho, thin_macho]),
+        "windows": b"MZ" + rest,
+    }
     (target / FLUTTER_ENGINE_FILENAMES[platform]).write_bytes(
-        b"" if empty else magic[platform] + b"\x00rest-of-the-library\x00"
+        b"" if empty else payload[platform]
     )
     return bundle
 
@@ -1596,6 +1612,32 @@ class ArchiveFlutterTests(unittest.TestCase):
                 "0.4.0", "macos", bundle, root / "out", COMMIT
             )
             self.assertEqual(output.name, "engram-flutter-macos-v0.4.0.zip")
+
+    def test_a_thin_macos_engine_is_refused_through_the_archiver(self) -> None:
+        """The universality check, pinned where the release actually calls it.
+
+        `_reject_thin_macos_flutter_engine` had thorough tests that invoked it
+        DIRECTLY, and it still sat dormant over every bundle this class builds
+        for two commits, because the call site is gated on the engine stem and
+        nothing exercised it through `archive_flutter`. Tests against a helper
+        cannot tell you the helper is reached: the same suite passes whether
+        the call site is there, mis-gated, or deleted outright.
+
+        So this one goes through the archiver, on a bundle shaped exactly like
+        the one the accepting test uses -- the ONLY difference is the engine's
+        container -- and the release step runs this same entry point.
+        """
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bundle = _write_flutter_bundle(root, "macos")
+            engine = next(bundle.rglob(FLUTTER_ENGINE_FILENAMES["macos"]))
+            engine.write_bytes(b"\xcf\xfa\xed\xfe" + b"\x00thin\x00")
+            with self.assertRaises(ValueError) as caught:
+                engram_release.archive_flutter(
+                    "0.4.0", "macos", bundle, root / "out", COMMIT
+                )
+            self.assertIn("not universal", str(caught.exception))
 
     def test_a_framework_outside_the_loader_directory_is_still_refused(self) -> None:
         """Recursion is scoped to the engine directory, not the whole bundle.
