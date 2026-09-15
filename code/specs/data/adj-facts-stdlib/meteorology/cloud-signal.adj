@@ -21,6 +21,10 @@
 %     "Stratus clouds are uniform and flat, producing a gray layer of cloud
 %      cover which may be precipitation-free or may cause periods of light
 %      precipitation or drizzle."
+%     (the page has a NON-BREAKING SPACE, U+00A0, after "precipitation-free",
+%      which this comment cannot show; the table shipped an ordinary space there
+%      until 2026-09-15, a string the page never wrote. The row's `source` now
+%      carries the page's character.)
 %
 % Recall is a binding query:
 %
@@ -44,17 +48,22 @@
 %     ? cloud_signal($Cloud, upper_level_jet_streak)
 %       % cirrus
 %
-% Provenance: reproduces, byte-for-byte, the SAME two NWS sentences
-% `cloud-type.adj`'s own `source` field and header already quote in full for
-% its cirrus and stratus rows -- no new WebFetch, only a different schema
-% decoding each listed signal as its own row instead of folding the whole
-% clause into one compound `weather_indication` atom. An ADJ `table` carries
-% ONE provenance envelope, so `source`/`locator`/`trust` below hold the
-% cirrus span (matching `cloud-type.adj`'s own convention of quoting each
-% row's own source sentence in prose); the stratus row's own span is listed
-% above for independent auditability. `trust authoritative` -- the same tier
-% `cloud-type.adj` already carries (NWS Louisville forecast office, a
-% primary U.S. government science-education source).
+% Provenance: the SAME two NWS sentences `cloud-type.adj` cites, from the NWS
+% Louisville "Cloud Classification" page, decoding each listed signal as its
+% own row. EACH ROW CARRIES ITS OWN CLOUD'S SENTENCE AS ITS `source`
+% (ADJ-TABLES RS-5e, #14986). This paragraph used to say the spans were
+% reproduced "byte-for-byte" with "no new WebFetch", and that an ADJ `table`
+% carries ONE provenance envelope -- so it held the cirrus value sentence as
+% the envelope, which made it the primary source of the three stratus answers
+% too. Neither claim survives a raw fetch: the language has per-row blocks,
+% and the stratus sentence was not byte-for-byte (see the U+00A0 note above).
+% Each sentence names both its cloud and its signals, so each warrants its
+% rows. The envelope is now the page's framing sentence, "Clouds are
+% classified according to their height above and appearance (texture) from
+% the ground.", which names no cloud and no signal. Measured 2026-09-15: the
+% cirrus span, the stratus sentence (in the page's own form) and the envelope
+% each occur exactly once. `trust authoritative` -- NWS Louisville forecast
+% office, a primary U.S. government science-education source.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -62,16 +71,29 @@
 table cloud_signal {
     columns cloud, signal
 
-    row (cirrus, approaching_warm_front)
-    row (cirrus, upper_level_jet_streak)
-    row (stratus, precipitation_free)
-    row (stratus, light_precipitation)
-    row (stratus, drizzle)
+    row (cirrus, approaching_warm_front) {
+        source "Cirrus clouds are wispy, feathery, and composed entirely of ice crystals. They often are the first sign of an approaching warm front or upper-level jet streak."
+    }
+    row (cirrus, upper_level_jet_streak) {
+        source "Cirrus clouds are wispy, feathery, and composed entirely of ice crystals. They often are the first sign of an approaching warm front or upper-level jet streak."
+    }
+    row (stratus, precipitation_free) {
+        % U+00A0 after "precipitation-free", as on the page.
+        source "Stratus clouds are uniform and flat, producing a gray layer of cloud cover which may be precipitation-free or may cause periods of light precipitation or drizzle."
+    }
+    row (stratus, light_precipitation) {
+        % U+00A0 after "precipitation-free", as on the page.
+        source "Stratus clouds are uniform and flat, producing a gray layer of cloud cover which may be precipitation-free or may cause periods of light precipitation or drizzle."
+    }
+    row (stratus, drizzle) {
+        % U+00A0 after "precipitation-free", as on the page.
+        source "Stratus clouds are uniform and flat, producing a gray layer of cloud cover which may be precipitation-free or may cause periods of light precipitation or drizzle."
+    }
 
-    source "They often are the first sign of an approaching warm front or upper-level jet streak."
+    % THE ENVELOPE WAS THE CIRRUS VALUE SENTENCE, and so the primary source of the stratus answers.
+    % Each row now carries its own cloud's sentence; this framing
+    % sentence names no cloud and no weather signal.
+    source "Clouds are classified according to their height above and appearance (texture) from the ground."
     locator "https://www.weather.gov/lmk/cloud_classification"
     trust authoritative
-
-    cites "Stratus clouds are uniform and flat, producing a gray layer of cloud cover which may be precipitation-free or may cause periods of light precipitation or drizzle." locator "https://www.weather.gov/lmk/cloud_classification"
-    cites "Cirrus clouds are wispy, feathery, and composed entirely of ice crystals. They often are the first sign of an approaching warm front or upper-level jet streak." locator "https://www.weather.gov/lmk/cloud_classification"
 }
