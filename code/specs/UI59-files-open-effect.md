@@ -180,14 +180,28 @@ window. A cleaner long-term fix is a generator change exposing a
 static window accessor; noted as follow-up, not required here.
 
 **Error handling.** Any exception during the picker call or the file
-read completes the effect as `failed` with the exception's message,
-mirroring Qt's `installEngramEffects`'s own try/catch-into-
-`failedOutcome` pattern (`UI47`'s worked Qt example) — the one already-
-proven error-handling shape for a `[host_effects]` handler in this
-repo. `FileOpenPicker` being dismissed (Escape, or the Cancel button)
-returns `null` from `PickSingleFileAsync()`, not an exception — that
-path completes as `cancelled`, not `failed`, matching §3's explicit
-"the picker was dismissed; not an error."
+read completes the effect as `failed`, mirroring Qt's
+`installEngramEffects`'s own try/catch-into-`failedOutcome` pattern
+(`UI47`'s worked Qt example) — the one already-proven error-handling
+shape for a `[host_effects]` handler in this repo. The message is a
+short, generic string rather than the raw exception's own — a real
+`dotnet build` and the mandatory `/security-review` before push
+(§6 gate 4) together caught that `.NET`'s own exception messages for
+this case routinely embed the full local filesystem path, and
+`failed.message` is app-visible data a future copy of this handler
+could plausibly log or display remotely. `FileOpenPicker` being
+dismissed (Escape, or the Cancel button) returns `null` from
+`PickSingleFileAsync()`, not an exception — that path completes as
+`cancelled`, not `failed`, matching §3's explicit "the picker was
+dismissed; not an error."
+
+**Size limit.** Before reading a picked file, the handler checks
+`StorageFile.GetBasicPropertiesAsync().Size` against a 50 MiB cap and
+completes the effect as `failed` if it's exceeded, rather than reading
+an arbitrarily large file fully into memory and base64-encoding it
+(the concern §6 gate 4 flags). This is a host-side cap, not part of
+the wire contract in §3 — a future revision could add a request-side
+`maxBytes` field if a caller ever needs a different limit.
 
 ## 5. Test strategy
 

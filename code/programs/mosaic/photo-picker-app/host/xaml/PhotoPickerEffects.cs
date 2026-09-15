@@ -68,6 +68,15 @@ public static class PhotoPickerEffects
     [DllImport("user32.dll")]
     private static extern IntPtr GetForegroundWindow();
 
+    // A picked file is read fully into memory and base64-encoded (UI59
+    // §3's `bytes` field is the whole file); without a cap, a caller
+    // picking an arbitrarily large file costs an arbitrarily large amount
+    // of host memory, entirely outside this app's control. 50 MiB comfortably
+    // covers a real photo (even an uncompressed multi-megapixel one) while
+    // bounding the worst case -- not a claim about what any particular
+    // caller's own images will be.
+    private const ulong MaxPickedFileBytes = 50 * 1024 * 1024;
+
     public static void Install()
     {
         MosaicRuntimeHost.EffectHandler = (id, kind, payload, delivery) =>
@@ -170,6 +179,23 @@ public static class PhotoPickerEffects
                 return;
             }
 
+            // Reject an oversized pick before reading it into memory -- the
+            // read-then-base64-encode path below holds the raw bytes and
+            // the encoded string at once (~1.33x), and the app decodes the
+            // string again on its side (UI59 security review finding 1):
+            // an unbounded read lets a single pick cost several times the
+            // file's own size in memory, on a value the host does not
+            // control (the user's own filesystem).
+            var properties = await file.GetBasicPropertiesAsync();
+            if (properties.Size > MaxPickedFileBytes)
+            {
+                MosaicRuntimeHost.CompleteEffect(id, new
+                {
+                    failed = new { message = $"\"{file.Name}\" is too large ({properties.Size} bytes; limit is {MaxPickedFileBytes} bytes)." },
+                });
+                return;
+            }
+
             var bytes = await ReadAllBytesAsync(file);
             var mimeType = ExtensionMimeTypes.TryGetValue(file.FileType, out var known)
                 ? known
@@ -184,9 +210,18 @@ public static class PhotoPickerEffects
                 },
             });
         }
-        catch (Exception error)
+        catch (UnauthorizedAccessException)
         {
-            MosaicRuntimeHost.CompleteEffect(id, new { failed = new { message = error.Message } });
+            // Don't surface the raw exception message here (UI59 security
+            // review finding 2) -- .NET's own message for this case
+            // routinely embeds the full local filesystem path, and
+            // `failed.message` is app-visible data that a future copy of
+            // this handler could plausibly log or display remotely.
+            MosaicRuntimeHost.CompleteEffect(id, new { failed = new { message = "Permission denied reading the selected file." } });
+        }
+        catch (Exception)
+        {
+            MosaicRuntimeHost.CompleteEffect(id, new { failed = new { message = "Couldn't read the selected file." } });
         }
     }
 
