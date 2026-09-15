@@ -772,11 +772,113 @@ fn compose_component_with_model_and_style_options(
     // same reason this type exists at all (see its doc comment).
     resolve_current_color(&layout.def.root, &mut style);
 
+    // #15225 -- resolve a PERCENTAGE `border-radius` to pixels while the
+    // authored box is still in hand. Every backend lowers this property
+    // through a pixel parser, so `50%` reached none of them and twelve
+    // elements that are meant to be round rendered as squares.
+    resolve_percentage_border_radius(&mut style);
+
     Ok(ComposedComponent {
         model,
         layout,
         style,
     })
+}
+
+/// Resolve a percentage `border-radius` against the part's own box (#15225).
+///
+/// CSS resolves a percentage radius against the element's dimensions. Every
+/// Mosaic backend lowers `border-radius` through a pixel parser -- Compose
+/// `RoundedCornerShape(N.dp)`, SwiftUI `.cornerRadius(N)`, Qt `radius: N`,
+/// XAML `CornerRadius="N"` -- so `50%` matched none of them and was dropped.
+///
+/// Trestle authors it six times per theme, and every one rendered SQUARE on
+/// the five native backends: both pill status dots, the progress ring's fill
+/// and hole, and both theme-toggle buttons. The dot's squareness is visible
+/// in the Compose screenshots as exactly 36 painted pixels -- 6x6 -- where a
+/// circle covers about 28.
+///
+/// Resolved here, once, for the same reason as [`resolve_current_color`]:
+/// the answer is arithmetic over the authored box, not a property of any
+/// target language.
+///
+/// ONLY A SQUARE BOX WITH LITERAL SIDES IS RESOLVED. A percentage radius on a
+/// non-square box is an ELLIPSE, which none of these frameworks expresses as
+/// a plain corner radius, and a box sized by its content has no pixel value
+/// to resolve against at emit time. Both are left exactly as authored, so the
+/// web keeps resolving them natively and the native backends keep dropping
+/// them -- no worse than today, and never silently wrong.
+///
+/// Base declarations only. A radius that varies by state would need the same
+/// per-state treatment; nothing authors one, and guessing is how the other
+/// half of this file's bugs happened.
+fn resolve_percentage_border_radius(style: &mut mosstyle_compiler::StyleDef) {
+    for part in style.parts.iter_mut() {
+        let Some(side) = square_side(part) else {
+            continue;
+        };
+        for prop in part.base.iter_mut() {
+            if prop.name != "border-radius" {
+                continue;
+            }
+            if let Some(fraction) = percentage_fraction(&prop.value) {
+                // CSS's overlap rule scales adjacent radii so a radius can
+                // never exceed half the side -- `border-radius: 100%` on a
+                // square renders exactly as `50%`. Compose, SwiftUI and QML
+                // clamp for us; XAML does not, so clamping here keeps the
+                // backends agreeing rather than leaving one at double.
+                let resolved = (side * fraction).min(side / 2.0);
+                // Rounded to a sane pixel precision. f64 `Display` never
+                // uses exponent notation in EITHER direction, so an
+                // unrounded product is both ugly (`0.30000000000000004`
+                // from a 3px box at 10%) and, for a subnormal side, a
+                // several-hundred-character literal shipped to every
+                // backend.
+                let resolved = (resolved * 1000.0).round() / 1000.0;
+                prop.value = format!("{resolved}");
+            }
+        }
+    }
+}
+
+/// The side length of a part whose authored box is square, or `None`.
+fn square_side(part: &mosstyle_compiler::PartStyle) -> Option<f64> {
+    let side = |name: &str| {
+        part.base
+            .iter()
+            .rev() // last-wins, as every emitter applies it
+            .find(|p| p.name == name)
+            .and_then(|p| literal_length(&p.value))
+    };
+    let w = side("width")?;
+    let h = side("height")?;
+    (w == h && w > 0.0).then_some(w)
+}
+
+/// A finite, non-negative pixel length, or `None` for anything relative.
+fn literal_length(value: &str) -> Option<f64> {
+    let v = value.trim();
+    let v = v.strip_suffix("px").unwrap_or(v).trim();
+    // The same character class the STRICTEST backend length parser accepts
+    // (Compose's `px_or_none` is digits, `.` and `-`). `6e0` and `+6`
+    // parse as f64 here but are DROPPED by that emitter, which would leave
+    // a box sized by its content carrying a radius resolved against a
+    // width it never applied.
+    if v.is_empty() || !v.bytes().all(|b| b.is_ascii_digit() || b == b'.' || b == b'-') {
+        return None;
+    }
+    v.parse::<f64>()
+        .ok()
+        .filter(|f| f.is_finite() && *f >= 0.0 && f.abs() <= 9_007_199_254_740_992.0)
+}
+
+/// `50%` -> `0.5`. `None` for anything that is not a plain percentage.
+fn percentage_fraction(value: &str) -> Option<f64> {
+    let v = value.trim().strip_suffix('%')?.trim();
+    v.parse::<f64>()
+        .ok()
+        .filter(|f| f.is_finite() && *f >= 0.0 && *f <= 100.0)
+        .map(|f| f / 100.0)
 }
 
 /// Resolve the CSS `currentColor` keyword against the inherited text colour,
@@ -15456,6 +15558,237 @@ mod current_color_tests {
         assert_eq!(
             dot_background, "#6fb489",
             "composition must resolve currentColor before any emitter sees it"
+        );
+    }
+}
+
+// =====================================================================
+// #15225 -- a percentage `border-radius` resolves against the part's box
+//
+// Every backend lowers `border-radius` through a pixel parser, so `50%`
+// matched none of them and was dropped. Trestle authors it six times per
+// theme and every one rendered SQUARE on the five native backends: both
+// pill status dots, the progress ring's fill and hole, and both
+// theme-toggle buttons.
+//
+// Verified by rendering. The status dot's 6x6 block in the Compose
+// screenshot, before and after (# = exactly the dot colour, + =
+// antialiased edge, . = background):
+//
+//     ######        ..++..
+//     ######        .####.
+//     ######        +####+
+//     ######        +####+
+//     ######        .####.
+//     ######        ..++..
+// =====================================================================
+#[cfg(test)]
+mod percentage_radius_tests {
+    use super::*;
+    use mosstyle_compiler::{PartStyle, StyleDef, StyleProp};
+
+    fn prop(name: &str, value: &str) -> StyleProp {
+        StyleProp {
+            name: name.to_string(),
+            value: value.to_string(),
+        }
+    }
+
+    fn style_with(base: Vec<StyleProp>) -> StyleDef {
+        StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "dot".to_string(),
+                base,
+                transitions: vec![],
+                states: vec![],
+            }],
+        }
+    }
+
+    fn radius_of(s: &StyleDef) -> String {
+        s.parts[0]
+            .base
+            .iter()
+            .find(|p| p.name == "border-radius")
+            .map(|p| p.value.clone())
+            .unwrap_or_default()
+    }
+
+    /// The authored cases, all six of which are square with literal sides.
+    #[test]
+    fn a_percentage_on_a_square_box_resolves_to_pixels() {
+        for (side, expected) in [("6", "3"), ("34", "17"), ("24", "12")] {
+            let mut s = style_with(vec![
+                prop("width", side),
+                prop("height", side),
+                prop("border-radius", "50%"),
+            ]);
+            resolve_percentage_border_radius(&mut s);
+            assert_eq!(radius_of(&s), expected, "50% of {side}");
+        }
+        // any percentage, not just 50
+        let mut s = style_with(vec![
+            prop("width", "20px"),
+            prop("height", "20px"),
+            prop("border-radius", "25%"),
+        ]);
+        resolve_percentage_border_radius(&mut s);
+        assert_eq!(radius_of(&s), "5");
+    }
+
+    /// A percentage radius on a NON-SQUARE box is an ellipse, which no
+    /// backend expresses as a plain corner radius. Left as authored so the
+    /// web keeps resolving it and the native backends keep dropping it --
+    /// never silently wrong.
+    #[test]
+    fn a_non_square_box_is_left_alone() {
+        let mut s = style_with(vec![
+            prop("width", "100"),
+            prop("height", "40"),
+            prop("border-radius", "50%"),
+        ]);
+        resolve_percentage_border_radius(&mut s);
+        assert_eq!(radius_of(&s), "50%");
+    }
+
+    /// Without both dimensions there is no pixel value to resolve against.
+    #[test]
+    fn a_box_without_literal_sides_is_left_alone() {
+        for base in [
+            vec![prop("width", "6"), prop("border-radius", "50%")],
+            vec![
+                prop("width", "100%"),
+                prop("height", "100%"),
+                prop("border-radius", "50%"),
+            ],
+            vec![
+                prop("width", "auto"),
+                prop("height", "auto"),
+                prop("border-radius", "50%"),
+            ],
+            vec![
+                prop("width", "0"),
+                prop("height", "0"),
+                prop("border-radius", "50%"),
+            ],
+        ] {
+            let mut s = style_with(base);
+            resolve_percentage_border_radius(&mut s);
+            assert_eq!(radius_of(&s), "50%");
+        }
+    }
+
+    /// A radius that is already a length is untouched -- the pass must not
+    /// reformat what already worked on every backend.
+    #[test]
+    fn a_length_radius_is_untouched() {
+        for authored in ["3", "8px", "0", "12.5"] {
+            let mut s = style_with(vec![
+                prop("width", "34"),
+                prop("height", "34"),
+                prop("border-radius", authored),
+            ]);
+            resolve_percentage_border_radius(&mut s);
+            assert_eq!(radius_of(&s), authored);
+        }
+    }
+
+    /// Junk in the percentage position is declined, not coerced to 0 --
+    /// a 0 radius is a square, which is exactly the bug being fixed.
+    #[test]
+    fn a_malformed_percentage_is_declined_not_zeroed() {
+        for bad in ["%", "abc%", "-10%", "200%", "1e400%", "50 %x"] {
+            let mut s = style_with(vec![
+                prop("width", "6"),
+                prop("height", "6"),
+                prop("border-radius", bad),
+            ]);
+            resolve_percentage_border_radius(&mut s);
+            assert_eq!(radius_of(&s), bad, "`{bad}` must be left as authored");
+        }
+    }
+
+    /// CSS clamps a radius to half the side (the overlap rule), so `100%`
+    /// on a square renders exactly as `50%`. Compose, SwiftUI and QML clamp
+    /// for us; XAML does not, so resolving `100%` to the full side would
+    /// leave one backend at double the others.
+    #[test]
+    fn a_radius_is_clamped_to_half_the_side() {
+        let mut s = style_with(vec![
+            prop("width", "20"),
+            prop("height", "20"),
+            prop("border-radius", "100%"),
+        ]);
+        resolve_percentage_border_radius(&mut s);
+        assert_eq!(radius_of(&s), "10");
+    }
+
+    /// The product is rounded. f64 `Display` never uses exponent notation in
+    /// either direction, so an unrounded value is either ugly or enormous:
+    /// a 3px box at 10% gives `0.30000000000000004`, and a subnormal side
+    /// gives a several-hundred-character literal shipped to every backend.
+    #[test]
+    fn the_resolved_radius_is_rounded_to_a_sane_precision() {
+        let mut s = style_with(vec![
+            prop("width", "3"),
+            prop("height", "3"),
+            prop("border-radius", "10%"),
+        ]);
+        resolve_percentage_border_radius(&mut s);
+        assert_eq!(radius_of(&s), "0.3");
+        assert!(radius_of(&s).len() < 8);
+
+        let mut tiny = style_with(vec![
+            prop("width", "1e-300"),
+            prop("height", "1e-300"),
+            prop("border-radius", "50%"),
+        ]);
+        resolve_percentage_border_radius(&mut tiny);
+        assert!(
+            radius_of(&tiny).len() < 12,
+            "a subnormal side must not ship a 300-character literal: {}",
+            radius_of(&tiny)
+        );
+    }
+
+    /// A length the STRICTEST backend parser rejects must not be used as a
+    /// side. Compose's `px_or_none` is a digits/`.`/`-` character check, so
+    /// `6e0` is dropped there and the box ends up sized by its content --
+    /// while a radius resolved against 6 would already be baked in.
+    #[test]
+    fn a_side_no_backend_would_apply_is_not_used() {
+        for side in ["6e0", "+6", "6 px x", "1_0"] {
+            let mut s = style_with(vec![
+                prop("width", side),
+                prop("height", side),
+                prop("border-radius", "50%"),
+            ]);
+            resolve_percentage_border_radius(&mut s);
+            assert_eq!(radius_of(&s), "50%", "`{side}` must not be used as a side");
+        }
+    }
+
+    /// THE CALL, not just the helper -- the same trap as the `currentColor`
+    /// pass, where every helper test passed with the call site deleted.
+    #[test]
+    fn composition_itself_resolves_a_percentage_radius() {
+        let mil = "component Dot {\n  slot label : text ;\n}\n";
+        let mll = "layout Dot {\n  Row [ wrap ] {\n    Box [ dot ] { }\n    Text [ label ] ( content : slot: label )\n  }\n}\n";
+        let msl = "style Dot {\n  part wrap { gap : 4 ; }\n  part dot { width : 6 ; height : 6 ; border-radius : 50% ; }\n  part label { font-size : 12 ; }\n}\n";
+        let composed =
+            compose_component("Dot", mil, mll, msl, &[], None).expect("the fixture composes");
+        let radius = composed
+            .style
+            .parts
+            .iter()
+            .find(|p| p.name == "dot")
+            .and_then(|p| p.base.iter().find(|b| b.name == "border-radius"))
+            .map(|b| b.value.clone())
+            .expect("the dot keeps a radius");
+        assert_eq!(
+            radius, "3",
+            "composition must resolve the percentage before any emitter sees it"
         );
     }
 }

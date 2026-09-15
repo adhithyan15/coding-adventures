@@ -4104,6 +4104,33 @@ fn emit_styled_box(
             }),
         );
     }
+    // #15225 -- `border-radius`. This builder read background, border and
+    // elevation and simply never looked at the radius, so a styled box was
+    // square on Flutter however it was authored -- a NUMERIC radius was
+    // dropped here just as surely as a percentage one. `emit_container`
+    // handles it, which is why the same property works elsewhere in the
+    // same file: two writers, and only one of them had it.
+    //
+    // Emitted after the border so the argument order matches
+    // `emit_container`'s, keeping the two writers' output comparable.
+    // NOT paired with a per-edge border. Flutter's `Border.paint` throws
+    // "A borderRadius can only be given on borders with uniform colors"
+    // the moment a non-uniform `Border(...)` carries a radius, and asserts
+    // separately on a hairline side -- taking out the widget and everything
+    // above it in any debug or profile build. `per_edge_border_expr` emits
+    // exactly that non-uniform form, and it can also emit a `width: 0`
+    // side for an edge whose authored width was unreadable.
+    //
+    // Before #15225 this builder emitted no radius at all, so the pairing
+    // was unreachable; adding one without this gate turns an authored
+    // per-edge border plus a radius into a runtime crash. A uniform border
+    // is fine, which is the case every product actually authors.
+    let uniform_border = per_edge_border_expr(&base).is_none();
+    if uniform_border {
+        if let Some(radius) = base.get("border-radius").and_then(|v| strict_pixel_length(v)) {
+            deco_parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
+        }
+    }
     // UI41, #12028 item 1 — base props only (see `elevation_tier`'s doc
     // comment).
     if let Some(tier) = elevation_tier(&base) {
@@ -14356,6 +14383,93 @@ mod host_input_style_tests {
 #[cfg(test)]
 mod negative_length_tests {
     use super::*;
+
+    /// #15225 -- `emit_styled_box` built its `BoxDecoration` from
+    /// background, border and elevation and never looked at the radius, so
+    /// a styled box was SQUARE on Flutter however it was authored. A
+    /// NUMERIC radius was dropped here just as surely as a percentage one,
+    /// which is why the same property visibly works elsewhere in the same
+    /// file: `emit_container` handles it, and only one of the two writers
+    /// had it.
+    #[test]
+    fn a_styled_box_carries_its_border_radius() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        let m = MosmodelComponent {
+            component: "X".to_string(),
+            slots: vec![],
+            emits: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("dot".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "dot".to_string(),
+                base: vec![
+                    prop("width", "6"),
+                    prop("height", "6"),
+                    prop("background", "#6fb489"),
+                    prop("border-radius", "3"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &style).expect("emits").output;
+        assert!(
+            out.contains("borderRadius: BorderRadius.circular(3)"),
+            "the styled box must carry its radius: {out}"
+        );
+        // An unreadable radius is dropped rather than becoming 0, since a 0
+        // radius is a square -- the very bug being fixed. Asserted on the
+        // VALIDATOR, because asserting `!out.contains("circular(0)")` on the
+        // emitted text cannot fail under any implementation of the line
+        // above: `strict_pixel_length("50%")` returns None, so `Some(0.0)`
+        // is unreachable and the assertion reads as coverage it never had.
+        assert_eq!(strict_pixel_length("50%"), None);
+        assert_eq!(strict_pixel_length("auto"), None);
+        let mut unresolved = style.clone();
+        unresolved.parts[0].base.pop();
+        unresolved.parts[0].base.push(prop("border-radius", "50%"));
+        let out2 = from_pipeline(&m, &l, &unresolved).expect("emits").output;
+        assert!(
+            !out2.contains("borderRadius"),
+            "an unresolved percentage must emit no radius at all: {out2}"
+        );
+
+        // A RADIUS IS NEVER PAIRED WITH A PER-EDGE BORDER. Flutter's
+        // `Border.paint` throws "A borderRadius can only be given on borders
+        // with uniform colors", so this combination is a runtime crash that
+        // takes out the widget and its ancestry.
+        let mut per_edge = style.clone();
+        per_edge.parts[0].base.extend([
+            prop("border-top-width", "1"),
+            prop("border-top-color", "#ff0000"),
+            prop("border-bottom-width", "2"),
+            prop("border-bottom-color", "#00ff00"),
+        ]);
+        let out3 = from_pipeline(&m, &l, &per_edge).expect("emits").output;
+        assert!(
+            out3.contains("border: Border("),
+            "the fixture should still produce a per-edge border: {out3}"
+        );
+        assert!(
+            !out3.contains("borderRadius"),
+            "a per-edge border must suppress the radius, or Flutter throws at paint: {out3}"
+        );
+    }
 
     #[test]
     fn a_negative_length_falls_back_rather_than_reaching_dart() {
