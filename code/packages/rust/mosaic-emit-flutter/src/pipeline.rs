@@ -2939,6 +2939,33 @@ fn emit_container(
                     }),
                 );
             }
+            // #15225 fixed the missing `border-radius` in `emit_styled_box`
+            // only, and its comment asserted THIS writer already had one. It
+            // did not. This decoration read background, border and elevation
+            // and never looked at the radius, so every container-shaped part
+            // rendered square however it was authored -- Trestle's
+            // `task-card` (`border-radius: 13`) among them, emitting
+            // `BoxDecoration(color:.., border:.., boxShadow:..)` with no
+            // radius at all. Measured in the emitted Dart, not inferred from
+            // the source.
+            //
+            // Emitted after the border and before the shadow so the argument
+            // order matches the other writer's, keeping the two comparable.
+            //
+            // Gated exactly as the other writer gates it. Flutter's
+            // `Border.paint` throws "A borderRadius can only be given on
+            // borders with uniform colors" the moment a non-uniform
+            // `Border(...)` carries one, taking out the widget and everything
+            // above it in any debug or profile build -- and
+            // `per_edge_border_expr` emits precisely that non-uniform form.
+            if per_edge_border_expr(&props).is_none() {
+                if let Some(radius) = props
+                    .get("border-radius")
+                    .and_then(|value| strict_pixel_length(value))
+                {
+                    decoration.push(format!("borderRadius: BorderRadius.circular({radius})"));
+                }
+            }
             if let Some(tier) = elevation {
                 decoration.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
             }
@@ -4168,9 +4195,9 @@ fn flutter_box_style(
     // #15225 -- `border-radius`. This builder read background, border and
     // elevation and simply never looked at the radius, so a styled box was
     // square on Flutter however it was authored -- a NUMERIC radius was
-    // dropped here just as surely as a percentage one. `emit_container`
-    // handles it, which is why the same property works elsewhere in the
-    // same file: two writers, and only one of them had it.
+    // dropped here just as surely as a percentage one. NEITHER writer
+    // had it: the claim once made here that `emit_container` handled the
+    // radius was wrong, and that writer was fixed separately.
     //
     // Emitted after the border so the argument order matches
     // `emit_container`'s, keeping the two writers' output comparable.
@@ -13321,6 +13348,121 @@ mod tests {
         assert!(out.contains("], 12, Axis.horizontal)"), "got:\n{out}");
         assert!(out.contains("SizedBox(width: gap)"), "got:\n{out}");
         assert_eq!(out.matches("List<Widget> _mosaicWithGap(").count(), 1);
+    }
+
+    // ====================================================================
+    // #15225 residue -- `border-radius` on a CONTAINER (the other writer)
+    // ====================================================================
+
+    /// A styled container keeps its authored `border-radius`.
+    ///
+    /// #15225 fixed this in `emit_styled_box` only, and left a comment there
+    /// saying `emit_container` already handled the radius. It did not: that
+    /// decoration read background, border and elevation and never looked at
+    /// the radius, so every container-shaped part rendered square. Trestle's
+    /// `task-card` authors `border-radius: 13` and emitted
+    /// `BoxDecoration(color:.., border:.., boxShadow:..)` with none.
+    ///
+    /// Nothing caught it: the whole suite passed both before and after the
+    /// fix, because no test asserted on this writer's radius at all.
+    ///
+    /// Asserted as one adjacent string rather than two `contains` calls, so
+    /// it pins the radius INSIDE this decoration and in the documented
+    /// argument order -- `out.contains("BorderRadius.circular(13)")` alone
+    /// would pass on a radius emitted anywhere in the file.
+    #[test]
+    fn a_styled_container_keeps_its_border_radius() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "card", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "card",
+            vec![
+                StyleProp {
+                    name: "border-width".into(),
+                    value: "1".into(),
+                },
+                StyleProp {
+                    name: "border-color".into(),
+                    value: "#352e25".into(),
+                },
+                StyleProp {
+                    name: "border-radius".into(),
+                    value: "13".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains(
+                "border: Border.all(color: const Color(0xFF352E25), width: 1), \
+                 borderRadius: BorderRadius.circular(13)"
+                    .replace("                 ", "")
+                    .as_str()
+            ),
+            "a uniform-bordered container must carry its radius:\n{out}"
+        );
+    }
+
+    /// ...but a PER-EDGE border withholds it, because Flutter throws.
+    ///
+    /// `Border.paint` raises "A borderRadius can only be given on borders
+    /// with uniform colors" the moment a non-uniform `Border(...)` carries
+    /// one, taking out the widget and everything above it in any debug or
+    /// profile build. Trestle authors exactly this shape on `board-card` and
+    /// `board-card-crit` (a 3px left accent plus `border-radius: 9`), so the
+    /// gate is load-bearing rather than defensive.
+    ///
+    /// The uniform case above is this test's control: without it, asserting
+    /// an absence here would also pass if the emitter had simply stopped
+    /// emitting radii altogether.
+    #[test]
+    fn a_per_edge_bordered_container_withholds_the_radius() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "card", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "card",
+            vec![
+                StyleProp {
+                    name: "border-width".into(),
+                    value: "1".into(),
+                },
+                StyleProp {
+                    name: "border-color".into(),
+                    value: "#352e25".into(),
+                },
+                StyleProp {
+                    name: "border-left-width".into(),
+                    value: "3".into(),
+                },
+                StyleProp {
+                    name: "border-left-color".into(),
+                    value: "#e26a52".into(),
+                },
+                StyleProp {
+                    name: "border-radius".into(),
+                    value: "9".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("border: Border(top:"),
+            "expected the per-edge form:\n{out}"
+        );
+        assert!(
+            !out.contains("borderRadius"),
+            "a non-uniform border carrying a radius throws at paint time:\n{out}"
+        );
     }
 
     #[test]
