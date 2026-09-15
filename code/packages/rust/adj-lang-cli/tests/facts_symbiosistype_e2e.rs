@@ -96,7 +96,7 @@ fn symbiosis_type_abstains_honestly_on_an_untabled_term() {
     assert!(ok, "cli should succeed: {out}");
     assert!(
         out.contains("\"abstained\":true"),
-        "amensalism is a real interaction category the source names, but its own sentence bundles it together with competition rather than stating one clean fact -- honest abstention, never invented: {out}"
+        "amensalism is a real interaction category the page defines, but this table covers mutualism, commensalism and parasitism only -- honest abstention, never invented: {out}"
     );
 }
 
@@ -195,8 +195,14 @@ fn the_table_shape_matches_the_measured_rows() {
     );
     assert!(!body.contains(&format!("\n    source \"{MUTUALISM}\"\n    locator")), "not the mutualism sentence as the envelope again");
     assert!(!body.contains("harmed.[49]"), "the page's citation marker is not part of the parasitism quote");
-    let folded = ENVELOPE.to_lowercase();
+    // Read the envelope from the shipped table, not the constant, so the word
+    // check tests the file itself.
+    let shipped_envelope = body
+        .lines()
+        .find(|l| l.starts_with("    source \""))
+        .expect("the table has an envelope source line")
+        .to_lowercase();
     for word in ["mutual", "commensal", "parasit", "benefit", "harm", "host"] {
-        assert!(!folded.contains(word), "the envelope must name no type or description, but contains {word:?}");
+        assert!(!shipped_envelope.contains(word), "the shipped envelope must name no type or description, but contains {word:?}");
     }
 }

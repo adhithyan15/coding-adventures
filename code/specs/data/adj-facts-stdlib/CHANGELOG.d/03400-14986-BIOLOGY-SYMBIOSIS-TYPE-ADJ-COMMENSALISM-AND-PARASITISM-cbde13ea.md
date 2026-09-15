@@ -26,6 +26,17 @@
     sentence opens "Finally," as the last of a list of relationships, and the note now says so.
   - **The first-row and WebFetch wording.** The "carries the first row's quote" and "WebFetch-verified
     across two passes" wording is replaced by the measurement.
+  - **Why `competition` and `amensalism` are not rows.**
+    - The header said their only defining sentence is the semicolon-joined one. The page also gives each
+      a sentence of its own in its own section, each once, inside a `<p>`: "Competition is an
+      interaction in which one organism's fitness is reduced by another's presence." and "Amensalism is
+      a non-mutualistic, asymmetric interaction where one species is harmed or killed by the other, and
+      one is unaffected by the other." The header now calls the omission a scope choice and quotes both.
+    - It placed the compound sentence in the article's "opening paragraph". The sentence is in the
+      paragraph the new envelope opens.
+    - The abstention test's message now gives the scope reason too.
+  - **The grep claim** ("zero hits ... before this file was written") now says it held when the file was
+    written.
 
   ### Pins
 

@@ -41,18 +41,21 @@
 % same tier this stdlib already reserves for other Wikipedia citations
 % (e.g. `pond-zone.adj`, `seed-dispersal-mechanism.adj`).
 %
-% Two related terms the SAME article's opening paragraph also names are
-% deliberately NOT rows here, so a recall ABSTAINS on them rather than
-% inventing a description: `competition` and `amensalism`. Both are
-% real ecological interaction categories the source names, but its own
-% defining sentence bundles them together as a single semicolon-joined
-% compound sentence ("Where the interaction reduces both parties' fitness,
-% it is called competition; where just one party's fitness is reduced, it
-% is called amensalism.") rather than stating one clean fact each the way
-% mutualism/commensalism/parasitism do. Picked using the mandatory
-% full-tree-grep-before-scoping discipline — zero hits for
-% "symbiosis_type"/"mutualism"/"commensalism"/"parasitism" before this
-% file was written. (See ../README.md; feedback_nothing_human_authored,
+% Two related terms the same article names are deliberately NOT rows here,
+% so a recall ABSTAINS on them rather than inventing a description:
+% `competition` and `amensalism`. They are left out as a scope choice: this
+% table covers mutualism, commensalism and parasitism only. (This used to
+% say their only defining sentence is the semicolon-joined one in the
+% paragraph the envelope opens, "Where the interaction reduces both
+% parties' fitness, it is called competition; where just one party's
+% fitness is reduced, it is called amensalism." The page also gives each a
+% sentence of its own in its own section: "Competition is an interaction in
+% which one organism's fitness is reduced by another's presence." and
+% "Amensalism is a non-mutualistic, asymmetric interaction where one species
+% is harmed or killed by the other, and one is unaffected by the other.")
+% When this file was written, a full-tree grep found zero hits for
+% "symbiosis_type"/"mutualism"/"commensalism"/"parasitism".
+% (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 %
 % EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
