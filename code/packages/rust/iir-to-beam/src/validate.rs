@@ -52,6 +52,7 @@
 //! | `field_load` | any (type_hint is `"ref<any>"` or similar) |
 //! | `field_store` | any (type_hint is `"void"`) |
 //! | `is_null` | `type_hint == "bool"` |
+//! | `mov` | any `ref<…>` type_hint (VM-041 — a plain register copy of a heap pointer, same as the `"str"` exception) |
 //!
 //! These ops are lowered to BEAM instructions by `lower.rs`:
 //! - `alloc` + adjacent `field_store`s → `put_list`
@@ -364,7 +365,8 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                     // type); this validator was simply never told to accept the
                     // ref-typed case, even though `"mov"` was already accepted
                     // for the analogous `"str"` type_hint case above. Confirmed
-                    // safe against real `erl`: `test_99_real_erl_match_union`.
+                    // safe against real `erl`:
+                    // `test_99_real_erl_mov_ref_lispy_pair_lowers_correctly`.
                     "mov" => true,
 
                     _ => false,
