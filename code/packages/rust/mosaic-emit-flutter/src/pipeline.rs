@@ -2315,8 +2315,23 @@ fn part_max_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> O
     let props = part_styles.get(part)?;
     let raw = parse_style_props(props).get("max-width")?.clone();
     let trimmed = raw.trim().trim_end_matches("px").trim();
-    trimmed.parse::<f64>().ok().filter(|v| v.is_finite() && *v > 0.0)?;
-    Some(trimmed.to_string())
+    // Emit the PARSED value, not the authored text. This validated one
+    // thing and emitted another -- the classic shape where a guard proves
+    // nothing about what ships. `+760px` parses as a finite positive f64
+    // (Rust's float grammar accepts a leading `+`) and was emitted
+    // verbatim as `maxWidth: +760`, which Dart has no unary `+` for: a
+    // hard compile error from one authored value. A 22-digit literal got
+    // through the same way and Dart rejects it as
+    // `integer_literal_imprecise_as_double`.
+    //
+    // Formatting the parse closes both, and matches every other length
+    // path in this file.
+    const MAX_EXACT_INT: f64 = 9_007_199_254_740_992.0; // 2^53
+    let value = trimmed
+        .parse::<f64>()
+        .ok()
+        .filter(|v| v.is_finite() && *v > 0.0 && v.abs() <= MAX_EXACT_INT)?;
+    Some(format!("{value}"))
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -4456,6 +4471,12 @@ fn strict_pixel_length(s: &str) -> Option<f64> {
     t.parse::<f64>()
         .ok()
         .filter(|f| f.is_finite() && *f >= 0.0 && f.abs() <= MAX_EXACT_INT)
+        // IEEE `-0.0 >= 0.0` is true, and callers format with `{}`, which
+        // prints `-0`. Harmless to Dart (it reads as `-0.0`, satisfying
+        // `assert(width >= 0.0)`) but it puts a `width: -` into generated
+        // source from a legal input, which is the invariant the tests
+        // assert. Same normalisation as `parse_pixel_value`.
+        .map(|f| if f == 0.0 { 0.0 } else { f })
 }
 
 /// #15142 -- lower a `HostInput`'s part style into its `InputDecoration`.
@@ -14404,15 +14425,88 @@ mod negative_length_tests {
             !out.contains("width: -"),
             "a negative width reached BorderSide, which asserts at build: {out}"
         );
+        // Assert what this path ACTUALLY emits. The styled-box path writes
+        // `EdgeInsets.symmetric(horizontal: N)`, so an
+        // `EdgeInsets.all(-` assertion could never fail here and read as
+        // coverage it did not provide.
         assert!(
-            !out.contains("EdgeInsets.all(-"),
-            "a negative padding reached EdgeInsets: {out}"
+            out.contains("EdgeInsets.symmetric(horizontal: 0)"),
+            "the negative padding should have clamped to 0 on this path: {out}"
+        );
+        assert!(
+            !out.contains(": -"),
+            "no negative value may reach any emitted argument: {out}"
         );
         // and the border is still drawn, at the clamped width
         assert!(
             out.contains("width: 0"),
             "the border should fall back to 0, not vanish: {out}"
         );
+    }
+
+    /// `strict_pixel_length` feeds the same kind of unquoted sink and had
+    /// the same negative-zero leak as its sibling: `border: -0px solid
+    /// #ff0000` emitted `width: -0`, and `font-size: -0px` emitted
+    /// `fontSize: -0`. Legal input, legal Dart, but it falsifies the
+    /// "no `-` in an emitted length" invariant these tests exist to state.
+    #[test]
+    fn the_strict_parse_does_not_leak_negative_zero() {
+        assert_eq!(strict_pixel_length("-0px"), Some(0.0));
+        assert_eq!(strict_pixel_length("-0.0"), Some(0.0));
+        assert!(!format!("{}", strict_pixel_length("-0px").unwrap()).starts_with('-'));
+        // through the real sinks
+        let mut border_props = HashMap::new();
+        border_props.insert("border".to_string(), "-0px solid #ff0000".to_string());
+        let got = host_input_border_expr(&border_props);
+        assert!(
+            got.as_deref().is_none_or(|g| !g.contains("width: -")),
+            "got: {got:?}"
+        );
+
+        let node = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("f".to_string()),
+            props: vec![],
+            children: vec![],
+        };
+        let mut part_styles = HashMap::new();
+        part_styles.insert("f".to_string(), "font-size: -0px".to_string());
+        let style = host_input_text_style_arg(&node, &part_styles);
+        assert!(
+            style.as_deref().is_none_or(|s| !s.contains("-0")),
+            "got: {style:?}"
+        );
+    }
+
+    /// `part_max_width` VALIDATED the parse and EMITTED the authored text,
+    /// so its guard proved nothing about what shipped. Rust's float
+    /// grammar accepts a leading `+`, and Dart has no unary `+` on a
+    /// literal -- so `max-width: +760px` passed validation and emitted
+    /// `maxWidth: +760`, a hard compile error from one authored value.
+    #[test]
+    fn max_width_emits_the_parsed_value_not_the_authored_text() {
+        fn max_width_node(value: &str) -> Option<String> {
+            let node = LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("p".to_string()),
+                props: vec![],
+                children: vec![],
+            };
+            let mut m = HashMap::new();
+            m.insert("p".to_string(), format!("max-width: {value}"));
+            part_max_width(&node, &m)
+        }
+        assert_eq!(max_width_node("+760px").as_deref(), Some("760"));
+        assert_eq!(max_width_node("760px").as_deref(), Some("760"));
+        assert_eq!(max_width_node(" 760 px ").as_deref(), Some("760"));
+        // absurd magnitudes are rejected rather than emitted as a
+        // 22-digit literal Dart refuses to compile
+        assert_eq!(max_width_node("9999999999999999999999px"), None);
+        assert_eq!(max_width_node("1e300px"), None);
+        // and the pre-existing rejections still hold
+        assert_eq!(max_width_node("0px"), None);
+        assert_eq!(max_width_node("-5px"), None);
+        assert_eq!(max_width_node("100%"), None);
     }
 
     /// A negative on a `Row`/`Column`/`Stack` size wrapper must DROP the

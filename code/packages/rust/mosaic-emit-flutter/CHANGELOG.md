@@ -63,6 +63,25 @@ A central rule is only safe where it holds everywhere, and it did not quite:
   it as `-0.0`, which satisfies the assert -- but it falsified the very
   invariant these tests assert. The sign of zero is normalised.
 
+A second review round found two more of the same shape, both now closed:
+
+- `strict_pixel_length` -- the sibling helper feeding `BorderSide` and
+  `TextStyle` on the `HostInput` path -- had the identical negative-zero
+  leak, so `border: -0px solid #ff0000` emitted `width: -0` and
+  `font-size: -0px` emitted `fontSize: -0`.
+- `part_max_width` **validated the parse and emitted the authored text**,
+  so its guard proved nothing about what shipped. Rust's float grammar
+  accepts a leading `+` and Dart has no unary `+` on a literal, so
+  `max-width: +760px` passed validation and emitted `maxWidth: +760` -- a
+  hard compile error from one authored value. A 22-digit literal got
+  through the same way. It now emits the parsed value, with the same
+  magnitude cap as every other length path.
+
+And one of the new tests was **vacuous**: it asserted
+`!out.contains("EdgeInsets.all(-")` on a fixture whose path emits
+`EdgeInsets.symmetric`, so it could never fail and read as coverage it did
+not provide. It now asserts what that path actually emits.
+
 **No product change.** Zero of the 3,536 length declarations in the
 authored `.msl` corpus is negative, and emitted Flutter output for
 task-app, visicalc and engram-app is byte-identical. This closes a latent
