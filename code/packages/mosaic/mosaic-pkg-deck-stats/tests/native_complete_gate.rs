@@ -102,7 +102,6 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // #15247 -- `qml_padding` reads ONE value and fans it to all four
     // edges, so any longhand beyond the one it picks is lost.
     (Backend::Qt, "padding-bottom"),
-    (Backend::Qt, "padding-top"),
     //
     // a percentage width has no direct QML analogue; the emitter declines
     // rather than collapsing it.
