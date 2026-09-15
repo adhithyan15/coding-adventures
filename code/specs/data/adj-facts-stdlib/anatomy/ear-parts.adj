@@ -89,8 +89,8 @@
 %
 % Measured 2026-09-15 with inline tags removed without a space and only ASCII
 % whitespace collapsed (HTTP 200; a nonsense path on the same host returns
-% 404): each quoted sentence above occurs exactly once, the three path-of-
-% sound ones inside `<li>` items and the framing one inside a `<p>`. Every
+% 404): each quoted sentence above occurs exactly once: the four path-of-sound
+% ones inside three `<li>` items, and the framing one inside a `<p>`. Every
 % row's page is the envelope's, so no row restates `locator` or `trust`
 % (ADJ-TABLES §4). NIDCD is a primary U.S. government NIH institute, so
 % `trust authoritative`.
