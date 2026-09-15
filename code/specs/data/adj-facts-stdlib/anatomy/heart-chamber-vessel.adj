@@ -8,10 +8,12 @@
 % (`heart_chamber_function(chamber, function)`, right_atrium/right_ventricle/
 % left_atrium/left_ventricle → receives_blood_from_body/pumps_blood_to_lungs/
 % receives_blood_from_lungs/pumps_blood_to_body): that table's own header
-% already quotes, verbatim, four StatPearls sentences that each name a
-% chamber's FUNCTION (what it does to blood) AND, in the same breath, the
-% NAMED vessel(s)/valve(s) that blood passes through to get there -- a fact
-% the chamber/function schema had no room for:
+% quotes five StatPearls sentences (the left atrium's span is two) that name
+% each chamber's FUNCTION (what it does to blood) AND the NAMED vessel(s)/
+% valve(s) that blood passes through to get there -- a fact the
+% chamber/function schema had no room for. (This paragraph used to say
+% "four StatPearls sentences", each naming both "in the same breath"; the
+% left-atrium sentence alone says only "these veins", as noted below.)
 %
 %   right_atrium → superior_vena_cava, inferior_vena_cava
 %     "...via the superior and inferior vena cavae."
@@ -62,31 +64,73 @@
 % than homogenized, exactly as `heart-valves.adj`'s own header already does
 % for its own "pulmonary trunk" (not "pulmonary artery") wording.
 %
-% Provenance: reproduces, byte-for-byte, the SAME four spans already quoted
-% inside `heart-chambers.adj`'s own header, from the SAME NIH/NLM StatPearls
-% "Anatomy, Thorax, Heart" page that table already cites -- no new WebFetch,
-% only a different schema decoding a different clause of each already-
-% verified quote. `trust authoritative` -- the same tier the parent table
+% Provenance: the SAME NIH/NLM StatPearls "Anatomy, Thorax, Heart" page that
+% `heart-chambers.adj` cites. This paragraph used to say its spans were
+% reproduced "byte-for-byte" with "no new WebFetch"; they are now measured
+% against the page itself (below). `trust authoritative` -- the same tier
+% the parent table
 % already carries (StatPearls is a primary U.S. government NIH/NLM
 % reference).
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+%
+% EACH ROW CARRIES ITS OWN SPAN (ADJ-TABLES RS-5e, #14986). The envelope used
+% to be the right-atrium sentence, the primary source of all six answers,
+% with the other three chambers' sentences as table-level `cites`. Now:
+%
+%   - both right-atrium rows take the right-atrium sentence, which names
+%     both vena cavae;
+%   - both right-ventricle rows take the right-ventricle sentence, which
+%     names the pulmonic valve and the pulmonary artery;
+%   - the left-atrium row takes two contiguous sentences, "This oxygenated
+%     blood is collected by the four pulmonary veins, two from each lung.
+%     All four of these veins open into the left atrium ...". The
+%     left-atrium sentence alone says only "these veins", so it never named
+%     the pulmonary veins; the sentence before it does;
+%   - the left-ventricle row takes the left-ventricle sentence.
+%
+% The envelope is now a framing sentence from the page, which names no
+% chamber and no vessel:
+%
+%     "The heart is a muscular organ situated in the center of the chest
+%      behind the sternum."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the four row spans and the envelope each occur
+% exactly once, each inside a `<p>`, and the four ellipsis fragments quoted
+% above each occur once. Every row's page is the envelope's, so no row
+% restates a `locator` line or `trust` (ADJ-TABLES §4).
 % ============================================================================
 
 table heart_chamber_vessel {
     columns chamber, vessel
 
-    row (right_atrium, superior_vena_cava)
-    row (right_atrium, inferior_vena_cava)
-    row (right_ventricle, pulmonic_valve)
-    row (right_ventricle, pulmonary_artery)
-    row (left_atrium, pulmonary_veins)
-    row (left_ventricle, aortic_valve)
+    row (right_atrium, superior_vena_cava) {
+        source "The right atrium receives deoxygenated blood from the entire body except for the lungs (the systemic circulation) via the superior and inferior vena cavae."
+    }
+    row (right_atrium, inferior_vena_cava) {
+        source "The right atrium receives deoxygenated blood from the entire body except for the lungs (the systemic circulation) via the superior and inferior vena cavae."
+    }
+    row (right_ventricle, pulmonic_valve) {
+        source "The right ventricle pumps blood through the right ventricular outflow tract, across the pulmonic valve, and into the pulmonary artery that distributes it to the lungs for oxygenation."
+    }
+    row (right_ventricle, pulmonary_artery) {
+        source "The right ventricle pumps blood through the right ventricular outflow tract, across the pulmonic valve, and into the pulmonary artery that distributes it to the lungs for oxygenation."
+    }
+    row (left_atrium, pulmonary_veins) {
+        source "This oxygenated blood is collected by the four pulmonary veins, two from each lung. All four of these veins open into the left atrium that acts as a collection chamber for oxygenated blood."
+    }
+    row (left_ventricle, aortic_valve) {
+        source "The left ventricle is the main pumping chamber of the left heart, then pumps, sending freshly oxygenated blood to the systemic circulation through the aortic valve."
+    }
 
-    source "The right atrium receives deoxygenated blood from the entire body except for the lungs (the systemic circulation) via the superior and inferior vena cavae."
+    % THE ENVELOPE WAS THE RIGHT-ATRIUM ROW'S OWN SENTENCE, the primary source
+    % of all six answers, and the other chambers' vessels were read across
+    % three table-level `cites`. Each row now carries its own span, and the
+    % envelope is a framing sentence that names no chamber and no vessel.
+    % Every row overrides it, so it reaches no answer.
+    source "The heart is a muscular organ situated in the center of the chest behind the sternum."
     locator "https://www.ncbi.nlm.nih.gov/books/NBK470256/"
     trust authoritative
-    cites "The right ventricle pumps blood through the right ventricular outflow tract, across the pulmonic valve, and into the pulmonary artery that distributes it to the lungs for oxygenation." locator "https://www.ncbi.nlm.nih.gov/books/NBK470256/"
-    cites "All four of these veins open into the left atrium that acts as a collection chamber for oxygenated blood." locator "https://www.ncbi.nlm.nih.gov/books/NBK470256/"
-    cites "The left ventricle is the main pumping chamber of the left heart, then pumps, sending freshly oxygenated blood to the systemic circulation through the aortic valve." locator "https://www.ncbi.nlm.nih.gov/books/NBK470256/"
 }
