@@ -78,13 +78,27 @@
 % government teaching resource — "a closed system of vessels called arteries,
 % veins, and capillaries" — another span of the same page's parent module.)
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the SEER statement that fixes the
-% first row (artery → away_from_heart). Every OTHER row's per-fact source and
-% verbatim span is listed above, so each function remains independently
-% checkable. All sources are the NCI SEER Training Modules, a primary U.S.
-% government (National Cancer Institute) teaching resource, so `trust
-% authoritative`.
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). This paragraph
+% used to say an ADJ `table` carries ONE provenance envelope; per-row blocks
+% exist, and the envelope was the artery sentence, so it was the primary
+% source of all three answers. Each row quote above names its vessel and its
+% function, so every row now takes its own as a `source`. The envelope is now
+% the page's framing sentence, which names no vessel and no function:
+%
+%     "Blood vessels are the channels or conduits through which blood is
+%      distributed to body tissues."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the three row quotes and the envelope each occur
+% exactly once, each inside a `<p>`. The capillary quote's "connection"
+% fragment is part of a longer sentence that also occurs once. The "closed
+% system" framing quote does not occur on this page; the header attributes
+% it to the parent module, which was not fetched, so it is unverified here.
+% Neither is a row's source. Every row's page is the envelope's, so no row
+% restates a `locator` line or `trust` (ADJ-TABLES §4). All sources are the
+% NCI SEER Training Modules, a primary U.S. government (National Cancer
+% Institute) teaching resource, so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -92,11 +106,20 @@
 table vessel_function {
     columns vessel, function
 
-    row (artery, away_from_heart)
-    row (vein, toward_heart)
-    row (capillary, exchange_of_materials)
+    row (artery, away_from_heart) {
+        source "Arteries carry blood away from the heart."
+    }
+    row (vein, toward_heart) {
+        source "Veins carry blood toward the heart."
+    }
+    row (capillary, exchange_of_materials) {
+        source "The primary function of capillaries is the exchange of materials between the blood and tissue cells."
+    }
 
-    source "Arteries carry blood away from the heart."
+    % THE ENVELOPE WAS THE ARTERY ROW'S OWN SENTENCE, the primary source of
+    % all three answers. It is now a framing sentence that names no vessel
+    % and no function. Every row overrides it, so it reaches no answer.
+    source "Blood vessels are the channels or conduits through which blood is distributed to body tissues."
     locator "https://training.seer.cancer.gov/anatomy/cardiovascular/blood/classification.html"
     trust authoritative
 }
