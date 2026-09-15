@@ -781,3 +781,67 @@ describe("the real documents", () => {
     });
   }
 });
+
+// ---------------------------------------------------------------------------
+// The registry and the gate that guards it must not drift apart.
+// ---------------------------------------------------------------------------
+describe("the append-only deletion guard covers every plan", () => {
+  // `--check` does NOT catch a deleted shard. Measured: delete one shard, run
+  // `--check` with no local rendered monolith present (which is CI's state,
+  // since the monolith is gitignored) and it exits 0. It only noticed locally
+  // because a stale rendered file happened to be sitting there.
+  //
+  // What actually forbids a deletion is a `git diff --diff-filter=D` against a
+  // HARDCODED glob list in the detect job of `human-languages-books.yml`. That
+  // list is maintained by hand and had already drifted: Hindi has 72 committed
+  // shards and appeared in DOC_SHARD_PLANS, yet no glob covered it, so a PR
+  // deleting its entire history would have passed.
+  //
+  // This pins the two together, so adding a plan without extending the guard
+  // fails here instead of silently shipping unguarded history.
+  const WORKFLOW = ".github/workflows/human-languages-books.yml";
+
+  /** The workflow with whole-line comments removed.
+   *
+   * A plain `includes()` over the raw file would be satisfied by a glob that
+   * had been COMMENTED OUT but left as text — the exact state this test exists
+   * to reject.
+   *
+   * Comments are stripped rather than the array being sliced out, because
+   * `doc_shard_globs` is not one literal: Script Ductus is appended
+   * conditionally with `+=` further down, and a test scoped to the literal
+   * reported it missing when it is properly covered. Only whole-line comments
+   * are removed, so a `#` inside a quoted glob could never be damaged.
+   */
+  function code(workflow: string): string {
+    return workflow
+      .split("\n")
+      .filter((line) => !line.trimStart().startsWith("#"))
+      .join("\n");
+  }
+
+  const workflow = () =>
+    code(readFileSync(join(defaultRepoRoot(), WORKFLOW), "utf8"));
+
+  it("names a shard glob for every document in DOC_SHARD_PLANS", () => {
+    const text = workflow();
+    const missing = DOC_SHARD_PLANS.map(
+      (plan) => `${docShardDirectoryFor(plan.path)}/*.md`,
+    ).filter((glob) => !text.includes(glob));
+
+    expect(missing).toEqual([]);
+  });
+
+  it("forbids re-tracking the aggregate of every document in DOC_SHARD_PLANS", () => {
+    // The second half of the same drift. `--check` does not test trackedness
+    // either -- a resurrected aggregate that happens to be IN SYNC passes it --
+    // so `tracked_doc_monoliths` is the only thing standing between a merge and
+    // the restored hot spot. It had drifted too: Hindi was a plan with no entry.
+    const text = workflow();
+    const missing = DOC_SHARD_PLANS.map((plan) => plan.path).filter(
+      (path) => !text.includes(path),
+    );
+
+    expect(missing).toEqual([]);
+  });
+});

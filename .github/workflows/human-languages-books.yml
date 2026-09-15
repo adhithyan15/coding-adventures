@@ -78,10 +78,17 @@ jobs:
             fi
             # Disable rename detection so moving a history shard is treated as
             # one deletion plus one addition and cannot hide removed history.
+            # This list must name one glob per entry in `DOC_SHARD_PLANS`.
+            # `doc-shard.test.ts` pins that, because the list is hand-kept and
+            # had already drifted: Hindi carried 72 committed shards and a plan
+            # entry while no glob covered it, so a PR deleting its whole history
+            # would have passed this gate.
             doc_shard_globs=(
               'code/learning/human-languages/BACKLOG.d/*.md'
+              'code/learning/human-languages/hindi/CHANGELOG.d/*.md'
               'code/packages/typescript/human-language-data/CHANGELOG.d/*.md'
               'code/programs/typescript/language-ladder/CHANGELOG.d/*.md'
+              'code/packages/rust/lang-aot/CHANGELOG.d/*.md'
             )
             # The migration PR must replace the one provisional Script Ductus
             # fragment while establishing its strict plan. The migration base is
@@ -106,11 +113,17 @@ jobs:
 
           # These paths are render targets, not repository content. Refuse a
           # future merge that accidentally recreates any shared hot spot.
+          # One path per entry in `DOC_SHARD_PLANS`, pinned by
+          # `doc-shard.test.ts`. This list had drifted the same way the
+          # deletion globs had: Hindi was a plan with no entry here, so its
+          # aggregate could have been re-tracked without failing anything.
           tracked_doc_monoliths=$(git ls-files -- \
             code/learning/human-languages/BACKLOG.md \
+            code/learning/human-languages/hindi/CHANGELOG.md \
             code/packages/typescript/human-language-data/CHANGELOG.md \
             code/packages/typescript/script-ductus/CHANGELOG.md \
-            code/programs/typescript/language-ladder/CHANGELOG.md)
+            code/programs/typescript/language-ladder/CHANGELOG.md \
+            code/packages/rust/lang-aot/CHANGELOG.md)
           if [ -n "$tracked_doc_monoliths" ]; then
             echo "::error::Generated Markdown aggregates must remain untracked:"
             printf '%s\n' "$tracked_doc_monoliths"
