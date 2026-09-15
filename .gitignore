@@ -95,6 +95,7 @@ build_output.txt
 /code/packages/typescript/human-language-data/CHANGELOG.md
 /code/programs/typescript/language-ladder/CHANGELOG.md
 /code/packages/rust/lang-aot/CHANGELOG.md
+/code/packages/rust/algol-iir-compiler/CHANGELOG.md
 # Script Ductus is deliberately absent: it is already ignored by its own
 # `code/packages/typescript/script-ductus/.gitignore`. A line was briefly added
 # here claiming it had "never been ignored" -- that came from grepping this
