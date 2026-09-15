@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W04-arbaa-sutur",
+    "language": "arabic",
+    "chapter": 45,
+    "sequence": 1270,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:31bd423ebe45b455",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ]
+  },
+  "findings": []
+}

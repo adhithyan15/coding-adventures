@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "AR-W03-maa-al-saaa",
+    "language": "arabic",
+    "chapter": 44,
+    "sequence": 1260,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a0b4d8284a98e550",
+    "detachableSegments": [
+      "Writing — timed production"
+    ]
+  },
+  "findings": []
+}
