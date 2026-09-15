@@ -72,9 +72,10 @@
 % `trust authoritative` — the FHWA is the first-party federal publisher of
 % the MUTCD, and this is the standard itself rather than a description of
 % it. Both chapter pages (2B and 2C) were CONTENT-verified by RAW TEXT
-% EXTRACTION (HTTP 200, 589 and 406 substantive sentences, zero soft-404
-% markers), and every quoted sentence was confirmed to appear verbatim in
-% that extraction.
+% EXTRACTION (589 and 406 substantive sentences, zero soft-404 markers; an
+% HTTP 200 proves nothing on this host, which answers a nonsense path with
+% 200 too), and every row sentence was confirmed to appear verbatim in that
+% extraction.
 %
 % EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The
 % envelope used to be the regulatory default, so it was the primary source
@@ -92,8 +93,11 @@
 % it (ADJ-TABLES §4). Measured 2026-09-15 with inline tags removed without a
 % space and only ASCII whitespace collapsed: each of the six sentences
 % occurs exactly once on its own page and zero times on the other two, each
-% inside one `<p>`. The host answers a nonsense path with HTTP 200, so the
-% content control is what counts: the nonsense page holds none of them.
+% inside one `<p>`. Two of those `<p>`s hold the page's own anchors, which
+% is where the section numbers come from: `section2A06_para05` for the
+% envelope and `section2B02_para01` for the regulatory default. The host
+% answers a nonsense path with HTTP 200, so the content control is what
+% counts: the nonsense page holds none of them.
 %
 % Honest abstention:
 %

@@ -26,7 +26,10 @@
   - the six sentences (the five row sentences and the envelope) each occur **exactly once** on their
     own page and **zero** times on the other two, each inside one `<p>`;
   - the regulatory default's nearest enclosing `<td>` is the page's layout table; its innermost block
-    is Section 2B.02's `<p>`;
+    is a `<p>`;
+  - the section numbers come from the pages' own anchors: the envelope's `<p>` holds
+    `section2A06_para05`, and the regulatory default's holds `section2B02_para01`. The other section
+    numbers in the headers predate this change and were not re-measured;
   - the MUTCD host answers a nonsense path with HTTP 200, so status codes prove nothing here. The
     content control held: the nonsense page contains none of the six sentences, and a fabricated
     variant of the STOP sentence occurs zero times.

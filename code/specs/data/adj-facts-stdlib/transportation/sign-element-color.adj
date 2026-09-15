@@ -57,7 +57,7 @@
 %
 % `trust authoritative` — the FHWA is the first-party federal publisher and
 % this is the standard itself. Both chapter pages (2B and 2C) were
-% CONTENT-verified by RAW TEXT EXTRACTION, and every quoted sentence was
+% CONTENT-verified by RAW TEXT EXTRACTION, and every row sentence was
 % confirmed verbatim against the RAW HTML, not merely against the
 % extraction: the pages wrap figure references in `<a>` tags, and a
 % tag-stripping artifact previously put "(see Figure 2B-1 )" — with a
@@ -80,8 +80,10 @@
 % it (ADJ-TABLES §4). Measured 2026-09-15 with inline tags removed without a
 % space and only ASCII whitespace collapsed: each of the four sentences
 % occurs exactly once on its own page and zero times on the other two, each
-% inside one `<p>`. The host answers a nonsense path with HTTP 200, so the
-% content control is what counts: the nonsense page holds none of them.
+% inside one `<p>`; the envelope's `<p>` holds the page's own anchor
+% `section2A06_para05`, which is where "Section 2A.06" comes from. The host
+% answers a nonsense path with HTTP 200, so the content control is what
+% counts: the nonsense page holds none of them.
 %
 % Honest abstention:
 %
