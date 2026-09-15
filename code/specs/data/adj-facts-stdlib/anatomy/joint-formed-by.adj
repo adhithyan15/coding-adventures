@@ -54,29 +54,70 @@
 % the specific bones that form any of them -- correctly abstains rather than
 % inventing a bone for it.
 %
-% Provenance: reproduces, byte-for-byte, the SAME three spans already quoted
-% inside `joint-types.adj`'s own header, from the SAME NIH/NLM StatPearls
-% "Anatomy, Joints" page that table already cites -- no new WebFetch, only a
-% different schema decoding the forming-bone clause of each already-verified
-% quote. `trust authoritative` -- the same tier the parent table already
+% Provenance: the SAME NIH/NLM StatPearls "Anatomy, Joints" page that
+% `joint-types.adj` cites. This paragraph used to say its spans were
+% reproduced "byte-for-byte" with "no new WebFetch"; they are now measured
+% against the page itself (below). `trust authoritative` -- the same tier
+% the parent table already
 % carries (StatPearls is a primary U.S. government NIH/NLM reference).
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+%
+% EACH ROW CARRIES ITS OWN SPAN (ADJ-TABLES RS-5e, #14986). The envelope used
+% to be the pivot sentence, the primary source of all six answers, with the
+% condyloid and saddle spans as table-level `cites`. Now:
+%
+%   - both pivot rows take the pivot sentence, which names the type and both
+%     bones;
+%   - both condyloid rows take the knuckles sentence, which names the type
+%     and both bones;
+%   - both saddle rows take the page's three contiguous sentences, "A saddle
+%     joint is an articulation ... This joint type is biaxial. One example is
+%     the joint formed by the trapezium and 1st metacarpal bone." No single
+%     sentence names the saddle joint and its bones: the bone sentence says
+%     only "One example", and the biaxial sentence sits between the two.
+%
+% The envelope is now a framing sentence from the page, which names no joint
+% type and no bone:
+%
+%     "Joint classifications offer a broad understanding of joints."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the pivot sentence, the knuckles sentence, the
+% three-sentence saddle span and the envelope each occur exactly once, each
+% inside a `<p>`. Every row's page is the envelope's, so no row restates a
+% `locator` line or `trust` (ADJ-TABLES §4).
 % ============================================================================
 
 table joint_formed_by {
     columns joint_type, bone
 
-    row (pivot, atlas)
-    row (pivot, axis)
-    row (condyloid, distal_metacarpals)
-    row (condyloid, proximal_phalanges)
-    row (saddle, trapezium)
-    row (saddle, first_metacarpal)
+    row (pivot, atlas) {
+        source "The atlantoaxial joint, formed by the 1st (atlas) and 2nd (axis) cervical vertebrae, is a pivot joint."
+    }
+    row (pivot, axis) {
+        source "The atlantoaxial joint, formed by the 1st (atlas) and 2nd (axis) cervical vertebrae, is a pivot joint."
+    }
+    row (condyloid, distal_metacarpals) {
+        source "Examples of condyloid joints are the knuckles, formed by the distal metacarpals and proximal phalanges of the medial 4 fingers."
+    }
+    row (condyloid, proximal_phalanges) {
+        source "Examples of condyloid joints are the knuckles, formed by the distal metacarpals and proximal phalanges of the medial 4 fingers."
+    }
+    row (saddle, trapezium) {
+        source "A saddle joint is an articulation between 2 saddle-shaped bones, which are concave in one direction and convex in another. This joint type is biaxial. One example is the joint formed by the trapezium and 1st metacarpal bone."
+    }
+    row (saddle, first_metacarpal) {
+        source "A saddle joint is an articulation between 2 saddle-shaped bones, which are concave in one direction and convex in another. This joint type is biaxial. One example is the joint formed by the trapezium and 1st metacarpal bone."
+    }
 
-    source "The atlantoaxial joint, formed by the 1st (atlas) and 2nd (axis) cervical vertebrae, is a pivot joint."
+    % THE ENVELOPE WAS THE PIVOT ROW'S OWN SENTENCE, the primary source of
+    % all six answers, and the condyloid and saddle bones were read across
+    % two table-level `cites`. Each row now carries its own span, and the
+    % envelope is a framing sentence that names no joint type and no bone.
+    % Every row overrides it, so it reaches no answer.
+    source "Joint classifications offer a broad understanding of joints."
     locator "https://www.ncbi.nlm.nih.gov/books/NBK507893/"
     trust authoritative
-    cites "Examples of condyloid joints are the knuckles, formed by the distal metacarpals and proximal phalanges of the medial 4 fingers." locator "https://www.ncbi.nlm.nih.gov/books/NBK507893/"
-    cites "A saddle joint is an articulation between 2 saddle-shaped bones, which are concave in one direction and convex in another. This joint type is biaxial. One example is the joint formed by the trapezium and 1st metacarpal bone." locator "https://www.ncbi.nlm.nih.gov/books/NBK507893/"
 }
