@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "HI-W10-a1-con-reloj",
+    "language": "hindi",
+    "chapter": 86,
+    "sequence": 3310,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1824c47fd92a56d7",
+    "detachableSegments": [
+      "Writing — timed production"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

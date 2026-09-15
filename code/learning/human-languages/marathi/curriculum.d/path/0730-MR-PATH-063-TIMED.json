@@ -1,0 +1,12 @@
+{
+  "id": "MR-PATH-063-TIMED",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "MR-W10-a1-con-reloj"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-063-TIMED"
+  ],
+  "after": []
+}
