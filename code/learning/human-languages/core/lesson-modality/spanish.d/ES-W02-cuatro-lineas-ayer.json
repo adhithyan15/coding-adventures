@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "ES-W02-cuatro-lineas-ayer",
+    "language": "spanish",
+    "chapter": 418,
+    "sequence": 9680,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:380158f8184b75fc",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ]
+  },
+  "findings": []
+}

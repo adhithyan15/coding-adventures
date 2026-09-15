@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-418-WRITING",
+  "stage": "A2",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can write four connected lines to a named reader, joining with y and porque so that one line depends on another.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-W02-cuatro-lineas-ayer"
+  ]
+}

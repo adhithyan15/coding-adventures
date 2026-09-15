@@ -173,6 +173,38 @@ Learner copy comes first.
   // A ceiling rather than a pin: it may only fall. Pinning it exactly would make
   // every unrelated tranche that happens to add a staged lesson edit this line.
   // ---------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // One lesson closed FIVE level-debts. `connected-composition` is first required
+  // at A2, and every level above inherits the requirement, so a track missing it
+  // fails A2, B1, B2, C1 and C2 at once -- and a single lesson clears all five.
+  //
+  // That is the shape of the remaining 346: they are not 346 independent pieces
+  // of work. The cumulative rule means the cheapest move is always the LOWEST
+  // unproved stage in a track, and this assertion exists so the first track to
+  // reach the top cannot quietly fall back off it.
+  // ---------------------------------------------------------------------------
+  it("keeps Spanish proving every writing stage at every level", () => {
+    const { registry, lessons, curricula, spine: realSpine } = loadEverything();
+    const report = measureWritingStages(
+      loadAssessmentPolicy(),
+      registry.languages.map((track) => track.id),
+      lessons,
+      curricula,
+      realSpine,
+    );
+    const spanish = report.tracks.find((track) => track.language === "spanish");
+    expect(spanish?.levels.filter((level) => !level.complete)).toEqual([]);
+    expect(spanish?.defects).toEqual([]);
+
+    // The claim is about the corpus, not about Spanish's luck: at the time this
+    // landed Spanish was the ONLY track complete at every level, and the count is
+    // asserted so that a second track arriving is a visible event rather than a
+    // silent one.
+    const complete = report.tracks.filter((track) => track.levels.every((level) => level.complete));
+    expect(complete.length).toBeGreaterThanOrEqual(1);
+    expect(complete.map((track) => track.language)).toContain("spanish");
+  }, 30_000);
+
   it("never grows the remaining writing-stage debt above A1", () => {
     const { registry, lessons, curricula, spine: realSpine } = loadEverything();
     const report = measureWritingStages(
@@ -182,6 +214,6 @@ Learner copy comes first.
       curricula,
       realSpine,
     );
-    expect(report.summary.missingTrackLevelStages).toBeLessThanOrEqual(351);
+    expect(report.summary.missingTrackLevelStages).toBeLessThanOrEqual(346);
   }, 30_000);
 });
