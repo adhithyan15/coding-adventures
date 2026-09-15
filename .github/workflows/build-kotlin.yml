@@ -49,7 +49,7 @@ jobs:
         run: ./gradlew assembleDebug
 
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: hello-world-debug
           path: code/programs/kotlin/01-hello-world/app/build/outputs/apk/debug/app-debug.apk
