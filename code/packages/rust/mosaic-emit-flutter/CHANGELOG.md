@@ -46,6 +46,23 @@ answer, since skipping lets the shorthand cascade in. It now reads the
 authored text. An existing test caught this, which is the only reason it is
 not in this release.
 
+**Two corrections from security review, both in this change.**
+
+A central rule is only safe where it holds everywhere, and it did not quite:
+
+- `fixed_pixel_length` delegates here, and it exists *because* the `0`
+  fallback collapses a subtree into a zero-width box -- its own doc records
+  catching that in a real `flutter test` render. Centralising the guard
+  made `width: -5px` on a `Row` part go from `SizedBox(width: -5)`, which
+  trips Flutter's `debugAssertIsValid` **loudly**, to `SizedBox(width: 0)`,
+  which **silently** eats the subtree. Trading a loud failure for a silent
+  one is the wrong direction, so that site now drops a negative outright,
+  the same way it already drops a `%`.
+- IEEE `-0.0 >= 0.0` is true and Rust prints it `-0`, so `border-width:
+  -0px` emitted `width: -0` from a legal input. Not a crash -- Dart reads
+  it as `-0.0`, which satisfies the assert -- but it falsified the very
+  invariant these tests assert. The sign of zero is normalised.
+
 **No product change.** Zero of the 3,536 length declarations in the
 authored `.msl` corpus is negative, and emitted Flutter output for
 task-app, visicalc and engram-app is byte-identical. This closes a latent

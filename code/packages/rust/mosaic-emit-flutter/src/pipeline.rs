@@ -3563,7 +3563,13 @@ fn parse_pixel_value(s: &str) -> String {
     s.parse::<f64>()
         .ok()
         .filter(|f| f.is_finite() && *f >= 0.0 && f.abs() <= MAX_EXACT_INT)
-        .map(|f| format!("{f}"))
+        // IEEE `-0.0 >= 0.0` is true, and Rust prints it as `-0`. Dart
+        // reads that as `-0.0`, which does satisfy `assert(width >= 0.0)`
+        // -- so it is not a crash -- but it puts a `width: -` in generated
+        // source from a legal input, which is precisely what the tests
+        // here assert can never happen. Normalise the sign rather than
+        // leave the invariant weaker than it reads.
+        .map(|f| if f == 0.0 { "0".to_string() } else { format!("{f}") })
         .unwrap_or_else(|| "0".to_string())
 }
 
@@ -3580,7 +3586,17 @@ fn parse_pixel_value(s: &str) -> String {
 /// not applying the width, leaving the child to size itself as it always
 /// did before this wrapper existed, is the correct behaviour here.
 fn fixed_pixel_length(s: &str) -> Option<String> {
-    if s.trim().ends_with('%') {
+    let trimmed = s.trim();
+    // A NEGATIVE is dropped for the same reason a `%` is, and the reason is
+    // the one written above: handing this site `parse_pixel_value`'s `0`
+    // collapses the whole subtree into a zero-width box. #15160 made that
+    // reachable -- centralising the negative guard turned `width: -5px` on
+    // a Row part from `SizedBox(width: -5)`, which trips Flutter's
+    // `debugAssertIsValid` LOUDLY, into `SizedBox(width: 0)`, which
+    // silently eats the subtree. Trading a loud failure for a silent one
+    // is the wrong direction, so this site keeps its own answer: do not
+    // apply the width at all, and let the child size itself.
+    if trimmed.ends_with('%') || trimmed.starts_with('-') {
         return None;
     }
     Some(parse_pixel_value(s))
@@ -3663,8 +3679,14 @@ fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
     // result. `parse_pixel_value` now rejects negatives centrally (#15160)
     // and answers `0`, so a check on its output can never fire -- reading
     // the raw value is what keeps this edge SKIPPED rather than silently
-    // emitted as a zero-width side. The two answers differ: skipping lets
-    // the shorthand cascade in, a zero-width side pins the edge to nothing.
+    // emitted as a zero-width side.
+    //
+    // The two answers differ: a skipped edge is omitted from `Border(..)`
+    // entirely and renders as `BorderSide.none`, whereas a zero-width side
+    // is a real side that happens to be invisible. (An earlier draft of
+    // this comment said skipping "lets the shorthand cascade in" -- it does
+    // not. The `continue` happens BEFORE the `fallback_w` lookup, so the
+    // shorthand cascades only to edges that authored no width at all.)
     let authored_negative =
         |v: Option<&String>| v.is_some_and(|v| v.trim_start().starts_with('-'));
     let fallback_w = (!authored_negative(m.get("border-width")))
@@ -14323,6 +14345,15 @@ mod negative_length_tests {
                 "`{bad}` must not survive into generated Dart"
             );
         }
+        // NEGATIVE ZERO. `-0.0 >= 0.0` is true in IEEE, and Rust prints
+        // it as `-0`. Dart reads that as `-0.0`, which does satisfy
+        // `assert(width >= 0.0)` -- so it is not a crash -- but it puts a
+        // `width: -` into generated source from a legal input, falsifying
+        // the invariant the emit test below asserts.
+        assert_eq!(parse_pixel_value("-0px"), "0");
+        assert_eq!(parse_pixel_value("-0.0"), "0");
+        assert!(!parse_pixel_value("-0px").starts_with('-'));
+
         // ordinary values are untouched
         assert_eq!(parse_pixel_value("0px"), "0");
         assert_eq!(parse_pixel_value("13px"), "13");
@@ -14382,6 +14413,28 @@ mod negative_length_tests {
             out.contains("width: 0"),
             "the border should fall back to 0, not vanish: {out}"
         );
+    }
+
+    /// A negative on a `Row`/`Column`/`Stack` size wrapper must DROP the
+    /// width, not clamp it to 0.
+    ///
+    /// `fixed_pixel_length` exists because `parse_pixel_value`'s `0`
+    /// fallback collapses the subtree into a zero-width box -- a real
+    /// regression its doc comment records catching in a `flutter test`
+    /// render. Centralising the negative guard made that reachable again:
+    /// `width: -5px` went from `SizedBox(width: -5)`, which trips
+    /// Flutter's `debugAssertIsValid` LOUDLY, to `SizedBox(width: 0)`,
+    /// which silently eats the subtree. Loud beats silent, and dropping
+    /// beats both.
+    #[test]
+    fn a_negative_size_wrapper_length_is_dropped_not_clamped() {
+        assert_eq!(fixed_pixel_length("-5px"), None);
+        assert_eq!(fixed_pixel_length("-0.5"), None);
+        // the reason it already returned None for a relative length
+        assert_eq!(fixed_pixel_length("100%"), None);
+        // and a real length still applies
+        assert_eq!(fixed_pixel_length("120px").as_deref(), Some("120"));
+        assert_eq!(fixed_pixel_length("0px").as_deref(), Some("0"));
     }
 
     /// A negative PER-EDGE width is skipped entirely rather than clamped,
