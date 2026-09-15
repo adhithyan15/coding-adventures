@@ -23,8 +23,8 @@
 %       % one_syllable_adjective
 %
 % Provenance: quoted verbatim from Grammarly's "What Are Superlative
-% Adjectives? Definition and Examples" article, which states each rule
-% directly:
+% Adjectives? Definition and Examples" article, which states rules 1 and 2
+% directly and rule 3 across two sentences (see below):
 %
 %     rule (this table's atom label)             description (this table's atom label)      rule quote (verbatim)
 %     -------------------------------------------  ------------------------------------------  --------------------------------------------------------------------------------
@@ -60,10 +60,10 @@
 % character. Every row's page is the envelope's, so no row restates
 % `locator` or `trust` (ADJ-TABLES §4).
 %
-% WebFetch-verified before writing (twice, across two cycles of this loop —
-% the second pass specifically re-confirmed exact wording after an initial
-% fetch surfaced a bullet-list fragment for a DIFFERENT, ultimately
-% rejected rule about long adjectives). `trust consensus` — Grammarly is a
+% The original authoring note said the quotes were "WebFetch-verified before
+% writing (twice, across two cycles of this loop)". That is superseded by the
+% raw-page measurement above; WebFetch summaries are not verbatim evidence.
+% `trust consensus` — Grammarly is a
 % reputable, widely-cited grammar-content company, the same tier this
 % stdlib already reserves for other non-.gov language sources and the same
 % source family already cited by `sentence-type.adj`/`part-of-speech.adj`/
