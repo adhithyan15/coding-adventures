@@ -2315,8 +2315,23 @@ fn part_max_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> O
     let props = part_styles.get(part)?;
     let raw = parse_style_props(props).get("max-width")?.clone();
     let trimmed = raw.trim().trim_end_matches("px").trim();
-    trimmed.parse::<f64>().ok().filter(|v| v.is_finite() && *v > 0.0)?;
-    Some(trimmed.to_string())
+    // Emit the PARSED value, not the authored text. This validated one
+    // thing and emitted another -- the classic shape where a guard proves
+    // nothing about what ships. `+760px` parses as a finite positive f64
+    // (Rust's float grammar accepts a leading `+`) and was emitted
+    // verbatim as `maxWidth: +760`, which Dart has no unary `+` for: a
+    // hard compile error from one authored value. A 22-digit literal got
+    // through the same way and Dart rejects it as
+    // `integer_literal_imprecise_as_double`.
+    //
+    // Formatting the parse closes both, and matches every other length
+    // path in this file.
+    const MAX_EXACT_INT: f64 = 9_007_199_254_740_992.0; // 2^53
+    let value = trimmed
+        .parse::<f64>()
+        .ok()
+        .filter(|v| v.is_finite() && *v > 0.0 && v.abs() <= MAX_EXACT_INT)?;
+    Some(format!("{value}"))
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -3529,27 +3544,47 @@ fn style_prop_to_container_arg(prop: &str) -> Option<String> {
 /// than panicking — generated source still type-checks.
 fn parse_pixel_value(s: &str) -> String {
     let s = s.trim().trim_end_matches("px");
-    // Non-finite values must not survive: `f64::parse` accepts `inf`,
-    // `NaN` and overflowing literals like `1e400`, and `{f}` then prints
-    // them as bare Dart identifiers (`inf`, `NaN`) that do not compile.
-    // Not an injection -- no punctuation survives `parse::<f64>` -- but
-    // it breaks the "generated source still type-checks" contract this
-    // function's `0` fallback exists to keep.
-    // `is_finite` alone is NOT enough to keep the "generated source still
-    // type-checks" contract this function's `0` fallback exists for.
-    // Rust's `Display` for f64 never uses exponent notation, so a finite
-    // `1e300` expands to a 301-DIGIT bare literal, and Dart rejects that
-    // outright: "The integer literal is being used as a double, but can't
-    // be represented as a 64-bit double without overflow or loss of
-    // precision" -- a hard compile error that stops the whole generated
-    // app from building, from one authored style value. Anything beyond
-    // the exactly-representable integer range falls back to `0` like any
-    // other unreadable input.
+    // Three ways an authored length breaks the generated app, all of which
+    // fall back to `0` -- the same answer this function has always given
+    // for input it cannot read. The contract is that generated Dart still
+    // compiles and still builds; a length is never worth breaking that for.
+    //
+    //  1. NOT FINITE. `f64::parse` accepts `inf`, `NaN` and overflowing
+    //     literals like `1e400`, and `{f}` prints them as bare Dart
+    //     identifiers that do not compile.
+    //
+    //  2. TOO LARGE. Rust's `Display` for f64 never uses exponent
+    //     notation, so a finite `1e300` expands to a 301-DIGIT bare
+    //     literal. Dart rejects that outright -- "the integer literal is
+    //     being used as a double, but can't be represented as a 64-bit
+    //     double without overflow or loss of precision" -- so one authored
+    //     value stops the whole app compiling.
+    //
+    //  3. NEGATIVE (#15160). This one type-checks and then THROWS. Every
+    //     property that reaches this function is non-negative geometry --
+    //     gap, padding, width, height, min-height, border-width,
+    //     border-radius, font-size, stroke width -- and CSS forbids a
+    //     negative for each. Flutter is harsher than "forbids": a width
+    //     reaching `BorderSide` hits its `assert(width >= 0.0)` and takes
+    //     out the widget and everything above it in the tree, in any debug
+    //     or profile build. Four `Border.all` / `BorderSide` writers took
+    //     their width from here unguarded.
+    //
+    //     Audited before centralising: no margin, inset, offset or
+    //     letter-spacing is lowered through this function, so nothing that
+    //     legitimately admits a negative loses one. (`top`/`left`/`right`/
+    //     `bottom` appear nearby only as per-edge BORDER names.)
     const MAX_EXACT_INT: f64 = 9_007_199_254_740_992.0; // 2^53
     s.parse::<f64>()
         .ok()
-        .filter(|f| f.is_finite() && f.abs() <= MAX_EXACT_INT)
-        .map(|f| format!("{f}"))
+        .filter(|f| f.is_finite() && *f >= 0.0 && f.abs() <= MAX_EXACT_INT)
+        // IEEE `-0.0 >= 0.0` is true, and Rust prints it as `-0`. Dart
+        // reads that as `-0.0`, which does satisfy `assert(width >= 0.0)`
+        // -- so it is not a crash -- but it puts a `width: -` in generated
+        // source from a legal input, which is precisely what the tests
+        // here assert can never happen. Normalise the sign rather than
+        // leave the invariant weaker than it reads.
+        .map(|f| if f == 0.0 { "0".to_string() } else { format!("{f}") })
         .unwrap_or_else(|| "0".to_string())
 }
 
@@ -3566,7 +3601,17 @@ fn parse_pixel_value(s: &str) -> String {
 /// not applying the width, leaving the child to size itself as it always
 /// did before this wrapper existed, is the correct behaviour here.
 fn fixed_pixel_length(s: &str) -> Option<String> {
-    if s.trim().ends_with('%') {
+    let trimmed = s.trim();
+    // A NEGATIVE is dropped for the same reason a `%` is, and the reason is
+    // the one written above: handing this site `parse_pixel_value`'s `0`
+    // collapses the whole subtree into a zero-width box. #15160 made that
+    // reachable -- centralising the negative guard turned `width: -5px` on
+    // a Row part from `SizedBox(width: -5)`, which trips Flutter's
+    // `debugAssertIsValid` LOUDLY, into `SizedBox(width: 0)`, which
+    // silently eats the subtree. Trading a loud failure for a silent one
+    // is the wrong direction, so this site keeps its own answer: do not
+    // apply the width at all, and let the child size itself.
+    if trimmed.ends_with('%') || trimmed.starts_with('-') {
         return None;
     }
     Some(parse_pixel_value(s))
@@ -3645,22 +3690,37 @@ fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
     {
         return None;
     }
-    let fallback_w = m.get("border-width").map(|v| parse_pixel_value(v));
+    // A negative width is tested on the AUTHORED text, not on the parsed
+    // result. `parse_pixel_value` now rejects negatives centrally (#15160)
+    // and answers `0`, so a check on its output can never fire -- reading
+    // the raw value is what keeps this edge SKIPPED rather than silently
+    // emitted as a zero-width side.
+    //
+    // The two answers differ: a skipped edge is omitted from `Border(..)`
+    // entirely and renders as `BorderSide.none`, whereas a zero-width side
+    // is a real side that happens to be invisible. (An earlier draft of
+    // this comment said skipping "lets the shorthand cascade in" -- it does
+    // not. The `continue` happens BEFORE the `fallback_w` lookup, so the
+    // shorthand cascades only to edges that authored no width at all.)
+    let authored_negative =
+        |v: Option<&String>| v.is_some_and(|v| v.trim_start().starts_with('-'));
+    let fallback_w = (!authored_negative(m.get("border-width")))
+        .then(|| m.get("border-width").map(|v| parse_pixel_value(v)))
+        .flatten();
     let fallback_c = m.get("border-color").and_then(|v| css_color_to_dart(v));
     let mut sides = Vec::new();
     for e in edges {
-        let w = m
-            .get(&format!("border-{e}-width"))
+        let raw = m.get(&format!("border-{e}-width"));
+        // `BorderSide` asserts `width >= 0` at RUNTIME, so a negative
+        // authored width type-checks and then throws in the app, taking
+        // out the widget and everything above it. Skip the edge instead.
+        if authored_negative(raw) {
+            continue;
+        }
+        let w = raw
             .map(|v| parse_pixel_value(v))
             .or_else(|| fallback_w.clone());
         let Some(w) = w else { continue };
-        // `BorderSide` asserts `width >= 0` at RUNTIME, so a negative
-        // authored width type-checks and then throws in the app. Skip
-        // the edge instead: the same "generated source still works"
-        // contract `parse_pixel_value`'s `0` fallback exists to keep.
-        if w.starts_with('-') {
-            continue;
-        }
         let c = m
             .get(&format!("border-{e}-color"))
             .and_then(|v| css_color_to_dart(v))
@@ -4411,6 +4471,12 @@ fn strict_pixel_length(s: &str) -> Option<f64> {
     t.parse::<f64>()
         .ok()
         .filter(|f| f.is_finite() && *f >= 0.0 && f.abs() <= MAX_EXACT_INT)
+        // IEEE `-0.0 >= 0.0` is true, and callers format with `{}`, which
+        // prints `-0`. Harmless to Dart (it reads as `-0.0`, satisfying
+        // `assert(width >= 0.0)`) but it puts a `width: -` into generated
+        // source from a legal input, which is the invariant the tests
+        // assert. Same normalisation as `parse_pixel_value`.
+        .map(|f| if f == 0.0 { 0.0 } else { f })
 }
 
 /// #15142 -- lower a `HostInput`'s part style into its `InputDecoration`.
@@ -14264,6 +14330,237 @@ mod host_input_style_tests {
         assert_eq!(
             deco, None,
             "neither `transparent` nor the `font` shorthand should invent a value"
+        );
+    }
+}
+
+// =====================================================================
+// #15160 -- a negative length never reaches generated Dart
+//
+// Flutter's `BorderSide` constructor is `assert(width >= 0.0)`. A
+// negative authored width therefore produces Dart that TYPE-CHECKS and
+// then THROWS the moment the widget builds, taking out that widget and
+// everything above it in the tree. It is a runtime crash reachable from
+// any stylesheet, not a rendering glitch.
+//
+// `per_edge_border_expr` had guarded its own path for a while; four other
+// `Border.all` / `BorderSide` writers took their width from
+// `parse_pixel_value` unguarded. The guard is central now.
+//
+// Audited before centralising: every property reaching `parse_pixel_value`
+// is non-negative geometry (gap, padding, width, height, min-height,
+// border-width, border-radius, font-size, stroke width), and CSS forbids a
+// negative for each. No margin, inset or offset is lowered through it, so
+// nothing that legitimately admits a negative loses one.
+// =====================================================================
+#[cfg(test)]
+mod negative_length_tests {
+    use super::*;
+
+    #[test]
+    fn a_negative_length_falls_back_rather_than_reaching_dart() {
+        for bad in ["-1px", "-0.5px", "-5", "-1e300px"] {
+            assert_eq!(
+                parse_pixel_value(bad),
+                "0",
+                "`{bad}` must not survive into generated Dart"
+            );
+        }
+        // NEGATIVE ZERO. `-0.0 >= 0.0` is true in IEEE, and Rust prints
+        // it as `-0`. Dart reads that as `-0.0`, which does satisfy
+        // `assert(width >= 0.0)` -- so it is not a crash -- but it puts a
+        // `width: -` into generated source from a legal input, falsifying
+        // the invariant the emit test below asserts.
+        assert_eq!(parse_pixel_value("-0px"), "0");
+        assert_eq!(parse_pixel_value("-0.0"), "0");
+        assert!(!parse_pixel_value("-0px").starts_with('-'));
+
+        // ordinary values are untouched
+        assert_eq!(parse_pixel_value("0px"), "0");
+        assert_eq!(parse_pixel_value("13px"), "13");
+        assert_eq!(parse_pixel_value("6.5"), "6.5");
+    }
+
+    /// End to end through a real emit: a part authoring a negative border
+    /// width must not put `width: -N` anywhere in the generated file. This
+    /// covers the `Border.all` writers that a unit test on the helper
+    /// would miss.
+    #[test]
+    fn no_emitted_border_side_carries_a_negative_width() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        let m = MosmodelComponent {
+            component: "X".to_string(),
+            slots: vec![],
+            emits: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![
+                    prop("border-width", "-5px"),
+                    prop("border-color", "#ff0000"),
+                    prop("padding", "-3px"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &style).expect("emits").output;
+        assert!(
+            !out.contains("width: -"),
+            "a negative width reached BorderSide, which asserts at build: {out}"
+        );
+        // Assert what this path ACTUALLY emits. The styled-box path writes
+        // `EdgeInsets.symmetric(horizontal: N)`, so an
+        // `EdgeInsets.all(-` assertion could never fail here and read as
+        // coverage it did not provide.
+        assert!(
+            out.contains("EdgeInsets.symmetric(horizontal: 0)"),
+            "the negative padding should have clamped to 0 on this path: {out}"
+        );
+        assert!(
+            !out.contains(": -"),
+            "no negative value may reach any emitted argument: {out}"
+        );
+        // and the border is still drawn, at the clamped width
+        assert!(
+            out.contains("width: 0"),
+            "the border should fall back to 0, not vanish: {out}"
+        );
+    }
+
+    /// `strict_pixel_length` feeds the same kind of unquoted sink and had
+    /// the same negative-zero leak as its sibling: `border: -0px solid
+    /// #ff0000` emitted `width: -0`, and `font-size: -0px` emitted
+    /// `fontSize: -0`. Legal input, legal Dart, but it falsifies the
+    /// "no `-` in an emitted length" invariant these tests exist to state.
+    #[test]
+    fn the_strict_parse_does_not_leak_negative_zero() {
+        assert_eq!(strict_pixel_length("-0px"), Some(0.0));
+        assert_eq!(strict_pixel_length("-0.0"), Some(0.0));
+        assert!(!format!("{}", strict_pixel_length("-0px").unwrap()).starts_with('-'));
+        // through the real sinks
+        let mut border_props = HashMap::new();
+        border_props.insert("border".to_string(), "-0px solid #ff0000".to_string());
+        let got = host_input_border_expr(&border_props);
+        assert!(
+            got.as_deref().is_none_or(|g| !g.contains("width: -")),
+            "got: {got:?}"
+        );
+
+        let node = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("f".to_string()),
+            props: vec![],
+            children: vec![],
+        };
+        let mut part_styles = HashMap::new();
+        part_styles.insert("f".to_string(), "font-size: -0px".to_string());
+        let style = host_input_text_style_arg(&node, &part_styles);
+        assert!(
+            style.as_deref().is_none_or(|s| !s.contains("-0")),
+            "got: {style:?}"
+        );
+    }
+
+    /// `part_max_width` VALIDATED the parse and EMITTED the authored text,
+    /// so its guard proved nothing about what shipped. Rust's float
+    /// grammar accepts a leading `+`, and Dart has no unary `+` on a
+    /// literal -- so `max-width: +760px` passed validation and emitted
+    /// `maxWidth: +760`, a hard compile error from one authored value.
+    #[test]
+    fn max_width_emits_the_parsed_value_not_the_authored_text() {
+        fn max_width_node(value: &str) -> Option<String> {
+            let node = LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("p".to_string()),
+                props: vec![],
+                children: vec![],
+            };
+            let mut m = HashMap::new();
+            m.insert("p".to_string(), format!("max-width: {value}"));
+            part_max_width(&node, &m)
+        }
+        assert_eq!(max_width_node("+760px").as_deref(), Some("760"));
+        assert_eq!(max_width_node("760px").as_deref(), Some("760"));
+        assert_eq!(max_width_node(" 760 px ").as_deref(), Some("760"));
+        // absurd magnitudes are rejected rather than emitted as a
+        // 22-digit literal Dart refuses to compile
+        assert_eq!(max_width_node("9999999999999999999999px"), None);
+        assert_eq!(max_width_node("1e300px"), None);
+        // and the pre-existing rejections still hold
+        assert_eq!(max_width_node("0px"), None);
+        assert_eq!(max_width_node("-5px"), None);
+        assert_eq!(max_width_node("100%"), None);
+    }
+
+    /// A negative on a `Row`/`Column`/`Stack` size wrapper must DROP the
+    /// width, not clamp it to 0.
+    ///
+    /// `fixed_pixel_length` exists because `parse_pixel_value`'s `0`
+    /// fallback collapses the subtree into a zero-width box -- a real
+    /// regression its doc comment records catching in a `flutter test`
+    /// render. Centralising the negative guard made that reachable again:
+    /// `width: -5px` went from `SizedBox(width: -5)`, which trips
+    /// Flutter's `debugAssertIsValid` LOUDLY, to `SizedBox(width: 0)`,
+    /// which silently eats the subtree. Loud beats silent, and dropping
+    /// beats both.
+    #[test]
+    fn a_negative_size_wrapper_length_is_dropped_not_clamped() {
+        assert_eq!(fixed_pixel_length("-5px"), None);
+        assert_eq!(fixed_pixel_length("-0.5"), None);
+        // the reason it already returned None for a relative length
+        assert_eq!(fixed_pixel_length("100%"), None);
+        // and a real length still applies
+        assert_eq!(fixed_pixel_length("120px").as_deref(), Some("120"));
+        assert_eq!(fixed_pixel_length("0px").as_deref(), Some("0"));
+    }
+
+    /// A negative PER-EDGE width is skipped entirely rather than clamped,
+    /// so the shorthand can cascade in. That is a different answer from
+    /// the central `0` fallback, and it is deliberate -- pinning it here
+    /// because the check has to read the AUTHORED text: once
+    /// `parse_pixel_value` rejects negatives, a check on its output can
+    /// never fire, and the edge would be silently emitted at width 0.
+    #[test]
+    fn a_negative_per_edge_width_skips_the_edge_rather_than_clamping() {
+        let mut m = HashMap::new();
+        m.insert("border-bottom-width".to_string(), "-1px".to_string());
+        assert_eq!(per_edge_border_expr(&m), None);
+
+        // with a positive sibling, only the good edge survives
+        let mut m2 = HashMap::new();
+        m2.insert("border-bottom-width".to_string(), "-1px".to_string());
+        m2.insert("border-top-width".to_string(), "2px".to_string());
+        m2.insert("border-color".to_string(), "#ABCDEF".to_string());
+        let got = per_edge_border_expr(&m2).expect("the top edge survives");
+        assert!(got.contains("top: BorderSide"), "got: {got}");
+        assert!(!got.contains("bottom:"), "the negative edge must be skipped: {got}");
+        assert!(!got.contains("width: -"), "got: {got}");
+
+        // a negative SHORTHAND must not cascade a negative into an edge
+        let mut m3 = HashMap::new();
+        m3.insert("border-width".to_string(), "-4px".to_string());
+        m3.insert("border-top-color".to_string(), "#ABCDEF".to_string());
+        let got3 = per_edge_border_expr(&m3);
+        assert!(
+            got3.as_deref().is_none_or(|g| !g.contains("width: -")),
+            "got: {got3:?}"
         );
     }
 }
