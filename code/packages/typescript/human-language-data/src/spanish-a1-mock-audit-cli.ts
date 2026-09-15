@@ -6,6 +6,28 @@ import { defaultCurriculumRoot, loadEverything } from "./loader.js";
 
 export const SPANISH_A1_MOCK_AUDIT = "spanish/mocks/a1/book-bounded-audit.json";
 
+/**
+ * The audit is per (track, level), and the level is the only thing that varies.
+ *
+ * It was written for A1 alone and hard-coded that everywhere, which was correct
+ * while A1 was the only rung with mocks. pre-A1 now has a pair too, and the
+ * question it answers -- "is every objective item answerable from what the book
+ * has taught BY THIS RUNG?" -- is the same question with a different cut-off.
+ *
+ * `lessonsUpToLevel` already takes the level, so nothing about the measurement
+ * needed to change; only the three places that spelled `a1` out loud did.
+ */
+export type MockAuditLevel = "pre-A1" | "A1";
+
+const AUDIT_DIR: Readonly<Record<MockAuditLevel, string>> = {
+  "pre-A1": "spanish/mocks/pre-a1",
+  A1: "spanish/mocks/a1",
+};
+
+export function spanishMockAuditPath(level: MockAuditLevel): string {
+  return `${AUDIT_DIR[level]}/book-bounded-audit.json`;
+}
+
 const citationFormCredits = [
   "llevar", "andar", "dar", "llover", "amigo", "sol",
   "vivir", "llamar", "llamarse", "año", "mes",
@@ -42,13 +64,16 @@ function parseAnswerKey(path: string): Item[] {
   return rows;
 }
 
-export function buildSpanishA1MockAudit(root = defaultCurriculumRoot()) {
+export function buildSpanishA1MockAudit(
+  root = defaultCurriculumRoot(),
+  level: MockAuditLevel = "A1",
+) {
   const everything = loadEverything(root);
   const lessons = lessonsUpToLevel(
     everything.lessons.filter((lesson) => lesson.language === "spanish"),
     everything.curricula.filter((path) => path.language === "spanish"),
     everything.spine,
-    "A1",
+    level,
   );
   const taught = new Set<string>();
   for (const lesson of lessons) {
@@ -67,7 +92,7 @@ export function buildSpanishA1MockAudit(root = defaultCurriculumRoot()) {
 
   const answerKeys = [1, 2].map((mock) => ({
     mock,
-    rows: parseAnswerKey(resolve(root, `spanish/mocks/a1/mock-${mock}-answer-key.md`)),
+    rows: parseAnswerKey(resolve(root, `${AUDIT_DIR[level]}/mock-${mock}-answer-key.md`)),
   }));
   const mocks = answerKeys.map(({ mock, rows }) => {
     const failed = rows
@@ -98,9 +123,9 @@ export function buildSpanishA1MockAudit(root = defaultCurriculumRoot()) {
   return {
     version: 1,
     language: "spanish",
-    level: "A1",
+    level,
     policy: {
-      description: "Credit explicit A1 headwords, their article-free and token forms, documented citation aliases, and Spanish numerals 0-100.",
+      description: `Credit explicit ${level} headwords, their article-free and token forms, documented citation aliases, and Spanish numerals 0-100.`,
       citationFormCredits,
       numberWordCredits,
       numericCredits: "0-100",
@@ -116,25 +141,36 @@ export function buildSpanishA1MockAudit(root = defaultCurriculumRoot()) {
   };
 }
 
-export function serializeSpanishA1MockAudit(root = defaultCurriculumRoot()): string {
-  return `${JSON.stringify(buildSpanishA1MockAudit(root), null, 2)}\n`;
+export function serializeSpanishA1MockAudit(
+  root = defaultCurriculumRoot(),
+  level: MockAuditLevel = "A1",
+): string {
+  return `${JSON.stringify(buildSpanishA1MockAudit(root, level), null, 2)}\n`;
 }
 
 export function runSpanishA1MockAudit(
   args = process.argv.slice(2),
   root = defaultCurriculumRoot(),
 ): number {
-  const mode = args.length === 1 ? args[0] : undefined;
-  if (mode !== "--write" && mode !== "--check" && mode !== "--report") {
-    process.stderr.write("usage: spanish-a1-mock-audit-cli (--write | --check | --report)\n");
+  const mode = args.find((arg) => arg.startsWith("--") && arg !== "--level");
+  const levelArg = args.includes("--level") ? args[args.indexOf("--level") + 1] : "A1";
+  const level: MockAuditLevel | undefined =
+    levelArg === "pre-A1" || levelArg === "A1" ? levelArg : undefined;
+  if (
+    (mode !== "--write" && mode !== "--check" && mode !== "--report") ||
+    level === undefined
+  ) {
+    process.stderr.write(
+      "usage: spanish-a1-mock-audit-cli (--write | --check | --report) [--level pre-A1|A1]\n",
+    );
     return 2;
   }
-  const current = serializeSpanishA1MockAudit(root);
+  const current = serializeSpanishA1MockAudit(root, level);
   if (mode === "--report") {
     process.stdout.write(current);
     return 0;
   }
-  const output = resolve(root, SPANISH_A1_MOCK_AUDIT);
+  const output = resolve(root, spanishMockAuditPath(level));
   if (mode === "--write") {
     writeFileSync(output, current, "utf8");
     return 0;
