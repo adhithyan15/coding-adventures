@@ -24,7 +24,7 @@ refusal also does not imply the complete driver refuses that feature.
 
 | Frontend | Unified rows | Declared cells (all backends, Beam included) | Additional proof boundary |
 |---|---:|---:|---|
-| Twig | 49 | 363 | 20 of those cells are BEAM; dedicated heap/closure tests |
+| Twig | 49 | 390 | 47 of those cells are BEAM (VM-041); dedicated heap/closure/string tests |
 | Nib | 26 | 208 | All eight columns including real BEAM u4/u8 and BCD storage |
 | Brainfuck | 6 | 45 | Dedicated WASM/JVM/CLR and JIT execution; 3 of 6 rows also real BEAM (VM-042) |
 | Dartmouth BASIC | 51 | 400 | 43 of those cells are BEAM (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins + 4 arrays/DATA, BEAM03/VM-LOOP-24/BEAM04); random differential suite and frontend JIT tests |
@@ -35,7 +35,7 @@ refusal also does not imply the complete driver refuses that feature.
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1636
+The normal non-ALGOL capstone therefore declares 210 programs and 1663
 declared cells (sum of the non-ALGOL rows above). At VM-061 this matched a
 fresh `non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells
 exercised plus 210 skipped (missing local `ilasm`) = 1548. VM-042 then added
@@ -215,6 +215,34 @@ float-storage question just closed), and `RND` remains blocked on VM-018's
 module-global design question, neither touched by this slice. Dartmouth
 BASIC now declares 43/51 rows on Beam; the only remaining gaps are the 5
 `INPUT` rows (VM-060b), the 2 string-array/mixed-`DATA` rows, and `RND`.
+
+VM-041 then turned to Twig, the last non-ALGOL frontend with a large
+undeclared BEAM surface (20/49 rows, the remaining 29 framed only as
+unscoped "dynamic-string/record/closure BEAM isolation" design work). A
+confirmed silent-data-corruption bug had to be fixed first: `iir-to-beam`'s
+`"call_closure"` lowering emits TWO `call_ext` instructions
+(`erlang:'++'/2` then `erlang:apply/3`), and neither was wrapped in the
+liveness save/restore macros — the same VM-D029 bug class already fixed
+once for the six `:atomics` ops, dormant here because no `lang_matrix.rs`
+row exercising `call_closure` had ever declared `Beam`. With the fix landed
+(and a real-`erl` regression test proving a variable now survives across a
+`call_closure` call), a probe-first sweep of EVERY one of the 29 not-yet-
+`Beam` Twig rows against real `erl` found **27 pass completely unchanged** —
+dynamic `any`-typed arithmetic, the `length`/`list-ref`/`assoc` recursive
+list-walk helpers, both closure rows (no-capture and capturing, unblocked
+by the fix above), and all 19 string-op rows (`iir-to-beam`'s string ops
+were already proven on BEAM for other frontends; these Twig rows had simply
+never been individually probed). Only 2 rows (`match`/`union`) remain
+deferred: a validator gap was found and fixed along the way (`"mov"` with a
+`ref<LispyPair>` type_hint was rejected even though `lower.rs` already
+lowers it correctly for any type — relaxed to mirror the existing `"str"`
+exception, proven correct by a dedicated real-`erl` test), but that fix
+alone is not sufficient — both rows hit a SEPARATE, deeper, still-open gap:
+the `alloc`+`field_store`+`field_store` → `put_list` fusion only recognizes
+the three instructions immediately adjacent, and the synthesized
+union-variant constructor interleaves a `mov` between them. Twig now
+declares 47/49 rows on Beam (363 → 390 declared cells); only tagged-union
+pattern matching remains.
 
 The "Declared cells" column counts every backend a
 row proves, Beam included — the convention Nib, Oct, FLOW-MATIC and

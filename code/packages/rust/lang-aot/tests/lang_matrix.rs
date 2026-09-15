@@ -170,7 +170,7 @@ mod common;
 /// so a backend that merely emits a literal would not pass.
 const PROGRAMS: &[Prog] = &[
     // Twig — the original AOT language; a bare expression is the whole program.
-    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
+    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
     // Twig — *variadic* arithmetic (`(+ 10 20 12)` = 42).  Scheme's `+`/`-`/`*`/`/`
     // are n-ary; `twig-ir-compiler` folds an all-`i64` arithmetic call into a
     // left-associated chain of typed binary CIR ops (`r1 = add 10,20; r2 = add
@@ -237,7 +237,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(+ (car (cons 41 0)) 1)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-3a: the `list` constructor on the code-gen backends.**
     // `list` is pure sugar over `cons`: `(list a b c)` = `(cons a (cons b
@@ -282,7 +282,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(+ (length (list 1 2 3)) 39)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-3b: `null?` on the empty list `(list)` (a bare nil) is #t → exit 1,
     // the direct regression guard for the WASM nil-const `ref.null` fix.
@@ -308,7 +308,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(list-ref (list 10 20 42) 2)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-3b: the `append` list operation on the code-gen backends.**
     // `append` *rebuilds* the first list in front of the second, so `lower_list_ops`
@@ -358,7 +358,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-3b: `assoc` of an ABSENT key returns nil, so `null?` of the result
     // is #t → exit 1 — the direct guard for the not-found (nil base-case) branch.
@@ -367,7 +367,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(null? (assoc 9 (list (cons 1 10) (cons 2 20))))",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-4: symbols / quote on the code-gen backends.** A quote literal
     // `'a` (or `(quote a)`) now lowers to `const Var("a") : symbol` — the same
@@ -533,7 +533,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "((lambda (x) (+ x 1)) 41)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-7: a **capturing** closure. The outer lambda returns an inner
     // one that captures `x`; applying it threads the captured 40 + the arg 2.
@@ -545,7 +545,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(((lambda (x) (lambda (y) (+ x y))) 40) 2)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
@@ -560,7 +560,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(string-length \"HELLO\")",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 literal `string-ref`. The front-end emits `str_const` plus a
     // typed integer index and `str_index`; ASCII keeps the byte-oriented E4
@@ -570,7 +570,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(string-ref \"ABC\" 1)",
         expect: Expect::Exit(66),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 literal `string-ref` out-of-bounds trap. This proves the same
     // runtime fail-closed contract on every backend: native/LLVM lower the
@@ -581,7 +581,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(string-ref \"ABC\" 3)",
         expect: Expect::Trap,
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 literal `string-append` feeding `string-length`. This exercises
     // the shared `str_concat` op while staying on the direct-literal metadata
@@ -592,7 +592,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(string-length (string-append \"AB\" \"CDE\"))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 literal `string=?`. Like the literal length row, this stays on
     // the direct `str_const` + `str_eq` path so every codegen backend can prove
@@ -616,7 +616,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define a \"AB\") (define b \"CDE\") (string-length (string-append a b))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 named string equality driving control flow. The `string=?`
     // result is the shared i64 boolean consumed by the existing `if` lowering,
@@ -637,7 +637,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define s \"ABC\") (string-ref s 2)",
         expect: Expect::Exit(67),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 lexical string locals. A `let` string binding now materialises
     // directly as a typed `str_const` register, and a local integer binding can
@@ -648,7 +648,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let ((s \"ABC\") (i 2)) (string-ref s i))",
         expect: Expect::Exit(67),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 lexical `let*` string locals. The sequential-binding form uses
     // the same typed `str_const` local slot path as `let`, and `str_len`
@@ -658,7 +658,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let* ((s \"HELLO\")) (string-length s))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 lexical string locals can drive equality control flow too.
     // Two local string slots feed `str_eq`, and the resulting i64 boolean flows
@@ -679,7 +679,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let ((a \"AB\") (b \"CDE\")) (string-length (string-append a b)))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 `str_concat` feeding `str_index`. The prior local-string proof
     // observed a concat result with `str_len`; this row makes the byte-indexing
@@ -690,7 +690,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let ((a \"AB\") (b \"CDE\") (i 3)) (string-ref (string-append a b) i))",
         expect: Expect::Exit(68),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 `str_len` computing a `str_index` operand. This keeps
     // `string-length` on the shared `str_len` path, lowers `(- len 1)` as typed
@@ -701,7 +701,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let ((s \"ABCDE\")) (string-ref s (- (string-length s) 1)))",
         expect: Expect::Exit(69),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 `substring` feeding `string-ref`. This proves the shared
     // `str_slice` op produces a string value that all seven proven columns can
@@ -712,7 +712,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let ((s \"ABCDE\")) (string-ref (substring s 1 4) 1))",
         expect: Expect::Exit(67),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 `str_cmp` driving lexical string predicates. The frontend lowers
     // `string<?`/`string>?` to shared `str_cmp` followed by typed comparison
@@ -733,7 +733,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (strlen) (string-length \"HELLO\")) (strlen)",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string ops over an annotated top-level function parameter. The
     // bare `str` annotation gives the compiler enough static evidence to stamp
@@ -752,7 +752,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (strlen (s : str)) (string-length s)) (strlen \"HELLO\")",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from `main`. The direct `(strlen "HELLO")`
@@ -766,7 +766,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (strlen s) (string-length s)) (strlen \"HELLO\")",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a static string expression actual. The
@@ -784,7 +784,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string equality over multiple unannotated top-level function
     // parameters inferred from one direct call. The first actual is literal,
@@ -819,7 +819,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define s \"HELLO\") (define (strlen x) (string-length x)) (strlen s)",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a lexical string local in `main`. The
@@ -833,7 +833,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (let ((s \"HELLO\")) (strlen s))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a derived sequential `let*` string local
@@ -851,7 +851,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (let* ((a \"HE\") (b (string-append a \"LLO\"))) (strlen b))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
@@ -8216,9 +8216,15 @@ fn dotnet_ok() -> bool {
 // The Lisp-shaped column. BEAM is the one target with NO raw memory — no linear
 // address space, every term immutable — so it takes the cons/immutable half of
 // the IIR natively (`cons`/`car`/`cdr` are Erlang lists, symbols are atoms) and
-// refuses the rest outright rather than approximating it. `box`/`unbox` and
-// `str_len` remain unsupported ops, so a program needing them is REJECTED at
-// validation, never miscompiled. Only cells proven to run list `Beam`.
+// refuses the rest outright rather than approximating it. `str_len` and the
+// string op family ARE supported (BEAM E4). `box`/`unbox` never reach
+// `iir-to-beam` as such: `compile_source_to_beam`'s own
+// `concretize_scalar_any_for_beam` pass rewrites both to a plain `mov` first
+// (BEAM values are already dynamically-typed Erlang terms, so boxing is a
+// no-op identity move here) — VM-041 fixed the one gap that rewrite exposed,
+// a `mov` carrying a `ref<...>` type_hint the validator rejected outright
+// even though `lower.rs` already lowered it correctly. Only cells proven to
+// run list `Beam`.
 fn erl_ok() -> bool {
     Command::new("erl")
         .arg("-noshell")
@@ -9419,6 +9425,33 @@ fn matrix_every_proven_cell_agrees() {
 /// candidate to expose a real `iir-to-beam` defect via
 /// `emit_string_pointer_overlay`'s chained `str_slice`/`str_concat` calls
 /// over fully run-time-computed bounds; all 8 passed clean on real `erl`.
+///
+/// Twig's expected cell count changed for the first time (363 → 390, VM-041)
+/// after fixing a confirmed silent-corruption bug: `call_closure` lowers to
+/// TWO `call_ext` instructions, and neither was wrapped in
+/// `save_live_across_imported_call!`/`restore_live_across_imported_call!` —
+/// the same VM-D029 bug class already fixed once for the six `:atomics` ops.
+/// With the fix in place (and a real-`erl` regression test proving a
+/// variable survives across a `call_closure` call), a probe-first sweep of
+/// EVERY not-yet-`Beam` Twig row (29 of 49) found 27 that already ran
+/// correctly with zero further lowering changes — including the two closure
+/// rows the fix directly protects. One row's blocker (`match`/`union`) was
+/// also *partly* diagnosed: `iir-to-beam`'s validator rejected a `mov` op
+/// carrying a `ref<LispyPair>` type_hint even though `lower.rs`'s `"mov"`
+/// arm already lowers it correctly for any type (an unconditional
+/// register-to-register `move`); relaxing the validator (mirroring the
+/// existing `"str"`-type_hint exception) is safe and tested
+/// (`test_99_real_erl_mov_ref_lispy_pair_lowers_correctly` in
+/// `iir-to-beam`'s suite) but is NOT by itself sufficient — the two
+/// `match`/`union` rows still fail with a SEPARATE, deeper error
+/// (`field_store: found outside of alloc+field_store+field_store pattern`)
+/// once validation passes, in the synthesized union-variant constructor
+/// function. That is a real, still-open design/implementation gap (the
+/// `alloc`+2×`field_store` → `put_list` fusion only recognizes the three
+/// instructions immediately adjacent; the union-variant constructor
+/// interleaves a `mov` between them) — left deferred, NOT forced. See
+/// `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-041" section for the full probe
+/// transcript and the exact remaining gap description.
 #[test]
 fn feature_coverage_doc_counts_match_programs_source() {
     fn rows_and_cells(lang: Language) -> (usize, usize) {
@@ -9431,7 +9464,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
     // (language, expected rows, expected total declared cells — all backends
     // including Beam). Order matches the doc table.
     let expected = [
-        (Language::Twig, 49, 363),
+        (Language::Twig, 49, 390),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 45),
         (Language::DartmouthBasic, 51, 400),
@@ -16158,4 +16191,132 @@ fn portable_text_stdout_dartmouth_basic_beam_arrays_and_data() {
     }
     assert_eq!(executed, 4);
     eprintln!("Dartmouth BASIC BEAM arrays and DATA: {executed} programs executed");
+}
+
+// VM-041: fixed a confirmed silent-corruption bug first — `call_closure`
+// lowers to TWO `call_ext` instructions (`erlang:'++'/2` then
+// `erlang:apply/3`), and neither was wrapped in
+// `save_live_across_imported_call!`/`restore_live_across_imported_call!`,
+// even though `call_closure` was already listed in `iir-to-beam`'s
+// `live_across` liveness match — the exact VM-D029 bug class already fixed
+// once for the six `:atomics` ops. See `iir-to-beam`'s
+// `test_98_real_erl_call_closure_survives_live_across_call` for the direct
+// regression proof (a variable live across a `call_closure` call that would
+// read back wrong without the fix).
+//
+// With that fixed, a probe-first sweep compiled and ran EVERY one of the 29
+// not-yet-`Beam` Twig `lang_matrix.rs` rows individually against real `erl`,
+// using ONLY the `iir-to-beam` capabilities that existed before this slice
+// plus the `call_closure` fix. 27 of 29 passed unchanged: no new lowering, no
+// new op, no new import — they simply had never been probed as individual
+// corpus rows before (the same "never actually run, not actually broken"
+// shape VM-LOOP-24 found for 12 Dartmouth BASIC rows). This group covers
+// dynamic `any`-typed arithmetic over a `car`'d cons cell, the `length`/
+// `list-ref`/`assoc` synthesized recursive list-walk helpers, and — thanks
+// to the fix above — both closure rows (no-capture and a capturing closure).
+// See `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-041" section for the full probe
+// transcript, including the 2 rows that do NOT belong here (`match`/`union`,
+// deferred with a documented, still-open `alloc`+`field_store` fusion gap —
+// see `feature_coverage_doc_counts_match_programs_source`'s doc comment).
+#[test]
+fn twig_beam_dynamic_arith_list_ops_and_closures() {
+    if !erl_ok() {
+        eprintln!("SKIP Twig BEAM dynamic arith/list ops/closures: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, i32)] = &[
+        ("42", 42),
+        ("(+ (car (cons 41 0)) 1)", 42),
+        ("(+ (length (list 1 2 3)) 39)", 42),
+        ("(list-ref (list 10 20 42) 2)", 42),
+        ("(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))", 42),
+        ("(null? (assoc 9 (list (cons 1 10) (cons 2 20))))", 1),
+        ("((lambda (x) (+ x 1)) 41)", 42),
+        ("(((lambda (x) (lambda (y) (+ x y))) 40) 2)", 42),
+    ];
+    let mut executed = 0;
+    for (src, exit_code) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::Twig && p.src == *src)
+            .unwrap_or_else(|| panic!("Twig row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected Twig row must declare Beam");
+        assert!(matches!(program.expect, Expect::Exit(n) if n == *exit_code),
+            "selected Twig expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Twig");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 8);
+    eprintln!("Twig BEAM dynamic arith/list ops/closures: {executed} programs executed");
+}
+
+// VM-041 probe-first sweep, string-op group: `str_const`/`str_len`/
+// `str_index`/`str_concat`/`str_slice`/`str_cmp` were all already proven on
+// `iir-to-beam` (BEAM E4 slices) for OTHER frontends' corpus rows, but no
+// Twig string row had been individually probed against real `erl` before —
+// the same "proven capability, unprobed corpus row" gap as the arithmetic/
+// list-ops group above. All 19 run unchanged: string literals, `let`/`let*`
+// locals, non-escaping top-level `define`s, `substring`, comparison
+// operators (`string<?`/`string>?`), the documented `string-ref`
+// out-of-bounds trap, and a top-level function whose `str`-typed parameter
+// is inferred four different ways (explicit annotation, a literal direct
+// call, a `str_concat`+`str_slice` actual, and a named/`let`/`let*` actual).
+#[test]
+fn twig_beam_string_ops() {
+    if !erl_ok() {
+        eprintln!("SKIP Twig BEAM string ops: erl unavailable");
+        return;
+    }
+    let exit_cases: &[(&str, i32)] = &[
+        ("(string-length \"HELLO\")", 5),
+        ("(string-ref \"ABC\" 1)", 66),
+        ("(string-length (string-append \"AB\" \"CDE\"))", 5),
+        ("(define a \"AB\") (define b \"CDE\") (string-length (string-append a b))", 5),
+        ("(define s \"ABC\") (string-ref s 2)", 67),
+        ("(let ((s \"ABC\") (i 2)) (string-ref s i))", 67),
+        ("(let* ((s \"HELLO\")) (string-length s))", 5),
+        ("(let ((a \"AB\") (b \"CDE\")) (string-length (string-append a b)))", 5),
+        ("(let ((a \"AB\") (b \"CDE\") (i 3)) (string-ref (string-append a b) i))", 68),
+        ("(let ((s \"ABCDE\")) (string-ref s (- (string-length s) 1)))", 69),
+        ("(let ((s \"ABCDE\")) (string-ref (substring s 1 4) 1))", 67),
+        ("(define (strlen) (string-length \"HELLO\")) (strlen)", 5),
+        ("(define (strlen (s : str)) (string-length s)) (strlen \"HELLO\")", 5),
+        ("(define (strlen s) (string-length s)) (strlen \"HELLO\")", 5),
+        (
+            "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))",
+            5,
+        ),
+        ("(define s \"HELLO\") (define (strlen x) (string-length x)) (strlen s)", 5),
+        ("(define (strlen x) (string-length x)) (let ((s \"HELLO\")) (strlen s))", 5),
+        (
+            "(define (strlen x) (string-length x)) (let* ((a \"HE\") (b (string-append a \"LLO\"))) (strlen b))",
+            5,
+        ),
+    ];
+    let mut executed = 0;
+    for (src, exit_code) in exit_cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::Twig && p.src == *src)
+            .unwrap_or_else(|| panic!("Twig row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected Twig row must declare Beam");
+        assert!(matches!(program.expect, Expect::Exit(n) if n == *exit_code),
+            "selected Twig expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Twig");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+
+    // The out-of-bounds string-ref trap — a separate `Expect::Trap` case.
+    let trap_src = "(string-ref \"ABC\" 3)";
+    let trap_program = PROGRAMS.iter()
+        .find(|p| p.lang == Language::Twig && p.src == trap_src)
+        .unwrap_or_else(|| panic!("Twig row with src {trap_src:?} not found"));
+    assert!(trap_program.backends.contains(&Beam), "selected Twig row must declare Beam");
+    assert!(matches!(trap_program.expect, Expect::Trap), "selected Twig expectation changed");
+    let trap_result = run_beam(trap_program).expect("detected erl must execute Twig");
+    assert_cell(Beam, trap_program, trap_result);
+    executed += 1;
+
+    assert_eq!(executed, 19);
+    eprintln!("Twig BEAM string ops: {executed} programs executed");
 }
