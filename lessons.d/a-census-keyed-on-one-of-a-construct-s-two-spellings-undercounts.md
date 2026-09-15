@@ -48,6 +48,33 @@ another lane, with three instances of the identical shape. `CLAUDE.md` says to r
 `lessons.d/` before implementation work; I did not, and paid the same toll a fourth time.
 Scan code lines, or in this case locator *values*, not the whole file.
 
+**The title undercounts: there is a third shape, and the corrected census missed it.**
+Measured on `origin/main` `a146ad8f29` (2026-09-14), a row block can also be written over
+several lines and hold **`cites` with no `source` at all**. That is the honest form for a row no
+span states outright, and `earth-science/water-cycle.adj` (5 blocks) and
+`physics/energy-form-family.adj` (8 blocks) ship it. The census I built to fix the inline blind
+spot counted *`source` spans inside a block*. So it read both tables as unconverted, and I
+published **27 / 288** and **28 / 287** converted/remaining on the tracking issue while the tree
+held **30 / 285**. One of those comments said in the same paragraph that `energy-form-family`
+had shipped "with per-row `cites`, not `source`". Two header sweeps from the same session asked
+"`source` **or** `cites`" and counted 30, and one of them put "30 converted tables" into the
+CHANGELOG. I never compared the two numbers.
+
+**And the fix did not reach the copies.** The eight-space needle had been replaced in the
+census I was publishing from, and still sat in three sibling scripts: a blocker triage, a
+remaining-tables census and a converted-tables selector. It surfaced when the triage printed
+`kingdoms.adj` and `si-base-units.adj` among its largest *unconverted* candidates, after both
+had been corrected in public.
+
+**Rule, sharpened:**
+- **Test for the construct, not for what it holds or how it is laid out.** "Does any `row (…)`
+  line open a brace?" is right for all three shapes. A test for a keyword inside the block is
+  wrong for every block that uses a different keyword.
+- **When one instrument is corrected, grep for every copy of its test before republishing any
+  number from any of them.** Run each copy on one control file per known shape.
+- **When two instruments count the same thing differently, name the differing items before
+  publishing either number.** 28 against 30 was two named files, and finding them took one run.
+
 Related: [[a-source-code-audit-that-searches-for-a-rust-literal-in-one]] — the same
 too-narrow-needle family on the Rust side, where the guards used a raw string literal and
 the audit searched for the escaped one.
