@@ -3638,6 +3638,256 @@ fn test_93_real_erl_real_to_int_floor() {
     assert_eq!(stdout.trim(), "3", "expected erl output \"3\", got {:?}", stdout.trim());
 }
 
+/// BEAM04: `alloc_array`/`array_set`/`array_get` with `type_hint ==
+/// "array<f64>"`/`"f64"` must actually EMIT `call_ext`s against `:ets`
+/// (`ets:new/2`, `ets:insert/2`, `ets:lookup_element/3`, plus
+/// `erlang:list_to_tuple/1` for building the `{Idx, Val}` insert tuple) —
+/// NOT `:atomics`, which can only hold 64-bit integers and traps (`badarg`)
+/// on a float `atomics:put` (see
+/// `code/specs/BEAM04-float-array-representation.md`).
+///
+/// Every `math:*`/`atomics:*`/`ets:*` import is pre-registered
+/// unconditionally at module setup ("so their indices are stable" — see
+/// `lower.rs`'s own comment), so asserting on `beam.imports` alone cannot
+/// distinguish "this module actually calls atomics" from "the backend
+/// always reserves the slot" — every module's import table contains
+/// `atomics:*` regardless of whether any instruction uses it. The only
+/// question that matters is which import index each EMITTED `call_ext`
+/// instruction actually references, so this test reads the import table to
+/// find `atomics:{new,put,get}`'s reserved indices, then asserts no
+/// `call_ext` in the generated instruction stream targets any of them, and
+/// that `call_ext`s targeting `ets:{new,insert,lookup_element}` and
+/// `erlang:list_to_tuple/1` DO appear. This is the pure instruction-shape
+/// proof; `test_95`/`test_96`/`test_97` below prove actual execution on
+/// real Erlang.
+#[test]
+fn test_94_f64_array_ops_use_ets_not_atomics() {
+    let m = make_module_fn("main", vec![], "f64", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(2)], "i64"),
+        IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], "array<f64>"),
+        IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Float(40.0)], "f64"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("p".into()), Operand::Var("i0".into()), Operand::Var("v".into())], "f64"),
+        IIRInstr::new("array_get", Some("r".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i0".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+    ]);
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "f64 array module must pass validation: {errs:?}");
+
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+
+    let import_idx = |module: &str, func: &str, arity: u32| -> Option<usize> {
+        beam.imports.iter().position(|imp| {
+            let m = beam.atoms.get(imp.module_atom_index as usize - 1).map(String::as_str);
+            let f = beam.atoms.get(imp.function_atom_index as usize - 1).map(String::as_str);
+            m == Some(module) && f == Some(func) && imp.arity == arity
+        })
+    };
+    let called_import_indices: std::collections::HashSet<u64> = beam.instructions.iter()
+        .filter(|i| i.opcode == OP_CALL_EXT)
+        .map(|i| i.operands[1].value)
+        .collect();
+    let is_called = |module: &str, func: &str, arity: u32| -> bool {
+        match import_idx(module, func, arity) {
+            Some(idx) => called_import_indices.contains(&(idx as u64)),
+            None => false,
+        }
+    };
+
+    assert!(is_called("ets", "new", 2), "must call_ext ets:new/2");
+    assert!(is_called("ets", "insert", 2), "must call_ext ets:insert/2");
+    assert!(is_called("ets", "lookup_element", 3), "must call_ext ets:lookup_element/3");
+    assert!(is_called("erlang", "list_to_tuple", 1), "must call_ext erlang:list_to_tuple/1");
+    assert!(!is_called("atomics", "new", 2),
+        "an all-f64 array module must NOT call_ext atomics:new/2");
+    assert!(!is_called("atomics", "put", 3),
+        "an all-f64 array module must NOT call_ext atomics:put/3");
+    assert!(!is_called("atomics", "get", 2),
+        "an all-f64 array module must NOT call_ext atomics:get/2");
+}
+
+/// End-to-end: the exact shape of the promoted `10 DIM A(3)\n20 LET A(1) =
+/// 40\n30 LET A(2) = 2\n40 PRINT A(1) + A(2)` corpus row — `alloc_array`
+/// (`array<f64>`), two `array_set`s, two `array_get`s, `add` — executed on
+/// real Erlang. This is the row that traps with `{badarg,[{atomics,put,...`
+/// before this slice (see `LANG-VM-NON-ALGOL-BACKLOG.md`'s VM-LOOP-24
+/// findings); after this slice it must run and print `42.0`.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_95_real_erl_float_array_set_get_roundtrip() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "f64", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(4)], "i64"),
+        IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], "array<f64>"),
+        IIRInstr::new("const", Some("i1".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("const", Some("i2".into()), vec![Operand::Int(2)], "i64"),
+        IIRInstr::new("const", Some("v40".into()), vec![Operand::Float(40.0)], "f64"),
+        IIRInstr::new("const", Some("v2".into()), vec![Operand::Float(2.0)], "f64"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("p".into()), Operand::Var("i1".into()), Operand::Var("v40".into())], "f64"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("p".into()), Operand::Var("i2".into()), Operand::Var("v2".into())], "f64"),
+        IIRInstr::new("array_get", Some("a1".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i1".into())], "f64"),
+        IIRInstr::new("array_get", Some("a2".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i2".into())], "f64"),
+        IIRInstr::new("add", Some("s".into()),
+            vec![Operand::Var("a1".into()), Operand::Var("a2".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "f64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "float array roundtrip module must pass validation: {errs:?}");
+
+    let beam_cfg = IIRBeamConfig::new("iir_float_array_roundtrip_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+
+    let tmp = std::env::temp_dir()
+        .join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create iir_to_beam_tests temp dir");
+    let beam_path = tmp.join("iir_float_array_roundtrip_test.beam");
+    std::fs::write(&beam_path, &bytes).expect("write iir_float_array_roundtrip_test.beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_float_array_roundtrip_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(
+        output.status.success(),
+        "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert_eq!(stdout.trim(), "42.0", "expected erl output \"42.0\", got {:?}", stdout.trim());
+}
+
+/// End-to-end: `array_set` on the SAME index twice must overwrite (not
+/// duplicate) — proving `ets:insert/2` replaces an existing key the same way
+/// `atomics:put/3` already does for integer arrays. Sets index 0 to `1.0`,
+/// then `99.5`, and reads back `99.5`.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_96_real_erl_float_array_overwrite() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "f64", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], "array<f64>"),
+        IIRInstr::new("const", Some("i0".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("v1".into()), vec![Operand::Float(1.0)], "f64"),
+        IIRInstr::new("const", Some("v2".into()), vec![Operand::Float(99.5)], "f64"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("p".into()), Operand::Var("i0".into()), Operand::Var("v1".into())], "f64"),
+        IIRInstr::new("array_set", None,
+            vec![Operand::Var("p".into()), Operand::Var("i0".into()), Operand::Var("v2".into())], "f64"),
+        IIRInstr::new("array_get", Some("r".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i0".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "float array overwrite module must pass validation: {errs:?}");
+
+    let beam_cfg = IIRBeamConfig::new("iir_float_array_overwrite_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+
+    let tmp = std::env::temp_dir()
+        .join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create iir_to_beam_tests temp dir");
+    let beam_path = tmp.join("iir_float_array_overwrite_test.beam");
+    std::fs::write(&beam_path, &bytes).expect("write iir_float_array_overwrite_test.beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_float_array_overwrite_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(
+        output.status.success(),
+        "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert_eq!(stdout.trim(), "99.5", "expected erl output \"99.5\", got {:?}", stdout.trim());
+}
+
+/// Documents the known limitation from `BEAM04-float-array-representation.md`
+/// §"known limitation": unlike `atomics:new`, `ets:new` does not pre-zero N
+/// cells, so `array_get` on an index that was never `array_set` TRAPS
+/// (`badarg`) instead of returning `0.0`. No promoted corpus row exercises
+/// this (every promoted float-array row writes every cell it later reads),
+/// so this test pins the trap as a documented, intentional divergence rather
+/// than letting it regress silently into "returns 0.0" or "returns garbage"
+/// without anyone noticing.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_97_real_erl_float_array_unset_read_traps() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "f64", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+        IIRInstr::new("alloc_array", Some("p".into()), vec![Operand::Var("n".into())], "array<f64>"),
+        IIRInstr::new("const", Some("i2".into()), vec![Operand::Int(2)], "i64"),
+        // index 2 was never array_set.
+        IIRInstr::new("array_get", Some("r".into()),
+            vec![Operand::Var("p".into()), Operand::Var("i2".into())], "f64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "unset-read module must pass validation: {errs:?}");
+
+    let beam_cfg = IIRBeamConfig::new("iir_float_array_unset_read_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+
+    let tmp = std::env::temp_dir()
+        .join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create iir_to_beam_tests temp dir");
+    let beam_path = tmp.join("iir_float_array_unset_read_test.beam");
+    std::fs::write(&beam_path, &bytes).expect("write iir_float_array_unset_read_test.beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_float_array_unset_read_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(!output.status.success(), "reading an unset ets-backed cell must trap");
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(stderr.contains("badarg"),
+        "expected a badarg trap on the unset read, got stderr: {stderr}");
+}
+
 #[test]
 fn narrow_operations_mask_but_i64_remains_unbounded() {
     for op in ["add", "sub", "mul", "neg", "not", "and", "or", "xor", "shl", "shr"] {

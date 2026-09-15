@@ -8,6 +8,121 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## BEAM04 — ets-backed float-array representation (selected after VM-LOOP-24)
+
+`git fetch origin && git merge origin/main` fast-forwarded cleanly onto the
+VM-LOOP-24 merge (below). `gh pr list --state open --limit 50` showed no
+other LANG-VM-related PR in flight, and specifically nothing touching
+`iir-to-beam` or BASIC array/float support.
+
+VM-LOOP-24's own Findings §1 (and its trailing reprioritization note) named
+this exact problem: `iir-to-beam` represents every `alloc_array`/
+`array_set`/`array_get` with Erlang's `:atomics` module, which can only hold
+64-bit INTEGERS — confirmed by a real trap
+(`{badarg,[{atomics,put,[Ref,Index,FloatValue],...}]}`) the instant a
+float value is written. BASIC arrays are `array<f64>` (every scalar numeric
+value routes through the shared f64 track per BA7-1b), so every BASIC array
+write traps, blocking 4 numeric-array/`DATA` rows.
+
+**This is a design item, not a promotion, so it needed real research before
+any code.** Wrote `code/specs/BEAM04-float-array-representation.md`,
+researching both candidates the backlog named — concretely, against real
+`erl`/`erlc -S`, not by intuition:
+
+- **Bit-reinterpret the f64 as an i64, keep `:atomics`.** The bit pattern
+  DOES round-trip exactly (verified across a wide set of finite values,
+  including `±0.0`, min/max-magnitude doubles, and ordinary decimals) — but
+  the actual BEAM instruction shape needed, confirmed by disassembling a
+  real compiled bit-syntax round-trip with `erlc -S`, requires THREE
+  entirely new opcode families this backend has never implemented:
+  `bs_create_bin` (construction), `bs_start_match4`/`bs_match` (matching,
+  with a nested `{commands, [...]}` operand shape unlike anything this
+  encoder currently handles), and a typed `test bs_get_float2` extraction.
+- **Switch float-element arrays to `:ets`.** Disassembly confirmed this
+  needs **zero** new BEAM opcodes: `ets:new/2`/`ets:insert/2`/
+  `ets:lookup_element/3` are ordinary `call_ext`s (the exact shape
+  `math:*` already uses), and the `{Idx, Val}` insert tuple is built with
+  `put_list` (the exact cons-cell construction `call_closure`'s arg-list
+  already uses) + `erlang:list_to_tuple/1`. Functional testing on real
+  `erl` (not just disassembly) confirmed: no size argument needed (`:ets`
+  grows dynamically, unlike fixed-size `:atomics`), a fixed table-name atom
+  never collides across allocation sites (`ets:new` without `named_table`
+  always returns a fresh identifier), re-`insert` at an existing key
+  overwrites (matching `atomics:put`'s semantics), and a missing-key read
+  traps `badarg` (matching `atomics:get`'s out-of-range failure mode).
+
+**`:ets` was chosen.** This backlog's own prior framing guessed that reusing
+`:atomics` "is likely simpler... since it wouldn't need a new
+table-lifecycle model" — that guess did not survive measurement. `:ets`
+needs zero new opcodes (pure reuse of `put_list`/`call_ext`, both already
+implemented and tested); the bit-reinterpretation path needs a materially
+larger, structurally new part of the encoder for a benefit (staying on
+`:atomics`) that turned out not to matter — no per-array table-lifecycle
+problem ever materialized (no explicit cleanup needed; a single `call_ext`
+creates a table exactly like `atomics:new` does).
+
+### Findings
+
+- One genuine, documented limitation was found and deliberately left
+  unfixed: unlike `atomics:new`, `ets:new` does not pre-zero N cells, so
+  `array_get` on an index that was never `array_set` traps `badarg` instead
+  of returning `0.0`. Confirmed not to affect any of the 4 rows being
+  promoted (each writes every cell it later reads — checked against each
+  row's actual source before promoting, not assumed) and pinned by a
+  dedicated real-`erl` test (`test_97_real_erl_float_array_unset_read_traps`)
+  so it can't regress silently into "returns garbage" later.
+- No other frontend or existing corpus row was put at risk: only
+  `array_set`/`array_get`/`alloc_array` instructions whose `type_hint` is
+  exactly `"f64"`/`"array<f64>"` dispatch to `:ets`; every other array/tape
+  use (Brainfuck's byte tape, the GOSUB return-address `array<i64>` stack,
+  the `DATA` pool's kind array) is untouched, and — since EVERY f64 array
+  op traps on real `erl` today, per VM-LOOP-24's own finding — there was no
+  working case to regress.
+
+### Validation
+
+`iir-to-beam` 0.12.0 → 0.13.0: 104 unit/integration tests + 5 doc tests pass
+(up from 100), including a new instruction-shape test
+(`test_94_f64_array_ops_use_ets_not_atomics`) that checks the actual
+`call_ext` OPERANDS emitted target `:ets`/`list_to_tuple` and none target
+`:atomics` (import-table presence alone can't prove this — every import is
+pre-registered unconditionally at module setup), and three new real-`erl`
+integration tests: a set/get roundtrip matching the promoted 1-D-array row
+exactly (`test_95`), an overwrite proof (`test_96`), and the
+unset-read-traps proof above (`test_97`). All-target Clippy with warnings
+denied is clean.
+
+`lang-aot` 0.340.0 → 0.341.0: promoted the 4 Dartmouth BASIC `lang_matrix`
+rows VM-LOOP-24 found blocked on this gap — 1-D array, 2-D array, `DATA`/
+`READ`/`RESTORE`, and fractional `DATA` — via a new dedicated
+`portable_text_stdout_dartmouth_basic_beam_arrays_and_data` test (4
+programs) executed against real `erl` before promotion.
+`feature_coverage_doc_counts_match_programs_source` was updated
+(Dartmouth BASIC tuple `(51, 396)` → `(51, 400)`) and passes against the
+live `PROGRAMS` corpus; `LANG-VM-FEATURE-COVERAGE.md`'s Dartmouth BASIC row,
+grand-total prose (1632 → 1636), and the "Implemented feature families"
+narrative row were all updated to match. No full
+`non_algol_matrix_every_proven_cell_agrees` capstone rerun is claimed for
+this slice, matching every prior BEAM03/VM-LOOP-24 slice's own precedent —
+the dedicated arrays/DATA test plus the full `iir-to-beam` suite (including
+the new real-`erl` tests) are the executed evidence.
+
+Dartmouth BASIC now declares 43/51 rows on `Beam` — up from 39/51. Only 8
+rows remain undeclared: the 5 `INPUT` rows (still gated on VM-060b), the 2
+string-array/mixed-`DATA` rows (gated on a SEPARATE, larger design item —
+`iir-to-beam` has no `str`-typed array element representation at all,
+independent of the float-storage question this slice closed), and `RND`
+(gated on the VM-018 module-global design question). Reprioritize after
+this merges: **VM-060b (BEAM host input) is now the single highest-value
+remaining non-ALGOL BEAM item for Dartmouth BASIC**, unblocking 5 rows at
+once — the largest remaining single group for this frontend. The
+string-array representation gap is the next-largest design item (only 2
+rows, but architecturally bigger than the float-storage question just
+closed, per §5 of the BEAM04 spec). `RND` is a single row gated on a design
+question unrelated to arrays or input (VM-018), not attempted here or by
+any prior slice. VM-041 (Twig dynamic-string/record/closure BEAM isolation)
+remains the other standing non-ALGOL candidate untouched by this slice.
+
 ## VM-LOOP-24 — probe-first sweep of the remaining Dartmouth BASIC non-`INPUT` rows (selected after #15231)
 
 `git fetch origin && git merge origin/main` fast-forwarded cleanly onto
