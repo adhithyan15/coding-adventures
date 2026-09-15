@@ -85,11 +85,15 @@ assert_eq!(&bytes[0..4], b"FOR1");
 |--------|---------------|
 | `const` (Int) | `move {i,val} {x,rd}` |
 | `const` (Bool) | `move {i,0or1} {x,rd}` |
-| `add` | `gc_bif2 erlang:+/2` |
-| `sub` | `gc_bif2 erlang:-/2` |
-| `mul` | `gc_bif2 erlang:*/2` |
-| `div` | `gc_bif2 erlang:div/2` |
-| `mod` | `gc_bif2 erlang:rem/2` |
+| `const` (Float, `f64`) | `move {literal,idx} {x,rd}` — module `LiteralPool` (BEAM03) |
+| `add` | `gc_bif2 erlang:+/2` (int or float — already polymorphic) |
+| `sub` | `gc_bif2 erlang:-/2` (int or float — already polymorphic) |
+| `mul` | `gc_bif2 erlang:*/2` (int or float — already polymorphic) |
+| `div` (i64) | `gc_bif2 erlang:div/2` |
+| `div` (f64) | `gc_bif2 erlang:'/'/2` (BEAM03/VM-D034 — `erlang:div/2` traps on a float operand) |
+| `mod` | `gc_bif2 erlang:rem/2` (no f64 case in any current frontend) |
+| `int_to_real` | `gc_bif1 erlang:float/1` (BEAM03) |
+| `real_to_int_trunc` | `gc_bif1 erlang:trunc/1` (BEAM03) |
 | `neg` | `gc_bif1 erlang:-/1` |
 | `and` | `gc_bif2 erlang:band/2` |
 | `or`  | `gc_bif2 erlang:bor/2` |
@@ -164,9 +168,24 @@ past the list's end, so both out-of-range directions already raise
 `function_clause` on their own — no separate explicit guard is needed, and
 the 0-based-to-1-based `+1` conversion is exactly what makes that native
 failure line up with `str_index`'s documented `idx < 0 || idx >= len` trap
-contract (`vm-core::dispatch::handle_str_index`). Float constants are also
-rejected — BEAM integer arithmetic cannot hold IEEE-754 doubles without
-boxing.
+contract (`vm-core::dispatch::handle_str_index`).
+
+A float `const` is now accepted **only** with `type_hint == "f64"` (BEAM03 —
+see the opcode table above and `code/specs/BEAM03-float-lowering.md`); any
+other type_hint on a float const (e.g. a stray `"f32"`, which no current
+frontend emits) is still rejected, since BEAM integer/immediate arithmetic
+cannot hold an IEEE-754 double without boxing and this backend only
+implements the one float width every frontend actually uses. General f64
+division by zero is a known, deliberately out-of-scope gap: real Erlang
+floats cannot represent IEEE-754 Inf/NaN at all (confirmed: `X/0.0` traps
+`badarith`, and the ETF decoder itself refuses a non-finite float bit
+pattern), so `div`(f64) traps on a zero divisor rather than returning
+`±inf`/`NaN` like every other backend's `fdiv` — not reachable by the rows
+promoted with BEAM03 (every divisor there is a nonzero compile-time
+constant), but real for a future program with a runtime-zero divisor. See
+`BEAM03-float-lowering.md` §6 for the two directions a future slice could
+take (accept the divergence vs. emulate IEEE-754 with a sentinel
+representation) — left open, not guessed at.
 
 ## OTP compatibility
 

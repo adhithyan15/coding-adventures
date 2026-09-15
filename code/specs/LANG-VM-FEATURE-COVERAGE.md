@@ -1,6 +1,6 @@
 # LANG VM feature and backend coverage
 
-Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification, then reference-modification MOVE/trap, then STRING SIZE/delimiter, then UNSTRING/delimiter, then INSPECT TALLYING/REPLACING, then pointer/overflow, then regions/self-move, then Dartmouth BASIC BEAM pure-string family). This is an inventory of the implemented
+Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification, then reference-modification MOVE/trap, then STRING SIZE/delimiter, then UNSTRING/delimiter, then INSPECT TALLYING/REPLACING, then pointer/overflow, then regions/self-move, then Dartmouth BASIC BEAM pure-string family, then Dartmouth BASIC BEAM numeric baseline / BEAM03 f64 lowering). This is an inventory of the implemented
 frontend families and their executable proof boundaries, not a claim that the
 historical languages or every backend are complete. Follow-up IDs live in the
 [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md).
@@ -27,7 +27,7 @@ refusal also does not imply the complete driver refuses that feature.
 | Twig | 49 | 363 | 20 of those cells are BEAM; dedicated heap/closure tests |
 | Nib | 26 | 208 | All eight columns including real BEAM u4/u8 and BCD storage |
 | Brainfuck | 6 | 45 | Dedicated WASM/JVM/CLR and JIT execution; 3 of 6 rows also real BEAM (VM-042) |
-| Dartmouth BASIC | 51 | 375 | 18 of those cells are BEAM (the pure-string family); random differential suite and frontend JIT tests |
+| Dartmouth BASIC | 51 | 377 | 20 of those cells are BEAM (18 pure-string + 2 numeric-baseline, BEAM03); random differential suite and frontend JIT tests |
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
 | FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
@@ -35,7 +35,7 @@ refusal also does not imply the complete driver refuses that feature.
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1611
+The normal non-ALGOL capstone therefore declares 210 programs and 1613
 declared cells (sum of the non-ALGOL rows above). At VM-061 this matched a
 fresh `non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells
 exercised plus 210 skipped (missing local `ilasm`) = 1548. VM-042 then added
@@ -95,8 +95,36 @@ byte-identical stdout (VM-040 Dartmouth BASIC BEAM pure-string family;
 capstone confirmed the corrected total against a live run: 210 programs,
 **1401** cells exercised, 210 skipped (the same host-wide missing `ilasm`
 pattern every prior slice reports), zero failures, in 602.62s — and
-1401 + 210 = 1611 matches the corrected declared total exactly. The
-"Declared cells" column counts every backend a
+1401 + 210 = 1611 matches the corrected declared total exactly.
+
+That slice explicitly deferred BASIC's numeric corpus: `iir-to-beam` had no
+`f64` lowering support of any kind (no `f64`/`Float`/`fadd`-family match arm
+anywhere in `lower.rs`). BEAM03 (`code/specs/BEAM03-float-lowering.md`) adds
+it — `const`(f64) via a new module literal table (`ir-to-beam` 0.4.0's `LitT`
+chunk support, hand-rolled RFC 1950/1951 zlib encoder targeting this repo's
+pinned OTP 27 CI runtime), `int_to_real`/`real_to_int_trunc` via new
+single-argument `gc_bif1` BIF calls, and `add`/`sub`/`mul`/`cmp_*` needing NO
+code changes at all (they already lower generically over any register
+contents). This promotes the two BASIC "numeric baseline" rows immediately
+preceding the pure-string family (375 → 377 declared BASIC cells): `10 PRINT
+42` (BA7-1b's paradigm case, exercising `__basic_print_real`'s full op chain)
+and `10 PRINT 6 ^ 2 + 6` (a literal-integer-exponent `^`, adding `mul`/`add`
+beyond the bare-literal case). Both passed on real Erlang
+(`portable_text_stdout_dartmouth_basic_beam_numeric_baseline`). A genuine
+defect (VM-D034) was found and fixed along the way: the existing i64 `div`
+lowering used `erlang:div/2`, which traps on a float operand; f64 `div` now
+dispatches to `erlang:'/'/2`. General f64 division by zero remains a
+documented, deliberately out-of-scope platform gap (real Erlang floats
+cannot represent IEEE-754 Inf/NaN at all), not reachable by either promoted
+row. No full `non_algol_matrix_every_proven_cell_agrees` capstone rerun is
+claimed for this slice; the dedicated numeric-baseline test above and the
+full `iir-to-beam`/`ir-to-beam` suites (including new real-`erl`
+integration tests for the float op set) are the executed evidence. Dartmouth
+BASIC now declares 20/51 rows on Beam; the remaining ~26 numeric/`FOR`/
+`LET`/`RND` rows need `neg`(f64) and `f64_pow` (still unimplemented) plus
+the unscoped BEAM host-input design (VM-060b) for the 5 `INPUT` rows.
+
+The "Declared cells" column counts every backend a
 row proves, Beam included — the convention Nib, Oct, FLOW-MATIC and
 COBOL-60's numbers already used. Twig was the one holdout at VM-061: its old
 "343" was `49 rows × 7 standard backends`, silently excluding its 20 Beam
