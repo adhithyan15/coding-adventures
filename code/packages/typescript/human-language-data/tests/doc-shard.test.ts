@@ -800,12 +800,27 @@ describe("the measured bullet-shaped document", () => {
   // generator by time-clustered contention and cannot be split on headings: it
   // has exactly one `##` over 323 top-level entries.
   const TARGET = "code/specs/data/adj-facts-stdlib/CHANGELOG.md";
-  const plan: DocShardPlan = {
-    path: TARGET,
-    headingLevel: 2,
-    newestFirst: true,
-    entryShape: "bullet",
-  };
+
+  // The document is read through `unshardDocContents`, NOT with `readFileSync`
+  // on the path above.
+  //
+  // These two tests were written when that file was still tracked, and read it
+  // straight off disk. This PR makes it a generated, gitignored aggregate — so
+  // on a clean checkout it is not there, and both tests died with ENOENT in
+  // CI. They passed locally only because an earlier `--unshard` had left a
+  // rendered copy sitting in my working tree.
+  //
+  // `unshardDocContents` is what every other real-document test in this file
+  // uses, and it reads the shards, which are the source of truth. It cannot go
+  // stale against them and does not depend on whether anyone happens to have
+  // rendered the aggregate.
+  const plan = DOC_SHARD_PLANS.find((p) => p.path === TARGET);
+
+  it("is registered as a bullet plan", () => {
+    // Guards the two tests below from passing vacuously if the plan were
+    // renamed or dropped: without this they would simply skip their bodies.
+    expect(plan?.entryShape).toBe("bullet");
+  });
 
   it("splits on headings into far too few sections to be useful", () => {
     // The reason the new mode exists, asserted rather than asserted-about.
@@ -818,17 +833,17 @@ describe("the measured bullet-shaped document", () => {
     // a changelog its author never touched. The claim that matters is "heading
     // splitting is useless here", which survives any number of release
     // headings.
-    const text = readFileSync(safeDocumentPath(defaultRepoRoot(), TARGET), "utf8");
+    const text = unshardDocContents(defaultRepoRoot(), plan!);
     const byHeading = splitDocument(text, 2).sections.length;
     const byBullet = splitDocument(text, "bullet").sections.length;
     expect(byHeading).toBeLessThan(byBullet / 10);
   });
 
   it("splits on bullets into many, and rejoins byte-for-byte", () => {
-    const text = readFileSync(safeDocumentPath(defaultRepoRoot(), TARGET), "utf8");
-    const shards = docShardContents(text, plan);
+    const text = unshardDocContents(defaultRepoRoot(), plan!);
+    const shards = docShardContents(text, plan!);
     expect(shards.size).toBeGreaterThan(200);
-    expect(joinDocShards(shards, plan)).toBe(text);
+    expect(joinDocShards(shards, plan!)).toBe(text);
   });
 });
 
