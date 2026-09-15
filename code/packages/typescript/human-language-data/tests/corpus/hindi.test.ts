@@ -30,7 +30,12 @@ it("pins Hindi lesson-content budgets", () =>
     // checked to occur in a lesson with a lower sequence number, which is what
     // lets the lessons claim nothing in them is new. The count moves because
     // reading is its own skill, not because the track learned more Hindi.
-    lessons: 358,
+    // 358 -> 359: the timed A1 writing paper. One lesson, no new atoms -- it
+    // practises the form atoms the track already teaches and adds only the
+    // clock, which is the last of the seven writing stages and the one Hindi
+    // had never proven. Timing, task count, field count and word range are read
+    // out of hindi/task-shapes/a1.json rather than invented for the lesson.
+    lessons: 359,
     idioms: 21,
     // +2: HI-C70-song declares gana's singing sense and HI-C73-drink declares
     // khana's eating sense, which is what covers HI-A1-V-26.

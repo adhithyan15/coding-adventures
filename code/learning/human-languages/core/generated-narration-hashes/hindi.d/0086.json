@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:e8f1b3844dd47897",
+  "lessonIds": [
+    "HI-W10-a1-con-reloj"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "hindi/narration/ch86.txt",
+  "json": "hindi/narration/ch86.json",
+  "textHash": "fnv1a64:a8fb3c9f327ef7ed",
+  "jsonHash": "fnv1a64:ba6526fa154143ab",
+  "findings": []
+}

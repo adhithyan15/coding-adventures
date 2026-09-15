@@ -1,0 +1,21 @@
+{
+  "chapter": 86,
+  "title": "Writing --- With A Clock",
+  "label": "ch:hi-ghadi-ke-saath",
+  "canDo": "I can complete the A1 writing paper's two tasks inside its published twenty minutes, filling every form field and keeping the message between thirty and forty words.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-W10-a1-con-reloj",
+    "kind": "task",
+    "summary": "Complete HI-W10-a1-con-reloj: seven minutes for the form and thirteen for the message, then count the words and check the form for blanks before mistakes.",
+    "assesses": [
+      "HI-FORM-LABEL-NAME-01",
+      "HI-FORM-NAME-MIRA-01",
+      "HI-FORM-NAME-CUE-MAP-01",
+      "HI-FORM-NAME-NO-MODEL-01"
+    ],
+    "note": "Timing, task count, field count and word range are read out of this track's own task-shapes/a1.json, not invented for the lesson."
+  }
+}
