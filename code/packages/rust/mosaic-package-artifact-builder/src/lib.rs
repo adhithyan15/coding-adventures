@@ -13160,14 +13160,29 @@ version = "1"
         .expect("probe manifest must parse")
     }
 
+    /// A scratch root no other test can be handed.
+    ///
+    /// This used to be pid + nanosecond timestamp. Two tests in one process
+    /// share the pid, and `SystemTime::now()` is not guaranteed to advance
+    /// between two threads reading it, so two tests could be handed the SAME
+    /// directory -- `create_dir_all` is idempotent, so neither noticed. Each
+    /// of these tests ends with `remove_dir_all(&root)`, so the first to
+    /// finish deleted the other's fixture mid-run and the survivor failed
+    /// reading a file it had just written.
+    ///
+    /// Measured before the fix: 11 failures in 25 local runs of this module.
+    /// The counter makes the name unique by construction rather than by
+    /// hoping the clock ticks.
+    fn unique_scratch_id() -> usize {
+        static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+    }
+
     fn scratch(name: &str) -> PathBuf {
         let root = std::env::temp_dir().join(format!(
             "mosaic-host-effect-{name}-{}-{}",
             std::process::id(),
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .expect("system clock after epoch")
-                .as_nanos()
+            unique_scratch_id()
         ));
         fs::create_dir_all(root.join("host").join("qt")).expect("create the package tree");
         fs::create_dir_all(root.join("out")).expect("create the output tree");
@@ -13342,14 +13357,18 @@ version = "1"
         .expect("probe manifest must parse")
     }
 
+    /// Unique by construction, for the reason spelled out on the other
+    /// `scratch` helper in this file: a timestamp is not a unique name.
+    fn unique_overwrite_scratch_id() -> usize {
+        static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+    }
+
     fn scratch() -> PathBuf {
         let root = std::env::temp_dir().join(format!(
             "mosaic-host-effect-overwrite-{}-{}",
             std::process::id(),
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .expect("system clock after epoch")
-                .as_nanos()
+            unique_overwrite_scratch_id()
         ));
         fs::create_dir_all(root.join("host").join("qt")).expect("create the package tree");
         fs::create_dir_all(root.join("out")).expect("create the output tree");
