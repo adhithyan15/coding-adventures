@@ -514,6 +514,18 @@ were verified across several NIH fact sheets should carry each fact sheet.
 > Evidence that lives only in the literate header is not provenance — it is a comment, and nothing
 > can check it.
 
+**Since RS-5e (#14986), prefer a per-row `source` when the row's sentence lives on the envelope's
+own page.** A `row` may carry its own block — `row (k, v) { source "..." }` — and that row's answer
+is then evidenced by the sentence naming *that* row, instead of by one table-level sentence about a
+different row plus a pile of corroborations every answer drags along. Per `ADJ-TABLES.md` §4 a row
+whose page is the envelope's restates no `locator` and no `trust`. Reserve `cites` for evidence that
+genuinely belongs to a *different* page, or for a sentence that corroborates a row across a document
+boundary — and note that a row block may carry both (`source` plus its own `cites`). The envelope
+then becomes a framing sentence that names no row key or value, so every row overrides it.
+
+The rule above is unchanged in force: evidence that lives only in the header is still not
+provenance. RS-5e changes *where* the evidence goes, not whether it must be encoded.
+
 Concretely: if your first column is a CATEGORY (`legislative` / `judicial` / `executive`, or
 `cerebrum` / `brainstem` / `hippocampus`) and the `source` sentence names only one of them, the
 others each need a `cites`. Otherwise every answer is returned evidenced by a sentence **about a
