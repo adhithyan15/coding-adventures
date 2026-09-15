@@ -1,0 +1,32 @@
+German, chapter 54: Writing --- With A Clock.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 1.
+The same writing, with a clock — the Goethe writing paper's own clock, its own two parts, and its own published lengths.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+You wrote your own line with as long as you liked.
+[pause 1 second]
+A task you can only do untimed is not yet a task you can do. Here are the exam's own conditions.
+
+Writing — timed production.
+What Goethe publishes. The Start Deutsch 1 writing paper runs 20 minutes and holds two parts: a form with five fields to complete, and a short personal text of about thirty words.
+Those numbers are read out of task-shapes/a1.json, which transcribes the Goethe materials. They are not invented for this page.
+[pause 2 seconds]
+Split the time the way the paper does. Six minutes for the five fields, starting now. Fill every one — a blank field scores nothing and cannot be argued with.
+[pause 3 seconds]
+Now fourteen minutes for the thirty-word text.
+[pause 2 seconds]
+When the time is up, stop even mid-word. An unfinished paper is information. An untimed one is not.
+
+Wrap-up recall.
+[pause 2 seconds]
+Count your words. Thirty is the published length, and it is a target rather than a floor: a text of fifteen has not done the task, and one of sixty has spent time the paper did not give you.
+[pause 2 seconds]
+Now the German-specific check, and do it last because it is the one a clock destroys first: the capitals. Under time pressure a hand reverts to the habits it learned first, and for most readers of this book those habits are English ones.
+[pause 2 seconds]
+Goethe awards the certificate on 60 of 100 overall and publishes no separate pass mark for writing — which means a weak writing paper can be carried by the other three. Knowing that is not permission to write badly; it is the reason to know exactly how weak yours is.

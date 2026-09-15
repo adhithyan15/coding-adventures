@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "GE-W04-vier-zeilen",
+    "language": "german",
+    "chapter": 55,
+    "sequence": 1530,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:274f3ac6890369d5",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ]
+  },
+  "findings": []
+}

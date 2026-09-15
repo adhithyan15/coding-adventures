@@ -791,6 +791,97 @@ impl PartStyleMap {
 ///
 /// Empty `base` / `state` blocks are skipped so callers can rely on
 /// `map.get(key).is_some()` as "the author wrote SOMETHING here".
+/// Expand the CSS `border` shorthand into the longhands this emitter lowers.
+///
+/// `border : "1px solid #32463b"` reached NOTHING before this: every reader
+/// asks for `border-width` / `border-color`, and nobody asked for `border`.
+/// VisiCalc is the one product that authors the shorthand, and it rendered
+/// with no borders at all on Qt -- no cell borders, no grid rules, no outline
+/// on the formula field (#15255).
+///
+/// Expanded at the ONE point where a part's props are assembled, so every
+/// existing reader picks it up and there is no second place to keep in step.
+///
+/// An explicit longhand always wins. `border: 1px solid red; border-color:
+/// blue` keeps blue, because a declaration that names the edge it means is
+/// more specific than one that does not.
+///
+/// A ZERO width expands to nothing at all. `border: 0px` means NO border, and
+/// synthesising `border-width: 0` plus a colour would invite exactly the
+/// defect #15248 just fixed in Compose, where a zero width asked for a
+/// hairline rather than for nothing.
+fn expand_border_shorthand(props: &mut Vec<StyleProp>) {
+    let Some(shorthand) = props
+        .iter()
+        .find(|p| p.name == "border")
+        .map(|p| p.value.clone())
+    else {
+        return;
+    };
+
+    let (mut width, mut style, mut color) = (None, None, None);
+    for token in shorthand.split_whitespace() {
+        if matches!(token, "solid" | "dashed" | "dotted" | "double" | "none") {
+            style.get_or_insert(token);
+        } else if token.starts_with('#') || token.starts_with("rgb") {
+            color.get_or_insert(token);
+        } else if token.chars().next().is_some_and(|c| c.is_ascii_digit()) {
+            width.get_or_insert(token);
+        } else {
+            // A bare colour keyword (`red`), which is neither a length nor a
+            // line style. Only claim it if nothing else has taken the slot.
+            color.get_or_insert(token);
+        }
+    }
+
+    // `border: none` and a zero width both mean NO border, so expand to
+    // nothing rather than to a zero-width one. The declaration is still
+    // HONOURED -- "draw nothing" is what it asked for -- so the shorthand is
+    // dropped from the part rather than left to be reported as lost.
+    let zero_width = width.is_some_and(|w| {
+        w.trim_end_matches("px").parse::<f64>().is_ok_and(|n| n == 0.0)
+    });
+    if style == Some("none") || zero_width {
+        props.retain(|p| p.name != "border");
+        return;
+    }
+
+    let mut expanded = false;
+    for (name, value) in [
+        ("border-width", width),
+        // Only a NON-solid style is worth synthesising. Qt draws solid and
+        // nothing else, so `border-style: solid` would be a property no
+        // reader wants -- and the drop reporter would dutifully record 15 of
+        // them as lost, which is noise about a declaration the author never
+        // wrote. A dashed or dotted style IS genuinely lost here, and saying
+        // so is the report doing its job.
+        ("border-style", style.filter(|kind| *kind != "solid")),
+        ("border-color", color),
+    ] {
+        let Some(value) = value else { continue };
+        if props.iter().any(|p| p.name == name) {
+            continue;
+        }
+        props.push(StyleProp {
+            name: name.to_string(),
+            value: value.to_string(),
+        });
+        expanded = true;
+    }
+
+    // Desugared: the longhands now carry the meaning, so the shorthand is no
+    // longer part of what this emitter was asked for. Left in place it would
+    // be reported as a dropped property forever, because nothing reads
+    // `border` by that name -- a permanent false positive about a border
+    // that now renders.
+    //
+    // An UNPARSEABLE value expands to nothing and is deliberately kept, so
+    // the reporter still flags it. That is a real loss and should be visible.
+    if expanded {
+        props.retain(|p| p.name != "border");
+    }
+}
+
 fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     let mut out = PartStyleMap {
         entries: HashMap::with_capacity(style.parts.len()),
@@ -798,12 +889,16 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     };
     for part in &style.parts {
         if !part.base.is_empty() {
-            out.insert(part.name.clone(), part.base.clone());
+            let mut base = part.base.clone();
+            expand_border_shorthand(&mut base);
+            out.insert(part.name.clone(), base);
         }
         for state in &part.states {
             if !state.props.is_empty() {
                 let key = format!("{}:{}", part.name, state.state);
-                out.insert(key, state.props.clone());
+                let mut props = state.props.clone();
+                expand_border_shorthand(&mut props);
+                out.insert(key, props);
             }
         }
     }
@@ -7758,6 +7853,104 @@ mod tests {
             name: name.to_string(),
             r#type: t,
         }
+    }
+
+    /// The CSS `border` shorthand reaches the emitted QML (#15255).
+    ///
+    /// Nothing read the plain `border` property, and VisiCalc is the one
+    /// product that authors it -- so VisiCalc rendered with NO borders at all
+    /// on Qt: no cell borders, no grid rules, no outline on the formula
+    /// field. Expanding it where a part's props are assembled lets every
+    /// existing reader pick it up.
+    ///
+    /// Asserted through `from_pipeline`, not against the expansion helper, so
+    /// this pins that the expansion is actually REACHED. A helper-level test
+    /// would pass with the call site deleted.
+    #[test]
+    fn the_border_shorthand_reaches_the_emitted_qml() {
+        let m = component("X", vec![], vec![]);
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "cell".into(),
+                base: vec![sp("border", "1px solid #32463b")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "X".into(),
+            root: LayoutNode {
+                tag: "Box".into(),
+                part_name: Some("cell".into()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        assert!(out.contains("border.width: 1"), "got:\n{out}");
+        assert!(out.contains("border.color: \"#32463b\""), "got:\n{out}");
+    }
+
+    /// A zero-width shorthand means NO border, not a zero-width one.
+    ///
+    /// This is the control for the test above -- without it, that one would
+    /// also pass if the emitter had started drawing a border unconditionally.
+    /// It is also the lesson #15248 paid for on Compose, where a zero width
+    /// asked for a one-pixel hairline rather than for nothing.
+    #[test]
+    fn a_zero_width_border_shorthand_draws_nothing() {
+        let m = component("X", vec![], vec![]);
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "cell".into(),
+                base: vec![sp("border", "0px")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "X".into(),
+            root: LayoutNode {
+                tag: "Box".into(),
+                part_name: Some("cell".into()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        assert!(!out.contains("border.width"), "got:\n{out}");
+    }
+
+    /// An explicit longhand wins over the shorthand on its own property.
+    #[test]
+    fn a_border_longhand_overrides_the_shorthand() {
+        let m = component("X", vec![], vec![]);
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "cell".into(),
+                base: vec![
+                    sp("border", "1px solid #32463b"),
+                    sp("border-color", "#9bd3ad"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "X".into(),
+            root: LayoutNode {
+                tag: "Box".into(),
+                part_name: Some("cell".into()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        assert!(out.contains("border.color: \"#9bd3ad\""), "got:\n{out}");
+        assert!(!out.contains("#32463b"), "the shorthand colour must lose:\n{out}");
     }
 
     #[test]

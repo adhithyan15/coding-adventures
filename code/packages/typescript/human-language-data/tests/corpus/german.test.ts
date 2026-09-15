@@ -16,7 +16,13 @@ it("pins German lesson-content budgets", () =>
     // Hallo with the model covered -- where the capital is the expected miss,
     // because the sound does not carry it -- and a dictation, where the doubled
     // l is, because German writes vowel length with what follows the vowel.
-    lessons: 344,
+    //
+    // 344 -> 347: the three writing stages German had never proven, on the
+    // SPINE-SAY-WHY node where weil already lives. No new atoms in any of the
+    // three -- they practise the joiners and the possessive the track already
+    // teaches, and add only what the stages themselves are: a choice with no
+    // model, a clock, and a join.
+    lessons: 347,
     idioms: 1,
     senses: 5,
     cultureClaims: 32,
