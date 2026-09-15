@@ -1,0 +1,21 @@
+{
+  "chapter": 418,
+  "title": "Writing --- Four Lines That Hold Together",
+  "label": "ch:escribir-cuatro-lineas",
+  "canDo": "I can write four connected lines to a named reader about what I did yesterday, using y to add and porque to give a reason, so that a line depends on the one before it.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "ES-W02-cuatro-lineas-ayer",
+    "kind": "task",
+    "summary": "Complete ES-W02-cuatro-lineas-ayer: four lines to one named reader, at least one joined with y and at least one with porque, then cover line one and check line two still needs it.",
+    "assesses": [
+      "ES-WRITING-CONNECTED-COMPOSITION",
+      "ES-WRITING-CONTROLLED-COMPOSITION",
+      "ES-GRAMMAR-AR-PRETERITE-3PL",
+      "ES-GRAMMAR-ER-IR-PRETERITE-PLURAL"
+    ],
+    "note": "The stage after controlled composition in the HL16 ramp, and the one Spanish had never proven: a reader can be named, sentences can depend on each other, and the check is whether line two survives covering line one."
+  }
+}

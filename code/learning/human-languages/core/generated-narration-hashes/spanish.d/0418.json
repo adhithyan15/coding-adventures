@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:d775215bbc934ca0",
+  "lessonIds": [
+    "ES-W02-cuatro-lineas-ayer"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch418.txt",
+  "json": "spanish/narration/ch418.json",
+  "textHash": "fnv1a64:840c908ee91e100b",
+  "jsonHash": "fnv1a64:667b72d1fb86dfe4",
+  "findings": []
+}
