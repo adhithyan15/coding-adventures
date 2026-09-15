@@ -27,6 +27,12 @@
     and style data set aside and over the whole file.
   - Every row's page is the envelope's, so no row restates a locator line or trust (`ADJ-TABLES.md`
     §4). The corroboration's page is also the envelope's.
+  - **Stale wording fixed.**
+    - The header said each row carries "the table's citation", and the query example's comment said
+      each answer returns "the table's source". Both now say the row's own.
+    - The summary table said the left ventricle pumps "out to the whole body", stronger than the
+      page's gloss ("the entire body except for the lungs"). It now reads "out to the body
+      (systemic)".
 
   ### Pins
 

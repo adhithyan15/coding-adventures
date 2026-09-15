@@ -11,7 +11,7 @@
 %     ? heart_chamber_function(right_atrium, $Job)   % receives_blood_from_body
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `heart_chamber_function(chamber, function)` carrying the table's
+% relation `heart_chamber_function(chamber, function)` carrying its row's
 % citation, so the lookup above is the ordinary SLD binding query — the engine
 % returns the job WITH its source, on the CPU, with zero model calls, and
 % abstains on anything that is not one of the four chambers.
@@ -23,7 +23,7 @@
 %     right_atrium     receives_blood_from_body   deoxygenated, from the body
 %     right_ventricle  pumps_blood_to_lungs       out to the lungs for oxygen
 %     left_atrium      receives_blood_from_lungs  oxygenated, back from lungs
-%     left_ventricle   pumps_blood_to_body        out to the whole body
+%     left_ventricle   pumps_blood_to_body        out to the body (systemic)
 %
 % The RIGHT side of the heart handles used (deoxygenated) blood on its way to
 % the lungs; the LEFT side handles fresh (oxygenated) blood on its way to the
