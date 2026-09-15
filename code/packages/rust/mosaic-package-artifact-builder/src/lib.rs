@@ -786,8 +786,8 @@ fn compose_component_with_model_and_style_options(
 /// natively, so the html and react backends have always been correct. No
 /// native backend has an equivalent -- a brush must be an actual colour --
 /// and each failed differently, and silently. Measured on Trestle's pill
-/// status dot, which is authored `background: currentColor` precisely so it
-/// tracks its pill's text colour:
+/// status dot, authored `background: currentColor` so it tracks its pill's
+/// text colour:
 ///
 /// | backend | what the dot rendered |
 /// | --- | --- |
@@ -799,44 +799,41 @@ fn compose_component_with_model_and_style_options(
 /// property of the LAYOUT TREE, not of any target language, and eight
 /// separate implementations of one cascade rule is how they drift.
 ///
-/// AMBIGUITY IS LEFT UNRESOLVED, NOT GUESSED. A part may be used at several
-/// places in the tree under different inherited colours; no single literal
-/// serves them all. Such a part is left exactly as authored, so it keeps
-/// whatever each backend already does with an unrecognised colour, rather
-/// than being silently pinned to one branch's colour. The same applies when
-/// nothing above it declares a `color` at all.
+/// # What it refuses to do
+///
+/// This pass COPIES an authored value from one property into another, which
+/// moves it into sinks its original property never reached. So it copies only
+/// values it can positively recognise as a colour literal, and declines every
+/// case where the right answer is not unique:
+///
+/// * **Not a colour literal.** See [`colour_literal`]. A `color` holding
+///   anything else is never copied.
+/// * **Used under two different inherited colours.** No single literal serves
+///   both usages.
+/// * **Nothing above declares a `color`.**
+/// * **An ancestor's `color` changes with state.** CSS follows the state at
+///   runtime, so pinning the base colour would REGRESS html and react -- the
+///   two backends this keyword already worked on. Such an ancestor POISONS
+///   its whole subtree rather than being skipped: skipping it would let a
+///   grandparent's colour be pinned instead, which is wrong in every state.
+/// * **A part name that is ambiguous across the merged style list.**
+///   `merge_dependency_styles` concatenates dependency parts with the
+///   component's own WITHOUT namespacing, so names like `root` or `dot`
+///   collide routinely. Resolution is decided per NAME over every instance
+///   sharing it, never per instance -- otherwise a same-named part from
+///   another package silently supplies the colour.
+///
+/// In every declined case the property is left exactly as authored, so the
+/// web keeps resolving it natively and the native backends keep whatever they
+/// already did.
 fn resolve_current_color(
     layout: &moslayout_compiler::LayoutNode,
     style: &mut mosstyle_compiler::StyleDef,
 ) {
-    // What `color` does each part declare? Read once; the walk consults it.
-    let declared: HashMap<String, String> = style
-        .parts
-        .iter()
-        .filter(|part| {
-            // A part whose `color` CHANGES WITH STATE has no single value to
-            // inherit. CSS would follow the state at runtime, so pinning the
-            // base colour here would be a regression on html/react -- the two
-            // backends this keyword already worked on. Leave those subtrees
-            // alone: the web keeps resolving natively, and the native
-            // backends keep whatever they do today.
-            !part
-                .states
-                .iter()
-                .any(|state| state.props.iter().any(|p| p.name == "color"))
-        })
-        .filter_map(|part| {
-            part.base
-                .iter()
-                .find(|p| p.name == "color")
-                .map(|p| (part.name.clone(), unquote_style_value(&p.value)))
-        })
-        .filter(|(_, value)| !is_current_color(value))
-        .collect();
+    let declared = declared_colours(style);
 
-    // Every inherited colour each part is used under. A part used twice
-    // under the SAME colour still resolves; under two different ones it
-    // does not.
+    // Every inherited colour each part is used under. `None` means "declines"
+    // -- either nothing was inherited there, or an ancestor poisoned it.
     let mut seen: HashMap<String, Vec<Option<String>>> = HashMap::new();
     walk_inherited_color(layout, None, &declared, &mut seen);
 
@@ -851,29 +848,121 @@ fn resolve_current_color(
             continue;
         };
         for prop in part.base.iter_mut() {
-            if is_current_color(&unquote_style_value(&prop.value)) {
+            if is_current_color(&prop.value) {
                 prop.value = resolved.clone();
             }
         }
     }
 }
 
+/// What each part NAME contributes to the colour its subtree inherits.
+enum InheritedColour {
+    /// Every instance of this name agrees on one recognisable colour.
+    Literal(String),
+    /// This name declares a `color` that cannot be pinned -- it varies by
+    /// state, its instances disagree, or it is not a colour literal. Its
+    /// subtree must decline rather than fall through to an ancestor.
+    Unresolvable,
+}
+
+/// Decide, per part NAME, what its subtree inherits.
+///
+/// Name-wise and not instance-wise on purpose: `merge_dependency_styles`
+/// appends dependency parts to the component's own with no namespacing, so
+/// one name can carry several `PartStyle`s from different packages. Collecting
+/// instance-wise into a map is last-write-wins, which silently lets another
+/// package's part supply the colour -- and defeats the state-dependent guard,
+/// since that was checked on the instance that lost.
+fn declared_colours(style: &mosstyle_compiler::StyleDef) -> HashMap<String, InheritedColour> {
+    let mut grouped: HashMap<&str, Vec<&mosstyle_compiler::PartStyle>> = HashMap::new();
+    for part in &style.parts {
+        grouped.entry(part.name.as_str()).or_default().push(part);
+    }
+
+    let mut out = HashMap::new();
+    for (name, instances) in grouped {
+        let state_dependent = instances
+            .iter()
+            .any(|p| p.states.iter().any(|s| s.props.iter().any(|q| q.name == "color")));
+        let mut bases: Vec<&str> = instances
+            .iter()
+            .filter_map(|p| p.base.iter().find(|q| q.name == "color"))
+            .map(|q| q.value.trim())
+            .filter(|v| !is_current_color(v))
+            .collect();
+        bases.sort_unstable();
+        bases.dedup();
+
+        if bases.is_empty() && !state_dependent {
+            continue; // declares no colour at all -- transparent to the walk
+        }
+        let resolved = (!state_dependent)
+            .then_some(bases.as_slice())
+            .and_then(|b| match b {
+                [only] => colour_literal(only),
+                _ => None,
+            });
+        out.insert(
+            name.to_string(),
+            match resolved {
+                Some(literal) => InheritedColour::Literal(literal),
+                None => InheritedColour::Unresolvable,
+            },
+        );
+    }
+    out
+}
+
+/// The value, if it is a colour literal safe to copy into another property.
+///
+/// A positive test, not a blocklist. This pass moves a value from the property
+/// the author wrote it on into a DIFFERENT one, and the emitters do not all
+/// read those two through the same validator -- react's `path_paint_jsx`
+/// recovers `background` from a serialized style fragment by splitting on
+/// commas and writes it into an UNQUOTED `fill={...}` TSX expression, a sink
+/// `color` never reaches. So only shapes that cannot carry a comma, quote,
+/// paren, brace or semicolon are eligible.
+///
+/// `rgb()` / `rgba()` are deliberately NOT eligible even though they are
+/// perfectly valid CSS: they contain commas, and the react sink above turns
+/// `rgba(255,255,255,0.12)` -- the default `$color-border` token -- into
+/// `fill={"rgba(255}`, an unterminated literal that stops the generated
+/// component compiling. That sink's comma-splitting is a defect in its own
+/// right and is filed separately; declining here means this pass cannot
+/// trigger it.
+fn colour_literal(value: &str) -> Option<String> {
+    let v = value.trim();
+    if v.is_empty() {
+        return None;
+    }
+    if let Some(hex) = v.strip_prefix('#') {
+        let ok = matches!(hex.len(), 3 | 4 | 6 | 8) && hex.bytes().all(|b| b.is_ascii_hexdigit());
+        return ok.then(|| v.to_string());
+    }
+    // A bare CSS colour keyword: letters only, so it cannot carry punctuation
+    // into any sink. Length-capped because no real keyword is near it.
+    let named = v.len() <= 24 && v.bytes().all(|b| b.is_ascii_alphabetic());
+    named.then(|| v.to_ascii_lowercase())
+}
+
 fn is_current_color(value: &str) -> bool {
     value.trim().eq_ignore_ascii_case("currentcolor")
 }
 
-fn unquote_style_value(value: &str) -> String {
-    value.trim().trim_matches('"').trim().to_string()
-}
-
-/// Walk the layout recording, for each part, the `color` in effect where it
-/// is used. A node's own declared `color` applies to its SUBTREE, not to
-/// itself -- which is what makes `background: currentColor` on a child pick
-/// up its parent's text colour.
+/// Walk the layout recording, for each part, the `color` in effect where it is
+/// used. A node's own declared `color` applies to its SUBTREE, not to itself
+/// -- which is what makes `background: currentColor` on a child pick up its
+/// parent's colour rather than its own.
+///
+/// `blocked` carries an [`InheritedColour::Unresolvable`] ancestor down the
+/// tree. Without it an excluded ancestor would simply be invisible and its
+/// children would resolve against the GRANDPARENT -- a literal that is wrong
+/// in every state, and a regression on the two backends that already handled
+/// this keyword correctly.
 fn walk_inherited_color(
     node: &moslayout_compiler::LayoutNode,
     inherited: Option<&str>,
-    declared: &HashMap<String, String>,
+    declared: &HashMap<String, InheritedColour>,
     seen: &mut HashMap<String, Vec<Option<String>>>,
 ) {
     let mut child_colour = inherited;
@@ -881,8 +970,10 @@ fn walk_inherited_color(
         seen.entry(part.to_string())
             .or_default()
             .push(inherited.map(str::to_string));
-        if let Some(own) = declared.get(part) {
-            child_colour = Some(own.as_str());
+        match declared.get(part) {
+            Some(InheritedColour::Literal(own)) => child_colour = Some(own.as_str()),
+            Some(InheritedColour::Unresolvable) => child_colour = None,
+            None => {}
         }
     }
     for child in &node.children {
@@ -14975,12 +15066,27 @@ version = "1"
 mod current_color_tests {
     use super::*;
     use moslayout_compiler::LayoutNode;
-    use mosstyle_compiler::{PartStyle, StyleDef, StyleProp};
+    use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp};
 
+    // NOTE ON VALUE SHAPE. `.msl` admits a quoted STRING, but `analyze`
+    // hands `StyleProp::value` the CONTENT with its delimiters already
+    // removed and `\"` escapes decoded -- `color : "#6fb489"` arrives as
+    // `#6fb489`. An earlier version of these tests fed `"\"#6fb489\""`,
+    // a shape the pipeline never produces, so they exercised a synthetic
+    // input while the real one rested on a single test.
     fn node(part: &str, children: Vec<LayoutNode>) -> LayoutNode {
         LayoutNode {
             tag: "Box".to_string(),
             part_name: Some(part.to_string()),
+            props: vec![],
+            children,
+        }
+    }
+
+    fn anon(children: Vec<LayoutNode>) -> LayoutNode {
+        LayoutNode {
+            tag: "Box".to_string(),
+            part_name: None,
             props: vec![],
             children,
         }
@@ -15002,6 +15108,21 @@ mod current_color_tests {
         }
     }
 
+    fn part_with_state(name: &str, base: Vec<StyleProp>, state: Vec<StyleProp>) -> PartStyle {
+        PartStyle {
+            name: name.to_string(),
+            base,
+            transitions: vec![],
+            states: vec![StateStyle {
+                state: "hover".to_string(),
+                slot: None,
+                slot_is_bool: false,
+                props: state,
+                transitions: vec![],
+            }],
+        }
+    }
+
     fn style(parts: Vec<PartStyle>) -> StyleDef {
         StyleDef {
             component_name: "X".to_string(),
@@ -15009,151 +15130,232 @@ mod current_color_tests {
         }
     }
 
-    fn background_of(style: &StyleDef, part: &str) -> String {
+    fn value_of(style: &StyleDef, part: &str, prop: &str) -> String {
         style
             .parts
             .iter()
             .find(|p| p.name == part)
-            .and_then(|p| p.base.iter().find(|b| b.name == "background"))
+            .and_then(|p| p.base.iter().find(|b| b.name == prop))
             .map(|b| b.value.clone())
             .unwrap_or_default()
     }
 
-    /// The Trestle case: a dot inside a pill picks up the pill's text
-    /// colour. Note the quoted form -- `.msl` admits a quoted STRING and
-    /// that is how these are authored.
+    /// The Trestle case: a dot inside a pill picks up the pill's colour.
     #[test]
     fn a_child_resolves_against_its_parents_colour() {
         let layout = node("pill-ok", vec![node("pill-dot-ok", vec![])]);
         let mut s = style(vec![
-            part("pill-ok", vec![prop("color", "\"#6fb489\"")]),
-            part("pill-dot-ok", vec![prop("background", "\"currentColor\"")]),
+            part("pill-ok", vec![prop("color", "#6fb489")]),
+            part("pill-dot-ok", vec![prop("background", "currentColor")]),
         ]);
         resolve_current_color(&layout, &mut s);
-        assert_eq!(background_of(&s, "pill-dot-ok"), "#6fb489");
+        assert_eq!(value_of(&s, "pill-dot-ok", "background"), "#6fb489");
     }
 
-    /// A part's own `color` applies to its SUBTREE, not to itself. If it
-    /// applied to itself, a part with both `color` and
-    /// `background: currentColor` would paint its background its own text
-    /// colour -- invisible text on itself.
+    /// A part's own `color` applies to its SUBTREE, not to itself.
     #[test]
     fn a_parts_own_colour_does_not_resolve_its_own_current_color() {
         let layout = node("solo", vec![]);
         let mut s = style(vec![part(
             "solo",
-            vec![prop("color", "\"#112233\""), prop("background", "\"currentColor\"")],
+            vec![prop("color", "#112233"), prop("background", "currentColor")],
         )]);
         resolve_current_color(&layout, &mut s);
-        assert_eq!(
-            background_of(&s, "solo"),
-            "\"currentColor\"",
-            "a part must not resolve against itself"
-        );
+        assert_eq!(value_of(&s, "solo", "background"), "currentColor");
     }
 
-    /// Used under two different colours, there is no single literal that
-    /// serves both. Leave it authored rather than pinning one branch's
-    /// colour and silently making the other wrong.
+    /// Two different inherited colours: no literal serves both.
     #[test]
     fn an_ambiguous_usage_is_left_unresolved() {
-        let layout = LayoutNode {
-            tag: "Box".to_string(),
-            part_name: None,
-            props: vec![],
-            children: vec![
-                node("ok", vec![node("dot", vec![])]),
-                node("warn", vec![node("dot", vec![])]),
-            ],
-        };
+        let layout = anon(vec![
+            node("ok", vec![node("dot", vec![])]),
+            node("warn", vec![node("dot", vec![])]),
+        ]);
         let mut s = style(vec![
-            part("ok", vec![prop("color", "\"#6fb489\"")]),
-            part("warn", vec![prop("color", "\"#e26a52\"")]),
-            part("dot", vec![prop("background", "\"currentColor\"")]),
+            part("ok", vec![prop("color", "#6fb489")]),
+            part("warn", vec![prop("color", "#e26a52")]),
+            part("dot", vec![prop("background", "currentColor")]),
         ]);
         resolve_current_color(&layout, &mut s);
-        assert_eq!(background_of(&s, "dot"), "\"currentColor\"");
+        assert_eq!(value_of(&s, "dot", "background"), "currentColor");
     }
 
-    /// The same part under the SAME colour twice still resolves -- it is
-    /// the set of colours that matters, not the number of usages.
+    /// The same colour at two usages still resolves.
     #[test]
     fn the_same_colour_at_two_usages_still_resolves() {
-        let layout = LayoutNode {
-            tag: "Box".to_string(),
-            part_name: None,
-            props: vec![],
-            children: vec![
-                node("pill", vec![node("dot", vec![])]),
-                node("pill", vec![node("dot", vec![])]),
-            ],
-        };
+        let layout = anon(vec![
+            node("pill", vec![node("dot", vec![])]),
+            node("pill", vec![node("dot", vec![])]),
+        ]);
         let mut s = style(vec![
-            part("pill", vec![prop("color", "\"#6fb489\"")]),
-            part("dot", vec![prop("background", "\"currentColor\"")]),
+            part("pill", vec![prop("color", "#6fb489")]),
+            part("dot", vec![prop("background", "currentColor")]),
         ]);
         resolve_current_color(&layout, &mut s);
-        assert_eq!(background_of(&s, "dot"), "#6fb489");
+        assert_eq!(value_of(&s, "dot", "background"), "#6fb489");
     }
 
-    /// Nothing above declares a colour, so there is nothing to inherit.
     #[test]
     fn no_inherited_colour_leaves_it_alone() {
         let layout = node("wrap", vec![node("dot", vec![])]);
         let mut s = style(vec![
             part("wrap", vec![prop("padding", "4px")]),
-            part("dot", vec![prop("background", "\"currentColor\"")]),
+            part("dot", vec![prop("background", "currentColor")]),
         ]);
         resolve_current_color(&layout, &mut s);
-        assert_eq!(background_of(&s, "dot"), "\"currentColor\"");
+        assert_eq!(value_of(&s, "dot", "background"), "currentColor");
     }
 
-    /// A STATE-DEPENDENT ancestor colour has no single value to inherit.
-    /// CSS follows the state at runtime, so pinning the base colour would
-    /// REGRESS html and react -- the two backends this keyword already
-    /// worked on. Leaving it alone keeps them correct.
+    /// A state-dependent ancestor has no single value to inherit. CSS
+    /// follows the state at runtime, so pinning the base colour would
+    /// regress html and react.
     #[test]
     fn a_state_dependent_ancestor_colour_is_not_pinned() {
         let layout = node("btn", vec![node("dot", vec![])]);
         let mut s = style(vec![
-            PartStyle {
-                name: "btn".to_string(),
-                base: vec![prop("color", "\"#6fb489\"")],
-                transitions: vec![],
-                states: vec![mosstyle_compiler::StateStyle {
-                    state: "hover".to_string(),
-                    slot: None,
-                    slot_is_bool: false,
-                    props: vec![prop("color", "\"#ffffff\"")],
-                    transitions: vec![],
-                }],
-            },
-            part("dot", vec![prop("background", "\"currentColor\"")]),
+            part_with_state(
+                "btn",
+                vec![prop("color", "#6fb489")],
+                vec![prop("color", "#ffffff")],
+            ),
+            part("dot", vec![prop("background", "currentColor")]),
+        ]);
+        resolve_current_color(&layout, &mut s);
+        assert_eq!(value_of(&s, "dot", "background"), "currentColor");
+    }
+
+    /// REGRESSION. An excluded ancestor must POISON its subtree, not vanish
+    /// from it. Falling through let the child resolve against the
+    /// GRANDPARENT -- a literal wrong in every state, and a regression on
+    /// the two backends that already handled this keyword correctly.
+    #[test]
+    fn an_excluded_ancestor_blocks_rather_than_falls_through() {
+        let layout = node("gp", vec![node("parent", vec![node("dot", vec![])])]);
+        let mut s = style(vec![
+            part("gp", vec![prop("color", "#aaaaaa")]),
+            part_with_state(
+                "parent",
+                vec![prop("color", "#bbbbbb")],
+                vec![prop("color", "#cccccc")],
+            ),
+            part("dot", vec![prop("background", "currentColor")]),
         ]);
         resolve_current_color(&layout, &mut s);
         assert_eq!(
-            background_of(&s, "dot"),
-            "\"currentColor\"",
-            "a colour that changes with state must not be pinned"
+            value_of(&s, "dot", "background"),
+            "currentColor",
+            "the grandparent's colour must not be pinned through an excluded parent"
         );
     }
 
-    /// THE CALL, not just the helper.
-    ///
-    /// Every test above exercises `resolve_current_color` directly, and all
-    /// of them keep passing if the CALL is deleted from `compose_component`
-    /// -- verified by deleting it. The product then emits unresolved
-    /// `currentColor` again and every native backend goes back to an
-    /// invisible dot. So the pass has to be pinned where it is WIRED, at
-    /// the one place a `ComposedComponent` is built.
+    /// SECURITY. The pass copies a value from the property the author wrote
+    /// it on into a DIFFERENT one, and the emitters do not read those two
+    /// through the same validator. Only recognisable colour literals are
+    /// eligible, so a hostile or merely unusual `color` cannot be carried
+    /// into a sink `color` never reaches.
+    #[test]
+    fn only_a_colour_literal_is_ever_copied() {
+        for hostile in [
+            "#00)+E(/*",
+            "0.sp, color = Color.Red); x = (",
+            "red; } .evil { x: y",
+            "rgba(255,255,255,0.12)",
+            "var(--x)",
+            "",
+            "#12345",
+        ] {
+            let layout = node("pill", vec![node("dot", vec![])]);
+            let mut s = style(vec![
+                part("pill", vec![prop("color", hostile)]),
+                part("dot", vec![prop("background", "currentColor")]),
+            ]);
+            resolve_current_color(&layout, &mut s);
+            assert_eq!(
+                value_of(&s, "dot", "background"),
+                "currentColor",
+                "`{hostile}` must never be copied into another property"
+            );
+        }
+        // the shapes that ARE eligible
+        for ok in ["#6fb489", "#fff", "#ffffffee", "rebeccapurple"] {
+            let layout = node("pill", vec![node("dot", vec![])]);
+            let mut s = style(vec![
+                part("pill", vec![prop("color", ok)]),
+                part("dot", vec![prop("background", "currentColor")]),
+            ]);
+            resolve_current_color(&layout, &mut s);
+            assert_ne!(value_of(&s, "dot", "background"), "currentColor", "`{ok}`");
+        }
+    }
+
+    /// Part names collide across packages: `merge_dependency_styles`
+    /// concatenates dependency parts with the component's own and does NOT
+    /// namespace them. Deciding per instance is last-write-wins, which lets
+    /// another package's part supply the colour and defeats the
+    /// state-dependent guard on the instance that lost.
+    #[test]
+    fn a_name_shared_across_packages_is_decided_once_for_the_name() {
+        let layout = node("pill", vec![node("dot", vec![])]);
+        let mut s = style(vec![
+            // a dependency package's `pill`
+            part("pill", vec![prop("color", "#dddddd")]),
+            // the component's own `pill`, whose colour varies by state
+            part_with_state(
+                "pill",
+                vec![prop("color", "#bbbbbb")],
+                vec![prop("color", "#cccccc")],
+            ),
+            part("dot", vec![prop("background", "currentColor")]),
+        ]);
+        resolve_current_color(&layout, &mut s);
+        assert_eq!(
+            value_of(&s, "dot", "background"),
+            "currentColor",
+            "a same-named part from another package must not supply the colour"
+        );
+
+        // and two instances that merely DISAGREE are equally ambiguous
+        let layout2 = node("pill", vec![node("dot", vec![])]);
+        let mut s2 = style(vec![
+            part("pill", vec![prop("color", "#dddddd")]),
+            part("pill", vec![prop("color", "#111111")]),
+            part("dot", vec![prop("background", "currentColor")]),
+        ]);
+        resolve_current_color(&layout2, &mut s2);
+        assert_eq!(value_of(&s2, "dot", "background"), "currentColor");
+    }
+
+    #[test]
+    fn the_keyword_is_case_insensitive_and_not_background_only() {
+        let layout = node("pill", vec![node("dot", vec![])]);
+        let mut s = style(vec![
+            part("pill", vec![prop("color", "#6fb489")]),
+            part(
+                "dot",
+                vec![
+                    prop("background", "CurrentColor"),
+                    prop("border-color", "currentcolor"),
+                ],
+            ),
+        ]);
+        resolve_current_color(&layout, &mut s);
+        assert_eq!(value_of(&s, "dot", "background"), "#6fb489");
+        assert_eq!(value_of(&s, "dot", "border-color"), "#6fb489");
+    }
+
+    /// THE CALL, not just the helper. Every test above keeps passing if the
+    /// call is deleted from `compose_component` -- verified by deleting it.
+    /// The product then emits unresolved `currentColor` again and every
+    /// native backend goes back to an invisible dot, so the pass has to be
+    /// pinned where it is WIRED.
     #[test]
     fn composition_itself_resolves_current_color() {
         let mil = "component Pill {\n  slot label : text ;\n}\n";
         let mll = "layout Pill {\n  Row [ pill ] {\n    Box [ dot ] { }\n    Text [ label ] ( content : slot: label )\n  }\n}\n";
         let msl = "style Pill {\n  part pill { color : \"#6fb489\" ; }\n  part dot { width : 6 ; height : 6 ; background : \"currentColor\" ; }\n  part label { font-size : 12 ; }\n}\n";
 
-        let composed = compose_component("Pill", mil, mll, msl, &[], None)
-            .expect("the fixture composes");
+        let composed =
+            compose_component("Pill", mil, mll, msl, &[], None).expect("the fixture composes");
         let dot_background = composed
             .style
             .parts
@@ -15166,32 +15368,5 @@ mod current_color_tests {
             dot_background, "#6fb489",
             "composition must resolve currentColor before any emitter sees it"
         );
-    }
-
-    /// The keyword is case-insensitive in CSS, and `border-color` takes it
-    /// as readily as `background`.
-    #[test]
-    fn the_keyword_is_case_insensitive_and_not_background_only() {
-        let layout = node("pill", vec![node("dot", vec![])]);
-        let mut s = style(vec![
-            part("pill", vec![prop("color", "\"#6fb489\"")]),
-            part(
-                "dot",
-                vec![
-                    prop("background", "\"CurrentColor\""),
-                    prop("border-color", "currentcolor"),
-                ],
-            ),
-        ]);
-        resolve_current_color(&layout, &mut s);
-        assert_eq!(background_of(&s, "dot"), "#6fb489");
-        let border = s
-            .parts
-            .iter()
-            .find(|p| p.name == "dot")
-            .and_then(|p| p.base.iter().find(|b| b.name == "border-color"))
-            .map(|b| b.value.clone())
-            .unwrap_or_default();
-        assert_eq!(border, "#6fb489");
     }
 }
