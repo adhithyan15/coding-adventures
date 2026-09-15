@@ -1,0 +1,1 @@
+- Parse SPICE `.temp <celsius> [celsius ...]` operating-temperature cards.

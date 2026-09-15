@@ -670,6 +670,7 @@ pub fn lower_ir_to_beam(
         max_opcode: 0, // let encode_beam derive from instructions
         instruction_set_version: 0,
         extra_chunks: beam_attr_cinf_chunks(),
+        literals: vec![],
     })
 }
 

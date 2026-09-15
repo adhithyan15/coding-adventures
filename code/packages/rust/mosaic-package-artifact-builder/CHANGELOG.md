@@ -104,6 +104,112 @@ build script and that file has a migration in flight.
 
 ## Unreleased
 
+### Fixed -- a percentage `border-radius` is resolved against the part's box (#15225)
+
+Every backend lowers `border-radius` through a pixel parser -- Compose
+`RoundedCornerShape(N.dp)`, SwiftUI `.cornerRadius(N)`, Qt `radius: N`, XAML
+`CornerRadius="N"`, Flutter `BorderRadius.circular(N)` -- so `50%` matched
+none of them and was dropped.
+
+Trestle authors it **six times per theme**, and every one rendered as a
+SQUARE on the five native backends: both pill status dots, the progress
+ring's fill and hole, and both theme-toggle buttons. A progress ring drawn
+as a square is not a subtle defect.
+
+Resolved here for the same reason as `currentColor`: the answer is
+arithmetic over the authored box, not a property of any target language.
+
+**Only a square box with literal sides is resolved.** A percentage radius on
+a non-square box is an ellipse, which none of these frameworks expresses as
+a plain corner radius, and a content-sized box has no pixel value to resolve
+against at emit time. Both are left exactly as authored -- the web keeps
+resolving them natively, the native backends keep dropping them, and neither
+is ever silently wrong. A malformed percentage is declined rather than
+coerced to `0`, because a zero radius is a square, which is the bug itself.
+
+Three details the arithmetic needs to be right about:
+
+- **Clamped to half the side.** CSS's overlap rule scales adjacent radii, so
+  `border-radius: 100%` on a square renders exactly as `50%`. Compose,
+  SwiftUI and QML clamp for us; XAML does not, so resolving to the full side
+  would leave one backend at double the others.
+- **Rounded.** f64 `Display` never uses exponent notation in *either*
+  direction, so an unrounded product is either ugly (`0.30000000000000004`
+  from a 3px box at 10%) or enormous -- a subnormal side produces a
+  several-hundred-character literal shipped to every backend.
+- **The side must be a length every backend accepts.** `6e0` parses as a
+  float but is dropped by Compose's character-class parser, which would
+  leave a content-sized box carrying a radius resolved against a width it
+  never applied.
+
+
+### Fixed -- `currentColor` is resolved against the inherited text colour (#15169)
+
+`currentColor` means "whatever `color` is in effect here". CSS resolves it
+natively, so the html and react backends were always correct. **No native
+backend has an equivalent** -- a brush must be an actual colour -- and each
+failed differently, and silently.
+
+Trestle's pill status dot is authored `background: currentColor` precisely so
+it tracks its pill's text colour. Measured, per backend:
+
+| backend | what the dot rendered |
+| --- | --- |
+| html, react | correct |
+| compose, flutter, swiftui, xaml | nothing -- an invisible box |
+| qt | a **white** square: `Rectangle.color` defaults to `#ffffff` (measured, not assumed) |
+
+So the dot had not rendered on five of seven backends for as long as the part
+has existed, and on the sixth it rendered the wrong colour.
+
+Resolution happens once, where `ComposedComponent` is built -- the single
+point both package builds and standalone pipeline builds pass through, which
+is the reason that type exists. Doing it in each emitter would be eight
+implementations of one cascade rule, which is how they drift.
+
+**The pass COPIES a value between properties**, which moves it into sinks the
+property it was written on never reaches. So only values positively
+recognisable as a colour literal are eligible -- hex (3/4/6/8 digits) or a
+bare alphabetic keyword. `rgb()` / `rgba()` are declined despite being valid
+CSS: they contain commas, and react's `path_paint_jsx` recovers `background`
+from a serialized style fragment by splitting on commas and writes it into an
+unquoted `fill={...}`, so the default `$color-border` token
+`rgba(255,255,255,0.12)` becomes `fill={"rgba(255}` and the generated
+component stops compiling. That sink is a defect in its own right, reachable
+without this pass; declining here means this pass cannot trigger it.
+
+A part resolves against its **own** `color` when it declares one, falling
+back to the inherited one only when it does not -- which is what CSS does.
+Recording the inherited colour unconditionally pinned the *parent's* colour
+on such a part, and meant a part whose own colour varies by state declined
+only for its subtree, not for itself.
+
+Duplicate declarations follow **last-wins**, matching every emitter:
+`part p { color: #aaa; color: #bbb }` renders `#bbb`, so taking the first
+pinned a colour that never renders.
+
+**Ambiguity is left unresolved, not guessed.** These cases are deliberately
+declined, each with a test:
+
+- a part used under two different inherited colours (no literal serves both),
+- a part with no `color` declared anywhere above it,
+- an ancestor whose `color` **changes with state** -- CSS follows the state at
+  runtime, so pinning the base colour would REGRESS html and react, the two
+  backends this keyword already worked on. Such an ancestor **poisons its
+  subtree** rather than being skipped: skipping it let the child resolve
+  against the GRANDPARENT, a literal wrong in every state.
+- a part **name** that is ambiguous across the merged style list.
+  `merge_dependency_styles` concatenates dependency parts with the
+  component's own without namespacing, so names collide routinely. Resolution
+  is decided per NAME over every instance sharing it -- deciding per instance
+  is last-write-wins, which let a same-named part from another package supply
+  the colour and defeated the state-dependent guard on the instance that lost.
+
+A part's own `color` applies to its subtree, not to itself, so a part with
+both `color` and `background: currentColor` does not paint its background its
+own text colour.
+
+
 ### Added — the resolver's contract is now enforced, not assumed (#14886)
 
 `LayoutPackageResolver` promises backends "a layout tree containing no qualified

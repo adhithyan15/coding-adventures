@@ -24,7 +24,7 @@
 //! | `EmptyFunction` | A function has zero instructions |
 //! | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` — except for `call_closure` |
 //! | `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` — see exceptions |
-//! | `UnsupportedType` (float const) | `op == "const"` and src is `Operand::Float` |
+//! | `UnsupportedType` (float const) | `op == "const"`, src is `Operand::Float`, and `type_hint != "f64"` |
 //! | `UnsupportedOp` | op is a runtime/memory/IO/GC opcode (list below) |
 //!
 //! Unsupported ops: `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`,
@@ -155,9 +155,10 @@ const UNSUPPORTED_OPS: &[&str] = &[
 ///    no BEAM equivalent in this lowering).
 ///
 /// 5. **UnsupportedType for float const** — `op == "const"` with an
-///    `Operand::Float` source is rejected.  BEAM does support floats, but
-///    loading them requires a different instruction path (`fmove`), which this
-///    backend does not implement in v1.
+///    `Operand::Float` source and `type_hint != "f64"` is rejected. BEAM03
+///    added `"f64"` float-const support (lowered via the module literal
+///    table, see `lower.rs`); any other type_hint on a float const is still
+///    rejected as unsupported.
 ///
 /// 6. **UnsupportedOp** — see [`UNSUPPORTED_OPS`].
 ///
@@ -366,18 +367,23 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
 
             // ── Check 5: float const ─────────────────────────────────────────
             //
-            // BEAM does support floating-point, but the instruction form is
-            // `fmove` into a float register, which this lowering does not emit.
-            // Rejecting float constants here gives a clear error rather than
-            // silently truncating the value to an integer.
+            // BEAM03: a `const` with an `Operand::Float` source is accepted
+            // when `type_hint == "f64"` — it lowers to a `move` referencing
+            // the module's literal table (see `lower.rs`'s `LiteralPool` and
+            // `ir_to_beam::literal_operand`). Any OTHER type_hint on a float
+            // const (e.g. a stray "f32", which no current frontend emits) is
+            // still rejected: this backend only implements the one float
+            // width every frontend actually uses.
             if instr.op == "const" {
                 if let Some(Operand::Float(_)) = instr.srcs.first() {
-                    errors.push(format!(
-                        "UnsupportedType: function {:?}, const instruction has a Float \
-                         operand; float constants are not supported (use integer arithmetic \
-                         or a separate fp lowering pass)",
-                        func.name
-                    ));
+                    if instr.type_hint != "f64" {
+                        errors.push(format!(
+                            "UnsupportedType: function {:?}, const instruction has a Float \
+                             operand with type_hint {:?}; only \"f64\" float constants are \
+                             supported in this BEAM backend",
+                            func.name, instr.type_hint
+                        ));
+                    }
                 }
             }
 
@@ -561,12 +567,26 @@ mod tests {
         assert!(errs.iter().any(|e| e.contains("UntypedInstruction")));
     }
 
+    /// BEAM03: an `f64` float const is now accepted (previously rejected
+    /// unconditionally) — it lowers to a literal-table reference.
     #[test]
-    fn float_const_rejected() {
+    fn float_const_f64_accepted() {
         let errs = validate_for_beam(&single_fn_module(vec![
             IIRInstr::new("const", Some("v".into()), vec![Operand::Float(3.14)], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "f64"),
         ]));
-        assert!(errs.iter().any(|e| e.contains("Float")));
+        assert!(errs.is_empty(), "unexpected errors: {errs:?}");
+    }
+
+    /// A float const with any type_hint other than "f64" (e.g. a stray
+    /// "f32", which no current frontend emits) is still rejected — this
+    /// backend only implements the one float width every frontend uses.
+    #[test]
+    fn float_const_non_f64_type_hint_rejected() {
+        let errs = validate_for_beam(&single_fn_module(vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Float(3.14)], "f32"),
+        ]));
+        assert!(errs.iter().any(|e| e.contains("Float") && e.contains("f32")));
     }
 
     #[test]

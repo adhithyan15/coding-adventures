@@ -1,5 +1,39 @@
 # Changelog — ir-to-beam
 
+## [0.4.0] — 2026-09-15
+
+### Added (BEAM03 — literal table support, the general infrastructure float lowering needed)
+
+- `BEAMTag::Z` (the extended/"compound operand" tag, value 7) — previously
+  scaffolded as "not used in v1", now implemented for its one needed
+  sub-tag.
+- `BEAMModule.literals: Vec<Vec<u8>>` — the module's literal table (`LitT`
+  chunk source data), each entry a complete External Term Format blob.
+- `literal_operand(index) -> [BEAMOperand; 2]` — the two-part compact-term
+  operand (`{tag_z,4}` + `{tag_u,index}`) that references a literal-table
+  entry from the instruction stream. Verified against `beam_asm.erl` (OTP's
+  own assembler): `encode_arg({literal,_},...)` and `encode_arg({float,_},...)`
+  both funnel through this exact same encoding.
+- `etf_new_float(f64) -> Vec<u8>` — encodes a standalone Erlang External Term
+  Format float (`NEW_FLOAT_EXT`, tag 70).
+- A dependency-free RFC 1950/1951 zlib encoder (`zlib_store_compress`,
+  stored/uncompressed DEFLATE blocks only) and Adler-32 checksum, used to
+  build the `LitT` chunk in the **compressed** form this repo's pinned CI
+  runtime (OTP 27.3.4.11) requires (OTP 28+ accepts an uncompressed form
+  instead, but the compressed form has always been valid on every OTP
+  release). Verified against real `erlang:adler32/1` and `zlib:uncompress/1`,
+  and by patching a real compiled `.beam` file's `LitT` chunk with this
+  exact byte layout and successfully loading + running it on real `erl`.
+- `encode_beam` now emits a `LitT` chunk whenever `module.literals` is
+  non-empty (omitted entirely otherwise, matching `beam_asm:build_literal_chunk/2`).
+
+This is general literal-table infrastructure — any future literal kind (not
+just floats) can reuse `literal_operand`/the `LitT` chunk builder. The first
+consumer is `iir-to-beam` 0.10.0's `f64` `const` lowering (BEAM03).
+
+See `code/specs/BEAM03-float-lowering.md` for the full design and the
+real-`erl` verification method.
+
 ## [0.3.0] — 2026-09-09
 
 ### Fixed (large positive `I`-tagged literals silently went negative)

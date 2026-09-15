@@ -196,6 +196,44 @@ export interface DocShardPlan {
    * into a recency rank and turns a prepend back into an append.
    */
   readonly newestFirst: boolean;
+  /**
+   * What starts an entry: an ATX heading (the default) or a top-level bullet.
+   *
+   * Some append-only documents are not a list of headings at all. The worst
+   * example measured in this repo, `code/specs/data/adj-facts-stdlib/
+   * CHANGELOG.md`, is 10,541 lines with exactly ONE `##` heading and 323
+   * top-level `- ` entries beneath it. Splitting that on headings yields a
+   * single shard — the whole document — which is why `docShardContents`
+   * refuses it outright rather than writing something useless.
+   *
+   * When this is `"bullet"`, `headingLevel` is not consulted: the preamble is
+   * everything above the first top-level bullet, which naturally carries the
+   * `# Title` and the single `## Unreleased` along with it.
+   *
+   * Only a bullet in the FIRST column counts. An indented `- ` is a nested
+   * list item belonging to the entry above it, and one inside a fence is code.
+   *
+   * ONE CAVEAT THE MODULE HEADER DOES NOT COVER. It justifies digesting the
+   * heading rather than the body with "headings change rarely; bodies change
+   * constantly". Under `"bullet"` the digest input is an entry's first line of
+   * PROSE, and on the measured target 315 of 323 first lines end mid-sentence
+   * at the wrap column. So REFLOWING a paragraph renames that one shard.
+   *
+   * That is acceptable, and the reason is worth stating rather than leaving to
+   * be rediscovered: the hot path is APPENDING an entry, and an append renames
+   * nothing — measured at 0 renames, 324 -> 325 shards, on the real file. A
+   * rename costs one merge conflict on one shard, where the shared-file layout
+   * this replaces cost one on every concurrent pair.
+   */
+  readonly entryShape?: "heading" | "bullet";
+}
+
+/** What a plan splits on: an ATX level, or top-level bullets. */
+export type DocSplitAt = 2 | 3 | "bullet";
+
+/** The split rule for a plan, resolved once so callers cannot disagree. */
+export function docSplitAt(plan: DocShardPlan): DocSplitAt {
+  return plan.entryShape === "bullet" ? "bullet" : plan.headingLevel;
 }
 
 /** One section of a document, as an exact slice of the original bytes. */
@@ -435,10 +473,12 @@ export function readDocShards(documentPath: string, plan: DocShardPlan): Map<str
     try {
       const body = readFileSync(path, "utf8");
       const legacyDigest = legacyDocShardSha256(plan, name);
+      const at = docSplitAt(plan);
       if (name !== DOC_META_SHARD && legacyDigest === undefined &&
-          !headingPattern(plan.headingLevel).test(body.split(/\r?\n/, 1)[0])) {
+          !entryStartPattern(at).test(body.split(/\r?\n/, 1)[0])) {
         throw new Error(
-          `doc shard ${reportableFilename(name)} must start with its level-${plan.headingLevel} heading; ` +
+          `doc shard ${reportableFilename(name)} must start with its ` +
+            `${at === "bullet" ? "top-level bullet" : `level-${at} heading`}; ` +
             `the document preamble belongs in ${DOC_META_SHARD}`,
         );
       }
@@ -473,6 +513,21 @@ function headingPattern(level: 2 | 3): RegExp {
 }
 
 /**
+ * The line pattern that starts an entry.
+ *
+ * One definition, used by BOTH `splitDocument` and the shard-body check in
+ * `readDocShards`. They previously each built their own `headingPattern` call;
+ * with a second entry shape that duplication becomes a place for the writer and
+ * the validator to disagree — the sharder would happily emit bullet shards that
+ * the reader then rejected for not starting with a heading.
+ */
+function entryStartPattern(at: DocSplitAt): RegExp {
+  // `^- ` only, anchored at column 0: an indented `  - ` is a nested item of the
+  // entry above it, not a new entry.
+  return at === "bullet" ? /^- / : headingPattern(at);
+}
+
+/**
  * Split a document into its preamble and its sections.
  *
  * The invariant, asserted at the end rather than trusted: the pieces
@@ -488,8 +543,8 @@ function headingPattern(level: 2 | 3): RegExp {
  * fails toward "a section is larger than it needed to be" rather than toward "a
  * code block was cut in half".
  */
-export function splitDocument(text: string, level: 2 | 3): SplitDocument {
-  const isHeading = headingPattern(level);
+export function splitDocument(text: string, level: DocSplitAt): SplitDocument {
+  const isHeading = entryStartPattern(level);
   const lines = text.split("\n");
   const starts: number[] = [];
   let fence: string | null = null;
@@ -646,11 +701,12 @@ const WINDOWS_RESERVED = new Set([
  * choice.
  */
 export function docShardContents(text: string, plan: DocShardPlan): Map<string, string> {
-  const { preamble, sections } = splitDocument(text, plan.headingLevel);
+  const at = docSplitAt(plan);
+  const { preamble, sections } = splitDocument(text, at);
   if (sections.length === 0) {
     throw new Error(
-      `${plan.path}: no level-${plan.headingLevel} headings to shard on — ` +
-        `the whole document would become '${DOC_META_SHARD}'`,
+      `${plan.path}: no ${at === "bullet" ? "top-level bullets" : `level-${at} headings`} ` +
+        `to shard on — the whole document would become '${DOC_META_SHARD}'`,
     );
   }
   const out = new Map<string, string>();

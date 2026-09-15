@@ -876,13 +876,23 @@ fn extract_style_value(
                 //   NAME:       [a-zA-Z][a-zA-Z0-9-]* — alphanumeric + hyphen
                 // None of these can contain '}' or ';' that would break CSS rule syntax.
                 //
-                // STRING: "([^"\\\n]|\\.)*" — the token value includes the surrounding
-                // double-quote delimiters.  When emitted into CSS as `prop: "..."`, the
-                // `}` or `;` characters inside the string literal are safely contained by
-                // the CSS parser's string tokenisation; they do NOT terminate the rule.
-                // Additionally, the lexer stops at the closing `"`, so characters after
-                // the closing quote are separate tokens and the grammar rejects them.
-                // No CSS injection is possible via the grammar's STRING tokens.
+                // STRING: the token value does NOT include its delimiters --
+                // the lexer strips them and decodes the escapes, so
+                // `color : "#6fb489"` arrives here as `#6fb489`.
+                //
+                // #15222 -- this comment used to claim the opposite, and
+                // concluded that "no CSS injection is possible via the
+                // grammar's STRING tokens". Both halves were wrong.
+                // Verified by compiling `color : "#fff; } .evil { x: y"`:
+                // the value is stored delimiter-free and, interpolated
+                // verbatim, closed its Lattice rule and opened another.
+                //
+                // The claim was load-bearing: a helper in
+                // `mosaic-package-artifact-builder` was written against it
+                // and had to be removed. Consumers must therefore escape
+                // for their own target -- `emit_lattice` does so in
+                // `lattice_value`, and each emitter validates or quotes at
+                // its own sinks.
                 _ => Ok(t.value.clone()),
             };
         }
@@ -1291,6 +1301,55 @@ pub fn compile_with_tokens_and_slot_states(
 /// immediately consumable by the existing Lattice transpiler while keeping
 /// Mosaic's authored style artifacts in Lattice instead of treating CSS as the
 /// canonical style output.
+/// Escape the characters that would let a style value break out of its
+/// Lattice rule (#15222).
+///
+/// A quoted STRING in `.msl` reaches `StyleProp::value` with its delimiters
+/// ALREADY STRIPPED and its escapes decoded -- `color : "#6fb489"` arrives
+/// as `#6fb489`. So interpolating the value verbatim into
+/// `  {name}: {value};` puts its contents into CSS structure. Authoring
+///
+/// ```text
+///   color : "#fff; } .evil { x: y"
+/// ```
+///
+/// emitted a rule that closes early and opens another:
+///
+/// ```text
+///   .mos-X-p {
+///     color: #fff; } .evil { x: y;
+///     background: #abc;
+///   }
+/// ```
+///
+/// The comment that used to sit in `style_value` asserted the opposite --
+/// that the delimiters were retained and no CSS injection was possible via
+/// STRING tokens. It was wrong on both counts, and load-bearing: a helper
+/// in `mosaic-package-artifact-builder` was written against it and had to
+/// be removed.
+///
+/// Backslash escaping is CSS's own mechanism and keeps the value's text
+/// intact, so a declaration that was going to be meaningless stays
+/// meaningless instead of becoming structure. No authored value in the
+/// corpus contains any of these characters -- 0 of 2,736 quoted values --
+/// so this is hardening, not a change to any shipped stylesheet.
+fn lattice_value(value: &str) -> String {
+    let mut out = String::with_capacity(value.len());
+    for ch in value.chars() {
+        match ch {
+            '\\' | ';' | '{' | '}' => {
+                out.push('\\');
+                out.push(ch);
+            }
+            // A newline cannot be escaped into a CSS value; drop it rather
+            // than emit a rule split across lines.
+            '\n' | '\r' => out.push(' '),
+            _ => out.push(ch),
+        }
+    }
+    out
+}
+
 pub fn emit_lattice(def: &StyleDef) -> String {
     let blocks = emit_scoped_rule_blocks(def);
     if blocks.is_empty() {
@@ -1316,7 +1375,7 @@ fn emit_scoped_rule_blocks(def: &StyleDef) -> Vec<String> {
             let mut props: Vec<String> = part
                 .base
                 .iter()
-                .map(|p| format!("  {}: {};", p.name, p.value))
+                .map(|p| format!("  {}: {};", p.name, lattice_value(&p.value)))
                 .collect();
             if let Some(transition) = format_transitions(&part.transitions) {
                 props.push(format!("  transition: {transition};"));
@@ -1342,7 +1401,7 @@ fn emit_scoped_rule_blocks(def: &StyleDef) -> Vec<String> {
             let mut props: Vec<String> = state
                 .props
                 .iter()
-                .map(|p| format!("  {}: {};", p.name, p.value))
+                .map(|p| format!("  {}: {};", p.name, lattice_value(&p.value)))
                 .collect();
             if let Some(transition) = format_transitions(&state.transitions) {
                 props.push(format!("  transition: {transition};"));
@@ -2614,5 +2673,90 @@ mod tests {
         src.push_str("}\n");
         let def = parse_and_analyze(&src);
         assert_eq!(def.parts.len(), 200);
+    }
+}
+
+// =====================================================================
+// #15222 -- a style value cannot break out of its Lattice rule
+//
+// A quoted STRING in `.msl` reaches `StyleProp::value` with its delimiters
+// ALREADY STRIPPED and its escapes decoded, so interpolating it verbatim
+// into `  {name}: {value};` puts its contents into CSS structure.
+//
+// The comment in `style_value` used to assert the opposite -- that the
+// delimiters were retained, and therefore that "no CSS injection is
+// possible via the grammar's STRING tokens". Both halves were wrong, and
+// the claim was load-bearing: a helper in mosaic-package-artifact-builder
+// was written against it and had to be removed.
+// =====================================================================
+#[cfg(test)]
+mod lattice_escaping_tests {
+    use super::*;
+
+    fn lattice_of(msl: &str) -> String {
+        compile(msl, None).expect("compiles").lattice
+    }
+
+    /// The reproduction from the issue: a value carrying `;` and braces
+    /// closed its rule and opened another.
+    #[test]
+    fn a_value_cannot_close_its_rule_and_open_another() {
+        let lattice = lattice_of(
+            "style X {\n  part p { color : \"#fff; } .evil { x: y\" ; background : \"#abc\" ; }\n}\n",
+        );
+        assert!(
+            !lattice.contains(".evil {"),
+            "a value opened a new rule: {lattice}"
+        );
+        // The declaration that followed must still be INSIDE the rule.
+        // Escaped characters are removed FIRST -- they are value text, not
+        // structure, and a naive split on `}` cuts at the escaped one.
+        let structural = lattice
+            .replace("\\;", "")
+            .replace("\\{", "")
+            .replace("\\}", "");
+        let rule = structural
+            .split(".mos-X-p {")
+            .nth(1)
+            .and_then(|r| r.split('}').next())
+            .expect("the rule body");
+        assert!(
+            rule.contains("background: #abc;"),
+            "the next declaration fell outside the rule: {rule}"
+        );
+        // and exactly one rule was opened
+        assert_eq!(
+            structural.matches('{').count(),
+            1,
+            "a value opened an extra rule: {structural}"
+        );
+    }
+
+    /// Each structural character is escaped rather than dropped, so a
+    /// declaration that was going to be meaningless stays meaningless
+    /// instead of becoming structure.
+    #[test]
+    fn structural_characters_are_escaped_not_dropped() {
+        assert_eq!(lattice_value("a;b"), "a\\;b");
+        assert_eq!(lattice_value("a{b}c"), "a\\{b\\}c");
+        assert_eq!(lattice_value("a\\b"), "a\\\\b");
+        // a newline cannot be escaped into a CSS value
+        assert_eq!(lattice_value("a\nb"), "a b");
+    }
+
+    /// Ordinary values are untouched -- including the comma-bearing font
+    /// stacks and `rgba()` colours the corpus actually authors.
+    #[test]
+    fn ordinary_values_are_untouched() {
+        for value in [
+            "#6fb489",
+            "currentColor",
+            "rgba(255,255,255,0.12)",
+            "-apple-system, Segoe UI, system-ui, Helvetica Neue, Arial, sans-serif",
+            "1px solid #32463b",
+            "100vh",
+        ] {
+            assert_eq!(lattice_value(value), value, "`{value}` must be untouched");
+        }
     }
 }

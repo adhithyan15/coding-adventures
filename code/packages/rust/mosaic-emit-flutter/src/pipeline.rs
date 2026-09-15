@@ -2075,6 +2075,20 @@ struct TableCtx<'a> {
     /// so cells fall back to the sheet's `color` / `font-family` /
     /// `font-size` instead of `null`. Each is the already-lowered Dart
     /// expression (`const Color(0xFFCCCCCC)`) or family/size literal.
+    /// #15166 -- the `TextStyle(..)` ARGUMENTS the enclosing styled box is
+    /// about to apply via `DefaultTextStyle.merge`.
+    ///
+    /// A Flutter `TextField` does NOT inherit `DefaultTextStyle` the way a
+    /// `Text` does -- it falls back to the Material theme -- so an input
+    /// authoring `font: inherit` had no way to follow the text around it,
+    /// and the grid's inline editor sat 4px taller than its display row
+    /// rather than the 1px an explicit font reaches.
+    ///
+    /// Threaded rather than resolved at the input, because only the
+    /// enclosing box knows what it merged. `DefaultTextStyle.of(context)`
+    /// cannot substitute: the `context` in scope at the input is the
+    /// widget's own, which sits ABOVE the merge the emitter just wrote.
+    inherited_text_style: Option<&'a str>,
     sheet_text_color: Option<&'a str>,
     sheet_font_family: Option<&'a str>,
     sheet_font_size: Option<&'a str>,
@@ -2315,8 +2329,23 @@ fn part_max_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> O
     let props = part_styles.get(part)?;
     let raw = parse_style_props(props).get("max-width")?.clone();
     let trimmed = raw.trim().trim_end_matches("px").trim();
-    trimmed.parse::<f64>().ok().filter(|v| v.is_finite() && *v > 0.0)?;
-    Some(trimmed.to_string())
+    // Emit the PARSED value, not the authored text. This validated one
+    // thing and emitted another -- the classic shape where a guard proves
+    // nothing about what ships. `+760px` parses as a finite positive f64
+    // (Rust's float grammar accepts a leading `+`) and was emitted
+    // verbatim as `maxWidth: +760`, which Dart has no unary `+` for: a
+    // hard compile error from one authored value. A 22-digit literal got
+    // through the same way and Dart rejects it as
+    // `integer_literal_imprecise_as_double`.
+    //
+    // Formatting the parse closes both, and matches every other length
+    // path in this file.
+    const MAX_EXACT_INT: f64 = 9_007_199_254_740_992.0; // 2^53
+    let value = trimmed
+        .parse::<f64>()
+        .ok()
+        .filter(|v| v.is_finite() && *v > 0.0 && v.abs() <= MAX_EXACT_INT)?;
+    Some(format!("{value}"))
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -2408,14 +2437,7 @@ fn emit_widget_tree_inner(
     // Flutter build had no notes input at all while reporting ZERO
     // degradations.
     if node.tag == "HostInput" || node.tag == "Input" {
-        return emit_host_input(
-            node,
-            indent,
-            part_styles,
-            component,
-            emits,
-            ctx.direct_row_child,
-        );
+        return emit_host_input(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostButton" {
         return emit_host_button(node, indent, part_styles, component, emits, ctx);
@@ -3005,8 +3027,19 @@ fn emit_paired_children(
         }
         // Orphan Else falls through to the standalone routing in
         // `emit_widget_tree`, which emits a documenting placeholder.
-        let flex = ctx
-            .direct_row_child
+        // #15213 -- gated on `direct_row_accepts_flex` as well, which is
+        // what the comment further down already claims of `Expanded` and
+        // what was never true of it. An `Expanded` under a Row that is
+        // measured with an unbounded max width throws
+        // `RenderFlex children have non-zero flex but incoming width
+        // constraints are unbounded`, taking out the widget and its
+        // ancestry.
+        //
+        // Declining a relative width (the rest of this change) removes the
+        // `SizedBox` that used to be such a subtree's only bound, so
+        // without this the fix would convert a silently-blank subtree into
+        // a thrown layout error -- a different failure, not a fixed one.
+        let flex = (ctx.direct_row_child && ctx.direct_row_accepts_flex)
             .then(|| part_flex_grow(child, part_styles))
             .flatten();
         // This children list owns the explicit flex wrapper. Do not also let
@@ -3098,6 +3131,15 @@ fn emit_for_spread(
     // `columnWidths[<idx>]`. Only meaningful when an `index:` binding is
     // present and the table carries a column-widths slot.
     let body_ctx = TableCtx {
+        // #15166 -- the threaded style is TEXT, and a `For` REBINDS the
+        // identifiers inside it. Carrying it across would both change this
+        // loop's shape (the emitters choose `(_)` vs `(item)` by scanning
+        // the emitted body for those identifiers) and make the input's copy
+        // evaluate a predicate against the loop's binding while the
+        // enclosing merge evaluates it against the outer one -- so the
+        // editor and the cell would disagree at runtime. `emit_host_table`
+        // resets it for the same reason.
+        inherited_text_style: None,
         cell_index: match (&index_name, ctx.column_widths_slot) {
             (Some(idx), Some(_)) => Some(idx.as_str()),
             _ => ctx.cell_index,
@@ -3256,6 +3298,15 @@ fn emit_for_dart(
     // `index:` — optional, always a Keyword when present.
     let index_name = find_keyword_prop(node, "index").map(to_camel_case_first_lower);
     let body_ctx = TableCtx {
+        // #15166 -- the threaded style is TEXT, and a `For` REBINDS the
+        // identifiers inside it. Carrying it across would both change this
+        // loop's shape (the emitters choose `(_)` vs `(item)` by scanning
+        // the emitted body for those identifiers) and make the input's copy
+        // evaluate a predicate against the loop's binding while the
+        // enclosing merge evaluates it against the outer one -- so the
+        // editor and the cell would disagree at runtime. `emit_host_table`
+        // resets it for the same reason.
+        inherited_text_style: None,
         for_item: Some(as_name.as_str()),
         for_index: index_name.as_deref().or(ctx.for_index),
         ..ctx
@@ -3513,8 +3564,9 @@ fn style_prop_to_container_arg(prop: &str) -> Option<String> {
             "padding: const EdgeInsets.all({})",
             parse_pixel_value(value)
         )),
-        "width" => Some(format!("width: {}", parse_pixel_value(value))),
-        "height" => Some(format!("height: {}", parse_pixel_value(value))),
+        // #15213 -- decline a relative length rather than collapsing to 0.
+        "width" => fixed_pixel_length(value).map(|v| format!("width: {v}")),
+        "height" => fixed_pixel_length(value).map(|v| format!("height: {v}")),
         "min-height" => Some(format!(
             "constraints: const BoxConstraints(minHeight: {})",
             parse_pixel_value(value)
@@ -3529,27 +3581,47 @@ fn style_prop_to_container_arg(prop: &str) -> Option<String> {
 /// than panicking — generated source still type-checks.
 fn parse_pixel_value(s: &str) -> String {
     let s = s.trim().trim_end_matches("px");
-    // Non-finite values must not survive: `f64::parse` accepts `inf`,
-    // `NaN` and overflowing literals like `1e400`, and `{f}` then prints
-    // them as bare Dart identifiers (`inf`, `NaN`) that do not compile.
-    // Not an injection -- no punctuation survives `parse::<f64>` -- but
-    // it breaks the "generated source still type-checks" contract this
-    // function's `0` fallback exists to keep.
-    // `is_finite` alone is NOT enough to keep the "generated source still
-    // type-checks" contract this function's `0` fallback exists for.
-    // Rust's `Display` for f64 never uses exponent notation, so a finite
-    // `1e300` expands to a 301-DIGIT bare literal, and Dart rejects that
-    // outright: "The integer literal is being used as a double, but can't
-    // be represented as a 64-bit double without overflow or loss of
-    // precision" -- a hard compile error that stops the whole generated
-    // app from building, from one authored style value. Anything beyond
-    // the exactly-representable integer range falls back to `0` like any
-    // other unreadable input.
+    // Three ways an authored length breaks the generated app, all of which
+    // fall back to `0` -- the same answer this function has always given
+    // for input it cannot read. The contract is that generated Dart still
+    // compiles and still builds; a length is never worth breaking that for.
+    //
+    //  1. NOT FINITE. `f64::parse` accepts `inf`, `NaN` and overflowing
+    //     literals like `1e400`, and `{f}` prints them as bare Dart
+    //     identifiers that do not compile.
+    //
+    //  2. TOO LARGE. Rust's `Display` for f64 never uses exponent
+    //     notation, so a finite `1e300` expands to a 301-DIGIT bare
+    //     literal. Dart rejects that outright -- "the integer literal is
+    //     being used as a double, but can't be represented as a 64-bit
+    //     double without overflow or loss of precision" -- so one authored
+    //     value stops the whole app compiling.
+    //
+    //  3. NEGATIVE (#15160). This one type-checks and then THROWS. Every
+    //     property that reaches this function is non-negative geometry --
+    //     gap, padding, width, height, min-height, border-width,
+    //     border-radius, font-size, stroke width -- and CSS forbids a
+    //     negative for each. Flutter is harsher than "forbids": a width
+    //     reaching `BorderSide` hits its `assert(width >= 0.0)` and takes
+    //     out the widget and everything above it in the tree, in any debug
+    //     or profile build. Four `Border.all` / `BorderSide` writers took
+    //     their width from here unguarded.
+    //
+    //     Audited before centralising: no margin, inset, offset or
+    //     letter-spacing is lowered through this function, so nothing that
+    //     legitimately admits a negative loses one. (`top`/`left`/`right`/
+    //     `bottom` appear nearby only as per-edge BORDER names.)
     const MAX_EXACT_INT: f64 = 9_007_199_254_740_992.0; // 2^53
     s.parse::<f64>()
         .ok()
-        .filter(|f| f.is_finite() && f.abs() <= MAX_EXACT_INT)
-        .map(|f| format!("{f}"))
+        .filter(|f| f.is_finite() && *f >= 0.0 && f.abs() <= MAX_EXACT_INT)
+        // IEEE `-0.0 >= 0.0` is true, and Rust prints it as `-0`. Dart
+        // reads that as `-0.0`, which does satisfy `assert(width >= 0.0)`
+        // -- so it is not a crash -- but it puts a `width: -` in generated
+        // source from a legal input, which is precisely what the tests
+        // here assert can never happen. Normalise the sign rather than
+        // leave the invariant weaker than it reads.
+        .map(|f| if f == 0.0 { "0".to_string() } else { format!("{f}") })
         .unwrap_or_else(|| "0".to_string())
 }
 
@@ -3566,10 +3638,47 @@ fn parse_pixel_value(s: &str) -> String {
 /// not applying the width, leaving the child to size itself as it always
 /// did before this wrapper existed, is the correct behaviour here.
 fn fixed_pixel_length(s: &str) -> Option<String> {
-    if s.trim().ends_with('%') {
+    let trimmed = s.trim();
+    // #15213 -- decline EVERY length that is not a plain pixel value, not
+    // just `%` and negatives. `100vh`, `max-content`, `auto`, `calc(...)`
+    // and `12rem` all fell through to `parse_pixel_value`'s `0`, which is
+    // the exact collapse this function exists to prevent: VisiCalc's root
+    // `Column [workbook]` authors `height: 100vh` and emitted
+    // `Container(height: 0)`, so the entire app rendered as nothing on
+    // Flutter.
+    //
+    // A positive test, so a unit nobody has thought of yet declines by
+    // default rather than collapsing a subtree.
+    let body = trimmed.strip_suffix("px").unwrap_or(trimmed).trim();
+    if body.is_empty()
+        || !body
+            .bytes()
+            .all(|b| b.is_ascii_digit() || b == b'.' || b == b'-')
+    {
         return None;
     }
-    Some(parse_pixel_value(s))
+    // Derive the answer from a real PARSE rather than delegating to
+    // `parse_pixel_value`. The charset gate admits shapes that still fail to
+    // parse -- `1-2`, `1.2.3`, `.`, `100 ` once `px` is stripped -- and
+    // delegating answered `0` for each, which is the very collapse this
+    // function exists to prevent, reached through a narrower door.
+    const MAX_EXACT_INT: f64 = 9_007_199_254_740_992.0;
+    let parsed = body
+        .parse::<f64>()
+        .ok()
+        .filter(|f| f.is_finite() && *f >= 0.0 && f.abs() <= MAX_EXACT_INT)?;
+    //
+    // A NEGATIVE declines here too (#15160). Handing this site
+    // `parse_pixel_value`'s `0` for one turned `width: -5px` on a Row part
+    // from `SizedBox(width: -5)` -- which trips Flutter's
+    // `debugAssertIsValid` LOUDLY -- into `SizedBox(width: 0)`, which
+    // silently eats the subtree. The `>= 0.0` filter keeps that declining,
+    // and `%` can no longer reach the parse at all.
+    Some(if parsed == 0.0 {
+        "0".to_string()
+    } else {
+        format!("{parsed}")
+    })
 }
 
 /// Translate a CSS hex / named colour to a Dart `Color(0xFFRRGGBB)`
@@ -3645,22 +3754,37 @@ fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
     {
         return None;
     }
-    let fallback_w = m.get("border-width").map(|v| parse_pixel_value(v));
+    // A negative width is tested on the AUTHORED text, not on the parsed
+    // result. `parse_pixel_value` now rejects negatives centrally (#15160)
+    // and answers `0`, so a check on its output can never fire -- reading
+    // the raw value is what keeps this edge SKIPPED rather than silently
+    // emitted as a zero-width side.
+    //
+    // The two answers differ: a skipped edge is omitted from `Border(..)`
+    // entirely and renders as `BorderSide.none`, whereas a zero-width side
+    // is a real side that happens to be invisible. (An earlier draft of
+    // this comment said skipping "lets the shorthand cascade in" -- it does
+    // not. The `continue` happens BEFORE the `fallback_w` lookup, so the
+    // shorthand cascades only to edges that authored no width at all.)
+    let authored_negative =
+        |v: Option<&String>| v.is_some_and(|v| v.trim_start().starts_with('-'));
+    let fallback_w = (!authored_negative(m.get("border-width")))
+        .then(|| m.get("border-width").map(|v| parse_pixel_value(v)))
+        .flatten();
     let fallback_c = m.get("border-color").and_then(|v| css_color_to_dart(v));
     let mut sides = Vec::new();
     for e in edges {
-        let w = m
-            .get(&format!("border-{e}-width"))
+        let raw = m.get(&format!("border-{e}-width"));
+        // `BorderSide` asserts `width >= 0` at RUNTIME, so a negative
+        // authored width type-checks and then throws in the app, taking
+        // out the widget and everything above it. Skip the edge instead.
+        if authored_negative(raw) {
+            continue;
+        }
+        let w = raw
             .map(|v| parse_pixel_value(v))
             .or_else(|| fallback_w.clone());
         let Some(w) = w else { continue };
-        // `BorderSide` asserts `width >= 0` at RUNTIME, so a negative
-        // authored width type-checks and then throws in the app. Skip
-        // the edge instead: the same "generated source still works"
-        // contract `parse_pixel_value`'s `0` fallback exists to keep.
-        if w.starts_with('-') {
-            continue;
-        }
         let c = m
             .get(&format!("border-{e}-color"))
             .and_then(|v| css_color_to_dart(v))
@@ -3922,6 +4046,234 @@ fn state_color_expr(
     acc
 }
 
+/// Everything `emit_styled_box` lowers from a part's OWN style props.
+///
+/// Split out of `emit_styled_box` without changing a byte of what it
+/// emits. The point is the shape, not the saving: this is a function from
+/// style props to a style, with no `LayoutNode`, no child, and no
+/// `PipelineEmitError` -- so it can be CALLED, by a test or by a reporter,
+/// without emitting a widget tree.
+///
+/// Flutter had no such seam. `emit_styled_box` takes a layout node, the
+/// component name and the emit declarations and hands back generated Dart
+/// TEXT, so the only way to ask "what did lowering do with `border-radius`?"
+/// was to emit a whole subtree and read the answer back out of a string.
+/// That is why Flutter is one of the two backends still reporting no style
+/// degradations at all (#12022): there was nowhere to put the question.
+///
+/// Note what the caller keeps. The child is emitted by `emit_styled_box`
+/// and appended as the last `args` entry, because building it needs the
+/// layout and can fail. `inherited_text_style` is returned rather than
+/// applied for the same reason -- it is threaded into the `TableCtx` the
+/// child is emitted under (#15166), and the child is not this function's
+/// business.
+struct FlutterBoxStyle {
+    /// `Container` arguments, in emission order, WITHOUT `child:`.
+    args: Vec<String>,
+    /// Fields of the `TextStyle(...)` in the `DefaultTextStyle.merge`
+    /// wrapper the caller builds around the child.
+    text_style_parts: Vec<String>,
+    /// The already-joined text style a `HostInput` below this box inherits
+    /// (#15166). A `TextField` does not read `DefaultTextStyle.merge`, so
+    /// this is validated separately and threaded down instead.
+    inherited_text_style: String,
+}
+
+fn flutter_box_style(
+    base: &HashMap<String, String>,
+    layers: &[StateLayer],
+    ctx: TableCtx,
+) -> FlutterBoxStyle {
+    // --- Sizing / alignment / padding args ---------------------------
+    let mut args: Vec<String> = Vec::new();
+
+    // width: a discovered column width (`columnWidths[c]`) wins; else an
+    // explicit base `width`.
+    if let (Some(slot), Some(idx)) = (ctx.column_widths_slot, ctx.cell_index) {
+        args.push(format!("width: {slot}[{idx}]"));
+    } else if let Some(w) = base.get("width").and_then(|w| fixed_pixel_length(w)) {
+        // #15213 -- `fixed_pixel_length`, not `parse_pixel_value`. A
+        // relative length here became `width: 0` and collapsed the subtree;
+        // declining leaves the child to size itself, which is what every
+        // one of these parts wants from `width: 100%` anyway.
+        args.push(format!("width: {w}"));
+    }
+    if let Some(h) = base.get("height").and_then(|h| fixed_pixel_length(h)) {
+        args.push(format!("height: {h}"));
+    }
+    if let Some(min_height) = base.get("min-height") {
+        args.push(format!(
+            "constraints: const BoxConstraints(minHeight: {})",
+            parse_pixel_value(min_height)
+        ));
+    }
+    if let Some(ta) = base.get("text-align") {
+        args.push(format!("alignment: {}", text_align_to_alignment(ta)));
+    }
+    let base_padding = base.get("padding").map(|v| parse_pixel_value(v));
+    if base_padding.is_some() || layers.iter().any(|layer| layer.padding.is_some()) {
+        if layers.iter().all(|layer| layer.padding.is_none()) {
+            args.push(format!(
+                "padding: const EdgeInsets.symmetric(horizontal: {})",
+                base_padding.as_deref().unwrap_or("0")
+            ));
+        } else {
+            let padding = state_color_expr(
+                layers,
+                |layer| layer.padding.as_ref(),
+                base_padding.as_deref().unwrap_or("0"),
+            );
+            args.push(format!(
+                "padding: EdgeInsets.symmetric(horizontal: {padding})"
+            ));
+        }
+    }
+
+    // --- BoxDecoration: background (state-conditional) + border -------
+    let base_bg = base
+        .get("background")
+        .or_else(|| base.get("background-color"))
+        .and_then(|v| css_color_to_dart(v));
+    let bg_expr = state_color_expr(
+        layers,
+        |l| l.background.as_ref(),
+        base_bg.as_deref().unwrap_or("null"),
+    );
+    let mut deco_parts: Vec<String> = vec![format!("color: {bg_expr}")];
+    let base_border_color = base.get("border-color").and_then(|v| css_color_to_dart(v));
+    let base_border_width = base.get("border-width").map(|v| parse_pixel_value(v));
+    if base_border_width.is_some()
+        || layers.iter().any(|layer| layer.border_width.is_some())
+        || per_edge_border_expr(base).is_some()
+    {
+        let border_color = state_color_expr(
+            layers,
+            |layer| layer.border_color.as_ref(),
+            base_border_color.as_deref().unwrap_or("Colors.transparent"),
+        );
+        let border_width = state_color_expr(
+            layers,
+            |layer| layer.border_width.as_ref(),
+            base_border_width.as_deref().unwrap_or("0"),
+        );
+        deco_parts.push(
+            // UI79 -- a per-edge declaration replaces the all-four form
+            // for the whole border, filling unauthored sides from the
+            // shorthand it just read.
+            per_edge_border_expr(base).unwrap_or_else(|| {
+                format!("border: Border.all(color: {border_color}, width: {border_width})")
+            }),
+        );
+    }
+    // #15225 -- `border-radius`. This builder read background, border and
+    // elevation and simply never looked at the radius, so a styled box was
+    // square on Flutter however it was authored -- a NUMERIC radius was
+    // dropped here just as surely as a percentage one. `emit_container`
+    // handles it, which is why the same property works elsewhere in the
+    // same file: two writers, and only one of them had it.
+    //
+    // Emitted after the border so the argument order matches
+    // `emit_container`'s, keeping the two writers' output comparable.
+    // NOT paired with a per-edge border. Flutter's `Border.paint` throws
+    // "A borderRadius can only be given on borders with uniform colors"
+    // the moment a non-uniform `Border(...)` carries a radius, and asserts
+    // separately on a hairline side -- taking out the widget and everything
+    // above it in any debug or profile build. `per_edge_border_expr` emits
+    // exactly that non-uniform form, and it can also emit a `width: 0`
+    // side for an edge whose authored width was unreadable.
+    //
+    // Before #15225 this builder emitted no radius at all, so the pairing
+    // was unreachable; adding one without this gate turns an authored
+    // per-edge border plus a radius into a runtime crash. A uniform border
+    // is fine, which is the case every product actually authors.
+    let uniform_border = per_edge_border_expr(base).is_none();
+    if uniform_border {
+        if let Some(radius) = base.get("border-radius").and_then(|v| strict_pixel_length(v)) {
+            deco_parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
+        }
+    }
+    // UI41, #12028 item 1 — base props only (see `elevation_tier`'s doc
+    // comment).
+    if let Some(tier) = elevation_tier(base) {
+        deco_parts.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
+    }
+    args.push(format!(
+        "decoration: BoxDecoration({})",
+        deco_parts.join(", ")
+    ));
+
+    // --- Child, wrapped in a per-state text colour -------------------
+    //
+    // Text colour: the part's own base `color`, else the sheet's
+    // inherited `color` (threaded via [`TableCtx`]), with the
+    // per-state overrides folded on top. A `TextStyle` whose `color:`
+    // is a runtime ternary can't be `const`.
+    let base_text = base
+        .get("color")
+        .and_then(|v| css_color_to_dart(v))
+        .or_else(|| ctx.sheet_text_color.map(str::to_string))
+        .unwrap_or_else(|| "null".to_string());
+    let text_color_expr = state_color_expr(layers, |l| l.text_color.as_ref(), &base_text);
+
+    // Font family / size: the part's own, else the sheet's (the
+    // VisiCalc monospace 12px lives on the `sheet` part, not the cell).
+    let font_family = base
+        .get("font-family")
+        .map(String::as_str)
+        .or(ctx.sheet_font_family);
+    let font_size = base
+        .get("font-size")
+        .map(|v| parse_pixel_value(v))
+        .or_else(|| ctx.sheet_font_size.map(str::to_string));
+
+    let mut text_style_parts: Vec<String> = vec![format!("color: {text_color_expr}")];
+    if let Some(ff) = font_family {
+        text_style_parts.push(format!("fontFamily: \"{}\"", escape_dart_string(ff)));
+    }
+    if let Some(fs) = font_size {
+        text_style_parts.push(format!("fontSize: {fs}"));
+    }
+
+    // #15166 -- computed BEFORE the child is emitted, so it can be threaded
+    // down. A Flutter `TextField` does not inherit the
+    // `DefaultTextStyle.merge` written below it; an input authoring
+    // `font: inherit` has no other way to follow the text around it.
+    //
+    // Built SEPARATELY from the merge copy, and validated the way
+    // `host_input_text_style_arg` validates an input's own font. The merge
+    // reads `font-size` through `parse_pixel_value`, whose contract is "0
+    // on anything unreadable" -- harmless for a `Text`, which the theme
+    // still sizes, but on a `TextField` `fontSize: 0` is an editor the user
+    // cannot see or place a cursor in. That is the exact invariant
+    // `inherit_is_dropped_rather_than_invented` pins for the explicit path,
+    // and threading the merge copy verbatim would have walked around it.
+    // An unregistered font family means nothing to Flutter, so the same
+    // allow-list applies.
+    let mut inherited_parts: Vec<String> = vec![format!("color: {text_color_expr}")];
+    if let Some(family) = font_family.and_then(|f| match f.trim() {
+        "monospace" => Some("\"monospace\""),
+        "serif" => Some("\"serif\""),
+        "sans-serif" => Some("\"sans-serif\""),
+        _ => None,
+    }) {
+        inherited_parts.push(format!("fontFamily: {family}"));
+    }
+    if let Some(size) = base
+        .get("font-size")
+        .and_then(|v| strict_pixel_length(v))
+        .or_else(|| ctx.sheet_font_size.and_then(strict_pixel_length))
+    {
+        inherited_parts.push(format!("fontSize: {size}"));
+    }
+    let inherited_text_style = inherited_parts.join(", ");
+
+    FlutterBoxStyle {
+        args,
+        text_style_parts,
+        inherited_text_style,
+    }
+}
+
 /// Lower a styled `Box [part]` (a spreadsheet cell or header-cell) to a
 /// fully-decorated Flutter `Container`. This is the Bug-B fix.
 ///
@@ -3967,95 +4319,15 @@ fn emit_styled_box(
     let base = parse_style_props(style_props);
     let layers = collect_cell_state_layers(node, part, part_styles);
 
-    // --- Sizing / alignment / padding args ---------------------------
-    let mut args: Vec<String> = Vec::new();
+    let style = flutter_box_style(&base, &layers, ctx);
+    let mut args = style.args;
+    let text_style_parts = style.text_style_parts;
+    let inherited_text_style = style.inherited_text_style;
+    let ctx = TableCtx {
+        inherited_text_style: Some(inherited_text_style.as_str()),
+        ..ctx
+    };
 
-    // width: a discovered column width (`columnWidths[c]`) wins; else an
-    // explicit base `width`.
-    if let (Some(slot), Some(idx)) = (ctx.column_widths_slot, ctx.cell_index) {
-        args.push(format!("width: {slot}[{idx}]"));
-    } else if let Some(w) = base.get("width") {
-        args.push(format!("width: {}", parse_pixel_value(w)));
-    }
-    if let Some(h) = base.get("height") {
-        args.push(format!("height: {}", parse_pixel_value(h)));
-    }
-    if let Some(min_height) = base.get("min-height") {
-        args.push(format!(
-            "constraints: const BoxConstraints(minHeight: {})",
-            parse_pixel_value(min_height)
-        ));
-    }
-    if let Some(ta) = base.get("text-align") {
-        args.push(format!("alignment: {}", text_align_to_alignment(ta)));
-    }
-    let base_padding = base.get("padding").map(|v| parse_pixel_value(v));
-    if base_padding.is_some() || layers.iter().any(|layer| layer.padding.is_some()) {
-        if layers.iter().all(|layer| layer.padding.is_none()) {
-            args.push(format!(
-                "padding: const EdgeInsets.symmetric(horizontal: {})",
-                base_padding.as_deref().unwrap_or("0")
-            ));
-        } else {
-            let padding = state_color_expr(
-                &layers,
-                |layer| layer.padding.as_ref(),
-                base_padding.as_deref().unwrap_or("0"),
-            );
-            args.push(format!(
-                "padding: EdgeInsets.symmetric(horizontal: {padding})"
-            ));
-        }
-    }
-
-    // --- BoxDecoration: background (state-conditional) + border -------
-    let base_bg = base
-        .get("background")
-        .or_else(|| base.get("background-color"))
-        .and_then(|v| css_color_to_dart(v));
-    let bg_expr = state_color_expr(
-        &layers,
-        |l| l.background.as_ref(),
-        base_bg.as_deref().unwrap_or("null"),
-    );
-    let mut deco_parts: Vec<String> = vec![format!("color: {bg_expr}")];
-    let base_border_color = base.get("border-color").and_then(|v| css_color_to_dart(v));
-    let base_border_width = base.get("border-width").map(|v| parse_pixel_value(v));
-    if base_border_width.is_some()
-        || layers.iter().any(|layer| layer.border_width.is_some())
-        || per_edge_border_expr(&base).is_some()
-    {
-        let border_color = state_color_expr(
-            &layers,
-            |layer| layer.border_color.as_ref(),
-            base_border_color.as_deref().unwrap_or("Colors.transparent"),
-        );
-        let border_width = state_color_expr(
-            &layers,
-            |layer| layer.border_width.as_ref(),
-            base_border_width.as_deref().unwrap_or("0"),
-        );
-        deco_parts.push(
-            // UI79 -- a per-edge declaration replaces the all-four form
-            // for the whole border, filling unauthored sides from the
-            // shorthand it just read.
-            per_edge_border_expr(&base).unwrap_or_else(|| {
-                format!("border: Border.all(color: {border_color}, width: {border_width})")
-            }),
-        );
-    }
-    // UI41, #12028 item 1 — base props only (see `elevation_tier`'s doc
-    // comment).
-    if let Some(tier) = elevation_tier(&base) {
-        deco_parts.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
-    }
-    args.push(format!(
-        "decoration: BoxDecoration({})",
-        deco_parts.join(", ")
-    ));
-
-    // --- Child, wrapped in a per-state text colour -------------------
-    //
     // The Box [cell] body is an `If (is-editing) { HostInput } Else
     // { Text }` pair — exactly one rendered widget after fusing. Detect
     // the leading `If` (+ optional `Else`) and emit the single ternary
@@ -4101,35 +4373,6 @@ fn emit_styled_box(
     };
     let inner_child = inner_child.trim_start();
 
-    // Text colour: the part's own base `color`, else the sheet's
-    // inherited `color` (threaded via [`TableCtx`]), with the
-    // per-state overrides folded on top. A `TextStyle` whose `color:`
-    // is a runtime ternary can't be `const`.
-    let base_text = base
-        .get("color")
-        .and_then(|v| css_color_to_dart(v))
-        .or_else(|| ctx.sheet_text_color.map(str::to_string))
-        .unwrap_or_else(|| "null".to_string());
-    let text_color_expr = state_color_expr(&layers, |l| l.text_color.as_ref(), &base_text);
-
-    // Font family / size: the part's own, else the sheet's (the
-    // VisiCalc monospace 12px lives on the `sheet` part, not the cell).
-    let font_family = base
-        .get("font-family")
-        .map(String::as_str)
-        .or(ctx.sheet_font_family);
-    let font_size = base
-        .get("font-size")
-        .map(|v| parse_pixel_value(v))
-        .or_else(|| ctx.sheet_font_size.map(str::to_string));
-
-    let mut text_style_parts: Vec<String> = vec![format!("color: {text_color_expr}")];
-    if let Some(ff) = font_family {
-        text_style_parts.push(format!("fontFamily: \"{}\"", escape_dart_string(ff)));
-    }
-    if let Some(fs) = font_size {
-        text_style_parts.push(format!("fontSize: {fs}"));
-    }
     let child_expr = format!(
         "DefaultTextStyle.merge(style: TextStyle({}), child: {inner_child})",
         text_style_parts.join(", ")
@@ -4233,8 +4476,9 @@ fn emit_host_input(
     part_styles: &HashMap<String, String>,
     component: &str,
     emits: &[EmitDecl],
-    direct_row_child: bool,
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
+    let direct_row_child = ctx.direct_row_child;
     let pad = " ".repeat(indent);
     let field_pad = if direct_row_child {
         " ".repeat(indent + 2)
@@ -4316,6 +4560,17 @@ fn emit_host_input(
     }
     if let Some(text_style) = host_input_text_style_arg(node, part_styles) {
         writeln!(out, "{input_pad}  style: {text_style},").unwrap();
+    } else if let Some(inherited) = inherits_enclosing_font(node, part_styles)
+        .then_some(ctx.inherited_text_style)
+        .flatten()
+    {
+        // #15166 -- the author wrote `font: inherit`, and a `TextField` has
+        // no way to honour that: it does NOT read the enclosing
+        // `DefaultTextStyle` the way a `Text` does, so it silently renders
+        // at the Material theme's font instead of the text beside it. The
+        // enclosing styled box computed the style it merged; this is that
+        // same expression, handed to the input directly.
+        writeln!(out, "{input_pad}  style: TextStyle({inherited}),").unwrap();
     }
 
     if let Some(read_only) = bool_prop_expression(node, "read-only")? {
@@ -4411,6 +4666,31 @@ fn strict_pixel_length(s: &str) -> Option<f64> {
     t.parse::<f64>()
         .ok()
         .filter(|f| f.is_finite() && *f >= 0.0 && f.abs() <= MAX_EXACT_INT)
+        // IEEE `-0.0 >= 0.0` is true, and callers format with `{}`, which
+        // prints `-0`. Harmless to Dart (it reads as `-0.0`, satisfying
+        // `assert(width >= 0.0)`) but it puts a `width: -` into generated
+        // source from a legal input, which is the invariant the tests
+        // assert. Same normalisation as `parse_pixel_value`.
+        .map(|f| if f == 0.0 { 0.0 } else { f })
+}
+
+/// Did this part ask to inherit the surrounding font? (#15166)
+///
+/// Only an explicit `inherit` counts. CSS does NOT give a text input the
+/// surrounding font by default -- which is exactly why `font: inherit` is a
+/// standard reset -- so applying the enclosing style to every unstyled input
+/// would diverge from the web backends rather than agree with them.
+fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, String>) -> bool {
+    let Some(part) = node.part_name.as_deref() else {
+        return false;
+    };
+    let Some(style) = part_styles.get(part) else {
+        return false;
+    };
+    parse_style_props(style).iter().any(|(name, value)| {
+        (name == "font" || name.starts_with("font-"))
+            && value.trim().eq_ignore_ascii_case("inherit")
+    })
 }
 
 /// #15142 -- lower a `HostInput`'s part style into its `InputDecoration`.
@@ -6114,6 +6394,7 @@ fn emit_host_table(
         cell_index: parent_ctx.cell_index,
         for_item: parent_ctx.for_item,
         for_index: parent_ctx.for_index,
+        inherited_text_style: None,
         sheet_text_color: sheet_text_color.as_deref(),
         sheet_font_family: sheet_font_family.as_deref(),
         sheet_font_size: sheet_font_size.as_deref(),
@@ -14166,6 +14447,231 @@ mod host_input_style_tests {
         );
     }
 
+    /// #15166 -- `font: inherit` reaches the TextField.
+    ///
+    /// A Flutter `TextField` does NOT read the enclosing `DefaultTextStyle`
+    /// the way a `Text` does, so an input authoring `font: inherit` rendered
+    /// at the Material theme's font instead of the text beside it. Measured
+    /// in a real `flutter test` with a real font, inside the cell's own text
+    /// context:
+    ///
+    ///   display Text                19.0
+    ///   editor without the font     24.0   (+5)
+    ///   editor with it              20.0   (+1)
+    #[test]
+    fn an_input_asking_to_inherit_gets_the_enclosing_style() {
+        let node = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("cell-editor".to_string()),
+            props: vec![],
+            children: vec![],
+        };
+        let mut styles = HashMap::new();
+        styles.insert(
+            "cell-editor".to_string(),
+            "padding: 0px; border: 0px; font: inherit".to_string(),
+        );
+        assert!(
+            inherits_enclosing_font(&node, &styles),
+            "`font: inherit` must be recognised as asking to inherit"
+        );
+        // and the shorthand's long forms
+        for authored in ["font-family: inherit", "font-size: inherit", "font: INHERIT"] {
+            let mut s2 = HashMap::new();
+            s2.insert("cell-editor".to_string(), authored.to_string());
+            assert!(inherits_enclosing_font(&node, &s2), "`{authored}`");
+        }
+    }
+
+    /// ONLY an explicit `inherit` counts. CSS does not give a text input the
+    /// surrounding font by default -- which is exactly why `font: inherit`
+    /// is a standard reset -- so applying the enclosing style to every
+    /// unstyled input would diverge from the web backends rather than agree
+    /// with them.
+    #[test]
+    fn an_input_that_did_not_ask_does_not_inherit() {
+        let node = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("plain".to_string()),
+            props: vec![],
+            children: vec![],
+        };
+        for authored in [
+            "padding: 4px",
+            "font-size: 13px",
+            "font-family: monospace",
+            "color: #fff",
+        ] {
+            let mut styles = HashMap::new();
+            styles.insert("plain".to_string(), authored.to_string());
+            assert!(
+                !inherits_enclosing_font(&node, &styles),
+                "`{authored}` did not ask to inherit"
+            );
+        }
+        // and a part with no style at all, or no part name
+        assert!(!inherits_enclosing_font(&node, &HashMap::new()));
+        let anon = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![],
+        };
+        assert!(!inherits_enclosing_font(&anon, &HashMap::new()));
+    }
+
+    /// THE CALL SITE, not just the predicate. Both tests above call
+    /// `inherits_enclosing_font` directly and keep passing if the gate is
+    /// deleted from `emit_host_input` -- verified by deleting it. A guard
+    /// has to be pinned where it is WIRED, which is the third time that has
+    /// bitten in this file.
+    #[test]
+    fn the_emitted_input_honours_the_gate() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        fn emit(editor_style: &str) -> String {
+            let m = MosmodelComponent {
+                component: "X".to_string(),
+                slots: vec![],
+                emits: vec![],
+            };
+            // a styled cell (which merges a text style) wrapping an input
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: "Box".to_string(),
+                    part_name: Some("cell".to_string()),
+                    props: vec![],
+                    children: vec![LayoutNode {
+                        tag: "HostInput".to_string(),
+                        part_name: Some("editor".to_string()),
+                        props: vec![],
+                        children: vec![],
+                    }],
+                },
+            };
+            let mut editor_base = vec![prop("padding", "0px")];
+            if !editor_style.is_empty() {
+                let (name, value) = editor_style.split_once(':').expect("name: value");
+                editor_base.push(prop(name.trim(), value.trim()));
+            }
+            let style = StyleDef {
+                component_name: "X".to_string(),
+                parts: vec![
+                    PartStyle {
+                        name: "cell".to_string(),
+                        base: vec![
+                            prop("color", "#e3eee4"),
+                            prop("font-size", "13"),
+                            prop("background", "#1e1e1e"),
+                        ],
+                        transitions: vec![],
+                        states: vec![],
+                    },
+                    PartStyle {
+                        name: "editor".to_string(),
+                        base: editor_base,
+                        transitions: vec![],
+                        states: vec![],
+                    },
+                ],
+            };
+            from_pipeline(&m, &l, &style).expect("emits").output
+        }
+
+        // Assert on the TEXTFIELD's own slice. Asserting over the whole
+        // output matched the `DefaultTextStyle.merge` line, which has always
+        // contained that byte sequence -- so the test passed with the entire
+        // feature reverted. Fourth vacuous assertion in this area; the
+        // negative half below was the only thing pinning anything.
+        let asked = emit("font: inherit");
+        let asked_field = asked
+            .split("TextField(")
+            .nth(1)
+            .expect("a TextField is emitted");
+        assert!(
+            asked_field.contains("style: TextStyle(color: const Color(0xFFE3EEE4), fontSize: 13)"),
+            "an input asking to inherit must carry the cell's style: {asked_field}"
+        );
+
+        let did_not_ask = emit("");
+        let field = did_not_ask
+            .split("TextField(")
+            .nth(1)
+            .expect("a TextField is emitted");
+        assert!(
+            !field.contains("style: TextStyle"),
+            "an input that did not ask must NOT be given the enclosing style: {field}"
+        );
+    }
+
+    /// An UNREADABLE enclosing font-size must not reach the input as
+    /// `fontSize: 0`.
+    ///
+    /// The merge copy reads `font-size` through `parse_pixel_value`, whose
+    /// contract is "0 on anything unreadable" -- harmless for a `Text`,
+    /// which the theme still sizes, but on a `TextField` a zero size is an
+    /// editor the user cannot see or place a cursor in. Threading the merge
+    /// copy verbatim walked straight around the invariant
+    /// `inherit_is_dropped_rather_than_invented` pins for the explicit path.
+    #[test]
+    fn an_unreadable_inherited_font_size_is_not_threaded_as_zero() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        for bad in ["90%", "0.9rem", "inherit", "large", "-4px"] {
+            let m = MosmodelComponent {
+                component: "X".to_string(),
+                slots: vec![],
+                emits: vec![],
+            };
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: "Box".to_string(),
+                    part_name: Some("cell".to_string()),
+                    props: vec![],
+                    children: vec![LayoutNode {
+                        tag: "HostInput".to_string(),
+                        part_name: Some("editor".to_string()),
+                        props: vec![],
+                        children: vec![],
+                    }],
+                },
+            };
+            let style = StyleDef {
+                component_name: "X".to_string(),
+                parts: vec![
+                    PartStyle {
+                        name: "cell".to_string(),
+                        base: vec![prop("font-size", bad), prop("background", "#1e1e1e")],
+                        transitions: vec![],
+                        states: vec![],
+                    },
+                    PartStyle {
+                        name: "editor".to_string(),
+                        base: vec![prop("font", "inherit")],
+                        transitions: vec![],
+                        states: vec![],
+                    },
+                ],
+            };
+            let out = from_pipeline(&m, &l, &style).expect("emits").output;
+            let field = out.split("TextField(").nth(1).expect("a TextField");
+            assert!(
+                !field.contains("fontSize: 0"),
+                "`{bad}` reached the editor as a zero size: {field}"
+            );
+        }
+    }
+
     /// A NEGATIVE width must not reach `BorderSide`. Its constructor
     /// asserts `width >= 0.0`, so a negative one type-checks and then
     /// throws when the widget builds, taking out the input and its whole
@@ -14265,5 +14771,532 @@ mod host_input_style_tests {
             deco, None,
             "neither `transparent` nor the `font` shorthand should invent a value"
         );
+    }
+}
+
+// =====================================================================
+// #15160 -- a negative length never reaches generated Dart
+//
+// Flutter's `BorderSide` constructor is `assert(width >= 0.0)`. A
+// negative authored width therefore produces Dart that TYPE-CHECKS and
+// then THROWS the moment the widget builds, taking out that widget and
+// everything above it in the tree. It is a runtime crash reachable from
+// any stylesheet, not a rendering glitch.
+//
+// `per_edge_border_expr` had guarded its own path for a while; four other
+// `Border.all` / `BorderSide` writers took their width from
+// `parse_pixel_value` unguarded. The guard is central now.
+//
+// Audited before centralising: every property reaching `parse_pixel_value`
+// is non-negative geometry (gap, padding, width, height, min-height,
+// border-width, border-radius, font-size, stroke width), and CSS forbids a
+// negative for each. No margin, inset or offset is lowered through it, so
+// nothing that legitimately admits a negative loses one.
+// =====================================================================
+#[cfg(test)]
+mod negative_length_tests {
+    use super::*;
+
+    /// #15225 -- `emit_styled_box` built its `BoxDecoration` from
+    /// background, border and elevation and never looked at the radius, so
+    /// a styled box was SQUARE on Flutter however it was authored. A
+    /// NUMERIC radius was dropped here just as surely as a percentage one,
+    /// which is why the same property visibly works elsewhere in the same
+    /// file: `emit_container` handles it, and only one of the two writers
+    /// had it.
+    #[test]
+    fn a_styled_box_carries_its_border_radius() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        let m = MosmodelComponent {
+            component: "X".to_string(),
+            slots: vec![],
+            emits: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("dot".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "dot".to_string(),
+                base: vec![
+                    prop("width", "6"),
+                    prop("height", "6"),
+                    prop("background", "#6fb489"),
+                    prop("border-radius", "3"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &style).expect("emits").output;
+        assert!(
+            out.contains("borderRadius: BorderRadius.circular(3)"),
+            "the styled box must carry its radius: {out}"
+        );
+        // An unreadable radius is dropped rather than becoming 0, since a 0
+        // radius is a square -- the very bug being fixed. Asserted on the
+        // VALIDATOR, because asserting `!out.contains("circular(0)")` on the
+        // emitted text cannot fail under any implementation of the line
+        // above: `strict_pixel_length("50%")` returns None, so `Some(0.0)`
+        // is unreachable and the assertion reads as coverage it never had.
+        assert_eq!(strict_pixel_length("50%"), None);
+        assert_eq!(strict_pixel_length("auto"), None);
+        let mut unresolved = style.clone();
+        unresolved.parts[0].base.pop();
+        unresolved.parts[0].base.push(prop("border-radius", "50%"));
+        let out2 = from_pipeline(&m, &l, &unresolved).expect("emits").output;
+        assert!(
+            !out2.contains("borderRadius"),
+            "an unresolved percentage must emit no radius at all: {out2}"
+        );
+
+        // A RADIUS IS NEVER PAIRED WITH A PER-EDGE BORDER. Flutter's
+        // `Border.paint` throws "A borderRadius can only be given on borders
+        // with uniform colors", so this combination is a runtime crash that
+        // takes out the widget and its ancestry.
+        let mut per_edge = style.clone();
+        per_edge.parts[0].base.extend([
+            prop("border-top-width", "1"),
+            prop("border-top-color", "#ff0000"),
+            prop("border-bottom-width", "2"),
+            prop("border-bottom-color", "#00ff00"),
+        ]);
+        let out3 = from_pipeline(&m, &l, &per_edge).expect("emits").output;
+        assert!(
+            out3.contains("border: Border("),
+            "the fixture should still produce a per-edge border: {out3}"
+        );
+        assert!(
+            !out3.contains("borderRadius"),
+            "a per-edge border must suppress the radius, or Flutter throws at paint: {out3}"
+        );
+    }
+
+    #[test]
+    fn a_negative_length_falls_back_rather_than_reaching_dart() {
+        for bad in ["-1px", "-0.5px", "-5", "-1e300px"] {
+            assert_eq!(
+                parse_pixel_value(bad),
+                "0",
+                "`{bad}` must not survive into generated Dart"
+            );
+        }
+        // NEGATIVE ZERO. `-0.0 >= 0.0` is true in IEEE, and Rust prints
+        // it as `-0`. Dart reads that as `-0.0`, which does satisfy
+        // `assert(width >= 0.0)` -- so it is not a crash -- but it puts a
+        // `width: -` into generated source from a legal input, falsifying
+        // the invariant the emit test below asserts.
+        assert_eq!(parse_pixel_value("-0px"), "0");
+        assert_eq!(parse_pixel_value("-0.0"), "0");
+        assert!(!parse_pixel_value("-0px").starts_with('-'));
+
+        // ordinary values are untouched
+        assert_eq!(parse_pixel_value("0px"), "0");
+        assert_eq!(parse_pixel_value("13px"), "13");
+        assert_eq!(parse_pixel_value("6.5"), "6.5");
+    }
+
+    /// End to end through a real emit: a part authoring a negative border
+    /// width must not put `width: -N` anywhere in the generated file. This
+    /// covers the `Border.all` writers that a unit test on the helper
+    /// would miss.
+    #[test]
+    fn no_emitted_border_side_carries_a_negative_width() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        let m = MosmodelComponent {
+            component: "X".to_string(),
+            slots: vec![],
+            emits: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![
+                    prop("border-width", "-5px"),
+                    prop("border-color", "#ff0000"),
+                    prop("padding", "-3px"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &style).expect("emits").output;
+        assert!(
+            !out.contains("width: -"),
+            "a negative width reached BorderSide, which asserts at build: {out}"
+        );
+        // Assert what this path ACTUALLY emits. The styled-box path writes
+        // `EdgeInsets.symmetric(horizontal: N)`, so an
+        // `EdgeInsets.all(-` assertion could never fail here and read as
+        // coverage it did not provide.
+        assert!(
+            out.contains("EdgeInsets.symmetric(horizontal: 0)"),
+            "the negative padding should have clamped to 0 on this path: {out}"
+        );
+        assert!(
+            !out.contains(": -"),
+            "no negative value may reach any emitted argument: {out}"
+        );
+        // and the border is still drawn, at the clamped width
+        assert!(
+            out.contains("width: 0"),
+            "the border should fall back to 0, not vanish: {out}"
+        );
+    }
+
+    /// `strict_pixel_length` feeds the same kind of unquoted sink and had
+    /// the same negative-zero leak as its sibling: `border: -0px solid
+    /// #ff0000` emitted `width: -0`, and `font-size: -0px` emitted
+    /// `fontSize: -0`. Legal input, legal Dart, but it falsifies the
+    /// "no `-` in an emitted length" invariant these tests exist to state.
+    #[test]
+    fn the_strict_parse_does_not_leak_negative_zero() {
+        assert_eq!(strict_pixel_length("-0px"), Some(0.0));
+        assert_eq!(strict_pixel_length("-0.0"), Some(0.0));
+        assert!(!format!("{}", strict_pixel_length("-0px").unwrap()).starts_with('-'));
+        // through the real sinks
+        let mut border_props = HashMap::new();
+        border_props.insert("border".to_string(), "-0px solid #ff0000".to_string());
+        let got = host_input_border_expr(&border_props);
+        assert!(
+            got.as_deref().is_none_or(|g| !g.contains("width: -")),
+            "got: {got:?}"
+        );
+
+        let node = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: Some("f".to_string()),
+            props: vec![],
+            children: vec![],
+        };
+        let mut part_styles = HashMap::new();
+        part_styles.insert("f".to_string(), "font-size: -0px".to_string());
+        let style = host_input_text_style_arg(&node, &part_styles);
+        assert!(
+            style.as_deref().is_none_or(|s| !s.contains("-0")),
+            "got: {style:?}"
+        );
+    }
+
+    /// `part_max_width` VALIDATED the parse and EMITTED the authored text,
+    /// so its guard proved nothing about what shipped. Rust's float
+    /// grammar accepts a leading `+`, and Dart has no unary `+` on a
+    /// literal -- so `max-width: +760px` passed validation and emitted
+    /// `maxWidth: +760`, a hard compile error from one authored value.
+    #[test]
+    fn max_width_emits_the_parsed_value_not_the_authored_text() {
+        fn max_width_node(value: &str) -> Option<String> {
+            let node = LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("p".to_string()),
+                props: vec![],
+                children: vec![],
+            };
+            let mut m = HashMap::new();
+            m.insert("p".to_string(), format!("max-width: {value}"));
+            part_max_width(&node, &m)
+        }
+        assert_eq!(max_width_node("+760px").as_deref(), Some("760"));
+        assert_eq!(max_width_node("760px").as_deref(), Some("760"));
+        assert_eq!(max_width_node(" 760 px ").as_deref(), Some("760"));
+        // absurd magnitudes are rejected rather than emitted as a
+        // 22-digit literal Dart refuses to compile
+        assert_eq!(max_width_node("9999999999999999999999px"), None);
+        assert_eq!(max_width_node("1e300px"), None);
+        // and the pre-existing rejections still hold
+        assert_eq!(max_width_node("0px"), None);
+        assert_eq!(max_width_node("-5px"), None);
+        assert_eq!(max_width_node("100%"), None);
+    }
+
+    /// A negative on a `Row`/`Column`/`Stack` size wrapper must DROP the
+    /// width, not clamp it to 0.
+    ///
+    /// `fixed_pixel_length` exists because `parse_pixel_value`'s `0`
+    /// fallback collapses the subtree into a zero-width box -- a real
+    /// regression its doc comment records catching in a `flutter test`
+    /// render. Centralising the negative guard made that reachable again:
+    /// `width: -5px` went from `SizedBox(width: -5)`, which trips
+    /// Flutter's `debugAssertIsValid` LOUDLY, to `SizedBox(width: 0)`,
+    /// which silently eats the subtree. Loud beats silent, and dropping
+    /// beats both.
+    #[test]
+    fn a_negative_size_wrapper_length_is_dropped_not_clamped() {
+        assert_eq!(fixed_pixel_length("-5px"), None);
+        assert_eq!(fixed_pixel_length("-0.5"), None);
+        // the reason it already returned None for a relative length
+        assert_eq!(fixed_pixel_length("100%"), None);
+        // and a real length still applies
+        assert_eq!(fixed_pixel_length("120px").as_deref(), Some("120"));
+        assert_eq!(fixed_pixel_length("0px").as_deref(), Some("0"));
+    }
+
+    /// A negative PER-EDGE width is skipped entirely rather than clamped,
+    /// so the shorthand can cascade in. That is a different answer from
+    /// the central `0` fallback, and it is deliberate -- pinning it here
+    /// because the check has to read the AUTHORED text: once
+    /// `parse_pixel_value` rejects negatives, a check on its output can
+    /// never fire, and the edge would be silently emitted at width 0.
+    #[test]
+    fn a_negative_per_edge_width_skips_the_edge_rather_than_clamping() {
+        let mut m = HashMap::new();
+        m.insert("border-bottom-width".to_string(), "-1px".to_string());
+        assert_eq!(per_edge_border_expr(&m), None);
+
+        // with a positive sibling, only the good edge survives
+        let mut m2 = HashMap::new();
+        m2.insert("border-bottom-width".to_string(), "-1px".to_string());
+        m2.insert("border-top-width".to_string(), "2px".to_string());
+        m2.insert("border-color".to_string(), "#ABCDEF".to_string());
+        let got = per_edge_border_expr(&m2).expect("the top edge survives");
+        assert!(got.contains("top: BorderSide"), "got: {got}");
+        assert!(!got.contains("bottom:"), "the negative edge must be skipped: {got}");
+        assert!(!got.contains("width: -"), "got: {got}");
+
+        // a negative SHORTHAND must not cascade a negative into an edge
+        let mut m3 = HashMap::new();
+        m3.insert("border-width".to_string(), "-4px".to_string());
+        m3.insert("border-top-color".to_string(), "#ABCDEF".to_string());
+        let got3 = per_edge_border_expr(&m3);
+        assert!(
+            got3.as_deref().is_none_or(|g| !g.contains("width: -")),
+            "got: {got3:?}"
+        );
+    }
+}
+
+// =====================================================================
+// #15213 -- a relative length must not collapse a subtree to zero
+//
+// `fixed_pixel_length` exists because `parse_pixel_value`'s "unreadable
+// -> 0" fallback turns a size into a zero-size box and eats whatever is
+// inside it. It declined `%` and (since #15160) negatives, and let every
+// other relative form through to that exact fallback.
+//
+// Measured on the products, three subtrees were collapsed:
+//
+//   visicalc  Column [workbook]  height: 100vh  -> Container(height: 0)
+//             ...which is the ROOT, so the whole app rendered as nothing
+//   task-app  two calendar cells  width: 100%   -> Container(width: 0)
+//
+// The corpus authors 86 relative lengths, so the rest reach writers that
+// already decline; these three reached ones that did not.
+// =====================================================================
+#[cfg(test)]
+mod relative_length_tests {
+    use super::*;
+
+    /// Every relative form declines. A positive test, so a unit nobody has
+    /// thought of yet declines by default rather than collapsing a subtree.
+    #[test]
+    fn a_relative_length_is_declined_not_zeroed() {
+        for relative in [
+            "100vh", "100vw", "60vh", "max-content", "min-content", "auto",
+            "fit-content", "12rem", "1.5em", "calc(100% - 10px)", "100%", "-5px",
+        ] {
+            assert_eq!(
+                fixed_pixel_length(relative),
+                None,
+                "`{relative}` must decline, not become a zero-size box"
+            );
+        }
+    }
+
+    /// Plain pixel lengths still apply.
+    #[test]
+    fn a_plain_length_still_applies() {
+        assert_eq!(fixed_pixel_length("240").as_deref(), Some("240"));
+        assert_eq!(fixed_pixel_length("240px").as_deref(), Some("240"));
+        assert_eq!(fixed_pixel_length("6.5px").as_deref(), Some("6.5"));
+        assert_eq!(fixed_pixel_length("0").as_deref(), Some("0"));
+    }
+
+    /// End to end: the shape that collapsed VisiCalc's entire app. A
+    /// declining size must emit NO size argument -- not a zero one.
+    #[test]
+    fn a_container_with_a_viewport_height_emits_no_height() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        let m = MosmodelComponent {
+            component: "X".to_string(),
+            slots: vec![],
+            emits: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: Some("workbook".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "workbook".to_string(),
+                base: vec![
+                    prop("height", "100vh"),
+                    prop("background", "#14221e"),
+                    prop("padding", "24px"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &style).expect("emits").output;
+        assert!(
+            !out.contains("height: 0"),
+            "a viewport height must not collapse the root: {out}"
+        );
+        // the rest of the part still applies
+        assert!(out.contains("EdgeInsets.all(24)"), "{out}");
+    }
+
+    /// The charset gate is not a parse, so shapes that pass it can still
+    /// fail to parse. Delegating those to `parse_pixel_value` answered `0`
+    /// -- the very collapse this function exists to prevent, through a
+    /// narrower door.
+    #[test]
+    fn a_shape_that_passes_the_charset_but_not_the_parse_still_declines() {
+        for malformed in ["1-2", "1.2.3", ".", "-", "2-3px", "5.5.5px", "1--2"] {
+            assert_eq!(
+                fixed_pixel_length(malformed),
+                None,
+                "`{malformed}` must decline, not become a zero-size box"
+            );
+        }
+        // `100 px` is accepted leniently as 100 -- the inner trim reaches a
+        // clean number. Not valid CSS, but the answer is a real size rather
+        // than a collapse, which is what this guard is about.
+        assert_eq!(fixed_pixel_length("100 px").as_deref(), Some("100"));
+    }
+
+    /// `style_prop_to_container_arg` declines too. This path is unreachable
+    /// from `emit_container` today -- `part_has_decoration` returns true
+    /// whenever a `width` or `height` key is present, so the lightweight
+    /// path is never taken for a sized part -- so this is defence in depth,
+    /// pinned rather than shipped as if it were a live fix.
+    #[test]
+    fn the_lightweight_container_arg_path_declines_too() {
+        assert_eq!(style_prop_to_container_arg("width: 100vh"), None);
+        assert_eq!(style_prop_to_container_arg("height: max-content"), None);
+        assert_eq!(
+            style_prop_to_container_arg("width: 240px").as_deref(),
+            Some("width: 240")
+        );
+    }
+
+    /// The styled box's HEIGHT arm, which the percentage-width test above
+    /// does not reach.
+    #[test]
+    fn a_styled_box_with_a_viewport_height_emits_no_height() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        let m = MosmodelComponent {
+            component: "X".to_string(),
+            slots: vec![],
+            emits: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("cell".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "cell".to_string(),
+                base: vec![prop("height", "100vh"), prop("background", "#123456")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &style).expect("emits").output;
+        assert!(
+            !out.contains("height: 0"),
+            "a viewport height must not collapse the box: {out}"
+        );
+        assert!(out.contains("0xFF123456"), "{out}");
+    }
+
+    /// The same for a styled box, which reached the lossy parse by a
+    /// different route -- `width: 100%` on a calendar cell.
+    #[test]
+    fn a_styled_box_with_a_percentage_width_emits_no_width() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        let m = MosmodelComponent {
+            component: "X".to_string(),
+            slots: vec![],
+            emits: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("cell".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "cell".to_string(),
+                base: vec![prop("width", "100%"), prop("background", "#123456")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &style).expect("emits").output;
+        assert!(
+            !out.contains("width: 0"),
+            "a percentage width must not collapse the box: {out}"
+        );
+        assert!(out.contains("0xFF123456"), "the background still applies: {out}");
     }
 }

@@ -519,6 +519,40 @@ jobs:
       - name: Install Python contract dependencies
         run: python3 -m pip install --disable-pip-version-check --quiet jsonschema==4.26.0
 
+      # `DOC_SHARD_PLANS` now names a document outside human-languages
+      # (`code/packages/rust/lang-aot/CHANGELOG.md`), and its only gate until
+      # now was the `build` job of `human-languages-books.yml`, which is gated
+      # `if: needs.detect.outputs.books == 'true'`. A pull request touching
+      # only that Rust package never sets `books`, so the plan would have been
+      # governed by a check that cannot run on any PR able to break it.
+      #
+      # This job has `needs: detect` but no `if:`, so it runs on every pull
+      # request. That is the property being relied on.
+      - name: Set up Node for the document-shard registry
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - name: Verify sharded documents rebuild
+        run: |
+          set -euo pipefail
+          cd code/packages/typescript/human-language-data
+          npm ci --quiet
+          npm run build --silent
+          # Parses every shard set in DOC_SHARD_PLANS and fails if it cannot
+          # rebuild a structurally complete document, or if a locally rendered
+          # aggregate has gone stale against its shards.
+          #
+          # It does NOT catch a DELETED shard, and does not test trackedness --
+          # both measured. Delete one shard with no local aggregate present
+          # (CI's state, since the aggregate is gitignored) and this exits 0;
+          # a re-tracked aggregate that happens to be in sync also passes.
+          # Those two are guarded by `doc_shard_globs` and
+          # `tracked_doc_monoliths` in human-languages-books.yml, whose detect
+          # job is ungated and so runs on every PR. `doc-shard.test.ts` pins
+          # both lists against DOC_SHARD_PLANS so they cannot drift again.
+          npm run check:doc-shards --silent
+
       - name: Verify repo-wide metadata contracts
         run: |
           # `lessons.d/` is one file per lesson so concurrent PRs cannot

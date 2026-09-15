@@ -1,0 +1,1 @@
+- Lower valid JFET `NLEV` noise-equation levels and reject invalid inputs.

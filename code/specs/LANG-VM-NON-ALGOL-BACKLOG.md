@@ -1,12 +1,345 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-13
+Status date: 2026-09-15
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
 `LANG-FULL-IMPLEMENTATION.md`; when the two disagree about landed behavior,
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
+
+## VM-LOOP-24 — probe-first sweep of the remaining Dartmouth BASIC non-`INPUT` rows (selected after #15231)
+
+`git fetch origin && git merge origin/main` fast-forwarded cleanly onto
+`58fbc2f1a5` (PR #15231, the BEAM03 continuation `neg`(f64)/`f64_pow` slice).
+`gh pr list --state open --limit 50` showed no other LANG-VM-related PR in
+flight, and specifically nothing touching `iir-to-beam` or BASIC BEAM support.
+
+That merged slice's own trailing note named the next work precisely: Dartmouth
+BASIC was 22/51 rows on `Beam`, and the remaining ~29 rows split into (a) 5
+`INPUT` rows (BASIC) + 4 `INPUT` rows (FLOW-MATIC) needing the unscoped
+VM-060b BEAM host-input design — explicitly out of scope, not attempted here
+— and (b) the rest (`FOR`/`LET` general arithmetic, one- and two-D numeric
+arrays, `DATA`/`READ`/`RESTORE`, `RND`'s full DEF-FN-and-module-global chain,
+`GOSUB`/`RETURN`), each needing its OWN real-`erl` probe before promotion,
+explicitly flagging that "nothing in this slice or its predecessor
+established that neg/f64_pow alone unblocks them".
+
+**This is a probe-first task, exactly as scoped.** A scratch probe (discarded
+before this PR — not part of the permanent test suite) compiled and ran EVERY
+one of the 24 not-yet-`Beam`, non-`INPUT` Dartmouth BASIC corpus rows
+individually against real `erl`, unmodified from their existing
+`lang_matrix.rs` source text, using only the `iir-to-beam` capabilities that
+existed before this slice.
+
+### Findings
+
+- **12 rows ran with ZERO new lowering.** General `FOR`/`FOR … STEP` loops,
+  `IF … THEN` + `GOTO`-style line jumps, a same-module `DEF FN` call,
+  multi-item `PRINT` with `;` (including a literal negative, i.e. `sub`) and
+  `,`, ordinary scalar real arithmetic, BA7 fixed-decimal and six-
+  significant-digit/`E`-notation formatting, flat and nested `GOSUB`/
+  `RETURN`, and `SGN`. None of these needed anything BEAM03/BEAM03-
+  continuation hadn't already proven — they simply hadn't been run as
+  individual corpus rows before. `GOSUB`/`RETURN` in particular reuses the
+  E5 `array<i64>` return-address stack, which is an INTEGER array, so it
+  never touches the float-array gap found below.
+- **5 more rows needed new but bounded/mechanical lowering.**
+  `SQR`/`SIN`/`COS`/`LOG`/`EXP`/`ATN`/`TAN` each lower to a single-source
+  IIR op (`f64_sqrt`/`f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`/`f64_atan`/
+  `f64_tan`) that a real `erlc -S` disassembly confirmed emits `call_ext`
+  against a `math:*` import (never `gc_bif1` — `math` functions are
+  ordinary library code, not loader-recognized guard BIFs) — the exact
+  `f64_pow` `call_ext` shape from the prior slice, just with one operand
+  staged instead of two. `INT` additionally needed `real_to_int_floor`,
+  confirmed (also via `erlc -S`) to disassemble to the SAME generic
+  `gc_bif1` shape `int_to_real`/`real_to_int_trunc` already use
+  (`erlang:floor/1` — a genuine guard BIF, unlike the `math:*` functions
+  above it). Implemented both additions in `iir-to-beam` 0.11.0 → 0.12.0,
+  mirroring the existing patterns exactly (see
+  `code/specs/BEAM03-float-lowering.md` §9.3 for the full derivation).
+- **3 groups are explicitly deferred as genuine design questions, per this
+  task's own "do not force a design decision" instruction:**
+  1. **1-D/2-D numeric arrays and `DATA`/`READ`/`RESTORE`** (4 rows) compile
+     cleanly through `iir-to-beam` validation, then TRAP AT RUNTIME on real
+     `erl` with `{badarg,[{atomics,put,[Ref,Index,FloatValue],...}]}`.
+     `iir-to-beam` represents every `alloc_array`/`array_set`/`array_get`
+     with Erlang's `atomics` module, and `atomics` is a fixed-size array of
+     **64-bit INTEGERS ONLY** — confirmed directly on real `erl`
+     (`atomics:put(Ref, 1, 40.0)` traps; the integer form does not). BASIC
+     arrays are `array<f64>` (even `DIM A(3)`, since BA7-1b routes every
+     scalar numeric value through the shared `f64` track), so every BASIC
+     array write traps. Fixing this needs a real architecture decision (bit-
+     reinterpreting the float as an integer via BEAM bit-syntax — itself new
+     lowering `iir-to-beam` has for no op today — versus a different mutable
+     substrate entirely, e.g. `ets`), not a mechanical opcode addition. Left
+     open.
+  2. **String arrays and mixed numeric/string `DATA`** (2 rows) fail
+     `iir-to-beam` VALIDATION outright (`UnsupportedType`: `str`-typed
+     `array_set`/`array_get`), independent of the float-array gap above —
+     `iir-to-beam` has no `str`-typed array element representation at all.
+     A separate, likely larger design item. Left open.
+  3. **`RND`** traps with `{badarith,[{erlang,'*',[undefined,48271],...}]}`
+     inside its compiled `__basic_rnd` helper — a module-global
+     `erlang:get/1` read returns `undefined` instead of the expected seed.
+     This is the SAME "RND's full DEF-FN-and-module-global chain" open
+     design question flagged at VM-018, confirmed still unresolved and
+     confirmed NOT fixed as a side effect of this slice's `real_to_int_floor`
+     addition (the probe re-ran `RND` after implementing it). Left open.
+
+### Validation
+
+`iir-to-beam` 0.12.0: 96 unit/integration tests + 5 doc tests pass (up from
+92), including new tests proving each of the 7 `math:*` transcendentals
+emits exactly one `call_ext` (never `gc_bif1`/`gc_bif2`) against the correct
+import (`test_90`), `real_to_int_floor` emits `gc_bif1` against
+`erlang:floor/1` (not `call_ext`, unlike its `math:*` siblings — `test_91`),
+and two new real-`erl` integration tests: all 7 transcendentals chained in
+one module against their exact Dartmouth BASIC corpus arguments (`SQR(49) +
+SIN(0) + COS(0) + LOG(1) + EXP(0) + ATN(0) + TAN(0)` truncated = `9`,
+`test_92`) and `real_to_int_floor(3.7)` = `3` (`test_93`). All-target
+Clippy with warnings denied is clean.
+
+`lang-aot` 0.339.0 → 0.340.0: promoted 17 more Dartmouth BASIC `lang_matrix`
+rows to `Beam` (22 → 39 of 51) via two new dedicated tests executed against
+real `erl` before promotion —
+`portable_text_stdout_dartmouth_basic_beam_general_arithmetic_and_control_flow`
+(12 programs, zero new lowering) and
+`portable_text_stdout_dartmouth_basic_beam_math_builtins` (5 programs, the
+new `math:*`/`real_to_int_floor` lowering). `feature_coverage_doc_counts_match_programs_source`
+was updated (Dartmouth BASIC tuple `(51, 379)` → `(51, 396)`) and passes
+against the live `PROGRAMS` corpus; `LANG-VM-FEATURE-COVERAGE.md`'s Dartmouth
+BASIC row, grand-total prose (1615 → 1632), and the "Implemented feature
+families" narrative row were all updated to match. No full
+`non_algol_matrix_every_proven_cell_agrees` capstone rerun is claimed for
+this slice, matching both BEAM03 slices' own precedent — the two dedicated
+tests above plus the full `iir-to-beam` suite (including the new real-`erl`
+tests) are the executed evidence.
+
+Dartmouth BASIC now declares 39/51 rows on `Beam` — up from 22/51, and up
+from 0/51 three slices ago. Only 12 rows remain undeclared: the 5 `INPUT`
+rows (still gated on VM-060b), the 6 array/`DATA` rows (gated on a BEAM
+float/string array data-representation decision — see Findings above), and
+`RND` (gated on the VM-018 module-global design question). Reprioritize
+after this merges: **VM-060b (BEAM host input) and the BEAM float-array
+representation decision are now the two highest-value non-ALGOL BEAM items**
+— either would unblock the largest remaining single group (5 and 4 rows
+respectively) — but both are genuine design items, not quick probes; picking
+between them (or working the array-representation research as its own
+bounded design spike, the way BEAM03's own `LitT`/zlib research was) is the
+next real product decision for this backlog, not something to default into
+without deciding. VM-041 (Twig dynamic-string/record/closure BEAM isolation)
+remains the other standing non-ALGOL candidate untouched by this slice.
+
+## BEAM03 continuation — neg(f64) and f64_pow (selected after #15219)
+
+`git fetch origin && git merge origin/main` fast-forwarded cleanly onto
+`f5f657a3f9` (PR #15219, the first BEAM03 f64-lowering slice). `gh pr list
+--state open --limit 50` showed no other LANG-VM-related PR in flight, and
+specifically nothing touching `iir-to-beam` or BASIC float support.
+
+That merged slice's own trailing note named the next two candidates
+explicitly: (a) `neg`(f64) — "structurally trivial (mirrors `neg`(i64)'s
+existing `gc_bif1` shape with `erlang:'-'/1`, already polymorphic over int
+and float)"; (b) `f64_pow` — "no direct single-BIF equivalent (`math:pow/2`
+returns a float already, so likely a straightforward `gc_bif2`-shaped
+`call_ext`, but unverified)". This slice implements both, in one PR (the
+task's own scope note allowed splitting into two if `f64_pow` turned out
+non-trivial, but it stayed simple enough — a `call_ext`, just not a
+`gc_bif2` — to land together).
+
+### Findings
+
+- **`neg`(f64) needed zero lowering changes.** Reading `lower.rs`'s existing
+  `"neg" | "not"` arm confirmed the prediction exactly: it dispatches
+  unconditionally to `import_neg` (`erlang:-/1`), and the only
+  `type_hint`-conditional branch in that arm is the `u4`/`u8` narrowing
+  mask, which `"f64"` never matches. `validate.rs` never special-cased `neg`
+  either. Real `erl` confirms `erlang:'-'(3.14)` returns `-3.14` — no
+  `badarith`, unlike `div` (VM-D034's two-different-operators case). This is
+  a genuinely different shape from VM-D034: there, integer and float needed
+  DIFFERENT Erlang operators; here, one operator already covers both. New
+  unit + real-`erl` tests exist anyway, because "reading the code says it's
+  already right" and "proving it's already right" are not the same
+  discipline, and this backlog treats them as such.
+- **`f64_pow` needed the `call_ext` path, not `gc_bif2`.** The "unverified"
+  flag on this candidate was warranted: `math:pow/2` is an ordinary Erlang
+  function, not a loader-recognized guard BIF (confirmed by reading
+  `beam_asm.erl`'s guard-BIF table and by disassembling a real compiled
+  `math:pow/2` call with `erlc -S`, which showed `call_ext`, never
+  `gc_bif2`). It lowers the same way `str_concat`'s `erlang:'++'/2` and
+  `str_index`'s `lists:nth/2` already do: stage both operands into scratch
+  registers above `next_reg`, save live-across-call variables, move into
+  `x0`/`x1`, `call_ext 2 {u,import_pow}`, move the result, restore live
+  variables. `f64_pow` was added to the `live_across` call-list match — the
+  same "EVERY op that emits a `call_ext` must be listed here" invariant
+  documented at that match (an omission there silently destroys a live
+  variable's value, not a crash — the exact bug class a prior slice already
+  found and fixed for the six `:atomics` ops and `call_closure`).
+- No new platform-limitation surface: `f64_pow`'s Inf/NaN behavior is
+  exactly the same already-documented (BEAM03-float-lowering.md §6)
+  Erlang-floats-cannot-represent-Inf/NaN gap `div` has — real Erlang's
+  `math:pow/2` is a direct libm `pow` binding, matching the `vm-core`
+  oracle's `f64::powf` semantics on every finite input, diverging only where
+  every backend's float division already diverges. Not reachable by the
+  promoted row (base `4`, exponent `0.5`, exact finite result `2.0`).
+
+### Validation
+
+`iir-to-beam` 0.11.0: 92 unit/integration tests + 5 doc tests pass (up from
+87), including new tests proving `neg`(f64) emits exactly one `gc_bif1` and
+zero masking `gc_bif2`s, `f64_pow` emits exactly one `call_ext` (not
+`gc_bif2`) against a real `math:pow/2` import-table entry, and three new
+real-`erl` integration tests: double negation (`neg(neg(3.5))` = `3.5`),
+`f64_pow(2.0, 10.0)` truncated = `1024`, and a combined case chaining `neg`
++ `f64_pow` in one module reproducing the `4 ^ 0.5` BASIC row's exact
+arithmetic. All-target Clippy with warnings denied is clean.
+
+`lang-aot` 0.339.0: promoted two more Dartmouth BASIC `lang_matrix` rows to
+`Beam` — `10 PRINT ABS(-42)` (exercises `neg`(f64) twice: once for the
+literal `-42` via `emit_unary`, once inside ABS's own inline conditional
+negation) and `10 PRINT 4 ^ 0.5` (a fractional exponent that misses the
+literal-integer-exponent fast path and falls through to the general
+`f64_pow` runtime call). Both executed on real Erlang via a new dedicated
+`portable_text_stdout_dartmouth_basic_beam_neg_and_pow` test before
+promotion, matched by exact source text (not position — these two rows are
+not adjacent to each other or to the BEAM03 numeric-baseline pair; SGN/ATN/
+TAN sit between ABS and the `^` row). `feature_coverage_doc_counts_match_programs_source`
+was updated (Dartmouth BASIC tuple `(51, 377)` → `(51, 379)`) and passes
+against the live `PROGRAMS` corpus; `LANG-VM-FEATURE-COVERAGE.md`'s
+Dartmouth BASIC row, grand-total prose (1613 → 1615), and the "Implemented
+feature families" narrative row were all updated to match. No full
+`non_algol_matrix_every_proven_cell_agrees` capstone rerun is claimed for
+this slice, matching the first BEAM03 slice's own precedent — the dedicated
+neg/pow test plus the full `iir-to-beam` suite (including the new real-`erl`
+tests) are the executed evidence.
+
+Dartmouth BASIC now declares 22/51 rows on `Beam` (up from 20/51).
+Reprioritize after this merges: the remaining ~29 numeric/`INPUT` BASIC rows
+split into two independent gaps — the 5 `INPUT` rows need the unscoped BEAM
+host-input design (VM-060b, shared with FLOW-MATIC's 4 `INPUT` rows); the
+rest (`FOR`/`LET` general arithmetic, one- and two-D numeric arrays, `DATA`/
+`READ`/`RESTORE`, `RND`'s full DEF-FN-and-module-global chain, `GOSUB`/
+`RETURN`) each need their OWN real-`erl` probe before promotion — nothing in
+this slice or its predecessor established that `neg`/`f64_pow` alone
+unblocks them, and several (the array ops, the `GOSUB` return-address stack)
+already ran on BEAM via unrelated ops in other frontends, so they may
+already be one probe away rather than needing new lowering work. The
+still-open float-division-by-zero design question (§6) also remains
+unraised — no promoted row anywhere yet exercises a runtime-variable
+divisor. VM-041 (Twig dynamic-string/record/closure BEAM isolation) remains
+the other standing non-ALGOL candidate untouched by either BEAM03 slice.
+
+## BEAM03 — iir-to-beam f64 lowering, first bounded slice (selected after #15147)
+
+`git fetch origin && git merge origin/main` fast-forwarded cleanly onto
+`bebf50d125` (PR #15147, the Dartmouth BASIC BEAM pure-string family).
+`gh pr list --state open --limit 50` showed no LANG-VM-related PR in flight,
+and specifically nothing touching `iir-to-beam` or BASIC float support.
+
+That merged slice's own trailing note was unambiguous about the next item:
+`iir-to-beam` has **zero** `f64`/`Float` lowering support at all (no
+`f64`/`Float`/`fadd`-family match arm anywhere in `lower.rs`), and BASIC's
+BA7-1b change routes every scalar numeric value — even an integer-spelled
+literal like `PRINT 42` — through the shared `f64` value track, blocking
+~28 of BASIC's 51 corpus rows. The note explicitly called this out as
+qualitatively different from every prior VM-040 BEAM slice (which only ever
+needed to *declare* an already-working op) and recommended scoping it as its
+own real production-code track, likely multi-slice, the way COBOL BEAM was.
+
+**This is a design item, not a promotion, so it needed real research before
+any code.** Wrote `code/specs/BEAM03-float-lowering.md` covering:
+
+- The exact `LitT` (literal table) chunk binary layout, reverse-engineered
+  from a real compiled Erlang module's chunks (`beam_lib`/`beam_disasm`) and
+  cross-checked against `beam_asm.erl` (OTP's own assembler source, shipped
+  locally at `lib/compiler-10.0.3/src/beam_asm.erl`) rather than assumed
+  from memory — the "read the actual runtime contract" discipline the VM-D029
+  signed-integer fix established.
+- A previously-unnoticed OTP-version split: OTP 28+ stores `LitT`
+  **uncompressed**, but this repo's CI pins **OTP 27.3.4.11**
+  (`.github/workflows/ci.yml`), which only accepts the older
+  **zlib-compressed** form. Implemented a dependency-free RFC 1950/1951
+  encoder (stored/uncompressed DEFLATE blocks only — a small, unambiguous
+  special case any compliant decoder must accept) rather than add this
+  repo's first external compression crate; every other binary encoder in
+  `ir-to-beam`/`iir-to-beam` is already hand-rolled with zero dependencies.
+- A genuine platform limitation, not a lowering gap: real Erlang floats
+  cannot represent IEEE-754 Inf/NaN at all (`X/0.0` raises `badarith`, and
+  the ETF decoder itself refuses a non-finite float bit pattern). This
+  diverges from the `vm-core` oracle's IEEE-754 contract (matched by every
+  other backend's `fdiv`) and has no clean fix — left as an explicit open
+  design question for a future slice, not guessed at.
+
+Every claim above was verified against a real, locally-installed Erlang/OTP
+29 runtime before being relied on — including patching a real compiled
+`.beam` file's `LitT` chunk with the exact byte layout this slice implements
+and successfully loading and running it with real `erl`, per this loop's own
+"probe before declaring" discipline, applied here to the *platform* rather
+than to a frontend's corpus row.
+
+### BEAM03 contract
+
+Implement, in `ir-to-beam` (encoder): the `Z` extended compact-term tag,
+`BEAMModule.literals`, `literal_operand`, `etf_new_float`, the dependency-free
+zlib stored-block encoder, and `LitT` chunk assembly (omitted when empty).
+In `iir-to-beam` (lowering): accept `const` with `Operand::Float` when
+`type_hint == "f64"` (previously rejected unconditionally); add
+`int_to_real`/`real_to_int_trunc` via new single-argument `gc_bif1` BIF
+calls (`erlang:float/1`/`erlang:trunc/1`); leave `add`/`sub`/`mul`/`cmp_*`
+untouched (they already lower generically over any register contents).
+Promote the two Dartmouth BASIC "numeric baseline" rows (`PRINT 42` and
+`PRINT 6 ^ 2 + 6`) to `Beam` only after executing them on real Erlang.
+Explicitly out of scope: the remaining ~26 BASIC numeric/`INPUT` rows
+(need `neg`(f64), `f64_pow`, and VM-060b host input), `f32`, and general
+float division by zero (the open platform-limitation question above).
+
+### BEAM03 validation
+
+`ir-to-beam` 0.4.0: 77 unit tests + 5 doc tests pass, including new
+Adler-32 known-vector, stored-block round-trip (small, empty, and a
+>64KiB multi-block case), `literal_operand` byte-level encoding, and
+`LitT`-chunk-presence/omission tests. All-target Clippy with warnings
+denied is clean.
+
+`iir-to-beam` 0.10.0: 87 unit/integration tests + 5 doc tests pass,
+including new real-`erl` integration tests for float arithmetic
+(`((3.5+2.5)-1.0)*2.0/4.0` truncated → `2`), float comparisons
+(`cmp_lt`/`cmp_eq`/`cmp_ge` summed → `3`), and `int_to_real`/
+`real_to_int_trunc` round-trip (`trunc(float(7)+0.5)` → `7`) — all executed
+against real Erlang, not just validated for instruction shape. Writing the
+float-division test surfaced **VM-D034**: the existing i64 `div` lowering
+used `erlang:div/2`, which traps (`badarith`) on a float operand (confirmed:
+`erlang:div(10.0, 4.0)` traps on real `erl`); fixed by dispatching `div` to
+a new `erlang:'/'/2` import specifically when `type_hint == "f64"`, leaving
+the i64 path unchanged. All-target Clippy with warnings denied is clean.
+
+`lang-aot` 0.338.0: both promoted BASIC rows pass on real Erlang via the new
+dedicated `portable_text_stdout_dartmouth_basic_beam_numeric_baseline` test
+(mirroring the pure-string family's own test shape), and all 23 BEAM-prefixed
+`lang_matrix` tests (22 prior + this new one) pass together.
+`feature_coverage_doc_counts_match_programs_source` was updated (Dartmouth
+BASIC tuple `(51, 375)` → `(51, 377)`) and passes against the live `PROGRAMS`
+corpus; `LANG-VM-FEATURE-COVERAGE.md`'s Dartmouth BASIC row and grand-total
+prose were updated to match (1611 → 1613 declared cells). No full
+`non_algol_matrix_every_proven_cell_agrees` capstone rerun is claimed for
+this slice — the dedicated numeric-baseline test plus the full `iir-to-beam`/
+`ir-to-beam` suites (including the new real-`erl` float tests) are the
+executed evidence.
+
+Dartmouth BASIC now declares 20/51 rows on `Beam` (up from 18/51).
+Reprioritize after this merges: the next f64-lowering candidates are (a)
+`neg`(f64) — needed by BASIC's `RND`/unary-minus expressions, structurally
+trivial (mirrors `neg`(i64)'s existing `gc_bif1` shape with `erlang:'-'/1`,
+already polymorphic over int/float); (b) `f64_pow` — needed by variable/
+fractional `^` exponents, no direct single-BIF equivalent (`math:pow/2`
+returns a float already, so likely a straightforward `gc_bif2`-shaped
+`call_ext`, but unverified); (c) the still-open float-division-by-zero
+design question, which should be raised explicitly (not guessed at) once a
+row actually needs a runtime-variable divisor. VM-060b (BEAM host input,
+unblocking BASIC's 5 `INPUT` rows and FLOW-MATIC's 4 together) and VM-041
+(Twig dynamic-string/record/closure BEAM isolation) remain the other
+standing non-ALGOL candidates.
 
 ## VM-040 Dartmouth BASIC BEAM pure-string family (selected after #15119 merged)
 

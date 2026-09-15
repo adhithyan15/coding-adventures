@@ -7,6 +7,75 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.2.0` accumulate here until the next version is
 cut.
 
+### Fixed -- the release gate has been refusing this file since #15224
+
+`Release TaskApp`'s "Validate release identity" job has failed on every branch
+carrying a task-app change since 2026-09-15, with:
+
+```
+taskapp-release: changelog has an unbracketed Unreleased heading
+```
+
+`validate_changelog` requires exactly one `## [Unreleased]` section and
+rejects the unbracketed spelling outright. #15224 added a second, unbracketed
+`## Unreleased` at the top of this file -- above even the "All notable
+changes" preamble -- and #15230 then filed its entry under it. So the file
+had two roll-forward sections, the first of them malformed, and the gate
+refused the release.
+
+The entries are moved under the real `## [Unreleased]`, in order, with the
+preamble restored above it. No entry text changed: every non-blank line of
+the previous file is present, verified by sorted comparison.
+
+That job is not a required check, so nothing stopped while it was red -- the
+same shape as #15170, and the reason #15242 asks whether a non-required lane
+should be allowed to stay red in silence.
+
+### Fixed -- the round elements are round again on every backend (#15225)
+
+Six parts per theme author `border-radius: 50%` and every one rendered as a
+square on Compose, Flutter, SwiftUI, Qt and XAML: both pill status dots, the
+progress ring's fill and hole, and both theme-toggle buttons.
+
+Nothing changed in this app -- the percentage is now resolved during
+composition against each part's own box (6px becomes 3, 34px becomes 17,
+24px becomes 12).
+
+Verified by rendering. The status dot's 6x6 block in the Compose
+screenshot, before and after (`#` exactly the dot colour, `+` an
+antialiased edge, `.` background):
+
+```
+    ######        ..++..
+    ######        .####.
+    ######        +####+
+    ######        +####+
+    ######        .####.
+    ######        ..++..
+```
+
+Diffing the two renders finds exactly three changed regions, and all three
+are elements that authored `50%`: the 6x6 dot, the 24x24 ring hole, and the
+theme toggles. Nothing else moved.
+
+### Fixed -- the pill status dot now renders on every backend (#15169)
+
+The dot is authored `background: currentColor` so it always matches whichever
+branch's text colour, with no separate warn/ok dot styling to keep in sync.
+That worked on the web and nowhere else: `currentColor` has no native
+equivalent, so the dot rendered as **nothing** on Compose, Flutter, SwiftUI
+and XAML, and as a **white square** on Qt, whose `Rectangle` defaults to
+`#ffffff`.
+
+Nothing changed in this app -- the keyword is now resolved during composition
+(see `mosaic-package-artifact-builder`). Verified by rendering: the ok-pill
+green `#6fb489` gains **exactly 36 pixels** in every Compose screenshot, which
+is a 6x6 dot to the pixel.
+
+**The dot is still square.** `border-radius: 50%` is dropped by all five
+native backends -- the same 36-pixel count proves it, since a circle would be
+about 28. Filed separately.
+
 ## [0.2.0] - 2026-09-13
 
 ### Fixed — release validations no longer cancel unrelated pull requests (#15060)

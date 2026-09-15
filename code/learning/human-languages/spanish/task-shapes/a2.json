@@ -1,0 +1,712 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "level": "A2",
+  "target": {
+    "name": "DELE A2",
+    "basis": "external"
+  },
+  "sources": [
+    {
+      "id": "cervantes-a2-overview",
+      "title": "Exámenes DELE A2",
+      "url": "https://examenes.cervantes.es/es/dele/examenes/a2",
+      "published": "not stated",
+      "accessed": "2026-09-14"
+    },
+    {
+      "id": "cervantes-a2-guide-2020",
+      "title": "Guía del examen DELE A2, versión 2020",
+      "url": "https://examenes.cervantes.es/sites/default/files/DELE_A2_v2020_Guia_de_examen.pdf",
+      "published": "2019",
+      "accessed": "2026-09-14"
+    },
+    {
+      "id": "cervantes-dele-scoring",
+      "title": "Cómo son las pruebas DELE",
+      "url": "https://examenes.cervantes.es/es/node/265480",
+      "published": "not stated",
+      "accessed": "2026-09-14"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": 145,
+    "speakingMinutes": 12,
+    "speakingGroupMaximum": 1,
+    "speakingPreparationMinutes": 12,
+    "deliveryModes": [
+      "paper at an accredited examination centre",
+      "in-person speaking, which the centre may schedule on the official date or an immediately adjacent day"
+    ]
+  },
+  "passRule": {
+    "maximumPoints": 100,
+    "passPoints": 60,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": null,
+      "listening": null,
+      "writing": null,
+      "speaking": null
+    },
+    "note": "DELE A2 awards 25 points per prueba and requires at least 30/50 in each of two GROUPS: Grupo 1 is comprensión de lectura plus expresión e interacción escritas, and Grupo 2 is comprensión auditiva plus expresión e interacción orales. Reading is therefore paired with WRITING and listening with SPEAKING -- not reception with reception -- so a candidate who reads well and writes badly can fail Grupo 1 while passing overall on points. Sixty is the smallest possible passing total and 60/100 alone is not sufficient. Instituto Cervantes publishes no four independent skill thresholds; this file therefore leaves them null rather than inventing them, and the project assessment contract adds its own."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 60,
+      "parts": [
+        {
+          "id": "reading-single-text-detail",
+          "promptModes": [
+            "written text"
+          ],
+          "promptGenres": [
+            "informational or personal text"
+          ],
+          "responseModes": [
+            "choose one of three options for each question"
+          ],
+          "items": 5,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 250,
+            "maximum": 300,
+            "approximate": false
+          },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": 5,
+            "criteria": [
+              "official answer-key match; one point per correct answer and no wrong-answer penalty"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided answer sheet"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "response length is not applicable to selected response",
+            "replay is not applicable to written input"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        },
+        {
+          "id": "reading-eight-short-texts",
+          "promptModes": [
+            "written text"
+          ],
+          "promptGenres": [
+            "eight short independent texts"
+          ],
+          "responseModes": [
+            "choose one of three options for each question"
+          ],
+          "items": 8,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 50,
+            "maximum": 80,
+            "approximate": false
+          },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": 8,
+            "criteria": [
+              "official answer-key match; one point per correct answer and no wrong-answer penalty"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided answer sheet"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "response length is not applicable to selected response",
+            "replay is not applicable to written input",
+            "the guide gives the length of EACH text, not of the eight together"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        },
+        {
+          "id": "reading-match-statements-to-texts",
+          "promptModes": [
+            "written text"
+          ],
+          "promptGenres": [
+            "three texts on one theme"
+          ],
+          "responseModes": [
+            "match each statement to the text it belongs to"
+          ],
+          "items": 6,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 100,
+            "maximum": 120,
+            "approximate": false
+          },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": 6,
+            "criteria": [
+              "official answer-key match; one point per correct answer and no wrong-answer penalty"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided answer sheet"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "response length is not applicable to selected response",
+            "replay is not applicable to written input",
+            "the guide gives the length of EACH text, not of the three together"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        },
+        {
+          "id": "reading-longer-text-detail",
+          "promptModes": [
+            "written text"
+          ],
+          "promptGenres": [
+            "one longer informational text"
+          ],
+          "responseModes": [
+            "choose one of three options for each question"
+          ],
+          "items": 6,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 375,
+            "maximum": 425,
+            "approximate": false
+          },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": 6,
+            "criteria": [
+              "official answer-key match; one point per correct answer and no wrong-answer penalty"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided answer sheet"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "response length is not applicable to selected response",
+            "replay is not applicable to written input"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "listening",
+      "minutes": 40,
+      "parts": [
+        {
+          "id": "listening-six-conversations",
+          "promptModes": [
+            "recorded speech"
+          ],
+          "promptGenres": [
+            "six short conversations"
+          ],
+          "responseModes": [
+            "choose one of three options for each question"
+          ],
+          "items": 6,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 50,
+            "maximum": 80,
+            "approximate": false
+          },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": {
+            "maxRawPoints": 6,
+            "criteria": [
+              "official answer-key match; one point per correct answer and no wrong-answer penalty"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided answer sheet"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "response length is not applicable to selected response"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        },
+        {
+          "id": "listening-six-short-messages",
+          "promptModes": [
+            "recorded speech"
+          ],
+          "promptGenres": [
+            "six brief messages"
+          ],
+          "responseModes": [
+            "choose one of three options for each question"
+          ],
+          "items": 6,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 40,
+            "maximum": 60,
+            "approximate": false
+          },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": {
+            "maxRawPoints": 6,
+            "criteria": [
+              "official answer-key match; one point per correct answer and no wrong-answer penalty"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided answer sheet"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "response length is not applicable to selected response"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        },
+        {
+          "id": "listening-one-conversation-attribution",
+          "promptModes": [
+            "recorded speech"
+          ],
+          "promptGenres": [
+            "one extended conversation"
+          ],
+          "responseModes": [
+            "match each statement to the speaker it belongs to"
+          ],
+          "items": 6,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 225,
+            "maximum": 275,
+            "approximate": false
+          },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": {
+            "maxRawPoints": 6,
+            "criteria": [
+              "official answer-key match; one point per correct answer and no wrong-answer penalty"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided answer sheet"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "response length is not applicable to selected response"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        },
+        {
+          "id": "listening-seven-messages-match",
+          "promptModes": [
+            "recorded speech"
+          ],
+          "promptGenres": [
+            "seven messages"
+          ],
+          "responseModes": [
+            "match seven messages to seven of ten written options"
+          ],
+          "items": 7,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 30,
+            "maximum": 50,
+            "approximate": false
+          },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": {
+            "maxRawPoints": 7,
+            "criteria": [
+              "official answer-key match; one point per correct answer and no wrong-answer penalty"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided answer sheet"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "response length is not applicable to selected response",
+            "three of the ten options are distractors that match nothing"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "writing",
+      "minutes": 45,
+      "parts": [
+        {
+          "id": "writing-short-correspondence",
+          "promptModes": [
+            "written instructions",
+            "short written input text"
+          ],
+          "promptGenres": [
+            "note, postcard, message, email or short letter"
+          ],
+          "responseModes": [
+            "write a short piece of correspondence responding to the input"
+          ],
+          "items": null,
+          "stimulusLength": {
+            "unit": "words",
+            "minimum": 35,
+            "maximum": 45,
+            "approximate": false
+          },
+          "responseLength": {
+            "unit": "words",
+            "minimum": 60,
+            "maximum": 70,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": null,
+            "criteria": [
+              "holistic task fulfilment",
+              "range and control appropriate to A2",
+              "coherence and cohesion",
+              "correction"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided response booklet"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "part-level raw point ceiling; the guide publishes 25 points for the whole prueba",
+            "replay is not applicable to written input"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        },
+        {
+          "id": "writing-short-composition",
+          "promptModes": [
+            "written instructions"
+          ],
+          "promptGenres": [
+            "short composition; the candidate chooses one of two offered options"
+          ],
+          "responseModes": [
+            "write a short composition including description, narration and a simple opinion"
+          ],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": {
+            "unit": "words",
+            "minimum": 70,
+            "maximum": 80,
+            "approximate": false
+          },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": null,
+            "criteria": [
+              "holistic task fulfilment",
+              "range and control appropriate to A2",
+              "coherence and cohesion",
+              "correction"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided response booklet"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "prompt word count",
+            "part-level raw point ceiling",
+            "replay is not applicable to written input"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "speaking",
+      "minutes": 12,
+      "parts": [
+        {
+          "id": "speaking-personal-presentation",
+          "promptModes": [
+            "live interlocutor"
+          ],
+          "promptGenres": [
+            "personal-domain monologue"
+          ],
+          "responseModes": [
+            "deliver a short prepared monologue about yourself"
+          ],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": null,
+            "criteria": [
+              "holistic task fulfilment",
+              "fluency",
+              "coherence",
+              "correction",
+              "range"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided photograph",
+              "candidate notes made during the 12-minute preparation"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone",
+              "a read-aloud script"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "response length is published as 2-3 minutes of speech, not as a word count",
+            "part-level raw point ceiling"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        },
+        {
+          "id": "speaking-describe-a-photograph",
+          "promptModes": [
+            "live interlocutor",
+            "exam-provided photograph"
+          ],
+          "promptGenres": [
+            "public-domain monologue from an image"
+          ],
+          "responseModes": [
+            "describe the photograph in a short monologue"
+          ],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": null,
+            "criteria": [
+              "holistic task fulfilment",
+              "fluency",
+              "coherence",
+              "correction",
+              "range"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided photograph",
+              "candidate notes made during the 12-minute preparation"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone",
+              "a read-aloud script"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "response length is published as 2-3 minutes of speech, not as a word count",
+            "part-level raw point ceiling"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        },
+        {
+          "id": "speaking-simulated-conversation",
+          "promptModes": [
+            "live interlocutor",
+            "exam-provided photograph"
+          ],
+          "promptGenres": [
+            "simulated situation arising from the photograph described in the previous task"
+          ],
+          "responseModes": [
+            "hold a conversation with the examiner in the simulated situation"
+          ],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "pair",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": null,
+            "criteria": [
+              "holistic task fulfilment",
+              "interaction",
+              "fluency",
+              "coherence",
+              "correction"
+            ]
+          },
+          "aids": {
+            "allowed": [
+              "exam-provided photograph",
+              "candidate notes made during the 12-minute preparation"
+            ],
+            "forbidden": [
+              "dictionary",
+              "phone",
+              "a read-aloud script"
+            ],
+            "notPublished": [
+              "other aids"
+            ]
+          },
+          "notPublished": [
+            "response length is published as 3-4 minutes of speech, not as a word count",
+            "part-level raw point ceiling"
+          ],
+          "sourceIds": [
+            "cervantes-a2-guide-2020"
+          ]
+        }
+      ],
+      "variants": []
+    }
+  ]
+}

@@ -326,7 +326,8 @@ See [Engram](./code/specs/engram-app.md) and the
 |   |-- sites/        website source/content
 |   \-- specs/        architecture, package, and roadmap specifications
 |-- .github/workflows CI, CodeQL, safety, publishing, releases, and deployment
-|-- CHANGELOG.md      monorepo-level notable changes
+|-- CHANGELOG.d/      monorepo-level notable changes, one entry per file
+|                     (see its `_meta.md`)
 |-- CLAUDE.md         repository policy and working conventions
 \-- lessons.d/        accumulated engineering failures and durable fixes,
                      one lesson per file (see its `_meta.md`)

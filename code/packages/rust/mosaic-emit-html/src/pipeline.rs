@@ -3495,11 +3495,59 @@ fn path_coordinate_html(node: &LayoutNode, prop_name: &str) -> Result<String, Pi
     }
 }
 
+/// Look up one property in an already-serialized CSS declaration body.
+///
+/// #15221 -- the twin of the React emitter's defect, found in the same
+/// review. This split on EVERY `;`, so a value containing one -- inside a
+/// quoted string, or a `url(...)` -- started a new "declaration" and a
+/// fragment of it was recovered as the property being looked up.
+///
+/// The consequence is milder here than on the React side: `emit_path_html`
+/// puts what it recovers into QUOTED attributes through `escape_html_attr`,
+/// so the failure is a wrong or garbled paint attribute rather than
+/// injection, and the HTML emitter resolves states into a flat prop list
+/// instead of splicing nested blocks. Fixed for parity all the same: the
+/// parse was simply wrong, and a reader comparing the two emitters should
+/// not find one of them still doing it.
 fn css_value<'a>(style: &'a str, property: &str) -> Option<&'a str> {
-    style.split(';').find_map(|declaration| {
+    css_declarations(style).find_map(|declaration| {
         let (name, value) = declaration.trim().split_once(':')?;
         (name.trim() == property).then_some(value.trim())
     })
+}
+
+/// Split a CSS declaration body on its top-level `;`, ignoring any inside a
+/// quoted string or a parenthesised function such as `url(...)`.
+fn css_declarations(style: &str) -> impl Iterator<Item = &str> {
+    let mut boundaries = vec![0usize];
+    let mut quote: Option<char> = None;
+    let mut escaped = false;
+    let mut depth: i32 = 0;
+    for (idx, ch) in style.char_indices() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        match ch {
+            '\\' if quote.is_some() => escaped = true,
+            '"' | '\'' => match quote {
+                Some(open) if open == ch => quote = None,
+                None => quote = Some(ch),
+                _ => {}
+            },
+            '(' if quote.is_none() => depth += 1,
+            ')' if quote.is_none() => depth -= 1,
+            ';' if quote.is_none() && depth <= 0 => boundaries.push(idx),
+            _ => {}
+        }
+    }
+    boundaries.push(style.len());
+    let mut out = Vec::new();
+    for pair in boundaries.windows(2) {
+        let slice = &style[pair[0]..pair[1]];
+        out.push(slice.strip_prefix(';').unwrap_or(slice));
+    }
+    out.into_iter()
 }
 
 fn emit_path_html(
@@ -8130,4 +8178,50 @@ mod tests {
         assert!(!out_false.contains(" disabled"), "got:\n{out_false}");
     }
 
+}
+
+// =====================================================================
+// #15221 -- a `;` inside a CSS value must not be read as a separator
+//
+// The twin of the React emitter's defect, found in the same review.
+// `emit_path_html` recovers `background` / `border-color` / `border-width`
+// from a serialized declaration body; splitting on every `;` let a
+// fragment of one value be recovered as another property.
+//
+// Milder here than on the React side -- what is recovered lands in QUOTED
+// attributes through `escape_html_attr`, so the failure is a wrong paint
+// attribute rather than injection -- but the parse was simply wrong.
+// =====================================================================
+#[cfg(test)]
+mod css_value_parsing_tests {
+    use super::*;
+
+    #[test]
+    fn a_semicolon_inside_a_value_is_not_a_separator() {
+        let style = "font-family: \"a; background: red\"; background: #1e1e1e";
+        assert_eq!(
+            css_value(style, "background"),
+            Some("#1e1e1e"),
+            "the real declaration must win over a fragment of another value"
+        );
+    }
+
+    #[test]
+    fn a_semicolon_inside_a_url_is_not_a_separator() {
+        let style = "background: url(data:image/svg+xml;base64,AAAA)";
+        assert_eq!(
+            css_value(style, "background"),
+            Some("url(data:image/svg+xml;base64,AAAA)")
+        );
+    }
+
+    #[test]
+    fn plain_declarations_still_resolve() {
+        let style = "background: #1e1e1e; border-color: #333; border-width: 2px";
+        assert_eq!(css_value(style, "background"), Some("#1e1e1e"));
+        assert_eq!(css_value(style, "border-color"), Some("#333"));
+        assert_eq!(css_value(style, "border-width"), Some("2px"));
+        assert_eq!(css_value(style, "missing"), None);
+        assert_eq!(css_value("", "background"), None);
+    }
 }

@@ -1,0 +1,1 @@
+- Lower valid JFET `EG` bandgap voltages and reject invalid inputs.

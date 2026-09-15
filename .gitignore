@@ -82,13 +82,35 @@ build_output.txt
 /build-tool.exe
 /.tmp/
 
-# Human-languages Markdown aggregates are local rendered views. Their `.d/`
+# Sharded Markdown aggregates are local rendered views. Their `.d/`
 # directories are the committed source of truth; tracking these files
 # recreates the merge hot spots that sharding exists to remove.
+#
+# This list must hold one line per entry in `DOC_SHARD_PLANS`
+# (code/packages/typescript/human-language-data/src/doc-shard-cli.ts). An
+# untracked-but-unignored aggregate is not safe merely because it is currently
+# absent: `git add -A` puts it straight back, and the hot spot returns with it.
 /code/learning/human-languages/BACKLOG.md
 /code/learning/human-languages/hindi/CHANGELOG.md
 /code/packages/typescript/human-language-data/CHANGELOG.md
 /code/programs/typescript/language-ladder/CHANGELOG.md
+/code/packages/rust/lang-aot/CHANGELOG.md
+/code/packages/rust/algol-iir-compiler/CHANGELOG.md
+/code/specs/data/adj-facts-stdlib/CHANGELOG.md
+/code/packages/rust/mermaid-parser/CHANGELOG.md
+/code/packages/rust/wasm-conformance/CHANGELOG.md
+/code/packages/rust/diagram-ir/CHANGELOG.md
+/code/packages/rust/diagram-to-paint/CHANGELOG.md
+/code/packages/rust/spice-netlist-parser/CHANGELOG.md
+/code/packages/rust/venture-browser-core/CHANGELOG.md
+/code/packages/rust/oauth-broker/CHANGELOG.md
+# The monorepo changelog. `CHANGELOG.d/_meta.md` at the repository root is now
+# its entry point, the same rule the repo standard already applies to packages.
+/CHANGELOG.md
+# Script Ductus is deliberately absent: it is already ignored by its own
+# `code/packages/typescript/script-ductus/.gitignore`. A line was briefly added
+# here claiming it had "never been ignored" -- that came from grepping this
+# file alone, which cannot see a nested .gitignore.
 
 # IDE
 .vscode/

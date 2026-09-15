@@ -5,6 +5,263 @@ this file.
 
 ## [Unreleased]
 
+
+
+### Changed -- Flutter has a style-lowering seam for the first time
+
+Everything `emit_styled_box` lowers from a part's own style props now lives
+in a pure `flutter_box_style(base, layers, ctx) -> FlutterBoxStyle`. Not one
+byte of emitted output changes.
+
+The point is the shape, not the saving. `emit_styled_box` takes a
+`LayoutNode`, the component name and the emit declarations and returns
+generated Dart **text**, so the only way to ask "what did lowering do with
+`border-radius`?" was to emit an entire widget subtree and read the answer
+back out of a string. Compose can answer that question directly, because
+`compose_box_style` is a plain function from style props to a style -- and
+that, not any shortage of care, is why Compose has a dropped-property
+reporter and Flutter does not (#12022).
+
+**What this does not do.** It adds no reporting, records no dropped
+property, changes no gate and is wired into nothing. Flutter's
+`styleDegradations` is still empty, and still means "nobody looked" rather
+than "nothing was lost". The accumulator and the reporter that reads it
+belong in one change and will land together once every Flutter writer is
+covered: there are three (`emit_container`, `emit_styled_box`, and the
+host-widget helpers), and a reporter that saw only one would make the
+report look populated while remaining blind to the rest.
+
+The caller keeps what needs the tree. The child is emitted by
+`emit_styled_box` and appended as the last `args` entry, because building it
+needs the layout and can fail; `inherited_text_style` is returned rather
+than applied, because it is threaded into the `TableCtx` the child is
+emitted under (#15166).
+
+Verified byte-for-byte rather than by argument: the Flutter artifacts for
+all four Mosaic product packages -- VisiCalc, Venture, Engram and Trestle --
+are identical before and after (27 files, 618,546 bytes, zero diff lines).
+The comparison was itself falsified by planting a marker inside the new
+function, which moved 337 lines across 83 sites; an equality that cannot
+fail is not evidence.
+
+### Fixed -- `font: inherit` now reaches a `TextField` (#15166)
+
+A Flutter `TextField` does **not** read the enclosing `DefaultTextStyle` the
+way a `Text` does -- it falls back to the Material theme. So an input
+authoring `font: inherit` had no way to follow the text around it, and the
+grid's inline editor rendered at the theme's font while the cell beside it
+rendered at the authored one.
+
+Measured in a real `flutter test` with a real font, inside the cell's own
+text context:
+
+| editor | height | delta |
+| --- | --- | --- |
+| display `Text` | 19.0 | — |
+| without the inherited font | 24.0 | **+5** |
+| with it | 20.0 | **+1** |
+
+The residual 1px is the editable's own line box and is not reachable from a
+stylesheet.
+
+`DefaultTextStyle.of(context)` cannot substitute for this: the `context` in
+scope at the input is the widget's own, which sits **above** the merge the
+emitter just wrote. So the style is computed before the child is emitted and
+threaded down on `TableCtx`, beside the `sheet_text_*` fields that already
+work this way.
+
+Three things security review found, all inside this change and all inert for
+the products:
+
+- **The threaded copy is validated separately from the merge copy.** The
+  merge reads `font-size` through `parse_pixel_value`, whose contract is "0
+  on anything unreadable" -- harmless for a `Text`, which the theme still
+  sizes, but on a `TextField` `fontSize: 0` is an editor the user cannot see
+  or place a cursor in. Threading the merge copy verbatim walked around the
+  invariant the explicit path already pins.
+- **A `For` resets it.** The threaded style is TEXT, and a loop rebinds the
+  identifiers inside it -- so carrying it across would change the loop's
+  shape (the emitters pick `(_)` vs `(item)` by scanning the emitted body
+  for those identifiers) and make the input's copy evaluate a predicate
+  against the loop binding while the enclosing merge evaluates it against
+  the outer one. `emit_host_table` resets it for the same reason.
+- **The test was vacuous.** It asserted over the whole output, and the
+  `DefaultTextStyle.merge` line has always contained the same byte
+  sequence -- so it passed with the feature entirely reverted. It asserts on
+  the `TextField`'s own slice now.
+
+**Only an explicit `inherit` counts.** CSS does not give a text input the
+surrounding font by default -- which is exactly why `font: inherit` is a
+standard reset -- so applying the enclosing style to every unstyled input
+would diverge from the web backends rather than agree with them. Emitted
+output gains exactly one `style:` argument, on the inline grid editor.
+
+### Fixed -- a relative length collapsed the subtree to zero (#15213)
+
+`fixed_pixel_length` exists because `parse_pixel_value`'s "unreadable -> 0"
+fallback turns a size into a zero-size box and eats whatever is inside it.
+It declined `%` and (since #15160) negatives, and let **every other relative
+form** through to that exact fallback -- `100vh`, `max-content`, `auto`,
+`calc(...)`, `rem`, `em`.
+
+Two writers also bypassed it entirely, calling `parse_pixel_value` for
+width and height directly: `emit_styled_box` and
+`style_prop_to_container_arg`.
+
+**Three subtrees were collapsed in the shipped products**, measured on the
+emitted Dart:
+
+| product | part | authored | emitted |
+| --- | --- | --- | --- |
+| visicalc | `Column [workbook]` -- **the root** | `height: 100vh` | `Container(height: 0)` |
+| task-app | two calendar cells | `width: 100%` | `Container(width: 0)` |
+
+VisiCalc's is the root of the whole component, so the Flutter build rendered
+**nothing at all**.
+
+The parse is a positive test now -- a plain pixel value, optionally suffixed
+`px` -- so a unit nobody has thought of yet declines by default rather than
+collapsing a subtree. Declining means emitting **no size argument**, leaving
+the child to size itself, which is what `width: 100%` wants in the first
+place.
+
+Two things found in security review, both inside this change:
+
+- **Declining a width removes a bound.** `Expanded` was gated only on
+  `direct_row_child`, never on `direct_row_accepts_flex` -- despite a
+  comment thirty lines below claiming it was. So removing the `SizedBox`
+  that had been a subtree's only width bound could leave an `Expanded`
+  measured unbounded, which throws
+  `RenderFlex children have non-zero flex but incoming width constraints
+  are unbounded`. That would have turned a silently-blank subtree into a
+  thrown layout error -- a different failure, not a fixed one. The gate now
+  matches what the comment always claimed. No product output changes.
+- **The charset gate is not a parse.** `1-2`, `1.2.3` and `.` pass the
+  character check and still fail to parse, and delegating those to
+  `parse_pixel_value` answered `0` -- the very collapse this function
+  exists to prevent, through a narrower door. The result is derived from a
+  real parse now.
+
+**Flutter only.** Compose, Qt, SwiftUI, XAML, React and HTML all decline or
+pass through relative lengths correctly; measured on VisiCalc, whose root
+carries `height: 100vh`. The corpus authors 86 relative lengths, so most
+already reached writers that handled them -- these three reached ones that
+did not.
+
+### Fixed -- `emit_styled_box` never applied `border-radius` (#15225)
+
+This builder assembled its `BoxDecoration` from background, border and
+elevation and simply never looked at the radius, so a styled box came out
+SQUARE on Flutter however it was authored -- a plain `border-radius: 8` was
+dropped here just as surely as a percentage one.
+
+The same property visibly works elsewhere in the same file because
+`emit_container` does read it. Two writers, and only one of them had it.
+
+**This is not scoped to the percentage case.** Measured across the products:
+engram-app gains 24 radii it was silently losing, and task-app 17, none of
+which involve a percentage at all. Every changed line is the same
+`BoxDecoration` with a radius inserted -- verified by stripping the
+insertion and asserting the line is then byte-identical to before.
+
+An unreadable radius is dropped rather than coerced to `0`, since a zero
+radius is a square.
+
+**The radius is never paired with a per-edge border.** Flutter's
+`Border.paint` throws *"A borderRadius can only be given on borders with
+uniform colors"* the moment a non-uniform `Border(...)` carries one, and
+asserts separately on a hairline side -- taking out the widget and
+everything above it in any debug or profile build. Before this change the
+builder emitted no radius at all, so the pairing was unreachable; adding one
+without the gate turns an authored per-edge border plus a radius into a
+runtime crash.
+
+That was not hypothetical. **Three widgets in task-app** author exactly that
+combination, and an ungated version emitted all three. Found in security
+review, before it shipped.
+
+### Fixed -- a negative length reached four unguarded `BorderSide` writers (#15160)
+
+Flutter's `BorderSide` constructor is `assert(width >= 0.0)`, so a negative
+authored width produces Dart that type-checks and then **throws when the
+widget builds**, taking out that widget and everything above it in the
+tree. It is a runtime crash reachable from any stylesheet, not a rendering
+glitch.
+
+`per_edge_border_expr` had guarded its own path for a while. Four other
+writers took their width straight from `parse_pixel_value`, which happily
+returned `-5`:
+
+| site | construct |
+| --- | --- |
+| styled container | `border: Border.all(color: .., width: {w})` |
+| `emit_styled_box` | `border: Border.all(color: .., width: {w})` |
+| button shape | `side: BorderSide(width: {w})` |
+| `path_paint` | `Border.all(color: {stroke}, width: {w})` |
+
+`Border.all` builds a `BorderSide`, so all four hit the same assert.
+
+The guard is central now: `parse_pixel_value` rejects negatives and falls
+back to `0`, the same answer it already gave for anything unreadable. That
+also covers `EdgeInsets`, `SizedBox` and every other length sink at once.
+
+**Audited before centralising**, because a shared helper is the wrong place
+for a rule that does not hold everywhere. Every property reaching it is
+non-negative geometry -- gap, padding, width, height, min-height,
+border-width, border-radius, font-size, stroke width -- and CSS forbids a
+negative for each. No margin, inset, offset or letter-spacing is lowered
+through it, so nothing that legitimately admits a negative loses one.
+(`top`/`left`/`right`/`bottom` appear nearby only as per-edge border names.)
+
+**A dead check the central fix would have created.** `per_edge_border_expr`
+tested `w.starts_with('-')` on the PARSED value. Once `parse_pixel_value`
+never returns a leading `-`, that check can never fire, and the edge would
+have been silently emitted at width 0 instead of skipped -- a different
+answer, since skipping lets the shorthand cascade in. It now reads the
+authored text. An existing test caught this, which is the only reason it is
+not in this release.
+
+**Two corrections from security review, both in this change.**
+
+A central rule is only safe where it holds everywhere, and it did not quite:
+
+- `fixed_pixel_length` delegates here, and it exists *because* the `0`
+  fallback collapses a subtree into a zero-width box -- its own doc records
+  catching that in a real `flutter test` render. Centralising the guard
+  made `width: -5px` on a `Row` part go from `SizedBox(width: -5)`, which
+  trips Flutter's `debugAssertIsValid` **loudly**, to `SizedBox(width: 0)`,
+  which **silently** eats the subtree. Trading a loud failure for a silent
+  one is the wrong direction, so that site now drops a negative outright,
+  the same way it already drops a `%`.
+- IEEE `-0.0 >= 0.0` is true and Rust prints it `-0`, so `border-width:
+  -0px` emitted `width: -0` from a legal input. Not a crash -- Dart reads
+  it as `-0.0`, which satisfies the assert -- but it falsified the very
+  invariant these tests assert. The sign of zero is normalised.
+
+A second review round found two more of the same shape, both now closed:
+
+- `strict_pixel_length` -- the sibling helper feeding `BorderSide` and
+  `TextStyle` on the `HostInput` path -- had the identical negative-zero
+  leak, so `border: -0px solid #ff0000` emitted `width: -0` and
+  `font-size: -0px` emitted `fontSize: -0`.
+- `part_max_width` **validated the parse and emitted the authored text**,
+  so its guard proved nothing about what shipped. Rust's float grammar
+  accepts a leading `+` and Dart has no unary `+` on a literal, so
+  `max-width: +760px` passed validation and emitted `maxWidth: +760` -- a
+  hard compile error from one authored value. A 22-digit literal got
+  through the same way. It now emits the parsed value, with the same
+  magnitude cap as every other length path.
+
+And one of the new tests was **vacuous**: it asserted
+`!out.contains("EdgeInsets.all(-")` on a fixture whose path emits
+`EdgeInsets.symmetric`, so it could never fail and read as coverage it did
+not provide. It now asserts what that path actually emits.
+
+**No product change.** Zero of the 3,536 length declarations in the
+authored `.msl` corpus is negative, and emitted Flutter output for
+task-app, visicalc and engram-app is byte-identical. This closes a latent
+trap; it does not fix a live defect.
+
 ### Fixed -- `HostInput` ignored its part style entirely (#15142)
 
 `emit_host_input` took `_part_styles` and never read it, so no authored

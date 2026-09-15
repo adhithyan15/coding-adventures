@@ -54,7 +54,14 @@ pub enum BEAMTag {
     /// Label / function reference (f).
     F = 5,
     // H = 6 — legacy character; never emitted
-    // Z = 7 — extended (list, fpreg, alloc-list, lit-table); not used in v1
+    /// Extended tag: a compound operand whose *sub-tag* (encoded as the
+    /// following compact-term value, tag `Z` itself) selects the actual
+    /// shape.  This crate only implements sub-tag 4 ("literal" — a
+    /// reference into `BEAMModule.literals`), via [`literal_operand`].
+    /// See `beam_asm.erl`'s `encode_arg/2` (OTP's own assembler) for the
+    /// full sub-tag list (`1`=list, `2`=fr/float-register, `3`=alloc-list,
+    /// `4`=literal, `5`=typed-register hint); this crate needs only `4`.
+    Z = 7,
 }
 
 // ===========================================================================
@@ -163,6 +170,13 @@ pub struct BEAMModule {
     pub instruction_set_version: u32,
     /// Extra chunks to append verbatim.
     pub extra_chunks: Vec<([u8; 4], Vec<u8>)>,
+    /// Module literal table (`LitT` chunk): each entry is a complete
+    /// External Term Format blob (starting with the `131` version byte),
+    /// in table order. Referenced from the instruction stream via
+    /// [`literal_operand`]'s `{tag_z,4}`+`{tag_u,index}` pair. Empty by
+    /// default — a module with no literals omits the `LitT` chunk entirely
+    /// (see `build_litt_chunk`), matching `beam_asm:build_literal_chunk/2`.
+    pub literals: Vec<Vec<u8>>,
 }
 
 // ===========================================================================
@@ -290,6 +304,174 @@ fn value_to_be_bytes(value: u64, signed: bool) -> Vec<u8> {
         start += 1;
     }
     raw[start..].to_vec()
+}
+
+// ===========================================================================
+// Literal table (`LitT` chunk) — BEAM03
+// ===========================================================================
+//
+// BEAM has no immediate encoding for a float: unlike a small integer (which
+// the compact-term `I`/`U` tags can carry directly as a tagged term), every
+// float value is a *boxed* term. On disk this means a reference into the
+// module's literal table, encoded as the two-part extended operand built by
+// [`literal_operand`] and resolved by the `LitT` chunk built here.
+//
+// # Two on-disk formats, one implemented here
+//
+// OTP 28+ stores `LitT` **uncompressed** (a `0:32` marker word signals this —
+// zero is never a valid *original* size, since the chunk is omitted entirely
+// when there are no literals). OTP 27 and earlier only accept the **older,
+// zlib-compressed** form. This repo's CI pins OTP 27.3.4.11
+// (`.github/workflows/ci.yml`), so this encoder targets that format
+// unconditionally — it is also accepted by every newer OTP release, since a
+// compressed literal chunk has always been valid.
+//
+// Verified against `beam_asm.erl` (OTP's own assembler,
+// `lib/compiler-10.0.3/src/beam_asm.erl`, function `build_literal_chunk/2`)
+// rather than assumed from memory, and round-tripped through real `erl`
+// (compiling a float-using module, then reading its `LitT`/`Code` chunks
+// with `beam_lib`/`beam_disasm`, and separately loading a hand-patched
+// `.beam` file whose `LitT` chunk was rebuilt with exactly this encoder's
+// output).
+
+/// Encode `value` as a standalone Erlang External Term Format term:
+/// the version byte (`131`), the `NEW_FLOAT_EXT` tag (`70`), and the
+/// value's 8-byte big-endian IEEE-754 representation (`f64::to_be_bytes`
+/// already produces the correct big-endian binary64 layout).
+///
+/// This is the shape of one entry in `BEAMModule.literals` for a plain
+/// float constant (confirmed against a real compiled module: a bare float
+/// argument disassembles as `{move,{float,V},{x,N}}`, and `beam_asm.erl`
+/// shows `encode_arg({float,Float},...)` and `encode_arg({literal,Lit},...)`
+/// share the exact same `encode_literal/2` path — there is no separate
+/// "embedded float" compact-term form).
+pub fn etf_new_float(value: f64) -> Vec<u8> {
+    const ETF_VERSION_TAG: u8 = 131;
+    const NEW_FLOAT_EXT: u8 = 70;
+    let mut out = Vec::with_capacity(10);
+    out.push(ETF_VERSION_TAG);
+    out.push(NEW_FLOAT_EXT);
+    out.extend_from_slice(&value.to_be_bytes());
+    out
+}
+
+/// The two-part compact-term operand referencing literal-table index
+/// `index` (0-based) in `BEAMModule.literals`.
+///
+/// Per `beam_asm.erl`'s `encode_literal/2`: `[encode(?tag_z, 4),
+/// encode(?tag_u, Index)]` — the extended tag (`Z`, value 7) with sub-tag 4
+/// ("literal"), immediately followed by a normal compact-term-encoded
+/// unsigned index. Both halves reuse the existing `encode_compact_term`
+/// machinery (called once per element of the returned array) — no new
+/// encoding logic, just the previously-unused `Z` tag.
+pub fn literal_operand(index: u32) -> [BEAMOperand; 2] {
+    [
+        BEAMOperand { tag: BEAMTag::Z, value: 4 },
+        BEAMOperand::u(index as u64),
+    ]
+}
+
+/// Assemble the `LitT` chunk *payload* (everything after the 4-byte tag +
+/// 4-byte chunk-length header that [`wrap_chunk`] adds) for `literals`.
+///
+/// Returns `None` when `literals` is empty: `beam_asm:build_literal_chunk/2`
+/// omits the chunk entirely in that case ("the literal chunk must be
+/// omitted"), and this encoder matches that.
+fn build_litt_chunk(literals: &[Vec<u8>]) -> Option<Vec<u8>> {
+    if literals.is_empty() {
+        return None;
+    }
+    let mut plain = Vec::new();
+    let count = u32::try_from(literals.len())
+        .expect("BEAM literal table exceeds u32::MAX entries — should never occur in practice");
+    plain.extend_from_slice(&count.to_be_bytes());
+    for lit in literals {
+        let size = u32::try_from(lit.len())
+            .expect("a single BEAM literal exceeds 4 GiB — should never occur in practice");
+        plain.extend_from_slice(&size.to_be_bytes());
+        plain.extend_from_slice(lit);
+    }
+    let compressed = zlib_store_compress(&plain);
+    let original_size = u32::try_from(plain.len())
+        .expect("BEAM literal table exceeds 4 GiB — should never occur in practice");
+    let mut payload = Vec::with_capacity(4 + compressed.len());
+    payload.extend_from_slice(&original_size.to_be_bytes());
+    payload.extend_from_slice(&compressed);
+    Some(payload)
+}
+
+/// Compute the Adler-32 checksum of `data` (RFC 1950 §8.2).
+///
+/// `a` starts at 1 (not 0) and both accumulators wrap modulo 65521 (the
+/// largest prime below 2^16) — this is the exact algorithm zlib uses for
+/// its stream trailer. Verified against `erlang:adler32/1` on a known input
+/// (`"hello world"` → `436929629`) before relying on it.
+fn adler32(data: &[u8]) -> u32 {
+    const MOD_ADLER: u32 = 65521;
+    let mut a: u32 = 1;
+    let mut b: u32 = 0;
+    for &byte in data {
+        a = (a + byte as u32) % MOD_ADLER;
+        b = (b + a) % MOD_ADLER;
+    }
+    (b << 16) | a
+}
+
+/// Wrap `data` in a valid zlib (RFC 1950) stream using only RFC 1951
+/// **stored** (uncompressed) DEFLATE blocks — no entropy coding.
+///
+/// # Why hand-roll this instead of using a compression crate
+///
+/// Every existing binary encoder in this codebase (this file included) is
+/// hand-rolled with zero external dependencies; a stored-block deflate
+/// stream is a small, unambiguous special case of the format (any
+/// RFC-1951-compliant decoder — including the C zlib real BEAM loads
+/// through — must accept it) and needs no entropy coder to get right.
+///
+/// # Format
+///
+/// ```text
+/// zlib header:  0x78 0x01            (CMF=0x78 deflate/32K window,
+///                                      FLG=0x01 fastest/no-dict; chosen so
+///                                      (CMF*256+FLG) % 31 == 0, per RFC 1950)
+/// one or more DEFLATE stored blocks, each:
+///   1 byte:  BFINAL (bit 0) | BTYPE=00 (bits 1-2) | 0-padding
+///   2 bytes: LEN  (u16 LE)  — bytes in this block (max 65535)
+///   2 bytes: NLEN (u16 LE)  — one's complement of LEN
+///   LEN bytes: the literal data for this block
+/// zlib trailer: Adler-32 of the ORIGINAL (uncompressed) data, 4 bytes BE
+/// ```
+///
+/// Verified end-to-end against real Erlang: the Adler-32 trailer was
+/// checked against `erlang:adler32/1`, the whole stream was round-tripped
+/// through `zlib:uncompress/1` (the exact primitive `beam_load.c` uses to
+/// inflate `LitT`), and a `.beam` file's `LitT` chunk was rebuilt with this
+/// exact byte layout and successfully loaded and run by real `erl`.
+fn zlib_store_compress(data: &[u8]) -> Vec<u8> {
+    const MAX_STORED_BLOCK: usize = 0xFFFF;
+    let mut out = Vec::with_capacity(data.len() + 16);
+    out.extend_from_slice(&[0x78, 0x01]); // zlib header (see doc comment)
+
+    if data.is_empty() {
+        // A single empty final stored block: BFINAL=1, BTYPE=00, LEN=NLEN=0.
+        out.extend_from_slice(&[0x01, 0x00, 0x00, 0xFF, 0xFF]);
+    } else {
+        let mut offset = 0usize;
+        while offset < data.len() {
+            let remaining = data.len() - offset;
+            let take = remaining.min(MAX_STORED_BLOCK);
+            let is_final = offset + take == data.len();
+            out.push(if is_final { 0x01 } else { 0x00 });
+            let len = take as u16;
+            out.extend_from_slice(&len.to_le_bytes());
+            out.extend_from_slice(&(!len).to_le_bytes()); // NLEN = one's complement
+            out.extend_from_slice(&data[offset..offset + take]);
+            offset += take;
+        }
+    }
+
+    out.extend_from_slice(&adler32(data).to_be_bytes());
+    out
 }
 
 // ===========================================================================
@@ -508,6 +690,12 @@ pub fn encode_beam(module: &BEAMModule) -> Vec<u8> {
     if !loct_payload.is_empty() || !module.locals.is_empty() {
         chunks.extend(wrap_chunk(b"LocT", &loct_payload));
     }
+    // BEAM03: the literal table, only present when the module has literals
+    // (e.g. any f64 `const`). See `build_litt_chunk`'s doc comment for the
+    // on-disk format and why it targets OTP 27's compressed encoding.
+    if let Some(litt_payload) = build_litt_chunk(&module.literals) {
+        chunks.extend(wrap_chunk(b"LitT", &litt_payload));
+    }
 
     // ── OTP 25+ mandatory chunks ───────────────────────────────────────────
     //
@@ -554,6 +742,10 @@ pub fn encode_beam(module: &BEAMModule) -> Vec<u8> {
 // ===========================================================================
 
 #[cfg(test)]
+// The float literals in these tests (e.g. 3.14) are hand-written test/demo
+// values matching this crate's real-erl probe data, not attempts to
+// approximate `std::f64::consts::PI`.
+#[allow(clippy::approx_constant)]
 mod tests {
     use super::*;
 
@@ -769,6 +961,7 @@ mod tests {
             max_opcode: 3,
             instruction_set_version: 0,
             extra_chunks: vec![],
+            literals: vec![],
         };
         let bytes = encode_beam(&module);
         assert_eq!(&bytes[0..4], b"FOR1");
@@ -788,6 +981,7 @@ mod tests {
             max_opcode: 3,
             instruction_set_version: 0,
             extra_chunks: vec![],
+            literals: vec![],
         };
         let bytes = encode_beam(&module);
         let pos = bytes.windows(4).position(|w| w == b"AtU8");
@@ -810,6 +1004,7 @@ mod tests {
             max_opcode: 3,
             instruction_set_version: 0,
             extra_chunks: vec![],
+            literals: vec![],
         }
     }
 
@@ -890,5 +1085,179 @@ mod tests {
         assert_eq!(BEAMOperand::x(0).tag, BEAMTag::X);
         assert_eq!(BEAMOperand::f(1).value, 1);
         assert_eq!(BEAMOperand::a(2).tag, BEAMTag::A);
+    }
+
+    // ------------------------------------------------------------------
+    // BEAM03: literal table (float lowering)
+    // ------------------------------------------------------------------
+
+    /// Known vector, checked against real `erlang:adler32/1` before relying
+    /// on it in `zlib_store_compress`'s trailer.
+    #[test]
+    fn test_adler32_known_vector() {
+        assert_eq!(adler32(b"hello world"), 436_929_629);
+    }
+
+    #[test]
+    fn test_adler32_empty() {
+        // a=1, b=0 initial state, packed as (0<<16)|1.
+        assert_eq!(adler32(b""), 1);
+    }
+
+    /// `etf_new_float` must produce `[131, 70, <8 big-endian IEEE-754
+    /// bytes>]` — verified against a real compiled module's literal table
+    /// entry for `3.14` (bit pattern `0x40091EB851EB851F`).
+    #[test]
+    fn test_etf_new_float_matches_real_beam_literal() {
+        let encoded = etf_new_float(3.14);
+        assert_eq!(encoded, vec![131, 70, 0x40, 0x09, 0x1E, 0xB8, 0x51, 0xEB, 0x85, 0x1F]);
+    }
+
+    /// `literal_operand`'s header byte is the extended-tag "Small form":
+    /// sub-tag 4 ("literal") in the top nibble, `tag_z` (7) in the bottom 3
+    /// bits — `(4 << 4) | 7 = 0x47` — matching `beam_asm:encode/2`'s
+    /// `(N bsl 4) bor Tag` for `N < 16`.
+    #[test]
+    fn test_literal_operand_header_byte() {
+        let [header, index_operand] = literal_operand(0);
+        assert_eq!(header.tag, BEAMTag::Z);
+        assert_eq!(header.value, 4);
+        assert_eq!(encode_compact_term(header.tag, header.value), vec![0x47]);
+        assert_eq!(index_operand, BEAMOperand::u(0));
+    }
+
+    #[test]
+    fn test_literal_operand_large_index() {
+        // Index encoding reuses the ordinary compact-term U encoder — a
+        // large index just becomes a multi-byte Large-form U operand, same
+        // as any other big unsigned value.
+        let [_, index_operand] = literal_operand(5000);
+        assert_eq!(index_operand, BEAMOperand::u(5000));
+    }
+
+    /// `zlib_store_compress` must produce a stream real `zlib:uncompress/1`
+    /// accepts and returns byte-identical to the input. This test hand-
+    /// decodes the stored-block format itself (no compression dependency
+    /// needed to verify a format this crate also hand-rolled the encoder
+    /// for) — the real-`erl` round-trip was performed manually during
+    /// development (see BEAM03-float-lowering.md §3) and is not repeated
+    /// on every `cargo test` run since this crate has no Erlang test
+    /// harness of its own (that lives in `iir-to-beam`).
+    fn decode_stored_zlib(stream: &[u8]) -> Vec<u8> {
+        assert_eq!(&stream[0..2], &[0x78, 0x01], "zlib header mismatch");
+        let mut pos = 2;
+        let mut out = Vec::new();
+        loop {
+            let bfinal = stream[pos] & 0x01;
+            assert_eq!(stream[pos] & 0x06, 0x00, "expected BTYPE=00 (stored)");
+            pos += 1;
+            let len = u16::from_le_bytes([stream[pos], stream[pos + 1]]) as usize;
+            let nlen = u16::from_le_bytes([stream[pos + 2], stream[pos + 3]]);
+            assert_eq!(nlen, !(len as u16), "NLEN must be one's complement of LEN");
+            pos += 4;
+            out.extend_from_slice(&stream[pos..pos + len]);
+            pos += len;
+            if bfinal == 1 {
+                break;
+            }
+        }
+        // Trailing 4 bytes are the Adler-32 checksum; skip in this decoder.
+        out
+    }
+
+    #[test]
+    fn test_zlib_store_compress_roundtrips_small() {
+        let data = b"the quick brown fox";
+        let compressed = zlib_store_compress(data);
+        assert_eq!(decode_stored_zlib(&compressed), data);
+        // Trailer must be the Adler-32 of the ORIGINAL data.
+        let trailer = &compressed[compressed.len() - 4..];
+        assert_eq!(u32::from_be_bytes(trailer.try_into().unwrap()), adler32(data));
+    }
+
+    #[test]
+    fn test_zlib_store_compress_roundtrips_empty() {
+        let compressed = zlib_store_compress(b"");
+        assert_eq!(decode_stored_zlib(&compressed), b"");
+    }
+
+    #[test]
+    fn test_zlib_store_compress_chunks_over_64k() {
+        // A payload over the 65535-byte stored-block limit must split into
+        // multiple blocks, each individually valid, with BFINAL=1 only on
+        // the last. `decode_stored_zlib` already asserts NLEN correctness
+        // and stops only at the final block, so a successful round-trip
+        // here proves the multi-block chunking (not just a single block).
+        let data: Vec<u8> = (0..200_000u32).map(|i| (i % 251) as u8).collect();
+        let compressed = zlib_store_compress(&data);
+        assert_eq!(decode_stored_zlib(&compressed), data);
+    }
+
+    /// `build_litt_chunk` must omit the chunk entirely for an empty literal
+    /// table, matching `beam_asm:build_literal_chunk/2`'s own rule ("the
+    /// literal chunk must be omitted").
+    #[test]
+    fn test_build_litt_chunk_omitted_when_empty() {
+        assert!(build_litt_chunk(&[]).is_none());
+    }
+
+    /// `build_litt_chunk`'s payload must be `<<OriginalSize:32,
+    /// zlib_store_compress(<<Count:32, (Size:32,ETF)...>>)>>` — the exact
+    /// layout empirically confirmed against a real compiled module's `LitT`
+    /// chunk (see BEAM03-float-lowering.md §3.1/§3.3).
+    #[test]
+    fn test_build_litt_chunk_layout() {
+        let lit = etf_new_float(3.14);
+        let chunk = build_litt_chunk(std::slice::from_ref(&lit)).expect("one literal present");
+
+        let original_size = u32::from_be_bytes(chunk[0..4].try_into().unwrap());
+        let plain = decode_stored_zlib(&chunk[4..]);
+        assert_eq!(original_size as usize, plain.len());
+
+        let count = u32::from_be_bytes(plain[0..4].try_into().unwrap());
+        assert_eq!(count, 1);
+        let size = u32::from_be_bytes(plain[4..8].try_into().unwrap());
+        assert_eq!(size as usize, lit.len());
+        assert_eq!(&plain[8..8 + lit.len()], lit.as_slice());
+    }
+
+    /// End-to-end: a module with a float literal, referenced from a `move`
+    /// instruction via `literal_operand`, produces an encoded `.beam` file
+    /// containing a `LitT` chunk.
+    #[test]
+    fn test_encode_beam_with_literal_contains_litt_chunk() {
+        let lit = etf_new_float(2.5);
+        let move_operands = {
+            let [h, i] = literal_operand(0);
+            vec![h, i, BEAMOperand::x(0)]
+        };
+        let module = BEAMModule {
+            name: "m".to_string(),
+            atoms: vec!["m".to_string()],
+            instructions: vec![
+                BEAMInstruction::new(64, move_operands), // 64 = move (see lower.rs OP_MOVE)
+                BEAMInstruction::new(3, vec![]),          // INT_CODE_END
+            ],
+            imports: vec![],
+            exports: vec![],
+            locals: vec![],
+            label_count: 1,
+            max_opcode: 64,
+            instruction_set_version: 0,
+            extra_chunks: vec![],
+            literals: vec![lit],
+        };
+        let bytes = encode_beam(&module);
+        assert!(bytes.windows(4).any(|w| w == b"LitT"), "LitT chunk not found");
+    }
+
+    /// A module with an empty literal table must NOT contain a `LitT`
+    /// chunk at all — every non-BEAM03 test module above relies on this
+    /// (they construct `BEAMModule { literals: vec![], .. }` and must not
+    /// suddenly gain an empty `LitT` chunk that no real compiler emits).
+    #[test]
+    fn test_encode_beam_without_literals_omits_litt_chunk() {
+        let bytes = encode_beam(&minimal_module());
+        assert!(!bytes.windows(4).any(|w| w == b"LitT"), "LitT chunk should be omitted");
     }
 }

@@ -69,6 +69,7 @@ import {
   assertRealDocFile,
   docShardContents,
   docShardDirectoryFor,
+  docSplitAt,
   isDocSharded,
   isValidDocShardName,
   joinDocShards,
@@ -158,6 +159,144 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     // evidence. Split at level 3 so each note owns one file; historical level-2
     // version markers remain attached to the preceding entry byte-for-byte.
     path: "code/packages/typescript/script-ductus/CHANGELOG.md",
+    headingLevel: 3,
+    newestFirst: true,
+  },
+  {
+    // The first plan outside human-languages, and the repo's worst LIVE
+    // conflict generator: 522 `##` sections, newest-first, every PR prepending
+    // under `## Unreleased`. It carries the evidence in plain sight -- at the
+    // time of writing it held TWO separate `## Unreleased` sections, because
+    // two PRs each prepended one and both landed.
+    //
+    // Measured like the entries above, but by CLUSTERING rather than count: a
+    // file touched 89 times spread evenly never collides. Counting touches
+    // that land within one median PR-lifetime (1.19h here, derived from the
+    // last 100 merged PRs) of the previous touch, this file leads at 90 close
+    // touches of 143 over 21 days.
+    //
+    // That metric checks out against history: every document already sharded
+    // -- BACKLOG.md, human-language-data, Language Ladder, Script Ductus, and
+    // lessons.md -- also scores high on it and has since left `main`.
+    //
+    // Level 2 because the version heading IS the entry heading here
+    // (`## 0.337.0 — ...`), the Language Ladder shape, unlike
+    // human-language-data where level 2 banners a level-3 entry list.
+    path: "code/packages/rust/lang-aot/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // 275 newest-first `## <version> — <date> — <title>` sections, the same
+    // shape as the plan above. 41 close touches of 89 over 21 days, measured
+    // the same way (touches within one 1.16h median PR-lifetime of the
+    // previous), and the highest-scoring document still shardable by this
+    // tool: `adj-facts-stdlib/CHANGELOG.md` outscores it but is one heading
+    // over 323 bullets, which `splitDocument` cannot divide.
+    //
+    // Weaker case than lang-aot, recorded so nobody reads it as equal: this
+    // package's `src/lib.rs`, `Cargo.toml` and `CHANGELOG.md` all score
+    // IDENTICALLY, so every PR touches all three and sharding removes one
+    // conflict surface of three. lang-aot's changelog outscored its own
+    // siblings, meaning PRs hit it more often than the code beside it.
+    path: "code/packages/rust/algol-iir-compiler/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // The first BULLET plan, and the worst remaining live conflict generator:
+    // 62 close touches of 110 over 21 days. Exactly one `##` heading over 323
+    // top-level entries, so heading-splitting would emit a single shard holding
+    // the whole 10,541-line document -- `entryShape: "bullet"` exists for this
+    // file.
+    //
+    // The evidence here is not a proxy. The last EIGHT commits each insert at
+    // LINE 8: `## Unreleased` is line 6 and every author writes directly
+    // beneath it. That also settles `newestFirst` by observation rather than by
+    // copying it from the plans above.
+    //
+    // `headingLevel` is not consulted under `"bullet"`; it is carried because
+    // the field is required, and the preamble is the 161 bytes above the first
+    // entry.
+    path: "code/specs/data/adj-facts-stdlib/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
+
+  // The remaining contended package changelogs, migrated together rather than
+  // one per PR. Every sharding PR edits this list and the two guard lists in
+  // human-languages-books.yml, so they conflict with EACH OTHER and land
+  // strictly one at a time -- this work is itself serialized on a shared file,
+  // one level up from the problem it solves.
+  //
+  // `newestFirst` below is not copied from the plans above. For each of the
+  // seven, the last six commits insert at the SAME line: 3 for the heading-mode
+  // files, 5 for the bullet-mode ones.
+  {
+    // 166 `##` entries.
+    path: "code/packages/rust/mermaid-parser/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // 135 `##` entries AND 143 `###`. Split at level 2, so the level-3
+    // subsections ride inside their parent shard -- the documented behaviour,
+    // and the same choice Language Ladder made.
+    path: "code/packages/rust/wasm-conformance/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // 97 `##` entries.
+    path: "code/packages/rust/diagram-ir/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // 53 `##` entries.
+    path: "code/packages/rust/diagram-to-paint/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // 182 bullet entries under 10 `##` version markers. Under bullet mode a
+    // marker attaches to the end of the preceding entry's shard and returns to
+    // the same place on rejoin -- the "frozen version markers ride along"
+    // behaviour human-language-data already relies on, confirmed here by round
+    // trip rather than reasoned about.
+    path: "code/packages/rust/spice-netlist-parser/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
+  {
+    // 57 bullet entries under 9 `##` version markers.
+    path: "code/packages/rust/venture-browser-core/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
+  {
+    // 31 bullet entries under 1 `##` heading.
+    path: "code/packages/rust/oauth-broker/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
+  {
+    // The monorepo changelog, and the last document this effort migrates. 100
+    // `###` entries under a `## [Unreleased]` banner, so level 3 for the same
+    // reason as human-language-data: level 2 is the version marker and the hot
+    // spot is the entry list beneath it, where every PR prepends.
+    //
+    // Picked on a measured append-only signal rather than on being named
+    // CHANGELOG: 10 of its last 10 commits touch the top, 9 of them in a single
+    // hunk. The same measurement is why package-parity-roadmap.md is NOT here
+    // despite 64 `##` sections -- 0 of 10 at the top, so it is edited
+    // throughout and sharding would disguise semantic conflicts rather than
+    // remove additive ones.
+    path: "CHANGELOG.md",
     headingLevel: 3,
     newestFirst: true,
   },
@@ -399,9 +538,18 @@ export function runDocShardCli(
     const shardCount = listDocShardNames(monolith, plan).length - 1; // `_meta.md`
     const sectionCount = docShardContents(expected, plan).size - 1;
     if (sectionCount !== shardCount) {
+      // `docSplitAt`, not `plan.headingLevel`: the gate above is already
+      // shape-aware, so only the MESSAGE would lie. For a bullet plan it would
+      // report "exactly one level-2 section" about a document that has no
+      // level-2 sections, sending the reader to hunt for `##` headings in a
+      // file with one. The last surviving `headingLevel` read outside
+      // `docSplitAt`, and exactly the divergence `entryStartPattern` exists to
+      // stop.
+      const at = docSplitAt(plan);
       process.stderr.write(
         `${plan.path}: ${shardCount} section shard(s) rebuild as ${sectionCount} section(s). ` +
-          `Each non-meta shard must contain exactly one level-${plan.headingLevel} section.\n`,
+          `Each non-meta shard must contain exactly one ` +
+          `${at === "bullet" ? "top-level bullet entry" : `level-${at} section`}.\n`,
       );
       failed = true;
     }

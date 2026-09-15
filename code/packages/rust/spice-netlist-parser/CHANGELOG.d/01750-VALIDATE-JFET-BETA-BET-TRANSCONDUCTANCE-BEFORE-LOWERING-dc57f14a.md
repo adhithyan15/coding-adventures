@@ -1,0 +1,1 @@
+- Validate JFET `BETA` / `BET` transconductance before lowering.

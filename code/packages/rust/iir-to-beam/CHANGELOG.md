@@ -1,5 +1,135 @@
 # Changelog — iir-to-beam
 
+## 0.12.0 - 2026-09-15 - math:* transcendentals and real_to_int_floor (VM-LOOP-24)
+
+A probe-first sweep of Dartmouth BASIC's remaining non-`INPUT` corpus rows
+found 5 that need new but bounded/mechanical lowering, mirroring `f64_pow`'s
+existing `call_ext` shape exactly. Full design + probe transcript:
+`code/specs/BEAM03-float-lowering.md` §9.
+
+- **`f64_sqrt`/`f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`/`f64_atan`/`f64_tan`
+  (new ops, no prior lowering):** each lowers to a `call_ext` targeting a
+  new single-arity `math:*` import (`math:sqrt/1`, `math:sin/1`,
+  `math:cos/1`, `math:log/1` — natural log, matching BASIC's `LOG`/IIR
+  `f64_ln` — `math:exp/1`, `math:atan/1`, `math:tan/1`) — confirmed by real
+  `erlc -S` disassembly to be ordinary `math` module functions, never
+  loader-recognized guard BIFs, so none can use `gc_bif1`. Each reuses the
+  `f64_pow` staging pattern with ONE operand instead of two: stage into a
+  scratch register above `next_reg`, `save_live_across_imported_call!`,
+  move into `x0`, `call_ext 1 {u,import_idx}`, move the result to the
+  destination, `restore_live_across_imported_call!`. All seven joined the
+  `live_across` call-list match (the same invariant `f64_pow` joined in
+  0.11.0 — an omission there silently destroys a live variable's value, not
+  a crash).
+- **`real_to_int_floor` (new op, no prior lowering):** lowers to a
+  `gc_bif1` targeting a new `erlang:floor/1` import — UNLIKE the `math:*`
+  ops above, `erlang:floor/1` IS a loader-recognized guard BIF (confirmed,
+  also via `erlc -S`, to disassemble to the same generic `{gc_bif,floor,
+  ...}` shape `int_to_real`/`real_to_int_trunc` already use), so it joins
+  THEIR match arm instead of the new `call_ext` family, despite being
+  adjacent in the frontend's own `INT(X) = real_to_int_floor + int_to_real`
+  lowering.
+- Proven with new unit tests: instruction-shape tests for all 8 ops
+  (`call_ext`-not-`gc_bif`/`gc_bif1`-not-`call_ext`, plus the correct new
+  import-table entry for each), and real-`erl` integration tests: all 7
+  transcendentals chained in one module against their exact Dartmouth BASIC
+  corpus arguments (`SQR(49) + SIN(0) + COS(0) + LOG(1) + EXP(0) + ATN(0) +
+  TAN(0)` truncated = `9`) and `real_to_int_floor(3.7)` = `3`.
+- No new platform-limitation surface: every one of these ops is a direct
+  libm binding on both Erlang's `math` module and the `vm-core` oracle, so
+  they agree on every finite input; none of the promoted rows reach a
+  non-finite result.
+
+## 0.11.0 - 2026-09-15 - neg(f64) and f64_pow (BEAM03 continuation)
+
+Second bounded BEAM03 slice, continuing the f64 lowering track. Full design:
+`code/specs/BEAM03-float-lowering.md` §8.
+
+- **`neg`(f64): no lowering change.** The existing `"neg" | "not"` arm
+  already dispatches unconditionally to `erlang:-/1` (`gc_bif1`), and
+  Erlang's unary minus is already polymorphic over integer and float
+  operands — unlike `div` (VM-D034), there is only one operator, not two.
+  The arm's only per-`type_hint` branch (the `u4`/`u8` narrowing mask) never
+  matches `"f64"`, so a float `neg` already took the correct unmasked path.
+  Proven with new unit tests (`gc_bif1` count, no masking `gc_bif2`) and
+  real-`erl` integration tests (double negation, and a combined case
+  chaining `neg` + `f64_pow` in one module).
+- **`f64_pow` (new op, no prior lowering at all):** lowers to a `call_ext`
+  targeting a new `math:pow/2` import — NOT `gc_bif2`, because `math:pow/2`
+  is an ordinary Erlang function, not a loader-recognized guard BIF (unlike
+  `add`/`sub`/`mul`/`int_to_real`/`real_to_int_trunc`, all of which ARE
+  guard BIFs). Both source registers are staged into scratch registers
+  above `next_reg` before the call (the same parallel-move-hazard avoidance
+  `str_index`'s `lists:nth/2` call already uses), the call clobbers all
+  x-registers so it participates in the existing `live_across`
+  save/restore-around-call-ext machinery (added to that match list — an
+  omission there silently destroys a live variable's value, not a crash),
+  and the result is moved to the destination register.
+- Real-`erl` proof: `f64_pow(2.0, 10.0)` truncates to `1024`; the combined
+  `neg`+`f64_pow` case reproduces the `4 ^ 0.5` BASIC row's arithmetic
+  (`neg(-4.0)` = `4.0`, then `pow(4.0, 0.5)` = `2.0`) in one process.
+- No new platform-limitation surface: `f64_pow`'s Inf/NaN behavior is the
+  same already-documented Erlang-floats-are-not-full-IEEE-754 gap `div` has
+  (BEAM03-float-lowering.md §6), not newly discovered here and not
+  reachable by the promoted `lang-aot` corpus row.
+
+## 0.10.0 - 2026-09-15 - f64 lowering (BEAM03): const, arithmetic, comparison, conversion
+
+`iir-to-beam` previously had **zero** `f64`/`Float` support at all — every
+`const` with an `Operand::Float` source was unconditionally rejected by
+`validate_for_beam`. This blocked Dartmouth BASIC's entire numeric corpus on
+BEAM (BA7-1b routes every scalar numeric value, even an integer-spelled
+literal like `PRINT 42`, through the shared `f64` track). Full design and
+real-`erl` verification method: `code/specs/BEAM03-float-lowering.md`.
+
+**New/changed ops:**
+
+- `const` with `Operand::Float` and `type_hint == "f64"` is now accepted
+  (previously rejected unconditionally) — lowers to a `move` referencing a
+  new module-level `LiteralPool` (dedups by exact bit pattern, mirroring the
+  existing `AtomTable`/`ImportTable` pattern) via `ir-to-beam` 0.4.0's new
+  `literal_operand`/`LitT`-chunk infrastructure. Any type_hint other than
+  `"f64"` on a float const is still rejected.
+- `int_to_real` / `real_to_int_trunc` (new ops, no prior lowering at all):
+  single-argument `gc_bif1` calls to `erlang:float/1` / `erlang:trunc/1`
+  respectively — the same shape already used for `neg`/`not`.
+- `add`/`sub`/`mul`/`cmp_eq`/`cmp_ne`/`cmp_lt`/`cmp_le`/`cmp_gt`/`cmp_ge`
+  needed **no code changes at all**: they already lower generically over
+  `Operand::Var` registers regardless of the term type the register holds
+  (confirmed by disassembling real compiled Erlang: `is_lt`/`is_eq` are the
+  same generic term-comparison opcodes for floats as for integers). Once
+  `const` can put a valid boxed float into a register, these "just work".
+
+**VM-D034 (discovered while writing the real-`erl` div test):** `div`
+**does** need a code change — `erlang:div/2` (the existing i64 lowering's
+BIF) requires both operands to be integers and traps (`badarith`) on a
+float; confirmed with `erlang:div(10.0, 4.0)`. Unlike `+`/`-`/`*`
+(`erlang:'+'`/`'-'`/`'*'`, already polymorphic over int/float), Erlang
+division has two distinct operators with no shared polymorphic form. Fixed
+by dispatching `"div"` to a new `erlang:'/'/2` import specifically when
+`type_hint == "f64"`, leaving the i64 `erlang:div/2` path unchanged. `mod`
+has no f64 case in the current corpus and was deliberately left unfixed
+(documented in the match arm) — a future f64 `mod` would hit the same trap.
+
+**Known, documented, out-of-scope gap:** general float division by zero.
+Real Erlang floats cannot represent IEEE-754 Inf/NaN at all — `X/0.0` raises
+`badarith`, and the ETF decoder itself refuses a non-finite float bit
+pattern (`binary_to_term` → `badarg`). This diverges from the `vm-core`
+oracle's documented IEEE-754 contract (matched by LLVM/WASM/JVM/CLR `fdiv`).
+Not reachable by the two rows promoted with this release (every divisor is
+a compile-time nonzero constant), but a real gap for a future frontend
+program that divides by a runtime zero. See `BEAM03-float-lowering.md` §6
+for the two possible directions — deliberately left as an open design
+question, not guessed at.
+
+**Tests:** new unit tests (literal-pool dedup, `int_to_real`/
+`real_to_int_trunc` `gc_bif1` shape) plus three new real-`erl` integration
+tests in `tests/test_backend.rs` (float arithmetic incl. division by a
+nonzero constant, float comparisons, `int_to_real`/`real_to_int_trunc`
+round-trip) — all executed against real Erlang, not just validated for
+shape. `lang-aot` promotes the two Dartmouth BASIC numeric-baseline
+`lang_matrix` rows to `Beam` in the same PR (see its own changelog).
+
 ## 0.9.3 - 2026-09-12 - add `str_len`/`str_index` (VM-040 COBOL BEAM STRING SIZE/delimiter)
 
 Added two new string ops needed by the next COBOL BEAM promotion batch:
