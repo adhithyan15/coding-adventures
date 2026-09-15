@@ -4598,23 +4598,35 @@ const PROGRAMS: &[Prog] = &[
     // `__basic_print_real` and the shared f64 backend tracks. The helper's current
     // whole-valued contract truncates with E8 `real_to_int_trunc`, then reuses BA2's
     // digit printer, keeping the observable output identical on all 7 backends.
+    //
+    // BEAM03: this is BASIC's own paradigm case for the just-added `iir-to-beam`
+    // f64 lowering (const/add/sub/mul/div/cmp_*/int_to_real/real_to_int_trunc,
+    // see BEAM03-float-lowering.md) — the numeric baseline row the VM-040 BASIC
+    // BEAM pure-string slice explicitly deferred. `__basic_print_real`'s sign/
+    // zero/magnitude-bucket dispatch and its `real_to_int_trunc` digit-extraction
+    // chain both exercise real, non-synthetic float lowering, not a bespoke probe.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT 42\n20 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — exponentiation with an integer-valued literal exponent
     // (LANG-FULL BA-^). General `^` still needs a math runtime for variable or
     // fractional exponents; this proof lowers `6 ^ 2` to repeated f64 `mul`,
     // then adds 6 and prints 42 on every backend.
+    //
+    // BEAM03: the second promoted numeric-baseline row — `dartmouth-basic-iir-
+    // compiler`'s `literal_power_lowers_to_repeated_f64_mul` fast path emits one
+    // `mul` (base * base) then a top-level `add`, so this exercises float `mul`/
+    // `add` beyond what the bare-literal row above needs.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT 6 ^ 2 + 6\n20 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — E4/BA4 first string-PRINT proof. The frontend lowers a
     // string literal item to shared `str_const` + `print_str`, and the existing
@@ -9346,6 +9358,11 @@ fn matrix_every_proven_cell_agrees() {
 /// declaration. That is exactly the "future slice" drift this test exists to
 /// catch, not evidence the test itself is unreliable.
 ///
+/// Dartmouth BASIC's expected cell count changed again after `iir-to-beam`
+/// gained f64 lowering (375 → 377, BEAM03): the two numeric-baseline rows
+/// deferred by the pure-string family slice above gained a real, `erl`-proven
+/// `Beam` declaration.
+///
 /// COBOL-60's expected cell count changed again after VM-040's boolean/
 /// EVALUATE slice (422 → 426) and again in this slice (426 → 430): four more
 /// rows (alphanumeric EVALUATE subject via `str_cmp`, and three reference-
@@ -9374,7 +9391,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Twig, 49, 363),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 45),
-        (Language::DartmouthBasic, 51, 375),
+        (Language::DartmouthBasic, 51, 377),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
         (Language::Cobol60, 58, 464),
@@ -15885,4 +15902,35 @@ fn portable_text_stdout_dartmouth_basic_beam_strings() {
     }
     assert_eq!(executed, 18);
     eprintln!("Dartmouth BASIC BEAM pure-string family: {executed} programs executed");
+}
+
+// BEAM03: the two numeric-baseline Dartmouth BASIC rows, promoted once
+// `iir-to-beam` gained f64 lowering (see BEAM03-float-lowering.md). These are
+// the two rows immediately BEFORE the 18-row pure-string family above (which
+// intentionally skipped them — see that slice's own "why this slice does not
+// close all of it" note). Real Erlang execution proves the full print-helper
+// op chain (const/add/mul/sub/div/cmp_lt/cmp_eq/cmp_ge/int_to_real/
+// real_to_int_trunc), not just that a float const loads.
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_numeric_baseline() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM numeric baseline: erl unavailable");
+        return;
+    }
+    let programs: Vec<_> = PROGRAMS.iter()
+        .filter(|p| p.lang == Language::DartmouthBasic)
+        .take(2).collect();
+    assert_eq!(programs.len(), 2);
+    let expected_stdout = ["42", "42"];
+    let mut executed = 0;
+    for (program, stdout) in programs.iter().zip(expected_stdout) {
+        assert!(program.backends.contains(&Beam), "selected BASIC row must declare Beam");
+        assert!(matches!(program.expect, Expect::Stdout(value) if value == stdout),
+            "selected BASIC expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 2);
+    eprintln!("Dartmouth BASIC BEAM numeric baseline: {executed} programs executed");
 }

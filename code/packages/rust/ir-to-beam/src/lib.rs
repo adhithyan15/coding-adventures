@@ -69,6 +69,8 @@ pub use encoder::{
     BEAMTag,
     encode_beam,
     encode_compact_term,
+    etf_new_float,
+    literal_operand,
 };
 
 pub use backend::{
