@@ -80,7 +80,6 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[    // ---- Qt (#15245) ----
     // edges, so any longhand beyond the one it picks is lost.
     (Backend::Qt, "padding"),
     (Backend::Qt, "padding-bottom"),
-    (Backend::Qt, "padding-top"),
 ];
 
 fn package_root() -> PathBuf {
