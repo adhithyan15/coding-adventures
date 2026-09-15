@@ -27,32 +27,66 @@
 %     shield_volcano        built_almost_entirely_of_fluid_lava_flows         "Shield volcanoes are built almost entirely of fluid lava flows."
 %     composite_volcano     also_called_a_stratovolcano                       "Some of the Earth's grandest mountains are composite volcanoes—sometimes called stratovolcanoes."
 %
-% Provenance: quoted verbatim from USGS's "About Volcanoes" page, which
-% introduces each of these three types in its own complete sentence before
-% going on to further description. WebFetch-verified before writing
-% (twice — the second pass specifically confirmed each sentence's exact
-% wording and where it actually ends, since a first-pass fetch can
-% misjudge where a source sentence stops). `trust authoritative` — USGS is
+% Provenance: quoted from USGS's "About Volcanoes" page, which introduces
+% each of these three types in its own complete sentence before going on
+% to further description. The original authoring note said the quotes were
+% "WebFetch-verified before writing (twice ...)"; the raw-page measurement
+% below supersedes it, and two of the quotes above are not the page's
+% characters (see below). `trust authoritative` — USGS is
 % a primary .gov source, the same tier the sibling `rock-type.adj`/
 % `mineral-hardness.adj` (the other libraries in this directory) already
 % use for their USGS citations. A volcano-related term that is NOT one of
 % these three — "lava_dome", a real term the same page also names, but one
 % the source ITSELF explicitly disclaims as not a type: "A volcano can
 % host many lava domes over a long period of time, so these are
-% technically not a 'volcano type' but rather an eruption phenomenon." —
+% technically not a "volcano type" but rather an eruption phenomenon." —
 % is deliberately NOT a row, so a recall ABSTAINS on it rather than
 % inventing a description. (See ../README.md;
 % feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the shield row's own sentence, the primary source of all three
+% answers. Each quoted sentence above names its type and its description, so
+% every row now takes its own as a `source`. The envelope is now a framing
+% sentence from the page, which names no type:
+%
+%     "There are about 1,350 potentially active volcanoes worldwide, not
+%      counting the volcanoes under the oceans."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the three row sentences and the envelope each occur
+% exactly once, each inside a `<p>`. Every row's page is the envelope's, so
+% no row restates a `locator` line or `trust` (ADJ-TABLES §4).
+%
+% TWO QUOTES ABOVE ARE NOT THE PAGE'S CHARACTERS, and the shipped envelope
+% occurred on no page because of it. The page writes U+00A0 (NO-BREAK SPACE)
+% after "Cinder" in the cinder-cone sentence, and on both sides of "lava" in
+% the shield sentence ("fluid lava flows."). A comment cannot show U+00A0,
+% so the truth table keeps plain spaces; in that form each sentence occurs
+% zero times. The rows carry the page's characters. The lava-dome quote used
+% single quotes around volcano type; the page writes double quotes, and the
+% quote above now does too.
 % ============================================================================
 
 table volcano_type {
     columns type, description
 
-    row (cinder_cone, is_the_simplest_type_of_volcano)
-    row (shield_volcano, built_almost_entirely_of_fluid_lava_flows)
-    row (composite_volcano, also_called_a_stratovolcano)
+    row (cinder_cone, is_the_simplest_type_of_volcano) {
+        source "Cinder cones are the simplest type of volcano."
+    }
+    row (shield_volcano, built_almost_entirely_of_fluid_lava_flows) {
+        source "Shield volcanoes are built almost entirely of fluid lava flows."
+    }
+    row (composite_volcano, also_called_a_stratovolcano) {
+        source "Some of the Earth's grandest mountains are composite volcanoes—sometimes called stratovolcanoes."
+    }
 
-    source "Shield volcanoes are built almost entirely of fluid lava flows."
+    % THE ENVELOPE WAS THE SHIELD ROW'S OWN SENTENCE, the primary source of
+    % all three answers, and as shipped it occurred on no page (plain spaces
+    % where the page writes U+00A0). It is now a framing sentence that names
+    % no type. Every row overrides it, so it reaches no answer.
+    source "There are about 1,350 potentially active volcanoes worldwide, not counting the volcanoes under the oceans."
     locator "https://www.usgs.gov/programs/VHP/about-volcanoes"
     trust authoritative
 }
