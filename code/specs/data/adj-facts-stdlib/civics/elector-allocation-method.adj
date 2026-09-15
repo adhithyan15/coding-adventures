@@ -83,18 +83,47 @@
 %
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the 48-states sentence, the primary source of all three answers,
+% with the Maine and Nebraska sentence as a table-level `cites`, so Maine's
+% answer was cited to the sentence about the OTHER 48 states. Now the group
+% row takes the 48-states sentence, and the Maine and Nebraska rows each
+% take the sentence that names both of them and their method. The envelope
+% is now a framing sentence from the page, which names no jurisdiction and
+% no method:
+%
+%     "The Electoral College decides who will be elected president and vice
+%      president of the U.S."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the two row sentences each occur exactly once,
+% consecutively in one `<p>` inside a list item (the "two consecutive
+% sentences" above), and the envelope occurs exactly once, inside a `<p>`.
+% Every row's page is the envelope's, so no row restates a `locator` line or
+% `trust` (ADJ-TABLES §4).
 % ============================================================================
 
 table elector_allocation_method {
     columns jurisdiction, method
 
-    row (forty_eight_states_and_dc, winner_take_all)
-    row (maine, proportional)
-    row (nebraska, proportional)
+    row (forty_eight_states_and_dc, winner_take_all) {
+        source "In 48 states and Washington, D.C., the winner gets all the electoral votes for that state."
+    }
+    row (maine, proportional) {
+        source "Maine and Nebraska assign their electors using a proportional system."
+    }
+    row (nebraska, proportional) {
+        source "Maine and Nebraska assign their electors using a proportional system."
+    }
 
-    source "In 48 states and Washington, D.C., the winner gets all the electoral votes for that state."
+    % THE ENVELOPE WAS THE 48-STATES ROW'S OWN SENTENCE, the primary source of
+    % all three answers, and Maine and Nebraska read their method across a
+    % table-level `cites`. Each row now carries its own sentence, and the
+    % envelope is a framing sentence that names no jurisdiction and no
+    % method. Every row overrides it, so it reaches no answer.
+    source "The Electoral College decides who will be elected president and vice president of the U.S."
     locator "https://www.usa.gov/electoral-college"
     trust authoritative
-
-    cites "Maine and Nebraska assign their electors using a proportional system." locator "https://www.usa.gov/electoral-college"
 }

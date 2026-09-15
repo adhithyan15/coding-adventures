@@ -16,6 +16,13 @@
 //! for any particular state. A model asked "how does California award its
 //! electors?" answers confidently; this table declines, which is the whole
 //! point. 0 answer-time model calls.
+//!
+//! EACH ROW CARRIES ITS OWN SENTENCE (RS-5e, #14986). The envelope used to be
+//! the 48-states sentence, the primary source of all three answers, so Maine's
+//! answer was cited to the sentence about the OTHER 48 states, and this test
+//! pinned exactly that. The Maine and Nebraska rows now carry the sentence that
+//! names them; the envelope is a framing sentence from the page, which every
+//! row overrides. Each answer's citations array is pinned whole.
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -53,6 +60,29 @@ fn place(dir: &Path, names: &[&str]) {
     }
 }
 
+const LOCATOR: &str = "https://www.usa.gov/electoral-college";
+const ENVELOPE: &str = "The Electoral College decides who will be elected president and vice president of the U.S.";
+const RULE: &str = "In 48 states and Washington, D.C., the winner gets all the electoral votes for that state.";
+const MAINE_AND_NEBRASKA: &str = "Maine and Nebraska assign their electors using a proportional system.";
+
+/// (jurisdiction, method, that row's own sentence)
+const ROWS: [(&str, &str, &str); 3] = [
+    ("forty_eight_states_and_dc", "winner_take_all", RULE),
+    ("maine", "proportional", MAINE_AND_NEBRASKA),
+    ("nebraska", "proportional", MAINE_AND_NEBRASKA),
+];
+
+/// The whole citations array of a one-citation answer, as one contiguous run.
+fn only_citation(sentence: &str) -> String {
+    format!("\"citations\":[{{\"source\":\"{sentence}\",\"locator\":\"{LOCATOR}\",\"trust\":\"authoritative\",\"corroborations\":[]}}]")
+}
+
+fn shipped_table() -> String {
+    let adj = std::fs::read_to_string(facts_stdlib().join("civics/elector-allocation-method.adj"))
+        .expect("read shipped elector-allocation-method.adj");
+    adj[adj.find("table elector_allocation_method").expect("table")..].to_string()
+}
+
 #[test]
 fn elector_allocation_method_binds_maines_method_with_citation() {
     let dir = scratch("direct");
@@ -66,26 +96,18 @@ fn elector_allocation_method_binds_maines_method_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
-    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
-    // file matched only part of the sentence, which let the citation be
-    // truncated AT that point -- deleting everything after it -- while
-    // the test stayed green. Anchoring on the `"source":"` key and
-    // closing on the terminating quote pins head, tail, punctuation and
-    // length at once. See issues #13916 and #13918.
-    assert!(
-        out.contains("\"source\":\"In 48 states and Washington, D.C., the winner gets all the electoral votes for that state.\""),
-        "the citation is the whole source sentence, exactly: {out}"
-    );
+    // THE WHOLE CITATIONS ARRAY, not a fragment (#13916, #13918). This used to
+    // pin the 48-STATES sentence as the source of Maine's answer: the envelope
+    // was primary for every row (#14986). Maine's answer now carries the
+    // sentence that names Maine, and nothing else.
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(out.contains("\"M\":\"proportional\""), "maine is proportional: {out}");
+    assert_eq!(out.matches("\"citations\":[").count(), 1, "one answer: {out}");
     assert!(
-        out.contains("Maine and Nebraska assign their electors using a proportional system."),
-        "carries the exception sentence verbatim: {out}"
+        out.contains(&only_citation(MAINE_AND_NEBRASKA)),
+        "the Maine and Nebraska sentence is the only citation, whole: {out}"
     );
-    assert!(
-        out.contains("usa.gov/electoral-college") && out.contains("\"trust\":\"authoritative\""),
-        "carries the USA.gov citation: {out}"
-    );
+    assert!(!out.contains(RULE), "the 48-states sentence no longer reaches Maine's answer: {out}");
 }
 
 #[test]
@@ -109,6 +131,12 @@ fn elector_allocation_method_reverse_returns_both_exception_states() {
             "{state} assigns electors proportionally: {out}"
         );
     }
+    assert_eq!(out.matches("\"citations\":[").count(), 2, "two answers: {out}");
+    assert_eq!(
+        out.matches(&only_citation(MAINE_AND_NEBRASKA)).count(),
+        2,
+        "both exception states carry only the sentence that names them: {out}"
+    );
 }
 
 #[test]
@@ -131,10 +159,9 @@ fn elector_allocation_method_keeps_the_rule_the_exception_is_an_exception_to() {
         out.contains("\"M\":\"winner_take_all\""),
         "the 48 states and D.C. are winner-take-all: {out}"
     );
-    assert!(
-        out.contains("In 48 states and Washington, D.C., the winner gets all the electoral votes"),
-        "carries the rule sentence verbatim: {out}"
-    );
+    assert_eq!(out.matches("\"citations\":[").count(), 1, "one answer: {out}");
+    assert!(out.contains(&only_citation(RULE)), "the rule sentence is the only citation, whole: {out}");
+    assert!(!out.contains(MAINE_AND_NEBRASKA), "the exception sentence does not reach the rule's answer: {out}");
 }
 
 #[test]
@@ -191,4 +218,54 @@ fn elector_allocation_method_abstains_on_unplaced_states_and_on_the_mechanism() 
         abstained_count, 2,
         "abstains on the unplaced state and on the unexplained mechanism: {out}"
     );
+}
+
+#[test]
+fn every_jurisdiction_answer_carries_its_own_sentence() {
+    for (jurisdiction, method, sentence) in ROWS {
+        let dir = scratch(&format!("row_{jurisdiction}"));
+        place(&dir, &["elector-allocation-method.adj"]);
+        std::fs::write(
+            dir.join("case.adj"),
+            format!("import \"elector-allocation-method.adj\"\n? elector_allocation_method({jurisdiction}, $M)\n"),
+        )
+        .unwrap();
+        let (ok, out) = run(&dir.join("case.adj"));
+        assert!(ok, "cli should succeed: {out}");
+        assert_eq!(out.matches("\"citations\":[").count(), 1, "one answer for {jurisdiction}: {out}");
+        assert!(out.contains(&format!("\"M\":\"{method}\"")), "{jurisdiction} uses {method}: {out}");
+        assert!(out.contains(&only_citation(sentence)), "{jurisdiction}: its own sentence, whole, and the only citation: {out}");
+        for (_, _, other_sentence) in ROWS {
+            if other_sentence != sentence {
+                assert!(!out.contains(other_sentence), "another row's sentence must not reach {jurisdiction}: {out}");
+            }
+        }
+        assert!(!out.contains(ENVELOPE), "the envelope is not primary for {jurisdiction}: {out}");
+    }
+}
+
+#[test]
+fn the_table_shape_matches_the_measured_rows() {
+    // Every row overrides the envelope, so the envelope's wording reaches no
+    // answer; this file-shape test is what pins it.
+    let body = shipped_table();
+    for (jurisdiction, method, sentence) in ROWS {
+        let expected = format!("    row ({jurisdiction}, {method}) {{\n        source \"{sentence}\"\n    }}");
+        assert!(body.contains(&expected), "row ({jurisdiction}, {method}) is shipped in its measured shape");
+    }
+    assert_eq!(body.matches("\n        source \"").count(), 3, "three row sources");
+    assert!(!body.contains("cites \""), "no corroboration at row or table level");
+    assert!(
+        !body.contains("\n        locator ") && !body.contains("\n        trust "),
+        "no row restates a locator line or trust"
+    );
+    assert!(
+        body.contains(&format!("\n    source \"{ENVELOPE}\"\n    locator \"{LOCATOR}\"\n    trust authoritative\n")),
+        "the envelope is the page's framing sentence"
+    );
+    assert!(!body.contains(&format!("\n    source \"{RULE}\"\n    locator")), "not the 48-states sentence as the envelope again");
+    let folded = ENVELOPE.to_lowercase();
+    for word in ["48", "maine", "nebraska", "winner", "proportional", "state"] {
+        assert!(!folded.contains(word), "the envelope must name no jurisdiction or method, but contains {word:?}");
+    }
 }
