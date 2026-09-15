@@ -31,11 +31,11 @@
 %     comma_before_but              use_a_comma_before_but_when_it_is_joining_two_independent_clauses                   "Use a comma before the coordinating conjunction but if it is joining two independent clauses."
 %     comma_with_direct_address     set_off_the_name_with_commas_when_addressing_another_person_by_name                 "When addressing another person by name, set off the name with commas."
 %
-% Provenance: quoted verbatim from Grammarly's "Rules for Using Commas,
-% With Examples" article. WebFetch-verified twice — the second pass pulled
-% the full paragraph under each of these three headings, confirming each
-% quoted sentence is the article's own first, complete, standalone rule
-% sentence, with worked examples following it (not folded into the quote).
+% Provenance: quoted from Grammarly's "Rules for Using Commas,
+% With Examples" article. The original authoring note said the quotes were
+% "WebFetch-verified twice" and that each is a "complete, standalone rule
+% sentence"; the raw-page measurement below supersedes it, and the "but"
+% sentence ends in a colon, not a period (see below).
 % `trust consensus` — Grammarly is a reputable secondary reference, the
 % same tier the sibling `end-punctuation-mark.adj`/`capitalization-rule.adj`
 % (the other libraries in this directory) already use for their Grammarly
@@ -49,16 +49,46 @@
 % inventing a description the source's own sentence doesn't cleanly state.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the series row's own sentence, the primary source of all three
+% answers. Each quoted sentence above names its rule and what it says to do,
+% so every row now takes its own as a `source`. The envelope is now the
+% article's framing sentence, which names no rule:
+%
+%     "There are lots of rules about comma usage, and often the factors that
+%      determine whether you should use one are quite subtle."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the three row sentences and the envelope each occur
+% exactly once, each inside a `<p>`. Every row's page is the envelope's, so
+% no row restates a `locator` line or `trust` (ADJ-TABLES §4).
+%
+% THE "BUT" QUOTE ABOVE IS NOT VERBATIM. The truth table ends it with a
+% period; the page ends it with a COLON, which introduces an example pair.
+% In the period form it occurs zero times. The row carries the page's colon
+% form: the sentence is a whole instruction naming the rule and its action,
+% even though its punctuation leads into the examples.
 % ============================================================================
 
 table comma_rule {
     columns rule, description
 
-    row (comma_in_a_series, use_commas_to_separate_elements_in_a_list_of_more_than_two_elements)
-    row (comma_before_but, use_a_comma_before_but_when_it_is_joining_two_independent_clauses)
-    row (comma_with_direct_address, set_off_the_name_with_commas_when_addressing_another_person_by_name)
+    row (comma_in_a_series, use_commas_to_separate_elements_in_a_list_of_more_than_two_elements) {
+        source "When you have a list that contains more than two elements, use commas to separate them."
+    }
+    row (comma_before_but, use_a_comma_before_but_when_it_is_joining_two_independent_clauses) {
+        source "Use a comma before the coordinating conjunction but if it is joining two independent clauses:"
+    }
+    row (comma_with_direct_address, set_off_the_name_with_commas_when_addressing_another_person_by_name) {
+        source "When addressing another person by name, set off the name with commas."
+    }
 
-    source "When you have a list that contains more than two elements, use commas to separate them."
+    % THE ENVELOPE WAS THE SERIES ROW'S OWN SENTENCE, the primary source of
+    % all three answers. It is now a framing sentence that names no rule.
+    % Every row overrides it, so it reaches no answer.
+    source "There are lots of rules about comma usage, and often the factors that determine whether you should use one are quite subtle."
     locator "https://www.grammarly.com/blog/punctuation-capitalization/comma/"
     trust consensus
 }
