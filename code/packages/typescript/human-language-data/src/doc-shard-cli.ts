@@ -203,6 +203,26 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     headingLevel: 2,
     newestFirst: true,
   },
+  {
+    // The first BULLET plan, and the worst remaining live conflict generator:
+    // 62 close touches of 110 over 21 days. Exactly one `##` heading over 323
+    // top-level entries, so heading-splitting would emit a single shard holding
+    // the whole 10,541-line document -- `entryShape: "bullet"` exists for this
+    // file.
+    //
+    // The evidence here is not a proxy. The last EIGHT commits each insert at
+    // LINE 8: `## Unreleased` is line 6 and every author writes directly
+    // beneath it. That also settles `newestFirst` by observation rather than by
+    // copying it from the plans above.
+    //
+    // `headingLevel` is not consulted under `"bullet"`; it is carried because
+    // the field is required, and the preamble is the 161 bytes above the first
+    // entry.
+    path: "code/specs/data/adj-facts-stdlib/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
 ];
 
 /**

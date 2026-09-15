@@ -29,6 +29,7 @@ import {
   isValidDocShardName,
   docShardContents,
   docShardDirectoryFor,
+  docSplitAt,
   docShardFilename,
   docSlug,
   headingDigest,
@@ -851,11 +852,21 @@ describe("the real documents", () => {
       // is what broke — which is the diagnostic the byte comparison cannot give.
       const monolith = safeDocumentPath(root, plan.path);
       const rendered = unshardDocContents(root, plan);
-      const level = "#".repeat(plan.headingLevel) + " ";
+      // Via `docSplitAt`, not `plan.headingLevel`. Under a bullet plan the
+      // latter names a heading level the document barely has, so this filter
+      // would collect one line and compare it against 323 shards. Same class of
+      // bug as the failure message in doc-shard-cli.ts that still read
+      // `headingLevel` — a call site that did not follow the split rule.
+      const at = docSplitAt(plan);
+      const level = at === "bullet" ? "- " : "#".repeat(at) + " ";
 
       const fromMonolith = rendered
         .split("\n")
-        .filter((line) => line.startsWith(level) && !line.startsWith(level + "#"));
+        .filter(
+          (line) =>
+            line.startsWith(level) &&
+            (at === "bullet" ? true : !line.startsWith(level + "#")),
+        );
 
       const dir = docShardDirectoryFor(monolith);
       const names = readdirSync(dir)
@@ -891,7 +902,10 @@ describe("the real documents", () => {
       // that guard were ever weakened.
       const rendered = unshardDocContents(root, plan);
       const contents = docShardContents(rendered, plan);
-      const sections = splitDocument(rendered, plan.headingLevel).sections.length;
+      // `docSplitAt`, for the same reason as the test above: under a bullet
+      // plan `plan.headingLevel` splits the document into one section and this
+      // would assert 324 === 2.
+      const sections = splitDocument(rendered, docSplitAt(plan)).sections.length;
       expect(contents.size).toBe(sections + 1); // +1 for _meta.md
     });
   }
@@ -958,5 +972,37 @@ describe("the append-only deletion guard covers every plan", () => {
     );
 
     expect(missing).toEqual([]);
+  });
+
+  it("keeps every line-continuation in the trackedness gate intact", () => {
+    // `includes()` proves a path is MENTIONED, not that it reaches `git
+    // ls-files`. The paths are backslash-continued arguments, so dropping one
+    // `\` truncates the argument list: every path below the break silently
+    // stops being checked while the test above stays green, because the text is
+    // still in the file.
+    //
+    // That is the failure this whole pin exists to prevent, one level down —
+    // a gate that reads as covering more than it does.
+    const lines = workflow().split("\n");
+    const start = lines.findIndex((l) => l.includes("tracked_doc_monoliths=$("));
+    expect(start).toBeGreaterThan(-1);
+
+    const end = lines.findIndex((l, i) => i > start && l.trimEnd().endsWith(")"));
+    expect(end).toBeGreaterThan(start);
+
+    // Every line of the invocation except the last must end in a backslash,
+    // with NO trailing whitespace after it — `\ ` is a line continuation that
+    // bash does not honour.
+    const broken = lines
+      .slice(start, end)
+      .filter((l) => !/\\$/.test(l))
+      .map((l) => l.trim());
+
+    expect(broken).toEqual([]);
+    // And the block must actually carry every plan, not just end tidily.
+    const block = lines.slice(start, end + 1).join("\n");
+    expect(
+      DOC_SHARD_PLANS.map((p) => p.path).filter((p) => !block.includes(p)),
+    ).toEqual([]);
   });
 });
