@@ -9,6 +9,37 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed -- `border-width: 0` asked Compose for a hairline instead of nothing
+
+An authored `border-width: 0` means NO border. The emitter lowered it to
+`Modifier.border(0.dp, Color.Gray, ..)`, and Compose does not read that as
+"nothing": `Dp.Hairline` **is** `0.dp`, so the modifier asks for a hairline --
+a one-pixel stroke that survives any screen density. In `Color.Gray`, because
+a part that declares no width declares no colour either, so the emitter's own
+unauthored default is what gets painted.
+
+Measured in the emitted Kotlin:
+
+| product | `.border(0.dp` before | after | real borders kept |
+| --- | --- | --- | --- |
+| Trestle | 59 | **0** | 30 |
+| Engram | 8 | **0** | 236 |
+| VisiCalc | 0 | 0 | 0 |
+| Venture | 0 | 0 | 12 |
+
+Only a **statically** zero width is dropped. A state layer that raises the
+width off zero makes the width a runtime `if` rather than the literal `0`, and
+still gets its border -- so this cannot silence a border any state asks for.
+
+It reports no new degradation either: the width is still read, and honoured as
+"no border", which is what was authored. Compose's `styleDegradations` for
+Trestle is unchanged at 93, with zero `border-width` entries.
+
+Nothing caught this: the suite passed identically before and after, because no
+test asserted on a zero width. One now does, and it carries the non-zero case
+as its control -- asserting the absence alone would also pass if the emitter
+had stopped emitting borders altogether.
+
 ### Fixed -- an unresolvable colour was painted invisible instead of dropped (#15141)
 
 `compose_color_value` was total, ending in `_ => Color.Transparent`.
