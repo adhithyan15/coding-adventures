@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "FR-W02-ma-propre-ligne",
+    "language": "french",
+    "chapter": 46,
+    "sequence": 1780,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:90a0c512089f9301",
+    "detachableSegments": [
+      "Writing — controlled composition"
+    ]
+  },
+  "findings": []
+}

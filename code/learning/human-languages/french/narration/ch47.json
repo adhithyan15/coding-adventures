@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 47,
+  "title": "Writing --- With A Clock",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:8d41f527c1bd8285",
+  "lessons": [
+    {
+      "id": "FR-W03-avec-la-montre",
+      "sequence": 1790,
+      "title": "The same writing, with a clock",
+      "headword": "(avec la montre)",
+      "romanization": "(avec la montre)",
+      "gloss": "the DELF A1 writing paper's clock, its two parts, and the rule that can fail you on one skill alone",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:fc8e44a9e960c006",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You wrote your own line with as long as you liked."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A task you can only do untimed is not yet a task you can do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — timed production",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What France Éducation international publishes. The DELF A1 writing paper runs 30 minutes and holds two parts: a form to complete, and a personal message of at least forty words."
+            },
+            {
+              "kind": "speech",
+              "text": "Those numbers are read out of task-shapes/a1.json, which transcribes the published materials. Note what is not there: the paper publishes a minimum for the message and no maximum. Forty is a floor, not a target."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ten minutes for the form, starting now. Fill every field."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now twenty minutes for the message. Forty words is the floor; write past it rather than up to it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Stop when the time is up, even mid-word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count your words. Under forty and the task has not been done — this is the one number on the paper that is a hard floor rather than guidance."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the rule worth carrying out of this lesson, because it changes how you should study rather than how you should write today."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "DELF A1 passes on 50 out of 100 overall — and any single skill below 5 out of 25 is eliminatory. A candidate with 45 across three papers and 4 in the fourth does not pass, whatever the total says."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So the paper that decides your result is the one you are worst at, not the average of four. If that is writing, no amount of reading practice repairs it."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

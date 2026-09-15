@@ -170,22 +170,35 @@ it("pins French lesson-content budgets", () =>
     // 274 -> 277: chapter 45, the reading rung -- six instructions, six lines
     // off a form, and a 63-word paragraph. No new word: every token was checked
     // to occur in a lesson with a lower sequence number.
-    lessons: 277,
+    //
+    // 277 -> 280: the three writing stages French had never proven, on the
+    // SPINE-SAY-WHY node where parce que already lives. No new atoms in any --
+    // they practise the joiners and the SVO rule the track already teaches.
+    lessons: 280,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,
     unitPrefix: "FR",
   }));
 
-it("pins French's complete pre-A1 writing runway", () => {
+it("pins French's writing runway, now complete at every level", () => {
   const french = languageWritingStages("french");
   expect(french.defects).toEqual([]);
-  expect(french.levels[0]).toMatchObject({ level: "pre-A1", complete: true, missingStages: [] });
+  expect(french.levels.filter((level) => !level.complete)).toEqual([]);
+
+  // Was the four pre-A1 stages and nothing after them. The three that follow
+  // are cumulative and inherited upward, so between them they closed A1 through
+  // C2 in one tranche -- and the ORDER is what makes them valid evidence, not
+  // the set: `missing-stage-prerequisite` rejects a connected composition that
+  // sits before the timed paper, or a timed paper before a controlled one.
   expect(french.validEvidence.map((entry) => entry.stage)).toEqual([
     "observe-trace",
     "guided-copy",
     "delayed-copy",
     "dictation-transcription",
+    "controlled-composition",
+    "timed-assessment-production",
+    "connected-composition",
   ]);
 });
 
