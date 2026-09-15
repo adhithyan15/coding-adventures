@@ -2,6 +2,47 @@
 
 ## [Unreleased]
 
+
+### Fixed -- a style value could break out of its Lattice rule, and the comment saying it could not (#15222)
+
+A quoted STRING in `.msl` reaches `StyleProp::value` with its delimiters
+**already stripped** and its escapes decoded -- `color : "#6fb489"` arrives
+as `#6fb489`. So interpolating the value verbatim into `  {name}: {value};`
+puts its contents into CSS structure. Authoring
+
+```
+color : "#fff; } .evil { x: y"
+```
+
+emitted a rule that closed early and opened another:
+
+```css
+.mos-X-p {
+  color: #fff; } .evil { x: y;
+  background: #abc;
+}
+```
+
+`background` fell outside the rule entirely.
+
+**The comment in `style_value` asserted the opposite** -- that the token
+value "includes the surrounding double-quote delimiters", and concluded
+"No CSS injection is possible via the grammar's STRING tokens". Both halves
+were wrong, and the claim was **load-bearing**: a helper in
+`mosaic-package-artifact-builder` was written against it and had to be
+removed once the real shape was measured. The comment now records what the
+value actually is, and points consumers at their own escaping.
+
+`lattice_value` escapes `\`, `;`, `{` and `}` with a backslash -- CSS's own
+mechanism -- so a declaration that was going to be meaningless stays
+meaningless instead of becoming structure, and the rule survives. A newline
+cannot be escaped into a CSS value and becomes a space.
+
+**Hardening, not a change to any shipped stylesheet.** Zero of the 2,736
+quoted style values in the corpus contain any of those characters, and the
+emitted Lattice for task-app, visicalc and engram-app carries no escapes at
+all.
+
 ### Fixed - viewport dimensions
 
 - Preserve `vh`, `vw`, `vmin`, and `vmax` as dimension units instead of
