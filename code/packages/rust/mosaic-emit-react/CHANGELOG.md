@@ -8,6 +8,42 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+
+### Fixed -- a comma inside a style value could inject JavaScript into a generated `fill={...}` (#15221)
+
+`path_paint_jsx` recovers `background`, `borderColor` and `borderWidth` from
+an already-serialized React style-object body and writes each into an
+**unquoted JSX expression container**. The recovery split that body on every
+comma and colon, which is wrong the moment a value contains one -- and values
+do: font stacks are comma-separated, and `rgba(r,g,b,a)` is the shape of the
+default `$color-border` token.
+
+So a fragment from inside somebody else's quoted value was read as the
+property being looked up:
+
+```
+  fontFamily: "x, background: (globalThis.pwn=1), y"
+    -> fill={(globalThis.pwn=1)}
+```
+
+That is arbitrary JavaScript in an expression position, reached from an
+ordinary authored stylesheet rather than anything hostile. The same split
+also truncated `background: "rgba(255,255,255,0.12)"` to `fill={"rgba(255}`,
+an unterminated literal that stops the generated component compiling.
+
+The scan now honours string literals and backslash escapes, and splits a
+declaration at its first top-level colon so a value containing one (a URL)
+keeps it. Every value the emitter writes into that body is a well-formed JS
+literal or expression by construction, so a correct parse cannot recover
+anything invalid in the position it lands in -- which is why the fix is the
+parse rather than a validator at the sink, where a legitimate
+state-conditional ternary would have been rejected.
+
+**Reachable, not currently triggered.** `mosaic-pkg-spice-workbench` is the
+one package using `Path`, and it emits six real SVG shapes -- but no
+stylesheet authors a comma-bearing value today, so emitted output for it and
+for task-app, visicalc and engram-app is byte-identical.
+
 ### Fixed — a table row kept none of its style (#15051)
 
 `<tr>` was emitted bare. A `Row` inside `HostTableBody` was the one element in
