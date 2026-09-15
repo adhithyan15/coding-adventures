@@ -33,9 +33,10 @@
 
   The test keeps every behaviour it shipped with: the direct and reverse recalls on both the original
   and the added rows, and the two abstentions. Its `contains("grammarly.com") && contains(trust)`
-  check (#15209's shape) becomes the common row's whole contiguous citation. Added:
-  - every type's answer is one answer carrying its own sentence, with no other type's sentence and not
-    the envelope;
+  check (#15209's shape) becomes one answer whose citations array holds exactly the common row's whole
+  contiguous citation. Added:
+  - every type's answer is one answer whose citations array holds exactly its own sentence's citation,
+    with no other type's sentence and not the envelope;
   - the countable and uncountable rows carry their whole sentences, not the header's cut forms;
   - a table-shape test.
 

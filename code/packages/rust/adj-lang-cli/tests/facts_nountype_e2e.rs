@@ -89,7 +89,11 @@ fn noun_type_recall_binds_the_definition_directly() {
         "common_noun means generic_name_of_an_item_in_a_class_or_group: {out}"
     );
     // ONE CONTIGUOUS RUN, not `contains("grammarly.com") && contains(trust)` (#15209).
-    assert!(out.contains(&citation(COMMON)), "carries the common-noun sentence, whole: {out}");
+    assert_eq!(out.matches("\"citations\":[").count(), 1, "one answer: {out}");
+    assert!(
+        out.contains(&format!("\"citations\":[{{{}}}]", citation(COMMON))),
+        "the common-noun sentence is the only citation: {out}"
+    );
 }
 
 #[test]
@@ -201,7 +205,10 @@ fn every_noun_type_answer_carries_its_own_sentence() {
         assert!(ok, "cli should succeed: {out}");
         assert_eq!(out.matches("\"citations\":[").count(), 1, "one answer for {kind}: {out}");
         assert!(out.contains(&format!("\"T\":\"{kind}\"")), "{def} binds {kind}: {out}");
-        assert!(out.contains(&citation(sentence)), "{kind}: its own sentence, whole: {out}");
+        assert!(
+            out.contains(&format!("\"citations\":[{{{}}}]", citation(sentence))),
+            "{kind}: its own sentence, whole, and the only citation: {out}"
+        );
         for (other, _, other_sentence) in ROWS {
             if other != kind {
                 assert!(!out.contains(other_sentence), "the {other} sentence must not reach {kind}: {out}");
