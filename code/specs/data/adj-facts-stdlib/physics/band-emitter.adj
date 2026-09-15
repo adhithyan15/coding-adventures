@@ -6,10 +6,12 @@
 % A sibling to the already-shipped `em-spectrum.adj`
 % (`band_use(band, application)`, a representative everyday USE / effect /
 % detector NASA associates with each of the seven EM bands — radio →
-% radio_stations, x_ray → teeth, etc.). That table's own header already
-% quotes, verbatim, three NASA sentences that separately state WHO or
-% WHAT emits the band — a fact distinct from the `application` column
-% (use/effect/detector), which the parent schema had no room for:
+% radio_stations, x_ray → teeth, etc.). The page that table cites has three
+% sentences that state WHO or WHAT emits a band — a fact distinct from the
+% `application` column (use/effect/detector), which the parent schema had no
+% room for. (This used to say that table's header quotes all three verbatim;
+% it quotes the ultraviolet and infrared ones and only notes the fireflies
+% sentence.) The three sentences, one per row:
 %
 %   ultraviolet → sun
 %     "Ultraviolet radiation is emitted by the Sun and are the reason
@@ -20,8 +22,9 @@
 %      skin and objects with heat."
 %
 %   visible → fireflies
-%     "Our eyes detect visible light. Fireflies, light bulbs, and stars
-%      all emit visible light." (the source lists THREE emitters for
+%     "Fireflies, light bulbs, and stars all emit visible light." (This used
+%      to also quote "Our eyes detect visible light.", which names a
+%      detector, not an emitter.) (the source lists THREE emitters for
 %      visible light; the FIRST listed, fireflies, is carried as the row
 %      value, matching this stdlib's own established convention — see
 %      `simple-machines.adj` — of carrying the first everyday item a

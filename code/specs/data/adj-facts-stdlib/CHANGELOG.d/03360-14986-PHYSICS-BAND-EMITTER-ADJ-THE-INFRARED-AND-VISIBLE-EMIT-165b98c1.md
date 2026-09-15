@@ -28,6 +28,12 @@
     that the page goes on to the fireflies sentence. The note now names the page and points to the
     measurement.
   - **The one-envelope wording** is replaced by the per-row explanation.
+  - **The list of emitter sentences** was introduced as three sentences `em-spectrum.adj`'s header
+    "already quotes, verbatim". Its visible entry quoted the detector sentence together with the
+    fireflies sentence. The intro now says the three sentences are on the page, and that the sibling
+    header quotes only the ultraviolet and infrared ones and mentions the fireflies sentence in a note.
+    The visible entry quotes only the fireflies sentence, with a note that it used to include the
+    detector sentence.
   - **The rows' trailing `% NASA: "..."` comments** are gone; each row's `source` now carries its
     sentence.
 
