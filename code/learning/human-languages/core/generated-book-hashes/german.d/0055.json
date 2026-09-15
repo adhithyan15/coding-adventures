@@ -1,0 +1,9 @@
+{
+  "language": "german",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:e6b527cea562826d",
+  "lessonIds": [
+    "GE-W04-vier-zeilen"
+  ],
+  "tex": "german/book/chapters/ch55-ge-vier-zeilen.tex"
+}

@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:17cb031a7b8f1ef9",
+  "lessonIds": [
+    "GE-W03-mit-der-uhr"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "german/narration/ch54.txt",
+  "json": "german/narration/ch54.json",
+  "textHash": "fnv1a64:f0a993338392b515",
+  "jsonHash": "fnv1a64:19f54b5f6e07150d",
+  "findings": []
+}

@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "GE-W03-mit-der-uhr",
+    "language": "german",
+    "chapter": 54,
+    "sequence": 1520,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f4638748e3015c44",
+    "detachableSegments": [
+      "Writing — timed production"
+    ]
+  },
+  "findings": []
+}
