@@ -4,18 +4,19 @@
 % ============================================================================
 % One of the first organizing ideas of introductory chemistry: the endless
 % variety of chemical equations sorts into just a handful of BASIC reaction
-% types, and each type is named by what happens to the atoms. "A combination
+% types, and each type is named by what happens to the atoms: a combination
 % reaction combines two or more substances into one; a decomposition reaction
 % breaks a compound down into simpler substances; a single-replacement reaction
 % has one element replace another in a compound; a double-replacement reaction
 % swaps the ions of two compounds; a combustion reaction burns a substance in
-% oxygen." Before you can predict the products of an equation you must first
-% classify WHICH of these five types it is. Recall is a binding query:
+% oxygen. (That summary used to sit in quotation marks; it is a paraphrase,
+% not the page's words.) Before you can predict an equation's products you must
+% first classify WHICH of these five types it is. Recall is a binding query:
 %
 %     ? reaction_defining(combustion, $Defining)   % reacts_with_oxygen
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `reaction_defining(type, defining)` carrying the table's citation, so
+% relation `reaction_defining(type, defining)` carrying its row's citation, so
 % the lookup above is the ordinary SLD binding query — the engine returns the
 % defining token WITH its source, on the CPU, with zero model calls, and
 % abstains on a word that is not one of these five reaction types (it never
@@ -67,6 +68,8 @@
 %   single_replacement → one_element_replaces
 %     "A fourth type of reaction is the single replacement reaction, in which
 %      one element replaces a similar element in a compound."
+%      (The page writes U+00A0 between "fourth" and "type"; the row carries
+%      it. With the plain space shown here the sentence occurs zero times.)
 %
 %   double_replacement → ions_exchange_places
 %     "A double-replacement reaction (also called double-displacement reaction)
@@ -82,11 +85,22 @@
 %   (Chemistry LibreTexts — Anoka-Ramsey Community College, "Introduction to
 %    Chemistry", 7.05 Classifying Chemical Reactions.)
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the LibreTexts statement that
-% fixes the first row (combination → two_or_more_combine). Every OTHER row's
-% verbatim span is listed above, so each definition remains independently
-% checkable. LibreTexts is an openly-licensed college teaching resource (not a
+% EACH ROW CARRIES ITS OWN SPAN (ADJ-TABLES RS-5e, #14986). This paragraph
+% used to say an ADJ `table` carries ONE provenance envelope, so the
+% combination sentence was the `source` of all five answers while the
+% other spans were only listed above. Row blocks now let each row carry the
+% span quoted for it above. The envelope is now a framing sentence from the
+% page, which names no reaction type:
+%
+%     "The key to success is to find useful ways to categorize reactions."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the five row sentences (the single-replacement one
+% with its U+00A0) and the envelope each occur exactly once, each inside a
+% `<p>`. Every row's page is the envelope's, so no row restates a `locator`
+% line or `trust` (ADJ-TABLES §4). LibreTexts is an openly-licensed college
+% teaching resource (not a
 % primary U.S. `.gov`/`.edu` authority), so the honest trust tier is
 % `consensus`.
 % (See ../README.md; feedback_nothing_human_authored,
@@ -96,13 +110,26 @@
 table reaction_defining {
     columns type, defining
 
-    row (combination, two_or_more_combine)
-    row (decomposition, breaks_down)
-    row (single_replacement, one_element_replaces)
-    row (double_replacement, ions_exchange_places)
-    row (combustion, reacts_with_oxygen)
+    row (combination, two_or_more_combine) {
+        source "A combination reaction is a reaction in which two or more substances combine to form a single new substance."
+    }
+    row (decomposition, breaks_down) {
+        source "A decomposition reaction is a reaction in which a compound breaks down into two or more simpler substances."
+    }
+    row (single_replacement, one_element_replaces) {
+        source "A fourth type of reaction is the single replacement reaction, in which one element replaces a similar element in a compound."
+    }
+    row (double_replacement, ions_exchange_places) {
+        source "A double-replacement reaction (also called double-displacement reaction) is a reaction in which the positive and negative ions of two ionic compounds exchange places to form two new compounds."
+    }
+    row (combustion, reacts_with_oxygen) {
+        source "A combustion reaction is a reaction in which a substance reacts with oxygen gas, releasing energy in the form of light and heat."
+    }
 
-    source "A combination reaction is a reaction in which two or more substances combine to form a single new substance."
+    % THE ENVELOPE WAS THE COMBINATION ROW'S OWN SENTENCE, the primary source
+    % of all five answers. It is now a framing sentence that names no type.
+    % Every row overrides it, so it reaches no answer.
+    source "The key to success is to find useful ways to categorize reactions."
     locator "https://chem.libretexts.org/Courses/Anoka-Ramsey_Community_College/Introduction_to_Chemistry/07:_Chemical_Reactions/7.05:_Classifying_Chemical_Reactions"
     trust consensus
 }
