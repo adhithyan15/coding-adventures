@@ -8,6 +8,159 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-041 — Twig BEAM: call_closure liveness fix + probe-first sweep (selected after BEAM04)
+
+`git fetch origin && git merge origin/main` fast-forwarded cleanly onto the
+BEAM04 merge (below). `gh pr list --state open --limit 50` showed no other
+LANG-VM-related PR in flight, and specifically nothing touching
+`iir-to-beam` or Twig BEAM support.
+
+BEAM04's own trailing note named this exact item: Twig was 20/49 rows
+declared `Beam`, with the remaining 29 framed only as unscoped "dynamic-
+string/record/closure BEAM isolation" design work (VM-041) — no scoped
+design existed yet. Per this task's own instructions, the confirmed
+`call_closure` liveness bug (found by a prior agent and independently
+verified by direct code read before this slice started) had to be fixed
+FIRST, before any promotion — landing new closure-row Beam coverage on top
+of a dormant silent-corruption bug would have been exactly backwards.
+
+### The call_closure fix (VM-D035)
+
+`iir-to-beam`'s `"call_closure"` lowering arm (`src/lower.rs`) emits TWO
+`OP_CALL_EXT` instructions — `erlang:'++'/2` (combining captured values with
+call arguments), then `erlang:apply/3` (invoking the closure) — and neither
+was wrapped in the `save_live_across_imported_call!`/
+`restore_live_across_imported_call!` macro pair every other call-emitting op
+in this file uses, even though `call_closure` was already listed in the
+`live_across` liveness match (the surrounding comment names the exact bug
+class, VM-D029, already fixed once for the six `:atomics` ops). This is the
+same "wrong VALUE, not a crash" failure mode: any SSA variable live across a
+`call_closure` invocation could have its value silently destroyed if it
+landed in an X register either call clobbers. Confirmed CURRENTLY DORMANT
+before this fix: no `lang_matrix.rs` row exercising `call_closure` declared
+`Beam` yet.
+
+Fixed by wrapping BOTH `call_ext` emissions in a SINGLE
+`save_live_across_imported_call!`/`restore_live_across_imported_call!` pair
+spanning both calls — mirroring the `array_set` (f64/ets) arm's existing
+pattern, which already wraps ITS two calls (`list_to_tuple` then
+`ets:insert`) in one such pair. The call result is moved out of `x0` into
+the destination register BEFORE the restore runs, mirroring `alloc_array`'s
+ordering (restore can itself write back into `x0`).
+
+Proven with a dedicated real-`erl` regression test,
+`test_98_real_erl_call_closure_survives_live_across_call`: a variable `k`
+defined before `call_closure` and used after it is allocated `x0` — the
+exact register the closure dispatch's internal `caps -> x0` move clobbers
+first — and the test asserts the correct combined result. Verified the test
+actually exercises the bug (not merely a passthrough): reverting the fix
+made the test fail with `14` instead of the correct `106` (the wrong value
+`call_closure`'s own dispatch result leaked into `k`'s clobbered register),
+confirmed by running the test with the fix temporarily removed before
+restoring it.
+
+### Probe-first sweep of the remaining 29 Twig rows
+
+With the fix in place, a scratch probe (discarded before this PR, per this
+task's own "probe before declaring" discipline) compiled and ran EVERY one
+of the 29 not-yet-`Beam` Twig `lang_matrix.rs` rows individually against
+real `erl`, using ONLY pre-existing `iir-to-beam` capabilities plus the fix
+above.
+
+**27 of 29 passed completely unchanged** — zero new lowering, zero new ops,
+zero new imports:
+
+- **8 dynamic-arithmetic/list-op/closure rows:** a bare literal, dynamic
+  `any`-typed arithmetic over a `car`'d cons cell (`unbox`/`add`/`box`), the
+  `length`/`list-ref`/`assoc` synthesized recursive list-walk helpers, and —
+  thanks to the fix above — both closure rows (a no-capture closure and a
+  capturing closure returning another closure).
+- **19 string-op rows:** string literals, `let`/`let*` locals, non-escaping
+  top-level `define`s, `substring`, `string<?`/`string>?` comparisons, the
+  documented `string-ref` out-of-bounds trap, and a top-level function whose
+  `str`-typed parameter is inferred four different ways (explicit
+  annotation, a literal direct call, a `str_concat`+`str_slice` actual, and
+  a named/`let`/`let*` actual). `iir-to-beam`'s string ops (`str_const`/
+  `str_len`/`str_index`/`str_concat`/`str_slice`/`str_cmp`) were already
+  proven on BEAM for other frontends (COBOL-60, Dartmouth BASIC) — these 19
+  Twig rows simply had never been individually probed before, the same
+  "never actually run, not actually broken" shape VM-LOOP-24 found for 12
+  Dartmouth BASIC rows.
+
+Promoted via two new dedicated `lang_matrix.rs` tests,
+`twig_beam_dynamic_arith_list_ops_and_closures` (8 programs) and
+`twig_beam_string_ops` (19 programs), each row executed against real `erl`
+before promotion.
+
+**2 of 29 (`match`/`union`) remain explicitly deferred, not forced.** While
+probing, `iir-to-beam`'s validator was found to reject `"mov"` with a
+`ref<LispyPair>` type_hint outright — but `lower.rs`'s `"mov"` arm already
+lowers it correctly for ANY type_hint (an unconditional `{operand} ->
+{x,rd}` move, agnostic to what the register holds). The gap traces to
+`twig-ir-compiler::compiler.rs`'s `emit_move`, which merges each `if`/
+`match` arm's result into one mutable "phi" variable via a typed `mov`
+using the SOURCE value's own inferred type — `ref<LispyPair>` when a branch
+is a cons cell (a `union` variant constructor's result). Relaxing the
+validator (mirroring the existing `"str"`-type_hint exception already
+there) is a real, tested fix — proven correct, not just accepted, by a new
+dedicated real-`erl` test,
+`test_99_real_erl_mov_ref_lispy_pair_lowers_correctly`, which merges two
+cons cells built in the two arms of an `if` through the exact mutually-
+exclusive two-`mov` pattern `emit_move` produces, and reads back the correct
+one.
+
+That fix alone is **not sufficient** to promote `match`/`union`: both rows
+still fail with a SEPARATE, deeper error once validation passes —
+`UnsupportedOp { function: "Some", op: "field_store: found outside of
+alloc+field_store+field_store pattern — lower alloc+2×field_store into
+put_list before reaching the backend" }`. `iir-to-beam`'s `alloc`+
+`field_store`+`field_store` → `put_list` fusion (the pattern that lets a
+single cons-cell construction lower to one BEAM `put_list`) only recognizes
+the three instructions immediately ADJACENT in the instruction stream; the
+synthesized union-variant constructor function (`Some`) interleaves a `mov`
+between the `alloc` and its field_stores (or between the two field_stores —
+not yet pinned down further), which breaks the look-ahead. This is a real,
+scoped, still-open gap: the fusion look-ahead would need to tolerate (or
+skip over) intervening non-`field_store` instructions, or the union-variant
+constructor codegen would need to avoid interleaving them. Left deferred
+with this exact description rather than guessed at or forced — genuinely
+smaller and more precisely scoped than VM-041's original "dynamic-string/
+record/closure BEAM isolation" framing, since strings, dynamic arithmetic,
+list ops, and closures are now ALL proven; only tagged-union pattern
+matching remains.
+
+### Validation
+
+`iir-to-beam` 0.13.0 → 0.14.0: 102 unit/integration tests + 5 doc tests pass
+(up from 100 + 5), including the two new tests above (`test_98` proves the
+liveness fix; `test_99` proves the validator fix lowers correctly, not just
+validates). All-target Clippy with warnings denied is clean.
+
+`lang-aot` 0.341.0 → 0.342.0: promoted 27 Twig `lang_matrix` rows to `Beam`
+(20 → 47 of 49) via the two new dedicated tests above, each program executed
+against real `erl` before promotion.
+`feature_coverage_doc_counts_match_programs_source` was updated (Twig tuple
+`(49, 363)` → `(49, 390)`) and passes against the live `PROGRAMS` corpus;
+`LANG-VM-FEATURE-COVERAGE.md`'s Twig row, grand-total prose (1636 → 1663),
+and the VM-041 narrative paragraph were all updated to match. No full
+`non_algol_matrix_every_proven_cell_agrees` capstone rerun is claimed for
+this slice, matching every prior BEAM03/VM-LOOP-24/BEAM04 slice's own
+precedent — the two dedicated tests above plus the full `iir-to-beam` suite
+(including the new real-`erl` tests) are the executed evidence.
+
+Twig now declares 47/49 rows on `Beam` — up from 20/49. Only 2 rows remain
+undeclared: `match`/`union`, gated on the `alloc`+`field_store` fusion gap
+described above — a genuinely bounded follow-up now that every other Twig
+feature family (dynamic arithmetic, list ops, strings, closures) is proven
+on BEAM. Twig no longer has a large undeclared surface; VM-041 is
+effectively DONE except for this one precisely-scoped fusion gap.
+Reprioritize after this merges: the only two remaining non-ALGOL BEAM gaps
+across the whole backlog are (a) this `match`/`union` fusion gap (2 Twig
+rows) and (b) Dartmouth BASIC's remaining 8 rows (5 `INPUT` rows on VM-060b,
+2 string-array/mixed-`DATA` rows on a separate `str`-typed-array-element
+design question, and `RND` on VM-018's module-global design question) — the
+non-ALGOL BEAM backlog is close to fully closed.
+
 ## BEAM04 — ets-backed float-array representation (selected after VM-LOOP-24)
 
 `git fetch origin && git merge origin/main` fast-forwarded cleanly onto the
@@ -3239,6 +3392,33 @@ implementation item. The known DEF FN-global and print-zone semantics remain
 future frontend design scope, not missing proofs for already-implemented code.
 
 ## Discovery log
+
+- **VM-D035 — CONFIRMED AND FIXED 2026-09-15 (this PR):** while scoping
+  VM-041 (Twig BEAM closure/string/record isolation), a prior agent flagged
+  and this session independently confirmed by direct code read:
+  `iir-to-beam`'s `"call_closure"` lowering arm (`src/lower.rs`) emits TWO
+  `OP_CALL_EXT` instructions — `erlang:'++'/2` (combining captured values
+  with call arguments), then `erlang:apply/3` (invoking the closure) — and
+  neither was wrapped in the `save_live_across_imported_call!`/
+  `restore_live_across_imported_call!` macro pair every other call-emitting
+  op in this file uses, even though `call_closure` was already listed in
+  the `live_across` liveness match (whose own comment names the exact bug
+  class, VM-D029, already fixed once for the six `:atomics` ops: an op
+  missing the save/restore wrap has its live variables silently destroyed —
+  a WRONG VALUE, not a crash). Confirmed CURRENTLY DORMANT: no
+  `lang_matrix.rs` row exercising `call_closure` had ever declared `Beam`,
+  so nothing in CI had exercised the gap. **Fixed in this PR**: both
+  `call_ext` emissions are now wrapped in a single save/restore pair
+  spanning both calls (mirroring the `array_set` f64/ets arm's existing
+  two-call-one-pair pattern), with the call result moved into the
+  destination register before the restore runs (mirroring `alloc_array`'s
+  ordering, since restore can itself write into `x0`). Pinned by
+  `iir-to-beam`'s `test_98_real_erl_call_closure_survives_live_across_call`,
+  verified to fail with the wrong value (`14` instead of `106`) when the fix
+  is reverted — direct proof the test exercises the bug, not a passthrough.
+  See this backlog's top-of-file "VM-041" section for the full fix and the
+  probe-first sweep it unblocked (27 of 29 remaining Twig rows promoted to
+  `Beam` in the same PR).
 
 - **VM-D033 — confirmed 2026-09-13:** with all 58 COBOL-60 rows BEAM-declared
   (#15099/#15119), a fresh reprioritization asked whether any OTHER non-ALGOL
