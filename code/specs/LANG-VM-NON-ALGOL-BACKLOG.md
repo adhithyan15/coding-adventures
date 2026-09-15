@@ -3393,7 +3393,7 @@ future frontend design scope, not missing proofs for already-implemented code.
 
 ## Discovery log
 
-- **VM-D035 — CONFIRMED AND FIXED 2026-09-15 (this PR):** while scoping
+- **VM-D035 — CONFIRMED AND FIXED 2026-09-15 (#15265):** while scoping
   VM-041 (Twig BEAM closure/string/record isolation), a prior agent flagged
   and this session independently confirmed by direct code read:
   `iir-to-beam`'s `"call_closure"` lowering arm (`src/lower.rs`) emits TWO
@@ -3407,7 +3407,7 @@ future frontend design scope, not missing proofs for already-implemented code.
   missing the save/restore wrap has its live variables silently destroyed —
   a WRONG VALUE, not a crash). Confirmed CURRENTLY DORMANT: no
   `lang_matrix.rs` row exercising `call_closure` had ever declared `Beam`,
-  so nothing in CI had exercised the gap. **Fixed in this PR**: both
+  so nothing in CI had exercised the gap. **Fixed in #15265**: both
   `call_ext` emissions are now wrapped in a single save/restore pair
   spanning both calls (mirroring the `array_set` f64/ets arm's existing
   two-call-one-pair pattern), with the call result moved into the
