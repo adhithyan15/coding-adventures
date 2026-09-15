@@ -1,5 +1,45 @@
 # Changelog — iir-to-beam
 
+## 0.12.0 - 2026-09-15 - math:* transcendentals and real_to_int_floor (VM-LOOP-24)
+
+A probe-first sweep of Dartmouth BASIC's remaining non-`INPUT` corpus rows
+found 5 that need new but bounded/mechanical lowering, mirroring `f64_pow`'s
+existing `call_ext` shape exactly. Full design + probe transcript:
+`code/specs/BEAM03-float-lowering.md` §9.
+
+- **`f64_sqrt`/`f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`/`f64_atan`/`f64_tan`
+  (new ops, no prior lowering):** each lowers to a `call_ext` targeting a
+  new single-arity `math:*` import (`math:sqrt/1`, `math:sin/1`,
+  `math:cos/1`, `math:log/1` — natural log, matching BASIC's `LOG`/IIR
+  `f64_ln` — `math:exp/1`, `math:atan/1`, `math:tan/1`) — confirmed by real
+  `erlc -S` disassembly to be ordinary `math` module functions, never
+  loader-recognized guard BIFs, so none can use `gc_bif1`. Each reuses the
+  `f64_pow` staging pattern with ONE operand instead of two: stage into a
+  scratch register above `next_reg`, `save_live_across_imported_call!`,
+  move into `x0`, `call_ext 1 {u,import_idx}`, move the result to the
+  destination, `restore_live_across_imported_call!`. All seven joined the
+  `live_across` call-list match (the same invariant `f64_pow` joined in
+  0.11.0 — an omission there silently destroys a live variable's value, not
+  a crash).
+- **`real_to_int_floor` (new op, no prior lowering):** lowers to a
+  `gc_bif1` targeting a new `erlang:floor/1` import — UNLIKE the `math:*`
+  ops above, `erlang:floor/1` IS a loader-recognized guard BIF (confirmed,
+  also via `erlc -S`, to disassemble to the same generic `{gc_bif,floor,
+  ...}` shape `int_to_real`/`real_to_int_trunc` already use), so it joins
+  THEIR match arm instead of the new `call_ext` family, despite being
+  adjacent in the frontend's own `INT(X) = real_to_int_floor + int_to_real`
+  lowering.
+- Proven with new unit tests: instruction-shape tests for all 8 ops
+  (`call_ext`-not-`gc_bif`/`gc_bif1`-not-`call_ext`, plus the correct new
+  import-table entry for each), and real-`erl` integration tests: all 7
+  transcendentals chained in one module against their exact Dartmouth BASIC
+  corpus arguments (`SQR(49) + SIN(0) + COS(0) + LOG(1) + EXP(0) + ATN(0) +
+  TAN(0)` truncated = `9`) and `real_to_int_floor(3.7)` = `3`.
+- No new platform-limitation surface: every one of these ops is a direct
+  libm binding on both Erlang's `math` module and the `vm-core` oracle, so
+  they agree on every finite input; none of the promoted rows reach a
+  non-finite result.
+
 ## 0.11.0 - 2026-09-15 - neg(f64) and f64_pow (BEAM03 continuation)
 
 Second bounded BEAM03 slice, continuing the f64 lowering track. Full design:

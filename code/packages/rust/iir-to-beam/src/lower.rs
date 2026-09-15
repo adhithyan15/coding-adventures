@@ -578,6 +578,17 @@ pub fn lower_iir_to_beam(
     let import_float = imports.intern(erlang_atom, atom_float, 1); // erlang:float/1
     let import_trunc = imports.intern(erlang_atom, atom_trunc, 1); // erlang:trunc/1
 
+    // ── BEAM03 non-ALGOL continuation (VM-LOOP-24): real_to_int_floor ─────
+    //
+    // `erlang:floor/1` was confirmed, the same way `float`/`trunc` were for
+    // the first BEAM03 slice, by disassembling a real compiled call with
+    // `erlc -S`: it emits `{gc_bif,floor,{f,0},1,[{x,0}],{x,0}}` — the SAME
+    // generic gc_bif1 shape as `float`/`trunc`, not a `call_ext`. So
+    // `real_to_int_floor` joins the `int_to_real`/`real_to_int_trunc` match
+    // arm below rather than the `math:*` call_ext family just below it.
+    let atom_floor = atoms.intern("floor");
+    let import_floor = imports.intern(erlang_atom, atom_floor, 1); // erlang:floor/1
+
     // ── BEAM03 continuation: f64_pow via math:pow/2 ────────────────────────
     //
     // `math:pow/2` is an ORDINARY Erlang function, not a loader-recognized
@@ -592,6 +603,32 @@ pub fn lower_iir_to_beam(
     let math_atom = atoms.intern("math");
     let atom_pow  = atoms.intern("pow");
     let import_pow = imports.intern(math_atom, atom_pow, 2); // math:pow/2
+
+    // ── VM-LOOP-24: single-argument `math:*` transcendentals ──────────────
+    //
+    // `SQR`/`SIN`/`COS`/`LOG`/`EXP`/`ATN`/`TAN` each lower to a single-source
+    // IIR op (`f64_sqrt`/`f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`/`f64_atan`/
+    // `f64_tan`). Each was confirmed, exactly like `math:pow/2` above, by
+    // disassembling a real compiled call with `erlc -S`: every one of them
+    // emits `call_ext`/`call_ext_only` against a `math:*` import, never a
+    // `gc_bif1` — `math` functions are ordinary library code, not
+    // loader-recognized guard BIFs (only `erlang:*` names are). So they all
+    // share the exact `f64_pow` call_ext shape below, just with one operand
+    // staged into `x0` instead of two staged into `x0`/`x1`.
+    let atom_sqrt = atoms.intern("sqrt");
+    let atom_sin  = atoms.intern("sin");
+    let atom_cos  = atoms.intern("cos");
+    let atom_log  = atoms.intern("log"); // math:log/1 is the NATURAL log (BASIC LOG / IIR f64_ln)
+    let atom_exp  = atoms.intern("exp");
+    let atom_atan = atoms.intern("atan");
+    let atom_tan  = atoms.intern("tan");
+    let import_sqrt = imports.intern(math_atom, atom_sqrt, 1); // math:sqrt/1
+    let import_sin  = imports.intern(math_atom, atom_sin,  1); // math:sin/1
+    let import_cos  = imports.intern(math_atom, atom_cos,  1); // math:cos/1
+    let import_log  = imports.intern(math_atom, atom_log,  1); // math:log/1
+    let import_exp  = imports.intern(math_atom, atom_exp,  1); // math:exp/1
+    let import_atan = imports.intern(math_atom, atom_atan, 1); // math:atan/1
+    let import_tan  = imports.intern(math_atom, atom_tan,  1); // math:tan/1
 
     // ── BEAM03: module literal table (float constants) ────────────────────
     let mut literal_pool = LiteralPool::new();
@@ -995,6 +1032,11 @@ pub fn lower_iir_to_beam(
                     // call_ext (see `import_pow` above) — `math:pow/2` is not
                     // a guard BIF, so it cannot use gc_bif2 like add/sub/mul.
                     | "f64_pow"
+                    // VM-LOOP-24: the single-argument `math:*` transcendentals
+                    // emit `call_ext` for the same reason `f64_pow` does —
+                    // see the `import_sqrt`/… comment above.
+                    | "f64_sqrt" | "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp"
+                    | "f64_atan" | "f64_tan"
             ) && !(instr.op == "call_builtin" && matches!(instr.srcs.first(),
                 Some(Operand::Var(name)) if name == "putchar")) {
                 continue;
@@ -2018,10 +2060,14 @@ pub fn lower_iir_to_beam(
                 // toward zero" contract — Rust/C `trunc` semantics). No
                 // width masking: that block only ever fires for the Nib/Oct
                 // u4/u8 integer result types, which these ops never produce.
-                "int_to_real" | "real_to_int_trunc" => {
+                // VM-LOOP-24: `real_to_int_floor` joins this arm — confirmed
+                // a guard BIF (`{gc_bif,floor,...}`) by real `erlc -S`
+                // disassembly, exactly like `float`/`trunc` above it.
+                "int_to_real" | "real_to_int_trunc" | "real_to_int_floor" => {
                     let import_idx = match instr.op.as_str() {
                         "int_to_real" => import_float,
                         "real_to_int_trunc" => import_trunc,
+                        "real_to_int_floor" => import_floor,
                         _ => unreachable!(),
                     };
                     let rd = match &instr.dest {
@@ -2097,6 +2143,71 @@ pub fn lower_iir_to_beam(
                     instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
                         BEAMOperand::u(2),
                         BEAMOperand::u(import_pow as u64),
+                    ]));
+                    if rd != 0 {
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(rd),
+                        ]));
+                    }
+                    restore_live_across_imported_call!(cur_idx);
+                }
+
+                // ── VM-LOOP-24: single-argument `math:*` transcendentals ────
+                //
+                // `f64_sqrt`/`f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`/
+                // `f64_atan`/`f64_tan` — the exact same `call_ext` shape as
+                // `f64_pow` just above, but with ONE operand staged into
+                // scratch/`x0` instead of two staged into `x0`/`x1`. See the
+                // `import_sqrt`/… comment above for why these cannot be
+                // `gc_bif1` (they are `math:*` library calls, not
+                // `erlang:*` guard BIFs).
+                "f64_sqrt" | "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp"
+                | "f64_atan" | "f64_tan" => {
+                    let import_idx = match instr.op.as_str() {
+                        "f64_sqrt" => import_sqrt,
+                        "f64_sin" => import_sin,
+                        "f64_cos" => import_cos,
+                        "f64_ln" => import_log,
+                        "f64_exp" => import_exp,
+                        "f64_atan" => import_atan,
+                        "f64_tan" => import_tan,
+                        _ => unreachable!(),
+                    };
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!("{} must have a dest", instr.op),
+                        }),
+                    };
+                    let arg_reg = operand_reg!(get_src!(instr, 0));
+
+                    // Scratch register is a u8 and the bank tops out at 255;
+                    // guard the same way f64_pow/str_index/str_slice do.
+                    let top = meta.next_reg.checked_add(1).filter(|t| *t < 255);
+                    let Some(_) = top else {
+                        return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!(
+                                "{}: needs 1 scratch register but only {} remain below x255",
+                                instr.op, 255u16 - meta.next_reg as u16
+                            ),
+                        });
+                    };
+                    let s_arg = meta.next_reg;
+                    let cur_idx = instr_idx - 1;
+
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(arg_reg), BEAMOperand::x(s_arg),
+                    ]));
+
+                    save_live_across_imported_call!(cur_idx);
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(s_arg), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(1),
+                        BEAMOperand::u(import_idx as u64),
                     ]));
                     if rd != 0 {
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![

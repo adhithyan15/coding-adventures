@@ -393,3 +393,142 @@ promotion, per this backlog's "probe before declaring" discipline — see the
   fractional exponent, which is `NaN` in IEEE-754) — same platform gap as
   §6, not exercised by the promoted row (base `4`, exponent `0.5`, exact
   finite result `2.0`).
+
+## 9. VM-LOOP-24: probe-first sweep of the remaining non-`INPUT` BASIC rows
+
+The BEAM03-continuation slice's own trailing note (§8 above, and the
+backlog's own record) named five candidate groups still blocking BASIC's
+remaining ~29 rows once the 5 `INPUT`-driven rows are set aside as
+out-of-scope pending VM-060b: general `FOR`/`LET` arithmetic, one- and
+two-dimensional numeric arrays, `DATA`/`READ`/`RESTORE`, `RND`'s full
+DEF-FN-and-module-global chain, and `GOSUB`/`RETURN` — and explicitly
+flagged that "nothing in this slice or its predecessor established that
+`neg`/`f64_pow` alone unblocks them", so each needed its own real-`erl`
+probe rather than a guessed promotion.
+
+### 9.1 Method
+
+A scratch probe (`lang_aot::compile_source_to_beam` + a real `erl` run,
+discarded before this PR — not part of the permanent suite) ran EVERY
+not-yet-`Beam` Dartmouth BASIC corpus row individually, unmodified from the
+existing `lang_matrix.rs` source text, using only the `iir-to-beam`
+capabilities that existed before this slice. This produced three groups:
+
+### 9.2 Group A — zero new lowering (12 rows)
+
+These ran correctly on real `erl` completely unchanged:
+
+- General `FOR`/`NEXT` and `FOR … STEP` loops — `cmp_le`/`add` on the shared
+  `f64` value track, the same ops the BEAM03-continuation slice's numeric
+  baseline already proved; the loop-carried backward branch itself was
+  already proven by other frontends (COBOL, Twig) on `Beam`.
+- `IF … THEN <line>` + `GOTO`-style jumps — `cmp_gt` on `f64`.
+- `DEF FN` — a same-module `call`, the exact calling convention ALGOL's
+  value procedures already run on every backend including `Beam`.
+- Multi-item `PRINT` with `;` (including a literal negative operand, i.e.
+  `sub`) and `,` — pure `__basic_print_int`/separator control flow, no
+  numeric op beyond what earlier BEAM slices proved.
+- Ordinary scalar real arithmetic (`6.0 * 7.0`), BA7 fixed-decimal
+  formatting, and six-significant-digit/`E`-notation formatting — all
+  `__basic_print_real`/`__basic_print_fixed_mag`/`__basic_print_real_e`
+  paths already exercised by the BEAM03 numeric-baseline row; these
+  specific corpus rows simply hadn't been run individually before.
+- Flat and nested `GOSUB`/`RETURN` — the E5 `array<i64>` return-address
+  stack. This is an **integer** array (`alloc_array`/`array_set`/
+  `array_get` at `type_hint == "i64"`), so it never touches the `atomics`
+  float-storage gap in §9.3 below — `atomics:put/3` requires an integer
+  value, and an `i64` return address already is one.
+- `SGN` — an inline three-way `cmp`/`const` conditional, no new op (the
+  same shape `ABS` and the `RND(X)` sign-dispatch already use).
+
+Promoted straight to `Beam`, each executed on real `erl` via the new
+`portable_text_stdout_dartmouth_basic_beam_general_arithmetic_and_control_flow`
+`lang_matrix` test (12 programs).
+
+### 9.3 Group B — bounded/mechanical: single-argument `math:*` + `erlang:floor/1` (5 rows)
+
+`SQR`, `SIN`/`COS`/`LOG`/`EXP`, `ATN`, `TAN`, and `INT` all failed
+`iir-to-beam` validation with `UnsupportedOp` for their respective IIR ops
+(`f64_sqrt`/`f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`/`f64_atan`/`f64_tan`/
+`real_to_int_floor`) — no lowering arm existed at all, unlike the array
+rows in §9.4 (which compiled and only failed at runtime).
+
+Each was confirmed mechanical, the same "read the actual contract" way
+`f64_pow` was in §8.2, by disassembling a real compiled call to each with
+`erlc -S`:
+
+- `math:sqrt/1`, `math:sin/1`, `math:cos/1`, `math:log/1` (natural log —
+  BASIC's `LOG`/IIR `f64_ln`), `math:exp/1`, `math:atan/1`, `math:tan/1` all
+  emit `call_ext`/`call_ext_only`, never `gc_bif1` — they are ordinary
+  `math` module functions, not loader-recognized guard BIFs (the same
+  reasoning as `math:pow/2` in §8.2). Each lowers with the exact `f64_pow`
+  staging pattern, just with **one** operand staged instead of two: move
+  the source into a scratch register above `meta.next_reg`,
+  `save_live_across_imported_call!`, move into `x0`, `call_ext 1
+  {u,import_idx}`, move the result to the destination,
+  `restore_live_across_imported_call!`. All seven joined the `live_across`
+  call-list match (the same invariant `f64_pow` joined in §8.2).
+- `erlang:floor/1`, by contrast, disassembles to `{gc_bif,floor,{f,0},1,
+  [{x,0}],{x,0}}` — the SAME generic `gc_bif1` shape `int_to_real`
+  (`erlang:float/1`) and `real_to_int_trunc` (`erlang:trunc/1`) already use.
+  So `real_to_int_floor` joins THAT match arm instead, not the `math:*`
+  `call_ext` family — despite being adjacent in the frontend's own `INT(X)
+  = real_to_int_floor + int_to_real` lowering, the two ops need different
+  BEAM opcodes for the same reason `f64_pow` and `int_to_real` did in §8.
+
+New imports: `math:sqrt/1`, `math:sin/1`, `math:cos/1`, `math:log/1`,
+`math:exp/1`, `math:atan/1`, `math:tan/1`, `erlang:floor/1`.
+
+Promoted to `Beam`, each executed on real `erl` via the new
+`portable_text_stdout_dartmouth_basic_beam_math_builtins` `lang_matrix` test
+(5 programs), plus dedicated `iir-to-beam` unit tests proving instruction
+shape (`test_90`/`test_91`, mirroring `test_86`) and real-`erl` execution
+(`test_92`/`test_93`, mirroring `test_88`).
+
+### 9.4 Group C — deferred: genuine design questions, not guessed at
+
+Three sub-groups compiled (or partly compiled) but are explicitly NOT
+promoted in this slice, because each is the kind of "genuinely open design
+question" this backlog's own instructions say to document rather than force:
+
+1. **1-D/2-D numeric arrays, `DATA`/`READ`/`RESTORE`, and real aggregate
+   `DATA`** (`10 DIM A(3)…`, `10 DIM A(1,2)…`, `10 DATA 21\n20 READ A…`,
+   `10 DIM A(1)\n20 DATA 3.14, 0.25…` — 4 rows). Every one compiles cleanly
+   through `iir-to-beam` validation, then **traps at runtime** on real `erl`
+   with `{badarg,[{atomics,put,[Ref,Index,FloatValue],...}]}`. This is a
+   genuine BEAM data-representation gap, not a missing opcode: `iir-to-beam`
+   represents every `alloc_array`/`array_set`/`array_get` with Erlang's
+   `atomics` module (see `lower.rs`'s own "Mutable memory: the `:atomics`
+   module" comment), and **`atomics` is a fixed-size array of 64-bit
+   INTEGERS only** — `atomics:put/3` raises `badarg` the instant it's given
+   a float value (confirmed on real `erl`: `atomics:put(Ref, 1, 40.0)`
+   traps; `atomics:put(Ref, 1, 40)` does not). BASIC's arrays are
+   `array<f64>` (even `DIM A(3)` — BA7-1b routes every scalar numeric value
+   through the shared `f64` track), so every BASIC array write traps. Fixing
+   this needs a real architecture decision — e.g. storing the IEEE-754 bit
+   pattern as an integer via BEAM's bit-syntax (`<<F:64/float>> =
+   <<Bits:64>>`, itself new lowering `iir-to-beam` doesn't have for ANY op
+   today) versus switching float-element arrays to a different BEAM
+   substrate entirely (e.g. `ets`, which stores arbitrary terms but has
+   different mutation/cost characteristics than `atomics`) — not a
+   mechanical opcode addition. Left as an open follow-up; see the backlog's
+   VM-LOOP-24 section for the explicit next-item framing.
+2. **String arrays and mixed numeric/string `DATA`** (`10 DIM A$(2)…`,
+   `10 DIM S$(1)\n20 DATA 20, "O", 22, "K"…` — 2 rows). These fail
+   `iir-to-beam` VALIDATION outright (`UnsupportedType`: `array_set`/
+   `array_get` with `type_hint == "str"` — "only the ASCII string subset is
+   supported in this BEAM backend"), independent of the float-array gap
+   above. `iir-to-beam` has no `str`-typed array element representation at
+   all yet. A separate, likely larger design item than the float-array gap
+   (it needs a BEAM representation for a *heterogeneous* element type, not
+   just a wider scalar).
+3. **`RND`**. Its own corpus row does not just need `real_to_int_floor` (the
+   probe confirmed adding that lowering does NOT unblock it): it traps with
+   `{badarith,[{erlang,'*',[undefined,48271],...}]}` inside the compiled
+   `__basic_rnd` helper — a module-global `erlang:get/1` read returned the
+   atom `undefined` instead of the expected seed integer. This is exactly
+   the "RND's full DEF-FN-and-module-global chain" open design question the
+   backlog flagged all the way back at VM-018, not a new discovery of this
+   slice — this probe just confirms it is still unresolved and that nothing
+   in this slice's scope (math builtins, `real_to_int_floor`) happens to fix
+   it as a side effect. Left open.

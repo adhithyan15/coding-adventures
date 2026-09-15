@@ -3451,6 +3451,193 @@ fn test_89_real_erl_neg_and_f64_pow_combined() {
     assert_eq!(stdout.trim(), "2", "expected erl output \"2\", got {:?}", stdout.trim());
 }
 
+// ===========================================================================
+// VM-LOOP-24: single-argument `math:*` transcendentals + real_to_int_floor
+// ===========================================================================
+
+/// Every one of `f64_sqrt`/`f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`/`f64_atan`/
+/// `f64_tan` must lower to exactly one `call_ext` (never `gc_bif1`/
+/// `gc_bif2`) against the matching `math:*` import — confirmed, exactly like
+/// `f64_pow`'s `test_86`, by disassembling a real compiled call to each with
+/// `erlc -S`: every one emits `call_ext`/`call_ext_only`, because `math`
+/// functions are ordinary library code, not loader-recognized guard BIFs
+/// (only `erlang:*` names are).
+#[test]
+fn test_90_math_transcendentals_emit_call_ext_not_gc_bif() {
+    let cases: &[(&str, &str)] = &[
+        ("f64_sqrt", "sqrt"),
+        ("f64_sin", "sin"),
+        ("f64_cos", "cos"),
+        ("f64_ln", "log"),
+        ("f64_exp", "exp"),
+        ("f64_atan", "atan"),
+        ("f64_tan", "tan"),
+    ];
+    for (op, math_fn) in cases {
+        let m = make_module_fn("main", vec![("x", "f64")], "f64", vec![
+            IIRInstr::new(*op, Some("r".into()), vec![Operand::Var("x".into())], "f64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "f64"),
+        ]);
+        let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+        assert_eq!(count_opcode(&beam, OP_CALL_EXT), 1, "{op} must emit exactly one call_ext");
+        assert_eq!(count_opcode(&beam, OP_GC_BIF1), 0, "{op} must NOT emit gc_bif1");
+        assert_eq!(count_opcode(&beam, OP_GC_BIF2), 0, "{op} must NOT emit gc_bif2");
+
+        let has_math_fn = beam.imports.iter().any(|imp| {
+            let module = beam.atoms.get(imp.module_atom_index as usize - 1).map(String::as_str);
+            let func = beam.atoms.get(imp.function_atom_index as usize - 1).map(String::as_str);
+            module == Some("math") && func == Some(*math_fn) && imp.arity == 1
+        });
+        assert!(has_math_fn, "{op}: import table must contain math:{math_fn}/1: {:?}", beam.imports);
+    }
+}
+
+/// `real_to_int_floor` must lower to a `gc_bif1` against `erlang:floor/1` —
+/// UNLIKE the `math:*` transcendentals just above, `erlang:floor/1` IS a
+/// loader-recognized guard BIF, confirmed by real `erlc -S` disassembly
+/// showing the generic `{gc_bif,floor,...}` shape (the same shape
+/// `float`/`trunc` already use for `int_to_real`/`real_to_int_trunc`), never
+/// `call_ext`.
+#[test]
+fn test_91_real_to_int_floor_emits_gc_bif1_not_call_ext() {
+    let m = make_module_fn("main", vec![("x", "f64")], "i64", vec![
+        IIRInstr::new("real_to_int_floor", Some("r".into()), vec![Operand::Var("x".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ]);
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    assert_eq!(count_opcode(&beam, OP_GC_BIF1), 1, "real_to_int_floor must emit exactly one gc_bif1");
+    assert_eq!(count_opcode(&beam, OP_CALL_EXT), 0, "real_to_int_floor must NOT emit call_ext");
+
+    let has_erlang_floor = beam.imports.iter().any(|imp| {
+        let module = beam.atoms.get(imp.module_atom_index as usize - 1).map(String::as_str);
+        let func = beam.atoms.get(imp.function_atom_index as usize - 1).map(String::as_str);
+        module == Some("erlang") && func == Some("floor") && imp.arity == 1
+    });
+    assert!(has_erlang_floor, "import table must contain erlang:floor/1: {:?}", beam.imports);
+}
+
+/// End-to-end: every `math:*` transcendental actually executes on real
+/// Erlang with the correct value, not just the right instruction shape —
+/// `SQR(49)`, `SIN(0)`, `COS(0)`, `LOG(1)`, `EXP(0)`, `ATN(0)`, `TAN(0)`, the
+/// exact Dartmouth BASIC corpus arguments, all chained in one module and
+/// summed (each result is a whole number, so `real_to_int_trunc` makes the
+/// combined stdout an unambiguous integer): `7 + 0 + 1 + 0 + 1 + 0 + 0 = 9`.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_92_real_erl_math_transcendentals() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("c49".into()), vec![Operand::Float(49.0)], "f64"),
+        IIRInstr::new("f64_sqrt", Some("sqrt_r".into()), vec![Operand::Var("c49".into())], "f64"),
+        IIRInstr::new("const", Some("c0".into()), vec![Operand::Float(0.0)], "f64"),
+        IIRInstr::new("f64_sin", Some("sin_r".into()), vec![Operand::Var("c0".into())], "f64"),
+        IIRInstr::new("f64_cos", Some("cos_r".into()), vec![Operand::Var("c0".into())], "f64"),
+        IIRInstr::new("const", Some("c1".into()), vec![Operand::Float(1.0)], "f64"),
+        IIRInstr::new("f64_ln", Some("ln_r".into()), vec![Operand::Var("c1".into())], "f64"),
+        IIRInstr::new("f64_exp", Some("exp_r".into()), vec![Operand::Var("c0".into())], "f64"),
+        IIRInstr::new("f64_atan", Some("atan_r".into()), vec![Operand::Var("c0".into())], "f64"),
+        IIRInstr::new("f64_tan", Some("tan_r".into()), vec![Operand::Var("c0".into())], "f64"),
+        IIRInstr::new("add", Some("s1".into()),
+            vec![Operand::Var("sqrt_r".into()), Operand::Var("sin_r".into())], "f64"),
+        IIRInstr::new("add", Some("s2".into()),
+            vec![Operand::Var("s1".into()), Operand::Var("cos_r".into())], "f64"),
+        IIRInstr::new("add", Some("s3".into()),
+            vec![Operand::Var("s2".into()), Operand::Var("ln_r".into())], "f64"),
+        IIRInstr::new("add", Some("s4".into()),
+            vec![Operand::Var("s3".into()), Operand::Var("exp_r".into())], "f64"),
+        IIRInstr::new("add", Some("s5".into()),
+            vec![Operand::Var("s4".into()), Operand::Var("atan_r".into())], "f64"),
+        IIRInstr::new("add", Some("s6".into()),
+            vec![Operand::Var("s5".into()), Operand::Var("tan_r".into())], "f64"),
+        IIRInstr::new("real_to_int_trunc", Some("t".into()), vec![Operand::Var("s6".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("t".into())], "i64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "math transcendentals module must pass validation: {errs:?}");
+
+    let beam_cfg = IIRBeamConfig::new("iir_math_transcendentals_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+
+    let tmp = std::env::temp_dir()
+        .join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create iir_to_beam_tests temp dir");
+    let beam_path = tmp.join("iir_math_transcendentals_test.beam");
+    std::fs::write(&beam_path, &bytes).expect("write iir_math_transcendentals_test.beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_math_transcendentals_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(
+        output.status.success(),
+        "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert_eq!(stdout.trim(), "9", "expected erl output \"9\", got {:?}", stdout.trim());
+}
+
+/// End-to-end: `real_to_int_floor(3.7)` = `3` — proves `erlang:floor/1`
+/// actually executes on real Erlang with the correct value (test_91 only
+/// checks instruction shape), matching Dartmouth BASIC's `INT(3.7)` row.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_93_real_erl_real_to_int_floor() {
+    use iir_to_beam::encode_beam;
+
+    if !erl_available() {
+        return;
+    }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Float(3.7)], "f64"),
+        IIRInstr::new("real_to_int_floor", Some("f".into()), vec![Operand::Var("x".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("f".into())], "i64"),
+    ]);
+
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "real_to_int_floor module must pass validation: {errs:?}");
+
+    let beam_cfg = IIRBeamConfig::new("iir_real_to_int_floor_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+
+    let tmp = std::env::temp_dir()
+        .join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create iir_to_beam_tests temp dir");
+    let beam_path = tmp.join("iir_real_to_int_floor_test.beam");
+    std::fs::write(&beam_path, &bytes).expect("write iir_real_to_int_floor_test.beam");
+
+    let output = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg("io:format(\"~w~n\",[iir_real_to_int_floor_test:main()]),halt(0).")
+        .output()
+        .expect("spawn erl");
+
+    assert!(
+        output.status.success(),
+        "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    assert_eq!(stdout.trim(), "3", "expected erl output \"3\", got {:?}", stdout.trim());
+}
+
 #[test]
 fn narrow_operations_mask_but_i64_remains_unbounded() {
     for op in ["add", "sub", "mul", "neg", "not", "and", "or", "xor", "shl", "shr"] {

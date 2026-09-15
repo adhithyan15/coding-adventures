@@ -96,6 +96,14 @@ assert_eq!(&bytes[0..4], b"FOR1");
 | `real_to_int_trunc` | `gc_bif1 erlang:trunc/1` (BEAM03) |
 | `neg` | `gc_bif1 erlang:-/1` (int or float — already polymorphic; proven for f64 in the BEAM03 continuation slice) |
 | `f64_pow` | `call_ext math:pow/2` (BEAM03 continuation — NOT a guard BIF, so not `gc_bif2`) |
+| `f64_sqrt` | `call_ext math:sqrt/1` (VM-LOOP-24 — NOT a guard BIF, so not `gc_bif1`) |
+| `f64_sin` | `call_ext math:sin/1` (VM-LOOP-24) |
+| `f64_cos` | `call_ext math:cos/1` (VM-LOOP-24) |
+| `f64_ln` | `call_ext math:log/1` (VM-LOOP-24 — natural log; BASIC's `LOG`) |
+| `f64_exp` | `call_ext math:exp/1` (VM-LOOP-24) |
+| `f64_atan` | `call_ext math:atan/1` (VM-LOOP-24) |
+| `f64_tan` | `call_ext math:tan/1` (VM-LOOP-24) |
+| `real_to_int_floor` | `gc_bif1 erlang:floor/1` (VM-LOOP-24 — UNLIKE the `f64_*` row above, `erlang:floor/1` IS a guard BIF) |
 | `and` | `gc_bif2 erlang:band/2` |
 | `or`  | `gc_bif2 erlang:bor/2` |
 | `xor` | `gc_bif2 erlang:bxor/2` |
