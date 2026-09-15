@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 6704,
+    "totalLessons": 6705,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -32,17 +32,17 @@
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 496,
+    "atomsNeverRevisited": 497,
     "forwardReferences": 756,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 87,
     "chapterGateCleanTracks": 10,
     "tracksWithoutWritingStageEvidence": 0,
-    "missingWritingStagePairs": 351,
+    "missingWritingStagePairs": 346,
     "invalidWritingStageEvidence": 0,
     "drivableLessons": 5372,
     "drivablePercent": 80,
-    "chaptersWithoutDrivablePrefix": 192,
+    "chaptersWithoutDrivablePrefix": 193,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -1057,7 +1057,8 @@
           414,
           415,
           416,
-          417
+          417,
+          418
         ],
         "bookChapters": [
           1,
@@ -1476,7 +1477,8 @@
           414,
           415,
           416,
-          417
+          417,
+          418
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3899,9 +3901,9 @@
       {
         "language": "spanish",
         "status": "version-2",
-        "lessonCount": 1158,
+        "lessonCount": 1159,
         "versions": {
-          "2": 1158
+          "2": 1159
         }
       },
       {
@@ -4849,8 +4851,8 @@
       },
       {
         "language": "spanish",
-        "bookChapters": 417,
-        "declaredChapters": 417,
+        "bookChapters": 418,
+        "declaredChapters": 418,
         "missingCapability": 0,
         "findings": 27,
         "clean": false
@@ -4881,8 +4883,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1501,
-      "declaredChapters": 1501,
+      "bookChapters": 1502,
+      "declaredChapters": 1502,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 87,
@@ -4894,11 +4896,11 @@
     }
   },
   "levels": {
-    "totalLessons": 6704,
+    "totalLessons": 6705,
     "byLevel": {
       "pre-A1": 3857,
       "A1": 2141,
-      "A2": 622,
+      "A2": 623,
       "B1": 39,
       "B2": 17,
       "C1": 10,
@@ -5194,11 +5196,11 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 1158,
+        "lessonCount": 1159,
         "byLevel": {
           "pre-A1": 354,
           "A1": 594,
-          "A2": 126,
+          "A2": 127,
           "B1": 39,
           "B2": 17,
           "C1": 10,
@@ -6125,8 +6127,8 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 1158,
-        "measurable": 1152,
+        "lessonCount": 1159,
+        "measurable": 1153,
         "unmeasurable": 6,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -6700,7 +6702,7 @@
           "language": "spanish",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 1158,
+          "lessonCount": 1159,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -25396,7 +25398,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "FA-DIALOGUE-WELLBEING",
@@ -41529,6 +41531,17 @@
         "revisits": 2
       },
       {
+        "atom": "ES-LEX-CONCIERTO",
+        "language": "spanish",
+        "introducedBy": "ES-C413-concierto",
+        "introducedAt": 1138,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-CONMIGO",
         "language": "spanish",
         "introducedBy": "ES-C64-conmigo",
@@ -41549,6 +41562,17 @@
           "R4"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-COSTAR",
+        "language": "spanish",
+        "introducedBy": "ES-C402-costar",
+        "introducedAt": 1078,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 6
       },
       {
         "atom": "ES-LEX-DATO",
@@ -65048,7 +65072,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
@@ -65118,7 +65142,7 @@
         "missed": [
           "R4"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "ES-GRAMMAR-ER-PRESENT-3PL",
@@ -65401,24 +65425,14 @@
         "revisits": 5
       },
       {
-        "atom": "ES-LEX-CONCIERTO",
+        "atom": "ES-LEX-CURSO",
         "language": "spanish",
-        "introducedBy": "ES-C413-concierto",
-        "introducedAt": 1138,
+        "introducedBy": "ES-C417-curso",
+        "introducedAt": 1153,
         "missed": [
           "R2"
         ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-COSTAR",
-        "language": "spanish",
-        "introducedBy": "ES-C402-costar",
-        "introducedAt": 1078,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 6
+        "revisits": 4
       },
       {
         "atom": "ES-LEX-DIA",
@@ -87454,12 +87468,12 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 1158,
+        "lessonCount": 1159,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 1372,
-        "atomsNeverRevisited": 91,
+        "atomsTaught": 1373,
+        "atomsNeverRevisited": 92,
         "forwardReferences": 366
       },
       {
@@ -87498,14 +87512,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 8461,
-      "atomsNeverRevisited": 496,
+      "atomsTaught": 8462,
+      "atomsNeverRevisited": 497,
       "neverRevisitedPercent": 6,
       "missedByWindow": {
         "R1": 1690,
-        "R2": 3775,
-        "R3": 5334,
-        "R4": 3898
+        "R2": 3776,
+        "R3": 5335,
+        "R4": 3899
       },
       "forwardReferences": 756
     }
@@ -105680,6 +105694,15 @@
             "stage": "timed-assessment-production",
             "level": "A1",
             "sequence": 5910
+          },
+          {
+            "language": "spanish",
+            "lessonId": "ES-W02-cuatro-lineas-ayer",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A2",
+            "sequence": 9680
           }
         ],
         "validEvidence": [
@@ -105745,6 +105768,15 @@
             "stage": "timed-assessment-production",
             "level": "A1",
             "sequence": 5910
+          },
+          {
+            "language": "spanish",
+            "lessonId": "ES-W02-cuatro-lineas-ayer",
+            "blockIndex": 2,
+            "blockTitle": "Writing — connected composition",
+            "stage": "connected-composition",
+            "level": "A2",
+            "sequence": 9680
           }
         ],
         "defects": [],
@@ -105804,12 +105836,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B1",
@@ -105828,12 +105859,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "B2",
@@ -105852,12 +105882,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C1",
@@ -105876,12 +105905,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "C2",
@@ -105900,12 +105928,11 @@
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
-              "timed-assessment-production"
-            ],
-            "missingStages": [
+              "timed-assessment-production",
               "connected-composition"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           }
         ]
       },
@@ -107015,9 +107042,9 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 745,
+      "evidenceBlocks": 746,
       "invalidEvidenceBlocks": 0,
-      "missingTrackLevelStages": 351
+      "missingTrackLevelStages": 346
     }
   },
   "gentleRamp": {
@@ -108433,8 +108460,8 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 1158,
-        "atomMeasurableLessons": 1152,
+        "lessonCount": 1159,
+        "atomMeasurableLessons": 1153,
         "atomMeasurementBlindLessons": 6,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -108449,17 +108476,17 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 366,
-        "atomsTaught": 1372,
-        "atomsNeverRevisited": 91,
-        "reinforcementWindowMisses": 3728,
+        "atomsTaught": 1373,
+        "atomsNeverRevisited": 92,
+        "reinforcementWindowMisses": 3731,
         "reinforcementMissesByWindow": {
           "R1": 203,
-          "R2": 1152,
-          "R3": 1203,
-          "R4": 1170
+          "R2": 1153,
+          "R3": 1204,
+          "R4": 1171
         },
         "payoffSurprises": 27,
-        "writingPracticeLessons": 14,
+        "writingPracticeLessons": 15,
         "firstWritingPracticeAt": 1,
         "lessonsBeforeWritingPractice": 1,
         "findings": [
@@ -108480,7 +108507,7 @@
           {
             "language": "spanish",
             "kind": "reinforcement",
-            "count": 3728,
+            "count": 3731,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -109188,7 +109215,7 @@
       {
         "language": "spanish",
         "kind": "reinforcement",
-        "count": 3728,
+        "count": 3731,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -110012,11 +110039,6 @@
         "inProgressAt": "A2",
         "blockers": [
           {
-            "criterion": "writing-stage",
-            "detail": "1 cumulative writing stage(s) unproved at A2: connected-composition",
-            "shortfall": 1
-          },
-          {
             "criterion": "vocabulary",
             "detail": "teaches 776 distinct headwords at or below A2, against 1200",
             "shortfall": 424
@@ -110128,12 +110150,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 6704,
+    "totalLessons": 6705,
     "voice": 4839,
     "sight": 713,
-    "pen": 1152,
+    "pen": 1153,
     "coreVoice": 5372,
-    "lessonsWithWritingSegments": 669,
+    "lessonsWithWritingSegments": 670,
     "drivablePercent": 80,
     "tracks": [
       {
@@ -123357,12 +123379,12 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 1158,
+        "lessonCount": 1159,
         "voice": 1093,
         "sight": 51,
-        "pen": 14,
+        "pen": 15,
         "coreVoice": 1095,
-        "drivablePercent": 95,
+        "drivablePercent": 94,
         "drivablePrefixTotal": 1062,
         "chapters": [
           {
@@ -129233,6 +129255,21 @@
             ],
             "drivablePrefix": 5,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 418,
+            "lessonCount": 1,
+            "voice": 0,
+            "sight": 0,
+            "pen": 1,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "ES-W02-cuatro-lineas-ayer"
           }
         ]
       },
@@ -132752,7 +132789,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 6704,
+    "lessons": 6705,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -132760,7 +132797,7 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 6704,
+    "lessons": 6705,
     "measuredLessons": 3615,
     "idiomMeasuredLessons": 3615,
     "senseMeasuredLessons": 3615,
@@ -132773,8 +132810,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 6256,
-    "usesBeforeIntroduction": 20555,
+    "lessonsUsingTerms": 6257,
+    "usesBeforeIntroduction": 20557,
     "technicalUsesBeforeIntroduction": 5110,
     "technicalLessons": 2848,
     "worstTerms": [
@@ -132805,12 +132842,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 6704,
+    "lessonsScanned": 6705,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1570,
+    "filesScanned": 1571,
     "mainCharacters": 132,
     "scriptCharacters": 799,
     "gaps": 0
