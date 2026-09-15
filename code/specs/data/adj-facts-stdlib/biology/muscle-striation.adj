@@ -41,12 +41,29 @@
 %     ? muscle_striated($Muscle, no)
 %       % smooth
 %
-% Provenance: reproduces, byte-for-byte, the SAME three NCI SEER Training
-% Modules spans already quoted inside `muscle-types.adj`'s own header — no
-% new WebFetch, only a different schema decoding the striation half of each
-% already-verified quote. `trust authoritative` — the same tier
-% `muscle-types.adj` already carries (U.S. National Cancer Institute, a
-% primary U.S. government teaching resource).
+% Provenance: the SEER Training Modules "Muscle Tissue" page. This paragraph
+% used to say the spans were reproduced "byte-for-byte" with "no new
+% WebFetch"; they are now measured against the page itself.
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the skeletal sentence, the primary source of all three answers,
+% with the smooth and cardiac sentences only table-level corroborations. Each
+% of the three sentences names its muscle type and whether it is striated, so
+% every row now takes its own as a `source`. The smooth row takes only the
+% first of the two sentences quoted above: the second ("They are called
+% involuntary muscles.") names no striation. The envelope is now the page's
+% framing sentence, which names no muscle type and no striation:
+%
+%     "Muscle tissue is composed of cells that have the special ability to
+%      shorten or contract in order to produce movement of the body parts."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the three row sentences and the envelope each occur
+% exactly once, each inside a `<p>`. Every row's page is the envelope's, so no
+% row restates a `locator` line or `trust` (ADJ-TABLES §4). `trust
+% authoritative` — U.S. National Cancer Institute, a primary U.S. government
+% teaching resource.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -54,14 +71,21 @@
 table muscle_striated {
     columns muscle, striated
 
-    row (skeletal, yes)   % SEER: "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
-    row (smooth, no)      % SEER: "Smooth muscle cells are spindle shaped, have a single, centrally located nucleus, and lack striations."
-    row (cardiac, yes)    % SEER: "Cardiac muscle has branching fibers, one nucleus per cell, striations, and intercalated disks."
+    row (skeletal, yes) {
+        source "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
+    }
+    row (smooth, no) {
+        source "Smooth muscle cells are spindle shaped, have a single, centrally located nucleus, and lack striations."
+    }
+    row (cardiac, yes) {
+        source "Cardiac muscle has branching fibers, one nucleus per cell, striations, and intercalated disks."
+    }
 
-    source "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
+    % THE ENVELOPE WAS THE SKELETAL ROW'S OWN SENTENCE, the primary source of
+    % all three answers, with the smooth and cardiac sentences only table-level
+    % corroborations. It is now a framing sentence that names no muscle type
+    % and no striation. Every row overrides it, so it reaches no answer.
+    source "Muscle tissue is composed of cells that have the special ability to shorten or contract in order to produce movement of the body parts."
     locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
     trust authoritative
-
-    cites "Smooth muscle cells are spindle shaped, have a single, centrally located nucleus, and lack striations. They are called involuntary muscles." locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
-    cites "Cardiac muscle has branching fibers, one nucleus per cell, striations, and intercalated disks." locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
 }
