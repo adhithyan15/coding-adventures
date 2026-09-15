@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+### Fixed -- the pill status dot now renders on every backend (#15169)
+
+The dot is authored `background: currentColor` so it always matches whichever
+branch's text colour, with no separate warn/ok dot styling to keep in sync.
+That worked on the web and nowhere else: `currentColor` has no native
+equivalent, so the dot rendered as **nothing** on Compose, Flutter, SwiftUI
+and XAML, and as a **white square** on Qt, whose `Rectangle` defaults to
+`#ffffff`.
+
+Nothing changed in this app -- the keyword is now resolved during composition
+(see `mosaic-package-artifact-builder`). Verified by rendering: the ok-pill
+green `#6fb489` gains **exactly 36 pixels** in every Compose screenshot, which
+is a 6x6 dot to the pixel.
+
+**The dot is still square.** `border-radius: 50%` is dropped by all five
+native backends -- the same 36-pixel count proves it, since a circle would be
+about 28. Filed separately.
+
 All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]

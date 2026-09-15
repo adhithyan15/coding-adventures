@@ -104,6 +104,44 @@ build script and that file has a migration in flight.
 
 ## Unreleased
 
+### Fixed -- `currentColor` is resolved against the inherited text colour (#15169)
+
+`currentColor` means "whatever `color` is in effect here". CSS resolves it
+natively, so the html and react backends were always correct. **No native
+backend has an equivalent** -- a brush must be an actual colour -- and each
+failed differently, and silently.
+
+Trestle's pill status dot is authored `background: currentColor` precisely so
+it tracks its pill's text colour. Measured, per backend:
+
+| backend | what the dot rendered |
+| --- | --- |
+| html, react | correct |
+| compose, flutter, swiftui, xaml | nothing -- an invisible box |
+| qt | a **white** square: `Rectangle.color` defaults to `#ffffff` (measured, not assumed) |
+
+So the dot had not rendered on five of seven backends for as long as the part
+has existed, and on the sixth it rendered the wrong colour.
+
+Resolution happens once, where `ComposedComponent` is built -- the single
+point both package builds and standalone pipeline builds pass through, which
+is the reason that type exists. Doing it in each emitter would be eight
+implementations of one cascade rule, which is how they drift.
+
+**Ambiguity is left unresolved, not guessed.** Three cases are deliberately
+declined, each with a test:
+
+- a part used under two different inherited colours (no literal serves both),
+- a part with no `color` declared anywhere above it,
+- an ancestor whose `color` **changes with state** -- CSS follows the state at
+  runtime, so pinning the base colour would REGRESS html and react, the two
+  backends this keyword already worked on.
+
+A part's own `color` applies to its subtree, not to itself, so a part with
+both `color` and `background: currentColor` does not paint its background its
+own text colour.
+
+
 ### Added — the resolver's contract is now enforced, not assumed (#14886)
 
 `LayoutPackageResolver` promises backends "a layout tree containing no qualified
