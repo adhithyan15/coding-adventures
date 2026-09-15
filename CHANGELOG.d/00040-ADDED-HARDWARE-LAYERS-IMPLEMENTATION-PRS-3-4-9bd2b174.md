@@ -1,0 +1,10 @@
+### Added — Hardware Layers Implementation (PRs #3, #4)
+- `logic-gates` — 7 gates + NAND-derived + multi-input variants (89 tests)
+- `arithmetic` — half adder, full adder, ripple carry adder, ALU (34 tests)
+- `cpu-simulator` — generic fetch-decode-execute cycle (34 tests)
+- `arm-simulator` — ARMv7 subset: MOV, ADD, SUB (16 tests)
+- `riscv-simulator` — RISC-V RV32I subset: addi, add, sub (14 tests)
+- `wasm-simulator` — WebAssembly stack machine (28 tests)
+- `intel4004-simulator` — Intel 4004 accumulator machine (21 tests)
+- Layer renumbering from top-down (user perspective → hardware)
+

@@ -284,6 +284,22 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     newestFirst: true,
     entryShape: "bullet",
   },
+  {
+    // The monorepo changelog, and the last document this effort migrates. 100
+    // `###` entries under a `## [Unreleased]` banner, so level 3 for the same
+    // reason as human-language-data: level 2 is the version marker and the hot
+    // spot is the entry list beneath it, where every PR prepends.
+    //
+    // Picked on a measured append-only signal rather than on being named
+    // CHANGELOG: 10 of its last 10 commits touch the top, 9 of them in a single
+    // hunk. The same measurement is why package-parity-roadmap.md is NOT here
+    // despite 64 `##` sections -- 0 of 10 at the top, so it is edited
+    // throughout and sharding would disguise semantic conflicts rather than
+    // remove additive ones.
+    path: "CHANGELOG.md",
+    headingLevel: 3,
+    newestFirst: true,
+  },
 ];
 
 /**

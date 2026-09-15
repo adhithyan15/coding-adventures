@@ -990,13 +990,44 @@ describe("the append-only deletion guard covers every plan", () => {
   const workflow = () =>
     code(readFileSync(join(defaultRepoRoot(), WORKFLOW), "utf8"));
 
+  /** Does `value` appear as a WHOLE entry on some line, not as a substring?
+   *
+   * `text.includes(value)` is wrong here and was wrong in a way that only
+   * showed up on the sixteenth plan. The root document's path is `CHANGELOG.md`
+   * and its glob is `CHANGELOG.d/*.md` — both SUFFIXES of the other fifteen
+   * (`code/packages/rust/lang-aot/CHANGELOG.md` contains `CHANGELOG.md`). So
+   * `includes` was satisfied by a different plan's line, and all three drift
+   * pins were inert for exactly the entry they had just been asked to guard.
+   *
+   * A line carries the value as a whole entry when what precedes it is a
+   * quote or whitespace, and what follows is a quote, whitespace, a line
+   * continuation, or the closing paren.
+   */
+  function hasWholeEntry(text: string, value: string): boolean {
+    const escaped = value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`(^|['"\\s])${escaped}(['"\\s\\\\)]|$)`, "m").test(text);
+  }
+
   it("names a shard glob for every document in DOC_SHARD_PLANS", () => {
     const text = workflow();
     const missing = DOC_SHARD_PLANS.map(
       (plan) => `${docShardDirectoryFor(plan.path)}/*.md`,
-    ).filter((glob) => !text.includes(glob));
+    ).filter((glob) => !hasWholeEntry(text, glob));
 
     expect(missing).toEqual([]);
+  });
+
+  it("the whole-entry match cannot be satisfied by a longer path", () => {
+    // The property the three pins above depend on, asserted directly rather
+    // than trusted: a nested plan's line must NOT satisfy the root plan's
+    // shorter path. This is the check that was missing when `includes` let
+    // `lang-aot/CHANGELOG.md` stand in for `CHANGELOG.md`.
+    const nestedOnly = "            code/packages/rust/lang-aot/CHANGELOG.md \\";
+    expect(hasWholeEntry(nestedOnly, "code/packages/rust/lang-aot/CHANGELOG.md"))
+      .toBe(true);
+    expect(hasWholeEntry(nestedOnly, "CHANGELOG.md")).toBe(false);
+    expect(hasWholeEntry("              'a/b/CHANGELOG.d/*.md'", "CHANGELOG.d/*.md"))
+      .toBe(false);
   });
 
   it("forbids re-tracking the aggregate of every document in DOC_SHARD_PLANS", () => {
@@ -1006,7 +1037,7 @@ describe("the append-only deletion guard covers every plan", () => {
     // the restored hot spot. It had drifted too: Hindi was a plan with no entry.
     const text = workflow();
     const missing = DOC_SHARD_PLANS.map((plan) => plan.path).filter(
-      (path) => !text.includes(path),
+      (path) => !hasWholeEntry(text, path),
     );
 
     expect(missing).toEqual([]);
@@ -1040,7 +1071,7 @@ describe("the append-only deletion guard covers every plan", () => {
     // And the block must actually carry every plan, not just end tidily.
     const block = lines.slice(start, end + 1).join("\n");
     expect(
-      DOC_SHARD_PLANS.map((p) => p.path).filter((p) => !block.includes(p)),
+      DOC_SHARD_PLANS.map((p) => p.path).filter((p) => !hasWholeEntry(block, p)),
     ).toEqual([]);
   });
 });

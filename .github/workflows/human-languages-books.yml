@@ -98,6 +98,7 @@ jobs:
               'code/packages/rust/spice-netlist-parser/CHANGELOG.d/*.md'
               'code/packages/rust/venture-browser-core/CHANGELOG.d/*.md'
               'code/packages/rust/oauth-broker/CHANGELOG.d/*.md'
+              'CHANGELOG.d/*.md'
             )
             # The migration PR must replace the one provisional Script Ductus
             # fragment while establishing its strict plan. The migration base is
@@ -141,7 +142,8 @@ jobs:
             code/packages/rust/diagram-to-paint/CHANGELOG.md \
             code/packages/rust/spice-netlist-parser/CHANGELOG.md \
             code/packages/rust/venture-browser-core/CHANGELOG.md \
-            code/packages/rust/oauth-broker/CHANGELOG.md)
+            code/packages/rust/oauth-broker/CHANGELOG.md \
+            CHANGELOG.md)
           if [ -n "$tracked_doc_monoliths" ]; then
             echo "::error::Generated Markdown aggregates must remain untracked:"
             printf '%s\n' "$tracked_doc_monoliths"
