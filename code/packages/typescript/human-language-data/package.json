@@ -22,6 +22,8 @@
     "generate:assessment-artifacts": "node dist/assessment-artifact-cli.js --write",
     "check:assessment-artifacts": "node dist/assessment-artifact-cli.js --check",
     "generate:spanish-a1-mock-audit": "node dist/spanish-a1-mock-audit-cli.js --write",
+    "generate:spanish-prea1-mock-audit": "node dist/spanish-a1-mock-audit-cli.js --write --level pre-A1",
+    "check:spanish-prea1-mock-audit": "node dist/spanish-a1-mock-audit-cli.js --check --level pre-A1",
     "check:spanish-a1-mock-audit": "node dist/spanish-a1-mock-audit-cli.js --check",
     "report:spanish-a1-mock-audit": "node dist/spanish-a1-mock-audit-cli.js --report",
     "shard": "node dist/shard-cli.js --shard",

@@ -117,9 +117,28 @@ and edition rather than treating the summary below as a complete form.
 The project-defined bridge has independently scored reading, listening,
 writing, and speaking papers. It covers familiar signs and words, very short
 slow exchanges, greetings and identity, simple requests, and short independent
-German-script responses. The first four writing stages must be proven before a
-timed mock. Its duration and task inventory remain separate backlog; it must be
-gentler and shorter than A1 without being mislabeled as an external exam.
+German-script responses.
+
+**Both of the conditions this section used to defer are now met.** The first
+four writing stages are proven in the learning record -- chapter 1 carries
+observe/trace, guided copy, delayed copy and dictation on *Hallo* -- and the
+task inventory is checked in at
+[`task-shapes/pre-a1.json`](task-shapes/pre-a1.json):
+
+| paper | minutes | points |
+|---|---:|---:|
+| reading | 8 | 25 |
+| listening | 7 | 25 |
+| writing | 10 | 25 |
+| speaking | 5 (+2 preparation) | 25 |
+
+Twenty-five written minutes against Start Deutsch 1's sixty-five, and five
+spoken against fifteen: gentler and shorter than A1, as this section required,
+and labelled a project-defined precursor rather than an external exam. Goethe
+offers no examination below A1, so there is nothing here to transcribe.
+
+What remains outstanding at this rung is the mock pair, its rubric and its
+answer keys.
 
 ### A1
 
