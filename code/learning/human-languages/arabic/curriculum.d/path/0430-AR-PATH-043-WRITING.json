@@ -1,0 +1,14 @@
+{
+  "id": "AR-PATH-043-WRITING",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "AR-W02-satri-al-khass",
+    "AR-W03-maa-al-saaa",
+    "AR-W04-arbaa-sutur"
+  ],
+  "before": [],
+  "inline": [
+    "AR-EXT-043-WRITING"
+  ],
+  "after": []
+}

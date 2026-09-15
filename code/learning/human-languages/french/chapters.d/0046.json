@@ -1,0 +1,19 @@
+{
+  "chapter": 46,
+  "title": "Writing --- My Own Line",
+  "label": "ch:fr-ma-propre-ligne",
+  "canDo": "I can write one line about myself from a closed supply of known words, with nothing to copy, and put every accent on.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "FR-W02-ma-propre-ligne",
+    "kind": "task",
+    "summary": "Complete FR-W02-ma-propre-ligne: subject, verb and the rest, chosen rather than copied, with the accents checked before anything else.",
+    "assesses": [
+      "FR-LEX-ET-01",
+      "FR-GRAM-SVO-01"
+    ],
+    "note": "The first writing step with nothing to reach for. The French-specific check arrives with it: an accent is part of the letter, not a flourish on it, and a hand that omits one has written a different word."
+  }
+}

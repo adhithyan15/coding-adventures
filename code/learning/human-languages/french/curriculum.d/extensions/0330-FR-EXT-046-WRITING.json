@@ -1,0 +1,13 @@
+{
+  "id": "FR-EXT-046-WRITING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can write my own line, produce the DELF A1 writing paper under its clock, and join four lines with et, mais and parce que.",
+  "prerequisites": [],
+  "lessons": [
+    "FR-W02-ma-propre-ligne",
+    "FR-W03-avec-la-montre",
+    "FR-W04-quatre-lignes"
+  ]
+}
