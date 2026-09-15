@@ -6,8 +6,7 @@
 % (what MOVES the water, not how deep light reaches). Ocean currents are
 % classified by what drives them: tides drive tidal currents, wind drives
 % near-surface currents, and density differences (from temperature and
-% salinity) drive the deep, slow global circulation. Recall is a binding
-% query:
+% salinity) drive thermohaline circulation. Recall is a binding query:
 %
 %     ? ocean_current_driver(wind_driven_currents, $D)   % wind
 %
@@ -28,8 +27,9 @@
 %     tidal_currents             tides                                        "Tides create a current in the oceans, which are strongest near the shore, and
 %                                                                                in bays and estuaries along the coast."
 %     wind_driven_currents       wind                                         "Winds drive currents that are at or near the ocean's surface."
-%     thermohaline_circulation   density_differences_from_temperature_and_    "This is a process driven by density differences in water due to temperature
-%                                 salinity                                     (thermo) and salinity (haline) variations in different parts of the ocean."
+%     thermohaline_circulation   density_differences_from_temperature_and_    "3. Thermohaline circulation. This is a process driven by density differences
+%                                 salinity                                     in water due to temperature (thermo) and salinity (haline) variations in
+%                                                                              different parts of the ocean."
 %
 % Provenance: quoted from NOAA National Ocean Service's "What is a
 % current?" page, which numbers exactly these three driving mechanisms as
@@ -45,7 +45,7 @@
 % that is NOT one of these three driver categories — `gulf_stream`, a real,
 % specific named current the same page mentions ("The warm Gulf Stream, for
 % instance, brings milder winter weather to Bergen, Norway, than to New
-% York") but not a row here, since it names a PARTICULAR current, not a
+% York ...") but not a row here, since it names a PARTICULAR current, not a
 % DRIVER category — is deliberately NOT a row, so a recall ABSTAINS on it
 % rather than inventing a driver. (See ../README.md;
 % feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
@@ -65,8 +65,9 @@
 % Measured 2026-09-15 on the raw page (HTTP 200), with inline tags removed
 % without a space and only ASCII whitespace collapsed: the three row spans
 % and the envelope each occur exactly once, each inside a `<p>`. A nonsense
-% path on the same host also returns 200 (a different page), so the control
-% is its content: it holds none of them. Every row's page is the envelope's,
+% path on the same host also returns 200 (a soft-404 page titled "Page Not
+% Found: Error 404"), so the control is its content: it holds none of them.
+% Every row's page is the envelope's,
 % so no row restates a `locator` line or `trust` (ADJ-TABLES §4).
 % ============================================================================
 

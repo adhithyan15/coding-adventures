@@ -8,8 +8,8 @@
 
   Measured 2026-09-15 on NOAA National Ocean Service's "What is a current?" page (HTTP 200), with inline
   tags removed without a space and only ASCII whitespace collapsed. A nonsense path on the same host
-  also returns 200, with a different page, so the control is its content: it holds none of the spans
-  below.
+  also returns 200, with a soft-404 page titled "Page Not Found: Error 404", so the control is its
+  content: it holds none of the spans below.
   - **Tidal and wind** each take the sentence the header already quoted for them. The wind sentence
     keeps the page's U+0027 in "ocean's".
   - **Thermohaline** takes the page's numbered label with its sentence: *"3. Thermohaline circulation.
@@ -26,7 +26,12 @@
     §4).
 
   The provenance note's "quoted verbatim", "carries the first row's quote" and "WebFetch-verified" wording
-  is replaced by the measurement.
+  is replaced by the measurement. Three other header lines are corrected:
+  - **The truth table's thermohaline quote** now includes the "3. Thermohaline circulation." label, so
+    the "quote (verbatim)" column matches the row.
+  - **"Drive the deep, slow global circulation"** becomes "drive thermohaline circulation". The page says
+    those currents occur "at both deep and shallow ocean levels".
+  - **The Gulf Stream quote** gains an ellipsis. The page's sentence goes on with ", much further south."
 
   ### Pins
 
