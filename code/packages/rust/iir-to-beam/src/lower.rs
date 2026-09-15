@@ -88,6 +88,7 @@ use std::collections::HashMap;
 use interpreter_ir::{IIRModule, Operand};
 use ir_to_beam::encoder::{
     BEAMExport, BEAMImport, BEAMInstruction, BEAMModule, BEAMOperand,
+    etf_new_float, literal_operand,
 };
 
 use crate::validate::validate_for_beam;
@@ -403,6 +404,50 @@ impl ImportTable {
 }
 
 // ===========================================================================
+// LiteralPool — BEAM03, deduplicating, 0-based indices
+// ===========================================================================
+//
+// BEAM has no immediate encoding for a float (unlike a small integer, which
+// the `I`/`U` compact-term tags carry directly): every float constant must
+// live in the module's literal table (`LitT` chunk) and be referenced via
+// `ir_to_beam::literal_operand`'s two-part `{tag_z,4}`+`{tag_u,index}`
+// operand. This pool mirrors `AtomTable`/`ImportTable`'s dedup-by-key
+// pattern so an `f64` constant used many times (e.g. `0.0`/`1.0`/`10.0` in
+// the BASIC print-formatting helpers) gets exactly one literal-table entry,
+// keyed by its exact bit pattern (`f64::to_bits`) — safe because we never
+// need to treat two different bit patterns as "the same value" (e.g. `0.0`
+// and `-0.0` stay distinct entries, which is correct: they're different
+// literal-table terms even though Erlang's `==` would treat them as equal).
+struct LiteralPool {
+    literals: Vec<Vec<u8>>,
+    index: HashMap<u64, u32>,
+}
+
+impl LiteralPool {
+    fn new() -> Self {
+        Self { literals: Vec::new(), index: HashMap::new() }
+    }
+
+    /// Intern an `f64` literal, returning its 0-based literal-table index.
+    fn intern_f64(&mut self, value: f64) -> u32 {
+        let bits = value.to_bits();
+        if let Some(&idx) = self.index.get(&bits) {
+            return idx;
+        }
+        let idx = u32::try_from(self.literals.len())
+            .expect("BEAM literal table index overflows u32 (>4 billion literals)");
+        self.literals.push(etf_new_float(value));
+        self.index.insert(bits, idx);
+        idx
+    }
+
+    /// Return all literals in insertion order (used to build `BEAMModule.literals`).
+    fn all(&self) -> &[Vec<u8>] {
+        &self.literals
+    }
+}
+
+// ===========================================================================
 // lower_iir_to_beam
 // ===========================================================================
 
@@ -457,6 +502,12 @@ pub fn lower_iir_to_beam(
     let atom_times  = atoms.intern("*");
     let atom_div    = atoms.intern("div");
     let atom_rem    = atoms.intern("rem");
+    // BEAM03: `erlang:div/2` (above) requires BOTH operands to be integers
+    // and raises `badarith` if either is a float — discovered by a real-erl
+    // probe (`erlang:div(10.0, 4.0)` traps). `f64`-typed division needs the
+    // SEPARATE `erlang:'/'/2` operator instead, unlike add/sub/mul (whose
+    // `erlang:'+'`/`'-'`/`'*'` BIFs are already polymorphic over int/float).
+    let atom_fdiv   = atoms.intern("/");
     let atom_band   = atoms.intern("band");
     let atom_bor    = atoms.intern("bor");
     let atom_bxor   = atoms.intern("bxor");
@@ -484,7 +535,8 @@ pub fn lower_iir_to_beam(
     let import_add  = imports.intern(erlang_atom, atom_plus,  2); // erlang:+/2
     let import_sub  = imports.intern(erlang_atom, atom_minus, 2); // erlang:-/2
     let import_mul  = imports.intern(erlang_atom, atom_times, 2); // erlang:*/2
-    let import_div  = imports.intern(erlang_atom, atom_div,   2); // erlang:div/2
+    let import_div  = imports.intern(erlang_atom, atom_div,   2); // erlang:div/2 (integer only)
+    let import_fdiv = imports.intern(erlang_atom, atom_fdiv,  2); // erlang:'/'/2 (f64 division)
     let import_rem  = imports.intern(erlang_atom, atom_rem,   2); // erlang:rem/2
     let import_neg  = imports.intern(erlang_atom, atom_minus, 1); // erlang:-/1
     let import_and  = imports.intern(erlang_atom, atom_band,  2); // erlang:band/2
@@ -514,6 +566,20 @@ pub fn lower_iir_to_beam(
     let import_put     = imports.intern(erlang_atom, atom_put,     2); // erlang:put/2
     let import_get     = imports.intern(erlang_atom, atom_get,     1); // erlang:get/1
     let import_put_chars = imports.intern(io_atom, atom_put_chars, 1); // io:put_chars/1
+
+    // ── BEAM03: f64 numeric-conversion atoms and imports ──────────────────
+    //
+    // `int_to_real`/`real_to_int_trunc` are ordinary (gc_bif-eligible) BIFs
+    // — confirmed by disassembling real compiled Erlang using `float/1` and
+    // `trunc/1` on runtime (non-constant-folded) values, which showed the
+    // same single-argument gc_bif shape already used below for `neg`/`not`.
+    let atom_float = atoms.intern("float");
+    let atom_trunc = atoms.intern("trunc");
+    let import_float = imports.intern(erlang_atom, atom_float, 1); // erlang:float/1
+    let import_trunc = imports.intern(erlang_atom, atom_trunc, 1); // erlang:trunc/1
+
+    // ── BEAM03: module literal table (float constants) ────────────────────
+    let mut literal_pool = LiteralPool::new();
 
     // ── Mutable memory: the `:atomics` module ─────────────────────────────
     //
@@ -1232,6 +1298,19 @@ pub fn lower_iir_to_beam(
                         continue;
                     }
 
+                    // BEAM03: f64 float constant — no immediate encoding
+                    // exists, so intern into the module literal table and
+                    // move a {tag_z,4}+{tag_u,index} literal reference.
+                    // (validate_for_beam already rejects any type_hint other
+                    // than "f64" on a Float const, so no check needed here.)
+                    if let Some(Operand::Float(v)) = instr.srcs.first() {
+                        let idx = literal_pool.intern_f64(*v);
+                        let mut operands = literal_operand(idx).to_vec();
+                        operands.push(BEAMOperand::x(rd));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, operands));
+                        continue;
+                    }
+
                     let value: u64 = match instr.srcs.first() {
                         Some(Operand::Int(n)) => *n as u64,
                         Some(Operand::Bool(b)) => if *b { 1 } else { 0 },
@@ -1860,10 +1939,22 @@ pub fn lower_iir_to_beam(
                 // {x,r1},{x,r2} = source registers.
                 // {x,rd}        = destination register.
                 "add" | "sub" | "mul" | "div" | "mod" => {
+                    // VM-D034 (BEAM03): `div` needs a DIFFERENT BIF for f64
+                    // than for i64 — `erlang:div/2` requires integer
+                    // operands and traps (`badarith`) on a float (found by
+                    // a real-erl probe: `erlang:div(10.0, 4.0)` trapped),
+                    // unlike `+`/`-`/`*` (`erlang:'+'`/`'-'`/`'*'`), which
+                    // are already polymorphic over int/float. `mod` has no
+                    // f64 case in any current frontend and is left
+                    // unchanged (a future frontend emitting f64 `mod` would
+                    // hit the same integer-only-BIF trap `div` did here —
+                    // see BEAM03-float-lowering.md §6 for the parallel,
+                    // still out-of-scope, f64-`div`-by-zero gap).
                     let import_idx = match instr.op.as_str() {
                         "add" => import_add,
                         "sub" => import_sub,
                         "mul" => import_mul,
+                        "div" if instr.type_hint == "f64" => import_fdiv,
                         "div" => import_div,
                         "mod" => import_rem,
                         _ => unreachable!(),
@@ -1897,6 +1988,38 @@ pub fn lower_iir_to_beam(
                             BEAMOperand::x(rd), BEAMOperand::i(mask), BEAMOperand::x(rd),
                         ]));
                     }
+                }
+
+                // ── BEAM03: numeric conversion — int_to_real, real_to_int_trunc
+                //
+                // Same single-argument gc_bif1 shape as neg/not just below:
+                // `int_to_real` widens an i64 to f64 via `erlang:float/1`;
+                // `real_to_int_trunc` truncates a real toward zero via
+                // `erlang:trunc/1` (matches the `vm-core` oracle's "round
+                // toward zero" contract — Rust/C `trunc` semantics). No
+                // width masking: that block only ever fires for the Nib/Oct
+                // u4/u8 integer result types, which these ops never produce.
+                "int_to_real" | "real_to_int_trunc" => {
+                    let import_idx = match instr.op.as_str() {
+                        "int_to_real" => import_float,
+                        "real_to_int_trunc" => import_trunc,
+                        _ => unreachable!(),
+                    };
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!("{} must have a dest", instr.op),
+                        }),
+                    };
+                    let r = operand_reg!(get_src!(instr, 0));
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
+                        BEAMOperand::f(0),
+                        BEAMOperand::u(live),
+                        BEAMOperand::u(import_idx as u64), // U-type (OTP 25+)
+                        BEAMOperand::x(r),
+                        BEAMOperand::x(rd),
+                    ]));
                 }
 
                 // ── Unary arithmetic: neg, not ──────────────────────────────
@@ -3328,6 +3451,7 @@ pub fn lower_iir_to_beam(
         max_opcode: 177,
         instruction_set_version: 0,
         extra_chunks: vec![],
+        literals: literal_pool.all().to_vec(),
     })
 }
 

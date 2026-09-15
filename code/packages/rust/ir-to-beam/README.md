@@ -53,23 +53,44 @@ Each `.beam` binary is an IFF container with these chunks in order:
 
 ```
 FOR1 <size> BEAM
-  AtU8  — atom table (OTP 25+ format: negative i32 count, nibble-shifted lengths)
+  AtU8  — atom table (classic positive-count format; see encoder.rs doc comment)
   Code  — instruction stream with compact-term encoded operands
   StrT  — string table (empty in v1)
   ImpT  — import table (erlang:+/2, erlang:-/2, erlang:band/2, …)
   ExpT  — export table (run/0 at BEAM label 2)
   LocT  — local function table (empty in v1)
+  LitT  — literal table (BEAM03; only present when `module.literals` is non-empty
+          — e.g. any f64 `const` — zlib-compressed for OTP ≤27 compatibility)
   Attr  — module attributes (ETF nil list, required by OTP 25+)
   CInf  — compiler info   (ETF nil list, required by OTP 25+)
   Meta  — [{enabled_features,[]}] (required by OTP 25+)
 ```
 
-### AtU8 format (OTP 25+)
+### AtU8 format
 
-OTP 25 changed the atom-table encoding.  The old format used a positive `u32`
-count; the new format uses a **negative `i32`** count to signal the version,
-and each atom's length byte is left-shifted by 4 (`len << 4` for len 0–15,
-or `[0x08, len]` for len 16–255).  This encoder produces the new format only.
+This encoder emits the **classic** atom-table format: a plain positive `u32`
+count, then for each atom a single raw length byte followed by its UTF-8
+bytes. An earlier version emitted a nibble-packed negative-count form on the
+belief OTP 28's loader required it; that was wrong — OTP 28 accepts both, but
+**OTP 27 (this repo's pinned CI runtime) rejects the nibble-packed form**
+with `corrupt atom table`. The classic form loads on every supported OTP
+(20 through 28+) and is a strict superset of what this encoder needs (atoms
+are capped at 255 bytes by `validate_for_beam`), so it is now emitted
+unconditionally. See `encode_atu8`'s doc comment for the empirical
+OTP-27-vs-28 table that motivated this.
+
+### LitT format (BEAM03)
+
+Every float `const` needs a boxed term, so it goes through the module's
+literal table rather than an immediate compact-term operand. Like `AtU8`,
+this chunk targets the **older, universally-loadable** on-disk format: OTP
+28+ can store `LitT` uncompressed, but OTP ≤27 (this repo's pinned CI
+runtime) only accepts the zlib-**compressed** form. Rather than add an
+external compression dependency, `zlib_store_compress` hand-rolls a valid
+RFC 1950/1951 stream using only uncompressed ("stored") DEFLATE blocks — a
+small, unambiguous special case any compliant zlib decoder (including the C
+zlib real `erl` links against) must accept. See `build_litt_chunk`'s doc
+comment for the full format and how it was verified against real `erl`.
 
 ### Mandatory OTP 25+ chunks
 

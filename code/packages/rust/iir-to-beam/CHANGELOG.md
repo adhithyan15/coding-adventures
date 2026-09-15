@@ -1,5 +1,62 @@
 # Changelog — iir-to-beam
 
+## 0.10.0 - 2026-09-15 - f64 lowering (BEAM03): const, arithmetic, comparison, conversion
+
+`iir-to-beam` previously had **zero** `f64`/`Float` support at all — every
+`const` with an `Operand::Float` source was unconditionally rejected by
+`validate_for_beam`. This blocked Dartmouth BASIC's entire numeric corpus on
+BEAM (BA7-1b routes every scalar numeric value, even an integer-spelled
+literal like `PRINT 42`, through the shared `f64` track). Full design and
+real-`erl` verification method: `code/specs/BEAM03-float-lowering.md`.
+
+**New/changed ops:**
+
+- `const` with `Operand::Float` and `type_hint == "f64"` is now accepted
+  (previously rejected unconditionally) — lowers to a `move` referencing a
+  new module-level `LiteralPool` (dedups by exact bit pattern, mirroring the
+  existing `AtomTable`/`ImportTable` pattern) via `ir-to-beam` 0.4.0's new
+  `literal_operand`/`LitT`-chunk infrastructure. Any type_hint other than
+  `"f64"` on a float const is still rejected.
+- `int_to_real` / `real_to_int_trunc` (new ops, no prior lowering at all):
+  single-argument `gc_bif1` calls to `erlang:float/1` / `erlang:trunc/1`
+  respectively — the same shape already used for `neg`/`not`.
+- `add`/`sub`/`mul`/`cmp_eq`/`cmp_ne`/`cmp_lt`/`cmp_le`/`cmp_gt`/`cmp_ge`
+  needed **no code changes at all**: they already lower generically over
+  `Operand::Var` registers regardless of the term type the register holds
+  (confirmed by disassembling real compiled Erlang: `is_lt`/`is_eq` are the
+  same generic term-comparison opcodes for floats as for integers). Once
+  `const` can put a valid boxed float into a register, these "just work".
+
+**VM-D034 (discovered while writing the real-`erl` div test):** `div`
+**does** need a code change — `erlang:div/2` (the existing i64 lowering's
+BIF) requires both operands to be integers and traps (`badarith`) on a
+float; confirmed with `erlang:div(10.0, 4.0)`. Unlike `+`/`-`/`*`
+(`erlang:'+'`/`'-'`/`'*'`, already polymorphic over int/float), Erlang
+division has two distinct operators with no shared polymorphic form. Fixed
+by dispatching `"div"` to a new `erlang:'/'/2` import specifically when
+`type_hint == "f64"`, leaving the i64 `erlang:div/2` path unchanged. `mod`
+has no f64 case in the current corpus and was deliberately left unfixed
+(documented in the match arm) — a future f64 `mod` would hit the same trap.
+
+**Known, documented, out-of-scope gap:** general float division by zero.
+Real Erlang floats cannot represent IEEE-754 Inf/NaN at all — `X/0.0` raises
+`badarith`, and the ETF decoder itself refuses a non-finite float bit
+pattern (`binary_to_term` → `badarg`). This diverges from the `vm-core`
+oracle's documented IEEE-754 contract (matched by LLVM/WASM/JVM/CLR `fdiv`).
+Not reachable by the two rows promoted with this release (every divisor is
+a compile-time nonzero constant), but a real gap for a future frontend
+program that divides by a runtime zero. See `BEAM03-float-lowering.md` §6
+for the two possible directions — deliberately left as an open design
+question, not guessed at.
+
+**Tests:** new unit tests (literal-pool dedup, `int_to_real`/
+`real_to_int_trunc` `gc_bif1` shape) plus three new real-`erl` integration
+tests in `tests/test_backend.rs` (float arithmetic incl. division by a
+nonzero constant, float comparisons, `int_to_real`/`real_to_int_trunc`
+round-trip) — all executed against real Erlang, not just validated for
+shape. `lang-aot` promotes the two Dartmouth BASIC numeric-baseline
+`lang_matrix` rows to `Beam` in the same PR (see its own changelog).
+
 ## 0.9.3 - 2026-09-12 - add `str_len`/`str_index` (VM-040 COBOL BEAM STRING SIZE/delimiter)
 
 Added two new string ops needed by the next COBOL BEAM promotion batch:
