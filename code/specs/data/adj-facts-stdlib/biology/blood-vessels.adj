@@ -5,9 +5,10 @@
 % ============================================================================
 % One of the very first facts of the circulatory system, and a rung a MEDICINE
 % agent reasons UP from: blood travels in a closed loop of vessels, and there
-% are just THREE main kinds. "Arteries carry blood AWAY from the heart; veins
-% carry blood TOWARD the heart; capillaries are the tiny connecting vessels
-% where the actual EXCHANGE of materials between blood and tissue happens."
+% are just THREE main kinds. In paraphrase (not the page's words): arteries
+% carry blood AWAY from the heart; veins carry blood TOWARD the heart;
+% capillaries are the tiny connecting vessels where the actual EXCHANGE of
+% materials between blood and tissue happens.
 % Before you can reason about circulation, blood pressure, or a blockage you
 % must first know WHICH kind of vessel you are looking at and which direction it
 % moves blood. Recall is a binding query:
@@ -74,9 +75,11 @@
 %      the heart (arteries) and the vessels that return blood to the heart
 %      (veins)".)
 %
-% (The three-vessel framing itself is stated on the same primary U.S.
-% government teaching resource — "a closed system of vessels called arteries,
-% veins, and capillaries" — another span of the same page's parent module.)
+% (The original header said the three-vessel framing is stated on the same
+% U.S. government teaching resource — "a closed system of vessels called
+% arteries, veins, and capillaries" — in the page's parent module.
+% UNVERIFIED: that quote does not occur on the cited page, and the parent
+% module was not fetched; see the measurement paragraph below.)
 %
 % EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). This paragraph
 % used to say an ADJ `table` carries ONE provenance envelope; per-row blocks
