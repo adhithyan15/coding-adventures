@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 61,
+  "title": "Writing --- With A Clock",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:0d160aac16ce00fe",
+  "lessons": [
+    {
+      "id": "LA-W03-cum-horologio",
+      "sequence": 1720,
+      "title": "The same writing, with a clock",
+      "headword": "(cum horologio)",
+      "romanization": "(cum horologio)",
+      "gloss": "the A1 writing paper's clock, its three parts, and the rule that reading alone cannot satisfy",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:3e06b3bcd2dea5ce",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You wrote your own line with as long as you liked."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A task you can only do untimed is not yet a task you can do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — timed production",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What this track's contract publishes. The Latin A1 writing paper runs 30 minutes and holds three parts, which is one more than most:"
+            },
+            {
+              "kind": "speech",
+              "text": "dictation and orthography — 5 items, 8 to 15 words;"
+            },
+            {
+              "kind": "speech",
+              "text": "controlled sentences — 4 items, 20 to 35 words;"
+            },
+            {
+              "kind": "speech",
+              "text": "a short personal note — 3 items, 35 to 50 words."
+            },
+            {
+              "kind": "speech",
+              "text": "Those numbers come out of task-shapes/a1.json, not from this page."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Split the clock the way the parts are weighted: six minutes, ten minutes, fourteen minutes. Start."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Stop when the time is up, even mid-word. An unfinished paper is information; an untimed one is not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the rule this track states more sharply than any other, and the reason it does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin is the language most people meet only as reading. Centuries of teaching it that way have made \"I know Latin\" mean \"I can construe a page\", and a four-skill contract has to refuse that or it is not measuring the same thing at all."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So: each of the four papers is worth 25 points and each must independently reach 15. The aggregate must also reach 60 out of 100. Reading strength cannot hide absent writing. That is a project standard rather than an external certificate — Latin has no awarding body issuing one — and it is stated openly as this project's own choice."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count your words against the three ranges. Being under the floor on any one of them is the same as not having attempted it."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

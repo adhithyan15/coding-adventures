@@ -1,0 +1,35 @@
+Latin, chapter 61: Writing --- With A Clock.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 1.
+The same writing, with a clock — the A1 writing paper's clock, its three parts, and the rule that reading alone cannot satisfy.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+You wrote your own line with as long as you liked.
+[pause 1 second]
+A task you can only do untimed is not yet a task you can do.
+
+Writing — timed production.
+What this track's contract publishes. The Latin A1 writing paper runs 30 minutes and holds three parts, which is one more than most:
+dictation and orthography — 5 items, 8 to 15 words;
+controlled sentences — 4 items, 20 to 35 words;
+a short personal note — 3 items, 35 to 50 words.
+Those numbers come out of task-shapes/a1.json, not from this page.
+[pause 2 seconds]
+Split the clock the way the parts are weighted: six minutes, ten minutes, fourteen minutes. Start.
+[pause 3 seconds]
+Stop when the time is up, even mid-word. An unfinished paper is information; an untimed one is not.
+
+Wrap-up recall.
+[pause 2 seconds]
+Now the rule this track states more sharply than any other, and the reason it does.
+[pause 2 seconds]
+Latin is the language most people meet only as reading. Centuries of teaching it that way have made "I know Latin" mean "I can construe a page", and a four-skill contract has to refuse that or it is not measuring the same thing at all.
+[pause 2 seconds]
+So: each of the four papers is worth 25 points and each must independently reach 15. The aggregate must also reach 60 out of 100. Reading strength cannot hide absent writing. That is a project standard rather than an external certificate — Latin has no awarding body issuing one — and it is stated openly as this project's own choice.
+[pause 2 seconds]
+Count your words against the three ranges. Being under the floor on any one of them is the same as not having attempted it.
