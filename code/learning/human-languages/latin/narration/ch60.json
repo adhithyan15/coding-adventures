@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 60,
+  "title": "Writing --- My Own Line",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:65fda2d13f5fe571",
+  "lessons": [
+    {
+      "id": "LA-W02-versus-meus",
+      "sequence": 1710,
+      "title": "Your own line — the first writing with no model",
+      "headword": "(versus meus)",
+      "romanization": "(versus meus)",
+      "gloss": "your own line, chosen from a closed supply, with nothing to copy",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:2ce797de6928e2ef",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything you have written so far had something to reach for."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This does not. You choose the words, from a supply that is closed: only what this book has taught you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — controlled composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write one line in Latin about yourself."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And here is what makes this step harder in Latin than it is in most languages. Choosing the words is not enough. You must also choose which ending each word wears."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In English or French the shape of a word is given and its job comes from where you put it. In Latin the job comes from the ending, so a word you have only ever met in one form is a word you cannot yet place — you know it, and you still have to decide what it is doing."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the line. Use only forms the book has actually shown you, not forms you have guessed at from a pattern."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In Latin, what tells a reader what a word is doing in the sentence? (Its ending.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So what did you have to choose here that a French writer does not? (The form of each word, not only which word.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
