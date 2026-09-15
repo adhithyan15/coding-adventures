@@ -8,6 +8,44 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed -- the CSS `border` shorthand reached nothing, so VisiCalc had no borders
+
+Every reader in this emitter asks for `border-width` / `border-color`. Nothing
+asked for the plain `border` property, and VisiCalc is the one product that
+authors the shorthand -- so **VisiCalc rendered with no borders at all on Qt**:
+no cell borders, no grid rules, no outline on the formula field.
+
+| product | `border.width` emitted, before -> after |
+| --- | --- |
+| **VisiCalc** | **0 -> 15** |
+| Trestle | 88 -> 88 |
+| Engram | 244 -> 244 |
+| Venture | 12 -> 12 |
+
+The other three are untouched: this only reaches parts that author the
+shorthand. Qt's reported style drops fall from 649 to 632.
+
+The shorthand is expanded where a part's props are assembled, so every
+existing reader picks it up and there is no second place to keep in step.
+Three details worth knowing:
+
+- **An explicit longhand wins.** `border: 1px solid red; border-color: blue`
+  keeps blue -- a declaration that names the edge it means is more specific.
+- **A zero width expands to nothing.** `border: 0px` means NO border, and
+  synthesising `border-width: 0` would invite exactly the defect fixed in
+  mosaic-emit-compose, where a zero width asked Compose for a hairline.
+- **A `solid` style is not synthesised.** Qt draws solid and nothing else, so
+  emitting `border-style: solid` would add a property no reader wants -- and
+  the drop reporter dutifully recorded 15 of them as lost the first time this
+  was written that way. A dashed or dotted style IS genuinely lost on Qt and
+  is still synthesised, so the report can say so.
+
+The shorthand itself is removed once expanded. Left in place it would be
+reported as a dropped property forever, because nothing reads it by that name
+-- a permanent false positive about a border that now renders. An
+**unparseable** value expands to nothing and is deliberately kept, so a real
+loss stays visible.
+
 ### Added -- Qt reports the style properties its lowering drops (#12022)
 
 Qt reported nothing, so an empty `styleDegradations` meant "nobody looked"
