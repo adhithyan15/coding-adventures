@@ -47,31 +47,57 @@
 %
 %     ? band_emitter($Band, sun)   % ultraviolet
 %
-% Provenance: reproduces, byte-for-byte, three of the seven NASA Goddard
-% Space Flight Center "Imagine the Universe!" spans already quoted inside
-% `em-spectrum.adj`'s own header — no new WebFetch, only a different
-% schema decoding the emitter half of each already-verified quote. An ADJ
-% `table` carries ONE provenance envelope (per `em-spectrum.adj`'s own
-% convention), so `source`/`locator`/`trust` below hold the ultraviolet
-% span; the other two rows' own spans are listed above for independent
-% auditability. `trust authoritative` — the same tier `em-spectrum.adj`
+% Provenance: the NASA Goddard Space Flight Center "Imagine the Universe!"
+% page `em-spectrum.adj` cites. This paragraph used to say its spans were
+% reproduced "byte-for-byte" from that table's header with "no new
+% WebFetch", and that an ADJ `table` carries ONE provenance envelope; that
+% header quotes "Our eyes detect visible light." and only notes that the
+% page continues with the fireflies sentence, and row blocks now let each
+% row carry its own span (see below). `trust authoritative` — the same
+% tier `em-spectrum.adj`
 % already carries (NASA Goddard Space Flight Center, a primary U.S.
 % government teaching resource).
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the ultraviolet sentence, the primary source of all three
+% answers, with the infrared and visible spans as table-level `cites`. Now
+% the ultraviolet and infrared rows each take the sentence quoted for them
+% above. The visible row takes only "Fireflies, light bulbs, and stars all
+% emit visible light.", which names the band and its emitter; "Our eyes
+% detect visible light." names a detector, not an emitter. The envelope is
+% now a framing sentence from the page, which names no band and no emitter:
+%
+%     "The electromagnetic (EM) spectrum is the range of all types of EM
+%      radiation."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the three row sentences and the envelope each occur
+% exactly once, each inside a `<p>`. Every row's page is the envelope's, so
+% no row restates a `locator` line or `trust` (ADJ-TABLES §4).
 % ============================================================================
 
 table band_emitter {
     columns band, emitter
 
-    row (ultraviolet, sun)                    % NASA: "Ultraviolet radiation is emitted by the Sun and are the reason skin tans and burns."
-    row (infrared, skin_and_heat_objects)      % NASA: "Night vision goggles pick up the infrared light emitted by our skin and objects with heat."
-    row (visible, fireflies)                   % NASA: "Our eyes detect visible light. Fireflies, light bulbs, and stars all emit visible light."
+    row (ultraviolet, sun) {
+        source "Ultraviolet radiation is emitted by the Sun and are the reason skin tans and burns."
+    }
+    row (infrared, skin_and_heat_objects) {
+        source "Night vision goggles pick up the infrared light emitted by our skin and objects with heat."
+    }
+    row (visible, fireflies) {
+        source "Fireflies, light bulbs, and stars all emit visible light."
+    }
 
-    source "Ultraviolet radiation is emitted by the Sun and are the reason skin tans and burns."
+    % THE ENVELOPE WAS THE ULTRAVIOLET ROW'S OWN SENTENCE, the primary source
+    % of all three answers, and the infrared and visible emitters were read
+    % across two table-level `cites`. Each row now carries its own sentence,
+    % and the envelope is a framing sentence that names no band and no
+    % emitter. Every row overrides it, so it reaches no answer.
+    source "The electromagnetic (EM) spectrum is the range of all types of EM radiation."
     locator "https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html"
     trust authoritative
-
-    cites "Night vision goggles pick up the infrared light emitted by our skin and objects with heat." locator "https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html"
-    cites "Our eyes detect visible light. Fireflies, light bulbs, and stars all emit visible light." locator "https://imagine.gsfc.nasa.gov/science/toolbox/emspectrum1.html"
 }
