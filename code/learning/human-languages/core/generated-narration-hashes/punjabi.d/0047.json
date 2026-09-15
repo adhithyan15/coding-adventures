@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:45afb086afbb119d",
+  "lessonIds": [
+    "PA-W11-jodi-hoiyan-lineaan"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch47.txt",
+  "json": "punjabi/narration/ch47.json",
+  "textHash": "fnv1a64:6d01db9051b56c5b",
+  "jsonHash": "fnv1a64:f5dd86cdf6e00ac0",
+  "findings": []
+}

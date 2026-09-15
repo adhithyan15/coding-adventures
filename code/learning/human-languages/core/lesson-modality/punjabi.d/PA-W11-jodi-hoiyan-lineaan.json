@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W11-jodi-hoiyan-lineaan",
+    "language": "punjabi",
+    "chapter": 47,
+    "sequence": 2620,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bae8ffa6dc6b6fc0",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

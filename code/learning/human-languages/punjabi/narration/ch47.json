@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 47,
+  "title": "Writing --- Four Lines That Hold Together",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:45afb086afbb119d",
+  "lessons": [
+    {
+      "id": "PA-W11-jodi-hoiyan-lineaan",
+      "sequence": 2620,
+      "title": "Four lines to one person — where the second needs the first",
+      "headword": "ਅਤੇ",
+      "romanization": "ate",
+      "gloss": "four lines to one named reader, where the second needs the first",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:bae8ffa6dc6b6fc0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson asked for writing that was finished on time. This one asks for writing that holds together, which is a different thing."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one person who will read this. A real one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Connected writing is not longer writing. Four short lines can be connected, and one long line can fail to be."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What makes writing connected is that a sentence stops standing on its own — line two is about line one, and a reader who skipped line one would not follow it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already hold the two words that do this, and they do opposite jobs. ਅਤੇ (ate) adds one thing to another. ਪਰ sets one thing against another."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is the difference between a list and a paragraph. A list can be read in any order. A paragraph cannot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write four lines to the person you picked. Greet them, tell them two things, and close."
+            },
+            {
+              "kind": "speech",
+              "text": "At least one line must use ਅਤੇ (ate), and at least one must use ਪਰ."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use only words you already write. This lesson adds no vocabulary — the whole exercise is the joining, not the reaching."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover your first line and read the second on its own. Does it still make sense without the first?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "If it does, you wrote a list. That is not a failure — it is the stage you were at one lesson ago — but go back and make one line depend on another before you stop."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And read it as the person you named would. Writing for a reader you can picture is what makes this a task rather than an exercise, and it is what every level above this one keeps asking for."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
