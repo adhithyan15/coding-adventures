@@ -15,8 +15,9 @@
     similar ways."* It names no behavior and no effect.
   - **Counts:**
     - Each of the five row sentences occurs **exactly once** in the whole file, inside a `<p>`.
-    - The envelope occurs once in the page body, inside a `<p>`. The page's `<head>` metadata repeats
-      it once as the page description.
+    - The envelope occurs once in the page body, inside a `<p>`. The page's `<head>` repeats it in three
+      meta description attributes and a JSON-LD script. With tags removed, that is one more rendered
+      copy, the JSON-LD one.
   - Every row's page is the envelope's, so no row restates a locator line or trust (`ADJ-TABLES.md`
     §4).
 
@@ -31,6 +32,10 @@
     sentence it quotes ("When a light wave encounters an object, they are either transmitted,
     reflected, ...") occurs once, but it is the second sentence of its paragraph, after the new
     envelope. The header now says so.
+  - **`polarization`.** The header gave it as an example of a word that is not a light behavior. The
+    page's own list names it ("... refracted, polarized, diffracted, or scattered"), which is the only
+    place "polariz" occurs. Like `transmission`, the page gives it no defining sentence. It is now
+    dropped for that reason, and the non-behavior examples are `gravity` and `magnetism`.
 
   ### Pins
 

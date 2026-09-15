@@ -37,8 +37,8 @@
 %
 %     ? light_behavior($Behavior, bounces_off)   % reflection
 %
-% A word that is NOT one of these light behaviors — `gravity`, `magnetism`,
-% `polarization` — is deliberately NOT a row, so a behavior recall ABSTAINS on
+% A word that is NOT one of these light behaviors — `gravity`, `magnetism` —
+% is deliberately NOT a row, so a behavior recall ABSTAINS on
 % it rather than inventing an effect. That honest-abstention property is what
 % makes the table safe to build a reasoner on: it answers exactly the
 % behavior→effect pairs it can ground, and only those.
@@ -89,9 +89,10 @@
 % the same paragraph; this used to say "the same page's opening sentence":
 % "When a light wave encounters an object, they are either transmitted,
 % reflected, absorbed, refracted, polarized, diffracted, or scattered..."
-% `transmission` is listed there, but the page gives it NO defining
-% sentence of what it does to the light, so it is deliberately DROPPED —
-% never grounded from memory.)
+% `transmission` and `polarization` are listed there, but the page gives
+% neither a defining sentence of what it does to the light, so both are
+% deliberately DROPPED — never grounded from memory. (`polarization` used to
+% be named above as a word that is not a light behavior.))
 %
 % EACH ROW CARRIES ITS OWN SPAN (ADJ-TABLES RS-5e, #14986). This paragraph
 % used to say an ADJ `table` carries ONE provenance envelope, so the
@@ -104,8 +105,10 @@
 %
 % Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
 % host returns 404), with inline tags removed without a space and only ASCII
-% whitespace collapsed: the five row sentences and the envelope each occur
-% exactly once, each inside a `<p>`. Every row's page is the envelope's, so
+% whitespace collapsed: the five row sentences each occur exactly once, each
+% inside a `<p>`, and the envelope occurs once in the page body, inside a
+% `<p>` (the page's `<head>` repeats it in three meta description attributes
+% and a JSON-LD script). Every row's page is the envelope's, so
 % no row restates a `locator` line or `trust` (ADJ-TABLES §4).
 % All sources are NASA Science, a primary U.S. government (NASA) teaching
 % resource, so `trust authoritative`.
