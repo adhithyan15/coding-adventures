@@ -26,16 +26,17 @@
 %     -------------------------  ------------------------------------------------------------  --------------------------------------------------------------------------------
 %     preposition_of_place       shows_where_something_is_or_where_something_happened            "Prepositions of place show where something is or where something happened."
 %     preposition_of_time        shows_when_something_happened_or_will_happen                     "Prepositions of time show when something happened or will happen (and sometimes its duration)."
-%     preposition_of_direction   shows_how_something_is_moving_or_which_way_its_going              "Prepositions of direction or movement show how something is moving or which way it's going."
+%     preposition_of_direction   shows_how_something_is_moving_or_which_way_its_going              "Prepositions of direction or movement show how something is moving or which way it’s going."
 %
 % Provenance: quoted verbatim from Grammarly's "Prepositions: Definition,
 % Types, and Examples" article, "Types of prepositions" section, which
 % introduces each of these three categories in its own complete sentence
-% before moving on to worked examples. WebFetch-verified before writing
-% (twice — the second pass specifically re-checked whether the
-% direction/movement sentence was complete on its own or ran on into the
-% following worked example, since a first-pass fetch can misjudge where a
-% source sentence actually ends). `trust consensus` — Grammarly is a
+% before moving on to worked examples. The original authoring note said the
+% quotes were "WebFetch-verified before writing (twice ...)"; that note is
+% superseded by the raw-page measurement below, since WebFetch summaries
+% are not verbatim evidence (the direction quote above had a straight
+% apostrophe where the page writes U+2019). `trust consensus` — Grammarly
+% is a
 % reputable secondary reference, the same tier the sibling
 % `noun-type.adj`/`verb-type.adj`/`pronoun-type.adj` (the other libraries in
 % this directory) already use for their Grammarly citations. A preposition
@@ -46,16 +47,44 @@
 % here — is deliberately NOT a row, so a recall ABSTAINS on it rather than
 % inventing a description. (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the place row's own sentence, the primary source of all three
+% answers. Each quoted sentence above names its type and what it shows, so
+% every row now takes its own as a `source`. The envelope is now the
+% article's framing sentence, which names no type:
+%
+%     "However, the most common prepositions fit into four main categories,
+%      with a fifth category for additional types."
+%
+% (It counts four main categories; the fourth, manner/cause/purpose, is the
+% one deliberately not tabled, as explained above.) Measured 2026-09-15 on
+% the raw page (HTTP 200; a nonsense path on the same host returns 404), with
+% inline tags removed without a space and only ASCII whitespace collapsed:
+% the three quotes above and the envelope each occur exactly once, each
+% inside a `<p>`. The direction quote was written with a straight apostrophe
+% (U+0027) in "it's"; in that form it occurred zero times, and it now
+% carries the page's U+2019. Every row's page is the envelope's, so no row
+% restates a `locator` line or `trust` (ADJ-TABLES §4).
 % ============================================================================
 
 table preposition_type {
     columns type, description
 
-    row (preposition_of_place, shows_where_something_is_or_where_something_happened)
-    row (preposition_of_time, shows_when_something_happened_or_will_happen)
-    row (preposition_of_direction, shows_how_something_is_moving_or_which_way_its_going)
+    row (preposition_of_place, shows_where_something_is_or_where_something_happened) {
+        source "Prepositions of place show where something is or where something happened."
+    }
+    row (preposition_of_time, shows_when_something_happened_or_will_happen) {
+        source "Prepositions of time show when something happened or will happen (and sometimes its duration)."
+    }
+    row (preposition_of_direction, shows_how_something_is_moving_or_which_way_its_going) {
+        source "Prepositions of direction or movement show how something is moving or which way it’s going."
+    }
 
-    source "Prepositions of place show where something is or where something happened."
+    % THE ENVELOPE WAS THE PLACE ROW'S OWN SENTENCE, the primary source of
+    % all three answers. It is now a framing sentence that names no type.
+    % Every row overrides it, so it reaches no answer.
+    source "However, the most common prepositions fit into four main categories, with a fifth category for additional types."
     locator "https://www.grammarly.com/blog/parts-of-speech/prepositions/"
     trust consensus
 }
