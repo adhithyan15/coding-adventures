@@ -4046,51 +4046,44 @@ fn state_color_expr(
     acc
 }
 
-/// Lower a styled `Box [part]` (a spreadsheet cell or header-cell) to a
-/// fully-decorated Flutter `Container`. This is the Bug-B fix.
+/// Everything `emit_styled_box` lowers from a part's OWN style props.
 ///
-/// Produces (cell example):
+/// Split out of `emit_styled_box` without changing a byte of what it
+/// emits. The point is the shape, not the saving: this is a function from
+/// style props to a style, with no `LayoutNode`, no child, and no
+/// `PipelineEmitError` -- so it can be CALLED, by a test or by a reporter,
+/// without emitting a widget tree.
 ///
-/// ```dart
-/// Container(
-///   width: columnWidths[c],
-///   height: 22,
-///   alignment: Alignment.centerRight,
-///   padding: const EdgeInsets.symmetric(horizontal: 2),
-///   decoration: BoxDecoration(
-///     color: (( r == selectedRow && c == selectedCol )) ? const Color(0xFF264F78)
-///          : (( r == editRow && c == editCol )) ? const Color(0xFF1F4F3F)
-///          : null,
-///     border: Border.all(color: const Color(0xFF3F3F46), width: 1),
-///   ),
-///   child: DefaultTextStyle.merge(
-///     style: TextStyle(color: (( r == … )) ? const Color(0xFFFFFFFF) : const Color(0xFFCCCCCC)),
-///     child: <inner>,
-///   ),
-/// )
-/// ```
+/// Flutter had no such seam. `emit_styled_box` takes a layout node, the
+/// component name and the emit declarations and hands back generated Dart
+/// TEXT, so the only way to ask "what did lowering do with `border-radius`?"
+/// was to emit a whole subtree and read the answer back out of a string.
+/// That is why Flutter is one of the two backends still reporting no style
+/// degradations at all (#12022): there was nowhere to put the question.
 ///
-/// A `Container` cannot take BOTH `color:` and `decoration:`, so the
-/// background ALWAYS rides inside `BoxDecoration(color: …)` here. The
-/// per-state text colour is applied with `DefaultTextStyle.merge` so it
-/// reaches the child whether the child is a bare `Text` or an
-/// `If`/`Else` ternary (Text vs editing TextField).
-fn emit_styled_box(
-    node: &LayoutNode,
-    part: &str,
-    indent: usize,
-    part_styles: &HashMap<String, String>,
-    component: &str,
-    emits: &[EmitDecl],
+/// Note what the caller keeps. The child is emitted by `emit_styled_box`
+/// and appended as the last `args` entry, because building it needs the
+/// layout and can fail. `inherited_text_style` is returned rather than
+/// applied for the same reason -- it is threaded into the `TableCtx` the
+/// child is emitted under (#15166), and the child is not this function's
+/// business.
+struct FlutterBoxStyle {
+    /// `Container` arguments, in emission order, WITHOUT `child:`.
+    args: Vec<String>,
+    /// Fields of the `TextStyle(...)` in the `DefaultTextStyle.merge`
+    /// wrapper the caller builds around the child.
+    text_style_parts: Vec<String>,
+    /// The already-joined text style a `HostInput` below this box inherits
+    /// (#15166). A `TextField` does not read `DefaultTextStyle.merge`, so
+    /// this is validated separately and threaded down instead.
+    inherited_text_style: String,
+}
+
+fn flutter_box_style(
+    base: &HashMap<String, String>,
+    layers: &[StateLayer],
     ctx: TableCtx,
-) -> Result<String, PipelineEmitError> {
-    let pad = " ".repeat(indent);
-    let ip = " ".repeat(indent + 2);
-
-    let style_props = part_styles.get(part).map(String::as_str).unwrap_or("");
-    let base = parse_style_props(style_props);
-    let layers = collect_cell_state_layers(node, part, part_styles);
-
+) -> FlutterBoxStyle {
     // --- Sizing / alignment / padding args ---------------------------
     let mut args: Vec<String> = Vec::new();
 
@@ -4126,7 +4119,7 @@ fn emit_styled_box(
             ));
         } else {
             let padding = state_color_expr(
-                &layers,
+                layers,
                 |layer| layer.padding.as_ref(),
                 base_padding.as_deref().unwrap_or("0"),
             );
@@ -4142,7 +4135,7 @@ fn emit_styled_box(
         .or_else(|| base.get("background-color"))
         .and_then(|v| css_color_to_dart(v));
     let bg_expr = state_color_expr(
-        &layers,
+        layers,
         |l| l.background.as_ref(),
         base_bg.as_deref().unwrap_or("null"),
     );
@@ -4151,15 +4144,15 @@ fn emit_styled_box(
     let base_border_width = base.get("border-width").map(|v| parse_pixel_value(v));
     if base_border_width.is_some()
         || layers.iter().any(|layer| layer.border_width.is_some())
-        || per_edge_border_expr(&base).is_some()
+        || per_edge_border_expr(base).is_some()
     {
         let border_color = state_color_expr(
-            &layers,
+            layers,
             |layer| layer.border_color.as_ref(),
             base_border_color.as_deref().unwrap_or("Colors.transparent"),
         );
         let border_width = state_color_expr(
-            &layers,
+            layers,
             |layer| layer.border_width.as_ref(),
             base_border_width.as_deref().unwrap_or("0"),
         );
@@ -4167,7 +4160,7 @@ fn emit_styled_box(
             // UI79 -- a per-edge declaration replaces the all-four form
             // for the whole border, filling unauthored sides from the
             // shorthand it just read.
-            per_edge_border_expr(&base).unwrap_or_else(|| {
+            per_edge_border_expr(base).unwrap_or_else(|| {
                 format!("border: Border.all(color: {border_color}, width: {border_width})")
             }),
         );
@@ -4193,7 +4186,7 @@ fn emit_styled_box(
     // was unreachable; adding one without this gate turns an authored
     // per-edge border plus a radius into a runtime crash. A uniform border
     // is fine, which is the case every product actually authors.
-    let uniform_border = per_edge_border_expr(&base).is_none();
+    let uniform_border = per_edge_border_expr(base).is_none();
     if uniform_border {
         if let Some(radius) = base.get("border-radius").and_then(|v| strict_pixel_length(v)) {
             deco_parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
@@ -4201,7 +4194,7 @@ fn emit_styled_box(
     }
     // UI41, #12028 item 1 — base props only (see `elevation_tier`'s doc
     // comment).
-    if let Some(tier) = elevation_tier(&base) {
+    if let Some(tier) = elevation_tier(base) {
         deco_parts.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
     }
     args.push(format!(
@@ -4220,7 +4213,7 @@ fn emit_styled_box(
         .and_then(|v| css_color_to_dart(v))
         .or_else(|| ctx.sheet_text_color.map(str::to_string))
         .unwrap_or_else(|| "null".to_string());
-    let text_color_expr = state_color_expr(&layers, |l| l.text_color.as_ref(), &base_text);
+    let text_color_expr = state_color_expr(layers, |l| l.text_color.as_ref(), &base_text);
 
     // Font family / size: the part's own, else the sheet's (the
     // VisiCalc monospace 12px lives on the `sheet` part, not the cell).
@@ -4273,6 +4266,63 @@ fn emit_styled_box(
         inherited_parts.push(format!("fontSize: {size}"));
     }
     let inherited_text_style = inherited_parts.join(", ");
+
+    FlutterBoxStyle {
+        args,
+        text_style_parts,
+        inherited_text_style,
+    }
+}
+
+/// Lower a styled `Box [part]` (a spreadsheet cell or header-cell) to a
+/// fully-decorated Flutter `Container`. This is the Bug-B fix.
+///
+/// Produces (cell example):
+///
+/// ```dart
+/// Container(
+///   width: columnWidths[c],
+///   height: 22,
+///   alignment: Alignment.centerRight,
+///   padding: const EdgeInsets.symmetric(horizontal: 2),
+///   decoration: BoxDecoration(
+///     color: (( r == selectedRow && c == selectedCol )) ? const Color(0xFF264F78)
+///          : (( r == editRow && c == editCol )) ? const Color(0xFF1F4F3F)
+///          : null,
+///     border: Border.all(color: const Color(0xFF3F3F46), width: 1),
+///   ),
+///   child: DefaultTextStyle.merge(
+///     style: TextStyle(color: (( r == … )) ? const Color(0xFFFFFFFF) : const Color(0xFFCCCCCC)),
+///     child: <inner>,
+///   ),
+/// )
+/// ```
+///
+/// A `Container` cannot take BOTH `color:` and `decoration:`, so the
+/// background ALWAYS rides inside `BoxDecoration(color: …)` here. The
+/// per-state text colour is applied with `DefaultTextStyle.merge` so it
+/// reaches the child whether the child is a bare `Text` or an
+/// `If`/`Else` ternary (Text vs editing TextField).
+fn emit_styled_box(
+    node: &LayoutNode,
+    part: &str,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+    component: &str,
+    emits: &[EmitDecl],
+    ctx: TableCtx,
+) -> Result<String, PipelineEmitError> {
+    let pad = " ".repeat(indent);
+    let ip = " ".repeat(indent + 2);
+
+    let style_props = part_styles.get(part).map(String::as_str).unwrap_or("");
+    let base = parse_style_props(style_props);
+    let layers = collect_cell_state_layers(node, part, part_styles);
+
+    let style = flutter_box_style(&base, &layers, ctx);
+    let mut args = style.args;
+    let text_style_parts = style.text_style_parts;
+    let inherited_text_style = style.inherited_text_style;
     let ctx = TableCtx {
         inherited_text_style: Some(inherited_text_style.as_str()),
         ..ctx
