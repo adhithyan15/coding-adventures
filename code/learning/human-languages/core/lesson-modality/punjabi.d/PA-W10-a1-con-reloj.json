@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W10-a1-con-reloj",
+    "language": "punjabi",
+    "chapter": 46,
+    "sequence": 2610,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fd3544e1a95f0f67",
+    "detachableSegments": [
+      "Writing — timed production"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

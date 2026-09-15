@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:ee5e52255d5317fe",
+  "lessonIds": [
+    "PA-W10-a1-con-reloj"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch46.txt",
+  "json": "punjabi/narration/ch46.json",
+  "textHash": "fnv1a64:6b0b9e622320bd57",
+  "jsonHash": "fnv1a64:1f2d3597682d2f72",
+  "findings": []
+}

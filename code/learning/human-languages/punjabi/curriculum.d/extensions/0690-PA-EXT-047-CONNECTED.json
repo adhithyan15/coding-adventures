@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-047-CONNECTED",
+  "stage": "A2",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can write four connected lines to a named reader, joining with ਅਤੇ and ਪਰ.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-W11-jodi-hoiyan-lineaan"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "chapter": 46,
+  "title": "Writing --- With A Clock",
+  "label": "ch:pa-ghadi-naal",
+  "canDo": "I can complete the A1 writing paper's two tasks inside its published twenty minutes, filling every form field and keeping the message between thirty and forty words.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-W10-a1-con-reloj",
+    "kind": "task",
+    "summary": "Complete PA-W10-a1-con-reloj: seven minutes for the form and thirteen for the message, then count the words and check the form for blanks before mistakes.",
+    "assesses": [
+      "PA-FORM-LABEL-PHONE-01",
+      "PA-FORM-PHONE-CUE-MAP-01",
+      "PA-FORM-PHONE-DIGIT-ORDER-01",
+      "PA-FORM-PHONE-GROUPING-01",
+      "PA-FORM-PHONE-REPAIR-01"
+    ],
+    "note": "Timing, task count, field count and word range are read out of punjabi/task-shapes/a1.json, not invented for the lesson."
+  }
+}
