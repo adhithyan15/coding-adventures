@@ -52,19 +52,36 @@
 % Provenance: three sentences from the 2009 MUTCD — STOP from Section
 % 2B.05 and YIELD from 2B.08, both in Chapter 2B, "Regulatory Signs,
 % Barricades, and Gates"; the warning default from Section 2C.03 in Chapter
-% 2C, "Warning Signs And Object Markers", which carries its own locator.
+% 2C, "Warning Signs And Object Markers". Each row carries its own sign's
+% sentence as its `source`, with that sentence's chapter as its `locator`.
 %
 % `trust authoritative` — the FHWA is the first-party federal publisher and
-% this is the standard itself. Both pages were CONTENT-verified by RAW TEXT
-% EXTRACTION, and every quoted sentence was confirmed verbatim against the
-% RAW HTML, not merely against the extraction: the pages wrap figure
-% references in `<a>` tags, and a tag-stripping artifact previously put
-% "(see Figure 2B-1 )" — with a space the manual does not contain — into a
-% sibling library's citation before review caught it.
+% this is the standard itself. Both chapter pages (2B and 2C) were
+% CONTENT-verified by RAW TEXT EXTRACTION, and every quoted sentence was
+% confirmed verbatim against the RAW HTML, not merely against the
+% extraction: the pages wrap figure references in `<a>` tags, and a
+% tag-stripping artifact previously put "(see Figure 2B-1 )" — with a
+% space the manual does not contain — into a sibling library's citation
+% before review caught it.
 %
-% Provenance is TABLE-level, so all nine rows carry all three sentences and
-% `--explain` shows only the primary one. Issue #13898; the JSON output is
-% the authoritative view.
+% EACH ROW CARRIES ITS OWN SIGN'S SENTENCE (ADJ-TABLES RS-5e, #14986). The
+% envelope used to be the STOP sentence, so it was the primary source of
+% all nine answers: the yield and warning rows cited STOP first. Each of
+% the three sentences names its sign and all three of its elements'
+% colours, so every row now takes its sign's sentence as a `source`. The
+% envelope is now Section 2A.06's framing sentence, which names no sign
+% and no colour:
+%
+%     "Standardized colors and shapes are specified so that the several
+%      classes of traffic signs can be promptly recognized."
+%
+% Every row's page (Chapter 2B or 2C) differs from the envelope's (Chapter
+% 2A), so every row restates `locator`; trust is the same, so none restates
+% it (ADJ-TABLES §4). Measured 2026-09-15 with inline tags removed without a
+% space and only ASCII whitespace collapsed: each of the four sentences
+% occurs exactly once on its own page and zero times on the other two, each
+% inside one `<p>`. The host answers a nonsense path with HTTP 200, so the
+% content control is what counts: the nonsense page holds none of them.
 %
 % Honest abstention:
 %
@@ -91,21 +108,50 @@
 table sign_element_color {
     columns sign, element, color
 
-    row (stop_sign, background, red)
-    row (stop_sign, legend, white)
-    row (stop_sign, border, white)
+    row (stop_sign, background, red) {
+        source "The STOP sign shall be an octagon with a white legend and border on a red background."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    }
+    row (stop_sign, legend, white) {
+        source "The STOP sign shall be an octagon with a white legend and border on a red background."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    }
+    row (stop_sign, border, white) {
+        source "The STOP sign shall be an octagon with a white legend and border on a red background."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    }
 
-    row (yield_sign, background, white)
-    row (yield_sign, legend, red)
-    row (yield_sign, border, red)
+    row (yield_sign, background, white) {
+        source "The YIELD (R1-2) sign (see Figure 2B-1) shall be a downward-pointing equilateral triangle with a wide red border and the legend YIELD in red on a white background."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    }
+    row (yield_sign, legend, red) {
+        source "The YIELD (R1-2) sign (see Figure 2B-1) shall be a downward-pointing equilateral triangle with a wide red border and the legend YIELD in red on a white background."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    }
+    row (yield_sign, border, red) {
+        source "The YIELD (R1-2) sign (see Figure 2B-1) shall be a downward-pointing equilateral triangle with a wide red border and the legend YIELD in red on a white background."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    }
 
-    row (warning_sign, background, yellow)
-    row (warning_sign, legend, black)
-    row (warning_sign, border, black)
+    row (warning_sign, background, yellow) {
+        source "Except as provided in Paragraph 2 or unless specifically designated otherwise, all warning signs shall be diamond-shaped (square with one diagonal vertical) with a black legend and border on a yellow background."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm"
+    }
+    row (warning_sign, legend, black) {
+        source "Except as provided in Paragraph 2 or unless specifically designated otherwise, all warning signs shall be diamond-shaped (square with one diagonal vertical) with a black legend and border on a yellow background."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm"
+    }
+    row (warning_sign, border, black) {
+        source "Except as provided in Paragraph 2 or unless specifically designated otherwise, all warning signs shall be diamond-shaped (square with one diagonal vertical) with a black legend and border on a yellow background."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm"
+    }
 
-    source "The STOP sign shall be an octagon with a white legend and border on a red background."
-    locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    % THE ENVELOPE WAS THE STOP SENTENCE, the primary source of all nine
+    % answers, including the yield and warning rows. It is now Chapter 2A's
+    % framing sentence, which names no sign and no colour. Every row
+    % overrides it, so it reaches no answer.
+    source "Standardized colors and shapes are specified so that the several classes of traffic signs can be promptly recognized."
+    locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2a.htm"
     trust authoritative
-    cites "The YIELD (R1-2) sign (see Figure 2B-1) shall be a downward-pointing equilateral triangle with a wide red border and the legend YIELD in red on a white background." locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
-    cites "Except as provided in Paragraph 2 or unless specifically designated otherwise, all warning signs shall be diamond-shaped (square with one diagonal vertical) with a black legend and border on a yellow background." locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm"
 }

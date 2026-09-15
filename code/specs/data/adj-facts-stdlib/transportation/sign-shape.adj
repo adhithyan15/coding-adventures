@@ -49,11 +49,11 @@
 %
 % Provenance: five sentences from two CHAPTERS of the 2009 MUTCD — Chapter
 % 2B, "Regulatory Signs, Barricades, and Gates", and Chapter 2C, "Warning
-% Signs And Object Markers", both within Part 2, "Signs". The `source`
-% envelope carries the regulatory default from Chapter 2B; the
-% corroborations carry STOP (Section 2B.05) and YIELD (Section 2B.08) from
-% the same chapter, and the warning default (2C.03) and the pennant
-% exception (2C.45) from Chapter 2C, which has its OWN locator.
+% Signs And Object Markers", both within Part 2, "Signs". Chapter 2B gives
+% the regulatory default (Section 2B.02), STOP (2B.05) and YIELD (2B.08);
+% Chapter 2C gives the warning default (2C.03) and the pennant exception
+% (2C.45). Each row carries its own sentence as its `source`, with that
+% sentence's chapter as its `locator`.
 %
 % Those section numbers matter to the argument rather than being decoration:
 % STOP and YIELD sit inside the REGULATORY chapter, which is what makes them
@@ -71,15 +71,29 @@
 %
 % `trust authoritative` — the FHWA is the first-party federal publisher of
 % the MUTCD, and this is the standard itself rather than a description of
-% it. Both pages were CONTENT-verified by RAW TEXT EXTRACTION (HTTP 200,
-% 589 and 406 substantive sentences, zero soft-404 markers), and every
-% quoted sentence was confirmed to appear verbatim in that extraction.
+% it. Both chapter pages (2B and 2C) were CONTENT-verified by RAW TEXT
+% EXTRACTION (HTTP 200, 589 and 406 substantive sentences, zero soft-404
+% markers), and every quoted sentence was confirmed to appear verbatim in
+% that extraction.
 %
-% Provenance is TABLE-level, so all five rows carry all five sentences and
-% `--explain` shows only the primary one — meaning the STOP row displays
-% under the regulatory-default sentence, which does not ground it. That is
-% a property of every multi-sentence table in this stdlib, tracked as issue
-% #13898; the JSON output is the authoritative view.
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The
+% envelope used to be the regulatory default, so it was the primary source
+% of all five answers: the STOP row cited "Regulatory signs shall be
+% rectangular" first, a sentence that does not ground it and that its own
+% row contradicts. Each of the five sentences names its sign and its shape,
+% so every row now takes its own as a `source`. The envelope is now Section
+% 2A.06's framing sentence, which names no sign and no shape value:
+%
+%     "Standardized colors and shapes are specified so that the several
+%      classes of traffic signs can be promptly recognized."
+%
+% Every row's page (Chapter 2B or 2C) differs from the envelope's (Chapter
+% 2A), so every row restates `locator`; trust is the same, so none restates
+% it (ADJ-TABLES §4). Measured 2026-09-15 with inline tags removed without a
+% space and only ASCII whitespace collapsed: each of the six sentences
+% occurs exactly once on its own page and zero times on the other two, each
+% inside one `<p>`. The host answers a nonsense path with HTTP 200, so the
+% content control is what counts: the nonsense page holds none of them.
 %
 % Honest abstention:
 %
@@ -108,18 +122,34 @@
 table sign_shape {
     columns sign, shape
 
-    row (regulatory_sign, rectangular_unless_specifically_designated_otherwise)
-    row (stop_sign, octagon)
-    row (yield_sign, downward_pointing_equilateral_triangle)
+    row (regulatory_sign, rectangular_unless_specifically_designated_otherwise) {
+        source "Regulatory signs shall be rectangular unless specifically designated otherwise."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    }
+    row (stop_sign, octagon) {
+        source "The STOP sign shall be an octagon with a white legend and border on a red background."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    }
+    row (yield_sign, downward_pointing_equilateral_triangle) {
+        source "The YIELD (R1-2) sign (see Figure 2B-1) shall be a downward-pointing equilateral triangle with a wide red border and the legend YIELD in red on a white background."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    }
 
-    row (warning_sign, diamond_shaped_unless_specifically_designated_otherwise)
-    row (no_passing_zone_sign, pennant_shaped_isosceles_triangle)
+    row (warning_sign, diamond_shaped_unless_specifically_designated_otherwise) {
+        source "Except as provided in Paragraph 2 or unless specifically designated otherwise, all warning signs shall be diamond-shaped (square with one diagonal vertical) with a black legend and border on a yellow background."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm"
+    }
+    row (no_passing_zone_sign, pennant_shaped_isosceles_triangle) {
+        source "The NO PASSING ZONE (W14-3) sign (see Figure 2C-8) shall be a pennant-shaped isosceles triangle with its longer axis horizontal and pointing to the right."
+        locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm"
+    }
 
-    source "Regulatory signs shall be rectangular unless specifically designated otherwise."
-    locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
+    % THE ENVELOPE WAS THE REGULATORY DEFAULT, the primary source of all five
+    % answers — so the STOP row was grounded first by a sentence saying
+    % regulatory signs are rectangular. It is now Chapter 2A's framing
+    % sentence, which names no sign and no shape. Every row overrides it, so
+    % it reaches no answer.
+    source "Standardized colors and shapes are specified so that the several classes of traffic signs can be promptly recognized."
+    locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2a.htm"
     trust authoritative
-    cites "The STOP sign shall be an octagon with a white legend and border on a red background." locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
-    cites "The YIELD (R1-2) sign (see Figure 2B-1) shall be a downward-pointing equilateral triangle with a wide red border and the legend YIELD in red on a white background." locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm"
-    cites "Except as provided in Paragraph 2 or unless specifically designated otherwise, all warning signs shall be diamond-shaped (square with one diagonal vertical) with a black legend and border on a yellow background." locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm"
-    cites "The NO PASSING ZONE (W14-3) sign (see Figure 2C-8) shall be a pennant-shaped isosceles triangle with its longer axis horizontal and pointing to the right." locator "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm"
 }
