@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:27f3d5ff2b740945",
+  "lessonIds": [
+    "AR-W04-arbaa-sutur"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch45.txt",
+  "json": "arabic/narration/ch45.json",
+  "textHash": "fnv1a64:231200c95a0853d9",
+  "jsonHash": "fnv1a64:f8d626d29ec1f296",
+  "findings": []
+}
