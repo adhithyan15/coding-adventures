@@ -185,6 +185,23 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     headingLevel: 2,
     newestFirst: true,
   },
+  {
+    // 275 newest-first `## <version> — <date> — <title>` sections, the same
+    // shape as the plan above. 41 close touches of 89 over 21 days, measured
+    // the same way (touches within one 1.16h median PR-lifetime of the
+    // previous), and the highest-scoring document still shardable by this
+    // tool: `adj-facts-stdlib/CHANGELOG.md` outscores it but is one heading
+    // over 323 bullets, which `splitDocument` cannot divide.
+    //
+    // Weaker case than lang-aot, recorded so nobody reads it as equal: this
+    // package's `src/lib.rs`, `Cargo.toml` and `CHANGELOG.md` all score
+    // IDENTICALLY, so every PR touches all three and sharding removes one
+    // conflict surface of three. lang-aot's changelog outscored its own
+    // siblings, meaning PRs hit it more often than the code beside it.
+    path: "code/packages/rust/algol-iir-compiler/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
 ];
 
 /**
