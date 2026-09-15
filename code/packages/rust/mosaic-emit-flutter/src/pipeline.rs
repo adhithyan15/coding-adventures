@@ -3528,8 +3528,9 @@ fn style_prop_to_container_arg(prop: &str) -> Option<String> {
             "padding: const EdgeInsets.all({})",
             parse_pixel_value(value)
         )),
-        "width" => Some(format!("width: {}", parse_pixel_value(value))),
-        "height" => Some(format!("height: {}", parse_pixel_value(value))),
+        // #15213 -- decline a relative length rather than collapsing to 0.
+        "width" => fixed_pixel_length(value).map(|v| format!("width: {v}")),
+        "height" => fixed_pixel_length(value).map(|v| format!("height: {v}")),
         "min-height" => Some(format!(
             "constraints: const BoxConstraints(minHeight: {})",
             parse_pixel_value(value)
@@ -3602,6 +3603,24 @@ fn parse_pixel_value(s: &str) -> String {
 /// did before this wrapper existed, is the correct behaviour here.
 fn fixed_pixel_length(s: &str) -> Option<String> {
     let trimmed = s.trim();
+    // #15213 -- decline EVERY length that is not a plain pixel value, not
+    // just `%` and negatives. `100vh`, `max-content`, `auto`, `calc(...)`
+    // and `12rem` all fell through to `parse_pixel_value`'s `0`, which is
+    // the exact collapse this function exists to prevent: VisiCalc's root
+    // `Column [workbook]` authors `height: 100vh` and emitted
+    // `Container(height: 0)`, so the entire app rendered as nothing on
+    // Flutter.
+    //
+    // A positive test, so a unit nobody has thought of yet declines by
+    // default rather than collapsing a subtree.
+    let body = trimmed.strip_suffix("px").unwrap_or(trimmed).trim();
+    if body.is_empty()
+        || !body
+            .bytes()
+            .all(|b| b.is_ascii_digit() || b == b'.' || b == b'-')
+    {
+        return None;
+    }
     // A NEGATIVE is dropped for the same reason a `%` is, and the reason is
     // the one written above: handing this site `parse_pixel_value`'s `0`
     // collapses the whole subtree into a zero-width box. #15160 made that
@@ -4034,11 +4053,15 @@ fn emit_styled_box(
     // explicit base `width`.
     if let (Some(slot), Some(idx)) = (ctx.column_widths_slot, ctx.cell_index) {
         args.push(format!("width: {slot}[{idx}]"));
-    } else if let Some(w) = base.get("width") {
-        args.push(format!("width: {}", parse_pixel_value(w)));
+    } else if let Some(w) = base.get("width").and_then(|w| fixed_pixel_length(w)) {
+        // #15213 -- `fixed_pixel_length`, not `parse_pixel_value`. A
+        // relative length here became `width: 0` and collapsed the subtree;
+        // declining leaves the child to size itself, which is what every
+        // one of these parts wants from `width: 100%` anyway.
+        args.push(format!("width: {w}"));
     }
-    if let Some(h) = base.get("height") {
-        args.push(format!("height: {}", parse_pixel_value(h)));
+    if let Some(h) = base.get("height").and_then(|h| fixed_pixel_length(h)) {
+        args.push(format!("height: {h}"));
     }
     if let Some(min_height) = base.get("min-height") {
         args.push(format!(
@@ -14676,5 +14699,139 @@ mod negative_length_tests {
             got3.as_deref().is_none_or(|g| !g.contains("width: -")),
             "got: {got3:?}"
         );
+    }
+}
+
+// =====================================================================
+// #15213 -- a relative length must not collapse a subtree to zero
+//
+// `fixed_pixel_length` exists because `parse_pixel_value`'s "unreadable
+// -> 0" fallback turns a size into a zero-size box and eats whatever is
+// inside it. It declined `%` and (since #15160) negatives, and let every
+// other relative form through to that exact fallback.
+//
+// Measured on the products, three subtrees were collapsed:
+//
+//   visicalc  Column [workbook]  height: 100vh  -> Container(height: 0)
+//             ...which is the ROOT, so the whole app rendered as nothing
+//   task-app  two calendar cells  width: 100%   -> Container(width: 0)
+//
+// The corpus authors 86 relative lengths, so the rest reach writers that
+// already decline; these three reached ones that did not.
+// =====================================================================
+#[cfg(test)]
+mod relative_length_tests {
+    use super::*;
+
+    /// Every relative form declines. A positive test, so a unit nobody has
+    /// thought of yet declines by default rather than collapsing a subtree.
+    #[test]
+    fn a_relative_length_is_declined_not_zeroed() {
+        for relative in [
+            "100vh", "100vw", "60vh", "max-content", "min-content", "auto",
+            "fit-content", "12rem", "1.5em", "calc(100% - 10px)", "100%", "-5px",
+        ] {
+            assert_eq!(
+                fixed_pixel_length(relative),
+                None,
+                "`{relative}` must decline, not become a zero-size box"
+            );
+        }
+    }
+
+    /// Plain pixel lengths still apply.
+    #[test]
+    fn a_plain_length_still_applies() {
+        assert_eq!(fixed_pixel_length("240").as_deref(), Some("240"));
+        assert_eq!(fixed_pixel_length("240px").as_deref(), Some("240"));
+        assert_eq!(fixed_pixel_length("6.5px").as_deref(), Some("6.5"));
+        assert_eq!(fixed_pixel_length("0").as_deref(), Some("0"));
+    }
+
+    /// End to end: the shape that collapsed VisiCalc's entire app. A
+    /// declining size must emit NO size argument -- not a zero one.
+    #[test]
+    fn a_container_with_a_viewport_height_emits_no_height() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        let m = MosmodelComponent {
+            component: "X".to_string(),
+            slots: vec![],
+            emits: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: Some("workbook".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "workbook".to_string(),
+                base: vec![
+                    prop("height", "100vh"),
+                    prop("background", "#14221e"),
+                    prop("padding", "24px"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &style).expect("emits").output;
+        assert!(
+            !out.contains("height: 0"),
+            "a viewport height must not collapse the root: {out}"
+        );
+        // the rest of the part still applies
+        assert!(out.contains("EdgeInsets.all(24)"), "{out}");
+    }
+
+    /// The same for a styled box, which reached the lossy parse by a
+    /// different route -- `width: 100%` on a calendar cell.
+    #[test]
+    fn a_styled_box_with_a_percentage_width_emits_no_width() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        let m = MosmodelComponent {
+            component: "X".to_string(),
+            slots: vec![],
+            emits: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("cell".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "cell".to_string(),
+                base: vec![prop("width", "100%"), prop("background", "#123456")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &style).expect("emits").output;
+        assert!(
+            !out.contains("width: 0"),
+            "a percentage width must not collapse the box: {out}"
+        );
+        assert!(out.contains("0xFF123456"), "the background still applies: {out}");
     }
 }
