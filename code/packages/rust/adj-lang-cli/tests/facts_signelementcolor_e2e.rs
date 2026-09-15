@@ -13,10 +13,14 @@
 //! `yield_signs_background_is_white_not_red` is the test that matters:
 //! it pins the exact misconception the third column exists to prevent.
 //!
+//! EACH ROW CARRIES ITS OWN SIGN'S SENTENCE (RS-5e, #14986). The envelope
+//! used to be the STOP sentence, the primary source of all nine answers; it
+//! is now Chapter 2A's framing sentence, which every row overrides. The
+//! per-row citations are pinned whole -- sentence, chapter locator, trust and
+//! the empty corroboration list, as one contiguous run.
+//!
 //! Every assertion uses the JOINT binding form rather than independent
-//! substring scans, both abstention tests carry positive controls, and the
-//! two-locator property is pinned by sentence-to-locator PAIRS -- all three
-//! being defects review caught in earlier libraries of this series.
+//! substring scans, and both abstention tests carry positive controls.
 //!
 //! 0 answer-time model calls.
 
@@ -61,6 +65,41 @@ fn case(dir: &Path, query: &str) -> PathBuf {
     path
 }
 
+const PART2A: &str = "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2a.htm";
+const PART2B: &str = "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm";
+const PART2C: &str = "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm";
+
+const ENVELOPE: &str = "Standardized colors and shapes are specified so that the several classes of traffic signs can be promptly recognized.";
+const STOP: &str = "The STOP sign shall be an octagon with a white legend and border on a red background.";
+const YIELD: &str = "The YIELD (R1-2) sign (see Figure 2B-1) shall be a downward-pointing equilateral triangle with a wide red border and the legend YIELD in red on a white background.";
+const WARNING: &str = "Except as provided in Paragraph 2 or unless specifically designated otherwise, all warning signs shall be diamond-shaped (square with one diagonal vertical) with a black legend and border on a yellow background.";
+
+/// (sign, element, color, that sign's sentence, the chapter it was measured on)
+const ROWS: [(&str, &str, &str, &str, &str); 9] = [
+    ("stop_sign", "background", "red", STOP, PART2B),
+    ("stop_sign", "legend", "white", STOP, PART2B),
+    ("stop_sign", "border", "white", STOP, PART2B),
+    ("yield_sign", "background", "white", YIELD, PART2B),
+    ("yield_sign", "legend", "red", YIELD, PART2B),
+    ("yield_sign", "border", "red", YIELD, PART2B),
+    ("warning_sign", "background", "yellow", WARNING, PART2C),
+    ("warning_sign", "legend", "black", WARNING, PART2C),
+    ("warning_sign", "border", "black", WARNING, PART2C),
+];
+
+/// The whole citation a row's answer carries: its sentence, its chapter, the
+/// tier, and NO corroborations -- one contiguous run, so a swapped locator, a
+/// changed tier or an added `cites` each break it.
+fn citation(sentence: &str, locator: &str) -> String {
+    format!("\"source\":\"{sentence}\",\"locator\":\"{locator}\",\"trust\":\"authoritative\",\"corroborations\":[]")
+}
+
+fn shipped_table() -> String {
+    let adj = std::fs::read_to_string(facts_stdlib().join("transportation/sign-element-color.adj"))
+        .expect("read shipped sign-element-color.adj");
+    adj[adj.find("table sign_element_color").expect("table")..].to_string()
+}
+
 #[test]
 fn a_stop_signs_background_is_red() {
     let dir = scratch("stopbg");
@@ -69,28 +108,18 @@ fn a_stop_signs_background_is_red() {
 
     let (ok, out) = run(&program);
     assert!(ok, "cli should succeed: {out}");
-    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
-    // file matched only part of the sentence, which let the citation be
-    // truncated AT that point -- deleting everything after it -- while
-    // the test stayed green. Anchoring on the `"source":"` key and
-    // closing on the terminating quote pins head, tail, punctuation and
-    // length at once. See issues #13916 and #13918.
+    // FULL ANCHORED CITATION PIN, now the whole contiguous run: the STOP
+    // sentence, Chapter 2B, the tier and no corroborations. A fragment
+    // needle once let a citation be truncated while the test stayed green
+    // (issues #13916 and #13918).
     assert!(
-        out.contains("\"source\":\"The STOP sign shall be an octagon with a white legend and border on a red background.\""),
-        "the citation is the whole source sentence, exactly: {out}"
+        out.contains(&citation(STOP, PART2B)),
+        "the citation is the STOP sentence at Chapter 2B, whole: {out}"
     );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
         out.contains("\"bindings\":{\"C\":\"red\"}"),
         "the STOP sign's background is red: {out}"
-    );
-    assert!(
-        out.contains("The STOP sign shall be an octagon with a white legend and border on a red background."),
-        "carries the grounding sentence verbatim: {out}"
-    );
-    assert!(
-        out.contains("\"trust\":\"authoritative\""),
-        "carries the MUTCD trust tier: {out}"
     );
 }
 
@@ -160,47 +189,54 @@ fn the_reverse_lookup_on_a_red_background_names_stop_alone() {
 
 #[test]
 fn each_sentence_is_attributed_to_the_chapter_it_came_from() {
-    let dir = scratch("locators");
-    place(&dir);
-    let program = case(&dir, "sign_element_color(stop_sign, background, $C)");
+    // The rows point at TWO different chapters, and a bare scan for one
+    // locator would survive swapping them all. Each sign's answer is pinned
+    // to its own sentence-and-chapter PAIR, and must carry neither other
+    // sign's sentence nor the envelope. The YIELD pair is byte-exact
+    // including "(see Figure 2B-1)", the parenthesis a tag-stripping space
+    // once corrupted in the sibling sign-shape library.
+    for (sign, sentence, locator) in [
+        ("stop_sign", STOP, PART2B),
+        ("yield_sign", YIELD, PART2B),
+        ("warning_sign", WARNING, PART2C),
+    ] {
+        let dir = scratch(&format!("locators_{sign}"));
+        place(&dir);
+        let program = case(&dir, &format!("sign_element_color({sign}, background, $C)"));
+        let (ok, out) = run(&program);
+        assert!(ok, "cli should succeed: {out}");
+        assert!(
+            out.contains(&citation(sentence, locator)),
+            "{sign} carries its own sentence at its own chapter: {out}"
+        );
+        for other in [STOP, YIELD, WARNING] {
+            if other != sentence {
+                assert!(!out.contains(other), "{sign} must not carry another sign's sentence: {out}");
+            }
+        }
+        assert!(!out.contains(ENVELOPE), "the envelope is not primary for {sign}: {out}");
+        assert!(!out.contains(PART2A), "no {sign} answer cites Chapter 2A: {out}");
+    }
+}
 
-    let (ok, out) = run(&program);
-    assert!(ok, "cli should succeed: {out}");
-    // The corroborations point at TWO different chapters. A bare scan for
-    // one locator would survive swapping them all, so these pin
-    // sentence-to-locator PAIRS instead -- the gap review found in the
-    // sibling sign-shape library.
-    assert!(
-        out.contains(
-            "\"source\":\"Except as provided in Paragraph 2 or unless specifically designated \
-             otherwise, all warning signs shall be diamond-shaped (square with one diagonal \
-             vertical) with a black legend and border on a yellow background.\",\
-             \"locator\":\"https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm\""
-        ),
-        "the warning sentence is attributed to Chapter 2C: {out}"
-    );
-    assert!(
-        out.contains(
-            "\"source\":\"The STOP sign shall be an octagon with a white legend and border on a \
-             red background.\",\"locator\":\"https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm\""
-        ),
-        "the STOP sentence is attributed to Chapter 2B: {out}"
-    );
-    // THE YIELD PAIR IS NOT OPTIONAL, and review proved why. Without it,
-    // two separate regressions pass the whole suite: retargeting YIELD's
-    // locator to Chapter 2C, and -- worse -- reinserting "(see Figure
-    // 2B-1 )" with the spurious tag-stripping space, which is the EXACT
-    // defect the sibling sign-shape library shipped in a draft one slice
-    // ago. Pinning the sentence together with its locator closes both,
-    // because the needle is byte-exact including the parenthesis.
-    assert!(
-        out.contains(
-            "\"source\":\"The YIELD (R1-2) sign (see Figure 2B-1) shall be a downward-pointing \
-             equilateral triangle with a wide red border and the legend YIELD in red on a white \
-             background.\",\"locator\":\"https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm\""
-        ),
-        "the YIELD sentence is attributed to Chapter 2B, byte-exact: {out}"
-    );
+#[test]
+fn every_row_answer_carries_its_own_signs_sentence() {
+    for (sign, element, color, sentence, locator) in ROWS {
+        let dir = scratch(&format!("row_{sign}_{element}"));
+        place(&dir);
+        let program = case(&dir, &format!("sign_element_color({sign}, {element}, $C)"));
+        let (ok, out) = run(&program);
+        assert!(ok, "cli should succeed: {out}");
+        assert_eq!(out.matches("\"citations\":[").count(), 1, "one answer for {sign} {element}: {out}");
+        assert!(
+            out.contains(&format!("\"bindings\":{{\"C\":\"{color}\"}}")),
+            "{sign}'s {element} is {color}: {out}"
+        );
+        assert!(
+            out.contains(&citation(sentence, locator)),
+            "{sign} {element}: its sign's sentence at its chapter, whole: {out}"
+        );
+    }
 }
 
 #[test]
@@ -284,4 +320,31 @@ fn signs_whose_sentences_state_no_colour_abstain() {
         out.contains("\"bindings\":{\"C\":\"yellow\"}"),
         "control: a sign with stated colours still binds: {out}"
     );
+}
+
+#[test]
+fn the_table_shape_matches_the_measured_rows() {
+    // Every row overrides the envelope, so the envelope's wording reaches no
+    // answer; this file-shape test is what pins it.
+    let body = shipped_table();
+    for (sign, element, color, sentence, locator) in ROWS {
+        let expected = format!(
+            "    row ({sign}, {element}, {color}) {{\n        source \"{sentence}\"\n        locator \"{locator}\"\n    }}"
+        );
+        assert!(body.contains(&expected), "row ({sign}, {element}, {color}) is shipped in its measured shape");
+    }
+    assert_eq!(body.matches("\n        source \"").count(), 9, "nine row sources");
+    assert_eq!(body.matches("\n        locator \"").count(), 9, "nine row locators");
+    assert!(!body.contains("\n        trust "), "no row restates trust");
+    assert!(!body.contains("\n    cites "), "no table-level corroboration");
+    assert!(!body.contains("\n        cites "), "no row corroboration");
+    assert!(
+        body.contains(&format!("\n    source \"{ENVELOPE}\"\n    locator \"{PART2A}\"\n    trust authoritative\n")),
+        "the envelope is Chapter 2A's framing sentence"
+    );
+    assert!(!body.contains(&format!("\n    source \"{STOP}\"")), "not the STOP sentence as the envelope again");
+    let folded = ENVELOPE.to_lowercase();
+    for word in ["stop", "yield", "warning", "red ", "white", "yellow", "black", "legend", "border", "background"] {
+        assert!(!folded.contains(word), "the envelope must name no sign, colour or element, but contains {word:?}");
+    }
 }
