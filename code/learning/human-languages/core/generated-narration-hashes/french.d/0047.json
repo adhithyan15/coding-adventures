@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:8d41f527c1bd8285",
+  "lessonIds": [
+    "FR-W03-avec-la-montre"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "french/narration/ch47.txt",
+  "json": "french/narration/ch47.json",
+  "textHash": "fnv1a64:a23e0e50f2358164",
+  "jsonHash": "fnv1a64:60638c817f967c64",
+  "findings": []
+}

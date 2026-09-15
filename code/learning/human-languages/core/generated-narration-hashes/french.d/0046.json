@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:c6f56164fc6d40db",
+  "lessonIds": [
+    "FR-W02-ma-propre-ligne"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "french/narration/ch46.txt",
+  "json": "french/narration/ch46.json",
+  "textHash": "fnv1a64:79f25ba06b03944b",
+  "jsonHash": "fnv1a64:ebac0118d59450b5",
+  "findings": []
+}
