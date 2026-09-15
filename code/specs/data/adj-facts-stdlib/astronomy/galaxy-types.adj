@@ -8,10 +8,9 @@
 % characteristic shape it is defined by: a spiral galaxy is the one with spiral
 % arms; an elliptical galaxy is a smooth ball that ranges from round to oval; an
 % irregular galaxy is the one with no tidy shape at all. (That summary used to
-% sit in quotation marks; it is a paraphrase, not the page's words.) Before
-% you can reason
-% about a galaxy's age, its star formation, or its history you must first know
-% WHICH main type you are looking at. Recall is a binding query:
+% sit in quotation marks; it is a paraphrase, not the page's words.) Before you
+% can reason about a galaxy's age, its star formation, or its history you must
+% first know WHICH main type you are looking at. Recall is a binding query:
 %
 %     ? galaxy_shape(spiral, $Shape)      % spiral_arms
 %
@@ -45,10 +44,12 @@
 % The `shape` value of every row is a SINGLE lowercase atom, chosen to be the
 % defining shape / description NASA EXPLICITLY states for that type — never one
 % the source does not support. (Each atom uses the source's own words — NASA
-% says spiral arms, says "round to oval", says a bar that cuts "across their
-% centers", says lenticulars have "disk ... but no arms", says irregulars have
-% "unusual shapes" — so every value stays literally checkable against the quoted
-% span.)
+% says spiral arms, says "round to oval", says barred spirals have "ribbons of
+% stars, gas, and dust that cut across their centers" (bar_across_center reads
+% "Barred" and that phrase together; the word "bar" itself is in the next
+% sentence, not the row's span), says lenticulars have "disk ... but no arms",
+% says irregulars have "unusual shapes" — so every value stays literally
+% checkable against the quoted span.)
 %
 % ---------------------------------------------------------------------------
 % Provenance (nothing here is asserted from memory — every type→shape pair below

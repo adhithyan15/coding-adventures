@@ -30,6 +30,10 @@
     and it occurs zero times. The marks are removed and a note says it's a paraphrase.
   - **The table's citation.** "Carrying the table's citation" becomes "carrying its row's citation".
   - **The one-envelope paragraph** is replaced by the measurement above.
+  - **The barred-spiral claim.** The header said NASA "says a bar that cuts 'across their centers'".
+    The page says barred spirals have "ribbons of stars, gas, and dust that cut across their centers".
+    The word "bar" is only in the next sentence, which is not the row's span. The header now quotes that
+    phrase, and says `bar_across_center` reads "Barred" and that phrase together.
 
   ### Pins
 
