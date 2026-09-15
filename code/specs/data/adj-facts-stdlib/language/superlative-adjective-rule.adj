@@ -61,8 +61,9 @@
 % `locator` or `trust` (ADJ-TABLES §4).
 %
 % The original authoring note said the quotes were "WebFetch-verified before
-% writing (twice, across two cycles of this loop)". That is superseded by the
-% raw-page measurement above; WebFetch summaries are not verbatim evidence.
+% writing (twice, across two cycles of this loop ...)"; that note is superseded
+% by the raw-page measurement above, since WebFetch summaries are not verbatim
+% evidence.
 % `trust consensus` — Grammarly is a
 % reputable, widely-cited grammar-content company, the same tier this
 % stdlib already reserves for other non-.gov language sources and the same
