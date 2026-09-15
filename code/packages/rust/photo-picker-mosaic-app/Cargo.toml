@@ -1,0 +1,22 @@
+[package]
+name = "photo-picker-mosaic-app"
+version = "0.1.0"
+edition = "2021"
+description = "Standard Mosaic application demonstrating the files.open effect (UI59)"
+license = "MIT"
+
+[lib]
+# `cdylib` is the artifact the generated native hosts load: the Mosaic build
+# installs it beside the executable as `libmosaic_app.{so,dylib}` /
+# `mosaic_app.dll`. `rlib` keeps it usable as a normal Rust dependency for
+# tests. Same shape as `engram-mosaic-app`.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+mosaic-app-capi = { path = "../mosaic-app-capi" }
+mosaic-app-runtime = { path = "../mosaic-app-runtime" }
+# The host answers files.open with the picked file's bytes base64-encoded
+# (UI59 §3) -- same convention and same crate `engram-mosaic-app` already
+# uses for Anki package transfer.
+coding_adventures_base64 = { path = "../base64" }
+serde_json = "1"

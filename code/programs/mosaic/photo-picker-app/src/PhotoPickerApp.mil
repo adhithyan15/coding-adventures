@@ -1,0 +1,13 @@
+// PhotoPickerApp.mil — interface for the UI59 `files.open` reference app.
+//
+// One status line, one loading flag, one button. The app-logic crate
+// (`photo-picker-mosaic-app`) drives `status`/`picking` from `AppUpdate.
+// props`; the host answers the `files.open` effect the `onPickPhoto`
+// click produces, and the app renders whatever came back into `status`.
+
+component PhotoPickerApp {
+  slot status  : text ;
+  slot picking : bool ;
+
+  emit onPickPhoto ;
+}

@@ -1,0 +1,15 @@
+// PhotoPickerApp.light.msl — minimal style, light theme.
+
+style PhotoPickerApp {
+  part root {
+    padding : 16 ;
+  }
+  part status-row {
+    padding : 8 ;
+  }
+  part actions {
+    padding : 8 ;
+  }
+  part pick-btn {
+  }
+}
