@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "level": "pre-A1",
+  "policy": {
+    "description": "Credit explicit pre-A1 headwords, their article-free and token forms, documented citation aliases, and Spanish numerals 0-100.",
+    "citationFormCredits": [
+      "llevar",
+      "andar",
+      "dar",
+      "llover",
+      "amigo",
+      "sol",
+      "vivir",
+      "llamar",
+      "llamarse",
+      "año",
+      "mes"
+    ],
+    "numberWordCredits": [
+      "cero",
+      "uno",
+      "dos",
+      "tres",
+      "cuatro",
+      "cinco",
+      "seis",
+      "siete",
+      "ocho",
+      "nueve",
+      "diez",
+      "once",
+      "doce",
+      "trece",
+      "catorce",
+      "quince",
+      "dieciséis",
+      "diecisiete",
+      "dieciocho",
+      "diecinueve",
+      "veinte",
+      "veintiuno",
+      "veintidós",
+      "veintitrés",
+      "veinticuatro",
+      "veinticinco",
+      "veintiséis",
+      "veintisiete",
+      "veintiocho",
+      "veintinueve",
+      "treinta",
+      "cuarenta",
+      "cincuenta",
+      "sesenta",
+      "setenta",
+      "ochenta",
+      "noventa",
+      "cien"
+    ],
+    "numericCredits": "0-100"
+  },
+  "lessonCount": 354,
+  "taughtForms": 730,
+  "objectiveFailed": 0,
+  "mocks": [
+    {
+      "mock": 1,
+      "reading": 10,
+      "listening": 10,
+      "objectiveFailed": 0,
+      "failed": []
+    },
+    {
+      "mock": 2,
+      "reading": 10,
+      "listening": 10,
+      "objectiveFailed": 0,
+      "failed": []
+    }
+  ],
+  "missingObjectiveLexemes": [],
+  "missingFrequency": []
+}
