@@ -56,12 +56,28 @@
 % (only "an opening" — a role, not a property) and `optic_nerve` (only that it
 % carries signals) — deliberately left unrowed here.
 %
-% Provenance: reproduces, byte-for-byte, the SAME three parenthetical/
-% descriptive spans already quoted inside `eye-parts.adj`'s own header, from
-% the SAME NEI "How the Eyes Work" page that table already cites -- no new
-% WebFetch, only a different schema decoding a different clause of each
-% already-verified quote. `trust authoritative` -- the same tier the parent
-% table already carries (NEI is a primary U.S. government NIH institute).
+% Provenance: the SAME NEI "How the Eyes Work" page `eye-parts.adj` cites.
+% This paragraph used to say the spans were reproduced "byte-for-byte" with
+% "no new WebFetch"; they are now measured against the page itself, and the
+% retina quote above was NOT byte-for-byte: the page writes U+00A0 (NO-BREAK
+% SPACE) on both sides of "retina", which a comment cannot show. In the
+% ordinary-space form it occurs zero times; the row carries the page's form.
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the iris sentence, the primary source of all three answers. Each
+% quoted sentence above names its part and its property, so every row now
+% takes its own as a `source`. The envelope is now the page's framing
+% sentence, the one `eye-parts.adj` uses, which names no part:
+%
+%     "All the different parts of your eyes work together to help you see."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the three row sentences (retina in its page form) and
+% the envelope each occur exactly once, each inside a `<p>`. Every row's page
+% is the envelope's, so no row restates a `locator` line or `trust`
+% (ADJ-TABLES §4). `trust authoritative` -- NEI is a primary U.S. government
+% NIH institute.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -69,11 +85,21 @@
 table eye_part_property {
     columns part, property
 
-    row (cornea, dome_shaped)
-    row (iris, colored_part_of_eye)
-    row (retina, light_sensitive_layer)
+    row (cornea, dome_shaped) {
+        source "The cornea is shaped like a dome and bends light to help the eye focus."
+    }
+    row (iris, colored_part_of_eye) {
+        source "The iris (the colored part of the eye) controls how much light the pupil lets in."
+    }
+    row (retina, light_sensitive_layer) {
+        source "When light hits the retina (a light-sensitive layer of tissue at the back of the eye), special cells called photoreceptors turn the light into electrical signals."
+    }
 
-    source "The iris (the colored part of the eye) controls how much light the pupil lets in."
+    % THE ENVELOPE WAS THE IRIS ROW'S OWN SENTENCE, the primary source of all
+    % three answers. It is now the page's framing sentence (the same one
+    % eye-parts.adj uses), which names no part and no property. Every row
+    % overrides it, so it reaches no answer.
+    source "All the different parts of your eyes work together to help you see."
     locator "https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work"
     trust authoritative
 }

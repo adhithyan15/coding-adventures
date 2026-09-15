@@ -83,6 +83,13 @@ fn anatomy_eye_parts_recall_binds_function_with_citation() {
 
 const NEI: &str = "https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work";
 
+/// The retina sentence as the NEI page writes it: U+00A0 on both sides of
+/// "retina". In the ordinary-space form it occurs on no page.
+const RETINA: &str = "When light hits the\u{a0}retina\u{a0}(a light-sensitive layer of tissue at the back of the eye), special cells called photoreceptors turn the light into electrical signals.";
+/// The optic-nerve sentence as the page writes it: U+00A0 after "the", "optic"
+/// and "nerve".
+const OPTIC_NERVE: &str = "These electrical signals travel from the retina through the\u{a0}optic\u{a0}nerve\u{a0}to the brain.";
+
 /// Assert one row's warrant, binding the PART so exactly one row answers.
 ///
 /// No row carries a `locator`, so every answer's locator is the envelope's —
@@ -143,14 +150,41 @@ fn every_part_carries_the_sentence_that_states_its_job() {
         "eplens", "lens", "focuses_light",
         "The lens works together with the cornea to focus light correctly on the retina.",
     );
-    assert_part(
-        "epretina", "retina", "turns_light_into_signals",
-        "When light hits the retina (a light-sensitive layer of tissue at the back of the eye), special cells called photoreceptors turn the light into electrical signals.",
-    );
-    assert_part(
-        "epoptic", "optic_nerve", "carries_signals_to_brain",
-        "These electrical signals travel from the retina through the optic nerve to the brain.",
-    );
+    assert_part("epretina", "retina", "turns_light_into_signals", RETINA);
+    assert_part("epoptic", "optic_nerve", "carries_signals_to_brain", OPTIC_NERVE);
+}
+
+/// The retina and optic-nerve sentences carry the page's U+00A0 no-break
+/// spaces. Until this was measured they shipped with ordinary spaces, and in
+/// that form both occurred ZERO times on the page they cite, while this test
+/// file pinned the ordinary-space forms and stayed green.
+#[test]
+fn the_retina_and_optic_nerve_spans_carry_the_pages_no_break_spaces() {
+    assert_eq!(RETINA.matches('\u{a0}').count(), 2, "two U+00A0 in the retina sentence");
+    assert_eq!(OPTIC_NERVE.matches('\u{a0}').count(), 3, "three U+00A0 in the optic-nerve sentence");
+    let adj = std::fs::read_to_string(facts_stdlib().join("anatomy/eye-parts.adj"))
+        .expect("read shipped eye-parts.adj");
+    let table = &adj[adj.find("table eye_part_function").expect("table")..];
+    for span in [RETINA, OPTIC_NERVE] {
+        assert!(table.contains(&format!("        source \"{span}\"")), "the table carries the page form: {span:?}");
+        assert!(
+            !table.contains(&span.replace('\u{a0}', " ")),
+            "the ordinary-space form, which the page never writes, is not in the table: {span:?}"
+        );
+    }
+    let dir = scratch("epnbsp");
+    std::fs::copy(facts_stdlib().join("anatomy/eye-parts.adj"), dir.join("eye-parts.adj"))
+        .expect("copy shipped eye-parts.adj");
+    std::fs::write(
+        dir.join("case.adj"),
+        "import \"eye-parts.adj\"\n? eye_part_function(retina, $F)\n? eye_part_function(optic_nerve, $F)\n",
+    )
+    .unwrap();
+    let (ok, out) = run(&dir.join("case.adj"));
+    assert!(ok, "cli should succeed: {out}");
+    for span in [RETINA, OPTIC_NERVE] {
+        assert!(!out.contains(&span.replace('\u{a0}', " ")), "the ordinary-space form reaches no answer: {out}");
+    }
 }
 
 /// #15193. NO ROW HERE SHARES A SPAN, and no row carries a `locator` —
