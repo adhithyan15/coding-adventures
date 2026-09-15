@@ -1,15 +1,17 @@
 % ============================================================================
 % joint-formed-by — the actual BONES that meet to form three synovial-joint
-% types, decoded from spans already sitting unused inside `joint-types.adj`'s
-% own already-quoted NIH/NLM StatPearls sentences (adj-facts-stdlib, ANATOMY).
+% types, from the NIH/NLM StatPearls page `joint-types.adj` also cites
+% (adj-facts-stdlib, ANATOMY).
 % ============================================================================
 % A sibling to the already-shipped `joint-types.adj`
 % (`joint_example(joint_type, example)`, hinge/pivot/condyloid/saddle/planar/
 % ball_and_socket → a representative joint the source names for each shape,
-% e.g. pivot → atlantoaxial): that table's own header already quotes,
-% verbatim, three StatPearls sentences that name a joint type's representative
-% EXAMPLE joint AND, in the same sentence, the specific BONES that meet to
-% FORM that joint -- a fact the joint_type/example schema had no room for:
+% e.g. pivot → atlantoaxial): the page that table cites also names, for three
+% joint types, the specific BONES that meet to FORM the joint -- a fact the
+% joint_type/example schema had no room for. (This paragraph used to say
+% `joint-types.adj`'s header quotes these spans and that each names the
+% example and the bones in the same sentence; that header no longer quotes
+% them, and the saddle span takes three sentences, as noted below.)
 %
 %   pivot → atlas, axis
 %     "The atlantoaxial joint, formed by the 1st (atlas) and 2nd (axis)
@@ -20,14 +22,13 @@
 %      metacarpals and proximal phalanges of the medial 4 fingers."
 %
 %   saddle → trapezium, first_metacarpal
-%     "the joint formed by the trapezium and 1st metacarpal bone" (the
-%      saddle joint at the base of the thumb, already quoted inside
-%      `joint-types.adj`'s own header as the parenthetical gloss on its
-%      saddle → thumb row)
+%     "the joint formed by the trapezium and 1st metacarpal bone" (a clause
+%      of the last of the three sentences both saddle rows carry; see
+%      "EACH ROW CARRIES ITS OWN SPAN" below)
 %
 % New `joint_formed_by(joint_type, bone)` table decodes those named bones as
 % each joint type's own rows (6 total, across the three joint types whose
-% source sentence explicitly names the forming bones -- hinge, planar, and
+% source span explicitly names the forming bones -- hinge, planar, and
 % ball_and_socket are deliberately NOT rowed here, since their own quoted
 % spans in `joint-types.adj` name only an example joint, never the specific
 % bones that form it). "Bone" (what physically meets to form the joint) is

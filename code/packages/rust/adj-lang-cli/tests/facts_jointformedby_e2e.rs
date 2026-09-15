@@ -1,9 +1,8 @@
 //! End-to-end test for the anatomy FACTS library
 //! (`adj-facts-stdlib/anatomy/joint-formed-by.adj`) driven through the
 //! built CLI: a native `table` naming the actual bones that meet to form
-//! three synovial-joint types, decoded from spans already sitting unused
-//! inside `joint-types.adj`'s own already-quoted StatPearls sentences --
-//! a sibling to that table. Resolves binding-query recall (both
+//! three synovial-joint types, from the StatPearls "Anatomy, Joints" page
+//! that `joint-types.adj` also cites -- a sibling to that table. Resolves binding-query recall (both
 //! directions, including a 2-answer forward recall), and abstains on a
 //! real, already-tabled joint type (hinge) whose own quote names only an
 //! example joint, never its forming bones -- 0 model calls.

@@ -24,7 +24,11 @@
     §4).
 
   The header's "reproduces, byte-for-byte ... no new WebFetch" provenance note is replaced by the
-  measurement.
+  measurement. Three stale sibling claims are corrected, in the header and the test's doc comment:
+  - that the spans sit inside `joint-types.adj`'s header (that header no longer quotes them);
+  - that each names the example joint and the bones "in the same sentence" (the saddle span takes
+    three);
+  - that the saddle clause is quoted there as a parenthetical gloss.
 
   ### Pins
 
