@@ -152,8 +152,12 @@ const UNSUPPORTED_OPS: &[&str] = &[
 ///    We require the frontend to have resolved types before lowering.
 ///
 /// 4. **UnsupportedType** — `type_hint` must not be `"str"` (no string
-///    arithmetic in this backend) or start with `"ref<"` (heap pointers have
-///    no BEAM equivalent in this lowering).
+///    arithmetic in this backend, except the `str_const`/`str_concat`/
+///    `str_slice`/`call`/`ret`/`mov`/`array_set`/`array_get` ops this
+///    backend does lower — the last two are BEAM06's `str`-typed array
+///    element read/write, reusing BEAM04's `:ets` substrate unmodified) or
+///    start with `"ref<"` (heap pointers have no BEAM equivalent in this
+///    lowering).
 ///
 /// 5. **UnsupportedType for float const** — `op == "const"` with an
 ///    `Operand::Float` source and `type_hint != "f64"` is rejected. BEAM03
@@ -315,10 +319,21 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
             //   - `is_null` with `"bool"` → is_nil synthesis
             //
             // Any other ref<…> type on any other op is rejected as before.
+            // BEAM06: `array_set`/`array_get` with `type_hint == "str"` are
+            // a `str`-typed array element read/write (Dartmouth BASIC's
+            // `array<str>` — `DIM A$(n)` — and its mixed numeric/string
+            // `DATA` pool's string pool). These dispatch to the exact same
+            // `:ets` substrate BEAM04 built for `array<f64>` (see the
+            // module-setup comment in `lower.rs`): a `str` value is already
+            // an ordinary Erlang character list (the `str_const` scalar
+            // representation), and `:ets` holds arbitrary terms natively,
+            // so no new representation is needed — confirmed on real `erl`,
+            // see `code/specs/BEAM06-string-array-representation.md`.
             if instr.type_hint == "str"
                 && !matches!(
                     instr.op.as_str(),
                     "str_const" | "str_concat" | "str_slice" | "call" | "ret" | "mov"
+                        | "array_set" | "array_get"
                 )
             {
                 errors.push(format!(

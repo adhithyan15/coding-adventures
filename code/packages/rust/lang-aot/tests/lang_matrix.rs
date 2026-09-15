@@ -5060,9 +5060,13 @@ const PROGRAMS: &[Prog] = &[
     // `42` plus `OK`; RESTORE rewinds the same pointer, then a numeric scalar
     // and a string scalar read the first two items again and print `20` plus
     // `O`. This proves ordered mixed storage, both scalar and array string READ,
-    // numeric READ, and representation-independent rewind on all seven standard
-    // backends. Every READ also checks the runtime kind tag before loading its
-    // typed value pool, so dynamic control flow cannot silently cross types.
+    // numeric READ, and representation-independent rewind on all eight standard
+    // backends (BEAM06 — real `erl` proves the string-array pool's `array<str>`
+    // element runs on the same `:ets` substrate BEAM04 built for `array<f64>`,
+    // with the runtime kind-tag check unaffected: `array<i64>` stays on
+    // `:atomics` exactly as before). Every READ also checks the runtime kind
+    // tag before loading its typed value pool, so dynamic control flow cannot
+    // silently cross types.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
@@ -5070,7 +5074,7 @@ const PROGRAMS: &[Prog] = &[
               30 READ A, S$(0), B, S$(1)\n40 PRINT A + B\n50 PRINT S$(0) + S$(1)\n\
               60 RESTORE\n70 READ C, T$\n80 PRINT C\n90 PRINT T$\n100 END\n",
         expect: Expect::Stdout("42\nOK\n20\nO"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — *unstructured `GOSUB` / `RETURN`* (LANG-FULL BA1, enabler
     // **E7**). The headline proof that one `RETURN` resumes at the *dynamically
@@ -5383,7 +5387,7 @@ const PROGRAMS: &[Prog] = &[
     // reads them back through two `str`-typed `array_get`s and concatenates —
     // so the printed `OK` (not `OO`/`KK`) proves the two element slots are
     // distinct and the handles survive a store→load round-trip through the
-    // aggregate.  Runs on **all seven backends**, each with its native
+    // aggregate.  Runs on **all eight backends**, each with its native
     // representation of a `str` element:
     //   • **VM/JIT** — a tagged `Value::Str` array element.
     //   • **WASM** — a 4-byte i32 handle per element (`i32.store`/`i32.load`, the
@@ -5394,13 +5398,18 @@ const PROGRAMS: &[Prog] = &[
     //     `native_array_elem_size` accepts `str` as an 8-byte element on x86_64/aarch64.
     //   • **JVM** — a `java.lang.String[]` (`anewarray` + `aaload`/`aastore`).
     //   • **CLR** — a `System.String[]` (`newarr` + `ldelem.ref`/`stelem.ref`).
+    //   • **Beam** (BEAM06) — an ordinary Erlang character list, the exact
+    //     `str_const` scalar representation, stored directly in the SAME
+    //     `:ets` table substrate BEAM04 built for `array<f64>` — zero new
+    //     BEAM opcodes, confirmed on real `erl`; see
+    //     `code/specs/BEAM06-string-array-representation.md`.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 DIM A$(2)\n20 LET A$(0) = \"O\"\n30 LET A$(1) = \"K\"\n\
                40 PRINT A$(0) + A$(1)\n50 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // VM-044: three loop-carried additions wrap 250 + 30 to 24, then the
     // function returns that value across a call boundary for visible output.
@@ -9432,6 +9441,19 @@ fn matrix_every_proven_cell_agrees() {
 /// (VM-018's module-global design question, unaffected by array
 /// representation).
 ///
+/// It changed again (400 → 402, BEAM06) once `iir-to-beam` gained `str`-
+/// typed array element support on the SAME `:ets` substrate BEAM04 built,
+/// with ZERO new representation work: a `str` value is already an ordinary
+/// Erlang character list (the `str_const` scalar lowering), and `:ets`
+/// stores that exactly as natively as a float, confirmed on real `erl`
+/// (see `code/specs/BEAM06-string-array-representation.md`). The `DIM
+/// A$(2)` string-array row and the mixed numeric/string `DATA` row — both
+/// explicitly deferred by BEAM04 as needing a separate, larger design —
+/// each gained a real, `erl`-proven `Beam` declaration.  Dartmouth BASIC
+/// now declares 45/51 rows on `Beam`; only the 5 `INPUT` rows (VM-060b)
+/// and `RND` (VM-018) remain, both unscoped design questions rather than
+/// probe-and-promote items.
+///
 /// COBOL-60's expected cell count changed again after VM-040's boolean/
 /// EVALUATE slice (422 → 426) and again in this slice (426 → 430): four more
 /// rows (alphanumeric EVALUATE subject via `str_cmp`, and three reference-
@@ -9497,7 +9519,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Twig, 49, 392),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 45),
-        (Language::DartmouthBasic, 51, 400),
+        (Language::DartmouthBasic, 51, 402),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
         (Language::Cobol60, 58, 464),
@@ -16221,6 +16243,58 @@ fn portable_text_stdout_dartmouth_basic_beam_arrays_and_data() {
     }
     assert_eq!(executed, 4);
     eprintln!("Dartmouth BASIC BEAM arrays and DATA: {executed} programs executed");
+}
+
+/// BEAM06: Dartmouth BASIC **string-array** and mixed numeric/string `DATA`
+/// rows — the 2 rows BEAM04 explicitly left deferred as "a separate, larger
+/// gap" because `iir-to-beam` had no `str`-typed array element
+/// representation at all (`UnsupportedType` at validation, independent of
+/// BEAM04's float-storage fix). Research found this needed ZERO new
+/// representation work: a `str` value is already an ordinary Erlang
+/// character list (the `str_const` scalar lowering), and BEAM04's
+/// `:ets`-backed array substrate already stores arbitrary Erlang terms
+/// natively — confirmed on real `erl` (round-trip, overwrite, concatenation,
+/// empty-string edge case). Now that `type_hint == "array<str>"`/`"str"`
+/// dispatches to the SAME `:ets` substrate as `"array<f64>"`/`"f64"` (see
+/// `code/specs/BEAM06-string-array-representation.md`), both rows run
+/// correctly: `DIM A$(2)` (plain string array) and the mixed numeric/string
+/// `DATA`/`READ`/`RESTORE` row (VM-017's parallel kind/numeric/string
+/// pools — traced directly to confirm the pools are three separate typed
+/// arrays, never one heterogeneous array, so no tagged/variant element
+/// representation was needed).
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_string_arrays() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM string arrays: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, &str)] = &[
+        (
+            "10 DIM A$(2)\n20 LET A$(0) = \"O\"\n30 LET A$(1) = \"K\"\n\
+             40 PRINT A$(0) + A$(1)\n50 END\n",
+            "OK",
+        ),
+        (
+            "10 DIM S$(1)\n20 DATA 20, \"O\", 22, \"K\"\n\
+             30 READ A, S$(0), B, S$(1)\n40 PRINT A + B\n50 PRINT S$(0) + S$(1)\n\
+             60 RESTORE\n70 READ C, T$\n80 PRINT C\n90 PRINT T$\n100 END\n",
+            "42\nOK\n20\nO",
+        ),
+    ];
+    let mut executed = 0;
+    for (src, stdout) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::DartmouthBasic && p.src == *src)
+            .unwrap_or_else(|| panic!("DartmouthBasic row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected BASIC row must declare Beam");
+        assert!(matches!(program.expect, Expect::Stdout(value) if value == *stdout),
+            "selected BASIC expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 2);
+    eprintln!("Dartmouth BASIC BEAM string arrays: {executed} programs executed");
 }
 
 // VM-041: fixed a confirmed silent-corruption bug first — `call_closure`

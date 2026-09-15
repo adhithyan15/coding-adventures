@@ -1,5 +1,53 @@
 # Changelog — iir-to-beam
 
+## 0.15.0 - 2026-09-15 - str-typed array elements reuse the :ets substrate (BEAM06)
+
+Dartmouth BASIC's `DIM A$(n)` (`array<str>`) and its mixed numeric/string
+`DATA` pool's string pool both failed BEAM VALIDATION outright
+(`UnsupportedType: ... has type_hint "str"`) — `array_set`/`array_get` were
+not in the validator's `"str"`-type_hint allow-list, and `iir-to-beam` had
+no `str`-typed array element representation at all. Full research +
+decision: `code/specs/BEAM06-string-array-representation.md`.
+
+**Zero new representation work was needed.** A `str` value is already an
+ordinary Erlang character list (the `"str_const"` scalar lowering), and
+BEAM04's `:ets`-backed array substrate already stores arbitrary Erlang
+terms natively — confirmed directly against real `erl` with a standalone
+probe mirroring `iir-to-beam`'s exact `array_set`/`array_get` instruction
+shape (round-trip, overwrite, concatenation of two round-tripped elements,
+and the empty-string edge case all pass). Also traced BASIC's mixed
+numeric/string `DATA` pool and confirmed it uses THREE separate parallel
+typed arrays (kind/numeric/string), never one heterogeneous array — so no
+tagged/variant element representation is needed anywhere in this backend.
+
+- `validate.rs`: Check 4's `"str"`-type_hint allow-list gains `"array_set"`
+  and `"array_get"`, mirroring the existing `str_const`/`str_concat`/
+  `str_slice`/`call`/`ret`/`mov` entries. `alloc_array`'s `"array<str>"`
+  type_hint was never rejected in the first place (Check 4 only matches
+  the exact string `"str"`), so no change was needed there.
+- `lower.rs`: the `alloc_array`/`array_set`/`array_get` `:ets`-dispatch
+  conditions each widen from a single `== "array<f64>"`/`"f64"` check to
+  also match `"array<str>"`/`"str"`. The emitted instruction sequence is
+  byte-for-byte identical to the existing `f64` path — no branch on
+  element type inside the lowering itself, because nothing about the BEAM
+  instructions depends on it.
+- New unit test `test_100_str_array_ops_use_ets_not_atomics`
+  (instruction-shape): confirms an all-`str`-array module's emitted
+  `call_ext`s target `ets:*`/`erlang:list_to_tuple/1` and none target
+  `atomics:*`.
+- New real-`erl` test `test_101_real_erl_string_array_set_get_roundtrip`:
+  the exact shape of the promoted `DIM A$(2)` corpus row — `alloc_array`,
+  two `str`-typed `array_set`s, two `array_get`s, `str_concat` — executed
+  on real Erlang, printing `OK`.
+- New real-`erl` test `test_102_real_erl_string_array_overwrite`: writes
+  index 0 twice (`"lo"` then `"hi"`) and confirms the read-back is `"hi"`,
+  proving `ets:insert` overwrites for string values exactly as
+  `test_96_real_erl_float_array_overwrite` already proved for float
+  values.
+
+105 tests total (up from 102), all green; `cargo clippy --all-targets -- -D
+warnings` clean.
+
 ## 0.14.0 - 2026-09-15 - call_closure liveness fix + mov ref<LispyPair> validator fix (VM-041)
 
 **Fixed a confirmed silent-data-corruption bug (VM-D035):** `"call_closure"`
