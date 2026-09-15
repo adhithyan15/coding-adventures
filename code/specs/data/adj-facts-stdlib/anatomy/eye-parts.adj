@@ -57,7 +57,8 @@
 % the primary U.S. National Institutes of Health reference, the National Eye
 % Institute (NEI), "How the Eyes Work" (nei.nih.gov), whose step-by-step
 % description of how light moves through the eye states each part's job. Each
-% span is quoted here character-for-character so any reader can re-check it:
+% span is quoted here so any reader can re-check it, character-for-character
+% except for comment line-wrapping and the U+00A0 no-break spaces noted below:
 %
 %   cornea → bends_light
 %     "The cornea is shaped like a dome and bends light to help the eye focus."

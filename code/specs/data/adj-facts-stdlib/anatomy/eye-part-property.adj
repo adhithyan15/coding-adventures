@@ -7,7 +7,8 @@
 % (`eye_part_function(part, function)`, cornea/pupil/iris/lens/retina/
 % optic_nerve → bends_light/lets_in_light/controls_light/focuses_light/
 % turns_light_into_signals/carries_signals_to_brain): that table's own header
-% already quotes, verbatim, per-row NEI spans that each name a part's FUNCTION
+% already quotes per-row NEI spans (verbatim apart from line-wrapping and the
+% retina sentence's U+00A0, noted below) that each name a part's FUNCTION
 % (what it DOES to light) -- but three of those very same quoted spans also
 % carry a parenthetical or descriptive clause naming a PROPERTY of the part
 % (what it IS or looks like), a fact the function/description schema had no
