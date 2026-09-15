@@ -29,6 +29,11 @@
   The claim is withdrawn. The header's quote table now carries each sentence in the page's own
   characters, and names which row shape each rule takes.
 
+  The header also quotes a fragment for the untabled "more" rule, *"Adjectives with two syllables
+  except those that end in -er, -ow, -le, or -y"*, with HYPHEN-MINUS throughout. The page writes an
+  EN DASH before all four endings, and in that form the fragment occurs once. It is corrected. It
+  reaches no answer, and no test pins it.
+
   ### Pins
 
   The test keeps every behaviour it shipped with: the direct and reverse recalls, the silent-e,
