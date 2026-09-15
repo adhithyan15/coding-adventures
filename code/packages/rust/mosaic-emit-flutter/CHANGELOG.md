@@ -35,6 +35,23 @@ collapsing a subtree. Declining means emitting **no size argument**, leaving
 the child to size itself, which is what `width: 100%` wants in the first
 place.
 
+Two things found in security review, both inside this change:
+
+- **Declining a width removes a bound.** `Expanded` was gated only on
+  `direct_row_child`, never on `direct_row_accepts_flex` -- despite a
+  comment thirty lines below claiming it was. So removing the `SizedBox`
+  that had been a subtree's only width bound could leave an `Expanded`
+  measured unbounded, which throws
+  `RenderFlex children have non-zero flex but incoming width constraints
+  are unbounded`. That would have turned a silently-blank subtree into a
+  thrown layout error -- a different failure, not a fixed one. The gate now
+  matches what the comment always claimed. No product output changes.
+- **The charset gate is not a parse.** `1-2`, `1.2.3` and `.` pass the
+  character check and still fail to parse, and delegating those to
+  `parse_pixel_value` answered `0` -- the very collapse this function
+  exists to prevent, through a narrower door. The result is derived from a
+  real parse now.
+
 **Flutter only.** Compose, Qt, SwiftUI, XAML, React and HTML all decline or
 pass through relative lengths correctly; measured on VisiCalc, whose root
 carries `height: 100vh`. The corpus authors 86 relative lengths, so most

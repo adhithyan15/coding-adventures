@@ -3020,8 +3020,19 @@ fn emit_paired_children(
         }
         // Orphan Else falls through to the standalone routing in
         // `emit_widget_tree`, which emits a documenting placeholder.
-        let flex = ctx
-            .direct_row_child
+        // #15213 -- gated on `direct_row_accepts_flex` as well, which is
+        // what the comment further down already claims of `Expanded` and
+        // what was never true of it. An `Expanded` under a Row that is
+        // measured with an unbounded max width throws
+        // `RenderFlex children have non-zero flex but incoming width
+        // constraints are unbounded`, taking out the widget and its
+        // ancestry.
+        //
+        // Declining a relative width (the rest of this change) removes the
+        // `SizedBox` that used to be such a subtree's only bound, so
+        // without this the fix would convert a silently-blank subtree into
+        // a thrown layout error -- a different failure, not a fixed one.
+        let flex = (ctx.direct_row_child && ctx.direct_row_accepts_flex)
             .then(|| part_flex_grow(child, part_styles))
             .flatten();
         // This children list owns the explicit flex wrapper. Do not also let
@@ -3621,19 +3632,28 @@ fn fixed_pixel_length(s: &str) -> Option<String> {
     {
         return None;
     }
-    // A NEGATIVE is dropped for the same reason a `%` is, and the reason is
-    // the one written above: handing this site `parse_pixel_value`'s `0`
-    // collapses the whole subtree into a zero-width box. #15160 made that
-    // reachable -- centralising the negative guard turned `width: -5px` on
-    // a Row part from `SizedBox(width: -5)`, which trips Flutter's
-    // `debugAssertIsValid` LOUDLY, into `SizedBox(width: 0)`, which
-    // silently eats the subtree. Trading a loud failure for a silent one
-    // is the wrong direction, so this site keeps its own answer: do not
-    // apply the width at all, and let the child size itself.
-    if trimmed.ends_with('%') || trimmed.starts_with('-') {
-        return None;
-    }
-    Some(parse_pixel_value(s))
+    // Derive the answer from a real PARSE rather than delegating to
+    // `parse_pixel_value`. The charset gate admits shapes that still fail to
+    // parse -- `1-2`, `1.2.3`, `.`, `100 ` once `px` is stripped -- and
+    // delegating answered `0` for each, which is the very collapse this
+    // function exists to prevent, reached through a narrower door.
+    const MAX_EXACT_INT: f64 = 9_007_199_254_740_992.0;
+    let parsed = body
+        .parse::<f64>()
+        .ok()
+        .filter(|f| f.is_finite() && *f >= 0.0 && f.abs() <= MAX_EXACT_INT)?;
+    //
+    // A NEGATIVE declines here too (#15160). Handing this site
+    // `parse_pixel_value`'s `0` for one turned `width: -5px` on a Row part
+    // from `SizedBox(width: -5)` -- which trips Flutter's
+    // `debugAssertIsValid` LOUDLY -- into `SizedBox(width: 0)`, which
+    // silently eats the subtree. The `>= 0.0` filter keeps that declining,
+    // and `%` can no longer reach the parse at all.
+    Some(if parsed == 0.0 {
+        "0".to_string()
+    } else {
+        format!("{parsed}")
+    })
 }
 
 /// Translate a CSS hex / named colour to a Dart `Color(0xFFRRGGBB)`
@@ -14792,6 +14812,81 @@ mod relative_length_tests {
         );
         // the rest of the part still applies
         assert!(out.contains("EdgeInsets.all(24)"), "{out}");
+    }
+
+    /// The charset gate is not a parse, so shapes that pass it can still
+    /// fail to parse. Delegating those to `parse_pixel_value` answered `0`
+    /// -- the very collapse this function exists to prevent, through a
+    /// narrower door.
+    #[test]
+    fn a_shape_that_passes_the_charset_but_not_the_parse_still_declines() {
+        for malformed in ["1-2", "1.2.3", ".", "-", "2-3px", "5.5.5px", "1--2"] {
+            assert_eq!(
+                fixed_pixel_length(malformed),
+                None,
+                "`{malformed}` must decline, not become a zero-size box"
+            );
+        }
+        // `100 px` is accepted leniently as 100 -- the inner trim reaches a
+        // clean number. Not valid CSS, but the answer is a real size rather
+        // than a collapse, which is what this guard is about.
+        assert_eq!(fixed_pixel_length("100 px").as_deref(), Some("100"));
+    }
+
+    /// `style_prop_to_container_arg` declines too. This path is unreachable
+    /// from `emit_container` today -- `part_has_decoration` returns true
+    /// whenever a `width` or `height` key is present, so the lightweight
+    /// path is never taken for a sized part -- so this is defence in depth,
+    /// pinned rather than shipped as if it were a live fix.
+    #[test]
+    fn the_lightweight_container_arg_path_declines_too() {
+        assert_eq!(style_prop_to_container_arg("width: 100vh"), None);
+        assert_eq!(style_prop_to_container_arg("height: max-content"), None);
+        assert_eq!(
+            style_prop_to_container_arg("width: 240px").as_deref(),
+            Some("width: 240")
+        );
+    }
+
+    /// The styled box's HEIGHT arm, which the percentage-width test above
+    /// does not reach.
+    #[test]
+    fn a_styled_box_with_a_viewport_height_emits_no_height() {
+        fn prop(name: &str, value: &str) -> StyleProp {
+            StyleProp {
+                name: name.to_string(),
+                value: value.to_string(),
+            }
+        }
+        let m = MosmodelComponent {
+            component: "X".to_string(),
+            slots: vec![],
+            emits: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("cell".to_string()),
+                props: vec![],
+                children: vec![],
+            },
+        };
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "cell".to_string(),
+                base: vec![prop("height", "100vh"), prop("background", "#123456")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &style).expect("emits").output;
+        assert!(
+            !out.contains("height: 0"),
+            "a viewport height must not collapse the box: {out}"
+        );
+        assert!(out.contains("0xFF123456"), "{out}");
     }
 
     /// The same for a styled box, which reached the lossy parse by a
