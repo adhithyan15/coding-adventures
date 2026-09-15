@@ -7,13 +7,18 @@ license = "MIT"
 [components]
 exports = ["PhotoPickerApp"]
 
-# XAML only in this slice (UI59 §2) -- Qt, Compose, and Flutter follow as
-# separate PRs, in the same order `[host_effects]` itself landed in. No
+# XAML and Qt this slice (UI59 §2) -- Compose and Flutter follow as separate
+# PRs, in the same order `[host_effects]` itself landed in. No
 # `[host_assets]` section: unlike Engram, this app has no legacy
 # hand-written host to retire -- it starts on `[host_effects]` directly.
 [host_effects]
 files = [
   { backend = "xaml", source = "host/xaml/PhotoPickerEffects.cs", target = "PhotoPickerEffects.cs" },
+  # Qt names its sources and needs `target_sources` (unlike SwiftUI/Compose,
+  # which compile whole directories) -- both the header and the source are
+  # listed, matching engram-app's own Qt `[host_effects]` entry.
+  { backend = "qt", source = "host/qt/PhotoPickerEffects.h", target = "PhotoPickerEffects.h" },
+  { backend = "qt", source = "host/qt/PhotoPickerEffects.cpp", target = "PhotoPickerEffects.cpp" },
 ]
 handlers = [
   # No `include`: the XAML emitter refuses one outright (every type in the
@@ -29,6 +34,10 @@ handlers = [
   # a same-named handler namespace. Confirmed by a real `dotnet build`
   # failure (CS0117) before this was caught.
   { backend = "xaml", install = "PhotoPickerHost.PhotoPickerEffects.Install" },
+  # `include` names the header (plain C++, not a static class method like
+  # XAML), matching engram-app's `{ backend = "qt", include = ...,
+  # install = "installEngramEffects" }` shape exactly.
+  { backend = "qt", include = "PhotoPickerEffects.h", install = "installPhotoPickerEffects" },
 ]
 
 [kernel]

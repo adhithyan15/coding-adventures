@@ -5,6 +5,38 @@ All notable changes to this package are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `host/qt/PhotoPickerEffects.{h,cpp}` — the Qt `[host_effects]`
+  handler for `UI59`'s `files.open` effect, implemented via
+  `QFileDialog::getOpenFileName`, mirroring Engram's own Qt effect
+  handler (`installEngramEffects`) in structure.
+- `[host_effects]` manifest wiring for Qt, alongside the existing XAML
+  entry, per `UI59` §2; Compose and Flutter remain explicit follow-up
+  PRs.
+- `tests/package_compiles.rs` extended with Qt manifest-shape and
+  handler-source coverage (4 tests total, up from 3).
+- Verified with a real `cmake --build` (Ninja + MSVC) of the
+  `--profile native-complete` emitted project — a full, unqualified
+  success (no documented exception, unlike the XAML build's known
+  benign packaging-step error).
+
+### Design notes
+
+- The Qt handler reads a picked file in bounded 64 KiB chunks and
+  fails once the running total exceeds a 50 MiB cap (matching XAML's
+  cap), enforced *during* the read from the first draft — applying the
+  TOCTOU lesson `/security-review` taught on the XAML handler earlier
+  in this same effect's history (PR #15218 round 2), rather than
+  needing a follow-up fix here too.
+- `failed.message` is always a short, generic string, never a raw
+  `QFile::errorString()`/`std::exception::what()` — a deliberate
+  departure from `installEngramEffects`'s own precedent, applying the
+  same "don't leak host error text through an app-visible field"
+  lesson from XAML's security review.
+
 ## [0.1.0] — 2026-09-15
 
 ### Added
