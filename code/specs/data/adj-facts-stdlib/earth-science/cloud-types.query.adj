@@ -4,8 +4,9 @@
 % The shape a learner (or an LLM) produces to ANSWER "what level is a cirrus
 % cloud?": it states no weather fact — it only `import`s the grounded table and
 % asks binding queries. The engine resolves each `?` against the
-% `cloud_altitude` rows and returns the level + the table's source/locator/
-% trust. A cloud (or non-cloud) the NWS page never classifies abstains honestly
+% `cloud_altitude` rows and returns the level + the ROW's own deck sentence,
+% with the table's locator and trust inherited. A cloud (or non-cloud) the NWS
+% page never classifies abstains honestly
 % — the engine never invents a level.
 %
 % Run (from this directory so the relative import resolves):
