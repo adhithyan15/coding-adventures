@@ -69,6 +69,7 @@ import {
   assertRealDocFile,
   docShardContents,
   docShardDirectoryFor,
+  docSplitAt,
   isDocSharded,
   isValidDocShardName,
   joinDocShards,
@@ -423,9 +424,18 @@ export function runDocShardCli(
     const shardCount = listDocShardNames(monolith, plan).length - 1; // `_meta.md`
     const sectionCount = docShardContents(expected, plan).size - 1;
     if (sectionCount !== shardCount) {
+      // `docSplitAt`, not `plan.headingLevel`: the gate above is already
+      // shape-aware, so only the MESSAGE would lie. For a bullet plan it would
+      // report "exactly one level-2 section" about a document that has no
+      // level-2 sections, sending the reader to hunt for `##` headings in a
+      // file with one. The last surviving `headingLevel` read outside
+      // `docSplitAt`, and exactly the divergence `entryStartPattern` exists to
+      // stop.
+      const at = docSplitAt(plan);
       process.stderr.write(
         `${plan.path}: ${shardCount} section shard(s) rebuild as ${sectionCount} section(s). ` +
-          `Each non-meta shard must contain exactly one level-${plan.headingLevel} section.\n`,
+          `Each non-meta shard must contain exactly one ` +
+          `${at === "bullet" ? "top-level bullet entry" : `level-${at} section`}.\n`,
       );
       failed = true;
     }

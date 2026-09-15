@@ -717,6 +717,121 @@ describe("ordering", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Bullet entries: documents that are one heading over a long list.
+// ---------------------------------------------------------------------------
+describe("splitting on top-level bullets", () => {
+  const BULLET_PLAN: DocShardPlan = {
+    path: "fixture/BULLETS.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  };
+
+  it("takes everything above the first bullet as the preamble", () => {
+    const text = "# Changelog\n\nBlurb.\n\n## Unreleased\n\n- first\n\n- second\n";
+    const { preamble, sections } = splitDocument(text, "bullet");
+
+    expect(preamble).toBe("# Changelog\n\nBlurb.\n\n## Unreleased\n\n");
+    expect(sections.map((s) => s.heading)).toEqual(["- first", "- second"]);
+  });
+
+  it("round-trips byte-for-byte", () => {
+    const text = "# T\n\n## Unreleased\n\n- one\n  continued\n\n- two\n";
+    const { preamble, sections } = splitDocument(text, "bullet");
+    expect(preamble + sections.map((s) => s.text).join("")).toBe(text);
+  });
+
+  it("keeps an INDENTED bullet with the entry above it", () => {
+    // A nested list item is part of its parent entry. Splitting on it would cut
+    // an entry in half and file the halves under different names.
+    const text = "# T\n\n- parent\n  - nested\n  - also nested\n\n- next\n";
+    const { sections } = splitDocument(text, "bullet");
+    expect(sections.map((s) => s.heading)).toEqual(["- parent", "- next"]);
+    expect(sections[0].text).toContain("  - nested");
+  });
+
+  it("ignores a bullet inside a fenced block", () => {
+    // `- ` at column 0 inside ``` is shell/diff/YAML content, not an entry.
+    const text = "# T\n\n- real\n\n```yaml\n- not an entry\n```\n\n- also real\n";
+    const { sections } = splitDocument(text, "bullet");
+    expect(sections.map((s) => s.heading)).toEqual(["- real", "- also real"]);
+    expect(sections[0].text).toContain("- not an entry");
+  });
+
+  it("does not treat a heading as an entry in bullet mode", () => {
+    const text = "# T\n\n## Unreleased\n\n- only entry\n\n## Older\n";
+    const { sections } = splitDocument(text, "bullet");
+    expect(sections).toHaveLength(1);
+    expect(sections[0].text).toContain("## Older");
+  });
+
+  it("shards and rejoins through the plan API", () => {
+    const text = "# T\n\n## Unreleased\n\n- alpha entry\n\n- beta entry\n";
+    const shards = docShardContents(text, BULLET_PLAN);
+    expect(shards.size).toBe(3); // two entries + _meta.md
+    expect(joinDocShards(shards, BULLET_PLAN)).toBe(text);
+  });
+
+  it("refuses a document with no top-level bullets, naming bullets", () => {
+    expect(() => docShardContents("# T\n\nprose only\n", BULLET_PLAN)).toThrow(
+      /top-level bullets/,
+    );
+  });
+
+  it("leaves heading-shaped plans splitting on headings", () => {
+    // The default must not move. `entryShape` is optional, and every existing
+    // plan omits it.
+    const text = "# T\n\n## one\n\n- a bullet\n\n## two\n";
+    const headingPlan: DocShardPlan = {
+      path: "fixture/H.md",
+      headingLevel: 2,
+      newestFirst: true,
+    };
+    const shards = docShardContents(text, headingPlan);
+    expect(shards.size).toBe(3);
+    expect(joinDocShards(shards, headingPlan)).toBe(text);
+  });
+});
+
+describe("the measured bullet-shaped document", () => {
+  // Proves the tool handles the actual target before any migration commits to
+  // it. `adj-facts-stdlib/CHANGELOG.md` is the repo's second-worst conflict
+  // generator by time-clustered contention and cannot be split on headings: it
+  // has exactly one `##` over 323 top-level entries.
+  const TARGET = "code/specs/data/adj-facts-stdlib/CHANGELOG.md";
+  const plan: DocShardPlan = {
+    path: TARGET,
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  };
+
+  it("splits on headings into far too few sections to be useful", () => {
+    // The reason the new mode exists, asserted rather than asserted-about.
+    //
+    // Deliberately MONOTONE, not `toHaveLength(1)`. That file is an active
+    // keepachangelog owned by another team, and the moment someone cuts a
+    // release it gains a `## [0.4.0]` and goes 1 -> 2. Worse, it lives outside
+    // this package, so the build tool would not run this suite on the PR that
+    // broke it -- the red would land later, in an unrelated change, pointing at
+    // a changelog its author never touched. The claim that matters is "heading
+    // splitting is useless here", which survives any number of release
+    // headings.
+    const text = readFileSync(safeDocumentPath(defaultRepoRoot(), TARGET), "utf8");
+    const byHeading = splitDocument(text, 2).sections.length;
+    const byBullet = splitDocument(text, "bullet").sections.length;
+    expect(byHeading).toBeLessThan(byBullet / 10);
+  });
+
+  it("splits on bullets into many, and rejoins byte-for-byte", () => {
+    const text = readFileSync(safeDocumentPath(defaultRepoRoot(), TARGET), "utf8");
+    const shards = docShardContents(text, plan);
+    expect(shards.size).toBeGreaterThan(200);
+    expect(joinDocShards(shards, plan)).toBe(text);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // The test this file exists for.
 // ---------------------------------------------------------------------------
 describe("the real documents", () => {
