@@ -1,0 +1,20 @@
+{
+  "chapter": 54,
+  "title": "Writing --- With A Clock",
+  "label": "ch:ge-mit-der-uhr",
+  "canDo": "I can complete the Start Deutsch 1 writing paper's two parts inside its published twenty minutes, filling all five fields and keeping the text near thirty words.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "GE-W03-mit-der-uhr",
+    "kind": "task",
+    "summary": "Complete GE-W03-mit-der-uhr: six minutes for the five fields and fourteen for the thirty-word text, then count the words and check the capitals last.",
+    "assesses": [
+      "GE-LEX-MEIN-01",
+      "GE-LEX-UND-01",
+      "GE-LEX-HALLO-01"
+    ],
+    "note": "Timing, part count, field count and word length are read out of german/task-shapes/a1.json, which transcribes the Goethe materials, not invented for the lesson."
+  }
+}

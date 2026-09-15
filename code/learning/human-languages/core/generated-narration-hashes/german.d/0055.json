@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:45ba66a2c9f3f9dc",
+  "lessonIds": [
+    "GE-W04-vier-zeilen"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "german/narration/ch55.txt",
+  "json": "german/narration/ch55.json",
+  "textHash": "fnv1a64:9c56970e929dcf07",
+  "jsonHash": "fnv1a64:dd4b2b3befc66bde",
+  "findings": []
+}
