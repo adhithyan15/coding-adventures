@@ -23,7 +23,7 @@
 %     ? long_bone_part(diaphysis, $D)     % shaft
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `long_bone_part(part, description)` carrying the table's citation,
+% relation `long_bone_part(part, description)` carrying its own row's citation,
 % so the lookup above is the ordinary SLD binding query — the engine returns the
 % descriptor WITH its source, on the CPU, with zero model calls, and abstains on
 % anything that is not one of these named regions (it never invents one).
@@ -44,7 +44,10 @@
 % names the metaphysis "the region between the diaphysis and epiphysis", says
 % "the periosteum surrounds the bone surface", and states epiphyseal plates are
 % "responsible for linear bone growth". No token is a paraphrase the source
-% does not use, so every value is re-checkable against the spans below.
+% does not use, so every value is re-checkable against the spans below. (One
+% quote in this comment is not byte-exact and cannot be: wherever it reads
+% "surrounds the bone surface", the page has a NON-BREAKING SPACE, U+00A0,
+% between "surrounds" and "the". The shipped `source` carries it.)
 %
 % Why the MEDULLARY CAVITY (the marrow-filled hollow center) is NOT a row: the
 % chosen primary source lists "medullary cavity" only as a label in an
@@ -72,7 +75,10 @@
 % that could not be grounded there was dropped, e.g. medullary_cavity above).
 % All five pairs come from the SAME primary reference, the NIH National Library
 % of Medicine's NCBI Bookshelf StatPearls chapter "Anatomy, Bones" (NBK537199),
-% each quoted here character-for-character so any reader can re-check it. The
+% each quoted here so any reader can re-check it -- character-for-character
+% except one: the page writes a NON-BREAKING SPACE (U+00A0) between
+% "surrounds" and "the" in the periosteum sentence, which a comment cannot
+% show; the shipped `source` carries it. The
 % page introduces the first three with: "Long bones have 3 distinct anatomical
 % zones:".
 %
@@ -94,14 +100,30 @@
 %     "Epiphyseal plates are responsible for linear bone growth and remain
 %      cartilaginous until after puberty."
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single strongest span: the "Anatomy, Bones" sentence
-% that fixes the first row (diaphysis → shaft). The other rows' per-fact source
-% and verbatim span are listed above, so each pair remains independently
-% checkable. All five rows share the ONE source — NCBI Bookshelf StatPearls, a
-% peer-reviewed reference hosted and distributed by the NIH National Library of
-% Medicine (ncbi.nlm.nih.gov, a primary U.S. government host) — so
-% `trust authoritative`.
+% EACH ROW CARRIES ITS OWN SENTENCE AS ITS `source` (ADJ-TABLES RS-5e, #14986).
+% This paragraph used to say that an ADJ `table` carries ONE provenance
+% envelope, and so held the diaphysis line as the envelope -- which made it the
+% primary source of the epiphysis, metaphysis, periosteum and epiphyseal-plate
+% answers, none of which it describes. The language has per-row blocks.
+%
+% `source`, not `cites`: every sentence names its own part. The Diaphysis,
+% Epiphysis and Metaphysis lines are each ONE list item whose "Term:" head is
+% inline in the same element (not a separate heading), and the other two name
+% their subject in running prose.
+%
+% ONE SPAN WAS NEVER ON THE PAGE. The periosteum sentence was shipped with an
+% ordinary space between "surrounds" and "the"; the page writes
+% `&#x000a0;`, a NON-BREAKING SPACE. That string occurs zero times in a
+% rendering that keeps U+00A0; a renderer that collapses all whitespace hides
+% the difference. The shipped `source` now carries the page's character.
+%
+% The envelope is now "Long bones evolve via endochondral ossification.", from
+% the same section, which names no part. Every row overrides it, so it frames
+% the table and warrants no answer. Measured 2026-09-15: each row sentence and
+% the envelope occur exactly once. All five rows share the ONE source — NCBI
+% Bookshelf StatPearls, a peer-reviewed reference hosted and distributed by the
+% NIH National Library of Medicine (ncbi.nlm.nih.gov, a primary U.S. government
+% host) — so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -109,13 +131,27 @@
 table long_bone_part {
     columns part, description
 
-    row (diaphysis, shaft)                                % "Diaphysis: Also known as the shaft."
-    row (epiphysis, tip_of_bone)                          % "Epiphysis: Located at the tip of the long bone, ..."
-    row (metaphysis, between_diaphysis_and_epiphysis)     % "Metaphysis: The region between the diaphysis and epiphysis ..."
-    row (periosteum, surrounds_bone_surface)              % "The periosteum surrounds the bone surface."
-    row (epiphyseal_plate, linear_bone_growth)            % "Epiphyseal plates are responsible for linear bone growth ..."
+    row (diaphysis, shaft) {
+        source "Diaphysis: Also known as the shaft."
+    }
+    row (epiphysis, tip_of_bone) {
+        source "Epiphysis: Located at the tip of the long bone, typically responsible for articulation."
+    }
+    row (metaphysis, between_diaphysis_and_epiphysis) {
+        source "Metaphysis: The region between the diaphysis and epiphysis that contains the epiphyseal plate in children."
+    }
+    row (periosteum, surrounds_bone_surface) {
+        % U+00A0 between "surrounds" and "the", as on the page.
+        source "The periosteum surrounds the bone surface."
+    }
+    row (epiphyseal_plate, linear_bone_growth) {
+        source "Epiphyseal plates are responsible for linear bone growth and remain cartilaginous until after puberty."
+    }
 
-    source "Diaphysis: Also known as the shaft."
+    % THE ENVELOPE WAS THE DIAPHYSIS LINE, and so the primary source of
+    % every other answer. Each row now carries its own sentence; this
+    % framing sentence names no part.
+    source "Long bones evolve via endochondral ossification."
     locator "https://www.ncbi.nlm.nih.gov/books/NBK537199/"
     trust authoritative
 }
