@@ -176,6 +176,10 @@ fn the_rows_carry_the_pages_no_break_spaces() {
     // The header's lava-dome quote now uses the page's double quotes.
     let adj = shipped_adj();
     assert!(!adj.contains("technically not a 'volcano type'"), "no single-quoted lava-dome quote in the header");
+    assert!(
+        adj.contains("technically not a \"volcano type\" but rather an eruption phenomenon."),
+        "the header quotes the lava-dome disclaimer in the page's double quotes"
+    );
 }
 
 #[test]

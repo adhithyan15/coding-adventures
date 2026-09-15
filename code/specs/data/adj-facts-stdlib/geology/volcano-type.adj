@@ -21,7 +21,7 @@
 %
 % The three volcano types, as a little truth table:
 %
-%     type                 description                                       quote (verbatim)
+%     type                 description                                       quote (see note below)
 %     -------------------  ------------------------------------------------  --------------------------------------------------------------------------------
 %     cinder_cone           is_the_simplest_type_of_volcano                   "Cinder cones are the simplest type of volcano."
 %     shield_volcano        built_almost_entirely_of_fluid_lava_flows         "Shield volcanoes are built almost entirely of fluid lava flows."
@@ -62,11 +62,11 @@
 % TWO QUOTES ABOVE ARE NOT THE PAGE'S CHARACTERS, and the shipped envelope
 % occurred on no page because of it. The page writes U+00A0 (NO-BREAK SPACE)
 % after "Cinder" in the cinder-cone sentence, and on both sides of "lava" in
-% the shield sentence ("fluid lava flows."). A comment cannot show U+00A0,
-% so the truth table keeps plain spaces; in that form each sentence occurs
-% zero times. The rows carry the page's characters. The lava-dome quote used
-% single quotes around volcano type; the page writes double quotes, and the
-% quote above now does too.
+% the shield sentence. U+00A0 would be invisible in a comment, so the truth
+% table keeps plain spaces and is not verbatim; in that form each sentence
+% occurs zero times. The rows carry the page's characters. The lava-dome
+% quote used single quotes around volcano type; the page writes double
+% quotes, and the quote above now does too.
 % ============================================================================
 
 table volcano_type {

@@ -23,8 +23,9 @@
 
   ### Header corrections
 
-  - **Two truth-table quotes aren't the page's characters.** A comment can't show U+00A0, so the cinder
-    and shield quotes keep plain spaces, and a note says that in that form each occurs zero times.
+  - **Two truth-table quotes aren't the page's characters.** U+00A0 would be invisible in a comment, so
+    the cinder and shield quotes keep plain spaces. The column that called them verbatim now reads
+    "quote (see note below)", and the note says that in that form each occurs zero times.
   - **The lava-dome disclaimer** was quoted with single quotes around volcano type. The page writes
     double quotes, and the single-quote form occurs zero times. The quote now uses double quotes.
   - **The "WebFetch-verified before writing (twice ...)" note** is marked as superseded by the raw-page
@@ -44,7 +45,8 @@
   - every type's answer is one answer whose citations array holds exactly its own sentence, with no
     other type's sentence and not the envelope;
   - the rows carry the page's U+00A0 (one in the cinder sentence, two in the shield), no plain-space
-    form is left in the table, and no single-quoted lava-dome quote is left in the header;
+    form is left in the table, and the header quotes the lava-dome disclaimer in the page's double
+    quotes, not single;
   - a table-shape test.
 
   **10 of 10 mutants killed, two controls:**
