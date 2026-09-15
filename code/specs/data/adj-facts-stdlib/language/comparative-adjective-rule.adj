@@ -50,26 +50,44 @@
 % forming comparative adjectives" section, which states each rule
 % directly:
 %
-%     rule (this table's atom label)                    description (this table's atom label)   rule quote (verbatim)
+%     rule (this table's atom label)                    description (this table's atom label)   the row's provenance
 %     ---------------------------------------------------  -----------------------------------------  --------------------------------------------------------------------------------
-%     one_syllable_adjective                                add_er_suffix                               "For most adjectives with one syllable, simply add the suffix –er at the
-%                                                                                                          end of the word without changing the spelling."
-%     one_syllable_adjective_ending_in_e                    add_r_only                                  "If a one-syllable adjective already ends in -e, just add an –r at the
-%                                                                                                          end. You don't need to add another e."
-%     one_syllable_consonant_vowel_consonant                double_final_consonant_before_er            "Be careful of one-syllable adjectives with the last three letters in a
-%                                                                                                          consonant-vowel-consonant format, like big or thin. For these, you have
-%                                                                                                          to double the last consonant and then add –er."
-%     adjective_ending_in_y                                 change_y_to_i_before_er                     "If an adjective with either one or two syllables ends in a -y, first
-%                                                                                                          change the y into an i and then add –er."
-%     two_syllable_adjective_ending_in_er_ow_or_le          add_er_or_r_without_spelling_change         "If an adjective with two syllables ends with -er (like bitter) or -ow
-%                                                                                                          (like narrow), you can just add –er to the end without changing the
-%                                                                                                          spelling (bitterer or narrower). If a two-syllable adjective ends in
-%                                                                                                          -le, you can just add –r without adding a second e."
+%     one_syllable_adjective                                add_er_suffix                               `source`: the rule 1 sentence
+%     one_syllable_adjective_ending_in_e                    add_r_only                                  `source`: the first rule 2 sentence
+%     one_syllable_consonant_vowel_consonant                double_final_consonant_before_er            `cites`: both rule 3 sentences
+%     adjective_ending_in_y                                 change_y_to_i_before_er                     `source`: the rule 4 sentence
+%     two_syllable_adjective_ending_in_er_ow_or_le          add_er_or_r_without_spelling_change         `cites`: both rule 5 sentences
 %
-% curl-fetched the raw page directly and read it byte-for-byte before
-% writing this file (not just an AI-summarized WebFetch) — confirmed all
-% five quoted sentences appear verbatim in the page's own "5 spelling
-% rules for forming comparative adjectives" section. `trust consensus` —
+% Each rule's sentences, as the page writes them (the rules mix U+002D
+% HYPHEN-MINUS and U+2013 EN DASH, and the page's apostrophe is U+2019; the
+% row fields below carry the page's exact characters):
+%
+%   rule 1  "For most adjectives with one syllable, simply add the suffix –er at the end of the word without changing the spelling."
+%   rule 2  "If a one-syllable adjective already ends in -e, just add an -r at the end. You don’t need to add another e."
+%   rule 3  "Be careful of one-syllable adjectives with the last three letters in a consonant-vowel-consonant format, like big or thin."
+%           "For these, you have to double the last consonant and then add –er."   (a separate paragraph)
+%   rule 4  "If an adjective with either one or two syllables ends in a -y, first change the y into an i and then add –er."
+%   rule 5  "If an adjective with two syllables ends with -er (like bitter) or –ow (like narrow), you can just add –er to the end without changing the spelling (bitterer or narrower)."
+%           "If a two-syllable adjective ends in –le, you can just add –r without adding a second e."   (a separate paragraph)
+%
+% EACH ROW CARRIES THE PROVENANCE ITS SENTENCES SUPPORT (ADJ-TABLES RS-5e,
+% #14986). Rules 1, 2 and 4 each have ONE sentence naming both the spelling
+% pattern and the action, so each row takes it as its `source`. Rules 3 and 5
+% do not: rule 3's action sentence names its pattern only as "these", and
+% rule 5's -er/-ow half and -le half are separate paragraphs, neither stating
+% the combined row. Those two rows `cites` both of their sentences, and the
+% envelope stays their primary source. The envelope used to be rule 1's own
+% sentence, the primary source of all five answers; it is now the article's
+% "In theory, any adjective can become a comparative adjective, as long as you
+% follow the rules.", which names no rule.
+%
+% This paragraph used to say the page was "read byte-for-byte" and that all
+% five quotes "appear verbatim". Measured 2026-09-15, four quoted sentences did
+% not: rule 2 wrote an EN DASH in "add an -r" and a straight apostrophe in
+% "don't" (the page has HYPHEN-MINUS and U+2019), and rule 5 wrote HYPHEN-MINUS
+% in "-ow" and "-le" (the page has EN DASH). The claim is withdrawn; the quotes
+% above are now the page's own characters, each occurring exactly once.
+% `trust consensus` —
 % Grammarly is a reputable, widely-cited grammar-content company, the same
 % tier this stdlib already reserves for other non-.gov language sources
 % and the exact same source family `superlative-adjective-rule.adj` itself
@@ -92,13 +110,28 @@
 table comparative_adjective_rule {
     columns rule, description
 
-    row (one_syllable_adjective, add_er_suffix)
-    row (one_syllable_adjective_ending_in_e, add_r_only)
-    row (one_syllable_consonant_vowel_consonant, double_final_consonant_before_er)
-    row (adjective_ending_in_y, change_y_to_i_before_er)
-    row (two_syllable_adjective_ending_in_er_ow_or_le, add_er_or_r_without_spelling_change)
+    row (one_syllable_adjective, add_er_suffix) {
+        source "For most adjectives with one syllable, simply add the suffix –er at the end of the word without changing the spelling."
+    }
+    row (one_syllable_adjective_ending_in_e, add_r_only) {
+        source "If a one-syllable adjective already ends in -e, just add an -r at the end."
+    }
+    row (one_syllable_consonant_vowel_consonant, double_final_consonant_before_er) {
+        cites "Be careful of one-syllable adjectives with the last three letters in a consonant-vowel-consonant format, like big or thin." locator "https://www.grammarly.com/blog/parts-of-speech/comparative-adjectives/"
+        cites "For these, you have to double the last consonant and then add –er." locator "https://www.grammarly.com/blog/parts-of-speech/comparative-adjectives/"
+    }
+    row (adjective_ending_in_y, change_y_to_i_before_er) {
+        source "If an adjective with either one or two syllables ends in a -y, first change the y into an i and then add –er."
+    }
+    row (two_syllable_adjective_ending_in_er_ow_or_le, add_er_or_r_without_spelling_change) {
+        cites "If an adjective with two syllables ends with -er (like bitter) or –ow (like narrow), you can just add –er to the end without changing the spelling (bitterer or narrower)." locator "https://www.grammarly.com/blog/parts-of-speech/comparative-adjectives/"
+        cites "If a two-syllable adjective ends in –le, you can just add –r without adding a second e." locator "https://www.grammarly.com/blog/parts-of-speech/comparative-adjectives/"
+    }
 
-    source "For most adjectives with one syllable, simply add the suffix –er at the end of the word without changing the spelling."
+    % THE ENVELOPE WAS RULE 1'S OWN SENTENCE, the primary source of every
+    % answer. It is now a framing sentence that names no rule; it stays
+    % primary for the two `cites` rows (rules 3 and 5).
+    source "In theory, any adjective can become a comparative adjective, as long as you follow the rules."
     locator "https://www.grammarly.com/blog/parts-of-speech/comparative-adjectives/"
     trust consensus
 }
