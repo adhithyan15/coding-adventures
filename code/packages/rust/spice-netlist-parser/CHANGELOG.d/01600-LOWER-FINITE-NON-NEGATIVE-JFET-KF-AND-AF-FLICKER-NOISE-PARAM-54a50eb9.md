@@ -1,0 +1,1 @@
+- Lower finite, non-negative JFET `KF` and `AF` flicker-noise parameters.

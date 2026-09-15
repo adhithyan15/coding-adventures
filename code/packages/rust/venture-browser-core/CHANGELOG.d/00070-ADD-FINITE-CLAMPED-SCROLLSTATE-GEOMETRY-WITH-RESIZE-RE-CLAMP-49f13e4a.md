@@ -1,0 +1,1 @@
+- Add finite, clamped `ScrollState` geometry with resize re-clamping.

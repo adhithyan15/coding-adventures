@@ -107,7 +107,7 @@ before/after and the full opcode table.
 ## Real corpus evidence
 
 `data.wast` (vendored alongside this change — see
-`wasm-conformance/CHANGELOG.md` for the exact before/after tally) is the
+`wasm-conformance/CHANGELOG.d/` for the exact before/after tally) is the
 motivating file. Its "Extended constant expressions" section (3 modules:
 lone `i32.add`, lone `i32.sub`, lone `i32.mul`) and its "Combining add,
 sub, mul and global.get" section (1 module nesting all three plus a

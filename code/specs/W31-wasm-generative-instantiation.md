@@ -12,11 +12,11 @@ fetched files rather than trusting that categorization (a recurring lesson
 in this campaign — see `lessons.md`: prior "blocked" claims have
 repeatedly turned out stale or incomplete). Six turned out tractable;
 three stay genuinely blocked, for real, re-confirmed reasons documented in
-`wasm-conformance/CHANGELOG.md`.
+`wasm-conformance/CHANGELOG.d/`.
 
 This spec covers the two genuinely NEW pieces of grammar/behavior added.
 The per-file pass/fail numbers and the "still blocked" analysis live in
-`wasm-conformance/CHANGELOG.md`, not duplicated here.
+`wasm-conformance/CHANGELOG.d/`, not duplicated here.
 
 ## Piece 1 — three new `assert_return` wildcard expectations
 
@@ -206,7 +206,7 @@ trapped) are unaffected either way.
 
 ## Real corpus evidence
 
-See `wasm-conformance/CHANGELOG.md`'s own entry for this slice for the
+See `wasm-conformance/CHANGELOG.d/`'s own entry for this slice for the
 full per-file pass/`not_yet_supported`/fail breakdown and the complete
 "still blocked" analysis for `ref_null.wast`/`type-subtyping.wast`/
 `extern.wast`.

@@ -1,0 +1,1 @@
+- Lower valid JFET `RD` drain resistances and reject invalid inputs.

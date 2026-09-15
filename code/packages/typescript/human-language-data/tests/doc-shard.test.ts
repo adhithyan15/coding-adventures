@@ -60,6 +60,18 @@ const HINDI_PLAN: DocShardPlan = {
 const HINDI_FORWARD_FRAGMENT =
   "00250-UNRELEASED-HINDI-CHANGELOG-AUTHORING-IS-SHARDED-6788c56d.md";
 const HINDI_MIGRATION_MAX_RANK = 240;
+
+/**
+ * The fewest entries for which sharding a document buys anything.
+ *
+ * Below roughly this many, the shared file is not the bottleneck and the
+ * document should not carry a plan. Used as the anti-vacuity floor in the
+ * real-document order test, replacing a hardcoded 100 that was simply the size
+ * of the first documents migrated — and that failed on the first smaller one
+ * with "expected 31 to be greater than 100", a true statement about a perfectly
+ * healthy changelog.
+ */
+const MIN_SHARDABLE_ENTRIES = 20;
 const DUCTUS_PLAN: DocShardPlan = {
   path: DUCTUS_CHANGELOG,
   headingLevel: 3,
@@ -896,7 +908,18 @@ describe("the real documents", () => {
       if (plan.path === HINDI_CHANGELOG) {
         expect(fromShards.length).toBeGreaterThan(HINDI_MIGRATION_MAX_RANK / 10);
       } else {
-        expect(fromShards.length).toBeGreaterThan(100);
+        // The floor exists so `toEqual` above cannot pass on two EMPTY arrays.
+        // It was 100, which held while every plan was a large document and
+        // broke the moment smaller ones joined: oauth-broker has 31 entries,
+        // and the test failed with "expected 31 to be greater than 100" —
+        // a true statement about a healthy document.
+        //
+        // MIN_SHARDABLE_ENTRIES instead, because that is the number with a
+        // reason: below roughly twenty entries a shared file is not the
+        // bottleneck and the document should not have a plan at all. So this
+        // now fails for documents that should not be here, rather than for
+        // documents that are merely smaller than the first four migrated.
+        expect(fromShards.length).toBeGreaterThan(MIN_SHARDABLE_ENTRIES);
       }
     });
 

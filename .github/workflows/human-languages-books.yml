@@ -91,6 +91,13 @@ jobs:
               'code/packages/rust/lang-aot/CHANGELOG.d/*.md'
               'code/packages/rust/algol-iir-compiler/CHANGELOG.d/*.md'
               'code/specs/data/adj-facts-stdlib/CHANGELOG.d/*.md'
+              'code/packages/rust/mermaid-parser/CHANGELOG.d/*.md'
+              'code/packages/rust/wasm-conformance/CHANGELOG.d/*.md'
+              'code/packages/rust/diagram-ir/CHANGELOG.d/*.md'
+              'code/packages/rust/diagram-to-paint/CHANGELOG.d/*.md'
+              'code/packages/rust/spice-netlist-parser/CHANGELOG.d/*.md'
+              'code/packages/rust/venture-browser-core/CHANGELOG.d/*.md'
+              'code/packages/rust/oauth-broker/CHANGELOG.d/*.md'
             )
             # The migration PR must replace the one provisional Script Ductus
             # fragment while establishing its strict plan. The migration base is
@@ -127,7 +134,14 @@ jobs:
             code/programs/typescript/language-ladder/CHANGELOG.md \
             code/packages/rust/lang-aot/CHANGELOG.md \
             code/packages/rust/algol-iir-compiler/CHANGELOG.md \
-            code/specs/data/adj-facts-stdlib/CHANGELOG.md)
+            code/specs/data/adj-facts-stdlib/CHANGELOG.md \
+            code/packages/rust/mermaid-parser/CHANGELOG.md \
+            code/packages/rust/wasm-conformance/CHANGELOG.md \
+            code/packages/rust/diagram-ir/CHANGELOG.md \
+            code/packages/rust/diagram-to-paint/CHANGELOG.md \
+            code/packages/rust/spice-netlist-parser/CHANGELOG.md \
+            code/packages/rust/venture-browser-core/CHANGELOG.md \
+            code/packages/rust/oauth-broker/CHANGELOG.md)
           if [ -n "$tracked_doc_monoliths" ]; then
             echo "::error::Generated Markdown aggregates must remain untracked:"
             printf '%s\n' "$tracked_doc_monoliths"

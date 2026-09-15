@@ -1,0 +1,68 @@
+## Unreleased
+
+- Shape chart labels with resolved authored font sizes and spacing.
+- Lower quadrant external frames and internal dividers to independent backend-neutral instructions.
+- Lower chart accessibility title and description to `PaintScene` metadata.
+- Lower authored quadrant point fill, radius, and stroke geometry to backend-neutral ellipses.
+- Lower quadrant-chart regions and scatter points to backend-neutral rectangles, ellipses, and shaped labels.
+- Keep shared chart data-label boxes wide enough for titles and clamp them to canvas bounds.
+- Shape graph node, group, and edge text using resolved font families.
+- Shape graph node, group, and edge text using resolved italic styling.
+- Shape graph node, group, and edge text using resolved font weights.
+- Center graph labels using their resolved authored font size.
+- Validate colon-bearing state and transition text through native Metal PNG rendering.
+- Validate composed state classes through resolved graph styles and native Metal PNG rendering.
+- Validate multiline labels from quoted state aliases with trailing descriptions through native Metal PNG rendering.
+- Validate state hash comments alongside semantic colors through native Metal PNG rendering.
+- Omit empty graph-state shapes and labels when the semantic directive requests it.
+- Shape multiline graph-node descriptions without backend soft rewrapping.
+- Lower concurrent state-region dividers to backend-neutral Paint paths.
+- Lower resolved composite graph-group colors and stroke geometry to Paint.
+- Lower composite graph groups to backend-neutral background rectangles and shaped labels.
+- Export graph node URLs, tooltips, and hit-test bounds through PaintScene metadata.
+- Export graph-family accessibility metadata through PaintScene metadata.
+- Lower graph note nodes and dashed note associations to backend-neutral paths.
+- Lower compact graph-IR bar nodes to backend-neutral rectangles for state fork/join rendering.
+- Render destroyed participants through their message-positioned footer geometry instead of adding an unconditional destruction cross.
+- Resolve self-message source and destination tips independently for reverse/bidirectional arrowheads and central endpoint markers.
+- Paint sequence activation bars behind message paths so arrowheads remain visible at activation edges.
+- Validate message-bound sequence create/destroy events through Metal PNG rendering.
+- Render depth-offset nested sequence activation bars through backend-neutral rectangles.
+- Validate resumed, two-decimal sequence autonumber counters through Metal PNG rendering.
+- Validate mixed-case sequence syntax through Metal PNG rendering.
+- Validate escaped participant configuration aliases through Metal PNG rendering.
+- Validate comma-bearing participant configuration aliases through Metal PNG rendering.
+- Render mirrored sequence footer participants with backend-neutral instructions.
+- Validate sequence hash comments and adjacent entities through native Metal PNG rendering.
+- Render grammar-backed sequence `actor` declarations as backend-neutral UML stick figures.
+- Validate ordered sequence autonumber toggles and resets through PaintScene and Metal PNG.
+- Shape resolved multiline sequence participant-box labels without backend soft rewrapping.
+- Shape resolved multiline sequence participant aliases without backend soft rewrapping.
+- Shape resolved multiline sequence control labels without backend soft rewrapping.
+- Validate hyphenated sequence actor IDs through the native Metal PNG pipeline.
+- Validate multiword sequence actor IDs through the native Metal PNG pipeline.
+- Validate forced sequence text wrapping through PaintScene and Metal PNG rendering.
+- Export sequence accessibility title and description as PaintScene metadata.
+- Preserve multiline accessibility descriptions in that scene metadata.
+- Validate semicolon-separated sequence input through Metal PNG rendering.
+- Validate normalized HSL sequence group colors through Metal PNG rendering.
+- Validate legacy colon-prefixed sequence titles through Metal PNG rendering.
+- Validate decoded sequence entity characters through native text shaping.
+- Shape multiline sequence messages and notes into reserved layout geometry.
+- Export sequence actor details references as PaintScene metadata.
+- Export JSON-valued sequence actor properties as PaintScene metadata.
+- Export sequence actor links as PaintScene hit-test metadata.
+- Paint sequence rect blocks with their declared functional colors.
+- Format decimal sequence numbers without redundant trailing zeroes.
+- Added central-connection endpoint circles layered above activation bars.
+- Added normal and reverse filled/stick sequence half-arrow geometry.
+- Added backend-neutral sequence symbols for boundary, control, entity,
+  database, collections, and queue participants.
+- Added sequence participant-group backgrounds and labels.
+- Added a Mermaid Pie -> chart layout -> PaintScene -> Metal PNG example and
+  Apple end-to-end test.
+- Added sequence lowering for participant headers, lifelines, messages,
+  arrowheads, notes, activation bars, and shaped labels, plus a Metal PNG test.
+- Added nested sequence frame and branch-divider lowering with visual Metal coverage.
+- Added sequence destruction markers and dynamic participant Metal coverage.
+

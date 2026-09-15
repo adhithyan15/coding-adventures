@@ -1,0 +1,1 @@
+- Lower valid JFET `IS` gate saturation currents and reject invalid inputs.

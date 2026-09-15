@@ -1,0 +1,1 @@
+- Lower valid JFET `RS` source resistances and reject invalid inputs.

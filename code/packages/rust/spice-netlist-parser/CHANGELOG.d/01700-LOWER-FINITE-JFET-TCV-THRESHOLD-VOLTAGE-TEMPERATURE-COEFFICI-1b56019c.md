@@ -1,0 +1,1 @@
+- Lower finite JFET `TCV` threshold-voltage temperature coefficients.
