@@ -161,6 +161,30 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     headingLevel: 3,
     newestFirst: true,
   },
+  {
+    // The first plan outside human-languages, and the repo's worst LIVE
+    // conflict generator: 522 `##` sections, newest-first, every PR prepending
+    // under `## Unreleased`. It carries the evidence in plain sight -- at the
+    // time of writing it held TWO separate `## Unreleased` sections, because
+    // two PRs each prepended one and both landed.
+    //
+    // Measured like the entries above, but by CLUSTERING rather than count: a
+    // file touched 89 times spread evenly never collides. Counting touches
+    // that land within one median PR-lifetime (1.19h here, derived from the
+    // last 100 merged PRs) of the previous touch, this file leads at 90 close
+    // touches of 143 over 21 days.
+    //
+    // That metric checks out against history: every document already sharded
+    // -- BACKLOG.md, human-language-data, Language Ladder, Script Ductus, and
+    // lessons.md -- also scores high on it and has since left `main`.
+    //
+    // Level 2 because the version heading IS the entry heading here
+    // (`## 0.337.0 — ...`), the Language Ladder shape, unlike
+    // human-language-data where level 2 banners a level-3 entry list.
+    path: "code/packages/rust/lang-aot/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
 ];
 
 /**
