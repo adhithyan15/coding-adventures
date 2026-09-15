@@ -4839,7 +4839,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET S = 0\n20 FOR I = 1 TO 5\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n",
         expect: Expect::Stdout("15"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — `FOR … STEP` with step size 2 (LANG-FULL BA-step). The
     // `STEP` clause stores its value into a dedicated `_for_<n>_step` IIR slot
@@ -4854,7 +4854,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET S = 0\n20 FOR I = 1 TO 5 STEP 2\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n",
         expect: Expect::Stdout("9"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — `IF … THEN <line>` + `GOTO`-style jump (LANG-FULL BA0). `A > 5`
     // lowers to `cmp_gt` (one of the comparisons LLVM compared at the wrong width until
@@ -4867,7 +4867,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 LET A = 7\n20 IF A > 5 THEN 100\n30 PRINT 0\n40 END\n100 PRINT A\n110 END\n",
         expect: Expect::Stdout("7"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — `DEF FN` user-defined function (LANG-FULL BA5). The
     // single-line definition `DEF FNS(X) = X * X` lowers to a *sibling*
@@ -4884,7 +4884,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 DEF FNS(X) = X * X\n20 PRINT FNS(7)\n30 END\n",
         expect: Expect::Stdout("49"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — *one-dimensional real arrays* (LANG-FULL BA3 + BA7,
     // enabler
@@ -4969,7 +4969,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT 0 - 12; 34\n20 END\n",
         expect: Expect::Stdout("-1234"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — multi-item `PRINT` with a `,` separator (LANG-FULL BA2).
     // Where `;` joins tightly, `,` inserts a separator space: `PRINT 5, 6` ⇒
@@ -4985,7 +4985,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT 5, 6\n20 END\n",
         expect: Expect::Stdout("5 6"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA7-1 scalar real arithmetic. Decimal spellings (`6.0`,
     // `7.0`) stay on the same `f64` value path as integer-spelled literals; `*`
@@ -4996,7 +4996,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT 6.0 * 7.0\n20 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA7-2a fixed-decimal fractional `PRINT`. The helper
     // handles ordinary fractional values without backend-specific code: an
@@ -5009,7 +5009,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT 3.14\n20 PRINT 1.0 / 4.0\n30 PRINT 0.0 - 2.5\n40 END\n",
         expect: Expect::Stdout("3.14\n.25\n-2.5"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA7-2b historical real formatting. The helper now
     // rounds to six significant digits (`1.234567` -> `1.23457`) and switches
@@ -5020,7 +5020,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT 1.234567\n20 PRINT 123456789\n30 PRINT 0.0001234567\n40 PRINT 1.0 / 4.0\n50 END\n",
         expect: Expect::Stdout("1.23457\n1.23457E+08\n1.23457E-04\n.25"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — BA7-3 real aggregate storage. Fractional `DATA` values
     // are materialised in an `array<f64>` pool, `READ A(0)` stores one into a
@@ -5072,7 +5072,7 @@ const PROGRAMS: &[Prog] = &[
         src: "10 GOSUB 100\n20 PRINT 1;\n30 GOSUB 100\n40 END\n\
                100 PRINT 9;\n110 RETURN\n",
         expect: Expect::Stdout("919"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — *nested* `GOSUB` (LANG-FULL BA1). A subroutine that itself
     // `GOSUB`s a second one before returning — proves the **LIFO stack discipline**
@@ -5087,7 +5087,7 @@ const PROGRAMS: &[Prog] = &[
         src: "10 GOSUB 100\n20 END\n100 PRINT 8;\n110 GOSUB 200\n\
                120 PRINT 6;\n130 RETURN\n200 PRINT 7;\n210 RETURN\n",
         expect: Expect::Stdout("876"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — `SQR` (square root) built-in (LANG-FULL BA-builtins).
     // SQR(X) lowers to the f64_sqrt IIR op (same hardware instruction that
@@ -5098,7 +5098,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT SQR(49)\n20 END\n",
         expect: Expect::Stdout("7"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — deterministic transcendental builtins (VM-016).
     // The exact-value inputs separate frontend dispatch from floating-point
@@ -5110,7 +5110,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT SIN(0)\n20 PRINT COS(0)\n30 PRINT LOG(1)\n40 PRINT EXP(0)\n50 END\n",
         expect: Expect::Stdout("0\n1\n0\n1"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — portable deterministic RND semantics (VM-018). The
     // frontend emits one Park–Miller helper whose i64 state lives in the shared
@@ -5141,7 +5141,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT INT(3.7)\n20 END\n",
         expect: Expect::Stdout("3"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — `ABS` (absolute value) built-in (LANG-FULL BA-builtins).
     // ABS(X) is lowered inline: if X < 0 then −X else X (store-per-branch,
@@ -5168,7 +5168,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT SGN(-5)\n20 END\n",
         expect: Expect::Stdout("-1"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — `ATN` (arctangent) built-in (LANG-FULL BA-arctan).
     // ATN(X) lowers to the f64_atan IIR op which calls libm `atan` on every
@@ -5179,7 +5179,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT ATN(0)\n20 END\n",
         expect: Expect::Stdout("0"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — `TAN` (tangent) built-in (LANG-FULL BA-arctan).
     // TAN(X) lowers to the f64_tan IIR op which calls libm `tan` on every
@@ -5189,7 +5189,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 PRINT TAN(0)\n20 END\n",
         expect: Expect::Stdout("0"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — general `^` exponentiation via f64_pow IIR op (LANG-FULL BA-pow).
     // 4 ^ 0.5 = pow(4.0, 0.5) = 2.0 exactly; printed as "2" by __basic_print_real
@@ -9379,7 +9379,20 @@ fn matrix_every_proven_cell_agrees() {
 /// once `iir-to-beam` gained `neg`(f64) and `f64_pow`: the `ABS(-42)` row
 /// (exercising `neg`(f64) twice) and the `4 ^ 0.5` row (exercising the
 /// general runtime `f64_pow` path) each gained a real, `erl`-proven `Beam`
-/// declaration.
+/// declaration. It changed again (379 → 396, VM-LOOP-24) after a probe-first
+/// sweep of the remaining non-`INPUT` rows found 12 already ran on real `erl`
+/// with ZERO new `iir-to-beam` code (general `FOR`/`FOR…STEP`/`IF…THEN`
+/// control flow, `DEF FN` calls, multi-item `PRINT` with `;`/`,`, ordinary
+/// scalar/fixed-decimal/significant-digit real formatting, `GOSUB`/`RETURN`
+/// — both flat and nested — and `SGN`), plus 5 more once `iir-to-beam` gained
+/// single-argument `math:*` transcendentals (`f64_sqrt`/`f64_sin`/`f64_cos`/
+/// `f64_ln`/`f64_exp`/`f64_atan`/`f64_tan` via `call_ext`) and
+/// `real_to_int_floor` (`erlang:floor/1` via `gc_bif1`, confirmed a guard BIF
+/// by real `erlc -S` disassembly): `SQR`, `SIN`/`COS`/`LOG`/`EXP`, `INT`,
+/// `ATN`, `TAN`. See `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-LOOP-24" section
+/// for the full probe results, including the still-deferred rows (1-D/2-D
+/// numeric arrays, `DATA`/`READ`/`RESTORE`, string arrays/mixed-type `DATA`,
+/// and `RND`).
 ///
 /// COBOL-60's expected cell count changed again after VM-040's boolean/
 /// EVALUATE slice (422 → 426) and again in this slice (426 → 430): four more
@@ -9409,7 +9422,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Twig, 49, 363),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 45),
-        (Language::DartmouthBasic, 51, 379),
+        (Language::DartmouthBasic, 51, 396),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
         (Language::Cobol60, 58, 464),
@@ -15985,4 +15998,113 @@ fn portable_text_stdout_dartmouth_basic_beam_neg_and_pow() {
     }
     assert_eq!(executed, 2);
     eprintln!("Dartmouth BASIC BEAM neg(f64)/f64_pow: {executed} programs executed");
+}
+
+// VM-LOOP-24: a probe-first sweep of every not-yet-`Beam` Dartmouth BASIC row
+// (excluding the 5 `INPUT` rows, out of scope pending VM-060b) compiled and
+// ran EACH one individually through `compile_source_to_beam` against real
+// `erl` using ONLY the `iir-to-beam` capabilities that existed before this
+// slice (BEAM03 + BEAM03 continuation). These 12 rows passed unchanged: no
+// new lowering, no new op, no new import. They cover general `FOR`/`FOR…
+// STEP` loops (`cmp_le`/`add` on the shared `f64` track), `IF…THEN` +
+// `GOTO`-style line jumps (`cmp_gt`), a same-module `DEF FN` `call`,
+// multi-item `PRINT` with `;` (including a literal negative via `sub`) and
+// `,`, ordinary scalar real arithmetic, BA7 fixed-decimal and six-
+// significant-digit/`E`-notation formatting, flat and nested `GOSUB`/
+// `RETURN` (the E5 `array<i64>` return-address stack — an `i64` array, so it
+// never touches the `atomics`-is-integer-only gap that blocks the f64 array
+// rows below), and `SGN` (an inline 3-way `cmp`/`const` conditional, no new
+// op). See `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-LOOP-24" section for the
+// full probe transcript, including the rows that do NOT belong here (1-D/
+// 2-D numeric arrays, `DATA`/`READ`/`RESTORE`, string arrays/mixed-type
+// `DATA`, and `RND` — all deferred with a documented reason).
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_general_arithmetic_and_control_flow() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM general arithmetic/control flow: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, &str)] = &[
+        ("10 LET S = 0\n20 FOR I = 1 TO 5\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n", "15"),
+        ("10 LET S = 0\n20 FOR I = 1 TO 5 STEP 2\n30 LET S = S + I\n40 NEXT I\n50 PRINT S\n60 END\n", "9"),
+        ("10 LET A = 7\n20 IF A > 5 THEN 100\n30 PRINT 0\n40 END\n100 PRINT A\n110 END\n", "7"),
+        ("10 DEF FNS(X) = X * X\n20 PRINT FNS(7)\n30 END\n", "49"),
+        ("10 PRINT 0 - 12; 34\n20 END\n", "-1234"),
+        ("10 PRINT 5, 6\n20 END\n", "5 6"),
+        ("10 PRINT 6.0 * 7.0\n20 END\n", "42"),
+        ("10 PRINT 3.14\n20 PRINT 1.0 / 4.0\n30 PRINT 0.0 - 2.5\n40 END\n", "3.14\n.25\n-2.5"),
+        (
+            "10 PRINT 1.234567\n20 PRINT 123456789\n30 PRINT 0.0001234567\n40 PRINT 1.0 / 4.0\n50 END\n",
+            "1.23457\n1.23457E+08\n1.23457E-04\n.25",
+        ),
+        ("10 GOSUB 100\n20 PRINT 1;\n30 GOSUB 100\n40 END\n100 PRINT 9;\n110 RETURN\n", "919"),
+        (
+            "10 GOSUB 100\n20 END\n100 PRINT 8;\n110 GOSUB 200\n120 PRINT 6;\n130 RETURN\n200 PRINT 7;\n210 RETURN\n",
+            "876",
+        ),
+        ("10 PRINT SGN(-5)\n20 END\n", "-1"),
+    ];
+    let mut executed = 0;
+    for (src, stdout) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::DartmouthBasic && p.src == *src)
+            .unwrap_or_else(|| panic!("DartmouthBasic row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected BASIC row must declare Beam");
+        assert!(matches!(program.expect, Expect::Stdout(value) if value == *stdout),
+            "selected BASIC expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 12);
+    eprintln!(
+        "Dartmouth BASIC BEAM general arithmetic/control flow: {executed} programs executed"
+    );
+}
+
+// VM-LOOP-24: the second probe-first group — rows that needed new
+// `iir-to-beam` lowering, all bounded/mechanical and mirroring the `f64_pow`
+// `call_ext` shape (BEAM03 continuation) exactly: `SQR`/`SIN`/`COS`/`LOG`/
+// `EXP`/`ATN`/`TAN` each lower to a single-source IIR op (`f64_sqrt`/
+// `f64_sin`/`f64_cos`/`f64_ln`/`f64_exp`/`f64_atan`/`f64_tan`) that a real
+// `erlc -S` disassembly confirmed emits `call_ext` against a `math:*`
+// import (never `gc_bif1` — `math` functions are ordinary library code, not
+// loader-recognized guard BIFs), so each reuses the `f64_pow` staging
+// pattern with one operand instead of two. `INT` additionally needed
+// `real_to_int_floor`, confirmed (also via `erlc -S`) to emit the SAME
+// generic `gc_bif1` shape as `int_to_real`/`real_to_int_trunc` against
+// `erlang:floor/1` — a real guard BIF, unlike the `math:*` functions above.
+// `RND` (which also calls `INT`) is EXCLUDED here: it independently traps
+// with `{badarith,[{erlang,'*',[undefined,...]}]}` inside `__basic_rnd`, a
+// module-global read returning `undefined` — the still-open "RND's full
+// DEF-FN-and-module-global chain" design question flagged back in VM-018,
+// not something `real_to_int_floor` alone unblocks. See
+// `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-LOOP-24" section.
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_math_builtins() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM math builtins: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, &str)] = &[
+        ("10 PRINT SQR(49)\n20 END\n", "7"),
+        ("10 PRINT SIN(0)\n20 PRINT COS(0)\n30 PRINT LOG(1)\n40 PRINT EXP(0)\n50 END\n", "0\n1\n0\n1"),
+        ("10 PRINT INT(3.7)\n20 END\n", "3"),
+        ("10 PRINT ATN(0)\n20 END\n", "0"),
+        ("10 PRINT TAN(0)\n20 END\n", "0"),
+    ];
+    let mut executed = 0;
+    for (src, stdout) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::DartmouthBasic && p.src == *src)
+            .unwrap_or_else(|| panic!("DartmouthBasic row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected BASIC row must declare Beam");
+        assert!(matches!(program.expect, Expect::Stdout(value) if value == *stdout),
+            "selected BASIC expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 5);
+    eprintln!("Dartmouth BASIC BEAM math builtins: {executed} programs executed");
 }
