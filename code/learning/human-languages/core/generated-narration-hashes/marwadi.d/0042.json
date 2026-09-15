@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:7ff20dd270eaa38f",
+  "lessonIds": [
+    "MW-W03-ghadi-saathe"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "marwadi/narration/ch42.txt",
+  "json": "marwadi/narration/ch42.json",
+  "textHash": "fnv1a64:a9b916d470dfc81c",
+  "jsonHash": "fnv1a64:dc2e71d737b213af",
+  "findings": []
+}
