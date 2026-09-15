@@ -27,7 +27,7 @@
 %     -----------   --------------------------   ------------------------------
 %     skeletal      voluntary                    the muscle you move on purpose
 %     smooth        involuntary                  gut & vessel walls, not willed
-%     cardiac       intercalated_disks           the disks unique to heart muscle
+%     cardiac       intercalated_disks           disks the heart sentence names
 %
 % The query also runs BACKWARD — bind a trait and recall its muscle type:
 %
@@ -97,8 +97,10 @@
 %
 % Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
 % host returns 404), with inline tags removed without a space and only ASCII
-% whitespace collapsed: the three row spans and the envelope each occur
-% exactly once, each inside a `<p>`. Every row's page is the envelope's, so no
+% whitespace collapsed: the three row spans, the envelope, and the cardiac
+% sentence quoted above ("Its contraction is not under voluntary
+% control.") each occur exactly once, each inside a `<p>`. Every row's page
+% is the envelope's, so no
 % row restates a `locator` line or `trust` (ADJ-TABLES §4). All sources
 % are the NCI SEER Training Modules, a primary U.S. government (National
 % Cancer Institute) teaching resource, so `trust authoritative`.
