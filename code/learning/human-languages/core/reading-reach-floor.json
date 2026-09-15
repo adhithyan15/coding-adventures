@@ -4,6 +4,7 @@
   "floors": {
     "bengali/pre-A1": 3,
     "chinese/pre-A1": 1,
+    "german/pre-A1": 2,
     "gujarati/pre-A1": 3,
     "hindi/A1": 3,
     "hindi/pre-A1": 3,
@@ -23,6 +24,7 @@
     "russian/pre-A1": 3,
     "sanskrit/pre-A1": 3,
     "spanish/A1": 2,
+    "spanish/A2": 1,
     "spanish/pre-A1": 2,
     "tamil/pre-A1": 3,
     "telugu/pre-A1": 3,

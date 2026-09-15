@@ -1,0 +1,2 @@
+# Changelog — `lang-aot`
+
