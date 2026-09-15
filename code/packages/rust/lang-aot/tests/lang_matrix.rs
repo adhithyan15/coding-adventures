@@ -4907,7 +4907,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 DIM A(3)\n20 LET A(1) = 40\n30 LET A(2) = 2\n40 PRINT A(1) + A(2)\n50 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — *two-dimensional real arrays* (LANG-FULL BA-DIM-2D,
     // enabler **E5**).  `DIM A(1,2)` declares a 2×3 matrix (0-based inclusive:
@@ -4926,7 +4926,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 DIM A(1,2)\n20 LET A(0,0) = 40\n30 LET A(1,2) = 2\n40 PRINT A(0,0) + A(1,2)\n50 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — *`READ` / `DATA` / `RESTORE`* (LANG-FULL BA6 + BA7). The
     // `DATA` pool is materialised once at the top of `main` as an `array<f64>`
@@ -4944,7 +4944,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 DATA 21\n20 READ A\n30 RESTORE\n40 READ B\n50 PRINT A + B\n60 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — *multi-item `PRINT` on one line* with a `;` separator and
     // a negative value (LANG-FULL BA2). `PRINT 0 - 12; 34` prints `-12` and `34`
@@ -5032,7 +5032,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 DIM A(1)\n20 DATA 3.14, 0.25\n30 READ A(0)\n40 READ B\n50 PRINT A(0)\n60 PRINT B\n70 END\n",
         expect: Expect::Stdout("3.14\n.25"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — mixed numeric/string DATA (VM-017). One shared pointer
     // walks the source-ordered kind/numeric/string parallel pools. The first
@@ -9394,6 +9394,18 @@ fn matrix_every_proven_cell_agrees() {
 /// numeric arrays, `DATA`/`READ`/`RESTORE`, string arrays/mixed-type `DATA`,
 /// and `RND`).
 ///
+/// It changed again (396 → 400, BEAM04) once `iir-to-beam` gained an `:ets`-
+/// backed representation for `type_hint == "array<f64>"`/`"f64"` array ops
+/// (see `code/specs/BEAM04-float-array-representation.md`): the 1-D array,
+/// 2-D array, `DATA`/`READ`/`RESTORE`, and fractional-`DATA` rows — all four
+/// of which previously compiled cleanly but trapped at runtime
+/// (`{badarg,[{atomics,put,...`, since `:atomics` can only hold 64-bit
+/// integers) — each gained a real, `erl`-proven `Beam` declaration. String-
+/// typed arrays remain unpromoted (a separate, larger gap — `iir-to-beam`
+/// has no `str`-typed array element representation at all), as does `RND`
+/// (VM-018's module-global design question, unaffected by array
+/// representation).
+///
 /// COBOL-60's expected cell count changed again after VM-040's boolean/
 /// EVALUATE slice (422 → 426) and again in this slice (426 → 430): four more
 /// rows (alphanumeric EVALUATE subject via `str_cmp`, and three reference-
@@ -9422,7 +9434,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Twig, 49, 363),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 45),
-        (Language::DartmouthBasic, 51, 396),
+        (Language::DartmouthBasic, 51, 400),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
         (Language::Cobol60, 58, 464),
@@ -16107,4 +16119,43 @@ fn portable_text_stdout_dartmouth_basic_beam_math_builtins() {
     }
     assert_eq!(executed, 5);
     eprintln!("Dartmouth BASIC BEAM math builtins: {executed} programs executed");
+}
+
+/// BEAM04: Dartmouth BASIC numeric-array and `DATA`/`READ`/`RESTORE` rows —
+/// the 4 rows VM-LOOP-24 found trapping with
+/// `{badarg,[{atomics,put,[Ref,Index,FloatValue],...}]}` because
+/// `iir-to-beam` represented every `alloc_array`/`array_set`/`array_get`
+/// with `:atomics`, which can only hold 64-bit integers.  Now that
+/// `type_hint == "array<f64>"`/`"f64"` dispatches to `:ets` instead (see
+/// `code/specs/BEAM04-float-array-representation.md`), all 4 run correctly.
+/// String-typed arrays remain unpromoted — a separate, larger gap
+/// (`iir-to-beam` has no `str`-typed array element representation at all),
+/// explicitly out of scope for this slice.
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_arrays_and_data() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM arrays and DATA: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, &str)] = &[
+        ("10 DIM A(3)\n20 LET A(1) = 40\n30 LET A(2) = 2\n40 PRINT A(1) + A(2)\n50 END\n", "42"),
+        ("10 DIM A(1,2)\n20 LET A(0,0) = 40\n30 LET A(1,2) = 2\n40 PRINT A(0,0) + A(1,2)\n50 END\n", "42"),
+        ("10 DATA 21\n20 READ A\n30 RESTORE\n40 READ B\n50 PRINT A + B\n60 END\n", "42"),
+        ("10 DIM A(1)\n20 DATA 3.14, 0.25\n30 READ A(0)\n40 READ B\n50 PRINT A(0)\n60 PRINT B\n70 END\n",
+            "3.14\n.25"),
+    ];
+    let mut executed = 0;
+    for (src, stdout) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::DartmouthBasic && p.src == *src)
+            .unwrap_or_else(|| panic!("DartmouthBasic row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected BASIC row must declare Beam");
+        assert!(matches!(program.expect, Expect::Stdout(value) if value == *stdout),
+            "selected BASIC expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("Dartmouth BASIC BEAM arrays and DATA: {executed} programs executed");
 }

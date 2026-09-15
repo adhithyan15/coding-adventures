@@ -126,6 +126,12 @@ assert_eq!(&bytes[0..4], b"FOR1");
 | `load_reg` | `move {x,v} {x,rd}` |
 | `store_reg` | `move {x,src} {x,v}` |
 | `type_assert` | nop (erased at lowering time) |
+| `alloc_bytes` / `alloc_array` (not `array<f64>`) | `call_ext atomics:new/2` — fixed-size, 64-bit-integer-only mutable array |
+| `alloc_array` (`array<f64>`) | `call_ext ets:new/2` (BEAM04 — `:atomics` cannot hold floats; no size argument, `:ets` grows dynamically) |
+| `store_byte` / `array_set` (not f64) | `idx+1` (`gc_bif2 erlang:+/2`), `call_ext atomics:put/3` (`store_byte` additionally masks the value `band 255`) |
+| `array_set` (f64) | `put_list [Idx,Val]`, `call_ext erlang:list_to_tuple/1`, `call_ext ets:insert/2` (BEAM04 — no `+1`, `:ets` is not 1-indexed) |
+| `load_byte` / `array_get` (not f64) | `idx+1` (`gc_bif2 erlang:+/2`), `call_ext atomics:get/2` |
+| `array_get` (f64) | `call_ext ets:lookup_element/3` (BEAM04 — position `2` of the `{Idx,Val}` tuple; traps `badarg` on a missing key) |
 
 | `global_store` | `gc_bif2 erlang:put/2` (process dictionary) |
 | `global_load` | `gc_bif1 erlang:get/1` |
@@ -195,6 +201,22 @@ constant), but real for a future program with a runtime-zero divisor. See
 `BEAM03-float-lowering.md` §6 for the two directions a future slice could
 take (accept the divergence vs. emulate IEEE-754 with a sentinel
 representation) — left open, not guessed at.
+
+`array_set`/`array_get`/`alloc_array` with `type_hint == "f64"`/
+`"array<f64>"` use `:ets` instead of the `:atomics` module every other
+array/tape op uses (BEAM04 — see the opcode table above and
+`code/specs/BEAM04-float-array-representation.md`): `:atomics` is a
+fixed-size array of 64-bit INTEGERS ONLY, so it cannot hold a float value at
+all (confirmed: `atomics:put(Ref, I, 40.0)` traps `badarg` on real `erl`).
+`:ets` stores arbitrary terms natively and needs zero new BEAM opcodes — a
+bit-reinterpretation approach that kept `:atomics` was researched and
+rejected because it needs three entirely new opcode families
+(`bs_create_bin`, `bs_start_match4`/`bs_match`, `test bs_get_float2`) this
+backend has never implemented, versus `:ets`'s `call_ext`/`put_list`-only
+shape. One known, deliberately unfixed limitation: unlike `atomics:new`,
+`ets:new` does not pre-zero N cells, so reading a never-`array_set` index
+traps `badarg` instead of returning `0.0` — not reachable by any row
+promoted with BEAM04 (every one writes every cell it later reads).
 
 ## OTP compatibility
 

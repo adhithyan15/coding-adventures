@@ -1,5 +1,66 @@
 # Changelog — iir-to-beam
 
+## 0.13.0 - 2026-09-15 - ets-backed f64 array representation (BEAM04)
+
+`alloc_array`/`array_set`/`array_get` with `type_hint == "array<f64>"`/
+`"f64"` now lower to Erlang's `:ets` module instead of `:atomics`.
+`:atomics` can only hold 64-bit INTEGERS — every BASIC numeric-array write
+previously traps at runtime (`{badarg,[{atomics,put,[Ref,Index,FloatValue],
+...}]}`), confirmed on real `erl`. Full research + decision:
+`code/specs/BEAM04-float-array-representation.md`.
+
+- **Two candidates researched concretely against real `erl`/`erlc -S`, not
+  guessed at:** (a) bit-reinterpret the f64 as an i64 via BEAM bit-syntax,
+  keep `:atomics` — the bit pattern round-trips exactly, but the actual
+  instruction shape needs three entirely new opcode families
+  (`bs_create_bin`, `bs_start_match4`/`bs_match` with a nested `commands`
+  operand list, and a typed `test bs_get_float2`) this backend has never
+  implemented; (b) switch to `:ets`, which stores floats natively — needs
+  **zero** new BEAM opcodes (`ets:new/2`/`ets:insert/2`/
+  `ets:lookup_element/3` are ordinary `call_ext`s, the same shape `math:*`
+  already uses; the `{Idx, Val}` insert tuple is built with `put_list` +
+  `erlang:list_to_tuple/1`, the same list-construction op `call_closure`'s
+  arg-list already uses). (b) was chosen — this backlog's own prior
+  assumption that reusing `:atomics` would "likely" be simpler did not hold
+  up once actually measured.
+- **`alloc_array` (f64):** `x0 = 'farray' ; x1 = [] ; call_ext 2
+  ets:new/2 ; dest = x0`. No size argument — `:ets` tables grow
+  dynamically, so the length source is validated for shape but unused. A
+  fixed table-name atom is safe to reuse across every call site: `ets:new`
+  without `named_table` always returns a fresh, non-colliding table
+  identifier (confirmed on real `erl`).
+- **`array_set` (f64):** stage `Ref`/`Idx`/`Val` into scratch registers
+  (same discipline as the existing `:atomics` staging), build `[Idx, Val]`
+  with `put_list`, convert with `erlang:list_to_tuple/1` (`call_ext`), then
+  `ets:insert(Tab, Tuple)` (`call_ext`). No index `+1` — unlike `:atomics`,
+  `:ets` is not 1-indexed.
+- **`array_get` (f64):** `ets:lookup_element(Tab, Idx, 2)` (`call_ext`)
+  returns the value directly — no destructuring needed. Traps `badarg` on a
+  missing key, the same failure mode `atomics:get` already has for
+  out-of-range `array<i64>` reads.
+- Every other array/tape use (Brainfuck's byte tape, the GOSUB
+  return-address `array<i64>` stack, the `DATA` pool's kind array) is
+  untouched — still `:atomics`. `add`/`sub`/`mul`/`cmp_*`/etc. need zero
+  changes; they already lower generically over any register contents once a
+  valid boxed float is there.
+- **Known, documented limitation, not fixed:** unlike `atomics:new`,
+  `ets:new` does not pre-zero N cells — reading a never-`array_set` index
+  traps (`badarg`) instead of returning `0.0`. Not exercised by any
+  promoted row (each writes every cell it later reads); pinned by a
+  dedicated test (`test_97_real_erl_float_array_unset_read_traps`) rather
+  than left to regress silently.
+- New tests: `test_94_f64_array_ops_use_ets_not_atomics` (instruction-shape:
+  confirms the actual `call_ext` operands, not just import-table presence —
+  every import is pre-registered unconditionally at module setup, so
+  import-table presence alone can't distinguish "calls atomics" from "the
+  backend always reserves the slot"), plus three real-`erl` integration
+  tests: `test_95_real_erl_float_array_set_get_roundtrip` (the promoted
+  1-D-array row's exact shape), `test_96_real_erl_float_array_overwrite`
+  (re-`array_set` at the same index replaces, not duplicates), and
+  `test_97_real_erl_float_array_unset_read_traps` (the limitation above,
+  pinned as an intentional trap). 104 unit/integration tests + 5 doc tests
+  pass (up from 100). All-target Clippy with warnings denied is clean.
+
 ## 0.12.0 - 2026-09-15 - math:* transcendentals and real_to_int_floor (VM-LOOP-24)
 
 A probe-first sweep of Dartmouth BASIC's remaining non-`INPUT` corpus rows
