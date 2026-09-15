@@ -94,7 +94,8 @@ assert_eq!(&bytes[0..4], b"FOR1");
 | `mod` | `gc_bif2 erlang:rem/2` (no f64 case in any current frontend) |
 | `int_to_real` | `gc_bif1 erlang:float/1` (BEAM03) |
 | `real_to_int_trunc` | `gc_bif1 erlang:trunc/1` (BEAM03) |
-| `neg` | `gc_bif1 erlang:-/1` |
+| `neg` | `gc_bif1 erlang:-/1` (int or float — already polymorphic; proven for f64 in the BEAM03 continuation slice) |
+| `f64_pow` | `call_ext math:pow/2` (BEAM03 continuation — NOT a guard BIF, so not `gc_bif2`) |
 | `and` | `gc_bif2 erlang:band/2` |
 | `or`  | `gc_bif2 erlang:bor/2` |
 | `xor` | `gc_bif2 erlang:bxor/2` |

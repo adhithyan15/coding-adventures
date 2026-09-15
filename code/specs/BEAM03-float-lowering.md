@@ -269,3 +269,127 @@ divisor) division should raise this explicitly.
   process single-cell reruns for both.
 - Full `iir-to-beam`/`ir-to-beam`/`lang-aot` test suites and all-target
   Clippy (warnings denied) after the change.
+
+## 8. Continuation slice: `neg`(f64) and `f64_pow`
+
+**Status:** In progress — second bounded slice (this section), selected by
+this spec's own §4.3 trailing note and `LANG-VM-NON-ALGOL-BACKLOG.md`'s
+BEAM03 top-section reprioritization, which named these as candidates (a) and
+(b) respectively.
+
+### 8.1 `neg`(f64) — no lowering change needed
+
+Re-reading `iir-to-beam/src/lower.rs`'s existing `"neg" | "not"` arm (§4.2's
+prediction, now verified) confirms it is **already correct for f64** with
+zero code changes:
+
+- It dispatches unconditionally to `import_neg` (`erlang:-/1`), a `gc_bif1`
+  call. Unlike `div` (VM-D034: two *different* Erlang operators for integer
+  vs. float division), Erlang's unary `-` has exactly **one** operator that
+  is already polymorphic over integer and float operands — confirmed on
+  real `erl`: `erlang:'-'(3.14)` returns `-3.14` with no `badarith`.
+- The only per-`type_hint` branch in that arm is the `u4`/`u8` narrowing
+  mask (`band 15`/`band 255`), gated on `matches!(instr.type_hint.as_str(),
+  "u4" | "u8")`. `"f64"` never matches that guard, so a float `neg` already
+  skips masking and falls straight through — exactly the desired behavior
+  (floats are never narrowed).
+- `validate.rs` does not special-case `neg` at all: its only float-specific
+  check (§ Checks table, `UnsupportedType` (float const)) applies solely to
+  `op == "const"`. A `neg` instruction with `type_hint == "f64"` was never
+  rejected.
+
+This makes `neg`(f64) the "structurally trivial" case the backlog predicted
+— but "trivial lowering" still needed **proof**, not just code reading: see
+§8.3's real-`erl` test and §8.4's promoted corpus row, which is a completely
+independent verification of the same claim.
+
+### 8.2 `f64_pow` — a new `call_ext`, not `gc_bif2`
+
+Unlike `neg`, `f64_pow` needed real design work, because the backlog's own
+"unverified" flag on this candidate was warranted:
+
+- `math:pow/2` is an ordinary Erlang function, **not** a loader-recognized
+  guard BIF. The existing `gc_bif1`/`gc_bif2` opcodes only work for the
+  fixed allowlist of guard BIFs the BEAM loader itself recognizes (the same
+  set usable inside a guard expression) — confirmed by reading
+  `beam_asm.erl`'s guard-BIF handling table (only names like
+  `erlang:'+'/2`, `erlang:length/1`, etc. appear; `math:pow/2` is absent)
+  and cross-checked empirically: compiling a call to `math:pow(2.0, 3.0)`
+  and disassembling with `erlc -S` shows an ordinary `call_ext_only`/
+  `call_ext` to the `math:pow/2` import, never a `gc_bif2` instruction.
+- So `f64_pow` lowers the same way `iir-to-beam` already lowers other
+  non-guard-BIF two-argument calls (`str_concat`'s `erlang:'++'/2`,
+  `str_index`'s `lists:nth/2`): stage both source registers into scratch
+  registers above `meta.next_reg` (avoiding the parallel-move hazard where
+  writing `x1` could clobber a source still needed for `x0`, the same
+  reasoning documented at `str_index`'s call site), `save_live_across_imported_call!`,
+  move staged values into `x0`/`x1`, emit `call_ext 2 {u, import_pow}`, move
+  the result (`x0`) to the destination register if it differs, then
+  `restore_live_across_imported_call!`.
+- New import: `math:pow/2` (module atom `"math"`, function atom `"pow"`,
+  arity 2). `f64_pow` is added to the `live_across` call-list match (the
+  "EVERY op that emits a `call_ext` must be listed here" invariant already
+  documented at that match) — an omission there is the exact VM-D0xx-class
+  bug class the comment warns about (values silently destroyed, not a
+  crash).
+- Semantics match the `vm-core` oracle exactly: `handle_f64_pow` documents
+  `base.powf(exp)` (Rust `f64::powf`, "NaN / ±inf propagate per IEEE-754,
+  same as libm `pow`"). Erlang's `math:pow/2` is also a direct libm `pow`
+  binding, so the two agree on every finite input; the same §6 Inf/NaN
+  representability gap that already applies to `div` applies identically
+  here (unreachable by the promoted corpus row, whose base/exponent are
+  both finite non-degenerate values) — no new platform-limitation surface,
+  just the existing one.
+
+### 8.3 Validation (continuation)
+
+- `iir-to-beam` unit tests: `f64_pow` emits exactly one `call_ext` (not
+  `gc_bif2`) and a new `math:pow/2` import-table entry; `neg` on `type_hint
+  == "f64"` emits `gc_bif1` with **no** subsequent masking `gc_bif2` (the
+  existing `narrow_operations_mask_but_i64_remains_unbounded`-style
+  assertion, extended to `"f64"`).
+- Real-`erl` integration tests (mirroring §7's existing `test_82`–`test_84`
+  shape): `neg(3.5)` then `neg` of that result round-trips to `3.5`
+  (proving polymorphic unary minus survives two applications, not just
+  sign-flips into a coincidentally-still-valid case); `f64_pow(2.0, 10.0)`
+  truncates to `1024`; a combined case chains `neg` and `f64_pow` in one
+  module the way BASIC's `ABS`/general-`^` lowering actually does.
+- Full `iir-to-beam` test suite and all-target Clippy (warnings denied)
+  after the change.
+
+### 8.4 Promoted corpus rows
+
+Two more Dartmouth BASIC `lang_matrix.rs` rows, chosen because each is
+already the minimal, single-purpose existing proof for exactly one of these
+two ops (not a bespoke fixture written for this slice):
+
+1. `10 PRINT ABS(-42)\n20 END\n` → `"42"`. `dartmouth-basic-iir-compiler`'s
+   unary-minus lowering (`emit_unary`) emits `neg` for the literal `-42`
+   itself, and `ABS`'s own inline `if X < 0 then -X else X` lowering
+   (`"abs"` arm) emits a **second**, independent `neg` inside the taken
+   branch — so this one row exercises `neg`(f64) twice, plus the
+   `cmp_lt`/`jmp_if_false`/`mov`/`label` control-flow ops already proven
+   working by earlier BEAM slices, plus the same `__basic_print_real` path
+   BEAM03's first slice already validated.
+2. `10 PRINT 4 ^ 0.5\n20 END\n` → `"2"`. The literal-integer-exponent fast
+   path (repeated `mul`, already supported) only fires for exponents
+   `literal_integer_exponent` recognizes as a nonnegative integer; `0.5`
+   falls through to the general `f64_pow` runtime-call path — the smallest
+   possible proof that isn't reachable by the fast path.
+
+Both were executed on real Erlang via a dedicated `lang_matrix` test before
+promotion, per this backlog's "probe before declaring" discipline — see the
+`lang-aot` CHANGELOG entry for the exact test name and result.
+
+### 8.5 Explicitly out of scope (continuation)
+
+- The remaining BASIC numeric rows still needing `INPUT` (VM-060b, BEAM host
+  input) — untouched by this slice.
+- The general `mod`(f64) gap flagged (but deliberately left unfixed) by
+  VM-D034 — no current frontend emits it; still just documented, not fixed.
+- The §6 Inf/NaN representability design question — still open, still not
+  reachable by either promoted row.
+- `f64_pow` with a non-finite result (e.g. a negative base with a
+  fractional exponent, which is `NaN` in IEEE-754) — same platform gap as
+  §6, not exercised by the promoted row (base `4`, exponent `0.5`, exact
+  finite result `2.0`).

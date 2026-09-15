@@ -1,5 +1,38 @@
 # Changelog — iir-to-beam
 
+## 0.11.0 - 2026-09-15 - neg(f64) and f64_pow (BEAM03 continuation)
+
+Second bounded BEAM03 slice, continuing the f64 lowering track. Full design:
+`code/specs/BEAM03-float-lowering.md` §8.
+
+- **`neg`(f64): no lowering change.** The existing `"neg" | "not"` arm
+  already dispatches unconditionally to `erlang:-/1` (`gc_bif1`), and
+  Erlang's unary minus is already polymorphic over integer and float
+  operands — unlike `div` (VM-D034), there is only one operator, not two.
+  The arm's only per-`type_hint` branch (the `u4`/`u8` narrowing mask) never
+  matches `"f64"`, so a float `neg` already took the correct unmasked path.
+  Proven with new unit tests (`gc_bif1` count, no masking `gc_bif2`) and
+  real-`erl` integration tests (double negation, and a combined case
+  chaining `neg` + `f64_pow` in one module).
+- **`f64_pow` (new op, no prior lowering at all):** lowers to a `call_ext`
+  targeting a new `math:pow/2` import — NOT `gc_bif2`, because `math:pow/2`
+  is an ordinary Erlang function, not a loader-recognized guard BIF (unlike
+  `add`/`sub`/`mul`/`int_to_real`/`real_to_int_trunc`, all of which ARE
+  guard BIFs). Both source registers are staged into scratch registers
+  above `next_reg` before the call (the same parallel-move-hazard avoidance
+  `str_index`'s `lists:nth/2` call already uses), the call clobbers all
+  x-registers so it participates in the existing `live_across`
+  save/restore-around-call-ext machinery (added to that match list — an
+  omission there silently destroys a live variable's value, not a crash),
+  and the result is moved to the destination register.
+- Real-`erl` proof: `f64_pow(2.0, 10.0)` truncates to `1024`; the combined
+  `neg`+`f64_pow` case reproduces the `4 ^ 0.5` BASIC row's arithmetic
+  (`neg(-4.0)` = `4.0`, then `pow(4.0, 0.5)` = `2.0`) in one process.
+- No new platform-limitation surface: `f64_pow`'s Inf/NaN behavior is the
+  same already-documented Erlang-floats-are-not-full-IEEE-754 gap `div` has
+  (BEAM03-float-lowering.md §6), not newly discovered here and not
+  reachable by the promoted `lang-aot` corpus row.
+
 ## 0.10.0 - 2026-09-15 - f64 lowering (BEAM03): const, arithmetic, comparison, conversion
 
 `iir-to-beam` previously had **zero** `f64`/`Float` support at all — every
