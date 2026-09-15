@@ -8,6 +8,105 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## BEAM03 continuation — neg(f64) and f64_pow (selected after #15219)
+
+`git fetch origin && git merge origin/main` fast-forwarded cleanly onto
+`f5f657a3f9` (PR #15219, the first BEAM03 f64-lowering slice). `gh pr list
+--state open --limit 50` showed no other LANG-VM-related PR in flight, and
+specifically nothing touching `iir-to-beam` or BASIC float support.
+
+That merged slice's own trailing note named the next two candidates
+explicitly: (a) `neg`(f64) — "structurally trivial (mirrors `neg`(i64)'s
+existing `gc_bif1` shape with `erlang:'-'/1`, already polymorphic over int
+and float)"; (b) `f64_pow` — "no direct single-BIF equivalent (`math:pow/2`
+returns a float already, so likely a straightforward `gc_bif2`-shaped
+`call_ext`, but unverified)". This slice implements both, in one PR (the
+task's own scope note allowed splitting into two if `f64_pow` turned out
+non-trivial, but it stayed simple enough — a `call_ext`, just not a
+`gc_bif2` — to land together).
+
+### Findings
+
+- **`neg`(f64) needed zero lowering changes.** Reading `lower.rs`'s existing
+  `"neg" | "not"` arm confirmed the prediction exactly: it dispatches
+  unconditionally to `import_neg` (`erlang:-/1`), and the only
+  `type_hint`-conditional branch in that arm is the `u4`/`u8` narrowing
+  mask, which `"f64"` never matches. `validate.rs` never special-cased `neg`
+  either. Real `erl` confirms `erlang:'-'(3.14)` returns `-3.14` — no
+  `badarith`, unlike `div` (VM-D034's two-different-operators case). This is
+  a genuinely different shape from VM-D034: there, integer and float needed
+  DIFFERENT Erlang operators; here, one operator already covers both. New
+  unit + real-`erl` tests exist anyway, because "reading the code says it's
+  already right" and "proving it's already right" are not the same
+  discipline, and this backlog treats them as such.
+- **`f64_pow` needed the `call_ext` path, not `gc_bif2`.** The "unverified"
+  flag on this candidate was warranted: `math:pow/2` is an ordinary Erlang
+  function, not a loader-recognized guard BIF (confirmed by reading
+  `beam_asm.erl`'s guard-BIF table and by disassembling a real compiled
+  `math:pow/2` call with `erlc -S`, which showed `call_ext`, never
+  `gc_bif2`). It lowers the same way `str_concat`'s `erlang:'++'/2` and
+  `str_index`'s `lists:nth/2` already do: stage both operands into scratch
+  registers above `next_reg`, save live-across-call variables, move into
+  `x0`/`x1`, `call_ext 2 {u,import_pow}`, move the result, restore live
+  variables. `f64_pow` was added to the `live_across` call-list match — the
+  same "EVERY op that emits a `call_ext` must be listed here" invariant
+  documented at that match (an omission there silently destroys a live
+  variable's value, not a crash — the exact bug class a prior slice already
+  found and fixed for the six `:atomics` ops and `call_closure`).
+- No new platform-limitation surface: `f64_pow`'s Inf/NaN behavior is
+  exactly the same already-documented (BEAM03-float-lowering.md §6)
+  Erlang-floats-cannot-represent-Inf/NaN gap `div` has — real Erlang's
+  `math:pow/2` is a direct libm `pow` binding, matching the `vm-core`
+  oracle's `f64::powf` semantics on every finite input, diverging only where
+  every backend's float division already diverges. Not reachable by the
+  promoted row (base `4`, exponent `0.5`, exact finite result `2.0`).
+
+### Validation
+
+`iir-to-beam` 0.11.0: 92 unit/integration tests + 5 doc tests pass (up from
+87), including new tests proving `neg`(f64) emits exactly one `gc_bif1` and
+zero masking `gc_bif2`s, `f64_pow` emits exactly one `call_ext` (not
+`gc_bif2`) against a real `math:pow/2` import-table entry, and three new
+real-`erl` integration tests: double negation (`neg(neg(3.5))` = `3.5`),
+`f64_pow(2.0, 10.0)` truncated = `1024`, and a combined case chaining `neg`
++ `f64_pow` in one module reproducing the `4 ^ 0.5` BASIC row's exact
+arithmetic. All-target Clippy with warnings denied is clean.
+
+`lang-aot` 0.339.0: promoted two more Dartmouth BASIC `lang_matrix` rows to
+`Beam` — `10 PRINT ABS(-42)` (exercises `neg`(f64) twice: once for the
+literal `-42` via `emit_unary`, once inside ABS's own inline conditional
+negation) and `10 PRINT 4 ^ 0.5` (a fractional exponent that misses the
+literal-integer-exponent fast path and falls through to the general
+`f64_pow` runtime call). Both executed on real Erlang via a new dedicated
+`portable_text_stdout_dartmouth_basic_beam_neg_and_pow` test before
+promotion, matched by exact source text (not position — these two rows are
+not adjacent to each other or to the BEAM03 numeric-baseline pair; SGN/ATN/
+TAN sit between ABS and the `^` row). `feature_coverage_doc_counts_match_programs_source`
+was updated (Dartmouth BASIC tuple `(51, 377)` → `(51, 379)`) and passes
+against the live `PROGRAMS` corpus; `LANG-VM-FEATURE-COVERAGE.md`'s
+Dartmouth BASIC row, grand-total prose (1613 → 1615), and the "Implemented
+feature families" narrative row were all updated to match. No full
+`non_algol_matrix_every_proven_cell_agrees` capstone rerun is claimed for
+this slice, matching the first BEAM03 slice's own precedent — the dedicated
+neg/pow test plus the full `iir-to-beam` suite (including the new real-`erl`
+tests) are the executed evidence.
+
+Dartmouth BASIC now declares 22/51 rows on `Beam` (up from 20/51).
+Reprioritize after this merges: the remaining ~29 numeric/`INPUT` BASIC rows
+split into two independent gaps — the 5 `INPUT` rows need the unscoped BEAM
+host-input design (VM-060b, shared with FLOW-MATIC's 4 `INPUT` rows); the
+rest (`FOR`/`LET` general arithmetic, one- and two-D numeric arrays, `DATA`/
+`READ`/`RESTORE`, `RND`'s full DEF-FN-and-module-global chain, `GOSUB`/
+`RETURN`) each need their OWN real-`erl` probe before promotion — nothing in
+this slice or its predecessor established that `neg`/`f64_pow` alone
+unblocks them, and several (the array ops, the `GOSUB` return-address stack)
+already ran on BEAM via unrelated ops in other frontends, so they may
+already be one probe away rather than needing new lowering work. The
+still-open float-division-by-zero design question (§6) also remains
+unraised — no promoted row anywhere yet exercises a runtime-variable
+divisor. VM-041 (Twig dynamic-string/record/closure BEAM isolation) remains
+the other standing non-ALGOL candidate untouched by either BEAM03 slice.
+
 ## BEAM03 — iir-to-beam f64 lowering, first bounded slice (selected after #15147)
 
 `git fetch origin && git merge origin/main` fast-forwarded cleanly onto
