@@ -2867,8 +2867,13 @@ fn emit_container(
         // UI79 -- a part whose ONLY border is per-edge must still take
         // the decoration path, or the edge reaches nothing.
         || per_edge_border_expr(&props).is_some();
-    let has_padding =
-        base_padding.is_some() || state_layers.iter().any(|layer| layer.padding.is_some());
+    // Asks about the SHORTHAND, the longhands and the state layers. It used
+    // to ask only about the shorthand, so a part authoring nothing but
+    // `padding-top`/`-left`/... was skipped here entirely and rendered with
+    // no padding at all -- not collapsed, absent (#15249).
+    let has_padding = base_padding.is_some()
+        || flutter_padding_edges(&props).is_some()
+        || state_layers.iter().any(|layer| layer.padding.is_some());
 
     if width.is_some()
         || height.is_some()
@@ -2900,12 +2905,24 @@ fn emit_container(
             wrapper_args.push(format!("height: {h}"));
         }
         if has_padding {
-            let padding = state_color_expr(
-                &state_layers,
-                |layer| layer.padding.as_ref(),
-                base_padding.as_deref().unwrap_or("0"),
-            );
-            wrapper_args.push(format!("padding: EdgeInsets.all({padding})"));
+            // A state layer that overrides padding still resolves to ONE
+            // value, and that path is unchanged: 12 of the 1178 authored
+            // padding declarations in the repo sit inside a state block, and
+            // none of them needs per-edge resolution. Everything else --
+            // the other 99% -- now resolves edge by edge (#15249).
+            let layered = state_layers.iter().any(|layer| layer.padding.is_some());
+            let arg = match flutter_padding_edges(&props) {
+                Some(edges) if !layered => flutter_edge_insets(&edges, false),
+                _ => {
+                    let padding = state_color_expr(
+                        &state_layers,
+                        |layer| layer.padding.as_ref(),
+                        base_padding.as_deref().unwrap_or("0"),
+                    );
+                    format!("EdgeInsets.all({padding})")
+                }
+            };
+            wrapper_args.push(format!("padding: {arg}"));
         }
         if has_background || has_border || elevation.is_some() {
             let mut decoration: Vec<String> = Vec::new();
@@ -3578,6 +3595,58 @@ fn style_to_container_args(style_props: &str) -> String {
     parts.join(", ")
 }
 
+/// A part's padding resolved PER EDGE, the way CSS resolves it: a longhand
+/// wins over the shorthand, edge by edge, and an edge nobody mentions is zero.
+///
+/// Returned in Flutter's `fromLTRB` order.
+///
+/// Before this existed, every one of this emitter's padding writers took a
+/// single value: `emit_container` fanned it to all four edges with
+/// `EdgeInsets.all`, and the styled-box writer emitted
+/// `EdgeInsets.symmetric(horizontal: N)` -- whose omitted axis defaults to
+/// ZERO, so a box authoring vertical padding rendered with none (#15249).
+/// Neither could express `task-detail`'s `15 / 16 / 16 / 47`.
+fn flutter_padding_edges(props: &HashMap<String, String>) -> Option<[String; 4]> {
+    const EDGES: [&str; 4] = [
+        "padding-left",
+        "padding-top",
+        "padding-right",
+        "padding-bottom",
+    ];
+    let short = props.get("padding");
+    if short.is_none() && !EDGES.iter().any(|name| props.contains_key(*name)) {
+        return None;
+    }
+    let resolve = |name: &str| {
+        props
+            .get(name)
+            .or(short)
+            .map(|value| parse_pixel_value(value))
+            .unwrap_or_else(|| "0".to_string())
+    };
+    Some([
+        resolve(EDGES[0]),
+        resolve(EDGES[1]),
+        resolve(EDGES[2]),
+        resolve(EDGES[3]),
+    ])
+}
+
+/// Render resolved edges as the narrowest `EdgeInsets` that says the same
+/// thing -- `all` when the four agree, so the common case stays readable,
+/// and `fromLTRB` only when they genuinely differ.
+fn flutter_edge_insets(edges: &[String; 4], constant: bool) -> String {
+    let prefix = if constant { "const " } else { "" };
+    if edges.iter().all(|edge| edge == &edges[0]) {
+        format!("{prefix}EdgeInsets.all({})", edges[0])
+    } else {
+        format!(
+            "{prefix}EdgeInsets.fromLTRB({}, {}, {}, {})",
+            edges[0], edges[1], edges[2], edges[3]
+        )
+    }
+}
+
 /// Translate one `key: value` CSS-shape style prop into the matching
 /// Flutter `Container` property. Best-effort coverage; unknown props
 /// produce `None` and are silently dropped (TODO: surface as Dart
@@ -4138,22 +4207,31 @@ fn flutter_box_style(
         args.push(format!("alignment: {}", text_align_to_alignment(ta)));
     }
     let base_padding = base.get("padding").map(|v| parse_pixel_value(v));
-    if base_padding.is_some() || layers.iter().any(|layer| layer.padding.is_some()) {
-        if layers.iter().all(|layer| layer.padding.is_none()) {
-            args.push(format!(
-                "padding: const EdgeInsets.symmetric(horizontal: {})",
-                base_padding.as_deref().unwrap_or("0")
-            ));
-        } else {
-            let padding = state_color_expr(
-                layers,
-                |layer| layer.padding.as_ref(),
-                base_padding.as_deref().unwrap_or("0"),
-            );
-            args.push(format!(
-                "padding: EdgeInsets.symmetric(horizontal: {padding})"
-            ));
-        }
+    let padding_edges = flutter_padding_edges(base);
+    let layered_padding = layers.iter().any(|layer| layer.padding.is_some());
+    if padding_edges.is_some() || layered_padding {
+        // Was `EdgeInsets.symmetric(horizontal: N)` on both arms, which is
+        // wrong twice over (#15249): `symmetric` defaults the axis you omit
+        // to ZERO, so every box authoring vertical padding rendered with
+        // none -- and the guard looked only for the `padding` SHORTHAND, so
+        // a part authoring nothing but longhands got no padding at all.
+        //
+        // The state-layer arm still resolves to one value, and now spreads
+        // it with `all` rather than dropping the vertical axis. Only 12 of
+        // the 1178 authored padding declarations in the repo sit inside a
+        // state block, and none of them needs per-edge resolution.
+        let arg = match &padding_edges {
+            Some(edges) if !layered_padding => flutter_edge_insets(edges, true),
+            _ => {
+                let padding = state_color_expr(
+                    layers,
+                    |layer| layer.padding.as_ref(),
+                    base_padding.as_deref().unwrap_or("0"),
+                );
+                format!("EdgeInsets.all({padding})")
+            }
+        };
+        args.push(format!("padding: {arg}"));
     }
 
     // --- BoxDecoration: background (state-conditional) + border -------
@@ -13351,6 +13429,93 @@ mod tests {
     }
 
     // ====================================================================
+    // #15249 -- per-edge padding
+    // ====================================================================
+
+    /// Four different edges survive, in `fromLTRB` order.
+    ///
+    /// Before this, no Flutter part could render asymmetric padding at all:
+    /// the container writer fanned one value out with `EdgeInsets.all`, and
+    /// the styled-box writer wrote `EdgeInsets.symmetric(horizontal: N)`,
+    /// whose omitted axis defaults to ZERO. Trestle's `task-detail` authors
+    /// `15 / 16 / 16 / 47` and rendered `15` on every side.
+    ///
+    /// The values are deliberately all different, so a transposed argument
+    /// order fails rather than passing by symmetry.
+    #[test]
+    fn four_distinct_padding_edges_survive_in_ltrb_order() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "detail", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "detail",
+            vec![
+                StyleProp { name: "padding-top".into(), value: "15".into() },
+                StyleProp { name: "padding-right".into(), value: "16".into() },
+                StyleProp { name: "padding-bottom".into(), value: "17".into() },
+                StyleProp { name: "padding-left".into(), value: "47".into() },
+            ],
+        );
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("EdgeInsets.fromLTRB(47, 15, 16, 17)"),
+            "expected the four authored edges in LTRB order:\n{out}"
+        );
+    }
+
+    /// A longhand overrides the shorthand edge by edge, as CSS resolves it,
+    /// and an edge nobody mentions falls back to the shorthand.
+    #[test]
+    fn a_padding_longhand_overrides_the_shorthand_on_its_own_edge() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "detail", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "detail",
+            vec![
+                StyleProp { name: "padding".into(), value: "8".into() },
+                StyleProp { name: "padding-left".into(), value: "32".into() },
+            ],
+        );
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("EdgeInsets.fromLTRB(32, 8, 8, 8)"),
+            "the longhand must win on its edge only:\n{out}"
+        );
+    }
+
+    /// Uniform padding still emits the narrow `all` form.
+    ///
+    /// This is the control for the two tests above: without it, they would
+    /// also pass if the emitter had started writing `fromLTRB` for
+    /// everything, which would be correct but needlessly unreadable.
+    #[test]
+    fn uniform_padding_still_emits_the_all_form() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "detail", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "detail",
+            vec![StyleProp { name: "padding".into(), value: "8".into() }],
+        );
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(out.contains("EdgeInsets.all(8)"), "got:\n{out}");
+        assert!(
+            !out.contains("fromLTRB"),
+            "four equal edges do not need the long form:\n{out}"
+        );
+    }
+
+    // ====================================================================
     // #15225 residue -- `border-radius` on a CONTAINER (the other writer)
     // ====================================================================
 
@@ -15094,12 +15259,15 @@ mod negative_length_tests {
             !out.contains("width: -"),
             "a negative width reached BorderSide, which asserts at build: {out}"
         );
-        // Assert what this path ACTUALLY emits. The styled-box path writes
-        // `EdgeInsets.symmetric(horizontal: N)`, so an
-        // `EdgeInsets.all(-` assertion could never fail here and read as
-        // coverage it did not provide.
+        // Assert what this path ACTUALLY emits, so the assertion cannot read
+        // as coverage it does not provide. The form changed with #15249:
+        // the styled-box path used to write
+        // `EdgeInsets.symmetric(horizontal: N)` -- which silently dropped the
+        // vertical axis -- and now resolves all four edges, so a uniform
+        // `-3px` clamps to `EdgeInsets.all(0)`. The POINT of the test is
+        // unchanged: a negative length must not reach the emitted argument.
         assert!(
-            out.contains("EdgeInsets.symmetric(horizontal: 0)"),
+            out.contains("EdgeInsets.all(0)"),
             "the negative padding should have clamped to 0 on this path: {out}"
         );
         assert!(
