@@ -31,7 +31,22 @@ ordinary authored stylesheet rather than anything hostile. The same split
 also truncated `background: "rgba(255,255,255,0.12)"` to `fill={"rgba(255}`,
 an unterminated literal that stops the generated component compiling.
 
-The scan now honours string literals and backslash escapes, and splits a
+**The body is not a flat declaration list**, which the first version of this
+fix missed. `build_part_style_map` splices every state block in as a nested
+object inside a spread -- `...((cond) ? { a: 1, b: 2 } : {})` -- so a scanner
+that knows about string literals but not bracket nesting treats the comma
+inside `{ .. }` as a separator. It then mines a CONDITIONAL block for
+declarations, painting a state-only value unconditionally and dragging the
+block's closing scaffolding into the JSX expression, which closes it early:
+
+```
+  strokeWidth={9 } : {})}
+```
+
+Reached by ordinary authored mosstyle -- any `Path` part with a
+multi-property state block. Bracket depth is tracked now.
+
+The scan honours string literals and backslash escapes, and splits a
 declaration at its first top-level colon so a value containing one (a URL)
 keeps it. Every value the emitter writes into that body is a well-formed JS
 literal or expression by construction, so a correct parse cannot recover

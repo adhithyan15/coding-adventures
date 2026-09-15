@@ -5088,17 +5088,32 @@ fn path_coordinate_expression(
 /// that is not already valid in the position it lands in.
 fn react_style_property<'a>(style: &'a str, property: &str) -> Option<&'a str> {
     top_level_declarations(style).find_map(|declaration| {
+        // A SPREAD yields nothing here without a special case for it: every
+        // state block is spliced in as `...((cond) ? { .. } : {})`, and with
+        // bracket depth tracked, that whole thing is ONE declaration with no
+        // top-level colon. An explicit `starts_with("...")` guard was tried
+        // and removed -- deleting it broke no test, because depth tracking
+        // already covers it, and a guard nothing can falsify reads as
+        // coverage it does not provide.
         let (name, value) = split_first_top_level_colon(declaration)?;
         (name.trim() == property).then_some(value.trim())
     })
 }
 
-/// Split a style-object body on its top-level commas, ignoring any inside a
-/// double-quoted string (honouring backslash escapes).
+/// Split a style-object body on its top-level commas -- ignoring any inside
+/// a double-quoted string, and any nested inside brackets.
+///
+/// The body is NOT a flat declaration list. `build_part_style_map` splices
+/// state blocks in as `...((cond) ? { a: 1, b: 2 } : {})`, so a scanner that
+/// tracks only string literals treats the comma inside `{ .. }` as a
+/// separator and mines a conditional block for declarations -- recovering a
+/// value that should be conditional, together with the block's closing
+/// scaffolding, which closes the generated JSX expression early.
 fn top_level_declarations(style: &str) -> impl Iterator<Item = &str> {
     let mut boundaries = vec![0usize];
     let mut in_string = false;
     let mut escaped = false;
+    let mut depth: i32 = 0;
     for (idx, ch) in style.char_indices() {
         if escaped {
             escaped = false;
@@ -5107,7 +5122,9 @@ fn top_level_declarations(style: &str) -> impl Iterator<Item = &str> {
         match ch {
             '\\' if in_string => escaped = true,
             '"' => in_string = !in_string,
-            ',' if !in_string => {
+            '(' | '[' | '{' if !in_string => depth += 1,
+            ')' | ']' | '}' if !in_string => depth -= 1,
+            ',' if !in_string && depth <= 0 => {
                 boundaries.push(idx);
             }
             _ => {}
@@ -5123,11 +5140,13 @@ fn top_level_declarations(style: &str) -> impl Iterator<Item = &str> {
     out.into_iter()
 }
 
-/// Split `name: value` at the FIRST colon that is not inside a string, so a
-/// value containing one (a URL, say) keeps it.
+/// Split `name: value` at the FIRST colon that is not inside a string or
+/// nested in brackets, so a value containing one -- a URL, or a ternary --
+/// keeps it and cannot have its name mis-taken.
 fn split_first_top_level_colon(declaration: &str) -> Option<(&str, &str)> {
     let mut in_string = false;
     let mut escaped = false;
+    let mut depth: i32 = 0;
     for (idx, ch) in declaration.char_indices() {
         if escaped {
             escaped = false;
@@ -5136,7 +5155,11 @@ fn split_first_top_level_colon(declaration: &str) -> Option<(&str, &str)> {
         match ch {
             '\\' if in_string => escaped = true,
             '"' => in_string = !in_string,
-            ':' if !in_string => return Some((&declaration[..idx], &declaration[idx + 1..])),
+            '(' | '[' | '{' if !in_string => depth += 1,
+            ')' | ']' | '}' if !in_string => depth -= 1,
+            ':' if !in_string && depth <= 0 => {
+                return Some((&declaration[..idx], &declaration[idx + 1..]))
+            }
             _ => {}
         }
     }
@@ -13074,6 +13097,50 @@ mod path_paint_parsing_tests {
         assert_eq!(fill, "{\"#1e1e1e\"}");
         assert_eq!(stroke, "{\"#333\"}");
         assert_eq!(width, "{2}");
+    }
+
+    /// THE BODY IS NOT A FLAT LIST. `build_part_style_map` splices state
+    /// blocks in as NESTED object literals inside a spread:
+    ///
+    /// ```text
+    ///   background: "#111", ...((disabled) ? { opacity: 0.4, borderWidth: 9 } : {})
+    /// ```
+    ///
+    /// A scanner that knows about string literals but not bracket nesting
+    /// treats the comma inside `{ ... }` as a separator, so `borderWidth: 9`
+    /// is mined out of a CONDITIONAL block and painted unconditionally --
+    /// and the recovered text carries the block's closing scaffolding, which
+    /// closes the JSX expression early and stops the component compiling.
+    ///
+    /// Reached by ordinary authored mosstyle: any `Path` part with a
+    /// multi-property state block.
+    #[test]
+    fn a_nested_state_block_is_not_mined_for_declarations() {
+        let body = "background: \"#111\", ...((disabled) ? { opacity: 0.4, borderWidth: 9 } : {})";
+        let (fill, stroke, width) = path_paint_jsx(body);
+        assert_eq!(fill, "{\"#111\"}", "the base background still resolves");
+        assert_eq!(
+            width, "{1}",
+            "a state-conditional borderWidth must not be painted unconditionally: {width}"
+        );
+        assert!(
+            !width.contains('}') || width == "{1}",
+            "the recovered value must not carry the block's scaffolding: {width}"
+        );
+        assert_eq!(stroke, "\"currentColor\"");
+    }
+
+    /// A spread yields no property. This passes with or without an explicit
+    /// spread guard -- bracket depth alone is what makes it true -- so it is
+    /// a behavioural regression guard, not a pin on any one line.
+    #[test]
+    fn a_spread_is_never_mined_for_a_property() {
+        let body = "...(cond ? { background: \"#f00\" } : {})";
+        let (fill, _, _) = path_paint_jsx(body);
+        assert_eq!(
+            fill, "\"none\"",
+            "a conditional background must not become an unconditional fill: {fill}"
+        );
     }
 
     /// A declaration whose value contains a colon (a URL, say) must not
