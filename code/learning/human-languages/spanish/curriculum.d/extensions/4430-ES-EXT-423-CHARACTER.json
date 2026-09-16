@@ -1,0 +1,18 @@
+{
+  "id": "ES-EXT-423-CHARACTER",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a person's settled character with eight adjectives and make each one agree, or leave it alone, according to its ending.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C423-antipatico",
+    "ES-C423-inteligente",
+    "ES-C423-trabajador",
+    "ES-C423-serio",
+    "ES-C423-timido",
+    "ES-C423-sociable",
+    "ES-C423-repaso-caracter",
+    "ES-C423-sintesis-persona"
+  ]
+}

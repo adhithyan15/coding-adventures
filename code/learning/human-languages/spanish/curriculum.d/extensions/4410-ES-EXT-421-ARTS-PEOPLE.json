@@ -1,0 +1,14 @@
+{
+  "id": "ES-EXT-421-ARTS-PEOPLE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the actor and the actress and place both beside the theatre and the film I already knew.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C421-actor",
+    "ES-C421-actriz",
+    "ES-C421-repaso-escena",
+    "ES-C421-sintesis-espectaculo"
+  ]
+}

@@ -1656,8 +1656,17 @@
       "id": "A1-NE02-01",
       "category": "Individuo: dimension perceptiva y animica",
       "label": "character and personality adjectives",
-      "probe": null,
-      "note": "The source lists simpatico, antipatico, inteligente, trabajador, alegre, serio, timido and sociable. The corpus introduces none of them; the state adjectives it teaches are moods, not settled character."
+      "probe": [
+        "ES-LEX-C380-COUNT-36",
+        "ES-LEX-C380-COUNT-37",
+        "ES-LEX-C423-CHAR-01",
+        "ES-LEX-C423-CHAR-02",
+        "ES-LEX-C423-CHAR-03",
+        "ES-LEX-C423-CHAR-04",
+        "ES-LEX-C423-CHAR-05",
+        "ES-LEX-C423-CHAR-06"
+      ],
+      "note": "The source lists simpatico, antipatico, inteligente, trabajador, alegre, serio, timido and sociable. All eight are now introduced: simpatico (ES-C380) and alegre (ES-C380) were already taught -- an earlier version of this note wrongly said the corpus introduced none of them -- and chapter 423 adds the remaining six. These are settled character rather than mood, which is what the state adjectives elsewhere in the corpus describe."
     },
     {
       "id": "A1-NE03-01",
@@ -2174,8 +2183,13 @@
       "id": "A1-NE16-02",
       "category": "Ciencia y tecnologia",
       "label": "computing and new technology",
-      "probe": null,
-      "note": "The source's A1 exponents are ordenador, Internet, correo electronico and pagina web. Three of the four are introduced: ordenador (ES-C393), internet (ES-C393) and correo electronico (ES-C393). pagina web is not a headword anywhere, so the point stays uncovered on one missing exponent."
+      "probe": [
+        "ES-LEX-ORDENADOR",
+        "ES-LEX-INTERNET",
+        "ES-LEX-CORREO-ELECTRONICO",
+        "ES-LEX-C422-TECH-01"
+      ],
+      "note": "The source's A1 exponents are ordenador, Internet, correo electronico and pagina web. All four are now introduced: ordenador (ES-C393), internet (ES-C393), correo electronico (ES-C393) and pagina web (ES-C422). The point had stood uncovered on the single missing exponent."
     },
     {
       "id": "A1-NE17-01",
@@ -2250,8 +2264,14 @@
       "id": "A1-NE18-06",
       "category": "Actividades artisticas",
       "label": "cinema and theatre",
-      "probe": null,
-      "note": "The source's A1 exponents are cine, teatro, pelicula, actor and actriz. cine (ES-C354), pelicula (ES-C404) and now teatro (ES-C420) are introduced. actor and actriz are still not headwords anywhere, so the point stays uncovered on the two people it cannot name -- deliberately not wired on the three places alone."
+      "probe": [
+        "ES-LEX-C354-WHERE-28",
+        "ES-LEX-PELICULA",
+        "ES-LEX-C420-ARTS-01",
+        "ES-LEX-C421-ARTS-01",
+        "ES-LEX-C421-ARTS-02"
+      ],
+      "note": "The source's A1 exponents are cine, teatro, pelicula, actor and actriz. All five are now introduced: cine (ES-C354), pelicula (ES-C404), teatro (ES-C420), actor (ES-C421) and actriz (ES-C421). The probe was deliberately left null while actor and actriz were missing, rather than wired on the three places alone."
     },
     {
       "id": "A1-NE19-01",

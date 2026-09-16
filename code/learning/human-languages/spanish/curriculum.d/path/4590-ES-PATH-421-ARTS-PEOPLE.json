@@ -1,0 +1,15 @@
+{
+  "id": "ES-PATH-421-ARTS-PEOPLE",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C421-actor",
+    "ES-C421-actriz",
+    "ES-C421-repaso-escena",
+    "ES-C421-sintesis-espectaculo"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-421-ARTS-PEOPLE"
+  ],
+  "after": []
+}

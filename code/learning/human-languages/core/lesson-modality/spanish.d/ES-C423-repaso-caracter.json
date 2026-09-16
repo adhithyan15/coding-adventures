@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C423-repaso-caracter",
+    "language": "spanish",
+    "chapter": 423,
+    "sequence": 9890,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ccd4b61866e8678b"
+  },
+  "findings": []
+}
