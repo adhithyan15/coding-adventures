@@ -1,0 +1,23 @@
+{
+  "chapter": 428,
+  "title": "Five Last Pieces",
+  "label": "ch:piezas-sueltas",
+  "canDo": "I can read an e-mail address aloud with every symbol named, congratulate somebody, raise a glass, answer a sneeze, and name a creature I do not have the word for.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C428-sintesis-cumpleanos",
+    "kind": "task",
+    "summary": "Read an invitation with an address on it, saying each symbol by name, and answer it with the right word at each moment of the evening.",
+    "assesses": [
+      "ES-ORTH-C428-01",
+      "ES-ORTH-C428-02",
+      "ES-ORTH-C428-03",
+      "ES-ORTH-C428-04",
+      "ES-ORTH-C428-05",
+      "ES-ORTH-C424-01"
+    ],
+    "note": "Closes four points, and every one of the five words is the LAST MISSING PIECE of something the corpus could otherwise nearly do. A1-NE09-06 needed only arroba and guion bajo: internet, correo electronico, punto, guion and pagina web were all already taught across chapters 393, 342, 424 and 422, and the point's note had gone stale, still claiming guion and pagina web were missing. A1-F5-10 and A1-F5-09 are the same shape in a different direction -- feliz and la salud were both taught, but an adjective does not congratulate and a noun does not toast, so both needed the word put to a different use rather than a new word. A1-NE20-05 wanted the superordinate: the corpus had taught a dozen particular creatures and never the category they belong to, which is what lets a reader talk about an animal they cannot name."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C428-repaso-cortesia",
+    "language": "spanish",
+    "chapter": 428,
+    "sequence": 10290,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9e465e943563e2f2"
+  },
+  "findings": []
+}
