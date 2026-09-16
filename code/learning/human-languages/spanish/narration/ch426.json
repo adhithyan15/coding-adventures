@@ -1,0 +1,1325 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 426,
+  "title": "Capitals, Short Forms And Symbols",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:c9403687e7bb6e38",
+  "lessons": [
+    {
+      "id": "ES-C426-mayusculas",
+      "sequence": 10080,
+      "title": "las mayúsculas — and the four things Spanish refuses to capitalise",
+      "headword": "las mayúsculas",
+      "romanization": "las mayúsculas",
+      "gloss": "capital letters — and the four things Spanish pointedly does not capitalise, every one of which English does",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a08a3a7e08a45fdb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write today's day and month in English. Now write them in Spanish, and read on to find out what you almost certainly got wrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la mayúscula — \"the capital letter.\" La minúscula is the small one. Latin maiusculus, \"somewhat larger,\" and minusculus, \"somewhat smaller\" — the two names describe nothing but size."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish capitalises where you expect: the first word of a sentence, and proper names — people, cities, countries, rivers."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the four that English capitalises and Spanish does not",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the highest-value fact in the chapter, because an English-trained hand gets all four wrong and the marker sees every one:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "English",
+                "Spanish"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "days. English: Monday. Spanish: lunes.",
+                "months. English: January. Spanish: enero.",
+                "languages. English: Spanish. Spanish: español.",
+                "nationalities. English: I am Spanish. Spanish: soy español."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Add religions and titles: católico, and el rey, el presidente, doctor — all lower-case in running text."
+            },
+            {
+              "kind": "speech",
+              "text": "The idea underneath is consistent. Spanish capitalises a name, not a category. España is a name; español is a description of a kind of person, and a description is an ordinary adjective."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the title of a book or a film",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "English, One Hundred Years of Solitude.",
+                "Spanish, Cien años de soledad."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Only the first word takes a capital. English capitalises most words in a title; Spanish treats a title as an ordinary sentence with a capital at the front."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "today's day and month in Spanish, both lower-case",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: today's day and month in Spanish, both lower-case]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"soy español\" and hear that the nationality is not capitalised",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"soy español\" and hear that the nationality is not capitalised]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the single rule underneath all four (a name is capitalised, a category is not)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the single rule underneath all four (a name is capitalised, a category is not)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how many words of a Spanish book title take a capital (one)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how many words of a Spanish book title take a capital (one)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does Spanish capitalise lunes? (No.) Does it capitalise España? (Yes.) What is the difference? (A name takes a capital; a category does not.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C426-minuscula-inicial",
+      "sequence": 10090,
+      "title": "la minúscula inicial — the capital that depends on what stands beside it",
+      "headword": "la minúscula inicial",
+      "romanization": "la minúscula inicial",
+      "gloss": "the initial lower-case letter — whether a small word inside a surname takes a capital depends on whether the forename is standing in front of it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7501ef6d4a404be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the principle from the last lesson: a name takes a capital, a category does not. This lesson gives you a case where the same word takes a capital in one sentence and not in another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Many Spanish surnames contain a small word: de, del, la, las. Whether it is capitalised depends on what stands in front of it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "written",
+                "form"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "written: with the first name. form: Pedro de la Cruz.",
+                "written: without it. form: el señor De la Cruz."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "With the forename present, the small word is lower-case. Standing alone at the head of the name, it takes the capital."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: why the rule has that shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "It is not arbitrary. De originally meant from — Pedro de la Cruz was Pedro from the Cross, a description of where he came from rather than a name. A description does not take a capital, which is the rule from the last lesson exactly."
+            },
+            {
+              "kind": "speech",
+              "text": "Once the forename is gone, De la Cruz has become the whole name, and a name takes a capital."
+            },
+            {
+              "kind": "speech",
+              "text": "This appears on forms. A field asking for apellidos alone is the second row; a field with nombre y apellidos together is the first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Pedro de la Cruz\", and say which word is lower-case",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Pedro de la Cruz\", and say which word is lower-case]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same surname without the forename, and say what changed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same surname without the forename, and say what changed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what de originally meant, and why that explains the rule",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *de* originally meant, and why that explains the rule]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Is it Pedro De la Cruz or Pedro de la Cruz? (Lower-case de, because the forename is there.) And with no forename? (De la Cruz, capital.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C426-abreviaturas",
+      "sequence": 10100,
+      "title": "las abreviaturas — the short forms a letter opens with",
+      "headword": "las abreviaturas",
+      "romanization": "las abreviaturas",
+      "gloss": "abbreviations — the shortened forms of address a letter and a form print, and the point that must not be left off",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f71d5d287159a6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know that c/ on an address is calle. Say it. That slash was your first abbreviation; this lesson gives you the rest of the set."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "una abreviatura — \"an abbreviation\": a word written short, and always closed with a point."
+            },
+            {
+              "kind": "speech",
+              "text": "The forms of address are the ones an A1 paper prints:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "short",
+                "full",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "short: Sr. full: señor, Mr.",
+                "short: Sra. full: señora, Mrs.",
+                "short: Srta. full: señorita, Miss.",
+                "short: D. full: don, a courtesy title before a first name.",
+                "short: Dña. full: doña, its feminine.",
+                "short: Dr. full: doctor, blank."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The point is not decoration. Sr without it is an error, because the point is what marks the word as shortened."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: don and señor are not the same word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The distinction is one an English speaker has no equivalent for:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "goes before",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "señor. goes before: the surname. example: el Sr. García.",
+                "don. goes before: the first name. example: D. Pedro."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Don Pedro is respectful and warm; Señor García is respectful and formal. Putting them the wrong way round — don García — sounds wrong to a Spanish ear in the way Mr. Peter does to an English one."
+            },
+            {
+              "kind": "speech",
+              "text": "Two more an address prints, both of which you can now read: c/ for calle and n.º for número."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the abbreviations for señor, señora and señorita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the abbreviations for *señor*, *señora* and *señorita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what must never be left off the end of an abbreviation (the point)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what must never be left off the end of an abbreviation (the point)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of don and señor goes with a first name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of *don* and *señor* goes with a first name]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what c/ and n.º stand for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what **c/** and **n.º** stand for]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What closes every abbreviation? (A point.) Which goes before a first name, don or señor? (Don.) What is Dña. short for? (Doña.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C426-voladitas",
+      "sequence": 10110,
+      "title": "las letras voladitas — the little letters that sit above the line",
+      "headword": "las letras voladitas",
+      "romanization": "las letras voladitas",
+      "gloss": "the raised letters — the little o and a that sit above the line in an ordinal or an abbreviation, and which one to use for a woman",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3b526eca96d08c68",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the abbreviation for señora. Now say what you would write for señorita if you wanted the raised form, and read on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "las letras voladitas — \"the flown letters,\" raised above the line. Spanish uses exactly two of them, º and ª, and which one you use is decided by gender."
+            },
+            {
+              "kind": "speech",
+              "text": "Their commonest job is the ordinal indicator:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "written",
+                "read"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "written: 1.º. read: primero.",
+                "written: 1.ª. read: primera.",
+                "written: 2.º. read: segundo.",
+                "written: n.º. read: número."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English writes 1st and 2nd, changing the ending with the number. Spanish writes the same raised letter every time and changes it only for gender: º for a masculine word, ª for a feminine one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the point goes before the raised letter",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "correct",
+                "wrong"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "correct: 1.º. wrong: 1º.",
+                "correct: Sr.ª. wrong: Srª."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The Academy's recommendation puts the point first and the raised letter after, because the point is the abbreviation mark and the raised letter is the ending. You will see the pointless form printed everywhere; the one with the point is the one to write."
+            },
+            {
+              "kind": "speech",
+              "text": "A warning about the shape. º is a raised letter o, not a degree sign, even though the two look nearly identical. A temperature uses the degree sign; an ordinal uses the letter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "1.º and 1.ª, and say what decides between them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 1.º and 1.ª, and say what decides between them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where the point goes relative to the raised letter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where the point goes relative to the raised letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what n.º stands for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what **n.º** stands for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between the raised º and a degree sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between the raised **º** and a degree sign]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What decides between º and ª? (The gender of the word.) Does the point come before or after the raised letter? (Before.) Is º a degree sign? (No — it is a raised letter o.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C426-siglas",
+      "sequence": 10120,
+      "title": "las siglas — no points, and a plural made by doubling",
+      "headword": "las siglas",
+      "romanization": "las siglas",
+      "gloss": "initialisms and acronyms — written without points, and pluralised by doubling the letters rather than by adding an s",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7f73ff34aad2df3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the rule you learned for abbreviations: every one ends in a point. This lesson gives you a kind of short form where that rule is reversed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "una sigla — a set of initials standing for a name. ONU, DNI, RENFE."
+            },
+            {
+              "kind": "speech",
+              "text": "Unlike an abbreviation, a sigla takes no points at all:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "correct",
+                "wrong"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "correct: DNI. wrong: D.N.I.",
+                "correct: ONU. wrong: O.N.U."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The two you will actually meet on a form are DNI — Documento Nacional de Identidad, the Spanish identity card — and UE, the European Union."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the plural, which is the strange part",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A sigla does not take an -s in writing. It is made plural by doubling its letters, with a space in the middle:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "singular",
+                "plural",
+                "meaning"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "singular: EU. plural: EE. UU. meaning: the United States.",
+                "singular: CC. plural: CC. OO. meaning: a trade union confederation."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "EE. UU. is Estados Unidos — two words, so two doubled letters. Said aloud it is the full name; the doubling exists only on the page."
+            },
+            {
+              "kind": "speech",
+              "text": "One more distinction the names record. A sigla is spelled out letter by letter (DNI is de-ene-i). An acrónimo is said as a word (RENFE, ONU). Which one a set of initials becomes depends on nothing but whether the result is pronounceable."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "DNI, spelled out with the letter names you learned",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **DNI**, spelled out with the letter names you learned]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether a sigla takes points (no)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether a sigla takes points (no)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how Estados Unidos is written short (EE. UU.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how *Estados Unidos* is written short (*EE. UU.*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between a sigla and an acrónimo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between a *sigla* and an *acrónimo*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does a sigla end in a point? (No — an abbreviation does, a sigla does not.) How is a sigla made plural in writing? (By doubling its letters.) What does DNI stand for? (Documento Nacional de Identidad.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C426-simbolos",
+      "sequence": 10130,
+      "title": "los símbolos — the third kind of short form, and the one with no point",
+      "headword": "los símbolos",
+      "romanization": "los símbolos",
+      "gloss": "symbols — currency, the compass and the units, none of which take a point, because a symbol is not an abbreviation",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e18b566bab2b5795",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An abbreviation ends in a point and a sigla does not. Say both rules. This lesson adds a third kind, and it sides with the sigla."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "un símbolo — a fixed sign for a unit, a currency or a direction. It is international, unchanging, and takes no point."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "symbol",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "€ means the euro.",
+                "km means kilometre.",
+                "kg means kilogram.",
+                "h means hour."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "km is never km. and never kms. A symbol has no plural and no point, because it is not a shortened Spanish word — it is the same sign in every language."
+            },
+            {
+              "kind": "speech",
+              "text": "You have already read one in use: km/h, which you learned to say aloud as kilómetros por hora."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the compass, and where the euro goes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The four points of the compass have symbols that match their Spanish names, and one does not match the English:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "symbol",
+                "Spanish",
+                "English"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "symbol: N. Spanish: norte. English: north.",
+                "symbol: S. Spanish: sur. English: south.",
+                "symbol: E. Spanish: este. English: east.",
+                "symbol: O. Spanish: oeste. English: west (W)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A Spanish map prints O where an English map prints W. On a reading paper that is a trap worth having seen once."
+            },
+            {
+              "kind": "speech",
+              "text": "And the currency: Spanish writes the amount first and the symbol after, with a space — 20 €, not €20. English does the reverse."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether a symbol takes a point (no)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether a symbol takes a point (no)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four compass letters in Spanish, and the one that differs from English",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four compass letters in Spanish, and the one that differs from English]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"20 €\" the way Spanish writes it, and say what English would do instead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"20 €\" the way Spanish writes it, and say what English would do instead]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plural of km (there is none)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plural of *km* (there is none)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the three short forms takes a point — abbreviation, sigla or symbol? (Only the abbreviation.) Which compass letter differs between Spanish and English? (O for oeste, where English writes W.) Where does the euro sign go? (After the amount.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C426-repaso-cortas",
+      "sequence": 10140,
+      "title": "tres formas cortas — and the point tells you which is which",
+      "headword": "tres formas cortas",
+      "romanization": "tres formas cortas",
+      "gloss": "three kinds of short form — and the point is what tells them apart, because only one of the three takes one",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3950decf1c7e7cb7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the three kinds of short form before reading on, and say which one takes a point."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one test separates all three",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "kind",
+                "example",
+                "point?"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "kind: abreviatura. example: Sr., Dña., n.º. point?: yes.",
+                "kind: sigla. example: DNI, ONU, UE. point?: no.",
+                "kind: símbolo. example: €, km, N. point?: no."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The reason is worth more than the table. An abreviatura is a Spanish word cut short, and the point marks the cut. A sigla is not a cut word but a set of initials. A símbolo is not Spanish at all — it is an international sign that happens to appear in a Spanish sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "Only something that was cut needs a mark showing where."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the capitals, gathered",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "lower-case in Spanish",
+                "capitalised"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "lower-case in Spanish: lunes, enero. capitalised: España, Madrid.",
+                "lower-case in Spanish: español, católico. capitalised: Pedro, García.",
+                "lower-case in Spanish: el rey, el doctor. capitalised: De la Cruz, with no forename."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One idea covers the whole left column: a category is not a name. Days, months, languages, nationalities, religions and titles all describe a kind of thing rather than naming a particular one."
+            },
+            {
+              "kind": "speech",
+              "text": "And the raised letters: º for a masculine word, ª for a feminine one, with the point before — 1.º, 1.ª, Sr.ª."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three kinds of short form, and which takes a point",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three kinds of short form, and which takes a point]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "four things Spanish leaves lower-case that English capitalises",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: four things Spanish leaves lower-case that English capitalises]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why an abbreviation needs a point and a symbol does not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why an abbreviation needs a point and a symbol does not]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "1.ª, and say what the raised letter is agreeing with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 1.ª, and say what the raised letter is agreeing with]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the three takes a point, and why? (The abbreviation — the point marks where the word was cut.) What single idea keeps lunes and español lower-case? (They are categories, not names.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C426-sintesis-formulario",
+      "sequence": 10150,
+      "title": "un formulario completo — where all of it actually turns up",
+      "headword": "un formulario completo",
+      "romanization": "un formulario completo",
+      "gloss": "a filled-in form — which is where every short form, capital and raised letter in these two chapters actually turns up",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b689ae78e59f2b35",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say what DNI stands for, and say whether it takes points."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read this form. Every short form in it has been taught:"
+            },
+            {
+              "kind": "speech",
+              "text": "Datos personales Nombre y apellidos: Pedro de la Cruz DNI: 12345678-A Dirección: c/ Mayor, n.º 5, 1.º Teléfono: 600 123 456 Correo electrónico: Nacionalidad: español."
+            },
+            {
+              "kind": "speech",
+              "text": "Six things to notice, and every one is a rule rather than a detail: de la Cruz is lower-case because the forename is present; DNI carries no points; c/ is the street and n.º the number; 1.º is the floor, with the point before the raised letter; and español is lower-case because a nationality is a category."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the same data spoken aloud",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A form prints the short forms; a person says them in full:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "on the form",
+                "said aloud"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "on the form: c/ Mayor. said aloud: calle Mayor.",
+                "on the form: n.º 5. said aloud: número cinco.",
+                "on the form: 1.º. said aloud: primero."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A reading paper gives you the left column and a listening paper the right, which is why both have to be learned."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the address line of the form, aloud and in full",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the address line of the form, aloud and in full]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own nationality, and keep it lower-case",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own nationality, and keep it lower-case]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "DNI, letter by letter, using the Spanish letter names",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **DNI**, letter by letter, using the Spanish letter names]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why de is small in Pedro de la Cruz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *de* is small in *Pedro de la Cruz*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is español lower-case on the form? (A nationality is a category, not a name.) How is 1.º read aloud? (Primero.) Where does the point go in n.º? (Before the raised letter.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C425-abecedario",
+    "language": "spanish",
+    "chapter": 425,
+    "sequence": 10010,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9edaf7757cfdb7eb"
+  },
+  "findings": []
+}

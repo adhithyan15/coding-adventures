@@ -1,0 +1,22 @@
+{
+  "language": "spanish",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:c9403687e7bb6e38",
+  "lessonIds": [
+    "ES-C426-mayusculas",
+    "ES-C426-minuscula-inicial",
+    "ES-C426-abreviaturas",
+    "ES-C426-voladitas",
+    "ES-C426-siglas",
+    "ES-C426-simbolos",
+    "ES-C426-repaso-cortas",
+    "ES-C426-sintesis-formulario"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "spanish/narration/ch426.txt",
+  "json": "spanish/narration/ch426.json",
+  "textHash": "fnv1a64:cc8adb935a82820d",
+  "jsonHash": "fnv1a64:afe7ff367f28c784",
+  "findings": []
+}

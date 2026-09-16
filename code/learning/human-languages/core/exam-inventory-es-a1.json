@@ -2344,50 +2344,65 @@
       "id": "A1-O1-01",
       "category": "Ortografia de letras y palabras",
       "label": "the alphabet and the names of the letters",
-      "probe": null,
-      "note": "The source enumerates the names of every letter, including the letters with more than one name. The corpus never teaches the alphabet as a recited or named sequence, which is what spelling a name aloud requires."
+      "probe": [
+        "ES-ORTH-C425-01",
+        "ES-ORTH-C425-02"
+      ],
+      "note": "ES-C425-abecedario names all twenty-seven letters, grouped by the three naming patterns rather than listed, and ES-C425-dos-nombres covers the letters with more than one name. The second lesson exists because b and v are HOMOPHONES in Spanish, which is why be larga and ve corta were needed at all; w, y and z are covered in the same lesson."
     },
     {
       "id": "A1-O1-02",
       "category": "Ortografia de letras y palabras",
       "label": "the vowel letters and their graphic representation",
-      "probe": null,
-      "note": "The source treats the five vowel letters as graphemes that may carry a tilde. The corpus teaches the written accent as a stress rule but never the vowel inventory as an orthographic set."
+      "probe": [
+        "ES-ORTH-C425-03"
+      ],
+      "note": "ES-C425-vocales treats the five vowel letters as the closed orthographic set the source describes, with both marks a vowel can carry: la tilde on any of the five, and la dieresis on u alone. It also names the false friend -- Spanish tilde is the accent mark, not the squiggle on the enye, which is la virgulilla."
     },
     {
       "id": "A1-O1-03",
       "category": "Ortografia de letras y palabras",
       "label": "the consonant letters and digraphs",
-      "probe": null,
-      "note": "The source enumerates b/v/w, c/k/q/z and ch, g/j, h, y and ll, m/n/enye, p, r and rr, s/x, and t/d. The corpus teaches only the silent h and enye, so probing those two would report the whole consonant system as held."
+      "probe": [
+        "ES-ORTH-C425-04"
+      ],
+      "note": "ES-C425-digrafos teaches all five digraphs (ch, ll, rr, gu, qu) as two letters spelling one sound, including the silent u of guerra and queso and its relation to the dieresis, plus the 1994 change that stopped ch and ll being alphabet letters in their own right."
     },
     {
       "id": "A1-O1-04",
       "category": "Ortografia de letras y palabras",
       "label": "capital letters",
-      "probe": null,
-      "note": "The source enumerates general uses, whole-word capitals and initial capitals. The corpus never states a capitalisation rule."
+      "probe": [
+        "ES-ORTH-C426-01"
+      ],
+      "note": "ES-C426-mayusculas states the rule the note said the corpus never stated, and organises it around the four cases where Spanish and English disagree: days, months, languages and nationalities, plus titles and book titles. One idea covers all of them -- Spanish capitalises a name and not a category."
     },
     {
       "id": "A1-O1-05",
       "category": "Ortografia de letras y palabras",
       "label": "initial lower-case letters",
-      "probe": null,
-      "note": "The source covers surnames beginning with an article or a preposition. The corpus never states the rule."
+      "probe": [
+        "ES-ORTH-C426-02"
+      ],
+      "note": "ES-C426-minuscula-inicial covers exactly what the source names: a surname beginning with an article or a preposition. The rule turns on whether the forename is present -- Pedro de la Cruz against el senor De la Cruz -- and the lesson derives it from the capitalisation principle rather than presenting it as arbitrary."
     },
     {
       "id": "A1-O1-06",
       "category": "Ortografia de letras y palabras",
       "label": "superscript letters in frequent abbreviations",
-      "probe": null,
-      "note": "The source lists forms such as the abbreviated title and the ordinal indicator. The corpus never introduces them."
+      "probe": [
+        "ES-ORTH-C426-04"
+      ],
+      "note": "ES-C426-voladitas teaches the raised letters, the ordinal indicator and the abbreviated title the source lists, including the Academy's recommendation that the point precede the raised letter (1.o, Sr.a) and the warning that the raised o is not a degree sign."
     },
     {
       "id": "A1-O1-07",
       "category": "Ortografia de letras y palabras",
       "label": "spelling of words: syllable division and double spellings",
-      "probe": null,
-      "note": "The source covers inseparable consonant groups, words with two accepted spellings, and how figures and numbers are written. The corpus never addresses any of the three."
+      "probe": [
+        "ES-ORTH-C425-05"
+      ],
+      "note": "ES-C425-silabas covers all three of the source's sub-points: the inseparable consonant groups (digraphs, consonant plus l or r, diphthongs), words with two accepted spellings (sicologia/psicologia, setiembre/septiembre, quiosco/kiosco), and the rule that a number in figures is never split."
     },
     {
       "id": "A1-O2-01",
@@ -2496,22 +2511,28 @@
       "id": "A1-O4-01",
       "category": "Abreviaturas y siglas",
       "label": "abbreviations",
-      "probe": null,
-      "note": "The source lists the frequent forms of address in abbreviated form and the use of the point and the slash in them. The corpus teaches senor and senora in full but never their abbreviations."
+      "probe": [
+        "ES-ORTH-C426-03"
+      ],
+      "note": "ES-C426-abreviaturas teaches the frequent forms of address (Sr., Sra., Srta., D., Dna., Dr.) and both marks the source names: the obligatory point, and the slash of c/. It also draws the don-against-senor distinction, which is first-name against surname and has no English equivalent."
     },
     {
       "id": "A1-O4-02",
       "category": "Abreviaturas y siglas",
       "label": "initialisms and acronyms",
-      "probe": null,
-      "note": "The source covers capitalisation in initialisms. The corpus never introduces any."
+      "probe": [
+        "ES-ORTH-C426-05"
+      ],
+      "note": "ES-C426-siglas covers the capitalisation the source names, the absence of points that distinguishes a sigla from an abbreviation, and the plural by letter-doubling (EE. UU.). It also separates sigla from acronimo by whether the result is pronounceable."
     },
     {
       "id": "A1-O4-03",
       "category": "Abreviaturas y siglas",
       "label": "symbols",
-      "probe": null,
-      "note": "The source covers currency symbols, the points of the compass and non-alphabetisable symbols. The corpus teaches the compass words but never their symbols."
+      "probe": [
+        "ES-ORTH-C426-06"
+      ],
+      "note": "ES-C426-simbolos covers the currency symbol, the points of the compass and the non-alphabetisable symbols the source lists, with the two facts that trip an English reader: the Spanish compass writes O for oeste where English writes W, and the euro sign follows the amount rather than preceding it."
     }
   ]
 }

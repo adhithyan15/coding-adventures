@@ -1,0 +1,18 @@
+{
+  "id": "ES-EXT-426-MAYUSCULAS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "orthography",
+  "canDo": "I can capitalise the way Spanish does and read the short forms a form prints.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C426-mayusculas",
+    "ES-C426-minuscula-inicial",
+    "ES-C426-abreviaturas",
+    "ES-C426-voladitas",
+    "ES-C426-siglas",
+    "ES-C426-simbolos",
+    "ES-C426-repaso-cortas",
+    "ES-C426-sintesis-formulario"
+  ]
+}
