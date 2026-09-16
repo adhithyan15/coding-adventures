@@ -1,0 +1,16 @@
+{
+  "id": "HI-EXT-93-IMPERATIVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can command at the right level, say you are at the familiar level, and forbid something.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C85-bolo",
+    "HI-C85-boliye",
+    "HI-C85-tum-ho",
+    "HI-C85-mat",
+    "HI-C85-repaso-adesh",
+    "HI-C85-sintesis-suchna"
+  ]
+}

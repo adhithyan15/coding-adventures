@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:5a49efa12b908819",
+  "lessonIds": [
+    "HI-C85-bolo",
+    "HI-C85-boliye",
+    "HI-C85-tum-ho",
+    "HI-C85-mat",
+    "HI-C85-repaso-adesh",
+    "HI-C85-sintesis-suchna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "hindi/narration/ch93.txt",
+  "json": "hindi/narration/ch93.json",
+  "textHash": "fnv1a64:4c1dcda2dd945dc3",
+  "jsonHash": "fnv1a64:8b5ce6a0a078c99b",
+  "findings": []
+}
