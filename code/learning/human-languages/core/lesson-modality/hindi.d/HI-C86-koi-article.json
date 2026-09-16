@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C86-koi-article",
+    "language": "hindi",
+    "chapter": 94,
+    "sequence": 3700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64d666e4d44ac1a5"
+  },
+  "findings": []
+}
