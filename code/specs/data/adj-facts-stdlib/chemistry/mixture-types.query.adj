@@ -5,11 +5,14 @@
 % The shape a learner (or an LLM) produces to ANSWER "what's an example of a
 % colloid?": it states no chemistry fact — it only `import`s the grounded table
 % and asks binding queries. The engine resolves each `?` against the
-% `mixture_example` rows and returns the example + the table's source/locator/
-% trust. The fourth query runs the relation BACKWARD (bind the example
-% vegetable_soup, recall the kind the source classifies it as — heterogeneous).
-% An `alloy` is not in the table, so a recall on it abstains honestly — the
-% engine never invents an example.
+% `mixture_example` rows and returns the example + THAT ROW'S OWN sentence,
+% with the table envelope's locator and trust inherited (RS-5e, #14986). This
+% previously read "the table's source/locator/trust", which was accurate before
+% the conversion: every row then answered with the homogeneous-mixture sentence,
+% whatever kind was asked about. The fourth query runs the relation BACKWARD
+% (bind the example vegetable_soup, recall the kind the source classifies it as
+% — heterogeneous). An `alloy` is not in the table, so a recall on it abstains
+% honestly — the engine never invents an example.
 %
 % Run (from this directory so the relative import resolves):
 %     ../../../../packages/rust/target/debug/adj-lang-cli mixture-types.query.adj
