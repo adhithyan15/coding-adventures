@@ -1,0 +1,16 @@
+{
+  "id": "HI-EXT-90-BODY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a person as tall, thin or stout, and agree each adjective with the person I am describing.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C82-lambaa",
+    "HI-C82-patlaa",
+    "HI-C82-motaa",
+    "HI-C82-naataa",
+    "HI-C82-repaso-shareer",
+    "HI-C82-sintesis-shareer"
+  ]
+}

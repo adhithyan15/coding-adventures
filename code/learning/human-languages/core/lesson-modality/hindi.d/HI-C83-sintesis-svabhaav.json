@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C83-sintesis-svabhaav",
+    "language": "hindi",
+    "chapter": 91,
+    "sequence": 3510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20d089408abb390a"
+  },
+  "findings": []
+}

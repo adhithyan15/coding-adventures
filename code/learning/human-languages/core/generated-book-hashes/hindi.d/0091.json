@@ -1,0 +1,16 @@
+{
+  "language": "hindi",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:d42f5c3ed47b9b55",
+  "lessonIds": [
+    "HI-C83-buraa",
+    "HI-C83-hoshiyaar",
+    "HI-C83-mehnati",
+    "HI-C83-sharmeela",
+    "HI-C83-milansaar",
+    "HI-C83-gambhir",
+    "HI-C83-repaso-svabhaav",
+    "HI-C83-sintesis-svabhaav"
+  ],
+  "tex": "hindi/book/chapters/ch91-character.tex"
+}
