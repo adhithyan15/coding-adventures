@@ -21,6 +21,8 @@ from __future__ import annotations
 
 import contextlib
 import io
+import os
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -297,6 +299,85 @@ class NewTests(unittest.TestCase):
             code, _, err = run(lessons.cmd_new, d, "A claim", "Gopher")
             self.assertEqual(code, 1)
             self.assertIn("unknown category", err.lower())
+
+
+class EncodingTests(unittest.TestCase):
+    """`index` must survive a stdout that cannot encode a lesson title.
+
+    7 of the 526 real shards have a title carrying U+2192 or U+2260. On a
+    Windows cp1252 console `index` used to die partway with UnicodeEncodeError,
+    printing 31 lines of 526 and exiting 1 -- and because every CI runner is
+    Linux, where stdout is UTF-8, the gate never saw it.
+
+    These tests deliberately do NOT use the `run` helper above. It captures
+    through `io.StringIO`, which accepts every codepoint and raises nothing, so
+    a test built on it would pass with or without the fix: decoration rather
+    than a check. A `TextIOWrapper` over `BytesIO` with `encoding="cp1252"`
+    reproduces the real console, and was observed to raise on the unfixed code
+    before this test was written.
+    """
+
+    ARROW_TITLE = "A claim → with an arrow"
+
+    def test_index_emits_every_shard_on_a_codepage_that_cannot_encode_them(self):
+        """Run the real CLI with a stdout that cannot encode the titles.
+
+        A SUBPROCESS, not an in-process call, and the difference is the whole
+        test. `lessons.py` reconfigures `sys.stdout` at import, on the real
+        stream. `contextlib.redirect_stdout` replaces that object AFTERWARDS,
+        so an in-process test can only pass by re-applying the fix itself --
+        which it would then pass without the fix in place. Two earlier versions
+        of this test did exactly that and were deleted.
+
+        `PYTHONIOENCODING` is load-bearing on CI and inert here: this box's
+        default child encoding is already cp1252, while every CI runner is
+        Linux and defaults to UTF-8. Setting it explicitly is what makes the
+        test reproduce the Windows failure on the machine that gates.
+
+        No `cwd`: `LESSONS_DIR` comes from `parents[2]` of the script path, so
+        the command is invoked identically from anywhere.
+        """
+        script = REPO / "code" / "scripts" / "lessons.py"
+        process = subprocess.run(
+            [sys.executable, os.fspath(script), "index"],
+            capture_output=True,
+            check=False,
+            env={**os.environ, "PYTHONIOENCODING": "cp1252"},
+        )
+        self.assertEqual(process.returncode, 0, process.stderr.decode("utf-8", "replace"))
+        self.assertEqual(process.stderr, b"")
+        emitted = process.stdout.decode("utf-8").splitlines()
+        self.assertEqual(len(emitted), len(lessons.load()))
+
+    def test_the_cp1252_harness_really_cannot_encode_the_title(self):
+        """The negative arm: without the reconfigure the harness MUST raise.
+
+        An assertion never observed to fire is decoration, so the harness is
+        checked against the character it exists to catch.
+        """
+        stream = io.TextIOWrapper(io.BytesIO(), encoding="cp1252")
+        with self.assertRaises(UnicodeEncodeError):
+            stream.write(self.ARROW_TITLE)
+            stream.flush()
+
+    def test_a_title_the_codepage_cannot_encode_is_actually_present(self):
+        """The corpus arm above is only meaningful while such a title exists.
+
+        If every shard title became plain ASCII the subprocess test would keep
+        passing while checking nothing, so the precondition is asserted rather
+        than assumed. Measured 2026-09-16: 7 of 526 titles qualify.
+        """
+        unencodable = []
+        for lesson in lessons.load():
+            try:
+                lesson.title.encode("cp1252")
+            except UnicodeEncodeError:
+                unencodable.append(lesson.slug)
+        self.assertGreater(
+            len(unencodable),
+            0,
+            "no shard title exercises the codepage path any more",
+        )
 
 
 class RepositoryTests(unittest.TestCase):
