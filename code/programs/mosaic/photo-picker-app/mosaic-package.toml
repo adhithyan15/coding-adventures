@@ -7,8 +7,8 @@ license = "MIT"
 [components]
 exports = ["PhotoPickerApp"]
 
-# XAML and Qt this slice (UI59 §2) -- Compose and Flutter follow as separate
-# PRs, in the same order `[host_effects]` itself landed in. No
+# XAML, Qt, and Compose this slice (UI59 §2) -- Flutter follows as a separate
+# PR, in the same order `[host_effects]` itself landed in. No
 # `[host_assets]` section: unlike Engram, this app has no legacy
 # hand-written host to retire -- it starts on `[host_effects]` directly.
 [host_effects]
@@ -19,6 +19,10 @@ files = [
   # listed, matching engram-app's own Qt `[host_effects]` entry.
   { backend = "qt", source = "host/qt/PhotoPickerEffects.h", target = "PhotoPickerEffects.h" },
   { backend = "qt", source = "host/qt/PhotoPickerEffects.cpp", target = "PhotoPickerEffects.cpp" },
+  # Gradle's Kotlin convention compiles everything under `src/main/kotlin`,
+  # so the target is a path there and no build-list entry is needed -- same
+  # shape as SwiftUI, unlike Qt. Matches engram-app's own Compose entry.
+  { backend = "compose", source = "host/compose/PhotoPickerEffects.kt", target = "src/main/kotlin/PhotoPickerEffects.kt" },
 ]
 handlers = [
   # No `include`: the XAML emitter refuses one outright (every type in the
@@ -38,6 +42,11 @@ handlers = [
   # XAML), matching engram-app's `{ backend = "qt", include = ...,
   # install = "installEngramEffects" }` shape exactly.
   { backend = "qt", include = "PhotoPickerEffects.h", install = "installPhotoPickerEffects" },
+  # No `include`: Kotlin has no include directive and every file in the
+  # module is visible -- the emitter refuses one here for exactly that
+  # reason (confirmed against `compose_main_with_host_effects`'s own
+  # refusal message).
+  { backend = "compose", install = "installPhotoPickerEffects" },
 ]
 
 [kernel]
