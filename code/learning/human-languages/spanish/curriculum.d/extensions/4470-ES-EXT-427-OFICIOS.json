@@ -1,0 +1,18 @@
+{
+  "id": "ES-EXT-427-OFICIOS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name five professions and the company somebody works for.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C427-vendedor",
+    "ES-C427-comprador",
+    "ES-C427-policia",
+    "ES-C427-bombero",
+    "ES-C427-abogado",
+    "ES-C427-empresa",
+    "ES-C427-repaso-oficios",
+    "ES-C427-sintesis-profesion"
+  ]
+}

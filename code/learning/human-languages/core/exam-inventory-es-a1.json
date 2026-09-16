@@ -1888,8 +1888,10 @@
       "id": "A1-NE07-06",
       "category": "Trabajo",
       "label": "characteristics of a worker",
-      "probe": null,
-      "note": "The source's A1 exponent is ser trabajador, the adjective. The corpus teaches only the verb trabajar, and the adjective is never derived."
+      "probe": [
+        "ES-LEX-C423-CHAR-03"
+      ],
+      "note": "trabajador is introduced by ES-C423-trabajador, which teaches it as both the adjective the source asks for (ser trabajador) and the agent noun. The earlier note said the corpus taught only the verb trabajar and never derived the adjective; that stopped being true when chapter 423 landed, and the note had not caught up."
     },
     {
       "id": "A1-NE08-01",
@@ -2048,8 +2050,11 @@
       "id": "A1-NE11-04",
       "category": "Servicios",
       "label": "protection and security services",
-      "probe": null,
-      "note": "The source's A1 exponents are policia and bombero. Neither is introduced in the corpus."
+      "probe": [
+        "ES-LEX-C427-AGENT-03",
+        "ES-LEX-C427-AGENT-04"
+      ],
+      "note": "policia and bombero are introduced by chapter 427. The policia lesson carries the fact a reading paper can test: el policia is an officer and la policia is the force, so the article rather than any ending does the distinguishing."
     },
     {
       "id": "A1-NE12-01",
@@ -2099,8 +2104,10 @@
       "id": "A1-NE13-03",
       "category": "Salud e higiene",
       "label": "medicine and medicines",
-      "probe": null,
-      "note": "The source's single A1 exponent is farmacia, which the corpus never introduces."
+      "probe": [
+        "ES-LEX-C353-WHERE-23"
+      ],
+      "note": "farmacia is introduced by ES-C353-farmacia and has been since that chapter. The earlier note claiming the corpus never introduced it was FALSE -- resolved through the lesson headword per HL-C376. The source lists farmacia as its single A1 exponent, so the point needed no authoring at all, only wiring."
     },
     {
       "id": "A1-NE13-04",
@@ -2154,22 +2161,29 @@
       "id": "A1-NE15-02",
       "category": "Economia e industria",
       "label": "commerce: buyer and seller",
-      "probe": null,
-      "note": "The source's A1 exponents are the nouns vendedor and comprador. The corpus teaches the verb comprar but never derives either agent noun."
+      "probe": [
+        "ES-LEX-C427-AGENT-01",
+        "ES-LEX-C427-AGENT-02"
+      ],
+      "note": "vendedor and comprador are introduced by chapter 427, built from vender and comprar with the -dor ending chapter 423 had already taught as an adjective on trabajador. The lesson is explicit that these are the ROLES in a sale rather than shop vocabulary, which is why teaching comprar alone did not cover the point."
     },
     {
       "id": "A1-NE15-03",
       "category": "Economia e industria",
       "label": "businesses and organisations",
-      "probe": null,
-      "note": "The source's A1 exponent is empresa, which the corpus never introduces."
+      "probe": [
+        "ES-LEX-C427-AGENT-06"
+      ],
+      "note": "empresa is introduced by ES-C427-empresa. The lesson names the difference from English enterprise: Spanish empresa covers the firm as well as the venture, which is what makes it the everyday word a form asks for."
     },
     {
       "id": "A1-NE15-04",
       "category": "Economia e industria",
       "label": "industry and energy",
-      "probe": null,
-      "note": "The source's only A1 exponent is pescado, under fishing. The corpus never introduces it."
+      "probe": [
+        "ES-LEX-C361-REF-22"
+      ],
+      "note": "pescado is introduced by ES-C361-pescado and has been since that chapter. The earlier note claiming the corpus never introduced it was FALSE -- resolved through the lesson headword per HL-C376. The source's only A1 exponent under this point is pescado, so the point needed wiring rather than authoring."
     },
     {
       "id": "A1-NE16-01",
@@ -2203,8 +2217,10 @@
       "id": "A1-NE17-02",
       "category": "Gobierno, politica y sociedad",
       "label": "law and justice",
-      "probe": null,
-      "note": "The source's single A1 exponent is abogado, which the corpus never introduces."
+      "probe": [
+        "ES-LEX-C427-AGENT-05"
+      ],
+      "note": "abogado is introduced by ES-C427-abogado, from Latin advocatus, one called to your side. It is the chapter's example of a profession word with no Spanish verb inside it, because it was inherited whole rather than built here."
     },
     {
       "id": "A1-NE18-01",

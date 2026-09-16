@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C427-sintesis-profesion",
+    "language": "spanish",
+    "chapter": 427,
+    "sequence": 10230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:706908f51ac144bd"
+  },
+  "findings": []
+}
