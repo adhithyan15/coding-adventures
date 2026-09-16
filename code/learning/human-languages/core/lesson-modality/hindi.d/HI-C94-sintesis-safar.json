@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C94-sintesis-safar",
+    "language": "hindi",
+    "chapter": 102,
+    "sequence": 4350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55d81281d3750535"
+  },
+  "findings": []
+}

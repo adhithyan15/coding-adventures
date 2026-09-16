@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C94-se-nahin",
+    "language": "hindi",
+    "chapter": 102,
+    "sequence": 4330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b094f9a6f95bcd5e"
+  },
+  "findings": []
+}
