@@ -56,14 +56,23 @@ it("pins Punjabi lesson-content budgets", () =>
     // 267 -> 270: chapter 45, the reading rung -- six labels, a filled form, and
     // the same six facts as a 72-word paragraph. No new word: every Gurmukhi
     // token was checked to occur in a lesson with a lower sequence number.
-    lessons: 270,
+    //
+    // 270 -> 271: chapter 46, the timed A1 writing paper. One lesson, no new
+    // atoms -- it practises the form atoms the track already teaches and adds
+    // only the condition the six stages before it withheld: a clock.
+    //
+    // 271 -> 272: chapter 47, connected composition. Also no new vocabulary --
+    // ate and par are the joiners chapters 38 and 39 already taught, and the
+    // exercise is the joining rather than the reaching. Between them the two
+    // lessons close Punjabi's whole writing ramp, A1 through C2.
+    lessons: 272,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,
     unitPrefix: "PA",
   }));
 
-it("keeps Punjabi's 270-row session map aligned with canonical order", () => {
+it("keeps Punjabi's 272-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -78,8 +87,8 @@ it("keeps Punjabi's 270-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(270);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 270 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(272);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 272 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );
@@ -211,6 +220,13 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     "observe-trace",
     "guided-copy",
+    // 59 -> 60, and the list stops growing sideways here. Everything above is a
+    // pre-A1 stage repeated across the script runways; this one entry is the
+    // A1 timed paper, the seventh and last stage in the ramp. Punjabi proved
+    // the other six long ago and failed A1 through C2 on this one alone, so a
+    // single lesson closes six level-debts.
+    "timed-assessment-production",
+    "connected-composition",
   ]);
 });
 
@@ -697,7 +713,13 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // is for. The rise is the three new reading skills, introduced in the last
   // chapter with nothing after them yet to close their own R2 and R3. That
   // residue is the instruction for chapter 46, not a reason to hold the rung.
-  expect(report.summary.missedByWindow).toEqual({ R1: 54, R2: 130, R3: 216, R4: 106 });
+  // {54, 130, 216, 106} -> {55, 132, 217, 107}. The timed A1 writing paper is
+  // the LAST lesson in the track, and a terminal lesson cannot be retrieved: it
+  // practises five form atoms, opening a window for each that nothing after it
+  // can close. +1/+2/+1/+1 is the whole cost, it is inherent to any lesson that
+  // sits at the end rather than a defect in this one, and the next lesson added
+  // after it will pay part of it back.
+  expect(report.summary.missedByWindow).toEqual({ R1: 55, R2: 132, R3: 217, R4: 107 });
 });
 
 it("services Punjabi's three-field R4 debt without moving the boundary forward", () => {

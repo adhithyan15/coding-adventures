@@ -1,0 +1,20 @@
+{
+  "chapter": 47,
+  "title": "Writing --- Four Lines That Hold Together",
+  "label": "ch:pa-jodi-hoiyan-lineaan",
+  "canDo": "I can write four connected lines to a named reader, joining with ate and setting against with par, so that one line depends on the one before it.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-W11-jodi-hoiyan-lineaan",
+    "kind": "task",
+    "summary": "Complete PA-W11-jodi-hoiyan-lineaan: four lines to one named reader, at least one joined with ate and one with par, then cover line one and check line two still needs it.",
+    "assesses": [
+      "PA-SCRIPT-ATE-01",
+      "PA-SCRIPT-PAR-01",
+      "PA-FORM-LABEL-PHONE-01"
+    ],
+    "note": "The stage after timed production in the HL16 ramp. It adds no vocabulary: the two joiners are the ones chapters 38 and 39 already taught, and the exercise is the joining rather than the reaching."
+  }
+}
