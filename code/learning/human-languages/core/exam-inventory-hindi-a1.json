@@ -817,9 +817,13 @@
       "id": "HI-A1-POST-09",
       "category": "Parsarg (postpositions and case)",
       "label": "se ... tak for a span of days or hours",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C94-SPAN-01",
+        "HI-LEX-C94-SPAN-02",
+        "HI-LEX-C94-SPAN-03"
+      ],
       "derivedFrom": "ES:A1-NG3-06",
-      "note": "Mock 2's account opens `somvar se shukravar tak`. The weekday nouns are taught; the frame that spans them is not."
+      "note": "Introduced by HI-C94-tak (the tak postposition on its own), HI-C94-se-tak-din (somvaar se shukravaar tak) and HI-C94-se-tak-samay (the same frame over parts of a day and over clock hours). The note was EXACTLY RIGHT and needed no correction: the weekday nouns were taught in chapter 10 and se in chapter 98, so the only thing missing was tak and the permission to use the two together. The teachable part is that English builds a span out of from and to standing IN FRONT of their days while Hindi marks each end from behind, so the phrase reads as two packages rather than one long string: [somvaar se] [shukravaar tak]. tak does not require se -- paanch baje tak is complete on its own and is how the word most often appears on a sign -- so the lessons teach it alone before pairing it."
     },
     {
       "id": "HI-A1-POST-10",
@@ -1056,9 +1060,12 @@
       "id": "HI-A1-NEG-03",
       "category": "Nishedh (negation)",
       "label": "contrasting two alternatives negatively (X se nahin, Y se)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C94-SPAN-05",
+        "HI-LEX-C94-SPAN-04"
+      ],
       "derivedFrom": "ES:A1-CO-02",
-      "note": "Mock 2 reading item 13 is `main bas se nahin, train se jaunga`. Needs `se`."
+      "note": "Introduced by HI-C94-se-nahiin, with the one new noun tren supplied by HI-C94-train. The note was EXACTLY RIGHT that the frame needs se, and se was taught in chapter 98 -- and bas se with it, so mock 2 reading item 13 (main bas se nahiin, tren se jaaungaa) cost a single word. Two things are worth drilling. First, EACH OPTION KEEPS ITS OWN se: English drops the second by, Hindi does not, so counting the se tells a reader whether a swap is being offered. Second, the POSITION of nahiin says how much is being denied -- in front of the verb it denies the whole sentence, after a noun-plus-postposition it denies only that phrase -- and an item asking how the speaker will travel is answered by the phrase AFTER the negative, which is why the paper prints the rejected option first."
     },
     {
       "id": "HI-A1-NEG-04",
