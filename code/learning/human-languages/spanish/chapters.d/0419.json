@@ -1,0 +1,22 @@
+{
+  "chapter": 419,
+  "title": "Dancing, and the Article You Drop",
+  "label": "ch:bailar",
+  "canDo": "I can say that I like dancing, dropping the article before the infinitive that I keep before the noun.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "ES-C419-bailar",
+    "kind": "contrast",
+    "summary": "Say both halves in one breath: me gusta la musica y me gusta bailar, and notice that la was said once and not twice.",
+    "assesses": [
+      "ES-LEX-MUSICA",
+      "ES-LEX-BAILAR",
+      "ES-LEX-GUSTAR-07",
+      "ES-GRAMMAR-GUSTAR-INVERSION-09",
+      "ES-GRAMMAR-DEFINITE-ARTICLES"
+    ],
+    "note": "The two lessons are deliberately a pair rather than two entries in a word list. Chapter 35 taught the inversion; this chapter is the first place the learner has to decide whether the liked thing carries an article, and the answer differs between the two halves. Closes A1-NE18-02 in the Instituto Cervantes A1 inventory, which had no corresponding atom in the corpus at all."
+  }
+}

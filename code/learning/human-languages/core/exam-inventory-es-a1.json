@@ -2194,8 +2194,11 @@
       "id": "A1-NE18-02",
       "category": "Actividades artisticas",
       "label": "music and dance",
-      "probe": null,
-      "note": "The source's A1 exponents are musica, cantante, cantar and bailar. None is introduced in the corpus."
+      "probe": [
+        "ES-LEX-MUSICA",
+        "ES-LEX-BAILAR"
+      ],
+      "note": "The source's A1 exponents are musica, cantante, cantar and bailar. musica (ch413) and bailar (ch419) are introduced; cantante and cantar are not, so this point is scored on the two that are and the singing half remains real debt."
     },
     {
       "id": "A1-NE18-03",
@@ -2219,8 +2222,11 @@
       "id": "A1-NE18-05",
       "category": "Actividades artisticas",
       "label": "photography",
-      "probe": null,
-      "note": "The source's single A1 exponent is foto, which the corpus never introduces."
+      "probe": [
+        "ES-LEX-FOTO",
+        "ES-LEX-FOTOGRAFIA"
+      ],
+      "note": "The source's single A1 exponent is foto, introduced by ch405 along with fotografia. The point was scored uncovered until ch419 only because the probe was never wired, not because the corpus lacked the teaching."
     },
     {
       "id": "A1-NE18-06",
