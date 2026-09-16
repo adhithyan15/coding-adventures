@@ -290,9 +290,9 @@ fn the_table_shape_matches_the_measured_rows() {
     // only four: it enumerated the sites its author had tripped over rather than
     // scanning for them -- the very defect it was filed to correct.
     //
-    // A sweep keyed on the CLAIM CLASS rather than on one phrasing fires on TEN
-    // files, EIGHT of which needed correcting; the count of corrections rose
-    // three times while that sweep was being repaired:
+    // A sweep keyed on the CLAIM CLASS rather than on one phrasing is what
+    // found the sites below; EIGHT needed correcting, and the count of
+    // corrections rose three times while that sweep was being repaired:
     //
     //   four  -- the literal phrase "18 shipped tables"
     //   five  -- + comment prefixes stripped and whitespace flattened, which
@@ -311,22 +311,42 @@ fn the_table_shape_matches_the_measured_rows() {
     // it was implemented (a fixed list of nouns that lacked both "cites in all"
     // and "inside a row block"). The sweep had reported that file clean.
     //
-    // The sweep fires on FIFTEEN files. Five state a different predicate -- a
-    // per-domain or per-table count rather than this corpus-wide claim -- which
-    // leaves TEN carrying the claim class, and all ten are edited here. Every
-    // narrowing after the fifteen is my triage, not the instrument's: eight
-    // carried an inherited copy and are re-measured; CHANGELOG.d/03620 is the
-    // ORIGIN of the 87 rather than a copy, so it gets a dated retraction; and
-    // facts_plateboundaries_e2e.rs already stated the number with its
-    // predicate, so only its prose changed.
+    // THE SWEEP'S FILE COUNT IS DELIBERATELY NOT PUBLISHED HERE, and that is a
+    // finding rather than an omission. Three implementations of the description
+    // in facts_plateboundaries_e2e.rs returned THREE different counts over the
+    // same corpus: 15 (the script as written), 16 (my own re-implementation of
+    // my own published prose), and 17 (a reviewer's, reading the number as
+    // permitted on either side of the noun). The published description gives the
+    // noun list but never said the number must PRECEDE the noun, nor that
+    // leading-zero tokens and four-digit years are dropped. Every one of those
+    // readings is defensible from the prose, so no single count is re-derivable
+    // and publishing one would be the FOURTH iteration of the very defect this
+    // comment documents.
     //
-    // This comment ALSO used to cite "a loose scan over 4,109 files". That
-    // denominator could not be reproduced and has been withdrawn rather than
-    // re-derived into something that sounds better: the sweep that finds these
-    // sites runs over the two trees that carry the claim,
-    // code/packages/rust/adj-lang-cli/tests and code/specs/data/adj-facts-stdlib,
-    // and prints its own file count when it runs. A number nobody can reproduce
-    // is the defect, whether it is the count or the denominator.
+    // What survives every reading, and is therefore what is claimed: TEN files
+    // carry this corpus-wide claim and all ten are edited here. Eight carried an
+    // inherited copy and are re-measured; CHANGELOG.d/03620 is the ORIGIN of the
+    // 87 rather than a copy, so it gets a dated retraction; and
+    // facts_plateboundaries_e2e.rs already stated the number with its predicate,
+    // so only its prose changed. That partition is MY TRIAGE of the sweep's
+    // output, which is a reading aid and not a verdict -- it also matches dates,
+    // issue numbers and shard ids, and must be judged by eye.
+    //
+    // AN UNSHIPPED DRAFT of this comment cited "a loose scan over 4,109 files".
+    // That denominator could not be reproduced under any of eleven candidate
+    // scopes (nearest: 4,281) and was withdrawn rather than re-derived into
+    // something that sounds better. A number nobody can reproduce is the defect,
+    // whether it is the count or the denominator.
+    //
+    // "UNSHIPPED DRAFT", not "this comment used to say" -- the distinction was
+    // checked, not assumed. `git log -S` finds the string 4,109 entering these
+    // two trees only in the commit that REMOVES it, and the pre-change file at
+    // 05aa43d702 contains it zero times: it lived in a working-tree draft and
+    // was never on main. The sibling claim in this same block, "18 shipped
+    // tables use one", IS verifiable there -- once the needle is flattened,
+    // because that phrase wraps a line break and a line-anchored grep reports
+    // zero for it too. One history was real and one was not, and the needle
+    // that cannot tell them apart reports the same zero for both.
     assert!(
         !body.lines().any(|l| l.trim_start().starts_with("cites")),
         "this table ships no corroboration at any indent: {body}"

@@ -296,26 +296,46 @@ fn the_table_shape_matches_the_measured_rows() {
     //   THIS FILE already stated the number with its predicate, so only the
     //     prose around it changed.
     //
-    // WHAT THE INSTRUMENT RETURNS IS FIFTEEN. Every narrowing after that is MY
-    // TRIAGE, and the chain has to be stated that way or the number is being
-    // credited to a machine that never made the judgement:
+    // WHAT THE INSTRUMENT RETURNS IS A SET OF FILES; EVERY NARROWING AFTER THAT
+    // IS MY TRIAGE. The chain has to be stated that way or a judgement I made is
+    // credited to a machine that never made it. Note what this heading does NOT
+    // do: it names no count, because the count is exactly what turned out not to
+    // be re-derivable from the description below it.
     //
-    //   15 files fire on the noun list above
-    //    5 of those state a DIFFERENT predicate -- a per-domain or per-table
-    //      count, not this corpus-wide claim: CHANGELOG.d/01800 ("the domain's
-    //      ~20 shipped tables", anatomy), 02730 (whose "14111" is a bare issue
-    //      number), 03220 (321 test files), 03240 (23 answers / 22), 03570
-    //      (22 lines of U+00A0 census)
+    //   ?? files fire on the noun list above -- THE FILE COUNT IS DELIBERATELY
+    //      NOT PUBLISHED, because three implementations of the description in
+    //      this comment returned three different answers over the same corpus:
+    //      15 (the script as written), 16 (my own re-implementation of my own
+    //      published prose), and 17 (a reviewer's, permitting the number on
+    //      EITHER side of the noun). The prose gives the noun list but never
+    //      said the number must PRECEDE the noun, nor that leading-zero tokens
+    //      and four-digit years are dropped. All three readings are defensible
+    //      from what is written, so no count here is re-derivable, and choosing
+    //      one would be the FOURTH iteration of the defect this comment is
+    //      about -- after "EIGHT", "TEN" and "FIFTEEN".
+    //      Several fire on a DIFFERENT predicate, a per-domain or per-table
+    //      count rather than this corpus-wide claim: CHANGELOG.d/01800 ("the
+    //      domain's ~20 shipped tables", anatomy), 02730 (whose "14111" is a
+    //      bare issue number -- its window also catches a real measurement,
+    //      "361 of the stdlib's 362 library .adj files carry a quoted fragment
+    //      in a comment", a different predicate that independently corroborates
+    //      the 362), 03220 (321 test files), 03240 (23 answers / 22), 03570
+    //      (22 lines of U+00A0 census), 03320 (10 of 10 mutants killed)
     //   10 carry this claim class
     //    8 of those are inherited copies and are re-measured here
     //
     // AN EARLIER DRAFT OF THIS VERY PARAGRAPH SAID "TEN IS WHAT THE SWEEP
-    // RETURNS ON THAT NOUN LIST". It returns fifteen. I wrote an unmeasured
-    // number into the sentence correcting unmeasured numbers -- the second time
-    // in this one comment, after an earlier draft said the sweep "found EIGHT".
-    // Three review rounds caught successive versions. The habit being corrected
+    // RETURNS ON THAT NOUN LIST". It returns more than ten -- HOW MANY more
+    // depends on a predicate the prose never fixed, which is why no figure
+    // stands here now. That draft put an unmeasured number into the sentence
+    // correcting unmeasured numbers, and it was the SECOND such number in this
+    // one comment, after an earlier draft said the sweep "found EIGHT"; a third
+    // draft then said FIFTEEN, which is only one of three defensible answers.
+    // Four review rounds caught successive versions, each version narrower than
+    // the last and each still wrong in the same way. The habit being corrected
     // is not a fact about other people's prose; it reasserts itself hardest in
-    // the sentence claiming to have fixed it.
+    // the sentence claiming to have fixed it, and the only move that has ever
+    // worked is deleting the number rather than improving it.
     //
     // Of the eight, four were invisible to the original needle. THREE phrase the
     // claim differently -- "85 row-level `cites` lines"; "18 have a row-level
