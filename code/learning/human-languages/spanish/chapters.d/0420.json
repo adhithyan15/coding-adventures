@@ -1,0 +1,22 @@
+{
+  "chapter": 420,
+  "title": "Theatre, Exhibition, Circus",
+  "label": "ch:teatro-exposicion-circo",
+  "canDo": "I can name the theatre, an exhibition and the circus, and say what each word is actually named after: the audience, a putting-out, and the shape of the floor.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "ES-C420-sintesis-salir",
+    "kind": "task",
+    "summary": "Propose an outing to each of the five places, choosing al or a la without stopping to think, because the -cion ending already told you which one is feminine.",
+    "assesses": [
+      "ES-LEX-C420-ARTS-01",
+      "ES-LEX-C420-ARTS-02",
+      "ES-LEX-C420-ARTS-03",
+      "ES-LEX-C354-WHERE-28",
+      "ES-LEX-C353-WHERE-25"
+    ],
+    "note": "Three words close two A1 points at once. A1-NE18-01 (artistic disciplines) needed teatro and exposicion and had the other six exponents already; A1-NE08-02 (shows and exhibitions) needed teatro, exposicion and circo. A1-NE18-06 (cinema and theatre) is deliberately NOT closed here: it also wants actor and actriz, which remain untaught, and wiring it on teatro alone would repeat the over-claim a review blocked on A1-NE06-05. The chapter carries two retrieval lessons after the three word lessons because the last atom introduced in a track has nowhere to be retrieved otherwise: without them the reinforcement criterion fell short by two and Spanish's attained level dropped from A1 to pre-A1. That is the standing cost of any terminal lesson, not a defect in these three."
+  }
+}

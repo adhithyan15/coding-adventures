@@ -1,0 +1,799 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 420,
+  "title": "Theatre, Exhibition, Circus",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4c7eaade2d3c34c0",
+  "lessons": [
+    {
+      "id": "ES-C420-teatro",
+      "sequence": 9710,
+      "title": "el teatro — a place for looking, and the word theory came from it",
+      "headword": "el teatro",
+      "romanization": "el teatro",
+      "gloss": "theatre — Greek theatron, a place for viewing, from theaomai \"to behold\"; the same root sits inside the English word theory",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07ac482d71ee99f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can already name el cine. Say it, then say the building people went to for two thousand years before there was any such thing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el cine — the other place you go to watch something, and the one whose name is barely a century old."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stress-penultimate — te-A-tro, stress on the second of three. see reference."
+            },
+            {
+              "kind": "speech",
+              "text": "r-tap — the r is one flick of the tongue, not a growl."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el teatro — \"the theatre.\" Latin theatrum, from Greek théatron, \"a place for viewing,\" built on theáomai, \"to behold.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The Greeks named the building after what the audience does, not after what happens on the stage. A theatre is a looking-place."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the payoff. That same theá- gives Greek theōría — \"a viewing, a contemplation\" — which arrives in English as theory:"
+            },
+            {
+              "kind": "speech",
+              "text": "theatre, amphitheatre — the looking-place."
+            },
+            {
+              "kind": "speech",
+              "text": "theory, theoretical — what you see when you look hard at something."
+            },
+            {
+              "kind": "speech",
+              "text": "A theory and a theatre are the same idea twice: someone standing back and watching. Spanish keeps both, teatro and teoría, and they have never stopped being cousins."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: two names, two ages",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Set the two buildings beside each other:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "place",
+                "named after",
+                "age of the word"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "place: el teatro. named after: what the audience does — viewing. age of the word: ancient Greek.",
+                "place: el cine. named after: what the machine does — writing movement. age of the word: about 1900."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both are masculine and both take el. One is among the oldest words in this book and one is among the newest, and you learned them a chapter apart."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el teatro\" — te-A-tro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el teatro\" — *te-A-tro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el cine y el teatro\" — both places, both masculine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el cine y el teatro\" — both places, both masculine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which English word for an idea comes from the same root as teatro (theory)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which English word for an idea comes from the same root as *teatro* (theory)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did the Greeks name the theatre after — the stage, or the audience? (The audience: théatron is a place for viewing.) What everyday English word for an explanation shares that root? (Theory.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C420-exposicion",
+      "sequence": 9720,
+      "title": "la exposición — a putting-out",
+      "headword": "la exposición",
+      "romanization": "la exposición",
+      "gloss": "exhibition — Latin ex- \"out\" plus ponere \"to place\", a putting-out; the same ponere is inside compose, deposit and position",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:878df9b638a24617",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have el museo. A museum holds its collection all year. Say the word for the thing a museum puts on for three months and then takes down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el museo — the building. This lesson is the event inside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "accent-acute — the accent is on the last syllable: ex-po-si-CIÓN. see reference."
+            },
+            {
+              "kind": "speech",
+              "text": "ci-th-s — the c before i is the soft one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la exposición — \"the exhibition.\" Latin expositio: ex- (\"out\") plus ponere (\"to place\"). An exhibition is literally a putting-out."
+            },
+            {
+              "kind": "speech",
+              "text": "ponere is one of the most productive verbs Latin ever handed on. Once you see it, it is everywhere:"
+            },
+            {
+              "kind": "speech",
+              "text": "expose, exposition — placed out."
+            },
+            {
+              "kind": "speech",
+              "text": "compose — placed together. deposit — placed down."
+            },
+            {
+              "kind": "speech",
+              "text": "position, postpone, component, opponent."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish has the verb itself, poner, \"to put\" — so exposición is transparent to a Spanish speaker in a way that exhibition is not to an English one."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending that tells you the gender",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nouns ending in -ción are feminine, without exception worth worrying about."
+            },
+            {
+              "kind": "speech",
+              "text": "la exposición, la habitación, la nación. The ending comes from Latin -tio, which was feminine, and Spanish kept the gender along with the sound."
+            },
+            {
+              "kind": "speech",
+              "text": "That makes -ción one of the few endings you can trust on sight — most noun gender has to be learned with the word, and this one does not."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la exposición\" — accent on the last syllable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la exposición\" — accent on the last syllable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el museo y la exposición\" — the building and the event",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el museo y la exposición\" — the building and the event]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which article a noun ending in -ción takes, and why (la — the ending is feminine, from Latin -tio)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which article a noun ending in *-ción* takes, and why (*la* — the ending is feminine, from Latin *-tio*)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the two Latin pieces inside exposición, and what do they add up to? (ex- \"out\" plus ponere \"to place\" — a putting-out.) What gender does -ción guarantee? (Feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C420-circo",
+      "sequence": 9730,
+      "title": "el circo — the ring, and the two c's in one word",
+      "headword": "el circo",
+      "romanization": "el circo",
+      "gloss": "circus — Latin circus \"ring\", from Greek kirkos; the ring is the oldest part of the idea and the only part still round",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a7b3bc7b963c4b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Circo has two c's and they are not the same sound. Before reading on, say the word and listen to which one is soft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ci-th-s — the first c, before i, is soft. see reference."
+            },
+            {
+              "kind": "speech",
+              "text": "c-hard — the second c, before o, is hard, as in cat."
+            },
+            {
+              "kind": "speech",
+              "text": "stress-penultimate — CIR-co."
+            },
+            {
+              "kind": "speech",
+              "text": "One word, one letter, two jobs. The vowel that follows decides, every time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el circo — \"the circus.\" Latin circus, \"a ring,\" borrowed from Greek kírkos. The Romans' Circus Maximus was a ring you raced around; the tent came much later and kept the shape and the name."
+            },
+            {
+              "kind": "speech",
+              "text": "The family is large and all of it is round:"
+            },
+            {
+              "kind": "speech",
+              "text": "circle, circuit, circular, circumference."
+            },
+            {
+              "kind": "speech",
+              "text": "circa — \"around\" a date."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish cerca (\"near\") and cercar (\"to surround\") come from the same ring."
+            },
+            {
+              "kind": "speech",
+              "text": "So a circus is not named for clowns or animals. It is named for the shape of the floor."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the rule you can see inside one word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Most words make you check the letter against the vowel that follows it. Circo does the checking for you, because it contains both cases:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "followed by",
+                "sound"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "letter: cir-. followed by: i. sound: soft.",
+                "letter: -co. followed by: o. sound: hard."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Keep this word as your reference. Whenever you are unsure how a c should sound, say circo and listen to which half matches."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el circo\" — soft, then hard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el circo\" — soft, then hard]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el teatro y el circo\" — both masculine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el teatro y el circo\" — both masculine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the word is actually named after (the ring — the shape of the floor)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the word is actually named after (the ring — the shape of the floor)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which c in circo is soft and why? (The first — it is followed by i.) What does the Latin circus mean, and which English words keep it? (A ring: circle, circuit, circa.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C420-repaso-lugares",
+      "sequence": 9740,
+      "title": "cinco lugares — five places, sorted by what their names describe",
+      "headword": "cinco lugares",
+      "romanization": "cinco lugares",
+      "gloss": "five places to go — the two you had and the three now beside them, sorted by what each name describes",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c7ac4dcbfe2782d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the five places you can now go to. Say them out loud before reading the list."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: what each name is actually about",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every one of these buildings is named after something different, and once you sort them that way they stop being a list to memorise:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "place",
+                "named after",
+                "the thing itself"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "place: el teatro. named after: the audience. the thing itself: a looking-place.",
+                "place: el cine. named after: the machine. the thing itself: a movement-writer.",
+                "place: el museo. named after: the Muses. the thing itself: a seat of the arts.",
+                "place: la exposición. named after: the act. the thing itself: a putting-out.",
+                "place: el circo. named after: the floor. the thing itself: a ring."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two are named for people (the audience, the Muses), one for a machine, one for an action, and one for a shape. Not one of them is named for the art that happens inside it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four masculine ones with el (teatro, cine, museo, circo)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four masculine ones with *el* (teatro, cine, museo, circo)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the five you would go to in order to bailar, and notice that none of them is the obvious answer — the verb needs no place at all",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the five you would go to in order to *bailar*, and notice that none of them is the obvious answer — the verb needs no place at all]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one feminine one with la, and why (la exposición — the -ción ending)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one feminine one with *la*, and why (*la exposición* — the **-ción** ending)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which two are named after people (el teatro, el museo)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which two are named after people (*el teatro*, *el museo*)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the five is named after the shape of its floor? (El circo.) Which is named after what the audience does? (El teatro.) Which one is an event rather than a building? (La exposición.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C420-sintesis-salir",
+      "sequence": 9750,
+      "title": "¿Vamos al teatro o al circo? — the five places in a real question",
+      "headword": "¿Vamos al teatro o al circo?",
+      "romanization": "¿Vamos al teatro o al circo?",
+      "gloss": "putting the five places to work in a question, where al and a la do the choosing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00fb504efc0dff6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A place you can name is not yet a place you can propose. Ask a friend whether they want to go to the theatre or the circus, out loud, before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: al and a la, doing the gender work for you",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Proposing an outing needs a (\"to\") in front of the place, and the article comes along:"
+            },
+            {
+              "kind": "speech",
+              "text": "¿Vamos al teatro? — masculine, so a + el squeezes into al. ¿Vamos a la exposición? — feminine, so the two words stay apart."
+            },
+            {
+              "kind": "speech",
+              "text": "Four of your five places take al. Only la exposición takes a la, and you can predict which without remembering, because -ción told you the gender when you met the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every word here is one you have met:"
+            },
+            {
+              "kind": "speech",
+              "text": "—¿Vamos al cine? —No. Vamos al teatro. —¿Y el sábado? —El sábado, a la exposición del museo. Y el domingo, al circo. —¿Y después del circo? —Después, a bailar."
+            },
+            {
+              "kind": "speech",
+              "text": "Four places, one short exchange, and the only thing you had to decide each time was al or a la."
+            },
+            {
+              "kind": "speech",
+              "text": "The last line is the exception that proves it. Bailar is a verb, not a place, so it takes plain a and no article at all — the same reason me gusta bailar needed none."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿Vamos al teatro?\" — with the opening question mark heard as a rise from the start",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"¿Vamos al teatro?\" — with the opening question mark heard as a rise from the start]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿Vamos a la exposición?\" — two words, because the noun is feminine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"¿Vamos a la exposición?\" — two words, because the noun is feminine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "propose the circus, then the museum, in the same shape",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: propose the circus, then the museum, in the same shape]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of your five places is the only one that takes a la, and how did you know before you had to think about it? (La exposición — the -ción ending is feminine.) Say the other four with al."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
