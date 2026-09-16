@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C421-actor",
+    "language": "spanish",
+    "chapter": 421,
+    "sequence": 9760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1e3180835414637"
+  },
+  "findings": []
+}

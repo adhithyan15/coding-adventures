@@ -1,0 +1,12 @@
+{
+  "language": "spanish",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:93dcf98400874be1",
+  "lessonIds": [
+    "ES-C421-actor",
+    "ES-C421-actriz",
+    "ES-C421-repaso-escena",
+    "ES-C421-sintesis-espectaculo"
+  ],
+  "tex": "spanish/book/chapters/ch421-actor-actriz.tex"
+}

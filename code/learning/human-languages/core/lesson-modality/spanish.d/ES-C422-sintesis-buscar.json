@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C422-sintesis-buscar",
+    "language": "spanish",
+    "chapter": 422,
+    "sequence": 9820,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:87321077dd565497"
+  },
+  "findings": []
+}

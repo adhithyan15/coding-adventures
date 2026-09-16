@@ -1,0 +1,25 @@
+{
+  "chapter": 423,
+  "title": "Character, Not Mood",
+  "label": "ch:caracter",
+  "canDo": "I can describe what a person is like rather than how they feel today, using eight settled-character adjectives and predicting from the spelling alone which of them change ending for a woman.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "ES-C423-sintesis-persona",
+    "kind": "task",
+    "summary": "Answer the question how is he or she, using es for settled character and letting only the adjectives that can agree do so.",
+    "assesses": [
+      "ES-LEX-C423-CHAR-01",
+      "ES-LEX-C423-CHAR-02",
+      "ES-LEX-C423-CHAR-03",
+      "ES-LEX-C423-CHAR-04",
+      "ES-LEX-C423-CHAR-05",
+      "ES-LEX-C423-CHAR-06",
+      "ES-LEX-C380-COUNT-36",
+      "ES-LEX-C380-COUNT-37"
+    ],
+    "note": "Six words close A1-NE02-01 (character and personality adjectives). The source lists eight exponents; the corpus already taught simpatico and alegre, so the inventory note claiming it introduced none of them was wrong on two counts and is corrected in the same change. The six authored here are antipatico, inteligente, trabajador, serio, timido and sociable. The chapter is deliberately built to demonstrate all three agreement shapes at once -- the -o that changes, the -e and -able that do not, and the -dor consonant ending that changes anyway -- because the exam asks for the adjectives and the shapes are what makes them usable."
+  }
+}

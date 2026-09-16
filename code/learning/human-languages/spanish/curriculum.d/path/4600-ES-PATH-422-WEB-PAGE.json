@@ -1,0 +1,14 @@
+{
+  "id": "ES-PATH-422-WEB-PAGE",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C422-pagina-web",
+    "ES-C422-repaso-red",
+    "ES-C422-sintesis-buscar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-422-WEB-PAGE"
+  ],
+  "after": []
+}

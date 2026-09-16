@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C422-pagina-web",
+    "language": "spanish",
+    "chapter": 422,
+    "sequence": 9800,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:591e1e48fb8ba7a1"
+  },
+  "findings": []
+}

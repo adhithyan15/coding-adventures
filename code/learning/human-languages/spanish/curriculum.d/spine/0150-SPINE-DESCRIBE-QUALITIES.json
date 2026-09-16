@@ -8,7 +8,8 @@
     "ES-PATH-397-01",
     "ES-PATH-398-01",
     "ES-PATH-399-01",
-    "ES-PATH-401-QUALITY"
+    "ES-PATH-401-QUALITY",
+    "ES-PATH-423-CHARACTER"
   ],
   "omits": [],
   "relocates": {}

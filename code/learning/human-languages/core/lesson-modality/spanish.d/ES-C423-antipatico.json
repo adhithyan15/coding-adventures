@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C423-antipatico",
+    "language": "spanish",
+    "chapter": 423,
+    "sequence": 9830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:163724d2da4a1d31"
+  },
+  "findings": []
+}

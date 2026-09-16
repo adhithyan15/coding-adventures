@@ -1,0 +1,13 @@
+{
+  "id": "ES-EXT-422-WEB-PAGE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a web page and place it beside the network, the machine and the message I already knew.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C422-pagina-web",
+    "ES-C422-repaso-red",
+    "ES-C422-sintesis-buscar"
+  ]
+}
