@@ -17,8 +17,9 @@
 %     ? blood_cell_function(red_blood_cells, $F)   % carry_oxygen
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `blood_cell_function(cell_type, function)` carrying the table's
-% citation, so the lookup above is the ordinary SLD binding query — the engine
+% relation `blood_cell_function(cell_type, function)` carrying THAT ROW'S
+% OWN citation, with the envelope's locator and trust inherited (RS-5e,
+% #14986), so the lookup above is the ordinary SLD binding query — the engine
 % returns the function atom WITH its source, on the CPU, with zero model calls,
 % and abstains on something that is not one of the three blood cell types. The
 % query also runs BACKWARD — bind the job and recall the cell:
@@ -34,11 +35,33 @@
 %
 % Provenance: every cell-type name and its `function` atom is grounded in a
 % VERBATIM span from MedlinePlus (the U.S. National Library of Medicine / NIH,
-% a `.gov` primary reference). The `source` span below is the VERBATIM sentence
-% for the first data row (red_blood_cells), copied character-for-character from
-% the MedlinePlus "Blood" health-topic page (the `locator`). Each row's atom is
-% a faithful short paraphrase of that cell's own VERBATIM span, quoted here from
-% the same page so any reader can re-check it byte-for-byte:
+% a `.gov` primary reference). EACH ROW CARRIES ITS OWN span as its `source`
+% (RS-5e, #14986); the locator and trust are inherited from the envelope
+% field-by-field. Each row's atom is a faithful short paraphrase of that
+% cell's own span, quoted here from the same page so any reader can re-check
+% it byte-for-byte:
+%
+% (This previously read "The `source` span below is the VERBATIM sentence for
+%  the first data row (red_blood_cells)". That was accurate, and it was the
+%  defect: the red-cell sentence was the envelope, so a recall of what
+%  platelets do returned `clotting` warranted by a sentence about red cells.
+%  The other two spans sat in this comment block, reaching no answer.)
+%
+% THE ENVELOPE IS AN ENUMERATING FRAME. It is now the page's sentence naming
+% the three solid components together. That names all three row keys, which
+% is an ESTABLISHED shape in this library rather than one invented here --
+% biology/rainforest-layer.adj (4 rows), earth-science/atmosphere-layers.adj
+% (5) and astronomy/planets.adj (8) each ship an envelope naming every row
+% key. The rule those follow is not "name no row key" but: the envelope may
+% ENUMERATE the keys, and may not STATE any of the per-row facts the table
+% asserts. This table maps cell_type to FUNCTION, so BOTH halves are pinned by
+% the tests: the envelope names all three cell types, and it states no function
+% at all -- so it frames the table without warranting any row's answer.
+%
+% Both halves, because only pinning the prohibition is not enough. A mutant
+% that replaced this envelope with the same page's "Over half of your blood is
+% plasma." -- real text, stating no function -- passed every arm and SURVIVED,
+% because nothing required the frame to name what the rows are.
 %
 %   red_blood_cells   → carry_oxygen      https://medlineplus.gov/blood.html
 %     "Red blood cells (RBC) deliver oxygen from your lungs to your tissues and
@@ -62,11 +85,17 @@
 table blood_cell_function {
     columns cell_type, function
 
-    row (red_blood_cells, carry_oxygen)
-    row (white_blood_cells, fight_infection)
-    row (platelets, clotting)
+    row (red_blood_cells, carry_oxygen) {
+        source "Red blood cells (RBC) deliver oxygen from your lungs to your tissues and organs."
+    }
+    row (white_blood_cells, fight_infection) {
+        source "White blood cells (WBC) fight infection and are part of your immune system."
+    }
+    row (platelets, clotting) {
+        source "Platelets help blood to clot when you have a cut or wound."
+    }
 
-    source "Red blood cells (RBC) deliver oxygen from your lungs to your tissues and organs."
+    source "The solid part of your blood contains red blood cells, white blood cells, and platelets."
     locator "https://medlineplus.gov/blood.html"
     trust authoritative
 }
