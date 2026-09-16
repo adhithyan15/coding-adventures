@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:36c4abe330395b78",
+  "lessonIds": [
+    "ES-C429-instituto",
+    "ES-C429-nota",
+    "ES-C429-calificacion",
+    "ES-C429-aprobar",
+    "ES-C429-suspender",
+    "ES-C429-repaso-notas",
+    "ES-C429-sintesis-boletin"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "spanish/narration/ch429.txt",
+  "json": "spanish/narration/ch429.json",
+  "textHash": "fnv1a64:fba16535db899b9f",
+  "jsonHash": "fnv1a64:47cd90f02a358e9d",
+  "findings": []
+}

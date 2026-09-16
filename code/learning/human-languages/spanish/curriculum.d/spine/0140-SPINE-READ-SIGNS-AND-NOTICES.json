@@ -4,7 +4,9 @@
     "ES-PATH-424-SIGNOS",
     "ES-PATH-425-ABECEDARIO",
     "ES-PATH-426-MAYUSCULAS",
-    "ES-PATH-428-PIEZAS"
+    "ES-PATH-428-PIEZAS",
+    "ES-PATH-429-EDUCACION",
+    "ES-PATH-430-PARO-ROPA"
   ],
   "omits": [],
   "relocates": {}

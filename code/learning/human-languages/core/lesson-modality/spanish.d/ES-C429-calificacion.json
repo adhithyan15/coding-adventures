@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C429-calificacion",
+    "language": "spanish",
+    "chapter": 429,
+    "sequence": 10330,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8cb4cc13bf327852"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C430-bolso",
+    "language": "spanish",
+    "chapter": 430,
+    "sequence": 10410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef2041761a3273be"
+  },
+  "findings": []
+}

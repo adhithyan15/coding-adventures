@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:52e30ad63faed07b",
+  "lessonIds": [
+    "ES-C430-estar-en-paro",
+    "ES-C430-vaqueros",
+    "ES-C430-jersey",
+    "ES-C430-bolso",
+    "ES-C430-repaso-piezas",
+    "ES-C430-sintesis-anuncio"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch430.txt",
+  "json": "spanish/narration/ch430.json",
+  "textHash": "fnv1a64:a4907450b37743f7",
+  "jsonHash": "fnv1a64:b0fa22c3db6ee5d3",
+  "findings": []
+}

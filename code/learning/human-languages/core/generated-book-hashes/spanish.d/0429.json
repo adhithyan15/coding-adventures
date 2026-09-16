@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:e53b6dd9ed4e30ce",
+  "lessonIds": [
+    "ES-C429-instituto",
+    "ES-C429-nota",
+    "ES-C429-calificacion",
+    "ES-C429-aprobar",
+    "ES-C429-suspender",
+    "ES-C429-repaso-notas",
+    "ES-C429-sintesis-boletin"
+  ],
+  "tex": "spanish/book/chapters/ch429-instituto.tex"
+}
