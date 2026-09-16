@@ -1,0 +1,22 @@
+{
+  "language": "hindi",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:485390e229d481e0",
+  "lessonIds": [
+    "HI-C88-karunga",
+    "HI-C88-aaunga",
+    "HI-C88-aaega",
+    "HI-C88-aaenge",
+    "HI-C88-aaoge",
+    "HI-C88-baje",
+    "HI-C88-repaso-bhavishya",
+    "HI-C88-sintesis-bhavishya"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch96.txt",
+  "json": "hindi/narration/ch96.json",
+  "textHash": "fnv1a64:8b52eb644c1d3a15",
+  "jsonHash": "fnv1a64:f84be83436f4bc07",
+  "findings": []
+}

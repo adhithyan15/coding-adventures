@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 20,
-  "sourceHash": "fnv1a64:39509f6941c36348",
+  "sourceHash": "fnv1a64:da536cff6f02a2a6",
   "lessonIds": [
     "HI-C20-mausam",
     "HI-S124-letter-dha",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "hindi/narration/ch20.txt",
   "json": "hindi/narration/ch20.json",
-  "textHash": "fnv1a64:fc8754082b4c96b1",
-  "jsonHash": "fnv1a64:84cced9e88b2236d",
+  "textHash": "fnv1a64:d241c10de643572f",
+  "jsonHash": "fnv1a64:0e11461ed25c46d2",
   "findings": []
 }

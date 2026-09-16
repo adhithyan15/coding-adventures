@@ -3,9 +3,612 @@
   "language": "hindi",
   "chapter": 22,
   "title": "Numbers Eleven to Twenty",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:26c1fd532a5d4cd6",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:cadd51c9a6308046",
   "lessons": [
+    {
+      "id": "HI-S127-letter-u",
+      "sequence": 703,
+      "title": "उ (u) — the same vowel, standing on its own feet",
+      "headword": "उ",
+      "romanization": "u",
+      "gloss": "the independent vowel उ — the shape a u takes when no consonant is there to carry it",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ae8355dca25d0990",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: उ",
+          "Script: two ways to write one sound",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: उ, Script: two ways to write one sound and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already have the little hook that adds a u underneath a consonant. Before the new one: which mark is it, and where does it sit?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: उ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उ — u."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the independent vowel. The hook you already know rides under a consonant and cannot stand alone. When a word begins with u, there is no consonant to hang the hook on, so the vowel gets a full letter of its own."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a joined upper bowl and lower loop."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: two ways to write one sound",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "where the u falls",
+                "how it is written"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "where the u falls: under a consonant. how it is written: the hook you already have.",
+                "where the u falls: at the start of a word. how it is written: उ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both say u. Which one a word uses is settled by what comes before it, and nothing else. Every vowel in this script works this way, so learning the pair once tells you what to expect from all of them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing: उ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the headline junction, curve down and left around the upper bowl, then sweep back through the waist and around the lower loop without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The pen comes up once and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified two-stroke teaching form; everyday handwriting may divide the bowl and loop differently."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari उ stroke order.svg’, panels 1–2, Wikimedia Commons, 5 August 2023."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "उ three times, saying u as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: उ three times, saying *u* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether a word starting with u uses the hook or the full letter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether a word starting with *u* uses the hook or the full letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at उ (u) and say how many times the pen leaves the page",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at उ and say how many times the pen leaves the page]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why can the hook not open a word? (It has nothing to hang from.) What does उ carry? (u.) How many pen lifts? (One.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-S128-letter-uu",
+      "sequence": 705,
+      "title": "ऊ (ū) — the same letter, holding the note longer",
+      "headword": "ऊ",
+      "romanization": "ū",
+      "gloss": "the independent vowel ऊ — उ with one loop added, and the longer sound to match",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e20e5cef77fc3695",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ऊ",
+          "Script: the pair, side by side",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ऊ, Script: the pair, side by side and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: उ — what sound does it carry, and when does a word use it instead of the hook?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ऊ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊ — ū, the long one."
+            },
+            {
+              "kind": "speech",
+              "text": "The sound is the same vowel held for longer, and the letter says so: it is उ with one loop added on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "the continuous body of उ."
+            },
+            {
+              "kind": "speech",
+              "text": "a separate right-hand loop."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: the pair, side by side",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "sound",
+                "body"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "letter: उ. sound: u. body: bowl and loop.",
+                "letter: ऊ. sound: ū. body: the same, plus a right loop."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Put them next to each other and the extra loop is the only difference. That is not a coincidence of shape — the script pairs short and long vowels by building the long one out of the short one, and you will see the same trick again."
+            },
+            {
+              "kind": "speech",
+              "text": "This letter is worth having before you can use it. The Hindi for I will come begins with a long ū sitting where no consonant can carry it, so the whole of the future tense waits on this one loop."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing: ऊ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. curve down and left around the upper bowl, then sweep back through the waist and around the lower loop without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift at the waist and sweep the right-hand loop up, around, and down-left."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified three-stroke teaching form; everyday handwriting may join or simplify the loops differently."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ऊ (ū) stroke order.svg’, panels 1–3, Wikimedia Commons, 5 August 2023."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at उ (u) and ऊ (ū) side by side, and name the one difference",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at उ and ऊ side by side, and name the one difference]"
+            },
+            {
+              "kind": "speech",
+              "text": "उ (u), ऊ (ū)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ऊ (ū) three times, holding the vowel long as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ऊ three times, holding the vowel long as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two takes more pen lifts, and how many",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two takes more pen lifts, and how many]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is added to उ to make ऊ (ū)? (One loop on the right.) What does the extra loop do to the sound? (Holds it longer.) How many pen lifts does ऊ (ū) take? (Two.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-S129-letter-o",
+      "sequence": 707,
+      "title": "ओ — a letter you can already draw most of",
+      "headword": "ओ",
+      "romanization": "o",
+      "gloss": "the independent vowel ओ — the body of आ with one arc laid over the top",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c2422515294b1fbb",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ओ",
+          "Script: what is new and what is not",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ओ, Script: what is new and what is not and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: आ — what does it do? Picture its shape, and keep the picture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ओ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओ — o."
+            },
+            {
+              "kind": "speech",
+              "text": "Another independent vowel, for a word that begins with o and has no consonant to carry the mark."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "the joined upper and lower bowls of आ."
+            },
+            {
+              "kind": "speech",
+              "text": "a swept middle shoulder, an inner stem and a trailing stem."
+            },
+            {
+              "kind": "speech",
+              "text": "a separate arc over the top."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: what is new and what is not",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "what you see"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "letter: आ. what you see: the body.",
+                "letter: ओ. what you see: the same body, with an arc above."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Everything below the headline you have drawn before. The only new mark is the arc, and it sits above the line rather than on it, so it is easy to spot and easy to miss."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the third time a letter has turned out to be an old one with a piece added. That is how the script is built, and it is why the alphabet gets faster rather than slower as you go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing: ओ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. curve right around the upper bowl and continue down and around the lower bowl without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and sweep the middle shoulder right."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and descend the inner stem."
+            },
+            {
+              "kind": "speech",
+              "text": "4. lift and descend the trailing stem."
+            },
+            {
+              "kind": "speech",
+              "text": "5. lift at the trailing stem's headline junction and sweep the upper arc upward and left."
+            },
+            {
+              "kind": "speech",
+              "text": "6. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 5. The pen comes up 5 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified modern printed teaching form; traditional and everyday handwriting may divide or simplify the curves differently."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ओ stroke order.svg’, panels 1–6, Wikimedia Commons, 5 August 2023."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at आ and ओ side by side, and name the one mark that separates them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at आ and ओ side by side, and name the one mark that separates them]"
+            },
+            {
+              "kind": "speech",
+              "text": "आ, ओ (o)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ओ three times, saying o as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ओ three times, saying *o* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which part of ओ sits above the headline",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which part of ओ sits above the headline]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is ओ built on? (आ.) What is added? (An arc above the line.) What have the last three letters had in common? (Each was an older letter with one piece added.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "HI-C22-gyarah-bees",
       "sequence": 710,

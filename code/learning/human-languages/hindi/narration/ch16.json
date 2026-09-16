@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:48e1ff769ee7c082",
+  "sourceHash": "fnv1a64:ed5aced2fc996820",
   "lessons": [
     {
       "id": "HI-C16-mahine",
@@ -143,7 +143,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:57fcda1231011e45",
+      "sourceHash": "fnv1a64:a5bc97085d59c019",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -278,11 +278,11 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ◌ु (u) once more",
+              "instruction": "back at any page and find ◌ु (u) once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find ◌ु once more]"
+              "source": "[YOU LOOK: back at any page and find ◌ु once more]"
             }
           ]
         },

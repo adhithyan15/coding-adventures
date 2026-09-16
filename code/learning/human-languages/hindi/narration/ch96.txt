@@ -1,0 +1,348 @@
+Hindi, chapter 96: The Future, And The Two Letters It Needed.
+8 lessons. You can do the first 6 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 8.
+करूँगा (karūṅgā) — the third tense, and the one with no helper word.
+
+Warm-up.
+[pause 2 seconds]
+You can say what you do and what you did. Say the stem of to do, and hold it — the next tense attaches to it rather than standing beside it.
+
+You'll want to know: करूँगा.
+करूँगा (karūṅgā) — "I will do," said by a man. करूँगी (karūṅgī) — the same, said by a woman.
+The stem is कर-. Everything after it is the tense.
+
+The word, taken apart.
+Three pieces, and each one has a job:
+[a table of 3 rows, read aloud]
+piece: कर-. what it carries: the action.
+piece: -ऊँ-. what it carries: who is acting — I.
+piece: -गा / -गी. what it carries: the future itself, agreeing with the speaker.
+English needs a second word for this: I will do. Hindi has none. The tense is welded onto the verb, the way the person is welded into hūṁ and hai.
+You have met the -गा family once before, in the farewell milenge, where the plural -एंगे was named as the future ending. That was one cell of a grid. This chapter is the grid.
+
+Grammar Lens: the piece that comes from the old subjunctive.
+-गा is not a random syllable. It comes from Sanskrit गत (gata), "gone" — the participle of to go. A future in Hindi is built out of a word meaning gone, which is the same instinct behind English I am going to do it.
+[a table of 2 rows, read aloud]
+speaker: a man. form: करूँगा (karūṅgā).
+speaker: a woman. form: करूँगी.
+Only the last letter moves, and it moves the way every -आ / -ई pair in this language moves.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "करूँगा" — karūṅgā, I will do]
+[pause 8 seconds for the answer]
+[your turn — say: the same as a woman would say it]
+[pause 8 seconds for the answer]
+[your turn — say: the three pieces, and what each one carries]
+[pause 8 seconds for the answer]
+[your turn — say: how many words English needs for this, and how many Hindi needs]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which piece carries the future? (-गा, agreeing as -गी.) What did its Sanskrit ancestor mean? (Gone.) How many separate words does Hindi use to say will? (None — it is an ending.)
+
+
+Lesson 2 of 8.
+आऊँगा (āūṅgā) — the same ending, and the letter that was waiting for it.
+
+Warm-up.
+[pause 2 seconds]
+Say I will do. Now take the stem of to come and try to put the same ending on it — and listen for what happens when two vowels meet.
+
+You'll want to know: आऊँगा.
+आऊँगा (āūṅgā) — "I will come," said by a man. आऊँगी (āūṅgī) — the same, said by a woman.
+Nothing new has been added. The stem आ- has taken the ending you learned one lesson ago.
+
+The word, taken apart.
+[a table of 2 rows, read aloud]
+stem: कर-. first person, future: करूँगा (karūṅgā).
+stem: आ-. first person, future: आऊँगा (āūṅgā).
+The ending is identical. What changes is how it has to be written, and that is worth a moment.
+कर- ends in a consonant, so the long ū rides underneath it as the small mark you have used for a long time. आ- ends in a vowel, so there is nothing to ride on — and the ū has to be written as a full letter of its own.
+
+Grammar Lens: the letter arrives where it was promised.
+Find ऊ inside the word:
+आ ऊँ गा.
+That is the letter you were told was coming — the one with the extra loop on the right — and this is the word it was waiting for. A vowel that opens a syllable needs the full letter, and the first-person future of every vowel-stem verb puts one there.
+The same thing happens to to go:
+[a table of 2 rows, read aloud]
+verb: आना. I will: आऊँगा (āūṅgā).
+verb: जाना. I will: जाऊँगा.
+Both of these appear on a practice paper, in the first scored part.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "आऊँगा" — āūṅgā, I will come]
+[pause 8 seconds for the answer]
+[your turn — say: the same as a woman would say it]
+[pause 8 seconds for the answer]
+[your turn — look: at आऊँगा (āūṅgā) and put your finger on the letter ऊ]
+[pause 8 seconds for the answer]
+[your turn — say: why this word needs the full letter where karūṅgā needs only a mark]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What decides whether the long ū is a mark or a full letter? (Whether the stem ends in a consonant or a vowel.) Say I will go. (Jāūṅgā — जाऊँगा.)
+
+
+Lesson 3 of 8.
+आएगा (āegā) — the ending that tells you who, not when.
+
+Warm-up.
+[pause 2 seconds]
+You can say I will come. Point at somebody else and try to say it about them — and notice which part of the word has to move.
+
+You'll want to know: आएगा.
+आएगा (āegā) — "he will come." आएगी (āegī) — "she will come."
+वह आएगा (āegā)। — He will come. वह आएगी। — She will come.
+
+The word, taken apart.
+Set the two first persons beside the third:
+[a table of 2 rows, read aloud]
+who: मैं. ending: -ऊँगा.
+who: वह. ending: -एगा.
+The -गा has not moved. It is the piece in front of it that changed, from -ऊँ- to -ए-, and that piece is the one carrying the person.
+So the future has the same division of labour the present had: one slot for who, one slot for when. Learning the tense is learning that the two slots are separate.
+
+Grammar Lens: the form a paper prints.
+This is the commonest future in reading material, because most sentences on a page are about somebody other than the reader:
+[a table of 2 rows, read aloud]
+वह आएगा (āegā)। means He will come.
+वह जाएगी। means She will go.
+A bus, a train or a shop takes the same ending as a person, and the gender of the noun decides which one. A practice paper prints the bus will come with -एगी, because बस is feminine.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "वह आएगा (āegā)" — he will come]
+[pause 8 seconds for the answer]
+[your turn — say: "वह आएगी" — she will come]
+[pause 8 seconds for the answer]
+[your turn — say: which slot changed between āūṅgā and āegā, and which stayed]
+[pause 8 seconds for the answer]
+[your turn — say: "वह जाएगी"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which piece of the future word says who? (The one before -गा.) Which piece says when? (-गा itself.) What ending does a feminine noun take? (-एगी.)
+
+
+Lesson 4 of 8.
+आएँगे (āeṅge) — the ending you have been saying since the first goodbye.
+
+Warm-up.
+[pause 2 seconds]
+Say the farewell that means see you again. The last two syllables of it are about to become a rule.
+
+You'll want to know: आएँगे.
+आएँगे (āeṅge) — "we will come," "they will come," and "you will come" to somebody you address as आप.
+हम आएँगे (āeṅge)। — We will come. आप कब आएँगे (āeṅge)? — When will you come?
+
+The word, taken apart.
+You met this ending in your fourth chapter, inside मिलेंगे — we will meet. It was named there as the plural future, and it was true, but it was one word. Now it is a slot you can fill:
+[a table of 3 rows, read aloud]
+stem: मिल-. plural future: मिलेंगे.
+stem: आ-. plural future: आएँगे (āeṅge).
+stem: कर-. plural future: करेंगे.
+The farewell was never a lump. It was this ending, on a verb meaning to meet.
+
+Grammar Lens: आप takes the plural, again.
+[a table of 3 rows, read aloud]
+subject: हम. future: आएँगे (āeṅge).
+subject: वे. future: आएँगे (āeṅge).
+subject: आप. future: आएँगे (āeṅge).
+आप takes the plural ending even for one person, for the reason it has taken a plural everywhere else: the polite level in this language is built out of plural forms. That is now the fifth system in which one decision about how you address somebody settles the whole row.
+For a group of women, the ending nasalises differently and becomes आएँगी — worth recognising, because a practice paper asks आप कब आएँगी? of a woman.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "हम आएँगे (āeṅge)" — we will come]
+[pause 8 seconds for the answer]
+[your turn — say: "आप कब आएँगे (āeṅge)?" — when will you come?]
+[pause 8 seconds for the answer]
+[your turn — say: the farewell, and then name the ending inside it]
+[pause 8 seconds for the answer]
+[your turn — say: "हम करेंगे"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which ending does आप take in the future? (The plural one.) Which familiar farewell is built from it? (Milenge.) What was that farewell really made of? (A stem plus this ending.)
+
+
+Lesson 5 of 8.
+आओगे (āoge) — the तुम row, and a vowel that has shown up before.
+
+Warm-up.
+[pause 2 seconds]
+Say the command you would give a friend using तुम. Hold on to the vowel at its end — the future is about to reuse it.
+
+You'll want to know: आओगे.
+आओगे (āoge) — "you will come," to somebody you address as तुम. करोगे (karoge) — "you will do," at the same level.
+
+The word, taken apart.
+The तुम level has a vowel of its own, and you have already used it:
+[a table of 2 rows, read aloud]
+where: the command. form: बोलो.
+where: the future. form: आओगे (āoge).
+Both are -ओ. That is not two facts to learn — it is one vowel that belongs to तुम wherever it appears, and you have had it since the commands chapter.
+
+Grammar Lens: where the full letter shows up again.
+The same writing question as the first person, and the same answer:
+[a table of 2 rows, read aloud]
+stem: कर-. you will: करोगे.
+stem: आ-. you will: आओगे (āoge).
+करोगे carries the o as a mark on the consonant. आओगे (āoge) cannot, because आ- is a vowel, so the o is written as the full letter ओ — the one built on आ with an arc above it.
+Two vowel-stem words in one chapter, two full letters, and the same rule producing both.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "तुम आओगे (āoge)" — you will come]
+[pause 8 seconds for the answer]
+[your turn — say: "तुम करोगे"]
+[pause 8 seconds for the answer]
+[your turn — look: at आओगे (āoge) and put your finger on the letter ओ]
+[pause 8 seconds for the answer]
+[your turn — say: the same question at the आप level instead]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which vowel belongs to the तुम level? (-ओ.) Where else have you used it? (On the command.) Why does āoge need the full letter and karoge does not? (The stem ends in a vowel, so nothing can carry the mark.)
+
+
+Lesson 6 of 8.
+पाँच बजे (pā̃c baje) — reading the hour, and arranging to meet at it.
+
+Warm-up.
+[pause 2 seconds]
+You can say what the clock is doing — the verb that strikes. Now try to say at five, and notice that telling the time and fixing a time are not the same job.
+
+You'll want to know: पाँच बजे.
+पाँच बजे (pā̃c baje) — "at five o'clock."
+मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā)। — I will come at five.
+
+The word, taken apart.
+बजे comes from the verb you already have — the one meaning to strike, to toll, because clocks and towns once marked the hour by striking a bell.
+What is new is the shape of it. You learned it as something the clock is doing right now. This form is not doing anything: it sits beside a number and turns it into a time to meet at.
+[a table of 2 rows, read aloud]
+what it does: tells you the hour. the form: the striking form you know.
+what it does: fixes a time to act. the form: बजे.
+There is no separate word for at. The number plus बजे is the whole of it.
+
+Grammar Lens: where it stands in the sentence.
+[a table of 2 rows, read aloud]
+मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā)। means I will come at five.
+वह चार बजे आएगी। means She will come at four.
+The time phrase goes after the person and before the verb, in the same seat the place phrase took. Hindi keeps the verb at the end and fills the middle with whatever the sentence needs.
+Both practice papers ask for exactly this pairing — a number, बजे, and a future verb — in the first scored part.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "पाँच बजे (pā̃c baje)" — at five]
+[pause 8 seconds for the answer]
+[your turn — say: "मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā)"]
+[pause 8 seconds for the answer]
+[your turn — say: the same sentence as a woman would say it]
+[pause 8 seconds for the answer]
+[your turn — say: which word Hindi uses for at, and hear that there is none]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which verb is बजे from? (The one meaning to strike.) How does Hindi say at in front of a clock time? (It does not — the number plus बजे carries it.) Where does the time phrase stand? (After the person, before the verb.)
+
+
+Lesson 7 of 8.
+bhaviṣya kī tālikā — the future, on one page.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 3 seconds]
+Name the ending for I and the ending for he, and say which piece of each one is the tense, before you look at the table.
+
+Grammar Lens: the grid.
+[a table of 4 rows, read aloud]
+subject: मैं. with आ-: आऊँगा (āūṅgā) / आऊँगी.
+subject: तुम. with आ-: आओगे (āoge).
+subject: वह. with आ-: आएगा (āegā) / आएगी.
+subject: हम, वे, आप. with आ-: आएँगे (āeṅge) / आएँगी.
+Four rows, one verb, and -गा in every single cell. What moves is the vowel in front of it, and that vowel is the person.
+
+Grammar Lens: two slots, three tenses.
+[a table of 3 rows, read aloud]
+tense: now. how it is built: stem + -ता + हूँ / है.
+tense: earlier. how it is built: stem + -ता + था.
+tense: later. how it is built: stem + person vowel + -गा.
+The first two share a shape: the habit is in -ता and the time is in the word after it. The future is the odd one out — it has no separate word at all, and packs the person and the tense into one ending.
+
+Grammar Lens: where the full letters appear.
+[a table of 2 rows, read aloud]
+stem ends in: a consonant (कर-). how the vowel is written: a mark on the letter.
+stem ends in: a vowel (आ-, जा-). how the vowel is written: a full letter — ऊ or ओ.
+That is the whole reason two new letters were needed before this chapter could be written.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all four rows of the grid, top to bottom]
+[pause 8 seconds for the answer]
+[your turn — say: the same grid with कर- instead of आ-]
+[pause 8 seconds for the answer]
+[your turn — say: "मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā)"]
+[pause 8 seconds for the answer]
+[your turn — say: which two forms need a full letter, and why]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which piece is in every cell of the grid? (-गा.) Which tense uses no separate word for time? (The future.) How does Hindi say at five? (Pā̃c baje — no word for at.)
+
+
+Lesson 8 of 8.
+मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā) — the item the paper prints.
+
+Warm-up.
+[pause 2 seconds]
+Read this out loud before reading on.
+मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā)।.
+
+Grammar Lens: four words, four things you were taught.
+That line is reading item 8 of the first practice paper, word for word. Until this chapter two of its four words were unreadable.
+[a table of 3 rows, read aloud]
+word: मैं. what it does: who.
+word: पाँच बजे (pā̃c baje). what it does: when.
+word: आऊँगा (āūṅgā). what it does: the verb, carrying the tense.
+The answer the paper wants is I will come at five, and the two wrong answers offered are past and present. The only thing telling them apart is the ending on the last word.
+
+The exchange.
+The second paper asks the same thing as a conversation:
+— आप कब आएँगे (āeṅge)? — चार बजे।.
+आएँगे (āeṅge) because the question is to somebody addressed as आप. The answer needs no verb at all: a number and बजे is a complete reply, the way at four is in English.
+
+How to answer.
+Say each of these out loud:
+you will come at five.
+you will go by train, not by bus.
+she will come in ten minutes.
+[pause 4 seconds]
+The second and third are items 13 and 11 of the same papers. All three are the same shape: a person, a circumstance, and a verb whose ending does the work.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā)"]
+[pause 8 seconds for the answer]
+[your turn — say: the same sentence as a woman would say it]
+[pause 8 seconds for the answer]
+[your turn — say: "आप कब आएँगे (āeṅge)?" and answer it with two words]
+[pause 8 seconds for the answer]
+[your turn — say: "वह आएगी"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which single word in the paper's line tells you it is the future? (आऊँगा (āūṅgā) — its ending.) How many words does a full answer to when need? (Two — the number and बजे.) Which ending does a question to आप take? (The plural, आएँगे (āeṅge).)
