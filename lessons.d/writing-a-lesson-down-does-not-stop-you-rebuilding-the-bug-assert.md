@@ -52,8 +52,8 @@ It was not cosmetic. The corpus-wide counts were wrong by three files
 three, named so the claim is checkable: `astronomy/planets.adj` (reported
 partial, actually converted), `biology/kingdoms.adj` and
 `metrology/si-base-units.adj` (both reported unconverted, both converted). The
-latter two are the same files the earlier lesson records being **published on a
-tracking issue as unconverted work** — so a differently-broken instrument put
+latter two are the same files the earlier lesson records being **published on
+the tracking issue as unconverted work** — so a differently-broken instrument put
 the identical two files back into a work queue they had already left.
 
 ```python
@@ -75,10 +75,11 @@ deciding what to build; the control is for the author already building it, and
 that is the person who gets it wrong.
 
 **And note what this lesson cannot do for itself.** `endswith("{")` appears in
-no committed file in this repository: the census was ad-hoc, written in a
-scratch directory, and thrown away. So there is no line here to attach a comment
-to, and the next rebuild starts from prose again — which is precisely the
-failure being described. A rule that only survives in notes will be
+no committed *instrument* in this repository — only in the prose and code
+blocks of this shard: the census was ad-hoc, written in a scratch directory,
+and thrown away. So there is no line here to attach a comment to, and the next
+rebuild starts from prose again — which is precisely the failure being
+described. A rule that only survives in notes will be
 re-implemented from notes. If an instrument is going to be rebuilt more than
 once, the durable fix is to **commit the instrument**, control and all, rather
 than to write a better note about it.
@@ -103,3 +104,11 @@ and printing the first diverging character, which is the same habit the lesson
 recommends and the reason it is worth recommending. The earlier shard quotes
 that same line correctly; the copy that went wrong was the one made from a
 screen rather than from the file.
+
+That happened three times while this one file was being written: the `venus`
+line completed from a truncated listing; a bolded quotation of the sibling that
+said "a tracking issue" where the sibling says "the"; and a sentence claiming
+`endswith("{")` appeared in no committed file, which its own code blocks
+falsified four lines above it. Each was caught by comparing against the source
+bytes, and none by re-reading what I had written. Re-reading finds the errors
+you can still see; a diff finds the ones you have stopped seeing.
