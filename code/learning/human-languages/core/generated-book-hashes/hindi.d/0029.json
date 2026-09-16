@@ -1,9 +1,10 @@
 {
   "language": "hindi",
   "chapter": 29,
-  "sourceHash": "fnv1a64:8bd14d04a7ad2872",
+  "sourceHash": "fnv1a64:7293a1d0e337755c",
   "lessonIds": [
-    "HI-C29-shaam"
+    "HI-C29-shaam",
+    "HI-S131-letter-e"
   ],
   "tex": "hindi/book/chapters/ch29-evening.tex"
 }

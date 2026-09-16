@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C95-jaante-hain",
+    "language": "hindi",
+    "chapter": 103,
+    "sequence": 4370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a1189abaae6de87"
+  },
+  "findings": []
+}

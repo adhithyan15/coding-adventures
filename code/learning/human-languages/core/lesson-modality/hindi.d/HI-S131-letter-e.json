@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S131-letter-e",
+    "language": "hindi",
+    "chapter": 29,
+    "sequence": 805,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6716775e4701230b",
+    "detachableSegments": [
+      "Script you'll notice: ए",
+      "Script: two shapes, one sound",
+      "Writing: ए"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

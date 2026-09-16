@@ -666,9 +666,12 @@
       "id": "HI-A1-V-21",
       "category": "Kriya (the verb)",
       "label": "chahiye for wanting and needing",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C95-NEED-01",
+        "HI-LEX-C95-NEED-02"
+      ],
       "derivedFrom": "ES:A1-F3-04",
-      "note": "Still untaught, and now clearly distinct from what IS taught. chaahnaa has an atom (HI-LEX-CHAHNA-01, chapter 70) and takes another VERB; chaahiye takes a noun, is the form the mocks actually use (mujhe chaay chaahiye), and has no exponent. It also needs the independent vowel e, which no Hindi writing lesson has drawn -- so this is a script lesson as much as a vocabulary one."
+      "note": "Introduced by HI-C95-chahiye and HI-C95-mujhe-chahiye. THE NOTE WAS RIGHT ON BOTH COUNTS, including the one a mechanical check denied. It said chaahiye needs the independent vowel e, which no Hindi writing lesson has drawn -- and the glyph check answered ok, because measureScriptClosure credits a glyph to any script lesson whose BODY contains it, and HI-S117-letter-ca lists `ek do tiin chaar paanch`. The letter was credited to the cha lesson. HI-S131-letter-e now draws it, at chapter 29. The note is also right that chaahnaa (HI-LEX-CHAHNA-01, chapter 70) is a different thing: chaahtaa takes another VERB and chaahiye takes a NOUN, so the two are told apart by what FOLLOWS rather than by what they mean, since English says want for both. Two further teachables the note does not name: chaahiye NEVER BENDS -- no gender, no number, the same five letters whoever is speaking -- and its wanter is DATIVE, which makes `mujhe chaay chaahiye` the liking sentence with one word swapped. Wanting a thing and liking a thing happen to you; wanting to act is something you do, and Hindi draws that line with the case of the first word."
     },
     {
       "id": "HI-A1-V-22",
@@ -695,9 +698,12 @@
       "id": "HI-A1-V-24",
       "category": "Kriya (the verb)",
       "label": "janna, to know",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C95-KNOW-01",
+        "HI-LEX-C95-KNOW-02"
+      ],
       "derivedFrom": "ES:A1-F2-13, ES:A1-F2-14, ES:A1-NG7-01",
-      "note": "The negation lesson's own example sentence is `main nahin janta`, so the learner meets the word, but no atom introduces it and it cannot be used affirmatively."
+      "note": "Introduced by HI-C95-jaanta-hun and HI-C95-jaante-hain. The note is right and the defect is SHARPER than it states. It says the negation lesson's example sentence is `main nahiin jaantaa` so the learner meets the word while no atom introduces it. In fact jaantaa is in HI-C07-nahin's HEADWORD -- `nahiin / jaantaa` -- glossed as the masculine present form of to know, while all three of that lesson's atoms are about nahiin itself: its Sanskrit root, its Indo-European cousins, its two jobs. THE HEADWORD PROMISED A WORD THE ATOMS NEVER DELIVERED, so a learner could deny knowing something and not claim it. The affirmative needs no new grammar: take nahiin out and huun comes back, because a Hindi present needs its copula and the negative drops it. It did need a LETTER -- ja, which the corrected glyph check found had never been drawn either, and which HI-S132-letter-ja now teaches at chapter 30."
     },
     {
       "id": "HI-A1-V-25",

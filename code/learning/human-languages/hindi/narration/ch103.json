@@ -1,0 +1,1005 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 103,
+  "title": "What I Know and What I Want",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:4d3028ba5891dfbe",
+  "lessons": [
+    {
+      "id": "HI-C95-jaanta-hun",
+      "sequence": 4360,
+      "title": "मैं जानता हूँ (maiṁ jāntā hūṁ) — the half that was missing",
+      "headword": "मैं जानता हूँ",
+      "romanization": "maiṁ jāntā hūṁ",
+      "gloss": "I know — the affirmative half of a verb the track has only ever used to deny something",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:052bb419d549d615",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I do not know — you have had that sentence since the chapter on नहीं. Now try to say the opposite of it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जानता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मैं जानता हूँ (maiṁ jāntā hūṁ)। — I know."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing about that is new except the permission."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have been saying मैं नहीं जानता for a very long time. The negative lesson used it as its example sentence, and everything in it was explained except the last word."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you had",
+                "what you have now"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "what you had: मैं नहीं जानता. what you have now: मैं जानता हूँ (maiṁ jāntā hūṁ)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Take नहीं out and one thing has to come back: हूँ. A Hindi present needs its to be on the end, and the negative sentence dropped it — which is ordinary and which is why the affirmative does not look like the negative with a word removed."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is जानना, and its ज is the letter drawn two chapters before this one. It was on the page long before that, inside जी and आज."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: a word carried and never handed over",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is worth naming because it is a real gap and not a quirk of your memory. The negative lesson's headword names jāntā and glosses it as the masculine present of to know — but everything that lesson actually teaches is about नहीं: its Sanskrit root, its Indo-European cousins, its two jobs."
+            },
+            {
+              "kind": "speech",
+              "text": "The word rode along in an example and was never handed over. You could deny knowing something and not claim it, which is a strange shape for a vocabulary to have."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं जानता हूँ (maiṁ jāntā hūṁ)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं जानता हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं नहीं जानता\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं नहीं जानता\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word comes back when the negative goes away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word comes back when the negative goes away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the infinitive this form is built from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the infinitive this form is built from]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is I know? (मैं जानता हूँ (maiṁ jāntā hūṁ).) What did the negative version leave off? (हूँ.) Which half of this verb did you have first? (The denial.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C95-jaante-hain",
+      "sequence": 4370,
+      "title": "क्या आप जानते हैं? (kyā āp jānte haiṁ?) — asking it",
+      "headword": "क्या आप जानते हैं?",
+      "romanization": "kyā āp jānte haiṁ?",
+      "gloss": "do you know? — the question a traveller actually asks, built from the marker and the respectful plural you already have",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a1189abaae6de87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I know. Then say the little word that turns a Hindi statement into a yes-or-no question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जानते हैं",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्या आप जानते हैं? (kyā āp jānte haiṁ?) — Do you know?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every piece is old and the assembly is regular:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "job"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "piece: क्या. job: marks the whole thing as a question.",
+                "piece: आप. job: the respectful you.",
+                "piece: जानते. job: the verb, agreeing with आप.",
+                "piece: हैं. job: to be, also agreeing with आप."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "आप is grammatically plural, which is why both the verb and to be take their plural endings even when you are speaking to one person. That is not a new rule — it is the same respect-as-plural the track has used since the second chapter, turning up on a new verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: where क्या sits",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्या goes at the front, and the rest of the sentence keeps its ordinary order behind it. English reshuffles a question — you know becomes do you know — and Hindi does not move anything at all."
+            },
+            {
+              "kind": "speech",
+              "text": "So a yes-or-no question costs one word and no rearrangement, which makes it one of the cheapest things in the language to build once you can say the statement."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"क्या आप जानते हैं? (kyā āp jānte haiṁ?)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"क्या आप जानते हैं?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं जानता हूँ (maiṁ jāntā hūṁ)\" — the answer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं जानता हूँ\" — the answer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why the verb is जानते and not जानता",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why the verb is **जानते** and not **जानता**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where क्या stands in the sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where **क्या** stands in the sentence]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What turns a statement into a yes-or-no question? (क्या, at the front.) Does anything else move? (No.) Why is आप followed by plural endings? (It is grammatically plural, however many people you mean.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C95-chahiye",
+      "sequence": 4380,
+      "title": "चाहिए (cāhiye) — wanting a thing rather than an action",
+      "headword": "चाहिए",
+      "romanization": "cāhiye",
+      "gloss": "is needed, is wanted — a form of the wanting verb that takes a thing rather than an action, and never changes for the person who wants it",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6df3877316da3a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the verb for wanting, the one you met with सकना. Then try to use it to want a cup of tea rather than to want to do something."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चाहिए",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाहिए (cāhiye) — is wanted, is needed."
+            },
+            {
+              "kind": "speech",
+              "text": "It is built from the same root as चाहना, and it does a job that verb cannot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                "what follows it"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "form: चाहता / चाहती. what follows it: another verb.",
+                "form: चाहिए (cāhiye). what follows it: a thing."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "चाहना wants an action. It was taught alongside the rule that a Hindi verb can swallow another verb whole, and that is exactly what it does: I want to go."
+            },
+            {
+              "kind": "speech",
+              "text": "चाहिए (cāhiye) wants a noun. I want tea. English uses one word for both jobs and hides the difference; Hindi uses two forms and makes it visible."
+            },
+            {
+              "kind": "speech",
+              "text": "The other difference is that चाहिए (cāhiye) does not change. It has no masculine and feminine, no singular and plural — the same five letters whoever is speaking and whatever is wanted. After a chapter of endings that agree with everything in sight, that is a relief worth noticing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the ए on the end",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The word ends in ए, the standing vowel drawn a few chapters back — not the sitting mark ◌े, because there is no consonant after हि for the vowel to ride on."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the rule from the letter lesson doing its first real work: which of the two shapes a word uses is decided by whether a consonant is there to carry the vowel, and a word ending in a vowel sound has nothing behind it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"चाहिए (cāhiye)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"चाहिए\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two forms takes a thing after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two forms takes a thing after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which takes an action after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which takes an action after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why the last letter is the standing ए",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why the last letter is the standing **ए**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चाहिए (cāhiye) take after it? (A thing.) What does चाहता take? (Another verb.) Does चाहिए (cāhiye) change for gender or number? (No — never.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C95-mujhe-chahiye",
+      "sequence": 4390,
+      "title": "मुझे चाय चाहिए (mujhe cāy cāhiye) — the wanter is not the subject",
+      "headword": "मुझे चाय चाहिए",
+      "romanization": "mujhe cāy cāhiye",
+      "gloss": "I want tea — the wanter goes in the dative, exactly as the liker does, because both are things that happen to a person",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c531a99e70f7d8e0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I like tea in Hindi. Look at the first word you said, and keep it in mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मुझे … चाहिए",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुझे चाय चाहिए (mujhe cāy cāhiye)। — I want tea."
+            },
+            {
+              "kind": "speech",
+              "text": "Not मैं. मुझे — to me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The two words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the liking sentence again, with one word swapped:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Hindi",
+                "word for word"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "Hindi: मुझे चाय पसंद है. word for word: to me, tea is pleasing.",
+                "Hindi: मुझे चाय चाहिए (mujhe cāy cāhiye). word for word: to me, tea is wanted."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The person is in the dative both times, and the thing is what the sentence is really about. Hindi treats wanting and liking as things that happen to you rather than things you do, and puts the person on the receiving end of both."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a Hindi peculiarity. The proxy language reaches the same shape in me gusta, and Italian in mi piace — three languages in two unrelated families building the same idea the same way. What makes Hindi's version worth a lesson is that चाहिए (cāhiye) extends it to wanting, where those languages switch back to an ordinary verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: what agrees with what",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चाहिए (cāhiye) does not change, so there is nothing to agree. The sentence has no word that bends, which is unusual enough to be a useful landmark: if you hear चाहिए (cāhiye), stop looking for agreement."
+            },
+            {
+              "kind": "speech",
+              "text": "And मुझे carries झ, the breathy partner drawn a few chapters back. It was in your mouth from the liking chapter onwards and only recently on your hand."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मुझे चाय चाहिए (mujhe cāy cāhiye)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मुझे चाय चाहिए\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मुझे चाय पसंद है\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मुझे चाय पसंद है\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word is not मैं, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word is **not** **मैं**, and why]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what in the sentence agrees with anything (nothing)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what in the sentence agrees with anything (nothing)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is I want tea? (मुझे चाय चाहिए (mujhe cāy cāhiye).) Which case is the wanter in? (The dative — to me.) Which other sentence you know puts the person there? (The liking one.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C95-repaso-chaah",
+      "sequence": 4400,
+      "title": "cāh kī tālikā — wanting, on one page",
+      "headword": "चाह की तालिका",
+      "romanization": "cāh kī tālikā",
+      "gloss": "the table of wanting — one root, two forms, and the question of what follows each",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa45ea45bd2a7e64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the two forms of the wanting verb, and say what each one wants after it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one root, two forms",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                "what follows",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "form: चाहता / चाहती. what follows: a verb. example: मैं जाना चाहता हूँ.",
+                "form: चाहिए. what follows: a thing. example: मुझे चाय चाहिए (mujhe cāy cāhiye)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Ask what comes next, not what it means. Both translate into English as want, so the meaning will not tell the two apart — the shape of what follows will, every time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: who sits where",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "the person is"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "sentence: मैं जाना चाहता हूँ. the person is: मैं — the subject.",
+                "sentence: मुझे चाय चाहिए (mujhe cāy cāhiye). the person is: मुझे — the dative.",
+                "sentence: मुझे चाय पसंद है. the person is: मुझे — the dative."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two of the three put the person on the receiving end, and the one that does not is the one where the person is genuinely doing something — going. Wanting a thing and liking a thing happen to you; wanting to act is something you do, and Hindi draws that line with the case of the first word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb that was only ever denied",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you can now say",
+                "what you had before"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you can now say: मैं जानता हूँ (maiṁ jāntā hūṁ). what you had before: only मैं नहीं जानता.",
+                "what you can now say: क्या आप जानते हैं? (kyā āp jānte haiṁ?) what you had before: nothing."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The affirmative needed no new grammar at all — it needed somebody to introduce the word, which the negative lesson used and never taught."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मुझे चाय चाहिए (mujhe cāy cāhiye)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मुझे चाय चाहिए\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं जानता हूँ (maiṁ jāntā hūṁ)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं जानता हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"क्या आप जानते हैं? (kyā āp jānte haiṁ?)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"क्या आप जानते हैं?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question that tells the two wanting forms apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question that tells the two wanting forms apart]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which wanting form takes a noun? (चाहिए (cāhiye).) Which case is its wanter in? (The dative.) Does चाहिए (cāhiye) ever bend? (No.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C95-sintesis-chaay",
+      "sequence": 4410,
+      "title": "आपको क्या चाहिए? (āpko kyā cāhiye?) — answering at a counter",
+      "headword": "आपको क्या चाहिए?",
+      "romanization": "āpko kyā cāhiye?",
+      "gloss": "what would you like -- the question a counter asks, and the two-word answer the practice paper keys on",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d9053a3665d18bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to you in its respectful form, and the word that marks a question. Both have been yours for a while."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "speaker",
+                "Hindi"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "speaker: A. Hindi: आपको क्या चाहिए? (āpko kyā cāhiye?)",
+                "speaker: B. Hindi: मुझे चाय चाहिए (mujhe cāy cāhiye)।."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The two lines are the same sentence with the person swapped — आपको for मुझे — and क्या standing where the answer will go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "How to answer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A listening item built on this keys on the noun between the two fixed words. Everything else in B's reply is predictable:"
+            },
+            {
+              "kind": "speech",
+              "text": "The first word is the dative person — it tells you who, not what."
+            },
+            {
+              "kind": "speech",
+              "text": "The last word is चाहिए (cāhiye) — it never changes, so it carries no information."
+            },
+            {
+              "kind": "speech",
+              "text": "The answer is whatever sits between them."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why the item is answerable even if the middle word is the only one you catch. Listen to the middle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the chapter in one sentence",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hindi puts the person on the receiving end of wanting, and gives the wanting word no endings at all — so the sentence's whole meaning lives in the noun in the middle and the case of the word in front."
+            },
+            {
+              "kind": "speech",
+              "text": "क्या आप जानते हैं? (kyā āp jānte haiṁ?) works the other way round: there the endings do all the agreeing, because somebody is genuinely doing the knowing."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"आपको क्या चाहिए? (āpko kyā cāhiye?)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"आपको क्या चाहिए?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मुझे चाय चाहिए (mujhe cāy cāhiye)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मुझे चाय चाहिए\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word in the answer carries the information",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word in the answer carries the information]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what changed between the question and the answer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what changed between the question and the answer]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where in the answer is the information? (The noun in the middle.) What does चाहिए (cāhiye) tell you? (Nothing — it never changes.) What replaces क्या when the question is answered? (The thing wanted.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
