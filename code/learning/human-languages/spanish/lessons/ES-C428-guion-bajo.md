@@ -61,10 +61,14 @@ Every symbol an e-mail address can contain now has a Spanish name:
 | - | guion |
 | _ | guion bajo |
 
-> ana_lopez **arroba** ejemplo **punto** es
+> ana_lopez **arroba** ejemplo **punto** example
 
 Read that aloud and you have completed the task the source calls *dictating an
 e-mail address*. It needed four words, three of which you already had.
+
+A real Spanish address usually ends in **punto es**, for the country. The
+addresses printed here end in *example* because that ending is reserved for
+teaching and can never belong to anybody.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C428-02, ES-ORTH-C428-01] -->

@@ -14,7 +14,7 @@ la arroba — the @ sign.
 English calls it at, which is a preposition pressed into service. Spanish has a noun for it, and the noun is much older than e-mail.
 An arroba was a unit of weight — about eleven and a half kilos — from Arabic ar-rubʿ, "the quarter," because it was a quarter of a quintal. Merchants wrote it with a looped a, and that shorthand is the symbol on your keyboard.
 So when a Spanish speaker reads out an address, they are naming a medieval unit of weight:
-ana arroba ejemplo punto es.
+ana arroba ejemplo punto example.
 You have the other two pieces already: punto for the dot, from the punctuation chapter, and guion if the address carries one.
 
 Grammar Lens: reading an address aloud.
@@ -59,8 +59,9 @@ symbol: @. said aloud: arroba.
 symbol: . said aloud: punto.
 symbol: -. said aloud: guion.
 symbol: _. said aloud: guion bajo.
-ana_lopez arroba ejemplo punto es.
+ana_lopez arroba ejemplo punto example.
 Read that aloud and you have completed the task the source calls dictating an e-mail address. It needed four words, three of which you already had.
+A real Spanish address usually ends in punto es, for the country. The addresses printed here end in example because that ending is reserved for teaching and can never belong to anybody.
 
 Guided Practice.
 [pause 1 second]
@@ -240,8 +241,9 @@ Say the two things you would say at a birthday. One congratulates and one raises
 
 Reading.
 Read this invitation aloud, saying every symbol by name:
-Cumpleaños de Ana Sábado, a las ocho. Confirma en ana_lopez arroba ejemplo punto es.
-The address line is written in words here because that is how it is said. On a screen it would read ana_lopez@ejemplo.es, and saying it aloud requires the four names: guion bajo, arroba, punto, and the letters themselves.
+Cumpleaños de Ana Sábado, a las ocho. Confirma en ana_lopez arroba ejemplo punto example.
+The address line is written in words here because that is how it is said. On a screen it would read ana_lopez@ejemplo.example, and saying it aloud requires the four names: guion bajo, arroba, punto, and the letters themselves.
+A real Spanish address would end punto es; this one ends in the reserved teaching word instead, so that nobody is written to by accident.
 
 Grammar Lens: answering it.
 [a table of 3 rows, read aloud]

@@ -50,7 +50,7 @@ wrote it with a looped **a**, and that shorthand is the symbol on your keyboard.
 So when a Spanish speaker reads out an address, they are naming a **medieval
 unit of weight**:
 
-> ana **arroba** ejemplo punto es
+> ana **arroba** ejemplo punto example
 
 You have the other two pieces already: **punto** for the dot, from the
 punctuation chapter, and **guion** if the address carries one.

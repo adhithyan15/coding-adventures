@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 428,
-  "sourceHash": "fnv1a64:2a00a5985eed988d",
+  "sourceHash": "fnv1a64:d860f93ae8aad026",
   "lessonIds": [
     "ES-C428-arroba",
     "ES-C428-guion-bajo",
@@ -15,7 +15,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch428.txt",
   "json": "spanish/narration/ch428.json",
-  "textHash": "fnv1a64:0f8c3be0ac9ea462",
-  "jsonHash": "fnv1a64:874f65be546b7b0c",
+  "textHash": "fnv1a64:0c855aa3cf51ea24",
+  "jsonHash": "fnv1a64:12cc25ae95a19ed5",
   "findings": []
 }

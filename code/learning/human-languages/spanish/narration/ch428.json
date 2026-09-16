@@ -4,7 +4,7 @@
   "chapter": 428,
   "title": "Five Last Pieces",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2a00a5985eed988d",
+  "sourceHash": "fnv1a64:d860f93ae8aad026",
   "lessons": [
     {
       "id": "ES-C428-arroba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32931e745fb63bf4",
+      "sourceHash": "fnv1a64:2a6dbf3d5aa12366",
       "notice": null,
       "blocks": [
         {
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "ana arroba ejemplo punto es."
+              "text": "ana arroba ejemplo punto example."
             },
             {
               "kind": "speech",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e256d1b11a729694",
+      "sourceHash": "fnv1a64:2a3289e83bc36c94",
       "notice": null,
       "blocks": [
         {
@@ -241,11 +241,15 @@
             },
             {
               "kind": "speech",
-              "text": "ana_lopez arroba ejemplo punto es."
+              "text": "ana_lopez arroba ejemplo punto example."
             },
             {
               "kind": "speech",
               "text": "Read that aloud and you have completed the task the source calls dictating an e-mail address. It needed four words, three of which you already had."
+            },
+            {
+              "kind": "speech",
+              "text": "A real Spanish address usually ends in punto es, for the country. The addresses printed here end in example because that ending is reserved for teaching and can never belong to anybody."
             }
           ]
         },
@@ -957,7 +961,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c9a43225b89fd48",
+      "sourceHash": "fnv1a64:3b1791e3a0f36a1a",
       "notice": null,
       "blocks": [
         {
@@ -988,11 +992,15 @@
             },
             {
               "kind": "speech",
-              "text": "Cumpleaños de Ana Sábado, a las ocho. Confirma en ana_lopez arroba ejemplo punto es."
+              "text": "Cumpleaños de Ana Sábado, a las ocho. Confirma en ana_lopez arroba ejemplo punto example."
             },
             {
               "kind": "speech",
-              "text": "The address line is written in words here because that is how it is said. On a screen it would read ana_lopez@ejemplo.es, and saying it aloud requires the four names: guion bajo, arroba, punto, and the letters themselves."
+              "text": "The address line is written in words here because that is how it is said. On a screen it would read ana_lopez@ejemplo.example, and saying it aloud requires the four names: guion bajo, arroba, punto, and the letters themselves."
+            },
+            {
+              "kind": "speech",
+              "text": "A real Spanish address would end punto es; this one ends in the reserved teaching word instead, so that nobody is written to by accident."
             }
           ]
         },

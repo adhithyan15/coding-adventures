@@ -42,11 +42,14 @@ Read this invitation aloud, saying every symbol by name:
 
 > **Cumpleaños de Ana**
 > Sábado, a las ocho.
-> Confirma en ana_lopez arroba ejemplo punto es
+> Confirma en ana_lopez arroba ejemplo punto example
 
 The address line is written in words here because that is how it is **said**. On
-a screen it would read *ana_lopez@ejemplo.es*, and saying it aloud requires the
-four names: *guion bajo*, *arroba*, *punto*, and the letters themselves.
+a screen it would read *ana_lopez@ejemplo.example*, and saying it aloud requires
+the four names: *guion bajo*, *arroba*, *punto*, and the letters themselves.
+
+A real Spanish address would end *punto es*; this one ends in the reserved
+teaching word instead, so that nobody is written to by accident.
 
 ## Grammar Lens: answering it
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C428-03, ES-ORTH-C428-04, ES-ORTH-C428-05] -->
