@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C94-train",
+    "language": "hindi",
+    "chapter": 102,
+    "sequence": 4320,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c20f05ab3d0519c7"
+  },
+  "findings": []
+}

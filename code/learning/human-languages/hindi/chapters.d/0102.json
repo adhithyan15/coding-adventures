@@ -1,0 +1,21 @@
+{
+  "chapter": 102,
+  "title": "From, Until, and Instead",
+  "label": "ch:hi-safar",
+  "canDo": "I can say a span of days or hours with a marker on each end, name a second way of travelling, and correct somebody's guess by naming the option they got wrong and then the right one.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "HI-C94-sintesis-safar",
+    "kind": "task",
+    "summary": "Read the correction a practice paper prints -- bas se nahiin, tren se -- and say which side of the negative holds the true answer, then tell a span se from a means se in one sentence carrying both.",
+    "assesses": [
+      "HI-LEX-C94-SPAN-01",
+      "HI-LEX-C94-SPAN-02",
+      "HI-LEX-C94-SPAN-04",
+      "HI-LEX-C94-SPAN-05"
+    ],
+    "note": "Closes HI-A1-POST-09 (se ... tak for a span of days or hours) and HI-A1-NEG-03 (contrasting two alternatives negatively). Both were blocked only on se, which chapter 98 taught, and both notes were exactly right and needed no correction -- the first two accurate notes in six chapters. The chapter costs ONE new noun, tren, because bas se was already taught in chapter 98 and the weekday nouns since chapter 10. The thread is that se now does FIVE jobs -- from a place, by a means, measured against, the start of a span, and one option in a correction -- and never bends in any of them, unlike kaa which had to become ke the moment another word followed, because se is a plain postposition and has nothing to agree with. The load-bearing contrast with English is that English keeps ONE by across both halves of a correction while Hindi gives each option its own se, so counting the se tells a reader whether a swap is being offered. The other teachable is that the POSITION of nahiin says how much is being denied: in front of the verb it denies the sentence, after a noun-plus-postposition it denies only that phrase, and getting it wrong turns a correction into a refusal."
+  }
+}
