@@ -5,7 +5,10 @@
 % between a comet's two tails?": it states no fact of its own — it only
 % `import`s the grounded table and asks binding queries. The engine resolves
 % each `?` against the `comet_tail_type` rows and returns the description +
-% the table's own source/locator/trust. The second query runs BACKWARD (bind
+% the ROW's own NASA sentence, with the table's locator and trust inherited.
+% (Before the RS-5e conversion this said "the table's own
+% source/locator/trust", which was accurate then and is not now: the ion-tail
+% answer used to carry the DUST-tail sentence.) The second query runs BACKWARD (bind
 % the description, recall which tail it names). A comet-related term that is
 % not one of these two tails (e.g. `coma`, a different physical part
 % entirely) abstains honestly — the engine never invents a tail description.

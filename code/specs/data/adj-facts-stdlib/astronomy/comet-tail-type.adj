@@ -35,28 +35,64 @@
 % nucleus/coma/tail. That page states plainly, right after introducing the
 % single `tail`, "When astronomers look closely, they find that comets
 % actually have two separate tails" and then gives each of the two its own
-% complete, standalone sentence. WebFetch-verified before writing. `trust
-% authoritative` — NASA is a primary .gov source, the same tier
-% `comet-part.adj` (the sibling library this one refines) already uses.
+% complete, standalone sentence. The original authoring note said the
+% quotes were "WebFetch-verified before writing"; the raw-page measurement
+% below supersedes it. `trust authoritative` — NASA is a primary .gov
+% source, the same tier `comet-part.adj` (the sibling library this one
+% refines) already uses.
 %
 % This is genuinely a CLOSED two-way split, not an arbitrary subset of a
 % longer list — the source's own sentence states a comet has exactly two
 % separate tails. A comet-related term that is NOT one of these two —
 % `nucleus`, `coma` — is a different physical part entirely (already tabled
 % in `comet-part.adj`, a coarser sibling table, not a tail sub-type), so a
-% recall on it here ABSTAINS rather than inventing a tail description. (See
-% ../README.md; feedback_nothing_human_authored,
+% recall on it here ABSTAINS rather than inventing a tail description.
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The
+% envelope used to be the dust-tail span, so an ion-tail answer was
+% warranted primarily by a sentence about the DUST tail -- while the
+% ion-tail sentence sat in a table-level `cites`, riding along as a
+% corroboration rather than as that row's warrant. Each row now carries
+% the sentence defining its own tail, the `cites` is gone, and the
+% envelope is the page's sentence framing the two-tail split:
+%
+%     "When astronomers look closely, they find that comets actually
+%      have two separate tails."
+%
+% That envelope names neither tail -- not as the phrases "dust tail" or
+% "ion tail", and not as the bare tokens "dust" or "ion" -- and shares
+% no content word with either row's value. The two row spans are
+% mutually exclusive in the same way, so a negative assertion may name a
+% whole span without the shared-word hazard `comet-part.adj` has.
+%
+% Measured 2026-09-16 UTC by this table's own fetch. The page answered
+% 200 in 21830 bytes and a nonsense path on the same host answered 404
+% with a full styled page of 11281 bytes -- so the control is that the
+% spans are absent from a page of COMPARABLE SIZE, not that the page is
+% empty. Those byte counts are measured-at-a-moment, not properties of
+% the page: the sibling `comet-part.adj` measured the same 404 at 11280
+% bytes about an hour earlier. Tags removed without a space and only
+% ASCII whitespace collapsed: both row spans and the envelope each occur
+% exactly once, inside one `<p>`, scripts set aside and over the whole
+% file, with no `<head>` copy. Both row spans sit in the SAME `<p>`.
+% Every row's page is the envelope's, so no row restates a `locator`
+% line and no row repeats the `trust` tier.
+%
+% (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table comet_tail_type {
     columns tail, description
 
-    row (dust_tail, traces_a_broad_gently_curving_path_away_from_the_sun)
-    row (ion_tail, always_points_directly_away_from_the_sun)
+    row (dust_tail, traces_a_broad_gently_curving_path_away_from_the_sun) {
+        source "This dust tail traces a broad, gently curving path away from the Sun."
+    }
+    row (ion_tail, always_points_directly_away_from_the_sun) {
+        source "The ion tail always points directly away from the Sun."
+    }
 
-    source "This dust tail traces a broad, gently curving path away from the Sun."
+    source "When astronomers look closely, they find that comets actually have two separate tails."
     locator "https://spaceplace.nasa.gov/comets/en/"
     trust authoritative
-    cites "The ion tail always points directly away from the Sun." locator "https://spaceplace.nasa.gov/comets/en/"
 }
