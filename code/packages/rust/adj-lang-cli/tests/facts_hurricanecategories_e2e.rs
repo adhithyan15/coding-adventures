@@ -223,9 +223,19 @@ fn the_table_shape_matches_the_measured_rows() {
         !body.lines().any(|l| l.trim_start().starts_with("cites")),
         "no corroboration at any indent"
     );
-    assert!(
-        !body.contains("\n        locator ") && !body.contains("\n        trust "),
-        "no row restates a locator line or trust: every row's page is the envelope's"
+    // Indent-independent, like the `cites` arm above -- but `cites` can assert
+    // ABSENCE because no table-level `cites` exists, whereas the envelope has a
+    // `locator` and a `trust` of its own. So the pin is that there is EXACTLY
+    // one of each: a row restating either, at any indent, shows up as a second.
+    assert_eq!(
+        body.lines().filter(|l| l.trim_start().starts_with("locator ")).count(),
+        1,
+        "exactly one locator line, the envelope's: {body}"
+    );
+    assert_eq!(
+        body.lines().filter(|l| l.trim_start().starts_with("trust ")).count(),
+        1,
+        "exactly one trust line, the envelope's: {body}"
     );
     assert!(
         body.contains(&format!(
@@ -242,14 +252,11 @@ fn the_table_shape_matches_the_measured_rows() {
         .find(|l| l.starts_with("    source \""))
         .expect("the table has an envelope source line")
         .to_lowercase();
-    for word in [
-        "category 1",
-        "category 5",
-        "some damage",
-        "extensive damage",
-        "devastating",
-        "catastrophic",
-    ] {
+    // The BARE word, not "category 1".."category 5": the header and the
+    // CHANGELOG both claim the envelope names NO category, and a list of
+    // space-separated needles would let "category-3" or "Category Three"
+    // through while contradicting that claim. One needle subsumes all five.
+    for word in ["category", "some damage", "extensive damage", "devastating", "catastrophic"] {
         assert!(
             !shipped_envelope.contains(word),
             "the shipped envelope must name no category and no damage value, but contains {word:?}"
