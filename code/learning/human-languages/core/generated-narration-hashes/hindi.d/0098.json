@@ -1,0 +1,22 @@
+{
+  "language": "hindi",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:3911ba4398d9eba3",
+  "lessonIds": [
+    "HI-C90-se",
+    "HI-C90-bas",
+    "HI-C90-uthna",
+    "HI-C90-kaam",
+    "HI-C90-pahle",
+    "HI-C90-baad",
+    "HI-C90-repaso-dincharya",
+    "HI-C90-sintesis-dincharya"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch98.txt",
+  "json": "hindi/narration/ch98.json",
+  "textHash": "fnv1a64:54878a43ebe45cde",
+  "jsonHash": "fnv1a64:b5f45d56d61cbd55",
+  "findings": []
+}

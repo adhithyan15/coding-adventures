@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C90-sintesis-dincharya",
+    "language": "hindi",
+    "chapter": 98,
+    "sequence": 4030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5aecc039f780f0e2"
+  },
+  "findings": []
+}

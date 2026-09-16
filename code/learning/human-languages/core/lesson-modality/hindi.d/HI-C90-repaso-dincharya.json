@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "HI-C89-repaso-jaari",
+    "id": "HI-C90-repaso-dincharya",
     "language": "hindi",
-    "chapter": 97,
-    "sequence": 3940,
+    "chapter": 98,
+    "sequence": 4020,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:9dd5a402b33a1f1f"
+    "sourceHash": "fnv1a64:8d73c4930b75cd9b"
   },
   "findings": []
 }

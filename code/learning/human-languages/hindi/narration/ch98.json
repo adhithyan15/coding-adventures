@@ -1,0 +1,1406 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 98,
+  "title": "A Day, In The Order It Happens",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3911ba4398d9eba3",
+  "lessons": [
+    {
+      "id": "HI-C90-se",
+      "sequence": 3960,
+      "title": "से (se) — where you came from, and what you came by",
+      "headword": "से",
+      "romanization": "se",
+      "gloss": "from, and by — one small word doing two jobs English needs two words for",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:246d47a6fa6c17bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have पर for being at a place. Try to say you came from one, and notice you have the place and no way to leave it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: से",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "से (se) — \"from,\" and also \"by.\""
+            },
+            {
+              "kind": "speech",
+              "text": "घर से (se) — from home. हाथ से (se) — by hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Like पर, it trails its noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English splits this into two words and Hindi does not:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "Hindi"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "English: from home. Hindi: घर से (se).",
+                "English: by hand. Hindi: हाथ से (se)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both are the same idea seen from two angles. Where something starts and what it travels through are, to Hindi, one relation: the thing proceeds from the noun. A journey proceeds from your house; an action proceeds from your hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Once you see that, the second use stops being a second word to learn. A vehicle you travel in takes से for exactly the same reason your hand does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: two postpositions, one habit",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "postposition",
+                "what it marks"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "postposition: पर. what it marks: at a point.",
+                "postposition: से (se). what it marks: from it, or by way of it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both trail the noun, both are one syllable, and neither has an English word sitting in the same place. That is the whole class: the small word comes second, and knowing the noun tells you where to put it."
+            },
+            {
+              "kind": "speech",
+              "text": "A question you will be asked in a speaking interview turns on this word: आप कहाँ से (se) हैं? — where are you from?"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"घर से (se)\" — from home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"घर से\" — from home]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"हाथ से (se)\" — by hand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"हाथ से\" — by hand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"आप कहाँ से (se) हैं?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"आप कहाँ से हैं?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the two uses have in common",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the two uses have in common]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which side of the noun does से (se) sit on? (After it.) What single idea covers from and by? (The thing proceeds from the noun.) Which question in a speaking interview needs it? (आप कहाँ से (se) हैं?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C90-bas",
+      "sequence": 3970,
+      "title": "बस से (bas se) — the same three letters, twice over",
+      "headword": "बस से",
+      "romanization": "bas se",
+      "gloss": "by bus — three letters you already read as enough, and a second word that happens to be spelled the same",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a00f501eb006f2c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already read बस as a reply meaning enough, that's all. Read it again in बस से (bas se) and notice it cannot possibly mean that here."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बस से",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बस — the vehicle. बस से (bas se) — by bus."
+            },
+            {
+              "kind": "speech",
+              "text": "मैं बस से (bas se) स्कूल जाता हूँ। — I go to school by bus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These are two different words that happen to be spelled alike:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "where it comes from",
+                "what it means"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "word: बस. where it comes from: Persian bas. what it means: enough, that's all.",
+                "word: बस. where it comes from: English bus. what it means: the vehicle."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The first has been in the language for centuries. The second arrived with the vehicle, and English had shortened it from omnibus — Latin for \"for everybody\" — which is a fair description of a bus and a strange thing to find inside three Devanagari letters."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing marks them apart on the page. The sentence does the work: a reply on its own is the old word, and a noun with a postposition behind it is the vehicle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: reading the one from the other",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you see",
+                "which word"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you see: बस।. which word: enough.",
+                "what you see: बस से (bas se). which word: by bus."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The moment से follows it, it is a thing you can travel in. That is the sort of decision a reading paper tests without ever saying so, and you now make it from the shape of the sentence rather than from the word."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"बस से (bas se)\" — by bus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"बस से\" — by bus]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं बस से (bas se) स्कूल जाता हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं बस से स्कूल जाता हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the other word spelled the same, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the other word spelled the same, and what it means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what tells the two apart in a sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what tells the two apart in a sentence]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did English shorten bus from? (Omnibus, Latin for for everybody.) How do you know which बस you are reading? (From what stands around it — a postposition behind it means the vehicle.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C90-uthna",
+      "sequence": 3980,
+      "title": "उठना (uṭhnā) — where a day starts",
+      "headword": "उठना",
+      "romanization": "uṭhnā",
+      "gloss": "to get up — the verb every routine starts with, and the first word in the track to open with the letter u",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a7c0b000b69de8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say सुबह and you can build a habit with -ता. Try to say what you do first every morning, and find the verb missing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उठना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उठना (uṭhnā) — to get up, to rise."
+            },
+            {
+              "kind": "speech",
+              "text": "मैं सुबह उठता हूँ। — I get up in the morning. मैं सुबह सात बजे उठती हूँ। — I get up at seven in the morning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The stem is उठ-, and it opens with a vowel where no consonant can carry the mark — so the word begins with the full letter उ, which is why this is the first word in the track to start that way."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is broader than English get up. It covers a person leaving a bed, a person standing from a chair, smoke rising, and a price going up. What all of those share is movement away from the ground, and Hindi treats that as one action."
+            },
+            {
+              "kind": "speech",
+              "text": "Its opposite, बैठना, is to sit — the same idea in the other direction."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: it takes the endings you already have",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you mean",
+                "the form"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "what you mean: I get up (habit). the form: उठता हूँ.",
+                "what you mean: I am getting up. the form: उठ रहा हूँ.",
+                "what you mean: I used to get up. the form: उठता था.",
+                "what you mean: I will get up. the form: उठूँगा."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four tenses on one new stem, and you had all four endings before you had the verb. That is what a stem costs you now: one word, and the whole grid comes with it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं सुबह उठता हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं सुबह उठता हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same as a woman would say it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same as a woman would say it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं सुबह सात बजे उठती हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं सुबह सात बजे उठती हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at उठना (uṭhnā) and name the letter it opens with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at उठना and name the letter it opens with]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do a person, smoke and a price have in common in this verb? (They all move away from the ground.) Why does the word open with a full letter? (There is no consonant to carry the mark.) What is its opposite? (बैठना, to sit.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C90-kaam",
+      "sequence": 3990,
+      "title": "काम (kām) — the noun that was there all along",
+      "headword": "काम",
+      "romanization": "kām",
+      "gloss": "work, as a noun and as a place — the word that has been hiding inside kaam karnaa since the very first verb",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f735df2818ea345f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You learned काम (kām) करना long ago as one expression meaning to work. Say it, and then ask yourself what the first half of it means on its own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: काम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काम (kām) — work, a job, a task."
+            },
+            {
+              "kind": "speech",
+              "text": "काम (kām) पर — at work. मैं काम (kām) पर जाता हूँ। — I go to work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "काम (kām) करना was never one word. It is काम (kām) plus करना — literally to do work — and Hindi builds an enormous number of verbs this way: a noun, plus the verb to do."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the pattern",
+                "what it makes"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the pattern: काम (kām) + करना. what it makes: to work.",
+                "the pattern: a noun + करना. what it makes: to do that noun."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Knowing this turns a memorised phrase into a machine. Any noun you meet can be handed to करना, and the result is usually the verb a learner would otherwise look up separately."
+            },
+            {
+              "kind": "speech",
+              "text": "The word comes from Sanskrit कर्म (karma), \"act, deed\" — the same word English borrowed whole. A karma is a thing done, and a काम (kām) is a thing to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: which postposition a workplace takes",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "मैं काम (kām) पर जाता हूँ। means I go to work.",
+                "मैं बस से (bas se) काम (kām) पर जाता हूँ। means I go to work by bus."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "पर for the place you end up at, से (se) for what carries you there. Both of them trail their nouns, and the verb stays at the end however many of them you stack in front of it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"काम (kām)\" — work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"काम\" — work]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं काम (kām) पर जाता हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं काम पर जाता हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं बस से (bas se) काम (kām) पर जाता हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं बस से काम पर जाता हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what karma means, and how it is the same word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *karma* means, and how it is the same word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is kaam karnaa made of? (The noun काम (kām) plus करना.) Which postposition marks the workplace? (पर.) Which English word is the same Sanskrit root? (Karma.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C90-pahle",
+      "sequence": 4000,
+      "title": "पहले (pahle) — putting one thing in front of another",
+      "headword": "पहले",
+      "romanization": "pahle",
+      "gloss": "first, and before — the word that lets two events be put in an order",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7eed5e81f5575d63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say that you get up and that you go to work. Try to say which of the two happens first, and notice the track has never given you a way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पहले",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पहले (pahle) — first, beforehand, earlier."
+            },
+            {
+              "kind": "speech",
+              "text": "पहले (pahle) मैं उठता हूँ। — First I get up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पहला is first, the ordinal, and पहले (pahle) is the same word in the shape an adverb takes — the -ए ending you have now met on adjectives, on the past copula and on the continuous."
+            },
+            {
+              "kind": "speech",
+              "text": "It does two jobs, and the difference is where it stands:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "position",
+                "what it means"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "in front of the sentence means first, to begin with.",
+                "after a time word means before that time."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "सुबह से पहले (pahle) is before morning — the time word, से, then पहले (pahle). That is the second use, and it is why this lesson comes after the one on से."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: sequencing a day",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "पहले (pahle) मैं उठता हूँ। means First I get up.",
+                "मैं काम (kām) पर जाता हूँ। means I go to work."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two sentences and an order between them. That is the whole of what a one-minute spoken description needs — and until this word existed, every sentence in such a description floated free of the others."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"पहले (pahle)\" — first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"पहले\" — first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"पहले (pahle) मैं उठता हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"पहले मैं उठता हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ordinal it comes from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ordinal it comes from]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"सुबह से (se) पहले (pahle)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"सुबह से पहले\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ordinal is पहले (pahle) built on? (पहला, first.) What decides whether it means first or before? (Where it stands.) What must come in front of it for the second use? (A time word and से.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C90-baad",
+      "sequence": 4010,
+      "title": "के बाद (ke bād) — the other end of the pair",
+      "headword": "के बाद",
+      "romanization": "ke bād",
+      "gloss": "after — the other end of the pair, and it needs a small word in front of it",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43efc554f1137fa5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have पहले (pahle) for first. Guess its partner, and then read on to see what Hindi makes you put in front of it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: के बाद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाद (bād) — after. In a sentence it almost always arrives as के बाद (ke bād)."
+            },
+            {
+              "kind": "speech",
+              "text": "काम (kām) के बाद (ke bād) — after work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाद comes from Arabic بعد (baʿd), \"after\" — a plain borrowing that kept its job exactly."
+            },
+            {
+              "kind": "speech",
+              "text": "What is Hindi's own is the के in front of it. A two-part postposition like this one is built out of the possessive you already have: the after of work. Hindi has a shelf of these, and they all share the shape:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "shape",
+                "example"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "shape: noun + के + a word. example: काम (kām) के बाद (ke bād)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So के बाद (ke bād) is not a new kind of thing. It is the possessive का / के / की you met with uskā and hamārā, put to work as glue."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the pair, and a day in order",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you mean",
+                "the shape"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what you mean: first. the shape: पहले (pahle).",
+                "what you mean: before X. the shape: X से (se) पहले (pahle).",
+                "what you mean: after X. the shape: X के बाद (ke bād)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the asymmetry: before takes से (se) and after takes के. There is no tidy reason to give you; it is a pair of fixed habits, and the way to keep them apart is to say each one a few times rather than to reason about it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"काम (kām) के बाद (ke bād)\" — after work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"काम के बाद\" — after work]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"काम (kām) से (se) पहले (pahle)\" — before work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"काम से पहले\" — before work]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both one after the other, and hear which small word goes with which",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both one after the other, and hear which small word goes with which]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what language बाद was borrowed from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what language **बाद** was borrowed from]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which small word goes with बाद? (के.) Which goes with पहले (pahle)? (से.) What is के doing there? (It is the possessive, used as glue — the after of work.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C90-repaso-dincharya",
+      "sequence": 4020,
+      "title": "dincaryā kī tālikā — a day, in the order it happens",
+      "headword": "दिनचर्या की तालिका",
+      "romanization": "dincaryā kī tālikā",
+      "gloss": "the table of a day — six words, and the three postpositions a routine is held together by",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:8d73c4930b75cd9b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the verb a day starts with and the noun you travel to, before you look at the table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the six",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what it adds to a day"
+              ],
+              "columns": 2,
+              "rowCount": 6,
+              "utterances": [
+                "word: उठना (uṭhnā). what it adds to a day: the action it starts with.",
+                "word: काम (kām). what it adds to a day: the place it goes to.",
+                "word: बस. what it adds to a day: what carries you there.",
+                "word: से (se). what it adds to a day: from, and by.",
+                "word: पहले (pahle). what it adds to a day: which of two came first.",
+                "word: के बाद (ke bād). what it adds to a day: which came second."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four of the six are not vocabulary in the ordinary sense. They are joints: things that let two sentences be put in a relation instead of standing side by side."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the three small words, side by side",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "small word",
+                "what it marks"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "small word: पर. what it marks: at a point.",
+                "small word: से (se). what it marks: from it, or by way of it.",
+                "small word: के बाद (ke bād). what it marks: later than it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "All three trail their noun. That is now the whole postposition habit, and the only thing left to learn about any new one is which meaning it carries."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: a day, assembled",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "पहले (pahle) मैं सुबह उठता हूँ। means First I get up in the morning.",
+                "मैं बस से (bas se) काम (kām) पर जाता हूँ। means I go to work by bus.",
+                "काम (kām) के बाद (ke bād) मैं घर आता हूँ। means After work I come home."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three sentences, in order, every word of which is yours."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three sentences in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three sentences in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three small words, and what each one marks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three small words, and what each one marks]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which small word goes with पहले (pahle) and which with बाद",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which small word goes with **पहले** and which with **बाद**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two words spelled बस, and how a sentence tells them apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two words spelled **बस**, and how a sentence tells them apart]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which side of a noun does every postposition sit on? (After it.) Which small word does before take, and which does after take? (से (se) and के.) What does से (se) mean besides from? (By — what carries you.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C90-sintesis-dincharya",
+      "sequence": 4030,
+      "title": "मेरी दिनचर्या (merī dincaryā) — the minute you are asked to fill",
+      "headword": "मेरी दिनचर्या",
+      "romanization": "merī dincaryā",
+      "gloss": "my daily routine — the one-minute prepared description both papers ask for",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5aecc039f780f0e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say what time you get up, using the clock word from the future chapter. That is the first line of what follows."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading: a whole day",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पहले (pahle) मैं सुबह सात बजे उठती हूँ। मैं बस से (bas se) काम (kām) पर जाती हूँ। काम (kām) के बाद (ke bād) मैं घर आती हूँ। घर पर मैं हिंदी बोलती हूँ।."
+            },
+            {
+              "kind": "speech",
+              "text": "Four sentences, and every word in them is one you have been taught. Read it twice — once for meaning, once listening for how the joints do the work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what is holding it together",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "joint",
+                "what it does"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "joint: पहले (pahle). what it does: opens the sequence.",
+                "joint: से (se). what it does: names what carries her.",
+                "joint: पर. what it does: names where she ends up.",
+                "joint: के बाद (ke bād). what it does: hooks sentence three to sentence two."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Take those four out and you have four unrelated statements. Put them back and you have a description, which is what the one-minute task is graded on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "How to answer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say your own, out loud, in four sentences:"
+            },
+            {
+              "kind": "speech",
+              "text": "what time you get up."
+            },
+            {
+              "kind": "speech",
+              "text": "how you travel, and where to."
+            },
+            {
+              "kind": "speech",
+              "text": "what you do after that."
+            },
+            {
+              "kind": "speech",
+              "text": "what you do once you are home."
+            },
+            {
+              "kind": "pause",
+              "seconds": 6,
+              "perItem": false,
+              "source": "[PAUSE 6s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say it a second time and change nothing but the endings, as the other gender would. The habit endings and the joints stay exactly where they are."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"पहले (pahle) मैं सुबह सात बजे उठता हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"पहले मैं सुबह सात बजे उठता हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं बस से (bas se) काम (kām) पर जाता हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं बस से काम पर जाता हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"काम (kām) के बाद (ke bād) मैं घर आता हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"काम के बाद मैं घर आता हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four sentences straight through, as your own day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four sentences straight through, as your own day]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which four words turn four statements into a description? (पहले (pahle), से, पर, के बाद (ke bād).) Which tense is a routine told in? (The habit, with -ता.) What changes when a woman says the same day? (Only the endings.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

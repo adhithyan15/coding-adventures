@@ -1,0 +1,19 @@
+{
+  "id": "HI-PATH-98-ROUTINE",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "HI-C90-se",
+    "HI-C90-bas",
+    "HI-C90-uthna",
+    "HI-C90-kaam",
+    "HI-C90-pahle",
+    "HI-C90-baad",
+    "HI-C90-repaso-dincharya",
+    "HI-C90-sintesis-dincharya"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-98-ROUTINE"
+  ],
+  "after": []
+}

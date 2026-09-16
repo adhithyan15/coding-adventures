@@ -8,9 +8,9 @@ spine_node: SPINE-SAY-WHAT-I-DO
 sequence: 3940
 chapter: 97
 type: review
-headword: "जारी काम की तालिका"
+headword: "अभी की तालिका"
 gloss: "the table of what is going on — two dials, and the two old sentences that were built this way all along"
-romanization: "jārī kām kī tālikā"
+romanization: "abhī kī tālikā"
 concept_tag: HI-CONTINUOUS-REVIEW
 prerequisites: [HI-C89-karta-vs-kar-raha, HI-C18-ghanta, HI-C20-mausam]
 sounds: []
@@ -31,7 +31,7 @@ variety: standard-colloquial
 reviews_of: [HI-C89-kar-raha-hun, HI-C89-kar-rahi-hun, HI-C89-kar-raha-hai, HI-C89-kar-rahe-hain, HI-C89-karta-vs-kar-raha, HI-C18-ghanta, HI-C20-mausam]
 ---
 
-# jārī kām kī tālikā — two dials, and two sentences you already knew
+# abhī kī tālikā — two dials, and two sentences you already knew
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C89-CONT-01, HI-LEX-C89-CONT-04] -->
