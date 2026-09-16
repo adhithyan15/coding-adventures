@@ -67,10 +67,34 @@
 % Both were read out of the fetched page rather than retyped, and each occurs
 % exactly once on it. (ADJ-A9 requires a `cites` to carry its own `locator` --
 % enforced by the adapter's missing-child error on the second STRING, not by
-% the comment above it. Counted across this corpus: 209 `cites` in all, 87 of
-% them inside a `row` block after this change, and ZERO bare ones anywhere.)
+% the comment above it. Counted across this corpus: 209 `cites` in all,
+% ~~87 of them inside a `row` block~~ -- SUPERSEDED, see below -- and ZERO bare
+% ones anywhere.)
 %
-% The row-level `cites` on line 86 restates the envelope's own locator. That is
+% RE-MEASURED 2026-09-16 (#15378): the row-level figure is 86, not 87, and the
+% 209 total is correct. Classified by ENCLOSING CONSTRUCT rather than by indent:
+%
+%     table-level  122 lines   54 files   (4-space)
+%     row-level     86 lines   19 files   (8-space)
+%     rule-level     1 line     1 file    (7-space)
+%     total        209
+%
+% over 362 fact files matching adj-facts-stdlib/**/*.adj with CHANGELOG.d and
+% *.query.adj excluded. The one rule-level `cites` sits inside a top-level
+% `rule { }` block in geometry/shape-composition.adj and is neither row- nor
+% table-level; a predicate that assumes the 8-space/4-space pair is exhaustive
+% sweeps it into the row bucket and returns 87. Two such predicates do exactly
+% that (indent > 4, and innermost-construct-is-not-`table`); which one produced
+% the original 87 is not recoverable, so neither is named here as the cause.
+%
+% This header was the EIGHTH copy of that figure, and the sweep that found the
+% other seven could not see it: its needle matched phrasings like "row-level
+% cites" and "cites lines" while this line says "cites in all" and "inside a
+% row block". A security review found it by running the needle the way the
+% shipped prose DESCRIBED it rather than the way it was implemented. The
+% description promised a claim class; the implementation delivered a word list.
+%
+% The `liquid` row's `cites` restates the envelope's own locator. That is
 % not the RS-5e convention being broken: ADJ-A9 mandates the source/locator
 % pair on every corroboration, while the "a row locator means NOT the
 % envelope's page" convention governs a row's own `locator` annotation, which

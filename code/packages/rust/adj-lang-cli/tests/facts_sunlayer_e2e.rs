@@ -261,9 +261,72 @@ fn the_table_shape_matches_the_measured_rows() {
         "two row sources"
     );
     // Keyword-anchored so a `cites` at any indent fails. SCOPE: this table's
-    // rows differ only in `source`. A row-level `cites` is legal ADJ -- 18
-    // shipped tables use one -- so this pins a convention local to this table,
-    // not a language rule.
+    // rows differ only in `source`. A row-level `cites` is legal ADJ, so this
+    // pins a convention local to this table, not a language rule.
+    //
+    // MEASURED 2026-09-16, NOT INHERITED: 19 shipped fact files carry a
+    // row-level `cites` (86 such lines), over 362 files matching
+    // adj-facts-stdlib/**/*.adj with CHANGELOG.d and *.query.adj excluded. Two
+    // predicates agree on the same file set -- a `cites` at 8-space indent, and
+    // a `cites` inside a real `row (...) {` block -- because every row-level one
+    // in this corpus is written at 8 spaces, while a TABLE-level `cites` sits at
+    // 4 spaces before the table's closing brace (122 such lines, all legal).
+    //
+    // THE 8-AND-4 PAIR IS NOT EXHAUSTIVE, and a predicate that treats it as if
+    // it were returns 87 rather than 86. TWO do: relaxing the indent rule from
+    // `== 8` to `> 4`, and asking merely that the innermost construct is not
+    // `table`. Each picks up one `cites` at 7-space indent inside a top-level
+    // `rule { }` block in geometry/shape-composition.adj -- neither row- nor
+    // table-level -- and adds nothing else. The full account is
+    //
+    //     row 86 + table 122 + rule 1 = 209 `cites` corpus-wide
+    //
+    // Shard 03620 published 87 as its row-level count and now carries a dated
+    // retraction. WHICH of the two rules it ran is not recoverable from the
+    // shard, so neither is named here as the cause.
+    //
+    // This comment used to say "18 shipped tables use one" with no predicate and
+    // no denominator (#15378). THIS FILE IS THE FIFTH COPY, and the issue named
+    // only four: it enumerated the sites its author had tripped over rather than
+    // scanning for them -- the very defect it was filed to correct.
+    //
+    // A sweep keyed on the CLAIM CLASS rather than on one phrasing fires on TEN
+    // files, EIGHT of which needed correcting; the count of corrections rose
+    // three times while that sweep was being repaired:
+    //
+    //   four  -- the literal phrase "18 shipped tables"
+    //   five  -- + comment prefixes stripped and whitespace flattened, which
+    //            found THIS file, where the phrase wraps a line break
+    //   six   -- + keyed on the claim class: "85 row-level `cites` lines"
+    //   seven -- + shard 03580, a third phrasing again ("18 have a row-level
+    //            `cites`, 12 a row-level `locator`, 5 a row-level `trust`")
+    //   eight -- + chemistry/states-of-matter.adj, "209 `cites` in all, 87 of
+    //            them inside a `row` block"
+    //
+    // Every rise came from widening the needle, never from looking harder at
+    // the sites already known -- the whole argument for keying on the claim
+    // rather than on the sentence. The eighth is the sharpest instance: a
+    // security review found it by running the needle the way the shipped prose
+    // DESCRIBED it ("any number near a cites-count noun") rather than the way
+    // it was implemented (a fixed list of nouns that lacked both "cites in all"
+    // and "inside a row block"). The sweep had reported that file clean.
+    //
+    // The sweep fires on FIFTEEN files. Five state a different predicate -- a
+    // per-domain or per-table count rather than this corpus-wide claim -- which
+    // leaves TEN carrying the claim class, and all ten are edited here. Every
+    // narrowing after the fifteen is my triage, not the instrument's: eight
+    // carried an inherited copy and are re-measured; CHANGELOG.d/03620 is the
+    // ORIGIN of the 87 rather than a copy, so it gets a dated retraction; and
+    // facts_plateboundaries_e2e.rs already stated the number with its
+    // predicate, so only its prose changed.
+    //
+    // This comment ALSO used to cite "a loose scan over 4,109 files". That
+    // denominator could not be reproduced and has been withdrawn rather than
+    // re-derived into something that sounds better: the sweep that finds these
+    // sites runs over the two trees that carry the claim,
+    // code/packages/rust/adj-lang-cli/tests and code/specs/data/adj-facts-stdlib,
+    // and prints its own file count when it runs. A number nobody can reproduce
+    // is the defect, whether it is the count or the denominator.
     assert!(
         !body.lines().any(|l| l.trim_start().starts_with("cites")),
         "this table ships no corroboration at any indent: {body}"

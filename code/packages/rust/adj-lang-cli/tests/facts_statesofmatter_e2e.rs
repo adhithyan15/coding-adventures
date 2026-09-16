@@ -365,8 +365,27 @@ fn one_locator_one_trust_and_the_only_cites_is_the_liquid_rows() {
     let text = lib_text();
 
     // SCOPE: this pins a convention local to THIS table, not a language rule.
-    // ADJ-A9 allows `cites` at table or row level, and 85 row-level `cites`
-    // lines ship across this corpus.
+    // ADJ-A9 allows a `cites` wherever `source`/`locator`/`trust` are allowed.
+    //
+    // MEASURED 2026-09-16, NOT INHERITED, classified by ENCLOSING CONSTRUCT
+    // rather than by indent -- indent is a proxy that works for two cases and
+    // fails for the third:
+    //
+    //     table-level   122 lines   54 files   (4-space)
+    //     row-level      86 lines   19 files   (8-space)
+    //     rule-level      1 line     1 file    (7-space)
+    //     total         209
+    //
+    // over 362 fact files matching adj-facts-stdlib/**/*.adj with CHANGELOG.d
+    // and *.query.adj excluded (723 .adj files before excluding companions).
+    //
+    // This comment used to say "85 row-level `cites` lines". That figure was
+    // retired by shard 03620 as an indent-anchored-grep artifact, and this copy
+    // survived the retirement -- it was missed by the #15378 sweep because that
+    // needle keyed on the phrase "shipped tables" while this one says
+    // "row-level `cites` lines". A needle can only find what it already
+    // suspects. The predicate and the denominator are stated here WITH the
+    // number so the next copy can be re-measured instead of inherited.
     assert_eq!(
         text.matches("cites \"").count(),
         1,

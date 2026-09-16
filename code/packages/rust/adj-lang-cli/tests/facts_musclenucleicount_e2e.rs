@@ -250,8 +250,34 @@ fn the_table_shape_matches_the_measured_rows() {
     // `locator`. Keyword-anchored, so a `cites` at any indent fails it.
     //
     // SCOPE: this table's rows differ only in `source`. A row-level `cites` is
-    // legal ADJ -- 18 shipped tables use one -- so this pins a convention local
-    // to this table, not a language rule.
+    // legal ADJ, so this pins a convention local to this table, not a language
+    // rule.
+    //
+    // MEASURED 2026-09-16, NOT INHERITED: 19 shipped fact files carry a
+    // row-level `cites` (86 such lines), over 362 files matching
+    // adj-facts-stdlib/**/*.adj with CHANGELOG.d and *.query.adj excluded. Two
+    // predicates agree on the same file set -- a `cites` at 8-space indent, and
+    // a `cites` inside a real `row (...) {` block -- because every row-level one
+    // in this corpus is written at 8 spaces, while a TABLE-level `cites` sits at
+    // 4 spaces before the table's closing brace (122 such lines, all legal).
+    //
+    // THE 8-AND-4 PAIR IS NOT EXHAUSTIVE, and a predicate that treats it as if
+    // it were returns 87 rather than 86. Two do: relax the indent rule from
+    // `== 8` to `> 4`, or ask merely that the innermost construct is not
+    // `table`. Each picks up one `cites` at 7-space indent inside a top-level
+    // `rule { }` block in geometry/shape-composition.adj, which is neither row-
+    // nor table-level. Shard 03620 published 87; WHICH of the two rules it ran
+    // is not recoverable from the shard, so neither is named here as the cause.
+    // The full account is
+    //
+    //     row 86 + table 122 + rule 1 = 209 `cites` corpus-wide
+    //
+    // so a reader cannot derive a different total from what is written here.
+    //
+    // This comment used to say "18 shipped tables use one" with no predicate and
+    // no denominator, and this file is where the figure was copied FROM. It had
+    // gone stale (#15378). The predicate is stated here WITH the number so the
+    // next copy can be re-measured instead of inherited.
     assert!(
         !body.lines().any(|l| l.trim_start().starts_with("cites")),
         "this table ships no corroboration at any indent: {body}"
