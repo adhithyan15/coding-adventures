@@ -1,0 +1,11 @@
+{
+  "id": "ES-EXT-419-ARTS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name music and dancing as things I like, and choose correctly between an article and a bare infinitive after gustar.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C419-bailar"
+  ]
+}
