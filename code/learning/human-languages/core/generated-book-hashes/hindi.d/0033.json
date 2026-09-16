@@ -1,9 +1,10 @@
 {
   "language": "hindi",
   "chapter": 33,
-  "sourceHash": "fnv1a64:78fba53a2c79b3b4",
+  "sourceHash": "fnv1a64:e1d55a4cab067468",
   "lessonIds": [
-    "HI-C33-shubh-dopahar"
+    "HI-C33-shubh-dopahar",
+    "HI-S134-vowel-sign-au"
   ],
   "tex": "hindi/book/chapters/ch33-good-afternoon.tex"
 }

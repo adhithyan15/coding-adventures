@@ -1,15 +1,16 @@
 {
   "language": "hindi",
   "chapter": 33,
-  "sourceHash": "fnv1a64:3e3045f0a63c8964",
+  "sourceHash": "fnv1a64:5e465d1570fb3928",
   "lessonIds": [
-    "HI-C33-shubh-dopahar"
+    "HI-C33-shubh-dopahar",
+    "HI-S134-vowel-sign-au"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "hindi/narration/ch33.txt",
   "json": "hindi/narration/ch33.json",
-  "textHash": "fnv1a64:a6e29d08595577b9",
-  "jsonHash": "fnv1a64:c80979c1171cc795",
+  "textHash": "fnv1a64:bfd56afdeaf49193",
+  "jsonHash": "fnv1a64:aa1304d1fb4c54da",
   "findings": []
 }
