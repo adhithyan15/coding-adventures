@@ -267,17 +267,22 @@
       "id": "HI-A1-ADJ-08",
       "category": "Visheshan (the adjective)",
       "label": "thoda as a hedging quantifier",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C92-DEG-01"
+      ],
       "derivedFrom": "ES:A1-NG2-03",
-      "note": "Mock 1 listening item 12 keys on `han, thodi`."
+      "note": "thoda is introduced by HI-C92-thoda, and the note's item is what the lesson is built on: mock 1 listening item 12 keys on haan, thodii. The lesson makes the ending the subject rather than the word, because that is what the item actually tests -- the answer is thodii and not thoda because hindii is feminine and the hedge agrees with what it hedges, not with the person speaking. An English speaker is caught out here because a little is a fixed lump in English and an adjective in Hindi."
     },
     {
       "id": "HI-A1-ADJ-09",
       "category": "Visheshan (the adjective)",
       "label": "comparison: X is bigger than Y",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C92-DEG-03",
+        "HI-LEX-C90-ROUT-01"
+      ],
       "derivedFrom": "ES:A1-NG2-02",
-      "note": "Hindi compares with the postposition `se`, which is untaught. See HI-A1-POST-04."
+      "note": "STALE NOTE, corrected. It said Hindi compares with the postposition se, which is untaught, and pointed at HI-A1-POST-04 -- and se was introduced by HI-C90-se in chapter 98, so this point was waiting on work already done. HI-C92-se-comparison supplies the construction. The teachable part is that Hindi has NO comparative form: English carries two machines for this, -er on short adjectives and more in front of long ones, and Hindi carries neither -- the adjective does not change and the thing measured against takes se, which is the same idea as the postposition's other uses, the comparison PROCEEDING FROM the thing measured against. The one thing to drill is word order, because English puts than X after the adjective and Hindi puts it before, which follows from the verb-final rule the track has taught since its first sentence."
     },
     {
       "id": "HI-A1-PRON-01",
@@ -371,9 +376,12 @@
       "id": "HI-A1-PRON-10",
       "category": "Sarvanam (pronouns)",
       "label": "the exclamative: kitna accha!",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C92-DEG-05",
+        "HI-LEX-C92-DEG-04"
+      ],
       "derivedFrom": "ES:A1-PRON-07",
-      "note": "`kitna` is introduced only inside the memorised age question."
+      "note": "The exclamative is introduced by HI-C92-kitna-achchha, and the note is exactly right that kitna was introduced only inside the memorised age question. HI-C92-kitna lets the word out of that sentence first -- it bends like every other -aa word, and Hindi does not split how much from how many the way English does, because English sorts nouns into countable and uncountable and Hindi asks one question and lets the noun answer. The exclamative then adds nothing at all: it is the question word in front of an adjective with the verb and the rising voice taken away, exactly as English turns how good is it into how good. Both words bend together, so the phrase rhymes with itself in either gender, and the rhyme is a usable check."
     },
     {
       "id": "HI-A1-NUM-01",
@@ -868,9 +876,13 @@
       "id": "HI-A1-ADV-06",
       "category": "Kriya-visheshan (adverbs)",
       "label": "evaluative manner: doing something well, and doing it badly",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C92-DEG-02",
+        "HI-LEX-C41-ADJ-03",
+        "HI-LEX-C83-CHAR-01"
+      ],
       "derivedFrom": "ES:A1-ADV-04, ES:A1-NG6-07",
-      "note": "`thik` and `achha` cover 'well'. No word for 'badly' -- neither `bura` nor `kharab` -- is introduced, so the proxy's bien/mal pair is half present and cannot be contrasted."
+      "note": "STALE NOTE, corrected. It said no word for badly, neither bura nor kharab, is introduced, so the proxy's bien/mal pair is half present and cannot be contrasted. buraa IS introduced, by HI-C83-buraa in chapter 91, which landed after the note was written -- so the pair was already whole in the corpus and what was actually missing was the ADVERBIAL use of both. HI-C92-achchha-buraa supplies it, and the observation worth keeping is that Hindi needs no second shelf of words: English splits good/well and bad/badly and marks the second with -ly, while Hindi uses the same word and lets its POSITION say which job it is doing. It still bends for gender even when it is doing an English adverb's work, which is the second half of the same instinct to unlearn."
     },
     {
       "id": "HI-A1-ADV-07",
