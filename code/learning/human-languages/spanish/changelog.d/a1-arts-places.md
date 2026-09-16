@@ -75,3 +75,16 @@ One generator note: the first draft of the *teatro* lesson wrote **θέατρο�
 Greek script, and the glyph gate caught seven unrenderable characters — Spanish
 has no Greek font. The corpus convention is to romanize, which every other
 Greek etymology here already does.
+
+### One count went up, and it stays up
+
+`measurement-blind` moved **6 → 7**. The cause is `ES-C420-sintesis-salir`:
+`isExplicitRetrievalOnlyLesson` in `ramp.ts` accepts `review`, `practice` and
+`practice-mix` but not `synthesis`, so a lesson that introduces nothing still
+counts blind. `ES-C57-sintesis-reportar` already sat in the same position.
+
+The type was **not** changed to `review` to clear the count. The lesson is a
+synthesis — it puts five separate words into one connected exchange and makes
+the learner choose between *al* and *a la* — and relabelling it would be fixing
+the measurement rather than the thing measured. Recorded as HL-C377, with the
+`ramp.ts` change worth making when someone is next in that file.

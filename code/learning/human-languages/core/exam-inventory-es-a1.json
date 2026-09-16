@@ -1900,9 +1900,10 @@
         "ES-LEX-CONCIERTO",
         "ES-LEX-C420-ARTS-01",
         "ES-LEX-C354-WHERE-28",
-        "ES-LEX-C420-ARTS-03"
+        "ES-LEX-C420-ARTS-03",
+        "ES-LEX-C420-ARTS-02"
       ],
-      "note": "The source's A1 exponents are pelicula, concierto and going to the theatre, cinema or circus. All are now introduced: pelicula (ES-C404), concierto (ES-C413), cine (ES-C354), and teatro and circo (ES-C420)."
+      "note": "The source's A1 exponents are pelicula, concierto and going to the theatre, cinema or circus. All are now introduced: pelicula (ES-C404), concierto (ES-C413), cine (ES-C354), and teatro and circo (ES-C420). The probe also names exposicion (ES-C420): the label says 'shows and exhibitions', and the exhibitions half deserves its own evidence rather than riding on the venue words."
     },
     {
       "id": "A1-NE08-03",
