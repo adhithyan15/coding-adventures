@@ -1,0 +1,31 @@
+{
+  "lesson": {
+    "id": "HI-S134-vowel-sign-au",
+    "language": "hindi",
+    "chapter": 33,
+    "sequence": 855,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ede847e0c6266d68",
+    "detachableSegments": [
+      "Script you'll notice: ◌ौ",
+      "Script: the pair that differs by one stroke",
+      "Writing: ◌ौ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

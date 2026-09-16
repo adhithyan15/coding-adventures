@@ -97,7 +97,13 @@ it("pins Hindi lesson-content budgets", () =>
     // been drawn, though both were credited by measureScriptClosure. e goes to
     // chapter 29, ja to chapter 30, jha to chapter 31, and all three had sourced
     // stroke data sitting bundled and unused.
-    lessons: 478, // 359 -> 360: HI-C79-dopahar-raat-ka-khana // 360 -> 362: HI-C80-aasaan-mushkil, HI-C80-sundar-badsurat // 362 -> 366: HI-C81 school pair plus its two retrieval lessons
+    // 478 -> 480: the au PAIR, script only. The au-maatraa at chapter 33 clears
+    // the three closure violations it was causing, and the independent au at
+    // chapter 34 pays a debt HI-C68-aur had WRITTEN DOWN IN ITS OWN BODY -- that
+    // lesson's section was titled "one is still owed to you" and promised the
+    // letter would come. It has, so the section is rewritten. No inventory point
+    // closes; this is script debt.
+    lessons: 480, // 359 -> 360: HI-C79-dopahar-raat-ka-khana // 360 -> 362: HI-C80-aasaan-mushkil, HI-C80-sundar-badsurat // 362 -> 366: HI-C81 school pair plus its two retrieval lessons
     idioms: 21,
     // +2: HI-C70-song declares gana's singing sense and HI-C73-drink declares
     // khana's eating sense, which is what covers HI-A1-V-26.
