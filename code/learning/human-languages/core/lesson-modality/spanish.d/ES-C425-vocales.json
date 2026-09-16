@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C425-vocales",
+    "language": "spanish",
+    "chapter": 425,
+    "sequence": 10030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4100cec172a13c20"
+  },
+  "findings": []
+}

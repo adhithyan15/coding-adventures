@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C426-minuscula-inicial",
+    "language": "spanish",
+    "chapter": 426,
+    "sequence": 10090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7501ef6d4a404be"
+  },
+  "findings": []
+}

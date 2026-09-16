@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C426-sintesis-formulario",
+    "language": "spanish",
+    "chapter": 426,
+    "sequence": 10150,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b689ae78e59f2b35"
+  },
+  "findings": []
+}
