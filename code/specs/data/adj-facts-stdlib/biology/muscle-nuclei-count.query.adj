@@ -4,7 +4,18 @@
 % ============================================================================
 % Three queries: forward recall with citation, backward recall (bind a
 % nuclei value, find the muscle type), and honest abstention on smooth
-% muscle (not part of this cited span).
+% muscle.
+%
+% EACH ROW ANSWERS WITH ITS OWN SENTENCE (RS-5e, #14986), the locator and
+% trust inherited from the table envelope. Until that conversion the envelope
+% was the skeletal sentence and the cardiac one rode as a `cites`, so a
+% cardiac recall was warranted by a sentence about skeletal muscle.
+%
+% On smooth muscle, narrowly: it is not named in the two sentences
+% `tissue-types.adj` quotes in its header, which is where this table's two
+% facts were mined. It IS named in that table's shipped `cites`, and the
+% cited page does state a nuclei count for it -- so the abstention is about
+% this table's chosen scope, not about the page lacking the fact.
 % ============================================================================
 
 import "muscle-nuclei-count.adj"
@@ -15,5 +26,5 @@ import "muscle-nuclei-count.adj"
 % Backward: which muscle type has a single nucleus per cell?
 ? muscle_nuclei_count($Muscle, single_nucleus)
 
-% Honest abstention: smooth muscle is not part of this cited span.
+% Honest abstention: smooth muscle is outside this table's scope (see above).
 ? muscle_nuclei_count(smooth, $NucleiSmooth)

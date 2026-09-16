@@ -2088,9 +2088,12 @@
       "id": "HI-A1-LEX-04",
       "category": "Shabd-bhandar (core lexis)",
       "label": "attractiveness: beautiful and ugly",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C80-LOOKS-01",
+        "HI-LEX-C80-LOOKS-02"
+      ],
       "derivedFrom": "ES:A1-NG6-03",
-      "note": "Neither `sundar` nor any opposite is introduced."
+      "note": "sundar and its opposite badsurat are both introduced by HI-C80-sundar-badsurat. sundar carries the Sanskrit su- the track already met in suprabhat; badsurat is Persian bad plus Arabic surat, literally bad-faced."
     },
     {
       "id": "HI-A1-LEX-05",
@@ -2104,9 +2107,12 @@
       "id": "HI-A1-LEX-06",
       "category": "Shabd-bhandar (core lexis)",
       "label": "ease and difficulty",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C80-EASE-01",
+        "HI-LEX-C80-EASE-02"
+      ],
       "derivedFrom": "ES:A1-NG6-10",
-      "note": "`asan` and `mushkil` are both untaught, so a learner cannot say the language is hard."
+      "note": "asan and mushkil are both introduced by HI-C80-aasaan-mushkil, so a learner can now say the language is hard. Both are loans ending in a consonant and neither agrees, which the lesson teaches off the kaalaa/safed contrast rather than as a new rule."
     },
     {
       "id": "HI-A1-LEX-07",

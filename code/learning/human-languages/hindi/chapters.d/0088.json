@@ -1,0 +1,22 @@
+{
+  "chapter": 88,
+  "title": "Four Adjectives That Do Not Agree",
+  "label": "ch:hi-adjectives-that-do-not-bend",
+  "canDo": "I can say easy, difficult, beautiful and ugly, and tell from an adjective's ending whether it will change to match its noun.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C80-sundar-badsurat",
+    "kind": "pattern",
+    "summary": "Name all four adjectives and say which of them would change ending before a feminine noun: none, because a Hindi adjective bends only when it ends in -aa.",
+    "assesses": [
+      "HI-LEX-C80-EASE-01",
+      "HI-LEX-C80-EASE-02",
+      "HI-LEX-C80-LOOKS-01",
+      "HI-LEX-C80-LOOKS-02",
+      "HI-GRAMMAR-C41-ADJ-SYSTEM"
+    ],
+    "note": "Closes HI-A1-LEX-06 (ease and difficulty) and HI-A1-LEX-04 (attractiveness) together, because all four words land on the same side of the agreement rule chapter 41 already taught. The chapter teaches no new grammar: it reuses the -aa test and the kaalaa/safed contrast from chapter 11, so four A1 adjectives cost the learner one observation rather than four memorisations."
+  }
+}
