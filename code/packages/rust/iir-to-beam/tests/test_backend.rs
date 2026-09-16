@@ -4335,6 +4335,424 @@ fn test_102_real_erl_string_array_overwrite() {
         "array_set on the same string-array index must overwrite, not duplicate");
 }
 
+// ===========================================================================
+// 103-113. BEAM07: host input (`INPUT`/`READ-ITEM` EOF peek) — see
+// `code/specs/BEAM07-beam-host-input.md`
+// ===========================================================================
+
+/// Spawn `erl` against the given temp dir/module, piping `stdin_bytes` to the
+/// process and reading its output back — the real-`erl` sibling of
+/// `lang_matrix.rs`'s `output_with_stdin` helper (BEAM's runner had no stdin
+/// pipe at all before this slice; this test-only helper is the same fix
+/// applied to `test_backend.rs`'s own real-erl harness).
+fn run_erl_with_stdin(tmp: &std::path::Path, eval: &str, stdin_bytes: &[u8]) -> std::process::Output {
+    use std::io::Write as _;
+    let mut child = std::process::Command::new("erl")
+        .arg("-noshell")
+        .arg("-pa").arg(tmp.to_str().expect("tmp path is UTF-8"))
+        .arg("-eval")
+        .arg(eval)
+        .stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped())
+        .spawn()
+        .expect("spawn erl");
+    if let Some(mut si) = child.stdin.take() {
+        // A write error is ignored: a program that never reads stdin closes
+        // the read end, and the resulting broken pipe must not fail an
+        // otherwise-correct run (mirrors `lang_matrix.rs::output_with_stdin`).
+        let _ = si.write_all(stdin_bytes);
+        // `si` dropped here (end of block via explicit drop below) closes
+        // the pipe -> EOF, exactly like `output_with_stdin`.
+        drop(si);
+    }
+    child.wait_with_output().expect("wait for erl")
+}
+
+/// `call_builtin "input_more"`/`"input_i64"`/`"input_str"` must pass BEAM
+/// validation — including `input_str`'s `"str"` type_hint, which Check 4
+/// would otherwise reject (mirrors BEAM06's `array_set`/`array_get`
+/// "str"-type_hint allowance).
+#[test]
+fn test_103_call_builtin_input_ops_validate() {
+    for (builtin, type_hint) in [("input_more", "i64"), ("input_i64", "i64"), ("input_str", "str")] {
+        let m = make_module_fn("main", vec![], "void", vec![
+            IIRInstr::new("call_builtin", Some("r".into()),
+                vec![Operand::Var(builtin.into())], type_hint),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]);
+        let errs = validate_for_beam(&m);
+        assert!(errs.is_empty(), "call_builtin {builtin:?} must pass validation: {errs:?}");
+    }
+}
+
+/// Instruction-shape proof: `input_i64` must `call_ext` both `io:get_line/1`
+/// and `string:to_integer/1`, and must NOT call `string:trim/3` (that's
+/// `input_str`'s job) — mirrors `test_100`'s "check the actual call_ext
+/// operands" style.
+#[test]
+fn test_104_input_i64_uses_get_line_and_to_integer() {
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("call_builtin", Some("r".into()),
+            vec![Operand::Var("input_i64".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty());
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    let import_idx = |module: &str, func: &str, arity: u32| -> Option<usize> {
+        beam.imports.iter().position(|imp| {
+            let m = beam.atoms.get(imp.module_atom_index as usize - 1).map(String::as_str);
+            let f = beam.atoms.get(imp.function_atom_index as usize - 1).map(String::as_str);
+            m == Some(module) && f == Some(func) && imp.arity == arity
+        })
+    };
+    let called: std::collections::HashSet<u64> = beam.instructions.iter()
+        .filter(|i| i.opcode == OP_CALL_EXT)
+        .map(|i| i.operands[1].value)
+        .collect();
+    let is_called = |module: &str, func: &str, arity: u32| -> bool {
+        import_idx(module, func, arity).is_some_and(|idx| called.contains(&(idx as u64)))
+    };
+    assert!(is_called("io", "get_line", 1), "input_i64 must call_ext io:get_line/1");
+    assert!(is_called("string", "to_integer", 1), "input_i64 must call_ext string:to_integer/1");
+    assert!(!is_called("string", "trim", 3), "input_i64 must NOT call_ext string:trim/3");
+}
+
+/// Instruction-shape proof: `input_str` must `call_ext` both
+/// `io:get_line/1` and `string:trim/3`, and must NOT call
+/// `string:to_integer/1` (that's `input_i64`'s job).
+#[test]
+fn test_105_input_str_uses_get_line_and_trim() {
+    let m = make_module_fn("main", vec![], "void", vec![
+        IIRInstr::new("call_builtin", Some("r".into()),
+            vec![Operand::Var("input_str".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("r".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty());
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    let import_idx = |module: &str, func: &str, arity: u32| -> Option<usize> {
+        beam.imports.iter().position(|imp| {
+            let m = beam.atoms.get(imp.module_atom_index as usize - 1).map(String::as_str);
+            let f = beam.atoms.get(imp.function_atom_index as usize - 1).map(String::as_str);
+            m == Some(module) && f == Some(func) && imp.arity == arity
+        })
+    };
+    let called: std::collections::HashSet<u64> = beam.instructions.iter()
+        .filter(|i| i.opcode == OP_CALL_EXT)
+        .map(|i| i.operands[1].value)
+        .collect();
+    let is_called = |module: &str, func: &str, arity: u32| -> bool {
+        import_idx(module, func, arity).is_some_and(|idx| called.contains(&(idx as u64)))
+    };
+    assert!(is_called("io", "get_line", 1), "input_str must call_ext io:get_line/1");
+    assert!(is_called("string", "trim", 3), "input_str must call_ext string:trim/3");
+    assert!(!is_called("string", "to_integer", 1), "input_str must NOT call_ext string:to_integer/1");
+}
+
+/// Instruction-shape proof: `input_more` must `call_ext` `io:get_line/1`
+/// (its cache-miss lookahead read) but must NOT call `string:to_integer/1`
+/// or `string:trim/3` — those are only reached by the *consuming* reads.
+#[test]
+fn test_106_input_more_uses_get_line_only() {
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("call_builtin", Some("r".into()),
+            vec![Operand::Var("input_more".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty());
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    let import_idx = |module: &str, func: &str, arity: u32| -> Option<usize> {
+        beam.imports.iter().position(|imp| {
+            let m = beam.atoms.get(imp.module_atom_index as usize - 1).map(String::as_str);
+            let f = beam.atoms.get(imp.function_atom_index as usize - 1).map(String::as_str);
+            m == Some(module) && f == Some(func) && imp.arity == arity
+        })
+    };
+    let called: std::collections::HashSet<u64> = beam.instructions.iter()
+        .filter(|i| i.opcode == OP_CALL_EXT)
+        .map(|i| i.operands[1].value)
+        .collect();
+    let is_called = |module: &str, func: &str, arity: u32| -> bool {
+        import_idx(module, func, arity).is_some_and(|idx| called.contains(&(idx as u64)))
+    };
+    assert!(is_called("io", "get_line", 1), "input_more must call_ext io:get_line/1");
+    assert!(!is_called("string", "to_integer", 1), "input_more must NOT call_ext string:to_integer/1");
+    assert!(!is_called("string", "trim", 3), "input_more must NOT call_ext string:trim/3");
+}
+
+/// End-to-end: the exact shape of the promoted `10 INPUT A\n20 INPUT B\n30
+/// PRINT A + B` corpus row — two `input_i64` reads consuming "10\n32\n",
+/// summed and returned. Proves the real `erl` stdin pipe (`run_beam`'s fix)
+/// together with `string:to_integer/1` parsing.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_107_real_erl_input_i64_two_lines_sum() {
+    use iir_to_beam::encode_beam;
+    if !erl_available() { return; }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("call_builtin", Some("a".into()), vec![Operand::Var("input_i64".into())], "i64"),
+        IIRInstr::new("call_builtin", Some("b".into()), vec![Operand::Var("input_i64".into())], "i64"),
+        IIRInstr::new("add", Some("r".into()), vec![Operand::Var("a".into()), Operand::Var("b".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty());
+
+    let beam_cfg = IIRBeamConfig::new("iir_input_i64_sum_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_input_i64_sum_test.beam"), &bytes).expect("write .beam");
+
+    let output = run_erl_with_stdin(&tmp,
+        "io:format(\"~w~n\",[iir_input_i64_sum_test:main()]),halt(0).",
+        b"10\n32\n");
+    assert!(output.status.success(), "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "42",
+        "two INPUT reads of \"10\" and \"32\" must sum to 42");
+}
+
+/// End-to-end: the exact shape of the promoted `10 INPUT A$\n20 INPUT
+/// B$\n30 PRINT A$ + B$` corpus row — two `input_str` reads consuming
+/// "OK\n!\n", concatenated. Proves `string:trim/3` strips exactly the
+/// trailing newline (not the whole line) for BOTH reads.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_108_real_erl_input_str_two_lines_concat() {
+    use iir_to_beam::encode_beam;
+    if !erl_available() { return; }
+
+    let m = make_module_fn("main", vec![], "void", vec![
+        IIRInstr::new("call_builtin", Some("a".into()), vec![Operand::Var("input_str".into())], "str"),
+        IIRInstr::new("call_builtin", Some("b".into()), vec![Operand::Var("input_str".into())], "str"),
+        IIRInstr::new("str_concat", Some("s".into()), vec![Operand::Var("a".into()), Operand::Var("b".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty());
+
+    let beam_cfg = IIRBeamConfig::new("iir_input_str_concat_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_input_str_concat_test.beam"), &bytes).expect("write .beam");
+
+    let output = run_erl_with_stdin(&tmp,
+        "iir_input_str_concat_test:main(),halt(0).",
+        b"OK\n!\n");
+    assert!(output.status.success(), "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "OK!",
+        "two string INPUT reads of \"OK\" and \"!\" must concatenate to \"OK!\"");
+}
+
+/// End-to-end EOF: `input_i64` on exhausted stdin (`io:get_line` returns the
+/// atom `eof`) must return 0 — the same permissive "0 on EOF" contract
+/// every other backend's `input_i64`/`__twig_input_i64` already uses.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_109_real_erl_input_i64_eof_returns_zero() {
+    use iir_to_beam::encode_beam;
+    if !erl_available() { return; }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("call_builtin", Some("a".into()), vec![Operand::Var("input_i64".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty());
+
+    let beam_cfg = IIRBeamConfig::new("iir_input_i64_eof_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_input_i64_eof_test.beam"), &bytes).expect("write .beam");
+
+    let output = run_erl_with_stdin(&tmp,
+        "io:format(\"~w~n\",[iir_input_i64_eof_test:main()]),halt(0).",
+        b"");
+    assert!(output.status.success(), "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "0",
+        "input_i64 on exhausted stdin (EOF) must return 0");
+}
+
+/// End-to-end parse failure: `input_i64` on a non-numeric line
+/// (`string:to_integer/1` returns `{error, no_integer}`) must return 0 —
+/// same permissive contract as EOF.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_110_real_erl_input_i64_parse_failure_returns_zero() {
+    use iir_to_beam::encode_beam;
+    if !erl_available() { return; }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("call_builtin", Some("a".into()), vec![Operand::Var("input_i64".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty());
+
+    let beam_cfg = IIRBeamConfig::new("iir_input_i64_parsefail_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_input_i64_parsefail_test.beam"), &bytes).expect("write .beam");
+
+    let output = run_erl_with_stdin(&tmp,
+        "io:format(\"~w~n\",[iir_input_i64_parsefail_test:main()]),halt(0).",
+        b"abc\n");
+    assert!(output.status.success(), "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "0",
+        "input_i64 on a non-numeric line must return 0");
+}
+
+/// End-to-end FlowMatic `READ-ITEM` shape: `input_more` (peek) followed by
+/// `input_i64` (consume) across two records, then a final `input_more`
+/// observing EOF. Proves the process-dictionary lookahead cache correctly
+/// hands the SAME line `input_more` peeked to the following `input_i64`,
+/// and that the cache is empty again for the next record's peek.
+///
+/// Encodes `more1*100000 + f1*10000 + more2*1000 + f2*100 + more3` so a
+/// single `ret` proves all five observations at once: stdin "3\n7\n" ->
+/// more1=1, f1=3, more2=1, f2=7, more3=0 -> 100000+30000+1000+700+0=131700.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_111_real_erl_input_more_peek_then_consume_two_records() {
+    use iir_to_beam::encode_beam;
+    if !erl_available() { return; }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("call_builtin", Some("more1".into()), vec![Operand::Var("input_more".into())], "i64"),
+        IIRInstr::new("call_builtin", Some("f1".into()), vec![Operand::Var("input_i64".into())], "i64"),
+        IIRInstr::new("call_builtin", Some("more2".into()), vec![Operand::Var("input_more".into())], "i64"),
+        IIRInstr::new("call_builtin", Some("f2".into()), vec![Operand::Var("input_i64".into())], "i64"),
+        IIRInstr::new("call_builtin", Some("more3".into()), vec![Operand::Var("input_more".into())], "i64"),
+        IIRInstr::new("const", Some("c100000".into()), vec![Operand::Int(100000)], "i64"),
+        IIRInstr::new("const", Some("c10000".into()), vec![Operand::Int(10000)], "i64"),
+        IIRInstr::new("const", Some("c1000".into()), vec![Operand::Int(1000)], "i64"),
+        IIRInstr::new("const", Some("c100".into()), vec![Operand::Int(100)], "i64"),
+        IIRInstr::new("mul", Some("t1".into()), vec![Operand::Var("more1".into()), Operand::Var("c100000".into())], "i64"),
+        IIRInstr::new("mul", Some("t2".into()), vec![Operand::Var("f1".into()), Operand::Var("c10000".into())], "i64"),
+        IIRInstr::new("mul", Some("t3".into()), vec![Operand::Var("more2".into()), Operand::Var("c1000".into())], "i64"),
+        IIRInstr::new("mul", Some("t4".into()), vec![Operand::Var("f2".into()), Operand::Var("c100".into())], "i64"),
+        IIRInstr::new("add", Some("s1".into()), vec![Operand::Var("t1".into()), Operand::Var("t2".into())], "i64"),
+        IIRInstr::new("add", Some("s2".into()), vec![Operand::Var("s1".into()), Operand::Var("t3".into())], "i64"),
+        IIRInstr::new("add", Some("s3".into()), vec![Operand::Var("s2".into()), Operand::Var("t4".into())], "i64"),
+        IIRInstr::new("add", Some("r".into()), vec![Operand::Var("s3".into()), Operand::Var("more3".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty());
+
+    let beam_cfg = IIRBeamConfig::new("iir_input_more_two_records_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_input_more_two_records_test.beam"), &bytes).expect("write .beam");
+
+    let output = run_erl_with_stdin(&tmp,
+        "io:format(\"~w~n\",[iir_input_more_two_records_test:main()]),halt(0).",
+        b"3\n7\n");
+    assert!(output.status.success(), "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "131700",
+        "more1=1,f1=3,more2=1,f2=7,more3=0 (EOF) must encode to 131700");
+}
+
+/// End-to-end: two `input_more` peeks in a row must NOT advance past the
+/// same line — the non-destructive-peek proof, mirroring
+/// `portable_text_stdout_input_more_peek`'s native/LLVM double-peek test in
+/// `lang_matrix.rs` (`__twig_input_more` called twice, same line still
+/// there for `__twig_input_i64`).
+///
+/// Encodes `m1*10000 + m2*1000 + f*10 + m3`: stdin "9\n" -> m1=1 (peek),
+/// m2=1 (SAME cached line, peeked again), f=9 (consumes the SAME line),
+/// m3=0 (EOF) -> 10000+1000+90+0=11090.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_112_real_erl_input_more_double_peek_no_double_consume() {
+    use iir_to_beam::encode_beam;
+    if !erl_available() { return; }
+
+    let m = make_module_fn("main", vec![], "i64", vec![
+        IIRInstr::new("call_builtin", Some("m1".into()), vec![Operand::Var("input_more".into())], "i64"),
+        IIRInstr::new("call_builtin", Some("m2".into()), vec![Operand::Var("input_more".into())], "i64"),
+        IIRInstr::new("call_builtin", Some("f".into()), vec![Operand::Var("input_i64".into())], "i64"),
+        IIRInstr::new("call_builtin", Some("m3".into()), vec![Operand::Var("input_more".into())], "i64"),
+        IIRInstr::new("const", Some("c10000".into()), vec![Operand::Int(10000)], "i64"),
+        IIRInstr::new("const", Some("c1000".into()), vec![Operand::Int(1000)], "i64"),
+        IIRInstr::new("const", Some("c10".into()), vec![Operand::Int(10)], "i64"),
+        IIRInstr::new("mul", Some("t1".into()), vec![Operand::Var("m1".into()), Operand::Var("c10000".into())], "i64"),
+        IIRInstr::new("mul", Some("t2".into()), vec![Operand::Var("m2".into()), Operand::Var("c1000".into())], "i64"),
+        IIRInstr::new("mul", Some("t3".into()), vec![Operand::Var("f".into()), Operand::Var("c10".into())], "i64"),
+        IIRInstr::new("add", Some("s1".into()), vec![Operand::Var("t1".into()), Operand::Var("t2".into())], "i64"),
+        IIRInstr::new("add", Some("s2".into()), vec![Operand::Var("s1".into()), Operand::Var("t3".into())], "i64"),
+        IIRInstr::new("add", Some("r".into()), vec![Operand::Var("s2".into()), Operand::Var("m3".into())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty());
+
+    let beam_cfg = IIRBeamConfig::new("iir_input_more_double_peek_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_input_more_double_peek_test.beam"), &bytes).expect("write .beam");
+
+    let output = run_erl_with_stdin(&tmp,
+        "io:format(\"~w~n\",[iir_input_more_double_peek_test:main()]),halt(0).",
+        b"9\n");
+    assert!(output.status.success(), "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "11090",
+        "m1=1,m2=1 (same peeked line),f=9 (consumes that line),m3=0 (EOF) must encode to 11090");
+}
+
+/// End-to-end: `input_str` on exhausted stdin must yield the empty string
+/// (BEAM06's nil sentinel `{a,0}`), not attempt `string:trim/3` on the atom
+/// `eof`.
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_113_real_erl_input_str_eof_returns_empty_string() {
+    use iir_to_beam::encode_beam;
+    if !erl_available() { return; }
+
+    let m = make_module_fn("main", vec![], "void", vec![
+        IIRInstr::new("call_builtin", Some("a".into()), vec![Operand::Var("input_str".into())], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("a".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty());
+
+    let beam_cfg = IIRBeamConfig::new("iir_input_str_eof_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_input_str_eof_test.beam"), &bytes).expect("write .beam");
+
+    let output = run_erl_with_stdin(&tmp,
+        "iir_input_str_eof_test:main(),halt(0).",
+        b"");
+    assert!(output.status.success(), "erl exited non-zero; stderr: {}",
+        String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "",
+        "input_str on exhausted stdin (EOF) must print nothing (empty string)");
+}
+
 #[test]
 fn narrow_operations_mask_but_i64_remains_unbounded() {
     for op in ["add", "sub", "mul", "neg", "not", "and", "or", "xor", "shl", "shr"] {

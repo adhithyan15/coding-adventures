@@ -140,6 +140,12 @@ assert_eq!(&bytes[0..4], b"FOR1");
 | `call_closure` | `get_list` + `erlang:'++'`/2 + `erlang:apply/3` |
 | `str_len` | `gc_bif1 erlang:length/1` |
 | `str_index` | `idx+1` (`gc_bif2 erlang:+/2`), then `call_ext lists:nth/2` |
+| `call_builtin "putchar"` | `put_list` one char, `call_ext io:put_chars/1` |
+| `call_builtin "print_i64"` | `gc_bif1 erlang:display/1` |
+| `call_builtin "pair?"/"equal?"/"not"` | McCarthy predicates — `is_nonempty_list`/`is_eq_exact` 0/1 synthesis |
+| `call_builtin "input_i64"` (BASIC `INPUT X`) | `call_ext io:get_line/1`, then `call_ext string:to_integer/1` — `0` on EOF or parse failure (BEAM07) |
+| `call_builtin "input_str"` (BASIC `INPUT A$`) | `call_ext io:get_line/1`, then `call_ext string:trim/3` (strip one trailing `"\n"`) — `""` on EOF (BEAM07) |
+| `call_builtin "input_more"` (FlowMatic `READ-ITEM` EOF peek) | one-line lookahead cached in the process dictionary (`erlang:get/1`/`erlang:put/2` via `call_ext`); `0`/`1` (BEAM07) |
 
 ## Closure encoding (LANG35)
 
@@ -160,10 +166,13 @@ Both `erlang:'++'`/2 and `erlang:apply/3` are registered as BIF imports.
 
 ## Unsupported (validation rejects)
 
-`call_builtin`, `io_in`, `cast`, `load_mem`, `store_mem`, `alloc`,
+`io_in`, `cast`, `load_mem`, `store_mem`, `alloc`,
 `box`, `unbox`, `field_load`, `field_store`, `is_null`, `safepoint`, and any
 instruction with `type_hint` of `"any"`, `"polymorphic"`, or unsupported
-`"str"`/`"ref<…>"` shapes. The supported string subset is printable-ASCII
+`"str"`/`"ref<…>"` shapes. `call_builtin` is supported ONLY for the exact
+name set in the table above (`putchar`/`print_i64`/`pair?`/`equal?`/`not`/
+`input_more`/`input_i64`/`input_str`) — any other builtin name is rejected.
+The supported string subset is printable-ASCII
 `str_const`, `str_concat`, `str_slice`, `str_len`, `str_index`, `str_eq`,
 `str_cmp`, `print_str`, `array_set`/`array_get` (BEAM06 — a `str`-typed
 array element read/write), and ordinary call/return/move transport,

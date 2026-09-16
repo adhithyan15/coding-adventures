@@ -898,3 +898,29 @@ same-day promotion — and the 5 `INPUT` rows need the still-unscoped BEAM
 host-input design (VM-060b), shared with FLOW-MATIC's 4 blocked `INPUT`/EOF
 rows. See `code/specs/LANG-VM-NON-ALGOL-BACKLOG.md` (VM-D033) for the full
 investigation.
+
+### BEAM host input (BEAM07) — VM-060b resolved
+
+The two blockers named above are both closed. `run_beam` never piped a
+program's declared stdin to the spawned `erl` process at all before this
+slice — every other subprocess backend (native/LLVM/JVM/CLR) already did
+via `output_with_stdin`; `run_beam` now does the same. `iir-to-beam` gained
+BEAM lowering for `call_builtin "input_i64"`/`"input_str"`/`"input_more"`:
+a consuming line read (`io:get_line/1` then `string:to_integer/1`/
+`string:trim/3`, confirmed as genuine `call_ext`s on real `erl`, never
+guard BIFs) for BASIC `INPUT`/`INPUT A$`, and a one-line lookahead cached
+in the process dictionary for FlowMatic `READ-ITEM`'s EOF peek (real `erl`
+has no byte-level peek primitive the way C's `ungetc` does). Full research
+and the two pre-existing framework bugs found along the way (both
+confirmed via genuine real-`erl` access-violation crashes, not assumed):
+`code/specs/BEAM07-beam-host-input.md`.
+
+All 5 Dartmouth BASIC `INPUT` rows and all 4 FLOW-MATIC `READ-ITEM`/EOF
+rows now declare `Beam`, each proven against real `erl` with its declared
+stdin piped through before promotion
+(`portable_text_stdout_dartmouth_basic_beam_input`,
+`portable_text_stdout_flow_matic_beam_read_item_and_eof`). Dartmouth BASIC
+now declares 50 of 51 rows on `Beam` (only `RND`/VM-018 remains).
+FLOW-MATIC now declares all 8 of 8 rows on `Beam`. Combined with Twig,
+COBOL-60, Nib, Oct and Brainfuck's own fully-proven rows, this closes
+every non-ALGOL BEAM gap in `LANG-VM-NON-ALGOL-BACKLOG.md` except `RND`.
