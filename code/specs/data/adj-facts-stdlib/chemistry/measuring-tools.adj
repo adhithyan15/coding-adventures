@@ -32,8 +32,10 @@
 % Provenance: quoted verbatim from a Chemistry LibreTexts introductory lab
 % manual, "Introducing Measurements in the Laboratory", which walks a
 % four-part lab exercise, one tool per part, each part's opening sentence
-% naming the tool and the quantity/unit it measures. WebFetch-verified TWICE
-% for consistency before writing. The exact sentences:
+% naming the tool and the quantity/unit it measures. The spans below were
+% checked against the RAW page rather than a summarizing fetch -- see the
+% measured counts further down; a summarizer is not a sound basis for a
+% verbatim span, and this file's Part C quote is why. The exact sentences:
 %
 %   ruler → length:
 %     "In Part A of this lab, a metric ruler will be used to measure length
@@ -41,12 +43,40 @@
 %   graduated_cylinder → volume:
 %     "In Part B, a beaker and a graduated cylinder will be used to measure
 %      liquid volume in milliliters (mL)."
-%   balance → mass:
+%   balance → mass (the page is missing the word "used"; the row quotes
+%   the page's own wording rather than repairing it -- see below):
 %     "In Part C, an electronic balance and a triple-beam balance will be
-%      [used] to measure mass in grams (g)."
+%      to measure mass in grams (g)."
 %   thermometer → temperature:
 %     "In Part D, a thermometer will be used to measure temperature in
 %      degrees Celsius (°C)."
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the RULER sentence, so a graduated_cylinder, balance or
+% thermometer answer was warranted primarily by a sentence about a ruler,
+% and the other three sentences reached no answer at all. Each row now
+% carries the lab-part sentence that names its own tool, and the envelope is
+% the page's framing sentence, which names no tool and no quantity.
+%
+% THE BALANCE ROW QUOTES A PAGE TYPO ON PURPOSE (#15320). The page writes
+% "will be to measure mass in grams (g)" -- the word "used" is missing. The
+% header above used to repair that and mark the repair with brackets, under a
+% heading reading "The exact sentences"; measured, the repaired form occurs
+% ZERO times on the page, and so does the plain-"used" form. A repaired
+% citation is a paraphrase wearing quotation marks, so the row takes the
+% page's own wording. Same discipline as `earth-science/cloud-types.adj`,
+% which reproduces its page's singular slip ("The two main type of mid-level
+% clouds") rather than correcting it.
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404 and holds none of these spans), tags removed without a
+% space and only ASCII whitespace collapsed. Each of the four row spans
+% occurs exactly once, inside one `<p>`, both with script and style data set
+% aside and over the whole file. The envelope occurs exactly once in the
+% body, inside one `<p>`, and ONE MORE TIME in the page's `<head>` metadata,
+% so its whole-file count is two and the count check allows exactly that one
+% head copy. Every row's page is the envelope's, so no row restates a
+% `locator` line or a `trust` tier of its own.
 %
 % `trust consensus` — LibreTexts is an openly-licensed college teaching
 % resource (a secondary reference, not a primary standards body), the same
@@ -60,12 +90,20 @@
 table measuring_tool {
     columns tool, quantity
 
-    row (ruler, length)
-    row (graduated_cylinder, volume)
-    row (balance, mass)
-    row (thermometer, temperature)
+    row (ruler, length) {
+        source "In Part A of this lab, a metric ruler will be used to measure length in centimeters (cm)."
+    }
+    row (graduated_cylinder, volume) {
+        source "In Part B, a beaker and a graduated cylinder will be used to measure liquid volume in milliliters (mL)."
+    }
+    row (balance, mass) {
+        source "In Part C, an electronic balance and a triple-beam balance will be to measure mass in grams (g)."
+    }
+    row (thermometer, temperature) {
+        source "In Part D, a thermometer will be used to measure temperature in degrees Celsius (°C)."
+    }
 
-    source "In Part A of this lab, a metric ruler will be used to measure length in centimeters (cm)."
+    source "In this lab, students will be introduced to some common measuring instruments so that they can practice making measurements, and to learn about instrument precision."
     locator "https://chem.libretexts.org/Courses/BethuneCookman_University/B-CU:_CHL-141_General_Chemistry_1_Lab/Labs/1:_Introducing_Measurements_in_the_Laboratory_(Experiment)"
     trust consensus
 }
