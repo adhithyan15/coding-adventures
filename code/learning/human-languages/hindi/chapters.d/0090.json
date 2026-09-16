@@ -1,0 +1,22 @@
+{
+  "chapter": 90,
+  "title": "Four Adjectives That Always Agree",
+  "label": "ch:hi-adjectives-that-bend",
+  "canDo": "I can describe a person as tall, short, thin or stout, and make each adjective agree, because all four end in -aa.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C82-sintesis-shareer",
+    "kind": "pattern",
+    "summary": "Say the same sentence about a man and about a woman, and hear that vah and hai never move while the adjective carries the whole gender load.",
+    "assesses": [
+      "HI-LEX-C82-BODY-01",
+      "HI-LEX-C82-BODY-02",
+      "HI-LEX-C82-BODY-03",
+      "HI-LEX-C82-BODY-04",
+      "HI-GRAMMAR-C41-ADJ-SYSTEM"
+    ],
+    "note": "Closes HI-A1-LEX-09 (physical characteristics of a person). The inventory note named the gap precisely: bara and chhota were taught for things, and the track had no word for tall, short, thin or heavy. All four are authored here rather than three, because chhota could not be pressed into service for the short one: about a person chhota means YOUNGER, which the review lesson makes explicit, so naataa is a real gap rather than a synonym. This chapter is deliberately the complement of the ease-and-difficulty chapter: that one taught four adjectives that never agree and all four ended in a consonant, and these four all end in -aa and all four agree. Together they let a learner sort any Hindi adjective by its last letter instead of by a list. Two retrieval lessons follow the four word lessons, budgeted rather than discovered, because the last atom introduced in a track has nowhere to be retrieved and the reinforcement criterion then falls short."
+  }
+}

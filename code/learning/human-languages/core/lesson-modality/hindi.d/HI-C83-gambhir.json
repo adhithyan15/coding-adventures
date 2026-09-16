@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C83-gambhir",
+    "language": "hindi",
+    "chapter": 91,
+    "sequence": 3490,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c88b2da96174636d"
+  },
+  "findings": []
+}

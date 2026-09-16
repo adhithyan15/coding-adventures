@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C82-naataa",
+    "language": "hindi",
+    "chapter": 90,
+    "sequence": 3415,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0fe29c2d724e162f"
+  },
+  "findings": []
+}

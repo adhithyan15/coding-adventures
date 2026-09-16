@@ -1,0 +1,22 @@
+{
+  "language": "hindi",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:925aba4dc327ac67",
+  "lessonIds": [
+    "HI-C83-buraa",
+    "HI-C83-hoshiyaar",
+    "HI-C83-mehnati",
+    "HI-C83-sharmeela",
+    "HI-C83-milansaar",
+    "HI-C83-gambhir",
+    "HI-C83-repaso-svabhaav",
+    "HI-C83-sintesis-svabhaav"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch91.txt",
+  "json": "hindi/narration/ch91.json",
+  "textHash": "fnv1a64:585dac306dc000ae",
+  "jsonHash": "fnv1a64:2c2dc5cba0e7b2f7",
+  "findings": []
+}

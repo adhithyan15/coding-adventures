@@ -1,0 +1,25 @@
+{
+  "chapter": 91,
+  "title": "Character, Not Mood",
+  "label": "ch:hi-character",
+  "canDo": "I can say what a person is like rather than how they feel today, using seven disposition adjectives and predicting from the ending alone which of them change for a woman.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C83-sintesis-svabhaav",
+    "kind": "task",
+    "summary": "Answer the question what is he or she like, noticing that kaisaa itself bends, so the gender is announced in the question before any adjective arrives.",
+    "assesses": [
+      "HI-LEX-C83-CHAR-01",
+      "HI-LEX-C83-CHAR-02",
+      "HI-LEX-C83-CHAR-03",
+      "HI-LEX-C83-CHAR-04",
+      "HI-LEX-C83-CHAR-05",
+      "HI-LEX-C83-CHAR-06",
+      "HI-LEX-C41-ADJ-03",
+      "HI-GRAMMAR-C41-ADJ-SYSTEM"
+    ],
+    "note": "Closes HI-A1-LEX-11 (character and personality adjectives), whose note read: only achha, nothing describes a person's disposition. The point derives from the Spanish A1-NE02-01, and the six words chosen here answer the same eight-exponent source: buraa, hoshiyaar, mehnati, sharmeela, milansaar, gambhir, beside the achha the track already had. The chapter is built so the seven demonstrate all three agreement shapes at once, and the review lesson shows that the shapes track where each word came from -- inherited words mostly kept the -aa, borrowed ones mostly arrived ending in a consonant, and gambhir is the inherited exception that keeps this a tendency rather than a law."
+  }
+}

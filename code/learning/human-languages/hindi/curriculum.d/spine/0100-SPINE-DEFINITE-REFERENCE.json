@@ -5,7 +5,9 @@
     "HI-PATH-200",
     "HI-PATH-201",
     "HI-PATH-44-FAMILY",
-    "HI-PATH-88-ADJECTIVES"
+    "HI-PATH-88-ADJECTIVES",
+    "HI-PATH-90-BODY",
+    "HI-PATH-91-CHARACTER"
   ],
   "omits": [
     "GRAMMAR-THE"
