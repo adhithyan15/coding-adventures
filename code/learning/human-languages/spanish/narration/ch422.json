@@ -1,0 +1,507 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 422,
+  "title": "The Web Page",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:614cd773e0e2c97c",
+  "lessons": [
+    {
+      "id": "ES-C422-pagina-web",
+      "sequence": 9800,
+      "title": "la página web — a two-thousand-year-old word doing a thirty-year-old job",
+      "headword": "la página web",
+      "romanization": "la página web",
+      "gloss": "web page — Latin pagina, a column of writing fastened to a frame, plus English web; the oldest word for a written surface carrying the newest one",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:591e1e48fb8ba7a1",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say internet and el ordenador. You have the network and you have the machine. Say what is missing: the thing you actually look at."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "internet — the network itself."
+            },
+            {
+              "kind": "speech",
+              "text": "el ordenador — the machine, named in Spanish for what it orders rather than what it counts."
+            },
+            {
+              "kind": "speech",
+              "text": "el correo electrónico — the other thing that travels over the network."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "stress-antepenultimate — PÁ-gi-na, stress on the third syllable from the end, which is exactly what the written accent is there to tell you. see reference."
+            },
+            {
+              "kind": "speech",
+              "text": "g-soft — the g in página comes before i, so it is the throaty sound, not the g of gato."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la página web — \"the web page.\" Two words from two thousand years apart, and only one of them was borrowed."
+            },
+            {
+              "kind": "speech",
+              "text": "Página is Latin pagina, from pangere, \"to fasten, to fix in place.\" A Roman pagina was a column of writing, named for the way vine-growers fastened shoots to a trellis: a column of text is writing fixed into a frame."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what got fastened"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: página. what got fastened: writing, into a column.",
+                "word: pacto (a pact). what got fastened: two parties, into an agreement.",
+                "word: paz (peace). what got fastened: the same, after a war."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Web is English, taken whole. Spanish did not translate it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: which half carries the gender",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "name",
+                "article",
+                "what the second word is"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "name: el correo electrónico. article: el. what the second word is: an adjective, and it agrees with correo.",
+                "name: la página web. article: la. what the second word is: a noun bolted on, and it never moves."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The first word is the real noun and it decides everything. Web is a borrowed noun in an adjective's chair, so it never changes: dos páginas web, with no -s on web."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la página web\" — PÁ-gi-na web",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la página web\" — *PÁ-gi-na web*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la página web está en internet\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la página web está en internet\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"dos páginas web\" — and stop yourself before adding an -s to web",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"dos páginas web\" — and stop yourself before adding an **-s** to *web*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which Spanish word for peace comes from the same root as página (paz)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which Spanish word for peace comes from the same root as *página* (*paz*)]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did Latin pangere mean? (To fasten, to fix in place.) Why is página web feminine? (Página is the head noun and it ends in -a.) What happens to web in the plural? (Nothing — it stays web.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C422-repaso-red",
+      "sequence": 9810,
+      "title": "cuatro palabras de internet — four words, four different ways in",
+      "headword": "cuatro palabras de internet",
+      "romanization": "cuatro palabras de internet",
+      "gloss": "four internet words — the network, the machine, the message and the page, sorted by how each one entered Spanish",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:43eaf43191afcda8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the four things you can now talk about on a screen. Say them with their articles before reading the table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: borrowed, translated, or built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English named all four of these things first. Spanish did something different with each one, and that is the pattern worth carrying away:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "English source",
+                "what Spanish did"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "Spanish: internet. English source: internet. what Spanish did: took it whole.",
+                "Spanish: el ordenador. English source: computer. what Spanish did: refused it and used a French word instead.",
+                "Spanish: el correo electrónico. English source: e-mail. what Spanish did: translated both halves.",
+                "Spanish: la página web. English source: web page. what Spanish did: translated one half and kept the other."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four things, four strategies, and no rule decided which. Ordenador is the interesting one: Spain went to French ordinateur, \"the thing that puts in order,\" rather than to the Latin computare, \"to count.\" A machine that orders is a different idea about what the machine is for than a machine that counts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read aloud. Nothing here is new:"
+            },
+            {
+              "kind": "speech",
+              "text": "El ordenador está en internet. La página web está en el ordenador. El correo electrónico también."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three that take el (el ordenador, el correo electrónico, and the network word, which takes no article at all)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three that take *el* (*el ordenador*, *el correo electrónico*, and the network word, which takes no article at all)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that takes la (la página web)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that takes *la* (*la página web*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the four Spanish refused to borrow (el ordenador)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the four Spanish refused to borrow (*el ordenador*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la página web y el correo electrónico\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la página web y el correo electrónico\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the four words is entirely Spanish in both halves? (El correo electrónico.) Which came from French rather than English? (El ordenador.) Which keeps an English word inside it? (La página web.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C422-sintesis-buscar",
+      "sequence": 9820,
+      "title": "¿Cuál es la página web? — the question a form actually asks you",
+      "headword": "¿Cuál es la página web?",
+      "romanization": "¿Cuál es la página web?",
+      "gloss": "asking which web page, which needs the new word and the article that goes with it in one question",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:87321077dd565497",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la página web and el correo electrónico one after the other. Both are things a form will ask you for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the line on a form is the bare noun",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A printed form drops the article; a person speaking puts it back:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "on the form",
+                "spoken aloud"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "on the form: Correo electrónico: spoken aloud: ¿Cuál es el correo electrónico?",
+                "on the form: Página web: spoken aloud: ¿Cuál es la página web?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "This is worth noticing because a reading paper shows you the left-hand column and a listening paper plays you the right-hand one. The same word looks bare in one and dressed in the other."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Formulario Nombre: Correo electrónico: Página web:"
+            },
+            {
+              "kind": "speech",
+              "text": "Three lines, no articles, and you can now read every one of them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿Cuál es la página web?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"¿Cuál es la página web?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿Cuál es el correo electrónico?\" and hear the article change while the question word does not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"¿Cuál es el correo electrónico?\" and hear the article change while the question word does not]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la página web está en el ordenador\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la página web está en el ordenador\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does a form print Página web: without la? (A form label is the bare noun; the article belongs to speech.) Which article does it take when you say it aloud? (La.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

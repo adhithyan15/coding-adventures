@@ -1,0 +1,19 @@
+{
+  "id": "ES-PATH-423-CHARACTER",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "ES-C423-antipatico",
+    "ES-C423-inteligente",
+    "ES-C423-trabajador",
+    "ES-C423-serio",
+    "ES-C423-timido",
+    "ES-C423-sociable",
+    "ES-C423-repaso-caracter",
+    "ES-C423-sintesis-persona"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-423-CHARACTER"
+  ],
+  "after": []
+}

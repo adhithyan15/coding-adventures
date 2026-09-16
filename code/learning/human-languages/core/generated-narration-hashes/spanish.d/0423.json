@@ -1,0 +1,22 @@
+{
+  "language": "spanish",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:99097c9fb7b0912b",
+  "lessonIds": [
+    "ES-C423-antipatico",
+    "ES-C423-inteligente",
+    "ES-C423-trabajador",
+    "ES-C423-serio",
+    "ES-C423-timido",
+    "ES-C423-sociable",
+    "ES-C423-repaso-caracter",
+    "ES-C423-sintesis-persona"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch423.txt",
+  "json": "spanish/narration/ch423.json",
+  "textHash": "fnv1a64:5b78e7533f439928",
+  "jsonHash": "fnv1a64:58afd8b1fe5acb6d",
+  "findings": []
+}

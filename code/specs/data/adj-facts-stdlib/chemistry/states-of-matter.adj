@@ -11,7 +11,8 @@
 %     ? matter_state(solid, $Property)      % fixed_shape
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `matter_state(state, property)` carrying the table's citation, so the
+% relation `matter_state(state, property)` carrying THAT ROW'S OWN citation,
+% with the envelope's locator and trust inherited (RS-5e, #14986), so the
 % lookup above is the ordinary SLD binding query — the engine returns the
 % property WITH its source, on the CPU, with zero model calls, and abstains on a
 % state not in the table.
@@ -21,8 +22,10 @@
 %     state    property                    what it means
 %     ------   -------------------------   ---------------------------------
 %     solid    fixed_shape                 keeps its own shape and volume
-%     liquid   takes_shape_of_container    flows to fit its container,
-%                                          but has a FIXED volume
+%     liquid   takes_shape_of_container    flows to fit its container
+%                                          (the fixed volume is a SEPARATE
+%                                          page sentence, carried as the
+%                                          row's `cites` — see Provenance)
 %     gas      fills_container             spreads to fill the whole container
 %
 % The property atoms are chosen to match the source's own wording: a solid
@@ -36,14 +39,50 @@
 % invent a property for it. That honest-abstention property is what makes the
 % table safe to trust.
 %
-% Provenance: the properties are copied from NASA's Glenn Research Center K-12
-% "State of Matter" educational page. The `source` span below is the VERBATIM
-% solid-phase sentence from that page; the liquid and gas properties are the
-% page's own words too — it states verbatim that "A liquid will take the shape
-% of its container ... a liquid has a fixed volume" and that "A gas fills its
-% container, taking both the shape and the volume of the container." The citable
-% artifact is that page at the `locator`, and each state->property row was
-% confirmed against it. `trust authoritative` — grc.nasa.gov is a primary U.S.
+% Provenance: EACH ROW CARRIES ITS OWN span as its `source` (RS-5e, #14986);
+% the locator and trust are inherited from the envelope field-by-field. Until
+% this change the envelope WAS the solid sentence, so a `liquid` or `gas`
+% recall was warranted primarily by a sentence about SOLIDS, and those two
+% rows' own sentences reached no answer at all. The envelope is now the page's
+% framing sentence, "We call this property of matter the phase of the matter.",
+% which names no state.
+%
+% THE LIQUID ROW IS NOT A PLAIN RELOCATION, and this is the one place this
+% header used to overstate its evidence. It quoted the liquid span STITCHED
+% with an ellipsis — "A liquid will take the shape of its container ... a
+% liquid has a fixed volume" — but on the page those are TWO NON-ADJACENT
+% sentences, separated by a third ("In microgravity, a liquid forms a ball
+% inside a free surface."). An elided quotation is not verbatim, and shipping
+% it as a row `source` would put a citation on a row that cannot be found on
+% its own page. So the row ships the CONTIGUOUS sentence as its `source`:
+%
+%     "A liquid will take the shape of its container with a free surface in a
+%      gravitational field."
+%
+% That sentence supports `takes_shape_of_container` and says nothing about
+% volume, so the fixed-volume half rides as the row's own `cites`:
+%
+%     "Regardless of gravity, a liquid has a fixed volume."
+%
+% Both were read out of the fetched page rather than retyped, and each occurs
+% exactly once on it. (ADJ-A9 requires a `cites` to carry its own `locator` --
+% enforced by the adapter's missing-child error on the second STRING, not by
+% the comment above it. Counted across this corpus: 209 `cites` in all, 87 of
+% them inside a `row` block after this change, and ZERO bare ones anywhere.)
+%
+% The row-level `cites` on line 86 restates the envelope's own locator. That is
+% not the RS-5e convention being broken: ADJ-A9 mandates the source/locator
+% pair on every corroboration, while the "a row locator means NOT the
+% envelope's page" convention governs a row's own `locator` annotation, which
+% this table does not use.
+%
+% WHAT THIS FILE CLAIMS, AND ITS CEILING. Nothing here carries a `quote ... at
+% <byte_offset> snapshot "<sha256>"` annotation, which is the repo's
+% byte-provenance mechanism. The spans are labelled with the page they were
+% read from and nothing more: this table claims no more than `source_labeled`.
+%
+% The citable artifact is that page at the `locator`, and each state->property
+% row was confirmed against it. `trust authoritative` — grc.nasa.gov is a U.S.
 % government (.gov) science-education source. Nothing here is asserted from
 % memory. (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
@@ -52,11 +91,18 @@
 table matter_state {
     columns state, property
 
-    row (solid, fixed_shape)
-    row (liquid, takes_shape_of_container)
-    row (gas, fills_container)
+    row (solid, fixed_shape) {
+        source "A solid holds its shape and the volume of a solid is fixed by the shape of the solid."
+    }
+    row (liquid, takes_shape_of_container) {
+        source "A liquid will take the shape of its container with a free surface in a gravitational field."
+        cites "Regardless of gravity, a liquid has a fixed volume." locator "https://www.grc.nasa.gov/www/k-12/airplane/state.html"
+    }
+    row (gas, fills_container) {
+        source "A gas fills its container, taking both the shape and the volume of the container."
+    }
 
-    source "A solid holds its shape and the volume of a solid is fixed by the shape of the solid."
+    source "We call this property of matter the phase of the matter."
     locator "https://www.grc.nasa.gov/www/k-12/airplane/state.html"
     trust authoritative
 }

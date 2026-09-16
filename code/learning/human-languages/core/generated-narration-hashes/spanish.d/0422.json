@@ -1,0 +1,17 @@
+{
+  "language": "spanish",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:614cd773e0e2c97c",
+  "lessonIds": [
+    "ES-C422-pagina-web",
+    "ES-C422-repaso-red",
+    "ES-C422-sintesis-buscar"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch422.txt",
+  "json": "spanish/narration/ch422.json",
+  "textHash": "fnv1a64:02e48864c2284650",
+  "jsonHash": "fnv1a64:50a04dc3703bc01b",
+  "findings": []
+}

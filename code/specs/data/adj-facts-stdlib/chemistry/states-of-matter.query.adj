@@ -4,9 +4,11 @@
 % The shape a learner (or an LLM) produces to ANSWER "what does a solid do in a
 % container?": it states no science fact — it only `import`s the grounded table
 % and asks binding queries. The engine resolves each `?` against the
-% `matter_state` rows and returns the property + the table's source/locator/
-% trust. A state not in the table abstains honestly — the engine never invents a
-% property.
+% `matter_state` rows and returns the property + THAT ROW'S OWN source, with
+% the locator and trust inherited from the table envelope (RS-5e, #14986).
+% Until that conversion the envelope was the SOLID sentence, so a `liquid` or
+% `gas` recall came back warranted by a sentence about solids. A state not in
+% the table abstains honestly — the engine never invents a property.
 %
 % Run (from this directory so the relative import resolves):
 %     ../../../../packages/rust/target/debug/adj-lang-cli states-of-matter.query.adj
@@ -15,5 +17,6 @@
 import "states-of-matter.adj"
 
 ? matter_state(solid, $Property)       % expect fixed_shape
+? matter_state(liquid, $Property)      % expect takes_shape_of_container
 ? matter_state(gas, $Property)         % expect fills_container
 ? matter_state(plasma, $Property)      % expect abstain — plasma is the 4th state, not shipped here
