@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C427-bombero",
+    "language": "spanish",
+    "chapter": 427,
+    "sequence": 10190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d02c3d7473de9278"
+  },
+  "findings": []
+}

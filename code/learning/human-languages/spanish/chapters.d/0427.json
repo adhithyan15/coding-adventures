@@ -1,0 +1,24 @@
+{
+  "chapter": 427,
+  "title": "People Named By What They Do",
+  "label": "ch:oficios",
+  "canDo": "I can name five professions and the company somebody works for, take any profession word apart to see how it was built, and answer a question about my work without putting an article where Spanish leaves one out.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C427-sintesis-profesion",
+    "kind": "task",
+    "summary": "Answer the question about what somebody does for a living, naming the profession with no article and the company with one.",
+    "assesses": [
+      "ES-LEX-C427-AGENT-01",
+      "ES-LEX-C427-AGENT-02",
+      "ES-LEX-C427-AGENT-03",
+      "ES-LEX-C427-AGENT-04",
+      "ES-LEX-C427-AGENT-05",
+      "ES-LEX-C427-AGENT-06",
+      "ES-LEX-C423-CHAR-03"
+    ],
+    "note": "Closes four points: A1-NE15-02 (commerce, the buyer and seller), A1-NE11-04 (protection and security services), A1-NE17-02 (law and justice) and A1-NE15-03 (businesses and organisations). The chapter is organised by HOW each name was built rather than by what each person does, because that is the only thing that makes an unfamiliar profession word readable: -dor attaches to a verb and is productive for the learner, -ero attaches to a thing, policia is named from its institution, and abogado was inherited from Latin whole and has no Spanish verb inside it. The -dor half is a direct continuation of trabajador from chapter 423, where the ending was met as an adjective; here it does the job it was built for. The synthesis carries the one grammatical trap in the answer: Spanish says soy abogado and not soy un abogado, and the article returns as soon as an adjective is added."
+  }
+}
