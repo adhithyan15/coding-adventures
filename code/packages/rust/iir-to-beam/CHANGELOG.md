@@ -1,5 +1,89 @@
 # Changelog — iir-to-beam
 
+## 0.16.0 - 2026-09-15 - host input: `input_more`/`input_i64`/`input_str` (BEAM07)
+
+BASIC `INPUT X`/`INPUT A$` and FlowMatic `READ-ITEM`'s EOF peek all lowered
+to `call_builtin` names (`input_i64`/`input_str`/`input_more`) this backend
+had never implemented — every program using them failed BEAM validation
+outright (`UnsupportedOp: ... call_builtin is not in the BEAM builtin set`).
+Full research + decision: `code/specs/BEAM07-beam-host-input.md`.
+
+**New lowering**, confirmed against real `erl` (OTP 29, erts-17.0.5) before
+writing any bytecode-emission code:
+
+- `input_i64`/`input_str` are a "consuming read": `io:get_line('')` for a
+  fresh line (returns a char-list, a newline-less char-list for the last
+  line, or the atom `eof`), then `string:to_integer/1` (parse a leading
+  integer, `0` on `{error,_}` or EOF — the same permissive contract every
+  other backend's `input_i64` already uses) or `string:trim/3` (strip
+  exactly one trailing `"\n"`, `""`/nil on EOF — matching
+  `drain_stdin_line`'s "consume the delimiter, don't include it" contract).
+- `input_more` (FlowMatic's EOF peek) has no native peek primitive on real
+  `erl` (unlike C's `ungetc`): a one-line lookahead is cached in the process
+  dictionary under a private `$`-prefixed key no BASIC/FlowMatic source
+  identifier can ever collide with. `input_more` reads-and-caches without
+  consuming; `input_i64`/`input_str` atomically read-and-clear via
+  `erlang:put/2`'s "returns the OLD value" contract, so a peeked line is
+  delivered to the very next consuming read exactly once.
+
+**Two confirmed pre-existing framework bugs found and fixed along the way**
+(both via real-`erl` access-violation crashes on round-trip tests, not
+assumed):
+
+1. **`erlang:put/2` must lower to `call_ext`, never `gc_bif2`.** Real `erlc`
+   disassembly (`erlc -S`) confirms this directly: `erlang:get/1` compiles
+   to a zero-GC `bif` (never allocates, safe via `gc_bif1`), but
+   `erlang:put/2` — which can grow the process dictionary's hash table —
+   always compiles to a genuine `call_ext`. The existing `global_store`
+   lowering (and this slice's own first cut) used `gc_bif2` anyway, which
+   passed every existing test because none had a SEPARATE heap-allocated
+   value also live across the call — `gc_bif2`'s `Live` parameter cannot
+   correctly protect it, because `erlang:put/2` does not honor a guard
+   BIF's "only touch the declared Dest" contract. Two sequential
+   `input_str`/`input_i64` reads in one function (exactly BASIC's `INPUT
+   A\nINPUT B`/FlowMatic's `READ-ITEM` loop shape) is the first case in
+   this codebase's history to combine "erlang:put/2 call" with "a REAL heap
+   value must survive it", and it reproduced a genuine access violation
+   every time. `global_store`'s own `gc_bif2` usage carries the identical
+   latent bug — out of scope to fix here (pervasive, needs its own
+   regression pass), tracked separately as
+   [#15332](https://github.com/adhithyan15/coding-adventures/issues/15332).
+2. **`allocate`'s Y-register slots need explicit zero-initialization.**
+   `lower_iir_to_beam` emits `{allocate, StackNeed, Live}` for any function
+   needing cross-call Y-register spilling, but never the `init_yregs` a
+   real `erlc` always follows it with — a GC that runs before a slot's
+   first write scans whatever stack garbage was already there as if it
+   were a live term. Latent for the same reason as (1): no prior op put two
+   independent call-sites each introducing a NEW live variable into a NEW
+   Y-slot in one straight-line function. Fixed generally (every function
+   allocating a stack frame benefits, not just the new host-input ops): a
+   `move {a,0} {y,N}` (BEAM nil — an immediate, always GC-safe) for every
+   slot immediately after `allocate`.
+
+- `lower.rs`: new atoms/imports (`io:get_line/1`, `string:to_integer/1`,
+  `string:trim/3`, plus `eof`/`undefined`/the empty-atom prompt/the private
+  cache-key atom); new opcode constants `OP_IS_INTEGER` (45) and
+  `OP_GET_TUPLE_ELEMENT` (66), both confirmed via
+  `beam_opcodes:opcode/2` on this host's real `erl`; three new
+  `call_builtin` match arms; the `live_across` liveness filter list gains
+  `input_more`/`input_i64`/`input_str` (each emits a genuine `call_ext`
+  somewhere in its expansion); a new `alloc_synth_label!` macro factoring
+  out the repeated label-allocation boilerplate multi-label arms already
+  had.
+- `validate.rs`: Check 4's `"str"`-type_hint allow-list gains
+  `"call_builtin"` (for `input_str`'s `"str"`-typed result); Check 6b's
+  `call_builtin` name allow-list gains `input_more`/`input_i64`/
+  `input_str`.
+- 11 new tests (105 → 116): `test_103` (validation acceptance, all three
+  builtins), `test_104`/`test_105`/`test_106` (instruction-shape: each
+  builtin calls exactly the imports it should and none it shouldn't),
+  `test_107`–`test_113` (real-`erl` round-trips: two sequential `input_i64`
+  reads summed, two sequential `input_str` reads concatenated, `input_i64`
+  EOF/parse-failure both return `0`, `input_more` peek-then-consume across
+  two records with EOF, `input_more` double-peek doesn't double-consume,
+  `input_str` EOF returns the empty string).
+- Clippy with warnings denied is clean.
+
 ## 0.15.0 - 2026-09-15 - str-typed array elements reuse the :ets substrate (BEAM06)
 
 Dartmouth BASIC's `DIM A$(n)` (`array<str>`) and its mixed numeric/string

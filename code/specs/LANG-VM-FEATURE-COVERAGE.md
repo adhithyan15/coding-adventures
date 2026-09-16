@@ -1,6 +1,6 @@
 # LANG VM feature and backend coverage
 
-Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification, then reference-modification MOVE/trap, then STRING SIZE/delimiter, then UNSTRING/delimiter, then INSPECT TALLYING/REPLACING, then pointer/overflow, then regions/self-move, then Dartmouth BASIC BEAM pure-string family, then Dartmouth BASIC BEAM numeric baseline / BEAM03 f64 lowering, then BEAM03 continuation neg(f64)/f64_pow, then VM-LOOP-24's probe-first general-arithmetic/control-flow and math-builtin promotions, then BEAM04's ets-backed float-array representation, then VM-041's Twig call_closure-liveness fix and probe-first sweep plus its match/union fusion follow-up, then BEAM06's str-typed array element representation). This is an inventory of the implemented
+Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification, then reference-modification MOVE/trap, then STRING SIZE/delimiter, then UNSTRING/delimiter, then INSPECT TALLYING/REPLACING, then pointer/overflow, then regions/self-move, then Dartmouth BASIC BEAM pure-string family, then Dartmouth BASIC BEAM numeric baseline / BEAM03 f64 lowering, then BEAM03 continuation neg(f64)/f64_pow, then VM-LOOP-24's probe-first general-arithmetic/control-flow and math-builtin promotions, then BEAM04's ets-backed float-array representation, then VM-041's Twig call_closure-liveness fix and probe-first sweep plus its match/union fusion follow-up, then BEAM06's str-typed array element representation, then BEAM07's BEAM host input for Dartmouth BASIC `INPUT`/FLOW-MATIC `READ-ITEM`). This is an inventory of the implemented
 frontend families and their executable proof boundaries, not a claim that the
 historical languages or every backend are complete. Follow-up IDs live in the
 [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md).
@@ -27,17 +27,18 @@ refusal also does not imply the complete driver refuses that feature.
 | Twig | 49 | 392 | All 49 of those cells are BEAM (VM-041 + this follow-up: `match`/`union` fusion fix); dedicated heap/closure/string/union tests |
 | Nib | 26 | 208 | All eight columns including real BEAM u4/u8 and BCD storage |
 | Brainfuck | 6 | 45 | Dedicated WASM/JVM/CLR and JIT execution; 3 of 6 rows also real BEAM (VM-042) |
-| Dartmouth BASIC | 51 | 402 | 45 of those cells are BEAM (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins + 4 arrays/DATA + 2 string arrays, BEAM03/VM-LOOP-24/BEAM04/BEAM06); random differential suite and frontend JIT tests |
+| Dartmouth BASIC | 51 | 407 | 50 of those cells are BEAM (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins + 4 arrays/DATA + 2 string arrays + 5 `INPUT` rows, BEAM03/VM-LOOP-24/BEAM04/BEAM06/BEAM07); only `RND` (VM-018) remains undeclared; random differential suite and frontend JIT tests |
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
-| FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
+| FLOW-MATIC | 8 | 64 | All eight rows now declare Beam (BEAM07 promoted the four `READ-ITEM`/EOF rows that were on seven columns) |
 | COBOL-60 | 58 | 464 | All 58 of those cells are BEAM (VM-040 COBOL BEAM slices); much larger frontend JIT/oracle suite |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1667
-declared cells (sum of the non-ALGOL rows above, updated for BEAM06's two
-newly-promoted Dartmouth BASIC Beam cells). At VM-061 this matched a
+The normal non-ALGOL capstone therefore declares 210 programs and 1676
+declared cells (sum of the non-ALGOL rows above, updated for BEAM07's nine
+newly-promoted cells: 5 Dartmouth BASIC `INPUT` rows + 4 FLOW-MATIC
+`READ-ITEM`/EOF rows, each gaining one new Beam cell). At VM-061 this matched a
 fresh `non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells
 exercised plus 210 skipped (missing local `ilasm`) = 1548. VM-042 then added
 three real Beam cells to Brainfuck (42 → 45 declared), so a fresh run on a

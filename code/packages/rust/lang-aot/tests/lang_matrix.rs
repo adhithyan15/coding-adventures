@@ -5250,7 +5250,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 INPUT X\n20 PRINT X\n30 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — two sequential `INPUT` reads, then arithmetic (BA-INPUT).
     // This proves that two independent calls to `input_i64` drain successive lines
@@ -5262,7 +5262,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 INPUT A\n20 INPUT B\n30 PRINT A + B\n40 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — a *runtime (non-foldable) string* chosen by control flow
     // (LANG-FULL E4-dyn foothold). `INPUT N` reads an integer at run time, so
@@ -5293,7 +5293,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 INPUT N\n20 IF N > 0 THEN 50\n30 LET A$ = \"LO\"\n40 GOTO 60\n50 LET A$ = \"HI\"\n60 PRINT A$\n70 END\n",
         expect: Expect::Stdout("HI"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — **string** `INPUT A$` (LANG-FULL E4-dyn, BA string INPUT
     // foothold). Unlike the numeric `INPUT X` (which parses the line to an i64) and
@@ -5336,7 +5336,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 INPUT A$\n20 PRINT A$\n30 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // BA runtime string CONCAT — `str_concat` over two operands that are *both* read
     // from `INPUT`, so neither carries any compile-time string metadata (no data-segment
@@ -5377,7 +5377,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 INPUT A$\n20 INPUT B$\n30 PRINT A$ + B$\n40 END\n",
         expect: Expect::Stdout("OK!"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — **string arrays** (LANG-FULL E4-dyn, work item
     // E4d-BA-arr).  `DIM A$(2)` allocates an `array<str>`: the E5 length-
@@ -6802,10 +6802,10 @@ const PROGRAMS: &[Prog] = &[
     },
 
     // VM-039a: real stdin and EOF on the shared native/LLVM runtime.
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
 
 ];
 
@@ -8298,7 +8298,8 @@ fn run_beam(p: &Prog) -> Option<RunResult> {
     std::fs::write(dir.path().join(format!("{module}.beam")), &bytes)
         .expect("beam: write .beam");
 
-    let out = Command::new("erl")
+    let mut cmd = Command::new("erl");
+    cmd
         // A `str_slice` bounds trap (or any other uncaught error) makes `erl`
         // write `erl_crash.dump` to its current directory during boot. Anchor
         // that in the same disposable temp dir as the `.beam` file rather than
@@ -8316,9 +8317,17 @@ fn run_beam(p: &Prog) -> Option<RunResult> {
         // is then confidently wrong.
         .arg(format!(
             "io:format(\"<<R>>~w<</R>>~n\",[{module}:main()]),halt(0)."
-        ))
-        .output()
-        .expect("beam: spawn erl");
+        ));
+    // BEAM07 (host input): pipe the program's declared stdin bytes through to
+    // the real `erl` process, exactly like `output_with_stdin` already does
+    // for native/LLVM/JVM/CLR. Before this, `run_beam` never wired stdin at
+    // all — every BASIC `INPUT`/FlowMatic `READ-ITEM` row failed BEAM
+    // validation outright (no `input_i64`/`input_more` lowering existed), so
+    // the missing pipe was never a live gap until this slice's IIR-level
+    // lowering made it one. `program_stdin` returns `b""` for every other
+    // cell, so `output_with_stdin`'s `write_all(b"")` is a no-op for them —
+    // this is a pure extension, not a behavior change for existing rows.
+    let out = output_with_stdin(cmd, program_stdin(p)).expect("beam: spawn erl");
 
     let raw = String::from_utf8_lossy(&out.stdout);
     // A non-zero exit is a failure even when stdout happens to parse. OTP writes
@@ -9519,9 +9528,9 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Twig, 49, 392),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 45),
-        (Language::DartmouthBasic, 51, 402),
+        (Language::DartmouthBasic, 51, 407),
         (Language::Oct, 12, 96),
-        (Language::FlowMatic, 8, 60),
+        (Language::FlowMatic, 8, 64),
         (Language::Cobol60, 58, 464),
     ];
 
@@ -15559,6 +15568,33 @@ fn portable_text_stdout_flow_matic_beam_output() {
     eprintln!("FLOW-MATIC BEAM output: {executed} programs executed");
 }
 
+/// BEAM07: `READ-ITEM`'s `input_more` EOF peek + `input_i64` field reads on
+/// real `erl` — the four rows `portable_text_stdout_flow_matic_beam_output`
+/// deliberately excludes (`!p.src.contains("READ-ITEM")`). Covers: a
+/// `READ-ITEM`/`IF END OF DATA` loop over two records then EOF, the same
+/// loop over a genuinely empty file (EOF on the very first peek), a
+/// two-field-per-record loop (`Q`/`UP`), and two sequential bare
+/// `READ-ITEM`s with no EOF check at all. Each row is executed against
+/// real `erl` with its declared stdin piped through `run_beam` — see
+/// `code/specs/BEAM07-beam-host-input.md`.
+#[test]
+fn portable_text_stdout_flow_matic_beam_read_item_and_eof() {
+    if !erl_ok() {
+        eprintln!("SKIP FLOW-MATIC BEAM READ-ITEM/EOF: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p|
+        p.lang == Language::FlowMatic && p.src.contains("READ-ITEM")) {
+        assert!(program.backends.contains(&Beam), "selected FlowMatic READ-ITEM row must declare Beam");
+        let result = run_beam(program).expect("detected erl must execute FLOW-MATIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4, "exactly the four READ-ITEM/EOF rows are checked here");
+    eprintln!("FLOW-MATIC BEAM READ-ITEM/EOF: {executed} programs executed");
+}
+
 /// VM-042/VM-D031: the three non-input Brainfuck rows execute correctly on real
 /// `erl` through the SAME `:atomics`-backed `store_byte`/`load_byte`/`putchar`
 /// lowering every other byte-tape/array BEAM program already uses — `README`'s
@@ -16295,6 +16331,44 @@ fn portable_text_stdout_dartmouth_basic_beam_string_arrays() {
     }
     assert_eq!(executed, 2);
     eprintln!("Dartmouth BASIC BEAM string arrays: {executed} programs executed");
+}
+
+/// BEAM07: `INPUT`/`INPUT A$` on real `erl`, closing out the last Dartmouth
+/// BASIC BEAM gap besides `RND` (VM-018, a separate module-global design
+/// question) — see `code/specs/BEAM07-beam-host-input.md`. Each row is
+/// executed against real `erl` with its declared stdin bytes piped through
+/// `run_beam` (the harness fix this slice made — `run_beam` never wired
+/// stdin at all before): numeric `INPUT X`/two sequential `INPUT`s summed/
+/// a branch-selected string chosen by a runtime `INPUT N`/string `INPUT A$`/
+/// two string `INPUT`s concatenated. "Probe before declaring, promote only
+/// proven cells" — these five rows are proven here, not assumed from the
+/// instruction-shape proofs in `iir-to-beam`'s own test suite.
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_input() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM input: erl unavailable");
+        return;
+    }
+    let srcs: &[&str] = &[
+        "10 INPUT X\n20 PRINT X\n30 END\n",
+        "10 INPUT A\n20 INPUT B\n30 PRINT A + B\n40 END\n",
+        "10 INPUT N\n20 IF N > 0 THEN 50\n30 LET A$ = \"LO\"\n40 GOTO 60\n50 LET A$ = \"HI\"\n60 PRINT A$\n70 END\n",
+        "10 INPUT A$\n20 PRINT A$\n30 END\n",
+        "10 INPUT A$\n20 INPUT B$\n30 PRINT A$ + B$\n40 END\n",
+    ];
+    let mut executed = 0;
+    for src in srcs {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::DartmouthBasic && p.src == *src)
+            .unwrap_or_else(|| panic!("DartmouthBasic row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected BASIC INPUT row must declare Beam");
+        assert!(!program_stdin(program).is_empty(), "selected row must declare stdin");
+        let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 5, "exactly the five INPUT rows are checked here");
+    eprintln!("Dartmouth BASIC BEAM input: {executed} programs executed");
 }
 
 // VM-041: fixed a confirmed silent-corruption bug first — `call_closure`

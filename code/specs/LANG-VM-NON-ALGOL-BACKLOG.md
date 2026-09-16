@@ -8,6 +8,123 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## BEAM07 — BEAM host input: `INPUT`/`READ-ITEM` EOF peek, closing every non-ALGOL BEAM gap except `RND` (selected by the user after BEAM06)
+
+`git fetch origin && git merge origin/main` fast-forwarded cleanly onto the
+BEAM06 merge (below). `gh pr list --state open --limit 50` showed no other
+LANG-VM-related PR in flight, and specifically nothing touching
+`iir-to-beam`, `dartmouth-basic-iir-compiler`, `flow-matic-iir-compiler`, or
+`lang_matrix.rs`'s `run_beam`.
+
+BEAM06's own trailing note left exactly two items in this backlog: VM-060b
+(BEAM host input, unblocking 5 BASIC `INPUT` rows + 4 FlowMatic
+`READ-ITEM`/EOF rows at once) and VM-018 (`RND`'s module-global design).
+The user picked VM-060b as the larger of the two.
+
+Full research, decision, and the two pre-existing framework bugs found
+along the way (both via genuine real-`erl` access-violation crashes, not
+assumed): `code/specs/BEAM07-beam-host-input.md`. Summary:
+
+- **Harness gap**: `run_beam` never piped a program's declared stdin to
+  the spawned `erl` process at all — every other subprocess backend
+  (native/LLVM/JVM/CLR) already did via `output_with_stdin`. Fixed: a pure
+  extension (every other cell's `program_stdin` returns `b""`, a no-op).
+- **IIR lowering gap**: `call_builtin "input_i64"`/`"input_str"`/
+  `"input_more"` had no BEAM lowering at all (`UnsupportedOp` at
+  validation). Fixed: `io:get_line/1` + `string:to_integer/1`/
+  `string:trim/3` for the consuming reads (`input_i64`/`input_str`);
+  `input_more`'s EOF peek emulated with a one-line lookahead cached in the
+  process dictionary under a private key, consumed exactly once via
+  `erlang:put/2`'s "returns the OLD value" contract — real `erl` has no
+  byte-level peek primitive the way C's `ungetc` does.
+
+### BEAM07 discovery: VM-D036 — `erlang:put/2` must lower to `call_ext`, not `gc_bif2` (found in this slice's own new code, but the identical bug is pre-existing in `global_store`)
+
+Real `erlc` disassembly (`erlc -S`) confirms `erlang:get/1` compiles to a
+zero-GC `bif` (safe via `gc_bif1`) but `erlang:put/2` — which can allocate,
+growing the process dictionary's hash table — always compiles to a genuine
+`call_ext`, never `gc_bif2`. This slice's own first cut of the `input_more`
+lookahead cache used `gc_bif2` for `put/2` anyway, by direct precedent
+from the EXISTING `global_store` lowering. It passed every single-read
+test immediately, then either silently corrupted a separate live value or
+crashed `erl` outright with a Windows access violation
+(`ExitStatus(3221225477)` = `0xC0000005`) the moment two sequential reads
+whose results both survive appeared in one function — exactly BASIC's
+`INPUT A\nINPUT B\nPRINT A+B` and FlowMatic's `READ-ITEM` loop shape.
+
+Bisected with a disposable control test using ZERO of this slice's new
+code (`str_const` a list, an UNRELATED `global_store` of a plain integer,
+read the list back) — it reproduced the identical access violation,
+conclusive proof the bug is a **pre-existing `iir-to-beam` framework gap**,
+not something this slice's new lowering introduced. `gc_bif2`'s `Live`
+parameter cannot protect a separate live value across `erlang:put/2`,
+because `put/2` does not honor a guard BIF's "only touch the declared
+Dest" contract — no prior op combined "an `erlang:put/2` call" with "a
+real heap value also live across it" until this slice's two-sequential-
+reads shape did.
+
+**Fixed in this slice's own new lowering** (`input_more`/`input_i64`/
+`input_str`'s `put/2` calls now go through `call_ext`, protected by the
+existing `save_live_across_imported_call!`/`restore_live_across_
+imported_call!` Y-register machinery). **`global_store`'s identical bug is
+NOT fixed here** — converting it requires also adding `global_store` to
+`iir-to-beam`'s `live_across` liveness filter (currently absent, since
+`gc_bif2` was assumed non-clobbering) and re-verifying the ENTIRE existing
+BEAM corpus, since every BASIC/COBOL/Twig program with a module-level
+variable goes through it. A correctly-scoped follow-up, not a drive-by fix
+bundled into this feature slice — filed as
+[#15332](https://github.com/adhithyan15/coding-adventures/issues/15332).
+
+A second, related latent gap was found and fixed generally in the same
+slice (not given its own VM-D0xx number, since it never manifested as an
+independently-reproducible failure once VM-D036's fix landed — see the
+spec's §3.3 for why both were verified significant regardless):
+`lower_iir_to_beam`'s `{allocate, StackNeed, Live}` never zero-initializes
+its Y-register slots the way a real `erlc` always does via `init_yregs` —
+fixed with a `move {a,0} {y,N}` per slot immediately after `allocate`,
+benefiting every function that spills to Y-registers, not just the new
+host-input ops.
+
+### Validation
+
+`iir-to-beam` 0.15.0 → 0.16.0: new `call_builtin` lowering for the three
+host-input builtins; the `erlang:put/2`-as-`call_ext` and `allocate`
+Y-slot zero-init fixes; two new opcode constants (`OP_IS_INTEGER` = 45,
+`OP_GET_TUPLE_ELEMENT` = 66, both confirmed via `beam_opcodes:opcode/2` on
+real `erl`, OTP 29 erts-17.0.5, this host); 11 new tests (105 → 116) —
+validation-acceptance, instruction-shape (each builtin calls exactly the
+imports it should and none it shouldn't), and real-`erl` round-trips
+(sequential reads summed/concatenated, EOF and parse-failure both return
+the permissive default, `input_more` peek-then-consume across two records
+plus a double-peek non-destructiveness proof). `cargo clippy --all-targets
+-- -D warnings` clean.
+
+`lang-aot` 0.344.0 → 0.345.0: `run_beam`'s stdin pipe; all 9 target rows
+promoted to declare `Beam` — each executed against real `erl` with its
+declared stdin piped through the fixed harness BEFORE being promoted, per
+this backlog's "probe before declaring" discipline — via two new dedicated
+tests, `portable_text_stdout_dartmouth_basic_beam_input` (5 rows) and
+`portable_text_stdout_flow_matic_beam_read_item_and_eof` (4 rows).
+`feature_coverage_doc_counts_match_programs_source` updated (Dartmouth
+BASIC `(51, 402)` → `(51, 407)`; FLOW-MATIC `(8, 60)` → `(8, 64)`);
+`LANG-VM-FEATURE-COVERAGE.md`'s Dartmouth BASIC and FLOW-MATIC rows and
+grand-total prose (1667 → 1676) updated to match. A full `lang_matrix` run
+surfaced no regressions from this slice — the only other failures
+(`matrix_every_proven_cell_agrees`, `proven_columns_do_not_silently_skip`,
+and eight `algol_nested_procedure_*` tests) are the pre-existing,
+separately-tracked ALGOL nested-procedure-captured-array bug on
+NativeAOT/JVM (issue #12032), outside this task's ownership boundary and
+unrelated to BEAM.
+
+**Dartmouth BASIC now declares 50/51 rows on `Beam`** (only `RND`/VM-018
+remains). **FLOW-MATIC now declares all 8/8 rows on `Beam`** — fully
+complete. Combined with Twig (49/49), COBOL-60 (58/58), and Nib/Oct/
+Brainfuck each fully proven per their own rows, **this closes every
+non-ALGOL BEAM gap in this backlog except `RND`** (VM-018) and the
+just-discovered, deliberately-deferred `global_store`/`gc_bif2` follow-up
+(VM-D036) — both genuinely separate, unscoped questions a future slice
+should pick up on their own merits, not probe-and-promote items.
+
 ## BEAM06 — Dartmouth BASIC BEAM: `str`-typed array element representation, 45/51 (selected after the VM-041 follow-up)
 
 `git fetch origin && git merge origin/main` fast-forwarded cleanly onto the
