@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C84-uska",
+    "language": "hindi",
+    "chapter": 92,
+    "sequence": 3520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d756f5b1aa763f78"
+  },
+  "findings": []
+}
