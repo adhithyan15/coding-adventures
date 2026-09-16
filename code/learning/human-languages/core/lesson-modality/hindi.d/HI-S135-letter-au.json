@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S135-letter-au",
+    "language": "hindi",
+    "chapter": 34,
+    "sequence": 865,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9d72daac70b38165",
+    "detachableSegments": [
+      "Script you'll notice: औ",
+      "Script: built out of a letter you have",
+      "Writing: औ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
