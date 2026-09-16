@@ -502,9 +502,15 @@
       "id": "HI-A1-V-07",
       "category": "Kriya (the verb)",
       "label": "the present continuous raha/rahi/rahe hai as a productive pattern",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C89-CONT-01",
+        "HI-LEX-C89-CONT-02",
+        "HI-LEX-C89-CONT-03",
+        "HI-LEX-C89-CONT-04",
+        "HI-LEX-C89-CONT-05"
+      ],
       "derivedFrom": "ES:A1-V-03, ES:A1-V-13",
-      "note": "It appears twice as a fixed frame -- `ek baj raha hai` in the hour lesson, `barish ho rahi hai` in the weather lesson -- but no atom presents it as a pattern applying to any stem, the way the habitual lesson does for -ta."
+      "note": "Chapter 97 supplies the pattern, one lesson per row of the grid plus a lesson on the contrast with the habitual. The note was exactly right and needed no correction: the pattern existed only as two fixed frames, ek baj rahaa hai in the hour lesson and baarish ho rahii hai in the weather lesson, with no atom presenting it as something that applies to any stem. Those two frames are COLLECTED rather than left as lumps -- the review lesson takes both apart and shows that the only difference between them is the gender of the subject, which is what the middle word was reporting all along. The shape is unusually tidy: three words with one job each, and the stem stays BARE, which is what makes it productive where the habitual needs an ending on the stem. The chapter also names what an English speaker gets for free, because English keeps the same do/am-doing split Hindi keeps where French, German and Spanish translate both with one present tense."
     },
     {
       "id": "HI-A1-V-08",

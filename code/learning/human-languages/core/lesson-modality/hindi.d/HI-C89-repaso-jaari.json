@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C89-repaso-jaari",
+    "language": "hindi",
+    "chapter": 97,
+    "sequence": 3940,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fbb04e3123ef3977"
+  },
+  "findings": []
+}
