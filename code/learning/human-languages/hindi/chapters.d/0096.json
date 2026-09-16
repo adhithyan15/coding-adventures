@@ -1,0 +1,22 @@
+{
+  "chapter": 96,
+  "title": "The Future, And The Two Letters It Needed",
+  "label": "ch:hi-bhavishya",
+  "canDo": "I can say what I will do, what somebody else will do, and arrange to meet at a named hour.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "HI-C88-sintesis-bhavishya",
+    "kind": "task",
+    "summary": "Read reading item 8 of the first practice paper word for word -- main panch baje aunga -- and answer the same question as a conversation at the aap level.",
+    "assesses": [
+      "HI-LEX-C88-FUT-01",
+      "HI-LEX-C88-FUT-02",
+      "HI-LEX-C88-FUT-03",
+      "HI-LEX-C88-FUT-04",
+      "HI-LEX-C88-TIME-01"
+    ],
+    "note": "Closes two points and makes four scored mock items readable. HI-A1-V-11 wanted the future as a productive paradigm with agreement, and its note said milenge was taught as one memorised farewell rather than as a tense -- that half of the note is too strong and is corrected here: chapter 4 does take milenge apart, names the root, and states that Hindi marks the future with an ending rather than a helper word. What it gives is ONE CELL of a grid, the plural -enge, with no person and no gender, which is why the point was genuinely uncovered. HI-A1-T-06 wanted the adverbial baje, and its note is exactly right: chapter 18 teaches bajna as a predicate (ek baj raha hai, it IS one o'clock) and never the form that sits beside a number to fix a time to meet at. The chapter also pays down script debt: the independent vowels u, uu and o had never been taught anywhere in the track, and uu is what the whole first-person future waits on -- aaungaa and jaaungaa put a long u where no consonant can carry the mark, so it has to be written as a full letter."
+  }
+}

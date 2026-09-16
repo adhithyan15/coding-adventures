@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Weather",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:39509f6941c36348",
+  "sourceHash": "fnv1a64:da536cff6f02a2a6",
   "lessons": [
     {
       "id": "HI-C20-mausam",
@@ -162,7 +162,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:86586496b1dd7704",
+      "sourceHash": "fnv1a64:e4d41895fa0d03dc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -325,11 +325,11 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ध (dha) once more",
+              "instruction": "back at any page and find ध (dha) once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find ध once more]"
+              "source": "[YOU LOOK: back at any page and find ध once more]"
             }
           ]
         },

@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "HI-S128-letter-uu",
+    "language": "hindi",
+    "chapter": 22,
+    "sequence": 705,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e20e5cef77fc3695",
+    "detachableSegments": [
+      "Script you'll notice: ऊ",
+      "Script: the pair, side by side",
+      "Writing: ऊ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

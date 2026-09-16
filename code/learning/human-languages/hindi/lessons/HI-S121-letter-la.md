@@ -86,7 +86,7 @@ You already say these, and every one of them has ल somewhere inside it:
 > अलविदा  ·  मिलेंगे  ·  नमस्ते
 
 - [YOU TRACE: ल three times, saying *la* as you finish each one]
-- [YOU LOOK: back at any page of this chapter and find ल once more]
+- [YOU LOOK: back at any page and find ल once more]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-121] -->

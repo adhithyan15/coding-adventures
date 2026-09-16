@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:738e09b1186fffbd",
+  "sourceHash": "fnv1a64:36c548d2b7bc682c",
   "lessons": [
     {
       "id": "HI-C18-ghanta",
@@ -143,7 +143,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:af3ea18f75e115dc",
+      "sourceHash": "fnv1a64:a8d594fd50429fd8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -262,11 +262,11 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ख (kha) once more",
+              "instruction": "back at any page and find ख (kha) once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find ख once more]"
+              "source": "[YOU LOOK: back at any page and find ख once more]"
             }
           ]
         },

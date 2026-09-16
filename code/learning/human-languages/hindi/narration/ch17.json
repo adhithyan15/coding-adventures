@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:52df70e96f16d43a",
+  "sourceHash": "fnv1a64:7ff519ca33bed902",
   "lessons": [
     {
       "id": "HI-C17-dopahar-aadhi-raat",
@@ -135,7 +135,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:97507137e1a494fd",
+      "sourceHash": "fnv1a64:fcd442ea756bcd41",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -302,11 +302,11 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "back at any page of this chapter and find ल (la) once more",
+              "instruction": "back at any page and find ल (la) once more",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: back at any page of this chapter and find ल once more]"
+              "source": "[YOU LOOK: back at any page and find ल once more]"
             }
           ]
         },

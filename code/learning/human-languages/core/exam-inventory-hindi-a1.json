@@ -538,9 +538,15 @@
       "id": "HI-A1-V-11",
       "category": "Kriya (the verb)",
       "label": "forming the future productively: -unga / -ega / -engi and its agreement",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C88-FUT-01",
+        "HI-LEX-C88-FUT-02",
+        "HI-LEX-C88-FUT-03",
+        "HI-LEX-C88-FUT-04",
+        "HI-LEX-C88-FUT-05"
+      ],
       "derivedFrom": "ES:A1-F3-05, ES:A1-F3-06",
-      "note": "Both mocks depend on it in the first scored part: mock 1 reading item 8 `main panch baje aunga`, item 11 `bas das minat me aegi`, mock 2 items 8 and 13. `milenge` is taught as one memorised farewell, not as a tense."
+      "note": "Chapter 96 supplies the paradigm the point asks for: one lesson per row, mai/tum/vah/ham-ve-aap, with the -aa/-ii gender pair on every form. HALF THE OLD NOTE WAS TOO STRONG and is corrected here. milenge is NOT taught as one memorised farewell: HI-C04-milenge takes it apart, names the root mil-, names -enge as the plural future, and states that Hindi marks the future with an ending on the stem rather than a helper word. What chapter 4 gives is ONE CELL of a grid -- the plural, with no person and no gender -- which is why the point was genuinely uncovered, and the new chapter reads that farewell back as a stem plus this ending. The chapter was blocked on script rather than on grammar: aaungaa and jaaungaa put a long u where the stem ends in a vowel, so nothing can carry the matra and it has to be written as the independent letter uu, which had never been taught. HI-S127/128/129 teach u, uu and o, and aaoge needs the third for the same reason."
     },
     {
       "id": "HI-A1-V-12",
@@ -1179,9 +1185,11 @@
       "id": "HI-A1-T-06",
       "category": "Samay aur tarikh (time and date)",
       "label": "naming a clock time as an appointment: X baje",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C88-TIME-01"
+      ],
       "derivedFrom": "ES:A1-NG4-01, ES:A1-NG1-04",
-      "note": "The hour lesson teaches the predicate `ek baj raha hai` -- it IS one o'clock -- but not the adverbial `baje` that both mocks use throughout: `panch baje aunga`, `nau baje shuru hoga`, `sat baje uthti hun`, `char baje`. Reading the hour is taught; arranging to meet at it is not."
+      "note": "baje is introduced by HI-C88-baje. The note is exactly right about what was missing: chapter 18 teaches bajnaa as a PREDICATE -- ek baj rahaa hai, it IS one o'clock -- and never the adverbial form that sits beside a number to fix a time to act at. The lesson teaches it as the same bell verb in a different shape, states that Hindi has no separate word for 'at', and places the time phrase in the seat the place phrase already took, after the person and before the verb. It pairs with the future in the same chapter because that is how both mocks print it: a number, baje, and a future verb."
     },
     {
       "id": "HI-A1-T-07",

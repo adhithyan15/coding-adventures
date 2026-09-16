@@ -1,0 +1,18 @@
+{
+  "id": "HI-EXT-96-FUTURE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can form the future for any person, and name an hour to meet at.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C88-karunga",
+    "HI-C88-aaunga",
+    "HI-C88-aaega",
+    "HI-C88-aaenge",
+    "HI-C88-aaoge",
+    "HI-C88-baje",
+    "HI-C88-repaso-bhavishya",
+    "HI-C88-sintesis-bhavishya"
+  ]
+}

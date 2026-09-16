@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 18,
-  "sourceHash": "fnv1a64:738e09b1186fffbd",
+  "sourceHash": "fnv1a64:36c548d2b7bc682c",
   "lessonIds": [
     "HI-C18-ghanta",
     "HI-S122-letter-kha"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "hindi/narration/ch18.txt",
   "json": "hindi/narration/ch18.json",
-  "textHash": "fnv1a64:56bbc739efd02c7e",
-  "jsonHash": "fnv1a64:7b7e585615f16523",
+  "textHash": "fnv1a64:b6b68fa0a756d3b4",
+  "jsonHash": "fnv1a64:5360c249a1f43c26",
   "findings": []
 }
