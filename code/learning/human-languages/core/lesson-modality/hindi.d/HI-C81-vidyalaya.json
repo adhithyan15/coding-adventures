@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C81-vidyalaya",
+    "language": "hindi",
+    "chapter": 89,
+    "sequence": 3360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80455588d0b3ef03"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "HI-EXT-89-SCHOOL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the school casually and formally, and place the teacher and student inside it.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C81-skool",
+    "HI-C81-vidyalaya",
+    "HI-C81-repaso-skool",
+    "HI-C81-sintesis-skool"
+  ]
+}
