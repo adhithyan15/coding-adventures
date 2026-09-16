@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C87-repaso-atit",
+    "language": "hindi",
+    "chapter": 95,
+    "sequence": 3790,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:35e0f6db28d9021b"
+  },
+  "findings": []
+}

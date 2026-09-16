@@ -1,0 +1,18 @@
+{
+  "id": "HI-EXT-95-PAST",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say where I was, say what I used to do, and negate either one.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C87-par",
+    "HI-C87-thaa",
+    "HI-C87-thii",
+    "HI-C87-the",
+    "HI-C87-nahin-thaa",
+    "HI-C87-bolta-thaa",
+    "HI-C87-repaso-atit",
+    "HI-C87-sintesis-atit"
+  ]
+}

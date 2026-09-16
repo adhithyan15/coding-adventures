@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S126-letter-tha",
+    "language": "hindi",
+    "chapter": 20,
+    "sequence": 682,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:222ee866c4676642",
+    "detachableSegments": [
+      "Script you'll notice: थ",
+      "Script: the seat थ fills",
+      "Writing: थ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

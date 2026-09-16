@@ -1,0 +1,19 @@
+{
+  "id": "HI-PATH-95-PAST",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "HI-C87-par",
+    "HI-C87-thaa",
+    "HI-C87-thii",
+    "HI-C87-the",
+    "HI-C87-nahin-thaa",
+    "HI-C87-bolta-thaa",
+    "HI-C87-repaso-atit",
+    "HI-C87-sintesis-atit"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-95-PAST"
+  ],
+  "after": []
+}
