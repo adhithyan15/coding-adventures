@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C84-tumhara",
+    "language": "hindi",
+    "chapter": 92,
+    "sequence": 3540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f63bf6ae12785383"
+  },
+  "findings": []
+}

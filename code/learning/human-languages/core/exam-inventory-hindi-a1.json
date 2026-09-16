@@ -167,17 +167,23 @@
       "id": "HI-A1-DET-06",
       "category": "Nirdeshak (determiners and definiteness)",
       "label": "the remaining possessives: uska, hamara, tumhara",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C84-POSS-01",
+        "HI-LEX-C84-POSS-02",
+        "HI-LEX-C84-POSS-03"
+      ],
       "derivedFrom": "ES:A1-POS-01, ES:A1-POS-02",
-      "note": "Only mera and apka are introduced. A learner cannot say whose anything is unless it is their own or the addressee's."
+      "note": "uska, hamara and tumhara are introduced by chapter 92, beside the mera and apka the track already had. The chapter teaches them as one system rather than three words: all six end in -aa and all six agree with the THING OWNED rather than with the owner, which is the opposite of English."
     },
     {
       "id": "HI-A1-DET-07",
       "category": "Nirdeshak (determiners and definiteness)",
       "label": "the reflexive possessive apna, which replaces the possessive when the owner is the subject",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C84-POSS-04"
+      ],
       "derivedFrom": "ES:A1-PRON-04",
-      "note": "Hindi's counterpart to Spanish reflexive `se`, and it is not optional: `main mera dost` is wrong where `main apna dost` is right. BOTH mocks' personal accounts use it -- `apne dost ke sath`, `apne parivar ke sath` -- and nothing in the corpus introduces it."
+      "note": "apna is introduced by HI-C84-apna, which states the requirement the note named: main mera kaam is wrong where main apna kaam is right. One Hindi word covers my own, your own, their own and our own, and it also removes an ambiguity English cannot -- uski kitab is somebody else's book, apni kitab is his own."
     },
     {
       "id": "HI-A1-ADJ-01",
@@ -318,9 +324,12 @@
       "id": "HI-A1-PRON-07",
       "category": "Sarvanam (pronouns)",
       "label": "a pronoun in front of a postposition (mere liye, mere sath, mere pas)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C84-POSS-06",
+        "HI-LEX-C84-POSS-05"
+      ],
       "derivedFrom": "ES:A1-PRON-08",
-      "note": "Hindi's counterpart to the proxy's stressed post-prepositional pronouns. Needs the oblique possessive plus a compound postposition, and neither is taught."
+      "note": "mere liye, mere saath and mere paas are taught together as one pattern by HI-C84-mere-liye and HI-C84-mere-paas. The oblique the note said was untaught is the chapter's central insight: chapter 2 taught mere as the PLURAL of mera, and it is also the oblique, so -aa becomes -e in front of any postposition. Identical spelling, two jobs, and only what follows tells you which."
     },
     {
       "id": "HI-A1-PRON-08",
@@ -500,9 +509,11 @@
       "id": "HI-A1-V-09",
       "category": "Kriya (the verb)",
       "label": "possession: mere pas X hai",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C84-POSS-05"
+      ],
       "derivedFrom": "ES:A1-NG1-01",
-      "note": "Hindi has no verb 'to have'; possession is `at me there is`, which needs `pas` and the oblique possessive. Neither is taught, so a learner cannot say they have anything."
+      "note": "mere paas is introduced by HI-C84-mere-paas. The lesson teaches the construction as the note describes it -- Hindi has no verb to have, so possession is at me there is -- and makes the agreement explicit: the thing owned is the subject, so hai agrees with it and not with the possessor."
     },
     {
       "id": "HI-A1-V-10",

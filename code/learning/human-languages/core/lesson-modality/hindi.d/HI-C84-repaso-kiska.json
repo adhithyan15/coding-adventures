@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C84-repaso-kiska",
+    "language": "hindi",
+    "chapter": 92,
+    "sequence": 3580,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3f291d44941e0ad6"
+  },
+  "findings": []
+}

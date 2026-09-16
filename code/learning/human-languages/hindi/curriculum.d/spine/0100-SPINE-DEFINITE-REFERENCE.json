@@ -7,7 +7,8 @@
     "HI-PATH-44-FAMILY",
     "HI-PATH-88-ADJECTIVES",
     "HI-PATH-90-BODY",
-    "HI-PATH-91-CHARACTER"
+    "HI-PATH-91-CHARACTER",
+    "HI-PATH-92-POSSESSIVE"
   ],
   "omits": [
     "GRAMMAR-THE"
