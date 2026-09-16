@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 6848,
+    "totalLessons": 6859,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -26,13 +26,13 @@
     "rampOverBudgetLessons": 40,
     "scriptRampOverBudgetLessons": 31,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 268,
-    "scriptExposureExemptedGlyphs": 1467,
+    "scriptClosureViolations": 264,
+    "scriptExposureExemptedGlyphs": 1463,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 497,
+    "atomsNeverRevisited": 496,
     "forwardReferences": 782,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 87,
@@ -40,9 +40,9 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 5469,
+    "drivableLessons": 5476,
     "drivablePercent": 80,
-    "chaptersWithoutDrivablePrefix": 216,
+    "chaptersWithoutDrivablePrefix": 217,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -2070,7 +2070,8 @@
           92,
           93,
           94,
-          95
+          95,
+          96
         ],
         "bookChapters": [
           1,
@@ -2167,7 +2168,8 @@
           92,
           93,
           94,
-          95
+          95,
+          96
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -4019,9 +4021,9 @@
       {
         "language": "hindi",
         "status": "version-2",
-        "lessonCount": 410,
+        "lessonCount": 421,
         "versions": {
-          "2": 410
+          "2": 421
         }
       },
       {
@@ -4825,8 +4827,8 @@
       },
       {
         "language": "hindi",
-        "bookChapters": 95,
-        "declaredChapters": 95,
+        "bookChapters": 96,
+        "declaredChapters": 96,
         "missingCapability": 0,
         "findings": 13,
         "clean": false
@@ -4961,8 +4963,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1541,
-      "declaredChapters": 1541,
+      "bookChapters": 1542,
+      "declaredChapters": 1542,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 87,
@@ -4974,11 +4976,11 @@
     }
   },
   "levels": {
-    "totalLessons": 6848,
+    "totalLessons": 6859,
     "byLevel": {
-      "pre-A1": 3870,
+      "pre-A1": 3873,
       "A1": 2257,
-      "A2": 637,
+      "A2": 645,
       "B1": 39,
       "B2": 17,
       "C1": 10,
@@ -5079,11 +5081,11 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 410,
+        "lessonCount": 421,
         "byLevel": {
-          "pre-A1": 265,
+          "pre-A1": 268,
           "A1": 99,
-          "A2": 46,
+          "A2": 54,
           "B1": 0,
           "B2": 0,
           "C1": 0,
@@ -6101,9 +6103,9 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 410,
-        "measurable": 401,
-        "unmeasurable": 9,
+        "lessonCount": 421,
+        "measurable": 411,
+        "unmeasurable": 10,
         "lessonViolations": 1,
         "chapterViolations": 2
       },
@@ -6650,7 +6652,7 @@
           "language": "hindi",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 410,
+          "lessonCount": 421,
           "totalGlyphs": 57,
           "lessonViolations": 3,
           "systemViolations": 0,
@@ -6838,7 +6840,7 @@
     "summary": {
       "lessonViolations": 40,
       "chapterViolations": 61,
-      "unmeasurableLessons": 89,
+      "unmeasurableLessons": 90,
       "measurablePercent": 99,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -10519,19 +10521,6 @@
         "revisits": 1
       },
       {
-        "atom": "HI-CONCEPT-C06-NUMBERS-1-5-01",
-        "language": "hindi",
-        "introducedBy": "HI-C06-numbers-1-5",
-        "introducedAt": 53,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "HI-CONCEPT-C06-PAANCH-NASAL-01",
         "language": "hindi",
         "introducedBy": "HI-C06-paanch-nasal",
@@ -10542,7 +10531,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 1
       },
       {
         "atom": "HI-CONCEPT-C06-TIN-CHAR-HISTORY-01",
@@ -10571,45 +10560,6 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-C07-HAAN-02",
-        "language": "hindi",
-        "introducedBy": "HI-C07-haan",
-        "introducedAt": 58,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-C07-NAHIN-02",
-        "language": "hindi",
-        "introducedBy": "HI-C07-nahin",
-        "introducedAt": 59,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-C07-NAHIN-03",
-        "language": "hindi",
-        "introducedBy": "HI-C07-nahin",
-        "introducedAt": 59,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "HI-CONCEPT-C08-KRIPAYA-01",
         "language": "hindi",
         "introducedBy": "HI-C08-kripaya",
@@ -10634,6 +10584,19 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C09-MAAF-KIJIYE-02",
+        "language": "hindi",
+        "introducedBy": "HI-C09-maaf-kijiye",
+        "introducedAt": 65,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "HI-CONCEPT-C10-SHANIVAAR-RAVIVAAR-01",
@@ -10880,7 +10843,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "HI-CONCEPT-C18-GHANTA-02",
@@ -10893,7 +10856,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "HI-CONCEPT-C20-MAUSAM-01",
@@ -10935,10 +10898,62 @@
         "revisits": 1
       },
       {
+        "atom": "HI-CONCEPT-C21-NUMBERS-6-10-02",
+        "language": "hindi",
+        "introducedBy": "HI-C21-numbers-6-10",
+        "introducedAt": 101,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-01",
+        "language": "hindi",
+        "introducedBy": "HI-C21-six-nine-ten-history",
+        "introducedAt": 102,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-02",
+        "language": "hindi",
+        "introducedBy": "HI-C21-six-nine-ten-history",
+        "introducedAt": 102,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-03",
+        "language": "hindi",
+        "introducedBy": "HI-C21-six-nine-ten-history",
+        "introducedAt": 102,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "HI-CONCEPT-C34-LIKHNA-02",
         "language": "hindi",
         "introducedBy": "HI-C34-likhna",
-        "introducedAt": 121,
+        "introducedAt": 124,
         "missed": [
           "R1",
           "R2",
@@ -10951,7 +10966,7 @@
         "atom": "HI-CONCEPT-C34-PADHNA-02",
         "language": "hindi",
         "introducedBy": "HI-C34-padhna",
-        "introducedAt": 120,
+        "introducedAt": 123,
         "missed": [
           "R1",
           "R2",
@@ -10964,7 +10979,7 @@
         "atom": "HI-CONCEPT-C34-SAMAJHNA-02",
         "language": "hindi",
         "introducedBy": "HI-C34-samajhna",
-        "introducedAt": 119,
+        "introducedAt": 122,
         "missed": [
           "R1",
           "R2",
@@ -10977,7 +10992,7 @@
         "atom": "HI-CONCEPT-C34-SOCHNA-02",
         "language": "hindi",
         "introducedBy": "HI-C34-sochna",
-        "introducedAt": 118,
+        "introducedAt": 121,
         "missed": [
           "R1",
           "R2",
@@ -10990,7 +11005,7 @@
         "atom": "HI-CONCEPT-C35-PASAND-02",
         "language": "hindi",
         "introducedBy": "HI-C35-pasand",
-        "introducedAt": 125,
+        "introducedAt": 128,
         "missed": [
           "R1",
           "R2",
@@ -11003,7 +11018,7 @@
         "atom": "HI-CONCEPT-C35-PASAND-03",
         "language": "hindi",
         "introducedBy": "HI-C35-pasand",
-        "introducedAt": 125,
+        "introducedAt": 128,
         "missed": [
           "R1",
           "R2",
@@ -11016,7 +11031,7 @@
         "atom": "HI-LEX-C58-HOUSE-05",
         "language": "hindi",
         "introducedBy": "HI-C58-sheet",
-        "introducedAt": 236,
+        "introducedAt": 239,
         "missed": [
           "R1",
           "R2",
@@ -11030,19 +11045,6 @@
         "language": "hindi",
         "introducedBy": "HI-S01-letter-ma",
         "introducedAt": 56,
-        "missed": [
-          "R1",
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "HI-SCRIPT-RECOG-04",
-        "language": "hindi",
-        "introducedBy": "HI-S04-letter-aa",
-        "introducedAt": 66,
         "missed": [
           "R1",
           "R2",
@@ -11182,10 +11184,10 @@
         "revisits": 0
       },
       {
-        "atom": "HI-SCRIPT-RECOG-126",
+        "atom": "HI-SCRIPT-RECOG-129",
         "language": "hindi",
-        "introducedBy": "HI-S126-letter-tha",
-        "introducedAt": 100,
+        "introducedBy": "HI-S129-letter-o",
+        "introducedAt": 105,
         "missed": [
           "R1",
           "R2",
@@ -29524,7 +29526,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 4
       },
       {
         "atom": "HI-CONCEPT-C04-PHIR-01",
@@ -29572,7 +29574,19 @@
           "R3",
           "R4"
         ],
-        "revisits": 3
+        "revisits": 4
+      },
+      {
+        "atom": "HI-CONCEPT-C06-NUMBERS-1-5-01",
+        "language": "hindi",
+        "introducedBy": "HI-C06-numbers-1-5",
+        "introducedAt": 53,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "HI-CONCEPT-C07-HAAN-01",
@@ -29587,6 +29601,54 @@
         "revisits": 5
       },
       {
+        "atom": "HI-CONCEPT-C07-HAAN-02",
+        "language": "hindi",
+        "introducedBy": "HI-C07-haan",
+        "introducedAt": 58,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C07-NAHIN-01",
+        "language": "hindi",
+        "introducedBy": "HI-C07-nahin",
+        "introducedAt": 59,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 11
+      },
+      {
+        "atom": "HI-CONCEPT-C07-NAHIN-02",
+        "language": "hindi",
+        "introducedBy": "HI-C07-nahin",
+        "introducedAt": 59,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C07-NAHIN-03",
+        "language": "hindi",
+        "introducedBy": "HI-C07-nahin",
+        "introducedAt": 59,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "HI-CONCEPT-C09-MAAF-KIJIYE-01",
         "language": "hindi",
         "introducedBy": "HI-C09-maaf-kijiye",
@@ -29597,18 +29659,6 @@
           "R4"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "HI-CONCEPT-C09-MAAF-KIJIYE-02",
-        "language": "hindi",
-        "introducedBy": "HI-C09-maaf-kijiye",
-        "introducedAt": 65,
-        "missed": [
-          "R1",
-          "R2",
-          "R4"
-        ],
-        "revisits": 3
       },
       {
         "atom": "HI-CONCEPT-C13-HAATH-01",
@@ -29702,63 +29752,15 @@
         "missed": [
           "R1",
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-C21-NUMBERS-6-10-02",
-        "language": "hindi",
-        "introducedBy": "HI-C21-numbers-6-10",
-        "introducedAt": 101,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-01",
-        "language": "hindi",
-        "introducedBy": "HI-C21-six-nine-ten-history",
-        "introducedAt": 102,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-02",
-        "language": "hindi",
-        "introducedBy": "HI-C21-six-nine-ten-history",
-        "introducedAt": 102,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-03",
-        "language": "hindi",
-        "introducedBy": "HI-C21-six-nine-ten-history",
-        "introducedAt": 102,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
       },
       {
         "atom": "HI-CONCEPT-C22-GYARAH-BEES-01",
         "language": "hindi",
         "introducedBy": "HI-C22-gyarah-bees",
-        "introducedAt": 103,
+        "introducedAt": 106,
         "missed": [
           "R1",
           "R2",
@@ -29770,7 +29772,7 @@
         "atom": "HI-CONCEPT-C22-GYARAH-BEES-02",
         "language": "hindi",
         "introducedBy": "HI-C22-gyarah-bees",
-        "introducedAt": 103,
+        "introducedAt": 106,
         "missed": [
           "R1",
           "R2",
@@ -29782,7 +29784,7 @@
         "atom": "HI-CONCEPT-C22-GYARAH-BEES-03",
         "language": "hindi",
         "introducedBy": "HI-C22-gyarah-bees",
-        "introducedAt": 103,
+        "introducedAt": 106,
         "missed": [
           "R1",
           "R2",
@@ -29794,7 +29796,7 @@
         "atom": "HI-CONCEPT-C22-GYARAH-BEES-04",
         "language": "hindi",
         "introducedBy": "HI-C22-gyarah-bees",
-        "introducedAt": 103,
+        "introducedAt": 106,
         "missed": [
           "R1",
           "R2",
@@ -29806,7 +29808,7 @@
         "atom": "HI-CONCEPT-C23-BILLI-HISTORY-01",
         "language": "hindi",
         "introducedBy": "HI-C23-billi-history",
-        "introducedAt": 105,
+        "introducedAt": 108,
         "missed": [
           "R1",
           "R2",
@@ -29818,7 +29820,7 @@
         "atom": "HI-CONCEPT-C24-HARA-PILA-01",
         "language": "hindi",
         "introducedBy": "HI-C24-hara-pila",
-        "introducedAt": 106,
+        "introducedAt": 109,
         "missed": [
           "R1",
           "R2",
@@ -29830,7 +29832,7 @@
         "atom": "HI-CONCEPT-C24-PILA-HISTORY-01",
         "language": "hindi",
         "introducedBy": "HI-C24-pila-history",
-        "introducedAt": 107,
+        "introducedAt": 110,
         "missed": [
           "R1",
           "R2",
@@ -29842,7 +29844,7 @@
         "atom": "HI-CONCEPT-C25-DIN-01",
         "language": "hindi",
         "introducedBy": "HI-C25-din",
-        "introducedAt": 108,
+        "introducedAt": 111,
         "missed": [
           "R1",
           "R2",
@@ -29854,7 +29856,7 @@
         "atom": "HI-CONCEPT-C25-DIN-02",
         "language": "hindi",
         "introducedBy": "HI-C25-din",
-        "introducedAt": 108,
+        "introducedAt": 111,
         "missed": [
           "R1",
           "R2",
@@ -29866,7 +29868,7 @@
         "atom": "HI-CONCEPT-C26-RAAT-01",
         "language": "hindi",
         "introducedBy": "HI-C26-raat",
-        "introducedAt": 109,
+        "introducedAt": 112,
         "missed": [
           "R1",
           "R2",
@@ -29878,7 +29880,7 @@
         "atom": "HI-CONCEPT-C26-RAAT-02",
         "language": "hindi",
         "introducedBy": "HI-C26-raat",
-        "introducedAt": 109,
+        "introducedAt": 112,
         "missed": [
           "R1",
           "R2",
@@ -29890,7 +29892,7 @@
         "atom": "HI-CONCEPT-C27-SHUBH-RAATRI-01",
         "language": "hindi",
         "introducedBy": "HI-C27-shubh-raatri",
-        "introducedAt": 110,
+        "introducedAt": 113,
         "missed": [
           "R1",
           "R2",
@@ -29902,7 +29904,7 @@
         "atom": "HI-CONCEPT-C27-SHUBH-RAATRI-02",
         "language": "hindi",
         "introducedBy": "HI-C27-shubh-raatri",
-        "introducedAt": 110,
+        "introducedAt": 113,
         "missed": [
           "R1",
           "R2",
@@ -29914,7 +29916,7 @@
         "atom": "HI-CONCEPT-C28-SUBAH-01",
         "language": "hindi",
         "introducedBy": "HI-C28-subah",
-        "introducedAt": 111,
+        "introducedAt": 114,
         "missed": [
           "R1",
           "R2",
@@ -29926,7 +29928,7 @@
         "atom": "HI-CONCEPT-C28-SUBAH-02",
         "language": "hindi",
         "introducedBy": "HI-C28-subah",
-        "introducedAt": 111,
+        "introducedAt": 114,
         "missed": [
           "R1",
           "R2",
@@ -29938,7 +29940,7 @@
         "atom": "HI-CONCEPT-C28-SUBAH-03",
         "language": "hindi",
         "introducedBy": "HI-C28-subah",
-        "introducedAt": 111,
+        "introducedAt": 114,
         "missed": [
           "R1",
           "R2",
@@ -29950,7 +29952,7 @@
         "atom": "HI-CONCEPT-C29-SHAAM-02",
         "language": "hindi",
         "introducedBy": "HI-C29-shaam",
-        "introducedAt": 112,
+        "introducedAt": 115,
         "missed": [
           "R1",
           "R2",
@@ -29962,7 +29964,7 @@
         "atom": "HI-CONCEPT-C30-DOPAHAR-WIDENED-01",
         "language": "hindi",
         "introducedBy": "HI-C30-dopahar-widened",
-        "introducedAt": 113,
+        "introducedAt": 116,
         "missed": [
           "R1",
           "R2",
@@ -29974,7 +29976,7 @@
         "atom": "HI-CONCEPT-C30-DOPAHAR-WIDENED-02",
         "language": "hindi",
         "introducedBy": "HI-C30-dopahar-widened",
-        "introducedAt": 113,
+        "introducedAt": 116,
         "missed": [
           "R1",
           "R2",
@@ -29986,7 +29988,7 @@
         "atom": "HI-CONCEPT-C31-SUPRABHAT-01",
         "language": "hindi",
         "introducedBy": "HI-C31-suprabhat",
-        "introducedAt": 114,
+        "introducedAt": 117,
         "missed": [
           "R1",
           "R2",
@@ -29998,7 +30000,7 @@
         "atom": "HI-CONCEPT-C31-SUPRABHAT-02",
         "language": "hindi",
         "introducedBy": "HI-C31-suprabhat",
-        "introducedAt": 114,
+        "introducedAt": 117,
         "missed": [
           "R1",
           "R2",
@@ -30010,7 +30012,7 @@
         "atom": "HI-CONCEPT-C32-EVENING-REGISTER-01",
         "language": "hindi",
         "introducedBy": "HI-C32-evening-register",
-        "introducedAt": 116,
+        "introducedAt": 119,
         "missed": [
           "R1",
           "R2",
@@ -30022,7 +30024,7 @@
         "atom": "HI-CONCEPT-C32-SHUBH-SANDHYA-01",
         "language": "hindi",
         "introducedBy": "HI-C32-shubh-sandhya",
-        "introducedAt": 115,
+        "introducedAt": 118,
         "missed": [
           "R1",
           "R2",
@@ -30034,7 +30036,7 @@
         "atom": "HI-CONCEPT-C32-SHUBH-SANDHYA-02",
         "language": "hindi",
         "introducedBy": "HI-C32-shubh-sandhya",
-        "introducedAt": 115,
+        "introducedAt": 118,
         "missed": [
           "R1",
           "R2",
@@ -30046,7 +30048,7 @@
         "atom": "HI-CONCEPT-C33-SHUBH-DOPAHAR-01",
         "language": "hindi",
         "introducedBy": "HI-C33-shubh-dopahar",
-        "introducedAt": 117,
+        "introducedAt": 120,
         "missed": [
           "R1",
           "R2",
@@ -30058,7 +30060,7 @@
         "atom": "HI-CONCEPT-C33-SHUBH-DOPAHAR-02",
         "language": "hindi",
         "introducedBy": "HI-C33-shubh-dopahar",
-        "introducedAt": 117,
+        "introducedAt": 120,
         "missed": [
           "R1",
           "R2",
@@ -30070,7 +30072,7 @@
         "atom": "HI-CONCEPT-C34-LIKHNA-01",
         "language": "hindi",
         "introducedBy": "HI-C34-likhna",
-        "introducedAt": 121,
+        "introducedAt": 124,
         "missed": [
           "R2",
           "R3",
@@ -30082,7 +30084,7 @@
         "atom": "HI-CONCEPT-C34-PADHNA-01",
         "language": "hindi",
         "introducedBy": "HI-C34-padhna",
-        "introducedAt": 120,
+        "introducedAt": 123,
         "missed": [
           "R2",
           "R3",
@@ -30094,7 +30096,7 @@
         "atom": "HI-CONCEPT-C34-SAMAJHNA-01",
         "language": "hindi",
         "introducedBy": "HI-C34-samajhna",
-        "introducedAt": 119,
+        "introducedAt": 122,
         "missed": [
           "R2",
           "R3",
@@ -30106,7 +30108,7 @@
         "atom": "HI-CONCEPT-C35-LENA-02",
         "language": "hindi",
         "introducedBy": "HI-C35-lena",
-        "introducedAt": 122,
+        "introducedAt": 125,
         "missed": [
           "R1",
           "R3",
@@ -30118,7 +30120,7 @@
         "atom": "HI-CONCEPT-C35-MADAD-02",
         "language": "hindi",
         "introducedBy": "HI-C35-madad",
-        "introducedAt": 124,
+        "introducedAt": 127,
         "missed": [
           "R1",
           "R3",
@@ -30130,7 +30132,7 @@
         "atom": "HI-CONCEPT-C35-PASAND-01",
         "language": "hindi",
         "introducedBy": "HI-C35-pasand",
-        "introducedAt": 125,
+        "introducedAt": 128,
         "missed": [
           "R1",
           "R2",
@@ -30142,7 +30144,7 @@
         "atom": "HI-CONCEPT-C35-PUCHNA-02",
         "language": "hindi",
         "introducedBy": "HI-C35-puchna",
-        "introducedAt": 123,
+        "introducedAt": 126,
         "missed": [
           "R1",
           "R3",
@@ -30154,7 +30156,7 @@
         "atom": "HI-CONCEPT-C36-DARVAAZA-02",
         "language": "hindi",
         "introducedBy": "HI-C36-darvaaza",
-        "introducedAt": 127,
+        "introducedAt": 130,
         "missed": [
           "R2",
           "R3",
@@ -30166,7 +30168,7 @@
         "atom": "HI-CONCEPT-C36-GHAR-02",
         "language": "hindi",
         "introducedBy": "HI-C36-ghar",
-        "introducedAt": 126,
+        "introducedAt": 129,
         "missed": [
           "R2",
           "R3",
@@ -30178,7 +30180,7 @@
         "atom": "HI-CONCEPT-C36-KAMRA-01",
         "language": "hindi",
         "introducedBy": "HI-C36-kamra",
-        "introducedAt": 128,
+        "introducedAt": 131,
         "missed": [
           "R2",
           "R3",
@@ -30190,7 +30192,7 @@
         "atom": "HI-CONCEPT-C36-KAMRA-02",
         "language": "hindi",
         "introducedBy": "HI-C36-kamra",
-        "introducedAt": 128,
+        "introducedAt": 131,
         "missed": [
           "R2",
           "R3",
@@ -30202,7 +30204,7 @@
         "atom": "HI-CONCEPT-C36-KURSI-02",
         "language": "hindi",
         "introducedBy": "HI-C36-kursi",
-        "introducedAt": 129,
+        "introducedAt": 132,
         "missed": [
           "R1",
           "R3",
@@ -30214,7 +30216,7 @@
         "atom": "HI-CONCEPT-C37-CHAI-03",
         "language": "hindi",
         "introducedBy": "HI-C37-chai",
-        "introducedAt": 130,
+        "introducedAt": 133,
         "missed": [
           "R2",
           "R3",
@@ -30226,7 +30228,7 @@
         "atom": "HI-CONCEPT-C37-KITAAB-02",
         "language": "hindi",
         "introducedBy": "HI-C37-kitaab",
-        "introducedAt": 133,
+        "introducedAt": 136,
         "missed": [
           "R1",
           "R3",
@@ -30238,7 +30240,7 @@
         "atom": "HI-CONCEPT-C37-KITAAB-03",
         "language": "hindi",
         "introducedBy": "HI-C37-kitaab",
-        "introducedAt": 133,
+        "introducedAt": 136,
         "missed": [
           "R1",
           "R3",
@@ -30250,7 +30252,7 @@
         "atom": "HI-CONCEPT-C38-PET-02",
         "language": "hindi",
         "introducedBy": "HI-C38-pet",
-        "introducedAt": 137,
+        "introducedAt": 140,
         "missed": [
           "R1",
           "R3",
@@ -30262,7 +30264,7 @@
         "atom": "HI-CONCEPT-C39-AURAT-01",
         "language": "hindi",
         "introducedBy": "HI-C39-aurat",
-        "introducedAt": 141,
+        "introducedAt": 144,
         "missed": [
           "R1",
           "R3",
@@ -30274,7 +30276,7 @@
         "atom": "HI-CONCEPT-C39-AURAT-02",
         "language": "hindi",
         "introducedBy": "HI-C39-aurat",
-        "introducedAt": 141,
+        "introducedAt": 144,
         "missed": [
           "R1",
           "R3",
@@ -30286,7 +30288,7 @@
         "atom": "HI-CONCEPT-C39-AURAT-03",
         "language": "hindi",
         "introducedBy": "HI-C39-aurat",
-        "introducedAt": 141,
+        "introducedAt": 144,
         "missed": [
           "R1",
           "R3",
@@ -30514,7 +30516,7 @@
         "atom": "HI-FORM-LABEL-NAME-01",
         "language": "hindi",
         "introducedBy": "HI-A1F01-name-label",
-        "introducedAt": 283,
+        "introducedAt": 286,
         "missed": [
           "R2",
           "R3",
@@ -30526,7 +30528,7 @@
         "atom": "HI-FORM-NAME-DELAYED-ENTRY-01",
         "language": "hindi",
         "introducedBy": "HI-A1F01-name-delayed",
-        "introducedAt": 286,
+        "introducedAt": 289,
         "missed": [
           "R1",
           "R2",
@@ -30538,7 +30540,7 @@
         "atom": "HI-FORM-NAME-NO-MODEL-01",
         "language": "hindi",
         "introducedBy": "HI-A1F01-name-no-model",
-        "introducedAt": 287,
+        "introducedAt": 290,
         "missed": [
           "R1",
           "R2",
@@ -30550,7 +30552,7 @@
         "atom": "HI-FORM-NAME-SUPPORTED-ENTRY-01",
         "language": "hindi",
         "introducedBy": "HI-A1F01-name-supported",
-        "introducedAt": 285,
+        "introducedAt": 288,
         "missed": [
           "R1",
           "R2",
@@ -30562,7 +30564,7 @@
         "atom": "HI-GRAMMAR-C40-DEIXIS-SYSTEM",
         "language": "hindi",
         "introducedBy": "HI-C40-deixis-system",
-        "introducedAt": 148,
+        "introducedAt": 151,
         "missed": [
           "R1",
           "R2",
@@ -30574,7 +30576,7 @@
         "atom": "HI-GRAMMAR-C41-ADJ-SYSTEM",
         "language": "hindi",
         "introducedBy": "HI-C41-adjective-system",
-        "introducedAt": 154,
+        "introducedAt": 157,
         "missed": [
           "R1",
           "R2",
@@ -30586,7 +30588,7 @@
         "atom": "HI-JOIN-TAG-NA-01",
         "language": "hindi",
         "introducedBy": "HI-C74-na-tag",
-        "introducedAt": 309,
+        "introducedAt": 312,
         "missed": [
           "R2",
           "R3",
@@ -30598,7 +30600,7 @@
         "atom": "HI-LEX-C58-HOUSE-01",
         "language": "hindi",
         "introducedBy": "HI-C58-wall",
-        "introducedAt": 232,
+        "introducedAt": 235,
         "missed": [
           "R2",
           "R3",
@@ -30610,7 +30612,7 @@
         "atom": "HI-LEX-C58-HOUSE-02",
         "language": "hindi",
         "introducedBy": "HI-C58-roof",
-        "introducedAt": 233,
+        "introducedAt": 236,
         "missed": [
           "R2",
           "R3",
@@ -30622,7 +30624,7 @@
         "atom": "HI-LEX-C58-HOUSE-03",
         "language": "hindi",
         "introducedBy": "HI-C58-window",
-        "introducedAt": 234,
+        "introducedAt": 237,
         "missed": [
           "R2",
           "R3",
@@ -30634,7 +30636,7 @@
         "atom": "HI-LEX-C58-HOUSE-04",
         "language": "hindi",
         "introducedBy": "HI-C58-stairs",
-        "introducedAt": 235,
+        "introducedAt": 238,
         "missed": [
           "R2",
           "R3",
@@ -30646,7 +30648,7 @@
         "atom": "HI-LEX-C79-MEALS-01",
         "language": "hindi",
         "introducedBy": "HI-C79-dopahar-raat-ka-khana",
-        "introducedAt": 360,
+        "introducedAt": 363,
         "missed": [
           "R1",
           "R2",
@@ -30658,7 +30660,7 @@
         "atom": "HI-LEX-C79-MEALS-02",
         "language": "hindi",
         "introducedBy": "HI-C79-dopahar-raat-ka-khana",
-        "introducedAt": 360,
+        "introducedAt": 363,
         "missed": [
           "R1",
           "R2",
@@ -30670,7 +30672,7 @@
         "atom": "HI-LEX-C80-EASE-02",
         "language": "hindi",
         "introducedBy": "HI-C80-aasaan-mushkil",
-        "introducedAt": 361,
+        "introducedAt": 364,
         "missed": [
           "R1",
           "R2",
@@ -30682,7 +30684,7 @@
         "atom": "HI-LEX-C80-LOOKS-01",
         "language": "hindi",
         "introducedBy": "HI-C80-sundar-badsurat",
-        "introducedAt": 362,
+        "introducedAt": 365,
         "missed": [
           "R1",
           "R2",
@@ -30694,7 +30696,7 @@
         "atom": "HI-LEX-C80-LOOKS-02",
         "language": "hindi",
         "introducedBy": "HI-C80-sundar-badsurat",
-        "introducedAt": 362,
+        "introducedAt": 365,
         "missed": [
           "R1",
           "R2",
@@ -30706,7 +30708,7 @@
         "atom": "HI-LEX-GIVE",
         "language": "hindi",
         "introducedBy": "HI-C42-give",
-        "introducedAt": 158,
+        "introducedAt": 161,
         "missed": [
           "R1",
           "R3",
@@ -30718,7 +30720,7 @@
         "atom": "HI-SCRIPT-BA-01",
         "language": "hindi",
         "introducedBy": "HI-W12-ba",
-        "introducedAt": 246,
+        "introducedAt": 249,
         "missed": [
           "R2",
           "R3",
@@ -30730,7 +30732,7 @@
         "atom": "HI-SCRIPT-BHA-01",
         "language": "hindi",
         "introducedBy": "HI-W12-bha",
-        "introducedAt": 244,
+        "introducedAt": 247,
         "missed": [
           "R2",
           "R3",
@@ -30742,7 +30744,7 @@
         "atom": "HI-SCRIPT-CHANDRABINDU-01",
         "language": "hindi",
         "introducedBy": "HI-W12-chandrabindu",
-        "introducedAt": 243,
+        "introducedAt": 246,
         "missed": [
           "R2",
           "R3",
@@ -30754,7 +30756,7 @@
         "atom": "HI-SCRIPT-DA-RETROFLEX-01",
         "language": "hindi",
         "introducedBy": "HI-W12-da-retroflex",
-        "introducedAt": 247,
+        "introducedAt": 250,
         "missed": [
           "R2",
           "R3",
@@ -30785,6 +30787,18 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "HI-SCRIPT-RECOG-04",
+        "language": "hindi",
+        "introducedBy": "HI-S04-letter-aa",
+        "introducedAt": 66,
+        "missed": [
+          "R1",
+          "R2",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "HI-SCRIPT-RECOG-111",
@@ -30847,18 +30861,6 @@
         "revisits": 1
       },
       {
-        "atom": "HI-SCRIPT-RECOG-120",
-        "language": "hindi",
-        "introducedBy": "HI-S120-vowel-sign-u",
-        "introducedAt": 90,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "HI-SCRIPT-RECOG-121",
         "language": "hindi",
         "introducedBy": "HI-S121-letter-la",
@@ -30907,10 +30909,46 @@
         "revisits": 2
       },
       {
+        "atom": "HI-SCRIPT-RECOG-126",
+        "language": "hindi",
+        "introducedBy": "HI-S126-letter-tha",
+        "introducedAt": 100,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-SCRIPT-RECOG-127",
+        "language": "hindi",
+        "introducedBy": "HI-S127-letter-u",
+        "introducedAt": 103,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-SCRIPT-RECOG-128",
+        "language": "hindi",
+        "introducedBy": "HI-S128-letter-uu",
+        "introducedAt": 104,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "HI-SCRIPT-YA-01",
         "language": "hindi",
         "introducedBy": "HI-W12-ya",
-        "introducedAt": 245,
+        "introducedAt": 248,
         "missed": [
           "R2",
           "R3",
@@ -30922,7 +30960,7 @@
         "atom": "HI-SOUND-QUESTION-RISE-01",
         "language": "hindi",
         "introducedBy": "HI-C74-question-rise",
-        "introducedAt": 308,
+        "introducedAt": 311,
         "missed": [
           "R2",
           "R3",
@@ -30934,7 +30972,7 @@
         "atom": "HI-TASK-C77-ORDER-02",
         "language": "hindi",
         "introducedBy": "HI-C77-practice",
-        "introducedAt": 355,
+        "introducedAt": 358,
         "missed": [
           "R1",
           "R2",
@@ -48049,7 +48087,7 @@
           "R2",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 5
       },
       {
         "atom": "HI-CONCEPT-C02-HAI-01",
@@ -48104,7 +48142,18 @@
           "R3",
           "R4"
         ],
-        "revisits": 5
+        "revisits": 6
+      },
+      {
+        "atom": "HI-CONCEPT-C05-BOLNA-01",
+        "language": "hindi",
+        "introducedBy": "HI-C05-bolna",
+        "introducedAt": 47,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 9
       },
       {
         "atom": "HI-CONCEPT-C05-MAINHINDIBOLTAHUN-01",
@@ -48118,21 +48167,10 @@
         "revisits": 3
       },
       {
-        "atom": "HI-CONCEPT-C07-NAHIN-01",
-        "language": "hindi",
-        "introducedBy": "HI-C07-nahin",
-        "introducedAt": 59,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 11
-      },
-      {
         "atom": "HI-CONCEPT-C23-KUTTA-BILLI-01",
         "language": "hindi",
         "introducedBy": "HI-C23-kutta-billi",
-        "introducedAt": 104,
+        "introducedAt": 107,
         "missed": [
           "R1",
           "R2"
@@ -48143,7 +48181,7 @@
         "atom": "HI-CONCEPT-C29-SHAAM-01",
         "language": "hindi",
         "introducedBy": "HI-C29-shaam",
-        "introducedAt": 112,
+        "introducedAt": 115,
         "missed": [
           "R1",
           "R3"
@@ -48154,7 +48192,7 @@
         "atom": "HI-CONCEPT-C34-SOCHNA-01",
         "language": "hindi",
         "introducedBy": "HI-C34-sochna",
-        "introducedAt": 118,
+        "introducedAt": 121,
         "missed": [
           "R2",
           "R3"
@@ -48165,7 +48203,7 @@
         "atom": "HI-CONCEPT-C35-LENA-01",
         "language": "hindi",
         "introducedBy": "HI-C35-lena",
-        "introducedAt": 122,
+        "introducedAt": 125,
         "missed": [
           "R3",
           "R4"
@@ -48176,7 +48214,7 @@
         "atom": "HI-CONCEPT-C35-MADAD-01",
         "language": "hindi",
         "introducedBy": "HI-C35-madad",
-        "introducedAt": 124,
+        "introducedAt": 127,
         "missed": [
           "R3",
           "R4"
@@ -48187,7 +48225,7 @@
         "atom": "HI-CONCEPT-C35-PUCHNA-01",
         "language": "hindi",
         "introducedBy": "HI-C35-puchna",
-        "introducedAt": 123,
+        "introducedAt": 126,
         "missed": [
           "R3",
           "R4"
@@ -48198,7 +48236,7 @@
         "atom": "HI-CONCEPT-C36-DARVAAZA-01",
         "language": "hindi",
         "introducedBy": "HI-C36-darvaaza",
-        "introducedAt": 127,
+        "introducedAt": 130,
         "missed": [
           "R3",
           "R4"
@@ -48209,7 +48247,7 @@
         "atom": "HI-CONCEPT-C36-DARVAAZA-03",
         "language": "hindi",
         "introducedBy": "HI-C36-darvaaza",
-        "introducedAt": 127,
+        "introducedAt": 130,
         "missed": [
           "R3",
           "R4"
@@ -48220,7 +48258,7 @@
         "atom": "HI-CONCEPT-C36-GHAR-01",
         "language": "hindi",
         "introducedBy": "HI-C36-ghar",
-        "introducedAt": 126,
+        "introducedAt": 129,
         "missed": [
           "R2",
           "R3"
@@ -48231,7 +48269,7 @@
         "atom": "HI-CONCEPT-C36-KURSI-01",
         "language": "hindi",
         "introducedBy": "HI-C36-kursi",
-        "introducedAt": 129,
+        "introducedAt": 132,
         "missed": [
           "R3",
           "R4"
@@ -48242,7 +48280,7 @@
         "atom": "HI-CONCEPT-C36-KURSI-03",
         "language": "hindi",
         "introducedBy": "HI-C36-kursi",
-        "introducedAt": 129,
+        "introducedAt": 132,
         "missed": [
           "R3",
           "R4"
@@ -48253,7 +48291,7 @@
         "atom": "HI-CONCEPT-C37-CHAI-02",
         "language": "hindi",
         "introducedBy": "HI-C37-chai",
-        "introducedAt": 130,
+        "introducedAt": 133,
         "missed": [
           "R2",
           "R3"
@@ -48264,7 +48302,7 @@
         "atom": "HI-CONCEPT-C37-DUDH-02",
         "language": "hindi",
         "introducedBy": "HI-C37-dudh",
-        "introducedAt": 131,
+        "introducedAt": 134,
         "missed": [
           "R3",
           "R4"
@@ -48275,7 +48313,7 @@
         "atom": "HI-CONCEPT-C37-KHAANA-02",
         "language": "hindi",
         "introducedBy": "HI-C37-khaana",
-        "introducedAt": 132,
+        "introducedAt": 135,
         "missed": [
           "R3",
           "R4"
@@ -48286,7 +48324,7 @@
         "atom": "HI-CONCEPT-C38-AANKH-01",
         "language": "hindi",
         "introducedBy": "HI-C38-aankh",
-        "introducedAt": 134,
+        "introducedAt": 137,
         "missed": [
           "R3",
           "R4"
@@ -48297,7 +48335,7 @@
         "atom": "HI-CONCEPT-C38-AANKH-02",
         "language": "hindi",
         "introducedBy": "HI-C38-aankh",
-        "introducedAt": 134,
+        "introducedAt": 137,
         "missed": [
           "R3",
           "R4"
@@ -48308,7 +48346,7 @@
         "atom": "HI-CONCEPT-C38-DAANT-01",
         "language": "hindi",
         "introducedBy": "HI-C38-daant",
-        "introducedAt": 135,
+        "introducedAt": 138,
         "missed": [
           "R3",
           "R4"
@@ -48319,7 +48357,7 @@
         "atom": "HI-CONCEPT-C38-DAANT-02",
         "language": "hindi",
         "introducedBy": "HI-C38-daant",
-        "introducedAt": 135,
+        "introducedAt": 138,
         "missed": [
           "R3",
           "R4"
@@ -48330,7 +48368,7 @@
         "atom": "HI-CONCEPT-C38-PAIR-01",
         "language": "hindi",
         "introducedBy": "HI-C38-pair",
-        "introducedAt": 136,
+        "introducedAt": 139,
         "missed": [
           "R3",
           "R4"
@@ -48341,7 +48379,7 @@
         "atom": "HI-CONCEPT-C38-PAIR-02",
         "language": "hindi",
         "introducedBy": "HI-C38-pair",
-        "introducedAt": 136,
+        "introducedAt": 139,
         "missed": [
           "R3",
           "R4"
@@ -48352,7 +48390,7 @@
         "atom": "HI-CONCEPT-C38-PET-01",
         "language": "hindi",
         "introducedBy": "HI-C38-pet",
-        "introducedAt": 137,
+        "introducedAt": 140,
         "missed": [
           "R3",
           "R4"
@@ -48363,7 +48401,7 @@
         "atom": "HI-CONCEPT-C39-AADMI-01",
         "language": "hindi",
         "introducedBy": "HI-C39-aadmi",
-        "introducedAt": 140,
+        "introducedAt": 143,
         "missed": [
           "R3",
           "R4"
@@ -48374,7 +48412,7 @@
         "atom": "HI-CONCEPT-C39-AADMI-02",
         "language": "hindi",
         "introducedBy": "HI-C39-aadmi",
-        "introducedAt": 140,
+        "introducedAt": 143,
         "missed": [
           "R3",
           "R4"
@@ -48385,7 +48423,7 @@
         "atom": "HI-CONCEPT-C39-BACCHA-01",
         "language": "hindi",
         "introducedBy": "HI-C39-baccha",
-        "introducedAt": 139,
+        "introducedAt": 142,
         "missed": [
           "R3",
           "R4"
@@ -48396,7 +48434,7 @@
         "atom": "HI-CONCEPT-C39-BACCHA-02",
         "language": "hindi",
         "introducedBy": "HI-C39-baccha",
-        "introducedAt": 139,
+        "introducedAt": 142,
         "missed": [
           "R3",
           "R4"
@@ -48407,7 +48445,7 @@
         "atom": "HI-CONCEPT-C39-DOST-02",
         "language": "hindi",
         "introducedBy": "HI-C39-dost",
-        "introducedAt": 138,
+        "introducedAt": 141,
         "missed": [
           "R3",
           "R4"
@@ -48418,7 +48456,7 @@
         "atom": "HI-CONCEPT-C39-DOST-03",
         "language": "hindi",
         "introducedBy": "HI-C39-dost",
-        "introducedAt": 138,
+        "introducedAt": 141,
         "missed": [
           "R3",
           "R4"
@@ -48440,7 +48478,7 @@
         "atom": "HI-FORM-NAME-ARUN-01",
         "language": "hindi",
         "introducedBy": "HI-A1F01-name-select",
-        "introducedAt": 284,
+        "introducedAt": 287,
         "missed": [
           "R2",
           "R4"
@@ -48451,7 +48489,7 @@
         "atom": "HI-FORM-NAME-CUE-MAP-01",
         "language": "hindi",
         "introducedBy": "HI-A1F01-name-select",
-        "introducedAt": 284,
+        "introducedAt": 287,
         "missed": [
           "R2",
           "R4"
@@ -48462,7 +48500,7 @@
         "atom": "HI-FORM-NAME-MIRA-01",
         "language": "hindi",
         "introducedBy": "HI-A1F01-name-select",
-        "introducedAt": 284,
+        "introducedAt": 287,
         "missed": [
           "R2",
           "R4"
@@ -48473,7 +48511,7 @@
         "atom": "HI-GRAMMAR-C77-ORDER-01",
         "language": "hindi",
         "introducedBy": "HI-C77-one-other",
-        "introducedAt": 354,
+        "introducedAt": 357,
         "missed": [
           "R2",
           "R3"
@@ -48484,7 +48522,7 @@
         "atom": "HI-GRAMMAR-KYA-POLAR-01",
         "language": "hindi",
         "introducedBy": "HI-C74-kya-polar",
-        "introducedAt": 307,
+        "introducedAt": 310,
         "missed": [
           "R2",
           "R4"
@@ -48495,7 +48533,7 @@
         "atom": "HI-LEX-C40-DEIXIS-03",
         "language": "hindi",
         "introducedBy": "HI-C40-here",
-        "introducedAt": 144,
+        "introducedAt": 147,
         "missed": [
           "R3",
           "R4"
@@ -48506,7 +48544,7 @@
         "atom": "HI-LEX-C40-DEIXIS-04",
         "language": "hindi",
         "introducedBy": "HI-C40-there",
-        "introducedAt": 145,
+        "introducedAt": 148,
         "missed": [
           "R3",
           "R4"
@@ -48517,7 +48555,7 @@
         "atom": "HI-LEX-C40-DEIXIS-05",
         "language": "hindi",
         "introducedBy": "HI-C40-who",
-        "introducedAt": 146,
+        "introducedAt": 149,
         "missed": [
           "R3",
           "R4"
@@ -48528,7 +48566,7 @@
         "atom": "HI-LEX-C41-ADJ-01",
         "language": "hindi",
         "introducedBy": "HI-C41-big",
-        "introducedAt": 149,
+        "introducedAt": 152,
         "missed": [
           "R3",
           "R4"
@@ -48539,7 +48577,7 @@
         "atom": "HI-LEX-C41-ADJ-04",
         "language": "hindi",
         "introducedBy": "HI-C41-new",
-        "introducedAt": 152,
+        "introducedAt": 155,
         "missed": [
           "R3",
           "R4"
@@ -48550,7 +48588,7 @@
         "atom": "HI-LEX-C41-ADJ-05",
         "language": "hindi",
         "introducedBy": "HI-C41-old",
-        "introducedAt": 153,
+        "introducedAt": 156,
         "missed": [
           "R3",
           "R4"
@@ -48561,7 +48599,7 @@
         "atom": "HI-LEX-C45-ASK-01",
         "language": "hindi",
         "introducedBy": "HI-C45-fruit",
-        "introducedAt": 167,
+        "introducedAt": 170,
         "missed": [
           "R3",
           "R4"
@@ -48572,7 +48610,7 @@
         "atom": "HI-LEX-C45-ASK-02",
         "language": "hindi",
         "introducedBy": "HI-C45-cloth",
-        "introducedAt": 168,
+        "introducedAt": 171,
         "missed": [
           "R3",
           "R4"
@@ -48583,7 +48621,7 @@
         "atom": "HI-LEX-C45-ASK-03",
         "language": "hindi",
         "introducedBy": "HI-C45-lamp",
-        "introducedAt": 169,
+        "introducedAt": 172,
         "missed": [
           "R3",
           "R4"
@@ -48594,7 +48632,7 @@
         "atom": "HI-LEX-C45-ASK-04",
         "language": "hindi",
         "introducedBy": "HI-C45-salt",
-        "introducedAt": 170,
+        "introducedAt": 173,
         "missed": [
           "R3",
           "R4"
@@ -48605,7 +48643,7 @@
         "atom": "HI-LEX-C45-ASK-05",
         "language": "hindi",
         "introducedBy": "HI-C45-soap",
-        "introducedAt": 171,
+        "introducedAt": 174,
         "missed": [
           "R3",
           "R4"
@@ -48616,7 +48654,7 @@
         "atom": "HI-LEX-C46-BODY-01",
         "language": "hindi",
         "introducedBy": "HI-C46-hair",
-        "introducedAt": 172,
+        "introducedAt": 175,
         "missed": [
           "R3",
           "R4"
@@ -48627,7 +48665,7 @@
         "atom": "HI-LEX-C46-BODY-02",
         "language": "hindi",
         "introducedBy": "HI-C46-finger",
-        "introducedAt": 173,
+        "introducedAt": 176,
         "missed": [
           "R3",
           "R4"
@@ -48638,7 +48676,7 @@
         "atom": "HI-LEX-C46-BODY-03",
         "language": "hindi",
         "introducedBy": "HI-C46-ear",
-        "introducedAt": 174,
+        "introducedAt": 177,
         "missed": [
           "R3",
           "R4"
@@ -48649,7 +48687,7 @@
         "atom": "HI-LEX-C46-BODY-04",
         "language": "hindi",
         "introducedBy": "HI-C46-nose",
-        "introducedAt": 175,
+        "introducedAt": 178,
         "missed": [
           "R3",
           "R4"
@@ -48660,7 +48698,7 @@
         "atom": "HI-LEX-C46-BODY-05",
         "language": "hindi",
         "introducedBy": "HI-C46-throat",
-        "introducedAt": 176,
+        "introducedAt": 179,
         "missed": [
           "R3",
           "R4"
@@ -48671,7 +48709,7 @@
         "atom": "HI-LEX-C47-ROLE-03",
         "language": "hindi",
         "introducedBy": "HI-C47-farmer",
-        "introducedAt": 179,
+        "introducedAt": 182,
         "missed": [
           "R3",
           "R4"
@@ -48682,7 +48720,7 @@
         "atom": "HI-LEX-C47-ROLE-04",
         "language": "hindi",
         "introducedBy": "HI-C47-guest",
-        "introducedAt": 180,
+        "introducedAt": 183,
         "missed": [
           "R3",
           "R4"
@@ -48693,7 +48731,7 @@
         "atom": "HI-LEX-C47-ROLE-05",
         "language": "hindi",
         "introducedBy": "HI-C47-neighbour",
-        "introducedAt": 181,
+        "introducedAt": 184,
         "missed": [
           "R3",
           "R4"
@@ -48704,7 +48742,7 @@
         "atom": "HI-LEX-C48-REPLY-01",
         "language": "hindi",
         "introducedBy": "HI-C48-true",
-        "introducedAt": 182,
+        "introducedAt": 185,
         "missed": [
           "R3",
           "R4"
@@ -48715,7 +48753,7 @@
         "atom": "HI-LEX-C48-REPLY-02",
         "language": "hindi",
         "introducedBy": "HI-C48-enough",
-        "introducedAt": 183,
+        "introducedAt": 186,
         "missed": [
           "R3",
           "R4"
@@ -48726,7 +48764,7 @@
         "atom": "HI-LEX-C48-REPLY-03",
         "language": "hindi",
         "introducedBy": "HI-C48-certainly",
-        "introducedAt": 184,
+        "introducedAt": 187,
         "missed": [
           "R3",
           "R4"
@@ -48737,7 +48775,7 @@
         "atom": "HI-LEX-C48-REPLY-04",
         "language": "hindi",
         "introducedBy": "HI-C48-perhaps",
-        "introducedAt": 185,
+        "introducedAt": 188,
         "missed": [
           "R3",
           "R4"
@@ -48748,7 +48786,7 @@
         "atom": "HI-LEX-C48-REPLY-05",
         "language": "hindi",
         "introducedBy": "HI-C48-absolutely",
-        "introducedAt": 186,
+        "introducedAt": 189,
         "missed": [
           "R3",
           "R4"
@@ -48759,7 +48797,7 @@
         "atom": "HI-LEX-C49-LEAVE-01",
         "language": "hindi",
         "introducedBy": "HI-C49-now",
-        "introducedAt": 187,
+        "introducedAt": 190,
         "missed": [
           "R3",
           "R4"
@@ -48770,7 +48808,7 @@
         "atom": "HI-LEX-C49-LEAVE-02",
         "language": "hindi",
         "introducedBy": "HI-C49-day-after",
-        "introducedAt": 188,
+        "introducedAt": 191,
         "missed": [
           "R3",
           "R4"
@@ -48781,7 +48819,7 @@
         "atom": "HI-LEX-C49-LEAVE-03",
         "language": "hindi",
         "introducedBy": "HI-C49-journey",
-        "introducedAt": 189,
+        "introducedAt": 192,
         "missed": [
           "R3",
           "R4"
@@ -48792,7 +48830,7 @@
         "atom": "HI-LEX-C49-LEAVE-05",
         "language": "hindi",
         "introducedBy": "HI-C49-meeting",
-        "introducedAt": 191,
+        "introducedAt": 194,
         "missed": [
           "R3",
           "R4"
@@ -48803,7 +48841,7 @@
         "atom": "HI-LEX-C50-COURTESY-01",
         "language": "hindi",
         "introducedBy": "HI-C50-gratitude",
-        "introducedAt": 192,
+        "introducedAt": 195,
         "missed": [
           "R3",
           "R4"
@@ -48814,7 +48852,7 @@
         "atom": "HI-LEX-C50-COURTESY-02",
         "language": "hindi",
         "introducedBy": "HI-C50-favour",
-        "introducedAt": 193,
+        "introducedAt": 196,
         "missed": [
           "R3",
           "R4"
@@ -48825,7 +48863,7 @@
         "atom": "HI-LEX-C50-COURTESY-03",
         "language": "hindi",
         "introducedBy": "HI-C50-respect",
-        "introducedAt": 194,
+        "introducedAt": 197,
         "missed": [
           "R3",
           "R4"
@@ -48836,7 +48874,7 @@
         "atom": "HI-LEX-C50-COURTESY-04",
         "language": "hindi",
         "introducedBy": "HI-C50-blessing",
-        "introducedAt": 195,
+        "introducedAt": 198,
         "missed": [
           "R3",
           "R4"
@@ -48847,7 +48885,7 @@
         "atom": "HI-LEX-C50-COURTESY-05",
         "language": "hindi",
         "introducedBy": "HI-C50-salutation",
-        "introducedAt": 196,
+        "introducedAt": 199,
         "missed": [
           "R3",
           "R4"
@@ -48858,7 +48896,7 @@
         "atom": "HI-LEX-C51-WELCOME-01",
         "language": "hindi",
         "introducedBy": "HI-C51-flower",
-        "introducedAt": 197,
+        "introducedAt": 200,
         "missed": [
           "R3",
           "R4"
@@ -48869,7 +48907,7 @@
         "atom": "HI-LEX-C51-WELCOME-02",
         "language": "hindi",
         "introducedBy": "HI-C51-garland",
-        "introducedAt": 198,
+        "introducedAt": 201,
         "missed": [
           "R3",
           "R4"
@@ -48880,7 +48918,7 @@
         "atom": "HI-LEX-C51-WELCOME-03",
         "language": "hindi",
         "introducedBy": "HI-C51-courtyard",
-        "introducedAt": 199,
+        "introducedAt": 202,
         "missed": [
           "R3",
           "R4"
@@ -48891,7 +48929,7 @@
         "atom": "HI-LEX-C51-WELCOME-04",
         "language": "hindi",
         "introducedBy": "HI-C51-table",
-        "introducedAt": 200,
+        "introducedAt": 203,
         "missed": [
           "R3",
           "R4"
@@ -48902,7 +48940,7 @@
         "atom": "HI-LEX-C51-WELCOME-05",
         "language": "hindi",
         "introducedBy": "HI-C51-sweet",
-        "introducedAt": 201,
+        "introducedAt": 204,
         "missed": [
           "R3",
           "R4"
@@ -48913,7 +48951,7 @@
         "atom": "HI-LEX-C52-KITCHEN-01",
         "language": "hindi",
         "introducedBy": "HI-C52-rice",
-        "introducedAt": 202,
+        "introducedAt": 205,
         "missed": [
           "R3",
           "R4"
@@ -48924,7 +48962,7 @@
         "atom": "HI-LEX-C52-KITCHEN-02",
         "language": "hindi",
         "introducedBy": "HI-C52-lentils",
-        "introducedAt": 203,
+        "introducedAt": 206,
         "missed": [
           "R3",
           "R4"
@@ -48935,7 +48973,7 @@
         "atom": "HI-LEX-C52-KITCHEN-03",
         "language": "hindi",
         "introducedBy": "HI-C52-oil",
-        "introducedAt": 204,
+        "introducedAt": 207,
         "missed": [
           "R3",
           "R4"
@@ -48946,7 +48984,7 @@
         "atom": "HI-LEX-C52-KITCHEN-04",
         "language": "hindi",
         "introducedBy": "HI-C52-sugar",
-        "introducedAt": 205,
+        "introducedAt": 208,
         "missed": [
           "R3",
           "R4"
@@ -48957,7 +48995,7 @@
         "atom": "HI-LEX-C52-KITCHEN-05",
         "language": "hindi",
         "introducedBy": "HI-C52-vegetable",
-        "introducedAt": 206,
+        "introducedAt": 209,
         "missed": [
           "R3",
           "R4"
@@ -48968,7 +49006,7 @@
         "atom": "HI-LEX-C53-BODY-01",
         "language": "hindi",
         "introducedBy": "HI-C53-shoulder",
-        "introducedAt": 207,
+        "introducedAt": 210,
         "missed": [
           "R3",
           "R4"
@@ -48979,7 +49017,7 @@
         "atom": "HI-LEX-C53-BODY-02",
         "language": "hindi",
         "introducedBy": "HI-C53-knee",
-        "introducedAt": 208,
+        "introducedAt": 211,
         "missed": [
           "R3",
           "R4"
@@ -48990,7 +49028,7 @@
         "atom": "HI-LEX-C53-BODY-03",
         "language": "hindi",
         "introducedBy": "HI-C53-forehead",
-        "introducedAt": 209,
+        "introducedAt": 212,
         "missed": [
           "R3",
           "R4"
@@ -49001,7 +49039,7 @@
         "atom": "HI-LEX-C53-BODY-04",
         "language": "hindi",
         "introducedBy": "HI-C53-back",
-        "introducedAt": 210,
+        "introducedAt": 213,
         "missed": [
           "R3",
           "R4"
@@ -49012,7 +49050,7 @@
         "atom": "HI-LEX-C53-BODY-05",
         "language": "hindi",
         "introducedBy": "HI-C53-lip",
-        "introducedAt": 211,
+        "introducedAt": 214,
         "missed": [
           "R3",
           "R4"
@@ -49023,7 +49061,7 @@
         "atom": "HI-LEX-C54-ANIMAL-01",
         "language": "hindi",
         "introducedBy": "HI-C54-cow",
-        "introducedAt": 212,
+        "introducedAt": 215,
         "missed": [
           "R3",
           "R4"
@@ -49034,7 +49072,7 @@
         "atom": "HI-LEX-C54-ANIMAL-02",
         "language": "hindi",
         "introducedBy": "HI-C54-horse",
-        "introducedAt": 213,
+        "introducedAt": 216,
         "missed": [
           "R3",
           "R4"
@@ -49045,7 +49083,7 @@
         "atom": "HI-LEX-C54-ANIMAL-03",
         "language": "hindi",
         "introducedBy": "HI-C54-fish",
-        "introducedAt": 214,
+        "introducedAt": 217,
         "missed": [
           "R3",
           "R4"
@@ -49056,7 +49094,7 @@
         "atom": "HI-LEX-C54-ANIMAL-04",
         "language": "hindi",
         "introducedBy": "HI-C54-bird",
-        "introducedAt": 215,
+        "introducedAt": 218,
         "missed": [
           "R3",
           "R4"
@@ -49067,7 +49105,7 @@
         "atom": "HI-LEX-C54-ANIMAL-05",
         "language": "hindi",
         "introducedBy": "HI-C54-goat",
-        "introducedAt": 216,
+        "introducedAt": 219,
         "missed": [
           "R3",
           "R4"
@@ -49078,7 +49116,7 @@
         "atom": "HI-LEX-C55-SKY-01",
         "language": "hindi",
         "introducedBy": "HI-C55-sun",
-        "introducedAt": 217,
+        "introducedAt": 220,
         "missed": [
           "R3",
           "R4"
@@ -49089,7 +49127,7 @@
         "atom": "HI-LEX-C55-SKY-02",
         "language": "hindi",
         "introducedBy": "HI-C55-moon",
-        "introducedAt": 218,
+        "introducedAt": 221,
         "missed": [
           "R3",
           "R4"
@@ -49100,7 +49138,7 @@
         "atom": "HI-LEX-C55-SKY-03",
         "language": "hindi",
         "introducedBy": "HI-C55-star",
-        "introducedAt": 219,
+        "introducedAt": 222,
         "missed": [
           "R3",
           "R4"
@@ -49111,7 +49149,7 @@
         "atom": "HI-LEX-C55-SKY-04",
         "language": "hindi",
         "introducedBy": "HI-C55-cloud",
-        "introducedAt": 220,
+        "introducedAt": 223,
         "missed": [
           "R3",
           "R4"
@@ -49122,7 +49160,7 @@
         "atom": "HI-LEX-C55-SKY-05",
         "language": "hindi",
         "introducedBy": "HI-C55-sky",
-        "introducedAt": 221,
+        "introducedAt": 224,
         "missed": [
           "R3",
           "R4"
@@ -49133,7 +49171,7 @@
         "atom": "HI-LEX-C56-ROAD-01",
         "language": "hindi",
         "introducedBy": "HI-C56-road",
-        "introducedAt": 222,
+        "introducedAt": 225,
         "missed": [
           "R3",
           "R4"
@@ -49144,7 +49182,7 @@
         "atom": "HI-LEX-C56-ROAD-04",
         "language": "hindi",
         "introducedBy": "HI-C56-shop",
-        "introducedAt": 225,
+        "introducedAt": 228,
         "missed": [
           "R3",
           "R4"
@@ -49155,7 +49193,7 @@
         "atom": "HI-LEX-C56-ROAD-05",
         "language": "hindi",
         "introducedBy": "HI-C56-field",
-        "introducedAt": 226,
+        "introducedAt": 229,
         "missed": [
           "R3",
           "R4"
@@ -49166,7 +49204,7 @@
         "atom": "HI-LEX-C57-GIFT-01",
         "language": "hindi",
         "introducedBy": "HI-C57-present",
-        "introducedAt": 227,
+        "introducedAt": 230,
         "missed": [
           "R3",
           "R4"
@@ -49177,7 +49215,7 @@
         "atom": "HI-LEX-C57-GIFT-02",
         "language": "hindi",
         "introducedBy": "HI-C57-feast",
-        "introducedAt": 228,
+        "introducedAt": 231,
         "missed": [
           "R3",
           "R4"
@@ -49188,7 +49226,7 @@
         "atom": "HI-LEX-C57-GIFT-03",
         "language": "hindi",
         "introducedBy": "HI-C57-platter",
-        "introducedAt": 229,
+        "introducedAt": 232,
         "missed": [
           "R3",
           "R4"
@@ -49199,7 +49237,7 @@
         "atom": "HI-LEX-C57-GIFT-04",
         "language": "hindi",
         "introducedBy": "HI-C57-fragrance",
-        "introducedAt": 230,
+        "introducedAt": 233,
         "missed": [
           "R3",
           "R4"
@@ -49210,7 +49248,7 @@
         "atom": "HI-LEX-C57-GIFT-05",
         "language": "hindi",
         "introducedBy": "HI-C57-sweetness",
-        "introducedAt": 231,
+        "introducedAt": 234,
         "missed": [
           "R3",
           "R4"
@@ -49221,7 +49259,7 @@
         "atom": "HI-LEX-C60-YARD-01",
         "language": "hindi",
         "introducedBy": "HI-C60-monkey",
-        "introducedAt": 248,
+        "introducedAt": 251,
         "missed": [
           "R3",
           "R4"
@@ -49232,7 +49270,7 @@
         "atom": "HI-LEX-C60-YARD-02",
         "language": "hindi",
         "introducedBy": "HI-C60-snake",
-        "introducedAt": 249,
+        "introducedAt": 252,
         "missed": [
           "R3",
           "R4"
@@ -49243,7 +49281,7 @@
         "atom": "HI-LEX-C60-YARD-03",
         "language": "hindi",
         "introducedBy": "HI-C60-hen",
-        "introducedAt": 250,
+        "introducedAt": 253,
         "missed": [
           "R3",
           "R4"
@@ -49254,7 +49292,7 @@
         "atom": "HI-LEX-C60-YARD-04",
         "language": "hindi",
         "introducedBy": "HI-C60-buffalo",
-        "introducedAt": 251,
+        "introducedAt": 254,
         "missed": [
           "R3",
           "R4"
@@ -49265,7 +49303,7 @@
         "atom": "HI-LEX-C60-YARD-05",
         "language": "hindi",
         "introducedBy": "HI-C60-peacock",
-        "introducedAt": 252,
+        "introducedAt": 255,
         "missed": [
           "R3",
           "R4"
@@ -49276,7 +49314,7 @@
         "atom": "HI-LEX-C61-FIRE-01",
         "language": "hindi",
         "introducedBy": "HI-C61-vessel",
-        "introducedAt": 253,
+        "introducedAt": 256,
         "missed": [
           "R3",
           "R4"
@@ -49287,7 +49325,7 @@
         "atom": "HI-LEX-C61-FIRE-02",
         "language": "hindi",
         "introducedBy": "HI-C61-spoon",
-        "introducedAt": 254,
+        "introducedAt": 257,
         "missed": [
           "R3",
           "R4"
@@ -49298,7 +49336,7 @@
         "atom": "HI-LEX-C61-FIRE-03",
         "language": "hindi",
         "introducedBy": "HI-C61-tumbler",
-        "introducedAt": 255,
+        "introducedAt": 258,
         "missed": [
           "R3",
           "R4"
@@ -49309,7 +49347,7 @@
         "atom": "HI-LEX-C61-FIRE-04",
         "language": "hindi",
         "introducedBy": "HI-C61-griddle",
-        "introducedAt": 256,
+        "introducedAt": 259,
         "missed": [
           "R3",
           "R4"
@@ -49320,7 +49358,7 @@
         "atom": "HI-LEX-C61-FIRE-05",
         "language": "hindi",
         "introducedBy": "HI-C61-stove",
-        "introducedAt": 257,
+        "introducedAt": 260,
         "missed": [
           "R3",
           "R4"
@@ -49331,7 +49369,7 @@
         "atom": "HI-LEX-C62-HANDS-01",
         "language": "hindi",
         "introducedBy": "HI-C62-rope",
-        "introducedAt": 258,
+        "introducedAt": 261,
         "missed": [
           "R3",
           "R4"
@@ -49342,7 +49380,7 @@
         "atom": "HI-LEX-C62-HANDS-02",
         "language": "hindi",
         "introducedBy": "HI-C62-needle",
-        "introducedAt": 259,
+        "introducedAt": 262,
         "missed": [
           "R3",
           "R4"
@@ -49353,7 +49391,7 @@
         "atom": "HI-LEX-C62-HANDS-03",
         "language": "hindi",
         "introducedBy": "HI-C62-basket",
-        "introducedAt": 260,
+        "introducedAt": 263,
         "missed": [
           "R3",
           "R4"
@@ -49364,7 +49402,7 @@
         "atom": "HI-LEX-C62-HANDS-04",
         "language": "hindi",
         "introducedBy": "HI-C62-clay",
-        "introducedAt": 261,
+        "introducedAt": 264,
         "missed": [
           "R3",
           "R4"
@@ -49375,7 +49413,7 @@
         "atom": "HI-LEX-C62-HANDS-05",
         "language": "hindi",
         "introducedBy": "HI-C62-wood",
-        "introducedAt": 262,
+        "introducedAt": 265,
         "missed": [
           "R3",
           "R4"
@@ -49386,7 +49424,7 @@
         "atom": "HI-LEX-C63-STATE-01",
         "language": "hindi",
         "introducedBy": "HI-C63-hunger",
-        "introducedAt": 263,
+        "introducedAt": 266,
         "missed": [
           "R3",
           "R4"
@@ -49397,7 +49435,7 @@
         "atom": "HI-LEX-C63-STATE-02",
         "language": "hindi",
         "introducedBy": "HI-C63-thirst",
-        "introducedAt": 264,
+        "introducedAt": 267,
         "missed": [
           "R3",
           "R4"
@@ -49408,7 +49446,7 @@
         "atom": "HI-LEX-C63-STATE-03",
         "language": "hindi",
         "introducedBy": "HI-C63-sleep",
-        "introducedAt": 265,
+        "introducedAt": 268,
         "missed": [
           "R3",
           "R4"
@@ -49419,7 +49457,7 @@
         "atom": "HI-LEX-C63-STATE-04",
         "language": "hindi",
         "introducedBy": "HI-C63-fever",
-        "introducedAt": 266,
+        "introducedAt": 269,
         "missed": [
           "R3",
           "R4"
@@ -49430,7 +49468,7 @@
         "atom": "HI-LEX-C63-STATE-05",
         "language": "hindi",
         "introducedBy": "HI-C63-pain",
-        "introducedAt": 267,
+        "introducedAt": 270,
         "missed": [
           "R3",
           "R4"
@@ -49441,7 +49479,7 @@
         "atom": "HI-LEX-C64-MEASURE-01",
         "language": "hindi",
         "introducedBy": "HI-C64-now",
-        "introducedAt": 268,
+        "introducedAt": 271,
         "missed": [
           "R3",
           "R4"
@@ -49452,7 +49490,7 @@
         "atom": "HI-LEX-C64-MEASURE-02",
         "language": "hindi",
         "introducedBy": "HI-C64-quickly",
-        "introducedAt": 269,
+        "introducedAt": 272,
         "missed": [
           "R3",
           "R4"
@@ -49463,7 +49501,7 @@
         "atom": "HI-LEX-C64-MEASURE-03",
         "language": "hindi",
         "introducedBy": "HI-C64-slowly",
-        "introducedAt": 270,
+        "introducedAt": 273,
         "missed": [
           "R3",
           "R4"
@@ -49474,7 +49512,7 @@
         "atom": "HI-LEX-C64-MEASURE-04",
         "language": "hindi",
         "introducedBy": "HI-C64-little",
-        "introducedAt": 271,
+        "introducedAt": 274,
         "missed": [
           "R3",
           "R4"
@@ -49485,7 +49523,7 @@
         "atom": "HI-LEX-C64-MEASURE-05",
         "language": "hindi",
         "introducedBy": "HI-C64-more",
-        "introducedAt": 272,
+        "introducedAt": 275,
         "missed": [
           "R3",
           "R4"
@@ -49496,7 +49534,7 @@
         "atom": "HI-LEX-C65-GRACE-01",
         "language": "hindi",
         "introducedBy": "HI-C65-kindness",
-        "introducedAt": 273,
+        "introducedAt": 276,
         "missed": [
           "R3",
           "R4"
@@ -49507,7 +49545,7 @@
         "atom": "HI-LEX-C65-GRACE-02",
         "language": "hindi",
         "introducedBy": "HI-C65-entreaty",
-        "introducedAt": 274,
+        "introducedAt": 277,
         "missed": [
           "R3",
           "R4"
@@ -49518,7 +49556,7 @@
         "atom": "HI-LEX-C65-GRACE-03",
         "language": "hindi",
         "introducedBy": "HI-C65-permission",
-        "introducedAt": 275,
+        "introducedAt": 278,
         "missed": [
           "R3",
           "R4"
@@ -49529,7 +49567,7 @@
         "atom": "HI-LEX-C65-GRACE-04",
         "language": "hindi",
         "introducedBy": "HI-C65-trust",
-        "introducedAt": 276,
+        "introducedAt": 279,
         "missed": [
           "R3",
           "R4"
@@ -49540,7 +49578,7 @@
         "atom": "HI-LEX-C65-GRACE-05",
         "language": "hindi",
         "introducedBy": "HI-C65-manners",
-        "introducedAt": 277,
+        "introducedAt": 280,
         "missed": [
           "R3",
           "R4"
@@ -49551,7 +49589,7 @@
         "atom": "HI-LEX-C66-FIELD-01",
         "language": "hindi",
         "introducedBy": "HI-C66-seed",
-        "introducedAt": 278,
+        "introducedAt": 281,
         "missed": [
           "R3",
           "R4"
@@ -49562,7 +49600,7 @@
         "atom": "HI-LEX-C66-FIELD-02",
         "language": "hindi",
         "introducedBy": "HI-C66-crop",
-        "introducedAt": 279,
+        "introducedAt": 282,
         "missed": [
           "R3",
           "R4"
@@ -49573,7 +49611,7 @@
         "atom": "HI-LEX-C66-FIELD-03",
         "language": "hindi",
         "introducedBy": "HI-C66-grain",
-        "introducedAt": 280,
+        "introducedAt": 283,
         "missed": [
           "R3",
           "R4"
@@ -49584,7 +49622,7 @@
         "atom": "HI-LEX-C66-FIELD-05",
         "language": "hindi",
         "introducedBy": "HI-C66-well",
-        "introducedAt": 282,
+        "introducedAt": 285,
         "missed": [
           "R1",
           "R4"
@@ -49595,7 +49633,7 @@
         "atom": "HI-LEX-C70-LEISURE-01",
         "language": "hindi",
         "introducedBy": "HI-C70-game",
-        "introducedAt": 321,
+        "introducedAt": 324,
         "missed": [
           "R3",
           "R4"
@@ -49606,7 +49644,7 @@
         "atom": "HI-LEX-C70-LEISURE-02",
         "language": "hindi",
         "introducedBy": "HI-C70-play",
-        "introducedAt": 322,
+        "introducedAt": 325,
         "missed": [
           "R3",
           "R4"
@@ -49617,7 +49655,7 @@
         "atom": "HI-LEX-C70-LEISURE-03",
         "language": "hindi",
         "introducedBy": "HI-C70-cricket",
-        "introducedAt": 323,
+        "introducedAt": 326,
         "missed": [
           "R3",
           "R4"
@@ -49628,7 +49666,7 @@
         "atom": "HI-LEX-C70-LEISURE-04",
         "language": "hindi",
         "introducedBy": "HI-C70-song",
-        "introducedAt": 324,
+        "introducedAt": 327,
         "missed": [
           "R3",
           "R4"
@@ -49639,7 +49677,7 @@
         "atom": "HI-LEX-C70-LEISURE-05",
         "language": "hindi",
         "introducedBy": "HI-C70-rest",
-        "introducedAt": 325,
+        "introducedAt": 328,
         "missed": [
           "R3",
           "R4"
@@ -49650,7 +49688,7 @@
         "atom": "HI-LEX-C71-TODAY-01",
         "language": "hindi",
         "introducedBy": "HI-C71-today",
-        "introducedAt": 326,
+        "introducedAt": 329,
         "missed": [
           "R3",
           "R4"
@@ -49661,7 +49699,7 @@
         "atom": "HI-LEX-C71-TODAY-02",
         "language": "hindi",
         "introducedBy": "HI-C71-also",
-        "introducedAt": 327,
+        "introducedAt": 330,
         "missed": [
           "R3",
           "R4"
@@ -49672,7 +49710,7 @@
         "atom": "HI-LEX-C71-TODAY-03",
         "language": "hindi",
         "introducedBy": "HI-C71-very",
-        "introducedAt": 328,
+        "introducedAt": 331,
         "missed": [
           "R3",
           "R4"
@@ -49683,7 +49721,7 @@
         "atom": "HI-LEX-C72-COST-01",
         "language": "hindi",
         "introducedBy": "HI-C72-money",
-        "introducedAt": 329,
+        "introducedAt": 332,
         "missed": [
           "R3",
           "R4"
@@ -49691,10 +49729,87 @@
         "revisits": 4
       },
       {
+        "atom": "HI-LEX-C72-COST-02",
+        "language": "hindi",
+        "introducedBy": "HI-C72-rupee",
+        "introducedAt": 333,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "HI-LEX-C72-COST-03",
+        "language": "hindi",
+        "introducedBy": "HI-C72-price",
+        "introducedAt": 334,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-LEX-C72-COST-04",
+        "language": "hindi",
+        "introducedBy": "HI-C72-expensive",
+        "introducedAt": 335,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "HI-LEX-C72-COST-05",
+        "language": "hindi",
+        "introducedBy": "HI-C72-buy",
+        "introducedAt": 336,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-LEX-C73-EATING-01",
+        "language": "hindi",
+        "introducedBy": "HI-C73-eating-house",
+        "introducedAt": 337,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "HI-LEX-C73-EATING-03",
+        "language": "hindi",
+        "introducedBy": "HI-C73-bill",
+        "introducedAt": 339,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-LEX-C73-EATING-04",
+        "language": "hindi",
+        "introducedBy": "HI-C73-waiter",
+        "introducedAt": 340,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "HI-LEX-C76-ORDINAL-03",
         "language": "hindi",
         "introducedBy": "HI-C76-eighth",
-        "introducedAt": 351,
+        "introducedAt": 354,
         "missed": [
           "R2",
           "R3"
@@ -49705,7 +49820,7 @@
         "atom": "HI-LEX-C76-ORDINAL-04",
         "language": "hindi",
         "introducedBy": "HI-C76-ninth",
-        "introducedAt": 352,
+        "introducedAt": 355,
         "missed": [
           "R2",
           "R3"
@@ -49716,7 +49831,7 @@
         "atom": "HI-LEX-C76-ORDINAL-05",
         "language": "hindi",
         "introducedBy": "HI-C76-tenth",
-        "introducedAt": 353,
+        "introducedAt": 356,
         "missed": [
           "R2",
           "R3"
@@ -49727,7 +49842,7 @@
         "atom": "HI-LEX-C81-SCHOOL-01",
         "language": "hindi",
         "introducedBy": "HI-C81-skool",
-        "introducedAt": 363,
+        "introducedAt": 366,
         "missed": [
           "R2",
           "R3"
@@ -49738,7 +49853,7 @@
         "atom": "HI-LEX-C81-SCHOOL-02",
         "language": "hindi",
         "introducedBy": "HI-C81-vidyalaya",
-        "introducedAt": 364,
+        "introducedAt": 367,
         "missed": [
           "R2",
           "R3"
@@ -49749,7 +49864,7 @@
         "atom": "HI-LEX-C82-BODY-02",
         "language": "hindi",
         "introducedBy": "HI-C82-patlaa",
-        "introducedAt": 368,
+        "introducedAt": 371,
         "missed": [
           "R2",
           "R3"
@@ -49760,7 +49875,7 @@
         "atom": "HI-LEX-C82-BODY-04",
         "language": "hindi",
         "introducedBy": "HI-C82-naataa",
-        "introducedAt": 370,
+        "introducedAt": 373,
         "missed": [
           "R2",
           "R3"
@@ -49771,7 +49886,7 @@
         "atom": "HI-LEX-C83-CHAR-04",
         "language": "hindi",
         "introducedBy": "HI-C83-sharmeela",
-        "introducedAt": 376,
+        "introducedAt": 379,
         "missed": [
           "R2",
           "R3"
@@ -49782,7 +49897,7 @@
         "atom": "HI-LEX-C83-CHAR-05",
         "language": "hindi",
         "introducedBy": "HI-C83-milansaar",
-        "introducedAt": 377,
+        "introducedAt": 380,
         "missed": [
           "R2",
           "R3"
@@ -49793,7 +49908,7 @@
         "atom": "HI-LEX-C83-CHAR-06",
         "language": "hindi",
         "introducedBy": "HI-C83-gambhir",
-        "introducedAt": 378,
+        "introducedAt": 381,
         "missed": [
           "R2",
           "R3"
@@ -49804,7 +49919,7 @@
         "atom": "HI-LEX-C84-POSS-04",
         "language": "hindi",
         "introducedBy": "HI-C84-apna",
-        "introducedAt": 384,
+        "introducedAt": 387,
         "missed": [
           "R2",
           "R3"
@@ -49815,7 +49930,7 @@
         "atom": "HI-LEX-C84-POSS-05",
         "language": "hindi",
         "introducedBy": "HI-C84-mere-paas",
-        "introducedAt": 385,
+        "introducedAt": 388,
         "missed": [
           "R2",
           "R3"
@@ -49826,7 +49941,7 @@
         "atom": "HI-LEX-C84-POSS-06",
         "language": "hindi",
         "introducedBy": "HI-C84-mere-liye",
-        "introducedAt": 386,
+        "introducedAt": 389,
         "missed": [
           "R2",
           "R3"
@@ -49834,10 +49949,54 @@
         "revisits": 2
       },
       {
+        "atom": "HI-LEX-C85-IMP-02",
+        "language": "hindi",
+        "introducedBy": "HI-C85-boliye",
+        "introducedAt": 393,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-LEX-C85-IMP-03",
+        "language": "hindi",
+        "introducedBy": "HI-C85-tum-ho",
+        "introducedAt": 394,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-LEX-C85-IMP-04",
+        "language": "hindi",
+        "introducedBy": "HI-C85-mat",
+        "introducedAt": 395,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-LEX-C86-PRON-03",
+        "language": "hindi",
+        "introducedBy": "HI-C86-hamen-tumhen",
+        "introducedAt": 400,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "HI-LEX-DAUGHTER",
         "language": "hindi",
         "introducedBy": "HI-C44-daughter",
-        "introducedAt": 164,
+        "introducedAt": 167,
         "missed": [
           "R3",
           "R4"
@@ -49848,7 +50007,7 @@
         "atom": "HI-LEX-FAMILY",
         "language": "hindi",
         "introducedBy": "HI-C44-family",
-        "introducedAt": 165,
+        "introducedAt": 168,
         "missed": [
           "R3",
           "R4"
@@ -49859,7 +50018,7 @@
         "atom": "HI-LEX-PEOPLE",
         "language": "hindi",
         "introducedBy": "HI-C44-people",
-        "introducedAt": 166,
+        "introducedAt": 169,
         "missed": [
           "R3",
           "R4"
@@ -49870,7 +50029,7 @@
         "atom": "HI-LEX-SIT",
         "language": "hindi",
         "introducedBy": "HI-C42-sit",
-        "introducedAt": 156,
+        "introducedAt": 159,
         "missed": [
           "R3",
           "R4"
@@ -49881,7 +50040,7 @@
         "atom": "HI-LEX-SON",
         "language": "hindi",
         "introducedBy": "HI-C44-son",
-        "introducedAt": 163,
+        "introducedAt": 166,
         "missed": [
           "R3",
           "R4"
@@ -49892,7 +50051,7 @@
         "atom": "HI-LEX-SPEAK",
         "language": "hindi",
         "introducedBy": "HI-C43-speak",
-        "introducedAt": 161,
+        "introducedAt": 164,
         "missed": [
           "R3",
           "R4"
@@ -49903,7 +50062,7 @@
         "atom": "HI-LEX-STAND",
         "language": "hindi",
         "introducedBy": "HI-C42-stand",
-        "introducedAt": 157,
+        "introducedAt": 160,
         "missed": [
           "R3",
           "R4"
@@ -49914,7 +50073,7 @@
         "atom": "HI-LEX-WRITE",
         "language": "hindi",
         "introducedBy": "HI-C43-write",
-        "introducedAt": 162,
+        "introducedAt": 165,
         "missed": [
           "R3",
           "R4"
@@ -49925,7 +50084,7 @@
         "atom": "HI-SCRIPT-AA-01",
         "language": "hindi",
         "introducedBy": "HI-W12-aa",
-        "introducedAt": 241,
+        "introducedAt": 244,
         "missed": [
           "R3",
           "R4"
@@ -49936,7 +50095,7 @@
         "atom": "HI-SCRIPT-AI-MATRA-01",
         "language": "hindi",
         "introducedBy": "HI-W12-ai-matra",
-        "introducedAt": 240,
+        "introducedAt": 243,
         "missed": [
           "R3",
           "R4"
@@ -49947,7 +50106,7 @@
         "atom": "HI-SCRIPT-II-01",
         "language": "hindi",
         "introducedBy": "HI-W12-ii",
-        "introducedAt": 242,
+        "introducedAt": 245,
         "missed": [
           "R3",
           "R4"
@@ -49958,7 +50117,7 @@
         "atom": "HI-SCRIPT-II-MATRA-01",
         "language": "hindi",
         "introducedBy": "HI-W12-ii-matra",
-        "introducedAt": 238,
+        "introducedAt": 241,
         "missed": [
           "R3",
           "R4"
@@ -49966,10 +50125,21 @@
         "revisits": 9
       },
       {
+        "atom": "HI-SCRIPT-RECOG-120",
+        "language": "hindi",
+        "introducedBy": "HI-S120-vowel-sign-u",
+        "introducedAt": 90,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "HI-SCRIPT-SCHWA-DROP-01",
         "language": "hindi",
         "introducedBy": "HI-W12-schwa-drop",
-        "introducedAt": 237,
+        "introducedAt": 240,
         "missed": [
           "R3",
           "R4"
@@ -49980,7 +50150,7 @@
         "atom": "HI-SCRIPT-U-MATRA-01",
         "language": "hindi",
         "introducedBy": "HI-W12-u-matra",
-        "introducedAt": 239,
+        "introducedAt": 242,
         "missed": [
           "R3",
           "R4"
@@ -49991,7 +50161,7 @@
         "atom": "HI-SKILL-CONNECTED-READING",
         "language": "hindi",
         "introducedBy": "HI-C78-signs",
-        "introducedAt": 356,
+        "introducedAt": 359,
         "missed": [
           "R2",
           "R3"
@@ -70208,20 +70378,10 @@
         "revisits": 3
       },
       {
-        "atom": "HI-CONCEPT-C05-BOLNA-01",
-        "language": "hindi",
-        "introducedBy": "HI-C05-bolna",
-        "introducedAt": 47,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 9
-      },
-      {
         "atom": "HI-CONCEPT-C37-CHAI-01",
         "language": "hindi",
         "introducedBy": "HI-C37-chai",
-        "introducedAt": 130,
+        "introducedAt": 133,
         "missed": [
           "R3"
         ],
@@ -70231,7 +70391,7 @@
         "atom": "HI-CONCEPT-C37-DUDH-01",
         "language": "hindi",
         "introducedBy": "HI-C37-dudh",
-        "introducedAt": 131,
+        "introducedAt": 134,
         "missed": [
           "R3"
         ],
@@ -70241,7 +70401,7 @@
         "atom": "HI-CONCEPT-C37-KHAANA-01",
         "language": "hindi",
         "introducedBy": "HI-C37-khaana",
-        "introducedAt": 132,
+        "introducedAt": 135,
         "missed": [
           "R3"
         ],
@@ -70251,7 +70411,7 @@
         "atom": "HI-CONCEPT-C37-KITAAB-01",
         "language": "hindi",
         "introducedBy": "HI-C37-kitaab",
-        "introducedAt": 133,
+        "introducedAt": 136,
         "missed": [
           "R3"
         ],
@@ -70261,7 +70421,7 @@
         "atom": "HI-CONCEPT-C39-DOST-01",
         "language": "hindi",
         "introducedBy": "HI-C39-dost",
-        "introducedAt": 138,
+        "introducedAt": 141,
         "missed": [
           "R3"
         ],
@@ -70291,7 +70451,7 @@
         "atom": "HI-GRAMMAR-C75-ORDINAL-07",
         "language": "hindi",
         "introducedBy": "HI-C75-fifth",
-        "introducedAt": 348,
+        "introducedAt": 351,
         "missed": [
           "R3"
         ],
@@ -70301,7 +70461,7 @@
         "atom": "HI-GRAMMAR-INFINITIVE-OBJECT-01",
         "language": "hindi",
         "introducedBy": "HI-C70-infinitive-object",
-        "introducedAt": 297,
+        "introducedAt": 300,
         "missed": [
           "R4"
         ],
@@ -70311,7 +70471,7 @@
         "atom": "HI-GRAMMAR-KAR-01",
         "language": "hindi",
         "introducedBy": "HI-C73-kar",
-        "introducedAt": 305,
+        "introducedAt": 308,
         "missed": [
           "R4"
         ],
@@ -70321,7 +70481,7 @@
         "atom": "HI-GRAMMAR-SAKNA-STEM-01",
         "language": "hindi",
         "introducedBy": "HI-C70-sakna",
-        "introducedAt": 295,
+        "introducedAt": 298,
         "missed": [
           "R4"
         ],
@@ -70331,7 +70491,7 @@
         "atom": "HI-GRAMMAR-VERB-FINAL-01",
         "language": "hindi",
         "introducedBy": "HI-C69-verb-last",
-        "introducedAt": 292,
+        "introducedAt": 295,
         "missed": [
           "R4"
         ],
@@ -70341,7 +70501,7 @@
         "atom": "HI-JOIN-AUR-01",
         "language": "hindi",
         "introducedBy": "HI-C68-aur",
-        "introducedAt": 288,
+        "introducedAt": 291,
         "missed": [
           "R4"
         ],
@@ -70351,7 +70511,7 @@
         "atom": "HI-JOIN-JAB-TAB-01",
         "language": "hindi",
         "introducedBy": "HI-C72-jab-tab",
-        "introducedAt": 303,
+        "introducedAt": 306,
         "missed": [
           "R4"
         ],
@@ -70361,7 +70521,7 @@
         "atom": "HI-JOIN-KAB-01",
         "language": "hindi",
         "introducedBy": "HI-C72-kab",
-        "introducedAt": 302,
+        "introducedAt": 305,
         "missed": [
           "R4"
         ],
@@ -70371,7 +70531,7 @@
         "atom": "HI-JOIN-KI-01",
         "language": "hindi",
         "introducedBy": "HI-C69-ki",
-        "introducedAt": 293,
+        "introducedAt": 296,
         "missed": [
           "R4"
         ],
@@ -70381,7 +70541,7 @@
         "atom": "HI-JOIN-KYON-01",
         "language": "hindi",
         "introducedBy": "HI-C71-kyon",
-        "introducedAt": 299,
+        "introducedAt": 302,
         "missed": [
           "R4"
         ],
@@ -70391,7 +70551,7 @@
         "atom": "HI-JOIN-KYONKI-01",
         "language": "hindi",
         "introducedBy": "HI-C71-kyonki",
-        "introducedAt": 300,
+        "introducedAt": 303,
         "missed": [
           "R4"
         ],
@@ -70401,7 +70561,7 @@
         "atom": "HI-JOIN-LEKIN-01",
         "language": "hindi",
         "introducedBy": "HI-C68-lekin",
-        "introducedAt": 290,
+        "introducedAt": 293,
         "missed": [
           "R4"
         ],
@@ -70411,7 +70571,7 @@
         "atom": "HI-JOIN-YA-01",
         "language": "hindi",
         "introducedBy": "HI-C68-ya",
-        "introducedAt": 289,
+        "introducedAt": 292,
         "missed": [
           "R4"
         ],
@@ -70421,7 +70581,7 @@
         "atom": "HI-LEX-C40-DEIXIS-01",
         "language": "hindi",
         "introducedBy": "HI-C40-this",
-        "introducedAt": 142,
+        "introducedAt": 145,
         "missed": [
           "R3"
         ],
@@ -70431,17 +70591,17 @@
         "atom": "HI-LEX-C40-DEIXIS-02",
         "language": "hindi",
         "introducedBy": "HI-C40-that",
-        "introducedAt": 143,
+        "introducedAt": 146,
         "missed": [
           "R3"
         ],
-        "revisits": 8
+        "revisits": 9
       },
       {
         "atom": "HI-LEX-C40-DEIXIS-06",
         "language": "hindi",
         "introducedBy": "HI-C40-where",
-        "introducedAt": 147,
+        "introducedAt": 150,
         "missed": [
           "R3"
         ],
@@ -70451,7 +70611,7 @@
         "atom": "HI-LEX-C41-ADJ-02",
         "language": "hindi",
         "introducedBy": "HI-C41-small",
-        "introducedAt": 150,
+        "introducedAt": 153,
         "missed": [
           "R3"
         ],
@@ -70461,7 +70621,7 @@
         "atom": "HI-LEX-C41-ADJ-03",
         "language": "hindi",
         "introducedBy": "HI-C41-good",
-        "introducedAt": 151,
+        "introducedAt": 154,
         "missed": [
           "R3"
         ],
@@ -70471,7 +70631,7 @@
         "atom": "HI-LEX-C47-ROLE-01",
         "language": "hindi",
         "introducedBy": "HI-C47-teacher",
-        "introducedAt": 177,
+        "introducedAt": 180,
         "missed": [
           "R3"
         ],
@@ -70481,7 +70641,7 @@
         "atom": "HI-LEX-C47-ROLE-02",
         "language": "hindi",
         "introducedBy": "HI-C47-student",
-        "introducedAt": 178,
+        "introducedAt": 181,
         "missed": [
           "R3"
         ],
@@ -70491,7 +70651,7 @@
         "atom": "HI-LEX-C49-LEAVE-04",
         "language": "hindi",
         "introducedBy": "HI-C49-set-out",
-        "introducedAt": 190,
+        "introducedAt": 193,
         "missed": [
           "R3"
         ],
@@ -70501,7 +70661,7 @@
         "atom": "HI-LEX-C56-ROAD-02",
         "language": "hindi",
         "introducedBy": "HI-C56-village",
-        "introducedAt": 223,
+        "introducedAt": 226,
         "missed": [
           "R3"
         ],
@@ -70511,7 +70671,7 @@
         "atom": "HI-LEX-C56-ROAD-03",
         "language": "hindi",
         "introducedBy": "HI-C56-market",
-        "introducedAt": 224,
+        "introducedAt": 227,
         "missed": [
           "R3"
         ],
@@ -70521,7 +70681,7 @@
         "atom": "HI-LEX-C66-FIELD-04",
         "language": "hindi",
         "introducedBy": "HI-C66-grass",
-        "introducedAt": 281,
+        "introducedAt": 284,
         "missed": [
           "R4"
         ],
@@ -70531,7 +70691,7 @@
         "atom": "HI-LEX-C68-ORIGIN-01",
         "language": "hindi",
         "introducedBy": "HI-C68-country",
-        "introducedAt": 311,
+        "introducedAt": 314,
         "missed": [
           "R4"
         ],
@@ -70541,7 +70701,7 @@
         "atom": "HI-LEX-C68-ORIGIN-02",
         "language": "hindi",
         "introducedBy": "HI-C68-india",
-        "introducedAt": 312,
+        "introducedAt": 315,
         "missed": [
           "R4"
         ],
@@ -70551,7 +70711,7 @@
         "atom": "HI-LEX-C68-ORIGIN-03",
         "language": "hindi",
         "introducedBy": "HI-C68-city",
-        "introducedAt": 313,
+        "introducedAt": 316,
         "missed": [
           "R4"
         ],
@@ -70561,7 +70721,7 @@
         "atom": "HI-LEX-C68-ORIGIN-04",
         "language": "hindi",
         "introducedBy": "HI-C68-language",
-        "introducedAt": 314,
+        "introducedAt": 317,
         "missed": [
           "R4"
         ],
@@ -70571,7 +70731,7 @@
         "atom": "HI-LEX-C68-ORIGIN-05",
         "language": "hindi",
         "introducedBy": "HI-C68-english",
-        "introducedAt": 315,
+        "introducedAt": 318,
         "missed": [
           "R4"
         ],
@@ -70581,7 +70741,7 @@
         "atom": "HI-LEX-C69-GOING-01",
         "language": "hindi",
         "introducedBy": "HI-C69-vehicle",
-        "introducedAt": 316,
+        "introducedAt": 319,
         "missed": [
           "R4"
         ],
@@ -70591,7 +70751,7 @@
         "atom": "HI-LEX-C69-GOING-02",
         "language": "hindi",
         "introducedBy": "HI-C69-railway",
-        "introducedAt": 317,
+        "introducedAt": 320,
         "missed": [
           "R4"
         ],
@@ -70601,7 +70761,7 @@
         "atom": "HI-LEX-C69-GOING-04",
         "language": "hindi",
         "introducedBy": "HI-C69-ticket",
-        "introducedAt": 319,
+        "introducedAt": 322,
         "missed": [
           "R4"
         ],
@@ -70611,87 +70771,27 @@
         "atom": "HI-LEX-C69-GOING-05",
         "language": "hindi",
         "introducedBy": "HI-C69-go",
-        "introducedAt": 320,
+        "introducedAt": 323,
         "missed": [
           "R4"
         ],
         "revisits": 5
       },
       {
-        "atom": "HI-LEX-C72-COST-02",
+        "atom": "HI-LEX-C73-EATING-02",
         "language": "hindi",
-        "introducedBy": "HI-C72-rupee",
-        "introducedAt": 330,
+        "introducedBy": "HI-C73-breakfast",
+        "introducedAt": 338,
         "missed": [
-          "R3"
-        ],
-        "revisits": 5
-      },
-      {
-        "atom": "HI-LEX-C72-COST-03",
-        "language": "hindi",
-        "introducedBy": "HI-C72-price",
-        "introducedAt": 331,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "HI-LEX-C72-COST-04",
-        "language": "hindi",
-        "introducedBy": "HI-C72-expensive",
-        "introducedAt": 332,
-        "missed": [
-          "R3"
+          "R4"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "HI-LEX-C72-COST-05",
-        "language": "hindi",
-        "introducedBy": "HI-C72-buy",
-        "introducedAt": 333,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "HI-LEX-C73-EATING-01",
-        "language": "hindi",
-        "introducedBy": "HI-C73-eating-house",
-        "introducedAt": 334,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 5
-      },
-      {
-        "atom": "HI-LEX-C73-EATING-03",
-        "language": "hindi",
-        "introducedBy": "HI-C73-bill",
-        "introducedAt": 336,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "HI-LEX-C73-EATING-04",
-        "language": "hindi",
-        "introducedBy": "HI-C73-waiter",
-        "introducedAt": 337,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
       },
       {
         "atom": "HI-LEX-C73-EATING-05",
         "language": "hindi",
         "introducedBy": "HI-C73-drink",
-        "introducedAt": 338,
+        "introducedAt": 341,
         "missed": [
           "R3"
         ],
@@ -70701,7 +70801,7 @@
         "atom": "HI-LEX-C74-SIGNS-01",
         "language": "hindi",
         "introducedBy": "HI-C74-open",
-        "introducedAt": 339,
+        "introducedAt": 342,
         "missed": [
           "R3"
         ],
@@ -70711,7 +70811,7 @@
         "atom": "HI-LEX-C74-SIGNS-02",
         "language": "hindi",
         "introducedBy": "HI-C74-closed",
-        "introducedAt": 340,
+        "introducedAt": 343,
         "missed": [
           "R3"
         ],
@@ -70721,7 +70821,7 @@
         "atom": "HI-LEX-C74-SIGNS-03",
         "language": "hindi",
         "introducedBy": "HI-C74-entrance",
-        "introducedAt": 341,
+        "introducedAt": 344,
         "missed": [
           "R3"
         ],
@@ -70731,7 +70831,7 @@
         "atom": "HI-LEX-C74-SIGNS-04",
         "language": "hindi",
         "introducedBy": "HI-C74-exit",
-        "introducedAt": 342,
+        "introducedAt": 345,
         "missed": [
           "R3"
         ],
@@ -70741,7 +70841,7 @@
         "atom": "HI-LEX-C74-SIGNS-05",
         "language": "hindi",
         "introducedBy": "HI-C74-late",
-        "introducedAt": 343,
+        "introducedAt": 346,
         "missed": [
           "R3"
         ],
@@ -70751,7 +70851,7 @@
         "atom": "HI-LEX-C75-ORDINAL-01",
         "language": "hindi",
         "introducedBy": "HI-C75-first",
-        "introducedAt": 344,
+        "introducedAt": 347,
         "missed": [
           "R3"
         ],
@@ -70761,7 +70861,7 @@
         "atom": "HI-LEX-C75-ORDINAL-02",
         "language": "hindi",
         "introducedBy": "HI-C75-second",
-        "introducedAt": 345,
+        "introducedAt": 348,
         "missed": [
           "R3"
         ],
@@ -70771,7 +70871,7 @@
         "atom": "HI-LEX-C75-ORDINAL-03",
         "language": "hindi",
         "introducedBy": "HI-C75-second",
-        "introducedAt": 345,
+        "introducedAt": 348,
         "missed": [
           "R3"
         ],
@@ -70781,7 +70881,7 @@
         "atom": "HI-LEX-C75-ORDINAL-04",
         "language": "hindi",
         "introducedBy": "HI-C75-third",
-        "introducedAt": 346,
+        "introducedAt": 349,
         "missed": [
           "R3"
         ],
@@ -70791,7 +70891,7 @@
         "atom": "HI-LEX-C75-ORDINAL-05",
         "language": "hindi",
         "introducedBy": "HI-C75-fourth",
-        "introducedAt": 347,
+        "introducedAt": 350,
         "missed": [
           "R3"
         ],
@@ -70801,7 +70901,7 @@
         "atom": "HI-LEX-C75-ORDINAL-06",
         "language": "hindi",
         "introducedBy": "HI-C75-fifth",
-        "introducedAt": 348,
+        "introducedAt": 351,
         "missed": [
           "R3"
         ],
@@ -70811,7 +70911,7 @@
         "atom": "HI-LEX-C76-ORDINAL-01",
         "language": "hindi",
         "introducedBy": "HI-C76-sixth",
-        "introducedAt": 349,
+        "introducedAt": 352,
         "missed": [
           "R3"
         ],
@@ -70821,7 +70921,7 @@
         "atom": "HI-LEX-C76-ORDINAL-02",
         "language": "hindi",
         "introducedBy": "HI-C76-seventh",
-        "introducedAt": 350,
+        "introducedAt": 353,
         "missed": [
           "R3"
         ],
@@ -70831,7 +70931,7 @@
         "atom": "HI-LEX-C80-EASE-01",
         "language": "hindi",
         "introducedBy": "HI-C80-aasaan-mushkil",
-        "introducedAt": 361,
+        "introducedAt": 364,
         "missed": [
           "R3"
         ],
@@ -70841,7 +70941,7 @@
         "atom": "HI-LEX-C82-BODY-01",
         "language": "hindi",
         "introducedBy": "HI-C82-lambaa",
-        "introducedAt": 367,
+        "introducedAt": 370,
         "missed": [
           "R3"
         ],
@@ -70851,7 +70951,7 @@
         "atom": "HI-LEX-C82-BODY-03",
         "language": "hindi",
         "introducedBy": "HI-C82-motaa",
-        "introducedAt": 369,
+        "introducedAt": 372,
         "missed": [
           "R3"
         ],
@@ -70861,7 +70961,7 @@
         "atom": "HI-LEX-C83-CHAR-01",
         "language": "hindi",
         "introducedBy": "HI-C83-buraa",
-        "introducedAt": 373,
+        "introducedAt": 376,
         "missed": [
           "R3"
         ],
@@ -70871,7 +70971,7 @@
         "atom": "HI-LEX-C83-CHAR-02",
         "language": "hindi",
         "introducedBy": "HI-C83-hoshiyaar",
-        "introducedAt": 374,
+        "introducedAt": 377,
         "missed": [
           "R3"
         ],
@@ -70881,7 +70981,7 @@
         "atom": "HI-LEX-C83-CHAR-03",
         "language": "hindi",
         "introducedBy": "HI-C83-mehnati",
-        "introducedAt": 375,
+        "introducedAt": 378,
         "missed": [
           "R3"
         ],
@@ -70891,7 +70991,7 @@
         "atom": "HI-LEX-C84-POSS-01",
         "language": "hindi",
         "introducedBy": "HI-C84-uska",
-        "introducedAt": 381,
+        "introducedAt": 384,
         "missed": [
           "R3"
         ],
@@ -70901,7 +71001,7 @@
         "atom": "HI-LEX-C84-POSS-02",
         "language": "hindi",
         "introducedBy": "HI-C84-hamara",
-        "introducedAt": 382,
+        "introducedAt": 385,
         "missed": [
           "R3"
         ],
@@ -70911,67 +71011,37 @@
         "atom": "HI-LEX-C84-POSS-03",
         "language": "hindi",
         "introducedBy": "HI-C84-tumhara",
-        "introducedAt": 383,
+        "introducedAt": 386,
         "missed": [
           "R3"
         ],
         "revisits": 8
       },
       {
-        "atom": "HI-LEX-C85-IMP-01",
+        "atom": "HI-LEX-C86-PRON-01",
         "language": "hindi",
-        "introducedBy": "HI-C85-bolo",
-        "introducedAt": 389,
+        "introducedBy": "HI-C86-ham",
+        "introducedAt": 398,
         "missed": [
           "R3"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
-        "atom": "HI-LEX-C85-IMP-02",
+        "atom": "HI-LEX-C86-PRON-02",
         "language": "hindi",
-        "introducedBy": "HI-C85-boliye",
-        "introducedAt": 390,
+        "introducedBy": "HI-C86-ve",
+        "introducedAt": 399,
         "missed": [
-          "R2"
+          "R3"
         ],
-        "revisits": 3
-      },
-      {
-        "atom": "HI-LEX-C85-IMP-03",
-        "language": "hindi",
-        "introducedBy": "HI-C85-tum-ho",
-        "introducedAt": 391,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-LEX-C85-IMP-04",
-        "language": "hindi",
-        "introducedBy": "HI-C85-mat",
-        "introducedAt": 392,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-LEX-C86-PRON-03",
-        "language": "hindi",
-        "introducedBy": "HI-C86-hamen-tumhen",
-        "introducedAt": 397,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "HI-LEX-C86-PRON-04",
         "language": "hindi",
         "introducedBy": "HI-C86-aapko-use",
-        "introducedAt": 398,
+        "introducedAt": 401,
         "missed": [
           "R2"
         ],
@@ -70981,17 +71051,47 @@
         "atom": "HI-LEX-C86-PRON-05",
         "language": "hindi",
         "introducedBy": "HI-C86-koi-article",
-        "introducedAt": 399,
+        "introducedAt": 402,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
+        "atom": "HI-LEX-C87-PAST-03",
+        "language": "hindi",
+        "introducedBy": "HI-C87-the",
+        "introducedAt": 408,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-LEX-C87-PAST-04",
+        "language": "hindi",
+        "introducedBy": "HI-C87-nahin-thaa",
+        "introducedAt": 409,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-LEX-C87-PAST-05",
+        "language": "hindi",
+        "introducedBy": "HI-C87-bolta-thaa",
+        "introducedAt": 410,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "HI-LEX-CHAHNA-01",
         "language": "hindi",
         "introducedBy": "HI-C70-chahna",
-        "introducedAt": 296,
+        "introducedAt": 299,
         "missed": [
           "R4"
         ],
@@ -71001,17 +71101,17 @@
         "atom": "HI-LEX-COME",
         "language": "hindi",
         "introducedBy": "HI-C42-come",
-        "introducedAt": 155,
+        "introducedAt": 158,
         "missed": [
           "R3"
         ],
-        "revisits": 7
+        "revisits": 8
       },
       {
         "atom": "HI-LEX-LISTEN",
         "language": "hindi",
         "introducedBy": "HI-C43-listen",
-        "introducedAt": 160,
+        "introducedAt": 163,
         "missed": [
           "R3"
         ],
@@ -71021,7 +71121,7 @@
         "atom": "HI-LEX-LOOK",
         "language": "hindi",
         "introducedBy": "HI-C43-look",
-        "introducedAt": 159,
+        "introducedAt": 162,
         "missed": [
           "R3"
         ],
@@ -71031,7 +71131,7 @@
         "atom": "HI-LEX-SAKNA-01",
         "language": "hindi",
         "introducedBy": "HI-C70-sakna",
-        "introducedAt": 295,
+        "introducedAt": 298,
         "missed": [
           "R4"
         ],
@@ -85530,7 +85630,7 @@
       {
         "lessonId": "HI-C68-lekin",
         "language": "hindi",
-        "position": 290,
+        "position": 293,
         "word": "पर",
         "taughtBy": "HI-C87-par",
         "lessonsEarly": 112
@@ -86970,7 +87070,7 @@
       {
         "lessonId": "HI-C83-buraa",
         "language": "hindi",
-        "position": 373,
+        "position": 376,
         "word": "मत",
         "taughtBy": "HI-C85-mat",
         "lessonsEarly": 19
@@ -87032,6 +87132,14 @@
         "lessonsEarly": 17
       },
       {
+        "lessonId": "HI-S124-letter-dha",
+        "language": "hindi",
+        "position": 99,
+        "word": "दोपहर",
+        "taughtBy": "HI-C30-dopahar-widened",
+        "lessonsEarly": 17
+      },
+      {
         "lessonId": "KA-C03-niivu-hegiddiira",
         "language": "kannada",
         "position": 22,
@@ -87066,7 +87174,7 @@
       {
         "lessonId": "HI-C36-ghar",
         "language": "hindi",
-        "position": 126,
+        "position": 129,
         "word": "यह",
         "taughtBy": "HI-C40-this",
         "lessonsEarly": 16
@@ -87168,14 +87276,6 @@
         "lessonsEarly": 14
       },
       {
-        "lessonId": "HI-S124-letter-dha",
-        "language": "hindi",
-        "position": 99,
-        "word": "दोपहर",
-        "taughtBy": "HI-C30-dopahar-widened",
-        "lessonsEarly": 14
-      },
-      {
         "lessonId": "LA-C02-numbers-6-10",
         "language": "latin",
         "position": 10,
@@ -87250,9 +87350,17 @@
       {
         "lessonId": "HI-C84-hamara",
         "language": "hindi",
-        "position": 382,
+        "position": 385,
         "word": "हम",
         "taughtBy": "HI-C86-ham",
+        "lessonsEarly": 13
+      },
+      {
+        "lessonId": "HI-S124-letter-dha",
+        "language": "hindi",
+        "position": 99,
+        "word": "रात",
+        "taughtBy": "HI-C26-raat",
         "lessonsEarly": 13
       },
       {
@@ -87365,14 +87473,6 @@
         "position": 257,
         "word": "katze",
         "taughtBy": "GE-C22-hund-katze",
-        "lessonsEarly": 10
-      },
-      {
-        "lessonId": "HI-S124-letter-dha",
-        "language": "hindi",
-        "position": 99,
-        "word": "रात",
-        "taughtBy": "HI-C26-raat",
         "lessonsEarly": 10
       },
       {
@@ -87714,7 +87814,7 @@
       {
         "lessonId": "HI-C25-din",
         "language": "hindi",
-        "position": 108,
+        "position": 111,
         "word": "दोपहर",
         "taughtBy": "HI-C30-dopahar-widened",
         "lessonsEarly": 5
@@ -88634,7 +88734,7 @@
       {
         "lessonId": "HI-C40-here",
         "language": "hindi",
-        "position": 144,
+        "position": 147,
         "word": "वहाँ",
         "taughtBy": "HI-C40-there",
         "lessonsEarly": 1
@@ -88642,7 +88742,7 @@
       {
         "lessonId": "HI-C40-this",
         "language": "hindi",
-        "position": 142,
+        "position": 145,
         "word": "वह",
         "taughtBy": "HI-C40-that",
         "lessonsEarly": 1
@@ -88650,7 +88750,7 @@
       {
         "lessonId": "HI-C40-who",
         "language": "hindi",
-        "position": 146,
+        "position": 149,
         "word": "कहाँ",
         "taughtBy": "HI-C40-where",
         "lessonsEarly": 1
@@ -89319,12 +89419,12 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 410,
+        "lessonCount": 421,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 464,
-        "atomsNeverRevisited": 35,
+        "atomsTaught": 473,
+        "atomsNeverRevisited": 34,
         "forwardReferences": 13
       },
       {
@@ -89493,14 +89593,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 8554,
-      "atomsNeverRevisited": 497,
+      "atomsTaught": 8563,
+      "atomsNeverRevisited": 496,
       "neverRevisitedPercent": 6,
       "missedByWindow": {
         "R1": 1706,
-        "R2": 3841,
-        "R3": 5441,
-        "R4": 4021
+        "R2": 3846,
+        "R3": 5449,
+        "R4": 4034
       },
       "forwardReferences": 782
     }
@@ -89562,14 +89662,14 @@
       {
         "language": "hindi",
         "script": "devanagari",
-        "lessonCount": 410,
-        "scriptLessons": 61,
-        "taughtGlyphs": 47,
+        "lessonCount": 421,
+        "scriptLessons": 64,
+        "taughtGlyphs": 50,
         "shownGlyphs": 57,
-        "neverTaughtGlyphs": 10,
-        "violations": 35,
-        "exposureOnly": 68,
-        "exposureExemptedGlyphs": 144,
+        "neverTaughtGlyphs": 7,
+        "violations": 31,
+        "exposureOnly": 67,
+        "exposureExemptedGlyphs": 140,
         "headwordsWithoutRomanization": 1
       },
       {
@@ -91397,31 +91497,10 @@
         "count": 1
       },
       {
-        "lessonId": "HI-C22-gyarah-bees",
-        "language": "hindi",
-        "chapter": 22,
-        "glyphs": "ऊ",
-        "count": 1
-      },
-      {
         "lessonId": "HI-C23-billi-history",
         "language": "hindi",
         "chapter": 23,
         "glyphs": "ड",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C35-madad",
-        "language": "hindi",
-        "chapter": 35,
-        "glyphs": "उ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C35-puchna",
-        "language": "hindi",
-        "chapter": 35,
-        "glyphs": "उ",
         "count": 1
       },
       {
@@ -91464,13 +91543,6 @@
         "language": "hindi",
         "chapter": 53,
         "glyphs": "भ",
-        "count": 1
-      },
-      {
-        "lessonId": "HI-C53-lip",
-        "language": "hindi",
-        "chapter": 53,
-        "glyphs": "ओ",
         "count": 1
       },
       {
@@ -91610,9 +91682,9 @@
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 268,
-      "exposureOnly": 426,
-      "exposureExemptedGlyphs": 1467,
+      "violations": 264,
+      "exposureOnly": 425,
+      "exposureExemptedGlyphs": 1463,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
     },
@@ -109753,33 +109825,33 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 410,
-        "atomMeasurableLessons": 401,
-        "atomMeasurementBlindLessons": 9,
+        "lessonCount": 421,
+        "atomMeasurableLessons": 411,
+        "atomMeasurementBlindLessons": 10,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
         "atomChapterSpikes": 2,
         "glyphLessonSpikes": 3,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 35,
-        "neverTaughtGlyphs": 10,
+        "scriptClosureViolations": 31,
+        "neverTaughtGlyphs": 7,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 13,
-        "atomsTaught": 464,
-        "atomsNeverRevisited": 35,
-        "reinforcementWindowMisses": 1071,
+        "atomsTaught": 473,
+        "atomsNeverRevisited": 34,
+        "reinforcementWindowMisses": 1097,
         "reinforcementMissesByWindow": {
           "R1": 151,
-          "R2": 208,
-          "R3": 399,
-          "R4": 313
+          "R2": 213,
+          "R3": 407,
+          "R4": 326
         },
         "payoffSurprises": 13,
-        "writingPracticeLessons": 100,
+        "writingPracticeLessons": 103,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -109793,7 +109865,7 @@
           {
             "language": "hindi",
             "kind": "script-closure",
-            "count": 10,
+            "count": 7,
             "unit": "glyph(s)",
             "detail": "teach every load-bearing glyph before asking the learner to decode it"
           },
@@ -109814,7 +109886,7 @@
           {
             "language": "hindi",
             "kind": "reinforcement",
-            "count": 1071,
+            "count": 1097,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -109828,7 +109900,7 @@
           {
             "language": "hindi",
             "kind": "measurement-blind",
-            "count": 9,
+            "count": 10,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -111207,16 +111279,16 @@
         "detail": "teach every load-bearing glyph before asking the learner to decode it"
       },
       {
-        "language": "hindi",
+        "language": "bengali",
         "kind": "script-closure",
-        "count": 10,
+        "count": 8,
         "unit": "glyph(s)",
         "detail": "teach every load-bearing glyph before asking the learner to decode it"
       },
       {
-        "language": "bengali",
+        "language": "hindi",
         "kind": "script-closure",
-        "count": 8,
+        "count": 7,
         "unit": "glyph(s)",
         "detail": "teach every load-bearing glyph before asking the learner to decode it"
       },
@@ -111496,7 +111568,7 @@
       {
         "language": "hindi",
         "kind": "reinforcement",
-        "count": 1071,
+        "count": 1097,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -111753,16 +111825,16 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
-        "language": "punjabi",
+        "language": "hindi",
         "kind": "measurement-blind",
         "count": 10,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
-        "language": "hindi",
+        "language": "punjabi",
         "kind": "measurement-blind",
-        "count": 9,
+        "count": 10,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
@@ -111849,7 +111921,7 @@
       "tracksWithDetectedCliffs": 23,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 6,
-      "atomMeasurementBlindLessons": 89,
+      "atomMeasurementBlindLessons": 90,
       "findings": 114
     }
   },
@@ -112045,11 +112117,11 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "44 atom(s) at or below pre-A1 are revisited fewer than twice",
-            "shortfall": 44
+            "detail": "43 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 43
           }
         ],
-        "vocabulary": 300
+        "vocabulary": 306
       },
       {
         "language": "italian",
@@ -112457,12 +112529,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 6848,
-    "voice": 4936,
-    "sight": 740,
-    "pen": 1172,
-    "coreVoice": 5469,
-    "lessonsWithWritingSegments": 689,
+    "totalLessons": 6859,
+    "voice": 4943,
+    "sight": 741,
+    "pen": 1175,
+    "coreVoice": 5476,
+    "lessonsWithWritingSegments": 692,
     "drivablePercent": 80,
     "tracks": [
       {
@@ -116376,13 +116448,13 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 410,
-        "voice": 293,
-        "sight": 56,
-        "pen": 61,
-        "coreVoice": 331,
-        "drivablePercent": 81,
-        "drivablePrefixTotal": 304,
+        "lessonCount": 421,
+        "voice": 300,
+        "sight": 57,
+        "pen": 64,
+        "coreVoice": 338,
+        "drivablePercent": 80,
+        "drivablePrefixTotal": 309,
         "chapters": [
           {
             "language": "hindi",
@@ -116718,16 +116790,18 @@
           {
             "language": "hindi",
             "chapter": 22,
-            "lessonCount": 1,
+            "lessonCount": 4,
             "voice": 1,
             "sight": 0,
-            "pen": 0,
+            "pen": 3,
             "coreVoice": 1,
             "modalities": [
-              "voice"
+              "voice",
+              "sight",
+              "pen"
             ],
-            "drivablePrefix": 1,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "HI-S127-letter-u"
           },
           {
             "language": "hindi",
@@ -117771,6 +117845,21 @@
             ],
             "drivablePrefix": 5,
             "firstNonVoiceLesson": "HI-C87-bolta-thaa"
+          },
+          {
+            "language": "hindi",
+            "chapter": 96,
+            "lessonCount": 8,
+            "voice": 7,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 6,
+            "firstNonVoiceLesson": "HI-C88-repaso-bhavishya"
           }
         ]
       },
@@ -135674,7 +135763,7 @@
     "underspentPercent": 90
   },
   "infoDump": {
-    "lessons": 6848,
+    "lessons": 6859,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -135682,11 +135771,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 6848,
-    "measuredLessons": 3684,
-    "idiomMeasuredLessons": 3684,
-    "senseMeasuredLessons": 3685,
-    "cultureClaimMeasuredLessons": 3684,
+    "lessons": 6859,
+    "measuredLessons": 3695,
+    "idiomMeasuredLessons": 3695,
+    "senseMeasuredLessons": 3696,
+    "cultureClaimMeasuredLessons": 3695,
     "idioms": 101,
     "senses": 102,
     "cultureClaims": 207,
@@ -135695,18 +135784,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 6399,
-    "usesBeforeIntroduction": 21169,
-    "technicalUsesBeforeIntroduction": 5280,
-    "technicalLessons": 2941,
+    "lessonsUsingTerms": 6410,
+    "usesBeforeIntroduction": 21239,
+    "technicalUsesBeforeIntroduction": 5293,
+    "technicalLessons": 2949,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 1659
+        "lessons": 1665
       },
       {
         "term": "noun",
-        "lessons": 971
+        "lessons": 972
       },
       {
         "term": "adjective",
@@ -135722,17 +135811,17 @@
       },
       {
         "term": "tense",
-        "lessons": 218
+        "lessons": 222
       }
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 6848,
+    "lessonsScanned": 6859,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1610,
+    "filesScanned": 1611,
     "mainCharacters": 133,
     "scriptCharacters": 799,
     "gaps": 0
