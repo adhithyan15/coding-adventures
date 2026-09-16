@@ -21,7 +21,8 @@
     "ES-PATH-370-01",
     "ES-PATH-378-01",
     "ES-PATH-407-LOCATIONS",
-    "ES-PATH-407-REVIEWS"
+    "ES-PATH-407-REVIEWS",
+    "ES-PATH-420-ARTS-PLACES"
   ],
   "omits": [],
   "relocates": {}

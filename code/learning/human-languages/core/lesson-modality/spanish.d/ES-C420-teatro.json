@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C420-teatro",
+    "language": "spanish",
+    "chapter": 420,
+    "sequence": 9710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07ac482d71ee99f6"
+  },
+  "findings": []
+}
