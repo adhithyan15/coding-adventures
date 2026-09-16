@@ -1,0 +1,19 @@
+{
+  "id": "ES-PATH-427-OFICIOS",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "lessons": [
+    "ES-C427-vendedor",
+    "ES-C427-comprador",
+    "ES-C427-policia",
+    "ES-C427-bombero",
+    "ES-C427-abogado",
+    "ES-C427-empresa",
+    "ES-C427-repaso-oficios",
+    "ES-C427-sintesis-profesion"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-427-OFICIOS"
+  ],
+  "after": []
+}

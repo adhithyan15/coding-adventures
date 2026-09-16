@@ -1,0 +1,22 @@
+{
+  "language": "spanish",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:216478e277241e30",
+  "lessonIds": [
+    "ES-C427-vendedor",
+    "ES-C427-comprador",
+    "ES-C427-policia",
+    "ES-C427-bombero",
+    "ES-C427-abogado",
+    "ES-C427-empresa",
+    "ES-C427-repaso-oficios",
+    "ES-C427-sintesis-profesion"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch427.txt",
+  "json": "spanish/narration/ch427.json",
+  "textHash": "fnv1a64:a229e544533ce116",
+  "jsonHash": "fnv1a64:38b6546fc31129c2",
+  "findings": []
+}

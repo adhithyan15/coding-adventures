@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:3c04f0d217cdb87d",
+  "lessonIds": [
+    "ES-C427-vendedor",
+    "ES-C427-comprador",
+    "ES-C427-policia",
+    "ES-C427-bombero",
+    "ES-C427-abogado",
+    "ES-C427-empresa",
+    "ES-C427-repaso-oficios",
+    "ES-C427-sintesis-profesion"
+  ],
+  "tex": "spanish/book/chapters/ch427-oficios.tex"
+}

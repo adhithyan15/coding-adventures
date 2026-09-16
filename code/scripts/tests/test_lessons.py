@@ -304,10 +304,14 @@ class NewTests(unittest.TestCase):
 class EncodingTests(unittest.TestCase):
     """`index` must survive a stdout that cannot encode a lesson title.
 
-    7 of the 526 real shards have a title carrying U+2192 or U+2260. On a
-    Windows cp1252 console `index` used to die partway with UnicodeEncodeError,
-    printing 31 lines of 526 and exiting 1 -- and because every CI runner is
-    Linux, where stdout is UTF-8, the gate never saw it.
+    7 real shard titles carry U+2192 or U+2260 (five and two respectively,
+    measured over the 526-shard corpus at 83e38b3a3b). On a Windows cp1252
+    console `index` used to die partway with UnicodeEncodeError, printing 31
+    lines of 526 and exiting 1.
+
+    No gate saw it, and the reason is this file rather than CI topology: before
+    these tests the suite called `cmd_index` zero times, so nothing exercised
+    the command's output on ANY platform.
 
     These tests deliberately do NOT use the `run` helper above. It captures
     through `io.StringIO`, which accepts every codepoint and raises nothing, so
@@ -329,10 +333,11 @@ class EncodingTests(unittest.TestCase):
         which it would then pass without the fix in place. Two earlier versions
         of this test did exactly that and were deleted.
 
-        `PYTHONIOENCODING` is load-bearing on CI and inert here: this box's
-        default child encoding is already cp1252, while every CI runner is
-        Linux and defaults to UTF-8. Setting it explicitly is what makes the
-        test reproduce the Windows failure on the machine that gates.
+        `PYTHONIOENCODING` is set explicitly because the default child encoding
+        varies by machine: cp1252 on the Windows box this was written on, UTF-8
+        on the Linux runner that gates. Pinning it makes the test reproduce the
+        failing condition everywhere rather than only where the locale happens
+        to supply it.
 
         No `cwd`: `LESSONS_DIR` comes from `parents[2]` of the script path, so
         the command is invoked identically from anywhere.
@@ -365,7 +370,8 @@ class EncodingTests(unittest.TestCase):
 
         If every shard title became plain ASCII the subprocess test would keep
         passing while checking nothing, so the precondition is asserted rather
-        than assumed. Measured 2026-09-16: 7 of 526 titles qualify.
+        than assumed. Measured 2026-09-16: 7 titles qualify (five carrying
+        U+2192, two U+2260), over the 526-shard corpus at 83e38b3a3b.
         """
         unencodable = []
         for lesson in lessons.load():
