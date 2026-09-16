@@ -116,7 +116,7 @@
     each span to the file first, so the token and content-needle checks that follow run over the `scale()`
     constants and are constant-folded exactly as the envelope scan is. No claim here depends on those two
     checks firing independently — the arm genuinely fails against pre-conversion bytes on the row-header pin
-    (`:331`) — but disclosing the shape for one arm and not the other would have been the same over-claim in a
+    (on its row-header pin) — but disclosing the shape for one arm and not the other would have been the same over-claim in a
     quieter form.
   - **Added:** `every_row_motion_is_supported_by_the_span_that_row_carries` (#15318), anchored on the **row
     header** rather than the bare `source` line — the weaker needle proves a span sits among the eight-space
@@ -134,7 +134,9 @@
 
   Re-measured after the shape and row-support arms were added, the whole suite against pre-conversion bytes
   reads **2 passed / 5 failed** — the three citation arms plus both new structural arms, each panicking at its
-  own line (172, 182, 195, 234, 331). Both structural arms fail there for the right reason: the unconverted file
+  own assertion rather than sharing one. *Cited by assertion and not by line number: an earlier draft of this
+  entry pinned specific lines, and the follow-up commit that inserted comments above them made every one of
+  those citations stale — including the one it had just corrected.* Both structural arms fail there for the right reason: the unconverted file
   carries **no row-level `source` at all**. The `.adj` was restored and verified byte-identical by sha256 after
   every swap.
 
