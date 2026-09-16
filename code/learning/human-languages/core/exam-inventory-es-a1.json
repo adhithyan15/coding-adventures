@@ -2194,7 +2194,10 @@
       "id": "A1-NE18-02",
       "category": "Actividades artisticas",
       "label": "music and dance",
-      "probe": null,
+      "probe": [
+        "ES-LEX-MUSICA",
+        "ES-LEX-BAILAR"
+      ],
       "note": "The source's A1 exponents are musica, cantante, cantar and bailar. None is introduced in the corpus."
     },
     {
@@ -2219,7 +2222,10 @@
       "id": "A1-NE18-05",
       "category": "Actividades artisticas",
       "label": "photography",
-      "probe": null,
+      "probe": [
+        "ES-LEX-FOTO",
+        "ES-LEX-FOTOGRAFIA"
+      ],
       "note": "The source's single A1 exponent is foto, which the corpus never introduces."
     },
     {
