@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "What Is Going On Right Now",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0a0abfbb27b29f61",
+  "sourceHash": "fnv1a64:44b917d8154e5ad4",
   "lessons": [
     {
       "id": "HI-C89-kar-raha-hun",
@@ -863,9 +863,9 @@
     {
       "id": "HI-C89-repaso-jaari",
       "sequence": 3940,
-      "title": "jārī kām kī tālikā — two dials, and two sentences you already knew",
-      "headword": "जारी काम की तालिका",
-      "romanization": "jārī kām kī tālikā",
+      "title": "abhī kī tālikā — two dials, and two sentences you already knew",
+      "headword": "अभी की तालिका",
+      "romanization": "abhī kī tālikā",
       "gloss": "the table of what is going on — two dials, and the two old sentences that were built this way all along",
       "script": "devanagari",
       "modality": "sight",
@@ -873,7 +873,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:fbb04e3123ef3977",
+      "sourceHash": "fnv1a64:9dd5a402b33a1f1f",
       "notice": {
         "modality": "sight",
         "needs": [

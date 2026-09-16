@@ -1,0 +1,22 @@
+{
+  "chapter": 98,
+  "title": "A Day, In The Order It Happens",
+  "label": "ch:hi-dincharya",
+  "canDo": "I can describe my daily routine in order -- what time I get up, how I travel, where I go, and what happens before and after.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "HI-C90-sintesis-dincharya",
+    "kind": "task",
+    "summary": "Read a four-sentence daily routine in which every word is taught, then say your own, and say it again as the other gender changing nothing but the endings.",
+    "assesses": [
+      "HI-LEX-C90-ROUT-01",
+      "HI-LEX-C90-ROUT-03",
+      "HI-LEX-C90-ROUT-04",
+      "HI-LEX-C90-ROUT-05",
+      "HI-LEX-C90-ROUT-06"
+    ],
+    "note": "Closes three points, and one of the three notes had gone stale in the way that is now the commonest finding in this campaign. HI-A1-F-59 said the habitual tense is taught but jana, uthna, baje, se and par -- everything a routine is made of besides the tense -- are not. THREE OF THOSE FIVE ARE NOW TAUGHT: jaana has been a headword since HI-C69-go, par was introduced in chapter 95 and baje in chapter 96, so the gap was uthna and se. HI-A1-POST-04's note is exactly right and needed no correction: se is load-bearing in both mocks and was never introduced, and the speaking interview's origin question cannot be answered without it. HI-A1-T-09's note reads in full 'Nothing can be sequenced in time', which was true -- pahle and ke baad are what a one-minute prepared description needs to stop being four unrelated statements. The chapter also takes apart two things the corpus had been carrying: kaam karnaa was never one word but the noun kaam plus karnaa, which turns a memorised phrase into the noun-plus-karnaa machine Hindi builds verbs with; and bas is two different words spelled alike, the Persian one meaning enough and the English one shortened from omnibus, told apart by whether a postposition follows."
+  }
+}

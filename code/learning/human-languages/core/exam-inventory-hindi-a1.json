@@ -745,9 +745,12 @@
       "id": "HI-A1-POST-04",
       "category": "Parsarg (postpositions and case)",
       "label": "se for origin, instrument and means (Dilli se, bas se)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C90-ROUT-01",
+        "HI-LEX-C90-ROUT-02"
+      ],
       "derivedFrom": "ES:A1-NG3-07, ES:A1-F1-03",
-      "note": "Load-bearing in both mocks: `Aman Dilli se hai`, `Ravi bas se school jata hai`, `ap kahan se hain?`, `main Bhopal se hun`, `train se kam par jata hai`. Never introduced, and the A1 speaking interview's origin question cannot be answered without it."
+      "note": "se is introduced by HI-C90-se, and the note needed no correction: it was never introduced, it is load-bearing in both mocks (Aman Dilli se hai, Ravi bas se school jata hai, ap kahan se hain, main Bhopal se hun, train se kam par jata hai), and the speaking interview's origin question cannot be answered without it. The lesson teaches origin and means as ONE relation rather than two words -- the thing proceeds from the noun, whether that noun is a city or a hand -- which is why a vehicle takes the same postposition. HI-C90-bas then supplies the vehicle the mocks use, and it is a second word rather than a second sense: the Persian bas meaning enough and the English bus shortened from omnibus are spelled alike, and what tells them apart is whether a postposition follows."
     },
     {
       "id": "HI-A1-POST-05",
@@ -1219,9 +1222,12 @@
       "id": "HI-A1-T-09",
       "category": "Samay aur tarikh (time and date)",
       "label": "before and after: pahle and baad",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C90-ROUT-05",
+        "HI-LEX-C90-ROUT-06"
+      ],
       "derivedFrom": "ES:A1-NG4-03, ES:A1-NG3-06",
-      "note": "Nothing can be sequenced in time."
+      "note": "pahle and ke baad are introduced by HI-C90-pahle and HI-C90-baad. The note read in full 'Nothing can be sequenced in time', and that was true: the track could state facts about a day and not put two of them in an order, so a one-minute prepared description was four unrelated statements. The pair is asymmetric and the lessons say so rather than inventing a reason -- before takes se (X se pahle) and after takes ke (X ke baad) -- and ke baad is shown to be the possessive ka/ke/ki already taught for uska and hamara, used as glue: the after OF work."
     },
     {
       "id": "HI-A1-SCR-01",
@@ -2035,9 +2041,16 @@
       "id": "HI-A1-F-59",
       "category": "Sanvad-karya (communicative functions)",
       "label": "describe a daily routine",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C90-ROUT-03",
+        "HI-LEX-C90-ROUT-04",
+        "HI-LEX-C90-ROUT-01",
+        "HI-LEX-C90-ROUT-05",
+        "HI-LEX-C90-ROUT-06",
+        "HI-LEX-C88-TIME-01"
+      ],
       "derivedFrom": "ES:A1-V-03",
-      "note": "The one-minute prepared description and the personal-account listening part in both mocks are routines. The habitual tense is taught, but `jana`, `uthna`, `baje`, `se` and `par` -- everything a routine is made of besides the tense -- are not."
+      "note": "PARTLY STALE NOTE, corrected. It said the habitual tense is taught but jana, uthna, baje, se and par -- everything a routine is made of besides the tense -- are not. THREE of those five were already covered by the time it was re-read: jaana has been a headword since HI-C69-go, par was introduced by HI-C87-par in chapter 95, and baje by HI-C88-baje in chapter 96. The real gap was uthna and se, plus the sequencing words the note did not mention, and chapter 98 supplies all of them. The synthesis lesson reads a four-sentence routine in which every word is taught, then asks the reader to say their own and repeat it as the other gender changing nothing but the endings -- which is exactly the shape of the one-minute prepared description both mocks set."
     },
     {
       "id": "HI-A1-F-60",
