@@ -1,0 +1,16 @@
+{
+  "id": "HI-EXT-103-CHAAH",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I know and ask for what I want.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C95-jaanta-hun",
+    "HI-C95-jaante-hain",
+    "HI-C95-chahiye",
+    "HI-C95-mujhe-chahiye",
+    "HI-C95-repaso-chaah",
+    "HI-C95-sintesis-chaay"
+  ]
+}

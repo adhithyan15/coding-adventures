@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S132-letter-ja",
+    "language": "hindi",
+    "chapter": 30,
+    "sequence": 815,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:fefbbea5321392f3",
+    "detachableSegments": [
+      "Script you'll notice: ज",
+      "Script: where it has been hiding",
+      "Writing: ज"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

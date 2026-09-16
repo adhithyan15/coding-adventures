@@ -1,9 +1,10 @@
 {
   "language": "hindi",
   "chapter": 30,
-  "sourceHash": "fnv1a64:033276169a835469",
+  "sourceHash": "fnv1a64:9ccaf79667451b12",
   "lessonIds": [
-    "HI-C30-dopahar-widened"
+    "HI-C30-dopahar-widened",
+    "HI-S132-letter-ja"
   ],
   "tex": "hindi/book/chapters/ch30-afternoon.tex"
 }

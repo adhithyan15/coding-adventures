@@ -1,0 +1,17 @@
+{
+  "id": "HI-PATH-103-CHAAH",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "lessons": [
+    "HI-C95-jaanta-hun",
+    "HI-C95-jaante-hain",
+    "HI-C95-chahiye",
+    "HI-C95-mujhe-chahiye",
+    "HI-C95-repaso-chaah",
+    "HI-C95-sintesis-chaay"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-103-CHAAH"
+  ],
+  "after": []
+}
