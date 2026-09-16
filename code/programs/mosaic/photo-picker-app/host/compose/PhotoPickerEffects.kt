@@ -160,16 +160,28 @@ fun installPhotoPickerEffects(host: MosaicRuntimeHost) {
                 SwingUtilities.invokeLater {
                     // Nothing may escape this block -- the effect left the
                     // runtime's fail sweep the moment `deferEffect` returned
-                    // true, so an exception that unwinds to the EDT's
-                    // uncaught handler leaves the id awaited for the life of
-                    // the process (the runtime gates snapshot AND restore on
-                    // nothing being pending). `Exception`, not `Throwable`:
-                    // an `Error` means the JVM is already going down, same
-                    // reasoning as Engram's Compose handler and Qt's `catch
-                    // (...)`.
+                    // true, so anything that unwinds to the EDT's uncaught
+                    // handler leaves the id awaited for the life of the
+                    // process (the runtime gates snapshot AND restore on
+                    // nothing being pending).
+                    //
+                    // `Throwable`, not `Exception` -- a deliberate departure
+                    // from Engram's Compose handler and the Qt handler's own
+                    // `catch (...)`, both of which reason "an `Error` means
+                    // the JVM is already going down." That reasoning doesn't
+                    // hold for THIS handler: reading up to 50 MiB through
+                    // `readBounded`'s `ByteArrayOutputStream` (whose doubling
+                    // growth can transiently hold ~2x the accumulated size),
+                    // then `toByteArray()` (a full copy), then
+                    // `Base64.getEncoder().encodeToString` (another ~1.33x)
+                    // can transiently need well over 100 MiB of live heap for
+                    // a single in-cap pick -- a real, user-triggerable
+                    // `OutOfMemoryError` on a JVM with a modest heap, not a
+                    // sign the process is dying. Caught by `/security-review`
+                    // before this ever shipped.
                     val outcome = try {
                         runPickPhoto(payload)
-                    } catch (error: Exception) {
+                    } catch (error: Throwable) {
                         failedOutcome("couldn't pick a photo")
                     }
                     host.completeEffect(id, outcome)

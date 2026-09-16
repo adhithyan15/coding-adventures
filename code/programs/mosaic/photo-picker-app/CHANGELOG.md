@@ -51,6 +51,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   writes, so answering inline (Qt's approach) isn't available here;
   see `UI59` §10.2.
 
+### Fixed (caught by `/security-review`, before this ever shipped)
+
+- **Uncaught `OutOfMemoryError` could wedge an effect permanently.**
+  The `invokeLater` block's completion guarantee caught only
+  `Exception`, following Qt's and Engram's own "an `Error` means the
+  JVM is dying" reasoning — which doesn't hold for this handler:
+  bounded-reading up to 50 MiB, then `toByteArray()`, then base64
+  encoding can transiently need well over 100 MiB of live heap for a
+  single in-cap pick, a real `OutOfMemoryError` on a JVM with a modest
+  heap. Now catches `Throwable`, so `completeEffect` is always reached
+  even then.
+
 ## [0.1.0] — 2026-09-15
 
 ### Added
