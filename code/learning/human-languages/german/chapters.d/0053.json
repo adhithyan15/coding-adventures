@@ -1,0 +1,20 @@
+{
+  "chapter": 53,
+  "title": "Writing --- Your Own Line",
+  "label": "ch:ge-eigene-zeile",
+  "canDo": "I can write one line about myself from a closed supply of known words, with nothing to copy, and capitalise every noun.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "GE-W02-eigene-zeile",
+    "kind": "task",
+    "summary": "Complete GE-W02-eigene-zeile: a greeting and a name chosen rather than copied, with the capitals checked before anything else.",
+    "assesses": [
+      "GE-LEX-HALLO-01",
+      "GE-LEX-MEIN-01",
+      "GE-LEX-UND-01"
+    ],
+    "note": "The first writing step with nothing to reach for. The German-specific check arrives with it: every noun takes a capital, not only the ones English would capitalise."
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "GE-W02-eigene-zeile",
+    "language": "german",
+    "chapter": 53,
+    "sequence": 1510,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6f084b37489ac14a",
+    "detachableSegments": [
+      "Writing — controlled composition"
+    ]
+  },
+  "findings": []
+}

@@ -14,7 +14,7 @@
 %     ? lung_lobe_name(right_upper_lobe, $Lung)   % right_lung
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `lung_lobe_name(lobe, lung)` carrying the table's citation, so the
+% relation `lung_lobe_name(lobe, lung)` carrying its own row's citation, so the
 % lookup above is the ordinary SLD binding query — the engine returns the
 % owning lung WITH its source, on the CPU, with zero model calls, and
 % abstains on anything that is not one of these five named lobes. The query
@@ -30,19 +30,25 @@
 % lower (LLL) lobes.") but that table's `lung_lobe_count(lung, count)` schema
 % has no room for individual lobe names — a genuinely new predicate, not an
 % extend of the existing table, the same "sibling table, different schema"
-% shape already used for `comet-part.adj`/`comet-tail-type.adj`. WebFetch
-% re-verified the sentence live, THREE separate passes, all byte-identical
-% to what `lung-lobes.adj`'s header already quoted.
+% shape already used for `comet-part.adj`/`comet-tail-type.adj`. (This
+% paragraph used to say WebFetch re-verified the sentence in "THREE separate
+% passes, all byte-identical". That claim is withdrawn rather than restated:
+% the measurement below is a raw fetch of the page, not a summariser's.)
 %
 % The five lobes, as a little truth table:
 %
-%     lobe                lung          the cited assignment
-%     -----------------   -----------   -------------------------------------
-%     right_upper_lobe    right_lung    "the right upper (RUL) ... lobes"
-%     right_middle_lobe   right_lung    "... middle (RML) ... lobes"
-%     right_lower_lobe    right_lung    "... and lower (RLL) lobes"
-%     left_upper_lobe     left_lung     "the left upper (LUL) ... lobes"
-%     left_lower_lobe     left_lung     "... and lower (LLL) lobes"
+%     lobe                lung          the row's own `source`
+%     -----------------   -----------   ------------------------------
+%     right_upper_lobe    right_lung    the right-lung sentence
+%     right_middle_lobe   right_lung    the right-lung sentence
+%     right_lower_lobe    right_lung    the right-lung sentence
+%     left_upper_lobe     left_lung     the left-lung sentence
+%     left_lower_lobe     left_lung     the left-lung sentence
+%
+% (This table used to quote fragments such as "... middle (RML) ... lobes",
+% with ellipses INSIDE the quotation marks. Inside quotation marks an
+% ellipsis is a claim about what the page says; the page never writes
+% those fragments. Both whole sentences are quoted below.)
 %
 % Something that is not one of these five named lobes — the trachea, a whole
 % lung, a bronchus — has no row, so a recall on it ABSTAINS rather than
@@ -68,12 +74,29 @@
 %     "The left lung consists of the left upper (LUL) and lower (LLL)
 %      lobes."
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single span that fixes the right lung's three lobes;
-% the left lung's span is listed above, so each assignment remains
-% independently checkable. The source is a primary U.S. government NIH /
-% National Library of Medicine reference (ncbi.nlm.nih.gov), the same source
-% `lung-lobes.adj` already cites at this tier, so `trust authoritative`.
+% EACH ROW CARRIES ITS OWN LUNG'S SENTENCE AS ITS `source` (ADJ-TABLES RS-5e,
+% #14986). This paragraph used to say that an ADJ `table` carries ONE
+% provenance envelope, and so held the right-lung sentence as the envelope
+% -- which made it the primary source of the two LEFT-lung answers, although
+% it names no left lobe. The language has per-row blocks.
+%
+% `source`, not `cites`: each sentence names both the lung and its lobes, so
+% it warrants its rows (unlike the heading-shaped tables, whose lines never
+% name their key). ONE READING IS INVOLVED AND IT IS STATED HERE: "middle
+% (RML)" and "lower (RLL)" belong to "the right ... lobes" by distributing the
+% coordination, and the abbreviations RML and RLL are what fix that reading.
+% That is a reading, not a quotation -- the precedent is CHANGELOG.d 02890's
+% `bacteria -> gram_positive_bacteria`.
+%
+% The envelope is now the paragraph's first sentence, "The right and left
+% lungs' structural organization is similar, though asymmetrical.", which
+% names no lobe. Every row overrides it, so it is the table's framing and no
+% answer's warrant. Measured 2026-09-15: both lung sentences and the envelope
+% occur exactly once on the page, in one <p> with no inline markup.
+%
+% The source is a primary U.S. government NIH / National Library of Medicine
+% reference (ncbi.nlm.nih.gov), the same source `lung-lobes.adj` already cites
+% at this tier, so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -81,13 +104,26 @@
 table lung_lobe_name {
     columns lobe, lung
 
-    row (right_upper_lobe, right_lung)
-    row (right_middle_lobe, right_lung)
-    row (right_lower_lobe, right_lung)
-    row (left_upper_lobe, left_lung)
-    row (left_lower_lobe, left_lung)
+    row (right_upper_lobe, right_lung) {
+        source "The right lung is comprised of the right upper (RUL), middle (RML), and lower (RLL) lobes."
+    }
+    row (right_middle_lobe, right_lung) {
+        source "The right lung is comprised of the right upper (RUL), middle (RML), and lower (RLL) lobes."
+    }
+    row (right_lower_lobe, right_lung) {
+        source "The right lung is comprised of the right upper (RUL), middle (RML), and lower (RLL) lobes."
+    }
+    row (left_upper_lobe, left_lung) {
+        source "The left lung consists of the left upper (LUL) and lower (LLL) lobes."
+    }
+    row (left_lower_lobe, left_lung) {
+        source "The left lung consists of the left upper (LUL) and lower (LLL) lobes."
+    }
 
-    source "The right lung is comprised of the right upper (RUL), middle (RML), and lower (RLL) lobes."
+    % THE ENVELOPE WAS THE RIGHT-LUNG SENTENCE, and so the primary source
+    % of the left-lung answers too. Every row now carries its own lung's
+    % sentence; the envelope is the paragraph's framing sentence.
+    source "The right and left lungs' structural organization is similar, though asymmetrical."
     locator "https://www.ncbi.nlm.nih.gov/books/NBK470197/"
     trust authoritative
 }

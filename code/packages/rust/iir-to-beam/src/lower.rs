@@ -661,6 +661,75 @@ pub fn lower_iir_to_beam(
     let import_atomics_put = imports.intern(atomics_atom, atom_put, 3); // atomics:put/3
     let import_atomics_get = imports.intern(atomics_atom, atom_get, 2); // atomics:get/2
 
+    // ── BEAM04/BEAM06: mutable memory for f64/str-typed arrays — `:ets` ────
+    //
+    // `:atomics` above cannot hold `f64` cells: it is a fixed-size array of
+    // 64-bit INTEGERS only, so `atomics:put(Ref, I, 40.0)` raises `badarg`
+    // — confirmed on real `erl` (see
+    // `code/specs/BEAM04-float-array-representation.md`, which also
+    // documents why the alternative (bit-reinterpreting the f64 as an
+    // integer via new BEAM bit-syntax opcodes) was rejected: it needs
+    // `bs_create_bin`/`bs_start_match4`/`bs_match`, an entirely new,
+    // materially more complex operand-encoding subsystem this backend has
+    // never needed, versus `ets`, which needs ZERO new BEAM opcodes — every
+    // op below is an ordinary `call_ext`/`put_list`, the same shapes
+    // `math:*`/`call_closure` already use).
+    //
+    // BASIC numeric arrays are `array<f64>` (BA7-1b routes every scalar
+    // numeric value through the shared f64 track), so every `alloc_array`/
+    // `array_set`/`array_get` with `type_hint == "array<f64>"`/`"f64"`
+    // dispatches to this substrate instead of `:atomics`.
+    //
+    // BEAM06 extends the SAME substrate, completely unchanged, to
+    // `type_hint == "array<str>"`/`"str"` (BASIC's `DIM A$(n)` string
+    // arrays and its mixed numeric/string `DATA` pool's string pool —
+    // `dartmouth-basic-iir-compiler`'s E4d-BA-arr lowering). This needed
+    // ZERO new representation work: a `str` value is already an ordinary
+    // Erlang character list (see the `"str_const"` arm below), and `:ets`
+    // stores arbitrary Erlang terms natively — a string element is no
+    // different from a float element as far as `ets:insert`/
+    // `ets:lookup_element` are concerned. Confirmed directly on real `erl`
+    // (round-trip, overwrite, concatenation of two round-tripped array
+    // elements, and the empty-string edge case) — see
+    // `code/specs/BEAM06-string-array-representation.md`.
+    //
+    // `ets:new/2` needs no size argument (unlike `atomics:new/2`) — ets
+    // tables grow dynamically, so `alloc_array`'s length source is simply
+    // unused on this path. The table-name atom is a fixed atom (`farray`);
+    // we never pass `named_table`, so `ets:new/2` still returns a fresh,
+    // private table identifier on every call regardless of the name given
+    // (confirmed on real `erl`) — multiple DIMmed float arrays in the same
+    // module never collide.
+    //
+    // `array_set` needs a `{Idx, Val}` tuple for `ets:insert/2`. There is
+    // no tuple-construction BEAM opcode anywhere in this backend, so it is
+    // built as a 2-element list (`put_list` — the same op `call_closure`'s
+    // arg-list construction already uses) and converted with
+    // `erlang:list_to_tuple/1` (an ordinary call_ext, confirmed via
+    // `erlc -S`). Unlike `atomics`, the key is used AS GIVEN — ets is not
+    // 1-indexed, so no `+1` adjustment is needed.
+    //
+    // `array_get` uses `ets:lookup_element/3`, which returns the requested
+    // tuple element directly (no list/tuple destructuring needed): it
+    // raises `badarg` on a missing key — the same trap-on-out-of-range
+    // failure mode `atomics:get` already has for `array<i64>` arrays.
+    //
+    // KNOWN, DOCUMENTED LIMITATION (see the spec's own §6): unlike
+    // `atomics:new`, `ets:new` does not pre-zero N cells — reading an
+    // element that was never `array_set` traps (`badarg`) instead of
+    // returning `0.0`. No promoted row exercises this (every promoted
+    // float-array row writes every cell it later reads), so it is left
+    // undecided rather than guessed at.
+    let ets_atom = atoms.intern("ets");
+    let atom_insert = atoms.intern("insert");
+    let atom_lookup_element = atoms.intern("lookup_element");
+    let atom_list_to_tuple = atoms.intern("list_to_tuple");
+    let atom_farray = atoms.intern("farray");
+    let import_ets_new = imports.intern(ets_atom, atom_new, 2); // ets:new/2
+    let import_ets_insert = imports.intern(ets_atom, atom_insert, 2); // ets:insert/2
+    let import_ets_lookup_element = imports.intern(ets_atom, atom_lookup_element, 3); // ets:lookup_element/3
+    let import_list_to_tuple = imports.intern(erlang_atom, atom_list_to_tuple, 1); // erlang:list_to_tuple/1
+
     // ── Closure dispatch atoms and imports (LANG35) ───────────────────────
     //
     // `alloc_closure` / `call_closure` lower to two call_ext calls:
@@ -3074,6 +3143,12 @@ pub fn lower_iir_to_beam(
                 // signed 64-bit cells.
                 //
                 //   x0 = N ; x1 = [] ; call_ext 2 atomics:new/2 ; dest = x0
+                //
+                // EXCEPT `alloc_array` with `type_hint == "array<f64>"` or
+                // `"array<str>"` (BEAM04/BEAM06): that path allocates an
+                // `:ets` table instead (see the module-setup comment above)
+                // — `ets:new/2` takes no size argument, so the length source
+                // `N` is validated for shape but otherwise unused.
                 "alloc_bytes" | "alloc_array" => {
                     let rd = match &instr.dest {
                         Some(name) => var_reg!(name),
@@ -3082,6 +3157,32 @@ pub fn lower_iir_to_beam(
                             detail: format!("{} must have a dest", instr.op),
                         }),
                     };
+                    if instr.op == "alloc_array"
+                        && matches!(instr.type_hint.as_str(), "array<f64>" | "array<str>")
+                    {
+                        // BEAM04/BEAM06: ets-backed float/string array — see
+                        // the `:ets` module-setup comment above.
+                        let _ = get_src!(instr, 0); // shape check only; size is unused
+                        let cur_idx = instr_idx - 1;
+                        save_live_across_imported_call!(cur_idx);
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::a(atom_farray), BEAMOperand::x(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::a(0), BEAMOperand::x(1), // {a,0} = []
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                            BEAMOperand::u(2),
+                            BEAMOperand::u(import_ets_new as u64),
+                        ]));
+                        if rd != 0 {
+                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                                BEAMOperand::x(0), BEAMOperand::x(rd),
+                            ]));
+                        }
+                        restore_live_across_imported_call!(cur_idx);
+                        continue;
+                    }
                     let rn = operand_reg!(get_src!(instr, 0));
                     let cur_idx = instr_idx - 1;
                     save_live_across_imported_call!(cur_idx);
@@ -3119,6 +3220,96 @@ pub fn lower_iir_to_beam(
                 // staging registers cannot be collected out from under us even
                 // though they hold the `atomics` reference.
                 "store_byte" | "array_set" => {
+                    if instr.op == "array_set"
+                        && matches!(instr.type_hint.as_str(), "f64" | "str")
+                    {
+                        // BEAM04/BEAM06: array_set on an ets-backed
+                        // float/string array — see the `:ets` module-setup
+                        // comment above. The instruction sequence is
+                        // identical regardless of element type: `:ets`
+                        // stores whatever term `Val` holds, a character
+                        // list for `str` exactly as much as a boxed float
+                        // for `f64`.
+                        let r_ref = operand_reg!(get_src!(instr, 0));
+                        let r_idx = operand_reg!(get_src!(instr, 1));
+                        let r_val = operand_reg!(get_src!(instr, 2));
+
+                        let top = meta.next_reg.checked_add(4).filter(|t| *t < 255);
+                        let Some(_) = top else {
+                            return Err(IIRBeamError::UnsupportedOp {
+                                function: fn_name.clone(),
+                                op: format!(
+                                    "array_set (f64/str via ets): needs 4 scratch registers but \
+                                     only {} remain below x255",
+                                    255u16 - meta.next_reg as u16
+                                ),
+                            });
+                        };
+                        let s_ref  = meta.next_reg;
+                        let s_idx  = meta.next_reg + 1;
+                        let s_val  = meta.next_reg + 2;
+                        let s_list = meta.next_reg + 3;
+                        let cur_idx = instr_idx - 1;
+
+                        // Stage every source into scratch BEFORE any call —
+                        // same parallel-move-hazard/GC-safety discipline as
+                        // the atomics staging just below.
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(r_ref), BEAMOperand::x(s_ref),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(r_idx), BEAMOperand::x(s_idx),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(r_val), BEAMOperand::x(s_val),
+                        ]));
+
+                        save_live_across_imported_call!(cur_idx);
+
+                        // Build [Idx, Val] right-to-left — the same put_list
+                        // pattern call_closure's arg-list construction uses.
+                        // No index +1: ets keys are used as given (not
+                        // 1-indexed, unlike atomics).
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::a(0), BEAMOperand::x(s_list), // nil
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                            BEAMOperand::x(s_val), BEAMOperand::x(s_list), BEAMOperand::x(s_list),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                            BEAMOperand::x(s_idx), BEAMOperand::x(s_list), BEAMOperand::x(s_list),
+                        ]));
+
+                        // erlang:list_to_tuple([Idx, Val]) -> {Idx, Val}.
+                        // `s_ref` (>= meta.next_reg) survives this call the
+                        // same way call_closure's `r0` (fn_atom) survives its
+                        // own intermediate erlang:'++'/2 call — see that
+                        // arm's comment for why a scratch register above the
+                        // SSA set is not clobbered by an unrelated call_ext.
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(s_list), BEAMOperand::x(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                            BEAMOperand::u(1), BEAMOperand::u(import_list_to_tuple as u64),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(s_list), // now holds the tuple
+                        ]));
+
+                        // ets:insert(Tab, Tuple)
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(s_ref), BEAMOperand::x(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(s_list), BEAMOperand::x(1),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                            BEAMOperand::u(2), BEAMOperand::u(import_ets_insert as u64),
+                        ]));
+
+                        restore_live_across_imported_call!(cur_idx);
+                        continue;
+                    }
                     let r_ref = operand_reg!(get_src!(instr, 0));
                     let r_idx = operand_reg!(get_src!(instr, 1));
                     let r_val = operand_reg!(get_src!(instr, 2));
@@ -3222,6 +3413,63 @@ pub fn lower_iir_to_beam(
                             detail: format!("{} must have a dest", instr.op),
                         }),
                     };
+                    if instr.op == "array_get"
+                        && matches!(instr.type_hint.as_str(), "f64" | "str")
+                    {
+                        // BEAM04/BEAM06: array_get on an ets-backed
+                        // float/string array — see the `:ets` module-setup
+                        // comment above. `ets:lookup_element(Tab, Idx, 2)`
+                        // returns the value directly (position 2 of the
+                        // `{Idx, Val}` tuple) — no list/tuple destructuring
+                        // needed on this path, unlike the `atomics` branch's
+                        // index-only +1 below. Identical for `str` and
+                        // `f64`: `:ets` returns whatever term was stored.
+                        let r_ref = operand_reg!(get_src!(instr, 0));
+                        let r_idx = operand_reg!(get_src!(instr, 1));
+
+                        let top = meta.next_reg.checked_add(3).filter(|t| *t < 255);
+                        let Some(_) = top else {
+                            return Err(IIRBeamError::UnsupportedOp {
+                                function: fn_name.clone(),
+                                op: format!(
+                                    "array_get (f64/str via ets): needs 3 scratch registers but \
+                                     only {} remain below x255",
+                                    255u16 - meta.next_reg as u16
+                                ),
+                            });
+                        };
+                        let s_ref = meta.next_reg;
+                        let s_idx = meta.next_reg + 1;
+                        let s_pos = meta.next_reg + 2;
+                        let cur_idx = instr_idx - 1;
+
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(r_ref), BEAMOperand::x(s_ref),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(r_idx), BEAMOperand::x(s_idx),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::i(2), BEAMOperand::x(s_pos), // tuple position 2 = Val
+                        ]));
+
+                        save_live_across_imported_call!(cur_idx);
+                        for (from, to) in [(s_ref, 0u8), (s_idx, 1u8), (s_pos, 2u8)] {
+                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                                BEAMOperand::x(from), BEAMOperand::x(to),
+                            ]));
+                        }
+                        instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                            BEAMOperand::u(3), BEAMOperand::u(import_ets_lookup_element as u64),
+                        ]));
+                        if rd != 0 {
+                            instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                                BEAMOperand::x(0), BEAMOperand::x(rd),
+                            ]));
+                        }
+                        restore_live_across_imported_call!(cur_idx);
+                        continue;
+                    }
                     let r_ref = operand_reg!(get_src!(instr, 0));
                     let r_idx = operand_reg!(get_src!(instr, 1));
                     let top = meta.next_reg.checked_add(2).filter(|t| *t < 255);
@@ -3558,6 +3806,23 @@ pub fn lower_iir_to_beam(
                     // Move caps (r1) → x0, args (r2) → x1; result lands in x0.
                     // Note: r0 (fn_atom) is untouched by this call since r0 >=
                     // meta.next_reg which is always > 2 for any real function.
+                    //
+                    // This arm emits TWO call_ext instructions (erlang:'++'/2
+                    // here, then erlang:apply/3 below). Any SSA variable live
+                    // across THIS IIR `call_closure` instruction must be saved
+                    // to its Y-register slot before either call clobbers the
+                    // X-register bank, and restored only after both calls are
+                    // done — one save/restore pair spanning both call_ext
+                    // emissions, exactly like the `array_set` (f64/ets) arm's
+                    // single pair spanning its `list_to_tuple`+`ets:insert`
+                    // pair above. `cur_idx` indexes the single `live_across`
+                    // entry computed for this instruction (see the "EVERY op
+                    // that emits a call_ext must be listed here" comment at
+                    // the `live_across` match, which already lists
+                    // `call_closure` — this arm was the one place that never
+                    // read it back out).
+                    let cur_idx = instr_idx - 1;
+                    save_live_across_imported_call!(cur_idx);
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                         BEAMOperand::x(r1),
                         BEAMOperand::x(0),
@@ -3595,13 +3860,19 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::u(import_apply as u64),
                     ]));
 
-                    // Move result from x0 into dest register.
+                    // Move result from x0 into dest register — BEFORE restoring
+                    // saved live variables, mirroring the `alloc_array` arm's
+                    // ordering: `restore_live_across_imported_call!` moves
+                    // Y-slots back into their original X registers, which
+                    // could include x0 itself, so the call result must be
+                    // captured into `r_dest` first.
                     if r_dest != 0 {
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(0),
                             BEAMOperand::x(r_dest),
                         ]));
                     }
+                    restore_live_across_imported_call!(cur_idx);
                 }
 
                 // ── Unsupported ops ──────────────────────────────────────────

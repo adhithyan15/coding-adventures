@@ -2923,6 +2923,35 @@ impl Compiler {
                 // site above for the convention).
                 let mut tail = nil_r;
                 for field_name in params.iter().rev() {
+                    // E6d-6b: the field must be stored as a *boxed* `DynValue`, not
+                    // a raw word. `match`/accessors read the field back as `any`
+                    // (the loaded value flows through `unbox`/dynamic ops), so the
+                    // constructor boxes here. On the tagged backends (`any` = raw
+                    // i64) this is the `n<<3` that makes `unbox` recover the value;
+                    // on the structural backends `box` of an already-`anyref` field
+                    // is the identity, so the round-trip is unchanged.
+                    //
+                    // VM-041 (BEAM05 follow-up): `box` is emitted BEFORE `alloc`
+                    // here — not interleaved between them — so the resulting
+                    // `alloc, field_store, field_store` triple is textually
+                    // adjacent for `iir-to-beam`'s cons-cell fusion look-ahead
+                    // (which only recognizes the three instructions when
+                    // immediately adjacent; see `lower.rs`'s "alloc ref<LispyPair>
+                    // -> put_list" arm). `box` doesn't read or write the `alloc`'d
+                    // cell — it only reads `field_name`, which is independent of
+                    // the fresh cell register — so hoisting it above the `alloc`
+                    // changes no data dependency and mirrors this same function's
+                    // tag/head cons cell below, which already computes `tag_boxed`
+                    // before its `alloc_head`.
+                    let field_boxed = ctx.fresh_var("fbox");
+                    ctx.emit(IIRInstr::new(
+                        "box",
+                        Some(field_boxed.clone()),
+                        vec![Operand::Var(field_name.clone())],
+                        "ref<any>",
+                    ), loc);
+                    ctx.record_type(&field_boxed, "ref<any>");
+
                     let cell = ctx.fresh_var("cell");
                     let mut alloc = IIRInstr::new(
                         "alloc",
@@ -2933,21 +2962,6 @@ impl Compiler {
                     alloc.may_alloc = true;
                     ctx.emit(alloc, loc);
                     ctx.record_type(&cell, "ref<LispyPair>");
-                    // E6d-6b: the field must be stored as a *boxed* `DynValue`, not
-                    // a raw word. `match`/accessors read the field back as `any`
-                    // (the loaded value flows through `unbox`/dynamic ops), so the
-                    // constructor boxes here. On the tagged backends (`any` = raw
-                    // i64) this is the `n<<3` that makes `unbox` recover the value;
-                    // on the structural backends `box` of an already-`anyref` field
-                    // is the identity, so the round-trip is unchanged.
-                    let field_boxed = ctx.fresh_var("fbox");
-                    ctx.emit(IIRInstr::new(
-                        "box",
-                        Some(field_boxed.clone()),
-                        vec![Operand::Var(field_name.clone())],
-                        "ref<any>",
-                    ), loc);
-                    ctx.record_type(&field_boxed, "ref<any>");
                     ctx.emit(IIRInstr::new(
                         "field_store",
                         None,

@@ -1,5 +1,173 @@
 # Changelog — iir-to-beam
 
+## 0.15.0 - 2026-09-15 - str-typed array elements reuse the :ets substrate (BEAM06)
+
+Dartmouth BASIC's `DIM A$(n)` (`array<str>`) and its mixed numeric/string
+`DATA` pool's string pool both failed BEAM VALIDATION outright
+(`UnsupportedType: ... has type_hint "str"`) — `array_set`/`array_get` were
+not in the validator's `"str"`-type_hint allow-list, and `iir-to-beam` had
+no `str`-typed array element representation at all. Full research +
+decision: `code/specs/BEAM06-string-array-representation.md`.
+
+**Zero new representation work was needed.** A `str` value is already an
+ordinary Erlang character list (the `"str_const"` scalar lowering), and
+BEAM04's `:ets`-backed array substrate already stores arbitrary Erlang
+terms natively — confirmed directly against real `erl` with a standalone
+probe mirroring `iir-to-beam`'s exact `array_set`/`array_get` instruction
+shape (round-trip, overwrite, concatenation of two round-tripped elements,
+and the empty-string edge case all pass). Also traced BASIC's mixed
+numeric/string `DATA` pool and confirmed it uses THREE separate parallel
+typed arrays (kind/numeric/string), never one heterogeneous array — so no
+tagged/variant element representation is needed anywhere in this backend.
+
+- `validate.rs`: Check 4's `"str"`-type_hint allow-list gains `"array_set"`
+  and `"array_get"`, mirroring the existing `str_const`/`str_concat`/
+  `str_slice`/`call`/`ret`/`mov` entries. `alloc_array`'s `"array<str>"`
+  type_hint was never rejected in the first place (Check 4 only matches
+  the exact string `"str"`), so no change was needed there.
+- `lower.rs`: the `alloc_array`/`array_set`/`array_get` `:ets`-dispatch
+  conditions each widen from a single `== "array<f64>"`/`"f64"` check to
+  also match `"array<str>"`/`"str"`. The emitted instruction sequence is
+  byte-for-byte identical to the existing `f64` path — no branch on
+  element type inside the lowering itself, because nothing about the BEAM
+  instructions depends on it.
+- New unit test `test_100_str_array_ops_use_ets_not_atomics`
+  (instruction-shape): confirms an all-`str`-array module's emitted
+  `call_ext`s target `ets:*`/`erlang:list_to_tuple/1` and none target
+  `atomics:*`.
+- New real-`erl` test `test_101_real_erl_string_array_set_get_roundtrip`:
+  the exact shape of the promoted `DIM A$(2)` corpus row — `alloc_array`,
+  two `str`-typed `array_set`s, two `array_get`s, `str_concat` — executed
+  on real Erlang, printing `OK`.
+- New real-`erl` test `test_102_real_erl_string_array_overwrite`: writes
+  index 0 twice (`"lo"` then `"hi"`) and confirms the read-back is `"hi"`,
+  proving `ets:insert` overwrites for string values exactly as
+  `test_96_real_erl_float_array_overwrite` already proved for float
+  values.
+
+105 tests total (up from 102), all green; `cargo clippy --all-targets -- -D
+warnings` clean.
+
+## 0.14.0 - 2026-09-15 - call_closure liveness fix + mov ref<LispyPair> validator fix (VM-041)
+
+**Fixed a confirmed silent-data-corruption bug (VM-D035):** `"call_closure"`
+lowers to TWO `call_ext` instructions (`erlang:'++'/2` to build the combined
+`caps ++ args` list, then `erlang:apply/3` to dispatch). Neither call was
+wrapped in `save_live_across_imported_call!`/
+`restore_live_across_imported_call!`, even though `call_closure` was already
+listed in the `live_across` liveness match (the surrounding comment even
+named the exact bug class, VM-D029, already fixed once for the six
+`:atomics` ops). A `call_ext` clobbers every X-register; any SSA variable
+live across a `call_closure` invocation had its value silently destroyed —
+a wrong VALUE, not a crash — rather than raising an error. This was
+CURRENTLY DORMANT before this release: no `lang_matrix.rs` row exercising
+`call_closure` declared `Beam` yet.
+
+- Both `call_ext` emissions in the `"call_closure"` lowering arm
+  (`src/lower.rs`) are now wrapped in a SINGLE `save_live_across_imported_call!`
+  / `restore_live_across_imported_call!` pair spanning both calls — the same
+  pattern the `array_set` (f64/ets) arm already uses for its own two-call
+  sequence (`list_to_tuple` then `ets:insert`). The call result is moved out
+  of `x0` into the destination register BEFORE the restore runs (mirroring
+  `alloc_array`'s ordering), since restore can write back into `x0` itself.
+- New real-`erl` regression test,
+  `test_98_real_erl_call_closure_survives_live_across_call`: a variable
+  defined before `call_closure` and used after it is allocated `x0` — the
+  exact register the closure dispatch's internal `caps -> x0` move clobbers
+  first — and the test proves it survives with the correct value. Confirmed
+  the test fails (`14` instead of the correct `106`) when the fix is
+  reverted, proving the test actually exercises the bug.
+
+**Also relaxed the validator to accept `"mov"` with a `ref<...>` type_hint**
+(VM-041 discovery, made while probing Twig's `match`/`union` rows): Twig's
+`if`/`match` codegen (`twig-ir-compiler::compiler.rs`'s `emit_move`) merges
+each branch's result into one mutable "phi" variable via a typed `mov`,
+using the SOURCE value's own inferred type as the `mov`'s type_hint. When a
+branch's value is a cons cell (a `union` variant constructor's result, or
+anything that started as `box`/`unbox` — which `lang-aot`'s
+`concretize_scalar_any_for_beam` renames to `mov` without touching
+type_hint), that type_hint is `ref<LispyPair>`, not a scalar — but the
+validator rejected every `mov` with any `ref<...>` type_hint outright, even
+though `lower.rs`'s `"mov"` arm already lowers it correctly for ANY
+type_hint (an unconditional `{operand} -> {x,rd}` move, agnostic to what the
+register holds). Added `"mov"` to the ref<...> accepted-ops match, mirroring
+the existing `"str"` type_hint exception already there. Proven correct (not
+just accepted) by a new real-`erl` test,
+`test_99_real_erl_mov_ref_lispy_pair_lowers_correctly`, which merges two
+cons cells built in the two arms of an `if` through the exact
+mutually-exclusive two-`mov` pattern `emit_move` produces, and reads back the
+correct one. This fix alone does NOT promote Twig's `match`/`union` corpus
+rows — they hit a SEPARATE, deeper, still-open gap (the `alloc`+2×
+`field_store` → `put_list` fusion only recognizes the three instructions
+immediately adjacent; the union-variant constructor interleaves a `mov`
+between them) — see `code/specs/LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-041"
+section.
+
+Suite: 102 unit/integration tests + 5 doc tests pass (up from 100 + 5),
+including the two new tests above. All-target Clippy with warnings denied
+is clean.
+
+## 0.13.0 - 2026-09-15 - ets-backed f64 array representation (BEAM04)
+
+`alloc_array`/`array_set`/`array_get` with `type_hint == "array<f64>"`/
+`"f64"` now lower to Erlang's `:ets` module instead of `:atomics`.
+`:atomics` can only hold 64-bit INTEGERS — every BASIC numeric-array write
+previously traps at runtime (`{badarg,[{atomics,put,[Ref,Index,FloatValue],
+...}]}`), confirmed on real `erl`. Full research + decision:
+`code/specs/BEAM04-float-array-representation.md`.
+
+- **Two candidates researched concretely against real `erl`/`erlc -S`, not
+  guessed at:** (a) bit-reinterpret the f64 as an i64 via BEAM bit-syntax,
+  keep `:atomics` — the bit pattern round-trips exactly, but the actual
+  instruction shape needs three entirely new opcode families
+  (`bs_create_bin`, `bs_start_match4`/`bs_match` with a nested `commands`
+  operand list, and a typed `test bs_get_float2`) this backend has never
+  implemented; (b) switch to `:ets`, which stores floats natively — needs
+  **zero** new BEAM opcodes (`ets:new/2`/`ets:insert/2`/
+  `ets:lookup_element/3` are ordinary `call_ext`s, the same shape `math:*`
+  already uses; the `{Idx, Val}` insert tuple is built with `put_list` +
+  `erlang:list_to_tuple/1`, the same list-construction op `call_closure`'s
+  arg-list already uses). (b) was chosen — this backlog's own prior
+  assumption that reusing `:atomics` would "likely" be simpler did not hold
+  up once actually measured.
+- **`alloc_array` (f64):** `x0 = 'farray' ; x1 = [] ; call_ext 2
+  ets:new/2 ; dest = x0`. No size argument — `:ets` tables grow
+  dynamically, so the length source is validated for shape but unused. A
+  fixed table-name atom is safe to reuse across every call site: `ets:new`
+  without `named_table` always returns a fresh, non-colliding table
+  identifier (confirmed on real `erl`).
+- **`array_set` (f64):** stage `Ref`/`Idx`/`Val` into scratch registers
+  (same discipline as the existing `:atomics` staging), build `[Idx, Val]`
+  with `put_list`, convert with `erlang:list_to_tuple/1` (`call_ext`), then
+  `ets:insert(Tab, Tuple)` (`call_ext`). No index `+1` — unlike `:atomics`,
+  `:ets` is not 1-indexed.
+- **`array_get` (f64):** `ets:lookup_element(Tab, Idx, 2)` (`call_ext`)
+  returns the value directly — no destructuring needed. Traps `badarg` on a
+  missing key, the same failure mode `atomics:get` already has for
+  out-of-range `array<i64>` reads.
+- Every other array/tape use (Brainfuck's byte tape, the GOSUB
+  return-address `array<i64>` stack, the `DATA` pool's kind array) is
+  untouched — still `:atomics`. `add`/`sub`/`mul`/`cmp_*`/etc. need zero
+  changes; they already lower generically over any register contents once a
+  valid boxed float is there.
+- **Known, documented limitation, not fixed:** unlike `atomics:new`,
+  `ets:new` does not pre-zero N cells — reading a never-`array_set` index
+  traps (`badarg`) instead of returning `0.0`. Not exercised by any
+  promoted row (each writes every cell it later reads); pinned by a
+  dedicated test (`test_97_real_erl_float_array_unset_read_traps`) rather
+  than left to regress silently.
+- New tests: `test_94_f64_array_ops_use_ets_not_atomics` (instruction-shape:
+  confirms the actual `call_ext` operands, not just import-table presence —
+  every import is pre-registered unconditionally at module setup, so
+  import-table presence alone can't distinguish "calls atomics" from "the
+  backend always reserves the slot"), plus three real-`erl` integration
+  tests: `test_95_real_erl_float_array_set_get_roundtrip` (the promoted
+  1-D-array row's exact shape), `test_96_real_erl_float_array_overwrite`
+  (re-`array_set` at the same index replaces, not duplicates), and
+  `test_97_real_erl_float_array_unset_read_traps` (the limitation above,
+  pinned as an intentional trap). 104 unit/integration tests + 5 doc tests
+  pass (up from 100). All-target Clippy with warnings denied is clean.
+
 ## 0.12.0 - 2026-09-15 - math:* transcendentals and real_to_int_floor (VM-LOOP-24)
 
 A probe-first sweep of Dartmouth BASIC's remaining non-`INPUT` corpus rows

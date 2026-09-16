@@ -28,7 +28,8 @@
     "ES-PATH-B1-TUVIERON",
     "ES-PATH-B1-FUERON",
     "ES-PATH-B1-REVIEW-PRET",
-    "ES-PATH-B1-SYNTH-PRET"
+    "ES-PATH-B1-SYNTH-PRET",
+    "ES-PATH-418-WRITING"
   ],
   "omits": [],
   "relocates": {}

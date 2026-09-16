@@ -2849,26 +2849,19 @@ fn emit_container(
     let base_foreground = props
         .get("color")
         .and_then(|value| css_color_to_dart(value));
-    let base_border_color = props
-        .get("border-color")
-        .and_then(|value| css_color_to_dart(value));
-    let base_border_width = props
-        .get("border-width")
-        .map(|value| parse_pixel_value(value));
     let base_padding = props.get("padding").map(|value| parse_pixel_value(value));
     let has_background =
         base_background.is_some() || state_layers.iter().any(|layer| layer.background.is_some());
     let has_foreground =
         base_foreground.is_some() || state_layers.iter().any(|layer| layer.text_color.is_some());
-    let has_border = base_border_width.is_some()
-        || state_layers
-            .iter()
-            .any(|layer| layer.border_width.is_some())
-        // UI79 -- a part whose ONLY border is per-edge must still take
-        // the decoration path, or the edge reaches nothing.
-        || per_edge_border_expr(&props).is_some();
-    let has_padding =
-        base_padding.is_some() || state_layers.iter().any(|layer| layer.padding.is_some());
+    let has_border = flutter_has_border(&props, &state_layers);
+    // Asks about the SHORTHAND, the longhands and the state layers. It used
+    // to ask only about the shorthand, so a part authoring nothing but
+    // `padding-top`/`-left`/... was skipped here entirely and rendered with
+    // no padding at all -- not collapsed, absent (#15249).
+    let has_padding = base_padding.is_some()
+        || flutter_padding_edges(&props).is_some()
+        || state_layers.iter().any(|layer| layer.padding.is_some());
 
     if width.is_some()
         || height.is_some()
@@ -2900,48 +2893,35 @@ fn emit_container(
             wrapper_args.push(format!("height: {h}"));
         }
         if has_padding {
-            let padding = state_color_expr(
-                &state_layers,
-                |layer| layer.padding.as_ref(),
-                base_padding.as_deref().unwrap_or("0"),
-            );
-            wrapper_args.push(format!("padding: EdgeInsets.all({padding})"));
+            // A state layer that overrides padding still resolves to ONE
+            // value, and that path is unchanged: 12 of the 1178 authored
+            // padding declarations in the repo sit inside a state block, and
+            // none of them needs per-edge resolution. Everything else --
+            // the other 99% -- now resolves edge by edge (#15249).
+            let layered = state_layers.iter().any(|layer| layer.padding.is_some());
+            let arg = match flutter_padding_edges(&props) {
+                Some(edges) if !layered => flutter_edge_insets(&edges, false),
+                _ => {
+                    let padding = state_color_expr(
+                        &state_layers,
+                        |layer| layer.padding.as_ref(),
+                        base_padding.as_deref().unwrap_or("0"),
+                    );
+                    format!("EdgeInsets.all({padding})")
+                }
+            };
+            wrapper_args.push(format!("padding: {arg}"));
         }
         if has_background || has_border || elevation.is_some() {
-            let mut decoration: Vec<String> = Vec::new();
-            if has_background {
-                let background = state_color_expr(
+            let background = has_background.then(|| {
+                state_color_expr(
                     &state_layers,
                     |layer| layer.background.as_ref(),
                     base_background.as_deref().unwrap_or("Colors.transparent"),
-                );
-                decoration.push(format!("color: {background}"));
-            }
-            if has_border {
-                let border_color = state_color_expr(
-                    &state_layers,
-                    |layer| layer.border_color.as_ref(),
-                    base_border_color.as_deref().unwrap_or("Colors.transparent"),
-                );
-                let border_width = state_color_expr(
-                    &state_layers,
-                    |layer| layer.border_width.as_ref(),
-                    base_border_width.as_deref().unwrap_or("0"),
-                );
-                decoration.push(
-                    // UI79 -- a per-edge declaration replaces the
-                    // all-four form, filling unauthored sides from the
-                    // shorthand. This is the writer that actually runs
-                    // for a styled container; `emit_styled_box` has a
-                    // second one that does not.
-                    per_edge_border_expr(&props).unwrap_or_else(|| {
-                        format!("border: Border.all(color: {border_color}, width: {border_width})")
-                    }),
-                );
-            }
-            if let Some(tier) = elevation {
-                decoration.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
-            }
+                )
+            });
+            let decoration =
+                flutter_decoration_parts(&props, &state_layers, background, elevation);
             wrapper_args.push(format!(
                 "decoration: BoxDecoration({})",
                 decoration.join(", ")
@@ -3551,6 +3531,155 @@ fn style_to_container_args(style_props: &str) -> String {
     parts.join(", ")
 }
 
+/// The `BoxDecoration(..)` arguments, in emission order, shared by BOTH of
+/// this emitter's box writers.
+///
+/// `emit_container` and `flutter_box_style` computed these separately, and
+/// every time the two drifted a product lost something:
+///
+///   - #15225: `border-radius` was taught to one writer and not the other.
+///   - #15246: the gap that survived it -- containers rendered square, and a
+///     comment in the FIXED writer claimed the other one handled it.
+///   - #15249: padding, wrong in two DIFFERENT ways at once (`EdgeInsets.all`
+///     collapsed it here, `symmetric(horizontal:)` dropped the vertical axis
+///     there).
+///
+/// Qt, XAML, SwiftUI and React each lower a part's box in one place, and none
+/// of them has had this class of bug. So the decoration now has one writer
+/// too, and a property taught to it is taught to both callers at once.
+///
+/// The background is passed in rather than computed here: the two callers
+/// genuinely disagree about it. `emit_container` omits `color:` entirely when
+/// nothing authored a background and defaults to `Colors.transparent`;
+/// `flutter_box_style` always emits it and defaults to `null`. Folding that
+/// into one rule would change what is emitted, which this refactor must not
+/// do -- so it stays the callers' business, and only the ORDER is shared.
+/// Does this part have a border to draw?
+///
+/// ONE expression, asked by both the wrapper gate in `emit_container` and the
+/// border arm of `flutter_decoration_parts`. They were separate and textually
+/// identical, which is precisely how #15225/#15246/#15249 happened: two copies
+/// of one question, and a change to either alone is a silent divergence. A
+/// reviewer flagged the substitution as unproven, and proving the two matched
+/// today would not stop them drifting tomorrow.
+fn flutter_has_border(props: &HashMap<String, String>, layers: &[StateLayer]) -> bool {
+    props.get("border-width").is_some()
+        || layers.iter().any(|layer| layer.border_width.is_some())
+        // UI79 -- a part whose ONLY border is per-edge must still take the
+        // decoration path, or the edge reaches nothing.
+        || per_edge_border_expr(props).is_some()
+}
+
+fn flutter_decoration_parts(
+    props: &HashMap<String, String>,
+    layers: &[StateLayer],
+    background: Option<String>,
+    elevation: Option<ElevationTier>,
+) -> Vec<String> {
+    let mut parts: Vec<String> = Vec::new();
+    if let Some(background) = background {
+        parts.push(format!("color: {background}"));
+    }
+
+    let base_border_color = props.get("border-color").and_then(|v| css_color_to_dart(v));
+    let base_border_width = props.get("border-width").map(|v| parse_pixel_value(v));
+    if flutter_has_border(props, layers) {
+        let border_color = state_color_expr(
+            layers,
+            |layer| layer.border_color.as_ref(),
+            base_border_color.as_deref().unwrap_or("Colors.transparent"),
+        );
+        let border_width = state_color_expr(
+            layers,
+            |layer| layer.border_width.as_ref(),
+            base_border_width.as_deref().unwrap_or("0"),
+        );
+        parts.push(
+            // UI79 -- a per-edge declaration replaces the all-four form for
+            // the whole border, filling unauthored sides from the shorthand.
+            per_edge_border_expr(props).unwrap_or_else(|| {
+                format!("border: Border.all(color: {border_color}, width: {border_width})")
+            }),
+        );
+    }
+
+    // Gated on a UNIFORM border. Flutter's `Border.paint` throws "A
+    // borderRadius can only be given on borders with uniform colors" the
+    // moment a non-uniform `Border(...)` carries one, taking out the widget
+    // and everything above it in any debug or profile build -- and
+    // `per_edge_border_expr` emits exactly that non-uniform form.
+    if per_edge_border_expr(props).is_none() {
+        if let Some(radius) = props
+            .get("border-radius")
+            .and_then(|value| strict_pixel_length(value))
+        {
+            parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
+        }
+    }
+
+    // Taken as a parameter, NOT recomputed. `emit_container`'s wrapper gate
+    // already tests its own `elevation` binding, so recomputing here would be
+    // two evaluations of one question -- the same shape as the border guard
+    // above, and the same shape that produced #15225/#15246/#15249. Proving
+    // they agree today is not the point; they cannot disagree tomorrow.
+    if let Some(tier) = elevation {
+        parts.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
+    }
+    parts
+}
+
+/// A part's padding resolved PER EDGE, the way CSS resolves it: a longhand
+/// wins over the shorthand, edge by edge, and an edge nobody mentions is zero.
+///
+/// Returned in Flutter's `fromLTRB` order.
+///
+/// Before this existed, every one of this emitter's padding writers took a
+/// single value: `emit_container` fanned it to all four edges with
+/// `EdgeInsets.all`, and the styled-box writer emitted
+/// `EdgeInsets.symmetric(horizontal: N)` -- whose omitted axis defaults to
+/// ZERO, so a box authoring vertical padding rendered with none (#15249).
+/// Neither could express `task-detail`'s `15 / 16 / 16 / 47`.
+fn flutter_padding_edges(props: &HashMap<String, String>) -> Option<[String; 4]> {
+    const EDGES: [&str; 4] = [
+        "padding-left",
+        "padding-top",
+        "padding-right",
+        "padding-bottom",
+    ];
+    let short = props.get("padding");
+    if short.is_none() && !EDGES.iter().any(|name| props.contains_key(*name)) {
+        return None;
+    }
+    let resolve = |name: &str| {
+        props
+            .get(name)
+            .or(short)
+            .map(|value| parse_pixel_value(value))
+            .unwrap_or_else(|| "0".to_string())
+    };
+    Some([
+        resolve(EDGES[0]),
+        resolve(EDGES[1]),
+        resolve(EDGES[2]),
+        resolve(EDGES[3]),
+    ])
+}
+
+/// Render resolved edges as the narrowest `EdgeInsets` that says the same
+/// thing -- `all` when the four agree, so the common case stays readable,
+/// and `fromLTRB` only when they genuinely differ.
+fn flutter_edge_insets(edges: &[String; 4], constant: bool) -> String {
+    let prefix = if constant { "const " } else { "" };
+    if edges.iter().all(|edge| edge == &edges[0]) {
+        format!("{prefix}EdgeInsets.all({})", edges[0])
+    } else {
+        format!(
+            "{prefix}EdgeInsets.fromLTRB({}, {}, {}, {})",
+            edges[0], edges[1], edges[2], edges[3]
+        )
+    }
+}
+
 /// Translate one `key: value` CSS-shape style prop into the matching
 /// Flutter `Container` property. Best-effort coverage; unknown props
 /// produce `None` and are silently dropped (TODO: surface as Dart
@@ -4111,22 +4240,31 @@ fn flutter_box_style(
         args.push(format!("alignment: {}", text_align_to_alignment(ta)));
     }
     let base_padding = base.get("padding").map(|v| parse_pixel_value(v));
-    if base_padding.is_some() || layers.iter().any(|layer| layer.padding.is_some()) {
-        if layers.iter().all(|layer| layer.padding.is_none()) {
-            args.push(format!(
-                "padding: const EdgeInsets.symmetric(horizontal: {})",
-                base_padding.as_deref().unwrap_or("0")
-            ));
-        } else {
-            let padding = state_color_expr(
-                layers,
-                |layer| layer.padding.as_ref(),
-                base_padding.as_deref().unwrap_or("0"),
-            );
-            args.push(format!(
-                "padding: EdgeInsets.symmetric(horizontal: {padding})"
-            ));
-        }
+    let padding_edges = flutter_padding_edges(base);
+    let layered_padding = layers.iter().any(|layer| layer.padding.is_some());
+    if padding_edges.is_some() || layered_padding {
+        // Was `EdgeInsets.symmetric(horizontal: N)` on both arms, which is
+        // wrong twice over (#15249): `symmetric` defaults the axis you omit
+        // to ZERO, so every box authoring vertical padding rendered with
+        // none -- and the guard looked only for the `padding` SHORTHAND, so
+        // a part authoring nothing but longhands got no padding at all.
+        //
+        // The state-layer arm still resolves to one value, and now spreads
+        // it with `all` rather than dropping the vertical axis. Only 12 of
+        // the 1178 authored padding declarations in the repo sit inside a
+        // state block, and none of them needs per-edge resolution.
+        let arg = match &padding_edges {
+            Some(edges) if !layered_padding => flutter_edge_insets(edges, true),
+            _ => {
+                let padding = state_color_expr(
+                    layers,
+                    |layer| layer.padding.as_ref(),
+                    base_padding.as_deref().unwrap_or("0"),
+                );
+                format!("EdgeInsets.all({padding})")
+            }
+        };
+        args.push(format!("padding: {arg}"));
     }
 
     // --- BoxDecoration: background (state-conditional) + border -------
@@ -4139,64 +4277,8 @@ fn flutter_box_style(
         |l| l.background.as_ref(),
         base_bg.as_deref().unwrap_or("null"),
     );
-    let mut deco_parts: Vec<String> = vec![format!("color: {bg_expr}")];
-    let base_border_color = base.get("border-color").and_then(|v| css_color_to_dart(v));
-    let base_border_width = base.get("border-width").map(|v| parse_pixel_value(v));
-    if base_border_width.is_some()
-        || layers.iter().any(|layer| layer.border_width.is_some())
-        || per_edge_border_expr(base).is_some()
-    {
-        let border_color = state_color_expr(
-            layers,
-            |layer| layer.border_color.as_ref(),
-            base_border_color.as_deref().unwrap_or("Colors.transparent"),
-        );
-        let border_width = state_color_expr(
-            layers,
-            |layer| layer.border_width.as_ref(),
-            base_border_width.as_deref().unwrap_or("0"),
-        );
-        deco_parts.push(
-            // UI79 -- a per-edge declaration replaces the all-four form
-            // for the whole border, filling unauthored sides from the
-            // shorthand it just read.
-            per_edge_border_expr(base).unwrap_or_else(|| {
-                format!("border: Border.all(color: {border_color}, width: {border_width})")
-            }),
-        );
-    }
-    // #15225 -- `border-radius`. This builder read background, border and
-    // elevation and simply never looked at the radius, so a styled box was
-    // square on Flutter however it was authored -- a NUMERIC radius was
-    // dropped here just as surely as a percentage one. `emit_container`
-    // handles it, which is why the same property works elsewhere in the
-    // same file: two writers, and only one of them had it.
-    //
-    // Emitted after the border so the argument order matches
-    // `emit_container`'s, keeping the two writers' output comparable.
-    // NOT paired with a per-edge border. Flutter's `Border.paint` throws
-    // "A borderRadius can only be given on borders with uniform colors"
-    // the moment a non-uniform `Border(...)` carries a radius, and asserts
-    // separately on a hairline side -- taking out the widget and everything
-    // above it in any debug or profile build. `per_edge_border_expr` emits
-    // exactly that non-uniform form, and it can also emit a `width: 0`
-    // side for an edge whose authored width was unreadable.
-    //
-    // Before #15225 this builder emitted no radius at all, so the pairing
-    // was unreachable; adding one without this gate turns an authored
-    // per-edge border plus a radius into a runtime crash. A uniform border
-    // is fine, which is the case every product actually authors.
-    let uniform_border = per_edge_border_expr(base).is_none();
-    if uniform_border {
-        if let Some(radius) = base.get("border-radius").and_then(|v| strict_pixel_length(v)) {
-            deco_parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
-        }
-    }
-    // UI41, #12028 item 1 — base props only (see `elevation_tier`'s doc
-    // comment).
-    if let Some(tier) = elevation_tier(base) {
-        deco_parts.push(format!("boxShadow: [{}]", tier.box_shadow_dart()));
-    }
+    let deco_parts =
+        flutter_decoration_parts(base, layers, Some(bg_expr), elevation_tier(base));
     args.push(format!(
         "decoration: BoxDecoration({})",
         deco_parts.join(", ")
@@ -13323,6 +13405,208 @@ mod tests {
         assert_eq!(out.matches("List<Widget> _mosaicWithGap(").count(), 1);
     }
 
+    // ====================================================================
+    // #15249 -- per-edge padding
+    // ====================================================================
+
+    /// Four different edges survive, in `fromLTRB` order.
+    ///
+    /// Before this, no Flutter part could render asymmetric padding at all:
+    /// the container writer fanned one value out with `EdgeInsets.all`, and
+    /// the styled-box writer wrote `EdgeInsets.symmetric(horizontal: N)`,
+    /// whose omitted axis defaults to ZERO. Trestle's `task-detail` authors
+    /// `15 / 16 / 16 / 47` and rendered `15` on every side.
+    ///
+    /// The values are deliberately all different, so a transposed argument
+    /// order fails rather than passing by symmetry.
+    #[test]
+    fn four_distinct_padding_edges_survive_in_ltrb_order() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "detail", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "detail",
+            vec![
+                StyleProp { name: "padding-top".into(), value: "15".into() },
+                StyleProp { name: "padding-right".into(), value: "16".into() },
+                StyleProp { name: "padding-bottom".into(), value: "17".into() },
+                StyleProp { name: "padding-left".into(), value: "47".into() },
+            ],
+        );
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("EdgeInsets.fromLTRB(47, 15, 16, 17)"),
+            "expected the four authored edges in LTRB order:\n{out}"
+        );
+    }
+
+    /// A longhand overrides the shorthand edge by edge, as CSS resolves it,
+    /// and an edge nobody mentions falls back to the shorthand.
+    #[test]
+    fn a_padding_longhand_overrides_the_shorthand_on_its_own_edge() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "detail", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "detail",
+            vec![
+                StyleProp { name: "padding".into(), value: "8".into() },
+                StyleProp { name: "padding-left".into(), value: "32".into() },
+            ],
+        );
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("EdgeInsets.fromLTRB(32, 8, 8, 8)"),
+            "the longhand must win on its edge only:\n{out}"
+        );
+    }
+
+    /// Uniform padding still emits the narrow `all` form.
+    ///
+    /// This is the control for the two tests above: without it, they would
+    /// also pass if the emitter had started writing `fromLTRB` for
+    /// everything, which would be correct but needlessly unreadable.
+    #[test]
+    fn uniform_padding_still_emits_the_all_form() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "detail", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "detail",
+            vec![StyleProp { name: "padding".into(), value: "8".into() }],
+        );
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(out.contains("EdgeInsets.all(8)"), "got:\n{out}");
+        assert!(
+            !out.contains("fromLTRB"),
+            "four equal edges do not need the long form:\n{out}"
+        );
+    }
+
+    // ====================================================================
+    // #15225 residue -- `border-radius` on a CONTAINER (the other writer)
+    // ====================================================================
+
+    /// A styled container keeps its authored `border-radius`.
+    ///
+    /// #15225 fixed this in `emit_styled_box` only, and left a comment there
+    /// saying `emit_container` already handled the radius. It did not: that
+    /// decoration read background, border and elevation and never looked at
+    /// the radius, so every container-shaped part rendered square. Trestle's
+    /// `task-card` authors `border-radius: 13` and emitted
+    /// `BoxDecoration(color:.., border:.., boxShadow:..)` with none.
+    ///
+    /// Nothing caught it: the whole suite passed both before and after the
+    /// fix, because no test asserted on this writer's radius at all.
+    ///
+    /// Asserted as one adjacent string rather than two `contains` calls, so
+    /// it pins the radius INSIDE this decoration and in the documented
+    /// argument order -- `out.contains("BorderRadius.circular(13)")` alone
+    /// would pass on a radius emitted anywhere in the file.
+    #[test]
+    fn a_styled_container_keeps_its_border_radius() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "card", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "card",
+            vec![
+                StyleProp {
+                    name: "border-width".into(),
+                    value: "1".into(),
+                },
+                StyleProp {
+                    name: "border-color".into(),
+                    value: "#352e25".into(),
+                },
+                StyleProp {
+                    name: "border-radius".into(),
+                    value: "13".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains(
+                "border: Border.all(color: const Color(0xFF352E25), width: 1), \
+                 borderRadius: BorderRadius.circular(13)"
+                    .replace("                 ", "")
+                    .as_str()
+            ),
+            "a uniform-bordered container must carry its radius:\n{out}"
+        );
+    }
+
+    /// ...but a PER-EDGE border withholds it, because Flutter throws.
+    ///
+    /// `Border.paint` raises "A borderRadius can only be given on borders
+    /// with uniform colors" the moment a non-uniform `Border(...)` carries
+    /// one, taking out the widget and everything above it in any debug or
+    /// profile build. Trestle authors exactly this shape on `board-card` and
+    /// `board-card-crit` (a 3px left accent plus `border-radius: 9`), so the
+    /// gate is load-bearing rather than defensive.
+    ///
+    /// The uniform case above is this test's control: without it, asserting
+    /// an absence here would also pass if the emitter had simply stopped
+    /// emitting radii altogether.
+    #[test]
+    fn a_per_edge_bordered_container_withholds_the_radius() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "card", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "card",
+            vec![
+                StyleProp {
+                    name: "border-width".into(),
+                    value: "1".into(),
+                },
+                StyleProp {
+                    name: "border-color".into(),
+                    value: "#352e25".into(),
+                },
+                StyleProp {
+                    name: "border-left-width".into(),
+                    value: "3".into(),
+                },
+                StyleProp {
+                    name: "border-left-color".into(),
+                    value: "#e26a52".into(),
+                },
+                StyleProp {
+                    name: "border-radius".into(),
+                    value: "9".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("border: Border(top:"),
+            "expected the per-edge form:\n{out}"
+        );
+        assert!(
+            !out.contains("borderRadius"),
+            "a non-uniform border carrying a radius throws at paint time:\n{out}"
+        );
+    }
+
     #[test]
     fn column_gap_inserts_vertical_separators() {
         let m = component("X", vec![], vec![]);
@@ -14952,12 +15236,15 @@ mod negative_length_tests {
             !out.contains("width: -"),
             "a negative width reached BorderSide, which asserts at build: {out}"
         );
-        // Assert what this path ACTUALLY emits. The styled-box path writes
-        // `EdgeInsets.symmetric(horizontal: N)`, so an
-        // `EdgeInsets.all(-` assertion could never fail here and read as
-        // coverage it did not provide.
+        // Assert what this path ACTUALLY emits, so the assertion cannot read
+        // as coverage it does not provide. The form changed with #15249:
+        // the styled-box path used to write
+        // `EdgeInsets.symmetric(horizontal: N)` -- which silently dropped the
+        // vertical axis -- and now resolves all four edges, so a uniform
+        // `-3px` clamps to `EdgeInsets.all(0)`. The POINT of the test is
+        // unchanged: a negative length must not reach the emitted argument.
         assert!(
-            out.contains("EdgeInsets.symmetric(horizontal: 0)"),
+            out.contains("EdgeInsets.all(0)"),
             "the negative padding should have clamped to 0 on this path: {out}"
         );
         assert!(

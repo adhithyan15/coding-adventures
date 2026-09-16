@@ -170,7 +170,7 @@ mod common;
 /// so a backend that merely emits a literal would not pass.
 const PROGRAMS: &[Prog] = &[
     // Twig — the original AOT language; a bare expression is the whole program.
-    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
+    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
     // Twig — *variadic* arithmetic (`(+ 10 20 12)` = 42).  Scheme's `+`/`-`/`*`/`/`
     // are n-ary; `twig-ir-compiler` folds an all-`i64` arithmetic call into a
     // left-associated chain of typed binary CIR ops (`r1 = add 10,20; r2 = add
@@ -237,7 +237,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(+ (car (cons 41 0)) 1)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-3a: the `list` constructor on the code-gen backends.**
     // `list` is pure sugar over `cons`: `(list a b c)` = `(cons a (cons b
@@ -282,7 +282,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(+ (length (list 1 2 3)) 39)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-3b: `null?` on the empty list `(list)` (a bare nil) is #t → exit 1,
     // the direct regression guard for the WASM nil-const `ref.null` fix.
@@ -308,7 +308,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(list-ref (list 10 20 42) 2)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-3b: the `append` list operation on the code-gen backends.**
     // `append` *rebuilds* the first list in front of the second, so `lower_list_ops`
@@ -358,7 +358,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-3b: `assoc` of an ABSENT key returns nil, so `null?` of the result
     // is #t → exit 1 — the direct guard for the not-found (nil base-case) branch.
@@ -367,7 +367,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(null? (assoc 9 (list (cons 1 10) (cons 2 20))))",
         expect: Expect::Exit(1),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-4: symbols / quote on the code-gen backends.** A quote literal
     // `'a` (or `(quote a)`) now lowers to `const Var("a") : symbol` — the same
@@ -465,24 +465,44 @@ const PROGRAMS: &[Prog] = &[
     // `=`/`+`/`-`/`*` builtins the tag-test and arms use — so union `match` runs on
     // **all seven engines**. (`match` here needs no `is_null`, so no nil-handle
     // disambiguation is required; that is only for list `null?`.)
+    // **VM-041 (BEAM05 follow-up) — the `Beam` column, closing Twig to 49/49.**
+    // `emit_union_def`'s per-field cons cell used to emit `alloc`, then `box`
+    // (boxing the field for the tagged backends' match/unbox round-trip), THEN
+    // the two `field_store`s — the interleaved `box` broke `iir-to-beam`'s
+    // `alloc`+`field_store`+`field_store` → `put_list` fusion look-ahead
+    // (adjacency-only, not a general scan), which made every `match`/`union`
+    // Twig program fail BEAM lowering. Fixed by hoisting `box` to before
+    // `alloc` (no data dependency between them — `box` only reads the field
+    // value, not the freshly allocated cell register), restoring adjacency;
+    // mirrors the same function's tag/head cons cell, which already computed
+    // its `box` before its own `alloc`. See
+    // `twig-ir-compiler`'s `union_constructor_alloc_immediately_followed_by_
+    // its_two_field_stores` test and `LANG-VM-NON-ALGOL-BACKLOG.md`'s VM-041
+    // section for the full pinned-down shape and real-`erl` proof.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-6: matching the SECOND variant (`None`) proves the tag dispatch
     // actually discriminates — the boxed-bool branch takes the right arm, not
     // always the first. `(match (None) ((Some v) v) ((None) 42))` = 42. This is the
     // cell the raw-tag bug broke on the tagged backends (`unbox(raw 1)=0`); E6d-6b's
     // boxed tag fixes it. Runs on all seven engines (Clr via E6d-6c, Vm/Jit above).
+    // VM-041: the SECOND variant's match arm exercises the same `None`
+    // constructor (no fields — its cons chain has no per-field cell, only the
+    // tag/head cell, which was never interleaved) plus the tag-dispatch `=`
+    // comparison on `Beam`; both were already proven working on `Beam` by the
+    // `Some` row above, this row proves discrimination (not always the first
+    // arm) end to end.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-8: dynamic globals on the code-gen backends.** A value global
     // `g` that is *forward-referenced* (read inside `f` before its `define`) is
@@ -533,7 +553,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "((lambda (x) (+ x 1)) 41)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-7: a **capturing** closure. The outer lambda returns an inner
     // one that captures `x`; applying it threads the captured 40 + the arg 2.
@@ -545,7 +565,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(((lambda (x) (lambda (y) (+ x y))) 40) 2)",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 literal `string-length`. The compiler lowers
     // `(string-length "HELLO")` to shared `str_const` + `str_len`, avoiding the
@@ -560,7 +580,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(string-length \"HELLO\")",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 literal `string-ref`. The front-end emits `str_const` plus a
     // typed integer index and `str_index`; ASCII keeps the byte-oriented E4
@@ -570,7 +590,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(string-ref \"ABC\" 1)",
         expect: Expect::Exit(66),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 literal `string-ref` out-of-bounds trap. This proves the same
     // runtime fail-closed contract on every backend: native/LLVM lower the
@@ -581,7 +601,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(string-ref \"ABC\" 3)",
         expect: Expect::Trap,
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 literal `string-append` feeding `string-length`. This exercises
     // the shared `str_concat` op while staying on the direct-literal metadata
@@ -592,7 +612,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(string-length (string-append \"AB\" \"CDE\"))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 literal `string=?`. Like the literal length row, this stays on
     // the direct `str_const` + `str_eq` path so every codegen backend can prove
@@ -616,7 +636,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define a \"AB\") (define b \"CDE\") (string-length (string-append a b))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 named string equality driving control flow. The `string=?`
     // result is the shared i64 boolean consumed by the existing `if` lowering,
@@ -637,7 +657,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define s \"ABC\") (string-ref s 2)",
         expect: Expect::Exit(67),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 lexical string locals. A `let` string binding now materialises
     // directly as a typed `str_const` register, and a local integer binding can
@@ -648,7 +668,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let ((s \"ABC\") (i 2)) (string-ref s i))",
         expect: Expect::Exit(67),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 lexical `let*` string locals. The sequential-binding form uses
     // the same typed `str_const` local slot path as `let`, and `str_len`
@@ -658,7 +678,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let* ((s \"HELLO\")) (string-length s))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 lexical string locals can drive equality control flow too.
     // Two local string slots feed `str_eq`, and the resulting i64 boolean flows
@@ -679,7 +699,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let ((a \"AB\") (b \"CDE\")) (string-length (string-append a b)))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 `str_concat` feeding `str_index`. The prior local-string proof
     // observed a concat result with `str_len`; this row makes the byte-indexing
@@ -690,7 +710,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let ((a \"AB\") (b \"CDE\") (i 3)) (string-ref (string-append a b) i))",
         expect: Expect::Exit(68),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 `str_len` computing a `str_index` operand. This keeps
     // `string-length` on the shared `str_len` path, lowers `(- len 1)` as typed
@@ -701,7 +721,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let ((s \"ABCDE\")) (string-ref s (- (string-length s) 1)))",
         expect: Expect::Exit(69),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 `substring` feeding `string-ref`. This proves the shared
     // `str_slice` op produces a string value that all seven proven columns can
@@ -712,7 +732,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(let ((s \"ABCDE\")) (string-ref (substring s 1 4) 1))",
         expect: Expect::Exit(67),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 `str_cmp` driving lexical string predicates. The frontend lowers
     // `string<?`/`string>?` to shared `str_cmp` followed by typed comparison
@@ -733,7 +753,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (strlen) (string-length \"HELLO\")) (strlen)",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string ops over an annotated top-level function parameter. The
     // bare `str` annotation gives the compiler enough static evidence to stamp
@@ -752,7 +772,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (strlen (s : str)) (string-length s)) (strlen \"HELLO\")",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from `main`. The direct `(strlen "HELLO")`
@@ -766,7 +786,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (strlen s) (string-length s)) (strlen \"HELLO\")",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a static string expression actual. The
@@ -784,7 +804,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string equality over multiple unannotated top-level function
     // parameters inferred from one direct call. The first actual is literal,
@@ -819,7 +839,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define s \"HELLO\") (define (strlen x) (string-length x)) (strlen s)",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a lexical string local in `main`. The
@@ -833,7 +853,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (let ((s \"HELLO\")) (strlen s))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a derived sequential `let*` string local
@@ -851,7 +871,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "twig",
         src: "(define (strlen x) (string-length x)) (let* ((a \"HE\") (b (string-append a \"LLO\"))) (strlen b))",
         expect: Expect::Exit(5),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — *top-level value `define`* read from `main` (`(define x 40) (define
     // y 2) (+ x y)` = 42).  A value define previously lowered to
@@ -4907,7 +4927,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 DIM A(3)\n20 LET A(1) = 40\n30 LET A(2) = 2\n40 PRINT A(1) + A(2)\n50 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — *two-dimensional real arrays* (LANG-FULL BA-DIM-2D,
     // enabler **E5**).  `DIM A(1,2)` declares a 2×3 matrix (0-based inclusive:
@@ -4926,7 +4946,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 DIM A(1,2)\n20 LET A(0,0) = 40\n30 LET A(1,2) = 2\n40 PRINT A(0,0) + A(1,2)\n50 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — *`READ` / `DATA` / `RESTORE`* (LANG-FULL BA6 + BA7). The
     // `DATA` pool is materialised once at the top of `main` as an `array<f64>`
@@ -4944,7 +4964,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 DATA 21\n20 READ A\n30 RESTORE\n40 READ B\n50 PRINT A + B\n60 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — *multi-item `PRINT` on one line* with a `;` separator and
     // a negative value (LANG-FULL BA2). `PRINT 0 - 12; 34` prints `-12` and `34`
@@ -5032,7 +5052,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 DIM A(1)\n20 DATA 3.14, 0.25\n30 READ A(0)\n40 READ B\n50 PRINT A(0)\n60 PRINT B\n70 END\n",
         expect: Expect::Stdout("3.14\n.25"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — mixed numeric/string DATA (VM-017). One shared pointer
     // walks the source-ordered kind/numeric/string parallel pools. The first
@@ -5040,9 +5060,13 @@ const PROGRAMS: &[Prog] = &[
     // `42` plus `OK`; RESTORE rewinds the same pointer, then a numeric scalar
     // and a string scalar read the first two items again and print `20` plus
     // `O`. This proves ordered mixed storage, both scalar and array string READ,
-    // numeric READ, and representation-independent rewind on all seven standard
-    // backends. Every READ also checks the runtime kind tag before loading its
-    // typed value pool, so dynamic control flow cannot silently cross types.
+    // numeric READ, and representation-independent rewind on all eight standard
+    // backends (BEAM06 — real `erl` proves the string-array pool's `array<str>`
+    // element runs on the same `:ets` substrate BEAM04 built for `array<f64>`,
+    // with the runtime kind-tag check unaffected: `array<i64>` stays on
+    // `:atomics` exactly as before). Every READ also checks the runtime kind
+    // tag before loading its typed value pool, so dynamic control flow cannot
+    // silently cross types.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
@@ -5050,7 +5074,7 @@ const PROGRAMS: &[Prog] = &[
               30 READ A, S$(0), B, S$(1)\n40 PRINT A + B\n50 PRINT S$(0) + S$(1)\n\
               60 RESTORE\n70 READ C, T$\n80 PRINT C\n90 PRINT T$\n100 END\n",
         expect: Expect::Stdout("42\nOK\n20\nO"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — *unstructured `GOSUB` / `RETURN`* (LANG-FULL BA1, enabler
     // **E7**). The headline proof that one `RETURN` resumes at the *dynamically
@@ -5363,7 +5387,7 @@ const PROGRAMS: &[Prog] = &[
     // reads them back through two `str`-typed `array_get`s and concatenates —
     // so the printed `OK` (not `OO`/`KK`) proves the two element slots are
     // distinct and the handles survive a store→load round-trip through the
-    // aggregate.  Runs on **all seven backends**, each with its native
+    // aggregate.  Runs on **all eight backends**, each with its native
     // representation of a `str` element:
     //   • **VM/JIT** — a tagged `Value::Str` array element.
     //   • **WASM** — a 4-byte i32 handle per element (`i32.store`/`i32.load`, the
@@ -5374,13 +5398,18 @@ const PROGRAMS: &[Prog] = &[
     //     `native_array_elem_size` accepts `str` as an 8-byte element on x86_64/aarch64.
     //   • **JVM** — a `java.lang.String[]` (`anewarray` + `aaload`/`aastore`).
     //   • **CLR** — a `System.String[]` (`newarr` + `ldelem.ref`/`stelem.ref`).
+    //   • **Beam** (BEAM06) — an ordinary Erlang character list, the exact
+    //     `str_const` scalar representation, stored directly in the SAME
+    //     `:ets` table substrate BEAM04 built for `array<f64>` — zero new
+    //     BEAM opcodes, confirmed on real `erl`; see
+    //     `code/specs/BEAM06-string-array-representation.md`.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 DIM A$(2)\n20 LET A$(0) = \"O\"\n30 LET A$(1) = \"K\"\n\
                40 PRINT A$(0) + A$(1)\n50 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // VM-044: three loop-carried additions wrap 250 + 30 to 24, then the
     // function returns that value across a call boundary for visible output.
@@ -8216,9 +8245,15 @@ fn dotnet_ok() -> bool {
 // The Lisp-shaped column. BEAM is the one target with NO raw memory — no linear
 // address space, every term immutable — so it takes the cons/immutable half of
 // the IIR natively (`cons`/`car`/`cdr` are Erlang lists, symbols are atoms) and
-// refuses the rest outright rather than approximating it. `box`/`unbox` and
-// `str_len` remain unsupported ops, so a program needing them is REJECTED at
-// validation, never miscompiled. Only cells proven to run list `Beam`.
+// refuses the rest outright rather than approximating it. `str_len` and the
+// string op family ARE supported (BEAM E4). `box`/`unbox` never reach
+// `iir-to-beam` as such: `compile_source_to_beam`'s own
+// `concretize_scalar_any_for_beam` pass rewrites both to a plain `mov` first
+// (BEAM values are already dynamically-typed Erlang terms, so boxing is a
+// no-op identity move here) — VM-041 fixed the one gap that rewrite exposed,
+// a `mov` carrying a `ref<...>` type_hint the validator rejected outright
+// even though `lower.rs` already lowered it correctly. Only cells proven to
+// run list `Beam`.
 fn erl_ok() -> bool {
     Command::new("erl")
         .arg("-noshell")
@@ -9394,6 +9429,31 @@ fn matrix_every_proven_cell_agrees() {
 /// numeric arrays, `DATA`/`READ`/`RESTORE`, string arrays/mixed-type `DATA`,
 /// and `RND`).
 ///
+/// It changed again (396 → 400, BEAM04) once `iir-to-beam` gained an `:ets`-
+/// backed representation for `type_hint == "array<f64>"`/`"f64"` array ops
+/// (see `code/specs/BEAM04-float-array-representation.md`): the 1-D array,
+/// 2-D array, `DATA`/`READ`/`RESTORE`, and fractional-`DATA` rows — all four
+/// of which previously compiled cleanly but trapped at runtime
+/// (`{badarg,[{atomics,put,...`, since `:atomics` can only hold 64-bit
+/// integers) — each gained a real, `erl`-proven `Beam` declaration. String-
+/// typed arrays remain unpromoted (a separate, larger gap — `iir-to-beam`
+/// has no `str`-typed array element representation at all), as does `RND`
+/// (VM-018's module-global design question, unaffected by array
+/// representation).
+///
+/// It changed again (400 → 402, BEAM06) once `iir-to-beam` gained `str`-
+/// typed array element support on the SAME `:ets` substrate BEAM04 built,
+/// with ZERO new representation work: a `str` value is already an ordinary
+/// Erlang character list (the `str_const` scalar lowering), and `:ets`
+/// stores that exactly as natively as a float, confirmed on real `erl`
+/// (see `code/specs/BEAM06-string-array-representation.md`). The `DIM
+/// A$(2)` string-array row and the mixed numeric/string `DATA` row — both
+/// explicitly deferred by BEAM04 as needing a separate, larger design —
+/// each gained a real, `erl`-proven `Beam` declaration.  Dartmouth BASIC
+/// now declares 45/51 rows on `Beam`; only the 5 `INPUT` rows (VM-060b)
+/// and `RND` (VM-018) remain, both unscoped design questions rather than
+/// probe-and-promote items.
+///
 /// COBOL-60's expected cell count changed again after VM-040's boolean/
 /// EVALUATE slice (422 → 426) and again in this slice (426 → 430): four more
 /// rows (alphanumeric EVALUATE subject via `str_cmp`, and three reference-
@@ -9407,6 +9467,43 @@ fn matrix_every_proven_cell_agrees() {
 /// candidate to expose a real `iir-to-beam` defect via
 /// `emit_string_pointer_overlay`'s chained `str_slice`/`str_concat` calls
 /// over fully run-time-computed bounds; all 8 passed clean on real `erl`.
+///
+/// Twig's expected cell count changed for the first time (363 → 390, VM-041)
+/// after fixing a confirmed silent-corruption bug: `call_closure` lowers to
+/// TWO `call_ext` instructions, and neither was wrapped in
+/// `save_live_across_imported_call!`/`restore_live_across_imported_call!` —
+/// the same VM-D029 bug class already fixed once for the six `:atomics` ops.
+/// With the fix in place (and a real-`erl` regression test proving a
+/// variable survives across a `call_closure` call), a probe-first sweep of
+/// EVERY not-yet-`Beam` Twig row (29 of 49) found 27 that already ran
+/// correctly with zero further lowering changes — including the two closure
+/// rows the fix directly protects. The remaining 2 (`match`/`union`) needed
+/// two further fixes, landed in this same VM-041 arc: (1) `iir-to-beam`'s
+/// validator rejected a `mov` op carrying a `ref<LispyPair>` type_hint even
+/// though `lower.rs`'s `"mov"` arm already lowers it correctly for any type
+/// (an unconditional register-to-register `move`) — relaxed to mirror the
+/// existing `"str"`-type_hint exception, proven by
+/// `test_99_real_erl_mov_ref_lispy_pair_lowers_correctly` in `iir-to-beam`'s
+/// suite; (2) a SEPARATE, deeper gap in the synthesized union-variant
+/// constructor: `twig-ir-compiler::emit_union_def`'s per-field cons cell
+/// emitted `alloc`, then a `box` (E6d-6b: boxing the field for the tagged
+/// backends' round-trip), THEN the two `field_store`s — the interleaved
+/// `box` broke `iir-to-beam`'s `alloc`+2×`field_store` → `put_list` fusion,
+/// which only recognizes the three instructions when textually adjacent (a
+/// `[idx]`/`[idx+1]` look-ahead peek, not a general scan). Pinned down by
+/// direct IIR inspection to be exactly `[alloc, box, field_store,
+/// field_store]` — the `box` sits between `alloc` and the FIRST
+/// `field_store`. Fixed by hoisting the `box` above the `alloc` in
+/// `twig-ir-compiler` (not by teaching `iir-to-beam` to tolerate
+/// interleaving): `box` has no data dependency on the freshly allocated cell
+/// register, so the reorder is a pure no-op on every other backend and
+/// mirrors this same function's tag/head cons cell, which already boxed
+/// before allocating. Proven by `twig-ir-compiler`'s
+/// `union_constructor_alloc_immediately_followed_by_its_two_field_stores`
+/// (adjacency, direct on the IIR) and `lang-aot`'s `twig_beam_match_union`
+/// (full pipeline, real `erl`, both promoted rows) — Twig is now **49/49**
+/// on `Beam`. See `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-041" section for the
+/// full probe transcript and this follow-up's pinned-down shape.
 #[test]
 fn feature_coverage_doc_counts_match_programs_source() {
     fn rows_and_cells(lang: Language) -> (usize, usize) {
@@ -9419,10 +9516,10 @@ fn feature_coverage_doc_counts_match_programs_source() {
     // (language, expected rows, expected total declared cells — all backends
     // including Beam). Order matches the doc table.
     let expected = [
-        (Language::Twig, 49, 363),
+        (Language::Twig, 49, 392),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 45),
-        (Language::DartmouthBasic, 51, 396),
+        (Language::DartmouthBasic, 51, 402),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 60),
         (Language::Cobol60, 58, 464),
@@ -16107,4 +16204,285 @@ fn portable_text_stdout_dartmouth_basic_beam_math_builtins() {
     }
     assert_eq!(executed, 5);
     eprintln!("Dartmouth BASIC BEAM math builtins: {executed} programs executed");
+}
+
+/// BEAM04: Dartmouth BASIC numeric-array and `DATA`/`READ`/`RESTORE` rows —
+/// the 4 rows VM-LOOP-24 found trapping with
+/// `{badarg,[{atomics,put,[Ref,Index,FloatValue],...}]}` because
+/// `iir-to-beam` represented every `alloc_array`/`array_set`/`array_get`
+/// with `:atomics`, which can only hold 64-bit integers.  Now that
+/// `type_hint == "array<f64>"`/`"f64"` dispatches to `:ets` instead (see
+/// `code/specs/BEAM04-float-array-representation.md`), all 4 run correctly.
+/// String-typed arrays remain unpromoted — a separate, larger gap
+/// (`iir-to-beam` has no `str`-typed array element representation at all),
+/// explicitly out of scope for this slice.
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_arrays_and_data() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM arrays and DATA: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, &str)] = &[
+        ("10 DIM A(3)\n20 LET A(1) = 40\n30 LET A(2) = 2\n40 PRINT A(1) + A(2)\n50 END\n", "42"),
+        ("10 DIM A(1,2)\n20 LET A(0,0) = 40\n30 LET A(1,2) = 2\n40 PRINT A(0,0) + A(1,2)\n50 END\n", "42"),
+        ("10 DATA 21\n20 READ A\n30 RESTORE\n40 READ B\n50 PRINT A + B\n60 END\n", "42"),
+        ("10 DIM A(1)\n20 DATA 3.14, 0.25\n30 READ A(0)\n40 READ B\n50 PRINT A(0)\n60 PRINT B\n70 END\n",
+            "3.14\n.25"),
+    ];
+    let mut executed = 0;
+    for (src, stdout) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::DartmouthBasic && p.src == *src)
+            .unwrap_or_else(|| panic!("DartmouthBasic row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected BASIC row must declare Beam");
+        assert!(matches!(program.expect, Expect::Stdout(value) if value == *stdout),
+            "selected BASIC expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4);
+    eprintln!("Dartmouth BASIC BEAM arrays and DATA: {executed} programs executed");
+}
+
+/// BEAM06: Dartmouth BASIC **string-array** and mixed numeric/string `DATA`
+/// rows — the 2 rows BEAM04 explicitly left deferred as "a separate, larger
+/// gap" because `iir-to-beam` had no `str`-typed array element
+/// representation at all (`UnsupportedType` at validation, independent of
+/// BEAM04's float-storage fix). Research found this needed ZERO new
+/// representation work: a `str` value is already an ordinary Erlang
+/// character list (the `str_const` scalar lowering), and BEAM04's
+/// `:ets`-backed array substrate already stores arbitrary Erlang terms
+/// natively — confirmed on real `erl` (round-trip, overwrite, concatenation,
+/// empty-string edge case). Now that `type_hint == "array<str>"`/`"str"`
+/// dispatches to the SAME `:ets` substrate as `"array<f64>"`/`"f64"` (see
+/// `code/specs/BEAM06-string-array-representation.md`), both rows run
+/// correctly: `DIM A$(2)` (plain string array) and the mixed numeric/string
+/// `DATA`/`READ`/`RESTORE` row (VM-017's parallel kind/numeric/string
+/// pools — traced directly to confirm the pools are three separate typed
+/// arrays, never one heterogeneous array, so no tagged/variant element
+/// representation was needed).
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_string_arrays() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM string arrays: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, &str)] = &[
+        (
+            "10 DIM A$(2)\n20 LET A$(0) = \"O\"\n30 LET A$(1) = \"K\"\n\
+             40 PRINT A$(0) + A$(1)\n50 END\n",
+            "OK",
+        ),
+        (
+            "10 DIM S$(1)\n20 DATA 20, \"O\", 22, \"K\"\n\
+             30 READ A, S$(0), B, S$(1)\n40 PRINT A + B\n50 PRINT S$(0) + S$(1)\n\
+             60 RESTORE\n70 READ C, T$\n80 PRINT C\n90 PRINT T$\n100 END\n",
+            "42\nOK\n20\nO",
+        ),
+    ];
+    let mut executed = 0;
+    for (src, stdout) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::DartmouthBasic && p.src == *src)
+            .unwrap_or_else(|| panic!("DartmouthBasic row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected BASIC row must declare Beam");
+        assert!(matches!(program.expect, Expect::Stdout(value) if value == *stdout),
+            "selected BASIC expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 2);
+    eprintln!("Dartmouth BASIC BEAM string arrays: {executed} programs executed");
+}
+
+// VM-041: fixed a confirmed silent-corruption bug first — `call_closure`
+// lowers to TWO `call_ext` instructions (`erlang:'++'/2` then
+// `erlang:apply/3`), and neither was wrapped in
+// `save_live_across_imported_call!`/`restore_live_across_imported_call!`,
+// even though `call_closure` was already listed in `iir-to-beam`'s
+// `live_across` liveness match — the exact VM-D029 bug class already fixed
+// once for the six `:atomics` ops. See `iir-to-beam`'s
+// `test_98_real_erl_call_closure_survives_live_across_call` for the direct
+// regression proof (a variable live across a `call_closure` call that would
+// read back wrong without the fix).
+//
+// With that fixed, a probe-first sweep compiled and ran EVERY one of the 29
+// not-yet-`Beam` Twig `lang_matrix.rs` rows individually against real `erl`,
+// using ONLY the `iir-to-beam` capabilities that existed before this slice
+// plus the `call_closure` fix. 27 of 29 passed unchanged: no new lowering, no
+// new op, no new import — they simply had never been probed as individual
+// corpus rows before (the same "never actually run, not actually broken"
+// shape VM-LOOP-24 found for 12 Dartmouth BASIC rows). This group covers
+// dynamic `any`-typed arithmetic over a `car`'d cons cell, the `length`/
+// `list-ref`/`assoc` synthesized recursive list-walk helpers, and — thanks
+// to the fix above — both closure rows (no-capture and a capturing closure).
+// See `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-041" section for the full probe
+// transcript, including the 2 rows that do NOT belong here (`match`/`union`,
+// deferred with a documented, still-open `alloc`+`field_store` fusion gap —
+// see `feature_coverage_doc_counts_match_programs_source`'s doc comment).
+#[test]
+fn twig_beam_dynamic_arith_list_ops_and_closures() {
+    if !erl_ok() {
+        eprintln!("SKIP Twig BEAM dynamic arith/list ops/closures: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, i32)] = &[
+        ("42", 42),
+        ("(+ (car (cons 41 0)) 1)", 42),
+        ("(+ (length (list 1 2 3)) 39)", 42),
+        ("(list-ref (list 10 20 42) 2)", 42),
+        ("(cdr (assoc 2 (list (cons 1 10) (cons 2 42) (cons 3 30))))", 42),
+        ("(null? (assoc 9 (list (cons 1 10) (cons 2 20))))", 1),
+        ("((lambda (x) (+ x 1)) 41)", 42),
+        ("(((lambda (x) (lambda (y) (+ x y))) 40) 2)", 42),
+    ];
+    let mut executed = 0;
+    for (src, exit_code) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::Twig && p.src == *src)
+            .unwrap_or_else(|| panic!("Twig row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected Twig row must declare Beam");
+        assert!(matches!(program.expect, Expect::Exit(n) if n == *exit_code),
+            "selected Twig expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Twig");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 8);
+    eprintln!("Twig BEAM dynamic arith/list ops/closures: {executed} programs executed");
+}
+
+// VM-041 probe-first sweep, string-op group: `str_const`/`str_len`/
+// `str_index`/`str_concat`/`str_slice`/`str_cmp` were all already proven on
+// `iir-to-beam` (BEAM E4 slices) for OTHER frontends' corpus rows, but no
+// Twig string row had been individually probed against real `erl` before —
+// the same "proven capability, unprobed corpus row" gap as the arithmetic/
+// list-ops group above. All 19 run unchanged: string literals, `let`/`let*`
+// locals, non-escaping top-level `define`s, `substring`, comparison
+// operators (`string<?`/`string>?`), the documented `string-ref`
+// out-of-bounds trap, and a top-level function whose `str`-typed parameter
+// is inferred four different ways (explicit annotation, a literal direct
+// call, a `str_concat`+`str_slice` actual, and a named/`let`/`let*` actual).
+#[test]
+fn twig_beam_string_ops() {
+    if !erl_ok() {
+        eprintln!("SKIP Twig BEAM string ops: erl unavailable");
+        return;
+    }
+    let exit_cases: &[(&str, i32)] = &[
+        ("(string-length \"HELLO\")", 5),
+        ("(string-ref \"ABC\" 1)", 66),
+        ("(string-length (string-append \"AB\" \"CDE\"))", 5),
+        ("(define a \"AB\") (define b \"CDE\") (string-length (string-append a b))", 5),
+        ("(define s \"ABC\") (string-ref s 2)", 67),
+        ("(let ((s \"ABC\") (i 2)) (string-ref s i))", 67),
+        ("(let* ((s \"HELLO\")) (string-length s))", 5),
+        ("(let ((a \"AB\") (b \"CDE\")) (string-length (string-append a b)))", 5),
+        ("(let ((a \"AB\") (b \"CDE\") (i 3)) (string-ref (string-append a b) i))", 68),
+        ("(let ((s \"ABCDE\")) (string-ref s (- (string-length s) 1)))", 69),
+        ("(let ((s \"ABCDE\")) (string-ref (substring s 1 4) 1))", 67),
+        ("(define (strlen) (string-length \"HELLO\")) (strlen)", 5),
+        ("(define (strlen (s : str)) (string-length s)) (strlen \"HELLO\")", 5),
+        ("(define (strlen s) (string-length s)) (strlen \"HELLO\")", 5),
+        (
+            "(define (strlen x) (string-length x)) (strlen (substring (string-append \"HE\" \"LLO!\") 0 5))",
+            5,
+        ),
+        ("(define s \"HELLO\") (define (strlen x) (string-length x)) (strlen s)", 5),
+        ("(define (strlen x) (string-length x)) (let ((s \"HELLO\")) (strlen s))", 5),
+        (
+            "(define (strlen x) (string-length x)) (let* ((a \"HE\") (b (string-append a \"LLO\"))) (strlen b))",
+            5,
+        ),
+    ];
+    let mut executed = 0;
+    for (src, exit_code) in exit_cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::Twig && p.src == *src)
+            .unwrap_or_else(|| panic!("Twig row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected Twig row must declare Beam");
+        assert!(matches!(program.expect, Expect::Exit(n) if n == *exit_code),
+            "selected Twig expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Twig");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+
+    // The out-of-bounds string-ref trap — a separate `Expect::Trap` case.
+    let trap_src = "(string-ref \"ABC\" 3)";
+    let trap_program = PROGRAMS.iter()
+        .find(|p| p.lang == Language::Twig && p.src == trap_src)
+        .unwrap_or_else(|| panic!("Twig row with src {trap_src:?} not found"));
+    assert!(trap_program.backends.contains(&Beam), "selected Twig row must declare Beam");
+    assert!(matches!(trap_program.expect, Expect::Trap), "selected Twig expectation changed");
+    let trap_result = run_beam(trap_program).expect("detected erl must execute Twig");
+    assert_cell(Beam, trap_program, trap_result);
+    executed += 1;
+
+    assert_eq!(executed, 19);
+    eprintln!("Twig BEAM string ops: {executed} programs executed");
+}
+
+// VM-041 follow-up (BEAM05 §3.2 / this slice): the `match`/`union` fusion
+// gap, pinned down and fixed. `iir-to-beam`'s `alloc`+`field_store`+
+// `field_store` → `put_list` fusion only recognizes the three instructions
+// when textually adjacent; `twig-ir-compiler::emit_union_def`'s per-field
+// cons cell used to emit `alloc`, then a `box` (E6d-6b: boxing the field for
+// the tagged backends' `match`/`unbox` round-trip), THEN the two
+// `field_store`s — confirmed by direct IIR inspection (a scratch probe
+// dumping the `Some` constructor's instruction list, discarded before this
+// PR) to be `[alloc, box, field_store, field_store]`, i.e. the `box` sits
+// between `alloc` and the FIRST `field_store` (not between the two
+// `field_store`s, as BEAM05 §3.2 had left unpinned). Every other Twig BEAM
+// row was already proven (VM-041's first cut, 47/49); these were the only 2
+// still undeclared.
+//
+// Fixed in `twig-ir-compiler` (not `iir-to-beam`): hoisted the `box` to
+// before the `alloc` in `emit_union_def`'s per-field loop. `box` only reads
+// the field value — it has no data dependency on the freshly allocated cell
+// register — so the reorder changes no semantics on any of the five other
+// backends (record/union constructors on WASM/JVM/CLR/NativeAot/LLVM/Vm/Jit
+// all still pass their existing `lang_matrix` rows unchanged) and merely
+// restores the `alloc, field_store, field_store` adjacency `iir-to-beam`'s
+// fusion look-ahead requires — exactly mirroring this same function's
+// tag/head cons cell, which already computed its own `box` before its
+// `alloc`. Chosen over teaching the fusion look-ahead itself to tolerate
+// interleaved instructions: the concrete case has exactly one interleaved
+// instruction shape (a `box` with no aliasing to the alloc'd cell), so a
+// general N-instruction-skip scanner in `iir-to-beam` would be strictly more
+// machinery for the same proven outcome, touching the backend every OTHER
+// frontend also relies on instead of the one crate that produced the gap.
+//
+// Proven correct (not just "compiles"): `twig-ir-compiler`'s
+// `union_constructor_alloc_immediately_followed_by_its_two_field_stores`
+// asserts the adjacency directly on the emitted IIR; this test proves the
+// full pipeline — source → IIR → BEAM bytes → real `erl` execution — for
+// both promoted rows, closing Twig to **49/49** BEAM rows (the last 2 of the
+// original 49).
+#[test]
+fn twig_beam_match_union() {
+    if !erl_ok() {
+        eprintln!("SKIP Twig BEAM match/union: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, i32)] = &[
+        ("(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))", 42),
+        ("(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))", 42),
+    ];
+    let mut executed = 0;
+    for (src, exit_code) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::Twig && p.src == *src)
+            .unwrap_or_else(|| panic!("Twig row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected Twig row must declare Beam");
+        assert!(matches!(program.expect, Expect::Exit(n) if n == *exit_code),
+            "selected Twig expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Twig");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 2);
+    eprintln!("Twig BEAM match/union: {executed} programs executed (Twig now 49/49 on Beam)");
 }

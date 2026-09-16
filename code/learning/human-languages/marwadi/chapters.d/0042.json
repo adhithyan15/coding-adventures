@@ -1,0 +1,19 @@
+{
+  "chapter": 42,
+  "title": "Writing --- With A Clock",
+  "label": "ch:mw-ghadi-saathe",
+  "canDo": "I can complete the A1 writing paper's two tasks inside its published twenty minutes, filling every form field and keeping the message between thirty and forty words.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "MW-W03-ghadi-saathe",
+    "kind": "task",
+    "summary": "Complete MW-W03-ghadi-saathe: seven minutes for the form and thirteen for the message, then count the words and check the form for blanks before mistakes.",
+    "assesses": [
+      "MW-SKILL-READ-NOTICE",
+      "MW-SKILL-READ-SIGNBOARD"
+    ],
+    "note": "Timing, task count, field count and word range are read out of marwadi/task-shapes/a1.json, not invented for the lesson."
+  }
+}

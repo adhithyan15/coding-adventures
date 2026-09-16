@@ -5,6 +5,11 @@
 //! with the source's NCI SEER Training Modules citation, and abstains on a word
 //! that is not one of the three main blood vessels (a lymphatic vessel) — 0
 //! model calls.
+//!
+//! EACH ROW CARRIES ITS OWN SENTENCE (RS-5e, #14986). The envelope used to be
+//! the artery sentence, the primary source of all three answers; it is now the
+//! page's framing sentence, which every row overrides. Each row's citation is
+//! pinned whole.
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -31,12 +36,38 @@ fn run(program: &Path) -> (bool, String) {
     (out.status.success(), String::from_utf8(out.stdout).unwrap())
 }
 
+const LOCATOR: &str = "https://training.seer.cancer.gov/anatomy/cardiovascular/blood/classification.html";
+const ENVELOPE: &str = "Blood vessels are the channels or conduits through which blood is distributed to body tissues.";
+const ARTERY: &str = "Arteries carry blood away from the heart.";
+const VEIN: &str = "Veins carry blood toward the heart.";
+const CAPILLARY: &str = "The primary function of capillaries is the exchange of materials between the blood and tissue cells.";
+
+/// (vessel, function, that row's own sentence)
+const ROWS: [(&str, &str, &str); 3] = [
+    ("artery", "away_from_heart", ARTERY),
+    ("vein", "toward_heart", VEIN),
+    ("capillary", "exchange_of_materials", CAPILLARY),
+];
+
+/// The whole citation a row's answer carries, as one contiguous run.
+fn citation(sentence: &str) -> String {
+    format!("\"source\":\"{sentence}\",\"locator\":\"{LOCATOR}\",\"trust\":\"authoritative\",\"corroborations\":[]")
+}
+
+fn place(dir: &Path) {
+    let src = facts_stdlib().join("biology/blood-vessels.adj");
+    std::fs::copy(&src, dir.join("blood-vessels.adj")).expect("copy shipped blood-vessels.adj");
+}
+
+fn shipped_table() -> String {
+    let adj = std::fs::read_to_string(facts_stdlib().join("biology/blood-vessels.adj")).expect("read shipped blood-vessels.adj");
+    adj[adj.find("table vessel_function").expect("table")..].to_string()
+}
+
 #[test]
 fn biology_blood_vessels_recall_binds_function_with_citation() {
     let dir = scratch("bloodvessels");
-    // Copy the shipped biology table beside the entry program and import it.
-    let src = facts_stdlib().join("biology/blood-vessels.adj");
-    std::fs::copy(&src, dir.join("blood-vessels.adj")).expect("copy shipped blood-vessels.adj");
+    place(&dir);
     std::fs::write(
         dir.join("case.adj"),
         "import \"blood-vessels.adj\"\n\
@@ -50,16 +81,9 @@ fn biology_blood_vessels_recall_binds_function_with_citation() {
 
     let (ok, out) = run(&dir.join("case.adj"));
     assert!(ok, "cli should succeed: {out}");
-    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
-    // file matched only part of the sentence, which let the citation be
-    // truncated AT that point -- deleting everything after it -- while
-    // the test stayed green. Anchoring on the `"source":"` key and
-    // closing on the terminating quote pins head, tail, punctuation and
-    // length at once. See issues #13916 and #13918.
-    assert!(
-        out.contains("\"source\":\"Arteries carry blood away from the heart.\""),
-        "the citation is the whole source sentence, exactly: {out}"
-    );
+    // FULL ANCHORED CITATION PIN, now the whole contiguous run for the artery
+    // row: sentence, locator, tier and no corroborations (#13916, #13918).
+    assert!(out.contains(&citation(ARTERY)), "the artery citation is its whole sentence, exactly: {out}");
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     // Arteries carry blood away from the heart, veins carry blood toward the
     // heart, and capillaries are where the exchange of materials happens — the
@@ -82,16 +106,61 @@ fn biology_blood_vessels_recall_binds_function_with_citation() {
         out.contains("\"Vessel\":\"vein\""),
         "toward_heart → vein (reverse recall): {out}"
     );
-    // The answer carries the NCI SEER Training Modules citation as its proof, at
-    // the `authoritative` trust tier for a primary U.S. government source.
-    assert!(
-        out.contains("training.seer.cancer.gov") && out.contains("\"trust\":\"authoritative\""),
-        "carries the source citation: {out}"
-    );
     // A lymphatic vessel is not one of the three main blood vessels — honest
     // abstention, never a fabricated function.
     assert!(
         out.contains("\"abstained\":true"),
         "lymphatic abstains: {out}"
     );
+}
+
+#[test]
+fn every_vessel_answer_carries_its_own_sentence() {
+    for (vessel, function, sentence) in ROWS {
+        let dir = scratch(&format!("row_{vessel}"));
+        place(&dir);
+        std::fs::write(
+            dir.join("case.adj"),
+            format!("import \"blood-vessels.adj\"\n? vessel_function({vessel}, $F)\n"),
+        )
+        .unwrap();
+        let (ok, out) = run(&dir.join("case.adj"));
+        assert!(ok, "cli should succeed: {out}");
+        assert_eq!(out.matches("\"citations\":[").count(), 1, "one answer for {vessel}: {out}");
+        assert!(out.contains(&format!("\"F\":\"{function}\"")), "{vessel} → {function}: {out}");
+        assert!(out.contains(&citation(sentence)), "{vessel}: its own sentence, whole: {out}");
+        for (other, _, other_sentence) in ROWS {
+            if other != vessel {
+                assert!(!out.contains(other_sentence), "the {other} sentence must not reach {vessel}: {out}");
+            }
+        }
+        assert!(!out.contains(ENVELOPE), "the envelope is not primary for {vessel}: {out}");
+    }
+}
+
+#[test]
+fn the_table_shape_matches_the_measured_rows() {
+    // Every row overrides the envelope, so the envelope's wording reaches no
+    // answer; this file-shape test is what pins it.
+    let body = shipped_table();
+    for (vessel, function, sentence) in ROWS {
+        let expected = format!("    row ({vessel}, {function}) {{\n        source \"{sentence}\"\n    }}");
+        assert!(body.contains(&expected), "row ({vessel}, {function}) is shipped in its measured shape");
+    }
+    assert_eq!(body.matches("\n        source \"").count(), 3, "three row sources");
+    assert!(!body.contains("\n        cites "), "no row corroboration");
+    assert!(!body.contains("\n    cites "), "no table-level corroboration");
+    assert!(
+        !body.contains("\n        locator ") && !body.contains("\n        trust "),
+        "no row restates a locator line or trust"
+    );
+    assert!(
+        body.contains(&format!("\n    source \"{ENVELOPE}\"\n    locator \"{LOCATOR}\"\n    trust authoritative\n")),
+        "the envelope is the page's framing sentence"
+    );
+    assert!(!body.contains(&format!("\n    source \"{ARTERY}\"\n    locator")), "not the artery sentence as the envelope again");
+    let folded = ENVELOPE.to_lowercase();
+    for word in ["arter", "vein", "capillar", "away", "toward", "exchange"] {
+        assert!(!folded.contains(word), "the envelope must name no vessel or function, but contains {word:?}");
+    }
 }

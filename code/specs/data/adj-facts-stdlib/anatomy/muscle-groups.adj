@@ -81,6 +81,10 @@
 %     https://en.wikipedia.org/wiki/Pectoralis_major
 %     "The pectoralis major (from Latin pectus 'breast') is a thick, fan-shaped
 %      or triangular convergent muscle of the human chest."
+%     (the page has a NON-BREAKING SPACE, U+00A0, between "pectus" and
+%      "'breast'", which this comment cannot show; the table shipped an
+%      ordinary space there until 2026-09-15, a string the page never wrote.
+%      The row's `source` now carries the page's character.)
 %
 %   rectus_abdominis → abdomen
 %     https://en.wikipedia.org/wiki/Rectus_abdominis_muscle
@@ -123,12 +127,25 @@
 %     (the previous form was VERBATIM but began with a bare "It is", naming
 %      no subject. This contiguous block names the muscle AND its region.)
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the Wikipedia sentence that fixes
-% the first row (biceps_brachii → arm). Every OTHER row's per-fact source and
-% verbatim span is listed above, so each pair remains independently checkable.
-% All nine sources are the same secondary reference (English Wikipedia), so
-% `trust consensus`.
+% EACH ROW CARRIES ITS OWN SENTENCE AND ITS OWN ARTICLE (ADJ-TABLES RS-5e,
+% #14986). This paragraph used to say that an ADJ `table` carries ONE
+% provenance envelope, and so held the biceps sentence as the envelope with the
+% other eight attached as table-level `cites` -- which made every answer, the
+% gluteus maximus one included, primarily sourced to the biceps article and
+% carrying all nine sentences. The language has per-row blocks.
+%
+% `source`, not `cites`: each sentence names both its muscle and its region.
+% Each row also restates `locator`, because its article differs from the
+% envelope's (ADJ-TABLES section 4 omits a row locator only when it is the
+% same). Measured 2026-09-15: each of the nine sentences occurs exactly once in
+% its own article, rendered with inline tags removed and U+00A0 kept.
+%
+% The envelope is now a sentence from the gluteus maximus article that names
+% no muscle and no region: "The muscle is made up of muscle fascicles lying
+% parallel with one another, and are collected together into larger bundles
+% separated by fibrous septa." Every row overrides it, so it frames the table
+% and warrants no answer. All nine sources are the same secondary reference
+% (English Wikipedia), so `trust consensus`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -136,25 +153,48 @@
 table muscle_region {
     columns muscle, region
 
-    row (biceps_brachii, arm)
-    row (triceps_brachii, arm)
-    row (deltoid, shoulder)
-    row (pectoralis_major, chest)
-    row (rectus_abdominis, abdomen)
-    row (gluteus_maximus, hip)
-    row (quadriceps, thigh)
-    row (sartorius, thigh)
-    row (gastrocnemius, leg)
+    row (biceps_brachii, arm) {
+        source "The biceps or biceps brachii (Latin: musculus biceps brachii, \"two-headed muscle of the arm\") is a large muscle that lies on the front of the upper arm between the shoulder and the elbow."
+        locator "https://en.wikipedia.org/wiki/Biceps"
+    }
+    row (triceps_brachii, arm) {
+        source "The triceps, or triceps brachii (Latin for \"three-headed muscle of the arm\"), is a large muscle on the back of the upper limb of many vertebrates."
+        locator "https://en.wikipedia.org/wiki/Triceps"
+    }
+    row (deltoid, shoulder) {
+        source "The deltoid muscle (or musculus deltoideus) is the muscle[1] forming the rounded contour of the human shoulder."
+        locator "https://en.wikipedia.org/wiki/Deltoid_muscle"
+    }
+    row (pectoralis_major, chest) {
+        % U+00A0 between "pectus" and "'breast'", as on the page.
+        source "The pectoralis major (from Latin pectus 'breast') is a thick, fan-shaped or triangular convergent muscle of the human chest."
+        locator "https://en.wikipedia.org/wiki/Pectoralis_major"
+    }
+    row (rectus_abdominis, abdomen) {
+        source "The rectus abdominis, (Latin: straight abdominal) also known as the \"abdominal muscle\" or simply better known as the \"abs\", and sometimes informally referred to as the \"six-pack\", is a pair of segmented skeletal muscle on the ventral aspect of a person's abdomen."
+        locator "https://en.wikipedia.org/wiki/Rectus_abdominis_muscle"
+    }
+    row (gluteus_maximus, hip) {
+        source "The gluteus maximus is the main extensor muscle of the hip in humans."
+        locator "https://en.wikipedia.org/wiki/Gluteus_maximus_muscle"
+    }
+    row (quadriceps, thigh) {
+        source "The quadriceps femoris muscle (/ˈkwɒdrɪsɛps ˈfɛmərɪs/, also called the quadriceps extensor, quadriceps or quads) is a large muscle group that includes the four prevailing muscles on the front of the thigh."
+        locator "https://en.wikipedia.org/wiki/Quadriceps"
+    }
+    row (sartorius, thigh) {
+        source "The sartorius muscle (/sɑːrˈtɔːriəs/), historically known as couturier (French for \"tailor\"), is the longest muscle in the human body.[2] It is a long, thin, superficial muscle that runs down the length of the thigh in the anterior compartment."
+        locator "https://en.wikipedia.org/wiki/Sartorius_muscle"
+    }
+    row (gastrocnemius, leg) {
+        source "The gastrocnemius muscle (plural gastrocnemii) is a superficial two-headed muscle. It is located superficial to the soleus in the posterior (back) compartment of the leg."
+        locator "https://en.wikipedia.org/wiki/Gastrocnemius_muscle"
+    }
 
-    source "The biceps or biceps brachii (Latin: musculus biceps brachii, \"two-headed muscle of the arm\") is a large muscle that lies on the front of the upper arm between the shoulder and the elbow."
-    locator "https://en.wikipedia.org/wiki/Biceps"
+    % THE ENVELOPE WAS THE BICEPS SENTENCE, with eight table-level `cites`
+    % reaching every answer. Each row now carries its own sentence and
+    % article; this framing sentence names no muscle and no region.
+    source "The muscle is made up of muscle fascicles lying parallel with one another, and are collected together into larger bundles separated by fibrous septa."
+    locator "https://en.wikipedia.org/wiki/Gluteus_maximus_muscle"
     trust consensus
-    cites "The triceps, or triceps brachii (Latin for \"three-headed muscle of the arm\"), is a large muscle on the back of the upper limb of many vertebrates." locator "https://en.wikipedia.org/wiki/Triceps"
-    cites "The deltoid muscle (or musculus deltoideus) is the muscle[1] forming the rounded contour of the human shoulder." locator "https://en.wikipedia.org/wiki/Deltoid_muscle"
-    cites "The pectoralis major (from Latin pectus 'breast') is a thick, fan-shaped or triangular convergent muscle of the human chest." locator "https://en.wikipedia.org/wiki/Pectoralis_major"
-    cites "The rectus abdominis, (Latin: straight abdominal) also known as the \"abdominal muscle\" or simply better known as the \"abs\", and sometimes informally referred to as the \"six-pack\", is a pair of segmented skeletal muscle on the ventral aspect of a person's abdomen." locator "https://en.wikipedia.org/wiki/Rectus_abdominis_muscle"
-    cites "The gluteus maximus is the main extensor muscle of the hip in humans." locator "https://en.wikipedia.org/wiki/Gluteus_maximus_muscle"
-    cites "The quadriceps femoris muscle (/ˈkwɒdrɪsɛps ˈfɛmərɪs/, also called the quadriceps extensor, quadriceps or quads) is a large muscle group that includes the four prevailing muscles on the front of the thigh." locator "https://en.wikipedia.org/wiki/Quadriceps"
-    cites "The sartorius muscle (/sɑːrˈtɔːriəs/), historically known as couturier (French for \"tailor\"), is the longest muscle in the human body.[2] It is a long, thin, superficial muscle that runs down the length of the thigh in the anterior compartment." locator "https://en.wikipedia.org/wiki/Sartorius_muscle"
-    cites "The gastrocnemius muscle (plural gastrocnemii) is a superficial two-headed muscle. It is located superficial to the soleus in the posterior (back) compartment of the leg." locator "https://en.wikipedia.org/wiki/Gastrocnemius_muscle"
 }

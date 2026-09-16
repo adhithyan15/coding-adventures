@@ -1,0 +1,12 @@
+{
+  "id": "MW-EXT-041-WRITING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can write my own line and produce the A1 writing paper under its published clock.",
+  "prerequisites": [],
+  "lessons": [
+    "MW-W02-mharo-khud-ro-line",
+    "MW-W03-ghadi-saathe"
+  ]
+}

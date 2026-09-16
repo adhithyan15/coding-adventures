@@ -54,6 +54,34 @@
 % already-verified quote. `trust authoritative` — the same tier
 % `air-quality-index.adj` already carries (U.S. EPA / AirNow, a primary
 % U.S. government source).
+%
+% EACH ROW CARRIES ITS OWN SPAN (ADJ-TABLES RS-5e, #14986). The six spans
+% used to be table-level `cites`, so every answer carried all six and the
+% primary source of, say, a `hazardous` answer was the envelope rather than
+% the Maroon row. Each row now carries the AirNow span naming its own
+% colour. Nothing moved between pages: all six `cites` were already on the
+% envelope's own locator, so this conversion only relocates them into their
+% rows, and no row restates a `locator` line or a `trust` tier.
+%
+% The envelope needed no replacement -- it was already a framing sentence
+% naming no category and no colour, which the conversion checks
+% mechanically against the row keys and values rather than by eye.
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404 and holds none of these spans), tags removed without a
+% space and only ASCII whitespace collapsed: each of the six spans occurs
+% exactly once, scripts set aside and over the whole file; the envelope
+% occurs exactly once, inside one `<p>`, with no `<head>` copy.
+%
+% WHAT ELEMENT HOLDS A ROW SPAN. Not a paragraph: AirNow renders these six
+% rows as a real HTML table, so each span's innermost container is one
+% `<tr>`, and the span itself is that row's four `<td><strong>` cells read
+% left to right, joined by the inter-cell whitespace this extraction method
+% collapses. No single `<td>` holds a whole span, and the only `<div>`
+% involved wraps the entire table, so it is the same one for all six rows
+% and establishes nothing per span. (An earlier draft of this paragraph said
+% "inside one `<div>`" -- that was a measurement whose tag list omitted
+% `<tr>`, and it is corrected here.)
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -61,21 +89,26 @@
 table aqi_category_color {
     columns category, color
 
-    row (good, green)                              % AirNow: "Green Good 0 to 50 ..."
-    row (moderate, yellow)                          % AirNow: "Yellow Moderate 51 to 100 ..."
-    row (unhealthy_for_sensitive_groups, orange)    % AirNow: "Orange Unhealthy for Sensitive Groups 101 to 150 ..."
-    row (unhealthy, red)                            % AirNow: "Red Unhealthy 151 to 200 ..."
-    row (very_unhealthy, purple)                    % AirNow: "Purple Very Unhealthy 201 to 300 ..."
-    row (hazardous, maroon)                         % AirNow: "Maroon Hazardous 301 and higher ..."
+    row (good, green) {
+        source "Green Good 0 to 50 Air quality is satisfactory, and air pollution poses little or no risk."
+    }
+    row (moderate, yellow) {
+        source "Yellow Moderate 51 to 100 Air quality is acceptable. However, there may be a risk for some people, particularly those who are unusually sensitive to air pollution."
+    }
+    row (unhealthy_for_sensitive_groups, orange) {
+        source "Orange Unhealthy for Sensitive Groups 101 to 150 Members of sensitive groups may experience health effects. The general public is less likely to be affected."
+    }
+    row (unhealthy, red) {
+        source "Red Unhealthy 151 to 200 Some members of the general public may experience health effects; members of sensitive groups may experience more serious health effects."
+    }
+    row (very_unhealthy, purple) {
+        source "Purple Very Unhealthy 201 to 300 Health alert: The risk of health effects is increased for everyone."
+    }
+    row (hazardous, maroon) {
+        source "Maroon Hazardous 301 and higher Health warning of emergency conditions: everyone is more likely to be affected."
+    }
 
     source "The AQI includes six color-coded categories, each corresponding to a range of index values."
     locator "https://www.airnow.gov/aqi/aqi-basics/"
     trust authoritative
-
-    cites "Green Good 0 to 50 Air quality is satisfactory, and air pollution poses little or no risk." locator "https://www.airnow.gov/aqi/aqi-basics/"
-    cites "Yellow Moderate 51 to 100 Air quality is acceptable. However, there may be a risk for some people, particularly those who are unusually sensitive to air pollution." locator "https://www.airnow.gov/aqi/aqi-basics/"
-    cites "Orange Unhealthy for Sensitive Groups 101 to 150 Members of sensitive groups may experience health effects. The general public is less likely to be affected." locator "https://www.airnow.gov/aqi/aqi-basics/"
-    cites "Red Unhealthy 151 to 200 Some members of the general public may experience health effects; members of sensitive groups may experience more serious health effects." locator "https://www.airnow.gov/aqi/aqi-basics/"
-    cites "Purple Very Unhealthy 201 to 300 Health alert: The risk of health effects is increased for everyone." locator "https://www.airnow.gov/aqi/aqi-basics/"
-    cites "Maroon Hazardous 301 and higher Health warning of emergency conditions: everyone is more likely to be affected." locator "https://www.airnow.gov/aqi/aqi-basics/"
 }

@@ -27,10 +27,12 @@
 % fact lists 50), so the original 3-row slice was a narrow first cut, not
 % the page's own limit. Every one of the 20 newly added rows is grounded in
 % the SAME already-cited Oxford International English page, each with its
-% own clean one-sentence "Meaning: ..." definition, WebFetch-verified
-% (including a targeted second pass re-fetching five of the new rows'
-% raw "Meaning:" text directly, confirming the extraction is accurate and
-% not paraphrased) before writing — zero new source page needed. Idioms
+% own one-sentence "Meaning:" line — zero new source page needed. (This
+% paragraph used to say those lines were "WebFetch-verified", including a
+% second pass "confirming the extraction is accurate and not paraphrased".
+% A raw fetch on 2026-09-15 found six of the quotes below written with a
+% straight apostrophe where the page has a curly one, so the claim is
+% withdrawn rather than restated. The quotes are now the page's own bytes.) Idioms
 % whose page entry uses a slash or bracketed variant (e.g. "Hit the
 % sack/hay", "Cut [somebody] some slack", "By the skin of your/my teeth")
 % were deliberately left out of this batch, since a single unquoted atom
@@ -50,20 +52,20 @@
 %     hit_the_nail_on_the_head           describes_something_exactly_right                        "To describe something exactly right."
 %     cost_an_arm_and_a_leg              very_expensive                                           "To be very expensive"
 %     bite_off_more_than_you_can_chew    try_to_do_more_than_you_can_manage                       "To try to do more than you can manage."
-%     beat_around_the_bush               avoid_talking_about_what_is_important                    "To avoid talking about what's important."
-%     cry_over_spilled_milk              upset_about_something_already_happened_and_unchangeable  "To be upset about something that has already happened and can't be changed."
+%     beat_around_the_bush               avoid_talking_about_what_is_important                    "To avoid talking about what’s important."
+%     cry_over_spilled_milk              upset_about_something_already_happened_and_unchangeable  "To be upset about something that has already happened and can’t be changed."
 %     get_your_act_together              organise_yourself_and_improve_your_behaviour             "To organise yourself and improve your behaviour."
 %     kill_two_birds_with_one_stone      solve_two_problems_with_one_action                       "To solve two problems with one action."
 %     let_the_cat_out_of_the_bag         reveal_a_secret_by_mistake                               "To reveal a secret by mistake."
-%     pull_someones_leg                  joke_with_someone_by_telling_them_something_untrue       "To joke with someone by telling them something that isn't true."
+%     pull_someones_leg                  joke_with_someone_by_telling_them_something_untrue       "To joke with someone by telling them something that isn’t true."
 %     burn_the_midnight_oil              work_late_into_the_night                                 "To work late into the night."
 %     bite_the_bullet                    do_something_difficult_or_unpleasant_being_avoided       "To do something difficult or unpleasant that you have been avoiding."
 %     break_a_leg                        wish_someone_good_luck_especially_before_a_performance   "A way of wishing someone good luck, especially before a performance."
 %     call_it_a_day                      stop_working_on_something                                "To stop working on something."
-%     steal_someones_thunder             take_attention_away_from_someone_elses_achievement       "To take attention away from someone else's achievement."
-%     the_ball_is_in_your_court          your_turn_to_take_action_or_make_a_decision              "It's your turn to take action or make a decision."
+%     steal_someones_thunder             take_attention_away_from_someone_elses_achievement       "To take attention away from someone else’s achievement."
+%     the_ball_is_in_your_court          your_turn_to_take_action_or_make_a_decision              "It’s your turn to take action or make a decision."
 %     throw_in_the_towel                 give_up                                                  "To give up."
-%     speak_of_the_devil                 said_when_someone_appears_as_you_are_talking_about_them  "Said when someone appears just as you're talking about them."
+%     speak_of_the_devil                 said_when_someone_appears_as_you_are_talking_about_them  "Said when someone appears just as you’re talking about them."
 %     once_in_a_blue_moon                very_rarely                                              "Very rarely."
 %     catch_someone_red_handed           catch_someone_while_they_are_doing_something_wrong       "To catch someone while they are doing something wrong."
 %
@@ -81,31 +83,92 @@
 table idiom_meaning {
     columns idiom, meaning
 
-    row (piece_of_cake, very_easy_to_do)
-    row (break_the_ice, start_a_conversation)
-    row (under_the_weather, feeling_slightly_ill)
-    row (cut_corners, done_the_easiest_or_cheapest_way_often_badly)
-    row (hit_the_nail_on_the_head, describes_something_exactly_right)
-    row (cost_an_arm_and_a_leg, very_expensive)
-    row (bite_off_more_than_you_can_chew, try_to_do_more_than_you_can_manage)
-    row (beat_around_the_bush, avoid_talking_about_what_is_important)
-    row (cry_over_spilled_milk, upset_about_something_already_happened_and_unchangeable)
-    row (get_your_act_together, organise_yourself_and_improve_your_behaviour)
-    row (kill_two_birds_with_one_stone, solve_two_problems_with_one_action)
-    row (let_the_cat_out_of_the_bag, reveal_a_secret_by_mistake)
-    row (pull_someones_leg, joke_with_someone_by_telling_them_something_untrue)
-    row (burn_the_midnight_oil, work_late_into_the_night)
-    row (bite_the_bullet, do_something_difficult_or_unpleasant_being_avoided)
-    row (break_a_leg, wish_someone_good_luck_especially_before_a_performance)
-    row (call_it_a_day, stop_working_on_something)
-    row (steal_someones_thunder, take_attention_away_from_someone_elses_achievement)
-    row (the_ball_is_in_your_court, your_turn_to_take_action_or_make_a_decision)
-    row (throw_in_the_towel, give_up)
-    row (speak_of_the_devil, said_when_someone_appears_as_you_are_talking_about_them)
-    row (once_in_a_blue_moon, very_rarely)
-    row (catch_someone_red_handed, catch_someone_while_they_are_doing_something_wrong)
+    % Each row CITES the page's own "Meaning:" line for its idiom.
+    % `cites`, not `source`: on the page the idiom is a numbered <h3>
+    % heading and the meaning is a separate paragraph beneath it that
+    % never names the idiom. Which heading a line sits under is
+    % #13934's held question, so no span here is claimed to WARRANT a
+    % row -- the same decision as `physics/energy-form-family.adj`.
+    %
+    % Each line occurs exactly once in the page's visible text, measured
+    % 2026-09-15. Six carry a curly apostrophe (U+2019), because the
+    % page does; a straight one occurs zero times.
+    row (piece_of_cake, very_easy_to_do) {
+        cites "Something very easy to do." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (break_the_ice, start_a_conversation) {
+        cites "To start a conversation or make people feel more comfortable." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (under_the_weather, feeling_slightly_ill) {
+        cites "Feeling slightly ill." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (cut_corners, done_the_easiest_or_cheapest_way_often_badly) {
+        cites "To do something in the easiest or cheapest way, often badly." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (hit_the_nail_on_the_head, describes_something_exactly_right) {
+        cites "To describe something exactly right." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (cost_an_arm_and_a_leg, very_expensive) {
+        % No terminal period: the page has none.
+        cites "To be very expensive" locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (bite_off_more_than_you_can_chew, try_to_do_more_than_you_can_manage) {
+        cites "To try to do more than you can manage." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (beat_around_the_bush, avoid_talking_about_what_is_important) {
+        cites "To avoid talking about what’s important." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (cry_over_spilled_milk, upset_about_something_already_happened_and_unchangeable) {
+        cites "To be upset about something that has already happened and can’t be changed." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (get_your_act_together, organise_yourself_and_improve_your_behaviour) {
+        cites "To organise yourself and improve your behaviour." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (kill_two_birds_with_one_stone, solve_two_problems_with_one_action) {
+        cites "To solve two problems with one action." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (let_the_cat_out_of_the_bag, reveal_a_secret_by_mistake) {
+        cites "To reveal a secret by mistake." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (pull_someones_leg, joke_with_someone_by_telling_them_something_untrue) {
+        cites "To joke with someone by telling them something that isn’t true." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (burn_the_midnight_oil, work_late_into_the_night) {
+        cites "To work late into the night." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (bite_the_bullet, do_something_difficult_or_unpleasant_being_avoided) {
+        cites "To do something difficult or unpleasant that you have been avoiding." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (break_a_leg, wish_someone_good_luck_especially_before_a_performance) {
+        cites "A way of wishing someone good luck, especially before a performance." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (call_it_a_day, stop_working_on_something) {
+        cites "To stop working on something." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (steal_someones_thunder, take_attention_away_from_someone_elses_achievement) {
+        cites "To take attention away from someone else’s achievement." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (the_ball_is_in_your_court, your_turn_to_take_action_or_make_a_decision) {
+        cites "It’s your turn to take action or make a decision." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (throw_in_the_towel, give_up) {
+        cites "To give up." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (speak_of_the_devil, said_when_someone_appears_as_you_are_talking_about_them) {
+        cites "Said when someone appears just as you’re talking about them." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (once_in_a_blue_moon, very_rarely) {
+        cites "Very rarely." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
+    row (catch_someone_red_handed, catch_someone_while_they_are_doing_something_wrong) {
+        cites "To catch someone while they are doing something wrong." locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
+    }
 
-    source "Something very easy to do."
+    % THE ENVELOPE WAS `piece_of_cake`'s OWN MEANING, "Something very
+    % easy to do.", so it was the primary source of the other 22
+    % answers too. It is now the page's definition of an idiomatic
+    % expression, which names no idiom and warrants no single row.
+    source "Idiomatic expressions are phrases with meanings that are different from the literal meanings of the words."
     locator "https://www.oxfordinternationalenglish.com/30-useful-english-idiomatic-expressions-their-meanings/"
     trust consensus
 }

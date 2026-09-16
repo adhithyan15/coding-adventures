@@ -1188,3 +1188,72 @@ fn union_constructor_boxes_tag_and_fields() {
         }
     }
 }
+
+/// VM-041 (BEAM05 follow-up): every `alloc ref<LispyPair>` a union-variant
+/// constructor emits must be IMMEDIATELY followed by its two `field_store`s,
+/// with no other instruction interleaved between them.
+///
+/// `iir-to-beam`'s cons-cell fusion (`alloc` + `field_store` + `field_store`
+/// → one BEAM `put_list`) only recognizes the pattern when the three
+/// instructions are textually adjacent (a look-ahead peek at `[idx]` and
+/// `[idx+1]`, not a general scan). Before this fix, `emit_union_def`'s
+/// per-field loop emitted `alloc`, THEN `box` (to box the field for the
+/// tagged backends' `match`/`unbox` round-trip per `union_constructor_
+/// boxes_tag_and_fields` above), THEN the two `field_store`s — the `box`
+/// broke adjacency and made every `match`/`union` Twig program fail BEAM
+/// lowering with `UnsupportedOp { op: "field_store: found outside of
+/// alloc+field_store+field_store pattern" }` (`Some`/`None` constructors,
+/// see `lang-aot`'s `twig_beam_match_union` and
+/// `LANG-VM-NON-ALGOL-BACKLOG.md`'s VM-041 section for the full story and
+/// the real-`erl` proof). The fix hoists `box` to before `alloc` — `box`
+/// only reads the field value, which has no data dependency on the fresh
+/// cell register `alloc` allocates, so the reorder changes no semantics on
+/// any backend and merely makes the `alloc`/`field_store`/`field_store`
+/// triple adjacent again, exactly like the tag/head cons cell a few lines
+/// below it (which already computed `tag_boxed` before its own `alloc`).
+#[test]
+fn union_constructor_alloc_immediately_followed_by_its_two_field_stores() {
+    let m = compile_source(
+        "(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))",
+        "u2",
+    )
+    .expect("union program must compile");
+
+    let some = m.functions.iter().find(|f| f.name == "Some").expect("constructor Some");
+    let instrs = &some.instructions;
+
+    let mut checked_allocs = 0;
+    for (idx, instr) in instrs.iter().enumerate() {
+        if instr.op != "alloc" || instr.type_hint != "ref<LispyPair>" {
+            continue;
+        }
+        let cell = instr.dest.as_deref().expect("alloc ref<LispyPair> has a dest");
+        let next1 = instrs.get(idx + 1);
+        let next2 = instrs.get(idx + 2);
+        let is_field_store_of = |i: Option<&interpreter_ir::IIRInstr>, index: i64| {
+            matches!(
+                i,
+                Some(fs) if fs.op == "field_store"
+                    && fs.srcs.first() == Some(&Operand::Var(cell.to_string()))
+                    && fs.srcs.get(1) == Some(&Operand::Int(index))
+            )
+        };
+        assert!(
+            is_field_store_of(next1, 0),
+            "alloc {cell:?} at [{idx}] must be immediately followed by its car \
+             field_store (index 0); got {next1:?} — an interleaved instruction \
+             (e.g. `box`) breaks iir-to-beam's put_list fusion look-ahead"
+        );
+        assert!(
+            is_field_store_of(next2, 1),
+            "alloc {cell:?} at [{idx}] must have its cdr field_store (index 1) \
+             immediately after the car field_store; got {next2:?}"
+        );
+        checked_allocs += 1;
+    }
+    assert_eq!(
+        checked_allocs, 2,
+        "Some(v) constructor should allocate exactly 2 LispyPair cells \
+         (the field cons cell + the tag/head cons cell)"
+    );
+}

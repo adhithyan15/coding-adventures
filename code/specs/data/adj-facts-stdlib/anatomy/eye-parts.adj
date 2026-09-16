@@ -57,7 +57,8 @@
 % the primary U.S. National Institutes of Health reference, the National Eye
 % Institute (NEI), "How the Eyes Work" (nei.nih.gov), whose step-by-step
 % description of how light moves through the eye states each part's job. Each
-% span is quoted here character-for-character so any reader can re-check it:
+% span is quoted here so any reader can re-check it, character-for-character
+% except for comment line-wrapping and the U+00A0 no-break spaces noted below:
 %
 %   cornea → bends_light
 %     "The cornea is shaped like a dome and bends light to help the eye focus."
@@ -88,6 +89,9 @@
 %   optic_nerve → carries_signals_to_brain
 %     "These electrical signals travel from the retina through the optic nerve to
 %      the brain."
+%
+%   (The retina and optic-nerve sentences carry U+00A0 NO-BREAK SPACES on the
+%   page, which a comment cannot show; see the measurement note below.)
 %
 % (The sclera, macula, and the aqueous/vitreous humors are NOT described on this
 % page, so they are deliberately not rows — the table states only the six parts
@@ -135,9 +139,16 @@
 % (An earlier wording said TWO and omitted the iris/pupil overlap -- the one
 % that matters most.)
 %
-% All seven spans (six warrants plus the framing envelope) were confirmed
-% verbatim on the page, each occurring EXACTLY ONCE, each with a negative arm
-% (final word altered) absent, and all six row spans distinct.
+% All seven spans (six warrants plus the framing envelope) were said to be
+% confirmed verbatim, each occurring EXACTLY ONCE. Measured 2026-09-15 on the
+% raw page (HTTP 200; a nonsense path on the same host returns 404), with
+% inline tags removed without a space and only ASCII whitespace collapsed,
+% FIVE held. The retina and optic-nerve sentences occurred ZERO times: the
+% page writes U+00A0 (NO-BREAK SPACE) where they had ordinary spaces, twice
+% in the retina sentence (around "retina") and three times in the optic-nerve
+% sentence (after "the", "optic" and "nerve"). With the page's characters
+% each occurs exactly once, and both rows now carry them (#14986). All six
+% row spans are distinct.
 %
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
@@ -164,10 +175,10 @@ table eye_part_function {
         source "The lens works together with the cornea to focus light correctly on the retina."
     }
     row (retina, turns_light_into_signals) {
-        source "When light hits the retina (a light-sensitive layer of tissue at the back of the eye), special cells called photoreceptors turn the light into electrical signals."
+        source "When light hits the retina (a light-sensitive layer of tissue at the back of the eye), special cells called photoreceptors turn the light into electrical signals."
     }
     row (optic_nerve, carries_signals_to_brain) {
-        source "These electrical signals travel from the retina through the optic nerve to the brain."
+        source "These electrical signals travel from the retina through the optic nerve to the brain."
     }
 
     % THE ENVELOPE IS A FRAMING SPAN: the page's own opening sentence. It

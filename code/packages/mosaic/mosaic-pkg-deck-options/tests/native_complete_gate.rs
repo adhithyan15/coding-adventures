@@ -62,7 +62,24 @@ const NATIVE_BACKENDS: &[Backend] = &[
 /// This package drops nothing on the three backends that report style drops.
 /// An entry here would mean a property was lost, so the empty list is the gate:
 /// an empty allowlist tolerates nothing, rather than checking nothing.
-const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[];
+const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[    // ---- Qt (#15245) ----
+    //
+    // These became visible the moment Qt started reporting its drops in
+    // #15245. They are PRE-EXISTING gaps, not regressions: this package has
+    // been rendering without them on Qt since the parts were authored, and
+    // nothing could see them because the backend reported no drops at all.
+    //
+    // Pinned so the gate stays honest, NOT to bless them -- see this list's
+    // doc comment on how a stale pin turns into a standing licence.
+    //
+    // Qt lowers font size only where a primitive has native typography
+    // (`has_native_font_size`); other parts drop it.
+    (Backend::Qt, "font-size"),
+    //
+    // #15247 -- `qml_padding` reads ONE value and fans it to all four
+    // edges, so any longhand beyond the one it picks is lost.
+    (Backend::Qt, "padding-bottom"),
+];
 
 fn package_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))

@@ -8,6 +8,124 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed -- padding collapsed to one value, so no part could be asymmetric
+
+`qml_padding` read ONE value -- `padding`, else `padding-top`, else
+`padding-bottom` -- and fanned it to all four edges. `padding-left` and
+`padding-right` were never read at all, and the `or_else` chain skipped a
+longhand entirely whenever the shorthand was also present.
+
+Measured in Trestle's emitted QML: **42 padding groups of four, and all 42
+internally uniform**, against 19+ parts authoring four different edges.
+`task-detail` is `15 / 16 / 16 / 47` and rendered 15 on every side.
+
+| | before | after |
+| --- | ---: | ---: |
+| x/y inset pairs | 34 | 34 |
+| **pairs with x != y** | **0** | **10** |
+| Qt style drops, all products | 649 | **590** |
+| properties that INCREASED | — | **none** |
+
+Padding now resolves per edge as CSS resolves it -- a longhand wins over the
+shorthand edge by edge, an unmentioned edge is zero.
+
+The arithmetic generalises rather than changes: `childrenRect.x` **is** the
+left inset, because the inner content element sits at `x: left`, so the
+trailing term on `implicitWidth` supplies the RIGHT side. For uniform padding
+all four edges are equal and the emitted QML is unchanged, which is why the
+existing `x: 12` / `y: 12` test still passes untouched.
+
+`needs_container_wrapper` now asks about longhands too. It asked only about
+the shorthand, so a part whose only padding was `padding-left` got no wrapper
+and the inset reached nothing.
+
+**This does not resolve every padding drop.** 59 of the 649 went away, not the
+~226 the category totals suggest: the reporter records what each lowering path
+asks, and this fixes the container path. The rest are other paths -- host
+controls read `padding` but not the longhands (#15254) -- which is the same
+per-path pattern that explained the `elevation` discrepancy on #14709.
+
+Padding lengths are now **parsed and re-serialised** rather than passed
+through. `qml_px_or_none` validates a charset, not a number, so `1.2.3`, `-`
+and `5-` survive it -- and this change routes `padding-left`/`-right` into
+generated QML for the first time. Raised in review; the wider exposure (37
+other call sites) is #15269, deliberately not swept blind.
+
+Two pinned drops in `native_complete_gate` retired themselves as a result
+(`Qt: padding-top` in deck-stats and card-browser); the inverse ratchet caught
+both and its message is right -- a pin left after the gap closes stops
+recording a known limitation and starts licensing its return.
+
+### Fixed -- the CSS `border` shorthand reached nothing, so VisiCalc had no borders
+
+Every reader in this emitter asks for `border-width` / `border-color`. Nothing
+asked for the plain `border` property, and VisiCalc is the one product that
+authors the shorthand -- so **VisiCalc rendered with no borders at all on Qt**:
+no cell borders, no grid rules, no outline on the formula field.
+
+| product | `border.width` emitted, before -> after |
+| --- | --- |
+| **VisiCalc** | **0 -> 15** |
+| Trestle | 88 -> 88 |
+| Engram | 244 -> 244 |
+| Venture | 12 -> 12 |
+
+The other three are untouched: this only reaches parts that author the
+shorthand. Qt's reported style drops fall from 649 to 632.
+
+The shorthand is expanded where a part's props are assembled, so every
+existing reader picks it up and there is no second place to keep in step.
+Three details worth knowing:
+
+- **An explicit longhand wins.** `border: 1px solid red; border-color: blue`
+  keeps blue -- a declaration that names the edge it means is more specific.
+- **A zero width expands to nothing.** `border: 0px` means NO border, and
+  synthesising `border-width: 0` would invite exactly the defect fixed in
+  mosaic-emit-compose, where a zero width asked Compose for a hairline.
+- **A `solid` style is not synthesised.** Qt draws solid and nothing else, so
+  emitting `border-style: solid` would add a property no reader wants -- and
+  the drop reporter dutifully recorded 15 of them as lost the first time this
+  was written that way. A dashed or dotted style IS genuinely lost on Qt and
+  is still synthesised, so the report can say so.
+
+The shorthand itself is removed once expanded. Left in place it would be
+reported as a dropped property forever, because nothing reads it by that name
+-- a permanent false positive about a border that now renders. An
+**unparseable** value expands to nothing and is deliberately kept, so a real
+loss stays visible.
+
+### Added -- Qt reports the style properties its lowering drops (#12022)
+
+Qt reported nothing, so an empty `styleDegradations` meant "nobody looked"
+rather than "nothing was lost". Across the four Mosaic product packages it now
+reports **649** dropped properties that previously vanished in silence:
+VisiCalc 89, Venture 16, Engram 188, Trestle 356. Not one line of emitted QML
+changes (1,014,098 bytes, byte-identical before and after).
+
+Derived by running the REAL emit with read-recording armed and reporting what
+nothing asked for -- never by diffing against a list of "properties Qt
+supports". A hand-maintained list is wrong the first time someone adds an arm
+and forgets it, which is the drift #12022 exists to stop.
+
+That is affordable here because of a property of this emitter: **every** style
+read funnels through `style_prop` (`style_prop_any` delegates to it rather
+than searching itself). One recording point at the top of that one function
+sees all 83 read sites, including any added later -- so a property that gains
+support tomorrow stops being reported the moment its `style_prop` call lands,
+with no second place to update.
+
+Reads are attributed to a part by the address of its props vector, captured in
+`PartStyleMap::insert` while the vector still exists: `style_prop` is handed a
+slice and never learns a part name, and the vector is gone by the time anyone
+asks what was dropped.
+
+**A part the emit never asked about is not reported.** Nothing in the layout
+rendered it, so its properties never had a chance to be dropped, and blaming
+the emitter for a stylesheet entry the component does not use would be a false
+positive -- one that matters, because #12022 ends in a hard gate. Scoping to
+visited parts removed 107 such false positives; before it, `color` alone was
+reported 41 times on Trestle while Qt renders it correctly.
+
 ### Fixed -- two writers could assign one QML property, failing the build (#15155)
 
 A QML object may assign a property exactly once. `Property value set

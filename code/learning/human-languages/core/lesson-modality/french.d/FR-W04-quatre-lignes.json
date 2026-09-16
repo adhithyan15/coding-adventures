@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "FR-W04-quatre-lignes",
+    "language": "french",
+    "chapter": 48,
+    "sequence": 1800,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d497bd1ea50d5dfe",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ]
+  },
+  "findings": []
+}

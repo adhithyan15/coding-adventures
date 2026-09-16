@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "LA-W02-versus-meus",
+    "language": "latin",
+    "chapter": 60,
+    "sequence": 1710,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2ce797de6928e2ef",
+    "detachableSegments": [
+      "Writing — controlled composition"
+    ]
+  },
+  "findings": []
+}

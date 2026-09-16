@@ -8,6 +8,51 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed -- the CSS `border` shorthand was dropped whole (#15272)
+
+SwiftUI read `border-width`, `border-color` and `border-style`, and read
+`border` **zero times**. An authored `border: 1px solid #32463b` was
+therefore a total loss: no width, no colour, no border.
+
+VisiCalc is the one product that authors the shorthand, and the loss was
+visible in the emitted Swift. Measured with a single command per package,
+`mosaic-compile pkg --backend swiftui --profile permissive`:
+
+| package         | `.overlay(` before | after |
+| --------------- | -----------------: | ----: |
+| visicalc        |                  0 |    12 |
+| task-app        |                104 |   104 |
+| engram-app      |                240 |   240 |
+| venture-browser |                 16 |    16 |
+
+VisiCalc rendered on SwiftUI with no cell borders at all. The other three
+products' generated Swift is **byte-identical** before and after
+(`diff -rq`), so this reaches only the shorthand it set out to fix.
+
+`expand_border_shorthand` (ported from the Qt fix, #15255) desugars the
+shorthand into longhands in `build_part_style_map`, before any lowering
+runs. The drop reporter walks the desugared props too, so the report and
+the emitter keep reading one value and cannot drift.
+
+Every new border carries its authored colour -- `#32463b` lowers to
+`Color(red: 0.196, green: 0.275, blue: 0.231)` -- with no occurrences of
+the `Color.gray` fallback among them.
+
+Expansion is **all-or-nothing**: a token this emitter cannot place as a
+width, a stroke keyword or a colour `swiftui_color_value` accepts
+abandons the expansion and leaves the shorthand alone, so the loss stays
+reported. Security review of the first version caught the alternative --
+expanding what parsed and discarding the rest turned one loud loss into
+two silent ones, since `border: 1px solid notacolour` would have rendered
+a border in fallback grey *and* vanished from the drop report.
+
+**What this does not do.** It does not add the `border-style` longhand:
+`dashed` and `dotted` are still unrendered and still reported. It does
+not touch the per-edge shorthands (`border-top` and friends), which
+remain unread. And it does not change how any style drop is reported for
+the five product programs -- their degradation reports carry no
+`style.property-dropped` entries on this path at all.
+
 ### Fixed -- an unresolvable colour was painted invisible instead of dropped (#15141)
 
 `swiftui_color_value` was total, falling back to `Color.clear`.

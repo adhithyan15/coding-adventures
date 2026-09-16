@@ -4343,8 +4343,21 @@ fn compose_box_style(
 
     // .border — needs at least the width.  Default color `Color.Gray`
     // when only the width is set.
-    if !border_width.empty() && !border_none {
-        let w_expr = numeric_layer_value(&border_width, state_layers, "0");
+    //
+    // `border-width: 0` means NO border, and Compose disagrees about that:
+    // `Dp.Hairline` IS `0.dp`, so `Modifier.border(0.dp, ..)` asks for a
+    // hairline -- a one-pixel stroke that survives any density -- rather
+    // than for nothing. And it asks for it in `Color.Gray`, because a part
+    // that declares no width declares no colour either, so the unauthored
+    // default below is what gets painted. Trestle emitted 59 of these.
+    //
+    // Only a STATICALLY zero width is dropped. A state layer that raises the
+    // width off zero makes `numeric_layer_value` emit a runtime `if`, which
+    // is not the literal "0" and still gets its border -- so this cannot
+    // silence a border that any state actually asks for.
+    let border_w_expr = numeric_layer_value(&border_width, state_layers, "0");
+    if !border_width.empty() && !border_none && border_w_expr != "0" {
+        let w_expr = border_w_expr;
         let c_expr = if border_color.empty() {
             "Color.Gray".to_string()
         } else {
@@ -8389,6 +8402,49 @@ mod tests {
             props,
             children,
         }
+    }
+
+    /// `border-width: 0` means NO border, and must not emit one.
+    ///
+    /// Compose disagrees about what `0.dp` means here: `Dp.Hairline` IS
+    /// `0.dp`, so `Modifier.border(0.dp, ..)` asks for a hairline -- a
+    /// one-pixel stroke -- rather than for nothing. And it asks in
+    /// `Color.Gray`, because a part declaring no width declares no colour
+    /// either, so the emitter's unauthored default is what gets painted.
+    /// Trestle emitted 59 of these.
+    ///
+    /// The non-zero case is this test's control: asserting an absence alone
+    /// would also pass if the emitter had stopped emitting borders entirely.
+    #[test]
+    fn a_zero_width_border_emits_no_border_modifier() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", styled_node("Box", "card", vec![], vec![]));
+
+        let zero = from_pipeline(
+            &m,
+            &l,
+            &style_def("X", vec![part("card", vec![sprop("border-width", "0")], vec![])]),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            !zero.contains(".border("),
+            "an authored zero width must emit no border at all:\n{zero}"
+        );
+
+        // Control: the same part with a real width still gets its border,
+        // so the assertion above is about the zero and not about borders.
+        let one = from_pipeline(
+            &m,
+            &l,
+            &style_def("X", vec![part("card", vec![sprop("border-width", "1")], vec![])]),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            one.contains(".border(1.dp,"),
+            "a non-zero width must still emit its border:\n{one}"
+        );
     }
 
     #[test]

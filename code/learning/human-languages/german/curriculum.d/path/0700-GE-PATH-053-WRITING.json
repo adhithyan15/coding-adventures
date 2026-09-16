@@ -1,0 +1,14 @@
+{
+  "id": "GE-PATH-053-WRITING",
+  "spine_node": "SPINE-SAY-WHY",
+  "lessons": [
+    "GE-W02-eigene-zeile",
+    "GE-W03-mit-der-uhr",
+    "GE-W04-vier-zeilen"
+  ],
+  "before": [],
+  "inline": [
+    "GE-EXT-053-WRITING"
+  ],
+  "after": []
+}

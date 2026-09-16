@@ -52,6 +52,7 @@
 //! | `field_load` | any (type_hint is `"ref<any>"` or similar) |
 //! | `field_store` | any (type_hint is `"void"`) |
 //! | `is_null` | `type_hint == "bool"` |
+//! | `mov` | any `ref<…>` type_hint (VM-041 — a plain register copy of a heap pointer, same as the `"str"` exception) |
 //!
 //! These ops are lowered to BEAM instructions by `lower.rs`:
 //! - `alloc` + adjacent `field_store`s → `put_list`
@@ -151,8 +152,12 @@ const UNSUPPORTED_OPS: &[&str] = &[
 ///    We require the frontend to have resolved types before lowering.
 ///
 /// 4. **UnsupportedType** — `type_hint` must not be `"str"` (no string
-///    arithmetic in this backend) or start with `"ref<"` (heap pointers have
-///    no BEAM equivalent in this lowering).
+///    arithmetic in this backend, except the `str_const`/`str_concat`/
+///    `str_slice`/`call`/`ret`/`mov`/`array_set`/`array_get` ops this
+///    backend does lower — the last two are BEAM06's `str`-typed array
+///    element read/write, reusing BEAM04's `:ets` substrate unmodified) or
+///    start with `"ref<"` (heap pointers have no BEAM equivalent in this
+///    lowering).
 ///
 /// 5. **UnsupportedType for float const** — `op == "const"` with an
 ///    `Operand::Float` source and `type_hint != "f64"` is rejected. BEAM03
@@ -314,10 +319,21 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
             //   - `is_null` with `"bool"` → is_nil synthesis
             //
             // Any other ref<…> type on any other op is rejected as before.
+            // BEAM06: `array_set`/`array_get` with `type_hint == "str"` are
+            // a `str`-typed array element read/write (Dartmouth BASIC's
+            // `array<str>` — `DIM A$(n)` — and its mixed numeric/string
+            // `DATA` pool's string pool). These dispatch to the exact same
+            // `:ets` substrate BEAM04 built for `array<f64>` (see the
+            // module-setup comment in `lower.rs`): a `str` value is already
+            // an ordinary Erlang character list (the `str_const` scalar
+            // representation), and `:ets` holds arbitrary terms natively,
+            // so no new representation is needed — confirmed on real `erl`,
+            // see `code/specs/BEAM06-string-array-representation.md`.
             if instr.type_hint == "str"
                 && !matches!(
                     instr.op.as_str(),
                     "str_const" | "str_concat" | "str_slice" | "call" | "ret" | "mov"
+                        | "array_set" | "array_get"
                 )
             {
                 errors.push(format!(
@@ -344,6 +360,29 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                     // field_store void — write head or tail into a fresh cons cell.
                     // Consumed by the put_list pattern along with its preceding alloc.
                     "field_store" if instr.type_hint == "void" => true,
+
+                    // mov ref<…> — a plain register-to-register copy of a heap
+                    // pointer. VM-041: Twig's `match`/`if` compile a "phi via
+                    // mutable variable" pattern — each arm's `emit_move`
+                    // (`twig-ir-compiler::compiler.rs`) writes into a shared
+                    // result variable with a typed `mov`, using the SOURCE
+                    // value's own inferred type as the mov's type_hint. When a
+                    // `union` variant constructor's cons cell (or a value that
+                    // started life as `box`/`unbox`, which
+                    // `concretize_scalar_any_for_beam` renames to `mov` without
+                    // touching its type_hint — see `lang-aot::lib.rs`) is one of
+                    // the arms, that type_hint is `ref<LispyPair>`, not a
+                    // scalar. `lower.rs`'s `"mov"` arm already lowers this
+                    // correctly for ANY type_hint (it is an unconditional
+                    // `{operand} -> {x,rd}` BEAM `move`, agnostic to what the
+                    // register holds — see the `integer_operand!` macro, which
+                    // resolves a `Var` source to its x-register regardless of
+                    // type); this validator was simply never told to accept the
+                    // ref-typed case, even though `"mov"` was already accepted
+                    // for the analogous `"str"` type_hint case above. Confirmed
+                    // safe against real `erl`:
+                    // `test_99_real_erl_mov_ref_lispy_pair_lowers_correctly`.
+                    "mov" => true,
 
                     _ => false,
                 };

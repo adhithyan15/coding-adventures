@@ -1,0 +1,169 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 55,
+  "title": "Writing --- Four Lines, And The Joiner You Can See",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:45ba66a2c9f3f9dc",
+  "lessons": [
+    {
+      "id": "GE-W04-vier-zeilen",
+      "sequence": 1530,
+      "title": "Four lines, and the joiner you can see",
+      "headword": "weil",
+      "romanization": "weil",
+      "gloss": "four lines to one reader, and the joiner that visibly rearranges the sentence it joins",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:274f3ac6890369d5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson asked for writing that was finished on time. This one asks for writing that holds together."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one person who will read it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Connected writing is not longer writing. Four short lines can be connected; one long line can fail to be. What makes it connected is that a sentence stops standing on its own."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You hold three joiners, and German does something with the third that the first two do not. und adds. aber sets against. Both leave the sentence they join exactly as it was."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "weil does not. It picks the verb up and puts it at the end."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth stopping on, because it means German shows you the join in the word order itself. In most languages you can only tell that two clauses were joined by reading the joining word. In German the second clause visibly rearranges — and a reader who sees a verb arrive late knows a reason is being given before they have finished the sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write four lines to the person you picked."
+            },
+            {
+              "kind": "speech",
+              "text": "At least one must use und or aber. At least one must use weil — and in that one, check the verb has actually moved."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use only words you already write. This lesson adds no vocabulary; the whole exercise is the joining."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover your first line and read the second alone. Does it still make sense without the first? If it does, you wrote a list — which is where you were one lesson ago."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then find your weil line and point at the verb. Is it last? If it is sitting where it would sit in a sentence on its own, the word is doing nothing: you wrote und with a different spelling."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

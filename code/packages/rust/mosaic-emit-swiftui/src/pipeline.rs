@@ -1258,6 +1258,101 @@ fn extract_table_context(host_table: &LayoutNode) -> TableContext {
     }
 }
 
+
+/// Expand the CSS `border` shorthand into the longhands this emitter lowers.
+///
+/// `border : "1px solid #32463b"` reached NOTHING: every reader asks for
+/// `border-width` / `border-color`, and nobody asked for `border`. VisiCalc
+/// is the one product that authors the shorthand, and it rendered with **no
+/// borders at all** on SwiftUI -- zero `.overlay(..)` in its generated Swift,
+/// against 104 for task-app and 240 for engram-app. With this expansion it
+/// emits 12, and the other products' Swift is byte-identical.
+///
+/// The same defect was fixed for Qt in #15255. Found here by mapping the
+/// SwiftUI drop reporter's output the same way, which is the argument for
+/// having a reporter per backend rather than one.
+///
+/// An explicit longhand wins; a ZERO width expands to nothing, because
+/// `border: 0px` means NO border and synthesising `border-width: 0` invites
+/// the defect fixed in mosaic-emit-compose where a zero width asked for a
+/// hairline; and a `solid` style is not synthesised, since it is the only
+/// stroke SwiftUI draws and emitting it would add a property no reader wants.
+///
+/// Expansion is ALL-OR-NOTHING. Every token must be recognised -- a width
+/// this emitter can parse, a stroke keyword it draws, or a colour
+/// `swiftui_color_value` accepts. One token it cannot place abandons the
+/// expansion and leaves the shorthand alone, so the loss stays reported
+/// instead of becoming a border in the fallback grey that nothing records.
+fn expand_border_shorthand(props: &mut Vec<StyleProp>) {
+    let Some(shorthand) = props
+        .iter()
+        .find(|p| p.name == "border")
+        .map(|p| p.value.clone())
+    else {
+        return;
+    };
+
+    let (mut width, mut style, mut color) = (None, None, None);
+    for token in shorthand.split_whitespace() {
+        if matches!(token, "solid" | "dashed" | "dotted" | "double" | "none") {
+            style.get_or_insert(token);
+        } else if swiftui_color_value(token).is_some() {
+            color.get_or_insert(token);
+        } else if strip_css_px(token).parse::<f64>().is_ok() {
+            width.get_or_insert(token);
+        } else {
+            // An UNRECOGNISED token abandons the whole expansion, leaving
+            // the shorthand in place so `dropped_style_properties` keeps
+            // reporting it.
+            //
+            // The tempting alternative -- expand what parsed and discard the
+            // rest -- trades a loud loss for a silent one. `border: 1px solid
+            // notacolour` would emit a border in the WRONG colour (the
+            // `Color.gray` fallback) and report nothing at all, because
+            // removing the shorthand also removes it from the report. A
+            // half-understood value is not a value.
+            //
+            // Classifying against `swiftui_color_value` rather than a `#`
+            // prefix is what makes this reachable: it is the same allowlist
+            // the emitter itself uses, so this function cannot accept a
+            // colour the emitter will later reject.
+            return;
+        }
+    }
+
+    let zero_width =
+        width.is_some_and(|w| strip_css_px(w).parse::<f64>().is_ok_and(|n| n == 0.0));
+    if style == Some("none") || zero_width {
+        props.retain(|p| p.name != "border");
+        return;
+    }
+
+    let mut expanded = false;
+    for (name, value) in [
+        ("border-width", width),
+        ("border-style", style.filter(|kind| *kind != "solid")),
+        ("border-color", color),
+    ] {
+        let Some(value) = value else { continue };
+        if props.iter().any(|p| p.name == name) {
+            continue;
+        }
+        props.push(StyleProp {
+            name: name.to_string(),
+            value: value.to_string(),
+        });
+        expanded = true;
+    }
+
+    // Desugared: left in place the shorthand would be reported as a dropped
+    // property forever, because nothing reads it by that name. An
+    // UNPARSEABLE value expands to nothing and is deliberately KEPT, so a
+    // real loss stays visible.
+    if expanded {
+        props.retain(|p| p.name != "border");
+    }
+}
+
 /// Build a `part_name → style entry` map from a [`StyleDef`].
 ///
 /// Mirrors `mosaic_emit_react::pipeline::build_part_style_map` in shape
@@ -1278,10 +1373,12 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
     };
     for part in &style.parts {
         if !part.base.is_empty() || !part.transitions.is_empty() {
+            let mut base = part.base.clone();
+            expand_border_shorthand(&mut base);
             out.insert(
                 part.name.clone(),
                 PartStyleEntry {
-                    props: part.base.clone(),
+                    props: base,
                     transitions: part.transitions.clone(),
                 },
             );
@@ -2595,7 +2692,14 @@ pub fn dropped_style_properties(
     let consumed = gap_consuming_parts(layout, &part_styles);
     let mut out = Vec::new();
     for part in &style.parts {
-        let (_, drops) = swiftui_modifier_chain_with_drops(&part.base, &[], &[], 0, None);
+        // Scan what the EMITTER sees, not the raw authored props. The
+        // emitter desugars the `border` shorthand in `build_part_style_map`;
+        // scanning `part.base` here would keep reporting a shorthand that now
+        // renders -- a permanent false positive, and precisely the drift this
+        // reporter exists to catch. Emitter and report must read ONE value.
+        let mut base = part.base.clone();
+        expand_border_shorthand(&mut base);
+        let (_, drops) = swiftui_modifier_chain_with_drops(&base, &[], &[], 0, None);
         for drop in drops {
             if drop.name == "gap" && consumed.contains(part.name.as_str()) {
                 continue;
@@ -15066,6 +15170,152 @@ mod tests {
             }],
         };
         assert!(dropped_style_properties(&style, &no_gap_layout()).is_empty());
+    }
+
+    /// A shorthand this emitter cannot fully read stays REPORTED.
+    ///
+    /// Found by security review of the first version of this change, which
+    /// expanded the tokens it recognised and dropped the rest. That turned a
+    /// loud loss into a silent one twice over: the border rendered in the
+    /// `Color.gray` fallback rather than the authored colour, AND removing
+    /// the shorthand removed it from the drop report, so nothing recorded it.
+    #[test]
+    fn a_shorthand_with_an_unreadable_token_is_not_expanded() {
+        for value in [
+            // A bare word that is not a colour this emitter knows.
+            "1px solid notacolour",
+            // A width that is not a number. `px_or_none` would pass this
+            // through to `width: 1.2.3`, which is not valid Swift.
+            "1.2.3px solid red",
+        ] {
+            let style = StyleDef {
+                component_name: "X".to_string(),
+                parts: vec![PartStyle {
+                    name: "cell".to_string(),
+                    base: vec![sp("border", value)],
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+            let drops = dropped_style_properties(&style, &no_gap_layout());
+            assert!(
+                drops.iter().any(|d| d.name == "border"),
+                "`{value}` must stay reported, not half-expand: {drops:?}"
+            );
+
+            let mut base = vec![sp("border", value)];
+            expand_border_shorthand(&mut base);
+            assert_eq!(
+                base.len(),
+                1,
+                "`{value}` must not synthesise longhands: {base:?}"
+            );
+        }
+    }
+
+    /// The `border` shorthand reaches the EMITTED Swift.
+    ///
+    /// This goes through `from_pipeline`, not the reporter. Falsification
+    /// caught that necessity: with the expansion removed from
+    /// `build_part_style_map`, the two reporter tests below still passed,
+    /// because the reporter expands separately. They pinned the report and
+    /// not the thing that makes a border render.
+    #[test]
+    fn the_border_shorthand_reaches_the_emitted_swift() {
+        let m = component("X", vec![], vec![]);
+        let mut node = leaf("Text", vec![]);
+        node.part_name = Some("cell".into());
+        let l = layout_with("X", container_node("Column", vec![node]));
+        let s = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "cell".into(),
+                base: vec![sp("border", "1px solid #32463b")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        // All three components of `1px solid #32463b` must survive: the
+        // width as `width: 1` and the colour as the lowered sRGB triple.
+        // A uniform border lowers to `.border`; the rounded-corner case
+        // takes a separate `.overlay(RoundedRectangle...)` path.
+        assert!(
+            out.contains(".border(Color(red: 0.196, green: 0.275, blue: 0.231), width: 1)"),
+            "the shorthand must reach a border in the emitted Swift:\n{out}"
+        );
+    }
+
+    /// The CSS `border` shorthand is desugared and stops being reported.
+    ///
+    /// Nothing read the plain `border` property, and VisiCalc is the one
+    /// product that authors it -- so VisiCalc rendered with NO borders at all
+    /// on SwiftUI: zero `.overlay(..)` in its generated Swift, against 104 for
+    /// task-app and 240 for engram-app.
+    ///
+    /// Both halves matter. The shorthand must reach the longhands the emitter
+    /// lowers, AND it must stop being reported as dropped -- left in the
+    /// report it is a permanent false positive about a border that now
+    /// renders. The emitter and the reporter have to read one value.
+    #[test]
+    fn the_border_shorthand_is_expanded_and_not_reported() {
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "cell".to_string(),
+                base: vec![sp("border", "1px solid #32463b")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let drops = dropped_style_properties(&style, &no_gap_layout());
+        assert!(
+            !drops.iter().any(|d| d.name == "border"),
+            "a desugared shorthand must not stay in the report: {drops:?}"
+        );
+
+        // The control: a value that expands to NOTHING keeps the shorthand
+        // and is still reported, so the assertion above cannot pass by
+        // silently dropping every `border` from the report.
+        //
+        // An empty value is the case that expands to nothing. A bare word
+        // like `wat` does NOT qualify -- the fallback arm reads an unknown
+        // token as a colour keyword, which is what makes `border: red` work,
+        // so it desugars to `border-color` and the shorthand is correctly
+        // gone. Downstream colour validation is what rejects it from there.
+        let unexpandable = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "cell".to_string(),
+                base: vec![sp("border", "   ")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let drops = dropped_style_properties(&unexpandable, &no_gap_layout());
+        assert!(
+            drops.iter().any(|d| d.name == "border"),
+            "a real loss must stay visible: {drops:?}"
+        );
+    }
+
+    /// A zero-width shorthand means NO border, not a zero-width one.
+    ///
+    /// The lesson mosaic-emit-compose paid for, where a zero width asked
+    /// Compose for a one-pixel hairline rather than for nothing.
+    #[test]
+    fn a_zero_width_border_shorthand_expands_to_nothing() {
+        let mut props = vec![sp("border", "0px")];
+        expand_border_shorthand(&mut props);
+        assert!(props.is_empty(), "got: {props:?}");
+
+        // Control: a real width DOES expand.
+        let mut real = vec![sp("border", "1px solid #32463b")];
+        expand_border_shorthand(&mut real);
+        assert!(real.iter().any(|p| p.name == "border-width"), "got: {real:?}");
+        assert!(real.iter().any(|p| p.name == "border-color"), "got: {real:?}");
+        // `solid` is the only stroke SwiftUI draws, so it is not synthesised.
+        assert!(!real.iter().any(|p| p.name == "border-style"), "got: {real:?}");
     }
 
     #[test]

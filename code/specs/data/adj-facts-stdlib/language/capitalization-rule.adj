@@ -31,7 +31,29 @@
 %     proper_noun                      capitalized_regardless_of_position           "Proper nouns are always capitalized in English, no matter where they fall in
 %                                                                                     a sentence."
 %
-% WebFetch-verified before writing (twice, across two cycles of this loop).
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the first-word rule's own sentence, the primary source of all
+% three answers, so the pronoun-I and proper-noun answers cited it first.
+% Each quoted sentence above names its trigger and what it requires, so
+% every row now takes its own as a `source`. The envelope is now the
+% article's framing sentence, which names no rule:
+%
+%     "Knowing which types of words to capitalize is an important part of
+%      learning English capitalization rules."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the three quotes above and the envelope each occur
+% exactly once, each inside a `<p>`. The page ALSO states the proper-noun
+% rule in a list item, with a parenthetical ("Proper nouns (specific names
+% for a particular person, place, or thing) are always capitalized ...");
+% that is a different string, and the row quotes the `<p>` sentence. Every
+% row's page is the envelope's, so no row restates a `locator` line or
+% `trust` (ADJ-TABLES §4).
+%
+% The original authoring note said the quotes were "WebFetch-verified before
+% writing (twice, across two cycles of this loop)". That is superseded by the
+% raw-page measurement above; WebFetch summaries are not verbatim evidence.
 % `trust consensus` — Grammarly is a reputable, widely-cited grammar-content
 % company, the same tier this stdlib already reserves for other non-.gov
 % language sources and the same source family already cited by
@@ -47,11 +69,20 @@
 table capitalization_rule {
     columns rule, description
 
-    row (first_word_of_sentence, capitalize_first_letter)
-    row (pronoun_i, capitalized_anywhere_in_sentence)
-    row (proper_noun, capitalized_regardless_of_position)
+    row (first_word_of_sentence, capitalize_first_letter) {
+        source "Here’s an easy rule to follow—whenever you start a sentence, capitalize the first letter of the first word."
+    }
+    row (pronoun_i, capitalized_anywhere_in_sentence) {
+        source "Capitalize I when using it as a pronoun anywhere in a sentence."
+    }
+    row (proper_noun, capitalized_regardless_of_position) {
+        source "Proper nouns are always capitalized in English, no matter where they fall in a sentence."
+    }
 
-    source "Here’s an easy rule to follow—whenever you start a sentence, capitalize the first letter of the first word."
+    % THE ENVELOPE WAS THE FIRST-WORD RULE'S OWN SENTENCE, the primary
+    % source of all three answers. It is now a framing sentence that names
+    % no rule. Every row overrides it, so it reaches no answer.
+    source "Knowing which types of words to capitalize is an important part of learning English capitalization rules."
     locator "https://www.grammarly.com/blog/punctuation-capitalization/capitalization-rules/"
     trust consensus
 }

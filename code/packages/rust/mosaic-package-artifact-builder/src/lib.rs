@@ -1891,9 +1891,22 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                         push_drop(d.part, d.name, d.value, d.reason);
                     }
                 }
-                // The remaining backends do not report their drops yet, so an
-                // empty `styleDegradations` means "nobody looked" there rather
-                // than "nothing was lost" (#12022).
+                Backend::Qt => {
+                    // Qt derives its drops by running the REAL emit with
+                    // read-recording armed, so it needs the interface and
+                    // layout the emit needs -- not just the stylesheet.
+                    for d in mosaic_emit_qt::pipeline::dropped_style_properties(
+                        &composed.model.component,
+                        &composed.layout.def,
+                        &composed.style,
+                    ) {
+                        push_drop(d.part, d.name, d.value, d.reason);
+                    }
+                }
+                // Flutter is the last backend without drop reporting, so an
+                // empty `styleDegradations` there means "nobody looked" rather
+                // than "nothing was lost" (#12022). Its lowering is being given
+                // a callable seam first; see `flutter_box_style`.
                 _ => {}
             }
         }
@@ -9735,10 +9748,57 @@ layout NativeEvents {
         assert!(report.native_complete, "got: {report:?}");
     }
 
+    /// Qt reports what its own lowering drops, and ONLY that (#12022).
+    ///
+    /// Both halves are the test. `box-shadow` has no QML equivalent and must
+    /// be reported. `color` is lowered onto the element and must NOT be --
+    /// and a reporter that cannot tell those apart is worse than no reporter,
+    /// because #12022 ends in a gate that would then fail the build over a
+    /// property that renders perfectly.
+    ///
+    /// This is a real risk here rather than a hypothetical one: Qt derives
+    /// its drops by running the emit and reporting what nothing asked for, so
+    /// a part the emit never reaches would otherwise have every one of its
+    /// properties called dropped. The first draft of this reporter did
+    /// exactly that, on 107 properties across four products.
+    #[test]
+    fn qt_reports_its_own_style_drops_and_not_what_it_renders() {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(
+            pkg.path().join("src/Card.msl"),
+            "style Card { part root { box-shadow: \"0 1px 2px #000\" ; color: \"#ff0000\" ; } }\n",
+        )
+        .unwrap();
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("analysis");
+
+        let drops = &report.style_degradations;
+        assert_eq!(drops.len(), 1, "got: {report:?}");
+        assert_eq!(drops[0].code, "style.property-dropped");
+        assert_eq!(drops[0].primitive.as_deref(), Some("box-shadow"));
+        assert_eq!(drops[0].backend, "qt");
+        assert_eq!(drops[0].layout_path, "$style.root");
+        // Recorded, not gating (see DegradationReport::style_degradations).
+        assert!(report.native_complete, "got: {report:?}");
+    }
+
     /// A backend with no drop reporting yet must stay empty rather than
     /// inheriting another backend's list -- an empty `styleDegradations`
     /// there means "nobody looked", and conflating the two would hide real
     /// losses behind a green field (#12022).
+    ///
+    /// Flutter is the exemplar because it is now the LAST backend without
+    /// reporting; this test named Qt until Qt gained it.
     #[test]
     fn a_backend_without_drop_reporting_stays_empty() {
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
@@ -9752,7 +9812,7 @@ layout NativeEvents {
             &BuildOptions {
                 package_root: pkg.path().to_path_buf(),
                 output_root: out.path().to_path_buf(),
-                backend: Backend::Qt,
+                backend: Backend::Flutter,
                 emit_project: false,
                 theme: None,
             },
@@ -13100,14 +13160,29 @@ version = "1"
         .expect("probe manifest must parse")
     }
 
+    /// A scratch root no other test can be handed.
+    ///
+    /// This used to be pid + nanosecond timestamp. Two tests in one process
+    /// share the pid, and `SystemTime::now()` is not guaranteed to advance
+    /// between two threads reading it, so two tests could be handed the SAME
+    /// directory -- `create_dir_all` is idempotent, so neither noticed. Each
+    /// of these tests ends with `remove_dir_all(&root)`, so the first to
+    /// finish deleted the other's fixture mid-run and the survivor failed
+    /// reading a file it had just written.
+    ///
+    /// Measured before the fix: 11 failures in 25 local runs of this module.
+    /// The counter makes the name unique by construction rather than by
+    /// hoping the clock ticks.
+    fn unique_scratch_id() -> usize {
+        static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+    }
+
     fn scratch(name: &str) -> PathBuf {
         let root = std::env::temp_dir().join(format!(
             "mosaic-host-effect-{name}-{}-{}",
             std::process::id(),
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .expect("system clock after epoch")
-                .as_nanos()
+            unique_scratch_id()
         ));
         fs::create_dir_all(root.join("host").join("qt")).expect("create the package tree");
         fs::create_dir_all(root.join("out")).expect("create the output tree");
@@ -13282,14 +13357,18 @@ version = "1"
         .expect("probe manifest must parse")
     }
 
+    /// Unique by construction, for the reason spelled out on the other
+    /// `scratch` helper in this file: a timestamp is not a unique name.
+    fn unique_overwrite_scratch_id() -> usize {
+        static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+    }
+
     fn scratch() -> PathBuf {
         let root = std::env::temp_dir().join(format!(
             "mosaic-host-effect-overwrite-{}-{}",
             std::process::id(),
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .expect("system clock after epoch")
-                .as_nanos()
+            unique_overwrite_scratch_id()
         ));
         fs::create_dir_all(root.join("host").join("qt")).expect("create the package tree");
         fs::create_dir_all(root.join("out")).expect("create the output tree");

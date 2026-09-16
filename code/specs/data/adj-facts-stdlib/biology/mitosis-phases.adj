@@ -68,8 +68,7 @@
 % Provenance (nothing here is asserted from memory — every phase→event pair
 % below was read out of a fetched NCI SEER Training Modules "Cell Cycle" page,
 % and any pair whose event could not be verified there would have been
-% dropped). The single primary source, and the verbatim span that fixes each
-% row:
+% dropped). The single primary source, and the verbatim line each row cites:
 %
 %   Source: NCI SEER Training Modules — "Cell Cycle" (U.S. National Cancer
 %   Institute, cancer.gov). The page states "The four phases of mitosis are"
@@ -78,7 +77,9 @@
 %   II)". It does NOT state them in a sentence: the older wording here put a
 %   composite with invented " ... " separators after "which states", which
 %   attributed to the page a string the page has never carried. Each row
-%   below is fixed by its own verbatim span, quoted in full further down.
+%   below CITES its own verbatim line, quoted in full further down. A cited
+%   line corroborates its row and does not warrant it on its own: the line
+%   never names its phase, which comes from the list item it sits under.
 %   https://training.seer.cancer.gov/disease/cancer/biology/cycle.html
 %
 %   prophase → chromatin_forms_chromosomes
@@ -96,13 +97,29 @@
 %     "A nuclear membrane forms around each set of chromosomes forming a new
 %      nucleus with a nucleolus."
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the SEER statement that fixes the
-% first row (prophase → chromatin_forms_chromosomes). Every OTHER row's verbatim
-% span is listed above and echoed in an inline `%` comment on the row, so each
-% event remains independently checkable against the same primary page. The
-% source is the NCI SEER Training Modules, a primary U.S. government (National
-% Cancer Institute) teaching resource, so `trust authoritative`.
+% EACH ROW CITES ITS OWN LINE (ADJ-TABLES RS-5e, issue #14986). This paragraph
+% used to say that an ADJ `table` carries ONE provenance envelope, and so held
+% the prophase line as the envelope while listing the other three rows' spans
+% only in `%` comments. The language has per-row blocks, and that envelope was
+% the primary source of the metaphase, anaphase and telophase answers, none of
+% which it describes.
+%
+% Each row now carries a `cites` holding its own line. `cites`, not `source`:
+% on the page each line is its own list item NESTED UNDER a phase item, and
+% never names its phase. Which item a line sits under is #13934's held
+% question, decided the same way as `language/idiom-meaning.adj` and
+% `physics/energy-form-family.adj`. The telophase line sits one level deeper
+% still, under "Telophase I".
+%
+% The envelope is now the page's own statement of what cell division is,
+% "Cell division is the process by which cells reproduce (mitosis).", which
+% names no phase. On the page "Cell division", "process" and "mitosis" are
+% inline glossary links; removing the link tags leaves exactly that string,
+% while an extractor that turns tags into spaces renders "( mitosis )".
+% Measured 2026-09-15: each row line and the envelope occur exactly once.
+%
+% The source is the NCI SEER Training Modules, a primary U.S. government
+% (National Cancer Institute) teaching resource, so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_adjudication_no_interpretive_gating.)
 % ============================================================================
@@ -110,12 +127,22 @@
 table mitosis_phase {
     columns phase, event
 
-    row (prophase, chromatin_forms_chromosomes)   % "Chromatin is transformed into chromosomes composed of pairs of filaments called chromatids (each is a complete genetic copy of its chromosome)."
-    row (metaphase, chromosomes_line_up)          % "Paired chromosomes become lined up between the centrioles."
-    row (anaphase, chromatids_separate)           % "Chromatids are pulled toward the centrioles. One chromatid from each pair goes to each daughter cell."
-    row (telophase, nuclear_membrane_forms)       % "A nuclear membrane forms around each set of chromosomes forming a new nucleus with a nucleolus."
+    row (prophase, chromatin_forms_chromosomes) {
+        cites "Chromatin is transformed into chromosomes composed of pairs of filaments called chromatids (each is a complete genetic copy of its chromosome)." locator "https://training.seer.cancer.gov/disease/cancer/biology/cycle.html"
+    }
+    row (metaphase, chromosomes_line_up) {
+        cites "Paired chromosomes become lined up between the centrioles." locator "https://training.seer.cancer.gov/disease/cancer/biology/cycle.html"
+    }
+    row (anaphase, chromatids_separate) {
+        cites "Chromatids are pulled toward the centrioles. One chromatid from each pair goes to each daughter cell." locator "https://training.seer.cancer.gov/disease/cancer/biology/cycle.html"
+    }
+    row (telophase, nuclear_membrane_forms) {
+        % Under "Telophase I" on the page, one level below the
+        % "Telophase (divided into parts I and II)" item.
+        cites "A nuclear membrane forms around each set of chromosomes forming a new nucleus with a nucleolus." locator "https://training.seer.cancer.gov/disease/cancer/biology/cycle.html"
+    }
 
-    source "Chromatin is transformed into chromosomes composed of pairs of filaments called chromatids (each is a complete genetic copy of its chromosome)."
+    source "Cell division is the process by which cells reproduce (mitosis)."
     locator "https://training.seer.cancer.gov/disease/cancer/biology/cycle.html"
     trust authoritative
 }

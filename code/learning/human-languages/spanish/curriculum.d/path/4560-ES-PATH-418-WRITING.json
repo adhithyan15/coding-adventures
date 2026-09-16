@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-418-WRITING",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "lessons": [
+    "ES-W02-cuatro-lineas-ayer"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-418-WRITING"
+  ],
+  "after": []
+}

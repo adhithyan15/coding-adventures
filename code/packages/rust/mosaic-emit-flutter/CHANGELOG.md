@@ -7,6 +7,139 @@ this file.
 
 
 
+### Changed -- the two box writers now share one decoration builder
+
+`emit_container` and `flutter_box_style` each built their own
+`BoxDecoration(..)`. Every time the two drifted, a product lost something:
+
+- **#15225** -- `border-radius` was taught to one writer and not the other.
+- **#15246** -- the gap that survived it: containers rendered square, and a
+  comment in the *fixed* writer asserted the other one handled the radius.
+- **#15249** -- padding, wrong in two different ways at once: `EdgeInsets.all`
+  collapsed it in one writer while `symmetric(horizontal:)` dropped the
+  vertical axis in the other.
+
+Three defects, one cause. Qt, XAML, SwiftUI and React each lower a part's box
+in one place and none of them has had this class of bug, so the decoration now
+has one writer too: a property taught to `flutter_decoration_parts` is taught
+to both callers at once.
+
+**No emitted output changes.** Flutter artifacts for all four Mosaic product
+packages are byte-identical against `origin/main` -- 496,013 bytes, zero diff
+lines -- and the comparison was falsified by planting a marker inside the new
+builder, which moved 453 lines across 112 sites.
+
+The background is deliberately **not** folded in. The two callers genuinely
+disagree about it: `emit_container` omits `color:` entirely when nothing
+authored a background and defaults to `Colors.transparent`, while
+`flutter_box_style` always emits it and defaults to `null`. Unifying that
+would change what is emitted, which a refactor must not do -- so the caller
+computes the expression and only the argument ORDER is shared.
+
+The border condition is now a single `flutter_has_border` predicate, asked by
+both the wrapper gate in `emit_container` and the border arm of the shared
+builder. Those were two textually identical copies of one question -- which is
+exactly the shape that produced the three defects above -- so proving they
+matched today would not have stopped them drifting tomorrow.
+
+The elevation tier is likewise **passed in** rather than recomputed, for the
+same reason: `emit_container`'s wrapper gate already tests its own `elevation`
+binding, and a second evaluation inside the builder would be two answers to
+one question.
+
+Note this is the *decoration*; #15249 already gave the two writers a shared
+padding resolver. What remains separate is each writer's sizing and its
+wrapper decision, which are genuinely different jobs.
+
+### Fixed -- no Flutter part could render asymmetric padding, and some rendered none
+
+Two defects with one cause: every padding writer in this emitter took a
+**single value**.
+
+- `emit_container` fanned it to four edges with `EdgeInsets.all`.
+- The styled-box writer emitted `EdgeInsets.symmetric(horizontal: N)` -- and
+  `symmetric` defaults the axis you omit to **zero**, so every box authoring
+  vertical padding rendered with none. Engram alone had 48 of these.
+- Both guards asked only for the `padding` SHORTHAND, so a part authoring
+  nothing but longhands was skipped entirely and got **no padding at all** --
+  not collapsed, absent.
+
+Neither could express Trestle's `task-detail`, authored `15 / 16 / 16 / 47`
+and rendered `15` on every side.
+
+Padding now resolves per edge the way CSS resolves it -- a longhand wins over
+the shorthand, edge by edge, an unmentioned edge is zero -- through one shared
+`flutter_padding_edges` used by both writers.
+
+| product | before | after |
+| --- | --- | --- |
+| Trestle | `all` 73, `symmetric` 3 | `all` 76, `fromLTRB` 12 |
+| Engram | `all` 280, `symmetric` 48 | `all` 326, `fromLTRB` 74 |
+| VisiCalc | `all` 16, `symmetric` 1 | `all` 17 |
+| Venture | `all` 16 | `all` 16 |
+
+`EdgeInsets.symmetric` is gone entirely: 52 emissions that were each dropping
+an axis. `fromLTRB` appears 86 times where nothing could before. The totals
+also **rise**, because parts that authored only longhands previously emitted
+no padding at all.
+
+The emitted values match the source exactly: `task-detail` is now
+`fromLTRB(47, 15, 16, 16)`, `content` `fromLTRB(30, 8, 30, 60)`, `topbar`
+`fromLTRB(30, 20, 30, 14)`.
+
+`EdgeInsets.all` is still emitted when the four edges agree, so the common
+case stays readable.
+
+**State-layer padding is unchanged.** A state that overrides padding still
+resolves to one value -- 12 of the 1178 authored padding declarations in the
+repo sit inside a state block, and none needs per-edge resolution. That arm
+now spreads its value with `all` rather than dropping the vertical axis.
+
+Three tests cover this, and the uniform case is their control so none can
+pass by accident. Reverting either writer's arm fails them.
+
+### Fixed -- containers rendered square on Flutter, ignoring `border-radius`
+
+`emit_container` -- the writer that runs for a styled Row, Column or Box
+wrapper -- read background, border and elevation and **never looked at the
+radius**. Every container-shaped part rendered with square corners however it
+was authored.
+
+Trestle's `task-card` authors `border-radius: 13` and emitted:
+
+```dart
+decoration: BoxDecoration(
+  color: const Color(0xFF252019),
+  border: Border.all(color: const Color(0xFF352E25), width: 1),
+  boxShadow: [BoxShadow(...)]),          // no borderRadius
+```
+
+**#15225 fixed this in the other writer only**, and left a comment there
+stating that `emit_container` already handled the radius. That claim was
+false, and it is corrected in this change -- it is exactly the sentence that
+would stop the next reader from looking.
+
+Measured in the emitted artifact rather than inferred: across Trestle's dark
+theme, authored radii 9, 10 and 13 appeared **zero** times in the generated
+Dart, and 20 appeared twice against eleven authored. Sixteen radii are
+restored.
+
+**Not every authored radius comes back, by design.** `board-card` and
+`board-card-crit` author a 3px left accent alongside `border-radius: 9`, and
+Flutter's `Border.paint` throws *"A borderRadius can only be given on borders
+with uniform colors"* the moment a non-uniform `Border(...)` carries one --
+taking out the widget and everything above it in any debug or profile build.
+Those two stay square, gated exactly as the other writer gates them. Radius 9
+is therefore still absent from the output, and that is correct.
+
+Qt does not share this gap: it emits `radius: 13` six times for the same six
+authored declarations. The defect was Flutter's container writer alone.
+
+Nothing caught this. The suite passed identically before and after the fix,
+because no test asserted on this writer's radius at all; two now do, and the
+gate test carries the uniform case as its control so neither can pass
+vacuously.
+
 ### Changed -- Flutter has a style-lowering seam for the first time
 
 Everything `emit_styled_box` lowers from a part's own style props now lives

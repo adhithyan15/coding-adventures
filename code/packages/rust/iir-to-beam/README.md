@@ -126,6 +126,12 @@ assert_eq!(&bytes[0..4], b"FOR1");
 | `load_reg` | `move {x,v} {x,rd}` |
 | `store_reg` | `move {x,src} {x,v}` |
 | `type_assert` | nop (erased at lowering time) |
+| `alloc_bytes` / `alloc_array` (not `array<f64>`/`array<str>`) | `call_ext atomics:new/2` — fixed-size, 64-bit-integer-only mutable array |
+| `alloc_array` (`array<f64>` or `array<str>`) | `call_ext ets:new/2` (BEAM04/BEAM06 — `:atomics` cannot hold floats or strings; no size argument, `:ets` grows dynamically) |
+| `store_byte` / `array_set` (not f64/str) | `idx+1` (`gc_bif2 erlang:+/2`), `call_ext atomics:put/3` (`store_byte` additionally masks the value `band 255`) |
+| `array_set` (f64 or str) | `put_list [Idx,Val]`, `call_ext erlang:list_to_tuple/1`, `call_ext ets:insert/2` (BEAM04/BEAM06 — no `+1`, `:ets` is not 1-indexed; identical for both element types) |
+| `load_byte` / `array_get` (not f64/str) | `idx+1` (`gc_bif2 erlang:+/2`), `call_ext atomics:get/2` |
+| `array_get` (f64 or str) | `call_ext ets:lookup_element/3` (BEAM04/BEAM06 — position `2` of the `{Idx,Val}` tuple; traps `badarg` on a missing key) |
 
 | `global_store` | `gc_bif2 erlang:put/2` (process dictionary) |
 | `global_load` | `gc_bif1 erlang:get/1` |
@@ -159,8 +165,9 @@ Both `erlang:'++'`/2 and `erlang:apply/3` are registered as BIF imports.
 instruction with `type_hint` of `"any"`, `"polymorphic"`, or unsupported
 `"str"`/`"ref<…>"` shapes. The supported string subset is printable-ASCII
 `str_const`, `str_concat`, `str_slice`, `str_len`, `str_index`, `str_eq`,
-`str_cmp`, `print_str`, and ordinary call/return/move transport, represented
-as proper Erlang character lists. `str_slice`'s `[start, end)` bounds lower to
+`str_cmp`, `print_str`, `array_set`/`array_get` (BEAM06 — a `str`-typed
+array element read/write), and ordinary call/return/move transport,
+represented as proper Erlang character lists. `str_slice`'s `[start, end)` bounds lower to
 `lists:sublist(List, start+1, end-start)` (BEAM's `lists:sublist/3` is
 1-indexed and takes a count, not an end offset). `sublist` alone is more
 lenient than `str_slice`'s documented contract (trap when
@@ -195,6 +202,35 @@ constant), but real for a future program with a runtime-zero divisor. See
 `BEAM03-float-lowering.md` §6 for the two directions a future slice could
 take (accept the divergence vs. emulate IEEE-754 with a sentinel
 representation) — left open, not guessed at.
+
+`array_set`/`array_get`/`alloc_array` with `type_hint == "f64"`/
+`"array<f64>"` use `:ets` instead of the `:atomics` module every other
+array/tape op uses (BEAM04 — see the opcode table above and
+`code/specs/BEAM04-float-array-representation.md`): `:atomics` is a
+fixed-size array of 64-bit INTEGERS ONLY, so it cannot hold a float value at
+all (confirmed: `atomics:put(Ref, I, 40.0)` traps `badarg` on real `erl`).
+`:ets` stores arbitrary terms natively and needs zero new BEAM opcodes — a
+bit-reinterpretation approach that kept `:atomics` was researched and
+rejected because it needs three entirely new opcode families
+(`bs_create_bin`, `bs_start_match4`/`bs_match`, `test bs_get_float2`) this
+backend has never implemented, versus `:ets`'s `call_ext`/`put_list`-only
+shape. One known, deliberately unfixed limitation: unlike `atomics:new`,
+`ets:new` does not pre-zero N cells, so reading a never-`array_set` index
+traps `badarg` instead of returning `0.0` — not reachable by any row
+promoted with BEAM04 (every one writes every cell it later reads).
+
+BEAM06 extends this SAME `:ets` substrate, completely unchanged, to
+`type_hint == "array<str>"`/`"str"` (see
+`code/specs/BEAM06-string-array-representation.md`): a `str` value is
+already an ordinary Erlang character list (the `str_const` scalar
+representation above), and `:ets` stores that exactly as natively as a
+float — confirmed on real `erl` with zero new BEAM opcodes and zero new
+representation work needed. A hypothetical heterogeneous array (mixing
+`f64` and `str` elements in one array) never actually arises: BASIC's
+mixed numeric/string `DATA` pool uses three separate parallel typed
+arrays (kind/numeric/string), so no tagged/variant element wrapper is
+needed anywhere in this backend. The same unset-read `badarg` limitation
+above applies identically to string elements.
 
 ## OTP compatibility
 

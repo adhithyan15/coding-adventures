@@ -1,0 +1,9 @@
+{
+  "language": "marwadi",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:fdade7ae25b420db",
+  "lessonIds": [
+    "MW-W03-ghadi-saathe"
+  ],
+  "tex": "marwadi/book/chapters/ch42-mw-ghadi-saathe.tex"
+}

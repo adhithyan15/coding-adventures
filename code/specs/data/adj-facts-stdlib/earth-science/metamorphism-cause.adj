@@ -53,10 +53,31 @@
 %
 % The first sentence names the three causes (`heat`, `pressure`,
 % `hot_mineral_rich_fluids`); the second sentence states the shared effect
-% (`denser_more_compact_rock`) all three produce. An ADJ `table` carries ONE
-% provenance envelope, so the `source`/`locator`/`trust` below hold the
-% cause-naming sentence, with the effect sentence quoted above for full
-% auditability. `trust authoritative` — USGS/usgs.gov is a U.S. government
+% (`denser_more_compact_rock`) all three produce.
+%
+% EACH ROW CARRIES BOTH SENTENCES (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the cause-naming sentence and the effect sentence was quoted
+% here but cited NOWHERE, so no answer carried it at all. Each row now
+% takes the cause sentence as its own `source` and `cites` the effect
+% sentence. They sit in different paragraphs on the page -- the cause in
+% the opening paragraph, the effect under the run-in heading "Process of
+% Metamorphism:" -- so the pair is a source and a corroboration here,
+% and is never welded together into one contiguous span.
+%
+% The envelope is now the page's framing sentence, which names no cause
+% and no effect. It is quoted in the page's OWN characters: the body copy
+% writes U+00A0 before "igneous," and before "sedimentary,", while the
+% page's <head> metadata copies use plain spaces. Typed with plain spaces
+% the sentence occurs ZERO times in the text a reader sees.
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the
+% same host returns 404 and holds none of these spans), tags removed
+% without a space and only ASCII whitespace collapsed: the envelope, the
+% cause sentence and the effect sentence each occur exactly once, each
+% inside one `<p>`, scripts set aside and over the whole file. Every row's
+% page is the envelope's, so no row restates a `locator` line or `trust`.
+%
+% `trust authoritative` — USGS/usgs.gov is a U.S. government
 % (.gov) primary reference, the same tier `rock-types.adj` already
 % established for its own NPS citation.
 % (See ../README.md; feedback_nothing_human_authored,
@@ -66,11 +87,20 @@
 table metamorphism_cause {
     columns cause, effect
 
-    row (heat, denser_more_compact_rock)
-    row (pressure, denser_more_compact_rock)
-    row (hot_mineral_rich_fluids, denser_more_compact_rock)
+    row (heat, denser_more_compact_rock) {
+        source "Metamorphic rocks form when rocks are subjected to high heat, high pressure, hot mineral-rich fluids or, more commonly, some combination of these factors."
+        cites "The process of metamorphism does not melt the rocks, but instead transforms them into denser, more compact rocks." locator "https://www.usgs.gov/faqs/what-are-metamorphic-rocks"
+    }
+    row (pressure, denser_more_compact_rock) {
+        source "Metamorphic rocks form when rocks are subjected to high heat, high pressure, hot mineral-rich fluids or, more commonly, some combination of these factors."
+        cites "The process of metamorphism does not melt the rocks, but instead transforms them into denser, more compact rocks." locator "https://www.usgs.gov/faqs/what-are-metamorphic-rocks"
+    }
+    row (hot_mineral_rich_fluids, denser_more_compact_rock) {
+        source "Metamorphic rocks form when rocks are subjected to high heat, high pressure, hot mineral-rich fluids or, more commonly, some combination of these factors."
+        cites "The process of metamorphism does not melt the rocks, but instead transforms them into denser, more compact rocks." locator "https://www.usgs.gov/faqs/what-are-metamorphic-rocks"
+    }
 
-    source "Metamorphic rocks form when rocks are subjected to high heat, high pressure, hot mineral-rich fluids or, more commonly, some combination of these factors."
+    source "Metamorphic rocks started out as some other type of rock, but have been substantially changed from their original igneous, sedimentary, or earlier metamorphic form."
     locator "https://www.usgs.gov/faqs/what-are-metamorphic-rocks"
     trust authoritative
 }

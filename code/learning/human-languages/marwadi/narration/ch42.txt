@@ -1,0 +1,36 @@
+Marwadi (Marwari), chapter 42: Writing --- With A Clock.
+1 lesson. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 1.
+The same writing, with a clock — the A1 writing paper's own clock, its two tasks, and its own published lengths.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+You wrote your own line with as long as you liked.
+[pause 1 second]
+A task you can only do untimed is not yet a task you can do.
+
+Writing — timed production.
+What this track's contract publishes. The A1 writing paper runs 20 minutes and holds two tasks:
+a practical form asking for six to eight completed fields, worth 40 of the paper's 100 points;
+a message for a named reader and a stated purpose, 30 to 40 words, worth the other 60.
+Those numbers are read out of task-shapes/a1.json, the file the assessment contract points at. They are not invented here.
+[pause 2 seconds]
+Read the split before you write a word: the message is worth more than the form and is the shorter of the two. Time spent perfecting a field is time taken from the part that scores.
+[pause 2 seconds]
+Seven minutes for the form, starting now. Fill every field. A blank field scores nothing and cannot be argued with.
+[pause 3 seconds]
+Now the message: thirteen minutes, thirty to forty words.
+[pause 2 seconds]
+Stop when the time is up, even mid-word. An unfinished paper is information; an untimed one is not.
+
+Wrap-up recall.
+[pause 2 seconds]
+Count the words in your message. Under thirty and the task is half done; well past forty and you spent time the paper did not give you.
+[pause 2 seconds]
+Then check the form for blanks before mistakes. A field with a wrong answer can still earn something; a field left empty cannot.
+[question — say your answer, then pause 12 seconds]
+Which of the two tasks is worth more, the form or the message?

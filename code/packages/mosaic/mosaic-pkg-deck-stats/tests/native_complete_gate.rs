@@ -76,6 +76,36 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // still reported, so this entry would come back if one appeared here.
     (Backend::Compose, "border-bottom-style"),
     (Backend::Xaml, "border-bottom-style"),
+    // ---- Qt (#15245) ----
+    //
+    // These became visible the moment Qt started reporting its drops in
+    // #15245. They are PRE-EXISTING gaps, not regressions: this package has
+    // been rendering without them on Qt since the parts were authored, and
+    // nothing could see them because the backend reported no drops at all.
+    //
+    // Pinned so the gate stays honest, NOT to bless them -- see this list's
+    // doc comment on how a stale pin turns into a standing licence.
+    //
+    // alignment is not threaded onto the element yet.
+    (Backend::Qt, "align"),
+    (Backend::Qt, "text-align"),
+    //
+    // per-edge border halves are not lowered here.
+    (Backend::Qt, "border-bottom-color"),
+    (Backend::Qt, "border-bottom-style"),
+    (Backend::Qt, "border-bottom-width"),
+    //
+    // Qt expresses this through the container chosen (RowLayout /
+    // ColumnLayout / Flow), not through a property on a built element.
+    (Backend::Qt, "flex-grow"),
+    //
+    // #15247 -- `qml_padding` reads ONE value and fans it to all four
+    // edges, so any longhand beyond the one it picks is lost.
+    (Backend::Qt, "padding-bottom"),
+    //
+    // a percentage width has no direct QML analogue; the emitter declines
+    // rather than collapsing it.
+    (Backend::Qt, "width"),
 ];
 
 fn package_root() -> PathBuf {

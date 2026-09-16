@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 62,
+  "title": "Writing --- Four Lines, And The Word That Has A Twin",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:49411a83da116be0",
+  "lessons": [
+    {
+      "id": "LA-W04-quattuor-versus",
+      "sequence": 1730,
+      "title": "Four lines, and the word that has a twin",
+      "headword": "quia",
+      "romanization": "quia",
+      "gloss": "four lines to one reader, and the two words Latin has for because",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:ae1bdcb32f2763d2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson asked for writing finished on time. This one asks for writing that holds together."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one person who will read it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Connected writing is not longer writing. Four short lines can be connected; one long line can fail to be. What makes it connected is that a sentence stops standing on its own."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You hold four joiners. et adds. sed sets against. aut offers. quia gives the reason."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use quia for your reason, and use it deliberately, because Latin has a second word that also means because — quod — and that one is doing two jobs at once. quod is also the ordinary word for which."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "So a sentence built on quod hands the reader a small decision the writer may not have noticed making: is this a reason, or is it a relative clause? quia hands them nothing to decide. At this level, write the word that can only mean one thing."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is a real habit and not a beginner's crutch. Choosing the unambiguous word where one exists is most of what clear writing is, in any language."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write four lines to the person you picked."
+            },
+            {
+              "kind": "speech",
+              "text": "At least one must use et, sed or aut. At least one must use quia."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use only words and forms the book has shown you. This lesson adds no vocabulary; the whole exercise is the joining."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover your first line and read the second alone. Does it still make sense without the first? If it does, you wrote a list — which is where you were one lesson ago."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of Latin's two words for because can also mean which? (quod.) And which one did you write? (quia — the one that cannot be mistaken.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

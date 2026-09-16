@@ -1,0 +1,19 @@
+{
+  "chapter": 41,
+  "title": "Writing --- My Own Line",
+  "label": "ch:mw-khud-ro-line",
+  "canDo": "I can write one line about myself from a closed supply of known words, with nothing to copy, drawing the top line across the whole word.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "MW-W02-mharo-khud-ro-line",
+    "kind": "task",
+    "summary": "Complete MW-W02-mharo-khud-ro-line: one line chosen rather than copied, with the head-line checked before anything else.",
+    "assesses": [
+      "MW-SKILL-READ-NOTICE",
+      "MW-SKILL-READ-SIGNBOARD"
+    ],
+    "note": "The first writing step with nothing to reach for. The script check arrives with it: the line across the top belongs to the word, not to each letter, so it is drawn last and runs the whole way."
+  }
+}

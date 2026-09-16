@@ -1,6 +1,6 @@
 # LANG VM feature and backend coverage
 
-Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification, then reference-modification MOVE/trap, then STRING SIZE/delimiter, then UNSTRING/delimiter, then INSPECT TALLYING/REPLACING, then pointer/overflow, then regions/self-move, then Dartmouth BASIC BEAM pure-string family, then Dartmouth BASIC BEAM numeric baseline / BEAM03 f64 lowering, then BEAM03 continuation neg(f64)/f64_pow, then VM-LOOP-24's probe-first general-arithmetic/control-flow and math-builtin promotions). This is an inventory of the implemented
+Audit base: `cd73f3ad86` (2026-09-05); corpus counts updated for VM-047b, VM-057, VM-047c, VM-039b, VM-061, VM-042 and VM-040 (COBOL BEAM boolean/EVALUATE, then string ops/reference modification, then reference-modification MOVE/trap, then STRING SIZE/delimiter, then UNSTRING/delimiter, then INSPECT TALLYING/REPLACING, then pointer/overflow, then regions/self-move, then Dartmouth BASIC BEAM pure-string family, then Dartmouth BASIC BEAM numeric baseline / BEAM03 f64 lowering, then BEAM03 continuation neg(f64)/f64_pow, then VM-LOOP-24's probe-first general-arithmetic/control-flow and math-builtin promotions, then BEAM04's ets-backed float-array representation, then VM-041's Twig call_closure-liveness fix and probe-first sweep plus its match/union fusion follow-up, then BEAM06's str-typed array element representation). This is an inventory of the implemented
 frontend families and their executable proof boundaries, not a claim that the
 historical languages or every backend are complete. Follow-up IDs live in the
 [completion backlog](LANG-VM-NON-ALGOL-BACKLOG.md).
@@ -24,10 +24,10 @@ refusal also does not imply the complete driver refuses that feature.
 
 | Frontend | Unified rows | Declared cells (all backends, Beam included) | Additional proof boundary |
 |---|---:|---:|---|
-| Twig | 49 | 363 | 20 of those cells are BEAM; dedicated heap/closure tests |
+| Twig | 49 | 392 | All 49 of those cells are BEAM (VM-041 + this follow-up: `match`/`union` fusion fix); dedicated heap/closure/string/union tests |
 | Nib | 26 | 208 | All eight columns including real BEAM u4/u8 and BCD storage |
 | Brainfuck | 6 | 45 | Dedicated WASM/JVM/CLR and JIT execution; 3 of 6 rows also real BEAM (VM-042) |
-| Dartmouth BASIC | 51 | 396 | 39 of those cells are BEAM (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins, BEAM03/VM-LOOP-24); random differential suite and frontend JIT tests |
+| Dartmouth BASIC | 51 | 402 | 45 of those cells are BEAM (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins + 4 arrays/DATA + 2 string arrays, BEAM03/VM-LOOP-24/BEAM04/BEAM06); random differential suite and frontend JIT tests |
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
 | FLOW-MATIC | 8 | 60 | Four output/control-flow rows on eight columns; four input/EOF rows on seven |
@@ -35,8 +35,9 @@ refusal also does not imply the complete driver refuses that feature.
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1632
-declared cells (sum of the non-ALGOL rows above). At VM-061 this matched a
+The normal non-ALGOL capstone therefore declares 210 programs and 1667
+declared cells (sum of the non-ALGOL rows above, updated for BEAM06's two
+newly-promoted Dartmouth BASIC Beam cells). At VM-061 this matched a
 fresh `non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells
 exercised plus 210 skipped (missing local `ilasm`) = 1548. VM-042 then added
 three real Beam cells to Brainfuck (42 → 45 declared), so a fresh run on a
@@ -180,6 +181,127 @@ at VM-018, not something `real_to_int_floor` unblocks as a side effect. See
 `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-LOOP-24" section for the reprioritization
 note. Dartmouth BASIC now declares 39/51 rows on Beam.
 
+BEAM04 (`code/specs/BEAM04-float-array-representation.md`) then closed the
+first of VM-LOOP-24's two deferred design questions: the 1-D/2-D numeric-
+array and `DATA`/`READ`/`RESTORE` rows compiled cleanly but trapped at
+runtime (`{badarg,[{atomics,put,[Ref,Index,FloatValue],...}]}`), because
+`iir-to-beam` represented every `alloc_array`/`array_set`/`array_get` with
+Erlang's `:atomics` module, which can only hold 64-bit integers. Two
+directions were researched concretely against real `erl`/`erlc -S`, not
+guessed at: (a) bit-reinterpreting the f64 as a 64-bit integer via BEAM
+bit-syntax, reusing `:atomics` unchanged — the bit pattern round-trips
+exactly for every finite f64 tested, but the actual BEAM instruction shape
+needed (`bs_create_bin`/`bs_start_match4`/`bs_match`, confirmed by
+disassembling a real compiled bit-syntax round-trip) is an entirely new,
+materially more complex operand-encoding subsystem this backend has never
+needed; (b) switching float-element arrays to `:ets`, which stores
+arbitrary terms (floats included) natively — confirmed via `erlc -S` to
+need **zero** new BEAM opcodes: `ets:new/2`/`ets:insert/2`/
+`ets:lookup_element/3` are ordinary `call_ext`s (the same shape `math:*`
+already uses), and the `{Idx, Val}` insert tuple is built with `put_list` +
+`erlang:list_to_tuple/1` (the same list-construction op `call_closure`'s
+arg-list already uses). (b) was chosen on that evidence — the backlog's own
+prior guess that reusing `:atomics` would "likely" be simpler did not hold
+up once actually measured. This promotes four more BASIC rows (396 → 400
+declared BASIC cells): the 1-D array row, the 2-D array row, the `DATA`/
+`READ`/`RESTORE` row, and the fractional-`DATA` row, all executed on real
+Erlang (`portable_text_stdout_dartmouth_basic_beam_arrays_and_data`). A
+known, documented limitation was found and left unfixed (not exercised by
+any promoted row, since each writes every cell it later reads): unlike
+`atomics:new`, `ets:new` does not pre-zero N cells, so reading a
+never-`array_set` index traps (`badarg`) instead of returning `0.0`.
+String-typed arrays remain a separate, larger gap (`iir-to-beam` has no
+`str`-typed array element representation at all — independent of the
+float-storage question just closed), and `RND` remains blocked on VM-018's
+module-global design question, neither touched by this slice. Dartmouth
+BASIC now declares 43/51 rows on Beam; the only remaining gaps are the 5
+`INPUT` rows (VM-060b), the 2 string-array/mixed-`DATA` rows, and `RND`.
+
+VM-041 then turned to Twig, the last non-ALGOL frontend with a large
+undeclared BEAM surface (20/49 rows, the remaining 29 framed only as
+unscoped "dynamic-string/record/closure BEAM isolation" design work). A
+confirmed silent-data-corruption bug had to be fixed first: `iir-to-beam`'s
+`"call_closure"` lowering emits TWO `call_ext` instructions
+(`erlang:'++'/2` then `erlang:apply/3`), and neither was wrapped in the
+liveness save/restore macros — the same VM-D029 bug class already fixed
+once for the six `:atomics` ops, dormant here because no `lang_matrix.rs`
+row exercising `call_closure` had ever declared `Beam`. With the fix landed
+(and a real-`erl` regression test proving a variable now survives across a
+`call_closure` call), a probe-first sweep of EVERY one of the 29 not-yet-
+`Beam` Twig rows against real `erl` found **27 pass completely unchanged** —
+dynamic `any`-typed arithmetic, the `length`/`list-ref`/`assoc` recursive
+list-walk helpers, both closure rows (no-capture and capturing, unblocked
+by the fix above), and all 19 string-op rows (`iir-to-beam`'s string ops
+were already proven on BEAM for other frontends; these Twig rows had simply
+never been individually probed). Only 2 rows (`match`/`union`) remain
+deferred: a validator gap was found and fixed along the way (`"mov"` with a
+`ref<LispyPair>` type_hint was rejected even though `lower.rs` already
+lowers it correctly for any type — relaxed to mirror the existing `"str"`
+exception, proven correct by a dedicated real-`erl` test), but that fix
+alone is not sufficient — both rows hit a SEPARATE, deeper, still-open gap:
+the `alloc`+`field_store`+`field_store` → `put_list` fusion only recognizes
+the three instructions immediately adjacent, and the synthesized
+union-variant constructor interleaves a `mov` between them. Twig now
+declares 47/49 rows on Beam (363 → 390 declared cells); only tagged-union
+pattern matching remains.
+
+A direct follow-up then pinned down and closed that exact gap. Compiling the
+`match`/`union` corpus row through `compile_source_to_iir` and dumping the
+`Some` constructor's IIR (a scratch probe, discarded before the PR) showed
+the interleaved instruction is a **`box`**, not the `mov` guessed at above —
+and it sits between `alloc` and the FIRST `field_store`, not between the two
+`field_store`s: `twig-ir-compiler::emit_union_def`'s per-field cons-cell loop
+emits `alloc`, then `box` (E6d-6b: boxing the field for the tagged backends'
+`match`/`unbox` round-trip), THEN the two `field_store`s. Of the two fix
+directions the backlog left open — teaching `iir-to-beam`'s fusion
+look-ahead to tolerate interleaving, or changing the union-variant
+constructor's own codegen — the codegen fix was chosen: `box` has no data
+dependency on the freshly allocated cell register (it only reads the field
+value), so hoisting it to before the `alloc` changes no semantics on any
+backend and merely restores the adjacency the fusion needs, exactly
+mirroring this same function's tag/head cons cell a few lines below, which
+already computed its own `box` before its `alloc`. This is strictly less
+machinery than a general N-instruction-skip scanner in `iir-to-beam` (a
+backend every other frontend also depends on) for a concrete case with
+exactly one interleaved-instruction shape. Proven by
+`twig-ir-compiler`'s new `union_constructor_alloc_immediately_followed_by_
+its_two_field_stores` test (adjacency, direct on the emitted IIR) and
+`lang-aot`'s new `twig_beam_match_union` test (full pipeline, real `erl`,
+both promoted rows). Twig now declares **49/49** rows on Beam (390 → 392
+declared cells) — fully complete. Combined with COBOL-60 (58/58) and Nib/Oct
+(already full), Twig closing to 49/49 left Dartmouth BASIC's remaining 8
+design-blocked rows (5 `INPUT` rows on VM-060b, 2 string-array/mixed-`DATA`
+rows, `RND` on VM-018) as the ONLY non-ALGOL BEAM gap left in this backlog.
+
+BEAM06 then took up the string-array/mixed-`DATA` gap — the one item of
+those three that was NOT actually an unscoped design question, once
+investigated. `iir-to-beam`'s validator rejected `array_set`/`array_get`
+with `type_hint == "str"` outright (`UnsupportedType`), and BEAM04 had
+explicitly framed this as needing "a BEAM representation for a
+*heterogeneous* element type." Research tested that framing directly rather
+than accepting it: `str_const`'s existing scalar lowering already
+represents a `str` value as an ordinary Erlang character list, and BEAM04's
+`:ets`-backed array substrate already stores arbitrary Erlang terms
+natively — confirmed on real `erl` with a standalone probe mirroring
+`iir-to-beam`'s exact `array_set`/`array_get` instruction shape (round-trip,
+overwrite, concatenation of two round-tripped elements, and the
+empty-string edge case all pass). Tracing `dartmouth-basic-iir-compiler`'s
+mixed-`DATA` lowering directly also found the "heterogeneous element"
+framing did not apply in practice: BASIC's `DATA` pool materializes THREE
+separate parallel typed arrays (kind/numeric/string), never one array
+holding mixed element types — so no tagged/variant representation was
+needed anywhere. The fix was a pure widening of the existing `:ets`-dispatch
+condition (`"array<f64>"`/`"f64"` → also `"array<str>"`/`"str"`) plus a
+matching validator exception, with the emitted BEAM instructions
+byte-for-byte identical to the existing float-array path. Full research:
+`code/specs/BEAM06-string-array-representation.md`. Promoted both blocked
+rows (`DIM A$(2)` and the mixed numeric/string `DATA`/`READ`/`RESTORE` row)
+via a dedicated real-`erl` test. Dartmouth BASIC now declares **45/51** rows
+on Beam (400 → 402 declared cells); the only remaining gaps (5 `INPUT` rows
+on VM-060b, `RND` on VM-018) are genuinely unscoped design questions, not
+probe-and-promote items — this closes out every non-ALGOL BEAM gap in this
+backlog that does not require a new, out-of-scope architectural decision.
+
 The "Declared cells" column counts every backend a
 row proves, Beam included — the convention Nib, Oct, FLOW-MATIC and
 COBOL-60's numbers already used. Twig was the one holdout at VM-061: its old
@@ -212,10 +334,10 @@ tenth universal backend.
 
 | Frontend/source | Implemented family and current executable evidence | Boundary and next work |
 |---|---|---|
-| [Twig lowerer](../packages/rust/twig-ir-compiler/src/compiler.rs) | Scalars, variadic arithmetic, lexical bindings, calls, cons/list operations, symbols, globals, records/unions, closures and source-inferred strings. Unified rows cover heap arithmetic, list helpers, quote equality, records/match, forward and boxed globals, capturing closures, literal/local/parameter strings and a bounds trap. | BEAM covers 20 selected rows, not all strings/records/closures. Dynamic or captured/reassigned strings exceed the source-local fast path. VM-040 inventories the remaining BEAM families; VM-041 isolates dynamic-string lowering from existing literal metadata. |
+| [Twig lowerer](../packages/rust/twig-ir-compiler/src/compiler.rs) | Scalars, variadic arithmetic, lexical bindings, calls, cons/list operations, symbols, globals, records/unions, closures and source-inferred strings. Unified rows cover heap arithmetic, list helpers, quote equality, records/match, forward and boxed globals, capturing closures, literal/local/parameter strings and a bounds trap. | BEAM covers all 49/49 rows (VM-041's call_closure-liveness fix + probe-first sweep, then this follow-up's union-variant `alloc`/`box`/`field_store` reorder for the `match`/`union` fusion gap). Twig has no further BEAM gaps in this backlog. |
 | [Nib lowerer](../packages/rust/nib-iir-compiler/src/lib.rs) | Integer arithmetic, narrow masking, wrapping/saturating addition, bitwise/logical operations, branches/loops, calls, const/static initialization and BCD storage. Unified rows execute standard-backend cases. [JIT tests](../packages/rust/nib-iir-compiler/tests/jit_e2e.rs) independently exercise compiled functions. | Standard-target parity does not establish 4004 arithmetic/control-flow fidelity. Existing VM-028 owns that audit; VM-012 proves only its landed BCD storage slice. BEAM remains undeclared (VM-040). |
 | [Brainfuck compiler](../packages/rust/brainfuck-iir-compiler/src/compiler.rs) | All eight commands, wrapped tape cells/pointer movement, nested loops and input/EOF. Unified rows plus [WASM](../packages/rust/brainfuck-iir-compiler/tests/wasm_e2e.rs), [JVM](../packages/rust/brainfuck-iir-compiler/tests/jvm_e2e.rs), [CLR](../packages/rust/brainfuck-iir-compiler/tests/clr_e2e.rs) and [JIT](../packages/rust/brainfuck-iir-compiler/tests/jit_smoke.rs) execution. | VM-042/VM-D031: the frontend README's "BEAM tape support intentionally excluded" claim was stale — `iir-to-beam`'s `:atomics`-backed mutable memory (added for this exact purpose) already lowers tape mutation and `.`; a real `erl` probe promoted the 3 non-input rows to a real Beam cell each. `,` still refuses explicitly (no `getchar` builtin), pinned by `call_builtin_getchar_rejected_but_putchar_accepted`; that gap is host input (VM-060b), shared with every other frontend's BEAM input rows, not a Brainfuck- or tape-specific limitation. |
-| [BASIC lowerer](../packages/rust/dartmouth-basic-iir-compiler/src/lib.rs) | f64 arithmetic/general power/transcendentals, deterministic RND, scalar/string input and output, branches, FOR, GOSUB/RETURN, DEF FN, numeric/string arrays, mixed DATA/READ/RESTORE. All 51 rows declare at least seven columns; 39 rows (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins, BEAM03/VM-LOOP-24) also declare BEAM; random differential tests supplement fixed results. | DEF FN global access and historical print zones are frontend semantics, not already-implemented parity. The remaining ~12 numeric/`INPUT` rows still lack BEAM: the 5 `INPUT` rows need the unscoped BEAM host-input design (VM-060b); numeric/string arrays and `DATA`/`READ`/`RESTORE` (6 rows) need a BEAM float/string array data-representation decision (`atomics` is integer-only, confirmed by a real `erl` trap, not a missing opcode); `RND` (1 row) needs the still-open "DEF-FN-and-module-global chain" design question from VM-018. Two-dimensional numeric DIM already has a seven-column matrix proof; the stale one-dimensional-only README wording is corrected in this audit. |
+| [BASIC lowerer](../packages/rust/dartmouth-basic-iir-compiler/src/lib.rs) | f64 arithmetic/general power/transcendentals, deterministic RND, scalar/string input and output, branches, FOR, GOSUB/RETURN, DEF FN, numeric/string arrays, mixed DATA/READ/RESTORE. All 51 rows declare at least seven columns; 45 rows (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins + 4 arrays/DATA + 2 string arrays, BEAM03/VM-LOOP-24/BEAM04/BEAM06) also declare BEAM; random differential tests supplement fixed results. | DEF FN global access and historical print zones are frontend semantics, not already-implemented parity. The remaining 6 `INPUT`/`RND` rows still lack BEAM: the 5 `INPUT` rows need the unscoped BEAM host-input design (VM-060b); `RND` (1 row) needs the still-open "DEF-FN-and-module-global chain" design question from VM-018 — both genuinely unscoped design questions, not probe-and-promote items. String-typed arrays and mixed numeric/string `DATA` (2 rows) are no longer a gap: BEAM06 found the existing `:ets`-backed array substrate (BEAM04) already stores `str` values natively (a `str` value is already an ordinary Erlang character list), needing zero new representation work. Two-dimensional numeric DIM already has a seven-column matrix proof; the stale one-dimensional-only README wording is corrected in this audit. |
 | [Oct lowerer](../packages/rust/oct-iir-compiler/src/lib.rs) | u8 arithmetic/masking, bitwise/logical operations, functions, local/global state, if/while/loop/break and stdout `out`. Matrix covers output, wrap, short circuit, shared globals, loop-carried wrapping returned from a function, conditional break and nested break targets; [JIT suite](../packages/rust/oct-iir-compiler/tests/jit_e2e.rs) separately executes while loops and returned function values. | VM-044 adds observable loop/break and returned-call standard-column proofs. `in`, carry arithmetic and rotations are explicit intrinsic errors; VM-013 owns portable machine-state design. Body-local static and floats are not implemented parity gaps. |
 | [ALGOL lowerer](../packages/rust/algol-iir-compiler/src/lib.rs) | Scalar integer/boolean/real/string operations, arrays, procedures, by-name specializations, switches and nonlocal control flow have a substantial evolving corpus. [Frontend JIT](../packages/rust/algol-iir-compiler/tests/jit_e2e.rs) and [AOT smoke](../packages/rust/algol-iir-compiler/tests/aot_smoke.rs) are separate proofs. | Full LANG matrix remains excluded for the recorded native-array failure. VM-025 and the separate ALGOL owner control fixes and detailed feature expansion; 232 declarations do not mean 232 green Linux programs. |
 | [FLOW-MATIC lowerer](../packages/rust/flow-matic-iir-compiler/src/lib.rs) | MOVE, COMPARE/IF/OTHERWISE, GO TO/JUMP, STOP, READ-ITEM/EOF and WRITE-ITEM. Four unified rows prove scalar move/output, a taken EQUAL, false LESS/GREATER reaching OTHERWISE, and a jump chain. [JIT stream tests](../packages/rust/flow-matic-iir-compiler/tests/jit_e2e.rs) run read/process/write to EOF through custom `input_more`/`input_i64` builtins. | VM-037 adds terminating, output-discriminating control-flow rows; positive LESS/GREATER on nonzero input still requires VM-039. VM-039 provides portable EOF-aware input before promoting record streams to code-generation columns. TRANSFER and tape control are clean frontend rejections, not secretly implemented file I/O. |

@@ -1,0 +1,21 @@
+{
+  "chapter": 55,
+  "title": "Writing --- Four Lines, And The Joiner You Can See",
+  "label": "ch:ge-vier-zeilen",
+  "canDo": "I can write four connected lines to a named reader, joining with und and aber and giving a reason with weil, and check that weil actually moved the verb to the end.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "GE-W04-vier-zeilen",
+    "kind": "task",
+    "summary": "Complete GE-W04-vier-zeilen: four lines to one reader, at least one joined with und or aber and one with weil, then point at the verb in the weil line and check it is last.",
+    "assesses": [
+      "GE-LEX-UND-01",
+      "GE-LEX-ABER-01",
+      "GE-LEX-WEIL-01",
+      "GE-GRAMMAR-VERB-LETZT-01"
+    ],
+    "note": "German is the one track in this arc where the join is VISIBLE: und and aber leave the sentence as it was, weil sends the verb to the end. A weil line whose verb has not moved is und with a different spelling."
+  }
+}

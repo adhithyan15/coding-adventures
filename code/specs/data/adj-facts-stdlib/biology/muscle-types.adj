@@ -5,8 +5,9 @@
 % A rung a MEDICINE agent reasons UP from: below the four basic tissue types
 % (see tissue-types.adj) the MUSCLE tissue splits into exactly THREE kinds —
 % skeletal, smooth, and cardiac — and the source separates them by a single
-% telling trait. "Skeletal muscle is under voluntary control; smooth muscle is
-% involuntary; cardiac muscle is the one with intercalated disks." Before you
+% telling trait. In paraphrase (not the page's words): skeletal muscle is under
+% voluntary control; smooth muscle is involuntary; cardiac muscle is the one
+% with intercalated disks. Before you
 % can reason about a muscle biopsy, a heart, or a gut wall you must first know
 % WHICH of the three muscle-tissue types you are looking at. Recall is a binding
 % query:
@@ -26,7 +27,7 @@
 %     -----------   --------------------------   ------------------------------
 %     skeletal      voluntary                    the muscle you move on purpose
 %     smooth        involuntary                  gut & vessel walls, not willed
-%     cardiac       intercalated_disks           the disks unique to heart muscle
+%     cardiac       intercalated_disks           disks the heart sentence names
 %
 % The query also runs BACKWARD — bind a trait and recall its muscle type:
 %
@@ -40,12 +41,17 @@
 %
 % The `trait` value of every row is a SINGLE lowercase atom, chosen to be a
 % distinctive characteristic the source EXPLICITLY states for that muscle type,
-% and the three values are kept DISTINCT. The source calls both smooth and
-% cardiac muscle involuntary, so `involuntary` could not tell those two apart;
-% cardiac's row therefore uses `intercalated_disks`, the trait the source names
-% as UNIQUE to cardiac muscle ("The presence of intercalated disks distinguishes
-% cardiac muscle as unique among the three types" — the source's own summary),
-% so every value stays literally checkable against its own quoted span.
+% and the three values are kept DISTINCT. The page calls smooth muscle
+% involuntary ("They are called involuntary muscles.") and says of cardiac
+% muscle "Its contraction is not under voluntary control." So `involuntary`
+% could not tell those two apart; cardiac's row therefore uses
+% `intercalated_disks`, which the cardiac sentence names. The original header
+% added that the source names
+% intercalated disks as UNIQUE to cardiac muscle, quoting "The presence of
+% intercalated disks distinguishes cardiac muscle as unique among the three
+% types" as the source's own summary. UNVERIFIED: that quote does not occur on
+% the cited page (measured 2026-09-15). Every row value stays literally
+% checkable against its own quoted span.
 %
 % ---------------------------------------------------------------------------
 % Provenance (nothing here is asserted from memory — every muscle→trait pair
@@ -72,17 +78,32 @@
 %     "Cardiac muscle has branching fibers, one nucleus per cell, striations,
 %      and intercalated disks."
 %
-% (The three-type framing itself is stated on the same SEER page —
-% "There are three types of muscle tissue: Skeletal muscle ... Smooth muscle ...
-% Cardiac muscle ..." — another span of the same primary U.S. government
-% teaching resource.)
+% (The original header said the three-type framing is stated on the same SEER
+% page, quoting "There are three types of muscle tissue: Skeletal muscle ...
+% Smooth muscle ... Cardiac muscle ...". UNVERIFIED: "There are three types of
+% muscle tissue" does not occur on the cited page (measured 2026-09-15).)
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the SEER statement that fixes the
-% first row (skeletal → voluntary). Every OTHER row's per-fact source and
-% verbatim span is listed above, so each trait remains independently checkable.
-% All sources are the NCI SEER Training Modules, a primary U.S. government
-% (National Cancer Institute) teaching resource, so `trust authoritative`.
+% EACH ROW CARRIES ITS OWN SPAN (ADJ-TABLES RS-5e, #14986). This paragraph
+% used to say an ADJ `table` carries ONE provenance envelope; per-row blocks
+% exist, and the envelope was the skeletal sentence, so it was the primary
+% source of all three answers. Each row quote above names its muscle type and
+% its trait, so every row now takes its own as a `source`. The smooth row's is
+% the two-sentence span, because "involuntary" is only in the second sentence
+% and its "They" needs the first. The envelope is now the page's framing
+% sentence, which names no muscle type and no trait:
+%
+%     "Muscle tissue is composed of cells that have the special ability to
+%      shorten or contract in order to produce movement of the body parts."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the three row spans, the envelope, and the cardiac
+% sentence quoted above ("Its contraction is not under voluntary
+% control.") each occur exactly once, each inside a `<p>`. Every row's page
+% is the envelope's, so no
+% row restates a `locator` line or `trust` (ADJ-TABLES §4). All sources
+% are the NCI SEER Training Modules, a primary U.S. government (National
+% Cancer Institute) teaching resource, so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -90,11 +111,20 @@
 table muscle_trait {
     columns muscle, trait
 
-    row (skeletal, voluntary)
-    row (smooth, involuntary)
-    row (cardiac, intercalated_disks)
+    row (skeletal, voluntary) {
+        source "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
+    }
+    row (smooth, involuntary) {
+        source "Smooth muscle cells are spindle shaped, have a single, centrally located nucleus, and lack striations. They are called involuntary muscles."
+    }
+    row (cardiac, intercalated_disks) {
+        source "Cardiac muscle has branching fibers, one nucleus per cell, striations, and intercalated disks."
+    }
 
-    source "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
+    % THE ENVELOPE WAS THE SKELETAL ROW'S OWN SENTENCE, the primary source of
+    % all three answers. It is now a framing sentence that names no muscle type
+    % and no trait. Every row overrides it, so it reaches no answer.
+    source "Muscle tissue is composed of cells that have the special ability to shorten or contract in order to produce movement of the body parts."
     locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
     trust authoritative
 }

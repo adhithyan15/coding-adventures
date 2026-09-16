@@ -1,5 +1,35 @@
 # Changelog — twig-ir-compiler
 
+## [0.45.1] — 2026-09-15 (VM-041 follow-up — union-variant `box` no longer interleaves `alloc`/`field_store`)
+
+`emit_union_def`'s per-field cons-cell construction now emits the field's
+`box` op **before** the `alloc` that allocates its cons cell, instead of
+after. Previously the order was `alloc`, `box`, `field_store`, `field_store`
+— now it is `box`, `alloc`, `field_store`, `field_store`.
+
+Why: `iir-to-beam`'s cons-cell fusion (`alloc` + `field_store` + `field_store`
+→ one BEAM `put_list`) only recognizes the three instructions when they are
+textually adjacent (a `[idx]`/`[idx+1]` look-ahead peek, not a general scan).
+The interleaved `box` broke that adjacency, so every Twig `match`/`union`
+program failed BEAM lowering with `UnsupportedOp { function: "Some", op:
+"field_store: found outside of alloc+field_store+field_store pattern" }` —
+confirmed by direct IIR inspection (dumping the synthesized `Some`
+constructor's instruction list) to be the exact, and only, interleaved shape.
+
+`box` reads only the field value passed to the constructor; it has no data
+dependency on the freshly allocated cell register `alloc` produces, so
+reordering the two instructions changes no semantics on any backend — this
+mirrors the SAME function's tag/head cons cell a few lines below, which
+already computed its `box` before its own `alloc`. Proven by a new test,
+`union_constructor_alloc_immediately_followed_by_its_two_field_stores`
+(`tests/backend_compat.rs`), which asserts every `alloc ref<LispyPair>` in
+the `Some` constructor is immediately followed by its two matching
+`field_store`s; the existing `union_constructor_boxes_tag_and_fields` test
+(unaffected by the reorder) continues to pass. See `lang-aot`'s CHANGELOG for
+the full-pipeline real-`erl` proof (`twig_beam_match_union`) and
+`code/specs/LANG-VM-NON-ALGOL-BACKLOG.md`'s VM-041 section for the complete
+investigation.
+
 ## [0.45.0] — 2026-07-14 (LANG-FULL E6d-6b — union `match` runs on the tagged backends)
 
 `emit_union_def` now stores a variant's **tag and each field boxed** — a `box`
