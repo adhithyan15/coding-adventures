@@ -48,7 +48,7 @@ So the rules:
   +  assessment contract points at. They are not invented here.
   ```
 
-## Verifying it locally is worth the install
+### Verifying it locally is worth the install
 
 There is no need to guess at this class of bug. `check-book-compile.sh` plus
 `scan_latex_log_warnings.py` reproduce the CI failure exactly:
@@ -67,7 +67,7 @@ One track compiles in well under a minute. Tracks whose preamble loads bidi
 (hindi, and the RTL tracks) additionally need `texlive-lang-arabic`, or they die
 on a missing `bidi.sty` that has nothing to do with the content under test.
 
-## Editing a lesson touches three generators, not one
+### Editing a lesson touches three generators, not one
 
 `generate:books` alone leaves `check:modality` red. After changing any
 `lessons/*.md`, run all three and then the gates:
