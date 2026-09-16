@@ -1,0 +1,20 @@
+{
+  "id": "ES-EXT-424-SIGNOS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "orthography",
+  "canDo": "I can name the eight punctuation marks Spanish writing uses and say what each one does.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C424-punto",
+    "ES-C424-coma",
+    "ES-C424-dos-puntos",
+    "ES-C424-raya",
+    "ES-C424-comillas",
+    "ES-C424-parentesis",
+    "ES-C424-guion",
+    "ES-C424-barra",
+    "ES-C424-repaso-signos",
+    "ES-C424-sintesis-nota"
+  ]
+}

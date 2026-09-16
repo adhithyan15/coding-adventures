@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:923864ab53f7b859",
+  "lessonIds": [
+    "ES-C424-punto",
+    "ES-C424-coma",
+    "ES-C424-dos-puntos",
+    "ES-C424-raya",
+    "ES-C424-comillas",
+    "ES-C424-parentesis",
+    "ES-C424-guion",
+    "ES-C424-barra",
+    "ES-C424-repaso-signos",
+    "ES-C424-sintesis-nota"
+  ],
+  "tex": "spanish/book/chapters/ch424-signos.tex"
+}

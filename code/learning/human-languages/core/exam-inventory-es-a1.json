@@ -2413,22 +2413,28 @@
       "id": "A1-O3-01",
       "category": "Puntuacion",
       "label": "the full stop",
-      "probe": null,
-      "note": "The source distinguishes the three kinds of full stop and their role in laying out a text. The corpus never states them."
+      "probe": [
+        "ES-ORTH-C424-01"
+      ],
+      "note": "The three kinds of full stop -- punto y seguido, punto y aparte and punto final -- are named and distinguished by ES-C424-punto, together with the spacing convention and the rule that a title carries none."
     },
     {
       "id": "A1-O3-02",
       "category": "Puntuacion",
       "label": "the comma",
-      "probe": null,
-      "note": "The source covers enumerations with y and o, and with e and u. The corpus teaches the connectors themselves but never the punctuation rule that governs a list."
+      "probe": [
+        "ES-ORTH-C424-02"
+      ],
+      "note": "ES-C424-coma teaches the enumeration, including the point where Spanish and English disagree: Spanish writes NO comma before the final y. The y-to-e and o-to-u alternations before a matching vowel are taught in the same lesson."
     },
     {
       "id": "A1-O3-03",
       "category": "Puntuacion",
       "label": "the colon",
-      "probe": null,
-      "note": "The source covers announced enumerations and layout in examples. The corpus never states them."
+      "probe": [
+        "ES-ORTH-C424-03"
+      ],
+      "note": "ES-C424-dos-puntos teaches the announced enumeration and the letter opening, where Spanish uses a colon after the greeting and English a comma."
     },
     {
       "id": "A1-O3-04",
@@ -2445,36 +2451,46 @@
       "id": "A1-O3-05",
       "category": "Puntuacion",
       "label": "parentheses",
-      "probe": null,
-      "note": "The source covers parenthetical additions. The corpus never introduces the mark."
+      "probe": [
+        "ES-ORTH-C424-06"
+      ],
+      "note": "ES-C424-parentesis teaches the parenthetical addition, the removal test for whether an aside belongs in one, and the placement of the full stop outside the closing curve."
     },
     {
       "id": "A1-O3-06",
       "category": "Puntuacion",
       "label": "quotation marks",
-      "probe": null,
-      "note": "The source covers marking a foreign word inside a sentence. The corpus never introduces the Spanish angle quotation marks."
+      "probe": [
+        "ES-ORTH-C424-05"
+      ],
+      "note": "ES-C424-comillas teaches the three shapes in their order of preference, the angular pair first, and the foreign-word use the source names."
     },
     {
       "id": "A1-O3-07",
       "category": "Puntuacion",
       "label": "the hyphen",
-      "probe": null,
-      "note": "The source covers compound forenames and surnames. The corpus never introduces the mark."
+      "probe": [
+        "ES-ORTH-C424-07"
+      ],
+      "note": "ES-C424-guion teaches the compound forename and surname, the contrast with la raya, and the 2010 respelling of guion itself."
     },
     {
       "id": "A1-O3-08",
       "category": "Puntuacion",
       "label": "the dash in dialogue",
-      "probe": null,
-      "note": "The source covers turns in written dialogue marked with a dash and no speaker named. The corpus never introduces the convention, which is how printed Spanish dialogue is set."
+      "probe": [
+        "ES-ORTH-C424-04"
+      ],
+      "note": "ES-C424-raya teaches the dialogue convention: a raya opens each turn and no speaker is named. The corpus has PRINTED this mark in every exchange it has ever set, including the ones chapters 421-423 added, without naming it."
     },
     {
       "id": "A1-O3-09",
       "category": "Puntuacion",
       "label": "the slash",
-      "probe": null,
-      "note": "The source covers abbreviations and the marking of alternatives. The corpus never introduces the mark."
+      "probe": [
+        "ES-ORTH-C424-08"
+      ],
+      "note": "ES-C424-barra teaches the alternative, the c/ street abbreviation an address prints, and the per reading in a measurement."
     },
     {
       "id": "A1-O4-01",

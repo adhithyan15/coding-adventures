@@ -236,14 +236,25 @@ describe("the committed A1 inventory", () => {
     // (ES-C380-simpatico) and `alegre` (ES-C380-alegre) were both headwords. The
     // note is corrected in the same change that authors the remaining six, so
     // the point does not close on a correction -- it closes on six lessons.
+    // 41 -> 33. THE WHOLE `Puntuacion` GAP CLOSES AT ONCE, which is the second
+    // time a complete category has moved in one chapter and the first time it
+    // was the emptiest one. The comment below named it as the work queue at
+    // 1/9; chapter 424 takes it to 9/9.
+    //
+    // These eight are a different KIND of gap from every vocabulary point this
+    // campaign has closed. The corpus has PRINTED all eight marks for hundreds
+    // of chapters and named none of them: the dialogue `raya` opens every
+    // exchange the book has ever set, including the three chapters merged
+    // immediately before this one, and the reader was left to decode it by
+    // guess. So nothing here is a new word — it is the book finally saying what
+    // its own typography has been doing.
     expect(unmapped.sort()).toEqual([
       "A1-F2-10", "A1-F4-01", "A1-F5-09",
       "A1-F5-10", "A1-F6-06", "A1-NE06-01", "A1-NE06-05", "A1-NE07-04", "A1-NE07-06", "A1-NE09-06", "A1-NE11-04",
       "A1-NE12-02", "A1-NE13-03", "A1-NE15-02", "A1-NE15-03", "A1-NE15-04",
       "A1-NE17-02", "A1-NE20-05",
       "A1-O1-01", "A1-O1-02", "A1-O1-03", "A1-O1-04", "A1-O1-05",
-      "A1-O1-06", "A1-O1-07", "A1-O3-01", "A1-O3-02", "A1-O3-03", "A1-O3-05",
-      "A1-O3-06", "A1-O3-07", "A1-O3-08", "A1-O3-09", "A1-O4-01", "A1-O4-02",
+      "A1-O1-06", "A1-O1-07", "A1-O4-01", "A1-O4-02",
       "A1-O4-03",
     ]);
 
@@ -529,9 +540,9 @@ describe("what the corpus actually covers", () => {
     // Both behaviours are correct and neither is evidence on its own, which is the
     // argument for pinning `covered` and `unmapped` beside it.
     expect(coverage.enumerated).toBe(273); // 85 grammar + 54 functions + 113 notions + 21 orthography
-    expect(coverage.covered).toBe(237); // 234 -> 237 (ch421-423): A1-NE18-06 (cinema and theatre), A1-NE16-02 (computing and new technology) and A1-NE02-01 (character and personality adjectives). Nine headwords across three chapters. NE18-06 is the one chapter 420 deliberately left null pending actor and actriz, and it closes here by authoring them rather than by loosening the claim. NE16-02 needed a single exponent, pagina web, against three taught since ch393. NE02-01 needed six of eight, and its note wrongly said the corpus taught none of the eight while simpatico and alegre were headwords -- corrected here, but the point closes on the six new lessons, not on the correction. // 232 -> 234 (ch420): A1-NE18-01 (artistic disciplines) and A1-NE08-02 (shows and exhibitions). Three words -- teatro, exposicion, circo -- close two points, because six of NE18-01's eight exponents were already taught. A1-NE18-06 (cinema and theatre) is deliberately LEFT NULL: it also wants actor and actriz, and wiring it on teatro alone would repeat the over-claim blocked on A1-NE06-05. // 231 -> 232: A1-F3-03, whose note said the corpus never introduced preferir while ES-C396-preferir does. A1-NE06-05 was wired here too and REVERTED before merge: its label is "examinations and marks" and the marks half (nota, calificacion, aprobar, suspender) is absent, so wiring it on examen alone would have contradicted the call at A1-NE18-06, where pelicula without teatro is held not to buy "cinema and theatre". The 21% figure in the older comment below is WITHDRAWN -- see HL-C376; it came from a keyword scan, and the ES-LEX-<WORD> scan that replaced it was also wrong because half the corpus uses chain ids (ES-LEX-C354-WHERE-28 is el cine). Resolve an exponent through the lesson headword, never an atom id. // 229 -> 231 (ch419). TWO points, ONE new lesson, and the split is the finding: A1-NE18-02 (music and dance) needed authoring -- ES-LEX-BAILAR did not exist -- while A1-NE18-05 (photography) needed NOTHING but a probe: ES-LEX-FOTO and ES-LEX-FOTOGRAFIA have been introduced by ch405 all along and the point was counted uncovered only because nobody wired it. A corpus-wide scan puts 451 of the 2,189 uncovered points (21%) in that second class. // 85 grammar (unchanged) + 144 newly mapped // ...and 262-266 close the last four enumerated points. The inventory scope remains partial. // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
-    expect(coverage.percent).toBe(87); // 86 -> 87 (ch421-423) // 85 -> 86 (ch420) // 84 -> 85 (ch419) // 53 -> 56 -> 60 -> 64 -> 66 -> 68 -> 71 -> 77 -> 81 -> 85/85 grammar-only, then 223/273 across four dimensions
-    expect(coverage.unmapped).toBe(36); // 39 -> 36 (ch421-423) // 41 -> 39 (ch420) // 42 -> 41 // 44 -> 42 (ch419): NE18-02 authored, NE18-05 merely wired // was 0 while only grammar was enumerated
+    expect(coverage.covered).toBe(245); // 237 -> 245 (ch424): the ENTIRE Puntuacion category, 1/9 -> 9/9. Eight marks the corpus printed constantly and never named. Two of the eight carry a consequence a marker can see rather than a fact a reader can look up: Spanish writes NO comma before the final y of a list, where an English-trained hand puts one, and a Spanish letter opens with a colon after the greeting where English uses a comma. // 234 -> 237 (ch421-423): A1-NE18-06 (cinema and theatre), A1-NE16-02 (computing and new technology) and A1-NE02-01 (character and personality adjectives). Nine headwords across three chapters. NE18-06 is the one chapter 420 deliberately left null pending actor and actriz, and it closes here by authoring them rather than by loosening the claim. NE16-02 needed a single exponent, pagina web, against three taught since ch393. NE02-01 needed six of eight, and its note wrongly said the corpus taught none of the eight while simpatico and alegre were headwords -- corrected here, but the point closes on the six new lessons, not on the correction. // 232 -> 234 (ch420): A1-NE18-01 (artistic disciplines) and A1-NE08-02 (shows and exhibitions). Three words -- teatro, exposicion, circo -- close two points, because six of NE18-01's eight exponents were already taught. A1-NE18-06 (cinema and theatre) is deliberately LEFT NULL: it also wants actor and actriz, and wiring it on teatro alone would repeat the over-claim blocked on A1-NE06-05. // 231 -> 232: A1-F3-03, whose note said the corpus never introduced preferir while ES-C396-preferir does. A1-NE06-05 was wired here too and REVERTED before merge: its label is "examinations and marks" and the marks half (nota, calificacion, aprobar, suspender) is absent, so wiring it on examen alone would have contradicted the call at A1-NE18-06, where pelicula without teatro is held not to buy "cinema and theatre". The 21% figure in the older comment below is WITHDRAWN -- see HL-C376; it came from a keyword scan, and the ES-LEX-<WORD> scan that replaced it was also wrong because half the corpus uses chain ids (ES-LEX-C354-WHERE-28 is el cine). Resolve an exponent through the lesson headword, never an atom id. // 229 -> 231 (ch419). TWO points, ONE new lesson, and the split is the finding: A1-NE18-02 (music and dance) needed authoring -- ES-LEX-BAILAR did not exist -- while A1-NE18-05 (photography) needed NOTHING but a probe: ES-LEX-FOTO and ES-LEX-FOTOGRAFIA have been introduced by ch405 all along and the point was counted uncovered only because nobody wired it. A corpus-wide scan puts 451 of the 2,189 uncovered points (21%) in that second class. // 85 grammar (unchanged) + 144 newly mapped // ...and 262-266 close the last four enumerated points. The inventory scope remains partial. // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
+    expect(coverage.percent).toBe(90); // 87 -> 90 (ch424) // 86 -> 87 (ch421-423) // 85 -> 86 (ch420) // 84 -> 85 (ch419) // 53 -> 56 -> 60 -> 64 -> 66 -> 68 -> 71 -> 77 -> 81 -> 85/85 grammar-only, then 223/273 across four dimensions
+    expect(coverage.unmapped).toBe(28); // 36 -> 28 (ch424) // 39 -> 36 (ch421-423) // 41 -> 39 (ch420) // 42 -> 41 // 44 -> 42 (ch419): NE18-02 authored, NE18-05 merely wired // was 0 while only grammar was enumerated
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable. These three are GRAMMAR
@@ -545,7 +556,7 @@ describe("what the corpus actually covers", () => {
     // them is the point of the per-category tally: "82%" is a mood, "the
     // orthography inventory is 2/21 and clothing is 0/3" is a work queue.
     expect(coverage.byCategory["Ortografia de letras y palabras"]).toEqual({ enumerated: 7, covered: 0 });
-    expect(coverage.byCategory["Puntuacion"]).toEqual({ enumerated: 9, covered: 1 });
+    expect(coverage.byCategory["Puntuacion"]).toEqual({ enumerated: 9, covered: 9 }); // 1 -> 9 (ch424): the category the comment above named as the work queue, closed entire
   });
 
   it("reports the shortfall in a form somebody can act on", () => {
@@ -553,8 +564,8 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1 (partial inventory): 237/273 points covered (87%)");
-    expect(report).toContain("36 with no corresponding atom");
+    expect(report).toContain("spanish A1 (partial inventory): 245/273 points covered (90%)");
+    expect(report).toContain("28 with no corresponding atom");
     // Worst category first, not alphabetical. This USED to be checkable against
     // the real corpus, whose emptiest category kept changing as the campaign
     // closed points — `El sintagma adjetival` at 0/1, then `Los cuantificadores`
