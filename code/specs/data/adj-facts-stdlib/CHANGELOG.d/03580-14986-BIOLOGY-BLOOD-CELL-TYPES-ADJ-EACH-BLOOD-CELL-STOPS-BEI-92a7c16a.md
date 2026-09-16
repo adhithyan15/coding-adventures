@@ -66,8 +66,50 @@
     satisfied it completely.
   - **Scope stated in the failure text.** The shape test's "no `cites` at any indent" and "exactly one
     `locator`/`trust`" arms pin a convention local to *this* table, not a language rule: `lower.rs`'s row
-    path accepts `Source`, `Locator`, `Trust`, `Cites` and `Quote`, and shipped tables use them -- 18 have
-    a row-level `cites`, 12 a row-level `locator`, 5 a row-level `trust`.
+    path accepts `Source`, `Locator`, `Trust`, `Cites` and `Quote`, and shipped tables use them -- ~~18 have
+    a row-level `cites`, 12 a row-level `locator`, 5 a row-level `trust`~~ (**superseded; see below**).
+
+    *Re-measured 2026-09-16 (#15378). Those three figures carried no predicate and no denominator, and
+    two had gone stale: **19** tables carry a row-level `cites`, **13** a row-level `locator`, and **5** a
+    row-level `trust`. Over 362 fact files matching `adj-facts-stdlib/**/*.adj` with `CHANGELOG.d` and
+    `*.query.adj` excluded, holding 350 `table` blocks, classified by ENCLOSING CONSTRUCT rather than by
+    indent.*
+
+    ***The `locator` figure needs its predicate spelled out, because the obvious re-derivation gives a
+    different number.*** Here a row-level `locator` means **a `locator` annotation of the row itself** —
+    the keyword OPENING a row-level line — which is the thing the "a row locator means NOT the envelope's
+    page" convention governs. It does **not** mean the `locator` that ADJ-A9 requires on a row's own
+    `cites`, which rides at the end of the `cites` line. Count any `locator` token appearing on a
+    row-level line instead and the answer is **31 tables / 196 lines**, because all 86 row-level `cites`
+    carry one by mandate; 196 − 86 = 110, which is exactly the row-level `locator` line count. Same
+    corpus, same day, two defensible readings, eighteen tables apart. A reviewer raised this as the one
+    figure in this change still lacking a predicate — in a change whose whole thesis is that a number
+    without one rots.*
+
+    *That 196 was re-derived here rather than taken from the review, and the first attempt got **197**:
+    the scan counted `%` comment lines inside `row` blocks that merely mention the word `locator`.
+    Excluding comments, the identity closes exactly — 196 − 86 = 110 = the A-reading — and no row-level
+    line carries a `locator` token that is neither the keyword nor part of a `cites`. A count taken from
+    a reviewer is not a measurement either.*
+
+    ***The 5 is unchanged, and is left standing rather than restated as if freshly corrected.*** Rewriting
+    a number that was already right, to make a paragraph look uniformly re-measured, is the same defect as
+    inheriting a wrong one — it destroys the reader's ability to tell which figures actually moved. Only
+    `cites` and `locator` moved, each by one table.
+
+    *This entry says **tables** while the sibling corrections say **files**. Both are correct here and the
+    distinction was checked rather than assumed: tables-carrying-the-attribute and files-carrying-it are
+    equal for all three (19/19, 13/13, 5/5), because no file that carries row-level provenance holds more
+    than one table. The noun is left as it was written.*
+
+    *Counted as LINES rather than tables these are 86, 110 and 10 — nothing near 18/12/5, which is how the
+    denominator was identified rather than guessed. The line-level account reconciles as 86 row plus 122
+    table plus 1 rule = 209 `cites` corpus-wide; shard 03620 published 87 for the row bucket and now
+    carries a dated retraction.*
+
+    *That sentence is spelled out in words rather than symbols because the wrapped form began a line with
+    `+ 1 rule`, which CommonMark renders as a new list item — splitting the equation and handing the reader
+    "86 + 122" as the total. A number can be destroyed by the markup around it as easily as by a bad count.*
 
   ### 10 of 10 — and one of the kills was bought by a mutant that survived first
 

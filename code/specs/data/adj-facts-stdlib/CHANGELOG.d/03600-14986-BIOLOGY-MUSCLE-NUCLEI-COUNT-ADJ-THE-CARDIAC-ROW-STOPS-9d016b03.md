@@ -74,7 +74,23 @@
   - **Kept:** the backward bind and the `smooth` abstention.
   - **Scope stated in the failure text.** The "no `cites` at any indent" and "exactly one `locator`/`trust`"
     arms pin a convention local to *this* table, not a language rule: `lower.rs`'s row path accepts
-    `Source`, `Locator`, `Trust`, `Cites` and `Quote`, and 18 shipped tables carry a row-level `cites`.
+    `Source`, `Locator`, `Trust`, `Cites` and `Quote`, and a row-level `cites` is legal.
+
+    *This entry said "18 shipped tables carry a row-level `cites`" — a figure with no predicate and no
+    denominator, propagated by copying rather than re-derivation, and stale (#15378). Re-measured
+    2026-09-16: **19 shipped fact files carry a row-level `cites` (86 such lines), over 362 files**
+    matching `adj-facts-stdlib/**/*.adj` with `CHANGELOG.d` and `*.query.adj` excluded. Two predicates
+    agree on the same file set — a `cites` at 8-space indent, and a `cites` inside a real `row (…) {`
+    block — because every row-level one is written at 8 spaces while a table-level `cites` sits at 4
+    (122 such lines, all legal). Corrected here rather than only where it was noticed.*
+
+    *The 8-and-4 pair is **not exhaustive**, and a predicate that treats it as if it were returns **87**
+    rather than 86. Two do: relaxing the indent rule from `== 8` to `> 4`, or asking merely that the
+    innermost enclosing construct is not `table`. Each picks up one `cites` at 7-space indent inside a
+    top-level `rule { }` block in `geometry/shape-composition.adj` — neither row- nor table-level. The
+    full account is **86 row + 122 table + 1 rule = 209**, which is every `cites` in the corpus. Shard
+    03620 published that 87 as its row-level figure and now carries a dated retraction; **which of the two
+    rules it ran is not recoverable from the shard**, so neither is named here as the cause.*
 
   ### The query example, reported as it runs
 

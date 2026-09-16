@@ -239,9 +239,37 @@ fn the_table_shape_matches_the_measured_rows() {
     );
     // Keyword-anchored, so a `cites` at any indent fails without
     // false-positiving on the word in header prose. SCOPE: this table's rows
-    // differ only in `source`. A row-level `cites` is legal ADJ -- 18 shipped
-    // tables use one -- so this pins a convention local to this table, not a
-    // language rule.
+    // differ only in `source`. A row-level `cites` is legal ADJ, so this pins a
+    // convention local to this table, not a language rule.
+    //
+    // MEASURED 2026-09-16, NOT INHERITED: 19 shipped fact files carry a
+    // row-level `cites` (86 such lines), over 362 files matching
+    // adj-facts-stdlib/**/*.adj with CHANGELOG.d and *.query.adj excluded. Two
+    // predicates agree on the same file set -- a `cites` at 8-space indent, and
+    // a `cites` inside a real `row (...) {` block -- because every row-level one
+    // in this corpus is written at 8 spaces, while a TABLE-level `cites` sits at
+    // 4 spaces before the table's closing brace (122 such lines, all legal:
+    // ADJ-A9 requires each to carry its own `locator` and forbids nothing about
+    // where it sits).
+    //
+    // THE 8/4 DICHOTOMY IS NOT EXHAUSTIVE, and the full reconciliation is worth
+    // stating so the next reader cannot derive a different total:
+    //
+    //     table-level 122 + row-level 86 + rule-level 1 = 209 `cites` corpus-wide
+    //
+    // The one rule-level `cites` sits at 7-space indent inside a top-level
+    // `rule { }` block in geometry/shape-composition.adj. Shard 03620 reported
+    // 87 row-level and DISMISSED 86 as an artifact; 87 is what a
+    // NOT-TABLE-LEVEL predicate returns, and two such rules were run and do
+    // return it (indent > 4, and innermost-construct-is-not-`table`), each
+    // adding only this line. WHICH of the two produced 03620's figure is not
+    // recoverable from the shard, so this comment does not name one. 03620 now
+    // carries a dated retraction of the 87.
+    //
+    // This comment used to say "18 shipped tables use one" with no predicate and
+    // no denominator. That figure was propagated by copying rather than
+    // re-derivation and had gone stale (#15378). The predicate is stated here
+    // WITH the number so the next copy can be re-measured instead of inherited.
     assert!(
         !body.lines().any(|l| l.trim_start().starts_with("cites")),
         "this table ships no corroboration at any indent: {body}"

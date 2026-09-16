@@ -250,11 +250,125 @@ fn the_table_shape_matches_the_measured_rows() {
     // legal; ADJ-A9 requires each to carry its own `locator`, and forbids
     // nothing about where it sits).
     //
-    // The sibling test files say "18 shipped tables use one". That figure is
-    // stale and is propagated by copying rather than re-derivation -- it is in
-    // facts_bloodcells_e2e.rs, facts_musclenucleicount_e2e.rs and shards 03590
-    // and 03600. The predicate is stated here with the number so the next copy
-    // can be re-measured instead of inherited a fourth time.
+    // THE 8-AND-4 PAIR IS NOT EXHAUSTIVE, and the full account is
+    //
+    //     row 86 + table 122 + rule 1 = 209 `cites` corpus-wide
+    //
+    // The rule-level one sits at 7-space indent inside a top-level `rule { }`
+    // block in geometry/shape-composition.adj. TWO predicates pick it up and
+    // return 87 rather than 86 -- relaxing the indent rule from `== 8` to
+    // `> 4`, and asking merely that the innermost construct is not `table` --
+    // and each adds only that one line. Shard 03620 published 87; WHICH of the
+    // two it ran is not recoverable from the shard, so neither is named here as
+    // the cause. 03620 now carries a dated retraction.
+    //
+    // WHERE THIS FIGURE WAS COPIED TO, AND HOW THAT LIST WAS FOUND. This
+    // comment once listed FOUR sites and keyed them on one phrasing, "18
+    // shipped tables use one". Both halves were wrong in the way #15378 exists
+    // to retire. A sweep keyed on the CLAIM CLASS instead -- any number
+    // standing within 60 characters of a cites-count noun, comment prefixes
+    // stripped, whitespace flattened, case folded -- over the 1,631 .rs/.md/.adj
+    // files in code/packages/rust/adj-lang-cli/tests and
+    // code/specs/data/adj-facts-stdlib. "Cites-count noun" is not a category a
+    // reader can re-run, so here is the actual list the sweep matches on:
+    //
+    //   shipped tables / shipped fact files / row-level cites / row level cites
+    //   cites lines / such lines / tables use one / tables carry / files carry
+    //   cites in all / cites in total / inside a row block / cites lines inside
+    //
+    // EIGHT files carried an inherited copy of the figure and are re-measured
+    // here:
+    //
+    //   facts_bloodcells_e2e.rs          facts_musclenucleicount_e2e.rs
+    //   facts_sunlayer_e2e.rs            facts_statesofmatter_e2e.rs
+    //   CHANGELOG.d/03580                CHANGELOG.d/03590
+    //   CHANGELOG.d/03600                chemistry/states-of-matter.adj
+    //
+    // Two more fire without being inherited copies, and both are edited here
+    // too, so TEN files in total are touched by this change:
+    //
+    //   CHANGELOG.d/03620 is the ORIGIN of the 87 rather than a copy of it. It
+    //     carries the eighth site's phrasing -- not byte-for-byte, since both
+    //     copies wrap it across a line break and one carries a `% ` prefix, and
+    //     a literal grep for the string returns zero in each; identical only
+    //     AFTER the sweep's own prefix-stripping and whitespace-flattening. It
+    //     gets a dated retraction, not a re-measurement.
+    //   THIS FILE already stated the number with its predicate, so only the
+    //     prose around it changed.
+    //
+    // WHAT THE INSTRUMENT RETURNS IS A SET OF FILES; EVERY NARROWING AFTER THAT
+    // IS MY TRIAGE. The chain has to be stated that way or a judgement I made is
+    // credited to a machine that never made it. Note what this heading does NOT
+    // do: it names no count, because the count is exactly what turned out not to
+    // be re-derivable from the description below it.
+    //
+    //   ?? files fire on the noun list above -- THE FILE COUNT IS DELIBERATELY
+    //      NOT PUBLISHED, because three implementations of the description in
+    //      this comment returned three different answers over the same corpus:
+    //      15 (the script as written), 16 (my own re-implementation of my own
+    //      published prose), and 17 (a reviewer's, permitting the number on
+    //      EITHER side of the noun). The prose gives the noun list but never
+    //      said the number must PRECEDE the noun, nor that leading-zero tokens
+    //      and four-digit years are dropped. All three readings are defensible
+    //      from what is written, so no count here is re-derivable, and choosing
+    //      one would be the FOURTH iteration of the defect this comment is
+    //      about -- after "EIGHT", "TEN" and "FIFTEEN".
+    //      Several fire on a DIFFERENT predicate, a per-domain or per-table
+    //      count rather than this corpus-wide claim: CHANGELOG.d/01800 ("the
+    //      domain's ~20 shipped tables", anatomy), 02730 (whose "14111" is a
+    //      bare issue number -- its window also catches a real measurement,
+    //      "361 of the stdlib's 362 library .adj files carry a quoted fragment
+    //      in a comment", a different predicate that independently corroborates
+    //      the 362), 03220 (321 test files), 03240 (23 answers / 22), 03570
+    //      (22 lines of U+00A0 census), 03320 (10 of 10 mutants killed)
+    //   10 carry this claim class
+    //    8 of those are inherited copies and are re-measured here
+    //
+    // AN EARLIER DRAFT OF THIS VERY PARAGRAPH SAID "TEN IS WHAT THE SWEEP
+    // RETURNS ON THAT NOUN LIST". It returns more than ten -- HOW MANY more
+    // depends on a predicate the prose never fixed, which is why no figure
+    // stands here now. That draft put an unmeasured number into the sentence
+    // correcting unmeasured numbers, and it was the SECOND such number in this
+    // one comment, after an earlier draft said the sweep "found EIGHT"; a third
+    // draft then said FIFTEEN, which is only one of three defensible answers.
+    // Four review rounds caught successive versions, each version narrower than
+    // the last and each still wrong in the same way. The habit being corrected
+    // is not a fact about other people's prose; it reasserts itself hardest in
+    // the sentence claiming to have fixed it, and the only move that has ever
+    // worked is deleting the number rather than improving it.
+    //
+    // Of the eight, four were invisible to the original needle. THREE phrase the
+    // claim differently -- "85 row-level `cites` lines"; "18 have a row-level
+    // `cites`, 12 a row-level `locator`, 5 a row-level `trust`"; "209 `cites` in
+    // all, 87 of them inside a `row` block" -- and the fourth,
+    // facts_sunlayer_e2e.rs, uses the SAME phrasing wrapped across a line break,
+    // which a line-anchored needle cannot see.
+    //
+    // THE EIGHTH WAS FOUND BY RUNNING THIS NEEDLE THE WAY THIS COMMENT ONCE
+    // DESCRIBED IT, NOT THE WAY IT WAS BUILT. The description promised "any
+    // number near a cites-count noun"; the implementation held a fixed list of
+    // nouns, and "cites in all" and "inside a row block" were not on it. A
+    // security review took the description at its word and found the site the
+    // sweep had reported clean. Prose that overstates an instrument is worse
+    // than no prose: it retires the suspicion that would have re-run the check.
+    //
+    // The sweep's output is a reading aid to be triaged by eye, not a verdict.
+    // Three token classes look like counts and are not: an issue number
+    // (#15378), a year ("MEASURED 2026-09-16"), and a CHANGELOG shard id
+    // ("shard 03580"). Each was found by reading the sweep's own output, never
+    // by foresight -- the shard-id case appeared only on the run AFTER a shard
+    // name was written into one of these comments, so widening the needle
+    // created the artifact that the same needle then reported.
+    //
+    // Its controls -- a wrap-spanning phrase, a case-folded phrase, and an
+    // issue number that must NOT be read as a count -- have to fire before any
+    // zero it reports means anything. The third failed on its first run and
+    // caught a real bug: the guard forbade '#' BETWEEN the number and the noun,
+    // which does nothing when the '#' sits before the digits.
+    //
+    // Enumerating the copies one has tripped over is not a census. The number is
+    // stated here WITH its predicate, its denominator and its date so the next
+    // reader re-derives it instead of inheriting it.
     //
     // It would NOT have failed on the pre-conversion file: that file shipped no
     // `cites` either, so this arm passed there and passes here. It guards
