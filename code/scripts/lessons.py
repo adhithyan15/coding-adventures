@@ -61,18 +61,36 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-# `index` prints lesson TITLES, and 7 of the 526 shards have a title carrying a
-# character the Windows console codepage cannot encode -- U+2192 in six of them,
-# U+2260 in the seventh. On a cp1252 stdout the command dies partway with
+# `index` prints lesson TITLES, and 7 of them carry a character the Windows
+# console codepage cannot encode -- U+2192 in five, U+2260 in the other two,
+# measured over the 526-shard corpus at 83e38b3a3b and unchanged at 528 since.
+# On a cp1252 stdout the command dies partway with
 # UnicodeEncodeError, having printed 31 lines of 526, and exits 1. The traceback
 # goes to stderr, so a redirect or a pipe hides it and the truncated listing
 # looks like a short, complete corpus.
 #
 # That is worse than a crash: `_meta.md` points at `index` as the way to survey
 # lessons before adding one, and a near-duplicate check run on Windows silently
-# checks 6% of the corpus. It survived because every CI runner is Linux, where
-# stdout is already UTF-8 -- the bug is invisible to the only environment that
-# gates.
+# checks 6% of the corpus.
+#
+# IT SURVIVED BECAUSE NO TEST EVER TOUCHED A REAL STREAM -- not because of
+# where CI runs. Measured: the pre-fix suite at 83e38b3a3b calls `cmd_index`
+# ZERO times, and its 14 command invocations all route through the `run()`
+# helper, which captures via `io.StringIO`. StringIO accepts every codepoint on
+# every platform. Running that suite against this unfixed module under
+# PYTHONIOENCODING=cp1252 gives "Ran 28 tests ... OK", exit 0 -- so adding it to
+# a Windows leg would have been green too.
+#
+# Two earlier versions of this comment blamed CI topology instead, and both were
+# conclusions published ahead of their measurement:
+#   1. "every CI runner is Linux" -- false; the repo also uses windows-latest,
+#      windows-2025, macos-latest, macos-15, macos-15-intel, macos-14.
+#   2. "code/scripts/tests really is run on Windows by release-engram.yml and
+#      release-venture.yml" -- also false. That came from a grep showing each
+#      FILE contains a Windows runner AND a discover line; both files' discover
+#      sites actually sit in a `validate` job on ubuntu-latest. FILE-LEVEL
+#      CO-OCCURRENCE IS NOT JOB-LEVEL CO-OCCURRENCE.
+# Both are recorded rather than quietly replaced, because the shape recurred.
 #
 # The reconfigure lives at MODULE scope, not inside a command, because
 # `contextlib.redirect_stdout(io.StringIO())` -- which the test suite uses for
