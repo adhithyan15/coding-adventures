@@ -1,0 +1,18 @@
+{
+  "id": "HI-PATH-94-PRONOUNS",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "HI-C86-ham",
+    "HI-C86-ve",
+    "HI-C86-hamen-tumhen",
+    "HI-C86-aapko-use",
+    "HI-C86-koi-article",
+    "HI-C86-repaso-sarvanam",
+    "HI-C86-sintesis-sarvanam"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-94-PRONOUNS"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C86-repaso-sarvanam",
+    "language": "hindi",
+    "chapter": 94,
+    "sequence": 3710,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1edfa3577ce0c9fe"
+  },
+  "findings": []
+}
