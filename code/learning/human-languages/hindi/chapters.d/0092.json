@@ -1,0 +1,24 @@
+{
+  "chapter": 92,
+  "title": "Whose, And What A Postposition Does To It",
+  "label": "ch:hi-possessive",
+  "canDo": "I can say whose something is for any owner, use apna when the owner is the subject, and say what I have, using the oblique form a postposition demands.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C84-sintesis-mere-paas",
+    "kind": "task",
+    "summary": "Ask what somebody has and answer, noticing that no word in either line means have and that every possessive has bent to -e because a postposition follows it.",
+    "assesses": [
+      "HI-LEX-C84-POSS-01",
+      "HI-LEX-C84-POSS-02",
+      "HI-LEX-C84-POSS-03",
+      "HI-LEX-C84-POSS-04",
+      "HI-LEX-C84-POSS-05",
+      "HI-LEX-C84-POSS-06",
+      "HI-CONCEPT-C02-MERAA-01"
+    ],
+    "note": "Closes four points that are one system rather than four facts. HI-A1-DET-06 wanted uska, hamara and tumhara -- the note said a learner could name whose anything is only if it was their own or the addressee's. HI-A1-DET-07 wanted apna, and its note records that BOTH mock papers' personal accounts use it (apne dost ke sath, apne parivar ke sath) while nothing in the corpus introduced it. HI-A1-V-09's note is the bluntest in the inventory: Hindi has no verb to have, so possession is at me there is, and without pas a learner cannot say they have anything. HI-A1-PRON-07 wanted a pronoun in front of a postposition, which is the same oblique bend. The chapter is built so the bend is taught once and used four times. The insight it turns on is that ch02 taught mere as the PLURAL of mera and it is also the OBLIQUE -- identical spelling, two jobs, and only what follows tells you which."
+  }
+}

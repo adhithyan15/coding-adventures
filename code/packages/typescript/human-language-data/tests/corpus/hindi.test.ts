@@ -40,7 +40,12 @@ it("pins Hindi lesson-content budgets", () =>
     // 91 authors the six disposition words (buraa, hoshiyaar, mehnati,
     // sharmeela, milansaar, gambhir) plus two. Ten new atoms, four retrieval
     // lessons, budgeted rather than discovered.
-    lessons: 380, // 359 -> 360: HI-C79-dopahar-raat-ka-khana // 360 -> 362: HI-C80-aasaan-mushkil, HI-C80-sundar-badsurat // 362 -> 366: HI-C81 school pair plus its two retrieval lessons
+    // 380 -> 388: chapter 92, the possessive. Six lessons introduce one atom
+    // each and two retrieve, and the chapter closes FOUR inventory points
+    // because they are one system rather than four facts -- the possessive
+    // grid, the reflexive apna, the paas construction and the oblique a
+    // postposition demands are all the same bend seen from four sides.
+    lessons: 388, // 359 -> 360: HI-C79-dopahar-raat-ka-khana // 360 -> 362: HI-C80-aasaan-mushkil, HI-C80-sundar-badsurat // 362 -> 366: HI-C81 school pair plus its two retrieval lessons
     idioms: 21,
     // +2: HI-C70-song declares gana's singing sense and HI-C73-drink declares
     // khana's eating sense, which is what covers HI-A1-V-26.
@@ -154,8 +159,8 @@ it("pins Hindi A1 coverage, and the numeral column the ordinal tranche moved", (
   const { lessons } = loadEverything();
   const coverage = measureExamCoverage(loadExamInventory("hindi", "A1"), lessons);
   expect(coverage.enumerated).toBe(282);
-  expect(coverage.covered).toBe(199); // 197 -> 199 (ch90-91): HI-A1-LEX-09 (physical characteristics of a person) and HI-A1-LEX-11 (character and personality adjectives). LEX-09 cost four words rather than three: its note said bara and chhota were taught for THINGS, and chhota could not be pressed into service for "short" because about a person it means YOUNGER -- so naataa is a real gap and not a synonym. LEX-11 had achha and nothing else, and derives from the Spanish A1-NE02-01 closed in the same campaign. Both chapters teach the SAME rule from opposite sides: chapter 90 is four adjectives that all end in -aa and all agree, against the ease-and-difficulty chapter whose four all ended in a consonant and none did. // 196 -> 197 (ch89): HI-A1-LEX-23, educational institutions. school appeared in four separate mock items across the two papers while the track could name the teacher, the student and the act of studying but not the building. Both registers are taught because the reading paper is built of signs and the listening paper of speech. // 194 -> 196 (ch88): HI-A1-LEX-06 (ease and difficulty) and HI-A1-LEX-04 (attractiveness). Four adjectives, one observation: all four are consonant-final so none agrees, which the chapter teaches off the kaalaa/safed contrast from ch11 rather than as a new rule. // 193 -> 194 (ch87): HI-A1-LEX-18, the meals of the day. nashta was already taught; HI-C79-dopahar-raat-ka-khana names lunch and dinner as the transparent compounds they are, so the point closes without the track acquiring a single new word.
-  expect(coverage.unmapped).toBe(83); // 85 -> 83 (ch90-91) // 86 -> 85 (ch89) // 88 -> 86 (ch88) // 89 -> 88 (ch87) // 193 -> 194 (ch87): HI-A1-LEX-18, the meals of the day. nashta was already taught; HI-C79-dopahar-raat-ka-khana names lunch and dinner as the transparent compounds they are, so the point closes without the track acquiring a single new word.
+  expect(coverage.covered).toBe(203); // 199 -> 203 (ch92): HI-A1-DET-06 (uska, hamara, tumhara), HI-A1-DET-07 (the reflexive apna), HI-A1-V-09 (mere paas, because Hindi has no verb to have) and HI-A1-PRON-07 (a pronoun before a postposition). Four points for one chapter because they are one system: the -aa possessive bends to -e in front of any postposition, and that single habit is what all four need. The chapter turns on a correction rather than a new word -- chapter 2 taught mere as the PLURAL of mera, and it is ALSO the oblique, identical in spelling with only what follows telling you which. DET-07 was the urgent one: its note records that both mock papers use apna in their personal accounts while nothing in the corpus introduced it. // 197 -> 199 (ch90-91): HI-A1-LEX-09 (physical characteristics of a person) and HI-A1-LEX-11 (character and personality adjectives). LEX-09 cost four words rather than three: its note said bara and chhota were taught for THINGS, and chhota could not be pressed into service for "short" because about a person it means YOUNGER -- so naataa is a real gap and not a synonym. LEX-11 had achha and nothing else, and derives from the Spanish A1-NE02-01 closed in the same campaign. Both chapters teach the SAME rule from opposite sides: chapter 90 is four adjectives that all end in -aa and all agree, against the ease-and-difficulty chapter whose four all ended in a consonant and none did. // 196 -> 197 (ch89): HI-A1-LEX-23, educational institutions. school appeared in four separate mock items across the two papers while the track could name the teacher, the student and the act of studying but not the building. Both registers are taught because the reading paper is built of signs and the listening paper of speech. // 194 -> 196 (ch88): HI-A1-LEX-06 (ease and difficulty) and HI-A1-LEX-04 (attractiveness). Four adjectives, one observation: all four are consonant-final so none agrees, which the chapter teaches off the kaalaa/safed contrast from ch11 rather than as a new rule. // 193 -> 194 (ch87): HI-A1-LEX-18, the meals of the day. nashta was already taught; HI-C79-dopahar-raat-ka-khana names lunch and dinner as the transparent compounds they are, so the point closes without the track acquiring a single new word.
+  expect(coverage.unmapped).toBe(79); // 83 -> 79 (ch92) // 85 -> 83 (ch90-91) // 86 -> 85 (ch89) // 88 -> 86 (ch88) // 89 -> 88 (ch87) // 193 -> 194 (ch87): HI-A1-LEX-18, the meals of the day. nashta was already taught; HI-C79-dopahar-raat-ka-khana names lunch and dinner as the transparent compounds they are, so the point closes without the track acquiring a single new word.
   expect(coverage.partial).toBe(0);
   // HL-C350 measured ordinals as the weakest single column in the corpus --
   // twenty tracks enumerate an ordinal point and eighteen left it uncovered.
@@ -170,6 +175,6 @@ it("pins Hindi A1 coverage, and the numeral column the ordinal tranche moved", (
     covered: 4,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "hindi A1 (partial inventory): 199/282 points covered (71%)",
+    "hindi A1 (partial inventory): 203/282 points covered (72%)",
   );
 }, 60_000);
