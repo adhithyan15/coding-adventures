@@ -16,18 +16,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `host/compose/PhotoPickerEffects.kt` — the Compose `[host_effects]`
   handler, implemented via `javax.swing.JFileChooser` deferred onto
   the EDT via `SwingUtilities.invokeLater`, mirroring Engram's own
-  Compose effect handler (`installEngramEffects`) in structure.
-- `[host_effects]` manifest wiring for Qt and Compose, alongside the
-  existing XAML entry, per `UI59` §2; Flutter remains the last
-  explicit follow-up PR.
-- `tests/package_compiles.rs` extended with Qt and Compose
-  manifest-shape and handler-source coverage (5 tests total, up from
+  Compose effect handler (`installEngramEffects`) in structure. (PR
+  #15329, merged.)
+- `host/flutter/PhotoPickerEffects.dart` — the Flutter `[host_effects]`
+  handler, implemented via `package:file_selector`'s `openFile`,
+  deferred via `host.deferEffect`/an unawaited async closure (Dart's
+  `effectHandler` is synchronous; `openFile` returns a `Future` — no
+  answer to give inline), mirroring Engram's own Flutter effect
+  handler (`installEngramEffects`) in structure. The last backend this
+  effect needed — SwiftUI remains out of scope (no Apple toolchain).
+- `[host_effects]` manifest wiring for Qt, Compose, and Flutter,
+  alongside the existing XAML entry, per `UI59` §2. A new
+  `[host_assets].dependencies` entry declares Flutter's
+  `file_selector` pub package (this package's only `[host_assets]`
+  content — no `.files` entries, unlike Engram).
+- `tests/package_compiles.rs` extended with Qt, Compose, and Flutter
+  manifest-shape and handler-source coverage (6 tests total, up from
   3).
 - Verified with a real `cmake --build` (Ninja + MSVC) of the Qt
-  `--profile native-complete` emitted project, and a real `gradle
-  build` (Gradle 8.10.2, JDK 21) of the Compose one — both full,
-  unqualified successes (no documented exception, unlike the XAML
-  build's known benign packaging-step error).
+  `--profile native-complete` emitted project, a real `gradle build`
+  (Gradle 8.10.2, JDK 21) of the Compose one, and `flutter pub get` +
+  `flutter analyze` (0 issues) + `flutter test` (passing) of the
+  Flutter one — all full, unqualified successes (no documented
+  exception, unlike the XAML build's known benign packaging-step
+  error). `flutter build windows` itself wasn't exercised — it needs
+  Windows Developer Mode (symlink support) for plugin builds, not
+  enabled in this environment; stated explicitly rather than silently
+  skipped (`UI59` §14).
 
 ### Design notes
 
@@ -50,6 +65,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   monitor across the `effectHandler` call and requires EDT-only state
   writes, so answering inline (Qt's approach) isn't available here;
   see `UI59` §10.2.
+- The Flutter handler defers too, but for a third, simpler reason than
+  either Qt or Compose: `openFile` returns a `Future`, and
+  `effectHandler` is a synchronous callback — there is no answer to
+  give inline at all, full stop. Unlike Qt/Compose there's nothing to
+  marshal either: a Dart isolate is single-threaded, so the eventual
+  `completeEffect` call never races anything.
+- Applies the same bounded-read/generic-message lessons as Qt and
+  Compose (see above), but was already the safest of the four handlers
+  on the catch-type point Compose had to fix: Engram's own Flutter
+  handler already catches `on Object`, not a narrower `Exception`-only
+  type — Dart's `catch` has no Exception-vs-Error split the way
+  Kotlin's does, so there was no narrower clause to widen here.
 
 ### Fixed (caught by `/security-review`, before this ever shipped)
 
