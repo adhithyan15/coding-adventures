@@ -35,7 +35,7 @@ it("pins Hindi lesson-content budgets", () =>
     // clock, which is the last of the seven writing stages and the one Hindi
     // had never proven. Timing, task count, field count and word range are read
     // out of hindi/task-shapes/a1.json rather than invented for the lesson.
-    lessons: 359,
+    lessons: 360, // 359 -> 360: HI-C79-dopahar-raat-ka-khana
     idioms: 21,
     // +2: HI-C70-song declares gana's singing sense and HI-C73-drink declares
     // khana's eating sense, which is what covers HI-A1-V-26.
@@ -149,8 +149,8 @@ it("pins Hindi A1 coverage, and the numeral column the ordinal tranche moved", (
   const { lessons } = loadEverything();
   const coverage = measureExamCoverage(loadExamInventory("hindi", "A1"), lessons);
   expect(coverage.enumerated).toBe(282);
-  expect(coverage.covered).toBe(193);
-  expect(coverage.unmapped).toBe(89);
+  expect(coverage.covered).toBe(194); // 193 -> 194 (ch87): HI-A1-LEX-18, the meals of the day. nashta was already taught; HI-C79-dopahar-raat-ka-khana names lunch and dinner as the transparent compounds they are, so the point closes without the track acquiring a single new word.
+  expect(coverage.unmapped).toBe(88); // 89 -> 88 (ch87)
   expect(coverage.partial).toBe(0);
   // HL-C350 measured ordinals as the weakest single column in the corpus --
   // twenty tracks enumerate an ordinal point and eighteen left it uncovered.
@@ -165,6 +165,6 @@ it("pins Hindi A1 coverage, and the numeral column the ordinal tranche moved", (
     covered: 4,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "hindi A1 (partial inventory): 193/282 points covered (68%)",
+    "hindi A1 (partial inventory): 194/282 points covered (69%)",
   );
 }, 60_000);
