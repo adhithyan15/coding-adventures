@@ -1002,8 +1002,10 @@
       "id": "A1-F3-03",
       "category": "Expresar gustos, deseos y sentimientos",
       "label": "express a preference with prefiero",
-      "probe": null,
-      "note": "The source's A1 exponent is preferir. The corpus never introduces the verb, and querer expresses wanting rather than choosing between offered alternatives."
+      "probe": [
+        "ES-LEX-PREFERIR"
+      ],
+      "note": "The source's A1 exponent is preferir, introduced by ES-C396-preferir. The earlier note claimed the corpus never introduced the verb; that was false when written or went stale after ch396, and the point was scored uncovered on it."
     },
     {
       "id": "A1-F3-04",
@@ -1803,7 +1805,7 @@
       "category": "Educacion",
       "label": "examinations and marks",
       "probe": null,
-      "note": "The source's A1 exponent is hacer or tener un examen. The corpus never introduces examen."
+      "note": "The source's A1 exponent is hacer or tener un examen; examen IS introduced by ES-C410-examen, hacer by ES-C12 and tener by ES-C08, so the earlier note claiming examen was never introduced was false. The point stays UNCOVERED anyway, because the label is 'examinations and marks' and the marks half is wholly absent: nota, calificacion, aprobar and suspender occur nowhere in the corpus, as headwords, glosses or atoms. Wiring it on the examination half alone would claim coverage of untaught vocabulary, and would contradict the call made at A1-NE18-06, where pelicula without teatro is held not to buy 'cinema and theatre'."
     },
     {
       "id": "A1-NE06-06",
@@ -1894,7 +1896,7 @@
       "category": "Ocio",
       "label": "shows and exhibitions",
       "probe": null,
-      "note": "The source's A1 exponents are pelicula, concierto and going to the theatre, cinema or circus. None is introduced in the corpus."
+      "note": "The source's A1 exponents are pelicula, concierto and going to the theatre, cinema or circus. pelicula (ES-C404), concierto (ES-C413), cine (ES-C354) and museo (ES-C353) are all introduced. teatro, exposicion and circo are not headwords anywhere in the corpus, so the point stays uncovered on the venues it still cannot name."
     },
     {
       "id": "A1-NE08-03",
@@ -1960,7 +1962,7 @@
       "category": "Informacion y medios de comunicacion",
       "label": "the internet, and dictating an e-mail address",
       "probe": null,
-      "note": "The source's A1 exponents are Internet, arroba, guion, guion bajo, punto, pagina web and correo electronico. The corpus introduces none of them, so the very common task of spelling out an address aloud is unbuilt."
+      "note": "The source's A1 exponents are Internet, arroba, guion, guion bajo, punto, pagina web and correo electronico. internet (ES-C393), correo electronico (ES-C393) and punto (ES-C342, whose body names it as the full stop) are introduced. arroba, guion and pagina web are not, and without arroba an e-mail address cannot be dictated, which is what this point asks for."
     },
     {
       "id": "A1-NE10-01",
@@ -2048,7 +2050,7 @@
       "category": "Compras, tiendas y establecimientos",
       "label": "clothing, footwear and accessories",
       "probe": null,
-      "note": "The source's A1 exponents are pantalones, vaqueros, falda, camisa, jersey, zapatos and bolso. The corpus introduces none of them -- clothing is an entire A1 domain with no lesson anywhere."
+      "note": "The source's A1 exponents are pantalones, vaqueros, falda, camisa, jersey, zapatos and bolso. Four are introduced: pantalon (ES-C360), falda (ES-C373), camisa (ES-C402) and zapato (ES-C360) -- the corpus teaches the singulars where the source lists plurals. vaqueros, jersey and bolso are absent, so the point stays uncovered at four of seven."
     },
     {
       "id": "A1-NE12-03",
@@ -2166,7 +2168,7 @@
       "category": "Ciencia y tecnologia",
       "label": "computing and new technology",
       "probe": null,
-      "note": "The source's A1 exponents are ordenador, Internet, correo electronico and pagina web. The corpus introduces none of them."
+      "note": "The source's A1 exponents are ordenador, Internet, correo electronico and pagina web. Three of the four are introduced: ordenador (ES-C393), internet (ES-C393) and correo electronico (ES-C393). pagina web is not a headword anywhere, so the point stays uncovered on one missing exponent."
     },
     {
       "id": "A1-NE17-01",
@@ -2188,7 +2190,7 @@
       "category": "Actividades artisticas",
       "label": "artistic disciplines",
       "probe": null,
-      "note": "The source's A1 exponents are cine, teatro, musica, pelicula, concierto, foto, museo and exposicion. The corpus introduces none of them."
+      "note": "The source's A1 exponents are cine, teatro, musica, pelicula, concierto, foto, museo and exposicion. Six of the eight are introduced -- cine (ES-C354), musica (ES-C413), pelicula (ES-C404), concierto (ES-C413), foto (ES-C405) and museo (ES-C353). Only teatro and exposicion are missing, which makes this the closest of the arts points to closing."
     },
     {
       "id": "A1-NE18-02",
@@ -2233,7 +2235,7 @@
       "category": "Actividades artisticas",
       "label": "cinema and theatre",
       "probe": null,
-      "note": "The source's A1 exponents are cine, teatro, pelicula, actor and actriz. None is introduced in the corpus."
+      "note": "The source's A1 exponents are cine, teatro, pelicula, actor and actriz. cine (ES-C354) and pelicula (ES-C404) are introduced. teatro, actor and actriz are not headwords anywhere, so the theatre half of the label is wholly unnamed and the point stays uncovered."
     },
     {
       "id": "A1-NE19-01",
