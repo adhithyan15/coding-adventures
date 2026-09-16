@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C93-ke-saamne",
+    "language": "hindi",
+    "chapter": 101,
+    "sequence": 4230,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4701714b5fdc7ed6"
+  },
+  "findings": []
+}

@@ -794,17 +794,24 @@
       "id": "HI-A1-POST-07",
       "category": "Parsarg (postpositions and case)",
       "label": "ke sath for accompaniment, and ke bina for its absence",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C93-REL-01",
+        "HI-LEX-C93-REL-02"
+      ],
       "derivedFrom": "ES:A1-NG1-02",
-      "note": "Mock 1's account has `apne dost ke sath` and mock 2's has `apne parivar ke sath`."
+      "note": "ke saath is introduced by HI-C93-ke-saath and ke binaa by HI-C93-ke-binaa, and the note's own examples are constructible as printed: apnaa, dost and parivaar were all already taught, so mock 1's `apne dost ke saath` and mock 2's `apne parivaar ke saath` need nothing beyond the one new word. The teachable part is that these are not prepositions. dost ke saath is, piece by piece, THE FRIEND'S COMPANY -- a possessive phrase whose head noun happens to name a relation -- which is why the middle word is ke and never kaa, and why a pronoun needs no middle word at all. binaa is the one relation word in the family that may also stand in FRONT of its noun (binaa chaay ke), and the lesson teaches the ordinary order and flags the other so a reader is not surprised by it."
     },
     {
       "id": "HI-A1-POST-08",
       "category": "Parsarg (postpositions and case)",
       "label": "spatial compound postpositions: ke pas, ke samne, ke piche",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C93-REL-03",
+        "HI-LEX-C93-REL-04",
+        "HI-LEX-C93-REL-05"
+      ],
       "derivedFrom": "ES:A1-NG3-02, ES:A1-NG3-03, ES:A1-NG3-05",
-      "note": "Mock 2 listening item 6 `bas station ke samne hai` and item 11 `nahin, pas hai`. The proxy spends three A1 points on relative position, distance and direction; Hindi routes all three through this construction and none of it is taught."
+      "note": "All three are introduced in chapter 101: ke paas by HI-C93-ke-paas, ke saamne by HI-C93-ke-saamne and ke piichhe by HI-C93-ke-piichhe, so the note's mock 2 items -- listening item 6 `bas station ke saamne hai` and item 11 `nahiin, paas hai` -- are both now decodable. The note is right that the proxy spends three separate A1 points on relative position, distance and direction while Hindi routes all three through one construction, and that is exactly why one chapter closes all three. The load-bearing distinction the lessons drill is that paas answers a DIFFERENT QUESTION from the other two: it gives distance and no direction, while saamne and piichhe give a side and say nothing about distance. Mock 2's own pair of items tests precisely that, since item 11 concedes the weaker claim after item 6 made the stronger one. paas also arrives with a debt already paid: HI-C84-mere-paas taught it in chapter 92 as the phrase for HAVING without ever saying what the word means, and the physical sense taught here is the one the possessive sense was borrowed from."
     },
     {
       "id": "HI-A1-POST-09",
@@ -818,9 +825,12 @@
       "id": "HI-A1-POST-10",
       "category": "Parsarg (postpositions and case)",
       "label": "ke liye for purpose and benefit",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C93-REL-06",
+        "HI-LEX-C93-REL-07"
+      ],
       "derivedFrom": "ES:A1-SUB-07, ES:A1-PRON-08",
-      "note": "The proxy expresses purpose with para plus an infinitive; Hindi uses the oblique infinitive plus ke liye. Neither the postposition nor the oblique infinitive is taught."
+      "note": "The note's claim that neither the postposition nor the oblique infinitive is taught was half stale: HI-C84-mere-liye teaches `mere liye` in chapter 92, so the postposition was already in the corpus with a pronoun in front of it. What was genuinely missing was `ke liye` after a NOUN -- which needs the separate `ke` a pronoun carries inside itself -- and the oblique infinitive, which chapter 101 supplies as the fifth kind of word to wear the oblique -e."
     },
     {
       "id": "HI-A1-ADV-01",

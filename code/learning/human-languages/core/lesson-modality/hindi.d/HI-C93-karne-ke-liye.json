@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C93-karne-ke-liye",
+    "language": "hindi",
+    "chapter": 101,
+    "sequence": 4260,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b576da13622349ae"
+  },
+  "findings": []
+}

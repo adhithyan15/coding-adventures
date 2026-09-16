@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C93-repaso-sambandh",
+    "language": "hindi",
+    "chapter": 101,
+    "sequence": 4270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef3c5a09e3075630"
+  },
+  "findings": []
+}

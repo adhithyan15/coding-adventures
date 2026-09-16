@@ -1,0 +1,23 @@
+{
+  "language": "hindi",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:9aacc765f6c6ddbf",
+  "lessonIds": [
+    "HI-C93-ke-saath",
+    "HI-C93-ke-binaa",
+    "HI-C93-ke-paas",
+    "HI-C93-ke-saamne",
+    "HI-C93-ke-piichhe",
+    "HI-C93-ke-liye",
+    "HI-C93-karne-ke-liye",
+    "HI-C93-repaso-sambandh",
+    "HI-C93-sintesis-sambandh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch101.txt",
+  "json": "hindi/narration/ch101.json",
+  "textHash": "fnv1a64:3caec3770f5bdd22",
+  "jsonHash": "fnv1a64:24fce8118d71dfec",
+  "findings": []
+}
