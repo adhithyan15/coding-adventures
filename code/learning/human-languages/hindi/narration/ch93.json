@@ -4,7 +4,7 @@
   "chapter": 93,
   "title": "Telling Somebody To Do Something",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5a49efa12b908819",
+  "sourceHash": "fnv1a64:2e9f65c9ebc92984",
   "lessons": [
     {
       "id": "HI-C85-bolo",
@@ -661,7 +661,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f29deaf46bad3c80",
+      "sourceHash": "fnv1a64:6efa26fb19f91bc2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -733,7 +733,7 @@
             },
             {
               "kind": "speech",
-              "text": "The तू column is there for recognition. A learner should read it and not produce it — it is intimate between close friends and insulting to anyone else, and the risk of getting it wrong is much larger than the benefit of using it."
+              "text": "The तू row is there for recognition. A learner should read it and not produce it — it is intimate between close friends and insulting to anyone else, and the risk of getting it wrong is much larger than the benefit of using it."
             }
           ]
         },
@@ -777,20 +777,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the tum column top to bottom — possessive, copula, command",
+              "instruction": "the tum row straight across — possessive, copula, command",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the *tum* column top to bottom — possessive, copula, command]"
+              "source": "[YOU SAY: the *tum* row straight across — possessive, copula, command]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the āp column the same way",
+              "instruction": "the āp row the same way",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the *āp* column the same way]"
+              "source": "[YOU SAY: the *āp* row the same way]"
             },
             {
               "kind": "prompt",
@@ -825,7 +825,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does choosing a level of you decide? (A whole column — possessive, copula and command together.) Which column should a learner read but not use? (तू.) Does the negative change with the level? (No — mat is the same at all three.)"
+              "text": "What does choosing a level of you decide? (A whole row — possessive, copula and command together.) Which row should a learner read but not use? (तू.) Does the negative change with the level? (No — mat is the same at all three.)"
             }
           ]
         }

@@ -176,7 +176,7 @@ level: तू. command: बोल. negative command: मत (mat) बोल.
 level: तुम. command: बोलो (bolo). negative command: मत (mat) बोलो (bolo).
 level: आप. command: बोलिए (boliye). negative command: मत (mat) बोलिए (boliye).
 Read each row straight across. Choosing a person picks the whole row, and every cell in it follows. That is the saving: one decision, not four.
-The तू column is there for recognition. A learner should read it and not produce it — it is intimate between close friends and insulting to anyone else, and the risk of getting it wrong is much larger than the benefit of using it.
+The तू row is there for recognition. A learner should read it and not produce it — it is intimate between close friends and insulting to anyone else, and the risk of getting it wrong is much larger than the benefit of using it.
 
 Grammar Lens: how each command is built.
 [a table of 3 rows, read aloud]
@@ -187,9 +187,9 @@ Three endings, one stem. And as the table above showed, मत (mat) is the same
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: the tum column top to bottom — possessive, copula, command]
+[your turn — say: the tum row straight across — possessive, copula, command]
 [pause 8 seconds for the answer]
-[your turn — say: the āp column the same way]
+[your turn — say: the āp row the same way]
 [pause 8 seconds for the answer]
 [your turn — say: suno and suniye, built from sunnā with the two endings]
 [pause 8 seconds for the answer]
@@ -198,7 +198,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What does choosing a level of you decide? (A whole column — possessive, copula and command together.) Which column should a learner read but not use? (तू.) Does the negative change with the level? (No — mat is the same at all three.)
+What does choosing a level of you decide? (A whole row — possessive, copula and command together.) Which row should a learner read but not use? (तू.) Does the negative change with the level? (No — mat is the same at all three.)
 
 
 Lesson 6 of 6.

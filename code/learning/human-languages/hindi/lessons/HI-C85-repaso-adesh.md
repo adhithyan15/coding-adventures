@@ -60,7 +60,7 @@ to**, and every part of the sentence agrees to it:
 Read each row straight across. Choosing a person picks the whole row, and every
 cell in it follows. That is the saving: one decision, not four.
 
-The **तू** column is there for recognition. A learner should read it and not
+The **तू** row is there for recognition. A learner should read it and not
 produce it — it is intimate between close friends and insulting to anyone else,
 and the risk of getting it wrong is much larger than the benefit of using it.
 
@@ -81,15 +81,15 @@ does.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C85-IMP-01, HI-LEX-C85-IMP-02, HI-LEX-C85-IMP-04, HI-LEX-C85-IMP-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: the *tum* column top to bottom — possessive, copula, command]
-- [YOU SAY: the *āp* column the same way]
+- [YOU SAY: the *tum* row straight across — possessive, copula, command]
+- [YOU SAY: the *āp* row the same way]
 - [YOU SAY: *suno* and *suniye*, built from *sunnā* with the two endings]
 - [YOU SAY: the negative of each command you have made]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C85-IMP-02, HI-LEX-C85-IMP-04, HI-LEX-C85-IMP-03] -->
 
-[PAUSE 3s] What does choosing a level of *you* decide? (A whole column —
-possessive, copula and command together.) Which column should a learner read but
+[PAUSE 3s] What does choosing a level of *you* decide? (A whole row —
+possessive, copula and command together.) Which row should a learner read but
 not use? (**तू**.) Does the negative change with the level? (No — *mat* is the
 same at all three.)
