@@ -2,15 +2,16 @@
 
 ## Status
 
-XAML shipped (PR #15218, merged); Qt shipped in this revision. Depends
-on `UI47` (host capability effects — `[host_effects]`, `Effect`,
-`Delivery`, `mosaic_app_complete_effect`), which is fully implemented
-and tested on all five native backends (Qt, SwiftUI, Compose, Flutter,
-XAML). This spec adds no protocol surface — it is a *convention* for
-one effect kind's `kind` string and payload/result shape, plus real
-implementations of it per backend. Compose and Flutter follow in the
-same order already used for `[host_effects]` itself; SwiftUI is out of
-scope for this environment (no Apple toolchain).
+XAML shipped (PR #15218, merged); Qt shipped (PR #15252, merged);
+Compose shipped in this revision. Depends on `UI47` (host capability
+effects — `[host_effects]`, `Effect`, `Delivery`,
+`mosaic_app_complete_effect`), which is fully implemented and tested
+on all five native backends (Qt, SwiftUI, Compose, Flutter, XAML).
+This spec adds no protocol surface — it is a *convention* for one
+effect kind's `kind` string and payload/result shape, plus real
+implementations of it per backend. Flutter follows in the same order
+already used for `[host_effects]` itself; SwiftUI is out of scope for
+this environment (no Apple toolchain).
 
 **Layer:** UI / standard Mosaic app convention (not core protocol)
 **Depends on:** `UI47-host-capability-effects.md`
@@ -43,10 +44,10 @@ Flutter's `file_selector`. A caller that wants "pictures only" sets
 `accept` to image MIME types; the effect kind itself knows nothing
 about images.
 
-**XAML and Qt this slice.** Compose and Flutter follow as separate
-PRs, in the same order the underlying `[host_effects]` mechanism
-itself landed in. SwiftUI is out of scope for this environment (no
-Apple toolchain available).
+**XAML, Qt, and Compose this slice.** Flutter follows as a separate
+PR, in the same order the underlying `[host_effects]` mechanism itself
+landed in. SwiftUI is out of scope for this environment (no Apple
+toolchain available).
 
 **Out of scope, deliberately:**
 - Live camera capture — a continuous stream doesn't fit the one-shot
@@ -363,3 +364,135 @@ this same effect kind's XAML implementation.
    §6 gate 4 already required for XAML — this time with the TOCTOU
    lesson from that review applied from the first draft rather than
    fixed after the fact.
+
+## 10. Compose implementation
+
+### 10.1 Where the handler lives
+
+`photo-picker-app`'s own `host/compose/PhotoPickerEffects.kt`,
+mirroring Engram's Compose effect handler
+(`engram-app/host/compose/EngramEffects.kt`) in structure — the one
+other real `[host_effects]` Compose handler in this repo.
+
+### 10.2 The handler shape
+
+```kotlin
+fun installPhotoPickerEffects(host: MosaicRuntimeHost) {
+    host.effectHandler = { id, kind, payload, delivery ->
+        if (delivery.lowercase() == "await" && kind == "files.open") {
+            if (host.deferEffect(id)) {
+                SwingUtilities.invokeLater {
+                    val outcome = try {
+                        runPickPhoto(payload)
+                    } catch (error: Throwable) {
+                        failedOutcome("couldn't pick a photo")
+                    }
+                    host.completeEffect(id, outcome)
+                }
+            }
+        }
+    }
+}
+```
+
+`installPhotoPickerEffects` matches `UI47`'s Compose install contract
+exactly (`fun install(host: MosaicRuntimeHost)`, setting
+`host.effectHandler` — confirmed against the generated
+`MosaicRuntimeHost.kt` template's actual `var effectHandler: ((Long,
+String, Any?, String) -> Unit)?` property). Like Qt, Compose's
+manifest entry does *not* take an `include` (Kotlin has no include
+directive; `compose_main_with_host_effects` refuses one outright,
+matching XAML's refusal for a different reason — XAML because every
+type is already visible, Compose because Gradle compiles everything
+under `src/main/kotlin/` regardless).
+
+**Why `deferEffect`, unlike Qt.** `JFileChooser.showOpenDialog` blocks
+synchronously, the same as Qt's `QFileDialog::getOpenFileName` — but
+unlike Qt, Compose's handler still defers rather than answering
+inline, for two reasons specific to this host (documented in
+`MosaicRuntimeHost.kt`'s own `effectHandler` doc comment and mirrored
+from Engram's own Compose handler): the host's monitor is held across
+the `effectHandler` call, so running a modal dialog inline would hold
+it for as long as the dialog stays open; and Compose state must be
+written from the UI thread (EDT), which is where the generated app's
+props-changed handler runs. `SwingUtilities.invokeLater` — which is
+where a Swing dialog has to run anyway — satisfies both: it defers the
+dialog and the eventual `completeEffect` call onto the EDT.
+
+**Filter syntax.** Like Qt, Swing's filter is extension-based, not
+MIME-based — `javax.swing.filechooser.FileNameExtensionFilter`, built
+from a list of bare extensions (no leading dot, unlike Qt's glob
+syntax). The handler carries the same MIME→extension table concept as
+XAML/Qt and drops any `accept` MIME type it doesn't recognise (§3)
+rather than failing; if nothing is recognised, no filter is set at all
+(Swing then shows "All Files").
+
+**Size limit, TOCTOU-hardened from the start, like Qt.** Engram's own
+Compose handler (`runImport`) checks `File.length()` once before
+calling `File.readBytes()` — the same single-check-then-read shape the
+XAML handler's *first* cut used, which `/security-review` on PR #15218
+found was TOCTOU. Rather than repeat that on a new handler when the
+lesson is already known, `photo-picker-app`'s Compose handler reads in
+bounded 64 KiB chunks (via `FileInputStream`) and fails once the
+running total exceeds 50 MiB (matching XAML's and Qt's cap), the same
+approach the Qt handler (§7.2) was hardened to from its own first
+draft.
+
+**Error handling.** Like XAML (after its fix) and Qt, `failed.message`
+is always a short, generic string, never a raw
+`Exception.message`/`error.message`. This is a deliberate departure
+from `installEngramEffects`'s own Compose precedent, which does
+surface `error.message ?: "..."` for its own, already-merged, existing
+handler — not a claim that code is wrong, the same reasoning §7.2
+already gives for the Qt handler's equivalent departure.
+
+**`Throwable`, not `Exception` — a second deliberate departure from
+Engram's Compose handler (and from Qt's `catch (...)`).** Both reason
+"an `Error` means the JVM is already going down," which doesn't hold
+for this handler specifically: reading up to 50 MiB through
+`readBounded`'s `ByteArrayOutputStream` (whose doubling growth can
+transiently hold ~2x the accumulated size), then `toByteArray()` (a
+full copy), then `Base64.getEncoder().encodeToString` (another
+~1.33x) can transiently need well over 100 MiB of live heap for a
+single in-cap pick — a real, user-triggerable `OutOfMemoryError` on a
+JVM with a modest heap, not a sign the process is dying. Caught by
+`/security-review`: an uncaught `OutOfMemoryError` escaped the
+original `catch (error: Exception)`, so `completeEffect` was never
+reached and the effect id stayed awaited for the life of the process
+(the runtime gates snapshot AND restore on nothing being pending) — a
+genuine permanent wedge, not merely theoretical. Any future handler
+copying this file's memory-amplifying shape (bounded-read → full-copy
+→ re-encode) should carry the same `catch (Throwable)`, even where the
+*rest* of this file's pattern (deferred completion, generic error
+messages) is copied unchanged.
+
+## 11. Test strategy (Compose)
+
+- **Manifest/generation round trip**: given `photo-picker-app`'s real
+  manifest declaring the Compose handler, the generated `Main.kt`
+  calls `(mosaicHost as? MosaicRuntimeHost)?.let {
+  installPhotoPickerEffects(it) }` immediately after the `val
+  mosaicHost = remember { ... }` declaration.
+- **Package compile-check** (`tests/package_compiles.rs`, extended):
+  the manifest declares exactly the Compose `[host_effects]` file and
+  handler entries this spec describes (no `include`), and the Kotlin
+  source file exists and declares `installPhotoPickerEffects`/
+  `effectHandler`/`"files.open"`.
+- **Real build**: emit the app with `--profile native-complete` and
+  build the generated Gradle project (`gradle build`, the actual
+  toolchain installed in this environment: Gradle 8.10.2 on JDK 21) —
+  a full, unqualified success. Interactively exercising the native
+  `JFileChooser` dialog itself is not something this session can
+  automate, same limitation as §5's XAML entry and §8's Qt entry.
+
+## 12. Acceptance gates (Compose)
+
+1. §11's manifest/generation and compile-check tests are green.
+2. `gradle build` of the emitted `native-complete` project succeeds
+   with zero errors.
+3. `cargo clippy -p photo-picker-mosaic-app --all-targets -- -D
+   warnings` clean (the Rust app crate is backend-agnostic and
+   unchanged by this addition).
+4. Security review passed before push, applying the same scrutiny as
+   §6 gate 4 and §9 gate 4 — the TOCTOU and generic-error-message
+   lessons applied from the first draft, same as Qt.

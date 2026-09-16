@@ -12,30 +12,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `host/qt/PhotoPickerEffects.{h,cpp}` — the Qt `[host_effects]`
   handler for `UI59`'s `files.open` effect, implemented via
   `QFileDialog::getOpenFileName`, mirroring Engram's own Qt effect
-  handler (`installEngramEffects`) in structure.
-- `[host_effects]` manifest wiring for Qt, alongside the existing XAML
-  entry, per `UI59` §2; Compose and Flutter remain explicit follow-up
-  PRs.
-- `tests/package_compiles.rs` extended with Qt manifest-shape and
-  handler-source coverage (4 tests total, up from 3).
-- Verified with a real `cmake --build` (Ninja + MSVC) of the
-  `--profile native-complete` emitted project — a full, unqualified
-  success (no documented exception, unlike the XAML build's known
-  benign packaging-step error).
+  handler (`installEngramEffects`) in structure. (PR #15252, merged.)
+- `host/compose/PhotoPickerEffects.kt` — the Compose `[host_effects]`
+  handler, implemented via `javax.swing.JFileChooser` deferred onto
+  the EDT via `SwingUtilities.invokeLater`, mirroring Engram's own
+  Compose effect handler (`installEngramEffects`) in structure.
+- `[host_effects]` manifest wiring for Qt and Compose, alongside the
+  existing XAML entry, per `UI59` §2; Flutter remains the last
+  explicit follow-up PR.
+- `tests/package_compiles.rs` extended with Qt and Compose
+  manifest-shape and handler-source coverage (5 tests total, up from
+  3).
+- Verified with a real `cmake --build` (Ninja + MSVC) of the Qt
+  `--profile native-complete` emitted project, and a real `gradle
+  build` (Gradle 8.10.2, JDK 21) of the Compose one — both full,
+  unqualified successes (no documented exception, unlike the XAML
+  build's known benign packaging-step error).
 
 ### Design notes
 
-- The Qt handler reads a picked file in bounded 64 KiB chunks and
-  fails once the running total exceeds a 50 MiB cap (matching XAML's
-  cap), enforced *during* the read from the first draft — applying the
-  TOCTOU lesson `/security-review` taught on the XAML handler earlier
-  in this same effect's history (PR #15218 round 2), rather than
-  needing a follow-up fix here too.
-- `failed.message` is always a short, generic string, never a raw
-  `QFile::errorString()`/`std::exception::what()` — a deliberate
-  departure from `installEngramEffects`'s own precedent, applying the
-  same "don't leak host error text through an app-visible field"
-  lesson from XAML's security review.
+- Both the Qt and Compose handlers read a picked file in bounded
+  64 KiB chunks and fail once the running total exceeds a 50 MiB cap
+  (matching XAML's cap), enforced *during* the read from each
+  handler's first draft — applying the TOCTOU lesson `/security-review`
+  taught on the XAML handler earlier in this same effect's history
+  (PR #15218 round 2), rather than needing a follow-up fix on either.
+- `failed.message` is always a short, generic string on both, never a
+  raw `QFile::errorString()`/`std::exception::what()` (Qt) or
+  `Exception.message` (Compose) — a deliberate departure from
+  `installEngramEffects`'s own precedent on both backends (which does
+  surface those directly for its own, already-merged, existing
+  handlers), applying the same "don't leak host error text through an
+  app-visible field" lesson from XAML's security review.
+- The Compose handler defers via `host.deferEffect`/`SwingUtilities
+  .invokeLater` even though `JFileChooser` blocks synchronously the
+  same way Qt's `QFileDialog` does — unlike Qt, Compose's host holds a
+  monitor across the `effectHandler` call and requires EDT-only state
+  writes, so answering inline (Qt's approach) isn't available here;
+  see `UI59` §10.2.
+
+### Fixed (caught by `/security-review`, before this ever shipped)
+
+- **Uncaught `OutOfMemoryError` could wedge an effect permanently.**
+  The `invokeLater` block's completion guarantee caught only
+  `Exception`, following Qt's and Engram's own "an `Error` means the
+  JVM is dying" reasoning — which doesn't hold for this handler:
+  bounded-reading up to 50 MiB, then `toByteArray()`, then base64
+  encoding can transiently need well over 100 MiB of live heap for a
+  single in-cap pick, a real `OutOfMemoryError` on a JVM with a modest
+  heap. Now catches `Throwable`, so `completeEffect` is always reached
+  even then.
 
 ## [0.1.0] — 2026-09-15
 
