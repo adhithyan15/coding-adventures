@@ -34,8 +34,31 @@
 % of these under its own "Definition:"-labeled sentence. WebFetch-verified
 % before writing (twice — the second pass specifically confirmed each
 % sentence's exact wording and that it stands alone as a complete
-% definition before any follow-up example sentence). `trust consensus` —
-% Grammarly is a reputable secondary reference, the same tier the sibling
+% definition before any follow-up example sentence).
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the metaphor sentence, so a personification or hyperbole answer
+% was warranted primarily by a sentence about metaphors, and those two
+% sentences reached no answer at all. Each row now carries the definition
+% that names its own figure of speech, and the envelope is the article's
+% framing sentence, which names none of them.
+%
+% THE CURLY APOSTROPHE IS PART OF THE QUOTE. The metaphor sentence contains
+% U+2019 in "isn't". Measured on the raw page, the shipped form occurs once
+% and an ASCII-apostrophe variant occurs ZERO times, so the character is
+% load-bearing rather than cosmetic -- the mirror image of the U+00A0
+% failures found elsewhere in this stdlib, where a plain space was typed
+% where the page writes a non-breaking one.
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404 and holds none of these spans), tags removed without a
+% space and only ASCII whitespace collapsed: each row's span and the
+% envelope each occur exactly once, each inside one `<p>`, scripts set aside
+% and over the whole file, with no `<head>` copy. Every row's page is the
+% envelope's, so no row restates a `locator` line or a `trust` tier.
+%
+% `trust consensus` — Grammarly is a reputable secondary reference, the same
+% tier the sibling
 % `noun-type.adj`/`verb-type.adj`/`pronoun-type.adj`/`preposition-type.adj`/
 % `conjunction-type.adj`/`determiner-type.adj`/`end-punctuation-mark.adj`
 % (the other libraries in this directory) already use for their Grammarly
@@ -57,11 +80,17 @@
 table figurative_language_type {
     columns type, description
 
-    row (metaphor, describes_something_in_a_way_thats_not_literally_true_to_make_a_comparison)
-    row (personification, gives_human_characteristics_to_nonhuman_or_abstract_things)
-    row (hyperbole, a_great_exaggeration_used_to_add_emphasis)
+    row (metaphor, describes_something_in_a_way_thats_not_literally_true_to_make_a_comparison) {
+        source "A metaphor describes an object or action in a way that isn’t literally true but helps explain an idea or make a comparison."
+    }
+    row (personification, gives_human_characteristics_to_nonhuman_or_abstract_things) {
+        source "Personification means giving human characteristics to nonhuman or abstract things."
+    }
+    row (hyperbole, a_great_exaggeration_used_to_add_emphasis) {
+        source "Hyperbole is a great exaggeration, often unrealistic, to add emphasis to a sentiment."
+    }
 
-    source "A metaphor describes an object or action in a way that isn’t literally true but helps explain an idea or make a comparison."
+    source "Figurative language is a type of communication that does not use a word’s strict or literal meaning."
     locator "https://www.grammarly.com/blog/writing-tips/figurative-language/"
     trust consensus
 }
