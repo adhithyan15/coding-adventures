@@ -15,8 +15,9 @@
 %
 %     ? separation_basis(distillation, $Basis)   % by_volatility
 %
-% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `separation_basis(method, basis)` carrying the table's citation, so
+% This is a native `table` (ADJ-TABLES RS-5e): each `row` lowers to a ground
+% relation `separation_basis(method, basis)` carrying its OWN row's span, with
+% the table's locator and trust inherited, so
 % the lookup above is the ordinary SLD binding query — the engine returns the
 % basis WITH its source, on the CPU, with zero model calls, and abstains on a
 % word that is not one of these separation methods (it never invents a basis).
@@ -65,8 +66,12 @@
 %     "In simple distillation, a mixture is heated, and the most volatile
 %      component vaporizes at the lowest temperature."
 %
-%   evaporation → separates_liquid_from_solid
-%     "The method drives off the liquid components from the solid components."
+%   evaporation → separates_liquid_from_solid (TWO sentences: "The method"
+%   names no technique on its own, so the row carries the sentence before
+%   it, contiguous in the same paragraph)
+%     "Evaporation is a technique used to separate out homogeneous
+%      mixtures that contain one or more dissolved salts. The method
+%      drives off the liquid components from the solid components."
 %
 %   chromatography → by_different_rates
 %     "Chromatography is the separation of a mixture by passing it in solution or
@@ -78,10 +83,31 @@
 % Separating Mixtures):
 % https://chem.libretexts.org/Courses/Portland_Community_College/CH100:_Everyday_Chemistry/01:_Matter_and_Measurements/1.16:_Methods_for_Separating_Mixtures
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the LibreTexts statement that
-% fixes the first row (filtration → by_particle_size). Every OTHER row's
-% verbatim span is listed above, so each basis remains independently checkable.
+% EACH ROW CARRIES ITS OWN SPAN (ADJ-TABLES RS-5e, #14986). The envelope used
+% to be the FILTRATION span, so a distillation, evaporation or chromatography
+% answer was warranted primarily by a sentence about filtration, and those
+% three sentences were header prose that reached no answer. Each row now
+% carries the span above that names its own method.
+%
+% The envelope is now the first bullet of the page's own Summary list, which
+% names no method and no basis:
+%
+%     "Mixtures can be separated using a variety of techniques."
+%
+% The other Summary bullets are deliberately NOT used as row spans. They do
+% name a method and a property ("Distillation takes advantage of differences
+% in boiling points."), but the shipped `basis` atoms are grounded in the
+% body prose instead -- `by_volatility` comes from "the most volatile
+% component vaporizes at the lowest temperature", which is not what the
+% summary's "boiling points" wording says.
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404 and holds none of these spans), tags removed without a
+% space and only ASCII whitespace collapsed: each row's span occurs exactly
+% once, scripts set aside and over the whole file; the evaporation pair is
+% contiguous in one `<p>`; the envelope occurs once inside one `<li>`, with
+% no `<head>` copy. Every row's page is the envelope's, so no row
+% restates a `locator` line or a `trust` tier of its own.
 % Chemistry LibreTexts is a curated open-education teaching resource (a teaching
 % summary, not a primary standards body), so `trust consensus`.
 % (See ../README.md; feedback_nothing_human_authored,
@@ -91,12 +117,20 @@
 table separation_basis {
     columns method, basis
 
-    row (filtration, by_particle_size)
-    row (distillation, by_volatility)
-    row (evaporation, separates_liquid_from_solid)
-    row (chromatography, by_different_rates)
+    row (filtration, by_particle_size) {
+        source "Filtration is a separation method used to separate out pure substances in mixtures comprised of particles—some of which are large enough in size to be captured with a porous material. Particle size can vary considerably, given the type of mixture."
+    }
+    row (distillation, by_volatility) {
+        source "In simple distillation, a mixture is heated, and the most volatile component vaporizes at the lowest temperature."
+    }
+    row (evaporation, separates_liquid_from_solid) {
+        source "Evaporation is a technique used to separate out homogeneous mixtures that contain one or more dissolved salts. The method drives off the liquid components from the solid components."
+    }
+    row (chromatography, by_different_rates) {
+        source "Chromatography is the separation of a mixture by passing it in solution or suspension, or as a vapor (as in gas chromatography), through a medium in which the components move at different rates."
+    }
 
-    source "Filtration is a separation method used to separate out pure substances in mixtures comprised of particles—some of which are large enough in size to be captured with a porous material. Particle size can vary considerably, given the type of mixture."
+    source "Mixtures can be separated using a variety of techniques."
     locator "https://chem.libretexts.org/Courses/Portland_Community_College/CH100:_Everyday_Chemistry/01:_Matter_and_Measurements/1.16:_Methods_for_Separating_Mixtures"
     trust consensus
 }
