@@ -2291,9 +2291,12 @@
       "id": "HI-A1-LEX-23",
       "category": "Shabd-bhandar (core lexis)",
       "label": "educational institutions",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C81-SCHOOL-01",
+        "HI-LEX-C81-SCHOOL-02"
+      ],
       "derivedFrom": "ES:A1-NE06-01",
-      "note": "`school` appears in four separate mock items across the two papers and is introduced nowhere."
+      "note": "skool and vidyalaya are both introduced by chapter 89. The note's original finding stands as the reason this was urgent: school appeared in four separate mock items across the two papers while the track could name the teacher, the student and the act of studying but not the building. Both registers are taught because the reading paper is built of signs and notices, where vidyalaya appears, and the listening paper of people talking, where skool does."
     },
     {
       "id": "HI-A1-LEX-24",

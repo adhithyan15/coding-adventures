@@ -10,7 +10,8 @@
     "HI-PATH-54-ANIMAL",
     "HI-PATH-62-HANDS",
     "HI-PATH-67-A1-NAME-FIELD",
-    "HI-PATH-70-LEISURE"
+    "HI-PATH-70-LEISURE",
+    "HI-PATH-89-SCHOOL"
   ],
   "omits": [
     "PRONOUN-ME"
