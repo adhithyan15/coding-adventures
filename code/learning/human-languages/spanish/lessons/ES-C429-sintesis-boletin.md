@@ -40,7 +40,7 @@ column heading.
 ## Reading: el boletín de calificaciones
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C429-EDU-01, ES-LEX-C429-EDU-02, ES-LEX-C429-EDU-03, ES-LEX-C358-REF-14] -->
 
-> **IES Miguel Hernández**
+> **IES Ejemplo**
 > **Boletín de calificaciones**
 
 | clase | calificación |
@@ -52,6 +52,12 @@ column heading.
 Three rows, and everything in them is now readable. **IES** is the school.
 **Calificación** heads the column because this is a printed document. The numbers
 are out of ten.
+
+A real letterhead carries the centre's own name after those three letters —
+usually a poet, a scientist or a place. **Ejemplo** stands in for it here, so
+nothing on this page points at a school somebody actually attends. What you read
+off a real document is the same three things: the **IES**, the heading, and the
+column.
 
 ## How to answer
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C429-EDU-04, ES-LEX-C429-EDU-05, ES-LEX-C429-EDU-02] -->

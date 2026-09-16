@@ -4,7 +4,7 @@
   "chapter": 429,
   "title": "The Instituto, And What A Mark Is Called",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:36c4abe330395b78",
+  "sourceHash": "fnv1a64:45fc090b80c66fc8",
   "lessons": [
     {
       "id": "ES-C429-instituto",
@@ -1115,7 +1115,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:556ce28404f3042d",
+      "sourceHash": "fnv1a64:cce2d9ec048a9795",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1149,7 +1149,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "IES Miguel Hernández Boletín de calificaciones."
+              "text": "IES Ejemplo Boletín de calificaciones."
             },
             {
               "kind": "table",
@@ -1168,6 +1168,10 @@
             {
               "kind": "speech",
               "text": "Three rows, and everything in them is now readable. IES is the school. Calificación heads the column because this is a printed document. The numbers are out of ten."
+            },
+            {
+              "kind": "speech",
+              "text": "A real letterhead carries the centre's own name after those three letters — usually a poet, a scientist or a place. Ejemplo stands in for it here, so nothing on this page points at a school somebody actually attends. What you read off a real document is the same three things: the IES, the heading, and the column."
             }
           ]
         },

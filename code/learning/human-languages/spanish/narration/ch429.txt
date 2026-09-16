@@ -283,12 +283,13 @@ Warm-up.
 Say the two words for a mark. One of them is about to appear as a column heading.
 
 Reading: el boletín de calificaciones.
-IES Miguel Hernández Boletín de calificaciones.
+IES Ejemplo Boletín de calificaciones.
 [a table of 3 rows, read aloud]
 clase: Matemáticas. calificación: 7.
 clase: Historia. calificación: 4.
 clase: Inglés. calificación: 9.
 Three rows, and everything in them is now readable. IES is the school. Calificación heads the column because this is a printed document. The numbers are out of ten.
+A real letterhead carries the centre's own name after those three letters — usually a poet, a scientist or a place. Ejemplo stands in for it here, so nothing on this page points at a school somebody actually attends. What you read off a real document is the same three things: the IES, the heading, and the column.
 
 How to answer.
 Two of the three rows passed and one did not. Say which verb goes with each:
