@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:b6afd19480d11ca7",
+  "lessonIds": [
+    "ES-C430-estar-en-paro",
+    "ES-C430-vaqueros",
+    "ES-C430-jersey",
+    "ES-C430-bolso",
+    "ES-C430-repaso-piezas",
+    "ES-C430-sintesis-anuncio"
+  ],
+  "tex": "spanish/book/chapters/ch430-paro-ropa.tex"
+}

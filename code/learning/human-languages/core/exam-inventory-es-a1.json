@@ -1037,8 +1037,13 @@
       "id": "A1-F4-01",
       "category": "Influir en el interlocutor",
       "label": "give an order or instruction",
-      "probe": null,
-      "note": "The source's A1 exponents are a direct order and a softened order with an attenuator. The corpus teaches the NEGATIVE command and the register that surrounds commands, but never introduces the affirmative imperative."
+      "probe": [
+        "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+        "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
+        "ES-LEX-POR-FAVOR",
+        "ES-CULTURE-COMMAND-REGISTER"
+      ],
+      "note": "STALE NOTE, corrected. The earlier note said the corpus 'never introduces the affirmative imperative'; ES-C50-habla introduces it across all three conjugations (habla, come, vive) and ES-C50-ocho-cortos introduces the eight irregulars (di, haz, ve, pon, ten, sal, se, ven). The inventory already contradicted itself: A1-V-11 was wired to those same two atoms. The point's second exponent, a softened order with an attenuator, is ES-LEX-POR-FAVOR from ES-C06 plus ES-CULTURE-COMMAND-REGISTER from ES-C50-sintesis-pedir-bien, which reads Coma, por favor as the softened order and makes the argument that in Spanish the attenuation lives mostly in the choice of tu or usted rather than in an added word. Closed with zero authoring."
     },
     {
       "id": "A1-F4-02",
@@ -1785,8 +1790,13 @@
       "id": "A1-NE06-01",
       "category": "Educacion",
       "label": "educational institutions",
-      "probe": null,
-      "note": "The source's A1 exponents are instituto, universidad, clase and biblioteca. The corpus teaches escuela, which is a different institution, and none of the four listed words."
+      "probe": [
+        "ES-LEX-C429-EDU-01",
+        "ES-LEX-UNIVERSIDAD",
+        "ES-LEX-C358-REF-14",
+        "ES-LEX-C353-WHERE-24"
+      ],
+      "note": "PARTLY STALE NOTE, corrected. The source's exponents are instituto, universidad, clase and biblioteca, and the note claimed the corpus taught 'none of the four listed words'. Three of the four were already introduced: universidad by ES-C394-universidad, clase by ES-C358-clase and biblioteca by ES-C353-biblioteca. Only instituto was missing, and it is the one that mattered -- it is a false friend (English institute is a research body) and the missing middle rung of the school ladder, so the corpus could name the primary school and the university with nothing for the years between. ES-C429-instituto supplies it."
     },
     {
       "id": "A1-NE06-02",
@@ -1817,8 +1827,14 @@
       "id": "A1-NE06-05",
       "category": "Educacion",
       "label": "examinations and marks",
-      "probe": null,
-      "note": "The source's A1 exponent is hacer or tener un examen; examen IS introduced by ES-C410-examen, hacer by ES-C12 and tener by ES-C08, so the earlier note claiming examen was never introduced was false. The point stays UNCOVERED anyway, because the label is 'examinations and marks' and the marks half is wholly absent: nota, calificacion, aprobar and suspender occur nowhere in the corpus, as headwords, glosses or atoms. Wiring it on the examination half alone would claim coverage of untaught vocabulary, and would contradict the call made at A1-NE18-06, where pelicula without teatro is held not to buy 'cinema and theatre'."
+      "probe": [
+        "ES-LEX-EXAMEN",
+        "ES-LEX-C429-EDU-02",
+        "ES-LEX-C429-EDU-03",
+        "ES-LEX-C429-EDU-04",
+        "ES-LEX-C429-EDU-05"
+      ],
+      "note": "The note was right to hold this uncovered and is now satisfied on its own terms. It had already corrected one false claim (examen IS introduced by ES-C410-examen) and kept the point uncovered because the label is 'examinations and marks' and the marks half was wholly absent -- nota, calificacion, aprobar and suspender occurred nowhere. ES-C429 supplies all four, so the point closes on both halves rather than on the examination half alone, which is the call the note asked for and the same call made at A1-NE18-06."
     },
     {
       "id": "A1-NE06-06",
@@ -1877,8 +1893,11 @@
       "id": "A1-NE07-04",
       "category": "Trabajo",
       "label": "unemployment and job-seeking",
-      "probe": null,
-      "note": "The source's A1 exponents are estar en paro and tener trabajo. The corpus introduces neither paro nor trabajo as a noun."
+      "probe": [
+        "ES-LEX-C430-VIDA-01",
+        "ES-LEX-TRABAJO"
+      ],
+      "note": "PARTLY STALE NOTE, corrected. The source's exponents are estar en paro and tener trabajo, and the note claimed the corpus introduced 'neither paro nor trabajo as a noun'. el trabajo is introduced as a noun by ES-C394-trabajo, so only the negative half was missing. ES-C430-estar-en-paro supplies it, with the two things that make it an exam answer rather than a word: it takes estar rather than ser because it names a situation, and el paro names the STOPPAGE rather than the missing job (from parar, whose Latin parare meant to make ready before the sense slid through standing ready to standing still). Spain says paro where much of Latin America says desempleo."
     },
     {
       "id": "A1-NE07-05",
@@ -2082,8 +2101,16 @@
       "id": "A1-NE12-02",
       "category": "Compras, tiendas y establecimientos",
       "label": "clothing, footwear and accessories",
-      "probe": null,
-      "note": "The source's A1 exponents are pantalones, vaqueros, falda, camisa, jersey, zapatos and bolso. Four are introduced: pantalon (ES-C360), falda (ES-C373), camisa (ES-C402) and zapato (ES-C360) -- the corpus teaches the singulars where the source lists plurals. vaqueros, jersey and bolso are absent, so the point stays uncovered at four of seven."
+      "probe": [
+        "ES-LEX-C360-REF-19",
+        "ES-LEX-C373-REF-54",
+        "ES-LEX-CAMISA",
+        "ES-LEX-C360-REF-18",
+        "ES-LEX-C430-VIDA-02",
+        "ES-LEX-C430-VIDA-03",
+        "ES-LEX-C430-VIDA-04"
+      ],
+      "note": "The note was accurate at four of seven: pantalon (ES-C360), falda (ES-C373), camisa (ES-C402) and zapato (ES-C360) were introduced, and vaqueros, jersey and bolso were absent. ES-C430 adds exactly those three, each with the trap that makes it an exam item rather than a word -- vaqueros is plural every time and takes a plural article, jersey pluralises to jerseis and gains a written accent doing it, and bolso names a different object from bolsa, which is what a shop assistant will hand you if you choose wrong."
     },
     {
       "id": "A1-NE12-03",

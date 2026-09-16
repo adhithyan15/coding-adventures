@@ -1,0 +1,16 @@
+{
+  "id": "ES-EXT-430-PARO-ROPA",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say somebody is out of work, and name jeans, a jumper and a handbag.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C430-estar-en-paro",
+    "ES-C430-vaqueros",
+    "ES-C430-jersey",
+    "ES-C430-bolso",
+    "ES-C430-repaso-piezas",
+    "ES-C430-sintesis-anuncio"
+  ]
+}

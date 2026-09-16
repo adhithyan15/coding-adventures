@@ -1,0 +1,1288 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 429,
+  "title": "The Instituto, And What A Mark Is Called",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:45fc090b80c66fc8",
+  "lessons": [
+    {
+      "id": "ES-C429-instituto",
+      "sequence": 10310,
+      "title": "el instituto — the building between the two you already know",
+      "headword": "el instituto",
+      "romanization": "el instituto",
+      "gloss": "the secondary school — the false friend that sends English speakers to the wrong building, because an English institute is a research body and a Spanish one is where you go at twelve",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67c11194f5e8ca58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say la escuela and la universidad. A Spanish fifteen-year-old goes to neither. Where do they go?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el instituto",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el instituto — the secondary school, for students of about twelve to eighteen."
+            },
+            {
+              "kind": "speech",
+              "text": "On a sign it is often shortened to IES — Instituto de Educación Secundaria."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin instituere — in- plus statuere, \"to set up, to stand a thing upright.\" An institutum was something that had been set up: a custom, an arrangement, a foundation. A Spanish instituto is a thing that was established, and the school sense is one narrow use of a very wide word."
+            },
+            {
+              "kind": "speech",
+              "text": "Statuere is behind a crowd of words you can already half-read: estatua, estado, estatura, constituir. Every one of them is about standing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the false friend, and the ladder it breaks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English institute names a research body — the Institute of Physics. Spanish instituto can mean that too, but its everyday sense is the school, and that is the one a reading paper uses."
+            },
+            {
+              "kind": "speech",
+              "text": "The three buildings in order:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "age",
+                "building"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "age: about 6 to 12. building: la escuela.",
+                "age: about 12 to 18. building: el instituto.",
+                "age: after 18. building: la universidad."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Without the middle rung the ladder has a gap in exactly the years an exam candidate is most likely to be asked about."
+            },
+            {
+              "kind": "speech",
+              "text": "The stress is ins-ti-TU-to, on the second-last syllable, and no accent is written because a word ending in a vowel is stressed there by default."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el instituto\" — ins-ti-TU-to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el instituto\" — *ins-ti-TU-to*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three buildings in order of age",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three buildings in order of age]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the letters IES stand for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the letters *IES* stand for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what statuere meant, and one Spanish word that still shows it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *statuere* meant, and one Spanish word that still shows it]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does a fifteen-year-old go? (Al instituto.) What does English institute name instead? (A research body.) What was an institutum in Latin? (Something that had been set up.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C429-nota",
+      "sequence": 10320,
+      "title": "la nota — a mark, in the oldest sense of the word",
+      "headword": "la nota",
+      "romanization": "la nota",
+      "gloss": "the mark — the same word the corpus already taught for a written note, and the older of its two senses is this one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1db967465893c6ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say el examen. Now try to say what you got for it, and notice you have the event and not the result."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la nota",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la nota — the mark, the grade."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Qué nota tienes? — \"What mark did you get?\" In Spain the answer is a number out of ten, and five is where passing begins."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin nota meant a mark scratched onto something — a sign cut into wax, wood or skin so it could be told apart later."
+            },
+            {
+              "kind": "speech",
+              "text": "Every modern sense grew out of that one scratch:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the mark in it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: nota. the mark in it: the mark a teacher puts on your work.",
+                "word: notar. the mark in it: to notice — to catch the mark.",
+                "word: notable. the mark in it: worth marking."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English note, notice, notable and notorious are the same word arriving by a different road."
+            },
+            {
+              "kind": "speech",
+              "text": "So the grade sense is not a metaphor. It is the literal one, and a written note — a mark made on paper to be read later — is the extension."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: one word, two senses, and how to tell them apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have met nota before, on a message left for somebody. Both senses are live, and what sorts them is the company the word keeps:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what stands nearby",
+                "which sense"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what stands nearby: examen, clase, a number. which sense: the mark.",
+                "what stands nearby: dejar, escribir, a person. which sense: the message."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Sacar buena nota is the set phrase for doing well — literally \"to take out a good mark,\" the way you take out anything you have earned."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la nota\" — the mark",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la nota\" — the mark]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿Qué nota tienes?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"¿Qué nota tienes?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what a Latin nota physically was",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what a Latin *nota* physically was]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the phrase for doing well in an exam (sacar buena nota)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the phrase for doing well in an exam (*sacar buena nota*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Out of how many is a Spanish school mark? (Ten.) Which sense of nota came first, the mark or the message? (The mark — Latin nota was a scratch.) What tells the two senses apart in a sentence? (The words standing next to it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C429-calificacion",
+      "sequence": 10330,
+      "title": "la calificación — the word the paper uses when the person would say nota",
+      "headword": "la calificación",
+      "romanization": "la calificación",
+      "gloss": "the grade, as printed on a document — the formal partner of nota, and a word that says out loud what a grade is for",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:8cb4cc13bf327852",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say nota. Now imagine it printed at the top of an official column on a school document, and expect a longer word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la calificación",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la calificación — the grade, in its formal dress."
+            },
+            {
+              "kind": "speech",
+              "text": "Spoken between students it is nota. Printed on a report, a transcript or a form, it is calificación, and the two name the same thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Medieval Latin qualificare, built from qualis (\"of what kind\") plus facere (\"to make\"). To calificar is to say what kind a thing is."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a startlingly honest description of what a grade does. A number out of ten is a claim about the kind of work in front of the reader, which is why the formal word for it is built from the question of what kind?"
+            },
+            {
+              "kind": "speech",
+              "text": "English took the same compound as qualify, and kept the other half of the sense: to qualify a statement is to say what kind of statement it is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: where the accent sits, and why",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Calificación ends in -n, which by default pulls the stress to the second-last syllable — ca-li-fi-CA-cion. The stress is on the last one, so an accent has to be written: -ción."
+            },
+            {
+              "kind": "speech",
+              "text": "Every Spanish word ending in -ción works this way, and you have met dozens:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "stressed syllable"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: calificación. stressed syllable: -ción.",
+                "word: educación. stressed syllable: -ción.",
+                "word: información. stressed syllable: -ción."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "In the plural the accent disappears — calificaciones — because adding a syllable puts the stress where the default would have put it anyway."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la calificación\" — ca-li-fi-ca-CIÓN",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la calificación\" — *ca-li-fi-ca-CIÓN*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of nota and calificación you would hear in a corridor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of *nota* and *calificación* you would hear in a corridor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what qualis meant, and what a grade therefore claims",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *qualis* meant, and what a grade therefore claims]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plural, and say why it loses its accent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plural, and say why it loses its accent]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What question is hiding inside calificación? (Of what kind?) Where does its accent go, and where does it go in the plural? (On -ción; the plural drops it.) Which English word is the same compound? (Qualify.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C429-aprobar",
+      "sequence": 10340,
+      "title": "aprobar — to pass, and who is really doing the approving",
+      "headword": "aprobar",
+      "romanization": "aprobar",
+      "gloss": "to pass an exam — and the surprise is who does the approving, because the Latin has the exam approving you",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d1d791d887c0d9e0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can name the exam and the mark. Say what you did with the exam when the mark was a five or better."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aprobar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aprobar — to pass, as in to pass an exam."
+            },
+            {
+              "kind": "speech",
+              "text": "He aprobado el examen. — \"I have passed the exam.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The mark that does it is a five out of ten and upward."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin approbare — ad- (\"towards\") plus probare, \"to test something and find it good.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the direction that gives you. English says I passed the exam, with the student doing the acting and the exam standing still. The Latin behind aprobar says something closer to the examiner tested the work and found it good — the judgement travels the other way."
+            },
+            {
+              "kind": "speech",
+              "text": "Probare is a generous root, and you can read its family off the page:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what it tests"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: probar. what it tests: to try, to taste, to test.",
+                "word: prueba. what it tests: a test, a piece of evidence.",
+                "word: aprobar. what it tests: to test and find good."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English probe, proof, prove and approve all come from the same verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the vowel that breaks in the middle",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Aprobar is one of the verbs whose o splits into ue when the stress lands on it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                "stem"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "form: yo apruebo. stem: stressed.",
+                "form: nosotros aprobamos. stem: unstressed."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen this before in poder and contar. The rule has not changed: the stem breaks where the stress falls and stays whole where it does not."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"aprobar\" — to pass",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"aprobar\" — to pass]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He aprobado el examen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He aprobado el examen\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the yo form, and hear where the stem breaks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *yo* form, and hear where the stem breaks]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what probare meant, and which direction the judgement travels",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *probare* meant, and which direction the judgement travels]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the formal word a report prints for the number you got",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the formal word a report prints for the number you got]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What mark passes? (Five out of ten.) What did probare mean? (To test and find good.) What happens to the o in yo apruebo? (It breaks into ue, because the stress lands on it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C429-suspender",
+      "sequence": 10350,
+      "title": "suspender — to fail, and the picture the word is holding",
+      "headword": "suspender",
+      "romanization": "suspender",
+      "gloss": "to fail an exam — Latin for to leave hanging, which is exactly what a resit does to your year",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d22ab2cb3a55ab7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say aprobar. Guess its opposite, and then read on to see what the Spanish word is actually picturing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: suspender",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "suspender — to fail, as in to fail an exam or a subject."
+            },
+            {
+              "kind": "speech",
+              "text": "He suspendido el examen. — \"I have failed the exam.\" A mark below five does it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin suspendere — sub- (\"beneath\") plus pendere, \"to hang.\" To suspend a thing is to leave it hanging."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not a dead metaphor here. A failed subject in Spain is not finished: it hangs over the student until a resit in a later term. There is even a word for one — una asignatura pendiente, \"a hanging subject\" — which people also use for anything in life they have been putting off."
+            },
+            {
+              "kind": "speech",
+              "text": "Pendere built a shelf of words that all hang:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what hangs"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: pendiente. what hangs: a slope, an earring, a thing outstanding.",
+                "word: depender. what hangs: to hang from something else.",
+                "word: pensar. what hangs: to weigh a thing in the mind."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English pendant, pending, suspense and depend hang from the same nail."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the English false friend, and the Spanish one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English suspend keeps only the harsher senses — a suspended player, a suspended sentence. The school sense does not survive the crossing, so an English speaker reading he suspendido will hear something far more dramatic than what happened."
+            },
+            {
+              "kind": "speech",
+              "text": "The pair, side by side:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "mark",
+                "verb"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "mark: five or above. verb: aprobar.",
+                "mark: below five. verb: suspender."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both verbs take the exam as their object, so the exam is what is passed or failed, rather than the student."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"suspender\" — to fail",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"suspender\" — to fail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He suspendido el examen\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He suspendido el examen\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair, with the mark that decides each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair, with the mark that decides each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what una asignatura pendiente is, and what it means outside school",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *una asignatura pendiente* is, and what it means outside school]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pendere mean? (To hang.) What is una asignatura pendiente? (A subject left hanging, and by extension anything outstanding.) Which mark divides aprobar from suspender? (Five.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C429-repaso-notas",
+      "sequence": 10360,
+      "title": "el curso entero — one school year, in five words",
+      "headword": "el curso entero",
+      "romanization": "el curso entero",
+      "gloss": "review — the building, the mark, and the two verbs that decide what happens next",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:dac71d5ad86819ca",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the building and the thing a teacher writes on your work, before you look at the table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the year, in order",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what happens",
+                "the word"
+              ],
+              "columns": 2,
+              "rowCount": 7,
+              "utterances": [
+                "what happens: you go to the building. the word: el instituto.",
+                "what happens: you sit in the room. the word: la clase.",
+                "what happens: you sit the thing. the word: el examen.",
+                "what happens: a number comes back. the word: la nota.",
+                "what happens: the document prints it. the word: la calificación.",
+                "what happens: five or above. the word: aprobar.",
+                "what happens: below five. the word: suspender."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two of those seven were already yours. The chapter added the other five, and with them the track can follow a school year from the door to the report."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two words for one number",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "where you meet it",
+                "which word"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "where you meet it: a friend asking in a corridor. which word: la nota.",
+                "where you meet it: a column heading on a document. which word: la calificación."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same number, two registers. A reading paper prints the formal one; a listening paper says the short one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: three Latin pictures",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the picture under it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: nota. the picture under it: a scratch cut into a surface.",
+                "word: aprobar. the picture under it: a thing tested and found good.",
+                "word: suspender. the picture under it: a thing left hanging."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The third one is still literally true in Spain, where a failed subject hangs over a student until the resit."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three school buildings by the age that goes to each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three school buildings by the age that goes to each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two words for the number, and where each one appears",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two words for the number, and where each one appears]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two verbs, and the mark that divides them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two verbs, and the mark that divides them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the picture hiding inside suspender",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the picture hiding inside *suspender*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word heads a column on a report? (Calificación.) Which verb is the Latin for found good? (Aprobar.) Which building takes a fifteen-year-old? (El instituto.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C429-sintesis-boletin",
+      "sequence": 10370,
+      "title": "Synthesis — reading a report card",
+      "headword": "(synthesis)",
+      "romanization": "(synthesis)",
+      "gloss": "synthesis — read a report card, say what each row means, and answer the question a Spanish family asks in July",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:cce2d9ec048a9795",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the two words for a mark. One of them is about to appear as a column heading."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading: el boletín de calificaciones",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "IES Ejemplo Boletín de calificaciones."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "clase",
+                "calificación"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "clase: Matemáticas. calificación: 7.",
+                "clase: Historia. calificación: 4.",
+                "clase: Inglés. calificación: 9."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three rows, and everything in them is now readable. IES is the school. Calificación heads the column because this is a printed document. The numbers are out of ten."
+            },
+            {
+              "kind": "speech",
+              "text": "A real letterhead carries the centre's own name after those three letters — usually a poet, a scientist or a place. Ejemplo stands in for it here, so nothing on this page points at a school somebody actually attends. What you read off a real document is the same three things: the IES, the heading, and the column."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "How to answer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of the three rows passed and one did not. Say which verb goes with each:"
+            },
+            {
+              "kind": "speech",
+              "text": "He aprobado Matemáticas e Inglés. He suspendido Historia."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The history row is the one that hangs. The student will carry it into the next term as una asignatura pendiente, and the family will ask about it in exactly those words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— ¿Qué notas has sacado? — He aprobado casi todo. Historia no."
+            },
+            {
+              "kind": "speech",
+              "text": "The question uses notas because it is spoken. The answer names the one that did not pass, which is what the question is really asking about."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what IES at the top of the document stands for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *IES* at the top of the document stands for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which subjects passed, using the right verb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which subjects passed, using the right verb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which subject hangs, and the phrase for it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which subject hangs, and the phrase for it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the spoken version of the question, and answer it about the 4",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the spoken version of the question, and answer it about the 4]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word heads the column on the printed report? (Calificación.) What happened to Historia? (Suspendida — it hangs.) What is the spoken word for the same number? (La nota.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
