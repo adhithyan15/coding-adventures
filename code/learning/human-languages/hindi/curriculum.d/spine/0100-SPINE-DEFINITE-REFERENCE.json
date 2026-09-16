@@ -8,7 +8,8 @@
     "HI-PATH-88-ADJECTIVES",
     "HI-PATH-90-BODY",
     "HI-PATH-91-CHARACTER",
-    "HI-PATH-92-POSSESSIVE"
+    "HI-PATH-92-POSSESSIVE",
+    "HI-PATH-99-NOUN"
   ],
   "omits": [
     "GRAMMAR-THE"
