@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C428-guion-bajo",
+    "language": "spanish",
+    "chapter": 428,
+    "sequence": 10250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e256d1b11a729694"
+  },
+  "findings": []
+}

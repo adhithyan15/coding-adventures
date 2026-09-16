@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C428-salud-brindis",
+    "language": "spanish",
+    "chapter": 428,
+    "sequence": 10270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6235b23145fc08c"
+  },
+  "findings": []
+}

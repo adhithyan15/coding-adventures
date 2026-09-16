@@ -3,7 +3,8 @@
     "ES-PATH-A1-LECTURA",
     "ES-PATH-424-SIGNOS",
     "ES-PATH-425-ABECEDARIO",
-    "ES-PATH-426-MAYUSCULAS"
+    "ES-PATH-426-MAYUSCULAS",
+    "ES-PATH-428-PIEZAS"
   ],
   "omits": [],
   "relocates": {}

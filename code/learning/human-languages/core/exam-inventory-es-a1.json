@@ -1189,15 +1189,19 @@
       "id": "A1-F5-09",
       "category": "Relacionarse socialmente",
       "label": "propose a toast",
-      "probe": null,
-      "note": "The source's A1 exponent is the toast salud. The corpus teaches la salud as the noun health and saludo as a wish for it, but never the interjection, and the noun does not demonstrate the act."
+      "probe": [
+        "ES-ORTH-C428-04"
+      ],
+      "note": "The toast is introduced by ES-C428-salud-brindis, which is a SENSE rather than a new word and says so: la salud has been taught since chapter 334, and the toast is the same noun with its article dropped, turning a description into a wish. The lesson also carries the second use an English speaker does not expect, since Spanish answers a sneeze with the same word."
     },
     {
       "id": "A1-F5-10",
       "category": "Relacionarse socialmente",
       "label": "congratulate",
-      "probe": null,
-      "note": "The source's A1 exponent is felicidades. The corpus teaches feliz as an adjective and never the congratulation formula."
+      "probe": [
+        "ES-ORTH-C428-03"
+      ],
+      "note": "felicidades is introduced by ES-C428-felicidades. The note was right that feliz alone did not cover it: an adjective describes a state and a congratulation is an act, and Spanish makes the act by pluralising the noun -- felicidad becomes felicidades, several happinesses at once. The lesson also separates it from felicitaciones, which suits an achievement rather than an occasion."
     },
     {
       "id": "A1-F5-11",
@@ -1979,8 +1983,16 @@
       "id": "A1-NE09-06",
       "category": "Informacion y medios de comunicacion",
       "label": "the internet, and dictating an e-mail address",
-      "probe": null,
-      "note": "The source's A1 exponents are Internet, arroba, guion, guion bajo, punto, pagina web and correo electronico. internet (ES-C393), correo electronico (ES-C393) and punto (ES-C342, whose body names it as the full stop) are introduced. arroba, guion and pagina web are not, and without arroba an e-mail address cannot be dictated, which is what this point asks for."
+      "probe": [
+        "ES-LEX-INTERNET",
+        "ES-LEX-CORREO-ELECTRONICO",
+        "ES-ORTH-C424-01",
+        "ES-ORTH-C424-07",
+        "ES-LEX-C422-TECH-01",
+        "ES-ORTH-C428-01",
+        "ES-ORTH-C428-02"
+      ],
+      "note": "All seven of the source's A1 exponents are now introduced. internet and correo electronico came from chapter 393, punto from chapter 424 (chapter 342 names it as the full stop, and 424 teaches it as a mark), guion from chapter 424 and pagina web from chapter 422 -- the note claiming those last two were missing had gone stale. Chapter 428 adds the two that were genuinely absent, arroba and guion bajo, and without arroba an e-mail address cannot be dictated, which is what the point asks for."
     },
     {
       "id": "A1-NE10-01",
@@ -2344,8 +2356,10 @@
       "id": "A1-NE20-05",
       "category": "Geografia y naturaleza",
       "label": "fauna",
-      "probe": null,
-      "note": "The source's single A1 exponent is the generic noun animal. The corpus teaches individual creatures but never the superordinate word the source asks for."
+      "probe": [
+        "ES-ORTH-C428-05"
+      ],
+      "note": "animal is introduced by ES-C428-animal. The note asked for the superordinate the corpus lacked, and the lesson makes the case for why a superordinate earns its place: it is what lets a reader talk about a creature they cannot name, which is exactly what a notice covering every creature at once requires."
     },
     {
       "id": "A1-NE20-06",
