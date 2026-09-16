@@ -1,0 +1,15 @@
+{
+  "id": "ES-EXT-420-ARTS-PLACES",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the theatre, an exhibition and the circus, and place each beside the cinema and museum I already knew.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C420-teatro",
+    "ES-C420-exposicion",
+    "ES-C420-circo",
+    "ES-C420-repaso-lugares",
+    "ES-C420-sintesis-salir"
+  ]
+}

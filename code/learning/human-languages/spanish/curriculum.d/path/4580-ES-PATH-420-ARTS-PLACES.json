@@ -1,0 +1,16 @@
+{
+  "id": "ES-PATH-420-ARTS-PLACES",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ES-C420-teatro",
+    "ES-C420-exposicion",
+    "ES-C420-circo",
+    "ES-C420-repaso-lugares",
+    "ES-C420-sintesis-salir"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-420-ARTS-PLACES"
+  ],
+  "after": []
+}

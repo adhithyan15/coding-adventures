@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:4c7eaade2d3c34c0",
+  "lessonIds": [
+    "ES-C420-teatro",
+    "ES-C420-exposicion",
+    "ES-C420-circo",
+    "ES-C420-repaso-lugares",
+    "ES-C420-sintesis-salir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch420.txt",
+  "json": "spanish/narration/ch420.json",
+  "textHash": "fnv1a64:3f5226de96b392ad",
+  "jsonHash": "fnv1a64:d7d63c6039e0bd65",
+  "findings": []
+}
