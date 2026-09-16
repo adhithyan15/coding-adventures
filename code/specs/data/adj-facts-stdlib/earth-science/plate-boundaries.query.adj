@@ -5,8 +5,9 @@
 % The shape a learner (or an LLM) produces to ANSWER "how do the plates move at
 % a divergent boundary?": it states no geology fact of its own — it only
 % `import`s the grounded table and asks binding queries. The engine resolves
-% each `?` against the `boundary_motion` rows and returns the motion + the
-% table's source/locator/trust. The fourth query runs the relation BACKWARD
+% each `?` against the `boundary_motion` rows and returns the motion + THAT
+% ROW'S OWN source, with the envelope's locator and trust inherited (RS-5e,
+% #14986). The fourth query runs the relation BACKWARD
 % (bind the motion `slide_past`, recall its boundary type — transform). A word
 % that is not one of the three boundary types abstains honestly — the engine
 % never invents a motion.
