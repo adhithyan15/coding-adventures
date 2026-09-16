@@ -1,0 +1,11 @@
+{
+  "id": "MR-EXT-063-TIMED",
+  "stage": "A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can complete the A1 writing paper's two tasks inside its published twenty minutes.",
+  "prerequisites": [],
+  "lessons": [
+    "MR-W10-a1-con-reloj"
+  ]
+}

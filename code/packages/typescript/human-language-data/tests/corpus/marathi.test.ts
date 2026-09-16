@@ -99,7 +99,11 @@ it("pins Marathi lesson-content budgets", () =>
     // message, and an 83-word paragraph. It declares NO new word: every
     // Devanagari token in all three was checked to occur in a lesson with a
     // lower sequence number. The count moves because reading is its own skill.
-    lessons: 337,
+    // 337 -> 338: the timed A1 writing paper -- one lesson, no new atoms, and
+    // the last of the seven writing stages. Marathi already proved the other
+    // six; this is the one that asks whether the writing survives conditions
+    // the candidate does not choose.
+    lessons: 338,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -336,6 +340,11 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["61", 6],
     // chapter 62 — the reading rung: labels, a message, and an 83-word paragraph
     ["62", 3],
+    // Chapter 63 is one lesson and always will be: the timed A1 writing paper.
+    // It is the last of the seven writing stages, it introduces no atom, and it
+    // adds only the condition the six stages before it deliberately withheld --
+    // a clock the candidate does not control.
+    ["63", 1],
   ]);
 });
 
