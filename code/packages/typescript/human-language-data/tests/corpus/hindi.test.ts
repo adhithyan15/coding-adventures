@@ -150,7 +150,7 @@ it("pins Hindi A1 coverage, and the numeral column the ordinal tranche moved", (
   const coverage = measureExamCoverage(loadExamInventory("hindi", "A1"), lessons);
   expect(coverage.enumerated).toBe(282);
   expect(coverage.covered).toBe(196); // 194 -> 196 (ch88): HI-A1-LEX-06 (ease and difficulty) and HI-A1-LEX-04 (attractiveness). Four adjectives, one observation: all four are consonant-final so none agrees, which the chapter teaches off the kaalaa/safed contrast from ch11 rather than as a new rule. // 193 -> 194 (ch87): HI-A1-LEX-18, the meals of the day. nashta was already taught; HI-C79-dopahar-raat-ka-khana names lunch and dinner as the transparent compounds they are, so the point closes without the track acquiring a single new word.
-  expect(coverage.unmapped).toBe(86); // 88 -> 86 (ch88) // 89 -> 88 (ch87)
+  expect(coverage.unmapped).toBe(86); // 88 -> 86 (ch88) // 89 -> 88 (ch87) // 193 -> 194 (ch87): HI-A1-LEX-18, the meals of the day. nashta was already taught; HI-C79-dopahar-raat-ka-khana names lunch and dinner as the transparent compounds they are, so the point closes without the track acquiring a single new word.
   expect(coverage.partial).toBe(0);
   // HL-C350 measured ordinals as the weakest single column in the corpus --
   // twenty tracks enumerate an ordinal point and eighteen left it uncovered.
