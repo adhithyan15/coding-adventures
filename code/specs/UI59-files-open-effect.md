@@ -384,7 +384,7 @@ fun installPhotoPickerEffects(host: MosaicRuntimeHost) {
                 SwingUtilities.invokeLater {
                     val outcome = try {
                         runPickPhoto(payload)
-                    } catch (error: Exception) {
+                    } catch (error: Throwable) {
                         failedOutcome("couldn't pick a photo")
                     }
                     host.completeEffect(id, outcome)
@@ -445,6 +445,26 @@ from `installEngramEffects`'s own Compose precedent, which does
 surface `error.message ?: "..."` for its own, already-merged, existing
 handler — not a claim that code is wrong, the same reasoning §7.2
 already gives for the Qt handler's equivalent departure.
+
+**`Throwable`, not `Exception` — a second deliberate departure from
+Engram's Compose handler (and from Qt's `catch (...)`).** Both reason
+"an `Error` means the JVM is already going down," which doesn't hold
+for this handler specifically: reading up to 50 MiB through
+`readBounded`'s `ByteArrayOutputStream` (whose doubling growth can
+transiently hold ~2x the accumulated size), then `toByteArray()` (a
+full copy), then `Base64.getEncoder().encodeToString` (another
+~1.33x) can transiently need well over 100 MiB of live heap for a
+single in-cap pick — a real, user-triggerable `OutOfMemoryError` on a
+JVM with a modest heap, not a sign the process is dying. Caught by
+`/security-review`: an uncaught `OutOfMemoryError` escaped the
+original `catch (error: Exception)`, so `completeEffect` was never
+reached and the effect id stayed awaited for the life of the process
+(the runtime gates snapshot AND restore on nothing being pending) — a
+genuine permanent wedge, not merely theoretical. Any future handler
+copying this file's memory-amplifying shape (bounded-read → full-copy
+→ re-encode) should carry the same `catch (Throwable)`, even where the
+*rest* of this file's pattern (deferred completion, generic error
+messages) is copied unchanged.
 
 ## 11. Test strategy (Compose)
 
