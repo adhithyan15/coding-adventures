@@ -1,0 +1,21 @@
+{
+  "chapter": 87,
+  "title": "Lunch and Dinner",
+  "label": "ch:hi-dopahar-raat-ka-khana",
+  "canDo": "I can name all three meals of the day, and say which one is a borrowed word and which two are phrases Hindi builds from a time plus khana.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "HI-C79-dopahar-raat-ka-khana",
+    "kind": "pattern",
+    "summary": "Say all three meals in order, morning to night, and name the odd one out: nashta is borrowed whole, while dopahar ka khana and rat ka khana are built from a time the learner already has plus khana.",
+    "assesses": [
+      "HI-LEX-C79-MEALS-01",
+      "HI-LEX-C79-MEALS-02",
+      "HI-LEX-C73-EATING-02",
+      "HI-CONCEPT-C37-KHAANA-01"
+    ],
+    "note": "Closes HI-A1-LEX-18 in the Hindi A1 inventory, whose note recorded breakfast as taught and lunch and dinner as unnamed. Neither new name introduces a new word: both are transparent compounds of vocabulary the track already owns, which is why one lesson closes two thirds of the point's demand."
+  }
+}

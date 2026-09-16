@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 87,
+  "title": "Lunch and Dinner",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:8340106cc89e5095",
+  "lessons": [
+    {
+      "id": "HI-C79-dopahar-raat-ka-khana",
+      "sequence": 3320,
+      "title": "दोपहर का खाना / रात का खाना (dopahar kā khānā / rāt kā khānā) — the two meals you already know the words for",
+      "headword": "दोपहर का खाना / रात का खाना",
+      "romanization": "dopahar kā khānā / rāt kā khānā",
+      "gloss": "lunch and dinner — literally the afternoon's food and the night's food",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00bdca1bb47f9bb9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have खाना (khānā), \"food\". You have दोपहर (dopahar) and रात (rāt). Before reading on, guess what दोपहर का खाना is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दोपहर का खाना and रात का खाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दोपहर का खाना (dopahar kā khānā) — \"lunch.\" रात का खाना (rāt kā khānā) — \"dinner.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You guessed them, and that is the point of putting them here rather than in a word list. Neither is a new word. Each is a time you already have, plus का, plus the food-word you already have — \"the afternoon's food\", \"the night's food.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The transparency runs deeper than the compound."
+            },
+            {
+              "kind": "speech",
+              "text": "दोपहर is itself two pieces you can see: दो (\"two\") + पहर, a traditional watch of roughly three hours. Two watches into the day is noon — the word is a clock reading that turned into a time of day."
+            },
+            {
+              "kind": "speech",
+              "text": "रात comes from Sanskrit रात्रि (rātri), the formal word that shows up in शुभ रात्रि (\"good night\"). The everyday रात is the same word worn down by use, which is why the greeting sounds more ceremonious than the noun."
+            },
+            {
+              "kind": "speech",
+              "text": "So a three-word phrase for \"dinner\" contains a number, an obsolete time unit, and a Sanskrit noun — and a learner who has met all three can read it cold."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the pattern, not the pair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Set the day's three meals beside each other:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "meal",
+                "Hindi",
+                "what it is built from"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "meal: breakfast. Hindi: नाश्ता. what it is built from: its own word, borrowed whole.",
+                "meal: lunch. Hindi: दोपहर का खाना. what it is built from: a time + का + खाना.",
+                "meal: dinner. Hindi: रात का खाना. what it is built from: a time + का + खाना."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "नाश्ता is the odd one out: a single borrowed noun with no parts to see. The other two are phrases Hindi builds on demand. That asymmetry is worth noticing because it keeps recurring — Hindi borrows a whole word where it has one, and builds a transparent phrase where it does not."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"दोपहर का खाना\" — dopahar kā khānā, lunch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"दोपहर का खाना\" — *dopahar kā khānā*, lunch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"रात का खाना\" — rāt kā khānā, dinner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"रात का खाना\" — *rāt kā khānā*, dinner]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all three meals in order, morning to night (नाश्ता, दोपहर का खाना, रात का खाना)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all three meals in order, morning to night (नाश्ता, दोपहर का खाना, रात का खाना)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the three meal names is a single borrowed word rather than a built phrase? (नाश्ता.) What is दोपहर made of, and what does it add up to? (दो \"two\" + पहर a three-hour watch — two watches in, so noon.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
