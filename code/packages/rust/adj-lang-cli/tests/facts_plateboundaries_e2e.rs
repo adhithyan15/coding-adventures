@@ -236,9 +236,25 @@ fn the_table_shape_matches_the_measured_rows() {
         3,
         "three row sources, one per boundary type: {body}"
     );
-    // SCOPE: a row-level `cites` is legal ADJ -- 18 shipped tables use one -- so
-    // this pins a convention local to THIS table, not a language rule. It is
-    // keyword-anchored, so a `cites` at any indent fails it.
+    // SCOPE: a row-level `cites` is legal ADJ, so this pins a convention local
+    // to THIS table, not a language rule. It is keyword-anchored, so a `cites`
+    // at any indent fails it.
+    //
+    // MEASURED 2026-09-16, NOT INHERITED: 19 shipped fact files carry a
+    // row-level `cites` (86 such lines), over 362 files matching
+    // adj-facts-stdlib/**/*.adj with CHANGELOG.d and *.query.adj excluded. Two
+    // predicates agree on the same file set -- a `cites` at 8-space indent, and
+    // a `cites` inside a real `row (...) {` block -- because in this corpus
+    // every row-level one is written at 8 spaces, while a TABLE-level `cites`
+    // sits at 4 spaces before the table's closing brace (122 such lines, all
+    // legal; ADJ-A9 requires each to carry its own `locator`, and forbids
+    // nothing about where it sits).
+    //
+    // The sibling test files say "18 shipped tables use one". That figure is
+    // stale and is propagated by copying rather than re-derivation -- it is in
+    // facts_bloodcells_e2e.rs, facts_musclenucleicount_e2e.rs and shards 03590
+    // and 03600. The predicate is stated here with the number so the next copy
+    // can be re-measured instead of inherited a fourth time.
     //
     // It would NOT have failed on the pre-conversion file: that file shipped no
     // `cites` either, so this arm passed there and passes here. It guards

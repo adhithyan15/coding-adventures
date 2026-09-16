@@ -40,8 +40,13 @@
   A fragment punctuated into a sentence is precisely the defect
   `plate_boundary_citation_keeps_the_pages_semicolon` exists to catch — and it had been sitting in this file's
   own header the whole time that test was green, because the test pinned the **divergent** citation and nothing
-  read the header. The row ships the page's form. **`--ascii-shipped` stays off for this file**: shipping the
-  ASCII form would put a `source` on a row that appears on no page.
+  read the header. The row ships the page's form, curly quotes and semicolon intact — the ASCII form would put a
+  `source` on a row that appears on no page.
+
+  *An earlier draft said "`--ascii-shipped` stays off for this file". That flag belongs to a local width/ASCII
+  screen used while reviewing this batch; the script is **not in the repo**, and the flag name appears nowhere
+  else under `code/`. A reader of this changelog could not resolve what was withheld, so the sentence is now
+  stated in terms of the decision rather than of an instrument nobody else can run.*
 
   ### The envelope must frame plate motion and name no boundary type
 
