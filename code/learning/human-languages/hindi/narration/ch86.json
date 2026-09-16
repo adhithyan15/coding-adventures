@@ -4,7 +4,7 @@
   "chapter": 86,
   "title": "Writing --- With A Clock",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e8f1b3844dd47897",
+  "sourceHash": "fnv1a64:10d99ef55f4d0bff",
   "lessons": [
     {
       "id": "HI-W10-a1-con-reloj",
@@ -20,7 +20,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:1824c47fd92a56d7",
+      "sourceHash": "fnv1a64:8bca9e984cc738e3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -76,7 +76,7 @@
             },
             {
               "kind": "speech",
-              "text": "Those numbers are not invented here. They are read out of task-shapes/a1.json, the same file the assessment contract points at."
+              "text": "Those numbers are read out of task-shapes/a1.json, the same file the assessment contract points at. They are not invented here."
             },
             {
               "kind": "pause",

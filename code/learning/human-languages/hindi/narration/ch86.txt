@@ -17,7 +17,7 @@ Writing — timed production.
 What the contract publishes. This track's A1 writing paper runs 20 minutes and holds two tasks:
 a practical form asking for six to eight completed fields, worth 40 of the paper's 100 points;
 a message for a named reader and a stated purpose, 30 to 40 words, worth the other 60.
-Those numbers are not invented here. They are read out of task-shapes/a1.json, the same file the assessment contract points at.
+Those numbers are read out of task-shapes/a1.json, the same file the assessment contract points at. They are not invented here.
 [pause 2 seconds]
 Notice what the split says before you write a word: the message is worth more than the form, and it is the shorter of the two. Time spent perfecting a field is time taken from the part that scores.
 [pause 2 seconds]

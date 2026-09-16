@@ -54,8 +54,8 @@ minutes** and holds **two** tasks:
 - a message for a named reader and a stated purpose, **30 to 40 words**, worth
   the other 60.
 
-Those numbers are not invented here. They are read out of
-`task-shapes/a1.json`, the same file the assessment contract points at.
+Those numbers are read out of `task-shapes/a1.json`, the same file the
+assessment contract points at. They are not invented here.
 
 [PAUSE 2s] Notice what the split says before you write a word: the **message is
 worth more than the form**, and it is the shorter of the two. Time spent
