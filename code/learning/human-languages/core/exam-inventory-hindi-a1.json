@@ -457,9 +457,11 @@
       "id": "HI-A1-V-03",
       "category": "Kriya (the verb)",
       "label": "the copula with tum: ho",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C85-IMP-03"
+      ],
       "derivedFrom": "ES:A1-V-01",
-      "note": "`ho` occurs inside the age frame but no atom introduces the tum copula, so nothing demonstrates it independently of that one memorised question."
+      "note": "ho is introduced by HI-C85-tum-ho, which completes the copula set (hun, ho, hain, hai) for the first time. The note's complaint was precise -- ho occurred inside the age frame as a lump and no atom introduced it independently -- so the lesson gives it on its own and then shows the level matching end to end, where tum takes ho and bolo while aap takes hain and boliye."
     },
     {
       "id": "HI-A1-V-04",
@@ -570,17 +572,22 @@
       "id": "HI-A1-V-16",
       "category": "Kriya (the verb)",
       "label": "the plain and familiar imperatives (bol, bolo, boliye as a series)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C85-IMP-01",
+        "HI-LEX-C85-IMP-02"
+      ],
       "derivedFrom": "ES:A1-V-11",
-      "note": "Only the -iye form is introduced, and only inside two fixed courtesy phrases."
+      "note": "Chapter 93 teaches the series the point asks for. bolo (-o, the tum level) and boliye (-iye, the aap level) are each introduced by their own lesson, and the bare-stem tu form is taught in the same chapter for RECOGNITION rather than production, because using it wrongly costs far more than using it gains. The -iye lesson also takes maaf kijiye apart, which the note named as the only place the form had appeared: it was a respectful command all along."
     },
     {
       "id": "HI-A1-V-17",
       "category": "Kriya (the verb)",
       "label": "the negative imperative with mat",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C85-IMP-04"
+      ],
       "derivedFrom": "ES:A1-F4-06",
-      "note": "Mock 2 reading item 3 is exactly this: `yahan mat baithiye`."
+      "note": "mat is introduced by HI-C85-mat as the negative Hindi RESERVES for commands, distinct from the statement negative the track already had -- which is the error an English speaker makes, because English uses not for both. The synthesis lesson reads the exact item the note cites, yahan mat baithiye, and takes it apart into its three taught pieces."
     },
     {
       "id": "HI-A1-V-18",

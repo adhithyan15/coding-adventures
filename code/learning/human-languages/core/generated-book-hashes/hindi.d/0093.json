@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:c4546586ec41e12e",
+  "lessonIds": [
+    "HI-C85-bolo",
+    "HI-C85-boliye",
+    "HI-C85-tum-ho",
+    "HI-C85-mat",
+    "HI-C85-repaso-adesh",
+    "HI-C85-sintesis-suchna"
+  ],
+  "tex": "hindi/book/chapters/ch93-adesh.tex"
+}

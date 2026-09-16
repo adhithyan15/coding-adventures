@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C85-mat",
+    "language": "hindi",
+    "chapter": 93,
+    "sequence": 3630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:668b9bd3f5d93730"
+  },
+  "findings": []
+}
