@@ -122,9 +122,11 @@
       "id": "HI-A1-DET-01",
       "category": "Nirdeshak (determiners and definiteness)",
       "label": "Hindi has no article: definiteness is carried by bareness, by ek, and by a demonstrative",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C86-PRON-05"
+      ],
       "derivedFrom": "ES:A1-ART-01, ES:A1-ART-02, ES:A1-ART-03, ES:A1-ART-04",
-      "note": "The single largest structural difference from the proxy language, and the corpus never states it. Spanish spends four A1 points on the article; a learner arriving from English or Spanish needs to be told once that Hindi has none and what does the work instead. `ek chay dijiye` is taught, but as a cafe formula, not as indefiniteness."
+      "note": "HI-C86-koi-article states what the note said the corpus never stated: Hindi has no article, and a bare noun covers both a book and the book. It names the three things that carry specificity when it matters -- ek, vah, or nothing at all -- and makes the point the note asked for about ek chay dijiye, that ek is the numeral one doing indefiniteness work rather than a fixed cafe formula. The lesson ends on the habit rather than the fact: the commonest correct translation of English the is nothing."
     },
     {
       "id": "HI-A1-DET-02",
@@ -299,9 +301,12 @@
       "id": "HI-A1-PRON-04",
       "category": "Sarvanam (pronouns)",
       "label": "the subject pronoun paradigm as a whole, including ham and the plural third person",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C86-PRON-01",
+        "HI-LEX-C86-PRON-02"
+      ],
       "derivedFrom": "ES:A1-PRON-01",
-      "note": "`ham` is never introduced -- mock 2 reading item 10 is `ham station par milenge` -- and neither is the plural `ve`. Three of the paradigm's slots are taught and the rest are absent."
+      "note": "ham and ve are introduced by chapter 94, completing the subject paradigm beside the main and vah the track already had. The note named the item that needed it -- mock 2 reading item 10, ham station par milenge -- and the synthesis lesson reads that sentence. The ham lesson also carries the use an English speaker does not expect: ham often stands in for main, said modestly or as part of a household, which is the same instinct that makes hamaara parivaar the natural way to say my family."
     },
     {
       "id": "HI-A1-PRON-05",
@@ -316,9 +321,12 @@
       "id": "HI-A1-PRON-06",
       "category": "Sarvanam (pronouns)",
       "label": "the other oblique pronouns: apko, use, hamen, tumhen",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C86-PRON-03",
+        "HI-LEX-C86-PRON-04"
+      ],
       "derivedFrom": "ES:A1-PRON-02, ES:A1-SV-05",
-      "note": "Only mujhe is introduced, and only as part of the pasand frame rather than as a paradigm."
+      "note": "hamen, tumhen, aapko and use are introduced by chapter 94. The note was right that mujhe existed only inside the pasand frame; the chapter's finding is that the frame was never a lump -- mujhe is main in its oblique form, and once the set is visible the liking question can be asked at any level of address. Two of the five obliques show ko plainly and three take the nasal ending."
     },
     {
       "id": "HI-A1-PRON-07",
