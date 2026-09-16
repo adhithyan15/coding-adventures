@@ -21,24 +21,51 @@
 %
 % The three rock families, as a truth table:
 %
-%     rock_type     forms_from            how it is made (NPS)
+%     rock_type     forms_from            how it is made (gloss, not quoted)
 %     -----------   -------------------   ----------------------------------
-%     igneous       cooled_magma          molten magma cools and hardens
+%     igneous       cooled_magma          hot, liquid rock, or magma, cools
 %     sedimentary   compacted_sediment    sediment is pressed / compacted
 %     metamorphic   heat_and_pressure     older rock changed by heat+pressure
 %
 % Provenance: copied from the U.S. National Park Service (NPS) geology teacher
 % page "Olympic Geology pt 2: Rock Sorting", which names the three groups and
 % describes each one's formation verbatim on a single page (the `locator`).
-% Each row's `forms_from` atom is confirmed by its own sentence there:
+% Each row CARRIES its own sentence from that page (RS-5e, #14986):
 %   - igneous → cooled_magma:
-%       "Igneous Rocks: form when hot, liquid rock, or magma, cools."   (see `source`)
+%       "Igneous Rocks: form when hot, liquid rock, or magma, cools."
 %   - sedimentary → compacted_sediment:
 %       "With the help of time and external pressures, these sediments get
 %        compacted into sedimentary rock."
-%   - metamorphic → heat_and_pressure:
-%       "This normally happens deep underground where heat, pressure, and
-%        chemical activity can actually alter the minerals inside rocks."
+%   - metamorphic → heat_and_pressure (TWO sentences, contiguous in one
+%     paragraph -- the second names no rock type on its own):
+%       "Metamorphic Rocks: are created through the metamorphosis, or
+%        change, of other types of rocks. This normally happens deep
+%        underground where heat, pressure, and chemical activity can
+%        actually alter the minerals inside rocks."
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The
+% envelope used to be the IGNEOUS sentence, so a sedimentary or
+% metamorphic answer's primary source was a sentence about igneous rock.
+% The envelope is now the page's framing sentence, which names no rock
+% type and no formation:
+%
+%     "Geologists: scientists who study rocks and recognize
+%      three major groups of rocks."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the
+% same host returns 404 and holds none of these spans), tags removed
+% without a space and only ASCII whitespace collapsed: each row's span
+% and the envelope each occur exactly once, each inside one `<p>`, with
+% no `<head>` copy. The metamorphic pair is contiguous in one paragraph,
+% which also holds the envelope sentence. Every row's page is the
+% envelope's, so no row restates a `locator` line or `trust`.
+%
+% Widening the metamorphic quote to two sentences is not an invention of
+% this file: it is the remedy ../README.md already prescribes under "A
+% citation must name its own subject" -- a sentence that depends on a
+% previous one for its subject grounds nothing when read detached from
+% its page, so widen the quote until it is self-contained.
+%
 % `trust authoritative` — NPS/nps.gov is a U.S. government (.gov) primary
 % reference. Nothing here is asserted from memory. (See ../README.md;
 % feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
@@ -47,11 +74,17 @@
 table rock_formation {
     columns rock_type, forms_from
 
-    row (igneous, cooled_magma)
-    row (sedimentary, compacted_sediment)
-    row (metamorphic, heat_and_pressure)
+    row (igneous, cooled_magma) {
+        source "Igneous Rocks: form when hot, liquid rock, or magma, cools."
+    }
+    row (sedimentary, compacted_sediment) {
+        source "With the help of time and external pressures, these sediments get compacted into sedimentary rock."
+    }
+    row (metamorphic, heat_and_pressure) {
+        source "Metamorphic Rocks: are created through the metamorphosis, or change, of other types of rocks. This normally happens deep underground where heat, pressure, and chemical activity can actually alter the minerals inside rocks."
+    }
 
-    source "Igneous Rocks: form when hot, liquid rock, or magma, cools."
+    source "Geologists: scientists who study rocks and recognize three major groups of rocks."
     locator "https://www.nps.gov/teachers/classrooms/olympic-geology-pt-2-rock-sorting.htm"
     trust authoritative
 }
