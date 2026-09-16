@@ -53,15 +53,30 @@
 % Public Health (CFSPH), "The Livestock Project — Animals for Beginning Small
 % Farmers." CFSPH is a center of Iowa State University's College of Veterinary
 % Medicine, a primary university educational source — hence `trust authoritative`.
-% Nothing here is asserted from memory. Because ADJ tables carry ONE shared
-% provenance envelope (per-row provenance is a documented future extension — see
-% ADJ-TABLES §6), the envelope below cites that page at its `locator`, and the
-% `source` quotes the SHEEP entry verbatim. For full auditability, here is the
-% exact CFSPH span (all on the one page at the `locator`) that grounds EACH row:
+% Nothing here is asserted from memory. EACH ROW CARRIES ITS OWN SPAN, per
+% ADJ-TABLES RS-5e: a row's `{ ... }` block overrides the envelope field by
+% field, so every answer quotes the sentence that defends THAT row rather
+% than the table's first sentence.
+%
+% This file used to say ADJ tables carry ONE shared provenance envelope and
+% that per-row provenance was "a documented future extension". RS-5e shipped;
+% the sentence was false and it was the justification for the defect. The
+% envelope below is now the page's FRAMING sentence, which names no animal and
+% no product, so it warrants no row.
+%
+% No row restates `locator` or `trust`. ADJ-TABLES §4: a row restates
+% `locator` only when its page DIFFERS from the envelope's, and all five spans
+% are on the one page cited below. The spec is explicit that a row locator
+% equal to the envelope's is a no-op producing byte-identical output -- a line
+% no test can distinguish from its own absence.
+%
+% The exact CFSPH span grounding each row, all on the one page at the
+% `locator`, each measured to occur exactly once there and zero times against
+% a real 404 control on the same host:
 %
 %   chicken → eggs — "A small flock can keep a family in eggs or meat."
 %   duck    → eggs — "Like chickens, Ducks produce meat and eggs."
-%   sheep   → wool — "depending on the breed, they can produce wool, meat, and milk."
+%   sheep   → wool — "Sheep are low maintenance and versatile – depending on the breed, they can produce wool, meat, and milk."
 %   rabbit  → wool — "Some rabbit breeds produce a very soft wool that can be
 %                     harvested regularly and used for fiber arts."
 %   goat    → milk — "Goat milk may be pasteurized for human consumption."
@@ -72,13 +87,23 @@
 table farm_animal_product {
     columns animal, product
 
-    row (chicken, eggs)
-    row (duck, eggs)
-    row (sheep, wool)
-    row (rabbit, wool)
-    row (goat, milk)
+    row (chicken, eggs) {
+        source "A small flock can keep a family in eggs or meat."
+    }
+    row (duck, eggs) {
+        source "Like chickens, Ducks produce meat and eggs."
+    }
+    row (sheep, wool) {
+        source "Sheep are low maintenance and versatile – depending on the breed, they can produce wool, meat, and milk."
+    }
+    row (rabbit, wool) {
+        source "Some rabbit breeds produce a very soft wool that can be harvested regularly and used for fiber arts."
+    }
+    row (goat, milk) {
+        source "Goat milk may be pasteurized for human consumption."
+    }
 
-    source "Sheep are low maintenance and versatile – depending on the breed, they can produce wool, meat, and milk"
+    source "Deciding to bring animals onto your small farm can be exciting. It can also be overwhelming. Here are some things to think about while deciding what animals you will raise."
     locator "https://www.cfsph.iastate.edu/thelivestockproject/animals-for-beginning-small-farmers/"
     trust authoritative
 }
