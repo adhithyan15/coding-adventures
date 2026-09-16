@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:47a31b57c8f7ac96",
+  "lessonIds": [
+    "ES-C428-arroba",
+    "ES-C428-guion-bajo",
+    "ES-C428-felicidades",
+    "ES-C428-salud-brindis",
+    "ES-C428-animal",
+    "ES-C428-repaso-cortesia",
+    "ES-C428-sintesis-cumpleanos"
+  ],
+  "tex": "spanish/book/chapters/ch428-piezas.tex"
+}
