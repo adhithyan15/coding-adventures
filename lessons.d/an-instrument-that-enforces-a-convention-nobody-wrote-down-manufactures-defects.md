@@ -15,7 +15,7 @@ definition is stated because a neighbouring instrument defines it as
 `80 - len(line)`, and at the same threshold over the same corpus the two differ
 by nearly an order of magnitude. A number does not travel without its formula.
 
-## First instance: exact greedy wrapping
+### First instance: exact greedy wrapping
 
 The check flagged any line where slack was non-negative — i.e. any line the next
 word would have fitted on. Before acting on it I counted, over files I did not
@@ -43,7 +43,7 @@ I relaxed the rule to flag only lines with twenty or more columns of unused
 room — the far tail of the census's own slack distribution, rather than a number
 I preferred.
 
-## Second instance: the `% (See ../README.md; ...)` block
+### Second instance: the `% (See ../README.md; ...)` block
 
 The same check flagged `blood-cell-types.adj:80` — 32 columns, next word `(See`
 — and **I made the edit before checking.** Then I counted:
@@ -69,7 +69,7 @@ columns** of unbreakable identifiers and has always shipped that way, so the
 block is not held to the width band either. I reverted my edit to the file and
 exempted the construct in the instrument instead.
 
-## What the two have in common
+### What the two have in common
 
 Both times the instrument measured something real (line width) and inferred
 something it had no evidence for: that the corpus wraps greedily; that every
@@ -88,7 +88,7 @@ be argued with. A threshold without one is preference wearing a pass/fail mask.
 someone else's file is the moment to run the census — not the moment to fix the
 file.
 
-## The fix did not reach the copies
+### The fix did not reach the copies
 
 [[a-census-keyed-on-one-of-a-construct-s-two-spellings-undercounts]] already
 says: when one instrument is corrected, grep for every copy of its test. I
@@ -124,7 +124,7 @@ That is the phantom itself. After the `(See` exemption my six files contain
 wrap greedily still cannot see its own exception. **The tool that corrects you
 is not thereby corrected.**
 
-## And the copies do not carry the defect I assumed they did
+### And the copies do not carry the defect I assumed they did
 
 I nearly wrote that the eight copies would reproduce the `(See` phantom. They
 would not, and I only know that because I ran the old predicate against the
@@ -150,7 +150,7 @@ shard's own lesson arriving from the side: I had measured that the copies exist,
 and was about to explain what they would *do*, an assertion the measurement did
 not cover.
 
-## A closing note on this shard's own numbers
+### A closing note on this shard's own numbers
 
 Three review rounds found sixteen claim defects here, and every one was a
 denominator, a predicate or a scope left unstated — in a shard arguing that a
