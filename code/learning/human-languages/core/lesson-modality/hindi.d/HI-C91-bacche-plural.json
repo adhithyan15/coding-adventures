@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C91-bacche-plural",
+    "language": "hindi",
+    "chapter": 99,
+    "sequence": 4040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f2e68b2df29bdef"
+  },
+  "findings": []
+}

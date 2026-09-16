@@ -96,17 +96,25 @@
       "id": "HI-A1-N-07",
       "category": "Sangya (the noun)",
       "label": "number: forming the plural of a masculine -a noun, a feminine -i noun, and a consonant-final noun",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C91-NOUN-01",
+        "HI-LEX-C91-NOUN-02",
+        "HI-LEX-C91-NOUN-03",
+        "HI-LEX-C91-NOUN-04"
+      ],
       "derivedFrom": "ES:A1-N-05",
-      "note": "No atom teaches plural morphology; `log` ('people') is introduced as a lexical item and nothing else. Mock 1 item 16 and mock 2 item 20 both turn on `do bhashaen bolti hai`."
+      "note": "Chapter 99 supplies all four plural shapes, one lesson each, using ZERO new nouns -- baccha, kitaab, bhaasha and aadmi were all already taught, so the chapter is pure morphology on known vocabulary. The note is exactly right that no atom taught plural morphology and that log was a lexical item only. The item it names, do bhaashaaen boltii hai, is read back in the synthesis lesson. The organising question is gender FIRST and ending second: a masculine -aa noun swaps the vowel, both feminine shapes add a nasal, and a masculine noun not ending in -aa does nothing at all, so the number lives in the numeral, the verb and any adjective rather than in the word."
     },
     {
       "id": "HI-A1-N-08",
       "category": "Sangya (the noun)",
       "label": "the oblique form a noun takes before a postposition (larka -> larke ko)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C91-NOUN-06",
+        "HI-LEX-C91-NOUN-05"
+      ],
       "derivedFrom": "hindi-specific",
-      "note": "No Spanish counterpart: Spanish nouns do not inflect for case. The corpus teaches `me` and the `ka` genitive but never the case change the noun in front of them undergoes."
+      "note": "The oblique is introduced by HI-C91-bacche-ko. The note is right that the corpus taught me and the ka genitive without the case change the noun undergoes -- and the lesson's point is that this is NOT a new rule: the -aa to -e bend in front of a postposition has been taught four times already on other kinds of word (the possessive mera -> mere paas, uska -> uske baad, the adjective, the habitual, the past copula), and a noun is the fourth and last kind to wear it. The load-bearing consequence is that -e now means two different things: bacce with nothing behind it is a plural, bacce with a postposition behind it is ONE child in the oblique, and the postposition is the only signal. A reader who misses it miscounts every sentence that has one."
     },
     {
       "id": "HI-A1-N-09",
@@ -143,9 +151,11 @@
       "id": "HI-A1-DET-03",
       "category": "Nirdeshak (determiners and definiteness)",
       "label": "a demonstrative used adnominally, in front of its noun (yah kitab)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C91-NOUN-07"
+      ],
       "derivedFrom": "ES:A1-DEM-03",
-      "note": "The deixis chapter teaches yah and vah as standalone pronouns -- 'this one', 'that one' -- and never puts either in front of a noun."
+      "note": "PARTLY STALE NOTE, corrected. It said the deixis chapter teaches yah and vah as standalone pronouns and never puts either in front of a noun. The corpus DOES print the adnominal shape -- HI-C69-verb-last has yah kitaab hai and HI-C78-pehla-paath has vah kitaab padhtaa hai -- but neither lesson introduces it, so the point was genuinely uncovered and the precise complaint is that the shape was SHOWN and never TAUGHT. HI-C91-yah-kitab teaches it, and adds the reason it matters more in Hindi than the English parallel suggests: with no article in the language, yah and vah are what a writer reaches for where English would have used the, so vah aadmi is often best read as THE man rather than THAT man."
     },
     {
       "id": "HI-A1-DET-04",
@@ -766,9 +776,11 @@
       "id": "HI-A1-POST-06",
       "category": "Parsarg (postpositions and case)",
       "label": "ko marking an animate or definite object, and a recipient",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C91-NOUN-05"
+      ],
       "derivedFrom": "ES:A1-SV-04, ES:A1-SV-05, ES:A1-PRON-02",
-      "note": "The exact counterpart of the proxy's `a` before a human direct object -- the same demand, a different marker. Only the fused `mujhe` is present; `ko` itself is never introduced."
+      "note": "ko is introduced by HI-C91-ko, and the note is exactly right that only the fused mujhe was present. The lesson takes aapko apart in front of the reader -- aap plus ko -- so the postposition is recovered from a word they already say rather than presented as new. It teaches both jobs the point names: the recipient (bacce ko, TO the child) and the marker a definite or human object wears (aadmi ko). The note's own observation is carried into the lesson, that this is the exact counterpart of the proxy's a before a human direct object, so the demand is not unique to Hindi and only the marker is."
     },
     {
       "id": "HI-A1-POST-07",
