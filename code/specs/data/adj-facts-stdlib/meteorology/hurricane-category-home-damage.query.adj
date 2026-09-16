@@ -6,7 +6,8 @@
 % hurricane actually do to a well-built home?": it states no meteorology fact
 % of its own — it only `import`s the grounded table and asks binding
 % queries. The engine resolves each `?` against the `hurricane_home_damage`
-% rows and returns the structural effect + the table's source/locator/trust.
+% rows and returns the structural effect + the ROW's own NHC sentence, with
+% the table's locator and trust inherited.
 %
 % The last query runs the relation BACKWARD (bind the effect
 % `total_roof_failure_and_wall_collapse`, recall which category it names —
