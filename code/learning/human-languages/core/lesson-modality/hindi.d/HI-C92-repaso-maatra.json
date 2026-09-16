@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C92-repaso-maatra",
+    "language": "hindi",
+    "chapter": 100,
+    "sequence": 4180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d5b0971ed8c3b24"
+  },
+  "findings": []
+}

@@ -1,0 +1,6 @@
+{
+  "language": "hindi",
+  "chapter": 100,
+  "output": "hindi/book/chapters/ch100-maatra.tex",
+  "scriptSet": "hindi-main"
+}

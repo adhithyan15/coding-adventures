@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:6e1dc23f6a2b42ff",
+  "lessonIds": [
+    "HI-C92-thoda",
+    "HI-C92-achchha-buraa",
+    "HI-C92-se-comparison",
+    "HI-C92-kitna",
+    "HI-C92-kitna-achchha",
+    "HI-C92-repaso-maatra",
+    "HI-C92-sintesis-maatra"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch100.txt",
+  "json": "hindi/narration/ch100.json",
+  "textHash": "fnv1a64:b55650dfb833bf9c",
+  "jsonHash": "fnv1a64:208e5a938fa34698",
+  "findings": []
+}

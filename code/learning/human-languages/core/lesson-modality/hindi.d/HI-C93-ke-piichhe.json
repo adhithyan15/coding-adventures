@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C93-ke-piichhe",
+    "language": "hindi",
+    "chapter": 101,
+    "sequence": 4240,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9f6d7d0bb1bdc14b"
+  },
+  "findings": []
+}

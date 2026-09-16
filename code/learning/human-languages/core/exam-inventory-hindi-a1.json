@@ -267,17 +267,22 @@
       "id": "HI-A1-ADJ-08",
       "category": "Visheshan (the adjective)",
       "label": "thoda as a hedging quantifier",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C92-DEG-01"
+      ],
       "derivedFrom": "ES:A1-NG2-03",
-      "note": "Mock 1 listening item 12 keys on `han, thodi`."
+      "note": "thoda is introduced by HI-C92-thoda, and the note's item is what the lesson is built on: mock 1 listening item 12 keys on haan, thodii. The lesson makes the ending the subject rather than the word, because that is what the item actually tests -- the answer is thodii and not thoda because hindii is feminine and the hedge agrees with what it hedges, not with the person speaking. An English speaker is caught out here because a little is a fixed lump in English and an adjective in Hindi."
     },
     {
       "id": "HI-A1-ADJ-09",
       "category": "Visheshan (the adjective)",
       "label": "comparison: X is bigger than Y",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C92-DEG-03",
+        "HI-LEX-C90-ROUT-01"
+      ],
       "derivedFrom": "ES:A1-NG2-02",
-      "note": "Hindi compares with the postposition `se`, which is untaught. See HI-A1-POST-04."
+      "note": "STALE NOTE, corrected. It said Hindi compares with the postposition se, which is untaught, and pointed at HI-A1-POST-04 -- and se was introduced by HI-C90-se in chapter 98, so this point was waiting on work already done. HI-C92-se-comparison supplies the construction. The teachable part is that Hindi has NO comparative form: English carries two machines for this, -er on short adjectives and more in front of long ones, and Hindi carries neither -- the adjective does not change and the thing measured against takes se, which is the same idea as the postposition's other uses, the comparison PROCEEDING FROM the thing measured against. The one thing to drill is word order, because English puts than X after the adjective and Hindi puts it before, which follows from the verb-final rule the track has taught since its first sentence."
     },
     {
       "id": "HI-A1-PRON-01",
@@ -371,9 +376,12 @@
       "id": "HI-A1-PRON-10",
       "category": "Sarvanam (pronouns)",
       "label": "the exclamative: kitna accha!",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C92-DEG-05",
+        "HI-LEX-C92-DEG-04"
+      ],
       "derivedFrom": "ES:A1-PRON-07",
-      "note": "`kitna` is introduced only inside the memorised age question."
+      "note": "The exclamative is introduced by HI-C92-kitna-achchha, and the note is exactly right that kitna was introduced only inside the memorised age question. HI-C92-kitna lets the word out of that sentence first -- it bends like every other -aa word, and Hindi does not split how much from how many the way English does, because English sorts nouns into countable and uncountable and Hindi asks one question and lets the noun answer. The exclamative then adds nothing at all: it is the question word in front of an adjective with the verb and the rising voice taken away, exactly as English turns how good is it into how good. Both words bend together, so the phrase rhymes with itself in either gender, and the rhyme is a usable check."
     },
     {
       "id": "HI-A1-NUM-01",
@@ -786,17 +794,24 @@
       "id": "HI-A1-POST-07",
       "category": "Parsarg (postpositions and case)",
       "label": "ke sath for accompaniment, and ke bina for its absence",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C93-REL-01",
+        "HI-LEX-C93-REL-02"
+      ],
       "derivedFrom": "ES:A1-NG1-02",
-      "note": "Mock 1's account has `apne dost ke sath` and mock 2's has `apne parivar ke sath`."
+      "note": "ke saath is introduced by HI-C93-ke-saath and ke binaa by HI-C93-ke-binaa, and the note's own examples are constructible as printed: apnaa, dost and parivaar were all already taught, so mock 1's `apne dost ke saath` and mock 2's `apne parivaar ke saath` need nothing beyond the one new word. The teachable part is that these are not prepositions. dost ke saath is, piece by piece, THE FRIEND'S COMPANY -- a possessive phrase whose head noun happens to name a relation -- which is why the middle word is ke and never kaa, and why a pronoun needs no middle word at all. binaa is the one relation word in the family that may also stand in FRONT of its noun (binaa chaay ke), and the lesson teaches the ordinary order and flags the other so a reader is not surprised by it."
     },
     {
       "id": "HI-A1-POST-08",
       "category": "Parsarg (postpositions and case)",
       "label": "spatial compound postpositions: ke pas, ke samne, ke piche",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C93-REL-03",
+        "HI-LEX-C93-REL-04",
+        "HI-LEX-C93-REL-05"
+      ],
       "derivedFrom": "ES:A1-NG3-02, ES:A1-NG3-03, ES:A1-NG3-05",
-      "note": "Mock 2 listening item 6 `bas station ke samne hai` and item 11 `nahin, pas hai`. The proxy spends three A1 points on relative position, distance and direction; Hindi routes all three through this construction and none of it is taught."
+      "note": "All three are introduced in chapter 101: ke paas by HI-C93-ke-paas, ke saamne by HI-C93-ke-saamne and ke piichhe by HI-C93-ke-piichhe, so the note's mock 2 items -- listening item 6 `bas station ke saamne hai` and item 11 `nahiin, paas hai` -- are both now decodable. The note is right that the proxy spends three separate A1 points on relative position, distance and direction while Hindi routes all three through one construction, and that is exactly why one chapter closes all three. The load-bearing distinction the lessons drill is that paas answers a DIFFERENT QUESTION from the other two: it gives distance and no direction, while saamne and piichhe give a side and say nothing about distance. Mock 2's own pair of items tests precisely that, since item 11 concedes the weaker claim after item 6 made the stronger one. paas also arrives with a debt already paid: HI-C84-mere-paas taught it in chapter 92 as the phrase for HAVING without ever saying what the word means, and the physical sense taught here is the one the possessive sense was borrowed from."
     },
     {
       "id": "HI-A1-POST-09",
@@ -810,9 +825,12 @@
       "id": "HI-A1-POST-10",
       "category": "Parsarg (postpositions and case)",
       "label": "ke liye for purpose and benefit",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C93-REL-06",
+        "HI-LEX-C93-REL-07"
+      ],
       "derivedFrom": "ES:A1-SUB-07, ES:A1-PRON-08",
-      "note": "The proxy expresses purpose with para plus an infinitive; Hindi uses the oblique infinitive plus ke liye. Neither the postposition nor the oblique infinitive is taught."
+      "note": "The note's claim that neither the postposition nor the oblique infinitive is taught was half stale: HI-C84-mere-liye teaches `mere liye` in chapter 92, so the postposition was already in the corpus with a pronoun in front of it. What was genuinely missing was `ke liye` after a NOUN -- which needs the separate `ke` a pronoun carries inside itself -- and the oblique infinitive, which chapter 101 supplies as the fifth kind of word to wear the oblique -e."
     },
     {
       "id": "HI-A1-ADV-01",
@@ -868,9 +886,13 @@
       "id": "HI-A1-ADV-06",
       "category": "Kriya-visheshan (adverbs)",
       "label": "evaluative manner: doing something well, and doing it badly",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C92-DEG-02",
+        "HI-LEX-C41-ADJ-03",
+        "HI-LEX-C83-CHAR-01"
+      ],
       "derivedFrom": "ES:A1-ADV-04, ES:A1-NG6-07",
-      "note": "`thik` and `achha` cover 'well'. No word for 'badly' -- neither `bura` nor `kharab` -- is introduced, so the proxy's bien/mal pair is half present and cannot be contrasted."
+      "note": "STALE NOTE, corrected. It said no word for badly, neither bura nor kharab, is introduced, so the proxy's bien/mal pair is half present and cannot be contrasted. buraa IS introduced, by HI-C83-buraa in chapter 91, which landed after the note was written -- so the pair was already whole in the corpus and what was actually missing was the ADVERBIAL use of both. HI-C92-achchha-buraa supplies it, and the observation worth keeping is that Hindi needs no second shelf of words: English splits good/well and bad/badly and marks the second with -ly, while Hindi uses the same word and lets its POSITION say which job it is doing. It still bends for gender even when it is doing an English adverb's work, which is the second half of the same instinct to unlearn."
     },
     {
       "id": "HI-A1-ADV-07",

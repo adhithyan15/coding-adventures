@@ -1,0 +1,22 @@
+{
+  "chapter": 100,
+  "title": "How Much, How Well, How Big",
+  "label": "ch:hi-maatra",
+  "canDo": "I can hedge an answer, say that something was done well or badly, compare two things, ask a quantity and pay a compliment.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C92-sintesis-maatra",
+    "kind": "task",
+    "summary": "Answer the listening item the first practice paper sets -- haan, thodii -- and say why the ending rather than the word is what the item tests.",
+    "assesses": [
+      "HI-LEX-C92-DEG-01",
+      "HI-LEX-C92-DEG-02",
+      "HI-LEX-C92-DEG-03",
+      "HI-LEX-C92-DEG-04",
+      "HI-LEX-C92-DEG-05"
+    ],
+    "note": "Closes four points, and TWO of the four notes had gone stale because earlier chapters unblocked them. HI-A1-ADJ-09's note said Hindi compares with the postposition se, which is untaught -- se was taught in chapter 98, so the point was waiting on work already done. HI-A1-ADV-06's note said no word for badly, neither bura nor kharab, is introduced -- buraa was introduced by HI-C83-buraa in chapter 91, so the pair was already half in the corpus and only the ADVERBIAL use was missing. HI-A1-ADJ-08 (thoda) and HI-A1-PRON-10 (the exclamative kitna accha) needed authoring, and PRON-10's note is exactly right that kitna was locked inside the memorised age question. The thread through the chapter is that all five words end in -aa and bend, so none of them is a new kind of word: they are adjectives doing five different jobs, and the chapter adds five words and no new machinery. It also pays down script debt: chha had never been taught, which is why chapter 99 had to route around achchhaa in its agreement examples, and HI-S130-letter-chha teaches it as the breathy partner of cha exactly as tha is of ta."
+  }
+}
