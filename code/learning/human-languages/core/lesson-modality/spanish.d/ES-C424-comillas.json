@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C424-comillas",
+    "language": "spanish",
+    "chapter": 424,
+    "sequence": 9950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4fe8f4ff766ce565"
+  },
+  "findings": []
+}

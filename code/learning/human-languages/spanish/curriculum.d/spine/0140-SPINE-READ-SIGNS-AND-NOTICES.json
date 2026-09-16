@@ -1,6 +1,7 @@
 {
   "segments": [
-    "ES-PATH-A1-LECTURA"
+    "ES-PATH-A1-LECTURA",
+    "ES-PATH-424-SIGNOS"
   ],
   "omits": [],
   "relocates": {}

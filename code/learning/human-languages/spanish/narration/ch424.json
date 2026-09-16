@@ -1,0 +1,1545 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 424,
+  "title": "The Marks Themselves",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:e8dcfa92a298e8f3",
+  "lessons": [
+    {
+      "id": "ES-C424-punto",
+      "sequence": 9910,
+      "title": "el punto — the mark you have read ten thousand times and never been told about",
+      "headword": "el punto",
+      "romanization": "el punto",
+      "gloss": "the full stop — one mark with three jobs, and the job it is doing is decided by what comes after it rather than by the mark itself",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:f1e621f5b0c68f96",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the last sentence you read. It ended in a mark. Say what that mark is called in Spanish before reading on — and notice that this book has printed it on every page without once naming it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el punto — \"the full stop,\" or in American English, the period."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish gives the same mark a different name according to what follows it, and those names appear in exam instructions, so they are worth having:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what comes next",
+                "name",
+                "what it closes"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "what comes next: another sentence, same paragraph. name: punto y seguido. what it closes: a sentence.",
+                "what comes next: a new paragraph. name: punto y aparte. what it closes: a paragraph.",
+                "what comes next: nothing. name: punto final. what it closes: the whole text."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The mark on the page is identical in all three. What changes is the size of the thing being finished — a sentence, a block, or a text. Seguido means \"continued,\" aparte means \"separate,\" and final means what it looks like."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: spacing, and the one place the mark is left off",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two mechanical habits that a written paper is marked on:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "correct",
+                "wrong"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "spacing. correct: Hola. Adiós. wrong: Hola.Adiós.",
+                "after a title. correct: Mi familia. wrong: Mi familia."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "No space before the point, one space after it. And a title or a heading takes no point at all — which is why every heading in this book ends bare."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el punto\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el punto\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three names a point gets when a new paragraph follows (punto y aparte)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three names a point gets when a new paragraph follows (*punto y aparte*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether the title of your exam answer should end in a point (no)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether the title of your exam answer should end in a point (no)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the difference on the page between punto y seguido and punto y aparte? (Nothing — the mark is the same; what follows it differs.) Where does the space go? (After the point, not before.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C424-coma",
+      "sequence": 9920,
+      "title": "la coma — where Spanish and English disagree about lists",
+      "headword": "la coma",
+      "romanization": "la coma",
+      "gloss": "the comma — and the list rule where Spanish and English disagree, because Spanish puts no comma in front of the final y",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd3c397d640f102b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el punto. This mark is its smaller relative: it divides without finishing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la coma — \"the comma.\" From Greek kómma, \"a piece cut off,\" which is what a comma does to a sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "In a list, the items are divided by commas — and in front of the final y, Spanish writes no comma:"
+            },
+            {
+              "kind": "speech",
+              "text": "Tengo un hermano, una hermana y un perro."
+            },
+            {
+              "kind": "speech",
+              "text": "English allows a brother, a sister, and a dog. Spanish does not put a comma there. This is one of the few orthographic points where a habit carried from English is visible to a marker."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: when y becomes e, and o becomes u",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The joining word itself changes shape to avoid two identical vowel sounds colliding:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "written",
+                "becomes",
+                "before a word starting with"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "written: y. becomes: e. before a word starting with: i- or hi-.",
+                "written: o. becomes: u. before a word starting with: o- or ho-."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "padres e hijos — parents and children."
+            },
+            {
+              "kind": "speech",
+              "text": "siete u ocho — seven or eight."
+            },
+            {
+              "kind": "speech",
+              "text": "You met this already without being told its name: simpática e inteligente in the character chapter changed for exactly this reason."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la coma\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la coma\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a list of three things, and stop yourself before putting a comma in front of the y",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a list of three things, and stop yourself before putting a comma in front of the *y*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"padres e hijos\", and why it is not y hijos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"padres e hijos\", and why it is not *y hijos*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"siete u ocho\", and why it is not o ocho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"siete u ocho\", and why it is not *o ocho*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does Spanish put a comma before the final y of a list? (No.) What does y become before hijos? (E.) What does o become before ocho? (U.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C424-dos-puntos",
+      "sequence": 9930,
+      "title": "los dos puntos — a plural name, and the mark that opens a letter",
+      "headword": "los dos puntos",
+      "romanization": "los dos puntos",
+      "gloss": "the colon — plural in Spanish because there are two of them, and the mark that opens a Spanish letter where English uses a comma",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:940f3626ac746ca0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la coma. The next mark also introduces a list — but it stands in front of the list rather than inside it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "los dos puntos — \"the colon.\" Spanish names it for what it looks like: two points, and the name is plural, so it takes los and a plural verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Its main job is to announce what follows:"
+            },
+            {
+              "kind": "speech",
+              "text": "Tengo tres colores favoritos: rojo, azul y verde."
+            },
+            {
+              "kind": "speech",
+              "text": "The colon promises a list; the commas then divide it; and there is still no comma before the final y."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the letter opening, where English disagrees",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the exam-relevant half, because a written paper often asks for a note or a message:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "opening"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "language: Spanish. opening: Querido Juan:",
+                "language: English. opening: Dear John,"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish puts dos puntos after the greeting of a letter, an email or a note. English puts a comma. A Spanish reader notices the comma immediately, the way an English reader notices a colon."
+            },
+            {
+              "kind": "speech",
+              "text": "After it, the text begins on the next line, and it begins with a capital."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"los dos puntos\", with los, because the name is plural",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"los dos puntos\", with *los*, because the name is plural]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence that announces a list of three things and then gives it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence that announces a list of three things and then gives it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how you would open a note to a friend called Ana (Querida Ana:)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how you would open a note to a friend called Ana (*Querida Ana:*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is the name plural? (There are two points in the mark.) What goes after Querido Juan in Spanish? (A colon, where English uses a comma.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C424-raya",
+      "sequence": 9940,
+      "title": "la raya — you have been reading this mark for chapters",
+      "headword": "la raya",
+      "romanization": "la raya",
+      "gloss": "the dash that marks a turn of speech — the mark this book has used in every printed dialogue without ever naming it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d119a3a64a5db65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every printed conversation you have read in this book opened its lines with a long horizontal mark. Name what it was doing there, before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la raya — \"the dash.\" A raya is a line or a stripe, and it is longer than the hyphen, which is a different mark with a different job."
+            },
+            {
+              "kind": "speech",
+              "text": "In printed Spanish dialogue, a raya opens each turn of speech, and nobody is named:"
+            },
+            {
+              "kind": "speech",
+              "text": "— ¿Cómo estás? — Bien, gracias. ¿Y tú? — Muy bien."
+            },
+            {
+              "kind": "speech",
+              "text": "Three turns, two speakers, no he said and no quotation marks. The reader tracks who is talking by alternation alone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what replaces the quotation marks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Set the two traditions side by side, because a reading paper prints the Spanish one and an English-trained eye looks for the wrong thing:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "English",
+                "Spanish"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "opens a turn. English: \"Hello,\" Spanish: — Hola.",
+                "names the speaker. English: he said. Spanish: often nobody.",
+                "new speaker. English: new paragraph. Spanish: new paragraph."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "An English reader hunting for quotation marks in a Spanish story finds none and concludes there is no dialogue. There is; it is marked with la raya."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la raya\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la raya\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how a reader knows who is speaking when nobody is named (the turns alternate)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how a reader knows who is speaking when nobody is named (the turns alternate)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what an English reader is looking for that will not be there (quotation marks)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what an English reader is looking for that will not be there (quotation marks)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What opens a turn of speech in printed Spanish? (La raya.) How many speakers are named in a typical exchange? (Often none.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C424-comillas",
+      "sequence": 9950,
+      "title": "las comillas — three shapes, and the preferred one points outward",
+      "headword": "las comillas",
+      "romanization": "las comillas",
+      "gloss": "quotation marks — Spanish has three shapes in a stated order of preference, and the one it prefers is the one an English reader has never used",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4fe8f4ff766ce565",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last lesson said a Spanish dialogue carries no quotation marks. So Spanish does have them — they are for something else. This lesson says what."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "las comillas — \"quotation marks.\" Plural, like los dos puntos, because they come as a pair."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish uses three shapes and puts them in an order of preference:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "shape",
+                "name",
+                "when"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "shape: « ». name: comillas latinas, or angulares. when: preferred in printed Spanish.",
+                "shape: \" \". name: comillas inglesas. when: inside a quotation already in « ».",
+                "shape: ' '. name: comillas simples. when: inside that again."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The outermost pair is the angular one. Nesting works from the outside in, so the English-looking pair appears inside the Spanish-looking one, rather than first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what they are actually for",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Since la raya already handles dialogue, the marks are free for other work, and the one an A1 paper shows is the foreign word:"
+            },
+            {
+              "kind": "speech",
+              "text": "El camarero trajo un «sandwich»."
+            },
+            {
+              "kind": "speech",
+              "text": "A word borrowed and not yet naturalised is set apart from the sentence around it. Spanish also uses them for a title inside a text, and for a word being talked about rather than used."
+            },
+            {
+              "kind": "speech",
+              "text": "The name is a diminutive of coma: a comilla is a small comma, which is what the mark once looked like."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"las comillas\", plural, with las",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"las comillas\", plural, with *las*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which shape a printed Spanish text reaches for first (« »)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which shape a printed Spanish text reaches for first (« »)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the name is a small version of (coma)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the name is a small version of (*coma*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which pair does printed Spanish prefer? (The angular « ».) Why are they not needed for dialogue? (La raya marks the turns instead.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C424-parentesis",
+      "sequence": 9960,
+      "title": "los paréntesis — a putting-in-beside",
+      "headword": "los paréntesis",
+      "romanization": "los paréntesis",
+      "gloss": "parentheses — Greek for a putting-in-beside, which is exactly what the mark does to a sentence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7de0f1339e655c37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say las comillas. The next mark also sets something apart from the sentence — but what it sets apart is an aside rather than a quotation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "los paréntesis — \"the parentheses,\" the curved pair."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is Greek and it describes the job precisely: para- beside, en- in, thesis a putting. A parénthesis is a putting-in-beside — a remark placed next to the sentence rather than inside its grammar."
+            },
+            {
+              "kind": "speech",
+              "text": "Mi hermana (la mayor) vive en Madrid."
+            },
+            {
+              "kind": "speech",
+              "text": "Remove what is between them and the sentence still stands: Mi hermana vive en Madrid. That is the test for whether the mark is the right one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: spacing, and where the point goes",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "correct",
+                "wrong"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "spacing. correct: casa (grande) blanca. wrong: casa ( grande ) blanca.",
+                "with a point. correct: ... en Madrid. wrong: ... en Madrid). inside."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "No space on the inside of either curve. And when a parenthesis closes at the end of a sentence, the point goes outside it — the aside finishes first, then the sentence does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"los paréntesis\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"los paréntesis\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the three Greek pieces mean (beside, in, a putting)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the three Greek pieces mean (beside, in, a putting)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the test for whether an aside belongs in them (remove it, and see whether the sentence still stands)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the test for whether an aside belongs in them (remove it, and see whether the sentence still stands)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the Greek word literally describe? (A putting-in-beside.) Where does the full stop go at the end of a sentence that closes with a parenthesis? (Outside it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C424-guion",
+      "sequence": 9970,
+      "title": "el guion — the short one, and why it is not la raya",
+      "headword": "el guion",
+      "romanization": "el guion",
+      "gloss": "the hyphen — shorter than la raya and with a different job, and a word whose own spelling the Academy changed",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74658f4a7dffd967",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la raya. This lesson gives you a mark that looks like a small version of it and does something completely different."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el guion — \"the hyphen.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The two marks are easy to confuse on a page and easy to keep apart once you know what each is for:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "mark",
+                "length",
+                "job"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "mark: la raya. length: long. job: opens a turn of speech.",
+                "mark: el guion. length: short. job: joins two words into one."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Its everyday A1 use is in names:"
+            },
+            {
+              "kind": "speech",
+              "text": "Ana-María — a compound forename."
+            },
+            {
+              "kind": "speech",
+              "text": "Sánchez-Pérez — a compound surname, often a married name or a double family name."
+            },
+            {
+              "kind": "speech",
+              "text": "A form asking for apellidos may come back with a hyphen in it, and the hyphen is telling you the two halves are one name rather than two."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the word changed its own spelling",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This one is a small piece of history you will see both ways in print:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "spelling",
+                "status"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "spelling: guión. status: the older form, with a written accent.",
+                "spelling: guion. status: the current recommendation."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The Academy reclassified guion as a one-syllable word in 2010, and a one-syllable word carries no written accent. Older books print guión and are not wrong for their date. Both will appear in front of you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el guion\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el guion\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between what la raya does and what el guion does",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between what *la raya* does and what *el guion* does]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a compound surname with a hyphen in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a compound surname with a hyphen in it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two marks opens a line of dialogue? (La raya, the long one.) Why does the current spelling guion carry no accent? (It is counted as one syllable.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C424-barra",
+      "sequence": 9980,
+      "title": "la barra — a choice, a street, and a speed limit",
+      "headword": "la barra",
+      "romanization": "la barra",
+      "gloss": "the slash — the mark that offers a choice, abbreviates a street, and sits inside every speed limit sign",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d845805c90da2ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el guion, the mark that joins. This one separates — and what it separates are usually alternatives."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la barra — \"the slash.\" A barra is a bar or a rod, named for its shape."
+            },
+            {
+              "kind": "speech",
+              "text": "Three jobs, all of which turn up on an A1 reading paper:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "use",
+                "example",
+                "reading"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "use: alternatives. example: y/o. reading: and, or both.",
+                "use: abbreviation. example: c/ Mayor. reading: calle Mayor.",
+                "use: per. example: km/h. reading: kilometres per hour."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The middle one is the useful surprise: c/ on a Spanish address is calle, the street. An envelope, a form or a shop sign will print it that way, and it is unreadable if nobody has told you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the mark that means \"per\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In a measurement, la barra is read aloud as por:"
+            },
+            {
+              "kind": "speech",
+              "text": "50 km/h — cincuenta kilómetros por hora."
+            },
+            {
+              "kind": "speech",
+              "text": "It is not silent and it is not spelled out. A listening paper that reads a speed limit aloud gives you por where the page shows a slash."
+            },
+            {
+              "kind": "speech",
+              "text": "No spaces around it in any of these uses."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la barra\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la barra\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what c/ stands for on an address (calle)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what **c/** stands for on an address (*calle*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"50 km/h\" the way it is read aloud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"50 km/h\" the way it is read aloud]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does c/ abbreviate? (Calle.) What word replaces the slash when a measurement is read aloud? (Por.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C424-repaso-signos",
+      "sequence": 9990,
+      "title": "ocho signos — sorted by what each one does to a sentence",
+      "headword": "ocho signos",
+      "romanization": "ocho signos",
+      "gloss": "eight marks — sorted by whether each one divides, joins, or sets something apart",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:45faa6d0f2c67c18",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name as many of the eight marks as you can, in Spanish, before reading the table. Aim for five."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: divide, join, or set apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Eight marks, and every one of them is doing one of three jobs:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "mark",
+                "name",
+                "job"
+              ],
+              "columns": 3,
+              "rowCount": 8,
+              "utterances": [
+                "mark: . name: el punto. job: divides — a sentence, a paragraph, a text.",
+                "mark: , name: la coma. job: divides — inside a sentence.",
+                "mark: : name: los dos puntos. job: divides — and announces what follows.",
+                "mark: —. name: la raya. job: sets apart — a turn of speech.",
+                "mark: « ». name: las comillas. job: sets apart — a quoted or foreign word.",
+                "mark: ( ). name: los paréntesis. job: sets apart — an aside.",
+                "mark: -. name: el guion. job: joins — two words into one name.",
+                "mark: /. name: la barra. job: divides — alternatives, or per."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Seven divide or set apart. El guion is the only one of the eight that joins, which is the cleanest way to keep it from being confused with the mark it most resembles."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the three with plural names",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "name",
+                "why plural"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "name: los dos puntos. why plural: two points in the mark.",
+                "name: las comillas. why plural: they come as a pair.",
+                "name: los paréntesis. why plural: so do these."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Each of the three is one mark to an English speaker and a plural noun in Spanish, so each takes los or las and a plural verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three with plural names, with their articles",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three with plural names, with their articles]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that joins rather than divides (el guion)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that joins rather than divides (*el guion*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that opens a line of dialogue (la raya)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that opens a line of dialogue (*la raya*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one Spanish leaves out in front of the final y of a list (la coma)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one Spanish leaves out in front of the final *y* of a list (*la coma*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the eight joins? (El guion.) Which two are both horizontal lines with different lengths and different jobs? (La raya and el guion.) Which one is read aloud as por? (La barra.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C424-sintesis-nota",
+      "sequence": 10000,
+      "title": "una nota con todos los signos — the marks doing their jobs at once",
+      "headword": "una nota con todos los signos",
+      "romanization": "una nota con todos los signos",
+      "gloss": "a short written note that needs six of the eight marks, which is what a written paper actually asks for",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d7548fefe4dbd70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say how a Spanish note opens after the name, and say whether a list of three takes a comma before its y."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read this note and count the marks. Every word in it has been taught:"
+            },
+            {
+              "kind": "speech",
+              "text": "Querida Ana: Mañana voy al teatro con mi hermana (la mayor). Vamos a ver una película, una exposición y un concierto. Mi dirección es c/ Mayor, 5. Un abrazo, Marta."
+            },
+            {
+              "kind": "speech",
+              "text": "Six of the eight marks are at work: the colon after the name, commas inside the list with none before the y, a parenthesis around the aside, a slash in the address, and points closing the sentences."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "And the two the note had no use for, doing their own jobs:"
+            },
+            {
+              "kind": "speech",
+              "text": "— ¿Vamos al cine? — Sí. Traigo un «sandwich»."
+            },
+            {
+              "kind": "speech",
+              "text": "The first line opens with la raya because it is a turn of speech. The borrowed word sits inside las comillas because it is not naturalised."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the mark that opens the note after Querida Ana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the mark that opens the note after *Querida Ana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the list of three from the note, and stop before the y without putting a comma there",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the list of three from the note, and stop before the *y* without putting a comma there]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what c/ is short for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what **c/** is short for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which mark would open the note if it were a line of dialogue instead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which mark would open the note if it were a line of dialogue instead]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what a hyphen in Sánchez-Pérez is telling you (that the two halves are one name)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what a hyphen in *Sánchez-Pérez* is telling you (that the two halves are one name)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the point go when a sentence ends with a parenthesis? (Outside it.) Which mark marks the foreign word, and which marks the turn of speech? (Las comillas and la raya.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

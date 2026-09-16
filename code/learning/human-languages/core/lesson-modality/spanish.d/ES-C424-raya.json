@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C424-raya",
+    "language": "spanish",
+    "chapter": 424,
+    "sequence": 9940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d119a3a64a5db65"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C424-sintesis-nota",
+    "language": "spanish",
+    "chapter": 424,
+    "sequence": 10000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d7548fefe4dbd70"
+  },
+  "findings": []
+}
