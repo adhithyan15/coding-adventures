@@ -1,0 +1,18 @@
+{
+  "id": "HI-PATH-97-CONTINUOUS",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "HI-C89-kar-raha-hun",
+    "HI-C89-kar-rahi-hun",
+    "HI-C89-kar-raha-hai",
+    "HI-C89-kar-rahe-hain",
+    "HI-C89-karta-vs-kar-raha",
+    "HI-C89-repaso-jaari",
+    "HI-C89-sintesis-jaari"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-97-CONTINUOUS"
+  ],
+  "after": []
+}

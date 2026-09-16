@@ -1,0 +1,22 @@
+{
+  "chapter": 97,
+  "title": "What Is Going On Right Now",
+  "label": "ch:hi-jaari",
+  "canDo": "I can say what I am doing at this moment, ask somebody else what they are doing, and keep that apart from what I do in general.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "HI-C89-sintesis-jaari",
+    "kind": "task",
+    "summary": "Ask what somebody is doing at the aap level and answer for yourself, then say the same thing as a habit rather than as a moment.",
+    "assesses": [
+      "HI-LEX-C89-CONT-01",
+      "HI-LEX-C89-CONT-02",
+      "HI-LEX-C89-CONT-03",
+      "HI-LEX-C89-CONT-04",
+      "HI-LEX-C89-CONT-05"
+    ],
+    "note": "Closes HI-A1-V-07, and the note was exactly right: the pattern appears twice in the corpus as a fixed frame -- ek baj rahaa hai in the hour lesson and baarish ho rahii hai in the weather lesson -- with no atom presenting it as a pattern that applies to any stem. The chapter is built so that the two frames are collected rather than left as lumps: the review lesson takes both apart and shows that the only difference between them is the gender of the subject, which is what the middle word was reporting all along. The shape is unusually tidy for a tense -- three words, one job each, and the stem stays BARE, which is what makes it productive where the habitual needs an ending. The chapter also names the thing an English speaker gets for free and a French or German speaker does not: English keeps the same do/am-doing split Hindi keeps, so the instinct transfers, and the caution is only that Hindi leans on the habitual for an arranged near future where English reaches for the continuous."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:0a0abfbb27b29f61",
+  "lessonIds": [
+    "HI-C89-kar-raha-hun",
+    "HI-C89-kar-rahi-hun",
+    "HI-C89-kar-raha-hai",
+    "HI-C89-kar-rahe-hain",
+    "HI-C89-karta-vs-kar-raha",
+    "HI-C89-repaso-jaari",
+    "HI-C89-sintesis-jaari"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch97.txt",
+  "json": "hindi/narration/ch97.json",
+  "textHash": "fnv1a64:e439d3517e9387ae",
+  "jsonHash": "fnv1a64:0e3cb5b49e4ca43e",
+  "findings": []
+}

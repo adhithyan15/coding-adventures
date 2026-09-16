@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C89-kar-rahe-hain",
+    "language": "hindi",
+    "chapter": 97,
+    "sequence": 3920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfe255d456eb68e8"
+  },
+  "findings": []
+}
