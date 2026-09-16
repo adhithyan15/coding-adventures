@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C87-bolta-thaa",
+    "language": "hindi",
+    "chapter": 95,
+    "sequence": 3780,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e2dd32f32da7cfeb"
+  },
+  "findings": []
+}

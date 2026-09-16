@@ -546,9 +546,14 @@
       "id": "HI-A1-V-12",
       "category": "Kriya (the verb)",
       "label": "the past copula tha/thi, and the past habitual",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C87-PAST-01",
+        "HI-LEX-C87-PAST-02",
+        "HI-LEX-C87-PAST-03",
+        "HI-LEX-C87-PAST-05"
+      ],
       "derivedFrom": "ES:A1-V-04, ES:A1-V-05",
-      "note": "Nothing in the corpus is past-tense. The proxy spends five A1 points on past morphology; Hindi needs at minimum `tha` to say where one was or what one used to do."
+      "note": "Chapter 95 supplies the whole of what the note asked for. tha, thi and the are each introduced by their own lesson, the negative nahin tha by another, and the past habitual by HI-C87-bolta-thaa, which is the present habitual the track has taught since chapter 5 with its final word swapped -- so the past costs one substitution rather than a new conjugation. The note's claim that NOTHING in the corpus was past-tense had a mechanical cause worth recording: the letter tha was never taught anywhere in the track, so every past-tense form was a glyph the reader had not been given. HI-S126-letter-tha teaches it, which is what unblocked this point."
     },
     {
       "id": "HI-A1-V-13",
@@ -736,9 +741,11 @@
       "id": "HI-A1-POST-05",
       "category": "Parsarg (postpositions and case)",
       "label": "par for location at a point (ghar par, station par)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C87-POST-01"
+      ],
       "derivedFrom": "ES:A1-NG3-01",
-      "note": "Mock 1 reading item 14 and mock 2 item 10 both turn on it."
+      "note": "par is introduced by HI-C87-par. The note is precise about where it was needed: mock 1 reading item 14 is mai ghar par hu, which the chapter reads back word for word in its synthesis lesson. par had appeared in the corpus only inside the chapter-94 phrase ham station par milenge, where it was carried as part of a lump and no atom presented it as a word. The lesson also states the ordering that makes the whole class learnable -- the small word trails its noun, which is what POSTposition means."
     },
     {
       "id": "HI-A1-POST-06",
