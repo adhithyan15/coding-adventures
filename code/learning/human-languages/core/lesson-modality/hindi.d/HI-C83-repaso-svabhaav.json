@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C83-repaso-svabhaav",
+    "language": "hindi",
+    "chapter": 91,
+    "sequence": 3500,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:62bd1e4ddf590ce7"
+  },
+  "findings": []
+}

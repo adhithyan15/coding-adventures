@@ -2142,9 +2142,14 @@
       "id": "HI-A1-LEX-09",
       "category": "Shabd-bhandar (core lexis)",
       "label": "physical characteristics of a person",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C82-BODY-01",
+        "HI-LEX-C82-BODY-02",
+        "HI-LEX-C82-BODY-03",
+        "HI-LEX-C82-BODY-04"
+      ],
       "derivedFrom": "ES:A1-NE01-02",
-      "note": "`bara` and `chhota` are taught for things. No word for tall, short, thin or heavy, and the `purana` lesson says explicitly that it is used of things and not of people."
+      "note": "All four characteristics the source names are now introduced by chapter 90: lambaa (tall), naataa (short in height), patlaa (thin) and motaa (stout). chhota is deliberately NOT part of the probe even though it is taught: about a person it means YOUNGER, not short, which is why naataa had to be authored rather than the point wired on the size words the track already had."
     },
     {
       "id": "HI-A1-LEX-10",
@@ -2161,9 +2166,17 @@
       "id": "HI-A1-LEX-11",
       "category": "Shabd-bhandar (core lexis)",
       "label": "character and personality adjectives",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C41-ADJ-03",
+        "HI-LEX-C83-CHAR-01",
+        "HI-LEX-C83-CHAR-02",
+        "HI-LEX-C83-CHAR-03",
+        "HI-LEX-C83-CHAR-04",
+        "HI-LEX-C83-CHAR-05",
+        "HI-LEX-C83-CHAR-06"
+      ],
       "derivedFrom": "ES:A1-NE02-01",
-      "note": "Only `achha`. Nothing describes a person's disposition."
+      "note": "achha was the only disposition word the track had. Chapter 91 adds six: buraa (bad), hoshiyaar (clever), mehnati (hard-working), sharmeela (shy), milansaar (sociable) and gambhir (serious). These are settled character rather than mood, which is the distinction the point turns on, and the sharmeela lesson makes it explicit: the -ila ending builds a standing trait where -i would only say the person has the thing."
     },
     {
       "id": "HI-A1-LEX-12",

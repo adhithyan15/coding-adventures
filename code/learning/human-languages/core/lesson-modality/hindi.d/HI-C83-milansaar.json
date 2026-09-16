@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C83-milansaar",
+    "language": "hindi",
+    "chapter": 91,
+    "sequence": 3480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a38f387ec11a19a"
+  },
+  "findings": []
+}
