@@ -14,10 +14,8 @@ The first sentence is a correct and non-obvious piece of contrastive grammar.
 The second sentence is **half false** — `HI-C84-mere-liye` had taught **मेरे
 लिए** nine chapters earlier.
 
-## Why this one is harder to catch than the other two varieties
-
-This campaign has now found three kinds of stale note, and they fail different
-checks:
+**Why this one is harder to catch than the other two varieties.** The campaign
+has now found three kinds of stale note, and they fail different checks:
 
 | variety | how it goes wrong | what catches it |
 |---|---|---|
@@ -32,20 +30,17 @@ has already demonstrated real knowledge of the language — and that
 demonstration is exactly what makes the reader skip the verification step on
 the sentence that follows it.
 
-## The rule
+**The rule: authority about the language is not evidence about the corpus.**
+They are separate claims and they need separate checks. Grep every exponent a
+note declares missing, however well-informed the surrounding prose is —
+especially then, because a well-informed note is the one you will not think to
+check.
 
-**Authority about the language is not evidence about the corpus.** They are
-separate claims and they need separate checks. Grep every exponent a note
-declares missing, however well-informed the surrounding prose is — especially
-then, because a well-informed note is the one you will not think to check.
-
-## What it cost, and what it bought
-
-Nothing, and a chapter. Because half the note was already satisfied, the
-remaining work was **one construction rather than two**: `ke liye` after a noun
-(which is just the shape with a separate `के`, since a pronoun carries its own)
-plus the oblique infinitive. The point turned out to be roughly half the size
-it advertised.
+**What it cost, and what it bought.** Nothing, and a chapter. Because half the
+note was already satisfied, the remaining work was **one construction rather
+than two**: `ke liye` after a noun (which is just the shape with a separate
+`के`, since a pronoun carries its own) plus the oblique infinitive. The point
+turned out to be roughly half the size it advertised.
 
 That is the general shape of the win. Checking makes points **cheaper**, not
 more expensive, and a point that looks too expensive to attempt is the one most
