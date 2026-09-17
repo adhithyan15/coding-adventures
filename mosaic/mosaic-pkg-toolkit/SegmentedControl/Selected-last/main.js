@@ -4,7 +4,8 @@ const componentName = "SegmentedControl";
 const fallbackProps = {
   "disabled": false,
   "options": [],
-  "selectedIndex": 2.0
+  "selectedIndex": 2.0,
+  "vertical": false
 };
 const emitPayloads = {
   "onSelect": [

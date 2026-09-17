@@ -2,10 +2,10 @@
 // Fork the file (remove this banner) to customise.
 const componentName = "SegmentedControl";
 const fallbackProps = {
-  "disabled": false,
+  "disabled": true,
   "options": [],
-  "selectedIndex": -1.0,
-  "vertical": false
+  "selectedIndex": 0.0,
+  "vertical": true
 };
 const emitPayloads = {
   "onSelect": [
