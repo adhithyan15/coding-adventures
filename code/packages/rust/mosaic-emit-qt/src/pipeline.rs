@@ -7543,12 +7543,12 @@ fn qvariant_literal_for_fixture(slot_type: &SlotType, fixture: &str) -> String {
                     format!("{text}.0")
                 }
             }
-            _ => format!("QStringLiteral(\"{}\")", escape_qml_string(fixture)),
+            _ => format!("QStringLiteral(\"{}\")", escape_cpp_string(fixture)),
         },
         SlotType::Bool => match fixture.trim() {
             "true" => "true".to_string(),
             "false" => "false".to_string(),
-            _ => format!("QStringLiteral(\"{}\")", escape_qml_string(fixture)),
+            _ => format!("QStringLiteral(\"{}\")", escape_cpp_string(fixture)),
         },
         // Lists arrive as JSON text (#15428), and become a `QVariantList` (of
         // `QVariantList`s for rows) -- the shape a QML `var` list property
@@ -7558,7 +7558,7 @@ fn qvariant_literal_for_fixture(slot_type: &SlotType, fixture: &str) -> String {
             let strings = |items: &[String]| {
                 let cells: Vec<String> = items
                     .iter()
-                    .map(|item| format!("QVariant(QStringLiteral(\"{}\"))", escape_qml_string(item)))
+                    .map(|item| format!("QVariant(QStringLiteral(\"{}\"))", escape_cpp_string(item)))
                     .collect();
                 format!("QVariantList{{{}}}", cells.join(", "))
             };
@@ -7576,7 +7576,7 @@ fn qvariant_literal_for_fixture(slot_type: &SlotType, fixture: &str) -> String {
                 None => "QVariant(QVariantList{})".to_string(),
             }
         }
-        _ => format!("QStringLiteral(\"{}\")", escape_qml_string(fixture)),
+        _ => format!("QStringLiteral(\"{}\")", escape_cpp_string(fixture)),
     }
 }
 
@@ -7944,8 +7944,52 @@ fn escape_qml_string(s: &str) -> String {
             '\\' => out.push_str("\\\\"),
             '"' => out.push_str("\\\""),
             '\n' => out.push_str("\\n"),
+            // A raw CR ends a QML/JS string literal, which fails the build.
+            '\r' => out.push_str("\\r"),
             '\t' => out.push_str("\\t"),
             _ => out.push(ch),
+        }
+    }
+    out
+}
+
+/// Escape text for the inside of a C++ `QStringLiteral("...")` in the
+/// generated `main.cpp`.
+///
+/// `escape_qml_string` is NOT enough here, and using it was an injection
+/// (found by the #15428 security review). C++ splices lines -- deletes a
+/// backslash followed by a line ending -- before it reads string literals,
+/// and GCC and Clang treat a bare CR as a line ending. A fixture of
+/// backslash, CR, quote therefore escaped to `\\` CR `\"`; the splice
+/// removed the middle backslash and the CR, and the `\\"` that was left
+/// closed the literal, so the rest of the fixture compiled as C++.
+///
+/// Every character that is not plain printable ASCII is therefore written as
+/// an escape that cannot be split or extended:
+///
+/// | input               | output                        |
+/// |---------------------|-------------------------------|
+/// | backslash, quote    | `\\`, `\"`                    |
+/// | `?`                 | `\?` (no trigraph, ever)      |
+/// | control char, DEL   | `\ooo`, exactly three octal   |
+/// | non-ASCII           | `\uXXXX` / `\UXXXXXXXX`       |
+///
+/// Octal rather than hex: a hex escape is greedy and would swallow any hex
+/// digits that follow it. `QStringLiteral` is a UTF-16 literal, where
+/// universal character names are exact whatever the compiler's source
+/// encoding is.
+fn escape_cpp_string(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for ch in s.chars() {
+        let code = ch as u32;
+        match ch {
+            '\\' => out.push_str("\\\\"),
+            '"' => out.push_str("\\\""),
+            '?' => out.push_str("\\?"),
+            ' '..='~' => out.push(ch),
+            _ if code < 0x80 => out.push_str(&format!("\\{code:03o}")),
+            _ if code <= 0xFFFF => out.push_str(&format!("\\u{code:04X}")),
+            _ => out.push_str(&format!("\\U{code:08X}")),
         }
     }
     out
@@ -15624,6 +15668,32 @@ mod tests {
             render(&[("variant", "primary")])
         );
         assert_eq!(render(&[("variant", "danger")]), render(&[]));
+    }
+
+    /// #15428 security review: backslash + CR + quote in a fixture used to
+    /// close the C++ literal through line splicing, letting the rest of the
+    /// fixture compile as C++. Only printable ASCII may reach main.cpp now,
+    /// and the CR must be an octal escape.
+    #[test]
+    fn cpp_fixture_literals_cannot_be_split_or_closed() {
+        let attack = "x\\\r\"); puts(\"pwned\"); //";
+        // The same text as a JSON list, the form list fixtures arrive in.
+        let as_json_list = r#"["x\\\r\"); puts(\"pwned\"); //"]"#;
+        let list = SlotType::List(Box::new(mosmodel_compiler::ListInnerType::Text));
+        for literal in [
+            qvariant_literal_for_fixture(&SlotType::Text, attack),
+            qvariant_literal_for_fixture(&list, as_json_list),
+        ] {
+            assert!(
+                literal.chars().all(|c| (' '..='~').contains(&c)),
+                "only printable ASCII may reach main.cpp: {literal:?}"
+            );
+            assert!(literal.contains("x\\\\\\015\\\""), "escaped as \\\\ \\015 \\\": {literal}");
+        }
+        assert_eq!(escape_cpp_string("a?b"), "a\\?b");
+        // Three octal digits exactly, so a following digit is not absorbed.
+        assert_eq!(escape_cpp_string("\u{7f}1"), "\\1771");
+        assert_eq!(escape_cpp_string("é🙂"), "\\u00E9\\U0001F642");
     }
 
     /// #15428: list fixtures become QVariantLists for `initialProperties`.
