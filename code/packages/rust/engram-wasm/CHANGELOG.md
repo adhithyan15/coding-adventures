@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Regenerated `pkg/engram_engine.wasm` for the bounded media decode
+(#13672).** The rebuilt engine refuses an over-budget Anki package before it
+decodes the member that would cross the 32 MiB media budget, rather than after;
+`js/smoke.mjs` passes against it.
+
 **Regenerated `pkg/engram_engine.wasm` for the screen-switcher props
 (#14063).** The rebuilt engine returns `nav-options` / `nav-selected-index` and
 accepts `onShowScreen`; `js/smoke.mjs` passes against it.
