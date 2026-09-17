@@ -25,6 +25,8 @@
 //! - [`function::IIRFunction`] — a named function with parameters, return type, and body
 //! - [`module::IIRModule`] — top-level container for all functions in a program
 //! - [`opcodes`] — predicate functions for opcode category membership, type helpers
+//! - [`exception_kind`] — the dotted-path exception **kind** names `throw`/`catch`
+//!   match on (AOT00 T2), plus the built-in `Trap.*` kinds and [`exception_kind::kind_matches`]
 //! - [`serialise`] — compact binary serialisation / deserialisation
 //! - [`source_loc::SourceLoc`] — one source position, indexed in lockstep with
 //!   [`function::IIRFunction::instructions`]; substrate for the dev-tools stack
@@ -79,6 +81,7 @@
 //! assert_eq!(recovered.get_function("add").unwrap().params.len(), 2);
 //! ```
 
+pub mod exception_kind;
 pub mod function;
 pub mod instr;
 pub mod module;
@@ -89,6 +92,7 @@ pub mod slot_state;
 pub mod source_loc;
 
 // Re-export the most commonly used types at the crate root for ergonomic use.
+pub use exception_kind::{kind_matches, CATCH_ANY, TRAP_KIND};
 pub use function::{FunctionTypeStatus, IIRFunction};
 pub use instr::{IIRInstr, Operand};
 pub use module::IIRModule;

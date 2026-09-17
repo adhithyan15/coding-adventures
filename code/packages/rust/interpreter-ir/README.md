@@ -50,8 +50,12 @@ Standard opcodes (handled by `vm-core`):
 | Calls | `call call_builtin` |
 | Type system | `cast type_assert` |
 | Strings | `str_const str_len str_index str_concat str_slice str_eq str_cmp print_str` |
+| Exceptions (AOT00 T2, inert — no backend lowers these yet) | `throw catch landingpad` |
 
 Type strings: `u8 u16 u32 u64 i8 i16 i32 i64 bool f32 f64 str void any`
+
+Exception kind names (`exception_kind` module) are dotted paths, e.g. `"Trap.Bounds"`;
+`catch "Trap"` catches any `Trap.*`, and `"*"` catches anything.
 
 ---
 
@@ -116,6 +120,7 @@ src/
 ├── function.rs     — IIRFunction + FunctionTypeStatus
 ├── instr.rs        — IIRInstr + Operand
 ├── opcodes.rs      — opcode category predicates + type helpers
+├── exception_kind.rs — exception kind names + kind_matches() (AOT00 T2)
 ├── slot_state.rs   — SlotState (type-feedback)
 └── serialise.rs    — binary encode / decode
 ```

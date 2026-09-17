@@ -1,5 +1,35 @@
 # Changelog — interpreter-ir
 
+## [0.11.0] — 2026-09-16 (AOT00 T2 slice 1 — exception IIR ops, inert)
+
+Adds the IIR-level taxonomy and validation for structured exceptions (AOT00 T2,
+[`code/specs/AOT00-T2-exceptions.md`](../../../specs/AOT00-T2-exceptions.md) §12
+slice 1). No backend interprets these ops yet — this is purely additive and
+byte-for-byte behavior-preserving for every existing program (confirmed by
+`cargo check -p lang-aot`, which transitively compiles every backend and frontend
+in the tree). Mirrors LANG28's "opcode taxonomy first, backend later" pattern.
+
+- **New opcodes** `throw` / `catch` / `landingpad` (`opcodes::is_exception_op`),
+  wired into `is_known_op`, `is_value_producing` (`landingpad` only — it binds the
+  caught exception to its `dest`), and `has_side_effects` (all three — `throw` is a
+  terminator like `ret`; `catch`/`landingpad` are structural markers like `label`
+  that must never be dead-code-eliminated).
+- **New `EXCEPTION_TYPE` constant** (`"exception"`) — an exception value's type
+  hint is `make_ref_type(EXCEPTION_TYPE)` = `"ref<exception>"`, following the same
+  `ref<T>` convention `CLOSURE_TYPE` already uses.
+- **New `exception_kind` module** — dotted-path exception kind names and the
+  built-in `Trap.*` family (`TRAP_BOUNDS`, `TRAP_NULL`, `TRAP_DIV_ZERO`,
+  `TRAP_CONV_RANGE`, common ancestor `TRAP_KIND`, catch-all `CATCH_ANY = "*"`) plus
+  `kind_matches(catch_kind, thrown_kind)` — the reference ancestor-matching
+  semantics (`catch "Trap"` catches `throw Trap.Bounds`) every later backend's
+  `kind_mask` bitset must agree with bit-for-bit.
+- **`IIRModule::validate()`** now checks `catch`'s `try_end_label`/`handler_label`
+  resolve to a `label` in the same function (generalizing the existing
+  undefined-branch-target check to a shared `label_positions` lookup), and that
+  `handler_label` is immediately followed by a `landingpad` instruction.
+- 16 new unit tests (opcodes, exception_kind, module validation) + 3 new doctests;
+  all 104 pre-existing unit tests and 41 doctests continue to pass unmodified.
+
 ## [0.10.0] — 2026-06-28 (LANG-FULL E4 — string opcode classification truth-up)
 
 The shared opcode taxonomy now covers the full E4 string surface that later

@@ -122,6 +122,9 @@ impl IIRModule {
     /// - No instruction branches to an undefined label within its function
     /// - Every export refers to a function that exists in this module (LANG33)
     /// - No two exports have the same `public_name()` (LANG33)
+    /// - Every `catch`'s `try_end_label`/`handler_label` resolve to a `label`
+    ///   in the same function, and `handler_label` is immediately followed by
+    ///   a `landingpad` (AOT00 T2 — see `crate::opcodes::is_exception_op`)
     ///
     /// **Imports are not validated here** — import resolution requires peer
     /// modules and is the linker's job (`iir-linker::verify_imports`).
@@ -145,22 +148,81 @@ impl IIRModule {
         }
 
         for fn_ in &self.functions {
-            let defined_labels: std::collections::HashSet<&str> = fn_
+            // `label` position lookup: name -> instruction index. Used both for
+            // the branch-target check below and the AOT00 T2 `catch`/`landingpad`
+            // structural checks (which need to know not just that a label is
+            // *defined*, but what instruction immediately follows it).
+            let label_positions: std::collections::HashMap<&str, usize> = fn_
                 .instructions
                 .iter()
-                .filter(|i| i.op == "label")
-                .filter_map(|i| i.srcs.first()?.as_var())
+                .enumerate()
+                .filter(|(_, i)| i.op == "label")
+                .filter_map(|(idx, i)| Some((i.srcs.first()?.as_var()?, idx)))
                 .collect();
 
             for instr in &fn_.instructions {
                 if matches!(instr.op.as_str(), "jmp" | "jmp_if_true" | "jmp_if_false") {
                     if let Some(label) = instr.srcs.last().and_then(|s| s.as_var()) {
-                        if !defined_labels.contains(label) {
+                        if !label_positions.contains_key(label) {
                             errors.push(format!(
                                 "function {:?}: branch to undefined label {:?}",
                                 fn_.name, label
                             ));
                         }
+                    }
+                }
+
+                // ── AOT00 T2: `catch(kind, try_end_label, handler_label)` ──────
+                // Both label operands must resolve to a `label` in this function
+                // (same requirement as a `jmp` target), and `handler_label` must
+                // be immediately followed by a `landingpad` — the handler's entry
+                // point, which binds the in-flight exception. A `catch` whose
+                // handler isn't a real landing pad can never be lowered, so this
+                // is caught here rather than surfacing as a confusing backend
+                // error later.
+                if instr.op == "catch" {
+                    let try_end = instr.srcs.get(1).and_then(|s| s.as_var());
+                    let handler = instr.srcs.get(2).and_then(|s| s.as_var());
+
+                    match try_end {
+                        Some(label) if !label_positions.contains_key(label) => {
+                            errors.push(format!(
+                                "function {:?}: catch refers to undefined try_end_label {:?}",
+                                fn_.name, label
+                            ));
+                        }
+                        None => errors.push(format!(
+                            "function {:?}: catch is missing its try_end_label operand",
+                            fn_.name
+                        )),
+                        _ => {}
+                    }
+
+                    match handler {
+                        Some(label) => match label_positions.get(label) {
+                            None => errors.push(format!(
+                                "function {:?}: catch refers to undefined handler_label {:?}",
+                                fn_.name, label
+                            )),
+                            Some(&label_idx) => {
+                                let landingpad_idx = label_idx + 1;
+                                let is_landingpad = fn_
+                                    .instructions
+                                    .get(landingpad_idx)
+                                    .is_some_and(|i| i.op == "landingpad");
+                                if !is_landingpad {
+                                    errors.push(format!(
+                                        "function {:?}: handler_label {:?} is not immediately \
+                                         followed by a landingpad instruction",
+                                        fn_.name, label
+                                    ));
+                                }
+                            }
+                        },
+                        None => errors.push(format!(
+                            "function {:?}: catch is missing its handler_label operand",
+                            fn_.name
+                        )),
                     }
                 }
             }
@@ -283,6 +345,117 @@ mod tests {
         module.functions.push(fn_);
         let errors = module.validate();
         assert!(errors.iter().any(|e| e.contains("loop_start")));
+    }
+
+    // ── AOT00 T2: catch/landingpad structural validation ──────────────────────
+
+    /// Build `try { <body...> } catch <kind> -> handler { landingpad(dest) <handler_body...> }`
+    /// as a flat IIR instruction stream, using labels `try_end`/`handler` — the
+    /// shape every `validate_catch_*` test below starts from.
+    fn make_fn_with_try_catch(landingpad_follows_handler: bool) -> IIRFunction {
+        let mut instructions = vec![
+            IIRInstr::new(
+                "catch",
+                None,
+                vec![
+                    Operand::Str("Trap".into()),
+                    Operand::Var("try_end".into()),
+                    Operand::Var("handler".into()),
+                ],
+                "void",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("try_end".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("handler".into())], "void"),
+        ];
+        if landingpad_follows_handler {
+            instructions.push(IIRInstr::new(
+                "landingpad",
+                Some("exc".into()),
+                vec![],
+                "ref<exception>",
+            ));
+        }
+        instructions.push(IIRInstr::new("ret_void", None, vec![], "void"));
+
+        IIRFunction::new("f", vec![], "void", instructions)
+    }
+
+    #[test]
+    fn validate_accepts_well_formed_try_catch() {
+        let mut module = IIRModule::new("test.bas", "basic");
+        module.entry_point = None;
+        module.functions.push(make_fn_with_try_catch(true));
+        assert!(module.validate().is_empty());
+    }
+
+    #[test]
+    fn validate_catches_missing_landingpad_after_handler_label() {
+        let mut module = IIRModule::new("test.bas", "basic");
+        module.entry_point = None;
+        module.functions.push(make_fn_with_try_catch(false));
+        let errors = module.validate();
+        assert!(
+            errors.iter().any(|e| e.contains("landingpad")),
+            "expected a landingpad error, got: {errors:?}"
+        );
+    }
+
+    #[test]
+    fn validate_catches_undefined_handler_label() {
+        let mut module = IIRModule::new("test.bas", "basic");
+        module.entry_point = None;
+        let fn_ = IIRFunction::new(
+            "f",
+            vec![],
+            "void",
+            vec![
+                IIRInstr::new(
+                    "catch",
+                    None,
+                    vec![
+                        Operand::Str("Trap".into()),
+                        Operand::Var("try_end".into()),
+                        Operand::Var("nowhere".into()),
+                    ],
+                    "void",
+                ),
+                IIRInstr::new("label", None, vec![Operand::Var("try_end".into())], "void"),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ],
+        );
+        module.functions.push(fn_);
+        let errors = module.validate();
+        assert!(errors.iter().any(|e| e.contains("nowhere")));
+    }
+
+    #[test]
+    fn validate_catches_undefined_try_end_label() {
+        let mut module = IIRModule::new("test.bas", "basic");
+        module.entry_point = None;
+        let fn_ = IIRFunction::new(
+            "f",
+            vec![],
+            "void",
+            vec![
+                IIRInstr::new(
+                    "catch",
+                    None,
+                    vec![
+                        Operand::Str("Trap".into()),
+                        Operand::Var("nowhere".into()),
+                        Operand::Var("handler".into()),
+                    ],
+                    "void",
+                ),
+                IIRInstr::new("label", None, vec![Operand::Var("handler".into())], "void"),
+                IIRInstr::new("landingpad", Some("exc".into()), vec![], "ref<exception>"),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ],
+        );
+        module.functions.push(fn_);
+        let errors = module.validate();
+        assert!(errors.iter().any(|e| e.contains("nowhere")));
     }
 
     #[test]

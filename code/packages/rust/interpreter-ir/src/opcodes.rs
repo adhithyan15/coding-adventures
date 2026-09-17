@@ -69,6 +69,23 @@ pub const POLYMORPHIC_TYPE: &str = "polymorphic";
 /// ```
 pub const CLOSURE_TYPE: &str = "closure";
 
+/// The type hint produced by `landingpad` instructions (AOT00 T2).
+///
+/// An exception value is a heap-allocated record (a `gc-core` heap kind, per
+/// [`AOT00-T2-exceptions.md`](../../../../specs/AOT00-T2-exceptions.md) §6):
+/// a `kind` name (see `exception_kind`) plus an optional payload.  Like
+/// [`CLOSURE_TYPE`], `"exception"` is wrapped in [`make_ref_type`] rather than
+/// being a scalar — `landingpad`'s `type_hint` is `"ref<exception>"`, produced
+/// by [`make_ref_type(EXCEPTION_TYPE)`](make_ref_type).
+///
+/// ```
+/// use interpreter_ir::opcodes::{EXCEPTION_TYPE, make_ref_type, is_exception_op};
+/// assert_eq!(EXCEPTION_TYPE, "exception");
+/// assert_eq!(make_ref_type(EXCEPTION_TYPE), "ref<exception>");
+/// assert!(is_exception_op("throw"));
+/// ```
+pub const EXCEPTION_TYPE: &str = "exception";
+
 /// The concrete types recognised by every LANG-pipeline backend.
 ///
 /// Language frontends may use additional type strings; these are the ones
@@ -323,6 +340,67 @@ pub fn is_coercion(op: &str) -> bool {
     matches!(op, "cast" | "type_assert")
 }
 
+// ---------------------------------------------------------------------------
+// Exception opcodes (AOT00 T2)
+// ---------------------------------------------------------------------------
+//
+// Structured exceptions replace "traps only" (see
+// `code/specs/AOT00-T2-exceptions.md`).  Today an out-of-range `array_get`,
+// an `unbox` of null, or an integer divide-by-zero **aborts** the program —
+// there is no way to catch it, run a cleanup, and continue.  T2 adds three
+// opcodes that let a program do exactly that, while a program that installs
+// no handler still sees today's abort-on-trap behaviour (purely additive).
+//
+// ### The three ops
+//
+// | Mnemonic    | `dest`             | `srcs`                                            | Meaning |
+// |-------------|--------------------|----------------------------------------------------|---------|
+// | `throw`     | `None`             | `[exc_value]`                                       | Raise `exc_value` (a `"ref<exception>"`); transfers control to the nearest enclosing `catch` whose kind matches, or aborts if none does. Never falls through — a terminator, like `ret`. |
+// | `catch`     | `None`             | `[Str(kind_name), Var(try_end_label), Var(handler_label)]` | Declares that the region from here to `try_end_label` is protected: a `throw` of a kind matching `kind_name` (see `exception_kind::kind_matches`) transfers control to `handler_label`. A pure declaration — like `label`, it delimits structure rather than computing anything. |
+// | `landingpad`| `Some(bound_var)`  | `[]`                                                | Marks the entry of a handler block (must be the instruction immediately after the `label` named by some `catch`'s `handler_label`) and binds the in-flight exception to `bound_var`, typed `"ref<exception>"`. |
+//
+// ### Why exactly these three (and no `catch_end`)
+//
+// Unlike `jmp`/`label` (which need a *separate* label instruction as the
+// jump target), `catch` names **both ends** of its protected region in one
+// instruction (`try_end_label` is itself just another label already defined
+// via `label`) — so no fourth "pop handler" opcode is needed. This mirrors
+// how a single LLVM `invoke` names its normal and unwind destinations
+// without a separate scope-close instruction.
+//
+// ### Trap migration (spec §6) is a later, VM-level slice
+//
+// This module only adds the IIR *taxonomy* — `is_known_op`, `is_value_producing`,
+// `has_side_effects` — exactly as LANG28's concurrency opcodes did in their
+// first PR (see the "Implementation note" comment on `is_task` below): no
+// backend interprets `throw`/`catch`/`landingpad` yet, so no program can emit
+// them today and every existing program is byte-for-byte unaffected. Wiring
+// `vm-core`'s dispatch loop, migrating trap sites to `throw Trap{kind}`, and
+// giving the three native/LLVM/WASM backends real unwind tables are separate,
+// later PRs under this same track (see AOT00-T2-exceptions.md §12).
+//
+// ### Shared stack-walker (T1 ∪ T2)
+//
+// The native/LLVM/WASM backends will eventually encode `catch`'s handler
+// ranges into the *same* per-function frame-descriptor table T1 uses for GC
+// stack maps (AOT00-T1-precise-gc.md §3 `FrameDescriptor`) — one walk, two
+// consumers. Nothing about that shared format is IIR-visible; it is purely a
+// backend/runtime concern that these three opcodes make expressible.
+
+/// Return `true` if `op` is one of the three AOT00 T2 exception opcodes.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_exception_op;
+/// assert!(is_exception_op("throw"));
+/// assert!(is_exception_op("catch"));
+/// assert!(is_exception_op("landingpad"));
+/// assert!(!is_exception_op("jmp"));
+/// assert!(!is_exception_op("call"));
+/// ```
+pub fn is_exception_op(op: &str) -> bool {
+    matches!(op, "throw" | "catch" | "landingpad")
+}
+
 /// Numeric conversions between `integer` and `real` (LANG-FULL E8).
 ///
 /// Unlike the width-masking `cast` (`is_coercion`), these change the numeric
@@ -426,6 +504,8 @@ pub fn is_value_producing(op: &str) -> bool {
                 // Closure allocation and application (LANG34)
                 | "alloc_closure"
                 | "call_closure"
+                // Exception handler entry binds the in-flight exception (AOT00 T2)
+                | "landingpad"
                 // Concurrency ops that produce a dest value (LANG28)
                 | "task_spawn"
                 | "task_current"
@@ -481,6 +561,14 @@ pub fn has_side_effects(op: &str) -> bool {
                 | "print_str"
                 // Global variable write (LANG32)
                 | "global_store"
+                // Exception ops (AOT00 T2): `throw` is a terminator (like `ret`,
+                // it never falls through); `catch` and `landingpad` are
+                // structural markers (like `label`) that an optimiser must
+                // never eliminate even though neither has an externally
+                // observable effect on its own.
+                | "throw"
+                | "catch"
+                | "landingpad"
                 // Concurrency ops with side effects but no dest (LANG28)
                 | "task_yield"
                 | "task_sleep"
@@ -885,6 +973,7 @@ pub fn is_known_op(op: &str) -> bool {
         || is_string_op(op)
         || is_closure_op(op)
         || is_concurrency(op)
+        || is_exception_op(op)
 }
 
 /// Return `true` if `type_hint` is a concrete (non-dynamic) type.
@@ -1015,6 +1104,54 @@ mod tests {
     fn closure_ops_are_value_producing() {
         assert!(is_value_producing("alloc_closure"));
         assert!(is_value_producing("call_closure"));
+    }
+
+    // ── AOT00 T2 exception opcode tests ───────────────────────────────────────
+
+    #[test]
+    fn exception_type_constant() {
+        assert_eq!(EXCEPTION_TYPE, "exception");
+        assert_eq!(make_ref_type(EXCEPTION_TYPE), "ref<exception>");
+        // "exception" is not a scalar — it must be wrapped in ref<> like "closure".
+        assert!(!is_concrete_type(EXCEPTION_TYPE));
+        assert!(is_concrete_type(&make_ref_type(EXCEPTION_TYPE)));
+    }
+
+    #[test]
+    fn is_exception_op_recognised() {
+        for op in &["throw", "catch", "landingpad"] {
+            assert!(is_exception_op(op), "{op} should be an exception op");
+            assert!(is_known_op(op), "{op} should be a known op");
+        }
+        assert!(!is_exception_op("jmp"));
+        assert!(!is_exception_op("call"));
+        assert!(!is_exception_op("label"));
+    }
+
+    #[test]
+    fn only_landingpad_produces_a_value() {
+        assert!(is_value_producing("landingpad"));
+        assert!(!is_value_producing("throw"));
+        assert!(!is_value_producing("catch"));
+    }
+
+    #[test]
+    fn all_three_exception_ops_have_side_effects() {
+        // None may be dead-code-eliminated: `throw` diverges, `catch` and
+        // `landingpad` are structural markers an optimiser must preserve.
+        for op in &["throw", "catch", "landingpad"] {
+            assert!(has_side_effects(op), "{op} must have side effects");
+        }
+    }
+
+    #[test]
+    fn exception_ops_do_not_allocate_themselves() {
+        // The exception *value* is built beforehand via existing `alloc` +
+        // `field_store` (LANG16); `throw`/`catch`/`landingpad` just move
+        // control, so none of the three is independently allocating.
+        for op in &["throw", "catch", "landingpad"] {
+            assert!(!is_allocating(op), "{op} should not be independently allocating");
+        }
     }
 
     // ── LANG28 concurrency predicate tests ────────────────────────────────────
