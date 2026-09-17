@@ -130,9 +130,9 @@ HostButton [ part ] (
 | React | `aria-pressed={Boolean(expr)}` | |
 | HTML | literal: `aria-pressed="true\|false"`; dynamic: `data-mosaic&pressed="…"`, which the project runtime replaces with `aria-pressed="true\|false"` | see §4.1.1 |
 | WebComponent | `aria-pressed="${…}"` | through `escapeHtmlAttribute`, like the name |
-| SwiftUI | `.accessibilityAddTraits((expr) ? .isSelected : [])` | added after `.accessibilityLabel`, so both apply |
-| Compose | `selected = (expr)` inside the button's existing `Modifier.semantics { … }` | booleans pass through `_mosaicTruthy` as for `checked` |
-| Flutter | `selected: (expr)` on the existing `Semantics` wrapper | via `bool_prop_expression` |
+| SwiftUI | `.accessibilityAddTraits(_mosaicSelectedTraits(expr))` | added after `.accessibilityLabel`, so both apply; the typed helper keeps a `? .isSelected : []` ternary out of the result builder, and is emitted only when used |
+| Compose | `this.selected = _mosaicTruthy(expr)` inside the button's `Modifier.semantics { … }`, after any `contentDescription` | `this.` because a slot named `selected` would shadow the property; the import is added only when used |
+| Flutter | `selected: _mosaicTruthy(expr)` on the button's `Semantics` node, after `enabled` | a button with no authored name gets the same node, named by its visible label |
 | Qt | `property bool mosaicSelected: Boolean(expr)`, pushed to `Accessible.checkable: true` / `Accessible.checked` | the attached properties only; the `Button`'s own `checkable` stays false so a click does not toggle it; see §4.2.1 |
 | XAML | **not yet lowered**: reported as a degradation (§4.2, #15463) | the proposed lowering is a `ToggleButton` with `IsChecked="{x:Bind …, Mode=OneWay}"` |
 
