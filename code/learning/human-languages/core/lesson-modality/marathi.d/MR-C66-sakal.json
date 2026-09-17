@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C66-sakal",
+    "language": "marathi",
+    "chapter": 66,
+    "sequence": 2690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49a1c28f58af325d"
+  },
+  "findings": []
+}

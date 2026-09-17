@@ -1,0 +1,541 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 67,
+  "title": "The Clock",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:a4cda3f4019e9090",
+  "lessons": [
+    {
+      "id": "MR-C67-vajle",
+      "sequence": 2750,
+      "title": "किती वाजले (kitī vājle) — \"what time is it?\"",
+      "headword": "किती वाजले",
+      "romanization": "kitī vājle",
+      "gloss": "what time is it — a question you can already ask, and a verb that counts",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3b71d346e39adbd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count from one to five. Then say the word you use to ask how many."
+            },
+            {
+              "kind": "speech",
+              "text": "You already own both halves of this chapter's question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: किती वाजले",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "किती वाजले? — kitī vājle? — what time is it?"
+            },
+            {
+              "kind": "speech",
+              "text": "The question word is किती, the one you ask how many with. Marathi does not ask what time it is — it asks how many have sounded."
+            },
+            {
+              "kind": "speech",
+              "text": "वाजणे is to sound, to ring, to strike. English kept that picture when clocks had bells — the clock struck three."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb counts with you",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Answer it with a number, and the verb changes for one:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "एक वाजला. ek vājlā, It is one o'clock.",
+                "दोन वाजले. don vājle, It is two o'clock.",
+                "पाच वाजले. pāc vājle, It is five o'clock."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One struck. Two struck. Singular for one, plural for everything above it, which is what a verb about how many sounded ought to do."
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen a Marathi verb go plural before, in तुम्ही कसे आहात — but that plural was for respect, on one person. This one is plural because the things counted really are more than one. Same shape, different reason."
+            },
+            {
+              "kind": "speech",
+              "text": "So there is one form to learn, not twelve: -ला after एक, -ले after every other number."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitī vājle?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitī vājle?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek vājlā — one o'clock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek vājlā* — one o'clock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "don vājle, tīn vājle, chār vājle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *don vājle*, *tīn vājle*, *chār vājle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which number is the odd one out, and what it does to the verb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which number is the odd one out, and what it does to the verb]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C67-vajle-r1",
+              "prompt": "Ask what time it is, answer with one o'clock, then answer with four o'clock.",
+              "assesses": [
+                "MR-LEX-VAJLE",
+                "MR-GRAMMAR-CLOCK-NUMBER-AGREEMENT",
+                "MR-QUESTION-KITI"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "kitī vājle? — ek vājlā. chār vājle.",
+                "किती वाजले? एक वाजला चार वाजले"
+              ],
+              "feedback": {
+                "correct": "One is singular; everything above it is plural.",
+                "incorrect": "ek takes vājlā. Every other number takes vājle."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the question literally ask? (How many have sounded.) Which number takes वाजला rather than वाजले? (एक — one.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C67-vajta",
+      "sequence": 2760,
+      "title": "वाजता (vājtā) — \"at ___ o'clock\"",
+      "headword": "वाजता",
+      "romanization": "vājtā",
+      "gloss": "at N o'clock — the form that puts an event at a time, and refuses to change for anything",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cfb64be554cfa5de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say it is one o'clock. Then say it is three o'clock, and hear the verb change."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वाजता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मी दोन वाजता येतो. — mī don vājtā yeto. — I come at two o'clock."
+            },
+            {
+              "kind": "speech",
+              "text": "Telling the time and putting something at a time are two different jobs, and Marathi uses two different words for them:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "दोन वाजले, it is two o'clock.",
+                "दोन वाजता (vājtā), at two o'clock."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the one that never moves",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाजले counted with you — वाजला after one, वाजले after the rest."
+            },
+            {
+              "kind": "speech",
+              "text": "वाजता (vājtā) does not. It is वाजता (vājtā) after every number there is:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "एक वाजता (vājtā), at one.",
+                "दोन वाजता (vājtā), at two.",
+                "बारा वाजता (vājtā), at twelve."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So the harder-looking half of the clock is the easier one. And the whole phrase then goes where every time word on this track goes — early, in front of the verb, exactly where सकाळी sat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek vājtā, don vājtā, bārā vājtā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek vājtā*, *don vājtā*, *bārā vājtā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī don vājtā yeto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī don vājtā yeto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between don vājle and don vājtā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between *don vājle* and *don vājtā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence with a part of the day instead of a number",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence with a part of the day instead of a number]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-C67-vajta-r1",
+              "prompt": "Say it is two o'clock, then say you come at two o'clock, then say you come in the morning.",
+              "assesses": [
+                "MR-LEX-VAJTA",
+                "MR-LEX-VAJLE",
+                "MR-LEX-SAKAL"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "don vājle. mī don vājtā yeto. mī sakāḷī yeto.",
+                "दोन वाजले मी दोन वाजता येतो मी सकाळी येतो"
+              ],
+              "feedback": {
+                "correct": "Telling the time and placing an event at one are different words.",
+                "incorrect": "vājle tells the time; vājtā puts something at it and never changes."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say at four o'clock? (चार वाजता (vājtā).) Does वाजता (vājtā) change after एक? (No — only वाजले does that.) And where does the phrase sit? (In front of the verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R67-clock-recall",
+      "sequence": 2770,
+      "title": "(the clock) (ghaḍyāḷ) — from cold",
+      "headword": "(the clock)",
+      "romanization": "ghaḍyāḷ",
+      "gloss": "cold retrieval of asking the time, telling it, and putting an event at it",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2256dd1db78536ed",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Ask somebody the time, then answer yourself with one o'clock and with six o'clock."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two words, one of which counts",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "telling it",
+                "placing something at it"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "one. telling it: एक वाजला. placing something at it: एक वाजता (vājtā).",
+                "two. telling it: दोन वाजले. placing something at it: दोन वाजता (vājtā)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Only the left column moves, and only for एक. The right column is one word for every hour on the clock."
+            },
+            {
+              "kind": "speech",
+              "text": "This chapter added no new numbers. You had all twelve already, and until now the only thing you could do with them was count. The clock is what they were for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitī vājle?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitī vājle?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the hours from one to five, told",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the hours from one to five, told]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same hours, placed — ek vājtā … pāc vājtā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same hours, placed — *ek vājtā … pāc vājtā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mī dahā vājtā yeto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mī dahā vājtā yeto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two words ever changes, and after which number",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two words ever changes, and after which number]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-R67-clock-recall-run",
+              "prompt": "Ask the time, answer one o'clock, then say you come at ten o'clock.",
+              "assesses": [
+                "MR-LEX-VAJLE",
+                "MR-LEX-VAJTA",
+                "MR-GRAMMAR-CLOCK-NUMBER-AGREEMENT",
+                "MR-QUESTION-KITI"
+              ],
+              "responseSeconds": 35,
+              "acceptedResponses": [
+                "kitī vājle? — ek vājlā. mī dahā vājtā yeto.",
+                "किती वाजले? एक वाजला मी दहा वाजता येतो"
+              ],
+              "feedback": {
+                "correct": "Asked, told, and placed -- with one verb form that counts and one that does not.",
+                "incorrect": "ek takes vājlā; vājtā never changes."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask the time. (किती वाजले (kitī vājle)?) Say it is one o'clock. (एक वाजला.) Say at eleven o'clock. (अकरा वाजता (vājtā).) How many new numbers did this chapter teach you? (None — you had them all.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

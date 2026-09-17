@@ -1,0 +1,20 @@
+{
+  "language": "marathi",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:fd8b306e82091035",
+  "lessonIds": [
+    "MR-C66-sakal",
+    "MR-C66-dupar",
+    "MR-C66-sandhyakal",
+    "MR-C66-ratra",
+    "MR-C66-divas",
+    "MR-R66-day-recall"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "marathi/narration/ch66.txt",
+  "json": "marathi/narration/ch66.json",
+  "textHash": "fnv1a64:48f27a30a2903f44",
+  "jsonHash": "fnv1a64:6e9ff90313940c82",
+  "findings": []
+}
