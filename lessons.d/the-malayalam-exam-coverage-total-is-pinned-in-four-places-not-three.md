@@ -25,10 +25,8 @@ and it is not: the `covered` assertion sits ninety lines earlier under a
 different comment block, and searching for the old total by its formatted
 spelling (`171/243`) does not find it, because it is written `toBe(171)`.
 
-## What to do instead
-
-Do not search for the formatted string. Before touching a track's coverage,
-run:
+**What to do instead.** Do not search for the formatted string. Before touching
+a track's coverage, run:
 
 ```
 grep -rn "toBe(<old total>)\|toBe(<old unmapped>)\|<old total>/<enumerated>" tests/
