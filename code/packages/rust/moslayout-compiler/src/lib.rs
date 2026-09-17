@@ -213,6 +213,15 @@ const PRIMITIVES: &[&str] = &[
     // ignore a slot-bound `background` on a plain `Box`. Leaf
     // primitive, no children, like `Icon`/`HostSlider`.
     "HostProgressRing",
+    // UI29-6 (#15481) — `HostNavigationSplit`, the adaptive navigation
+    // container. A pane beside a detail area is two `Column`s underneath,
+    // and four layouts build it that way today with four different answers
+    // to pane width. What composition cannot supply is the platform's own
+    // collapse (`NavigationSplitView`, WinUI `NavigationView`,
+    // `NavigationSuiteScaffold` adapt inside their own layout pass, which
+    // UI48 §5.6 rules out routing through an event) and the pane landmark a
+    // screen reader navigates by. Exactly two children, pane then detail.
+    "HostNavigationSplit",
 ];
 
 #[allow(dead_code)] // retained as API surface / scaffolding
@@ -811,6 +820,20 @@ fn validate_node(
                 });
             }
         }
+    }
+    // UI29-6 §4.1 — the pane and the detail are the two children, in order,
+    // because the kernel has no named child slots. A different count is a
+    // compile error rather than a silent drop: a one-child split would lower
+    // to a pane with nothing beside it on every backend, and the author's
+    // intent is unrecoverable at that point.
+    if node.tag == "HostNavigationSplit" && node.children.len() != 2 {
+        errors.push(CompileError {
+            kind: ErrorKind::InvalidPrimitiveUsage,
+            message: format!(
+                "HostNavigationSplit takes exactly two children — the pane, then the detail — got {}",
+                node.children.len()
+            ),
+        });
     }
     if let Some(slot_name) = node.child_slot_name() {
         *child_mount_count += 1;
@@ -2016,6 +2039,56 @@ fn parse_interface_sets(
 // ===========================================================================
 
 #[cfg(test)]
+mod host_navigation_split_tests {
+    use super::*;
+
+    fn layout(children: &str) -> String {
+        format!(
+            "layout Shell {{\n  HostNavigationSplit [ shell ] ( pane-title : \"Projects\" ) {{\n{children}  }}\n}}\n"
+        )
+    }
+
+    /// UI29-6 §4.1: the pane and the detail are the two children, in order.
+    #[test]
+    fn two_children_compile() {
+        let source = layout("    Column [ pane ] { }\n    Column [ detail ] { }\n");
+        let out = compile(&source, None).expect("a pane and a detail must compile");
+        assert_eq!(out.def.root.tag, "HostNavigationSplit");
+        assert_eq!(out.def.root.children.len(), 2);
+    }
+
+    /// A different count is refused, not silently lowered: a one-child split
+    /// would render a pane with nothing beside it on every backend, and the
+    /// author's intent is unrecoverable by then.
+    #[test]
+    fn any_other_child_count_is_refused_by_name() {
+        for (children, count) in [
+            ("", 0),
+            ("    Column [ pane ] { }\n", 1),
+            (
+                "    Column [ pane ] { }\n    Column [ detail ] { }\n    Column [ extra ] { }\n",
+                3,
+            ),
+        ] {
+            let errors = compile(&layout(children), None)
+                .expect_err("only two children may compile");
+            let named = errors.iter().find(|error| {
+                error.kind == ErrorKind::InvalidPrimitiveUsage
+                    && error.message.contains("HostNavigationSplit takes exactly two children")
+            });
+            let error = named.unwrap_or_else(|| {
+                panic!("{count} children must be refused by name, got {errors:?}")
+            });
+            assert!(
+                error.message.contains(&format!("got {count}")),
+                "the refusal must say what it found: {}",
+                error.message
+            );
+        }
+    }
+}
+
+#[cfg(test)]
 mod tests {
 
     // ---- UI61: a scroll viewport has an axis -------------------------
@@ -3152,6 +3225,10 @@ mod tests {
         assert!(
             PRIMITIVES.contains(&"HostSwitch"),
             "UI38 registered HostSwitch as a kernel primitive"
+        );
+        assert!(
+            PRIMITIVES.contains(&"HostNavigationSplit"),
+            "UI29-6 registered HostNavigationSplit as a kernel primitive"
         );
         // UI31 — HostTable family structural sub-tags.
         assert!(

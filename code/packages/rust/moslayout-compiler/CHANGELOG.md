@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Added — `HostNavigationSplit`, with its child rule (UI29-6, #15481)
+
+Registered in `PRIMITIVES`, and the layout compiler enforces what the spec
+calls the primitive's shape: **exactly two children, the pane then the
+detail**. The kernel has no named child slots, so order is the surface, as it
+already is for `HostTable`'s rows.
+
+Any other count is a named `InvalidPrimitiveUsage` error rather than a silent
+lowering: a one-child split renders a pane with nothing beside it on every
+backend, and by then the author's intent is unrecoverable.
+
 ### Added — `HostScroll` declares the axis it scrolls (UI61, #14854)
 
 `ScrollAxis` — `Vertical` (default), `Horizontal`, `Both` — plus

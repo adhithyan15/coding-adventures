@@ -181,6 +181,15 @@ pub const KERNEL_PRIMITIVES: &[&str] = &[
     // can't provide on native backends at all — those backends
     // silently ignore a slot-bound `background` on a plain `Box`.
     "HostProgressRing",
+    // UI29-6 (#15481) — `HostNavigationSplit`, the adaptive navigation
+    // container. A pane beside a detail area is two `Column`s underneath,
+    // and four layouts build it that way today with four different answers
+    // to pane width. What composition cannot supply is the platform's own
+    // collapse (`NavigationSplitView`, WinUI `NavigationView`,
+    // `NavigationSuiteScaffold` adapt inside their own layout pass, which
+    // UI48 §5.6 rules out routing through an event) and the pane landmark a
+    // screen reader navigates by. Exactly two children, pane then detail.
+    "HostNavigationSplit",
 ];
 
 // ---------------------------------------------------------------------------
@@ -1555,6 +1564,10 @@ version = "1"
         }
         // And `Else` because the parser treats it as its own tag.
         assert!(KERNEL_PRIMITIVES.contains(&"Else"));
+        assert!(
+            KERNEL_PRIMITIVES.contains(&"HostNavigationSplit"),
+            "UI29-6 registered HostNavigationSplit as a kernel primitive"
+        );
         // Sanity: no duplicates.
         let mut sorted: Vec<&&str> = KERNEL_PRIMITIVES.iter().collect();
         sorted.sort();

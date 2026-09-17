@@ -2029,6 +2029,14 @@ fn collect_native_degradations(
             "primitive.slider-unimplemented",
             "the backend does not yet lower HostSlider to its native adjustable range control",
         )),
+        // UI29-6 (#15481) — registered before any backend lowers it, exactly
+        // as HostSwitch and HostProgressRing were. Each emitter's PR removes
+        // its own backend from this arm in the same change that adds the
+        // lowering, so the report cannot outlive the gap or precede the fix.
+        "HostNavigationSplit" if backend.is_native() => Some((
+            "primitive.navigation-split-unimplemented",
+            "the backend does not yet lower HostNavigationSplit to its native adaptive split container",
+        )),
         "HostSwitch" if backend.is_native() => Some((
             "primitive.switch-unimplemented",
             "the backend does not yet lower HostSwitch to its native on/off control",
@@ -7544,6 +7552,61 @@ layout Settings {
             assert_eq!(
                 report.degradations[0].primitive.as_deref(),
                 Some("HostSwitch")
+            );
+        }
+    }
+
+    /// UI29-6 (#15481): registered before any backend lowers it, so every
+    /// native backend must say so rather than emit two silent containers.
+    #[test]
+    fn host_navigation_split_is_explicitly_incomplete_until_native_lowerings_land() {
+        let pkg = make_package("mosaic-pkg-shell", &["Shell"]);
+        fs::write(
+            pkg.path().join("src/Shell.mll"),
+            r#"
+layout Shell {
+  HostNavigationSplit [ root ] (
+    pane-title: "Projects",
+    pane-width: 236
+  ) {
+    Column [ pane ] { }
+    Column [ detail ] { }
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        for backend in [
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("navigation-split capability analysis");
+
+            assert!(!report.native_complete, "{backend:?} must remain honest");
+            assert_eq!(report.degradations.len(), 1, "unexpected {backend:?} report");
+            assert_eq!(
+                report.degradations[0].code,
+                "primitive.navigation-split-unimplemented"
+            );
+            assert_eq!(report.degradations[0].layout_path, "root");
+            assert_eq!(
+                report.degradations[0].primitive.as_deref(),
+                Some("HostNavigationSplit")
             );
         }
     }

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added — `HostNavigationSplit` in `KERNEL_PRIMITIVES` (UI29-6, #15481)
+
+The 35th kernel primitive: the adaptive navigation container UI48 §5.4 asked
+for. A pane beside a detail area composes from two `Column`s — four layouts do
+exactly that today — but the platform's own collapse and the pane landmark do
+not compose, which is the UI29 §2.2 argument the spec makes in full.
+
 ### Fixed — a literal text or number bound into a gated slot is folded too
 
 `fold_constant_conditionals` handled only `true`/`false`. A component that
