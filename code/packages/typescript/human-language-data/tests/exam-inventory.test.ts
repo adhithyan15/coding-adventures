@@ -1721,8 +1721,30 @@ describe("the committed Kannada A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(258);
-    expect(coverage.covered).toBe(194);
-    expect(coverage.unmapped).toBe(64);
+    // 194 -> 197: KA-A1-L-12 (the full stop and the comma), KA-A1-L-13 (the
+    // question mark) and KA-A1-L-14 (colon, brackets, quotes, dash). THE CORPUS
+    // HAD BEEN PRINTING THESE MARKS SINCE CHAPTER ONE while no lesson named any
+    // of them -- every Kannada sentence in every reading passage ends in a Latin
+    // full stop -- so chapter 77 opens by pointing at the end of a line in the
+    // previous chapter and saying that something is sitting there nothing has
+    // named. Kannada borrows the whole Latin set, shape and job together, which
+    // is why three points cost one short chapter and nothing in it looks
+    // unfamiliar.
+    // L-13 CARRIES THE ONE LOAD-BEARING CONTRAST: the Spanish demand it derives
+    // from opens a question with a second inverted mark and Kannada does not, so
+    // a Kannada reader meets the mark at the end or not at all and the WORDS have
+    // to carry the question until then.
+    // L-14 IS PROBED AS A RECOGNITION POINT, not a production one: at A1 the
+    // demand is knowing what a colon or a bracket signals on a notice, and the
+    // recall lesson sorts the set into the three a reader writes and the rest
+    // they read. KA-A1-L-15 (abbreviations and symbols) stays open.
+    // FOUR OF KANNADA'S UNMAPPED POINTS ARE STRUCTURALLY UNCOVERABLE and are
+    // marked untransferable in the inventory: capital letters, written
+    // accentuation and superscript abbreviation letters have no Kannada
+    // counterpart at all, and neither does Spanish's mid-distance demonstrative.
+    // The real ceiling for this track is 254/258, not 258/258.
+    expect(coverage.covered).toBe(197);
+    expect(coverage.unmapped).toBe(61);
     expect(coverage.partial).toBe(0);
     // 193 -> 194: the HL-C354 ordinal tranche closed KA-A1-NUM-07 (chapters
     // 74-75). It is the ONLY point that moved, and the numeral column below
@@ -1750,13 +1772,23 @@ describe("the committed Kannada A1 inventory", () => {
     // most-used untaught characters. `ma` alone appears in 36 headwords and was
     // never taught. Nineteen characters remain, six of which have a sourced
     // ductus this project has not spent and thirteen of which have none.
-    expect(coverage.byCategory["Lipi (script and orthography)"]!.covered).toBeLessThan(10);
+    // THE COUNT MOVED 8 -> 11 WITHOUT THE CHARACTER DEBT SHRINKING BY ONE. The
+    // three new points are PUNCTUATION -- the full stop and comma, the question
+    // mark, and the colon/brackets/quotes/dash -- which Kannada borrows whole
+    // from the Latin alphabet and which this column happens to house alongside
+    // the characters. A count over the column is therefore the wrong proxy for
+    // "the script is still short", so the assertion now names the thing it
+    // meant: KA-A1-L-09 is the point whose own label reads "THE SCRIPT IS NOT
+    // CLOSED: 27 characters are used but never taught", and it is still
+    // uncovered.
+    expect(coverage.points.find((p) => p.id === "KA-A1-L-09")!.covered).toBe(false);
+    expect(coverage.byCategory["Lipi (script and orthography)"]!.covered).toBe(11);
     // The two columns that carry this track, and they are not the ones French
     // and German lead on.
     expect(coverage.byCategory["Kriyaapada (the verb)"]!.covered).toBeGreaterThan(12);
     expect(coverage.byCategory["Padakosha (lexicon by domain)"]!.covered).toBeGreaterThan(45);
     expect(formatExamCoverage(coverage)).toContain(
-      "kannada A1 (partial inventory): 194/258 points covered (75%)",
+      "kannada A1 (partial inventory): 197/258 points covered (76%)",
     );
   }, 60_000);
 });
@@ -1876,14 +1908,35 @@ describe("the committed Malayalam A1 inventory", () => {
     }
   });
 
-  it("reports a joining column of 2 out of 11, and a script 9 characters short", () => {
+  it("reports a joining column of 3 out of 11, and a script 9 characters short", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(243);
-    expect(coverage.covered).toBe(163);
-    expect(coverage.unmapped).toBe(80);
+    // 163 -> 164: ML-A1-JOIN-02 (or). ONE POINT FOR FOUR LESSONS, AND THE RATIO
+    // IS THE WRONG WAY TO READ THIS CHANGE. What chapter 70 actually does is give
+    // Malayalam its 'and': the language coordinates with the clitic -um repeated
+    // on EACH item, and NOTHING IN 307 LESSONS TAUGHT IT. Verified rather than
+    // taken from the note -- -um appeared in exactly one lesson file, inside an
+    // etymology note as a component of the word for evening, and the nine files
+    // carrying the sequence u+m all had it INSIDE a word (veendum, kudumbam,
+    // hrudayam, the month names). A learner owning 69 chapters of vocabulary could
+    // not say 'water and rice'.
+    // ML-A1-JOIN-01 STAYS OPEN ON PURPOSE. Its label is 'joining two nouns, AND
+    // joining two clauses', and this chapter delivers the noun half only. The
+    // everyday clause link in this corpus is the -i participle already covered by
+    // ML-A1-JOIN-11, and claiming clause coordination off the noun lessons would
+    // claim a range the corpus does not teach. Same call as TE-A1-L-10.
+    // ML-A1-JOIN-04 (distributive) also stays open, but its blocker is gone: its
+    // note said it depended on the missing coordinator, which now exists.
+    // -o IS TAUGHT BESIDE -um BECAUSE THEY ARE ONE HABIT: both go on every item
+    // with nothing in the gap, and only the vowel differs -- veLLavum ariyum for
+    // both, chaayayoo kaappiyoo for one of them.
+    // MALAYALAM HAS NO UNTRANSFERABLE POINTS, unlike Kannada's four, so its
+    // ceiling is the full 243.
+    expect(coverage.covered).toBe(164);
+    expect(coverage.unmapped).toBe(79);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -1903,7 +1956,7 @@ describe("the committed Malayalam A1 inventory", () => {
     // the corpus teaches without ever naming it as a way of joining clauses.
     // Same shape as Kannada's chapter 64 finding, measured independently.
     const joining = coverage.byCategory["Samuchayam (joining and subordination)"]!;
-    expect(joining).toEqual({ enumerated: 11, covered: 2 });
+    expect(joining).toEqual({ enumerated: 11, covered: 3 });
     // DO NOT CARRY ANOTHER TRACK'S SCRIPT SHAPE HERE. Tamil came back 52 of 52,
     // Kannada 50 of 69. Malayalam was measured on its own and is 58 of the 67
     // distinct characters its headwords use -- 87 per cent. The nine open ones,
@@ -1917,7 +1970,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 163/243 points covered (67%)",
+      "malayalam A1 (partial inventory): 164/243 points covered (67%)",
     );
   }, 60_000);
 });

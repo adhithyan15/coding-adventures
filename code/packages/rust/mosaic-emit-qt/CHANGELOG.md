@@ -8,6 +8,16 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed -- an empty run-time accessible name left a HostButton unnamed (#15427)
+
+An accessible name known only at run time can be empty, and an empty override is not the same as no override. Writing `Accessible.name` replaces the Controls
+default binding, where the name follows `text`, so an empty slot or
+expression name used to announce a button with no name. Dynamic names now
+lower to `Accessible.name: (<name>) || text`, and an empty literal is not
+written at all. The emitted TaskApp QML passes `qmllint`; the only notice on
+the changed line is the unqualified-`row` warning the repeater already
+produced.
+
 ### Fixed -- a state layer changed the background but never the border (#15275)
 
 `background` and `opacity` were built as conditional expressions over a

@@ -6686,10 +6686,24 @@ fn emit_host_button(
         modifier_expr = Some(format!("{base}.wrapContentWidth(unbounded = true)"));
     }
     if let Some(accessible_label) = text_prop_expr(node, "a11y-label")? {
-        let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
-        modifier_expr = Some(format!(
-            "{base}.semantics {{ contentDescription = {accessible_label} }}"
-        ));
+        // A name that is only known at run time can be empty, and an empty
+        // contentDescription is not "no description" to every accessibility
+        // service. Set it only when there is something to say, so the
+        // button's own Text names it otherwise (#15427). A literal "" is
+        // dropped outright.
+        let semantics = match find_prop_value(node, "a11y-label") {
+            Some(LayoutPropValue::String(text)) if text.is_empty() => None,
+            Some(LayoutPropValue::String(_)) => {
+                Some(format!("contentDescription = {accessible_label}"))
+            }
+            _ => Some(format!(
+                "({accessible_label}).toString().takeIf {{ it.isNotEmpty() }}?.let {{ contentDescription = it }}"
+            )),
+        };
+        if let Some(semantics) = semantics {
+            let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
+            modifier_expr = Some(format!("{base}.semantics {{ {semantics} }}"));
+        }
     }
 
     let mut out = String::new();
@@ -9419,10 +9433,34 @@ mod tests {
         let out = from_pipeline(&m, &l, &empty_style("Bar")).unwrap().output;
         assert!(
             out.contains(
-                "modifier = Modifier.testTag(\"toggle\").semantics { contentDescription = ( row [ 16 ] ) },"
+                "modifier = Modifier.testTag(\"toggle\").semantics { (( row [ 16 ] )).toString().takeIf { it.isNotEmpty() }?.let { contentDescription = it } },"
             ),
             "expected native accessible name on the button, got:\n{out}"
         );
+    }
+
+    /// #15427: an empty run-time name must not become an empty
+    /// contentDescription, and a literal "" is not written at all.
+    #[test]
+    fn host_button_empty_literal_accessible_name_is_not_written() {
+        let m = component("Bar", vec![], vec![]);
+        let l = layout(
+            "Bar",
+            node(
+                "HostButton",
+                vec![
+                    expr_prop("label", "( row [ 0 ] )"),
+                    LayoutProp {
+                        name: "a11y-label".into(),
+                        value: LayoutPropValue::String(String::new()),
+                    },
+                ],
+                vec![],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Bar")).unwrap().output;
+        assert!(!out.contains("contentDescription = \"\""), "got:\n{out}");
+        assert!(!out.contains(".semantics {"), "got:\n{out}");
     }
 
     #[test]

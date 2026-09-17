@@ -1,0 +1,15 @@
+{
+  "id": "KA-PATH-77-MARKS",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "KA-S152-full-stop-and-comma",
+    "KA-S153-question-mark",
+    "KA-S154-other-marks",
+    "KA-R77-marks-recall"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-77-MARKS"
+  ],
+  "after": []
+}

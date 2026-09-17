@@ -49,8 +49,30 @@ it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
   const { lessons } = loadEverything();
   const coverage = measureExamCoverage(loadExamInventory("kannada", "A1"), lessons);
   expect(coverage.enumerated).toBe(258);
-  expect(coverage.covered).toBe(194);
-  expect(coverage.unmapped).toBe(64);
+  // 194 -> 197: KA-A1-L-12 (the full stop and the comma), KA-A1-L-13 (the
+  // question mark) and KA-A1-L-14 (colon, brackets, quotes, dash). THE CORPUS
+  // HAD BEEN PRINTING THESE MARKS SINCE CHAPTER ONE while no lesson named any
+  // of them -- every Kannada sentence in every reading passage ends in a Latin
+  // full stop -- so chapter 77 opens by pointing at the end of a line in the
+  // previous chapter and saying that something is sitting there nothing has
+  // named. Kannada borrows the whole Latin set, shape and job together, which
+  // is why three points cost one short chapter and nothing in it looks
+  // unfamiliar.
+  // L-13 CARRIES THE ONE LOAD-BEARING CONTRAST: the Spanish demand it derives
+  // from opens a question with a second inverted mark and Kannada does not, so
+  // a Kannada reader meets the mark at the end or not at all and the WORDS have
+  // to carry the question until then.
+  // L-14 IS PROBED AS A RECOGNITION POINT, not a production one: at A1 the
+  // demand is knowing what a colon or a bracket signals on a notice, and the
+  // recall lesson sorts the set into the three a reader writes and the rest
+  // they read. KA-A1-L-15 (abbreviations and symbols) stays open.
+  // FOUR OF KANNADA'S UNMAPPED POINTS ARE STRUCTURALLY UNCOVERABLE and are
+  // marked untransferable in the inventory: capital letters, written
+  // accentuation and superscript abbreviation letters have no Kannada
+  // counterpart at all, and neither does Spanish's mid-distance demonstrative.
+  // The real ceiling for this track is 254/258, not 258/258.
+  expect(coverage.covered).toBe(197);
+  expect(coverage.unmapped).toBe(61);
   expect(coverage.partial).toBe(0);
   // KA-A1-NUM-07 was one of the thirteen ordinal points HL-C354 left open, and
   // the one it priced cheapest: Kannada's -aneya has no exceptions, so ten
@@ -62,7 +84,7 @@ it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "kannada A1 (partial inventory): 194/258 points covered (75%)",
+    "kannada A1 (partial inventory): 197/258 points covered (76%)",
   );
 }, 60_000);
 

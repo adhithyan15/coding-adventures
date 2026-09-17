@@ -5048,14 +5048,30 @@ fn emit_host_button(
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
+    // `Semantics(excludeSemantics: true)` hides the button's own Text, so
+    // an empty `label:` here leaves a button with no name at all (#15427).
+    // A dynamic name therefore falls back to the visible label when it is
+    // empty, and a literal "" counts as no name.
+    let dynamic_name = |name: String, visible: &str| format!("(({name}).isEmpty ? ({visible}) : ({name}))");
+    let visible_text: String = match find_prop_value(node, "label") {
+        Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_dart_string(s)),
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&camel)?;
+            camel
+        }
+        Some(LayoutPropValue::Expr(text)) => text.trim().to_string(),
+        _ => "\"\"".to_string(),
+    };
     let accessibility_label = match find_prop_value(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) if label.is_empty() => None,
         Some(LayoutPropValue::String(label)) => Some(format!("\"{}\"", escape_dart_string(label))),
         Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
             let field = to_camel_case_first_lower(name);
             validate_slot_or_field_name(&field)?;
-            Some(field)
+            Some(dynamic_name(field, &visible_text))
         }
-        Some(LayoutPropValue::Expr(expr)) => Some(expr.trim().to_string()),
+        Some(LayoutPropValue::Expr(expr)) => Some(dynamic_name(expr.trim().to_string(), &visible_text)),
         _ => None,
     };
     let label_expr: String = match find_prop_value(node, "label") {
@@ -8236,7 +8252,8 @@ mod tests {
             "expected HostButton label to use For item binding, got:\n{out}"
         );
         assert!(
-            out.contains("Semantics(label: item, button: true, enabled:"),
+            // An empty name falls back to the visible label (#15427).
+            out.contains("Semantics(label: ((item).isEmpty ? (item) : (item)), button: true, enabled:"),
             "expected HostButton accessible name to use the For expression, got:\n{out}"
         );
     }
