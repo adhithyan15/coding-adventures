@@ -1,0 +1,17 @@
+{
+  "chapter": 85,
+  "title": "Held Sounds",
+  "label": "ch:ml-held-sounds",
+  "canDo": "I can hear and say the difference a doubled consonant makes, and I know that Malayalam never uses stress to tell two words apart.",
+  "payoff": {
+    "lesson": "ML-R85-sounds-recall",
+    "kind": "production",
+    "summary": "From cold: the new verb, the held consonant that turns one word into another, how the doubling is written, and where the weight falls.",
+    "assesses": [
+      "ML-LEX-C85-DRINK-01",
+      "ML-CONCEPT-C85-GEMINATION-01",
+      "ML-CONCEPT-C85-STRESS-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. The verb is taught first because its stem supplies the contrast partner: kudi against kutti, which was taught in the child lesson, is the only gemination minimal pair available with one member already owned."
+  }
+}

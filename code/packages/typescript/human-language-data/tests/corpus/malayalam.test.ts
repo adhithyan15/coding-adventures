@@ -299,8 +299,35 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // noun ending in -am REPLACES it with -att- before any ending (Keralam ->
   // Keralattil, pustakam -> pustakattil), which is a CLASS, not an exception, and
   // puts every -am noun in the book into the locative from one rule.
-  expect(coverage.covered).toBe(187);
-  expect(coverage.unmapped).toBe(56);
+  // 187 -> 188: ML-A1-CASE-07, the spatial postpositions. Its note was exact --
+  // "the track teaches five house objects and no way to say where any of them is."
+  // The chapter spends its FIRST lesson on the shape rather than the vocabulary,
+  // because the shape is what makes each later place-word cost a word and nothing
+  // else: THE NOUN IN FRONT TAKES THE GENITIVE, which is chapter 78's ending
+  // unchanged. The reason is worth having -- kaseerayude mukalil is literally "the
+  // chair's top-part", so Malayalam names a part BELONGING to the chair rather
+  // than saying "on" it, which is why the owner-ending is what connects the two
+  // words at all. The recall states a pattern covering THREE of the four: mukalil,
+  // munnil and pinnil visibly end in the locative -il because they are part-words
+  // already in the in-form; thaazhe does not, and that is said plainly rather than
+  // tidied away. meesha (table) was deliberately NOT taught: it already appears
+  // untaught in ML-C52-chair's prose, so claiming it as a headword would convert
+  // that use into a forward reference -- the ML-C82-chechi-address trap.
+  // 188 -> 190: ML-A1-PHON-04 (gemination) and ML-A1-PHON-05 (stress), paired
+  // deliberately. A measurement first said this was NOT the free tranche it looked
+  // like: 102 of 292 taught tokens carry a doubled consonant, but gemination
+  // minimal pairs AMONG TAUGHT WORDS numbered ZERO, so the contrast could not be
+  // shown from taught vocabulary alone. kutti (child) was already taught and kudi
+  // returned zero files, so the chapter teaches kudikkuka (to drink) FIRST -- which
+  // fills a real hole, the book having given water, tea, coffee and milk and no
+  // verb for them -- and then sets its stem kudi against kutti. PHON-05 pairs with
+  // it because the point is not where the stress falls but how LITTLE it does: no
+  // two Malayalam words differ only by it, so English's habit of spending stress on
+  // meaning is the wrong ear for a language that spends LENGTH. PHON-03 stays open
+  // on purpose: no vowel-length minimal pair exists among taught words either, and
+  // it must not be written on a constructed pair.
+  expect(coverage.covered).toBe(190);
+  expect(coverage.unmapped).toBe(53);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -312,6 +339,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 187/243 points covered (77%)",
+    "malayalam A1 (partial inventory): 190/243 points covered (78%)",
   );
 }, 60_000);

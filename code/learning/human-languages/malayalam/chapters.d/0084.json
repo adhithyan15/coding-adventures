@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "Where A Thing Is",
+  "label": "ch:ml-place-words",
+  "canDo": "I can say that something is on, under, in front of or behind something else.",
+  "payoff": {
+    "lesson": "ML-R84-place-recall",
+    "kind": "production",
+    "summary": "From cold: all four place-words, the owner-ending the noun in front of them must carry, and the in-ending visible inside three of the four.",
+    "assesses": [
+      "ML-LEX-C84-PLACE-01",
+      "ML-LEX-C84-PLACE-02",
+      "ML-LEX-C84-PLACE-03",
+      "ML-LEX-C84-PLACE-04",
+      "ML-GRAMMAR-C84-POSTPOSITION-01"
+    ],
+    "note": "The chapter introduces exactly these five atoms and the payoff assesses all five. The owner-ending is not new: it is the genitive from chapter 78, unchanged, because kaseerayude mukalil is literally 'the chair's top-part'."
+  }
+}

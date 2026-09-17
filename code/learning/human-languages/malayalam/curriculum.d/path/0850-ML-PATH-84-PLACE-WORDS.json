@@ -1,0 +1,15 @@
+{
+  "id": "ML-PATH-84-PLACE-WORDS",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ML-C84-mukalil",
+    "ML-C84-thaazhe",
+    "ML-C84-munnil-pinnil",
+    "ML-R84-place-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-84-PLACE-WORDS"
+  ],
+  "after": []
+}

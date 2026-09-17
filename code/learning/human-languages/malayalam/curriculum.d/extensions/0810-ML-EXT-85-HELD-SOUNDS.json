@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-85-HELD-SOUNDS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "pronunciation",
+  "canDo": "I can hear length where an English ear listens for emphasis.",
+  "prerequisites": [
+    "ML-EXT-84-PLACE-WORDS"
+  ],
+  "lessons": [
+    "ML-C85-kudikkuka",
+    "ML-C85-gemination",
+    "ML-C85-stress",
+    "ML-R85-sounds-recall"
+  ]
+}
