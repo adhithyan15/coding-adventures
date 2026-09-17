@@ -146,7 +146,17 @@ const SNAPSHOT_SCHEMA: &str = "engram-mosaic-app";
 ///   selected, which screen is showing, what is typed in the browser's search
 ///   box, how far into a review you are. Reopening Engram now puts the reader
 ///   back where they were instead of at the deck list.
-const SNAPSHOT_VERSION: u32 = 2;
+/// - **3** — the same two halves, stored side by side rather than merged
+///   (#14523). Version 2 spliced the adapter's field *into* the facade's
+///   document, which meant parsing the whole collection — media blobs included
+///   — into a `serde_json::Value` just to add one string. Version 3 keeps the
+///   facade's JSON as an unparsed fragment:
+///
+///   ```json
+///   { "session": { ...the facade's document... },
+///     "adapterSelectedDeckId": "deck-1" }
+///   ```
+const SNAPSHOT_VERSION: u32 = 3;
 
 /// The oldest payload [`EngramMosaicApp::restore`] still understands.
 ///
@@ -625,31 +635,50 @@ impl MosaicApp for EngramMosaicApp {
             return Err(EngramAppError::InvalidSnapshot(message));
         }
         // The facade wraps the document as `{"ok": true, "session": {...}}`,
-        // while `load_session_snapshot` expects the bare `{state, cursor}`
-        // object. Unwrap here so the two halves of the round trip agree.
-        let value: Value = serde_json::from_str(&reply)
-            .map_err(|error| EngramAppError::InvalidSnapshot(error.to_string()))?;
-        let mut session = value.get("session").cloned().ok_or_else(|| {
-            EngramAppError::InvalidSnapshot("snapshot reply carried no `session`".to_string())
+        // and the adapter has one field of its own to persist beside it: which
+        // deck the reader was looking at. That selection lives here rather than
+        // in the facade, so the facade's cursor cannot carry it and this is the
+        // only place that can. Leaving it out would restore the screen and the
+        // search box but silently drop the deck, which is the most visible half.
+        //
+        // ## Why the collection is never parsed (#14523)
+        //
+        // Version 2 unwrapped the reply into a `Value`, inserted the adapter's
+        // field into that object, and serialised it again. That materialised
+        // the entire collection -- decks, notes, cards, the review log and
+        // media blobs -- as a tree of `Value` nodes to add one string. The same
+        // amplification cost ~300 MB of peak RSS on a 41.6 MB collection when
+        // `ok_with` had it (#13671), on the success path of an ordinary save.
+        //
+        // `RawValue` is the "do not parse this" primitive: deserialising the
+        // reply into a borrowed `&RawValue` records where the document *is* in
+        // `reply`, and serialising it writes those bytes back out verbatim. So
+        // the collection is copied twice (once by the facade, once into the
+        // snapshot) and parsed zero times.
+        #[derive(serde::Deserialize)]
+        struct Reply<'a> {
+            #[serde(borrow)]
+            session: &'a serde_json::value::RawValue,
+        }
+
+        #[derive(serde::Serialize)]
+        #[serde(rename_all = "camelCase")]
+        struct Document<'a> {
+            session: &'a serde_json::value::RawValue,
+            adapter_selected_deck_id: &'a str,
+        }
+
+        let parsed: Reply = serde_json::from_str(&reply).map_err(|error| {
+            EngramAppError::InvalidSnapshot(format!("snapshot reply carried no `session`: {error}"))
         })?;
-        // The adapter's own deck selection is presentation state too, and it
-        // lives here rather than in the facade -- so the facade's cursor cannot
-        // carry it and this is the only place that can persist it. Leaving it
-        // out would restore the screen and the search box but silently drop
-        // which deck the reader was looking at, which is the most visible half.
-        session
-            .as_object_mut()
-            .ok_or_else(|| {
-                EngramAppError::InvalidSnapshot("`session` was not an object".to_string())
-            })?
-            .insert(
-                "adapterSelectedDeckId".to_string(),
-                Value::String(self.selected_deck_id.clone()),
-            );
+        let document = Document {
+            session: parsed.session,
+            adapter_selected_deck_id: &self.selected_deck_id,
+        };
         Ok(Some(Snapshot {
             schema: SNAPSHOT_SCHEMA.to_string(),
             version: SNAPSHOT_VERSION,
-            bytes: serde_json::to_vec(&session)
+            bytes: serde_json::to_vec(&document)
                 .map_err(|error| EngramAppError::InvalidSnapshot(error.to_string()))?,
         }))
     }
@@ -684,7 +713,39 @@ impl MosaicApp for EngramMosaicApp {
             return self.update();
         }
 
-        let reply = self.session.load_session_snapshot(&json);
+        // Version 3 keeps the two halves side by side, so the facade's document
+        // is handed back as the fragment it already is: borrowed, not parsed
+        // (#14523). Version 2 merged them, so the whole document goes to the
+        // facade and the adapter's field is read out of it below.
+        #[derive(serde::Deserialize)]
+        #[serde(rename_all = "camelCase")]
+        struct Halves<'a> {
+            #[serde(borrow)]
+            session: &'a serde_json::value::RawValue,
+            #[serde(default)]
+            adapter_selected_deck_id: String,
+        }
+
+        // Borrowed from `json`, not copied: handing the facade
+        // `halves.session.get()` keeps the fragment in place, where
+        // `to_string()` here would put a second copy of the whole collection on
+        // the heap -- in the change that exists to stop doing that.
+        let halves = match version >= 3 {
+            true => Some(
+                serde_json::from_str::<Halves>(&json)
+                    .map_err(|error| EngramAppError::InvalidSnapshot(error.to_string()))?,
+            ),
+            false => None,
+        };
+        let session_json = match &halves {
+            Some(halves) => halves.session.get(),
+            None => json.as_str(),
+        };
+        let version_3_deck_id = halves
+            .as_ref()
+            .map(|halves| halves.adapter_selected_deck_id.clone());
+
+        let reply = self.session.load_session_snapshot(session_json);
         if let Some(message) = facade_error(&reply) {
             return Err(EngramAppError::InvalidSnapshot(message));
         }
@@ -705,9 +766,18 @@ impl MosaicApp for EngramMosaicApp {
             adapter_selected_deck_id: String,
         }
 
-        let half: AdapterHalf = serde_json::from_str(&json)
-            .map_err(|error| EngramAppError::InvalidSnapshot(error.to_string()))?;
-        let candidate = half.adapter_selected_deck_id.as_str();
+        let version_2_deck_id = match &version_3_deck_id {
+            Some(_) => None,
+            None => Some(
+                serde_json::from_str::<AdapterHalf>(&json)
+                    .map_err(|error| EngramAppError::InvalidSnapshot(error.to_string()))?
+                    .adapter_selected_deck_id,
+            ),
+        };
+        let candidate = version_3_deck_id
+            .as_deref()
+            .or(version_2_deck_id.as_deref())
+            .unwrap_or_default();
         // Check the id against the collection we just restored, because this
         // field does NOT get the check the facade's own cursor gets.
         //
@@ -890,6 +960,79 @@ mod tests {
         assert!(update.props.is_object());
         // No cursor was stored, so the reader lands on the deck list.
         assert_eq!(update.props["show-decks-screen"], true);
+    }
+
+    /// #14523: the payload keeps the facade's document as a fragment beside
+    /// the adapter's field, rather than merging the two. The fragment must come
+    /// through byte for byte -- that is what proves nothing re-serialised it.
+    #[test]
+    fn a_snapshot_stores_the_facade_document_verbatim() {
+        let mut app = EngramMosaicApp::default();
+        app.start(start_context()).unwrap();
+        app.selected_deck_id = "deck-1".to_string();
+
+        let facade_reply = app.session.session_snapshot();
+        let facade_session = facade_reply
+            .split_once("\"session\":")
+            .map(|(_, rest)| rest.trim_end_matches('}').trim_end().to_string())
+            .expect("the facade wraps its document under `session`");
+
+        let snapshot = app.snapshot().unwrap().unwrap();
+        assert_eq!(snapshot.version, 3);
+        let document = String::from_utf8(snapshot.bytes).unwrap();
+        assert!(
+            document.contains(&facade_session),
+            "the facade's document must be stored verbatim:
+{document}"
+        );
+        assert!(
+            document.contains(r#""adapterSelectedDeckId":"deck-1""#),
+            "{document}"
+        );
+
+        // And it still round-trips.
+        let mut restored = EngramMosaicApp::default();
+        restored
+            .restore(Snapshot {
+                schema: SNAPSHOT_SCHEMA.to_string(),
+                version: SNAPSHOT_VERSION,
+                bytes: document.into_bytes(),
+            })
+            .expect("restore must succeed");
+        // The id is checked against the restored collection, and this fixture
+        // has no decks, so it resolves to no selection -- the same as for a
+        // version-2 payload below. What this test pins is the document shape.
+        assert_eq!(restored.selected_deck_id, "");
+    }
+
+    /// A version-2 payload -- the facade's document with the adapter's field
+    /// merged into it -- is what is already on disk, and still restores.
+    #[test]
+    fn a_version_2_payload_still_restores() {
+        let mut source = EngramMosaicApp::default();
+        source.start(start_context()).unwrap();
+        source.selected_deck_id = "deck-1".to_string();
+
+        // Build the old shape by hand, which is also what pre-#14523 builds
+        // wrote: the bare session object carrying the adapter's key.
+        let reply: Value = serde_json::from_str(&source.session.session_snapshot()).unwrap();
+        let mut session = reply["session"].clone();
+        session.as_object_mut().unwrap().insert(
+            "adapterSelectedDeckId".to_string(),
+            Value::String("deck-1".to_string()),
+        );
+
+        let mut restored = EngramMosaicApp::default();
+        restored
+            .restore(Snapshot {
+                schema: SNAPSHOT_SCHEMA.to_string(),
+                version: 2,
+                bytes: serde_json::to_vec(&session).unwrap(),
+            })
+            .expect("a version-2 payload must still restore");
+        // The deck id is checked against the restored collection either way,
+        // and this fixture's collection has no decks, so it resolves to none.
+        assert_eq!(restored.selected_deck_id, "");
     }
 
     /// A snapshot naming a deck the collection does not contain is not trusted.

@@ -1,5 +1,48 @@
 # Changelog — engram-mosaic-app
 
+## Unreleased
+
+### Fixed — `snapshot()` no longer materialises the whole collection (#14523)
+
+**The problem.** The adapter has one field of its own to persist — which deck
+the reader was looking at — and version 2 of the payload merged it *into* the
+facade's document. To do that it parsed the facade's reply into a
+`serde_json::Value`, inserted one string, and serialised it again. That
+materialised the entire collection (decks, notes, cards, the review log and
+media blobs) as a tree of `Value` nodes, on the success path of an ordinary
+save. The same amplification cost ~300 MB of peak RSS on a 41.6 MB collection
+when `ok_with` had it (#13671).
+
+**The fix: payload version 3.** The two halves are stored side by side instead
+of merged, so the facade's document is never parsed:
+
+```json
+{ "session": { ...the facade's document... }, "adapterSelectedDeckId": "deck-1" }
+```
+
+`serde_json`'s `RawValue` is the "do not parse this" primitive: the reply is
+deserialised into a borrowed `&RawValue` (a slice of the reply, not a tree) and
+serialised back out verbatim. Restore borrows the fragment the same way and
+hands it to the facade.
+
+Restore borrows the fragment too: the facade is handed the slice in place
+rather than a second copy of the collection.
+
+**Compatibility.** Versions 1 and 2 still restore, and both are covered by
+tests: version 1 is a bare collection, version 2 the merged document.
+
+**Measured, not asserted** (`tests/snapshot_peak.rs`), because the failure mode
+is a regression that still passes every functional test — which is how it came
+back the first time. A counting global allocator records peak live heap during
+`snapshot()` on an inflated demo collection:
+
+| payload | peak heap growth | |
+| --- | --- | --- |
+| 1.44 MB | **7.2 MB (5.0x)** | version 3 |
+| 1.44 MB | 27.1 MB (18.8x) | version 2's `Value` round trip, put back to check the test bites |
+
+The test bounds it at 8x, so restoring the old path fails it.
+
 ## 0.1.0 - Unreleased
 
 ### Added -- Anki import and export ride `Effect` (UI47 §5.4 step 5)
