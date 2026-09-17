@@ -1,0 +1,15 @@
+{
+  "id": "TA-PATH-86-ACCUSATIVE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TA-C86-ai",
+    "TA-C86-ennai-unnai",
+    "TA-C86-rational",
+    "TA-R86-ai-recall"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-86-ACCUSATIVE"
+  ],
+  "after": []
+}

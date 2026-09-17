@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:c98e96f0e5df4c0d",
+  "lessonIds": [
+    "TA-C86-ai",
+    "TA-C86-ennai-unnai",
+    "TA-C86-rational",
+    "TA-R86-ai-recall"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch86.txt",
+  "json": "tamil/narration/ch86.json",
+  "textHash": "fnv1a64:9c9859836fc9cbc1",
+  "jsonHash": "fnv1a64:c83b252565b18222",
+  "findings": []
+}

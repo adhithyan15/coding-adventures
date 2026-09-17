@@ -1,0 +1,149 @@
+Tamil, chapter 86: The One It Is Done To.
+4 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 4.
+-ஐ (-ai) — your second case ending.
+
+Warm-up.
+[pause 2 seconds]
+Your first case ending was -உக்கு, and what it taught was bigger than its meaning: English puts a word in front, Tamil sticks a piece on the back.
+[pause 2 seconds]
+Here is the second piece, and it goes on the same end.
+
+You'll want to know: -ஐ.
+-ஐ — -ai — marks the one the verb is done to.
+A sentence can have two people in it, and something has to say which of them is doing and which is being done to. English uses position: the teacher saw the child and the child saw the teacher are built from the same three words and mean opposite things, and the only signal is the order.
+Tamil marks the one being done to, and then the order stops carrying the weight:
+நான் அவரை நினைக்கிறேன் nāṉ avarai ninaikkiṟēṉ — "I think of them".
+அவர் became அவரை. Nothing else moved. The verb you already know from the thinking chapter did not change, and nāṉ is still optional because the -ēṉ on the end is already saying "I".
+
+Grammar Lens: where the two endings sit.
+[a table of 2 rows, read aloud]
+the word: அவர். + ending: அவர்உக்கு becomes அவருக்கு. what it says: to them, for them.
+the word: அவர். + ending: அவர்ஐ becomes அவரை. what it says: them, as the one it is done to.
+Two endings, one place to put them, and the noun underneath is the same word both times. A case ending in Tamil is a seam you can see, which is the thing the dative chapter said was the biggest structural fact about the language — and this is the second piece of evidence for it rather than a new idea.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "avar … avarai"]
+[pause 8 seconds for the answer]
+[your turn — say: "nāṉ avarai ninaikkiṟēṉ"]
+[pause 8 seconds for the answer]
+[your turn — say: which word in that sentence is the one being thought of, and how you can tell]
+[pause 8 seconds for the answer]
+[your turn — say: "avarukku" and "avarai" one after the other, and what each of them does]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does -ஐ (-ai) mark? (The one the verb is done to.) Where does it go? (On the end of the word, like every Tamil case ending.) What is avar as the one it is done to? (Avarai.) And what does English use instead of an ending here? (Position — which word comes first.)
+
+
+Lesson 2 of 4.
+என்னை / உன்னை (eṉṉai / uṉṉai) — the body you already changed once.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Say "to me". Then say the word for "I" on its own.
+[pause 2 seconds]
+They do not look like each other, and the dative chapter told you why: the pronoun changes its body before an ending lands on it.
+
+You'll want to know: என்னை and உன்னை.
+என்னை — eṉṉai — me, as the one it is done to உன்னை — uṉṉai — you, as the one it is done to.
+These cost you nothing new. You changed nāṉ into eṉ- to build enakku chapters ago. That changed body is the same one -ஐ (-ai) lands on:
+[a table of 2 rows, read aloud]
+the word: நான் nāṉ — I. to / for: எனக்கு enakku. the one it is done to: என்னை eṉṉai.
+the word: நீ nī — you. to / for: உனக்கு unakku. the one it is done to: உன்னை uṉṉai.
+Read down the middle column and then down the right one. The left part of each word never changes once you have it. Learning the body is the work; the endings are the cheap part, and there are only so many of them.
+என்னை நினை eṉṉai ninai — "think of me".
+A bare verb stem is already a command — you met that with pō! in the farewell chapter — so this is a whole sentence with no machinery you have not used.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "enakku … eṉṉai"]
+[pause 8 seconds for the answer]
+[your turn — say: "unakku … uṉṉai"]
+[pause 8 seconds for the answer]
+[your turn — say: the part of those four words that never changes]
+[pause 8 seconds for the answer]
+[your turn — say: "eṉṉai ninai" — think of me]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is me, as the one it is done to? (Eṉṉai.) And to me? (Enakku.) What do those two have in common? (The changed body eṉ-.) Which of the two endings would you put on it to say "for you"? (-உக்கு, on uṉ-.)
+
+
+Lesson 3 of 4.
+தேநீர் / தேநீரை (tēnīr / tēnīrai) — when the ending is a choice.
+
+Warm-up.
+[pause 2 seconds]
+Say "I think of them". Say which piece of that sentence marks the one being thought of.
+[pause 2 seconds]
+Now the part nobody tells you: that piece is not always required.
+
+Grammar Lens: a person must have it, a thing need not.
+அவரை நினைக்கிறேன் — I think of them தேநீர் வாங்குகிறேன் — I buy tea தேநீரை வாங்குகிறேன் — I buy the tea.
+On a person the ending is obligatory. Leaving it off does not make a casual sentence; it makes a broken one.
+On a thing it is a choice, and the choice carries meaning. Bare தேநீர் is tea in general, the kind of thing you buy. தேநீரை is that tea, a particular one already in view. Tamil has no word for the, and this is one of the places the job gets done instead.
+[a table of 3 rows, read aloud]
+the object is: a person. the ending: required.
+the object is: a thing, in general. the ending: usually left off.
+the object is: a thing, a particular one. the ending: put on.
+
+Across the family: the same line, drawn at the other end.
+Spanish draws this line too, and a Spanish learner has met it: veo la casa ("I see the house") against veo a María ("I see María"). A human object gets a marker; a thing does not.
+Spanish puts that marker in front of the word as a separate piece. Tamil sticks it on the back. Same distinction between a person and a thing, opposite end of the word — which is the difference the dative chapter opened with, now showing up in a second place.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "avarai ninaikkiṟēṉ"]
+[pause 8 seconds for the answer]
+[your turn — say: "tēnīr vāṅgugiṟēṉ" and then "tēnīrai vāṅgugiṟēṉ"]
+[pause 8 seconds for the answer]
+[your turn — say: which of those two is about a particular tea]
+[pause 8 seconds for the answer]
+[your turn — say: which of the three objects could not drop the ending, and why]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+When is -ஐ (-ai) obligatory? (When the object is a person.) What does putting it on a thing add? (That it is a particular one — Tamil has no word for the.) And where does Spanish put its marker for a human object? (In front, as a separate word, where Tamil puts it on the back.)
+
+
+Lesson 4 of 4.
+(the one it is done to) (ai ninaivu) — from cold.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 3 seconds]
+Close the lessons before this one. Say the ending that marks the one a verb is done to, and say which end of the word it goes on.
+
+Grammar Lens: one ending, one question.
+[a table of 4 rows, read aloud]
+the object: அவர் — that person. with the ending: அவரை. required?: yes.
+the object: நான் — I. with the ending: என்னை. required?: yes.
+the object: நீ — you. with the ending: உன்னை. required?: yes.
+the object: தேநீர் — tea. with the ending: தேநீரை. required?: only for a particular one.
+Three of the four rows are people, and people have no choice. The question to ask of an object is not is this the subject or the object — the ending answers that — but is this a person.
+Two things carry over from earlier chapters rather than being new here. The pronouns stand on the changed bodies eṉ- and uṉ- that the dative built. And the ending sits on the back of the word, which is what your first case ending taught and what separates this language from the one that would put a word in front.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the four objects in the table, each with its ending]
+[pause 8 seconds for the answer]
+[your turn — say: "avarai ninaikkiṟēṉ" and "eṉṉai ninai"]
+[pause 8 seconds for the answer]
+[your turn — say: which row of the table lets you choose, and what choosing adds]
+[pause 8 seconds for the answer]
+[your turn — say: the two words that share the body eṉ-]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is them, as the one it is done to? (Avarai.) What is me? (Eṉṉai.) When may the ending be left off? (On a thing, when it is not a particular one.) And what has to be true before it is compulsory? (The object is a person.)
