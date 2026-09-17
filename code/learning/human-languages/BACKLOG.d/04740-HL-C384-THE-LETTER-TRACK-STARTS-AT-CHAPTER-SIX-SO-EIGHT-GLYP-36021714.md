@@ -106,3 +106,20 @@ picking a chapter.
 
 **Five remain:** the visarga, the vocalic-ṛ sign, **ट**, **ठ** and **इ**, all
 still bounded by the structural fact this entry records.
+
+
+### Correction: the vocalic-ṛ sign was never one of the eight
+
+This entry listed **ृ** among the glyphs that can never arrive on time, citing
+`HI-C01-namaskar` at chapter 1 as its first use. **That is a Sanskrit root
+quoted in an etymology note** — the entry counted √कृ, संस्कृत and कीदृश as
+first uses, and none of them is a Hindi word the reader is asked to read.
+
+The sign's only headword in the corpus is **कृपया**, at chapter 8. Its carrier
+**क** is drawn at chapter 7, so the sign goes at chapter 7 too — **before the
+word that needs it**. `HI-S144-vowel-sign-vocalic-r` does exactly that, and it
+is the first glyph in this campaign to arrive on time.
+
+**Seven, not eight**, and the same measurement error as `HI-C16-mahine`: a first
+use counted from raw text rather than from what a lesson teaches. Check the
+*kind* of appearance before recording a first use.

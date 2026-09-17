@@ -1,18 +1,19 @@
 {
   "language": "hindi",
   "chapter": 36,
-  "sourceHash": "fnv1a64:496cdaf17336b118",
+  "sourceHash": "fnv1a64:b0d5e7e6aff693ec",
   "lessonIds": [
     "HI-C36-ghar",
     "HI-C36-darvaaza",
     "HI-C36-kamra",
-    "HI-C36-kursi"
+    "HI-C36-kursi",
+    "HI-S147-letter-na-retroflex"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "hindi/narration/ch36.txt",
   "json": "hindi/narration/ch36.json",
-  "textHash": "fnv1a64:452913078f3707dc",
-  "jsonHash": "fnv1a64:6bd247f040ff2fa4",
+  "textHash": "fnv1a64:451ec055e2a53c23",
+  "jsonHash": "fnv1a64:94acde1284de25e4",
   "findings": []
 }

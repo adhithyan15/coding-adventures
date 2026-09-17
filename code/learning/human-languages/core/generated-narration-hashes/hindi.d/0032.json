@@ -1,16 +1,17 @@
 {
   "language": "hindi",
   "chapter": 32,
-  "sourceHash": "fnv1a64:25060430fcd7b8eb",
+  "sourceHash": "fnv1a64:303510b001248c96",
   "lessonIds": [
     "HI-C32-shubh-sandhya",
+    "HI-S145-letter-sha",
     "HI-C32-evening-register"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "drivablePrefix": 1,
   "text": "hindi/narration/ch32.txt",
   "json": "hindi/narration/ch32.json",
-  "textHash": "fnv1a64:9eebce271d08fac0",
-  "jsonHash": "fnv1a64:6b35460b1839b0cc",
+  "textHash": "fnv1a64:cf74d2fc69ec0032",
+  "jsonHash": "fnv1a64:e118cd79fe24f953",
   "findings": []
 }

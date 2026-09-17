@@ -3,8 +3,8 @@
   "language": "hindi",
   "chapter": 32,
   "title": "Good Evening",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:25060430fcd7b8eb",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:303510b001248c96",
   "lessons": [
     {
       "id": "HI-C32-shubh-sandhya",
@@ -115,6 +115,233 @@
             {
               "kind": "speech",
               "text": "What does संध्या literally mean, and what is it built from? (\"Holding together\" — सम् + धा — i.e. the junction of day and night.) Does साँझ work the same way रात्रि/रात's tatsama/tadbhava split did — one strictly formal, one strictly casual? (No — साँझ is used across both literary and everyday registers, not confined to one.) Next: choose between the written greeting and the casual all-day greeting."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-S145-letter-sha",
+      "sequence": 835,
+      "title": "श (śa) — the letter you have been thanking people with",
+      "headword": "श",
+      "romanization": "śa",
+      "gloss": "the single character श — the letter that opens the first word of thanks you ever learned",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:67a045c5438e65b5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: श",
+          "Script: the third sibilant",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: श, Script: the third sibilant and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The hook from before: where did it sit, and what did it replace?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Today is a whole letter, and one you have been looking at since your first page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: श",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "श — śa, the sh of English ship."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a joined upper loop, descending outer curve, lower loop and diagonal tail."
+            },
+            {
+              "kind": "speech",
+              "text": "a top-to-bottom right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "The left-hand side is more work than most letters ask for, and it is all one run — the pen does not come up until the tail is finished."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: the third sibilant",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "sound"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "letter: स. sound: sa.",
+                "letter: ष. sound: ṣa.",
+                "letter: श. sound: śa."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "You could already draw two of the three. This is the last one, and with it the hissing letters are complete."
+            },
+            {
+              "kind": "speech",
+              "text": "Words that have been yours from the start:"
+            },
+            {
+              "kind": "speech",
+              "text": "शुक्रिया — thank you."
+            },
+            {
+              "kind": "speech",
+              "text": "शाम — evening."
+            },
+            {
+              "kind": "speech",
+              "text": "शनिवार — Saturday."
+            },
+            {
+              "kind": "speech",
+              "text": "The first of those was among the first words in the book, and the letter that opens it is only being drawn now. The opening chapters taught whole words, and the letters inside them went unnamed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing: श",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the upper loop's lower inner tip, sweep left and clockwise around the upper loop, descend the outer curve, curl around the lower loop, and continue down-right through the diagonal tail without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and draw the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified three-stroke teaching form; everyday handwriting may join or simplify the body differently."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-श (śa)-order.gif’, strokes 1–3, Wikimedia Commons, 10 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these two words and find श (śa) in each one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these two words and find श in each one]"
+            },
+            {
+              "kind": "speech",
+              "text": "शुक्रिया, शाम."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "श three times, saying śa as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: श three times, saying *śa* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how many pen lifts the whole letter took",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how many pen lifts the whole letter took]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What sound does श carry? (śa.) Which three letters make the hissing set? Name the word of thanks it opens."
             }
           ]
         }
