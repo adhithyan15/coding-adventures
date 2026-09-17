@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S157-letter-ba",
+    "language": "telugu",
+    "chapter": 3,
+    "sequence": 181,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8bc1caada9184c72",
+    "detachableSegments": [
+      "Script you'll notice: బ",
+      "Writing: బ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1759,8 +1759,8 @@ describe("the committed Kannada A1 inventory", () => {
     // accentuation and superscript abbreviation letters have no Kannada
     // counterpart at all, and neither does Spanish's mid-distance demonstrative.
     // The real ceiling for this track is 254/258, not 258/258.
-    expect(coverage.covered).toBe(197);
-    expect(coverage.unmapped).toBe(61);
+    expect(coverage.covered).toBe(198);
+    expect(coverage.unmapped).toBe(60);
     expect(coverage.partial).toBe(0);
     // 193 -> 194: the HL-C354 ordinal tranche closed KA-A1-NUM-07 (chapters
     // 74-75). It is the ONLY point that moved, and the numeral column below
@@ -1788,23 +1788,35 @@ describe("the committed Kannada A1 inventory", () => {
     // most-used untaught characters. `ma` alone appears in 36 headwords and was
     // never taught. Nineteen characters remain, six of which have a sourced
     // ductus this project has not spent and thirteen of which have none.
-    // THE COUNT MOVED 8 -> 11 WITHOUT THE CHARACTER DEBT SHRINKING BY ONE. The
-    // three new points are PUNCTUATION -- the full stop and comma, the question
-    // mark, and the colon/brackets/quotes/dash -- which Kannada borrows whole
-    // from the Latin alphabet and which this column happens to house alongside
-    // the characters. A count over the column is therefore the wrong proxy for
-    // "the script is still short", so the assertion now names the thing it
-    // meant: KA-A1-L-09 is the point whose own label reads "THE SCRIPT IS NOT
-    // CLOSED: 27 characters are used but never taught", and it is still
-    // uncovered.
-    expect(coverage.points.find((p) => p.id === "KA-A1-L-09")!.covered).toBe(false);
-    expect(coverage.byCategory["Lipi (script and orthography)"]!.covered).toBe(11);
+    // THE COUNT ONCE MOVED 8 -> 11 WITHOUT THE CHARACTER DEBT SHRINKING BY ONE.
+    // Those three points were PUNCTUATION -- the full stop and comma, the
+    // question mark, and the colon/brackets/quotes/dash -- which Kannada borrows
+    // whole from the Latin alphabet and which this column happens to house
+    // alongside the characters. A count over the column is the wrong proxy for
+    // "the script is still short", so the assertion named the thing it meant:
+    // KA-A1-L-09, whose own label used to read "THE SCRIPT IS NOT CLOSED: N
+    // characters are used but never taught", with N going 27, 19, 13.
+    // IT IS NOW CLOSED, AND THE ASSERTION IS REWRITTEN RATHER THAN FLIPPED. A
+    // bare `.covered` toBe(true) would pass on a probe that had been quietly
+    // emptied, so the probe's own size is asserted beside it: the point carries
+    // all TWENTY-SEVEN characters it was opened for -- the eight chapters 67-73
+    // taught, the six chapter 78 taught as writing from cited stroke-order
+    // animations, and the thirteen chapters 79 and 80 taught as recognition
+    // because no ductus for them exists anywhere in this project.
+    // The character count itself is pinned at an exact zero in
+    // tests/corpus/kannada.test.ts, which is where a regression would show.
+    const scriptClosed = coverage.points.find((p) => p.id === "KA-A1-L-09")!;
+    expect(scriptClosed.covered).toBe(true);
+    expect(
+      loadExamInventory("kannada", "A1").points.find((p) => p.id === "KA-A1-L-09")!.probe,
+    ).toHaveLength(27);
+    expect(coverage.byCategory["Lipi (script and orthography)"]!.covered).toBe(12);
     // The two columns that carry this track, and they are not the ones French
     // and German lead on.
     expect(coverage.byCategory["Kriyaapada (the verb)"]!.covered).toBeGreaterThan(12);
     expect(coverage.byCategory["Padakosha (lexicon by domain)"]!.covered).toBeGreaterThan(45);
     expect(formatExamCoverage(coverage)).toContain(
-      "kannada A1 (partial inventory): 197/258 points covered (76%)",
+      "kannada A1 (partial inventory): 198/258 points covered (77%)",
     );
   }, 60_000);
 });

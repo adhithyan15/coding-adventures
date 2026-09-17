@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed -- list story fixtures hydrate as JSON arrays (#15428)
+
+`json_value_for_fixture` turns a list fixture into a JSON array in
+`main.js`'s fallback props. Before this, a list-driven story rendered with
+no rows. A shape that does not match the slot keeps the generated `[]`.
+
 ### Fixed -- `HostButton`'s accessible name was never emitted, and an indexed label rendered as literal braces (#15426)
 
 `emit_host_button` never read `a11y-label`, and reported no degradation for

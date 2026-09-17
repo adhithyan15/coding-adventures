@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S165-letter-sha",
+    "language": "kannada",
+    "chapter": 79,
+    "sequence": 2850,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:02f48988f45e2268",
+    "detachableSegments": [
+      "Script you'll notice: ಶ",
+      "Writing: ಶ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

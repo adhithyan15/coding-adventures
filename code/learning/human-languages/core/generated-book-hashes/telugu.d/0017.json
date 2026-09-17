@@ -1,12 +1,14 @@
 {
   "language": "telugu",
   "chapter": 17,
-  "sourceHash": "fnv1a64:5110c1ed67c22e50",
+  "sourceHash": "fnv1a64:a7023acfbc95b8d9",
   "lessonIds": [
     "TE-C17-madhyaahnam-ardharaatri",
     "TE-S138-letter-gha",
     "TE-S155-letter-ttha",
-    "TE-S156-script-recall"
+    "TE-S156-script-recall",
+    "TE-S160-letter-pha",
+    "TE-S161-script-recall-four"
   ],
   "tex": "telugu/book/chapters/ch17-noon-and-midnight.tex"
 }

@@ -8,6 +8,28 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed -- a line break in any emitted string broke the build; the link scheme check reads the raw href
+
+`escape_swift_string` passed raw `\n`, `\r` and `\t` through. A single-line
+Swift literal cannot contain a raw line break, so a label or fixture with one
+made the generated app fail to compile. The review of #15428 found this; all
+three are escaped now.
+
+Escaping tabs exposed a latent ordering bug. `emit_host_link` ran its
+`#13052` disallowed-scheme check on the *escaped* href, which only worked
+while tabs stayed raw: `java<TAB>script:` would have become `java\tscript:`
+and slipped past the normaliser. The check now reads the raw literal.
+`host_link_scheme_hidden_by_whitespace_is_still_rejected` caught this before
+it shipped, and still pins it.
+
+### Fixed -- list story fixtures reach the generated app (#15428)
+
+`swift_literal_for_fixture` renders a text-list fixture as a Swift array
+(`[["Board", "Board, selected"]]`) for the `fallback:` of
+`MosaicHostValue.stringList` / `stringListList`, so a story's rows show
+before a host attaches. A shape that does not match the slot keeps the
+sample.
+
 ### Fixed -- an empty run-time accessible name made VoiceOver read just "Button" (#15427)
 
 An accessible name known only at run time can be empty, and an empty override is not the same as no override. `.accessibilityLabel(Text(""))` *replaces* the

@@ -7423,6 +7423,28 @@ fn csharp_literal_for_fixture(t: &SlotType, fixture: &str) -> String {
             "false" => "false".to_string(),
             _ => format!("\"{}\"", escape_csharp_string(fixture)),
         },
+        // Lists arrive as JSON text (#15428). A shape that does not match the
+        // slot keeps the generated sample, so the project still builds.
+        SlotType::List(_) => {
+            let strings = |items: &[String]| {
+                let cells: Vec<String> = items
+                    .iter()
+                    .map(|item| format!("\"{}\"", escape_csharp_string(item)))
+                    .collect();
+                format!(
+                    "new System.Collections.Generic.List<string> {{ {} }}",
+                    cells.join(", ")
+                )
+            };
+            match mosmodel_compiler::fixtures::parse_list_fixture(t, fixture) {
+                Some(mosmodel_compiler::fixtures::ListFixture::Text(items)) => strings(&items),
+                Some(mosmodel_compiler::fixtures::ListFixture::TextRows(rows)) => format!(
+                    "new System.Collections.Generic.List<System.Collections.Generic.IReadOnlyList<string>> {{ {} }}",
+                    rows.iter().map(|row| strings(row)).collect::<Vec<_>>().join(", ")
+                ),
+                None => stub_value_for_slot(t, ""),
+            }
+        }
         _ => format!("\"{}\"", escape_csharp_string(fixture)),
     }
 }
@@ -10189,10 +10211,17 @@ fn escape_csharp_string(s: &str) -> String {
         match c {
             '\\' => out.push_str("\\\\"),
             '"' => out.push_str("\\\""),
-            // C# string literals do allow embedded \n in non-verbatim
-            // strings, but they translate to actual newlines at runtime
-            // and don't pose an injection risk inside a string-literal
-            // context. We leave them alone.
+            // A regular C# string literal may NOT contain a raw line break
+            // (CS1010), and C# counts U+0085, U+2028 and U+2029 as line
+            // breaks too. None of them can end the literal early, but any of
+            // them in a fixture or label used to break the generated build
+            // (#15428 review), so each is written as an escape.
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            '\u{85}' => out.push_str("\\u0085"),
+            '\u{2028}' => out.push_str("\\u2028"),
+            '\u{2029}' => out.push_str("\\u2029"),
             other => out.push(other),
         }
     }
@@ -21798,6 +21827,27 @@ mod tests {
         assert_eq!(render(&[("variant", "danger")]), render(&[]));
     }
 
+    /// #15428: list fixtures render as typed C# collection initializers.
+    #[test]
+    fn list_fixtures_render_as_csharp_collections() {
+        let rows = mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(Box::new(mosmodel_compiler::ListInnerType::Text))));
+        let text = mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::Text));
+        assert_eq!(
+            csharp_literal_for_fixture(&rows, r#"[["Board","Board, selected"]]"#),
+            "new System.Collections.Generic.List<System.Collections.Generic.IReadOnlyList<string>> \
+             { new System.Collections.Generic.List<string> { \"Board\", \"Board, selected\" } }"
+        );
+        assert_eq!(
+            csharp_literal_for_fixture(&text, r#"["a"]"#),
+            "new System.Collections.Generic.List<string> { \"a\" }"
+        );
+        // A mismatched shape keeps the stub's type.
+        assert_eq!(
+            csharp_literal_for_fixture(&rows, r#"["flat"]"#),
+            stub_value_for_slot(&rows, "")
+        );
+    }
+
     #[test]
     fn fixtures_render_as_typed_csharp_literals() {
         let cs = fixture_main_window(
@@ -21837,6 +21887,17 @@ mod tests {
         );
 
         assert!(cs.contains(r#"Label = "say \"hi\"""#), "got:\n{cs}");
+    }
+
+    /// A raw line break (including C#'s extra line separators) may not
+    /// appear in a regular string literal; it must be escaped, or the
+    /// generated shell fails to build (#15428 review).
+    #[test]
+    fn line_breaks_are_escaped_in_csharp_literals() {
+        assert_eq!(
+            escape_csharp_string("a\nb\rc\td\u{85}e\u{2028}f\u{2029}g"),
+            "a\\nb\\rc\\td\\u0085e\\u2028f\\u2029g"
+        );
     }
 
     #[test]

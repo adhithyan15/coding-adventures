@@ -263,6 +263,12 @@ fn run(result: cli_builder::types::ParseResult) {
         .get("strict-style")
         .and_then(|v| v.as_bool())
         .unwrap_or(false);
+    // --strict-fixtures: a fixture value the backend cannot render is an error
+    // rather than a warning (#15428). The MosaicBook story check passes it.
+    let strict_fixtures = flags
+        .get("strict-fixtures")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
     // --package-manifest: when set, the .mll's component-reference
     // resolver auto-registers every name in [components].exports so
     // intra-package references work (e.g. Field → Input in
@@ -309,7 +315,10 @@ fn run(result: cli_builder::types::ParseResult) {
             // Read here rather than reusing the binding below: that one is
             // declared after this branch returns, and it belongs to the legacy
             // single-file path.
-            flags.get("fixtures").and_then(|v| v.as_str()),
+            FixtureSource {
+                path: flags.get("fixtures").and_then(|v| v.as_str()),
+                strict: strict_fixtures,
+            },
         );
         return;
     }
@@ -695,7 +704,7 @@ fn run_pipeline(
     strict_style: bool,
     package_manifest_path: Option<&str>,
     package_search_path: Option<&str>,
-    fixtures_path: Option<&str>,
+    fixtures: FixtureSource<'_>,
 ) {
     // -- 1. Compile the mosmodel interface ----------------------------------
     //
@@ -904,7 +913,7 @@ fn run_pipeline(
                 // what the project renders before a host supplies anything,
                 // and therefore what a component page or demo app shows
                 // (#14459).
-                slot_values: pipeline_slot_values(fixtures_path),
+                slot_values: pipeline_slot_values(fixtures, ListFixtures::Json),
                 ..Default::default()
             };
             let result = mosaic_emit_react::pipeline::from_pipeline_with_options(
@@ -964,7 +973,7 @@ fn run_pipeline(
         "xaml" => {
             let opts = mosaic_emit_xaml::EmitOptions {
                 emit_project,
-                slot_values: pipeline_slot_values(fixtures_path),
+                slot_values: pipeline_slot_values(fixtures, ListFixtures::Json),
                 ..Default::default()
             };
             // Build the component registry: auto-register every name
@@ -1059,7 +1068,7 @@ fn run_pipeline(
             // typed entry point lets repository components and their authored
             // story fixtures render without reconstructing legacy .mosaic
             // source or requiring a native platform toolchain.
-            let slot_values = pipeline_slot_values(fixtures_path);
+            let slot_values = pipeline_slot_values(fixtures, ListFixtures::NotRendered);
             let png_bytes = mosaic_emit_paint::render_png_from_pipeline_with_slot_values(
                 &mosmodel_out.component,
                 &layout_out.def,
@@ -1098,7 +1107,7 @@ fn run_pipeline(
             // story and never make it render.
             let html_opts = mosaic_emit_html::pipeline::EmitOptions {
                 emit_project,
-                slot_values: pipeline_slot_values(fixtures_path),
+                slot_values: pipeline_slot_values(fixtures, ListFixtures::Json),
             };
             let result = mosaic_emit_html::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
@@ -1154,7 +1163,7 @@ fn run_pipeline(
                 emit_project,
                 // Fixtures replace the per-slot fallbacks in the emitted slot
                 // table, so a story changes what the element renders (#14459).
-                slot_values: pipeline_slot_values(fixtures_path),
+                slot_values: pipeline_slot_values(fixtures, ListFixtures::Json),
             };
             let result = mosaic_emit_webcomponent::pipeline::from_pipeline_with_options(
                 &mosmodel_out.component,
@@ -1207,7 +1216,7 @@ fn run_pipeline(
             let sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions {
                 // Fixtures replace the generated fallback the app uses before a
                 // host attaches, so a story changes what a demo app shows (#14459).
-                slot_values: pipeline_slot_values(fixtures_path),
+                slot_values: pipeline_slot_values(fixtures, ListFixtures::Json),
                 emit_project,
                 ..Default::default()
             };
@@ -1265,7 +1274,7 @@ fn run_pipeline(
             // Bare invocation is byte-identical to pre-UI32.
             let qt_opts = mosaic_emit_qt::pipeline::EmitOptions {
                 emit_project,
-                slot_values: pipeline_slot_values(fixtures_path),
+                slot_values: pipeline_slot_values(fixtures, ListFixtures::Json),
                 ..Default::default()
             };
             let result = mosaic_emit_qt::pipeline::from_pipeline_with_options(
@@ -1313,7 +1322,7 @@ fn run_pipeline(
             // Bare invocation is byte-identical to pre-UI32.
             let fl_opts = mosaic_emit_flutter::pipeline::EmitOptions {
                 emit_project,
-                slot_values: pipeline_slot_values(fixtures_path),
+                slot_values: pipeline_slot_values(fixtures, ListFixtures::Json),
                 ..Default::default()
             };
             let result = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
@@ -1629,8 +1638,46 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
 /// rendered as `[object Object]`: list- and node-typed slots need real
 /// support, and silently substituting nonsense is exactly the
 /// accepted-and-dropped behaviour this change exists to end.
-fn pipeline_slot_values(fixtures_path: Option<&str>) -> HashMap<String, String> {
-    let Some(path) = fixtures_path else {
+/// Where a pipeline build's `--fixtures` come from, and how strictly to
+/// treat values that cannot be rendered.
+#[derive(Clone, Copy)]
+struct FixtureSource<'a> {
+    path: Option<&'a str>,
+    strict: bool,
+}
+
+/// What a backend can do with a list-typed fixture (#15428).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum ListFixtures {
+    /// The backend renders it: the list is passed on as compact JSON text,
+    /// which the emitter turns into its own literal.
+    Json,
+    /// The backend never renders fixture content (paint uses fixtures only to
+    /// pick style states), so a list is not a loss and is skipped silently.
+    NotRendered,
+}
+
+/// Read `--fixtures` into the `slot -> value` map every emitter takes.
+///
+/// Scalars travel as their text. A list of text, or a list of lists of text,
+/// travels as compact JSON (`["a","b"]`, `[["a","b"]]`) to backends that can
+/// render it. Before #15428 every list was dropped with a warning, so each
+/// list-driven component (ButtonGroup, Tabs, SegmentedControl, most of
+/// Engram) previewed empty in every story, and the story check still passed.
+///
+/// Every backend that renders fixture content takes `Json`; only paint,
+/// which uses fixtures just to pick style states, takes `NotRendered`.
+///
+/// | value                          | Json backend | NotRendered |
+/// |--------------------------------|--------------|-------------|
+/// | string / number / bool         | text         | text        |
+/// | null                           | omitted      | omitted     |
+/// | list of text / list of lists   | JSON text    | skipped     |
+/// | object, mixed or deeper list   | dropped (!)  | dropped (!) |
+///
+/// (!) warns, and exits 1 under `--strict-fixtures`.
+fn pipeline_slot_values(fixtures: FixtureSource<'_>, lists: ListFixtures) -> HashMap<String, String> {
+    let Some(path) = fixtures.path else {
         return HashMap::new();
     };
     let raw = read_file_or_die(path);
@@ -1644,25 +1691,62 @@ fn pipeline_slot_values(fixtures_path: Option<&str>) -> HashMap<String, String> 
     };
 
     let mut out = HashMap::new();
+    let mut dropped = 0usize;
+    let mut drop_value = |name: &str, why: &str| {
+        let level = if fixtures.strict { "error" } else { "warning" };
+        eprintln!(
+            "mosaic-compile: {level}: fixtures file {path}: slot `{name}` {why}; it was not applied"
+        );
+        dropped += 1;
+    };
     for (name, v) in object {
-        let scalar = match v {
-            serde_json::Value::String(s) => Some(s.clone()),
-            serde_json::Value::Number(n) => Some(n.to_string()),
-            serde_json::Value::Bool(b) => Some(b.to_string()),
-            serde_json::Value::Null => None,
-            _ => {
-                eprintln!(
-                    "mosaic-compile: fixtures file {path}: slot `{name}` has a non-scalar value; \
-                     list- and node-typed fixtures are not supported yet and this one is ignored"
-                );
-                None
+        match v {
+            serde_json::Value::String(s) => {
+                out.insert(name.clone(), s.clone());
             }
-        };
-        if let Some(scalar) = scalar {
-            out.insert(name.clone(), scalar);
+            serde_json::Value::Number(n) => {
+                out.insert(name.clone(), n.to_string());
+            }
+            serde_json::Value::Bool(b) => {
+                out.insert(name.clone(), b.to_string());
+            }
+            serde_json::Value::Null => {}
+            serde_json::Value::Array(_) if is_text_list_fixture(v) => match lists {
+                ListFixtures::Json => {
+                    out.insert(name.clone(), v.to_string());
+                }
+                ListFixtures::NotRendered => {}
+            },
+            serde_json::Value::Array(_) => drop_value(
+                name,
+                "is a list of something other than text or lists of text, which no backend renders as a fixture",
+            ),
+            serde_json::Value::Object(_) => drop_value(
+                name,
+                "has a node-typed (object) value, which no backend renders as a fixture",
+            ),
         }
     }
+    if fixtures.strict && dropped > 0 {
+        eprintln!(
+            "mosaic-compile: --strict-fixtures: {dropped} fixture value(s) could not be applied; failing."
+        );
+        process::exit(1);
+    }
     out
+}
+
+/// `true` for `["a", ...]` or `[["a", ...], ...]`: the only list fixtures the
+/// emitters render. An empty list qualifies.
+fn is_text_list_fixture(value: &serde_json::Value) -> bool {
+    let Some(items) = value.as_array() else {
+        return false;
+    };
+    items.iter().all(serde_json::Value::is_string)
+        || items.iter().all(|item| {
+            item.as_array()
+                .is_some_and(|inner| inner.iter().all(serde_json::Value::is_string))
+        })
 }
 
 /// Serialise a component's declared surface as JSON (#14026, #14435).

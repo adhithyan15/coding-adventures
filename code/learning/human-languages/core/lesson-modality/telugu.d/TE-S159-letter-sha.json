@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S159-letter-sha",
+    "language": "telugu",
+    "chapter": 10,
+    "sequence": 371,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:34d40959cecede82",
+    "detachableSegments": [
+      "Script you'll notice: శ",
+      "Writing: శ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

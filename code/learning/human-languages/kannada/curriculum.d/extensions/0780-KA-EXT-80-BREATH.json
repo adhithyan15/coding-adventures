@@ -1,0 +1,20 @@
+{
+  "id": "KA-EXT-80-BREATH",
+  "stage": "A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can recognise the seven Kannada consonants that carry the breath.",
+  "prerequisites": [
+    "KA-EXT-79-SIGNS"
+  ],
+  "lessons": [
+    "KA-S167-letter-dha",
+    "KA-S168-letter-bha",
+    "KA-S169-letter-pha",
+    "KA-S170-letter-kha",
+    "KA-S171-letter-gha",
+    "KA-S172-letter-ddha",
+    "KA-S173-letter-ttha",
+    "KA-R80-the-breath"
+  ]
+}

@@ -222,7 +222,9 @@ limitation recorded against a closed issue.
   the critical path" / states slack in prose, so a dedicated chip would be a
   value-only restyle — low priority.
 
-- **Segmented-switch icons.** Split out from the icon/SVG-assets item (see
+- **Segmented-switch icons.** *(Since #14016 the switcher is the toolkit
+  `SegmentedControl`, so icons are now a toolkit feature — an optional icon
+  column in its option rows — rather than TaskApp markup.)* Split out from the icon/SVG-assets item (see
   Resolved below) — everything else in that item shipped. The six
   view-switcher buttons (List/Board/Sheet/Calendar/Notes/Timeline) each want
   a small line icon in the mock. Same construction technique as everything

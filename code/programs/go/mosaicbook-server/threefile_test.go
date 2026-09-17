@@ -174,7 +174,7 @@ mosaic-pkg-toolkit = "0.1.0"
 	if comps[0].PackageSearchPath != collection {
 		t.Fatalf("PackageSearchPath: got %q, want sibling package collection %q", comps[0].PackageSearchPath, collection)
 	}
-	args := strings.Join(compilerArgs(comps[0], "html", "out.html", ""), " ")
+	args := strings.Join(compilerArgs(comps[0], "html", "out.html", "", false), " ")
 	if !strings.Contains(args, "--package-search-path "+collection) {
 		t.Fatalf("compiler args do not pass the discovered package collection: %s", args)
 	}
@@ -245,7 +245,7 @@ func TestCompilerArgs_ThreeFileFormPassesManifest(t *testing.T) {
 		ManifestPath:      "mosaic-package.toml",
 		PackageSearchPath: "packages/mosaic",
 	}
-	got := strings.Join(compilerArgs(c, "react", "out.tsx", ""), " ")
+	got := strings.Join(compilerArgs(c, "react", "out.tsx", "", false), " ")
 
 	for _, want := range []string{
 		"--interface src/Field.mil",
@@ -266,7 +266,7 @@ func TestCompilerArgs_ThreeFileFormPassesManifest(t *testing.T) {
 // defaults rather than failing on a path that does not exist.
 func TestCompilerArgs_OmitsStyleWhenAbsent(t *testing.T) {
 	c := Component{InterfacePath: "A.mil", LayoutPath: "A.mll"}
-	got := strings.Join(compilerArgs(c, "html", "out.html", ""), " ")
+	got := strings.Join(compilerArgs(c, "html", "out.html", "", false), " ")
 	if strings.Contains(got, "--style") {
 		t.Errorf("expected no --style flag; got: %s", got)
 	}
@@ -278,7 +278,7 @@ func TestCompilerArgs_OmitsStyleWhenAbsent(t *testing.T) {
 // a flag by the compiler.
 func TestCompilerArgs_LegacySingleFileForm(t *testing.T) {
 	c := Component{SourcePath: "Button.mosaic"}
-	got := strings.Join(compilerArgs(c, "html", "out.html", ""), " ")
+	got := strings.Join(compilerArgs(c, "html", "out.html", "", false), " ")
 	want := "--backend html --output out.html -- Button.mosaic"
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
@@ -533,9 +533,33 @@ func TestCompilerArgs_PassesFixturesWhenPresent(t *testing.T) {
 	if err != nil {
 		t.Fatalf("discover: %v", err)
 	}
-	got := strings.Join(compilerArgs(comps[0], "html", "out.html", "/tmp/fx.json"), " ")
+	got := strings.Join(compilerArgs(comps[0], "html", "out.html", "/tmp/fx.json", false), " ")
 	if !strings.Contains(got, "--fixtures /tmp/fx.json") {
 		t.Fatalf("fixtures path must reach the compiler: %s", got)
+	}
+}
+
+// #15428: the catalogue check compiles with --strict-fixtures so a story that
+// sets a value the backend cannot render fails instead of passing on an empty
+// preview; the interactive server does not.
+func TestCompilerArgs_StrictFixturesOnlyWhenAskedAndOnlyWithFixtures(t *testing.T) {
+	dir := t.TempDir()
+	writeThreeFileComponent(t, dir, "Badge", ".light.msl")
+	comps, err := discoverComponents(dir)
+	if err != nil {
+		t.Fatalf("discover: %v", err)
+	}
+	strict := strings.Join(compilerArgs(comps[0], "html", "out.html", "/tmp/fx.json", true), " ")
+	if !strings.Contains(strict, "--fixtures /tmp/fx.json --strict-fixtures") {
+		t.Fatalf("the check must ask for strict fixtures: %s", strict)
+	}
+	lenient := strings.Join(compilerArgs(comps[0], "html", "out.html", "/tmp/fx.json", false), " ")
+	if strings.Contains(lenient, "--strict-fixtures") {
+		t.Fatalf("the interactive preview must not be strict: %s", lenient)
+	}
+	none := strings.Join(compilerArgs(comps[0], "html", "out.html", "", true), " ")
+	if strings.Contains(none, "--strict-fixtures") {
+		t.Fatalf("no fixtures, nothing to be strict about: %s", none)
 	}
 }
 
@@ -546,7 +570,7 @@ func TestCompilerArgs_OmitsFixturesFlagWhenAbsent(t *testing.T) {
 	if err != nil {
 		t.Fatalf("discover: %v", err)
 	}
-	got := strings.Join(compilerArgs(comps[0], "html", "out.html", ""), " ")
+	got := strings.Join(compilerArgs(comps[0], "html", "out.html", "", false), " ")
 	// A story with no fixtures must not pass an empty --fixtures: "unset" is a
 	// legitimate state a component has to render, not an empty file to apply.
 	if strings.Contains(got, "--fixtures") {

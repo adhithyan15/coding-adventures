@@ -1,5 +1,198 @@
 # Changelog
 
+## Chapters 79 and 80 — every character that was left
+
+`KA-A1-L-09` closes. Kannada A1 coverage **197/258 → 198/258**; the script
+column **11/16 → 12/16**.
+
+**Characters the corpus prints without teaching: 13 → 0.** That number was 27
+when the point was first measured, 19 after chapters 67–73, and 13 after
+chapter 78.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 197/258 → **198/258 (77%)** |
+| characters used but untaught | **13 → 0** |
+| atoms taught | 440 → 453 |
+| measurable lessons | 333 → 348 |
+| writing-practice lessons | 89 → 104 |
+| `forwardReferences` | unchanged |
+| `atomChapterSpikes` | unchanged (3) |
+| `durationViolations` | unchanged (0) |
+| `atomsNeverRevisited` | unchanged |
+| `payoffSurprises` | unchanged (0) |
+| reinforcement-window misses | 707 → 745 |
+
+### Thirteen characters, three ideas
+
+Thirteen shapes is a lot to hand a reader. They are three ideas, and the
+chapters are built on the ideas rather than the shapes.
+
+**A vowel can be long, or it can move** — the signs ◌ೀ, ◌ೈ and ◌ೌ. ◌ೀ is the
+most-used character in the whole book that nothing had taught: it is in ನೀವು,
+in ನೀಲಿ, and twice inside the polite ending of *how are you?*.
+
+**The tongue can curl back**, and Kannada writes that position where English
+marks nothing — ಣ against ನ, ಷ against ಸ, with ಶ as the third sibilant. ಸಂತೋಷ
+opens on one s and closes on another, and until now a reader could read one end
+of that word and not the other.
+
+**A consonant can have the breath let out after it**, and that accounts for
+**seven of the thirteen** — ಖ ಘ ಠ ಢ ಧ ಫ ಭ, each built on a plain letter the
+reader already had. ಧ opens ಧನ್ಯವಾದ, the second word this book teaches.
+
+### Why two chapters and not one
+
+The first draft put all thirteen in chapter 79. `core/chapter-policy.json` sets
+**twelve new atoms per chapter**, and the snapshot diff showed
+`atomChapterSpikes` going 3 → 4.
+
+Splitting it fixed the metric and improved the chapter: chapter 79 carries the
+six that are about vowels and the tongue, chapter 80 carries the seven that are
+one move done seven times. **One idea per chapter**, which is what the budget is
+there to enforce.
+
+### Recognition, not writing, and the reason is sources
+
+Chapter 78's six independent vowels were taught as **writing**, with a cited
+Wikimedia Commons stroke-order animation printed under each.
+
+**None of these thirteen has a sourced ductus anywhere in this project.** So all
+thirteen are recognition lessons, and every one keeps the standing block quote
+that refuses to say where the pen starts without a source. Nothing here invents
+a stroke path to make a count move.
+
+### The last glyph, and where it came from
+
+After all thirteen landed, the count stood at **one**, not zero — and the one
+was ಔ, the independent vowel *au*, appearing exactly once in the corpus.
+
+**That one occurrence was in the new lesson itself.** `KA-S163-vowel-sign-au`
+had a line explaining that this vowel's letter form is the single independent
+vowel with no sourced stroke order, and it printed the letter to say so. A
+lesson that prints an untaught glyph in order to explain why it is untaught is
+still a lesson printing an untaught glyph.
+
+The prose now names the letter instead of showing it, and the pin in
+`tests/corpus/kannada.test.ts` is an **exact zero** rather than a ceiling — a
+single new violation is a lesson asking the reader to decode something nobody
+taught, and there is no longer a backlog for it to hide inside.
+
+### What KA-A1-L-09's probe is
+
+The **twenty-seven characters the point was opened for**: the eight chapters
+67–73 taught, the six chapter 78 taught as writing, the thirteen these two
+chapters taught as recognition. The point reopens if any one of them loses its
+lesson.
+
+Its label was a status rather than a demand — *"THE SCRIPT IS NOT CLOSED: N
+characters are used but never taught"*, with N going 27, 19, 13 as tranches
+landed. It now states what the point asks for.
+
+## Chapter 78 — the vowels that start a word
+
+Six independent vowels — **ಆ ಎ ಏ ಒ ಐ ಋ** — taught as writing, with a cited
+stroke order for each. Characters the corpus prints without teaching fall
+**19 → 13**.
+
+**No exam point moves with this chapter.** `KA-A1-L-09` demands the whole used
+set, and thirteen characters are still short of it, so Kannada stays at
+**197/258**. That is stated up front rather than buried: this chapter pays down
+debt, and the point it is aimed at closes in the tranche after it.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 197/258 → **197/258 (76%)**, unchanged |
+| characters used but untaught | **19 → 13** |
+| atoms taught | 434 → 440 |
+| measurable lessons | 326 → 333 |
+| writing-practice lessons | 82 → 89 |
+| `forwardReferences` | unchanged |
+| `scriptClosureViolations` | unchanged |
+| `durationViolations` | unchanged (0) |
+| `atomsNeverRevisited` | unchanged |
+| `payoffSurprises` | unchanged (0) |
+| reinforcement-window misses | 687 → 707 |
+
+### Why these six and not the other thirteen
+
+The nineteen characters left after chapters 67–73 split cleanly in two, and the
+split is about **sources, not difficulty**.
+
+These six have an attested stroke order. `data/scripts/kannada.json` carries a
+cited Wikimedia Commons animation for each, with frame counts, and chapter 68
+had already shown what a lesson built on one looks like by teaching ಅ with its
+four-movement order and the citation printed underneath. So these six are taught
+the same way — as **writing**, not recognition.
+
+The other thirteen — the vowel signs ii, ai and au, and ಖ ಘ ಠ ಢ ಣ ಧ ಫ ಭ ಶ ಷ —
+have **no sourced ductus anywhere in this project**. The honest fallback for an
+unsourced letter is a recognition lesson, and thirteen of those is its own
+tranche. Nothing here invents a pen path to make a count move.
+
+### What was added
+
+| lesson | character | pen lifts | anchored in |
+|---|---|---|---|
+| `KA-S155-letter-aa` | ಆ | 1 | ಆರು — six |
+| `KA-S156-letter-e` | ಎ | 0 | ಎರಡು — two |
+| `KA-S157-letter-ee` | ಏ | 1 | ಏನು — what? |
+| `KA-S158-letter-o` | ಒ | 0 | ಒಂದು — one |
+| `KA-S159-letter-ai` | ಐ | 0 | ಐದು — five |
+| `KA-S160-letter-vocalic-r` | ಋ | 2 | ಋತು — season |
+| `KA-R78-vowels-recall` | — | — | cold retrieval of all six |
+
+**Five of the six open a number the reader already counts with.** These are not
+letters kept back for being exotic; they were on the page from chapter seven,
+and only now does the reader have the shapes.
+
+**ಏ closes the first question this book ever taught** — ನಿಮ್ಮ ಹೆಸರು ಏನು?, from
+chapter two. A learner could ask it out loud and not write its last word.
+
+The recall sorts the six by **pen lifts** rather than by sound: none for ಎ, ಒ
+and ಐ; one for ಆ and ಏ; two for ಋ. Sorting by sound gives a list to memorise;
+sorting by what the hand does gives something a learner can check themselves
+against.
+
+### A draft claim that was wrong, and how it was caught
+
+The first draft of `KA-S155-letter-aa` told the reader that **ಆ is ಅ plus an
+upright on the right**, and that this is how the script marks length across the
+vowel letters.
+
+`data/scripts/kannada.json` says no such thing. It gives ಅ and ಆ the **same four
+components** — a compact left loop, a broad lower bowl, a rounded right loop, an
+inward horizontal bar — and records the difference as a **pen lift**: ಅ runs all
+four without lifting, ಆ stops once at the upper right. The generalisation was
+worse still: ಇ and ಈ share almost no components at all, so "across the vowel
+letters" was invented.
+
+Both claims came out. The lesson now says what the data says — same four parts,
+one lift apart — and points the reader at the lift, which is the thing the hand
+remembers when the eye is still deciding.
+
+A second draft claim, that ಏನು "was the second word this book taught you", was
+also wrong: it is the eleventh lesson. It now says what it is — the last word of
+the first question the book teaches.
+
+### A third one the gates did not catch
+
+`data/scripts/kannada.json` gives ಋ the ISO-15919 sound **`r̥`** — a plain `r`
+plus U+0325 COMBINING RING BELOW — and the first draft copied that straight into
+the lesson. `validate` passed. All twelve `check:*` gates passed. The full suite
+did not:
+
+```
+kannada/book/chapters/ch78-the-vowels-that-start-a-word.tex U+0325 (main)
+```
+
+Latin Modern Roman has no glyph for that combining mark, so the generated
+chapter would have printed a hole. **The track already had a renderable
+convention**: every other Kannada and Telugu lesson writes this sound `ṛ`
+(U+1E5B, precomposed), including `KA-S131-vowel-sign-vocalic-r` in this very
+track. A data file's `sound` field is reference data, not learner-facing prose.
+Recorded in `lessons.d/`.
+
 ## Chapter 77 — the marks the book had been printing and never named
 
 `KA-A1-L-12`, `KA-A1-L-13` and `KA-A1-L-14`. Kannada A1 coverage

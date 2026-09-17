@@ -12,6 +12,14 @@ component EngramApp {
   slot show-add-screen : bool = false ;
   slot show-stats-screen : bool = false ;
   slot show-options-screen : bool = false ;
+  // The screen switcher, drawn by mosaic-pkg-toolkit's SegmentedControl
+  // (#14063): one [ label, accessible-name ] row per screen, in the order
+  // Decks, Study, Browse, Add, Stats, Options. The engine writes the
+  // selected state into the name ("Study, selected") because HostButton
+  // has no selected state of its own yet (#15420).
+  slot nav-options : list<list<text>> ;
+  // Index of the active screen in nav-options.
+  slot nav-selected-index : number ;
   slot host-status-visible : bool = false ;
   slot host-status-kind : text ;
   slot host-status-label : text ;
@@ -269,6 +277,10 @@ component EngramApp {
   emit onShowAdd ;
   emit onShowStats ;
   emit onShowOptions ;
+  // The switcher's selection, as an index into nav-options. The six
+  // onShow* events above stay: they name a screen without an index, which
+  // is what a keyboard shortcut or a deep link wants.
+  emit onShowScreen ( index : number ) ;
   emit onReveal ;
   emit onSelectDeck ( index : number ) ;
   emit onAgain ;

@@ -1,0 +1,18 @@
+{
+  "id": "KA-PATH-78-VOWELS",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "KA-S155-letter-aa",
+    "KA-S156-letter-e",
+    "KA-S157-letter-ee",
+    "KA-S158-letter-o",
+    "KA-S159-letter-ai",
+    "KA-S160-letter-vocalic-r",
+    "KA-R78-vowels-recall"
+  ],
+  "before": [],
+  "inline": [
+    "KA-EXT-78-VOWELS"
+  ],
+  "after": []
+}

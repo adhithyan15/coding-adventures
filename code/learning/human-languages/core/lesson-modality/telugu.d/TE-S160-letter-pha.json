@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "TE-S160-letter-pha",
+    "language": "telugu",
+    "chapter": 17,
+    "sequence": 445,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5cae7956983e9dae",
+    "detachableSegments": [
+      "Script you'll notice: ఫ",
+      "Writing: ఫ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

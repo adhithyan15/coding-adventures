@@ -33,6 +33,41 @@ enum ViewMode {
     Notes,
 }
 
+impl ViewMode {
+    /// The view switcher's order (#14016). Not the declaration order above,
+    /// which is snapshot history. Timeline is last so that leaving it out of
+    /// a Board-tier project never shifts another view's index.
+    const SWITCHER_ORDER: [Self; 6] = [
+        Self::List,
+        Self::Board,
+        Self::Sheet,
+        Self::Calendar,
+        Self::Notes,
+        Self::Timeline,
+    ];
+
+    fn switcher_label(self) -> &'static str {
+        match self {
+            Self::List => "List",
+            Self::Board => "Board",
+            Self::Sheet => "Sheet",
+            Self::Calendar => "Calendar",
+            Self::Notes => "Notes",
+            Self::Timeline => "Timeline",
+        }
+    }
+
+    /// The views the switcher offers: all six for a Full project, and all
+    /// but Timeline otherwise.
+    fn switcher_views(full: bool) -> &'static [Self] {
+        if full {
+            &Self::SWITCHER_ORDER
+        } else {
+            &Self::SWITCHER_ORDER[..5]
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct TaskAppState {
@@ -391,6 +426,27 @@ impl TaskMosaicApp {
             Vec::new()
         };
 
+        let views = ViewMode::switcher_views(full);
+        // `[label, accessible-name]` per view for the toolkit SegmentedControl.
+        // The showing view's name says so, because HostButton has no selected
+        // state for assistive technology yet (#15420).
+        let nav_options = views
+            .iter()
+            .map(|&view| {
+                let label = view.switcher_label();
+                let name = if view == self.state.view {
+                    format!("{label}, selected")
+                } else {
+                    label.to_string()
+                };
+                [label.to_string(), name]
+            })
+            .collect::<Vec<_>>();
+        let nav_selected_index = views
+            .iter()
+            .position(|&view| view == self.state.view)
+            .unwrap_or(0);
+
         json!({
             "app-title": "Tasks — auto-scheduled",
             "new-task-name": self.state.new_task_name,
@@ -419,6 +475,8 @@ impl TaskMosaicApp {
             "theme-is-dark": if self.state.dark_theme { "dark" } else { "" },
             "complexity-label": if full { "Full CPM" } else { "Board" },
             "allow-timeline": if full { "full" } else { "" },
+            "nav-options": nav_options,
+            "nav-selected-index": nav_selected_index,
             "timeline-mode": if self.state.view == ViewMode::Timeline { "timeline" } else { "" },
             "timeline-grid": timeline_grid,
             "timeline-scale": timeline_scale,
@@ -902,6 +960,19 @@ impl TaskMosaicApp {
             "showSheet" => self.state.view = ViewMode::Sheet,
             "showCalendar" => self.state.view = ViewMode::Calendar,
             "showNotes" => self.state.view = ViewMode::Notes,
+            // The switcher's selection. The index is into the views THIS
+            // project offers, so Timeline (index 5) is out of range for a
+            // Board-tier project and refused, like any other bad index.
+            "showView" => {
+                let index = index_payload(event, "index")?;
+                let full = self.active_project().settings.complexity == ProjectComplexity::Full;
+                self.state.view = *ViewMode::switcher_views(full).get(index).ok_or(
+                    TaskAppError::InvalidPayload {
+                        event: event.name.clone(),
+                        field: "index",
+                    },
+                )?;
+            }
             "sheetToggleSortOpen" => self.state.sheet_sort_open = !self.state.sheet_sort_open,
             "sheetToggleSortDirection" => {
                 self.state.sheet_sort_ascending = !self.state.sheet_sort_ascending
@@ -1605,6 +1676,8 @@ mod tests {
         "theme-is-dark",
         "complexity-label",
         "allow-timeline",
+        "nav-options",
+        "nav-selected-index",
         "timeline-mode",
         "timeline-grid",
         "board-mode",
@@ -1966,6 +2039,80 @@ mod tests {
         assert_eq!(app.snapshot().unwrap(), before);
     }
 
+    /// #14016: the toolkit SegmentedControl is fed by `nav-options` /
+    /// `nav-selected-index` and answers with `onShowView(index)`. Rows, index
+    /// and the `*-mode` slots must describe the same view at every step, and
+    /// Timeline is offered only to a Full project.
+    #[test]
+    fn view_switcher_rows_track_the_view_and_the_tier() {
+        let mut app = TaskMosaicApp::default();
+        app.start(context()).unwrap();
+        let labels = |props: &Value| -> Vec<String> {
+            props["nav-options"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|row| row[0].as_str().unwrap().to_string())
+                .collect()
+        };
+
+        // A new project is Board tier: five views, no Timeline.
+        let board = app.dispatch(event(1, "showView", json!({"index":1}))).unwrap().props;
+        assert_eq!(labels(&board), ["List", "Board", "Sheet", "Calendar", "Notes"]);
+        assert_eq!(board["nav-selected-index"], 1);
+        assert_eq!(board["board-mode"], "board");
+        assert_eq!(board["nav-options"][1][1], "Board, selected");
+        assert_eq!(board["nav-options"][0][1], "List");
+
+        // Index 5 is Timeline, which a Board-tier project does not offer.
+        let before = app.snapshot().unwrap();
+        assert!(matches!(
+            app.dispatch(event(2, "showView", json!({"index":5}))),
+            Err(TaskAppError::InvalidPayload { field: "index", .. })
+        ));
+        assert_eq!(app.snapshot().unwrap(), before, "a refused index changes nothing");
+
+        // Full tier adds Timeline last, so no other index moves.
+        let full = app.dispatch(event(3, "toggleProjectComplexity", json!({}))).unwrap().props;
+        assert_eq!(
+            labels(&full),
+            ["List", "Board", "Sheet", "Calendar", "Notes", "Timeline"]
+        );
+        let modes = [
+            ("", ""),
+            ("board-mode", "board"),
+            ("sheet-mode", "sheet"),
+            ("calendar-mode", "calendar"),
+            ("notes-mode", "notes"),
+            ("timeline-mode", "timeline"),
+        ];
+        for (index, (slot, value)) in modes.iter().enumerate() {
+            let props = app
+                .dispatch(event(4 + index as u64, "showView", json!({ "index": index })))
+                .unwrap()
+                .props;
+            assert_eq!(props["nav-selected-index"], index, "index {index}");
+            for (other, row) in props["nav-options"].as_array().unwrap().iter().enumerate() {
+                let label = row[0].as_str().unwrap();
+                let expected = if other == index {
+                    format!("{label}, selected")
+                } else {
+                    label.to_string()
+                };
+                assert_eq!(row[1], expected, "index {index}, row {other}");
+            }
+            if !slot.is_empty() {
+                assert_eq!(props[*slot], *value, "index {index}");
+            }
+        }
+
+        // Dropping back to Board tier while on Timeline returns to List,
+        // and the index follows.
+        let back = app.dispatch(event(20, "toggleProjectComplexity", json!({}))).unwrap().props;
+        assert_eq!(back["nav-selected-index"], 0);
+        assert_eq!(labels(&back).len(), 5);
+    }
+
     #[test]
     fn every_declared_event_is_accepted() {
         let mut app = TaskMosaicApp::default();
@@ -1986,6 +2133,7 @@ mod tests {
             ("showSheet", json!({})),
             ("showCalendar", json!({})),
             ("showNotes", json!({})),
+            ("showView", json!({"index":0})),
             (
                 "cardDropped",
                 json!({"key":"missing","kind":"task","targetKey":"next","position":"inside"}),

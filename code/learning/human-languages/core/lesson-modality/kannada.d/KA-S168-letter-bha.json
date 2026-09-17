@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S168-letter-bha",
+    "language": "kannada",
+    "chapter": 80,
+    "sequence": 2890,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c9a040f150758e15",
+    "detachableSegments": [
+      "Script you'll notice: ಭ",
+      "Writing: ಭ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
