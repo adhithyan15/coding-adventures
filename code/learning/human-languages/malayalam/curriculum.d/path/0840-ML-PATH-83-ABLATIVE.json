@@ -1,0 +1,15 @@
+{
+  "id": "ML-PATH-83-ABLATIVE",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "ML-C83-ninnu",
+    "ML-C83-evide-ninnu",
+    "ML-C83-keralathil",
+    "ML-R83-from-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-83-ABLATIVE"
+  ],
+  "after": []
+}

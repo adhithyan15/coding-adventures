@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R83-from-recall",
+    "language": "malayalam",
+    "chapter": 83,
+    "sequence": 2910,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7ef914244ae86e95"
+  },
+  "findings": []
+}

@@ -4,7 +4,8 @@
     "ML-PATH-100",
     "ML-PATH-52-WELCOME",
     "ML-PATH-53-SKY",
-    "ML-PATH-60-ANIMAL"
+    "ML-PATH-60-ANIMAL",
+    "ML-PATH-82-ADDRESS"
   ],
   "omits": [
     "GREETING-FORMAL",

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C83-evide-ninnu",
+    "language": "malayalam",
+    "chapter": 83,
+    "sequence": 2890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5af87220c3ee73c0"
+  },
+  "findings": []
+}

@@ -1,5 +1,166 @@
 # Changelog
 
+## Chapter 83 — where you came from
+
+`ML-A1-CASE-06` closes. Coverage **186/243 → 187/243 (77%)**.
+
+The point's blocker was named on the point itself: *"combined with the missing
+place names at ML-A1-N-02, 'where are you from' cannot be answered at all."*
+Chapter 80 supplied the place names, so this chapter could be written.
+
+**It adds no vocabulary at all.**
+
+### From is built on in
+
+| | |
+|---|---|
+| **ഊരിൽ** *ūril* | in the town |
+| **ഊരിൽ നിന്ന്** *ūril ninnŭ* | **from** the town |
+
+**നിന്ന് follows a word that already carries the in-ending**, so *from* is a
+second step **on top of** *in* rather than an ending competing with it, and the
+sense follows the shape.
+
+One thing separates it from every ending taught so far. The endings **glue on**;
+**നിന്ന് is a word of its own, standing apart.** The lesson explains why rather
+than asking the reader to remember it: it began as a form of a verb meaning *to
+stand* — *having stood in the town* — and hardened into the ordinary way to say
+*from*.
+
+### The question costs nothing
+
+**എവിടെ** already asks about a place you are **at**. Put the new word after it
+and the question builds itself:
+
+**എവിടെ നിന്ന്?** — *eviṭe ninnŭ?* — where from?
+
+Two words the learner owns, in the order the previous lesson gave them. **A
+well-built system spends its second question for free**, and the lesson says so
+instead of presenting the phrase as something to memorise.
+
+### The third lesson reaches well past this point
+
+| | in it |
+|---|---|
+| **ഇന്ത്യ** | **ഇന്ത്യയിൽ** — a vowel and a **-യ-** join |
+| **കേരളം** | **കേരളത്തിൽ** — the **-ം is gone**, **-ത്ത-** in its place |
+
+That is **a class, not an exception**. Every noun ending in **-ം** does it, and
+the book has taught a pile of them — **പുസ്തകം** becomes **പുസ്തകത്തിൽ** by the
+same rule. Learning it once puts **every -ം noun the learner owns** into the
+in-form, which is a far better return than memorising two place names.
+
+The framing the lesson gives it: **-ം is a citation dress.** It is what the word
+wears standing alone and being named, and it is dropped the moment anything is
+added. Look for that habit rather than for a list.
+
+And the chapter lands:
+
+**കേരളത്തിൽ നിന്ന്** — *kēraḷattil ninnŭ* — from Kerala.
+
+### Verified before writing
+
+**നിന്ന്**, **കേരളത്തിൽ**, **ഊരിൽ** and **ഇന്ത്യയിൽ** each returned **zero**
+files. A sweep for any existing oblique **-ത്തി-** form found only unrelated
+words — *aniyatti*, *katti*, *vākkatti* — so no lesson was silently using the
+shape this chapter teaches.
+
+`banned-words` fired once, at 1057 against 1056, on a *"just taught"* in the
+second lesson. Rewritten, not pinned.
+
+### Metrics
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 186/243 → **187/243 (77%)** |
+| new words taught | **none** |
+| `forwardReferences` | unchanged |
+
+## Chapter 82 — opening a conversation
+
+`ML-A1-S-07`, `ML-A1-F-35` and `ML-A1-REG-05` all close. Coverage **183/243 →
+186/243 (77%)**.
+
+The learner could count, describe, own, negate and grade — and could not
+**start**. This chapter is the opening line, which is the thing a learner needs
+first and usually gets last.
+
+### The words were already there
+
+The note said no term of address was taught. True, but the fix was cheaper than
+it sounds, because **ചേട്ടൻ** and **ചേച്ചി** have been taught since the family
+chapter.
+
+**In Kerala the sibling words are used well outside the family** — a shopkeeper,
+a driver, somebody a little older than you in a queue. **You address a stranger
+as kin**, and that is ordinary politeness rather than a familiarity you have to
+earn. English has nothing that works this way; *excuse me* names no relationship
+at all.
+
+### What was new is the calling form
+
+| | about them | **to** them |
+|---|---|---|
+| older brother | **ചേട്ടൻ** | **ചേട്ടാ** |
+| older sister | **ചേച്ചി** | **ചേച്ചി** |
+
+**A word ending in -ൻ swaps that ending for -ാ when you call somebody with it.**
+*cēcci* has no **-ൻ** to swap, so it stands as it is — stated as **a rule with
+nothing to act on** rather than as an exception, because that is what it is.
+
+### The register lesson teaches no word at all
+
+`ML-A1-REG-05`'s note contained its own method: *"the evidence is in the
+lessons' own register fields; the guidance is not in their prose."* So the
+lesson states the rule those fields already encode.
+
+| greeting | its own `register` field | reach |
+|---|---|---|
+| **നമസ്കാരം** | `respectful-neutral` | anyone, any hour |
+| **സുപ്രഭാതം** | `formal` | the morning — **formal or not** |
+| **ശുഭ മധ്യാഹ്നം** | `formal` | the afternoon |
+| **ശുഭ സായാഹ്നം** | `formal` | the evening |
+| **ശുഭ രാത്രി** | `formal` | the night |
+
+**നമസ്കാരം is never wrong.** The **ശുഭ** family is written and announced more
+than it is spoken. **സുപ്രഭാതം is the exception inside its own family** — its own
+lesson already records it as used in *both* formal and informal contexts and as
+the most general morning greeting — so anybody can say it before noon.
+
+**Knowing a word and knowing when it is used are two different pieces of
+knowledge**, and the corpus had given the first and not the second.
+
+### A forward reference the full suite caught, and the real fix
+
+A first version made `ML-C82-chechi-address` a **`word`** lesson with the
+headword **ചേച്ചി**. The suite failed at `forwardReferences` 13 against a ceiling
+of 12, naming a script lesson **255 lessons earlier**.
+
+The cause is worth recording. `ML-C12-kudumbam` teaches six family words under
+**one six-word headword**, and `continuity.ts` keeps a multi-word headword
+**whole** rather than splitting it. So no lesson owned the bare token ചേച്ചി, and
+the script lesson's use of it was **invisible debt**. Giving that token an owner
+converted the debt into a visible forward reference.
+
+**The fix was not to raise the pin.** This lesson does not teach the word — the
+family chapter did. It teaches a **use**, and the new knowledge is a rule, so its
+type is `grammar`. That is the accurate classification and it happens to be the
+one that does not claim ownership of a token taught long before.
+
+### Verified before writing
+
+**ചേട്ടാ** returned **zero** files. **ചേട്ടൻ** and **ചേച്ചി** returned three each,
+all citation uses — which is what made the chapter cheap, and also what created
+the trap above.
+
+### Metrics
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 183/243 → **186/243 (77%)** |
+| new words taught | **one** — ചേട്ടാ |
+| `forwardReferences` | unchanged at 12 (13 at one point — see above) |
+
 ## Chapter 81 — how far away
 
 `ML-A1-ADV-09` closes. Coverage **182/243 → 183/243 (75%)**.

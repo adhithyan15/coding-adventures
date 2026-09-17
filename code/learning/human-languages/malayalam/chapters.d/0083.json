@@ -1,0 +1,17 @@
+{
+  "chapter": 83,
+  "title": "Where You Came From",
+  "label": "ch:ml-ablative",
+  "canDo": "I can ask where somebody is from and answer with any place I know.",
+  "payoff": {
+    "lesson": "ML-R83-from-recall",
+    "kind": "production",
+    "summary": "From cold: the from-word and what must precede it, the question it builds at no cost, and what a noun ending in -am does before any ending.",
+    "assesses": [
+      "ML-GRAMMAR-C83-ABLATIVE-01",
+      "ML-CONCEPT-C83-WHERE-FROM-01",
+      "ML-GRAMMAR-C83-OBLIQUE-AM-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. No new vocabulary at all: the place names come from chapter 80, evide from the deixis chapter, and the in-ending from the first verbs."
+  }
+}

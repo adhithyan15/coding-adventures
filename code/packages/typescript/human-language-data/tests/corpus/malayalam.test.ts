@@ -277,8 +277,30 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // akale opens with a and the distal deictic prefix is a-, but here it is part of
   // the word, and the test is whether the other members exist (no ikale, no ekale,
   // so no set). Verified before writing: all three new words returned ZERO files.
-  expect(coverage.covered).toBe(183);
-  expect(coverage.unmapped).toBe(60);
+  // 183 -> 186: ML-A1-S-07 (the vocative), ML-A1-F-35 (addressing somebody) and
+  // ML-A1-REG-05 (which greeting, when). The first two were cheaper than their
+  // notes suggested because the WORDS were already there: chettan and chechi have
+  // been taught since the family chapter, and in Kerala the sibling words are used
+  // outward -- you address a stranger as KIN. What was new is the CALLING form: a
+  // word ending in -an swaps it for -aa, so chettan becomes chettaa; chechi has no
+  // -an to swap and stands as it is. REG-05 teaches NO WORD AT ALL: all five
+  // greetings were already taught and the lesson states the rule the corpus's own
+  // register fields already encode -- namaskaram is respectful-neutral and never
+  // wrong, the four shubha greetings are formal and mostly read, suprabhaatham is
+  // the everyday exception inside its own family.
+  // 186 -> 187: ML-A1-CASE-06, the ablative, whose blocker chapter 80 removed --
+  // its note said "combined with the missing place names at ML-A1-N-02, where are
+  // you from cannot be answered at all". The chapter adds NO VOCABULARY. ninnu
+  // follows a word already carrying the locative -il, so "from" is a second step
+  // ON TOP of "in"; and unlike every ending so far it is a WORD standing apart,
+  // not a suffix, which the lesson explains from its origin as a form of a verb
+  // meaning "to stand". The question costs nothing: evide ninnu is two owned words
+  // in the order just taught. The third lesson has reach well past this point -- a
+  // noun ending in -am REPLACES it with -att- before any ending (Keralam ->
+  // Keralattil, pustakam -> pustakattil), which is a CLASS, not an exception, and
+  // puts every -am noun in the book into the locative from one rule.
+  expect(coverage.covered).toBe(187);
+  expect(coverage.unmapped).toBe(56);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -290,6 +312,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 183/243 points covered (75%)",
+    "malayalam A1 (partial inventory): 187/243 points covered (77%)",
   );
 }, 60_000);

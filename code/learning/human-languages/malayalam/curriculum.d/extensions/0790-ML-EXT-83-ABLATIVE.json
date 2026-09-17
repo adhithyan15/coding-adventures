@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-83-ABLATIVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that something comes out of a place, not only that it is in one.",
+  "prerequisites": [
+    "ML-EXT-82-ADDRESS"
+  ],
+  "lessons": [
+    "ML-C83-ninnu",
+    "ML-C83-evide-ninnu",
+    "ML-C83-keralathil",
+    "ML-R83-from-recall"
+  ]
+}
