@@ -22,6 +22,26 @@ All notable changes to the Go build tool will be documented in this file.
   this repo's `*_windows` `BUILD` files) are untouched, since the filter
   only matches a lone flag cluster with no `=`.
 
+- A POSIX inline environment-variable prefix at the start of a BUILD line —
+  `RUSTDOCFLAGS="-D warnings" cargo doc -p widget --no-deps`, present in
+  17+ Rust crates' BUILD files, plus the same shape for `PYTHONPATH`,
+  `NPM_CONFIG_CACHE`, and `PYTHONIOENCODING` in a handful of other
+  packages — crashed the whole package's Windows build with `'RUSTDOCFLAGS'
+  is not recognized as an internal or external command`. cmd.exe (which
+  `runPackageBuild` invokes each BUILD line through on Windows) has no
+  notion of "set this variable for just the following command," so it
+  tried to run the literal text `RUSTDOCFLAGS="-D` as a program name.
+  `shellCommandForOS` now rewrites a simple prefix (bare or double-quoted
+  value, no command substitution, no chained assignments) into cmd's own
+  `set "VAR=value"&& command` form before invoking cmd.exe on Windows;
+  Unix is untouched, since the original line already works there. A
+  prefix this narrow translation can't safely express (`$(...)`, a second
+  chained assignment, a subshell) is left unchanged, exactly as it was
+  before this fix -- those shapes already have a hand-written
+  `BUILD_windows` override wherever they're actually exercised on Windows
+  CI (verified against every current instance in the repo before writing
+  this).
+
 - `packageCost` now weighs a Rust package higher when its build commands
   invoke `cargo tarpaulin`: coverage instrumentation measurably costs several
   times a plain `cargo test`, but the shard cost model treated every Rust

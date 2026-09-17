@@ -323,6 +323,7 @@ func shellCommand(command string) *exec.Cmd {
 // non-Windows hosts.
 func shellCommandForOS(command string, goos string) *exec.Cmd {
 	if goos == "windows" {
+		command = rewriteInlineEnvPrefixForWindows(command)
 		cmd := exec.Command("cmd", "/C", command)
 		// See executor_windows.go: this overrides the actual command line
 		// used to launch the process so cmd.exe receives it unescaped,
@@ -331,6 +332,86 @@ func shellCommandForOS(command string, goos string) *exec.Cmd {
 		return cmd
 	}
 	return exec.Command("sh", "-c", command)
+}
+
+// inlineEnvPrefixPattern matches a POSIX inline environment-variable prefix
+// — `VAR=value command...` or `VAR="value" command...` — followed by a
+// command. A double-quoted value may contain spaces (that's the point of
+// quoting it, e.g. `RUSTDOCFLAGS="-D warnings"`) but not `$`, backticks, or
+// another `"`, since those mean the value isn't a plain string. A bare
+// (unquoted) value may contain none of those either, plus no whitespace
+// (unquoted whitespace is where the value ends and the command begins).
+// Either way, `&`, `|`, `;`, parens, and `<`/`>` are excluded from the
+// value: those are shell control-flow/redirection characters with no
+// single cmd.exe translation, and every BUILD file in this repo using one
+// of those shapes already carries a hand-written BUILD_windows override
+// (see readLines's own doc comment on `set -e` for the parallel case:
+// don't guess at a translation cmd.exe can't express).
+var inlineEnvPrefixPattern = regexp.MustCompile(
+	`^([A-Za-z_][A-Za-z0-9_]*)=(?:"([^"$` + "`" + `&|;()<>]*)"|([^"$` + "`" + `&|;()<>\s]+))\s+(\S.*)$`,
+)
+
+// chainedAssignmentPattern matches a second leading `VAR=` at the start of
+// what rewriteInlineEnvPrefixForWindows already isolated as "the rest of
+// the command" (e.g. `DOTNET_CLI_HOME=$HOME dotnet test` inside
+// `DOTNET_SKIP...=1 DOTNET_CLI_HOME=$HOME dotnet test`). Two prefixes
+// stacked like this only mean "set both, then run the command" in POSIX
+// shells — cmd.exe's `set` can express that too (two `set ... &&` in a
+// row), but only correctly if EVERY assignment in the chain is itself
+// translatable, and by the time this file is walking a second assignment
+// it has already committed to treating the first `\s+` as the split point
+// between name and command. Getting that ambiguous rather than silently
+// mistranslating: bail out and let cmd.exe's existing (correct) rejection
+// stand, matching every other multi-assignment BUILD line's reliance on a
+// hand-written BUILD_windows override.
+var chainedAssignmentPattern = regexp.MustCompile(`^[A-Za-z_][A-Za-z0-9_]*=`)
+
+// rewriteInlineEnvPrefixForWindows translates a simple POSIX inline
+// environment-variable prefix into cmd.exe's equivalent, so a BUILD line
+// like `RUSTDOCFLAGS="-D warnings" cargo doc -p widget --no-deps` — which
+// runs fine under `sh -c` but is a syntax error to `cmd /C` (cmd has no
+// notion of "set this variable for just the following command") — becomes
+// `set "RUSTDOCFLAGS=-D warnings"&& cargo doc -p widget --no-deps`. `set`
+// inside one `cmd /C` invocation only affects that invocation's own
+// environment, which already matches the POSIX prefix's scope: each
+// BuildCommands line is its own separate process (see runCommands' doc
+// comment), so there is nothing for the variable to leak into either way.
+// Lines that don't match inlineEnvPrefixPattern, or whose "rest" is itself
+// another assignment, are returned unchanged — cmd.exe will still reject
+// anything more complex, exactly as it did before this function existed,
+// which is the correct outcome for a shape this translation can't safely
+// express.
+//
+// Known limitation, not currently reached by any BUILD file in this repo:
+// cmd.exe expands a literal `%NAME%` inside a command line (including
+// inside `set "..."`'s own quotes) before `set` ever runs, so a value
+// containing `%` would not round-trip byte-for-byte the way it does under
+// `sh -c`. None of the values this rewrite has ever been exercised against
+// contain `%`; if one ever does, that BUILD line needs the same treatment
+// as every other unrewritable shape here — a hand-written BUILD_windows
+// override, not a guess bolted onto this regex.
+func rewriteInlineEnvPrefixForWindows(command string) string {
+	idx := inlineEnvPrefixPattern.FindStringSubmatchIndex(command)
+	if idx == nil {
+		return command
+	}
+	name := command[idx[2]:idx[3]]
+	// Exactly one of the quoted-value group (2) or bare-value group (3)
+	// participated in the match — a -1 start index means that alternative
+	// wasn't taken. Reading the group that lost is what would make
+	// `VAR=""` (a legal, empty value) indistinguishable from "no value
+	// captured"; indices avoid that ambiguity FindStringSubmatch cannot.
+	var value string
+	if idx[4] >= 0 {
+		value = command[idx[4]:idx[5]] // quoted: `VAR="value"`
+	} else {
+		value = command[idx[6]:idx[7]] // bare: `VAR=value`
+	}
+	rest := command[idx[8]:idx[9]]
+	if chainedAssignmentPattern.MatchString(rest) {
+		return command
+	}
+	return `set "` + name + `=` + value + `"&& ` + rest
 }
 
 // ExecuteBuilds runs BUILD commands for packages respecting dependency order.
