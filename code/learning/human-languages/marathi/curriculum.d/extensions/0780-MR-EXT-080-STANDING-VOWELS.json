@@ -1,0 +1,17 @@
+{
+  "id": "MR-EXT-080-STANDING-VOWELS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the four vowel letters that open a word, against the four signs that cannot.",
+  "prerequisites": [
+    "MR-EXT-079-ROWS-CLOSED"
+  ],
+  "lessons": [
+    "MR-W65-ii-independent",
+    "MR-W65-o-independent",
+    "MR-W65-ai-independent",
+    "MR-W65-au-independent",
+    "MR-R65-standing-vowels"
+  ]
+}

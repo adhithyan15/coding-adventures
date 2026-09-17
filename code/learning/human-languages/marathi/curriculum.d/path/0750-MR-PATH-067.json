@@ -1,0 +1,16 @@
+{
+  "id": "MR-PATH-067",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "MR-W65-ii-independent",
+    "MR-W65-o-independent",
+    "MR-W65-ai-independent",
+    "MR-W65-au-independent",
+    "MR-R65-standing-vowels"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-080-STANDING-VOWELS"
+  ],
+  "after": []
+}

@@ -1427,8 +1427,13 @@ describe("the committed Marathi A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(165);
-    expect(coverage.unmapped).toBe(136);
+    //
+    // 165 -> 166: chapter 65 closes MR-A1-OR-12, the independent ii, o, ai and au.
+    // ONE point for five lessons, and the ratio is honest: four letters that each
+    // need their own shape practised, plus the review. All four had a sign the
+    // reader already drew, so the gap was in the POSITION rather than the sound.
+    expect(coverage.covered).toBe(166);
+    expect(coverage.unmapped).toBe(135);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -1439,7 +1444,7 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 165/301 points covered (55%)",
+      "marathi A1 (partial inventory): 166/301 points covered (55%)",
     );
   }, 60_000);
 });

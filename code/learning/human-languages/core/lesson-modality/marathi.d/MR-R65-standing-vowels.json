@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "MR-R65-standing-vowels",
+    "language": "marathi",
+    "chapter": 65,
+    "sequence": 2680,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6f551637cc8370ee",
+    "detachableSegments": [
+      "Script: the four pairs, written out once"
+    ]
+  },
+  "findings": []
+}
