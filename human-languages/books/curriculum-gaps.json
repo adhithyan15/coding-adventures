@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 6939,
+    "totalLessons": 6944,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 5526,
+    "drivableLessons": 5529,
     "drivablePercent": 80,
     "chaptersWithoutDrivablePrefix": 218,
     "unexplainedModalityOverrides": 0
@@ -2079,7 +2079,8 @@
           101,
           102,
           103,
-          104
+          104,
+          105
         ],
         "bookChapters": [
           1,
@@ -2185,7 +2186,8 @@
           101,
           102,
           103,
-          104
+          104,
+          105
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -4037,9 +4039,9 @@
       {
         "language": "hindi",
         "status": "version-2",
-        "lessonCount": 501,
+        "lessonCount": 506,
         "versions": {
-          "2": 501
+          "2": 506
         }
       },
       {
@@ -4843,8 +4845,8 @@
       },
       {
         "language": "hindi",
-        "bookChapters": 104,
-        "declaredChapters": 104,
+        "bookChapters": 105,
+        "declaredChapters": 105,
         "missingCapability": 0,
         "findings": 13,
         "clean": false
@@ -4979,8 +4981,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1550,
-      "declaredChapters": 1550,
+      "bookChapters": 1551,
+      "declaredChapters": 1551,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 87,
@@ -4992,9 +4994,9 @@
     }
   },
   "levels": {
-    "totalLessons": 6939,
+    "totalLessons": 6944,
     "byLevel": {
-      "pre-A1": 3895,
+      "pre-A1": 3900,
       "A1": 2300,
       "A2": 660,
       "B1": 39,
@@ -5097,9 +5099,9 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 501,
+        "lessonCount": 506,
         "byLevel": {
-          "pre-A1": 290,
+          "pre-A1": 295,
           "A1": 142,
           "A2": 69,
           "B1": 0,
@@ -6119,8 +6121,8 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 501,
-        "measurable": 484,
+        "lessonCount": 506,
+        "measurable": 489,
         "unmeasurable": 17,
         "lessonViolations": 1,
         "chapterViolations": 2
@@ -6668,7 +6670,7 @@
           "language": "hindi",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 501,
+          "lessonCount": 506,
           "totalGlyphs": 57,
           "lessonViolations": 3,
           "systemViolations": 0,
@@ -11262,7 +11264,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
         "atom": "HI-SCRIPT-RECOG-01",
@@ -29777,7 +29779,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "HI-CONCEPT-C04-MILENGE-01",
@@ -29885,7 +29887,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "HI-CONCEPT-C07-NAHIN-01",
@@ -31032,6 +31034,30 @@
         "language": "hindi",
         "introducedBy": "HI-C85-mat",
         "introducedAt": 417,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-LEX-C86-PRON-03",
+        "language": "hindi",
+        "introducedBy": "HI-C86-hamen-tumhen",
+        "introducedAt": 422,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-LEX-C86-PRON-05",
+        "language": "hindi",
+        "introducedBy": "HI-C86-koi-article",
+        "introducedAt": 424,
         "missed": [
           "R2",
           "R3",
@@ -50483,26 +50509,26 @@
         "revisits": 3
       },
       {
-        "atom": "HI-LEX-C86-PRON-03",
+        "atom": "HI-LEX-C86-PRON-02",
         "language": "hindi",
-        "introducedBy": "HI-C86-hamen-tumhen",
-        "introducedAt": 422,
+        "introducedBy": "HI-C86-ve",
+        "introducedAt": 421,
         "missed": [
-          "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
-        "atom": "HI-LEX-C86-PRON-05",
+        "atom": "HI-LEX-C86-PRON-04",
         "language": "hindi",
-        "introducedBy": "HI-C86-koi-article",
-        "introducedAt": 424,
+        "introducedBy": "HI-C86-aapko-use",
+        "introducedAt": 423,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
-        "revisits": 2
+        "revisits": 5
       },
       {
         "atom": "HI-LEX-C87-PAST-03",
@@ -50723,6 +50749,17 @@
           "R3"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "HI-LEX-C94-SPAN-03",
+        "language": "hindi",
+        "introducedBy": "HI-C94-se-tak-samay",
+        "introducedAt": 485,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
       },
       {
         "atom": "HI-LEX-DAUGHTER",
@@ -71244,7 +71281,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 6
+        "revisits": 7
       },
       {
         "atom": "HI-CONCEPT-W05-WRITE-NAMASTE-02",
@@ -71607,26 +71644,6 @@
         "revisits": 7
       },
       {
-        "atom": "HI-LEX-C86-PRON-02",
-        "language": "hindi",
-        "introducedBy": "HI-C86-ve",
-        "introducedAt": 421,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "HI-LEX-C86-PRON-04",
-        "language": "hindi",
-        "introducedBy": "HI-C86-aapko-use",
-        "introducedAt": 423,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 5
-      },
-      {
         "atom": "HI-LEX-C87-PAST-01",
         "language": "hindi",
         "introducedBy": "HI-C87-thaa",
@@ -71817,14 +71834,24 @@
         "revisits": 3
       },
       {
-        "atom": "HI-LEX-C94-SPAN-03",
+        "atom": "HI-LEX-C94-SPAN-01",
         "language": "hindi",
-        "introducedBy": "HI-C94-se-tak-samay",
-        "introducedAt": 485,
+        "introducedBy": "HI-C94-tak",
+        "introducedAt": 483,
         "missed": [
-          "R2"
+          "R3"
         ],
-        "revisits": 1
+        "revisits": 3
+      },
+      {
+        "atom": "HI-LEX-C94-SPAN-02",
+        "language": "hindi",
+        "introducedBy": "HI-C94-se-tak-din",
+        "introducedAt": 484,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "HI-LEX-C94-SPAN-04",
@@ -71885,6 +71912,76 @@
           "R2"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "HI-LEX-C96-TENS-01",
+        "language": "hindi",
+        "introducedBy": "HI-C96-tees-chaalees",
+        "introducedAt": 496,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-LEX-C96-TENS-02",
+        "language": "hindi",
+        "introducedBy": "HI-C96-tees-chaalees",
+        "introducedAt": 496,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-LEX-C96-TENS-03",
+        "language": "hindi",
+        "introducedBy": "HI-C96-pachaas-saath",
+        "introducedAt": 497,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-LEX-C96-TENS-04",
+        "language": "hindi",
+        "introducedBy": "HI-C96-pachaas-saath",
+        "introducedAt": 497,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-LEX-C96-TENS-05",
+        "language": "hindi",
+        "introducedBy": "HI-C96-sattar-assi-nabbe",
+        "introducedAt": 498,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-LEX-C96-TENS-06",
+        "language": "hindi",
+        "introducedBy": "HI-C96-sattar-assi-nabbe",
+        "introducedAt": 498,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-LEX-C96-TENS-07",
+        "language": "hindi",
+        "introducedBy": "HI-C96-sattar-assi-nabbe",
+        "introducedAt": 498,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "HI-LEX-COME",
@@ -90270,11 +90367,11 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 501,
+        "lessonCount": 506,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 542,
+        "atomsTaught": 545,
         "atomsNeverRevisited": 33,
         "forwardReferences": 22
       },
@@ -90444,14 +90541,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 8632,
+      "atomsTaught": 8635,
       "atomsNeverRevisited": 495,
       "neverRevisitedPercent": 6,
       "missedByWindow": {
         "R1": 1722,
-        "R2": 3889,
-        "R3": 5507,
-        "R4": 4104
+        "R2": 3896,
+        "R3": 5510,
+        "R4": 4108
       },
       "forwardReferences": 791
     }
@@ -90513,8 +90610,8 @@
       {
         "language": "hindi",
         "script": "devanagari",
-        "lessonCount": 501,
-        "scriptLessons": 85,
+        "lessonCount": 506,
+        "scriptLessons": 87,
         "taughtGlyphs": 55,
         "shownGlyphs": 57,
         "neverTaughtGlyphs": 2,
@@ -99569,6 +99666,24 @@
             "stage": "timed-assessment-production",
             "level": "A1",
             "sequence": 3310
+          },
+          {
+            "language": "hindi",
+            "lessonId": "HI-C97-sandesh",
+            "blockIndex": 1,
+            "blockTitle": "Writing: the three parts, with the model in front of you",
+            "stage": "controlled-composition",
+            "level": "pre-A1",
+            "sequence": 4510
+          },
+          {
+            "language": "hindi",
+            "lessonId": "HI-C97-sintesis-sandesh",
+            "blockIndex": 1,
+            "blockTitle": "Writing: produce the message from the cue alone",
+            "stage": "connected-composition",
+            "level": "pre-A1",
+            "sequence": 4520
           }
         ],
         "validEvidence": [
@@ -99706,6 +99821,24 @@
             "stage": "timed-assessment-production",
             "level": "A1",
             "sequence": 3310
+          },
+          {
+            "language": "hindi",
+            "lessonId": "HI-C97-sandesh",
+            "blockIndex": 1,
+            "blockTitle": "Writing: the three parts, with the model in front of you",
+            "stage": "controlled-composition",
+            "level": "pre-A1",
+            "sequence": 4510
+          },
+          {
+            "language": "hindi",
+            "lessonId": "HI-C97-sintesis-sandesh",
+            "blockIndex": 1,
+            "blockTitle": "Writing: produce the message from the cue alone",
+            "stage": "connected-composition",
+            "level": "pre-A1",
+            "sequence": 4520
           }
         ],
         "defects": [],
@@ -110134,7 +110267,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 764,
+      "evidenceBlocks": 766,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 243
     }
@@ -110599,8 +110732,8 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 501,
-        "atomMeasurableLessons": 484,
+        "lessonCount": 506,
+        "atomMeasurableLessons": 489,
         "atomMeasurementBlindLessons": 17,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
@@ -110615,17 +110748,17 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 22,
-        "atomsTaught": 542,
+        "atomsTaught": 545,
         "atomsNeverRevisited": 33,
-        "reinforcementWindowMisses": 1284,
+        "reinforcementWindowMisses": 1298,
         "reinforcementMissesByWindow": {
           "R1": 167,
-          "R2": 256,
-          "R3": 465,
-          "R4": 396
+          "R2": 263,
+          "R3": 468,
+          "R4": 400
         },
         "payoffSurprises": 13,
-        "writingPracticeLessons": 124,
+        "writingPracticeLessons": 126,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -110660,7 +110793,7 @@
           {
             "language": "hindi",
             "kind": "reinforcement",
-            "count": 1284,
+            "count": 1298,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -112342,7 +112475,7 @@
       {
         "language": "hindi",
         "kind": "reinforcement",
-        "count": 1284,
+        "count": 1298,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -112886,16 +113019,16 @@
         "blockers": [
           {
             "criterion": "vocabulary",
-            "detail": "teaches 197 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 103
+            "detail": "teaches 199 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 101
           },
           {
             "criterion": "reinforcement",
-            "detail": "45 atom(s) at or below pre-A1 are revisited fewer than twice",
-            "shortfall": 45
+            "detail": "44 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 44
           }
         ],
-        "vocabulary": 349
+        "vocabulary": 351
       },
       {
         "language": "italian",
@@ -113303,12 +113436,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 6939,
-    "voice": 4993,
+    "totalLessons": 6944,
+    "voice": 4996,
     "sight": 750,
-    "pen": 1196,
-    "coreVoice": 5526,
-    "lessonsWithWritingSegments": 713,
+    "pen": 1198,
+    "coreVoice": 5529,
+    "lessonsWithWritingSegments": 715,
     "drivablePercent": 80,
     "tracks": [
       {
@@ -117222,13 +117355,13 @@
       },
       {
         "language": "hindi",
-        "lessonCount": 501,
-        "voice": 350,
+        "lessonCount": 506,
+        "voice": 353,
         "sight": 66,
-        "pen": 85,
-        "coreVoice": 388,
+        "pen": 87,
+        "coreVoice": 391,
         "drivablePercent": 77,
-        "drivablePrefixTotal": 327,
+        "drivablePrefixTotal": 330,
         "chapters": [
           {
             "language": "hindi",
@@ -118779,6 +118912,22 @@
             ],
             "drivablePrefix": 5,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "hindi",
+            "chapter": 105,
+            "lessonCount": 5,
+            "voice": 3,
+            "sight": 0,
+            "pen": 2,
+            "coreVoice": 3,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "HI-C97-sandesh"
           }
         ]
       },
@@ -136682,7 +136831,7 @@
     "underspentPercent": 90
   },
   "infoDump": {
-    "lessons": 6939,
+    "lessons": 6944,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -136690,11 +136839,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 6939,
-    "measuredLessons": 3775,
-    "idiomMeasuredLessons": 3775,
-    "senseMeasuredLessons": 3776,
-    "cultureClaimMeasuredLessons": 3775,
+    "lessons": 6944,
+    "measuredLessons": 3780,
+    "idiomMeasuredLessons": 3780,
+    "senseMeasuredLessons": 3781,
+    "cultureClaimMeasuredLessons": 3780,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 207,
@@ -136703,14 +136852,14 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 6490,
-    "usesBeforeIntroduction": 21589,
-    "technicalUsesBeforeIntroduction": 5382,
-    "technicalLessons": 2996,
+    "lessonsUsingTerms": 6495,
+    "usesBeforeIntroduction": 21600,
+    "technicalUsesBeforeIntroduction": 5384,
+    "technicalLessons": 2998,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 1685
+        "lessons": 1686
       },
       {
         "term": "noun",
@@ -136718,7 +136867,7 @@
       },
       {
         "term": "adjective",
-        "lessons": 313
+        "lessons": 314
       },
       {
         "term": "pronoun",
@@ -136735,12 +136884,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 6939,
+    "lessonsScanned": 6944,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1619,
+    "filesScanned": 1620,
     "mainCharacters": 133,
     "scriptCharacters": 799,
     "gaps": 0
