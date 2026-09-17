@@ -1106,9 +1106,11 @@
       "id": "HI-A1-S-03",
       "category": "Vakya (the sentence)",
       "label": "the vocative: addressing a named reader or hearer",
-      "probe": null,
+      "probe": [
+        "HI-CONCEPT-C97-ADDRESS-01"
+      ],
       "derivedFrom": "ES:A1-SN-04",
-      "note": "The writing task in both mocks is addressed to a named person -- Reema, Mohan -- and the rubric awards 10 of that task's 60 points for a clear named reader. No atom covers address."
+      "note": "The writing task in both mocks is addressed to a named person -- Reema, Mohan -- and the rubric awards 10 of that task's 60 points for a clear named reader. HI-C97-naam-ji introduces the address itself: a name with जी after it, the honorific the track taught long ago, now in a new position. HI-C97-priya adds the written opening that sits on the other side of the name, but the probe rests on the address atom alone, which is what the rubric line names."
     },
     {
       "id": "HI-A1-S-04",
@@ -1124,9 +1126,12 @@
       "id": "HI-A1-S-05",
       "category": "Vakya (the sentence)",
       "label": "producing a connected two-sentence message for a named reader",
-      "probe": null,
+      "probe": [
+        "HI-CONCEPT-C97-MESSAGE-01",
+        "HI-CONCEPT-C97-ADDRESS-01"
+      ],
       "derivedFrom": "ES:A1-NE09-02",
-      "note": "HI-W06-two-sentence-card and HI-W06-two-sentence-no-model teach it and, like HI-A1-S-04, declare empty introduces lists. The A1 writing paper's second task -- 30 to 40 words to a named reader, 60 of that paper's 100 points -- rests on this rung."
+      "note": "The A1 writing paper's second task -- 30 to 40 words to a named reader, 60 of that paper's 100 points -- rests on this rung. HI-W06-two-sentence-card and HI-W06-two-sentence-no-model deliver the connected two-sentence half with empty introduces lists and no named reader at all; they write a card, not a message to somebody. HI-C97-sandesh supplies the missing half as an atom -- the three stacked parts of a message, opening line naming the reader, sentences underneath, writer's name at the foot -- and HI-C97-sintesis-sandesh has the reader produce all three from a cue with no model. The probe pairs that shape with the address it opens with. The task's word count is still well above what the corpus asks a reader to produce here."
     },
     {
       "id": "HI-A1-CJ-01",
