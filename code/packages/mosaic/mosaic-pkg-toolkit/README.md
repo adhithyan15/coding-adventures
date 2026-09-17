@@ -72,6 +72,10 @@ for the architecture, component catalog, and phasing plan.
   list<text>`, `active-body`, `active-index`. The active header
   renders through a distinct `tabs-tab-active` part. Emit:
   `onSelect(index: number)`.
+- **`EmptyState`** — what a view shows when it has nothing yet: a
+  heading (`title`, announced with the heading role), an optional
+  `message`, and an optional action button that appears only when
+  `action-label` is set. Emit: `onAction`.
 - **`SegmentedControl`** — a row of mutually exclusive options,
   one selected (a view switcher, a Day/Week toggle). Slots:
   `options: list<list<text>>` where each row is `[label,

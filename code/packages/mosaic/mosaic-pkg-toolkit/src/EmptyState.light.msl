@@ -1,0 +1,33 @@
+// EmptyState.light.msl — default light-theme styling.
+//
+// Only properties every native backend lowers: the toolkit's native gate
+// allows no style drops, and `align`, `text-align` and `border-style` are
+// dropped on some backends. A quiet panel, a darker title, a muted message.
+
+style EmptyState {
+  part empty-state {
+    padding       : 24 ;
+    gap           : 8 ;
+    background    : "#f8f9fa" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    border-radius : 0 ;
+  }
+  part empty-state-title {
+    color     : "#212529" ;
+    font-size : 16 ;
+  }
+  part empty-state-message {
+    color     : "#6c757d" ;
+    font-size : 14 ;
+  }
+  part empty-state-action {
+    padding       : 8 ;
+    background    : "#0d6efd" ;
+    color         : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#0a58ca" ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+}

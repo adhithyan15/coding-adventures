@@ -2,6 +2,41 @@
 
 ## [Unreleased]
 
+### Added — `EmptyState` (v0.14.0, #15440)
+
+What a view shows when it has nothing to show yet. All four products in
+#14415 need one, and each had started drawing its own: TaskApp's List view,
+Engram's "No cards queued".
+
+```
+slot title        : text ;   // announced as a heading
+slot message      : text ;   // optional
+slot action-label : text ;   // optional; empty = no button
+emit onAction ;
+```
+
+**Design.**
+
+- The title carries `a11y-role : heading`. On React it lowers to an `<h2>`,
+  so a screen reader lands on an empty state the same way everywhere.
+- The action button is gated on its label, so the component cannot be asked
+  for an unnamed button.
+- The message is gated too, so a title-only state has no blank line under
+  it.
+- The stylesheet uses only properties every native backend lowers, since
+  the toolkit gate allows no style drops. That rules out `align`,
+  `text-align` and `border-style`.
+
+**Stories:** title only; title and message; with action; long text.
+
+**Verified:**
+
+- It emits on all eight backends with no `EmptyState` degradations.
+- The native gate passes 3/3, and the MosaicBook check passes
+  (58 components, 106 stories).
+- Two new tests pin the interface, the heading role, and the gating of
+  message and action.
+
 ### Added — `SegmentedControl` stacks vertically (v0.13.0, #15432)
 
 `slot vertical : bool`. Engram's touch shell stacks its screen switcher,
