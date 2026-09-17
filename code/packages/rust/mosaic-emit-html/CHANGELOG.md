@@ -2,6 +2,34 @@
 
 ## [Unreleased]
 
+### Added -- `HostButton` `selected` lowers to `aria-pressed` (UI86, #15420)
+
+- **Literal values:** `selected : true` / `false` writes `aria-pressed`
+  directly.
+- **Dynamic values** (a slot, a loop binding, or an expression such as
+  `( i == selectedIndex )` inside `For`):
+  - The emitter writes `data-mosaic-pressed-when="…"`, attribute-escaped and
+    brace-escaped.
+  - The project runtime's new `renderPressed` pass decides it with the same
+    `evaluateCondition` that `mosaic-if` uses. The pass runs after loops and
+    `If`s are expanded and before mustaches are filled.
+  - It then replaces the attribute with `aria-pressed="true"` or `"false"`.
+- **Why not a placeholder:** a placeholder would write the bound *value* into
+  the attribute rather than a state, and an expression has no path to
+  substitute. UI86 §4.1.1 records the change from the draft.
+- **Safety:** the evaluator only understands paths, literals, `==`, `!=` and
+  `!`, so a condition is never executed as script.
+- **Absent `selected`** emits nothing. A string or number literal returns the
+  new `PipelineEmitError::InvalidPropValue`.
+
+Checked beyond the unit tests: a `For` over three options with
+`selected : ( i == selectedIndex )` was compiled with `--emit-project`, and
+`main.js`'s render functions were run on it in Node.
+- With `selectedIndex: 1`, the output was `List=false Board=true Timeline=false`,
+  with no `data-mosaic-pressed-when` left.
+- A condition of `( globalThis.pwned = true )` rendered `aria-pressed="false"`
+  and did not run.
+
 ### Fixed -- list story fixtures hydrate as JSON arrays (#15428)
 
 `json_value_for_fixture` turns a list fixture into a JSON array in

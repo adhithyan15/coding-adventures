@@ -188,6 +188,11 @@ pub enum PipelineEmitError {
     /// is unaffected -- only an explicit, disallowed scheme is
     /// rejected.
     UnsafeUriScheme(String),
+    /// A prop value has a shape the prop does not accept -- for example a
+    /// string literal where `HostButton`'s `selected:` needs a bool
+    /// (UI86 §4). Refused rather than dropped, so an authored state is
+    /// never silently lost.
+    InvalidPropValue(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -208,6 +213,7 @@ impl std::fmt::Display for PipelineEmitError {
                 f,
                 "HostLink href {href:?} uses a disallowed URI scheme (only http, https, mailto, or a relative reference are allowed)"
             ),
+            PipelineEmitError::InvalidPropValue(message) => write!(f, "{message}"),
         }
     }
 }
@@ -1035,7 +1041,32 @@ function camelSlotName(name) {
 }
 
 function renderTemplate(source, context) {
-  return renderMustaches(renderIfs(renderLoops(source, context), context), context);
+  return renderMustaches(
+    renderPressed(renderIfs(renderLoops(source, context), context), context),
+    context,
+  );
+}
+
+// UI86: a HostButton's dynamic `selected` state. The emitter writes the
+// condition as `data-mosaic-pressed-when`; it is decided here by the same
+// evaluator as `mosaic-if`, after loops have bound their row, and replaced by
+// a plain `aria-pressed="true"` or `"false"`. Nothing else reaches the page.
+function renderPressed(source, context) {
+  return source.replace(/\sdata-mosaic-pressed-when="([^"]*)"/g, (_match, condition) =>
+    ` aria-pressed="${evaluateCondition(unescapeAttribute(condition), context) ? "true" : "false"}"`,
+  );
+}
+
+// The condition was attribute-escaped (and brace-escaped) at emit time.
+function unescapeAttribute(value) {
+  return String(value)
+    .replaceAll("&#123;", "{")
+    .replaceAll("&#125;", "}")
+    .replaceAll("&quot;", "\"")
+    .replaceAll("&#39;", "'")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&amp;", "&");
 }
 
 function renderLoops(source, context) {
@@ -2115,6 +2146,10 @@ fn emit_input(node: &LayoutNode, indent: usize, part_styles: &HashMap<String, St
 /// |------------|-----------------------|--------------------|-----------------------------|
 /// | `label`    | `{{slot}}` as text    | escaped text       | (n/a)                       |
 /// | `disabled` | `data-disabled="..."` | (n/a)              | true → `disabled`; false → omit |
+/// | `selected` | `data-mosaic-pressed-when="..."` | refused | `aria-pressed="true"` / `"false"` |
+///
+/// `selected` (UI86) also accepts a loop binding or an expression, which take
+/// the SlotRef column's shape; see [`host_button_pressed_attr`].
 ///
 /// A `HostButton` with neither `label` nor `children` produces a bare
 /// `<button></button>` — the host can still drive content via slot
@@ -2172,6 +2207,8 @@ fn emit_host_button(
         }
         _ => {}
     }
+
+    attrs.push_str(&host_button_pressed_attr(node)?);
 
     let style_attr = build_style_attr(node, "", part_styles);
 
@@ -3216,6 +3253,49 @@ fn try_emit_table_for_cell_html(
 // =====================================================================
 // UI29 §3.1 / §3.2 — If / Else / For meta-primitive lowerings
 // =====================================================================
+
+/// Lower `HostButton`'s `selected:` (UI86) for the static-HTML backend.
+///
+/// A literal state is written directly. Anything dynamic -- a slot, a loop
+/// binding, or an expression such as `( i == selectedIndex )` -- cannot be a
+/// `{{placeholder}}`, because the runtime only substitutes data paths into
+/// attributes, and a placeholder would write the *value* (a number, a name)
+/// rather than a state. It is emitted instead as
+/// `data-mosaic-pressed-when="…"`, which `main.js` evaluates with the same
+/// `evaluateCondition` that decides `<!-- mosaic-if when="…" -->`, and
+/// replaces with `aria-pressed="true"` or `"false"`. So the condition is
+/// evaluated with the loop's bindings in scope, only a boolean ever reaches
+/// the page, and the expression is never executed as script: the evaluator
+/// understands paths, literals, `==`, `!=` and `!`, nothing else.
+///
+/// | authored form            | emitted                                      |
+/// |--------------------------|----------------------------------------------|
+/// | (absent)                 | nothing                                      |
+/// | `selected : true`        | ` aria-pressed="true"`                       |
+/// | `selected : slot: s`     | ` data-mosaic-pressed-when="s"`              |
+/// | `selected : item`        | ` data-mosaic-pressed-when="item"`           |
+/// | `selected : ( i == n )`  | ` data-mosaic-pressed-when="( i == n )"`     |
+/// | a string or number       | refused: `InvalidPropValue`                  |
+fn host_button_pressed_attr(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    let condition = match find_prop(node, "selected") {
+        None => return Ok(String::new()),
+        Some(LayoutPropValue::Keyword(k)) if k == "true" || k == "false" => {
+            return Ok(format!(" aria-pressed=\"{k}\""));
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => camel(slot),
+        Some(LayoutPropValue::Keyword(binding)) => binding.clone(),
+        Some(LayoutPropValue::Expr(expr)) if !expr.trim().is_empty() => expr.clone(),
+        Some(_) => {
+            return Err(PipelineEmitError::InvalidPropValue(
+                "HostButton `selected:` must be a slot reference, `true`/`false`, a loop binding, or an expression (UI86 §4)".to_string(),
+            ))
+        }
+    };
+    // Brace-escaped as well as attribute-escaped, so an expression containing
+    // `{{` cannot become a placeholder the mustache pass fills.
+    let safe = escape_mustache_braces(&escape_html_attr(&condition));
+    Ok(format!(" data-mosaic-pressed-when=\"{safe}\""))
+}
 
 /// Lower an `If` node (plus its optional sibling `Else`, which is
 /// passed in *implicitly* — see `emit_children`) to a comment-bracketed
@@ -5226,6 +5306,100 @@ mod tests {
             .unwrap()
             .output;
         assert!(out.contains(">{{row.1}}</span>"), "got:\n{out}");
+    }
+
+    /// UI86: literal states are written directly; everything dynamic becomes
+    /// a condition the runtime decides, never a placeholder that would write
+    /// the bound value itself into `aria-pressed`.
+    #[test]
+    fn host_button_selected_lowers_every_authored_form() {
+        let keyword = |k: &str| LayoutProp {
+            name: "selected".to_string(),
+            value: LayoutPropValue::Keyword(k.to_string()),
+        };
+        let expr = |e: &str| LayoutProp {
+            name: "selected".to_string(),
+            value: LayoutPropValue::Expr(e.to_string()),
+        };
+        for (prop, expected) in [
+            (keyword("true"), " aria-pressed=\"true\""),
+            (keyword("false"), " aria-pressed=\"false\""),
+            (prop_slot("selected", "is-current"), " data-mosaic-pressed-when=\"isCurrent\""),
+            (keyword("item"), " data-mosaic-pressed-when=\"item\""),
+            (
+                expr("( i == selectedIndex )"),
+                " data-mosaic-pressed-when=\"( i == selectedIndex )\"",
+            ),
+            // Escaped for the attribute and against the mustache pass.
+            (
+                expr("( name == \"{{x}}\" )"),
+                " data-mosaic-pressed-when=\"( name == &quot;&#123;&#123;x&#125;&#125;&quot; )\"",
+            ),
+        ] {
+            let l = layout(
+                "F",
+                node_with_props("HostButton", vec![prop_string("label", "Go"), prop]),
+            );
+            let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+                .unwrap()
+                .output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+            assert!(!out.contains("{{"), "no placeholder may carry the state:\n{out}");
+        }
+        let plain = layout("F", node_with_props("HostButton", vec![prop_string("label", "Go")]));
+        let out = from_pipeline(&component("F", vec![]), &plain, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(!out.contains("pressed"), "absent selected must emit nothing:\n{out}");
+    }
+
+    #[test]
+    fn host_button_selected_refuses_non_bool_values() {
+        for value in [
+            LayoutPropValue::String("true".into()),
+            LayoutPropValue::Number(1.0),
+        ] {
+            let l = layout(
+                "F",
+                node_with_props(
+                    "HostButton",
+                    vec![LayoutProp {
+                        name: "selected".to_string(),
+                        value,
+                    }],
+                ),
+            );
+            assert!(matches!(
+                from_pipeline(&component("F", vec![]), &l, &empty_style("F")),
+                Err(PipelineEmitError::InvalidPropValue(_))
+            ));
+        }
+    }
+
+    /// The project runtime decides the condition, after loops bind their row.
+    #[test]
+    fn project_runtime_renders_pressed_conditions() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "HostButton",
+                vec![LayoutProp {
+                    name: "selected".to_string(),
+                    value: LayoutPropValue::Keyword("item".to_string()),
+                }],
+            ),
+        );
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let result =
+            from_pipeline_with_options(&component("F", vec![]), &l, &empty_style("F"), &opts)
+                .unwrap();
+        let main_js = result.project.unwrap().main_js;
+        assert!(main_js.contains(
+            "renderPressed(renderIfs(renderLoops(source, context), context), context)"
+        ));
+        assert!(main_js.contains("data-mosaic-pressed-when"));
+        assert!(main_js.contains("evaluateCondition(unescapeAttribute(condition), context)"));
     }
 
     /// An expression the runtime cannot resolve must not be stamped into

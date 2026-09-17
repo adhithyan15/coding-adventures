@@ -143,6 +143,11 @@ pub enum PipelineEmitError {
     /// relative reference with no scheme (`"#"`, `"/about"`) is
     /// unaffected -- only an explicit, disallowed scheme is rejected.
     UnsafeUriScheme(String),
+    /// A prop value has a shape the prop does not accept -- for example a
+    /// string literal where `HostButton`'s `selected:` needs a bool
+    /// (UI86 §4). Refused rather than dropped, so an authored state is
+    /// never silently lost.
+    InvalidPropValue(String),
     /// A bound typography property cannot be projected safely.
     InvalidTypography,
 }
@@ -182,6 +187,7 @@ impl std::fmt::Display for PipelineEmitError {
                 f,
                 "HostLink href {href:?} uses a disallowed URI scheme (only http, https, mailto, or a relative reference are allowed)"
             ),
+            PipelineEmitError::InvalidPropValue(message) => write!(f, "{message}"),
         }
     }
 }
@@ -2134,6 +2140,7 @@ fn emit_host_input_jsx(
 /// | `a11y-label: (...)` | `aria-label={...}` keeps compact visual labels descriptive |
 /// | `disabled: slot: x` | `disabled={x}` (camelCased)                               |
 /// | `disabled: true`/`false` | `disabled={true}` / `disabled={false}` literal       |
+/// | `selected: ...`     | `aria-pressed={...}`, always a boolean (UI86); absent → no attribute |
 /// | `onTap: emit: onE`  | `onClick={() => dispatch({ type: "e" })}` (renamed from onTap to onClick because that is the DOM event name) |
 ///
 /// ## Why a dedicated emitter
@@ -2203,6 +2210,8 @@ fn emit_host_button_jsx(
         }
     }
 
+    attrs.push_str(&host_button_pressed_attr(node)?);
+
     // onClick={() => dispatch({ type: "..." })} — the moslayout author
     // writes this as `onTap: emit: onSomething`; we rename to the
     // DOM-native `onClick` here because that's what React expects on a
@@ -2217,6 +2226,54 @@ fn emit_host_button_jsx(
     let body = host_button_label_body(node)?;
 
     Ok(format!("{pad}<button{attrs}>{body}</button>\n"))
+}
+
+/// Lower `HostButton`'s `selected:` (UI86) to an ` aria-pressed={…}`
+/// attribute fragment, or to nothing when the prop is absent.
+///
+/// | authored form            | emitted                          |
+/// |--------------------------|----------------------------------|
+/// | (absent)                 | nothing: an ordinary push button |
+/// | `selected : true`        | ` aria-pressed={true}`           |
+/// | `selected : slot: s`     | ` aria-pressed={Boolean(s)}`     |
+/// | `selected : item`        | ` aria-pressed={Boolean(item)}`  |
+/// | `selected : ( i == n )`  | ` aria-pressed={Boolean(i == n)}`|
+///
+/// Why `aria-pressed`: `aria-selected` is not permitted on the `button`
+/// role, and UI86 §3.1 keeps the role. Why `Boolean(...)`: React renders
+/// `aria-pressed={false}` as `"false"`, but a string or number would be
+/// written through verbatim, and UI86 §4 allows only a boolean state to
+/// reach the page. A false state is still emitted (UI86 §3.2): it is what
+/// tells a screen reader the button is one of a set.
+///
+/// Expression text is the layout compiler's token reconstruction, the
+/// same text `If ( when: … )` lowers to, so it is a grammar expression,
+/// not arbitrary source. A string or number literal is refused.
+fn host_button_pressed_attr(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    let Some(prop) = node.props.iter().find(|p| p.name == "selected") else {
+        return Ok(String::new());
+    };
+    let value = match &prop.value {
+        LayoutPropValue::Keyword(k) if k == "true" || k == "false" => {
+            return Ok(format!(" aria-pressed={{{k}}}"));
+        }
+        LayoutPropValue::SlotRef(slot) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            camel
+        }
+        LayoutPropValue::Keyword(binding) => {
+            validate_slot_or_field_name(binding).map_err(PipelineEmitError::UnsafeSlotName)?;
+            binding.clone()
+        }
+        LayoutPropValue::Expr(text) if !text.trim().is_empty() => text.clone(),
+        _ => {
+            return Err(PipelineEmitError::InvalidPropValue(
+                "HostButton `selected:` must be a slot reference, `true`/`false`, a loop binding, or an expression (UI86 §4)".to_string(),
+            ))
+        }
+    };
+    Ok(format!(" aria-pressed={{Boolean({value})}}"))
 }
 
 fn host_button_event_expr(
@@ -8471,6 +8528,82 @@ mod tests {
             "expected `disabled={{isDisabled}}`, got:\n{}",
             result.output
         );
+    }
+
+    /// UI86: every accepted shape of `selected:` lowers to `aria-pressed`,
+    /// and every dynamic one is wrapped in `Boolean(...)` so only a boolean
+    /// state can be rendered.
+    #[test]
+    fn host_button_selected_lowers_every_authored_form_to_aria_pressed() {
+        let m = component("X", vec![], vec![]);
+        for (value, expected) in [
+            (LayoutPropValue::Keyword("true".into()), " aria-pressed={true}"),
+            (LayoutPropValue::Keyword("false".into()), " aria-pressed={false}"),
+            (
+                LayoutPropValue::SlotRef("is-current".into()),
+                " aria-pressed={Boolean(isCurrent)}",
+            ),
+            (LayoutPropValue::Keyword("item".into()), " aria-pressed={Boolean(item)}"),
+            (
+                LayoutPropValue::Expr("( i == selectedIndex )".into()),
+                " aria-pressed={Boolean(( i == selectedIndex ))}",
+            ),
+        ] {
+            let l = host_button_layout(vec![
+                LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::String("Go".to_string()),
+                },
+                LayoutProp {
+                    name: "selected".to_string(),
+                    value,
+                },
+            ]);
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+            assert_eq!(out.matches("aria-pressed=").count(), 1, "{out}");
+        }
+    }
+
+    /// Absent is not false (UI86 §3.2): a plain push button carries no state.
+    #[test]
+    fn host_button_without_selected_emits_no_pressed_state() {
+        let m = component("X", vec![], vec![]);
+        let l = host_button_layout(vec![LayoutProp {
+            name: "label".to_string(),
+            value: LayoutPropValue::String("Go".to_string()),
+        }]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(!out.contains("aria-pressed"), "{out}");
+    }
+
+    /// A string or number is not a state, and an unsafe binding name would be
+    /// spliced into JSX; both are refused rather than dropped.
+    #[test]
+    fn host_button_selected_refuses_non_bool_and_unsafe_values() {
+        let m = component("X", vec![], vec![]);
+        for value in [
+            LayoutPropValue::String("true".into()),
+            LayoutPropValue::Number(1.0),
+            LayoutPropValue::Expr("   ".into()),
+        ] {
+            let l = host_button_layout(vec![LayoutProp {
+                name: "selected".to_string(),
+                value,
+            }]);
+            assert!(matches!(
+                from_pipeline(&m, &l, &empty_style("X")),
+                Err(PipelineEmitError::InvalidPropValue(_))
+            ));
+        }
+        let l = host_button_layout(vec![LayoutProp {
+            name: "selected".to_string(),
+            value: LayoutPropValue::Keyword("x)} onFocus={steal".into()),
+        }]);
+        assert!(matches!(
+            from_pipeline(&m, &l, &empty_style("X")),
+            Err(PipelineEmitError::UnsafeSlotName(_))
+        ));
     }
 
     #[test]
