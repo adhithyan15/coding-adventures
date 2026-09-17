@@ -111,6 +111,14 @@ HostButton [ part ] (
   expression into `checked: false` without reporting it.)
 - **Liveness:** the value is re-evaluated on every render, including inside
   repeated rows, under the same rule UI29 §2.1 sets for `a11y-label`.
+- **Only booleans reach the output, and never as raw source.** On every
+  backend the emitted state is a normalised boolean (`true`/`false`, or the
+  platform's spelling). An expression is lowered only through the emitter's
+  existing expression and data-path machinery, the same functions `checked` and
+  `a11y-label` use, and is escaped for its attribute context. Expression text is
+  never spliced into generated markup or code: `<` and `&` would need escaping
+  in XAML attributes, and `x:Bind` does not accept `==`, so a spliced
+  `( i == selectedIndex )` would be broken at best and injectable at worst.
 - **No behaviour:** `selected` never changes what a click does, never toggles
   local state, and never disables the button. It does not affect styling; see
   §5.
@@ -251,6 +259,8 @@ degradation on every native backend.
   by removing each backend's lowering in turn.
 - XAML has a click test proving that a `ToggleButton` does not change its own
   checked state (§4.2).
+- A test on each backend passes a non-bool and a markup-bearing value and
+  asserts that only a boolean state is emitted (§4).
 - Absent `selected` emits nothing on every backend, and existing snapshot and
   needle tests for plain buttons are unchanged.
 - The toolkit components in §8.4 adopt the prop, and the host name workaround
