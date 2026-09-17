@@ -174,9 +174,51 @@ fn the_table_shape_matches_the_measured_rows() {
         body.contains(&format!("        source \"{METAPHOR}\"\n")),
         "the metaphor row keeps the page's U+2019, not an ASCII apostrophe"
     );
+    // SCOPED TO `source "` LINES, not the whole table block -- the correction
+    // #15337 made for plant-parts, #15338 for solar-eclipse-type, and #15413
+    // here, in eye-part-property and in eye-parts. Read against the block, this
+    // arm fails on a harmless `%` comment quoting the sentence in ASCII, and a
+    // comment is not a shipped citation.
+    //
+    // NARROWED TO WHAT WAS COUNTED. This table carries ZERO `%` comments inside
+    // its block; eye-part-property has four and eye-parts twelve. All three
+    // tests are GREEN today, so none of the three false alarms is firing: what
+    // the comment count distinguishes is whether the hazard needs a new comment
+    // zone or only one more comment line. An earlier wording here called this
+    // one AVAILABLE and that one ACTIVE. The count does not carry that.
+    //
+    // All THREE arms this change scopes were observed firing, this one at its
+    // own assert line. Every route below is a panic line from a mutant run:
+    //
+    //   ASCII on the metaphor row        -> :173  row-keeps-U+2019 (arm unreached)
+    //   ASCII replacing the envelope     -> :163  envelope-is-framing-sentence
+    //   ASCII on an added fourth row     -> :154  the row-source count of 3
+    //   ASCII on another row's source    -> HERE
+    //   a four-space `source` line added -> HERE
+    //
+    // Two earlier claims died there. Table level was said to trip
+    // not-metaphor-as-envelope (:169-172); it cannot, because that needle is
+    // built from the CURLY METAPHOR and an ASCII twin never matches it. And
+    // only a non-metaphor ROW was said to reach this arm; an added table-level
+    // `source` line reaches it too, which follows from this filter being
+    // indent-agnostic by design -- the claim contradicted the fix's own shape.
+    //
+    // The trade, recorded in shards 03560, 03670 and 03680: scoping lets a
+    // comment-borne ASCII form survive. Nothing now pins "no ASCII metaphor
+    // span anywhere in the block", only "no `source` line carries one".
+    //
+    // The positive half is already anchored above at eight spaces, so it needs
+    // no new scoping: a mutant that MOVED this span off its row fails it. One
+    // that ADDS a table-level copy does not -- it arrives here instead.
+    let source_lines: String = body
+        .lines()
+        .filter(|l| l.trim_start().starts_with("source \""))
+        .collect::<Vec<_>>()
+        .join("\n");
     assert!(
-        !body.contains(&METAPHOR.replace('\u{2019}', "'")),
-        "an ASCII-apostrophe metaphor span occurs nowhere on the page, so it must not ship"
+        !source_lines.contains(&METAPHOR.replace('\u{2019}', "'")),
+        "no `source` line may carry an ASCII-apostrophe metaphor span -- that \
+         spelling occurs zero times on the page: {source_lines}"
     );
     let shipped_envelope = body
         .lines()
