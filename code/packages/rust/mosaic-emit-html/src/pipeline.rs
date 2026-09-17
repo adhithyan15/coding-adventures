@@ -1048,11 +1048,19 @@ function renderTemplate(source, context) {
 }
 
 // UI86: a HostButton's dynamic `selected` state. The emitter writes the
-// condition as `data-mosaic-pressed-when`; it is decided here by the same
+// condition as `data-mosaic&pressed`; it is decided here by the same
 // evaluator as `mosaic-if`, after loops have bound their row, and replaced by
 // a plain `aria-pressed="true"` or `"false"`. Nothing else reaches the page.
+//
+// This pass scans text that already holds rendered host data (loop rows are
+// rendered before it runs), so the marker must be something host data can
+// never spell. The `&` guarantees that: `escapeHtml` turns every `&` in host
+// text into `&amp;`, and the emitter escapes every `&` in authored literals the
+// same way. A marker spelled with letters, `-` and `=` alone could be forged by
+// a task name, and the forged quote would shift every later attribute on the
+// line out of its quotes.
 function renderPressed(source, context) {
-  return source.replace(/\sdata-mosaic-pressed-when="([^"]*)"/g, (_match, condition) =>
+  return source.replace(/\sdata-mosaic&pressed="([^"]*)"/g, (_match, condition) =>
     ` aria-pressed="${evaluateCondition(unescapeAttribute(condition), context) ? "true" : "false"}"`,
   );
 }
@@ -1332,13 +1340,22 @@ function formatValue(value) {
   return String(value);
 }
 
+// Host text is inserted into a template that later passes scan again, so it
+// is escaped against those passes as well as against HTML: `{` and `}` so a
+// value cannot become a `{{placeholder}}` (or an unescaped `{{{surface}}}`) that
+// the mustache pass would fill, and `=` so it cannot spell `name="` next to a
+// template quote. Each is an ordinary character reference, so the page shows
+// and `dataset` reads the original text.
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll("\"", "&quot;")
-    .replaceAll("'", "&#39;");
+    .replaceAll("'", "&#39;")
+    .replaceAll("=", "&#61;")
+    .replaceAll("{", "&#123;")
+    .replaceAll("}", "&#125;");
 }
 
 function escapeHtmlAttr(value) {
@@ -2146,7 +2163,7 @@ fn emit_input(node: &LayoutNode, indent: usize, part_styles: &HashMap<String, St
 /// |------------|-----------------------|--------------------|-----------------------------|
 /// | `label`    | `{{slot}}` as text    | escaped text       | (n/a)                       |
 /// | `disabled` | `data-disabled="..."` | (n/a)              | true → `disabled`; false → omit |
-/// | `selected` | `data-mosaic-pressed-when="..."` | refused | `aria-pressed="true"` / `"false"` |
+/// | `selected` | `data-mosaic&pressed="..."` | refused | `aria-pressed="true"` / `"false"` |
 ///
 /// `selected` (UI86) also accepts a loop binding or an expression, which take
 /// the SlotRef column's shape; see [`host_button_pressed_attr`].
@@ -3261,9 +3278,16 @@ fn try_emit_table_for_cell_html(
 /// `{{placeholder}}`, because the runtime only substitutes data paths into
 /// attributes, and a placeholder would write the *value* (a number, a name)
 /// rather than a state. It is emitted instead as
-/// `data-mosaic-pressed-when="…"`, which `main.js` evaluates with the same
+/// `data-mosaic&pressed="…"`, which `main.js` evaluates with the same
 /// `evaluateCondition` that decides `<!-- mosaic-if when="…" -->`, and
-/// replaces with `aria-pressed="true"` or `"false"`. So the condition is
+/// replaces with `aria-pressed="true"` or `"false"`.
+///
+/// The `&` in the marker's name is deliberate. The runtime finds the marker
+/// by scanning text that already contains rendered host data, so the marker
+/// has to be unspellable by that data and by authored literals. Both are
+/// escaped so that no raw `&` survives (`escapeHtml` at run time,
+/// [`escape_html_attr`] / [`escape_html_text`] here). HTML allows `&` in an
+/// attribute name, so a page served without the runtime still parses. So the condition is
 /// evaluated with the loop's bindings in scope, only a boolean ever reaches
 /// the page, and the expression is never executed as script: the evaluator
 /// understands paths, literals, `==`, `!=` and `!`, nothing else.
@@ -3272,9 +3296,9 @@ fn try_emit_table_for_cell_html(
 /// |--------------------------|----------------------------------------------|
 /// | (absent)                 | nothing                                      |
 /// | `selected : true`        | ` aria-pressed="true"`                       |
-/// | `selected : slot: s`     | ` data-mosaic-pressed-when="s"`              |
-/// | `selected : item`        | ` data-mosaic-pressed-when="item"`           |
-/// | `selected : ( i == n )`  | ` data-mosaic-pressed-when="( i == n )"`     |
+/// | `selected : slot: s`     | ` data-mosaic&pressed="s"`              |
+/// | `selected : item`        | ` data-mosaic&pressed="item"`           |
+/// | `selected : ( i == n )`  | ` data-mosaic&pressed="( i == n )"`     |
 /// | a string or number       | refused: `InvalidPropValue`                  |
 fn host_button_pressed_attr(node: &LayoutNode) -> Result<String, PipelineEmitError> {
     let condition = match find_prop(node, "selected") {
@@ -3294,7 +3318,7 @@ fn host_button_pressed_attr(node: &LayoutNode) -> Result<String, PipelineEmitErr
     // Brace-escaped as well as attribute-escaped, so an expression containing
     // `{{` cannot become a placeholder the mustache pass fills.
     let safe = escape_mustache_braces(&escape_html_attr(&condition));
-    Ok(format!(" data-mosaic-pressed-when=\"{safe}\""))
+    Ok(format!(" data-mosaic&pressed=\"{safe}\""))
 }
 
 /// Lower an `If` node (plus its optional sibling `Else`, which is
@@ -5324,16 +5348,16 @@ mod tests {
         for (prop, expected) in [
             (keyword("true"), " aria-pressed=\"true\""),
             (keyword("false"), " aria-pressed=\"false\""),
-            (prop_slot("selected", "is-current"), " data-mosaic-pressed-when=\"isCurrent\""),
-            (keyword("item"), " data-mosaic-pressed-when=\"item\""),
+            (prop_slot("selected", "is-current"), " data-mosaic&pressed=\"isCurrent\""),
+            (keyword("item"), " data-mosaic&pressed=\"item\""),
             (
                 expr("( i == selectedIndex )"),
-                " data-mosaic-pressed-when=\"( i == selectedIndex )\"",
+                " data-mosaic&pressed=\"( i == selectedIndex )\"",
             ),
             // Escaped for the attribute and against the mustache pass.
             (
                 expr("( name == \"{{x}}\" )"),
-                " data-mosaic-pressed-when=\"( name == &quot;&#123;&#123;x&#125;&#125;&quot; )\"",
+                " data-mosaic&pressed=\"( name == &quot;&#123;&#123;x&#125;&#125;&quot; )\"",
             ),
         ] {
             let l = layout(
@@ -5398,7 +5422,16 @@ mod tests {
         assert!(main_js.contains(
             "renderPressed(renderIfs(renderLoops(source, context), context), context)"
         ));
-        assert!(main_js.contains("data-mosaic-pressed-when"));
+        assert!(main_js.contains("data-mosaic&pressed"));
+        // Host text must not be able to spell the marker (`=`) or a
+        // placeholder (`{`, `}`) for a later pass to act on.
+        for escape in [
+            r#".replaceAll("=", "&#61;")"#,
+            r#".replaceAll("{", "&#123;")"#,
+            r#".replaceAll("}", "&#125;")"#,
+        ] {
+            assert!(main_js.contains(escape), "missing {escape}");
+        }
         assert!(main_js.contains("evaluateCondition(unescapeAttribute(condition), context)"));
     }
 

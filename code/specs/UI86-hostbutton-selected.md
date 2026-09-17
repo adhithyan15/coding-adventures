@@ -128,7 +128,7 @@ HostButton [ part ] (
 | backend | `selected` present | notes |
 | --- | --- | --- |
 | React | `aria-pressed={Boolean(expr)}` | |
-| HTML | literal: `aria-pressed="true\|false"`; dynamic: `data-mosaic-pressed-when="…"`, which the project runtime replaces with `aria-pressed="true\|false"` | see §4.1.1 |
+| HTML | literal: `aria-pressed="true\|false"`; dynamic: `data-mosaic&pressed="…"`, which the project runtime replaces with `aria-pressed="true\|false"` | see §4.1.1 |
 | WebComponent | `aria-pressed="${…}"` | through `escapeHtmlAttribute`, like the name |
 | SwiftUI | `.accessibilityAddTraits((expr) ? .isSelected : [])` | added after `.accessibilityLabel`, so both apply |
 | Compose | `selected = (expr)` inside the button's existing `Modifier.semantics { … }` | booleans pass through `_mosaicTruthy` as for `checked` |
@@ -144,7 +144,7 @@ with a reported degradation for expressions that are not data paths.)*
 A `{{placeholder}}` substitutes a *value*. For `selected : ( i == selectedIndex )`
 there is no path to substitute, and for `selected : slot: s` the value would be
 written as-is, not as a state. So nothing dynamic becomes a placeholder.
-Instead, the emitter writes the condition as `data-mosaic-pressed-when="…"`
+Instead, the emitter writes the condition as `data-mosaic&pressed="…"`
 (attribute-escaped, and brace-escaped against the mustache pass).
 The project runtime `main.js` then:
 

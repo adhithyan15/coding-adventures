@@ -8,7 +8,7 @@
   directly.
 - **Dynamic values** (a slot, a loop binding, or an expression such as
   `( i == selectedIndex )` inside `For`):
-  - The emitter writes `data-mosaic-pressed-when="…"`, attribute-escaped and
+  - The emitter writes `data-mosaic&pressed="…"`, attribute-escaped and
     brace-escaped.
   - The project runtime's new `renderPressed` pass decides it with the same
     `evaluateCondition` that `mosaic-if` uses. The pass runs after loops and
@@ -22,11 +22,31 @@
 - **Absent `selected`** emits nothing. A string or number literal returns the
   new `PipelineEmitError::InvalidPropValue`.
 
+**Why the marker is spelled `data-mosaic&pressed`.**
+- **The problem:** the pass scans text that already holds rendered loop rows.
+  The security review showed that a marker spelled with only letters, `-` and
+  `=` could be forged by host data such as a task name. The forged quote then
+  moved later attributes out of their quotes, and in a Node reproduction an
+  `onfocus` handler ran.
+- **Why `&` fixes it:** every `&` in host text and in authored literals is
+  escaped, so neither can spell a name containing a raw `&`.
+
+### Security -- runtime `escapeHtml` also encodes `=`, `{` and `}`
+
+- **What changed:** host text rendered by `main.js` now has `=`, `{` and `}`
+  encoded as character references. The page shows and `dataset` reads the
+  same text.
+- **Why `{` and `}`:** this closes a pre-existing hole. A loop item containing
+  `{{{key}}}` was expanded again by the outer mustache pass, through the
+  unescaped triple-mustache path, so any host string could inject markup.
+- **Why `=`:** host text can no longer help spell an attribute next to a
+  template quote.
+
 Checked beyond the unit tests: a `For` over three options with
 `selected : ( i == selectedIndex )` was compiled with `--emit-project`, and
 `main.js`'s render functions were run on it in Node.
 - With `selectedIndex: 1`, the output was `List=false Board=true Timeline=false`,
-  with no `data-mosaic-pressed-when` left.
+  with no `data-mosaic&pressed` left.
 - A condition of `( globalThis.pwned = true )` rendered `aria-pressed="false"`
   and did not run.
 
