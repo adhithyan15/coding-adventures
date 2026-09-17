@@ -8,6 +8,28 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added -- `HostButton` `selected` lowers to `aria-pressed` (UI86, #15420)
+
+`selected : …` on a `HostButton` now emits `aria-pressed`. This is how a
+component such as `SegmentedControl`, `Tabs` or `ListGroup` tells a screen
+reader which option is current, without writing the word "selected" into the
+option's name.
+
+| authored | emitted |
+| --- | --- |
+| absent | nothing (an ordinary push button) |
+| `true` / `false` | `aria-pressed={true}` / `{false}` |
+| slot, loop binding or expression | `aria-pressed={Boolean(…)}` |
+
+Why these choices:
+- **`Boolean(…)`:** only a boolean can be rendered. A string or number would
+  otherwise be written through as-is.
+- **`false` is still emitted:** that is what marks the button as one of a
+  set (UI86 §3.2).
+- **Invalid values are refused, not dropped.** A string or number literal, or
+  an empty expression, returns the new `PipelineEmitError::InvalidPropValue`.
+  An unsafe binding name returns `UnsafeSlotName`.
+
 ### Fixed -- list story fixtures render as TypeScript arrays (#15428)
 
 `ts_literal_for_fixture` turns a list fixture into a typed array literal in
