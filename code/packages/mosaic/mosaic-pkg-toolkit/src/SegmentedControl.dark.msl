@@ -1,0 +1,28 @@
+// SegmentedControl.dark.msl — dark-theme styling.
+//
+// The same three-signal selection as the light theme (fill, text,
+// border). The palette matches Tabs.dark.msl.
+
+style SegmentedControl {
+  part segmented {
+    padding : 0 ;
+  }
+  part segmented-option {
+    padding       : 8 ;
+    background    : "#1f2937" ;
+    color         : "#60a5fa" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+  part segmented-option-selected {
+    padding       : 8 ;
+    background    : "#1d4ed8" ;
+    color         : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#60a5fa" ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+}

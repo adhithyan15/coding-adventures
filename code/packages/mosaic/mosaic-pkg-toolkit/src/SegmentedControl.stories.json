@@ -1,0 +1,221 @@
+{
+  "stories": [
+    {
+      "name": "Two options",
+      "fixtures": {
+        "options": [
+          [
+            "Day",
+            "Day, selected"
+          ],
+          [
+            "Week",
+            "Week"
+          ]
+        ],
+        "selected-index": 0,
+        "disabled": false
+      }
+    },
+    {
+      "name": "Selected first",
+      "fixtures": {
+        "options": [
+          [
+            "List",
+            "List, selected"
+          ],
+          [
+            "Board",
+            "Board"
+          ],
+          [
+            "Sheet",
+            "Sheet"
+          ]
+        ],
+        "selected-index": 0,
+        "disabled": false
+      }
+    },
+    {
+      "name": "Selected middle",
+      "fixtures": {
+        "options": [
+          [
+            "List",
+            "List"
+          ],
+          [
+            "Board",
+            "Board, selected"
+          ],
+          [
+            "Sheet",
+            "Sheet"
+          ]
+        ],
+        "selected-index": 1,
+        "disabled": false
+      }
+    },
+    {
+      "name": "Selected last",
+      "fixtures": {
+        "options": [
+          [
+            "List",
+            "List"
+          ],
+          [
+            "Board",
+            "Board"
+          ],
+          [
+            "Sheet",
+            "Sheet, selected"
+          ]
+        ],
+        "selected-index": 2,
+        "disabled": false
+      }
+    },
+    {
+      "name": "Six views",
+      "fixtures": {
+        "options": [
+          [
+            "List",
+            "List"
+          ],
+          [
+            "Board",
+            "Board"
+          ],
+          [
+            "Sheet",
+            "Sheet"
+          ],
+          [
+            "Calendar",
+            "Calendar, selected"
+          ],
+          [
+            "Notes",
+            "Notes"
+          ],
+          [
+            "Timeline",
+            "Timeline"
+          ]
+        ],
+        "selected-index": 3,
+        "disabled": false
+      }
+    },
+    {
+      "name": "Eight options",
+      "fixtures": {
+        "options": [
+          [
+            "Mon",
+            "Mon"
+          ],
+          [
+            "Tue",
+            "Tue"
+          ],
+          [
+            "Wed",
+            "Wed"
+          ],
+          [
+            "Thu",
+            "Thu"
+          ],
+          [
+            "Fri",
+            "Fri"
+          ],
+          [
+            "Sat",
+            "Sat"
+          ],
+          [
+            "Sun",
+            "Sun"
+          ],
+          [
+            "All",
+            "All, selected"
+          ]
+        ],
+        "selected-index": 7,
+        "disabled": false
+      }
+    },
+    {
+      "name": "Long labels",
+      "fixtures": {
+        "options": [
+          [
+            "Everything assigned to me",
+            "Everything assigned to me"
+          ],
+          [
+            "Due this week across every project",
+            "Due this week across every project, selected"
+          ],
+          [
+            "Done",
+            "Done"
+          ]
+        ],
+        "selected-index": 1,
+        "disabled": false
+      }
+    },
+    {
+      "name": "No selection",
+      "fixtures": {
+        "options": [
+          [
+            "List",
+            "List"
+          ],
+          [
+            "Board",
+            "Board"
+          ],
+          [
+            "Sheet",
+            "Sheet"
+          ]
+        ],
+        "selected-index": -1,
+        "disabled": false
+      }
+    },
+    {
+      "name": "Disabled",
+      "fixtures": {
+        "options": [
+          [
+            "List",
+            "List"
+          ],
+          [
+            "Board",
+            "Board, selected"
+          ],
+          [
+            "Sheet",
+            "Sheet"
+          ]
+        ],
+        "selected-index": 1,
+        "disabled": true
+      }
+    }
+  ]
+}

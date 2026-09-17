@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S154-vowel-sign-o",
+    "language": "telugu",
+    "chapter": 7,
+    "sequence": 341,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e25a6d625267cf03",
+    "detachableSegments": [
+      "Script you'll notice: ొ",
+      "Writing: ొ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

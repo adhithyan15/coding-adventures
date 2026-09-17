@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6a270bb3dfab41c5",
+  "sourceHash": "fnv1a64:e29333d97dc20588",
   "lessons": [
     {
       "id": "TE-C17-madhyaahnam-ardharaatri",
@@ -299,6 +299,311 @@
             {
               "kind": "speech",
               "text": "One more, from much earlier: య — what does it do?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S155-letter-ttha",
+      "sequence": 443,
+      "title": "ఠ (ṭha) — the curled t, with the breath let out",
+      "headword": "ఠ",
+      "romanization": "ṭha",
+      "gloss": "the single character ఠ — the curled t with breath after it, recognised inside a month name",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:66821ee5a34d127b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ఠ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ఠ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ట — what sound does it carry, and where does your tongue go for it?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Today's character is that one with a puff of air after it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ఠ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఠ — ṭha."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not ṭh, it is ṭha."
+            },
+            {
+              "kind": "speech",
+              "text": "జ్యేష్ఠం jyēṣṭham — Jyeshtha, the third month of the year (jyēṣṭham — \"the eldest\")."
+            },
+            {
+              "kind": "speech",
+              "text": "ట and ఠ are the same tongue position with and without the breath, the pair this script marks and English does not. The romanization writes them ṭ and ṭha, which is a difference of two letters for a difference you can hear; on the page they are two separate shapes, and that is the more reliable signal."
+            },
+            {
+              "kind": "speech",
+              "text": "This one is rare. It is worth a page because a month name needs it, and a reader who meets an unfamiliar shape in a familiar list has no way to tell whether the word or the printing is at fault."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ఠ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ఠ (ṭha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed. Then write ట beside it and look at the two."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the month name below and find ఠ (ṭha) near its end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the month name below and find ఠ near its end]"
+            },
+            {
+              "kind": "speech",
+              "text": "జ్యేష్ఠం."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ఠ three times, saying ṭha as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ఠ three times, saying *ṭha* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of ట and ఠ (ṭha) has the breath after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of ట and ఠ has the breath after it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ఠ? What sound does it carry? (ṭha.) What is the only difference between it and ట? (The breath after it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S156-script-recall",
+      "sequence": 444,
+      "title": "ఆరు అక్షరాలు (āru akṣarālu) — six characters, from cold",
+      "headword": "ఆరు అక్షరాలు",
+      "romanization": "āru akṣarālu",
+      "gloss": "cold retrieval of the six characters this pass added, four of them among the commonest on the page",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2a7cabaeb599f56d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: the six, side by side",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the six, side by side and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say the greeting and the thank-you word, and name the character each of them carries that you met most recently."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: the six, side by side",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మ, ధ, ట, ో, ొ, ఠ (ṭha)."
+            },
+            {
+              "kind": "speech",
+              "text": "Four are letters and two are signs. A letter can stand where a word begins; a sign has to hang on a letter, and telling which is which is the first question to ask of an unfamiliar shape."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "letters",
+                "signs"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "letters: మ ధ ట ఠ (ṭha). signs: ో ొ."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words and name every character in them you have been taught",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words and name every character in them you have been taught]"
+            },
+            {
+              "kind": "speech",
+              "text": "నమస్కారం, ధన్యవాదములు, ఏమిటి, తొమ్మిది."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the six is the one you have seen most often",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the six is the one you have seen most often]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which two of the six cannot start a word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which two of the six cannot start a word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "each of the four letters once, saying its sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: each of the four letters once, saying its sound]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two of the six are signs rather than letters? (ో and ొ.) Which pair is one tongue position with and without the breath? (ట and ఠ (ṭha).) Which of the two o signs is the long one? (ో.)"
             }
           ]
         }

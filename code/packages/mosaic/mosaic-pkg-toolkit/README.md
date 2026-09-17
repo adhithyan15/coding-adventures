@@ -72,6 +72,15 @@ for the architecture, component catalog, and phasing plan.
   list<text>`, `active-body`, `active-index`. The active header
   renders through a distinct `tabs-tab-active` part. Emit:
   `onSelect(index: number)`.
+- **`SegmentedControl`** — a row of mutually exclusive options,
+  one selected (a view switcher, a Day/Week toggle). Slots:
+  `options: list<list<text>>` where each row is `[label,
+  accessible-name]`, `selected-index` (-1 for none), `disabled`.
+  Emit: `onSelect(index: number)`. Selection costs two parts
+  (`segmented-option`, `segmented-option-selected`) however many
+  options there are. The host writes the selected state into the
+  accessible name (`"Board, selected"`) because the kernel's
+  `HostButton` has no selected state yet.
 - **`DropdownMenu`** — toggle button + revealed item list. Host
   owns the open flag. Slots: `label`, `items: list<text>`, `open`.
   Emits: `onToggle`, `onSelect(index: number)`.
