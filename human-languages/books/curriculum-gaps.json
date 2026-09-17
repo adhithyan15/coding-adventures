@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 6948,
+    "totalLessons": 6953,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -42,7 +42,7 @@
     "invalidWritingStageEvidence": 0,
     "drivableLessons": 5530,
     "drivablePercent": 80,
-    "chaptersWithoutDrivablePrefix": 219,
+    "chaptersWithoutDrivablePrefix": 220,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -3080,7 +3080,8 @@
           61,
           62,
           63,
-          64
+          64,
+          65
         ],
         "bookChapters": [
           1,
@@ -3146,7 +3147,8 @@
           61,
           62,
           63,
-          64
+          64,
+          65
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -4097,9 +4099,9 @@
       {
         "language": "marathi",
         "status": "version-2",
-        "lessonCount": 342,
+        "lessonCount": 347,
         "versions": {
-          "2": 342
+          "2": 347
         }
       },
       {
@@ -4895,8 +4897,8 @@
       },
       {
         "language": "marathi",
-        "bookChapters": 64,
-        "declaredChapters": 64,
+        "bookChapters": 65,
+        "declaredChapters": 65,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -4983,8 +4985,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1552,
-      "declaredChapters": 1552,
+      "bookChapters": 1553,
+      "declaredChapters": 1553,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 87,
@@ -4996,9 +4998,9 @@
     }
   },
   "levels": {
-    "totalLessons": 6948,
+    "totalLessons": 6953,
     "byLevel": {
-      "pre-A1": 3904,
+      "pre-A1": 3909,
       "A1": 2300,
       "A2": 660,
       "B1": 39,
@@ -5191,9 +5193,9 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 342,
+        "lessonCount": 347,
         "byLevel": {
-          "pre-A1": 142,
+          "pre-A1": 147,
           "A1": 173,
           "A2": 27,
           "B1": 0,
@@ -6171,8 +6173,8 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 342,
-        "measurable": 339,
+        "lessonCount": 347,
+        "measurable": 344,
         "unmeasurable": 3,
         "lessonViolations": 1,
         "chapterViolations": 1
@@ -6732,8 +6734,8 @@
           "language": "marathi",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 342,
-          "totalGlyphs": 52,
+          "lessonCount": 347,
+          "totalGlyphs": 56,
           "lessonViolations": 2,
           "systemViolations": 0,
           "lessonsWithForeignScript": 1
@@ -56063,7 +56065,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 6
+        "revisits": 8
       },
       {
         "atom": "MR-SCRIPT-MA-01",
@@ -76387,6 +76389,26 @@
         "revisits": 4
       },
       {
+        "atom": "MR-GRAMMAR-ORDINAL-SET",
+        "language": "marathi",
+        "introducedBy": "MR-C60-dusra-ordinal",
+        "introducedAt": 322,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 6
+      },
+      {
+        "atom": "MR-GRAMMAR-ORDINAL-VA",
+        "language": "marathi",
+        "introducedBy": "MR-C60-pachva",
+        "introducedAt": 326,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 7
+      },
+      {
         "atom": "MR-GRAMMAR-PRESENT-GENDER",
         "language": "marathi",
         "introducedBy": "MR-C07-jane",
@@ -76501,6 +76523,16 @@
         "language": "marathi",
         "introducedBy": "MR-C23-chalne",
         "introducedAt": 194,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "MR-LEX-CHAUTHA",
+        "language": "marathi",
+        "introducedBy": "MR-C60-chautha",
+        "introducedAt": 325,
         "missed": [
           "R3"
         ],
@@ -76667,6 +76699,26 @@
         "revisits": 20
       },
       {
+        "atom": "MR-LEX-PACHVA",
+        "language": "marathi",
+        "introducedBy": "MR-C60-pachva",
+        "introducedAt": 326,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MR-LEX-PAHILA",
+        "language": "marathi",
+        "introducedBy": "MR-C60-pahila",
+        "introducedAt": 324,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
         "atom": "MR-LEX-PAHNE",
         "language": "marathi",
         "introducedBy": "MR-C07-pahne",
@@ -76735,6 +76787,16 @@
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "MR-LEX-TISRA",
+        "language": "marathi",
+        "introducedBy": "MR-C60-tisra",
+        "introducedAt": 323,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 6
       },
       {
         "atom": "MR-LEX-TOND",
@@ -76807,6 +76869,16 @@
         "revisits": 7
       },
       {
+        "atom": "MR-POSTP-HUUN",
+        "language": "marathi",
+        "introducedBy": "MR-C46-huun",
+        "introducedAt": 263,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 6
+      },
+      {
         "atom": "MR-POSTP-NE-INSTR",
         "language": "marathi",
         "introducedBy": "MR-C45-ne",
@@ -76815,6 +76887,16 @@
           "R4"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "MR-POSTP-PAASUN",
+        "language": "marathi",
+        "introducedBy": "MR-C46-paasun",
+        "introducedAt": 264,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 5
       },
       {
         "atom": "MR-POSTP-SHII",
@@ -76827,14 +76909,14 @@
         "revisits": 5
       },
       {
-        "atom": "MR-SCRIPT-AI-MATRA-01",
+        "atom": "MR-QUESTION-KUTHUN",
         "language": "marathi",
-        "introducedBy": "MR-W59-ai-matra",
-        "introducedAt": 318,
+        "introducedBy": "MR-C46-kuthun",
+        "introducedAt": 265,
         "missed": [
-          "R3"
+          "R4"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "MR-SCRIPT-ANUSVARA-01",
@@ -76877,6 +76959,26 @@
         "revisits": 5
       },
       {
+        "atom": "MR-SCRIPT-DANDA",
+        "language": "marathi",
+        "introducedBy": "MR-W64-danda",
+        "introducedAt": 340,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "MR-SCRIPT-DDHA-01",
+        "language": "marathi",
+        "introducedBy": "MR-W64-ddha",
+        "introducedAt": 338,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "MR-SCRIPT-DHA-01",
         "language": "marathi",
         "introducedBy": "MR-W03-dha",
@@ -76895,6 +76997,16 @@
           "R3"
         ],
         "revisits": 7
+      },
+      {
+        "atom": "MR-SCRIPT-PHA-01",
+        "language": "marathi",
+        "introducedBy": "MR-W64-pha",
+        "introducedAt": 339,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "MR-SCRIPT-TA-01",
@@ -90520,11 +90632,11 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 342,
+        "lessonCount": 347,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 327,
+        "atomsTaught": 331,
         "atomsNeverRevisited": 2,
         "forwardReferences": 4
       },
@@ -90634,14 +90746,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 8638,
+      "atomsTaught": 8642,
       "atomsNeverRevisited": 495,
       "neverRevisitedPercent": 6,
       "missedByWindow": {
         "R1": 1722,
-        "R2": 3899,
-        "R3": 5513,
-        "R4": 4112
+        "R2": 3902,
+        "R3": 5518,
+        "R4": 4115
       },
       "forwardReferences": 791
     }
@@ -90755,10 +90867,10 @@
       {
         "language": "marathi",
         "script": "devanagari",
-        "lessonCount": 342,
-        "scriptLessons": 98,
-        "taughtGlyphs": 52,
-        "shownGlyphs": 52,
+        "lessonCount": 347,
+        "scriptLessons": 102,
+        "taughtGlyphs": 56,
+        "shownGlyphs": 56,
         "neverTaughtGlyphs": 0,
         "violations": 0,
         "exposureOnly": 2,
@@ -102511,6 +102623,42 @@
             "stage": "guided-copy",
             "level": "pre-A1",
             "sequence": 2620
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W65-ii-independent",
+            "blockIndex": 3,
+            "blockTitle": "Writing: guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 2640
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W65-o-independent",
+            "blockIndex": 3,
+            "blockTitle": "Writing: guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 2650
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W65-ai-independent",
+            "blockIndex": 3,
+            "blockTitle": "Writing: guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 2660
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W65-au-independent",
+            "blockIndex": 3,
+            "blockTitle": "Writing: guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 2670
           }
         ],
         "validEvidence": [
@@ -103296,6 +103444,42 @@
             "stage": "guided-copy",
             "level": "pre-A1",
             "sequence": 2620
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W65-ii-independent",
+            "blockIndex": 3,
+            "blockTitle": "Writing: guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 2640
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W65-o-independent",
+            "blockIndex": 3,
+            "blockTitle": "Writing: guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 2650
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W65-ai-independent",
+            "blockIndex": 3,
+            "blockTitle": "Writing: guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 2660
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W65-au-independent",
+            "blockIndex": 3,
+            "blockTitle": "Writing: guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 2670
           }
         ],
         "defects": [],
@@ -110414,7 +110598,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 23,
       "tracksCompleteAtPreA1": 23,
-      "evidenceBlocks": 769,
+      "evidenceBlocks": 773,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 243
     }
@@ -111314,8 +111498,8 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 342,
-        "atomMeasurableLessons": 339,
+        "lessonCount": 347,
+        "atomMeasurableLessons": 344,
         "atomMeasurementBlindLessons": 3,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
@@ -111330,17 +111514,17 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 4,
-        "atomsTaught": 327,
+        "atomsTaught": 331,
         "atomsNeverRevisited": 2,
-        "reinforcementWindowMisses": 362,
+        "reinforcementWindowMisses": 373,
         "reinforcementMissesByWindow": {
           "R1": 32,
-          "R2": 100,
-          "R3": 148,
-          "R4": 82
+          "R2": 103,
+          "R3": 153,
+          "R4": 85
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 151,
+        "writingPracticeLessons": 156,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -111368,7 +111552,7 @@
           {
             "language": "marathi",
             "kind": "reinforcement",
-            "count": 362,
+            "count": 373,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -112699,7 +112883,7 @@
       {
         "language": "marathi",
         "kind": "reinforcement",
-        "count": 362,
+        "count": 373,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -113310,8 +113494,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "11 atom(s) at or below pre-A1 are revisited fewer than twice (28 etymology hook(s) waived)",
-            "shortfall": 11
+            "detail": "13 atom(s) at or below pre-A1 are revisited fewer than twice (28 etymology hook(s) waived)",
+            "shortfall": 13
           }
         ],
         "vocabulary": 149
@@ -113583,12 +113767,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 6948,
+    "totalLessons": 6953,
     "voice": 4996,
-    "sight": 751,
-    "pen": 1201,
+    "sight": 752,
+    "pen": 1205,
     "coreVoice": 5530,
-    "lessonsWithWritingSegments": 718,
+    "lessonsWithWritingSegments": 722,
     "drivablePercent": 80,
     "tracks": [
       {
@@ -122962,12 +123146,12 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 342,
+        "lessonCount": 347,
         "voice": 185,
-        "sight": 59,
-        "pen": 98,
+        "sight": 60,
+        "pen": 102,
         "coreVoice": 237,
-        "drivablePercent": 69,
+        "drivablePercent": 68,
         "drivablePrefixTotal": 212,
         "chapters": [
           {
@@ -123907,6 +124091,21 @@
             ],
             "drivablePrefix": 0,
             "firstNonVoiceLesson": "MR-W64-ddha"
+          },
+          {
+            "language": "marathi",
+            "chapter": 65,
+            "lessonCount": 5,
+            "voice": 0,
+            "sight": 1,
+            "pen": 4,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "MR-W65-ii-independent"
           }
         ]
       },
@@ -136993,7 +137192,7 @@
     "underspentPercent": 90
   },
   "infoDump": {
-    "lessons": 6948,
+    "lessons": 6953,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -137001,11 +137200,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 6948,
-    "measuredLessons": 3784,
-    "idiomMeasuredLessons": 3784,
-    "senseMeasuredLessons": 3785,
-    "cultureClaimMeasuredLessons": 3784,
+    "lessons": 6953,
+    "measuredLessons": 3789,
+    "idiomMeasuredLessons": 3789,
+    "senseMeasuredLessons": 3790,
+    "cultureClaimMeasuredLessons": 3789,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 207,
@@ -137014,8 +137213,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 6499,
-    "usesBeforeIntroduction": 21610,
+    "lessonsUsingTerms": 6504,
+    "usesBeforeIntroduction": 21624,
     "technicalUsesBeforeIntroduction": 5384,
     "technicalLessons": 2998,
     "worstTerms": [
@@ -137046,12 +137245,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 6948,
+    "lessonsScanned": 6953,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1621,
+    "filesScanned": 1622,
     "mainCharacters": 133,
     "scriptCharacters": 799,
     "gaps": 0
