@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Added — `host_button_selected_is_native`, reporting `selected` as not yet native (UI86, #15463)
+
+`HostButton ( selected : … )` is not lowered on WinUI yet, and this predicate
+returns `false`, so a package build reports
+`accessibility.button-selected-unsupported` instead of claiming to be
+native-complete. The `ToggleButton` lowering UI86 §4.2 proposes has two
+problems that can only be checked on WinUI:
+- the Checked visual states apply accent brushes over the authored style;
+- a screen reader's Toggle may bypass `Click`.
+
+Tracked in #15463.
+
 ### Fixed — a line break in an emitted C# string broke the build
 
 `escape_csharp_string` passed raw line breaks through, and its comment

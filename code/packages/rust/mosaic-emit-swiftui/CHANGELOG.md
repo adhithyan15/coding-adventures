@@ -8,6 +8,23 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `HostButton` `selected` lowers to the `.isSelected` trait (UI86, #15420)
+
+`selected : …` adds `.accessibilityAddTraits(_mosaicSelectedTraits(…))`,
+after the accessible name.
+
+- **Accepted values:** literals, slots, loop bindings (through
+  `_mosaicTruthy`) and expressions. A boolean expression such as
+  `( i == selectedIndex )` is passed through with its indices rewritten.
+- **Why a typed helper:** `_mosaicSelectedTraits(Bool) -> AccessibilityTraits`
+  is emitted only when a layout uses `selected`. It keeps a `? .isSelected : []`
+  ternary out of the result builder, where it would slow type checking.
+- **`host_button_selected_is_native(node)`** is the predicate the artifact
+  builder uses to report anything that is not lowered (a string or number).
+  It shares the function the lowering uses.
+- **Not verified on a compiler.** SwiftUI cannot be compiled here, so this is
+  covered by emitter tests only.
+
 ### Fixed -- a line break in any emitted string broke the build; the link scheme check reads the raw href
 
 `escape_swift_string` passed raw `\n`, `\r` and `\t` through. A single-line
