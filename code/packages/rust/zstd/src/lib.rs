@@ -110,15 +110,21 @@ const MAX_BLOCK_SIZE: usize = 128 * 1024;
 const MAX_OUTPUT: usize = 256 * 1024 * 1024;
 
 /// Returns an error if adding `additional` more bytes to output (currently
-/// `current_size` bytes) would exceed [`MAX_OUTPUT`].
+/// `current_size` bytes) would exceed `limit`.
+///
+/// `limit` is the caller's cap from [`decompress_with_limit`], already
+/// clamped to [`MAX_OUTPUT`] — so the crate-wide ceiling still holds for a
+/// caller that asks for more, and a caller that knows it can afford less
+/// (an importer with a per-archive budget, say) is refused *while decoding*,
+/// before the output buffer ever grows past what it asked for.
 ///
 /// `additional` is always derived from bounded wire fields (`ll`/`ml`
 /// values, themselves at most ~131070 per RFC 8878's LL/ML code tables), so
 /// `current_size + additional` cannot overflow a `usize` before this check
 /// fires (`MAX_OUTPUT` itself is 2^28).
-fn check_output_budget(current_size: usize, additional: usize) -> Result<(), String> {
-    if current_size.saturating_add(additional) > MAX_OUTPUT {
-        return Err(format!("decompressed size exceeds limit of {MAX_OUTPUT} bytes"));
+fn check_output_budget(current_size: usize, additional: usize, limit: usize) -> Result<(), String> {
+    if current_size.saturating_add(additional) > limit {
+        return Err(format!("decompressed size exceeds limit of {limit} bytes"));
     }
     Ok(())
 }
@@ -2224,6 +2230,7 @@ fn decompress_block(
     data: &[u8],
     out: &mut Vec<u8>,
     frame: &mut FrameState,
+    limit: usize,
 ) -> Result<(), String> {
     // Split the frame state into independent field borrows so the rest of
     // this function can hold several of them at once.
@@ -2251,7 +2258,7 @@ fn decompress_block(
     // the third and looked fine.
     if pos >= data.len() {
         // Block has only literals, no sequences.
-        check_output_budget(out.len(), lits.len())?;
+        check_output_budget(out.len(), lits.len(), limit)?;
         out.extend_from_slice(&lits);
         return Ok(());
     }
@@ -2261,7 +2268,7 @@ fn decompress_block(
 
     if n_seqs == 0 {
         // No sequences — all content is in literals.
-        check_output_budget(out.len(), lits.len())?;
+        check_output_budget(out.len(), lits.len(), limit)?;
         out.extend_from_slice(&lits);
         return Ok(());
     }
@@ -2458,7 +2465,7 @@ fn decompress_block(
                 lits.len()
             ));
         }
-        check_output_budget(out.len(), ll as usize)?;
+        check_output_budget(out.len(), ll as usize, limit)?;
         out.extend_from_slice(&lits[lit_pos..lit_end]);
         lit_pos = lit_end;
 
@@ -2473,7 +2480,7 @@ fn decompress_block(
             ));
         }
         // Decompression-bomb guard: see the doc comment on `check_output_budget`.
-        check_output_budget(out.len(), ml as usize)?;
+        check_output_budget(out.len(), ml as usize, limit)?;
         let copy_start = out.len() - offset as usize;
         for j in 0..ml as usize {
             let byte = out[copy_start + j];
@@ -2495,7 +2502,7 @@ fn decompress_block(
     }
 
     // Any remaining literals after the last sequence.
-    check_output_budget(out.len(), lits.len() - lit_pos)?;
+    check_output_budget(out.len(), lits.len() - lit_pos, limit)?;
     out.extend_from_slice(&lits[lit_pos..]);
 
     Ok(())
@@ -2621,6 +2628,43 @@ pub fn compress(data: &[u8]) -> Vec<u8> {
 /// assert_eq!(decompress(&compress(original)).unwrap(), original);
 /// ```
 pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
+    decompress_with_limit(data, MAX_OUTPUT)
+}
+
+/// Decompress a Zstandard frame, refusing to produce more than `max_output`
+/// bytes.
+///
+/// [`decompress`] is this with `max_output` = 256 MiB, the crate-wide
+/// ceiling. A caller that has a smaller budget should pass it here rather
+/// than decoding in full and measuring afterwards: measuring afterwards means
+/// the process has *already* held the whole output — up to the crate ceiling
+/// — before it learns the input was too large. Here the refusal happens at
+/// the first block that would cross `max_output`, so the output buffer never
+/// holds more than `max_output` bytes.
+///
+/// A `max_output` above the crate ceiling is clamped to it; this function can
+/// only tighten the bomb guard, never loosen it.
+///
+/// A frame whose header *declares* a `Frame_Content_Size` above the limit is
+/// refused before any block is decoded, since a conforming frame must then
+/// produce exactly that many bytes.
+///
+/// # Errors
+///
+/// Everything [`decompress`] reports, with the size error naming
+/// `max_output` instead of the crate ceiling.
+///
+/// # Examples
+///
+/// ```
+/// use zstd::{compress, decompress_with_limit};
+///
+/// let packed = compress(&[7u8; 1000]);
+/// assert_eq!(decompress_with_limit(&packed, 1000).unwrap().len(), 1000);
+/// assert!(decompress_with_limit(&packed, 999).is_err());
+/// ```
+pub fn decompress_with_limit(data: &[u8], max_output: usize) -> Result<Vec<u8>, String> {
+    let limit = max_output.min(MAX_OUTPUT);
     if data.len() < 5 {
         return Err("frame too short".into());
     }
@@ -2734,8 +2778,21 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     };
     pos += fcs_bytes;
 
+    // A conforming frame must produce exactly its declared size, so a
+    // declaration past the limit is a refusal we can make before decoding a
+    // single block. (A frame that lies about its size is still caught by the
+    // incremental checks below and by the closing cross-check.)
+    if let Some(declared) = declared_size {
+        if declared > limit as u64 {
+            return Err(format!(
+                "frame declares {declared} bytes of content, past the limit of {limit} bytes"
+            ));
+        }
+    }
+
     // ── Blocks ───────────────────────────────────────────────────────────
-    // Guard against decompression bombs: cap total output at MAX_OUTPUT.
+    // Guard against decompression bombs: cap total output at `limit` (never
+    // more than MAX_OUTPUT).
     // See the doc comment on `check_output_budget` for why Compressed
     // blocks need this checked incrementally (inside `decompress_block`),
     // not just once per Raw/RLE block here.
@@ -2777,7 +2834,7 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
                 if pos + bsize > data.len() {
                     return Err(format!("raw block truncated: need {bsize} bytes at pos {pos}"));
                 }
-                check_output_budget(out.len(), bsize)?;
+                check_output_budget(out.len(), bsize, limit)?;
                 out.extend_from_slice(&data[pos..pos + bsize]);
                 pos += bsize;
             }
@@ -2786,7 +2843,7 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
                 if pos >= data.len() {
                     return Err("RLE block missing byte".into());
                 }
-                check_output_budget(out.len(), bsize)?;
+                check_output_budget(out.len(), bsize, limit)?;
                 let byte = data[pos];
                 pos += 1;
                 out.extend(std::iter::repeat_n(byte, bsize));
@@ -2798,7 +2855,7 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
                 }
                 let block_data = &data[pos..pos + bsize];
                 pos += bsize;
-                decompress_block(block_data, &mut out, &mut frame)?;
+                decompress_block(block_data, &mut out, &mut frame, limit)?;
             }
             3 => {
                 return Err("reserved block type 3".into());
@@ -4367,5 +4424,61 @@ mod tests {
         assert_eq!(used, 3);
         assert_eq!(lits.len(), 160);
         assert!(lits.iter().all(|&b| b == b'q'));
+    }
+
+    /// A frame with no `Frame_Content_Size` made of `blocks` RLE blocks, each
+    /// `per_block` copies of one byte. With no declared size, only the
+    /// incremental checks can refuse it.
+    fn undeclared_rle_frame(blocks: usize, per_block: usize) -> Vec<u8> {
+        let mut frame = vec![0x28, 0xB5, 0x2F, 0xFD, 0x00, 0x00];
+        for i in 0..blocks {
+            let last = u32::from(i + 1 == blocks);
+            let header = (per_block as u32) << 3 | (1 << 1) | last;
+            frame.extend_from_slice(&header.to_le_bytes()[..3]);
+            frame.push(b'z');
+        }
+        frame
+    }
+
+    /// `decompress_with_limit` accepts exactly the limit and refuses one byte
+    /// less, on the incremental path (no declared size to refuse up front).
+    #[test]
+    fn caller_limit_is_enforced_while_decoding() {
+        let frame = undeclared_rle_frame(4, 1000);
+        assert_eq!(decompress_with_limit(&frame, 4000).unwrap().len(), 4000);
+        let error = decompress_with_limit(&frame, 3999).expect_err("one byte over");
+        assert!(error.contains("exceeds limit of 3999 bytes"), "{error}");
+        // A limit that lands mid-frame is refused at the block that crosses
+        // it, not after the whole frame has been produced.
+        let error = decompress_with_limit(&frame, 1500).expect_err("mid-frame");
+        assert!(error.contains("exceeds limit of 1500 bytes"), "{error}");
+    }
+
+    /// A declared `Frame_Content_Size` past the limit is refused before any
+    /// block is decoded — the frame here has no blocks at all after the
+    /// header, so any other error would mean decoding was attempted.
+    #[test]
+    fn declared_size_past_the_limit_is_refused_up_front() {
+        // FHD 0xA0: FCS_Field_Size 2 (4 bytes), Single_Segment set.
+        let mut frame = vec![0x28, 0xB5, 0x2F, 0xFD, 0xA0];
+        frame.extend_from_slice(&5000u32.to_le_bytes());
+        let error = decompress_with_limit(&frame, 4999).expect_err("declared too big");
+        assert!(error.contains("frame declares 5000 bytes"), "{error}");
+        // Within the limit, the same header proceeds to the (missing) blocks.
+        let error = decompress_with_limit(&frame, 5000).expect_err("no blocks");
+        assert!(error.contains("truncated block header"), "{error}");
+    }
+
+    /// A limit above the crate ceiling is clamped to it: the caller's limit
+    /// can tighten the bomb guard, never loosen it.
+    #[test]
+    fn caller_limit_cannot_exceed_the_crate_ceiling() {
+        // FHD 0xE0: FCS_Field_Size 3 (8 bytes), Single_Segment set.
+        let mut frame = vec![0x28, 0xB5, 0x2F, 0xFD, 0xE0];
+        frame.extend_from_slice(&((MAX_OUTPUT as u64) + 1).to_le_bytes());
+        let error = decompress_with_limit(&frame, usize::MAX).expect_err("past the ceiling");
+        assert!(error.contains(&format!("limit of {MAX_OUTPUT} bytes")), "{error}");
+        // And `decompress` is exactly the ceiling-limited call.
+        assert_eq!(decompress(&frame).unwrap_err(), error);
     }
 }

@@ -490,23 +490,30 @@ pub fn read_collection_bytes(data: &[u8]) -> Result<Vec<u8>, ApkgError> {
     let reader = ZipReader::new(data).map_err(apkg_error)?;
     let entries = archive_entries(&reader);
     let collection = collection_member(&reader, &entries)?;
-    let bytes = reader
-        .read_by_name(&collection.name)
-        .map_err(|err| apkg_error(format!("failed to read collection: {err}")))?;
-    decode_package_payload(collection.format, "collection", &bytes)
+    read_member_bounded(
+        &reader,
+        &collection.name,
+        collection.format,
+        "collection",
+        COLLECTION_DECODE_CEILING,
+    )
 }
 
 pub fn read_v11_collection_bytes(data: &[u8]) -> Result<Vec<u8>, ApkgError> {
     let reader = ZipReader::new(data).map_err(apkg_error)?;
     let entries = archive_entries(&reader);
     let collection = collection_member(&reader, &entries)?;
-    let bytes = reader
-        .read_by_name(&collection.name)
-        .map_err(|err| apkg_error(format!("failed to read collection: {err}")))?;
-    decode_package_payload(collection.format, "collection", &bytes)
+    read_member_bounded(
+        &reader,
+        &collection.name,
+        collection.format,
+        "collection",
+        COLLECTION_DECODE_CEILING,
+    )
 }
 
 pub fn read_media_file(data: &[u8], archive_name: &str) -> Result<ResolvedMediaFile, ApkgError> {
+    let archive_len = data.len();
     let reader = ZipReader::new(data).map_err(apkg_error)?;
     let entries = archive_entries(&reader);
     let collection = collection_member(&reader, &entries)?;
@@ -517,13 +524,13 @@ pub fn read_media_file(data: &[u8], archive_name: &str) -> Result<ResolvedMediaF
         .find(|media| media_matches_archive_name(media, archive_name))
         .ok_or_else(|| apkg_error(format!("media file '{archive_name}' not found")))?;
     let payload_archive_name = media_payload_archive_name(&media);
-    let data = reader.read_by_name(&payload_archive_name).map_err(|err| {
-        apkg_error(format!(
-            "failed to read media file '{}' from archive member '{}': {err}",
-            media.archive_name, payload_archive_name
-        ))
-    })?;
-    let data = decode_package_payload(collection.format, "media file", &data)?;
+    let data = read_media_payload(
+        &reader,
+        &media,
+        &payload_archive_name,
+        collection.format,
+        media_budget(archive_len),
+    )?;
 
     Ok(ResolvedMediaFile {
         archive_name: media.archive_name,
@@ -641,6 +648,21 @@ const _: () = assert!(MEDIA_EXPANSION_CEILING < u64::MAX);
 ///
 /// The budget is on **total decompressed output**, not entry count, because entry
 /// count is not what exhausts memory.
+///
+/// ## Why the budget is checked *before* each decode (#13672)
+///
+/// It used to be checked after: decode the entry in full, add its length, then
+/// compare. That bounds what is *retained*, but not the peak -- the entry that
+/// crosses the line has already been held in full by the time it is refused,
+/// and each decoder's own ceiling is 256 MiB. On wasm, where the budget is
+/// 32 MiB precisely because memory is scarce, the refusal arrived after the
+/// allocation it was meant to prevent.
+///
+/// Now each entry is read with the **remaining** budget as its limit (see
+/// [`read_member_bounded`]): the ZIP layer is refused up front from the
+/// entry's declared size, and the Zstandard layer is decoded with
+/// `zstd::decompress_with_limit`, which stops at the first block that would
+/// cross it. The output buffers never hold more than the budget allows.
 pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError> {
     let archive_len = data.len();
     let reader = ZipReader::new(data).map_err(apkg_error)?;
@@ -656,21 +678,28 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
         .into_iter()
         .map(|media| {
             let payload_archive_name = media_payload_archive_name(&media);
-            let data = reader.read_by_name(&payload_archive_name).map_err(|err| {
-                apkg_error(format!(
-                    "failed to read media file '{}' from archive member '{}': {err}",
-                    media.archive_name, payload_archive_name
-                ))
+            let remaining = budget.saturating_sub(spent);
+            let data = read_media_payload(
+                &reader,
+                &media,
+                &payload_archive_name,
+                collection.format,
+                remaining,
+            )
+            .map_err(|err| {
+                if err.message.contains(OVER_LIMIT) {
+                    media_over_budget(budget, archive_len)
+                } else {
+                    err
+                }
             })?;
-            let data = decode_package_payload(collection.format, "media file", &data)?;
 
+            // Backstop only. `read_media_payload` has already refused anything
+            // that would cross `remaining`, so this cannot fire unless that
+            // bound is broken -- and if it is, the total must still hold.
             spent = spent.saturating_add(data.len() as u64);
             if spent > budget {
-                return Err(apkg_error(format!(
-                    "media in this package expands to more than {budget} bytes, \
-                     past the limit for an archive of {archive_len} bytes; \
-                     refusing to continue"
-                )));
+                return Err(media_over_budget(budget, archive_len));
             }
 
             Ok(ResolvedMediaFile {
@@ -680,6 +709,39 @@ pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError
             })
         })
         .collect()
+}
+
+/// Carried by every "this read would exceed its limit" error, so the media
+/// loop can swap the per-entry message for the whole-package one.
+const OVER_LIMIT: &str = "past its decode limit";
+
+fn media_over_budget(budget: u64, archive_len: usize) -> ApkgError {
+    apkg_error(format!(
+        "media in this package expands to more than {budget} bytes, \
+         past the limit for an archive of {archive_len} bytes; \
+         refusing to continue"
+    ))
+}
+
+/// Read one media payload with `limit` as its decode cap, naming the media
+/// file in any error that is not a budget refusal.
+fn read_media_payload(
+    reader: &ZipReader<'_>,
+    media: &MediaFile,
+    payload_archive_name: &str,
+    format: CollectionFormat,
+    limit: u64,
+) -> Result<Vec<u8>, ApkgError> {
+    read_member_bounded(reader, payload_archive_name, format, "media file", limit).map_err(|err| {
+        if err.message.contains(OVER_LIMIT) {
+            err
+        } else {
+            apkg_error(format!(
+                "failed to read media file '{}' from archive member '{}': {}",
+                media.archive_name, payload_archive_name, err.message
+            ))
+        }
+    })
 }
 
 fn media_matches_archive_name(media: &MediaFile, archive_name: &str) -> bool {
@@ -4614,7 +4676,19 @@ fn collection_member(
 fn package_collection_format(
     reader: &ZipReader<'_>,
 ) -> Result<Option<CollectionFormat>, ApkgError> {
-    let Ok(bytes) = reader.read_by_name(META) else {
+    let Some(meta_entry) = reader.entry_by_name(META) else {
+        return Ok(None);
+    };
+    // Plain protobuf in every format, hence the legacy (uncompressed) path.
+    let format = CollectionFormat::LegacySqlite;
+    let Ok(bytes) = read_stored_bounded(
+        reader,
+        meta_entry,
+        format,
+        "package metadata",
+        META_DECODE_CEILING,
+    )?
+    else {
         return Ok(None);
     };
     let metadata = PackageMetadataProto::decode_pb(bytes.as_slice())
@@ -4661,16 +4735,141 @@ fn collection_member_for_format(
 /// which means this works identically on every target, the browser included.
 /// There is no longer a build in which a modern package is refused for want of a
 /// decompressor.
+///
+/// `limit` caps the decoded size. The Zstandard decoder enforces it while
+/// decoding; a legacy payload is already its final size, so it is checked
+/// before the copy.
 fn decode_package_payload(
     format: CollectionFormat,
     label: &str,
     bytes: &[u8],
+    limit: u64,
 ) -> Result<Vec<u8>, ApkgError> {
     if format.is_modern() {
-        return zstd::decompress(bytes)
-            .map_err(|err| apkg_error(format!("failed to decode zstd-compressed {label}: {err}")));
+        return zstd::decompress_with_limit(bytes, limit_as_usize(limit)).map_err(|err| {
+            // The two refusals `decompress_with_limit` makes for size: the
+            // incremental one ("exceeds limit") and the declared-size one
+            // ("past the limit"). The media tests drive both through here.
+            if err.contains("exceeds limit") || err.contains("past the limit") {
+                over_limit(label, limit)
+            } else {
+                apkg_error(format!("failed to decode zstd-compressed {label}: {err}"))
+            }
+        });
+    }
+    if bytes.len() as u64 > limit {
+        return Err(over_limit(label, limit));
     }
     Ok(bytes.to_vec())
+}
+
+fn over_limit(label: &str, limit: u64) -> ApkgError {
+    apkg_error(format!("{label} is {OVER_LIMIT} of {limit} bytes"))
+}
+
+/// Limits are clamped, not truncated, on the way to a `usize` API: on
+/// `wasm32` a plain `as` would wrap a large `u64` limit into a *small* one.
+fn limit_as_usize(limit: u64) -> usize {
+    usize::try_from(limit).unwrap_or(usize::MAX)
+}
+
+/// Largest collection database a package may decode to.
+///
+/// This is the decoders' own ceiling, made explicit here so the importer's
+/// bound no longer depends silently on a constant in another crate. It is not
+/// lowered on wasm: unlike media, the collection is the whole point of an
+/// import, and nothing has been measured to say what a smaller figure would
+/// cost legitimate users.
+const COLLECTION_DECODE_CEILING: u64 = 256 * 1024 * 1024;
+
+/// Largest package `meta` member. It is one protobuf message holding a single
+/// version enum -- a handful of bytes -- so 64 KiB is generous and still keeps
+/// a hostile `meta` from inflating to the zip reader's 256 MiB ceiling before
+/// the package format is even known.
+const META_DECODE_CEILING: u64 = 64 * 1024;
+
+/// Largest media map (JSON in legacy packages, protobuf in modern ones).
+///
+/// The map holds a name -- and in modern packages a size and SHA-1 -- per
+/// media file, on the order of 100 bytes an entry. 16 MiB is room for well
+/// over 100,000 files, past any real collection, while keeping a hostile map
+/// from claiming the full 256 MiB decoder ceiling before a single media byte
+/// is counted.
+const MEDIA_MAP_DECODE_CEILING: u64 = 16 * 1024 * 1024;
+
+/// The largest a Zstandard frame can be while carrying `content_limit` bytes.
+///
+/// A frame of raw (stored) blocks is its content plus at most 18 bytes of
+/// frame header, a 3-byte header per 128 KiB block, and a 4-byte checksum.
+/// No valid frame for `content_limit` bytes is larger, which is what lets the
+/// ZIP-level size of a modern member be refused before it is read at all.
+fn zstd_frame_len_bound(content_limit: u64) -> u64 {
+    const MAX_BLOCK: u64 = 128 * 1024;
+    const FRAME_HEADER_MAX: u64 = 18;
+    const BLOCK_HEADER: u64 = 3;
+    const CHECKSUM: u64 = 4;
+    let blocks = content_limit.div_ceil(MAX_BLOCK).max(1);
+    content_limit
+        .saturating_add(FRAME_HEADER_MAX + CHECKSUM)
+        .saturating_add(blocks.saturating_mul(BLOCK_HEADER))
+}
+
+/// Read and decode one package member without ever holding more than `limit`
+/// decoded bytes (#13672).
+///
+/// Two layers can expand, and both are bounded before they allocate:
+///
+/// ```text
+///   layer        expands by    bounded how
+///   ----------   -----------   ----------------------------------------------
+///   ZIP entry    DEFLATE       declared `size` refused here if past the
+///                              bound; `ZipReader::read` then inflates to
+///                              exactly that size and refuses anything else
+///   Zstandard    zstd blocks   `decompress_with_limit(limit)` refuses at the
+///   (modern)                   first block that would cross `limit`
+/// ```
+///
+/// For a modern member the ZIP payload is the compressed frame, so its bound
+/// is the largest frame that could carry `limit` bytes, not `limit` itself.
+fn read_member_bounded(
+    reader: &ZipReader<'_>,
+    name: &str,
+    format: CollectionFormat,
+    label: &str,
+    limit: u64,
+) -> Result<Vec<u8>, ApkgError> {
+    let entry = reader.entry_by_name(name).ok_or_else(|| {
+        apkg_error(format!(
+            "failed to read {label}: zip: entry '{name}' not found"
+        ))
+    })?;
+    let bytes = read_stored_bounded(reader, entry, format, label, limit)?
+        .map_err(|err| apkg_error(format!("failed to read {label}: {err}")))?;
+    decode_package_payload(format, label, &bytes, limit)
+}
+
+/// The ZIP half of [`read_member_bounded`].
+///
+/// The outer `Result` is the budget refusal, which always propagates; the
+/// inner one is the reader's own error, kept separate because the media map
+/// callers have always treated an unreadable map as an absent one, and that
+/// leniency is not this change's to remove.
+fn read_stored_bounded(
+    reader: &ZipReader<'_>,
+    entry: &zip::ZipEntry,
+    format: CollectionFormat,
+    label: &str,
+    limit: u64,
+) -> Result<Result<Vec<u8>, String>, ApkgError> {
+    let stored_limit = if format.is_modern() {
+        zstd_frame_len_bound(limit)
+    } else {
+        limit
+    };
+    if u64::from(entry.size) > stored_limit {
+        return Err(over_limit(label, limit));
+    }
+    Ok(reader.read(entry))
 }
 
 /// Compress a package member for a modern package.
@@ -4698,7 +4897,19 @@ fn media_manifest(
     }
 
     let mut manifest = MediaManifest::default();
-    if let Ok(bytes) = reader.read_by_name(MEDIA_MAP) {
+    let map_entry = reader.entry_by_name(MEDIA_MAP);
+    let map_bytes = match map_entry {
+        Some(entry) => read_stored_bounded(
+            reader,
+            entry,
+            CollectionFormat::LegacySqlite,
+            "media map",
+            MEDIA_MAP_DECODE_CEILING,
+        )?
+        .ok(),
+        None => None,
+    };
+    if let Some(bytes) = map_bytes {
         manifest.map_present = true;
         manifest.mapping = serde_json::from_slice(&bytes)
             .map_err(|err| apkg_error(format!("invalid Anki media map JSON: {err}")))?;
@@ -4737,12 +4948,23 @@ fn media_manifest(
 
 fn modern_media_manifest(reader: &ZipReader<'_>) -> Result<MediaManifest, ApkgError> {
     let mut manifest = MediaManifest::default();
-    let media_map = match reader.read_by_name(MEDIA_MAP) {
+    let Some(map_entry) = reader.entry_by_name(MEDIA_MAP) else {
+        return Ok(manifest);
+    };
+    let format = CollectionFormat::Sqlite21b;
+    let media_map = match read_stored_bounded(
+        reader,
+        map_entry,
+        format,
+        "media map",
+        MEDIA_MAP_DECODE_CEILING,
+    )? {
         Ok(bytes) => bytes,
         Err(_) => return Ok(manifest),
     };
     manifest.map_present = true;
-    let media_map = decode_package_payload(CollectionFormat::Sqlite21b, "media map", &media_map)?;
+    let media_map =
+        decode_package_payload(format, "media map", &media_map, MEDIA_MAP_DECODE_CEILING)?;
     let entries = MediaEntriesProto::decode_pb(media_map.as_slice())
         .map_err(|err| apkg_error(format!("invalid Anki media entries protobuf: {err}")))?;
 
@@ -7477,6 +7699,93 @@ CREATE TABLE graves (
         );
     }
 
+    /// No valid Zstandard frame for `n` bytes is longer than
+    /// `zstd_frame_len_bound(n)`, which is what makes it safe to refuse a
+    /// modern member from its ZIP size alone. Incompressible input is the worst
+    /// case, since libzstd then falls back to raw blocks.
+    #[test]
+    fn zstd_frame_len_bound_covers_incompressible_frames() {
+        let mut state: u64 = 0x9E37_79B9_7F4A_7C15;
+        let noise: Vec<u8> = (0..300_000)
+            .map(|_| {
+                state ^= state << 13;
+                state ^= state >> 7;
+                state ^= state << 17;
+                state as u8
+            })
+            .collect();
+        let limit = noise.len() as u64;
+        for frame in [
+            zstd_encode(&noise),
+            zstd_crate::bulk::compress(&noise, 3).unwrap(),
+        ] {
+            assert!(
+                frame.len() as u64 <= zstd_frame_len_bound(limit),
+                "a {}-byte frame for {limit} bytes exceeds the bound {}",
+                frame.len(),
+                zstd_frame_len_bound(limit)
+            );
+            let decoded = decode_package_payload(CollectionFormat::Sqlite21b, "t", &frame, limit)
+                .expect("exactly at the limit is allowed");
+            assert_eq!(decoded, noise);
+            let error = decode_package_payload(CollectionFormat::Sqlite21b, "t", &frame, limit - 1)
+                .expect_err("one byte under the content is refused");
+            assert!(error.message.contains(OVER_LIMIT), "{}", error.message);
+        }
+        // The bound never wraps.
+        assert_eq!(zstd_frame_len_bound(u64::MAX), u64::MAX);
+    }
+
+    /// A legacy media map past its ceiling is a refusal, not an absent map:
+    /// silently dropping it would import media under archive names instead of
+    /// their real filenames.
+    #[test]
+    fn oversized_media_map_is_refused() {
+        let mut writer = ZipWriter::new();
+        writer.add_file(LEGACY_COLLECTION, b"unused", false);
+        let map = vec![b' '; MEDIA_MAP_DECODE_CEILING as usize + 1];
+        writer.add_file(MEDIA_MAP, &map, false);
+        let apkg = writer.finish();
+        let error = read_media_files(&apkg).expect_err("map past its ceiling");
+        assert!(
+            error
+                .message
+                .starts_with("media map is past its decode limit"),
+            "{}",
+            error.message
+        );
+
+        // At the ceiling, the map is read (and rejected only as bad JSON).
+        let mut writer = ZipWriter::new();
+        writer.add_file(LEGACY_COLLECTION, b"unused", false);
+        writer.add_file(MEDIA_MAP, &map[1..], false);
+        let apkg = writer.finish();
+        let error = read_media_files(&apkg).expect_err("blank map is not JSON");
+        assert!(
+            error.message.contains("invalid Anki media map JSON"),
+            "{}",
+            error.message
+        );
+    }
+
+    /// Same for the package `meta` member, which is read before the format is
+    /// known.
+    #[test]
+    fn oversized_package_metadata_is_refused() {
+        let mut writer = ZipWriter::new();
+        writer.add_file(META, &vec![0u8; META_DECODE_CEILING as usize + 1], false);
+        writer.add_file(SQLITE_21B_COLLECTION, b"unused", false);
+        let apkg = writer.finish();
+        let error = read_collection_bytes(&apkg).expect_err("meta past its ceiling");
+        assert!(
+            error
+                .message
+                .starts_with("package metadata is past its decode limit"),
+            "{}",
+            error.message
+        );
+    }
+
     #[test]
     fn reads_modern_media_payloads_via_legacy_zip_filename() {
         let mut writer = ZipWriter::new();
@@ -7861,8 +8170,13 @@ CREATE TABLE graves (
 
         // And our own reader agrees, so the two directions cannot drift apart
         // without one of them failing.
-        let ours = decode_package_payload(CollectionFormat::Sqlite21b, "collection", &encoded)
-            .expect("our reader should read our writer");
+        let ours = decode_package_payload(
+            CollectionFormat::Sqlite21b,
+            "collection",
+            &encoded,
+            COLLECTION_DECODE_CEILING,
+        )
+        .expect("our reader should read our writer");
         assert_eq!(ours, collection);
     }
 
