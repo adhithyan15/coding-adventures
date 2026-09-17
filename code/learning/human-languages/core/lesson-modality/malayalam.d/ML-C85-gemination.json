@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C85-gemination",
+    "language": "malayalam",
+    "chapter": 85,
+    "sequence": 2970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:922712c89a6ade46"
+  },
+  "findings": []
+}

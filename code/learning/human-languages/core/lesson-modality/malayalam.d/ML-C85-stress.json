@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C85-stress",
+    "language": "malayalam",
+    "chapter": 85,
+    "sequence": 2980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67689d0a3d3a32a8"
+  },
+  "findings": []
+}

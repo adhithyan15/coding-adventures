@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:edc01f6e28981326",
+  "lessonIds": [
+    "ML-C85-kudikkuka",
+    "ML-C85-gemination",
+    "ML-C85-stress",
+    "ML-R85-sounds-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch85-held-sounds.tex"
+}

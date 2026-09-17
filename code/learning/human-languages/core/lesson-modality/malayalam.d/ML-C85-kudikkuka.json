@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C85-kudikkuka",
+    "language": "malayalam",
+    "chapter": 85,
+    "sequence": 2960,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:50eca357bb12f675"
+  },
+  "findings": []
+}
