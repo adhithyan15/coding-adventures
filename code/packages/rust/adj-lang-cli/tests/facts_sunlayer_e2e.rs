@@ -334,15 +334,25 @@ fn the_table_shape_matches_the_measured_rows() {
     //
     // AN UNSHIPPED DRAFT of this comment cited "a loose scan over 4,109 files".
     // That denominator could not be reproduced under any of eleven candidate
-    // scopes (nearest: 4,281) and was withdrawn rather than re-derived into
-    // something that sounds better. A number nobody can reproduce is the defect,
-    // whether it is the count or the denominator.
+    // scopes and was withdrawn rather than re-derived into something that sounds
+    // better. The nearest candidate was code/specs/data at any extension; its
+    // reproducible form is 4,277 tracked files at 1614e47e5b, which
+    // `git ls-tree -r --name-only` repeats exactly. An earlier draft cited 4,281
+    // for that slot -- correct when written, and NOT reproducible, because the
+    // scope was a working-tree walk, which counts ignored build caches. Today
+    // that walk counts four (.ruff_cache/, tools/__pycache__/), and 4,277
+    // tracked + 4 ignored = 4,281 exactly. Naming a scope does not make a
+    // number reproducible if the scope is "whatever was on disk that hour".
+    // A number nobody can reproduce is the defect, whether it is the count or
+    // the denominator.
     //
     // "UNSHIPPED DRAFT", not "this comment used to say" -- the distinction was
-    // checked, not assumed. `git log -S` finds the string 4,109 entering these
-    // two trees only in the commit that REMOVES it, and the pre-change file at
-    // 05aa43d702 contains it zero times: it lived in a working-tree draft and
-    // was never on main. The sibling claim in this same block, "18 shipped
+    // checked, not assumed. `git log -S` on main finds the string 4,109 entering
+    // these two trees only at 1614e47e5b, the squash that shipped #15385: its
+    // parent holds the string zero times and the squash holds it twice, so that
+    // commit ADDS it. The pre-change file at 05aa43d702 contains it zero times:
+    // it lived in a working-tree draft and was never on main. The sibling
+    // claim in this same block, "18 shipped
     // tables use one", IS verifiable there -- once the needle is flattened,
     // because that phrase wraps a line break and a line-anchored grep reports
     // zero for it too. One history was real and one was not, and the needle
