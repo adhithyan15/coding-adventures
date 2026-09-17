@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 5,
-  "sourceHash": "fnv1a64:70cf3287f75cae36",
+  "sourceHash": "fnv1a64:8a58384fdbd129cb",
   "lessonIds": [
     "TE-S01-letter-ta",
     "TE-S01-copy-in-a-word",
@@ -11,6 +11,7 @@
     "TE-S147-digit-8",
     "TE-C05-nenu-telugu-maatlaadataanu",
     "TE-S111-letter-sa",
+    "TE-S158-letter-ssa",
     "TE-C05-undu",
     "TE-S125-letter-ha",
     "TE-C05-pani-ceyu",
@@ -21,7 +22,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch05.txt",
   "json": "telugu/narration/ch05.json",
-  "textHash": "fnv1a64:7bbb76e54b72f537",
-  "jsonHash": "fnv1a64:7812f1385effc0ea",
+  "textHash": "fnv1a64:748fd6313999e159",
+  "jsonHash": "fnv1a64:4018623c348679df",
   "findings": []
 }
