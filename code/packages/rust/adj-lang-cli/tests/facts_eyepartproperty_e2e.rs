@@ -157,8 +157,36 @@ fn every_part_answer_carries_its_own_sentence() {
 #[test]
 fn the_retina_row_carries_the_pages_no_break_spaces() {
     assert_eq!(RETINA.matches('\u{a0}').count(), 2, "two U+00A0 in the retina sentence");
+    // SCOPED TO `source "` LINES, not the whole table block -- the correction
+    // #15337 made for plant-parts and #15338 for solar-eclipse-type.
+    //
+    // This table is the LIVE case for that defect, not a hypothetical one: it
+    // carries four `%` comment lines between its rows and its envelope, and
+    // `shipped_table()` slices from `table ...` to end of file, so those
+    // comments are inside `body`. Measured on the shipped block with the
+    // ordinary-space form planted in a comment: the unscoped arm sees it and
+    // fails a correct file, the scoped arm does not.
+    //
+    // The trade, recorded in shards 03560 and 03670: scoping lets a
+    // comment-borne ordinary-space form survive. Nothing now pins "no
+    // ordinary-space form anywhere in the block", only "no `source` line
+    // carries one". That is the right trade -- the shipped string is what
+    // provenance means -- but it is a gap, so it is written down.
+    //
+    // The positive half needs no new scoping here: the shape test pins all
+    // three `row (part, property) { source "..." }` blocks verbatim and counts
+    // the row sources, so a mutant that moved this span could not pass it.
     let body = shipped_table();
-    assert!(!body.contains(&RETINA.replace('\u{a0}', " ")), "the ordinary-space form is not in the table");
+    let source_lines: String = body
+        .lines()
+        .filter(|l| l.trim_start().starts_with("source \""))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(
+        !source_lines.contains(&RETINA.replace('\u{a0}', " ")),
+        "no `source` line may carry the ordinary-space form, which the page never \
+         writes: {source_lines}"
+    );
 }
 
 #[test]

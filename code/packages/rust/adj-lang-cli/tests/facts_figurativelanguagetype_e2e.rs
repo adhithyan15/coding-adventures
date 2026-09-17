@@ -174,9 +174,35 @@ fn the_table_shape_matches_the_measured_rows() {
         body.contains(&format!("        source \"{METAPHOR}\"\n")),
         "the metaphor row keeps the page's U+2019, not an ASCII apostrophe"
     );
+    // SCOPED TO `source "` LINES, not the whole table block -- the correction
+    // #15337 made for plant-parts and #15338 for solar-eclipse-type. Read
+    // against the block, this arm fails on a harmless `%` comment quoting the
+    // sentence in ASCII, and a comment is not a shipped citation.
+    //
+    // Stated with its side: this table carries ZERO `%` comments inside its
+    // block today, so the false alarm here is AVAILABLE rather than ACTIVE.
+    // eye-part-property.adj, corrected in the same change, has four comments in
+    // its block and is the live case. That is the only difference -- both arms
+    // were measured firing, this one at its own assert line under a mutant that
+    // plants the ASCII form on a NON-metaphor row (the three obvious routes are
+    // each dominated by an earlier guard: the row-source count, the
+    // not-metaphor-as-envelope arm, and the row-keeps-U+2019 arm).
+    //
+    // The trade, recorded in shards 03560 and 03670: scoping lets a
+    // comment-borne ASCII form survive. Nothing now pins "no ASCII metaphor
+    // span anywhere in the block", only "no `source` line carries one".
+    //
+    // The positive half is already anchored above at eight spaces, so it needs
+    // no new scoping: a mutant planting this span at table level would fail it.
+    let source_lines: String = body
+        .lines()
+        .filter(|l| l.trim_start().starts_with("source \""))
+        .collect::<Vec<_>>()
+        .join("\n");
     assert!(
-        !body.contains(&METAPHOR.replace('\u{2019}', "'")),
-        "an ASCII-apostrophe metaphor span occurs nowhere on the page, so it must not ship"
+        !source_lines.contains(&METAPHOR.replace('\u{2019}', "'")),
+        "no `source` line may carry an ASCII-apostrophe metaphor span -- that \
+         spelling occurs zero times on the page: {source_lines}"
     );
     let shipped_envelope = body
         .lines()
