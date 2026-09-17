@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C73-enthukondu",
+    "language": "malayalam",
+    "chapter": 73,
+    "sequence": 2510,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c44e3e1757663264"
+  },
+  "findings": []
+}
