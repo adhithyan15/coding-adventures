@@ -1,0 +1,440 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ML-C72-ennu-more
+spine_node: SPINE-READ-SIGNS-AND-NOTICES
+sequence: 2490
+chapter: 72
+type: word
+headword: എന്ന് ചിന്തിക്കുന്നു
+gloss: the same marker with think, know and ask — one word opening four verbs the book already taught
+romanization: ennŭ cintikkunnu
+concept_tag: ML-QUOTATIVE-VERBS
+prerequisites: [ML-C72-ennu, ML-C34-codikkuka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-GRAMMAR-C72-ENNU-01, ML-CONCEPT-C33-CINTIKKUKA-01, ML-CONCEPT-C34-CODIKKUKA-01]
+introduces:
+  knowledge: [ML-GRAMMAR-C72-ENNU-VERBS-01]
+practises:
+  knowledge: [ML-GRAMMAR-C72-ENNU-VERBS-01, ML-GRAMMAR-C72-ENNU-01, ML-CONCEPT-C33-CINTIKKUKA-01, ML-CONCEPT-C34-CODIKKUKA-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C72-ennu, ML-C33-cintikkuka, ML-C34-codikkuka]
+---
+
+# എന്ന് ചിന്തിക്കുന്നു — the marker does not care which verb follows
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C72-ENNU-01] -->
+
+[PAUSE 2s] Say your quoted sentence with *ennŭ ñān paṟayunnu* after it.
+
+[PAUSE 2s] Now swap the last verb for a different one. That is today's whole
+lesson.
+
+## Grammar Lens: one marker, four verbs
+<!-- hl-knowledge: introduces=[ML-GRAMMAR-C72-ENNU-VERBS-01]; assesses=[] -->
+
+**എന്ന്** marks the thing said. What happens to it afterwards is up to the verb
+at the end, and you already have four of them:
+
+| the verb after it | what the sentence becomes |
+|---|---|
+| **പറയുന്നു** *paṟayunnu* | I **say** it |
+| **ചിന്തിക്കുന്നു** *cintikkunnu* | I **think** it |
+| **അറിയാം** *aṟiyāṁ* | I **know** it |
+| **ചോദിക്കുന്നു** *cōdikkunnu* | I **ask** it |
+
+> **"എനിക്ക് മലയാളം അറിയാം" എന്ന് ഞാൻ ചിന്തിക്കുന്നു.**
+>
+> *"enikku malayāḷaṁ aṟiyāṁ" ennŭ ñān cintikkunnu* — 'I think I know Malayalam.'
+
+**This is why the marker is worth a chapter.** It is one word, and it turns every
+sentence you can already build into something you can report, wonder about, claim
+to know, or put as a question — without learning a new shape for any of them.
+
+The knowing verb keeps its own shape: **അറിയാം** puts what is known at the
+front and leaves the knower in the dative, so the sentence arrives at you rather
+than being done by you. The marker sits in front of it unchanged.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C72-ENNU-VERBS-01, ML-GRAMMAR-C72-ENNU-01, ML-CONCEPT-C33-CINTIKKUKA-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: the quoted sentence, then *ennŭ ñān paṟayunnu*]
+- [YOU SAY: the same, then *ennŭ ñān cintikkunnu*]
+- [YOU SAY: which part of the sentence you changed each time, and which part you did not]
+- [YOU SAY: the four verbs the marker can hand a sentence to]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C72-ENNU-VERBS-01, ML-GRAMMAR-C72-ENNU-01, ML-CONCEPT-C34-CODIKKUKA-01] -->
+
+[PAUSE 3s] Does **എന്ന്** change when the verb after it changes? (**No**.) Name
+two verbs it can hand a sentence to. (***Paṟayunnu***, ***cintikkunnu*** — also
+*aṟiyāṁ* and *cōdikkunnu*.) And how much of the quoted sentence has to be
+rebuilt? (**None of it**.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+id: ML-C72-ennu
+spine_node: SPINE-READ-SIGNS-AND-NOTICES
+sequence: 2480
+chapter: 72
+type: word
+headword: എന്ന്
+gloss: the quotative ennu, which turns a whole sentence into the thing that is said
+romanization: ennŭ
+concept_tag: ML-QUOTATIVE
+prerequisites: [ML-C50-parayuka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-CONCEPT-C50-PARAYUKA-01, ML-CONCEPT-C32-ARIYUKA-01]
+introduces:
+  knowledge: [ML-GRAMMAR-C72-ENNU-01]
+practises:
+  knowledge: [ML-GRAMMAR-C72-ENNU-01, ML-CONCEPT-C50-PARAYUKA-01, ML-CONCEPT-C32-ARIYUKA-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C50-parayuka, ML-C32-ariyuka]
+---
+
+# എന്ന് (ennŭ) — the word that makes a sentence quotable
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-ARIYUKA-01, ML-CONCEPT-C50-PARAYUKA-01] -->
+
+[PAUSE 2s] Say *enikku malayāḷaṁ aṟiyāṁ* — "I know Malayalam." A whole sentence,
+and yours since the knowing chapter.
+
+[PAUSE 2s] Now say *ñān paṟayunnu*. Today one word joins those two.
+
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-GRAMMAR-C72-ENNU-01]; assesses=[] -->
+
+> **എന്ന്** — *ennŭ* — **marks the sentence before it as the thing said**
+
+> **"എനിക്ക് മലയാളം അറിയാം" എന്ന് ഞാൻ പറയുന്നു.**
+>
+> *"enikku malayāḷaṁ aṟiyāṁ" ennŭ ñān paṟayunnu* — 'I say, "I know Malayalam."'
+
+**Nothing in the quoted sentence changed.** It is the same five syllables you
+have been saying since chapter nine, sitting in front of *ennŭ* exactly as they
+stand on their own.
+
+That is the whole of it, and it is worth more than the one word costs. English
+rebuilds a reported sentence — *I know Malayalam* becomes *that I know
+Malayalam*, and a different person or tense forces more changes still.
+**Malayalam leaves the sentence alone and puts a marker after it.**
+
+## Grammar Lens: where it sits
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C72-ENNU-01, ML-CONCEPT-C50-PARAYUKA-01] -->
+
+| | |
+|---|---|
+| the sentence said | **എനിക്ക് മലയാളം അറിയാം** |
+| the marker | **എന്ന്** |
+| who says it | **ഞാൻ പറയുന്നു** |
+
+Read the three rows in that order and you have the sentence. **The quoted part
+comes first and the saying comes last**, which is the opposite of English and
+the same order Malayalam uses everywhere else — the verb at the end.
+
+You have seen this shape before without the marker: **എന്നാൽ** (*ennāl*), the
+word for *but*, begins with the same **എന്ന**. They are relatives, and meeting
+one helps you notice the other on a page.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C72-ENNU-01, ML-CONCEPT-C50-PARAYUKA-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *enikku malayāḷaṁ aṟiyāṁ*]
+- [YOU SAY: the same thing again with *ennŭ ñān paṟayunnu* after it]
+- [YOU SAY: which of the two parts came out unchanged]
+- [YOU SAY: where the saying-verb sits, and where English would put it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C72-ENNU-01] -->
+
+[PAUSE 3s] What does **എന്ന്** do? (**Marks the sentence in front of it as the
+thing said**.) What has to change inside that sentence? (**Nothing**.) Which
+comes first, the saying or the thing said? (**The thing said** — the verb goes
+last.)
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+id: ML-C73-enthukondennaal
+spine_node: SPINE-READ-SIGNS-AND-NOTICES
+sequence: 2530
+chapter: 73
+type: word
+headword: എന്തുകൊണ്ടെന്നാൽ
+gloss: the written because, which carries the whole question word inside it
+romanization: entukoṇṭennāl
+concept_tag: ML-BECAUSE-FORMAL
+prerequisites: [ML-C73-kaaranam]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-LEX-C73-KAARANAM-01, ML-LEX-C73-WHY-01]
+introduces:
+  knowledge: [ML-GRAMMAR-C73-BECAUSE-01]
+practises:
+  knowledge: [ML-GRAMMAR-C73-BECAUSE-01, ML-LEX-C73-KAARANAM-01, ML-LEX-C73-WHY-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C73-kaaranam, ML-C73-enthukondu]
+---
+
+# എന്തുകൊണ്ടെന്നാൽ (entukoṇṭennāl) — the long one, on the page
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C73-KAARANAM-01] -->
+
+[PAUSE 2s] Say the everyday word for *because*.
+
+[PAUSE 2s] Today's is the one you will read rather than say, and it is long
+enough to be worth taking slowly.
+
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-GRAMMAR-C73-BECAUSE-01]; assesses=[] -->
+
+> **എന്തുകൊണ്ടെന്നാൽ** — *entukoṇṭennāl* — **because** (written, explaining)
+
+Put it beside the question from two pages ago and the first half is the same
+letters:
+
+| | |
+|---|---|
+| **എന്തുകൊണ്ട്** | why |
+| **എന്തുകൊണ്ടെന്നാൽ** | because |
+
+**The answer carries the question inside it.** That is the thing to see on the
+page — a long unfamiliar word with a word you know at the front of it stops
+being unfamiliar, and this one is signposted more clearly than most.
+
+This book does not take the tail apart for you. The pieces after
+**എന്തുകൊണ്ട്** are read different ways by different grammars, and guessing
+between them would teach you something that might be wrong.
+
+## Grammar Lens: which one to use
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C73-BECAUSE-01, ML-LEX-C73-KAARANAM-01] -->
+
+| | |
+|---|---|
+| speaking, everyday | **കാരണം** |
+| writing, explaining | **എന്തുകൊണ്ടെന്നാൽ** |
+
+Both join a statement to its reason and neither rebuilds either half. **Reach
+for കാരണം when you talk.** Meeting the long one on a notice or in a written
+explanation is what this lesson is for, and a reader who can see the question
+word inside it has already got most of the way.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C73-BECAUSE-01, ML-LEX-C73-WHY-01] -->
+
+[PAUSE 1s]
+- [YOU LOOK: at the long word and find the question word at its front]
+
+> എന്തുകൊണ്ടെന്നാൽ
+
+- [YOU SAY: *entukoṇṭŭ* … *entukoṇṭennāl*]
+- [YOU SAY: which of the two because-words you would use out loud]
+- [YOU SAY: why this book stops short of taking the ending apart]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C73-BECAUSE-01, ML-LEX-C73-KAARANAM-01] -->
+
+[PAUSE 3s] What does **എന്തുകൊണ്ടെന്നാൽ** mean? (**Because**.) Which word can
+you see at the front of it? (**എന്തുകൊണ്ട്** — *why*.) And which because-word
+would you say rather than write? (***Kāraṇaṁ***.)
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+id: ML-C73-enthukondu
+spine_node: SPINE-READ-SIGNS-AND-NOTICES
+sequence: 2510
+chapter: 73
+type: word
+headword: എന്തുകൊണ്ട്
+gloss: why — the word for what, with the ending that means "by means of"
+romanization: entukoṇṭŭ
+concept_tag: ML-WHY
+prerequisites: [ML-C02-entu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-LEX-ENTU-01]
+introduces:
+  knowledge: [ML-LEX-C73-WHY-01]
+practises:
+  knowledge: [ML-LEX-C73-WHY-01, ML-LEX-ENTU-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C02-entu]
+---
+
+# എന്തുകൊണ്ട് (entukoṇṭŭ) — "by what", which is how Malayalam asks why
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ENTU-01] -->
+
+[PAUSE 2s] Say the word for *what*. You have had it since the second chapter,
+inside the question you ask for somebody's name.
+
+[PAUSE 2s] Today it grows an ending, and becomes a different question.
+
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-LEX-C73-WHY-01]; assesses=[] -->
+
+> **എന്തുകൊണ്ട്** — *entukoṇṭŭ* — **why**
+
+Look at the front of it. **എന്ത്** is sitting there, the word you already have.
+What follows is **കൊണ്ട്** (*koṇṭŭ*), an ending that means *by means of* — so the
+whole question asks, quite literally, **"by what?"**
+
+That is worth noticing rather than memorising. **Malayalam did not invent a new
+word for *why*; it took the word for *what* and asked what caused the thing.**
+
+Your question words now cover four of the five things a person asks about:
+
+| | |
+|---|---|
+| **എന്ത്** *entŭ* | what |
+| **ആര്** *ārŭ* | who |
+| **എവിടെ** *eviṭe* | where |
+| **എന്തുകൊണ്ട്** *entukoṇṭŭ* | why |
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C73-WHY-01, ML-LEX-ENTU-01] -->
+
+**എന്തു** is *entŭ* with its final mark opened out, which is what this script
+does when something follows. **കൊണ്ട്** is the piece carrying the meaning of
+*with* or *by*.
+
+**Three of the four question words in that table open on എ** — *entŭ*, *eviṭe*
+and now *entukoṇṭŭ*. That is the letter the pointing chapter named as the one
+that asks: change a word's front from ഇ to അ to എ and it walks from *near* to
+*far* to *a question*. Today's word keeps the എ because it is built on a word
+that had it already.
+
+**ആര്** is the odd one out and starts on ആ. Question words are a family, not a
+rule — most of them carry the asking letter, and *who* does not.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C73-WHY-01, ML-LEX-ENTU-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *entŭ* … *entukoṇṭŭ*]
+- [YOU SAY: the four question words in the table]
+- [YOU SAY: which part of today's word you already had, and which part is new]
+- [YOU SAY: what the new part means on its own]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C73-WHY-01] -->
+
+[PAUSE 3s] What is *why*? (***Entukoṇṭŭ***.) Which word is hiding at the front
+of it? (**എന്ത്** — *what*.) And what does the ending add? (**By means of** —
+so the question is "by what?")
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+id: ML-C73-kaaranam
+spine_node: SPINE-READ-SIGNS-AND-NOTICES
+sequence: 2520
+chapter: 73
+type: word
+headword: കാരണം
+gloss: a reason — the Sanskrit noun Malayalam also uses as the everyday word for because
+romanization: kāraṇaṁ
+concept_tag: ML-REASON
+prerequisites: [ML-C73-enthukondu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ML-LEX-C73-WHY-01]
+introduces:
+  knowledge: [ML-LEX-C73-KAARANAM-01]
+practises:
+  knowledge: [ML-LEX-C73-KAARANAM-01, ML-LEX-C73-WHY-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C73-enthukondu]
+---
+
+# കാരണം (kāraṇaṁ) — a reason, and the answer to the question
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C73-WHY-01] -->
+
+[PAUSE 2s] Ask *why* in Malayalam. Say which word is hiding inside it.
+
+[PAUSE 2s] Now you need something to answer with.
+
+## You'll want to know
+<!-- hl-knowledge: introduces=[ML-LEX-C73-KAARANAM-01]; assesses=[] -->
+
+> **കാരണം** — *kāraṇaṁ* — **a reason; and so, "because"**
+
+It is a **noun** first. *Kāraṇaṁ* is a reason, a cause, the thing behind
+something — and Malayalam then uses that same noun to join two statements, the
+way English uses *the reason is* before sliding into *because*.
+
+The word is Sanskrit, **कारण** (*kāraṇa*), taken whole. That puts it in the same
+company as **ചിന്ത**, the thought-noun that *cintikkuka* stands on, and
+**സുപ്രഭാതം**, the good-morning this book teaches — Malayalam borrows a Sanskrit
+noun and puts it to work without reshaping it.
+
+## Grammar Lens: it sits between the two halves
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C73-KAARANAM-01, ML-LEX-C73-WHY-01] -->
+
+Say the thing, then the word, then the reason:
+
+| | |
+|---|---|
+| what happened | **എനിക്ക് മലയാളം ഇഷ്ടം** |
+| the joiner | **കാരണം** |
+| why | (your reason) |
+
+**This is the everyday one**, the word a person reaches for in speech. It asks
+nothing of the sentences on either side of it — neither half is rebuilt, the
+same way the quotative left a quoted sentence alone.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C73-KAARANAM-01, ML-LEX-C73-WHY-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *kāraṇaṁ*]
+- [YOU SAY: the question and the joiner one after the other — *entukoṇṭŭ* … *kāraṇaṁ*]
+- [YOU SAY: what the word means before it means "because"]
+- [YOU SAY: two other Sanskrit nouns this book took whole]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C73-KAARANAM-01, ML-LEX-C73-WHY-01] -->
+
+[PAUSE 3s] What is *kāraṇaṁ* as a noun? (**A reason, a cause**.) What job does
+it do between two statements? (**Because**.) And what is the question it
+answers? (***Entukoṇṭŭ***.)
+`;export{t as a,r as i,s as n,a as r,l as t};
