@@ -6247,9 +6247,14 @@ fn emit_host_link(
     // identical scoping for #13052). A literal href is checked here,
     // at compile time; a slot-bound href is unknown until runtime, so
     // it's checked below via a generated safe-URL guard instead.
-    if let HostLinkHref::Literal(escaped) = &href {
-        if !external_false && has_disallowed_uri_scheme(escaped) {
-            return Err(PipelineEmitError::UnsafeUriScheme(escaped.clone()));
+    //
+    // The check reads the RAW literal, not the escaped one. It used to read
+    // the escaped form, which only worked while the escaper left tabs and
+    // line breaks raw: once they are escaped (#15428 review), `java<TAB>script:`
+    // becomes `java\tscript:`, which the normaliser no longer recognises.
+    if let Some(raw) = find_string_prop(node, "href") {
+        if !external_false && has_disallowed_uri_scheme(raw) {
+            return Err(PipelineEmitError::UnsafeUriScheme(raw.to_string()));
         }
     }
     let href_label_source = match &href {
@@ -7921,6 +7926,12 @@ fn escape_swift_string(s: &str) -> String {
         match c {
             '\\' => out.push_str("\\\\"),
             '"' => out.push_str("\\\""),
+            // A single-line Swift string literal may not contain a raw line
+            // break; one in a fixture or label used to break the generated
+            // build (#15428 review). Escaped, it cannot end the literal.
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
             other => out.push(other),
         }
     }
@@ -8061,6 +8072,13 @@ mod tests {
     fn fixtures_are_escaped_in_swift_literals() {
         let out = swift_literal_for_fixture(&SlotType::Text, "a\"b");
         assert!(!out.contains("a\"b"), "raw quote must not survive: {out}");
+    }
+
+    /// A single-line Swift literal may not contain a raw line break; it must
+    /// be escaped, or the generated app fails to build (#15428 review).
+    #[test]
+    fn line_breaks_are_escaped_in_swift_literals() {
+        assert_eq!(escape_swift_string("a\nb\rc\td"), "a\\nb\\rc\\td");
     }
 
 

@@ -7971,8 +7971,8 @@ fn escape_qml_string(s: &str) -> String {
 /// |---------------------|-------------------------------|
 /// | backslash, quote    | `\\`, `\"`                    |
 /// | `?`                 | `\?` (no trigraph, ever)      |
-/// | control char, DEL   | `\ooo`, exactly three octal   |
-/// | non-ASCII           | `\uXXXX` / `\UXXXXXXXX`       |
+/// | other, up to U+00FF | `\ooo`, exactly three octal   |
+/// | above U+00FF        | `\uXXXX` / `\UXXXXXXXX`       |
 ///
 /// Octal rather than hex: a hex escape is greedy and would swallow any hex
 /// digits that follow it. `QStringLiteral` is a UTF-16 literal, where
@@ -7987,7 +7987,11 @@ fn escape_cpp_string(s: &str) -> String {
             '"' => out.push_str("\\\""),
             '?' => out.push_str("\\?"),
             ' '..='~' => out.push(ch),
-            _ if code < 0x80 => out.push_str(&format!("\\{code:03o}")),
+            // Up to U+00FF as octal too: C++ allows a universal character
+            // name for a C1 control inside a literal, but not every compiler
+            // is known to agree, and `\ooo` in a UTF-16 literal is exactly
+            // that code unit anyway.
+            _ if code <= 0xFF => out.push_str(&format!("\\{code:03o}")),
             _ if code <= 0xFFFF => out.push_str(&format!("\\u{code:04X}")),
             _ => out.push_str(&format!("\\U{code:08X}")),
         }
@@ -15693,7 +15697,11 @@ mod tests {
         assert_eq!(escape_cpp_string("a?b"), "a\\?b");
         // Three octal digits exactly, so a following digit is not absorbed.
         assert_eq!(escape_cpp_string("\u{7f}1"), "\\1771");
-        assert_eq!(escape_cpp_string("é🙂"), "\\u00E9\\U0001F642");
+        // Up to U+00FF is octal; above that, universal character names.
+        assert_eq!(
+            escape_cpp_string("\u{85}é🙂\u{100}"),
+            "\\205\\351\\U0001F642\\u0100"
+        );
     }
 
     /// #15428: list fixtures become QVariantLists for `initialProperties`.

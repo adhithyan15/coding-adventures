@@ -10211,10 +10211,17 @@ fn escape_csharp_string(s: &str) -> String {
         match c {
             '\\' => out.push_str("\\\\"),
             '"' => out.push_str("\\\""),
-            // C# string literals do allow embedded \n in non-verbatim
-            // strings, but they translate to actual newlines at runtime
-            // and don't pose an injection risk inside a string-literal
-            // context. We leave them alone.
+            // A regular C# string literal may NOT contain a raw line break
+            // (CS1010), and C# counts U+0085, U+2028 and U+2029 as line
+            // breaks too. None of them can end the literal early, but any of
+            // them in a fixture or label used to break the generated build
+            // (#15428 review), so each is written as an escape.
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            '\u{85}' => out.push_str("\\u0085"),
+            '\u{2028}' => out.push_str("\\u2028"),
+            '\u{2029}' => out.push_str("\\u2029"),
             other => out.push(other),
         }
     }
@@ -21880,6 +21887,17 @@ mod tests {
         );
 
         assert!(cs.contains(r#"Label = "say \"hi\"""#), "got:\n{cs}");
+    }
+
+    /// A raw line break (including C#'s extra line separators) may not
+    /// appear in a regular string literal; it must be escaped, or the
+    /// generated shell fails to build (#15428 review).
+    #[test]
+    fn line_breaks_are_escaped_in_csharp_literals() {
+        assert_eq!(
+            escape_csharp_string("a\nb\rc\td\u{85}e\u{2028}f\u{2029}g"),
+            "a\\nb\\rc\\td\\u0085e\\u2028f\\u2029g"
+        );
     }
 
     #[test]
