@@ -2135,7 +2135,10 @@ fn emit_host_button(
     // below uses, so a name inside `For` tracks the current row.
     match find_prop(node, "a11y-label") {
         Some(LayoutPropValue::String(label)) => {
-            write!(attrs, " aria-label=\"{}\"", escape_html_attr(label)).unwrap();
+            // Brace-escaped too, so an authored `{{x}}` stays literal text
+            // instead of becoming a placeholder the runtime fills.
+            let safe = escape_mustache_braces(&escape_html_attr(label));
+            write!(attrs, " aria-label=\"{safe}\"").unwrap();
         }
         Some(LayoutPropValue::SlotRef(slot)) => {
             write!(attrs, " aria-label=\"{{{{{}}}}}\"", camel(slot)).unwrap();
@@ -3962,24 +3965,6 @@ fn merge_styles(builtin: &str, author: &str) -> String {
 // Name conversion
 // =====================================================================
 
-/// Escape `{` / `}` in interpolated content so a STRING literal
-/// inside a parsed expression cannot close a surrounding mustache
-/// placeholder.
-///
-/// The moslayout grammar admits STRING tokens inside expressions
-/// (UI29 §3.3 — `primary = … | STRING | …`).  `reconstruct_expr_text`
-/// keeps the STRING body in the Expr text without re-escaping, so a
-/// `.mll` author who wrote `Text ( content: ( "}}…{{" ) )` would —
-/// without this step — produce output that closes the surrounding
-/// `<span>{{ … }}</span>` early.
-///
-/// Escaping to `&#123;` / `&#125;` is HTML-entity neutral: the
-/// browser decodes the entities back to the literal characters
-/// when parsing the DOM, so legitimate content (which never
-/// contains `{` / `}`) renders unchanged visually.  The runtime
-/// template engine — which processes the raw HTML string before
-/// browser parsing — sees the entities and ignores them as
-/// non-delimiters.
 /// Rewrite a layout expression that is a plain data path into the dotted
 /// form the generated `main.js` resolves, or `None` if it is anything else.
 ///
@@ -4034,6 +4019,24 @@ fn mustache_path(expr: &str) -> Option<String> {
     Some(out)
 }
 
+/// Escape `{` / `}` in interpolated content so a STRING literal
+/// inside a parsed expression cannot close a surrounding mustache
+/// placeholder.
+///
+/// The moslayout grammar admits STRING tokens inside expressions
+/// (UI29 §3.3 — `primary = … | STRING | …`).  `reconstruct_expr_text`
+/// keeps the STRING body in the Expr text without re-escaping, so a
+/// `.mll` author who wrote `Text ( content: ( "}}…{{" ) )` would —
+/// without this step — produce output that closes the surrounding
+/// `<span>{{ … }}</span>` early.
+///
+/// Escaping to `&#123;` / `&#125;` is HTML-entity neutral: the
+/// browser decodes the entities back to the literal characters
+/// when parsing the DOM, so legitimate content (which never
+/// contains `{` / `}`) renders unchanged visually.  The runtime
+/// template engine — which processes the raw HTML string before
+/// browser parsing — sees the entities and ignores them as
+/// non-delimiters.
 fn escape_mustache_braces(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
     for c in s.chars() {
@@ -5253,6 +5256,22 @@ mod tests {
             .unwrap()
             .output;
         assert!(out.contains(">{{option.0}}</button>"), "got:\n{out}");
+    }
+
+    #[test]
+    fn host_button_literal_accessible_name_cannot_become_a_placeholder() {
+        let l = layout(
+            "F",
+            node_with_props("HostButton", vec![prop_string("a11y-label", "{{secret}}")]),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("aria-label=\"&#123;&#123;secret&#125;&#125;\""),
+            "literal braces must be entity-escaped, got:
+{out}"
+        );
     }
 
     #[test]
