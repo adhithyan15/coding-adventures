@@ -1,0 +1,17 @@
+{
+  "chapter": 70,
+  "title": "Joining Things Together",
+  "label": "ch:ml-cherkkuka",
+  "canDo": "I can put two or more nouns in one list, and offer somebody a choice between two, using the ending Malayalam puts on each item rather than a word between them.",
+  "payoff": {
+    "lesson": "ML-R70-cherkkuka",
+    "kind": "production",
+    "summary": "From cold: water and rice, tea or coffee, and a three-item list carrying three endings.",
+    "assesses": [
+      "ML-CONCEPT-C70-UM-01",
+      "ML-CONCEPT-C70-UM-02",
+      "ML-CONCEPT-C70-O-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three, with nothing open in front of the reader."
+  }
+}

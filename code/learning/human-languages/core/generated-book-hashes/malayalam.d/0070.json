@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:92447eda60caaa39",
+  "lessonIds": [
+    "ML-C70-um",
+    "ML-C70-um-more",
+    "ML-C70-o",
+    "ML-R70-cherkkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch70-joining-things-together.tex"
+}
