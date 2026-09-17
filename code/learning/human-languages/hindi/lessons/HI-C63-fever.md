@@ -12,17 +12,17 @@ headword: "बुख़ार"
 gloss: "a fever"
 romanization: "bukhār"
 concept_tag: HI-NOUN-FEVER
-prerequisites: [HI-C63-sleep, HI-C61-griddle, HI-C62-clay]
+prerequisites: [HI-S141-nuqta-borrowed, HI-C63-sleep, HI-C61-griddle, HI-C62-clay]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [HI-LEX-C63-STATE-03]
+  knowledge: [HI-LEX-C63-STATE-03, HI-SCRIPT-RECOG-141]
 introduces:
   knowledge: [HI-LEX-C63-STATE-04]
 practises:
-  knowledge: [HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04, HI-LEX-C61-FIRE-04, HI-LEX-C62-HANDS-04]
+  knowledge: [HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-LEX-C63-STATE-04, HI-LEX-C61-FIRE-04, HI-LEX-C62-HANDS-04, HI-SCRIPT-RECOG-141]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,7 +34,7 @@ reviews_of: [HI-C63-sleep]
 # बुख़ार (bukhār) — a fever
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-01, HI-LEX-C63-STATE-02, HI-LEX-C63-STATE-03, HI-SCRIPT-RECOG-141] -->
 
 [PAUSE 2s] Before the new one: what did *nīnd* mean?
 

@@ -34,7 +34,10 @@ way, because a lesson using one of these ten is never counted in debt for it.
 **This reconciles a disagreement nobody had resolved.** `HI-A1-SCR-15` says
 fifteen consonants ordinary A1 text needs are untaught; `HI-A1-SCR-16` calls
 the nuqta the single sharpest finding in the file, because the corpus's own
-headwords are full of *shukriyā*, *zarūr*, *darvāzā*, *mez*, *sabzī*, *safed*.
+headwords are full of *zarūr*, *darvāzā*, *mez*, *sabzī*, *safed* — **36 of them,
+counted.** (SCR-16's own note used to lead this list with *shukriyā*, which
+carries no nuqta at all. The false example is removed here too, because it was
+copied from that note rather than checked.)
 The metric said six. **The inventory was right and the metric was wrong**, and
 the two had been contradicting each other unnoticed for the whole campaign.
 
@@ -67,3 +70,15 @@ the two had been contradicting each other unnoticed for the whole campaign.
 
 **Do not treat the jump as a regression.** Nothing got worse; the count got
 honest.
+
+
+### Progress
+
+Drawn since this entry was written, each in its own change and each saying in
+the lesson that it is late: **ए** (chapter 29), **घ** (14), **ढ** (15), **ग**
+(25), **फ** (26), and the **nuqta** (60–61, two lessons, closing `HI-A1-SCR-16`
+and `HI-A1-PH-05`). By the corrected headword-based check the never-drawn figure
+is now **4**: ञ, ट, ठ and the vocalic-ṛ sign. Step 1 above — building the taught
+set from headwords in the audit helper — is done and has been load-bearing three
+times; changing `measureScriptClosure` itself is still open and still wants its
+own PR.

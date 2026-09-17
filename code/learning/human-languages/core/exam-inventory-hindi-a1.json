@@ -1427,9 +1427,12 @@
       "id": "HI-A1-SCR-16",
       "category": "Devanagari lipi (script and orthography)",
       "label": "the nuqta letters qa, kha, ga, za, fa and the flapped ra, rha",
-      "probe": null,
+      "probe": [
+        "HI-SCRIPT-RECOG-140",
+        "HI-SCRIPT-RECOG-141"
+      ],
       "derivedFrom": "hindi-specific",
-      "note": "The single sharpest finding in this file, and one the proxy could never have surfaced. The corpus's own headwords are FULL of nuqta: shukriya, khushi, zarur, safed, darvaza, mez, sabzi, zyada, safar, tohfa, bukhar, fasal, khushbu, mulaqat. Learners are shown the letters constantly and never taught the mark."
+      "note": "Was the single sharpest finding in this file. The corpus's own headwords carry a nuqta in 36 places -- khushi, maaf, safed, farvari, padhna, darvaza, bada, zarur, safar, mulaqat, mez, sabzi, sadak, bazar, tohfa, khushbu, bukhar, zyada, fasal and more -- the first of them in the second chapter, and the mark itself was never taught. HI-C37-khaana named it for ONE pair, khaanaa against khaanaa, as a fact about those two words; nothing generalised it to the other 34. HI-S140-nuqta draws the dot and the two flaps it makes; HI-S141-nuqta-borrowed draws the four that carry borrowed sounds. The mark had to wait for its carriers: retroflex da was not drawn until chapter 59, so no honest lesson could come earlier. A CORRECTION TO THIS NOTE'S OWN EVIDENCE: it used to lead with shukriya, which carries no nuqta at all. Fourteen examples, one of them wrong, and nobody had checked. Of the seven carriers the script data inventories, ga is the one the corpus never once uses with a dot, so neither lesson teaches it."
     },
     {
       "id": "HI-A1-SCR-17",
@@ -1524,9 +1527,11 @@
       "id": "HI-A1-PH-05",
       "category": "Uccharan (pronunciation)",
       "label": "the borrowed consonants z, f and q as sounds, not just as spellings",
-      "probe": null,
+      "probe": [
+        "HI-SCRIPT-RECOG-141"
+      ],
       "derivedFrom": "hindi-specific",
-      "note": "The spoken twin of HI-A1-SCR-16."
+      "note": "The spoken twin of HI-A1-SCR-16, closed the way PH-01 through PH-04 were: on a script atom that teaches the contrast rather than a separate pronunciation lesson. HI-S141-nuqta-borrowed names z, f, x and q as sounds, places the last two further back in the mouth than their plain letters, and says plainly that many speakers merge them. It builds on HI-C37-khaana, which had already named the nuqta for ONE pair -- khaanaa food against khaanaa a compartment -- as a fact about those two words, and told the truth that the dot is often left off in print."
     },
     {
       "id": "HI-A1-PH-06",

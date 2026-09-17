@@ -1,19 +1,20 @@
 {
   "language": "hindi",
   "chapter": 61,
-  "sourceHash": "fnv1a64:2da705e0c4c2dbad",
+  "sourceHash": "fnv1a64:b5ebce2fe46c24a3",
   "lessonIds": [
     "HI-C61-vessel",
+    "HI-S141-nuqta-borrowed",
     "HI-C61-spoon",
     "HI-C61-tumbler",
     "HI-C61-griddle",
     "HI-C61-stove"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "drivablePrefix": 1,
   "text": "hindi/narration/ch61.txt",
   "json": "hindi/narration/ch61.json",
-  "textHash": "fnv1a64:796376d0fa109d58",
-  "jsonHash": "fnv1a64:742d0a4d02416bf1",
+  "textHash": "fnv1a64:686a9edf46e3135d",
+  "jsonHash": "fnv1a64:4ad40ea89c3693d6",
   "findings": []
 }
