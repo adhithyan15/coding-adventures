@@ -118,6 +118,21 @@ it("pins Marathi lesson-content budgets", () =>
     // closure was CLEAN before this chapter (0 violations, 0 never-taught glyphs,
     // 50 taught) and stays clean: every example word uses only those 50 glyphs
     // plus the letter being taught.
+    // 347 -> 353: CHAPTER 66 REALIZES A CORE SPINE NODE THAT WAS EMPTY.
+    // SPINE-TIME-OF-DAY is "core": true at stage A1 with only SPINE-MEET-GREET
+    // before it, and Marathi's ledger read segments: [] with ALL NINE concepts
+    // omitted -- no lesson in 347 carried the node at all. This chapter realizes
+    // five of the nine: the four parts of the day and the whole day that holds
+    // them. The four GREETING-* concepts stay omitted and are the next chapter.
+    // IT CLOSES NO EXAM POINT AND THAT IS CORRECT. MR-A1-NT-01 is "the clock,
+    // AND the parts of the day"; the clock needs the numbers, which Marathi has
+    // to baaraa, so it is reachable and is deliberately left to its own chapter
+    // rather than claimed here. The NT column stays 6 of 6 open.
+    // ONE ENDING CARRIES THE CHAPTER: -ii turns a part of the day into an
+    // at-that-time word, shown on all four, and divas refuses it and takes -aa
+    // because it is MASCULINE where the four parts are feminine -- an exception
+    // the reader can predict from a gender system taught since chapter 10.
+    // Filed as HL-C394: ten of twenty-three tracks omit all nine of this node.
     // 342 -> 347: CHAPTER 65 GIVES FOUR VOWELS THE POSITION THEY WERE MISSING.
     // MR-A1-OR-12 wanted the independent ii, o, ai and au. Every one of the four
     // had a SIGN the reader already drew -- ii and o since chapter ONE, ai and au
@@ -130,7 +145,7 @@ it("pins Marathi lesson-content budgets", () =>
     // ai -- and nothing about a word like that announces that one of its four
     // shapes had never been drawn. The fifth lesson is the cold-retrieval review,
     // there for the same measured reason as chapter 64's.
-    lessons: 347,
+    lessons: 353,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -378,6 +393,9 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // Chapter 65: the four standing vowels plus the review that keeps the last
     // of them from being an atom nothing revisits.
     ["65", 5],
+    // Chapter 66: the four parts of the day, the whole day, and the review that
+    // keeps the last of them from being an atom nothing revisits.
+    ["66", 6],
   ]);
 });
 

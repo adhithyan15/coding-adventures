@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C66-sandhyakal",
+    "language": "marathi",
+    "chapter": 66,
+    "sequence": 2710,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c1d907654dec2592"
+  },
+  "findings": []
+}

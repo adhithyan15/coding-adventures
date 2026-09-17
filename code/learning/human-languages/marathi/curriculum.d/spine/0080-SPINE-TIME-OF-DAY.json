@@ -1,11 +1,8 @@
 {
-  "segments": [],
+  "segments": [
+    "MR-PATH-068"
+  ],
   "omits": [
-    "TIME-DAY",
-    "TIME-MORNING",
-    "TIME-AFTERNOON",
-    "TIME-EVENING",
-    "TIME-NIGHT",
     "GREETING-DAY",
     "GREETING-MORNING",
     "GREETING-AFTERNOON",
