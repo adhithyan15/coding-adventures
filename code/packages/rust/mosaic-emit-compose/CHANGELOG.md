@@ -9,6 +9,45 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Security -- `$` in an expression string literal is no longer Kotlin interpolation (#15464)
+
+`moslayout-compiler` re-quotes the string tokens inside an `Expr` but does not
+escape `$`, and Kotlin expands `$name` and `${...}` inside `"..."`. So an
+authored `If ( when: ( x == "${boom()}" ) )` put live Kotlin into the generated
+file, getting around the grammar's limit of names, literals and operators.
+
+- **Fix:** `from_pipeline` now works on a copy of the layout in which every
+  `Expr` has each `$` inside a quoted string rewritten to `\$`
+  (`escape_interpolation_in_expr`). Doing it once at the entry point covers
+  every sink (If conditions, a11y labels, `disabled`, `selected`, text and the
+  rest), including sinks added later.
+- **Unchanged output:** text outside string literals is copied byte for byte,
+  and an `Expr` with no `$` is not touched, so existing output is identical.
+- **Why not the shared compiler:** `\$` is an invalid escape in Swift, so the
+  escape is backend-specific.
+- **Tests:** scanner cases (escaped backslash before `$`, an already escaped
+  `\$`, an escaped quote, two strings, single quotes, `$` outside strings)
+  and end-to-end `If` emission for `"${boom()}"` and `"$y"`, plus a
+  positive control that a normal expression comes out verbatim. The
+  end-to-end test fails with the rewrite disabled.
+
+### Added — `HostButton` `selected` lowers to `semantics { selected }` (UI86, #15420)
+
+`selected : …` adds `this.selected = …` to the button's `Modifier.semantics`
+block, after any `contentDescription`. With a name as well, both go in one
+block.
+
+- **Why `this.`:** a slot named `selected` would otherwise shadow the semantics
+  property.
+- **Accepted values:** literals, slots, loop bindings and expressions, through
+  `_mosaicTruthy`.
+- **Import:** `androidx.compose.ui.semantics.selected` is imported only when a
+  layout uses the prop.
+- **Unchanged output:** a button without `selected` produces exactly the
+  output it did before.
+- **Predicate:** `host_button_selected_is_native(node)` is the artifact
+  builder's check.
+
 ### Fixed -- an empty run-time accessible name became an empty contentDescription (#15427)
 
 An accessible name known only at run time can be empty, and an empty override is not the same as no override. Not every accessibility service treats an empty

@@ -4753,6 +4753,75 @@ fn test_113_real_erl_input_str_eof_returns_empty_string() {
         "input_str on exhausted stdin (EOF) must print nothing (empty string)");
 }
 
+/// BEAM08/issue #15332: `global_store` must lower `erlang:put/2` via a
+/// `call_ext`, NOT `gc_bif2` — `put/2` is not a guard-safe BIF (confirmed
+/// via `erlc -S`; see the matching comment on the `"global_store"` match
+/// arm in `lower.rs`). Mirrors `test_86_f64_pow_emits_call_ext_not_gc_bif2`'s
+/// shape-proof style for the identical class of bug.
+#[test]
+fn test_114_global_store_emits_call_ext_not_gc_bif2() {
+    let m = make_module_fn("main", vec![], "void", vec![
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(42)], "i64"),
+        IIRInstr::new("global_store", None,
+            vec![Operand::Str("k".into()), Operand::Var("n".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    assert_eq!(count_opcode(&beam, OP_CALL_EXT), 1, "global_store must emit exactly one call_ext");
+    assert_eq!(count_opcode(&beam, OP_GC_BIF2), 0,
+        "global_store must NOT emit gc_bif2 (erlang:put/2 is not a guard BIF)");
+}
+
+/// BEAM08/issue #15332: real-`erl` regression proof for the exact scenario
+/// issue #15332 reported as a genuine, pre-existing access violation — a
+/// separate real heap value (a `str_const` character list) live across a
+/// `global_store` call. Before the `call_ext`/`live_across` fix, `gc_bif2`'s
+/// `Live` count could not protect `w` across `erlang:put/2`, corrupting it
+/// (or, on Windows, crashing `erl` outright with an access violation,
+/// `ExitStatus(3221225477)` = `0xC0000005`). This is the disposable control
+/// test from issue #15332's reproduction, made permanent with an assertion
+/// on the correct value instead of just "did not crash": `w` must still
+/// read back as `"OK"` after the call, proving BOTH that `w` survives AND
+/// that the stored global itself is later readable — this is also exactly
+/// the shape `RND`'s `main` → `__basic_rnd` handoff depends on (a
+/// `global_store` of the seed, with other state implicitly live around it).
+///
+/// Silently skipped when `erl` is not on PATH.
+#[test]
+fn test_115_real_erl_global_store_survives_live_across_call() {
+    use iir_to_beam::encode_beam;
+    if !erl_available() { return; }
+
+    let m = make_module_fn("main", vec![], "void", vec![
+        IIRInstr::new("str_const", Some("w".into()), vec![Operand::Str("OK".into())], "str"),
+        IIRInstr::new("const", Some("n".into()), vec![Operand::Int(42)], "i64"),
+        IIRInstr::new("global_store", None,
+            vec![Operand::Str("k".into()), Operand::Var("n".into())], "void"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("w".into())], "void"),
+        IIRInstr::new("global_load", Some("back".into()), vec![Operand::Str("k".into())], "i64"),
+        IIRInstr::new("io_out", None, vec![Operand::Var("back".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    assert!(validate_for_beam(&m).is_empty());
+
+    let beam_cfg = IIRBeamConfig::new("iir_global_store_live_across_test");
+    let beam_mod = lower_iir_to_beam(&m, &beam_cfg).unwrap();
+    let bytes = encode_beam(&beam_mod);
+    let tmp = std::env::temp_dir().join(format!("iir_to_beam_tests_{}", std::process::id()));
+    std::fs::create_dir_all(&tmp).expect("create temp dir");
+    std::fs::write(tmp.join("iir_global_store_live_across_test.beam"), &bytes).expect("write .beam");
+
+    let output = run_erl_with_stdin(&tmp,
+        "iir_global_store_live_across_test:main(),halt(0).",
+        b"");
+    assert!(output.status.success(), "erl exited non-zero (would be an access violation \
+        under the pre-fix gc_bif2 lowering); stderr: {}",
+        String::from_utf8_lossy(&output.stderr));
+    assert_eq!(String::from_utf8_lossy(&output.stdout).trim(), "OK42",
+        "`w` (\"OK\") must survive the global_store call intact, AND the stored \
+         value (42) must read back correctly via global_load");
+}
+
 #[test]
 fn narrow_operations_mask_but_i64_remains_unbounded() {
     for op in ["add", "sub", "mul", "neg", "not", "and", "or", "xor", "shl", "shr"] {

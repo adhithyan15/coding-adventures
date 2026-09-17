@@ -1,5 +1,175 @@
 # Changelog
 
+## Chapter 68 — three greetings, one word
+
+`MR-A1-F5-03` closes — *choose a greeting that fits the time of day*. Marathi
+coverage **167/301 → 168/301**.
+
+**`SPINE-TIME-OF-DAY` is now finished.** It realizes **8 of 9** concepts and
+omits only `GREETING-DAY` — exactly the shape kannada, latin, malayalam,
+telugu, tamil and hindi converge on. Three chapters ago this track's ledger read
+`segments: []` with all nine omitted.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 167/301 → **168/301** |
+| `SPINE-TIME-OF-DAY` concepts | 5/9 → **8/9** |
+| lessons | 356 → 360 |
+| culture claims | 7 → 8 |
+
+### F5-03's note named both halves, and both are now closed
+
+> *"SPINE-TIME-OF-DAY is an A1 core node and the track omits all four of its
+> greeting concepts along with its four time words."*
+
+Chapter 66 gave the time words, chapter 67 the clock, this one the greetings.
+
+### One new word buys three greetings
+
+| | |
+|---|---|
+| **शुभ सकाळ** | good morning |
+| **शुभ दुपार** | good afternoon |
+| **शुभ संध्याकाळ** | good evening |
+
+Only **शुभ** is new. Everything to its right came from chapter 66, which is the
+second time the parts of the day have paid for a later chapter — they bought the
+at-that-time forms first, and now these.
+
+### What the chapter refuses to do
+
+**It does not pretend these are what people say.** नमस्कार is the first word
+this track teaches and already carries a culture claim as Marathi's *default,
+all-purpose greeting*; it covers every hour. The three above belong to notices,
+messages and formal openings. They are taught **to read** — a reader who has
+never seen शुभ will stall on a word that costs nothing to know — and the lesson
+says plainly not to swap out a working greeting for one that will sound like a
+broadcast.
+
+This is the treatment Hindi's `HI-C31-suprabhat` already gives the same problem,
+so it is the track family's convention rather than a new position.
+
+**It leaves the night out, and says why.** The night greeting builds on
+**रात्री** — the at-that-time form — rather than the bare **रात्र** these three
+use. A reader extending the pattern would build it wrong, so the exception is
+named on the page. *A pattern worth trusting is one you also know the edge of.*
+
+### A draft claim cut because it was wrong
+
+A draft asked *"how many parts of the day could you still put behind it?"* and
+answered **two**. That over-predicts: only the evening follows. The night is the
+exception above, and the question now names the evening.
+
+## Chapter 67 — the clock
+
+`MR-A1-NT-01` closes. It reads *"the clock, **and** the parts of the day"* —
+chapter 66 did the second half and deliberately did not claim the point; this is
+the first half. Marathi coverage **166/301 → 167/301**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 166/301 → **167/301** |
+| lessons | 353 → 356 |
+| `SPINE-TIME-OF-DAY` concepts realized | 5/9 (unchanged) |
+
+### It adds no new numbers
+
+All twelve cardinals **एक … बारा** were already taught, and **किती** was already
+the *how many* question word. The reader owned both halves of **किती वाजले?**
+before the chapter opened.
+
+Until now the only thing those twelve numbers could do was count. **The clock is
+what they were for.**
+
+### Marathi does not ask what time it is
+
+It asks **how many have sounded**. **वाजणे** is to sound, to ring, to strike —
+English kept the same picture while clocks had bells (*the clock struck three*).
+
+### Two clock words, one of which counts
+
+| | telling it | placing something at it |
+|---|---|---|
+| one | **एक वाजला** | **एक वाजता** |
+| two | **दोन वाजले** | **दोन वाजता** |
+
+The telling verb agrees in number — **-ला** after एक, **-ले** after every other
+hour. The placing form **वाजता** is invariant across all twelve. So the
+harder-looking half of the clock is the easier one.
+
+The lesson keeps that plural **apart from the respect plural** of
+**तुम्ही कसे आहात**: that one is plural for one person, out of politeness; this
+one is plural because the things counted really are more than one. Same shape,
+different reason.
+
+### Still open on this node
+
+The four `GREETING-*` concepts. That chapter has an honest problem to state
+rather than calque: **नमस्कार** is taught in fourteen files and covers every
+hour, while **शुभ** and **सुप्रभात** return **zero**.
+
+## Chapter 66 — the parts of the day
+
+**Marathi's `SPINE-TIME-OF-DAY` had never been realized.** Its ledger read
+`segments: []` with **all nine concepts omitted**, and no lesson in 347 carried
+the node. This chapter realizes five of the nine.
+
+| metric | before → after |
+|---|---|
+| lessons | 347 → 353 |
+| atoms taught | 331 → 337 |
+| measurable lessons | 344 → 350 |
+| `SPINE-TIME-OF-DAY` concepts realized | 0/9 → **5/9** |
+| exam-point coverage | unchanged — see below |
+| reinforcement-window misses | 373 → 385 |
+
+### It closes no exam point, and that is correct
+
+`MR-A1-NT-01` is *"the clock, **and** the parts of the day"*. The clock needs
+the numbers, and Marathi has cardinals to **बारा**, so it is reachable — but it
+is its own chapter rather than something to claim here. The `MR-A1-NT` column
+stays **6 of 6 open**.
+
+What moved is the spine: a node marked `"core": true`, whose only prerequisite
+is greeting somebody, went from nothing to five concepts.
+
+### One ending carries the chapter
+
+| the part of the day | at that time |
+|---|---|
+| **सकाळ** *sakāḷ* | **सकाळी** *sakāḷī* |
+| **दुपार** *dupār* | **दुपारी** *dupārī* |
+| **संध्याकाळ** *sandhyākāḷ* | **संध्याकाळी** *sandhyākāḷī* |
+| **रात्र** *rātra* | **रात्री** *rātrī* |
+| **दिवस** *divas* | **दिवसा** *divasā* |
+
+Four feminine parts take **-ी**. **दिवस** is the whole day rather than a part of
+it, it is **masculine**, and it takes **-आ** — an exception the reader can
+predict from the gender system this track has taught since chapter 10. An
+exception you can predict is not an exception.
+
+The chapter also notes where the irregularity actually lives: English says *in*
+the morning, *in* the afternoon, *in* the evening — and then **at** night.
+Marathi changes nothing.
+
+### Nothing new to say it with
+
+Every sentence is **मी … येतो**, the verb the track has had since its first
+chapter, and the time word sits in the same pre-verb slot **कधी** and **उद्या**
+already occupy. Six new atoms, five of them single words.
+
+### Two claims cut from drafts because they were wrong
+
+- *"दुपार opens on दु-, the piece that also opens दोन"* — **दोन opens on दो-**,
+  a different vowel. The shared origin is real; the visual claim was not, and
+  it was decoration either way.
+- *"सकाळ and संध्याकाळ end in the same four letters"* — **काळ is two akshara**.
+  The piece is named now rather than counted.
+
+Filed alongside this chapter: **`HL-C394`** — ten of twenty-three tracks omit
+all nine concepts of this node, six of them languages this project's owner has
+said they most want to learn.
+
 ## Chapter 65 — the vowels that could not start a word
 
 `MR-A1-OR-12`: the independent **ई**, **ओ**, **ऐ** and **औ**. Marathi A1

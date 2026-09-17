@@ -84,6 +84,117 @@ func TestShellCommandPreservesEmbeddedQuotesOnWindows(t *testing.T) {
 	}
 }
 
+// TestShellCommandForOSWindowsRewritesInlineEnvPrefix is a regression test
+// for a real CI failure: `RUSTDOCFLAGS="-D warnings" cargo doc -p widget
+// --no-deps` (a POSIX inline environment-variable prefix, present in 17+
+// Rust crates' BUILD files) is valid to `sh -c` but a syntax error to
+// `cmd /C` -- cmd has no "set this variable for just the next command"
+// notation, so it tried to read a variable literally named `RUSTDOCFLAGS`
+// (there being no `=` immediately after `set`... no, wait: cmd actually
+// choked trying to *run* `RUSTDOCFLAGS="-D` as a program name) and failed
+// with `'RUSTDOCFLAGS' is not recognized as an internal or external
+// command`. shellCommandForOS must translate the prefix into cmd's own
+// `set "VAR=value"&& command` form before invoking cmd.exe.
+func TestShellCommandForOSWindowsRewritesInlineEnvPrefix(t *testing.T) {
+	cmd := shellCommandForOS(`RUSTDOCFLAGS="-D warnings" cargo doc -p widget --no-deps`, "windows")
+	want := `set "RUSTDOCFLAGS=-D warnings"&& cargo doc -p widget --no-deps`
+	if cmd.Args[2] != want {
+		t.Fatalf("got %q, want %q", cmd.Args[2], want)
+	}
+}
+
+// TestShellCommandForOSUnixLeavesInlineEnvPrefixAlone confirms the rewrite
+// is Windows-only: on Unix the same RUSTDOCFLAGS line already works
+// natively under `sh -c` and must pass through completely unchanged.
+func TestShellCommandForOSUnixLeavesInlineEnvPrefixAlone(t *testing.T) {
+	line := `RUSTDOCFLAGS="-D warnings" cargo doc -p widget --no-deps`
+	cmd := shellCommandForOS(line, "linux")
+	if cmd.Args[2] != line {
+		t.Fatalf("got %q, want unchanged %q", cmd.Args[2], line)
+	}
+}
+
+// TestRewriteInlineEnvPrefixForWindows is table-driven over both the
+// shapes this repo's BUILD files actually use (quoted and bare values,
+// including the real NPM_CONFIG_CACHE/PYTHONIOENCODING/PYTHONPATH
+// prefixes alongside RUSTDOCFLAGS) and the shapes it must deliberately
+// leave alone: command substitution, `&&`/`;`-chains, and multi-assignment
+// lines. Every "leave alone" case here already carries a hand-written
+// BUILD_windows override elsewhere in the repo (verified by hand before
+// writing this fix) -- cmd.exe has no single-line translation for real
+// shell control flow, so guessing one would be worse than the syntax
+// error it already produces.
+func TestRewriteInlineEnvPrefixForWindows(t *testing.T) {
+	cases := []struct {
+		name string
+		in   string
+		want string
+	}{
+		{
+			name: "quoted value with a flag-shaped dash",
+			in:   `RUSTDOCFLAGS="-D warnings" cargo doc -p widget --no-deps`,
+			want: `set "RUSTDOCFLAGS=-D warnings"&& cargo doc -p widget --no-deps`,
+		},
+		{
+			name: "bare value",
+			in:   `PYTHONPATH=src python3 -m pytest tests`,
+			want: `set "PYTHONPATH=src"&& python3 -m pytest tests`,
+		},
+		{
+			name: "bare value with path separators",
+			in:   `NPM_CONFIG_CACHE=.npm-cache npm install --silent`,
+			want: `set "NPM_CONFIG_CACHE=.npm-cache"&& npm install --silent`,
+		},
+		{
+			name: "quoted value with internal spaces",
+			in:   `PYTHONIOENCODING="utf 8" uv run main.py`,
+			want: `set "PYTHONIOENCODING=utf 8"&& uv run main.py`,
+		},
+		{
+			name: "empty quoted value",
+			in:   `FOO="" cargo test -p widget`,
+			want: `set "FOO="&& cargo test -p widget`,
+		},
+		{
+			name: "no prefix at all",
+			in:   `cargo test -p widget`,
+			want: `cargo test -p widget`,
+		},
+		{
+			name: "command substitution -- left unchanged, needs BUILD_windows",
+			in:   `REPO_ROOT=$(git rev-parse --show-toplevel) && echo "$REPO_ROOT"`,
+			want: `REPO_ROOT=$(git rev-parse --show-toplevel) && echo "$REPO_ROOT"`,
+		},
+		{
+			name: "expansion default inside the value -- left unchanged",
+			in:   `PERL5LIB=lib:${PERL5LIB:-} prove -l t/`,
+			want: `PERL5LIB=lib:${PERL5LIB:-} prove -l t/`,
+		},
+		{
+			name: "two chained assignments -- left unchanged",
+			in:   `DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_HOME=$HOME dotnet test`,
+			want: `DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 DOTNET_CLI_HOME=$HOME dotnet test`,
+		},
+		{
+			name: "subshell wrapper -- left unchanged",
+			in:   `(cd ../widget && PYTHONPATH=src python3 -m pytest tests)`,
+			want: `(cd ../widget && PYTHONPATH=src python3 -m pytest tests)`,
+		},
+		{
+			name: "assignment with no following command",
+			in:   `RUSTDOCFLAGS="-D warnings"`,
+			want: `RUSTDOCFLAGS="-D warnings"`,
+		},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := rewriteInlineEnvPrefixForWindows(c.in); got != c.want {
+				t.Errorf("rewriteInlineEnvPrefixForWindows(%q) = %q, want %q", c.in, got, c.want)
+			}
+		})
+	}
+}
+
 func TestShellCommandUsesCurrentOS(t *testing.T) {
 	// shellCommand (no OS parameter) should use the current platform.
 	cmd := shellCommand("echo test")

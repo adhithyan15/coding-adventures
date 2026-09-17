@@ -5,6 +5,46 @@ this file.
 
 ## [Unreleased]
 
+### Security -- `$` in an expression string literal is no longer Dart interpolation (#15464)
+
+`moslayout-compiler` re-quotes the string tokens inside an `Expr` but does not
+escape `$`, and Dart expands `$name` and `${...}` inside string literals. So an
+authored `If ( when: ( x == "${boom()}" ) )` put live Dart into the generated
+file, getting around the grammar's limit of names, literals and operators.
+
+- **Fix:** `from_pipeline` (and so `from_pipeline_with_options`) now works on
+  a copy of the layout in which every `Expr` has each `$` inside a quoted
+  string rewritten to `\$` (`escape_interpolation_in_expr`). Doing it once at
+  the entry point covers every sink, including sinks added later.
+- **Unchanged output:** text outside string literals is copied byte for byte,
+  and an `Expr` with no `$` is not touched, so existing output is identical.
+- **Why not the shared compiler:** `\$` is an invalid escape in Swift, so the
+  escape is backend-specific.
+- **Tests:** scanner cases and end-to-end `If` emission for `"${boom()}"` and
+  `"$y"`, plus a positive control. The end-to-end test fails with the rewrite
+  disabled. Checked with `dart run` that the emitted `"\${boom()}"` and
+  `"\$y"` are literal strings and `boom()` is never called.
+
+### Added — `HostButton` `selected` lowers to `Semantics(selected:)` (UI86, #15420)
+
+- **Where it goes:** `selected : …` adds `selected: …` to the button's
+  `Semantics` node, after `enabled`, so the release-lane contract marker before
+  it stays contiguous.
+- **Buttons with no authored name:** they get the same node, named by their
+  visible label, because a bare `Semantics` around an `ElevatedButton` is not
+  guaranteed to land on the button's node.
+- **Accepted values:** literals, slots, loop bindings and expressions, through
+  `_mosaicTruthy`.
+- **Predicate:** `host_button_selected_is_native(node)` is the artifact
+  builder's check.
+
+**Checked with Flutter 3.47.** A three-option `For` compiled with
+`selected : ( i == selectedIndex )` passes `flutter analyze`. A widget test on
+the generated widget found:
+- only the selected option has `isSelected`;
+- all three have `hasSelectedState` and `isButton`;
+- a tap dispatches the event and does not change the flag.
+
 ### Fixed -- list story fixtures reach the generated app (#15428)
 
 The generated `mosaicStringList` and `mosaicStringListList` readers ignored

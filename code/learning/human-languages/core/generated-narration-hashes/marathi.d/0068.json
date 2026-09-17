@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:2ef6ececde5e29d8",
+  "lessonIds": [
+    "MR-C68-shubh-sakal",
+    "MR-C68-shubh-dupar",
+    "MR-C68-shubh-sandhyakal",
+    "MR-R68-greetings-recall"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "marathi/narration/ch68.txt",
+  "json": "marathi/narration/ch68.json",
+  "textHash": "fnv1a64:3944013da06695e3",
+  "jsonHash": "fnv1a64:77bda70a618b2c0d",
+  "findings": []
+}

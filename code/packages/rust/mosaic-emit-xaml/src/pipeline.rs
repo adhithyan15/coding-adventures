@@ -8893,6 +8893,17 @@ fn host_input_event_args(
     }
 }
 
+/// Whether a `HostButton`'s authored `selected:` (UI86) reaches a native
+/// selected state on WinUI. Not yet: a `Button`'s automation peer has only
+/// the Invoke pattern, and the `ToggleButton` UI86 §4.2 proposes restyles its
+/// checked state with the accent brushes and may route a screen reader's
+/// Toggle past the Click handler. Until that is settled (#15463) the state
+/// is not emitted, and the artifact builder reports it rather than the
+/// package claiming it is native-complete.
+pub fn host_button_selected_is_native(_node: &LayoutNode) -> bool {
+    false
+}
+
 /// `HostButton` → `<Button>` per spec §4.2.
 fn emit_host_button(
     node: &LayoutNode,

@@ -1,0 +1,11 @@
+{
+  "language": "marathi",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:4b8bd2c75fcdcf3b",
+  "lessonIds": [
+    "MR-C67-vajle",
+    "MR-C67-vajta",
+    "MR-R67-clock-recall"
+  ],
+  "tex": "marathi/book/chapters/ch67-the-clock.tex"
+}

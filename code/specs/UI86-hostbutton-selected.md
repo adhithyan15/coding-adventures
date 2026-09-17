@@ -130,11 +130,11 @@ HostButton [ part ] (
 | React | `aria-pressed={Boolean(expr)}` | |
 | HTML | literal: `aria-pressed="true\|false"`; dynamic: `data-mosaic&pressed="…"`, which the project runtime replaces with `aria-pressed="true\|false"` | see §4.1.1 |
 | WebComponent | `aria-pressed="${…}"` | through `escapeHtmlAttribute`, like the name |
-| SwiftUI | `.accessibilityAddTraits((expr) ? .isSelected : [])` | added after `.accessibilityLabel`, so both apply |
-| Compose | `selected = (expr)` inside the button's existing `Modifier.semantics { … }` | booleans pass through `_mosaicTruthy` as for `checked` |
-| Flutter | `selected: (expr)` on the existing `Semantics` wrapper | via `bool_prop_expression` |
-| Qt | `Accessible.checkable: true` and `Accessible.checked: Boolean(expr)` | the attached properties only; the `Button`'s own `checkable` stays false so a click does not toggle it |
-| XAML | the button is emitted as a `ToggleButton` with `IsChecked="{x:Bind …, Mode=OneWay}"` | see §4.2 |
+| SwiftUI | `.accessibilityAddTraits(_mosaicSelectedTraits(expr))` | added after `.accessibilityLabel`, so both apply; the typed helper keeps a `? .isSelected : []` ternary out of the result builder, and is emitted only when used |
+| Compose | `this.selected = _mosaicTruthy(expr)` inside the button's `Modifier.semantics { … }`, after any `contentDescription` | `this.` because a slot named `selected` would shadow the property; the import is added only when used |
+| Flutter | `selected: _mosaicTruthy(expr)` on the button's `Semantics` node, after `enabled` | a button with no authored name gets the same node, named by its visible label |
+| Qt | `property bool mosaicSelected: Boolean(expr)`, pushed to `Accessible.checkable: true` / `Accessible.checked` | the attached properties only; the `Button`'s own `checkable` stays false so a click does not toggle it; see §4.2.1 |
+| XAML | **not yet lowered**: reported as a degradation (§4.2, #15463) | the proposed lowering is a `ToggleButton` with `IsChecked="{x:Bind …, Mode=OneWay}"` |
 
 #### 4.1.1 HTML: a condition, not a placeholder
 
@@ -178,6 +178,19 @@ the host changed the selection. The restoration is part of the lowering and must
 be covered by a test that clicks an unselected option whose host does *not*
 select it and asserts that it stays unchecked.
 
+**Status (slice 3):** the fallback below is in effect, and the `ToggleButton`
+lowering is tracked in
+[#15463](https://github.com/adhithyan15/coding-adventures/issues/15463).
+Two further problems turned up that this section did not anticipate, and
+neither can be checked without running WinUI:
+
+- **Checked styling.** The default `ToggleButton` template's Checked states
+  apply the accent brushes, overriding the authored part style. §5 rules that
+  out.
+- **Toggle without Click.** A screen reader's Toggle action reaches
+  `OnToggle`, which may not raise `Click`. That would flip the state without
+  dispatching, and without running the restore.
+
 If the implementation finds this cannot be made reliable, the fallback is a
 reported degradation (§4.3) on XAML, not a silent `Button`.
 
@@ -195,6 +208,34 @@ Web backends are not native-complete targets, but their emitter tests must
 assert all three value shapes. A value no web backend can lower (a string or
 number literal, an empty expression, an unsafe binding name) is an emit
 error, never a silent drop.
+
+### 4.2.1 Qt: the state is pushed, not only bound
+
+*(Found while implementing slice 3.)*
+
+**The problem.** When accessibility becomes active,
+`QQuickAbstractButton::accessibilityActiveChanged` writes the Button's own
+`checked` and `checkable` onto its `Accessible` attached object from C++. Both
+are false here, because the Button's `checkable` must stay false. A constant
+`Accessible.checkable: true` is never evaluated again, so it would be lost for
+good. `Accessible.checked` would be wrong until the selection next changed.
+
+**The lowering.** The state therefore lives in a property of its own, and is
+pushed onto the attached object:
+
+```qml
+property bool mosaicSelected: Boolean(expr)
+Accessible.checkable: true
+Accessible.checked: mosaicSelected
+onMosaicSelectedChanged: Accessible.checked = mosaicSelected
+Accessible.onCheckableChanged: if (!Accessible.checkable) Accessible.checkable = true
+Accessible.onCheckedChanged: if (Accessible.checked !== mosaicSelected) Accessible.checked = mosaicSelected
+```
+
+**Verification.** This is checked with `qml` offscreen, using a harder
+overwrite than Qt's own: a QML write, which also removes the binding. After
+the overwrite, both values come back, `checked` keeps following the
+selection, and a click changes nothing.
 
 ## 5. Styling is out of scope, deliberately
 

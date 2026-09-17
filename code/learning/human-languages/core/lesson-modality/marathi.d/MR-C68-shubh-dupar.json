@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C68-shubh-dupar",
+    "language": "marathi",
+    "chapter": 68,
+    "sequence": 2790,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a0c9310fb92059b1"
+  },
+  "findings": []
+}

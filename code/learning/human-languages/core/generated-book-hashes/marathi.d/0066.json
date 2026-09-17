@@ -1,0 +1,14 @@
+{
+  "language": "marathi",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:1309861120ea7c34",
+  "lessonIds": [
+    "MR-C66-sakal",
+    "MR-C66-dupar",
+    "MR-C66-sandhyakal",
+    "MR-C66-ratra",
+    "MR-C66-divas",
+    "MR-R66-day-recall"
+  ],
+  "tex": "marathi/book/chapters/ch66-parts-of-the-day.tex"
+}

@@ -8,6 +8,36 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `HostButton` `selected` lowers to `Accessible.checked` (UI86, #15420)
+
+`selected : …` sets the state on the `Accessible` attached object only. The
+Button's own `checkable` stays false, so a click toggles nothing and the role
+stays Button.
+
+**The state is pushed, not only bound.** Qt Quick Controls'
+`QQuickAbstractButton::accessibilityActiveChanged` (qtdeclarative 6.8, read
+from source) writes the Button's own false `checked` and `checkable` onto the
+attached object when accessibility activates. A constant
+`Accessible.checkable: true` would never recover. So the emitter writes:
+- `property bool mosaicSelected`, which holds the state;
+- `Accessible.checkable` and `Accessible.checked`;
+- handlers that push the state back after a selection change or an overwrite.
+
+**Checked with Qt 6.8.1.**
+- `qmllint` reports only the "unqualified access" warning that the existing
+  `onClicked` line already triggers.
+- A `qml` offscreen run applied a harder overwrite than Qt's own (a QML write,
+  which also removes the binding). Afterwards:
+  - both values came back;
+  - `checked` followed the next two selection changes;
+  - a click changed nothing.
+
+**Also:**
+- Unlike `checked` on `HostCheckbox`, an expression is lowered, not silently
+  turned into `false`.
+- An unsafe binding name is refused with `UnsafeSlotName`.
+- `host_button_selected_is_native(node)` is the artifact builder's check.
+
 ### Security -- a story fixture could inject C++ into `main.cpp` (#15443)
 
 `qvariant_literal_for_fixture` escaped fixture text with the QML escaper,

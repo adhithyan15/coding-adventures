@@ -1306,6 +1306,8 @@ pub fn from_pipeline(
     layout: &LayoutDef,
     style: &StyleDef,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
+    // #15464 -- `$` inside an Expr string literal is Dart interpolation.
+    let layout = &layout_with_escaped_expr_strings(layout);
     if interface.component != layout.component_name {
         return Err(PipelineEmitError::ComponentNameMismatch {
             mosmodel: interface.component.clone(),
@@ -5166,12 +5168,53 @@ fn emit_host_button(
     let style_arg = host_button_style_arg(node, part_styles);
     let button =
         format!("ElevatedButton(onPressed: {on_pressed_expr}{style_arg}, child: {label_expr})");
-    Ok(match accessibility_label {
+    // UI86: the application-owned selected state rides on the same
+    // `Semantics` node that names the button. A button with a state but no
+    // authored name still needs that node, so it is named by its visible
+    // label (the wrapper excludes the button's own semantics).
+    let selected = host_button_selected_expression(node)?;
+    let selected_arg = selected
+        .as_deref()
+        .map(|value| format!(", selected: {value}"))
+        .unwrap_or_default();
+    let label = match (accessibility_label, &selected) {
+        (Some(label), _) => Some(label),
+        (None, Some(_)) => Some(visible_text.clone()),
+        (None, None) => None,
+    };
+    Ok(match label {
         Some(label) => format!(
-            "{pad}Semantics(label: {label}, button: true, enabled: {semantics_enabled_expr}, onTap: {on_pressed_expr}, excludeSemantics: true, child: {button})\n"
+            "{pad}Semantics(label: {label}, button: true, enabled: {semantics_enabled_expr}{selected_arg}, onTap: {on_pressed_expr}, excludeSemantics: true, child: {button})\n"
         ),
         None => format!("{pad}{button}\n"),
     })
+}
+
+/// The Dart `bool` for a `HostButton`'s `selected:` (UI86), or `None` when
+/// the prop is absent or is not a state (a string or number, which the
+/// artifact builder reports). Unlike `bool_prop_expression`, a loop binding
+/// is accepted: the toolkit's call sites are inside `For`.
+fn host_button_selected_expression(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, "selected") {
+        Some(LayoutPropValue::Keyword(keyword)) if keyword == "true" || keyword == "false" => {
+            Ok(Some(keyword.clone()))
+        }
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&camel)?;
+            Ok(Some(format!("_mosaicTruthy({camel})")))
+        }
+        Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
+            Ok(Some(format!("_mosaicTruthy(({}))", expression.trim())))
+        }
+        _ => Ok(None),
+    }
+}
+
+/// Whether a `HostButton`'s authored `selected:` reaches
+/// `Semantics(selected:)`. The artifact builder asks this same predicate.
+pub fn host_button_selected_is_native(node: &LayoutNode) -> bool {
+    matches!(host_button_selected_expression(node), Ok(Some(_)))
 }
 
 fn host_button_event_args(emit: &EmitDecl, ctx: TableCtx) -> Result<String, PipelineEmitError> {
@@ -7358,6 +7401,100 @@ fn sanitize_dart_identifier(s: &str) -> String {
     }
 }
 
+// =====================================================================
+// Expression string literals: neutralise string-template interpolation
+// =====================================================================
+
+/// Escape every `$` that sits inside a quoted string literal of an
+/// `Expr`'s reconstructed source text (#15464).
+///
+/// `moslayout-compiler` rebuilds an `Expr` from its tokens and re-quotes
+/// each STRING token, escaping `"`, `\`, `\n`, `\r` and `\t`. That is
+/// enough for Swift, JavaScript and C#, but Dart expands `$name` and
+/// `${...}` inside a double-quoted string. So an authored
+///
+/// ```text
+/// If ( when: ( x == "${boom()}" ) ) { ... }
+/// ```
+///
+/// would reach the generated file as live code inside the string,
+/// getting around the grammar's restriction to names, literals and
+/// operators. The shared compiler can't add the escape itself, because
+/// `\$` is an invalid escape in Swift. So this backend does it, here.
+///
+/// A small scanner with two states:
+///
+/// | state         | on `"` or `'`           | on `\`           | on `$`     |
+/// |---------------|-------------------------|------------------|------------|
+/// | outside       | enter a string          | copy             | copy       |
+/// | inside string | leave if the same quote | copy + next char | emit `\$`  |
+///
+/// "copy + next char" keeps an existing escape intact. The compiler
+/// emits an author's backslash as `\\`, so `\\$` scans as the pair `\\`
+/// followed by a bare `$`, which becomes `\\\$`: a backslash, then a
+/// literal dollar. A `\$` that is already escaped stays as it is.
+/// Single quotes are tracked too. The grammar never produces them, but a
+/// hand-built IR could, and Dart interpolates inside single-quoted
+/// strings as well.
+///
+/// Text outside string literals is copied byte for byte, so an
+/// expression with no `$` inside a string comes out unchanged.
+fn escape_interpolation_in_expr(expr: &str) -> String {
+    let mut out = String::with_capacity(expr.len());
+    let mut quote: Option<char> = None;
+    let mut escaped = false;
+    for c in expr.chars() {
+        match quote {
+            None => {
+                if c == '"' || c == '\'' {
+                    quote = Some(c);
+                }
+                out.push(c);
+            }
+            Some(_) if escaped => {
+                escaped = false;
+                out.push(c);
+            }
+            Some(_) if c == '\\' => {
+                escaped = true;
+                out.push(c);
+            }
+            Some(_) if c == '$' => out.push_str("\\$"),
+            Some(q) => {
+                if c == q {
+                    quote = None;
+                }
+                out.push(c);
+            }
+        }
+    }
+    out
+}
+
+/// Return a copy of `layout` with [`escape_interpolation_in_expr`]
+/// applied to every `Expr` prop in the tree.
+///
+/// This runs once, at the entry point, instead of at each of the many
+/// sinks that splice `Expr` text into generated code. A sink added later
+/// is covered without anyone having to remember this issue.
+fn layout_with_escaped_expr_strings(layout: &LayoutDef) -> LayoutDef {
+    fn walk(node: &mut LayoutNode) {
+        for prop in &mut node.props {
+            if let LayoutPropValue::Expr(text) = &mut prop.value {
+                if text.contains('$') {
+                    *text = escape_interpolation_in_expr(text);
+                }
+            }
+        }
+        for child in &mut node.children {
+            walk(child);
+        }
+    }
+    let mut layout = layout.clone();
+    walk(&mut layout.root);
+    layout
+}
+
 /// Escape a string for inclusion inside a Dart `"..."` string literal.
 /// Handles backslash, double-quote, dollar sign (Dart interpolates
 /// `$ident` inside double-quoted strings), and newlines.
@@ -8292,6 +8429,60 @@ mod tests {
             out.contains("Semantics(label: ((item).isEmpty ? (item) : (item)), button: true, enabled:"),
             "expected HostButton accessible name to use the For expression, got:\n{out}"
         );
+    }
+
+    /// UI86: `selected:` lands on the button's `Semantics` node, after
+    /// `enabled` (the release-lane contract pins the text before it).
+    #[test]
+    fn host_button_selected_lowers_to_semantics_selected() {
+        let m = component("X", vec![], vec![]);
+        let button = |props: Vec<LayoutProp>| LayoutNode {
+            tag: "HostButton".to_string(),
+            part_name: None,
+            props,
+            children: vec![],
+        };
+        let label = LayoutProp {
+            name: "label".into(),
+            value: LayoutPropValue::String("Board".into()),
+        };
+        let selected = |value: LayoutPropValue| LayoutProp {
+            name: "selected".into(),
+            value,
+        };
+        for (value, expected) in [
+            (LayoutPropValue::Keyword("true".into()), "selected: true"),
+            (
+                LayoutPropValue::SlotRef("is-current".into()),
+                "selected: _mosaicTruthy(isCurrent)",
+            ),
+            (LayoutPropValue::Keyword("flag".into()), "selected: _mosaicTruthy(flag)"),
+            (
+                LayoutPropValue::Expr("( i == selectedIndex )".into()),
+                "selected: _mosaicTruthy((( i == selectedIndex )))",
+            ),
+        ] {
+            let node = button(vec![label.clone(), selected(value)]);
+            assert!(host_button_selected_is_native(&node));
+            let out = from_pipeline(&m, &layout("X", node), &empty_style("X"))
+                .unwrap()
+                .output;
+            assert!(
+                out.contains(&format!(
+                    "Semantics(label: \"Board\", button: true, enabled: true, {expected}, onTap:"
+                )),
+                "expected {expected} in:\n{out}"
+            );
+        }
+        let plain = button(vec![label]);
+        assert!(!host_button_selected_is_native(&plain));
+        let out = from_pipeline(&m, &layout("X", plain), &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(!out.contains("Semantics("), "absent selected must add nothing:\n{out}");
+        assert!(!host_button_selected_is_native(&button(vec![selected(
+            LayoutPropValue::Number(1.0)
+        )])));
     }
 
     #[test]
@@ -12592,6 +12783,67 @@ mod tests {
         assert!(
             !out.contains("Flexible(child:"),
             "a shrink-wrapped nested Row cannot host flex children:\n{out}"
+        );
+    }
+
+    /// `If ( when: <expr> ) { Text("yes") }`, for #15464.
+    fn dollar_if_tree(when: &str) -> LayoutNode {
+        if_node(LayoutPropValue::Expr(when.to_string()), vec![text_node("yes")])
+    }
+
+    // ----- #15464: `$` in an Expr string literal is not interpolation -----
+
+    #[test]
+    fn expr_string_dollar_scanner_escapes_only_inside_strings() {
+        let cases = [
+            (r#"( x == "${boom()}" )"#, r#"( x == "\${boom()}" )"#),
+            (r#"( x == "$y" )"#, r#"( x == "\$y" )"#),
+            // An author's backslash arrives as `\\`; the `$` after it is bare.
+            (r#"x == "a\\$b""#, r#"x == "a\\\$b""#),
+            // Already escaped: left alone, not double-escaped.
+            (r#"x == "\$b""#, r#"x == "\$b""#),
+            // An escaped quote does not end the string.
+            (r#"x == "\"$b""#, r#"x == "\"\$b""#),
+            // Two strings, with code between them.
+            (r#""$a" == "$b""#, r#""\$a" == "\$b""#),
+            // Single-quoted strings are tracked too.
+            (r#"a == 'q$'"#, r#"a == 'q\$'"#),
+            // Positive control: outside a string, byte for byte.
+            ("a$b == c", "a$b == c"),
+            (r#"( a == "x" ) && b$ != c"#, r#"( a == "x" ) && b$ != c"#),
+        ];
+        for (input, want) in cases {
+            assert_eq!(escape_interpolation_in_expr(input), want, "input: {input}");
+        }
+    }
+
+    #[test]
+    fn expr_string_literal_dollar_is_not_interpolated() {
+        let when = r#"( x == "${boom()}" || x == "$y" )"#;
+        let l = layout("X", dollar_if_tree(when));
+        let m = component("X", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains(r#"( x == "\${boom()}" || x == "\$y" )"#),
+            "expected both dollars escaped, got:\n{out}"
+        );
+        assert!(
+            !out.contains(r#"== "${boom"#),
+            "live ${{...}} template:\n{out}"
+        );
+        assert!(!out.contains(r#"== "$y""#), "live $name template:\n{out}");
+    }
+
+    #[test]
+    fn expr_without_string_dollar_is_emitted_unchanged() {
+        let when = r#"( status == "done" && count >= 2 )"#;
+        let l = layout("X", dollar_if_tree(when));
+        assert_eq!(layout_with_escaped_expr_strings(&l), l);
+        let m = component("X", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains(when),
+            "expected the Expr verbatim, got:\n{out}"
         );
     }
 
