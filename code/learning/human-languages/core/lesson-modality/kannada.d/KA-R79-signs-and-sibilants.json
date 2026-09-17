@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-R79-signs-and-sibilants",
+    "language": "kannada",
+    "chapter": 79,
+    "sequence": 2870,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cffe57b5ddabf26f",
+    "detachableSegments": [
+      "Script: six shapes, two ideas"
+    ]
+  },
+  "findings": []
+}

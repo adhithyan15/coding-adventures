@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S163-vowel-sign-au",
+    "language": "kannada",
+    "chapter": 79,
+    "sequence": 2830,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1b2fdd290c1e8b58",
+    "detachableSegments": [
+      "Script you'll notice: ◌ೌ",
+      "Writing: ◌ೌ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "KA-R80-the-breath",
+    "language": "kannada",
+    "chapter": 80,
+    "sequence": 2950,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "wide-table"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15c96171039691d0",
+    "detachableSegments": [
+      "Script: seven shapes, one move"
+    ]
+  },
+  "findings": []
+}

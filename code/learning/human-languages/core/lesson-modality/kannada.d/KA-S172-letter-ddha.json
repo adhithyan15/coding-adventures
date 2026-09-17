@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S172-letter-ddha",
+    "language": "kannada",
+    "chapter": 80,
+    "sequence": 2930,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8a6c599003064d6a",
+    "detachableSegments": [
+      "Script you'll notice: ಢ",
+      "Writing: ಢ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 79,
+  "title": "Long, Moving and Curled",
+  "label": "ch:ka-chihnegaLu",
+  "canDo": "I can read the three vowel signs this book had never named, and tell Kannada's two n letters and three s letters apart on the page.",
+  "payoff": {
+    "lesson": "KA-R79-signs-and-sibilants",
+    "kind": "production",
+    "summary": "From cold: name the three signs and say what each does to the consonant under it, then sort ನ against ಣ and ಸ, ಶ, ಷ by where the tongue sits.",
+    "assesses": [
+      "KA-SCRIPT-RECOG-161",
+      "KA-SCRIPT-RECOG-162",
+      "KA-SCRIPT-RECOG-163",
+      "KA-SCRIPT-RECOG-164",
+      "KA-SCRIPT-RECOG-165",
+      "KA-SCRIPT-RECOG-166"
+    ],
+    "note": "The chapter introduces exactly these six atoms and the payoff assesses all six. None has a sourced stroke order, so every lesson is recognition and keeps the standing refusal to state a pen path without a source."
+  }
+}

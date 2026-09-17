@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:97de087df29b76fb",
+  "lessonIds": [
+    "KA-S161-vowel-sign-ii",
+    "KA-S162-vowel-sign-ai",
+    "KA-S163-vowel-sign-au",
+    "KA-S164-letter-nna",
+    "KA-S165-letter-sha",
+    "KA-S166-letter-ssa",
+    "KA-R79-signs-and-sibilants"
+  ],
+  "tex": "kannada/book/chapters/ch79-long-moving-and-curled.tex"
+}

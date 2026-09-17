@@ -1,0 +1,16 @@
+{
+  "language": "kannada",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:9bcb2694da7bcf62",
+  "lessonIds": [
+    "KA-S167-letter-dha",
+    "KA-S168-letter-bha",
+    "KA-S169-letter-pha",
+    "KA-S170-letter-kha",
+    "KA-S171-letter-gha",
+    "KA-S172-letter-ddha",
+    "KA-S173-letter-ttha",
+    "KA-R80-the-breath"
+  ],
+  "tex": "kannada/book/chapters/ch80-the-breath.tex"
+}
