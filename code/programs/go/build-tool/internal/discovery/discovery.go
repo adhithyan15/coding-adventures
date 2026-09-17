@@ -127,12 +127,28 @@ var skipDirs = map[string]bool{
 	"gradle-build":  true, // Gradle output dir (renamed from "build" to avoid BUILD file conflict)
 }
 
-// readLines reads a file and returns non-blank, non-comment lines.
+// readLines reads a file and returns non-blank, non-comment,
+// non-POSIX-strict-mode-preamble lines.
 //
 // Blank lines and lines starting with '#' are stripped out. Leading and
 // trailing whitespace is removed from each line. If the file does not
 // exist, an empty slice is returned (not an error — a missing file
 // simply means "nothing to see here").
+//
+// A bare `set -e`/`set -eu`/`set -u`-style line (POSIX shell strict-mode
+// preamble, written by a BUILD script's `#!/bin/sh` author to fail fast) is
+// also stripped. The executor already runs every BuildCommands entry as its
+// own separate process and checks its exit code before starting the next
+// one (see executor.go's runCommands doc comment), so this directive has
+// never actually changed execution behavior here — each line was already a
+// fresh shell that `set -e` could not reach across. On Windows, though,
+// where BuildCommands run under `cmd /C` rather than a POSIX shell, `set`
+// is cmd's own builtin for defining an environment variable: `set -eu` with
+// no `=` reads as "print the value of a variable named -eu", which cmd
+// reports as an error and fails the whole package build. Dropping these
+// inert lines here — once, for every platform — is safe (they did nothing
+// on Unix) and fixes Windows without editing the 20+ BUILD files that carry
+// this leftover convention.
 func readLines(filepath string) []string {
 	data, err := os.ReadFile(filepath)
 	if err != nil {
@@ -142,11 +158,34 @@ func readLines(filepath string) []string {
 	var lines []string
 	for _, line := range strings.Split(string(data), "\n") {
 		trimmed := strings.TrimSpace(line)
-		if trimmed != "" && !strings.HasPrefix(trimmed, "#") {
+		if trimmed != "" && !strings.HasPrefix(trimmed, "#") && !isPosixSetFlagsPreamble(trimmed) {
 			lines = append(lines, trimmed)
 		}
 	}
 	return lines
+}
+
+// isPosixSetFlagsPreamble reports whether line is a bare `set` invocation
+// carrying only short shell flags (`set -e`, `set -eu`, `set -ux`, ...) —
+// POSIX strict-mode preamble, never a variable assignment. It is
+// deliberately narrow: any line containing '=' (cmd.exe's `set VAR=value`
+// or `set "VAR=value"`, used throughout this repo's *_windows BUILD files)
+// or naming anything other than a single-dash flag cluster is left alone.
+func isPosixSetFlagsPreamble(line string) bool {
+	fields := strings.Fields(line)
+	if len(fields) != 2 || fields[0] != "set" {
+		return false
+	}
+	flags := fields[1]
+	if len(flags) < 2 || flags[0] != '-' {
+		return false
+	}
+	for _, r := range flags[1:] {
+		if r < 'a' || r > 'z' {
+			return false
+		}
+	}
+	return true
 }
 
 // extraToolchainDirectivePrefix is the BUILD-file comment convention a
