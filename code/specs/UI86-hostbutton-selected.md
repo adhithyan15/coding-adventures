@@ -128,13 +128,40 @@ HostButton [ part ] (
 | backend | `selected` present | notes |
 | --- | --- | --- |
 | React | `aria-pressed={Boolean(expr)}` | |
-| HTML | `aria-pressed="{{…}}"` rendering `true`/`false` | expression values go through the same data-path rule as `a11y-label`; a non-path expression is a **reported** degradation, not a silent drop |
+| HTML | literal: `aria-pressed="true\|false"`; dynamic: `data-mosaic&pressed="…"`, which the project runtime replaces with `aria-pressed="true\|false"` | see §4.1.1 |
 | WebComponent | `aria-pressed="${…}"` | through `escapeHtmlAttribute`, like the name |
 | SwiftUI | `.accessibilityAddTraits((expr) ? .isSelected : [])` | added after `.accessibilityLabel`, so both apply |
 | Compose | `selected = (expr)` inside the button's existing `Modifier.semantics { … }` | booleans pass through `_mosaicTruthy` as for `checked` |
 | Flutter | `selected: (expr)` on the existing `Semantics` wrapper | via `bool_prop_expression` |
 | Qt | `property bool mosaicSelected: Boolean(expr)`, pushed to `Accessible.checkable: true` / `Accessible.checked` | the attached properties only; the `Button`'s own `checkable` stays false so a click does not toggle it; see §4.2.1 |
 | XAML | **not yet lowered**: reported as a degradation (§4.2, #15463) | the proposed lowering is a `ToggleButton` with `IsChecked="{x:Bind …, Mode=OneWay}"` |
+
+#### 4.1.1 HTML: a condition, not a placeholder
+
+*(Changed while implementing slice 2. The first draft said `aria-pressed="{{…}}"`,
+with a reported degradation for expressions that are not data paths.)*
+
+A `{{placeholder}}` substitutes a *value*. For `selected : ( i == selectedIndex )`
+there is no path to substitute, and for `selected : slot: s` the value would be
+written as-is, not as a state. So nothing dynamic becomes a placeholder.
+Instead, the emitter writes the condition as `data-mosaic&pressed="…"`
+(attribute-escaped, and brace-escaped against the mustache pass).
+The project runtime `main.js` then:
+
+- evaluates the condition with `evaluateCondition`, the same evaluator that
+  decides `<!-- mosaic-if when="…" -->`, after loops have bound their row;
+- replaces the attribute with `aria-pressed="true"` or `"false"`.
+
+As a result:
+
+- **Every call-site shape works.** `i == selectedIndex` inside `For` works,
+  so a degradation is never needed on this backend.
+- **Only a boolean reaches the page.**
+- **The condition is never executed as script.** The evaluator understands
+  paths, literals, `==`, `!=` and `!`, and nothing else.
+
+Static HTML served without the runtime keeps the `data-` attribute and has no
+state, like every other dynamic binding on that backend.
 
 ### 4.2 XAML: a toggle that does not toggle itself
 
@@ -178,8 +205,9 @@ value shape that is not lowered produces
 native-complete, in line with UI84 §3 ("recorded by the lowering itself").
 
 Web backends are not native-complete targets, but their emitter tests must
-assert all three value shapes, and HTML's non-path-expression case must be an
-error or a reported drop, never a silent one.
+assert all three value shapes. A value no web backend can lower (a string or
+number literal, an empty expression, an unsafe binding name) is an emit
+error, never a silent drop.
 
 ### 4.2.1 Qt: the state is pushed, not only bound
 

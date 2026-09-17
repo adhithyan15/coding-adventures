@@ -4,6 +4,30 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added -- `HostButton` `selected` lowers to `aria-pressed` (UI86, #15420)
+
+`selected : …` emits `aria-pressed`:
+
+| authored | emitted |
+| --- | --- |
+| `true` / `false` | `aria-pressed="true"` / `"false"` |
+| slot, loop binding or expression | `aria-pressed="${(…) ? 'true' : 'false'}"` |
+
+- **Only a boolean can be written.** The attribute sits inside `innerHTML`,
+  so the ternary guarantees that only the literals `'true'` and `'false'` can
+  land in it, whatever the value is.
+- **Truthiness is JavaScript's**, matching `If` on this backend.
+- **Invalid values are refused.** Absent `selected` emits nothing. A string or
+  number literal, or an empty expression, returns the new
+  `PipelineEmitError::InvalidPropValue`, and an unsafe binding name returns
+  `UnsafeSlotName`.
+- **Signature change:** `emit_host_button` now returns a `Result` so it can
+  report these errors.
+
+Checked in Node: the emitted template for a three-option `For` was evaluated
+with `selectedIndex` 0, 2, `"2"` and -1, and every state was `true` or
+`false`, as expected.
+
 ### Fixed — list story fixtures render as JS arrays in the slot table (#15428)
 
 `js_literal_for_fixture` turns a list fixture into an escaped array literal

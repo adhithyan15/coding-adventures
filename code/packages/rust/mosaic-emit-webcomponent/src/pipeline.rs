@@ -188,6 +188,11 @@ pub enum PipelineEmitError {
     /// `"/about"`) is unaffected -- only an explicit, disallowed
     /// scheme is rejected.
     UnsafeUriScheme(String),
+    /// A prop value has a shape the prop does not accept -- for example a
+    /// string literal where `HostButton`'s `selected:` needs a bool
+    /// (UI86 §4). Refused rather than dropped, so an authored state is
+    /// never silently lost.
+    InvalidPropValue(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -211,6 +216,7 @@ impl std::fmt::Display for PipelineEmitError {
                 f,
                 "HostLink href {href:?} uses a disallowed URI scheme (only http, https, mailto, or a relative reference are allowed)"
             ),
+            PipelineEmitError::InvalidPropValue(message) => write!(f, "{message}"),
         }
     }
 }
@@ -1145,7 +1151,7 @@ fn emit_html_tree(
     match node.tag.as_str() {
         "HostSurface" => return Ok(emit_host_surface(node, part_styles)),
         "HostInput" | "Input" => return Ok(emit_host_input(node, part_styles)),
-        "HostButton" => return Ok(emit_host_button(node, ctx, part_styles)),
+        "HostButton" => return emit_host_button(node, ctx, part_styles),
         "HostDialog" => return emit_host_dialog(node, ctx, part_styles),
 
         // UI29-2 — `HostCheckbox` and `HostRadio` lower to native
@@ -1778,7 +1784,7 @@ fn emit_host_button(
     node: &LayoutNode,
     ctx: &RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
-) -> String {
+) -> Result<String, PipelineEmitError> {
     let mut attrs = String::new();
     attrs.push_str(&build_style_attr(node, "", part_styles));
 
@@ -1812,10 +1818,57 @@ fn emit_host_button(
     // expression-bound HostButton name was lost on this backend while
     // React, Qt, SwiftUI, Compose, Flutter and XAML kept it.
     attrs.push_str(&accessible_name_attr(node));
+    attrs.push_str(&host_button_pressed_attr(node)?);
 
     let body = host_button_label_body(node);
 
-    format!("<button{attrs}>{body}</button>")
+    Ok(format!("<button{attrs}>{body}</button>"))
+}
+
+/// Lower `HostButton`'s `selected:` (UI86) to an ` aria-pressed="…"`
+/// attribute fragment, or to nothing when the prop is absent.
+///
+/// | authored form            | emitted                                              |
+/// |--------------------------|------------------------------------------------------|
+/// | (absent)                 | nothing: an ordinary push button                     |
+/// | `selected : true`        | ` aria-pressed="true"`                               |
+/// | `selected : slot: s`     | ` aria-pressed="${(s) ? 'true' : 'false'}"`          |
+/// | `selected : item`        | ` aria-pressed="${(item) ? 'true' : 'false'}"`       |
+/// | `selected : ( i == n )`  | ` aria-pressed="${(i == n) ? 'true' : 'false'}"`     |
+/// | a string or number       | refused: `InvalidPropValue`                          |
+///
+/// The ternary is the whole point: the attribute sits inside `innerHTML`,
+/// and only the two literals `'true'` and `'false'` can be written into it,
+/// whatever the value is. Truthiness is JavaScript's, the same as
+/// `If ( when: … )` on this backend. The expression is the layout
+/// compiler's token reconstruction, as for `If`.
+fn host_button_pressed_attr(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    let Some(prop) = node.props.iter().find(|prop| prop.name == "selected") else {
+        return Ok(String::new());
+    };
+    let condition = match &prop.value {
+        LayoutPropValue::Keyword(k) if k == "true" || k == "false" => {
+            return Ok(format!(r#" aria-pressed="{k}""#));
+        }
+        LayoutPropValue::SlotRef(name) | LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            if !is_safe_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            camel
+        }
+        LayoutPropValue::Expr(expr) if !strip_outer_parens(expr.trim()).is_empty() => {
+            strip_outer_parens(expr.trim()).to_string()
+        }
+        _ => {
+            return Err(PipelineEmitError::InvalidPropValue(
+                "HostButton `selected:` must be a slot reference, `true`/`false`, a loop binding, or an expression (UI86 §4)".to_string(),
+            ))
+        }
+    };
+    Ok(format!(
+        r#" aria-pressed="${{({condition}) ? 'true' : 'false'}}""#
+    ))
 }
 
 /// Lower a node's portable `a11y-label` to an ` aria-label="…"` attribute
@@ -4589,6 +4642,73 @@ mod tests {
                 out.contains(&format!("<button {expected}>Go</button>")),
                 "the name must sit on the button itself, got:\n{out}"
             );
+        }
+    }
+
+    /// UI86: only the literals `'true'` and `'false'` can be written into
+    /// `aria-pressed`, whatever the bound value is.
+    #[test]
+    fn host_button_selected_lowers_every_authored_form() {
+        let m = component("Btn", vec![], vec![]);
+        for (value, expected) in [
+            (LayoutPropValue::Keyword("true".into()), r#" aria-pressed="true""#),
+            (LayoutPropValue::Keyword("false".into()), r#" aria-pressed="false""#),
+            (
+                LayoutPropValue::SlotRef("is-current".into()),
+                r#" aria-pressed="${(isCurrent) ? 'true' : 'false'}""#,
+            ),
+            (
+                LayoutPropValue::Keyword("item".into()),
+                r#" aria-pressed="${(item) ? 'true' : 'false'}""#,
+            ),
+            (
+                LayoutPropValue::Expr("( i == selectedIndex )".into()),
+                r#" aria-pressed="${(i == selectedIndex) ? 'true' : 'false'}""#,
+            ),
+        ] {
+            let l = root_layout(
+                "Btn",
+                leaf_with_props(
+                    "HostButton",
+                    vec![LayoutProp {
+                        name: "selected".into(),
+                        value,
+                    }],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("Btn")).unwrap().output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+        }
+        let plain = root_layout("Btn", leaf_with_props("HostButton", vec![]));
+        let out = from_pipeline(&m, &plain, &empty_style("Btn")).unwrap().output;
+        assert!(!out.contains("aria-pressed"), "absent selected must emit nothing:\n{out}");
+    }
+
+    #[test]
+    fn host_button_selected_refuses_non_bool_and_unsafe_values() {
+        let m = component("Btn", vec![], vec![]);
+        for (value, unsafe_name) in [
+            (LayoutPropValue::String("true".into()), false),
+            (LayoutPropValue::Number(1.0), false),
+            (LayoutPropValue::Expr("( )".into()), false),
+            (LayoutPropValue::Keyword("x)}${alert(1)".into()), true),
+        ] {
+            let l = root_layout(
+                "Btn",
+                leaf_with_props(
+                    "HostButton",
+                    vec![LayoutProp {
+                        name: "selected".into(),
+                        value,
+                    }],
+                ),
+            );
+            let result = from_pipeline(&m, &l, &empty_style("Btn"));
+            if unsafe_name {
+                assert!(matches!(result, Err(PipelineEmitError::UnsafeSlotName(_))));
+            } else {
+                assert!(matches!(result, Err(PipelineEmitError::InvalidPropValue(_))));
+            }
         }
     }
 

@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:813d4b68d7571256",
+  "lessonIds": [
+    "ML-C74-aan",
+    "ML-C74-purpose",
+    "ML-C74-kazhiyum",
+    "ML-R74-aan-recall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch74.txt",
+  "json": "malayalam/narration/ch74.json",
+  "textHash": "fnv1a64:8e21368c9baf7414",
+  "jsonHash": "fnv1a64:4dd2fbbd6df30cf4",
+  "findings": []
+}
