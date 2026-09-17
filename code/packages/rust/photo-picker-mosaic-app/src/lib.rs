@@ -82,7 +82,20 @@ impl MosaicApp for PhotoPickerApp {
     }
 
     fn dispatch(&mut self, event: Event) -> Result<AppUpdate, Self::Error> {
-        if event.name != "pickPhoto" {
+        // "onPickPhoto", not "pickPhoto" -- the wire event name is the RAW
+        // emit name from `PhotoPickerApp.mil`'s `emit onPickPhoto ;`,
+        // unstripped. Every backend emitter deliberately keeps the "on"
+        // prefix on the wire value and only strips it for the generated
+        // *class/case* name (confirmed directly against
+        // `mosaic-emit-compose`'s own codegen and its own test asserting
+        // `mosaicName: String = "onCommit"`, and against `mosaic-emit-xaml`'s
+        // `event_name = escape_csharp_string(&emit.name)`, which uses the
+        // raw name, not `strip_on_prefix`'s output). A real, live click on
+        // the built XAML app proved this the hard way: this app's own
+        // button did nothing on any of the four already-shipped backends
+        // (XAML #15218, Qt #15252, Compose #15329, Flutter #15340) because
+        // dispatch was checking for a wire name none of them ever send.
+        if event.name != "onPickPhoto" {
             // Unknown event: render current state unchanged rather than
             // erroring -- a forward-compatible host sending an event this
             // version doesn't know about shouldn't break the app.
@@ -201,7 +214,7 @@ mod tests {
         let mut runtime = MosaicRuntime::new(PhotoPickerApp::default());
         runtime.start(start_context()).unwrap();
         let update = runtime
-            .dispatch(v2_event(1, "pickPhoto"))
+            .dispatch(v2_event(1, "onPickPhoto"))
             .expect("dispatch must succeed");
 
         assert_eq!(update.props["picking"], json!(true));
@@ -226,11 +239,34 @@ mod tests {
         assert!(update.effects.is_empty());
     }
 
+    /// Regression test for a real bug found by an actual live click on the
+    /// built app: `dispatch` originally checked for `"pickPhoto"`, but every
+    /// backend's generated client sends the RAW, unstripped emit name from
+    /// `PhotoPickerApp.mil`'s `emit onPickPhoto ;` -- "onPickPhoto" -- as the
+    /// wire event name (the "on" prefix is stripped only for the generated
+    /// class/case name, never the wire value; confirmed directly against
+    /// `mosaic-emit-compose`'s own test asserting `mosaicName: String =
+    /// "onCommit"`). The old name is deliberately still checked here, and
+    /// must keep behaving as an unrecognised event, not as `onPickPhoto`'s
+    /// synonym -- a future "helpful" alias would silently mask this class of
+    /// bug reappearing under a different event name.
+    #[test]
+    fn the_pre_fix_wire_name_is_still_just_an_unknown_event() {
+        let mut runtime = MosaicRuntime::new(PhotoPickerApp::default());
+        runtime.start(start_context()).unwrap();
+        let update = runtime
+            .dispatch(v2_event(1, "pickPhoto"))
+            .expect("dispatch must succeed");
+        assert_eq!(update.props["status"], json!("No photo picked yet."));
+        assert_eq!(update.props["picking"], json!(false));
+        assert!(update.effects.is_empty());
+    }
+
     #[test]
     fn completing_with_ok_reports_name_type_and_exact_size() {
         let mut runtime = MosaicRuntime::new(PhotoPickerApp::default());
         runtime.start(start_context()).unwrap();
-        let dispatch_update = runtime.dispatch(v2_event(1, "pickPhoto")).unwrap();
+        let dispatch_update = runtime.dispatch(v2_event(1, "onPickPhoto")).unwrap();
         let effect_id = dispatch_update.effects[0].id;
 
         let bytes = b"not a real jpeg, just test bytes";
@@ -257,7 +293,7 @@ mod tests {
     fn completing_with_cancelled_is_not_reported_as_a_failure() {
         let mut runtime = MosaicRuntime::new(PhotoPickerApp::default());
         runtime.start(start_context()).unwrap();
-        let dispatch_update = runtime.dispatch(v2_event(1, "pickPhoto")).unwrap();
+        let dispatch_update = runtime.dispatch(v2_event(1, "onPickPhoto")).unwrap();
         let effect_id = dispatch_update.effects[0].id;
 
         let update = runtime
@@ -273,7 +309,7 @@ mod tests {
     fn completing_with_failed_surfaces_the_message() {
         let mut runtime = MosaicRuntime::new(PhotoPickerApp::default());
         runtime.start(start_context()).unwrap();
-        let dispatch_update = runtime.dispatch(v2_event(1, "pickPhoto")).unwrap();
+        let dispatch_update = runtime.dispatch(v2_event(1, "onPickPhoto")).unwrap();
         let effect_id = dispatch_update.effects[0].id;
 
         let update = runtime
@@ -293,7 +329,7 @@ mod tests {
     fn malformed_base64_from_the_host_is_reported_not_panicked() {
         let mut runtime = MosaicRuntime::new(PhotoPickerApp::default());
         runtime.start(start_context()).unwrap();
-        let dispatch_update = runtime.dispatch(v2_event(1, "pickPhoto")).unwrap();
+        let dispatch_update = runtime.dispatch(v2_event(1, "onPickPhoto")).unwrap();
         let effect_id = dispatch_update.effects[0].id;
 
         let update = runtime
@@ -315,7 +351,7 @@ mod tests {
     fn missing_fields_in_ok_result_do_not_panic() {
         let mut runtime = MosaicRuntime::new(PhotoPickerApp::default());
         runtime.start(start_context()).unwrap();
-        let dispatch_update = runtime.dispatch(v2_event(1, "pickPhoto")).unwrap();
+        let dispatch_update = runtime.dispatch(v2_event(1, "onPickPhoto")).unwrap();
         let effect_id = dispatch_update.effects[0].id;
 
         let update = runtime
