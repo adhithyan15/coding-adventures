@@ -1,0 +1,16 @@
+{
+  "id": "TA-EXT-86-ACCUSATIVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can mark the object of a verb, and say when Tamil requires it.",
+  "prerequisites": [
+    "TA-EXT-85-THIRD-PERSON"
+  ],
+  "lessons": [
+    "TA-C86-ai",
+    "TA-C86-ennai-unnai",
+    "TA-C86-rational",
+    "TA-R86-ai-recall"
+  ]
+}

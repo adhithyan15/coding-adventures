@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C86-rational",
+    "language": "tamil",
+    "chapter": 86,
+    "sequence": 3580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7041609a55ad5e92"
+  },
+  "findings": []
+}

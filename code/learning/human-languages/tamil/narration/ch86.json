@@ -1,0 +1,631 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 86,
+  "title": "The One It Is Done To",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:c98e96f0e5df4c0d",
+  "lessons": [
+    {
+      "id": "TA-C86-ai",
+      "sequence": 3560,
+      "title": "-ஐ (-ai) — your second case ending",
+      "headword": "-ஐ",
+      "romanization": "-ai",
+      "gloss": "the accusative suffix -ai, which marks the one the verb is done to",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5708b81f518e4f1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first case ending was -உக்கு, and what it taught was bigger than its meaning: English puts a word in front, Tamil sticks a piece on the back."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the second piece, and it goes on the same end."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -ஐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-ஐ — -ai — marks the one the verb is done to."
+            },
+            {
+              "kind": "speech",
+              "text": "A sentence can have two people in it, and something has to say which of them is doing and which is being done to. English uses position: the teacher saw the child and the child saw the teacher are built from the same three words and mean opposite things, and the only signal is the order."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil marks the one being done to, and then the order stops carrying the weight:"
+            },
+            {
+              "kind": "speech",
+              "text": "நான் அவரை நினைக்கிறேன் nāṉ avarai ninaikkiṟēṉ — \"I think of them\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் became அவரை. Nothing else moved. The verb you already know from the thinking chapter did not change, and nāṉ is still optional because the -ēṉ on the end is already saying \"I\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: where the two endings sit",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "the word",
+                "+ ending",
+                "what it says"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "the word: அவர். + ending: அவர்உக்கு becomes அவருக்கு. what it says: to them, for them.",
+                "the word: அவர். + ending: அவர்ஐ becomes அவரை. what it says: them, as the one it is done to."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two endings, one place to put them, and the noun underneath is the same word both times. A case ending in Tamil is a seam you can see, which is the thing the dative chapter said was the biggest structural fact about the language — and this is the second piece of evidence for it rather than a new idea."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"avar … avarai\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"avar … avarai\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nāṉ avarai ninaikkiṟēṉ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nāṉ avarai ninaikkiṟēṉ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word in that sentence is the one being thought of, and how you can tell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word in that sentence is the one being thought of, and how you can tell]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"avarukku\" and \"avarai\" one after the other, and what each of them does",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"avarukku\" and \"avarai\" one after the other, and what each of them does]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does -ஐ (-ai) mark? (The one the verb is done to.) Where does it go? (On the end of the word, like every Tamil case ending.) What is avar as the one it is done to? (Avarai.) And what does English use instead of an ending here? (Position — which word comes first.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C86-ennai-unnai",
+      "sequence": 3570,
+      "title": "என்னை / உன்னை (eṉṉai / uṉṉai) — the body you already changed once",
+      "headword": "என்னை / உன்னை",
+      "romanization": "eṉṉai / uṉṉai",
+      "gloss": "me and you as the one it is done to, standing on the same changed body the dative already used",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:267027b79ef27c49",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to me\". Then say the word for \"I\" on its own."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "They do not look like each other, and the dative chapter told you why: the pronoun changes its body before an ending lands on it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: என்னை and உன்னை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "என்னை — eṉṉai — me, as the one it is done to உன்னை — uṉṉai — you, as the one it is done to."
+            },
+            {
+              "kind": "speech",
+              "text": "These cost you nothing new. You changed nāṉ into eṉ- to build enakku chapters ago. That changed body is the same one -ஐ (-ai) lands on:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the word",
+                "to / for",
+                "the one it is done to"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "the word: நான் nāṉ — I. to / for: எனக்கு enakku. the one it is done to: என்னை eṉṉai.",
+                "the word: நீ nī — you. to / for: உனக்கு unakku. the one it is done to: உன்னை uṉṉai."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read down the middle column and then down the right one. The left part of each word never changes once you have it. Learning the body is the work; the endings are the cheap part, and there are only so many of them."
+            },
+            {
+              "kind": "speech",
+              "text": "என்னை நினை eṉṉai ninai — \"think of me\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A bare verb stem is already a command — you met that with pō! in the farewell chapter — so this is a whole sentence with no machinery you have not used."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"enakku … eṉṉai\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"enakku … eṉṉai\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"unakku … uṉṉai\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"unakku … uṉṉai\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the part of those four words that never changes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the part of those four words that never changes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eṉṉai ninai\" — think of me",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eṉṉai ninai\" — think of me]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is me, as the one it is done to? (Eṉṉai.) And to me? (Enakku.) What do those two have in common? (The changed body eṉ-.) Which of the two endings would you put on it to say \"for you\"? (-உக்கு, on uṉ-.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C86-rational",
+      "sequence": 3580,
+      "title": "தேநீர் / தேநீரை (tēnīr / tēnīrai) — when the ending is a choice",
+      "headword": "தேநீர் / தேநீரை",
+      "romanization": "tēnīr / tēnīrai",
+      "gloss": "the ending a person must have and a thing can do without — and the line Tamil draws where Spanish draws it too",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7041609a55ad5e92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think of them\". Say which piece of that sentence marks the one being thought of."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the part nobody tells you: that piece is not always required."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a person must have it, a thing need not",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அவரை நினைக்கிறேன் — I think of them தேநீர் வாங்குகிறேன் — I buy tea தேநீரை வாங்குகிறேன் — I buy the tea."
+            },
+            {
+              "kind": "speech",
+              "text": "On a person the ending is obligatory. Leaving it off does not make a casual sentence; it makes a broken one."
+            },
+            {
+              "kind": "speech",
+              "text": "On a thing it is a choice, and the choice carries meaning. Bare தேநீர் is tea in general, the kind of thing you buy. தேநீரை is that tea, a particular one already in view. Tamil has no word for the, and this is one of the places the job gets done instead."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the object is",
+                "the ending"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the object is: a person. the ending: required.",
+                "the object is: a thing, in general. the ending: usually left off.",
+                "the object is: a thing, a particular one. the ending: put on."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "cognates",
+          "title": "Across the family: the same line, drawn at the other end",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Spanish draws this line too, and a Spanish learner has met it: veo la casa (\"I see the house\") against veo a María (\"I see María\"). A human object gets a marker; a thing does not."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish puts that marker in front of the word as a separate piece. Tamil sticks it on the back. Same distinction between a person and a thing, opposite end of the word — which is the difference the dative chapter opened with, now showing up in a second place."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"avarai ninaikkiṟēṉ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"avarai ninaikkiṟēṉ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tēnīr vāṅgugiṟēṉ\" and then \"tēnīrai vāṅgugiṟēṉ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tēnīr vāṅgugiṟēṉ\" and then \"tēnīrai vāṅgugiṟēṉ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of those two is about a particular tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of those two is about a particular tea]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three objects could not drop the ending, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three objects could not drop the ending, and why]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When is -ஐ (-ai) obligatory? (When the object is a person.) What does putting it on a thing add? (That it is a particular one — Tamil has no word for the.) And where does Spanish put its marker for a human object? (In front, as a separate word, where Tamil puts it on the back.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R86-ai-recall",
+      "sequence": 3590,
+      "title": "(the one it is done to) (ai ninaivu) — from cold",
+      "headword": "(the one it is done to)",
+      "romanization": "ai ninaivu",
+      "gloss": "cold retrieval of the accusative, its two pronoun forms, and the one question that decides whether it is optional",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a2658314eca1fc9e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say the ending that marks the one a verb is done to, and say which end of the word it goes on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one ending, one question",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "the object",
+                "with the ending",
+                "required?"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "the object: அவர் — that person. with the ending: அவரை. required?: yes.",
+                "the object: நான் — I. with the ending: என்னை. required?: yes.",
+                "the object: நீ — you. with the ending: உன்னை. required?: yes.",
+                "the object: தேநீர் — tea. with the ending: தேநீரை. required?: only for a particular one."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three of the four rows are people, and people have no choice. The question to ask of an object is not is this the subject or the object — the ending answers that — but is this a person."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things carry over from earlier chapters rather than being new here. The pronouns stand on the changed bodies eṉ- and uṉ- that the dative built. And the ending sits on the back of the word, which is what your first case ending taught and what separates this language from the one that would put a word in front."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four objects in the table, each with its ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four objects in the table, each with its ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"avarai ninaikkiṟēṉ\" and \"eṉṉai ninai\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"avarai ninaikkiṟēṉ\" and \"eṉṉai ninai\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which row of the table lets you choose, and what choosing adds",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which row of the table lets you choose, and what choosing adds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two words that share the body eṉ-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two words that share the body eṉ-]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is them, as the one it is done to? (Avarai.) What is me? (Eṉṉai.) When may the ending be left off? (On a thing, when it is not a particular one.) And what has to be true before it is compulsory? (The object is a person.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

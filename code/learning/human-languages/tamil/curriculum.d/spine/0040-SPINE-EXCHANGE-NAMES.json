@@ -10,7 +10,8 @@
     "TA-PATH-52-TREE",
     "TA-PATH-59-KITCHEN",
     "TA-PATH-70-ROOM",
-    "TA-PATH-85-THIRD-PERSON"
+    "TA-PATH-85-THIRD-PERSON",
+    "TA-PATH-86-ACCUSATIVE"
   ],
   "omits": [
     "PRONOUN-ME",
