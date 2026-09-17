@@ -104,9 +104,10 @@ HostButton [ part ] (
   where the type is knowable (a slot declared with a non-bool type), and
   truthiness applies to expressions, as for `If`.
 - **Value shapes:** slot reference, keyword (`true`/`false`), and expression.
-  **All three are required on every backend.** The toolkit's use is
-  `selected : ( i == selectedIndex )` inside `For`, so a backend that accepts
-  only slot references would lower none of the real call sites. (This is the
+  **All three are required on every backend.** The toolkit sets a literal on
+  each branch of its option `If` (§8.4), but expressions are what a host
+  writes: `selected : ( i == selectedIndex )` inside `For`. A backend that
+  accepted only slot references would lower neither. (This is the
   gap `checked` has today: React and SwiftUI accept only slots, and Qt turns an
   expression into `checked: false` without reporting it.)
 - **Liveness:** the value is re-evaluated on every render, including inside

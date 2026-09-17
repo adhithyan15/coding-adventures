@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Regenerated `pkg/engram_engine.wasm` for the switcher's plain labels
+(UI86, #15420).** The rebuilt engine returns `nav-options` as a list of screen
+names; the toolkit's SegmentedControl reports which one is selected through the
+kernel's selected state. `js/smoke.mjs` passes against it.
+
 **Regenerated `pkg/engram_engine.wasm` for the Study empty-state props
 (#15440).** The rebuilt engine returns `study-empty` and its copy. It was
 rebuilt on a tree that already contains the bounded media decode (#13672), so

@@ -3,9 +3,9 @@
 //   Column [ list-group ]
 //     For ( each: slot: items, as: item, index: i )
 //       If ( when: i == selectedIndex )
-//         HostButton [ list-group-item-selected ] (...)
+//         HostButton [ list-group-item-selected ] (..., selected: true)
 //       Else
-//         HostButton [ list-group-item ] (...)
+//         HostButton [ list-group-item ] (..., selected: false)
 //
 // Each item lowers to a full-width HostButton row. Clicking fires
 // onSelect with the row's index as the payload. The .msl styles
@@ -27,12 +27,14 @@ layout ListGroup {
       If ( when: i == selectedIndex ) {
         HostButton [ list-group-item-selected ] (
           label : item ,
+          selected : true ,
           onClick : emit: onSelect
         )
       }
       Else {
         HostButton [ list-group-item ] (
           label : item ,
+          selected : false ,
           onClick : emit: onSelect
         )
       }

@@ -4,6 +4,17 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Changed — `nav-options` is a list of labels (UI86, #15420)
+
+The view switcher's slot type follows toolkit 0.15: `list<text>` instead of
+`list<list<text>>`, and no name carries ", selected" any more. The toolkit
+dependency moves to 0.15.0.
+
+Checked on WinUI: the generated TaskApp still reports zero degradations under
+`--profile native-complete`, builds with `dotnet build`, and UI Automation
+shows the switcher's selected option as `IsSelected` (`List=True`, the rest
+false), with a screen reader's Select moving it.
+
 Entries added after `task-app-v0.2.0` accumulate here until the next version is
 cut.
 

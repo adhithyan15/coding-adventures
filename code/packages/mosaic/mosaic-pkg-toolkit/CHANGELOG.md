@@ -2,6 +2,37 @@
 
 ## [Unreleased]
 
+### Changed — options report the kernel selected state; `SegmentedControl.options` is `list<text>` (v0.15.0, UI86, #15420)
+
+**Breaking for `SegmentedControl` hosts.** `options` changes from
+`list<list<text>>` (`[label, accessible-name]` rows) to `list<text>`.
+- Pass the labels.
+- Stop writing `", selected"` into the names.
+
+Every backend now lowers the kernel's `HostButton ( selected : … )` (UI86), so
+the host-written name is no longer needed:
+
+- **`SegmentedControl`:** all four option branches (two orientations,
+  selected or not) set `selected : true` on the selected part and
+  `selected : false` on the other. The label is the option itself, and
+  `a11y-label` is gone.
+- **`Tabs` and `ListGroup`:** set `selected : true` / `false` on their two
+  branches. Until now their current item was only visual.
+
+`false` is written, not left out, because it is what marks an option as one of
+a set (UI86 §3.2).
+
+**Also changed:**
+- **Stories:** all 11 `SegmentedControl` stories now pass flat label lists.
+- **Tests:** `package_compiles` pins:
+  - the new slot type;
+  - the literal `selected` value on every branch of the three components;
+  - that no story keeps a nested row or a `", selected"` name. A stale nested
+    row would still pass `--strict-fixtures`, which checks list shape, not the
+    slot's element type.
+- **Docs:** the README and the toolkit spec's accessibility note describe the
+  kernel state instead of the stand-in.
+
 ### Added — `EmptyState` (v0.14.0, #15440)
 
 What a view shows when it has nothing to show yet. All four products in

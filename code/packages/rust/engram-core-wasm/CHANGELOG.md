@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Changed — the screen switcher sends plain labels (UI86, #15420)
+
+`switcher_rows` is now `switcher_labels`, returning the six screen names
+instead of `[label, accessible-name]` rows. Toolkit 0.15's
+`SegmentedControl` reports which option is selected through the kernel's
+selected state, so the engine no longer writes ", selected" into the active
+screen's name. `nav-options` is a `list<text>`.
+
+The switcher test now asserts the labels never change with the selection,
+which is the property that stand-in broke.
+
 ### Added — props for the Study screen's empty state (#15440)
 
 `engram_app_props_for_state` now sets `study-empty` (true when no card is

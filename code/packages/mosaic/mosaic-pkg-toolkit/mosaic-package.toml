@@ -15,7 +15,7 @@
 
 [package]
 name        = "mosaic-pkg-toolkit"
-version     = "0.14.0"
+version     = "0.15.0"
 description = "Bootstrap-shaped Mosaic UI component library — ready-made components composed purely from UI29 kernel primitives"
 license     = "MIT OR Apache-2.0"
 
@@ -37,6 +37,8 @@ license     = "MIT OR Apache-2.0"
 # v0.12: SegmentedControl (one-of-N option row; #14016).
 # v0.13: SegmentedControl gains a vertical orientation (#15432).
 # v0.14: EmptyState ("nothing here yet"; #15440).
+# v0.15: SegmentedControl, Tabs, ListGroup report the kernel selected state
+#        (UI86, #15420); SegmentedControl `options` becomes list<text>.
 # Remaining Tier-1 (Card, Container) blocked on UI29-2 children
 # pass-through spec; ship when that lands.
 exports = [

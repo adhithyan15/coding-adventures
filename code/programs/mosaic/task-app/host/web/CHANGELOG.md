@@ -4,6 +4,12 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed — `navOptions` is a list of labels (UI86, #15420)
+
+`switcherViews().map(([, label]) => label)`: the toolkit's SegmentedControl
+reports the selected view through the kernel's selected state, so the host no
+longer appends ", selected" to the showing view's accessible name.
+
 ### Changed
 
 - The view switcher's props (#14016). `navOptions` holds

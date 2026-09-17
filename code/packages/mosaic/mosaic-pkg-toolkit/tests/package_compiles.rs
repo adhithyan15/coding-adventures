@@ -83,8 +83,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.14.0",
-        "[package].version must be 0.14.0 for the EmptyState release"
+        version, "0.15.0",
+        "[package].version must be 0.15.0 for the selected-state release (UI86)"
     );
 
     let exports = value
@@ -976,7 +976,8 @@ fn empty_state_title_is_a_heading_and_optional_parts_are_gated() {
 }
 
 /// SegmentedControl — a row of options, one selected. The host owns
-/// `selected-index` and supplies each option as `[label, accessible-name]`.
+/// `selected-index` and supplies the option labels (`list<text>` since
+/// 0.15; the selected state is the kernel's, UI86).
 #[test]
 fn segmented_control_interface_matches_spec() {
     let mil_src = read_source("SegmentedControl.mil");
@@ -984,6 +985,11 @@ fn segmented_control_interface_matches_spec() {
     let c = &out.component;
     let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
     assert_eq!(slot_names, vec!["options", "selected-index", "vertical", "disabled"]);
+    assert_eq!(
+        format!("{:?}", c.slots[0].r#type),
+        format!("{:?}", mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::Text))),
+        "options is a plain list of labels"
+    );
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onSelect"]);
     // The payload is what lets a host map a click back to an option.
@@ -1001,8 +1007,9 @@ fn segmented_control_interface_matches_spec() {
 ///   edit cannot quietly reintroduce per-option parts;
 /// - the selection branch compares the loop index against the camelCase
 ///   slot identifier (the kebab spelling compiles and is wrong on web);
-/// - both branches bind the host-supplied accessible name, because the
-///   selected state reaches assistive tech only through that name;
+/// - every branch reports the kernel selected state (UI86) as a literal:
+///   `true` on the selected part, `false` on the other, and the label is
+///   the option itself (no host-written name);
 /// - in both themes the selected part differs from the unselected one in
 ///   fill, text colour AND border, so selection is never colour-alone.
 #[test]
@@ -1027,15 +1034,27 @@ fn segmented_control_selection_costs_two_parts_and_is_distinct() {
     );
     // Two orientations x (selected, unselected).
     assert_eq!(
-        code.matches("a11y-label : ( option[1] )").count(),
-        4,
-        "every branch must bind the host-supplied accessible name"
-    );
-    assert_eq!(
-        code.matches("label : ( option[0] )").count(),
+        code.matches("label : option ,").count(),
         4,
         "every branch must bind the visible label"
     );
+    assert!(!code.contains("a11y-label"), "the label is the accessible name now");
+    for part in ["segmented-option-selected", "segmented-vertical-option-selected"] {
+        assert!(
+            code.contains(&format!("HostButton [ {part} ] (
+label : option ,
+selected : true ,")),
+            "{part} must report selected : true"
+        );
+    }
+    for part in ["segmented-option", "segmented-vertical-option"] {
+        assert!(
+            code.contains(&format!("HostButton [ {part} ] (
+label : option ,
+selected : false ,")),
+            "{part} must report selected : false"
+        );
+    }
     assert!(
         code.contains("If ( when: slot: vertical )"),
         "orientation must be chosen by the bool slot"
@@ -1103,8 +1122,10 @@ fn segmented_control_selection_costs_two_parts_and_is_distinct() {
     }
 }
 
-/// Every story must name only declared slots, and every option row must
-/// carry both columns: a one-column row leaves the accessible name unset.
+/// Every story must name only declared slots, and every option must be a
+/// plain, non-empty label. A leftover `[label, name]` row would still pass
+/// `--strict-fixtures` (the compiler checks list shape, not the slot's
+/// element type) and silently render the generated sample instead.
 /// (MosaicBook's own fixture validation is #14031's open half; this pins
 /// this component's stories without waiting for it.)
 #[test]
@@ -1150,17 +1171,13 @@ fn segmented_control_stories_are_well_formed() {
             panic!("{name}: an integer selected-index");
         };
         let selected = *selected;
-        for (i, row) in options.iter().enumerate() {
-            let JsonValue::Array(row) = row else {
-                panic!("{name}: option {i} is not a row");
-            };
-            assert_eq!(row.len(), 2, "{name}: option {i} must be [label, accessible-name]");
-            let (label, a11y) = (text(&row[0]), text(&row[1]));
-            if i as i64 == selected {
-                assert_eq!(a11y, format!("{label}, selected"), "{name}: selected name");
-            } else {
-                assert_eq!(a11y, label, "{name}: only the selected option says selected");
-            }
+        for (i, option) in options.iter().enumerate() {
+            let label = text(option);
+            assert!(!label.is_empty(), "{name}: option {i} needs a label");
+            assert!(
+                !label.ends_with(", selected"),
+                "{name}: option {i} still carries the pre-UI86 selected name"
+            );
         }
         let count = options.len() as i64;
         assert!((-1..count).contains(&selected), "{name}: selection in range");
@@ -1181,6 +1198,34 @@ fn segmented_control_stories_are_well_formed() {
         })
         .count();
     assert!(verticals >= 1, "a vertical story (#15432)");
+}
+
+/// UI86: Tabs and ListGroup report which item is current through the
+/// kernel selected state, on both branches of their selection `If`.
+#[test]
+fn tabs_and_list_group_report_the_selected_state() {
+    for (file, selected_part, other_part) in [
+        ("Tabs.mll", "tabs-tab-active", "tabs-tab"),
+        ("ListGroup.mll", "list-group-item-selected", "list-group-item"),
+    ] {
+        let code: String = read_source(file)
+            .lines()
+            .filter(|line| !line.trim_start().starts_with("//"))
+            .map(|line| line.split_whitespace().collect::<Vec<_>>().join(" "))
+            .collect::<Vec<_>>()
+            .join("
+");
+        for (part, value) in [(selected_part, "true"), (other_part, "false")] {
+            let start = code
+                .find(&format!("HostButton [ {part} ] ("))
+                .unwrap_or_else(|| panic!("{file}: {part} not found"));
+            let block = &code[start..start + code[start..].find(')').expect("block end")];
+            assert!(
+                block.contains(&format!("selected : {value} ,")),
+                "{file}: {part} must report selected : {value}, got {block:?}"
+            );
+        }
+    }
 }
 
 /// DropdownMenu — toggle button + revealed item list. Two emits:
