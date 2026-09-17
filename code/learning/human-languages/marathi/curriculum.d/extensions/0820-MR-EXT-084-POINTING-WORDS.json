@@ -1,0 +1,16 @@
+{
+  "id": "MR-EXT-084-POINTING-WORDS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can point near and far in the right gender, and refer to a third person.",
+  "prerequisites": [
+    "MR-EXT-083-SHUBH-GREETINGS"
+  ],
+  "lessons": [
+    "MR-C69-ha",
+    "MR-C69-to",
+    "MR-C69-dem-system",
+    "MR-R69-dem-recall"
+  ]
+}

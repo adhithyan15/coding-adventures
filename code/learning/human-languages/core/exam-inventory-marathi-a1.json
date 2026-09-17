@@ -380,8 +380,11 @@
       "id": "MR-A1-DEM-01",
       "category": "Demonstratives",
       "label": "the forms haa/hii/he and to/tii/te, in all three genders",
-      "probe": null,
-      "note": "Untaught, and the reading paper's person-to-detail matching is built on pointing at things.",
+      "probe": [
+        "MR-LEX-HA-HI-HE",
+        "MR-LEX-TO-TI-TE"
+      ],
+      "note": "Chapter 69. Two fronts and three endings make six words: ha- for near, ta- for far, with -aa / -ii / -e chosen by the noun's gender rather than by the speaker. Taught on mitra, kholi and ghar, whose genders are STATED in the corpus (MR-C41-kholi says ghar is neuter and kholi feminine; maajhaa mitra gives the masculine) rather than assumed -- chahaa was dropped from a draft because its gender is nowhere stated.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -394,8 +397,10 @@
       "id": "MR-A1-DEM-02",
       "category": "Demonstratives",
       "label": "spatial deixis: Marathi's two-way near/far against Spanish's three-way",
-      "probe": null,
-      "note": "Untaught. The point transfers with its cardinality changed, which is what a proxy is for.",
+      "probe": [
+        "MR-GRAMMAR-DEM-TWO-WAY"
+      ],
+      "note": "Chapter 69. Marathi points in TWO directions and stops, against Spanish's three-way este/ese/aquel. The point transfers with its cardinality changed, which is what the proxy is for.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
@@ -408,8 +413,10 @@
       "id": "MR-A1-DEM-03",
       "category": "Demonstratives",
       "label": "position: prenominal, and compatible with a following noun",
-      "probe": null,
-      "note": "Untaught.",
+      "probe": [
+        "MR-GRAMMAR-DEM-PRENOMINAL"
+      ],
+      "note": "Chapter 69. All six sit in front of the noun, in the slot maajhaa and daavaa already occupy, and the ending is chosen by the noun -- so the pointing word announces the gender of anything that follows it.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "editorial-marathi-structure"
