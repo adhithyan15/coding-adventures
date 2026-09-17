@@ -790,6 +790,9 @@ struct EmitContext<'a> {
     /// component-scoped native Slider subclass that owns user-input and commit
     /// lifecycle tracking.
     needs_native_slider_support: bool,
+    /// Whether this component emitted a HostButton with `selected:` (UI86)
+    /// and therefore needs the component-scoped selectable Button subclass.
+    needs_selectable_button_support: bool,
 }
 
 impl<'a> EmitContext<'a> {
@@ -836,6 +839,7 @@ impl<'a> EmitContext<'a> {
             native_table_counter: 0,
             needs_native_drag_support: false,
             needs_native_slider_support: false,
+            needs_selectable_button_support: false,
         }
     }
 
@@ -4475,6 +4479,7 @@ fn emit_code_behind(
     if ctx.needs_native_table_support
         || ctx.needs_native_drag_support
         || ctx.needs_native_slider_support
+        || ctx.needs_selectable_button_support
     {
         writeln!(out, "using Microsoft.UI.Xaml.Automation;").unwrap();
         writeln!(out, "using Microsoft.UI.Xaml.Automation.Peers;").unwrap();
@@ -4482,7 +4487,7 @@ fn emit_code_behind(
         writeln!(out, "using Microsoft.UI.Xaml.Media;").unwrap();
         writeln!(out, "using Windows.System;").unwrap();
     }
-    if ctx.needs_native_table_support {
+    if ctx.needs_native_table_support || ctx.needs_selectable_button_support {
         writeln!(out, "using Microsoft.UI.Xaml.Automation.Provider;").unwrap();
     }
     if ctx.needs_native_drag_support {
@@ -4616,7 +4621,138 @@ fn emit_code_behind(
     if ctx.needs_native_slider_support {
         out.push_str(&emit_native_slider_support_source(name));
     }
+    if ctx.needs_selectable_button_support {
+        out.push_str(&emit_selectable_button_support_source(name));
+    }
     Ok(out)
+}
+
+/// The component-scoped `Button` subclass that carries UI86's selected state.
+///
+/// ## Why a subclass, and why not `ToggleButton`
+///
+/// A WinUI `Button`'s automation peer implements only the Invoke pattern, and
+/// no attached property adds a selected state to it. `ToggleButton` has one
+/// (the Toggle pattern), but its default template restyles the Checked state
+/// with the accent brushes, overriding the authored part style, and it
+/// changes its own `IsChecked` on click, while UI86 makes the state the
+/// application's. So this stays a `Button`, with the same template, styling
+/// and `Click`, and swaps in an automation peer that also implements
+/// **SelectionItem**:
+///
+/// | UIA member               | behaviour                                            |
+/// |--------------------------|------------------------------------------------------|
+/// | `IsSelected`             | the bound `MosaicSelected` dependency property       |
+/// | `Select` / `AddToSelection` | the same as activating the button: raise `Click`  |
+/// | `RemoveFromSelection`    | nothing: deselecting is the application's decision   |
+/// | `SelectionContainer`     | none                                                 |
+///
+/// A change of `MosaicSelected` raises the peer's `IsSelected` property
+/// change, and `ElementSelected` when it becomes true, so a screen reader
+/// hears the new state without re-querying.
+///
+/// `ElevationZ` exists for the same reason as on the drag source: WinUI's
+/// XAML compiler fails on `Translation` plus `<X.Shadow>` written on a custom
+/// subclass, so the depth is applied from C#.
+fn emit_selectable_button_support_source(component: &str) -> String {
+    r#"
+
+/// <summary>
+/// A Button that reports an application-owned selected state (UI86) through
+/// the UI Automation SelectionItem pattern, without changing how it looks or
+/// what a click does.
+/// </summary>
+public sealed class __COMPONENT__MosaicSelectableButton : Button
+{
+    public bool MosaicSelected
+    {
+        get => (bool)GetValue(MosaicSelectedProperty);
+        set => SetValue(MosaicSelectedProperty, value);
+    }
+
+    public static readonly DependencyProperty MosaicSelectedProperty =
+        DependencyProperty.Register(
+            nameof(MosaicSelected),
+            typeof(bool),
+            typeof(__COMPONENT__MosaicSelectableButton),
+            new PropertyMetadata(false, OnMosaicSelectedChanged));
+
+    private static void OnMosaicSelectedChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    {
+        var button = (__COMPONENT__MosaicSelectableButton)sender;
+        if (FrameworkElementAutomationPeer.FromElement(button) is __COMPONENT__MosaicSelectableButtonAutomationPeer peer)
+        {
+            peer.RaisePropertyChangedEvent(SelectionItemPatternIdentifiers.IsSelectedProperty, args.OldValue, args.NewValue);
+            if (args.NewValue is true)
+            {
+                peer.RaiseAutomationEvent(AutomationEvents.SelectionItemPatternOnElementSelected);
+            }
+        }
+    }
+
+    public string ElevationZ
+    {
+        get => (string)GetValue(ElevationZProperty);
+        set => SetValue(ElevationZProperty, value);
+    }
+
+    public static readonly DependencyProperty ElevationZProperty =
+        DependencyProperty.Register(
+            nameof(ElevationZ),
+            typeof(string),
+            typeof(__COMPONENT__MosaicSelectableButton),
+            new PropertyMetadata(string.Empty, OnElevationZChanged));
+
+    private static void OnElevationZChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    {
+        var button = (__COMPONENT__MosaicSelectableButton)sender;
+        var z = args.NewValue as string;
+        if (string.IsNullOrEmpty(z))
+        {
+            button.Shadow = null;
+            button.Translation = System.Numerics.Vector3.Zero;
+        }
+        else
+        {
+            button.Translation = new System.Numerics.Vector3(0, 0, float.Parse(z, System.Globalization.CultureInfo.InvariantCulture));
+            button.Shadow = new ThemeShadow();
+        }
+    }
+
+    protected override AutomationPeer OnCreateAutomationPeer() =>
+        new __COMPONENT__MosaicSelectableButtonAutomationPeer(this);
+}
+
+public sealed class __COMPONENT__MosaicSelectableButtonAutomationPeer : ButtonAutomationPeer, ISelectionItemProvider
+{
+    private readonly __COMPONENT__MosaicSelectableButton _owner;
+
+    public __COMPONENT__MosaicSelectableButtonAutomationPeer(__COMPONENT__MosaicSelectableButton owner)
+        : base(owner) => _owner = owner;
+
+    protected override object GetPatternCore(PatternInterface patternInterface) =>
+        patternInterface == PatternInterface.SelectionItem ? this : base.GetPatternCore(patternInterface);
+
+    public bool IsSelected => _owner.MosaicSelected;
+
+    public IRawElementProviderSimple SelectionContainer => null!;
+
+    public void Select() => Invoke();
+
+    public void AddToSelection()
+    {
+        if (!_owner.MosaicSelected)
+        {
+            Invoke();
+        }
+    }
+
+    public void RemoveFromSelection()
+    {
+    }
+}
+"#
+    .replace("__COMPONENT__", component)
 }
 
 fn emit_native_table_support_source(component: &str) -> String {
@@ -8893,15 +9029,112 @@ fn host_input_event_args(
     }
 }
 
-/// Whether a `HostButton`'s authored `selected:` (UI86) reaches a native
-/// selected state on WinUI. Not yet: a `Button`'s automation peer has only
-/// the Invoke pattern, and the `ToggleButton` UI86 §4.2 proposes restyles its
-/// checked state with the accent brushes and may route a screen reader's
-/// Toggle past the Click handler. Until that is settled (#15463) the state
-/// is not emitted, and the artifact builder reports it rather than the
-/// package claiming it is native-complete.
-pub fn host_button_selected_is_native(_node: &LayoutNode) -> bool {
-    false
+/// Whether a `HostButton`'s authored `selected:` (UI86) has a shape this
+/// emitter lowers to the selectable button's `MosaicSelected` (#15463).
+///
+/// The artifact builder calls this without an emit context, so it judges the
+/// shape only. A shape it accepts that still cannot be bound in context (an
+/// unknown bare name, a non-bool slot, an expression `x:Bind` cannot take) is
+/// a hard emit error in [`host_button_selected_xbind`], never a silent drop.
+pub fn host_button_selected_is_native(node: &LayoutNode) -> bool {
+    match find_prop_value(node, "selected") {
+        Some(LayoutPropValue::SlotRef(_)) | Some(LayoutPropValue::Keyword(_)) => true,
+        Some(LayoutPropValue::Expr(expr)) => !expr.trim().is_empty(),
+        _ => false,
+    }
+}
+
+/// `text` without any number of outer parentheses that enclose all of it.
+/// `(a) == (b)` is left alone: its first `(` closes before the end.
+fn strip_balanced_outer_parens(mut text: &str) -> &str {
+    loop {
+        let Some(inner) = text.strip_prefix('(').and_then(|t| t.strip_suffix(')')) else {
+            return text;
+        };
+        let mut depth = 0i32;
+        let encloses_all = inner.chars().all(|c| {
+            match c {
+                '(' => depth += 1,
+                ')' => depth -= 1,
+                _ => {}
+            }
+            depth >= 0
+        });
+        if !encloses_all || depth != 0 {
+            return text;
+        }
+        text = inner.trim();
+    }
+}
+
+/// The `MosaicSelected="…"` value for a `HostButton`'s `selected:`, or
+/// `None` when the prop is absent (UI86, #15463).
+///
+/// Lowered the way `If ( when: … )` is, because the values are the same
+/// kind: a literal is written directly; a slot, a loop binding or an
+/// expression becomes a `Mode=OneWay` `x:Bind`, with `i == selectedIndex`
+/// inside `For` taking the row's projected `IsSelected`. `x:Bind` does not
+/// coerce, so a slot must be declared `bool`.
+fn host_button_selected_xbind(
+    node: &LayoutNode,
+    ctx: &mut EmitContext<'_>,
+) -> Result<Option<String>, PipelineEmitError> {
+    let one_way = |path: String| format!("{{x:Bind {path}, Mode=OneWay}}");
+    let value = match find_prop_value(node, "selected") {
+        None => return Ok(None),
+        Some(LayoutPropValue::Keyword(k)) if k == "true" => "True".to_string(),
+        Some(LayoutPropValue::Keyword(k)) if k == "false" => "False".to_string(),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let property = ctx.slot_property_name(slot);
+            if !is_safe_identifier(&property) {
+                return Err(PipelineEmitError::UnsafeSlotName(property));
+            }
+            if ctx.slot_types.get(slot).map(String::as_str) != Some("bool") {
+                return Err(PipelineEmitError::UnsupportedExpression(format!(
+                    "HostButton selected: slot {slot:?} must be declared bool to bind natively on XAML"
+                )));
+            }
+            one_way(ctx.slot_xbind_path(slot))
+        }
+        Some(LayoutPropValue::Keyword(k)) => {
+            if ctx.lookup_for_binding(k).is_some() {
+                let property = kebab_to_pascal_case(k);
+                if !is_safe_identifier(&property) {
+                    return Err(PipelineEmitError::UnsafeSlotName(property));
+                }
+                one_way(property)
+            } else {
+                return Err(PipelineEmitError::UnsupportedExpression(format!(
+                    "HostButton selected: bare name {k:?} is not a slot or for-bound name"
+                )));
+            }
+        }
+        Some(LayoutPropValue::Expr(src)) if !src.trim().is_empty() => {
+            // `selected : ( i == selectedIndex )` keeps its parentheses, which
+            // the row-predicate matcher does not expect (an `If`'s `when:`
+            // value has none). Without this the comparison would fall through
+            // to a generic helper instead of the row's live `IsSelected`.
+            let src = strip_balanced_outer_parens(src.trim());
+            if let Some(path) = try_lower_for_template_predicate(src, ctx) {
+                one_way(path)
+            } else {
+                match lower_expr_for_xbind(src, ctx) {
+                    ExprLowering::Bindable(path) => one_way(path),
+                    ExprLowering::Helper(call) => one_way(call),
+                    ExprLowering::Unsupported(reason) => {
+                        return Err(PipelineEmitError::UnsupportedExpression(reason));
+                    }
+                }
+            }
+        }
+        Some(_) => {
+            return Err(PipelineEmitError::UnsupportedExpression(
+                "HostButton selected: must be a bool slot, true/false, a loop binding, or an expression"
+                    .to_string(),
+            ));
+        }
+    };
+    Ok(Some(value))
 }
 
 /// `HostButton` → `<Button>` per spec §4.2.
@@ -9072,7 +9305,32 @@ fn emit_host_button(
         .as_deref()
         .and_then(|p| part_styles.get(p))
         .and_then(|entry| entry.elevation);
-    let (shadow_attr, shadow_child) = theme_shadow_attr_and_child(elevation, "Button", indent + 4);
+    // UI86: a button with `selected:` is the component's selectable Button
+    // subclass. Everything else about it (visual states, `Click`, content)
+    // is unchanged; `register_host_visual_states` above still sees "Button",
+    // whose properties the subclass inherits.
+    let selected = host_button_selected_xbind(node, ctx)?;
+    let tag = match &selected {
+        Some(value) => {
+            ctx.needs_selectable_button_support = true;
+            attrs.push_str(&format!(" MosaicSelected=\"{value}\""));
+            format!("local:{}MosaicSelectableButton", ctx.component_name)
+        }
+        None => "Button".to_string(),
+    };
+    let (shadow_attr, shadow_child) = if selected.is_some() {
+        // See `emit_selectable_button_support_source`: depth is applied
+        // from C# on a custom subclass.
+        let z = elevation.map(|tier| tier.translation_z()).unwrap_or_default();
+        let attr = if z.is_empty() {
+            String::new()
+        } else {
+            format!(" ElevationZ=\"{z}\"")
+        };
+        (attr, String::new())
+    } else {
+        theme_shadow_attr_and_child(elevation, "Button", indent + 4)
+    };
     let content_child = host_content_control_children(node, &attrs, indent, part_styles, ctx)?;
     let inner = match (&content_child, shadow_child.is_empty()) {
         (None, true) => None,
@@ -9082,10 +9340,10 @@ fn emit_host_button(
     };
     match inner {
         None => Ok(format!(
-            "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}{shadow_attr}/>\n"
+            "{pad}<{tag} x:Name=\"{x_name}\"{attrs}{style}{shadow_attr}/>\n"
         )),
         Some(inner) => Ok(format!(
-            "{pad}<Button x:Name=\"{x_name}\"{attrs}{style}{shadow_attr}>\n{inner}{pad}</Button>\n"
+            "{pad}<{tag} x:Name=\"{x_name}\"{attrs}{style}{shadow_attr}>\n{inner}{pad}</{tag}>\n"
         )),
     }
 }
@@ -15407,6 +15665,150 @@ mod tests {
     /// declare `box-shadow` alongside `elevation` — UI41).
     /// `Button` normally self-closes; a `<Button.Shadow>` child forces
     /// the open/close form instead.
+    /// UI86 (#15463): a button with `selected:` is the component's
+    /// selectable Button subclass, with the state on `MosaicSelected`.
+    #[test]
+    fn host_button_selected_lowers_to_the_selectable_button() {
+        let selected = |value: LayoutPropValue| LayoutProp {
+            name: "selected".to_string(),
+            value,
+        };
+        let c = component("Foo", vec![slot("on", SlotType::Bool, true)], vec![]);
+        for (value, expected) in [
+            (LayoutPropValue::Keyword("true".into()), "MosaicSelected=\"True\""),
+            (LayoutPropValue::Keyword("false".into()), "MosaicSelected=\"False\""),
+            (
+                LayoutPropValue::SlotRef("on".into()),
+                "MosaicSelected=\"{x:Bind On, Mode=OneWay}\"",
+            ),
+        ] {
+            let node = host_button_node(Some("pick"), vec![selected(value)]);
+            assert!(host_button_selected_is_native(&node));
+            let r = compile(&c, &layout_with_root("Foo", node), &empty_style("Foo"));
+            assert!(
+                r.xaml.contains("<local:FooMosaicSelectableButton x:Name="),
+                "got:\n{}",
+                r.xaml
+            );
+            assert!(r.xaml.contains(expected), "expected {expected} in:\n{}", r.xaml);
+            assert!(!r.xaml.contains("<Button "), "got:\n{}", r.xaml);
+            for needle in [
+                "public sealed class FooMosaicSelectableButton : Button",
+                "public sealed class FooMosaicSelectableButtonAutomationPeer : ButtonAutomationPeer, ISelectionItemProvider",
+                "patternInterface == PatternInterface.SelectionItem ? this : base.GetPatternCore(patternInterface)",
+                "SelectionItemPatternIdentifiers.IsSelectedProperty",
+                "using Microsoft.UI.Xaml.Automation.Provider;",
+                "using Microsoft.UI.Xaml.Automation.Peers;",
+            ] {
+                assert!(r.code_behind.contains(needle), "missing {needle}");
+            }
+        }
+
+        // Absent is not false: an ordinary Button and no helper class.
+        let plain = host_button_node(Some("pick"), vec![]);
+        assert!(!host_button_selected_is_native(&plain));
+        let r = compile(&c, &layout_with_root("Foo", plain), &empty_style("Foo"));
+        assert!(r.xaml.contains("<Button x:Name="), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("MosaicSelected"), "got:\n{}", r.xaml);
+        assert!(!r.code_behind.contains("MosaicSelectableButton"));
+        assert!(!r.code_behind.contains("Automation.Provider"));
+    }
+
+    /// `selected : ( i == selectedIndex )` keeps its parentheses; it must
+    /// still reach the row's live `IsSelected`, not a page helper.
+    #[test]
+    fn host_button_selected_row_predicate_binds_is_selected() {
+        let c = component(
+            "Foo",
+            vec![
+                slot("items", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot("selected-index", SlotType::Number, true),
+            ],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            for_node(
+                LayoutPropValue::SlotRef("items".to_string()),
+                "item",
+                Some("i"),
+                vec![host_button_node(
+                    Some("option"),
+                    vec![LayoutProp {
+                        name: "selected".to_string(),
+                        value: LayoutPropValue::Expr("( i == selectedIndex )".to_string()),
+                    }],
+                )],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(
+            r.xaml.contains("MosaicSelected=\"{x:Bind IsSelected, Mode=OneWay}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(!r.xaml.contains("Expr_"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn strip_balanced_outer_parens_only_strips_enclosing_pairs() {
+        assert_eq!(strip_balanced_outer_parens("( ( a == b ) )"), "a == b");
+        assert_eq!(strip_balanced_outer_parens("(a) == (b)"), "(a) == (b)");
+        assert_eq!(strip_balanced_outer_parens("a == b"), "a == b");
+        assert_eq!(strip_balanced_outer_parens("(a))"), "(a))");
+    }
+
+    /// A shape the builder accepts but that cannot bind in context fails the
+    /// emit loudly; a string is not a state at all.
+    #[test]
+    fn host_button_selected_refuses_what_it_cannot_bind() {
+        let c = component(
+            "Foo",
+            vec![slot("title", SlotType::Text, true)],
+            vec![],
+        );
+        for (value, native) in [
+            (LayoutPropValue::SlotRef("title".into()), true),
+            (LayoutPropValue::Keyword("stranger".into()), true),
+            (LayoutPropValue::String("true".into()), false),
+            (LayoutPropValue::Number(1.0), false),
+        ] {
+            let node = host_button_node(
+                None,
+                vec![LayoutProp {
+                    name: "selected".to_string(),
+                    value,
+                }],
+            );
+            assert_eq!(host_button_selected_is_native(&node), native);
+            assert!(matches!(
+                from_pipeline(&c, &layout_with_root("Foo", node), &empty_style("Foo"), None, &opts()),
+                Err(PipelineEmitError::UnsupportedExpression(_))
+            ));
+        }
+    }
+
+    /// WinUI's XAML compiler rejects `Translation` plus `<X.Shadow>` on a
+    /// custom subclass, so an elevated selectable button takes its depth
+    /// through `ElevationZ`.
+    #[test]
+    fn elevated_selectable_button_uses_elevation_z() {
+        let c = component("Foo", vec![], vec![]);
+        let node = host_button_node(
+            Some("project-on"),
+            vec![LayoutProp {
+                name: "selected".to_string(),
+                value: LayoutPropValue::Keyword("true".into()),
+            }],
+        );
+        let s = style_for_box("project-on", vec![("elevation", "raised")]);
+        let r = compile(&c, &layout_with_root("Foo", node), &s);
+        assert!(r.xaml.contains("ElevationZ=\"4\""), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains("Translation="), "got:\n{}", r.xaml);
+        assert!(!r.xaml.contains(".Shadow>"), "got:\n{}", r.xaml);
+        assert!(r.code_behind.contains("button.Shadow = new ThemeShadow();"));
+    }
+
     #[test]
     fn host_button_with_box_shadow_emits_theme_shadow_and_opens_close_tag() {
         let c = component("Foo", vec![], vec![]);

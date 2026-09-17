@@ -50,7 +50,7 @@ The native surfaces that exist:
 | Compose | `Modifier.semantics { selected = … }` | the button already has a `semantics` block for its name |
 | Flutter | `Semantics(selected: …)` | the button is already wrapped in `Semantics` for its name |
 | Qt | `Accessible.checkable` / `Accessible.checked` | attached properties; independent of the control's own `checkable` |
-| XAML | `ToggleButton.IsChecked` | a WinUI `Button` has no selection or toggle pattern |
+| XAML | a custom automation peer with the SelectionItem pattern | a WinUI `Button`'s own peer has only Invoke; see §4.2 |
 
 ## 3. What "selected" means here
 
@@ -134,7 +134,7 @@ HostButton [ part ] (
 | Compose | `this.selected = _mosaicTruthy(expr)` inside the button's `Modifier.semantics { … }`, after any `contentDescription` | `this.` because a slot named `selected` would shadow the property; the import is added only when used |
 | Flutter | `selected: _mosaicTruthy(expr)` on the button's `Semantics` node, after `enabled` | a button with no authored name gets the same node, named by its visible label |
 | Qt | `property bool mosaicSelected: Boolean(expr)`, pushed to `Accessible.checkable: true` / `Accessible.checked` | the attached properties only; the `Button`'s own `checkable` stays false so a click does not toggle it; see §4.2.1 |
-| XAML | **not yet lowered**: reported as a degradation (§4.2, #15463) | the proposed lowering is a `ToggleButton` with `IsChecked="{x:Bind …, Mode=OneWay}"` |
+| XAML | `<local:{Component}MosaicSelectableButton MosaicSelected="…">`: literal `True`/`False`, or `{x:Bind …, Mode=OneWay}` | see §4.2; `i == selectedIndex` in `For` binds the row's `IsSelected` |
 
 #### 4.1.1 HTML: a condition, not a placeholder
 
@@ -163,36 +163,63 @@ As a result:
 Static HTML served without the runtime keeps the `data-` attribute and has no
 state, like every other dynamic binding on that backend.
 
-### 4.2 XAML: a toggle that does not toggle itself
+### 4.2 XAML: a Button with a selectable automation peer
 
-WinUI's `Button` automation peer implements only the Invoke pattern, so there is
-no attached property that adds a selected or toggle state to it. `ToggleButton`
-implements the Toggle pattern and is announced as checked or not checked, which
-is what is needed.
+*(Revised while implementing #15463. The first draft proposed a
+`ToggleButton` whose click handler restored `IsChecked`.)*
 
-A `ToggleButton` toggles `IsChecked` on click, which would violate §3 (the
-application owns the state) and would break a `OneWay` binding. The generated
-click handler therefore dispatches `onClick` and then **restores**
-`IsChecked` from the bound value. The next props update corrects it anyway if
-the host changed the selection. The restoration is part of the lowering and must
-be covered by a test that clicks an unselected option whose host does *not*
-select it and asserts that it stays unchecked.
+WinUI's `Button` automation peer implements only the Invoke pattern, and no
+attached property adds a selected state to it. A `ToggleButton` was rejected
+for two reasons:
 
-**Status (slice 3):** the fallback below is in effect, and the `ToggleButton`
-lowering is tracked in
-[#15463](https://github.com/adhithyan15/coding-adventures/issues/15463).
-Two further problems turned up that this section did not anticipate, and
-neither can be checked without running WinUI:
+- **Styling.** Its default template restyles the Checked states with the
+  accent brushes, overriding the authored part style, which §5 rules out.
+- **Self-toggling.** It changes its own `IsChecked` on click, and a screen
+  reader's Toggle action may bypass `Click` entirely.
 
-- **Checked styling.** The default `ToggleButton` template's Checked states
-  apply the accent brushes, overriding the authored part style. §5 rules that
-  out.
-- **Toggle without Click.** A screen reader's Toggle action reaches
-  `OnToggle`, which may not raise `Click`. That would flip the state without
-  dispatching, and without running the restore.
+Instead, a button with `selected:` is a generated
+`{Component}MosaicSelectableButton : Button`.
 
-If the implementation finds this cannot be made reliable, the fallback is a
-reported degradation (§4.3) on XAML, not a silent `Button`.
+- **Unchanged:** the template, styling, visual states, `Click` and Invoke
+  pattern are all the same as a plain `Button`.
+- **The peer:** `OnCreateAutomationPeer` returns a `ButtonAutomationPeer`
+  subclass that also implements **SelectionItem**:
+
+| UIA member | behaviour |
+| --- | --- |
+| `IsSelected` | the `MosaicSelected` dependency property, bound `OneWay` |
+| `Select` | the same as activating the button: `Click` is raised and the host decides |
+| `AddToSelection` | as `Select`, when not already selected |
+| `RemoveFromSelection` | nothing: deselection is the application's decision |
+| `SelectionContainer` | none (no group node yet; see §6) |
+
+A change to `MosaicSelected` raises the peer's `IsSelected` property-changed
+event, and raises `ElementSelected` when the value becomes true.
+
+**Elevation.** `ElevationZ` carries a part's elevation as on the drag source,
+because WinUI's XAML compiler fails on `Translation` plus `<X.Shadow>` written
+on a custom subclass.
+
+**Value lowering.** Values follow `If ( when: … )`:
+- A literal becomes `True` or `False`.
+- A bool slot, loop binding or expression becomes `{x:Bind …, Mode=OneWay}`.
+- `i == selectedIndex` inside `For` binds the row view model's `IsSelected`,
+  once any outer parentheses are stripped.
+- `x:Bind` does not coerce, so a non-bool slot, an unknown bare name, or an
+  expression `x:Bind` cannot take is an emit error, never a silent drop.
+
+**Verified on WinUI (Windows App SDK, .NET 9).**
+- **Build:** the fixture `mosaic-emit-xaml/fixtures/host-selected-button`,
+  which covers every value shape plus an elevated button, compiles, and CI
+  builds it.
+- **Runtime:** `code/scripts/xaml-selected-button-smoke.ps1`, run through
+  UI Automation against a build with props set in place of an engine, found:
+  - a literal `true` reports `IsSelected` true;
+  - a false slot reports false;
+  - a button without `selected` has no SelectionItem pattern;
+  - loop rows report their own values;
+  - invoking a row moves the selection;
+  - so does `SelectionItem.Select`.
 
 ### 4.3 Degradation
 
@@ -326,8 +353,10 @@ degradation on every native backend.
 - A cross-backend test asserts native-complete for a `HostButton` with each
   value shape on Compose, Flutter, Qt, SwiftUI and XAML. It is mutation-checked
   by removing each backend's lowering in turn.
-- XAML has a click test proving that a `ToggleButton` does not change its own
-  checked state (§4.2).
+- XAML is checked by a UI Automation run proving that the selected state is
+  application-owned: `IsSelected` changes only when the host changes it, and
+  `Select` dispatches like a click (§4.2). This replaces the draft's
+  `ToggleButton` click test.
 - A test on each backend passes a non-bool and a markup-bearing value and
   asserts that only a boolean state is emitted (§4).
 - Absent `selected` emits nothing on every backend, and existing snapshot and
@@ -354,5 +383,5 @@ degradation on every native backend.
 - **Absent versus false** (§3.2): only an authored prop emits state.
 - **All value shapes on all backends** (§4): the real call sites are
   expressions inside `For`.
-- **XAML becomes `ToggleButton`** (§4.2), with the fallback recorded.
+- **XAML keeps `Button`**, with a SelectionItem automation peer (§4.2). The draft's `ToggleButton` was rejected.
 - **Styling and group roving stay out** (§5, §6), with follow-ups filed.

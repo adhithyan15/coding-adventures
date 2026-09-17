@@ -1,0 +1,9 @@
+// UI86 fixture: every value shape `HostButton ( selected : … )` accepts,
+// compiled native-complete and built with the WinUI toolchain in CI.
+component Picker {
+  slot on : bool ;
+  slot flags : list<bool> ;
+  slot items : list<text> ;
+  slot selected-index : number ;
+  emit onSelect ( index : number ) ;
+}
