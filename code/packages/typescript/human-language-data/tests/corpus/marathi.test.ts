@@ -118,6 +118,19 @@ it("pins Marathi lesson-content budgets", () =>
     // closure was CLEAN before this chapter (0 violations, 0 never-taught glyphs,
     // 50 taught) and stays clean: every example word uses only those 50 glyphs
     // plus the letter being taught.
+    // 356 -> 360: CHAPTER 68 FINISHES THE NODE AND CLOSES MR-A1-F5-03.
+    // SPINE-TIME-OF-DAY now realizes 8 of 9 and omits only GREETING-DAY, which
+    // is exactly the shape kannada, latin, malayalam, telugu, tamil and hindi
+    // converge on. F5-03's note named both halves of the hole -- "omits all four
+    // of its greeting concepts along with its four time words" -- and chapters
+    // 66 to 68 closed both.
+    // ONE NEW WORD BUYS THREE GREETINGS: shubh, in front of parts of the day
+    // chapter 66 already taught. The chapter refuses two things ON THE PAGE: the
+    // night, whose greeting builds on raatree rather than the bare raatra and
+    // would be mis-built by the pattern, and any suggestion that these are what
+    // people say -- namaskaar is, and it is already a culture claim as the
+    // track's default all-purpose greeting. Hindi's suprabhaat lesson gives the
+    // same problem the same treatment.
     // 353 -> 356: CHAPTER 67 GIVES THE CLOCK, AND CLOSES MR-A1-NT-01.
     // NT-01 is "the clock, AND the parts of the day"; chapter 66 did the second
     // half and deliberately did not claim the point. This is the first half and
@@ -157,10 +170,15 @@ it("pins Marathi lesson-content budgets", () =>
     // ai -- and nothing about a word like that announces that one of its four
     // shapes had never been drawn. The fifth lesson is the cold-retrieval review,
     // there for the same measured reason as chapter 64's.
-    lessons: 356,
+    lessons: 360,
     idioms: 5,
     senses: 4,
-    cultureClaims: 7,
+    // 7 -> 8: MR-CULTURE-SHUBH-FORMAL-WRITTEN-REGISTER-01. The shubh greetings
+    // are formal and written; namaskaar is what is spoken at any hour. That is a
+    // claim about USE rather than about meaning, so it is a culture claim and
+    // not a lexical atom -- the same shape as the track's existing claim that
+    // namaskaar is the Marathi default greeting.
+    cultureClaims: 8,
     unitPrefix: "MR",
   }));
 
@@ -411,6 +429,8 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // Chapter 67: asking and telling the time, placing an event at an hour, and
     // the review that keeps the last atom from being one nothing revisits.
     ["67", 3],
+    // Chapter 68: three shubh greetings built on one new word, plus the review.
+    ["68", 4],
   ]);
 });
 
