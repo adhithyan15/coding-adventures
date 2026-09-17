@@ -1,0 +1,17 @@
+{
+  "chapter": 79,
+  "title": "How Much Of It",
+  "label": "ch:ml-degree",
+  "canDo": "I can say that something is very good, really big or a bit small, instead of only good, big or small.",
+  "payoff": {
+    "lesson": "ML-R79-degree-recall",
+    "kind": "production",
+    "summary": "From cold: both new degree words, which of them belongs in writing, the slot they stand in, and the third filler the learner already owned.",
+    "assesses": [
+      "ML-LEX-C79-DEGREE-01",
+      "ML-LEX-C79-DEGREE-02",
+      "ML-GRAMMAR-C79-DEGREE-SLOT-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. No new quality word is added: valiya, nalla and pustakam are taught, kuraccu is taught, and the slot lesson only names the position the two new words already occupied."
+  }
+}

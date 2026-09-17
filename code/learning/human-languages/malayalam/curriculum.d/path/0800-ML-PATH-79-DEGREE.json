@@ -1,0 +1,15 @@
+{
+  "id": "ML-PATH-79-DEGREE",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ML-C79-valare",
+    "ML-C79-orupadu",
+    "ML-C79-degree-slot",
+    "ML-R79-degree-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-79-DEGREE"
+  ],
+  "after": []
+}

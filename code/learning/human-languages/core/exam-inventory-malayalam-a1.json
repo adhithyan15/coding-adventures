@@ -249,7 +249,11 @@
       "id": "ML-A1-ADJ-05",
       "category": "Visheshanam (the adjective)",
       "label": "degree: intensifying an adjective",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C79-DEGREE-01",
+        "ML-LEX-C79-DEGREE-02",
+        "ML-GRAMMAR-C79-DEGREE-SLOT-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -261,7 +265,7 @@
         "A1-NG2-03"
       ],
       "malayalamSpecific": false,
-      "note": "valare ('very') is not taught, and neither is any other degree word. The track teaches five adjectives and no way to grade any of them, so 'good' cannot become 'very good'. Three Spanish points land on this one gap."
+      "note": "Chapter 79. The note was right that the track taught five qualities and no way to grade any of them, so 'good' could not become 'very good'. valare closes it, and it costs the learner nothing new structurally: the degree word stands in front of the quality word and the quality word does not change, which is the rule chapter 42 already established one position further in. orupadu ships beside it because the pair is a REGISTER split rather than a meaning split -- valare is what a notice or a teacher writes, orupadu is what a person says across a table -- and a learner who owns only one of them is understood but sounds like they have read and not listened. Verified before writing: valare and orupadu both returned ZERO files, so neither created a forward reference."
     },
     {
       "id": "ML-A1-ADJ-06",
@@ -316,7 +320,7 @@
         "A1-ART-03"
       ],
       "malayalamSpecific": false,
-      "note": "oru ('a, one') is never taught, although onnu ('one') is. That is a one-word lesson which would let every noun in chapters 46 to 66 be asked for singly."
+      "note": "oru ('a, one') is never taught, although onnu ('one') is. The old note called that \"a one-word lesson\" and it is NOT: oru is already used, untaught, in SIX lessons as a standalone word -- ML-C18-mani, ML-C23-naal, ML-C39-chaaya, ML-C39-kaapi, ML-C39-paal and ML-C49-perhaps, the earliest of them long before this point would be picked up. So closing it is a RELOCATION: the lesson has to land before ML-C18-mani or those six become forward references the moment oru acquires an owner. Count the token, not the substring. A first pass reported eight files by grepping for the bare string, which also matched orupaadu (chapter 79) and a compound in ML-C51-blessing; a word-bounded count against the Malayalam block gives six. Both the 'one-word lesson' claim and the eight were wrong in the same way -- measured loosely, then trusted."
     },
     {
       "id": "ML-A1-ART-03",
@@ -596,7 +600,10 @@
       "id": "ML-A1-POS-02",
       "category": "Sambandham (possession)",
       "label": "the genitive suffix itself: -nre / -ude on any noun",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C78-GENITIVE-NRE-01",
+        "ML-GRAMMAR-C78-GENITIVE-UDE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -608,7 +615,7 @@
         "A1-SN-01"
       ],
       "malayalamSpecific": false,
-      "note": "enre and ninre are both taught whole, and the suffix inside them is never named. So the learner owns two possessives and cannot make a third -- 'the teacher's book' is out of reach although both nouns are taught."
+      "note": "Chapter 78. The note was exact: enre and ninre were taught WHOLE and the suffix inside them was never named, so the learner owned two possessors and could not make a third. Naming it turns a closed pair into an open rule -- any taught noun can now own something. BOTH ALLOMORPHS are taught, one per lesson, because the choice is not the speaker's: -nre after a consonant (adhyaapakan-re), -yude after a vowel (ammayude). Verified before writing: NO third genitive existed anywhere in the corpus, so teaching the suffix here created no forward reference -- the only bare -nre token was the script decomposition inside ML-C02-enre, which showed the conjunct as a SHAPE. The chapter says so: something introduced as a shape often turns out later to be a part."
     },
     {
       "id": "ML-A1-POS-03",
@@ -1806,7 +1813,11 @@
       "id": "ML-A1-ADV-08",
       "category": "Kriyaavisheshanam (adverbs)",
       "label": "degree: very, quite, a bit",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C79-DEGREE-01",
+        "ML-LEX-C79-DEGREE-02",
+        "ML-GRAMMAR-C79-DEGREE-SLOT-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1816,7 +1827,7 @@
         "A1-ADV-03"
       ],
       "malayalamSpecific": false,
-      "note": "valare is not taught. Same gap as ML-A1-ADJ-05, from the adverb's side."
+      "note": "Chapter 79, the same three atoms as ML-A1-ADJ-05, because the gap was one gap seen from two sides. All three grades of the point are answered: 'very' is valare, 'quite/a lot' is orupadu, and 'a bit' is kuraccu -- which was ALREADY TAUGHT as a quantity word for rice and water and needed no new lesson, only the observation that it stands in the same slot pointing down instead of up. The grammar lesson names the slot rather than the words: immediately in front of the quality word, Malayalam keeps one open position for how much, and nothing else in the phrase reacts. That is what lets the next degree word the learner meets be understood on sight. orupadu also measures stuff rather than qualities (orupadu vellam, a lot of water, with no joining word), which is recorded in its own lesson and not claimed here."
     },
     {
       "id": "ML-A1-ADV-09",

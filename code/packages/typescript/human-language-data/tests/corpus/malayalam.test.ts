@@ -242,8 +242,24 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // had ZERO, so "I am not a teacher" was unsayable. Both alla and alle returned
   // zero files before this chapter, so neither created a forward reference --
   // checked BEFORE writing, after venam needed rehoming for exactly that.
-  expect(coverage.covered).toBe(177);
-  expect(coverage.unmapped).toBe(66);
+  // 177 -> 178: ML-A1-POS-02, the genitive suffix itself. enre and ninre were
+  // taught WHOLE and the suffix inside them was never named, so the learner
+  // owned two possessors and could not make a third. Naming it turns a closed
+  // pair into an OPEN RULE: any taught noun can now own something.
+  // BOTH ALLOMORPHS, one per lesson, because the choice is not the speaker's:
+  // -nre after a consonant, -yude after a vowel. Verified before writing that NO
+  // third genitive existed in the corpus, so this created no forward reference.
+  // 178 -> 180: ML-A1-ADJ-05 and ML-A1-ADV-08, which are ONE gap seen from two
+  // sides -- the track taught five qualities and no way to grade any of them,
+  // so "good" could not become "very good". valare closes the written register
+  // and orupadu the spoken one; the pair is a REGISTER split, not a meaning
+  // split. The third grade the adverb point asks for cost nothing: kuraccu was
+  // already taught as a quantity word and stands in the same slot pointing
+  // down. The grammar lesson names the SLOT rather than the words, so the next
+  // degree word the learner meets is understood on sight. Verified before
+  // writing: valare and orupadu both returned ZERO files.
+  expect(coverage.covered).toBe(180);
+  expect(coverage.unmapped).toBe(63);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -255,6 +271,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 177/243 points covered (73%)",
+    "malayalam A1 (partial inventory): 180/243 points covered (74%)",
   );
 }, 60_000);

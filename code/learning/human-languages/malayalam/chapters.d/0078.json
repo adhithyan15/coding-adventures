@@ -1,0 +1,16 @@
+{
+  "chapter": 78,
+  "title": "Whose It Is",
+  "label": "ch:ml-genitive",
+  "canDo": "I can say that any noun owns something, not only that I do.",
+  "payoff": {
+    "lesson": "ML-R78-genitive-recall",
+    "kind": "production",
+    "summary": "From cold: both genitive endings, what decides between them, and the owner-first order the phrase always takes.",
+    "assesses": [
+      "ML-GRAMMAR-C78-GENITIVE-NRE-01",
+      "ML-GRAMMAR-C78-GENITIVE-UDE-01"
+    ],
+    "note": "The chapter introduces exactly these two atoms and the payoff assesses both. No new noun is added: adhyaapakan, amma and pustakam are all taught, and the suffix was already visible inside enre."
+  }
+}

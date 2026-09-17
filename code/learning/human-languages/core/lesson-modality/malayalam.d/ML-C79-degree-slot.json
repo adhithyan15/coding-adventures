@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C79-degree-slot",
+    "language": "malayalam",
+    "chapter": 79,
+    "sequence": 2740,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:17aa7711761c8683"
+  },
+  "findings": []
+}
