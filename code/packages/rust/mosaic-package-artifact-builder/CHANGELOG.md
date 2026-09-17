@@ -111,16 +111,15 @@ each native emitter's `host_button_selected_is_native`, which is the same
 function that emitter lowers with, so the report cannot drift from the output.
 
 **Current state:**
-- **Compose, Flutter, Qt and SwiftUI** lower every accepted shape.
-- **XAML** reports every one (#15463).
+- **Compose, Flutter, Qt, SwiftUI and XAML** lower every accepted shape (XAML
+  since #15463).
 - **A string or number** is reported everywhere.
 
 **Test:** `host_button_selected_is_native_where_it_is_lowered` compiles a
 package with four shapes: a slot, a literal, a loop binding, and
 `( i == selectedIndex )` inside `For`.
-- **Compose, Flutter, Qt, SwiftUI:** it asserts the package is native-complete.
-- **XAML:** it asserts four reports.
-- **All five backends:** it asserts a string value is reported.
+- **All five backends:** it asserts the package is native-complete, and that
+  a string value is reported.
 
 **Mutation-checked:** forcing each of the four predicates to `false` in turn
 fails the test.

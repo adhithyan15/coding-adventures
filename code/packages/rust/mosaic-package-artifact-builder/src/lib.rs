@@ -8182,8 +8182,8 @@ layout LeechAction {
     }
 
     /// UI86: every accepted shape of `HostButton` `selected:` is native on
-    /// Compose, Flutter, Qt and SwiftUI. XAML reports it until #15463, and a
-    /// string is reported everywhere.
+    /// every native backend (XAML since #15463), and a string is reported
+    /// everywhere.
     #[test]
     fn host_button_selected_is_native_where_it_is_lowered() {
         let pkg = make_package("mosaic-pkg-selected-button", &["Picker"]);
@@ -8234,15 +8234,12 @@ layout Picker {
                 .iter()
                 .filter(|d| d.code == "accessibility.button-selected-unsupported")
                 .collect();
-            if backend == Backend::Xaml {
-                assert_eq!(selected.len(), 4, "XAML must report every selected button: {selected:?}");
-            } else {
-                assert!(
-                    report.native_complete && report.degradations.is_empty(),
-                    "unexpected {backend:?} degradation inventory: {:?}",
-                    report.degradations
-                );
-            }
+            assert!(selected.is_empty(), "{backend:?} reported selected buttons: {selected:?}");
+            assert!(
+                report.native_complete && report.degradations.is_empty(),
+                "unexpected {backend:?} degradation inventory: {:?}",
+                report.degradations
+            );
         }
 
         let node = LayoutNode {
