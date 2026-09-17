@@ -332,7 +332,7 @@ expensive to unwind (pun intended) if it ships broken.
 
 ### Slice 1 — IIR ops + exception value model (THIS PR)
 
-**Status: LANDED — PR #(filled in below once opened).**
+**Status: LANDED — PR [#15419](https://github.com/adhithyan15/coding-adventures/pull/15419).**
 
 - Add `throw` / `catch` / `landingpad` to `interpreter-ir::opcodes` (taxonomy only:
   `is_known_op`, `is_value_producing`, `has_side_effects`) — no crate outside
