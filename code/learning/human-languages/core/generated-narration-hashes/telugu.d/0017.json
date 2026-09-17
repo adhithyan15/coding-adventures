@@ -1,16 +1,18 @@
 {
   "language": "telugu",
   "chapter": 17,
-  "sourceHash": "fnv1a64:6a270bb3dfab41c5",
+  "sourceHash": "fnv1a64:e29333d97dc20588",
   "lessonIds": [
     "TE-C17-madhyaahnam-ardharaatri",
-    "TE-S138-letter-gha"
+    "TE-S138-letter-gha",
+    "TE-S155-letter-ttha",
+    "TE-S156-script-recall"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "telugu/narration/ch17.txt",
   "json": "telugu/narration/ch17.json",
-  "textHash": "fnv1a64:e116dfd695c76d5b",
-  "jsonHash": "fnv1a64:a2d00c0b93ef4dce",
+  "textHash": "fnv1a64:c542aadcd57c563c",
+  "jsonHash": "fnv1a64:87bcf298da541aaf",
   "findings": []
 }

@@ -48,8 +48,37 @@ it("pins Telugu A1 coverage, and the numeral column the ordinal tranche closed",
   const { lessons } = loadEverything();
   const coverage = measureExamCoverage(loadExamInventory("telugu", "A1"), lessons);
   expect(coverage.enumerated).toBe(326);
-  expect(coverage.covered).toBe(214);
-  expect(coverage.unmapped).toBe(112);
+  // 214 -> 216: TE-A1-L-04 (the vowel signs) and TE-A1-L-12 (the retroflex row).
+  // FIFTEEN TELUGU CHARACTERS APPEARED IN THE TRACK'S OWN LESSON BODIES WITH
+  // NOTHING TEACHING THEM, counted over every Telugu lesson: ma 756, tta 362,
+  // a 282, the oo sign 224, ba 180, the o sign 175, sha 126, aa 97, dha 92,
+  // ssa 72, ee 52, ai 13, o 12, pha 4, ttha 3. This pass teaches six of them
+  // and untaught-but-used falls 15 -> 9.
+  // THE OFFICIAL CLOSURE METRIC HID ALL OF IT: measureScriptClosure reported
+  // telugu neverTaughtGlyphs 0 and taughtGlyphs 64, because it credits a glyph
+  // to any script lesson whose BODY contains it (HL-C383). Under the HL-C386
+  // rule -- taught only when a script lesson's HEADWORD is a glyph inventory --
+  // only 49 were taught. Do not quote neverTaughtGlyphs for this track.
+  // TWO OF THE THREE NOTES WERE WRONG AND ARE CORRECTED IN THE INVENTORY:
+  // TE-A1-L-10 counted 'ta 292 times' among untaught consonants, and DENTAL ta
+  // has been taught since chapter 5 by TE-S01-copy-in-a-word -- the 292-count
+  // letter is RETROFLEX ta, the claim having been duplicated from TE-A1-L-12.
+  // TE-A1-L-04 called U+0C42 the oo sign; that is the UU sign, taught at
+  // chapter 7. The untaught pair was U+0C4A and U+0C4B.
+  // TE-A1-L-10 STAYS OPEN ON PURPOSE. ma and dha are taught because they cost a
+  // reader most -- ma is the most-used character in the track and sits in the
+  // second syllable of namaskaaram, the first word the book teaches -- but the
+  // demand is the consonant set as something a reader can finish a page with,
+  // and eleven are still untaught. Claiming it would be claiming a range the
+  // corpus does not teach; HL-C386 is the precedent.
+  // PLACEMENT FOLLOWS THIS TRACK'S OWN DESIGN, which teaches a letter just after
+  // the word that needs it rather than before: each of the six sits one slot
+  // after its first use, wedged at content-sequence+1 the way TE-S136 through
+  // TE-S139 already are. ttha moved from chapter 16 to 17 because a fifth atom
+  // took chapter 16's payoff to 2/5, under the 0.5 floor. TE-S156-script-recall
+  // introduces nothing and exists so the last atoms of the chain are revisited.
+  expect(coverage.covered).toBe(216);
+  expect(coverage.unmapped).toBe(110);
   expect(coverage.partial).toBe(0);
   // HL-C350 measured ordinals as the weakest single column in the corpus --
   // twenty tracks enumerate an ordinal point and eighteen left it uncovered --
@@ -62,7 +91,7 @@ it("pins Telugu A1 coverage, and the numeral column the ordinal tranche closed",
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "telugu A1 (partial inventory): 214/326 points covered (66%)",
+    "telugu A1 (partial inventory): 216/326 points covered (66%)",
   );
 }, 60_000);
 
