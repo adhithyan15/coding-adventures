@@ -165,11 +165,35 @@ fn the_retina_and_optic_nerve_spans_carry_the_pages_no_break_spaces() {
     let adj = std::fs::read_to_string(facts_stdlib().join("anatomy/eye-parts.adj"))
         .expect("read shipped eye-parts.adj");
     let table = &adj[adj.find("table eye_part_function").expect("table")..];
+    // SCOPED TO `source "` LINES, not the whole slice -- the correction #15337
+    // made for plant-parts, #15338 for solar-eclipse-type, and #15413 for
+    // eye-part-property and figurative-language-type.
+    //
+    // MEASURED, NOT REASONED, and this file was found only because a reviewer
+    // pushed back on a claim of mine that EXCLUDED it. Twelve `%` comment lines
+    // sit inside this block -- four above the rows, eight above the envelope --
+    // and the slice above runs to end of file, so those comments are inside
+    // `table`. With the ordinary-space form planted in one of them the unscoped
+    // arm FAILED A CORRECT FILE, panicking at what was then line 170; after
+    // this scoping that same mutant survives, and the form planted on the
+    // CORNEA row's `source` line still kills, panicking at this arm's own line.
+    // The test is green today either way: twelve comments mean the hazard needs
+    // only one more comment line here, not that it is firing.
+    //
+    // The trade, recorded in shards 03560, 03670 and 03680: nothing now pins
+    // "no ordinary-space form anywhere in the block", only "no `source` line
+    // carries one". The positive half needs no scoping -- it already pins the
+    // eight-space row line, so a mutant that MOVED the span fails it.
+    let source_lines: String = table
+        .lines()
+        .filter(|l| l.trim_start().starts_with("source \""))
+        .collect::<Vec<_>>()
+        .join("\n");
     for span in [RETINA, OPTIC_NERVE] {
         assert!(table.contains(&format!("        source \"{span}\"")), "the table carries the page form: {span:?}");
         assert!(
-            !table.contains(&span.replace('\u{a0}', " ")),
-            "the ordinary-space form, which the page never writes, is not in the table: {span:?}"
+            !source_lines.contains(&span.replace('\u{a0}', " ")),
+            "no `source` line may carry the ordinary-space form, which the page never writes: {span:?}"
         );
     }
     let dir = scratch("epnbsp");

@@ -157,8 +157,40 @@ fn every_part_answer_carries_its_own_sentence() {
 #[test]
 fn the_retina_row_carries_the_pages_no_break_spaces() {
     assert_eq!(RETINA.matches('\u{a0}').count(), 2, "two U+00A0 in the retina sentence");
+    // SCOPED TO `source "` LINES, not the whole table block -- the correction
+    // #15337 made for plant-parts, #15338 for solar-eclipse-type, and #15413
+    // here, in figurative-language-type and in eye-parts.
+    //
+    // WHAT WAS MEASURED, STATED AS MEASURED: this table carries four `%`
+    // comment lines between its rows and its envelope, and `shipped_table()`
+    // slices from `table ...` to end of file, so those comments are inside
+    // `body`. With the ordinary-space form PLANTED in one of them the unscoped
+    // arm sees it and fails a correct file; the scoped arm does not. This test
+    // was green before that mutant and is green after it -- an earlier wording
+    // called this table the LIVE case, which no green test supports. Four
+    // comments mean the hazard needs one more comment line here, not that it
+    // is firing.
+    //
+    // The trade, recorded in shards 03560, 03670 and 03680: scoping lets a
+    // comment-borne ordinary-space form survive. Nothing now pins "no
+    // ordinary-space form anywhere in the block", only "no `source` line
+    // carries one". That is the right trade -- the shipped string is what
+    // provenance means -- but it is a gap, so it is written down.
+    //
+    // The positive half needs no new scoping here: the shape test pins all
+    // three `row (part, property) { source "..." }` blocks verbatim and counts
+    // the row sources, so a mutant that moved this span could not pass it.
     let body = shipped_table();
-    assert!(!body.contains(&RETINA.replace('\u{a0}', " ")), "the ordinary-space form is not in the table");
+    let source_lines: String = body
+        .lines()
+        .filter(|l| l.trim_start().starts_with("source \""))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(
+        !source_lines.contains(&RETINA.replace('\u{a0}', " ")),
+        "no `source` line may carry the ordinary-space form, which the page never \
+         writes: {source_lines}"
+    );
 }
 
 #[test]
