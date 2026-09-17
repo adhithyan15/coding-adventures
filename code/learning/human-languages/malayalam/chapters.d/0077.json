@@ -1,0 +1,17 @@
+{
+  "chapter": 77,
+  "title": "Not There, Not So",
+  "label": "ch:ml-alla",
+  "canDo": "I can say that something is not what it was called, and I can check something I think I already know.",
+  "payoff": {
+    "lesson": "ML-R77-not-so-recall",
+    "kind": "production",
+    "summary": "From cold: both negatives and the question each one answers, and the tag built from the second of them.",
+    "assesses": [
+      "ML-LEX-C77-ALLA-01",
+      "ML-LEX-C77-ALLE-01",
+      "ML-CONCEPT-C77-NEGATION-SPLIT-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. No new noun is added: adhyaapakan and aanu carry every example, and alle is built on alla so the second lesson confirms what the first made possible."
+  }
+}

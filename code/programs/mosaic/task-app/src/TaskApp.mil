@@ -99,13 +99,12 @@ component TaskApp {
   slot allow-timeline   : text ;
 
   // The view switcher, drawn by mosaic-pkg-toolkit's SegmentedControl
-  // (#14016): one [ label, accessible-name ] row per view in the order List,
-  // Board, Sheet, Calendar, Notes, and Timeline last -- present only when the
-  // project is Full, which is how the switcher honours `allow-timeline` now.
-  // Timeline being last means dropping it never shifts another index. The
-  // selected view's name says so ("Board, selected") until HostButton has a
-  // selected state (#15420).
-  slot nav-options        : list<list<text>> ;
+  // (#14016): one label per view in the order List, Board, Sheet, Calendar,
+  // Notes, and Timeline last -- present only when the project is Full, which
+  // is how the switcher honours `allow-timeline` now. Timeline being last
+  // means dropping it never shifts another index. The control reports which
+  // view is selected through the kernel's selected state (UI86, #15420).
+  slot nav-options        : list<text> ;
   // Index of the showing view in nav-options.
   slot nav-selected-index : number ;
 

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R76-want-recall",
+    "language": "malayalam",
+    "chapter": 76,
+    "sequence": 2650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8356a37a32bca3c1"
+  },
+  "findings": []
+}

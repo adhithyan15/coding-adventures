@@ -352,19 +352,16 @@ HostButton). The kernel's a11y story is what each backend's native
 widget provides; the toolkit doesn't add anything beyond ARIA
 labels exposed as slots on each component (`aria-label: text`).
 
-**Selected state has no kernel surface yet.** `HostButton` exposes a
-name (`a11y-label`) but no selected/pressed state, and the layout
-language has no string concatenation. A component whose options can be
-selected (`SegmentedControl`) therefore takes each option's accessible
-name from the host, which writes the state into it (`"Board,
-selected"`). This is a stand-in, not the target: a screen reader hears
-the word rather than the platform's selected trait. Arrow-key traversal
-within a group is likewise not expressible. Both are kernel gaps, to be
-specified once against the tree rather than patched per component.
-[UI86](UI86-hostbutton-selected.md) specifies the selected state
-(`HostButton ( selected : … )`) and the toolkit migration that retires the
-name stand-in. Group traversal is deferred to #15457, and `Nav`'s
-current-page state to #15458.
+**Selected state is the kernel's.** Since 0.15, `SegmentedControl`,
+`Tabs` and `ListGroup` set `HostButton ( selected : true )` on their
+selected part and `selected : false` on the other
+([UI86](UI86-hostbutton-selected.md)). Every backend lowers that to its
+platform's own selected or pressed state, so a screen reader announces
+it as state rather than as a word in the name. Before 0.15,
+`SegmentedControl` took each option as `[label, accessible-name]` and
+the host wrote `"Board, selected"` into the name; its `options` slot is
+now a plain `list<text>`. Still open: arrow-key traversal within a group
+(#15457) and `Nav`'s current-page state (#15458).
 
 ---
 

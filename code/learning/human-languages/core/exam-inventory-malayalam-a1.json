@@ -1377,7 +1377,10 @@
       "id": "ML-A1-V-23",
       "category": "Kriya (the verb)",
       "label": "wanting: I want",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C58-WANT-01",
+        "ML-LEX-C76-VENO-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1388,7 +1391,7 @@
         "A1-F3-04"
       ],
       "malayalamSpecific": false,
-      "note": "venam ('want, need') is not taught, although venda ('no need') is -- so the learner can refuse and cannot ask. That asymmetry is the single cheapest fix in this file."
+      "note": "Chapter 76. The old note called this 'the single cheapest fix in this file' and was right: venda was already taught and venam appeared EXACTLY ONCE in the corpus -- inside ML-C58-no-need, which names it as 'the negative partner of venam' and then goes on without handing it over. The learner could refuse an offer they had no way of making. The chapter adds ONE genuinely new word: the question form veno is venam plus the -o particle ML-C70-o already taught, so the reader builds it in the warm-up. The result is a three-way exchange on one root -- veno? / venam / venda. It also re-states the dative-subject shape ML-A1-V-15 covers: enikku vellam venam is 'to me, water is wanted', so the WATER is the subject and the wanter is not."
     },
     {
       "id": "ML-A1-NEG-01",
@@ -1414,7 +1417,10 @@
       "id": "ML-A1-NEG-02",
       "category": "Nishedham (negation)",
       "label": "alla: negating an identity rather than an existence",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C77-ALLA-01",
+        "ML-CONCEPT-C77-NEGATION-SPLIT-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1424,7 +1430,7 @@
         "A1-OS-01"
       ],
       "malayalamSpecific": false,
-      "note": "Malayalam splits its negation two ways -- illa denies that something IS THERE, alla denies that something IS SO. Only illa is taught, so 'I am not a teacher' cannot be said."
+      "note": "Chapter 77. alla was ZERO across the corpus while illa had 27 occurrences, so the track could deny that something was THERE and not that something was SO -- 'I am not a teacher' was unsayable. alla is taught as the negative of aanu, closing a sentence where aanu closes it, and the split is taught as a DECISION English never makes you make: ask which question you are answering, is there any (illa) or is it that (alla)."
     },
     {
       "id": "ML-A1-NEG-03",
@@ -1627,7 +1633,9 @@
       "id": "ML-A1-Q-09",
       "category": "Chodyam (asking questions)",
       "label": "asking for confirmation: a tag question",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C77-ALLE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1637,7 +1645,7 @@
         "A1-F1-04"
       ],
       "malayalamSpecific": false,
-      "note": "alle is not taught. The -o particle asks a genuine question; a tag question invites agreement, and Malayalam has a separate form for it."
+      "note": "Chapter 77, and it costs almost nothing because alle visibly carries alla at its front. The old note framed it exactly right -- the -o particle of ML-C70-o asks a genuine question, alle invites agreement -- so the lesson contrasts what the two endings WANT BACK rather than what they mean. Both alle and alla returned zero files before this chapter, so neither created a forward reference."
     },
     {
       "id": "ML-A1-Q-10",

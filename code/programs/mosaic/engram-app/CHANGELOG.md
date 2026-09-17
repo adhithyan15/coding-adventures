@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed — `nav-options` is a list of labels (UI86, #15420)
+
+The screen switcher's slot type follows toolkit 0.15: `list<text>` instead of
+`list<list<text>>`. The selected screen is announced by the platform's own
+selected state, not by a name the engine wrote. The toolkit dependency moves
+to 0.15.0, and `engram_engine.wasm` is rebuilt.
+
 ### Changed - an empty Study screen is the toolkit's EmptyState (#15440)
 
 With no card queued, the Study screen used to draw the review card anyway: its

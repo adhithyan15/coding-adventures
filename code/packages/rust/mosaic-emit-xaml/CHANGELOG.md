@@ -40,6 +40,15 @@ pattern are the plain `Button`'s. Only its automation peer differs: a
 **Unchanged output:** a button without `selected` is still a plain `<Button>`,
 with no helper class and no new usings.
 
+**Fully qualified framework types.** The helper class lands in the package's own
+namespace, beside the generated components, so every `Microsoft.UI.Xaml.…` type
+is written out in full. The toolkit exports a component named `Button`, whose
+generated class is `sealed`, and an unqualified base type bound to that one:
+*"cannot derive from sealed type 'Button'"*, on SegmentedControl, Tabs and
+ListGroup at once. A single-component fixture compiled fine; building the whole
+toolkit is what caught it, and a test now pins that no bare framework type is
+emitted.
+
 **Verified.**
 - **CI fixture:** the new `fixtures/host-selected-button` covers every value
   shape plus an elevated button. It generates native-complete and builds with

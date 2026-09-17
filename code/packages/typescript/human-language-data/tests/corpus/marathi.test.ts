@@ -118,6 +118,22 @@ it("pins Marathi lesson-content budgets", () =>
     // closure was CLEAN before this chapter (0 violations, 0 never-taught glyphs,
     // 50 taught) and stays clean: every example word uses only those 50 glyphs
     // plus the letter being taught.
+    // 360 -> 364: CHAPTER 69 CLOSES ALL THREE DEMONSTRATIVE POINTS AND
+    // UNBLOCKS THE VERB WORK. MR-A1-DEM was 3 of 3 open; DEM-01 (the forms in
+    // three genders), DEM-02 (two-way near/far against Spanish's three-way) and
+    // DEM-03 (prenominal) all close together because they are one grid.
+    // THE REASON IT CAME FIRST IS HL-C395. to / tee / te are Marathi's
+    // third-person PRONOUNS as well as its demonstratives, and counted as
+    // TOKENS rather than substrings they were barely present: to appeared in a
+    // sentence exactly once (a table row in MR-C07-jane) and most of te's
+    // tokens were the RANGE word, as in ek te paach. So MR-A1-V-01, "the
+    // present habitual, all persons", had no third-person subject to conjugate
+    // for. This chapter supplies it.
+    // TWO FRONTS AND THREE ENDINGS MAKE SIX WORDS: the front carries distance
+    // and is the speaker's, the ending carries gender and is the noun's, and
+    // neither decision touches the other. Taught on mitra, kholi and ghar,
+    // whose genders are STATED in the corpus; chahaa was dropped from a draft
+    // because its gender is nowhere stated.
     // 356 -> 360: CHAPTER 68 FINISHES THE NODE AND CLOSES MR-A1-F5-03.
     // SPINE-TIME-OF-DAY now realizes 8 of 9 and omits only GREETING-DAY, which
     // is exactly the shape kannada, latin, malayalam, telugu, tamil and hindi
@@ -170,7 +186,7 @@ it("pins Marathi lesson-content budgets", () =>
     // ai -- and nothing about a word like that announces that one of its four
     // shapes had never been drawn. The fifth lesson is the cold-retrieval review,
     // there for the same measured reason as chapter 64's.
-    lessons: 360,
+    lessons: 364,
     idioms: 5,
     senses: 4,
     // 7 -> 8: MR-CULTURE-SHUBH-FORMAL-WRITTEN-REGISTER-01. The shubh greetings
@@ -431,6 +447,9 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["67", 3],
     // Chapter 68: three shubh greetings built on one new word, plus the review.
     ["68", 4],
+    // Chapter 69: the near row, the far row, the system lesson that makes them
+    // pronouns, and the review.
+    ["69", 4],
   ]);
 });
 

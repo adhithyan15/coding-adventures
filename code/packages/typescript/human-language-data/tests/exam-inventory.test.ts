@@ -1447,12 +1447,18 @@ describe("the committed Marathi A1 inventory", () => {
     // the node now omits only GREETING-DAY, matching every track that realizes
     // it. Three greetings for ONE new word, taught for reading, with namaskaar
     // named as what is actually spoken at any hour.
-    expect(coverage.covered).toBe(168);
-    expect(coverage.unmapped).toBe(133);
+    // 168 -> 171: chapter 69 closes ALL THREE MR-A1-DEM points at once, because
+    // they describe one grid: the six forms, the two-way near/far, and the
+    // prenominal position. DEMONSTRATIVES LEAVES THE EMPTY-COLUMN LIST BELOW,
+    // and that is the movement. It was worked before the verb column because
+    // to / tee / te are the third-person PRONOUNS too (HL-C395), so V-01's
+    // "all persons" had no third person to conjugate for.
+    expect(coverage.covered).toBe(171);
+    expect(coverage.unmapped).toBe(130);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
-    for (const empty of ["Demonstratives", "Personal identity"]) {
+    for (const empty of ["Personal identity"]) {
       expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
     }
     // "Temporal notions" was the third empty column and is not any more. It is
@@ -1464,7 +1470,7 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 168/301 points covered (56%)",
+      "marathi A1 (partial inventory): 171/301 points covered (57%)",
     );
   }, 60_000);
 });
@@ -2057,8 +2063,23 @@ describe("the committed Malayalam A1 inventory", () => {
     // carried by one piece -- pol. The now/then pair was already taught and the
     // question form was the missing third of the set ML-C41-deixis-system
     // promised the reader they would work out for themselves.
-    expect(coverage.covered).toBe(174);
-    expect(coverage.unmapped).toBe(69);
+    // 174 -> 175: ML-A1-V-23 (wanting). The point's own note called it "the
+    // single cheapest fix in this file" and was right -- venda was already
+    // taught and venam appeared EXACTLY ONCE, inside ML-C58-no-need, which names
+    // it as "the negative partner of venam" and then goes on without handing it
+    // over. The learner could refuse an offer they had no way of making.
+    // ONE GENUINELY NEW WORD: the question form veno is venam plus the -o
+    // particle ML-C70-o already taught, so the reader builds it in the warm-up.
+    // The result is a three-way exchange on one root: veno? / venam / venda.
+    // 175 -> 177: ML-A1-NEG-02 (alla) and ML-A1-Q-09 (the tag question), which
+    // close together because alle is built on alla and visibly carries it.
+    // MALAYALAM NEGATES TWICE WHERE ENGLISH NEGATES ONCE: illa denies that a
+    // thing is THERE, alla denies that it is SO. illa had 27 occurrences and alla
+    // had ZERO, so "I am not a teacher" was unsayable. Both alla and alle returned
+    // zero files before this chapter, so neither created a forward reference --
+    // checked BEFORE writing, after venam needed rehoming for exactly that.
+    expect(coverage.covered).toBe(177);
+    expect(coverage.unmapped).toBe(66);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2101,7 +2122,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 174/243 points covered (72%)",
+      "malayalam A1 (partial inventory): 177/243 points covered (73%)",
     );
   }, 60_000);
 });

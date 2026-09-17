@@ -2,8 +2,13 @@
 //! `--strict-fixtures` turns an unrenderable fixture into a failure.
 //!
 //! Before this, `pipeline_slot_values` dropped every list with a warning, so
-//! `SegmentedControl` (whose content is `options : list<list<text>>`)
-//! previewed with no options in every story while the story check passed.
+//! `SegmentedControl` (whose content is its `options` list) previewed with no
+//! options in every story while the story check passed.
+//!
+//! `options` was `list<list<text>>` until toolkit 0.15 and is `list<text>`
+//! since UI86, so these tests now drive the flat form through the real
+//! component. The nested form is still covered by `mosmodel-compiler`'s
+//! `parse_list_fixture` tests and each emitter's literal tests.
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -32,7 +37,7 @@ fn scratch(name: &str) -> PathBuf {
 }
 
 const FIXTURES: &str = r#"{
-  "options": [["List", "List"], ["Board \"B\"", "Board, selected"]],
+  "options": ["List", "Board \"B\""],
   "selected-index": 1,
   "disabled": false
 }"#;
@@ -82,18 +87,18 @@ fn list_fixtures_reach_every_browser_backend_under_strict_mode() {
 
     let react = read(dir.join("react/src/main.tsx"));
     assert!(
-        react.contains(r#"options: [["List", "List"], ["Board \"B\"", "Board, selected"]],"#),
-        "react fallback props must carry the rows, escaped:\n{react}"
+        react.contains(r#"options: ["List", "Board \"B\""],"#),
+        "react fallback props must carry the labels, escaped:\n{react}"
     );
     let web_component = read(dir.join("webcomponent/main.js"));
     assert!(
-        web_component.contains(r#"fallback: [["List", "List"], ["Board \"B\"", "Board, selected"]]"#),
-        "web component slot table must carry the rows:\n{web_component}"
+        web_component.contains(r#"fallback: ["List", "Board \"B\""]"#),
+        "web component slot table must carry the labels:\n{web_component}"
     );
     let html = read(dir.join("html/main.js"));
     assert!(
-        html.contains("\"Board, selected\"") && !html.contains("\"options\": []"),
-        "html fallback props must carry the rows:\n{html}"
+        html.contains(r#""Board \"B\"""#) && !html.contains("\"options\": []"),
+        "html fallback props must carry the labels:\n{html}"
     );
 }
 

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C77-alle",
+    "language": "malayalam",
+    "chapter": 77,
+    "sequence": 2670,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9fac16e6d3c82a7e"
+  },
+  "findings": []
+}

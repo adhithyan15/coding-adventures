@@ -18,7 +18,7 @@ mosaic-pkg-review-actions = "0.1.0"
 mosaic-pkg-review-card = "0.1.0"
 mosaic-pkg-review-history = "0.1.0"
 mosaic-pkg-session-progress = "0.1.0"
-mosaic-pkg-toolkit = "0.14.0"
+mosaic-pkg-toolkit = "0.15.0"
 
 [host_assets]
 files = [

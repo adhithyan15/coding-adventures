@@ -4,14 +4,8 @@
       "name": "Two options",
       "fixtures": {
         "options": [
-          [
-            "Day",
-            "Day, selected"
-          ],
-          [
-            "Week",
-            "Week"
-          ]
+          "Day",
+          "Week"
         ],
         "selected-index": 0,
         "vertical": false,
@@ -22,18 +16,9 @@
       "name": "Selected first",
       "fixtures": {
         "options": [
-          [
-            "List",
-            "List, selected"
-          ],
-          [
-            "Board",
-            "Board"
-          ],
-          [
-            "Sheet",
-            "Sheet"
-          ]
+          "List",
+          "Board",
+          "Sheet"
         ],
         "selected-index": 0,
         "vertical": false,
@@ -44,18 +29,9 @@
       "name": "Selected middle",
       "fixtures": {
         "options": [
-          [
-            "List",
-            "List"
-          ],
-          [
-            "Board",
-            "Board, selected"
-          ],
-          [
-            "Sheet",
-            "Sheet"
-          ]
+          "List",
+          "Board",
+          "Sheet"
         ],
         "selected-index": 1,
         "vertical": false,
@@ -66,18 +42,9 @@
       "name": "Selected last",
       "fixtures": {
         "options": [
-          [
-            "List",
-            "List"
-          ],
-          [
-            "Board",
-            "Board"
-          ],
-          [
-            "Sheet",
-            "Sheet, selected"
-          ]
+          "List",
+          "Board",
+          "Sheet"
         ],
         "selected-index": 2,
         "vertical": false,
@@ -88,30 +55,12 @@
       "name": "Six views",
       "fixtures": {
         "options": [
-          [
-            "List",
-            "List"
-          ],
-          [
-            "Board",
-            "Board"
-          ],
-          [
-            "Sheet",
-            "Sheet"
-          ],
-          [
-            "Calendar",
-            "Calendar, selected"
-          ],
-          [
-            "Notes",
-            "Notes"
-          ],
-          [
-            "Timeline",
-            "Timeline"
-          ]
+          "List",
+          "Board",
+          "Sheet",
+          "Calendar",
+          "Notes",
+          "Timeline"
         ],
         "selected-index": 3,
         "vertical": false,
@@ -122,38 +71,14 @@
       "name": "Eight options",
       "fixtures": {
         "options": [
-          [
-            "Mon",
-            "Mon"
-          ],
-          [
-            "Tue",
-            "Tue"
-          ],
-          [
-            "Wed",
-            "Wed"
-          ],
-          [
-            "Thu",
-            "Thu"
-          ],
-          [
-            "Fri",
-            "Fri"
-          ],
-          [
-            "Sat",
-            "Sat"
-          ],
-          [
-            "Sun",
-            "Sun"
-          ],
-          [
-            "All",
-            "All, selected"
-          ]
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat",
+          "Sun",
+          "All"
         ],
         "selected-index": 7,
         "vertical": false,
@@ -164,18 +89,9 @@
       "name": "Long labels",
       "fixtures": {
         "options": [
-          [
-            "Everything assigned to me",
-            "Everything assigned to me"
-          ],
-          [
-            "Due this week across every project",
-            "Due this week across every project, selected"
-          ],
-          [
-            "Done",
-            "Done"
-          ]
+          "Everything assigned to me",
+          "Due this week across every project",
+          "Done"
         ],
         "selected-index": 1,
         "vertical": false,
@@ -186,18 +102,9 @@
       "name": "No selection",
       "fixtures": {
         "options": [
-          [
-            "List",
-            "List"
-          ],
-          [
-            "Board",
-            "Board"
-          ],
-          [
-            "Sheet",
-            "Sheet"
-          ]
+          "List",
+          "Board",
+          "Sheet"
         ],
         "selected-index": -1,
         "vertical": false,
@@ -208,18 +115,9 @@
       "name": "Disabled",
       "fixtures": {
         "options": [
-          [
-            "List",
-            "List"
-          ],
-          [
-            "Board",
-            "Board, selected"
-          ],
-          [
-            "Sheet",
-            "Sheet"
-          ]
+          "List",
+          "Board",
+          "Sheet"
         ],
         "selected-index": 1,
         "vertical": false,
@@ -230,30 +128,12 @@
       "name": "Vertical",
       "fixtures": {
         "options": [
-          [
-            "List",
-            "List"
-          ],
-          [
-            "Board",
-            "Board, selected"
-          ],
-          [
-            "Sheet",
-            "Sheet"
-          ],
-          [
-            "Calendar",
-            "Calendar"
-          ],
-          [
-            "Notes",
-            "Notes"
-          ],
-          [
-            "Timeline",
-            "Timeline"
-          ]
+          "List",
+          "Board",
+          "Sheet",
+          "Calendar",
+          "Notes",
+          "Timeline"
         ],
         "selected-index": 1,
         "vertical": true,
@@ -264,18 +144,9 @@
       "name": "Vertical disabled",
       "fixtures": {
         "options": [
-          [
-            "List",
-            "List, selected"
-          ],
-          [
-            "Board",
-            "Board"
-          ],
-          [
-            "Sheet",
-            "Sheet"
-          ]
+          "List",
+          "Board",
+          "Sheet"
         ],
         "selected-index": 0,
         "vertical": true,

@@ -2,9 +2,9 @@
   "version": 1,
   "language": "malayalam",
   "chapter": 58,
-  "title": "Five More Short Answers",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:018c1842ebaff1db",
+  "title": "Six More Short Answers",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:4e83fc8b0186a2bd",
   "lessons": [
     {
       "id": "ML-C58-more",
@@ -412,6 +412,142 @@
       ]
     },
     {
+      "id": "ML-C58-venam",
+      "sequence": 1815,
+      "title": "വേണം (vēṇaṁ) — \"I want\"",
+      "headword": "വേണം",
+      "romanization": "vēṇaṁ",
+      "gloss": "I want — the word this track has been naming since it taught you how to refuse",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da175e8c3ffa37c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three short answers are already yours — more, less, a little. Say them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of them answers an offer. None of them makes one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വേണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേണം — vēṇaṁ — it is wanted."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the word the rest of the chapter is built against. The next lesson gives you its negative partner, and between them they make a whole exchange: one word offers, one accepts, one declines."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: nobody wants anything in Malayalam",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് വെള്ളം വേണം. enikku veḷḷaṁ vēṇaṁ — \"I want water.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Read it in Malayalam order and it does not say that. It says to me — water — is wanted. The water is what the sentence is about; you are not the subject, you are the one it is wanted by."
+            },
+            {
+              "kind": "speech",
+              "text": "You have built a sentence like this before. Knowing arrived at you the same way, and so did age. This is that shape again, and it is worth expecting rather than relearning: when a Malayalam sentence is about something happening to a person, the person shows up in the dative and the thing takes the front."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṇaṁ — wanted",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṇaṁ* — wanted]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enikku veḷḷaṁ vēṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enikku veḷḷaṁ vēṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word in the sentence is the subject, and which one is you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word in the sentence is the subject, and which one is you]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say I want water? (എനിക്ക് വെള്ളം വേണം (vēṇaṁ).) Who is the subject of that sentence? (The water — not you.) And which case is the person in? (The dative — enikku.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-C58-no-need",
       "sequence": 1820,
       "title": "വേണ്ട (vēṇṭa) — no need, no thank you",
@@ -424,7 +560,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0c6fb356195b02a",
+      "sourceHash": "fnv1a64:a563df4a4c6ca02d",
       "notice": null,
       "blocks": [
         {

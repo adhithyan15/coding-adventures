@@ -39,12 +39,18 @@
 // `Button` does NOT work; it is read as the legacy kernel primitive of
 // that name, which the pipeline emitters reject.)
 //
-// What stops it is the accessible name. `Button` has no `a11y-label`
-// slot, so an option placed through it would lose the host-supplied name,
-// and with it the only way the selected state reaches a screen reader
-// today. Keeping the name wins over reuse; moving onto `Button` once it
-// can carry a name is tracked separately. The two parts use the same
-// property set as the other toolkit buttons so they read as one family.
+// What stops it is the selected state. `Button` has no `selected` slot,
+// so an option placed through it could not tell a screen reader which one
+// is current. The two parts use the same property set as the other
+// toolkit buttons so they read as one family.
+//
+// Selected state (UI86)
+// ---------------------
+//
+// The two branches already know which option is selected, so each sets
+// `selected` to a literal: `true` on the selected part, `false` on the
+// other. `false` is not the same as leaving it out: it is what tells a
+// screen reader the option is one of a set.
 //
 // `selectedIndex`, not `selected-index`
 // -------------------------------------
@@ -56,8 +62,7 @@
 //
 // Keyboard: each option is a native button, so Tab traversal, focus rings
 // and Enter/Space activation are the platform's own. Arrow-key traversal
-// within the group is not expressible in the kernel today; it is tracked
-// with the selected-state gap described in SegmentedControl.mil.
+// within the group is not expressible in the kernel today (#15457).
 
 layout SegmentedControl {
   // One root: a layout may not start with If/Else (two roots). A Column,
@@ -68,16 +73,16 @@ layout SegmentedControl {
         For ( each: slot: options , as: option , index: i ) {
           If ( when: i == selectedIndex ) {
             HostButton [ segmented-vertical-option-selected ] (
-              label : ( option[0] ) ,
-              a11y-label : ( option[1] ) ,
+              label : option ,
+              selected : true ,
               disabled : slot: disabled ,
               onClick : emit: onSelect
             )
           }
           Else {
             HostButton [ segmented-vertical-option ] (
-              label : ( option[0] ) ,
-              a11y-label : ( option[1] ) ,
+              label : option ,
+              selected : false ,
               disabled : slot: disabled ,
               onClick : emit: onSelect
             )
@@ -90,16 +95,16 @@ layout SegmentedControl {
         For ( each: slot: options , as: option , index: i ) {
           If ( when: i == selectedIndex ) {
             HostButton [ segmented-option-selected ] (
-              label : ( option[0] ) ,
-              a11y-label : ( option[1] ) ,
+              label : option ,
+              selected : true ,
               disabled : slot: disabled ,
               onClick : emit: onSelect
             )
           }
           Else {
             HostButton [ segmented-option ] (
-              label : ( option[0] ) ,
-              a11y-label : ( option[1] ) ,
+              label : option ,
+              selected : false ,
               disabled : slot: disabled ,
               onClick : emit: onSelect
             )

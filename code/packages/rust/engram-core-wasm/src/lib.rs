@@ -366,21 +366,15 @@ impl EngramAppScreen {
         }
     }
 
-    /// `[label, accessible-name]` rows for the toolkit SegmentedControl.
-    /// The active screen's name says so, because HostButton has no selected
-    /// state for assistive technology yet (#15420).
-    fn switcher_rows(active: Self) -> Vec<[String; 2]> {
+    /// The labels for the toolkit SegmentedControl, in switcher order.
+    ///
+    /// Plain labels since toolkit 0.15: the control reports which one is
+    /// selected through the kernel's selected state (UI86), so the engine no
+    /// longer writes ", selected" into the active screen's name (#15420).
+    fn switcher_labels() -> Vec<&'static str> {
         Self::SWITCHER_ORDER
             .iter()
-            .map(|&screen| {
-                let label = screen.switcher_label();
-                let name = if screen == active {
-                    format!("{label}, selected")
-                } else {
-                    label.to_string()
-                };
-                [label.to_string(), name]
-            })
+            .map(|&screen| screen.switcher_label())
             .collect()
     }
 
@@ -2568,7 +2562,7 @@ fn engram_app_props_for_state(
     // above, which is already at `json!`'s recursion limit.
     props_object.insert(
         "nav-options".to_string(),
-        json!(EngramAppScreen::switcher_rows(active_screen)),
+        json!(EngramAppScreen::switcher_labels()),
     );
     props_object.insert(
         "nav-selected-index".to_string(),
@@ -9922,14 +9916,7 @@ mod tests {
         assert_eq!(initial["props"]["nav-selected-index"], 0);
         assert_eq!(
             initial["props"]["nav-options"],
-            json!([
-                ["Decks", "Decks, selected"],
-                ["Study", "Study"],
-                ["Browse", "Browse"],
-                ["Add", "Add"],
-                ["Stats", "Stats"],
-                ["Options", "Options"]
-            ])
+            json!(["Decks", "Study", "Browse", "Add", "Stats", "Options"])
         );
 
         let flags = [
@@ -9950,15 +9937,10 @@ mod tests {
             assert_eq!(props["nav-selected-index"], index);
             for (other, flag) in flags.iter().enumerate() {
                 assert_eq!(props[flag], other == index, "index {index}: {flag}");
-                let row = &props["nav-options"][other];
-                let label = row[0].as_str().unwrap();
-                let expected = if other == index {
-                    format!("{label}, selected")
-                } else {
-                    label.to_string()
-                };
-                assert_eq!(row[1], expected, "index {index}: row {other}");
             }
+            // The labels never change with the selection: the selected state
+            // is the control's to report (UI86), not a word in the name.
+            assert_eq!(props["nav-options"], initial["props"]["nav-options"], "index {index}");
         }
 
         // The named events and the indexed one agree.

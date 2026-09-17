@@ -1,0 +1,11 @@
+{
+  "language": "malayalam",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:cc7bc40d1bc6a924",
+  "lessonIds": [
+    "ML-C77-alla",
+    "ML-C77-alle",
+    "ML-R77-not-so-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch77-not-there-not-so.tex"
+}
