@@ -1,0 +1,15 @@
+{
+  "id": "ML-PATH-87-ACCUSATIVE",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ML-C87-accusative",
+    "ML-C87-animacy",
+    "ML-C87-avane",
+    "ML-R87-object-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-87-ACCUSATIVE"
+  ],
+  "after": []
+}

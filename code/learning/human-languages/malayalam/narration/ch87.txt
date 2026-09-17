@@ -1,0 +1,157 @@
+Malayalam, chapter 87: Who It Happens To.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 4.
+അധ്യാപകനെ (adhyāpakane) — who it happens to.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Say the word for a teacher. Say the verb to see. Now try to put them together and notice that you have never been shown how.
+
+Grammar Lens: an ending for the one it is done to.
+Every case ending you own so far has placed a noun somewhere — in a place, from a place, owning something, with somebody. This one does something different. It marks the person a verb happens to.
+-എ goes on the end, exactly as the others did:
+[a table of 2 rows, read aloud]
+അധ്യാപകൻ, a teacher — the one doing.
+അധ്യാപകനെ (adhyāpakane), the teacher — the one it is done to.
+ഞാൻ അധ്യാപകനെ കാണുന്നു — ñān adhyāpakane kāṇunnu — I see the teacher.
+Read the shape rather than the English. The doer wears nothing; the one it happens to wears -എ. English does that job with word order alone — I see the teacher and the teacher sees me use the same two words and differ only in which came first — and Malayalam marks it on the word itself.
+That is worth more than it looks. A marked object does not depend on where it stands, so the ending is doing work that English has to spend its word order on.
+Note what happened to the last letter: അധ്യാപകൻ ends in the standalone ൻ, and before the ending it becomes a plain ന. The chillu is the shape a consonant takes at the end of a word, and here it is no longer at the end.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: adhyāpakan, then adhyāpakane]
+[pause 8 seconds for the answer]
+[your turn — say: which of the two is the one being seen]
+[pause 8 seconds for the answer]
+[your turn — say: ñān adhyāpakane kāṇunnu]
+[pause 8 seconds for the answer]
+[your turn — say: what happened to the last letter when the ending arrived]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does -എ mark? (The one a verb happens to.) Does the doer take an ending? (No.) And what does English use instead? (Word order.)
+
+
+Lesson 2 of 4.
+പുസ്തകം വായിക്കുന്നു (pustakaṁ vāyikkunnu) — the ending a book does not take.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Say I see the teacher, and say which word carried the ending. Then say the word for a book.
+
+Grammar Lens: what kind of thing the object is.
+You might expect every object to take the ending. It does not work that way.
+[a table of 2 rows, read aloud]
+ഞാൻ കുട്ടിയെ കാണുന്നു, I see the child — ending.
+ഞാൻ പുസ്തകം വായിക്കുന്നു (pustakaṁ vāyikkunnu), I read the book — no ending.
+Both are objects. Both come before the verb. One is a person and the other is a thing, and that is the whole of it.
+A living thing being acted on takes -എ. A lifeless thing ordinarily does not. So the question the language asks before marking an object is not is this the object but what kind of thing is this — and no European language the reader is likely to know asks it in quite that way.
+Look at what the ending does to each noun:
+[a table of 2 rows, read aloud]
+കുട്ടി becomes കുട്ടിയെ, a -യ- joins, because the word ends in a vowel.
+അധ്യാപകൻ becomes അധ്യാപകനെ (adhyāpakane), the final chillu opens back into a plain consonant.
+The joining rule is the one you already know. It is the same choice the owner-ending made, decided by the same thing — the last sound of the noun — so there is nothing new to learn about attaching it.
+Now a verb that only takes people: സഹായിക്കുക, to help. You cannot help a book, so its object is always marked.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: kuṭṭiye]
+[pause 8 seconds for the answer]
+[your turn — say: ñān kuṭṭiye kāṇunnu]
+[pause 8 seconds for the answer]
+[your turn — say: ñān pustakaṁ vāyikkunnu, and say why the book has no ending]
+[pause 8 seconds for the answer]
+[your turn — say: which kind of object carries the ending, and why]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which objects take -എ? (Living ones.) Which ordinarily do not? (Lifeless ones.) And what decides how the ending attaches? (The last sound of the noun.)
+
+
+Lesson 3 of 4.
+അവനെ (avane) — him, as an object.
+
+Warm-up.
+[pause 2 seconds]
+Say he. Then say the ending that marks the one a verb happens to.
+
+You'll want to know: അവനെ.
+അവനെ — avane — him, when he is the one it happens to.
+There is nothing new in it. അവൻ takes the same ending a teacher takes, and it changes in the same way — the standalone ൻ opening back into a plain ന:
+[a table of 2 rows, read aloud]
+അധ്യാപകൻ becomes അധ്യാപകനെ (adhyāpakane), the teacher.
+അവൻ becomes അവനെ (avane), him.
+ഞാൻ അവനെ കാണുന്നു — ñān avane kāṇunnu — I see him.
+
+Why it's said this way: a full word, not a shrunken one.
+This is where the reader's own language is likely to mislead them.
+English turns he into him — a different word you have to remember. Spanish goes further and shrinks the object into a small unstressed piece that leans on the verb and moves around the sentence.
+Malayalam does neither. The pronoun keeps its whole shape and takes the ordinary ending, exactly like any other person-word. There is no separate object pronoun to learn and no small particle to place.
+So the list of things you have to memorise here is empty. If you can put the ending on teacher, you can put it on him, and on any person-word this book gives you later.
+That is the general shape of this language worth carrying: where a European language keeps a special form, Malayalam usually keeps the ordinary word and adds the ordinary ending.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: avan, then avane]
+[pause 8 seconds for the answer]
+[your turn — say: ñān avane kāṇunnu]
+[pause 8 seconds for the answer]
+[your turn — say: what you had to memorise to make the object form]
+[pause 8 seconds for the answer]
+[your turn — say: the same change on the word for a teacher]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say him as an object? (avane.) Is it a separate word to learn? (No — the ordinary pronoun with the ordinary ending.)
+
+
+Lesson 4 of 4.
+(who it happens to) (āre enna ōrmma) — from cold.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 3 seconds]
+Close the lessons before this one. Say I see the teacher, and say which word carries the ending.
+
+Grammar Lens: the doer wears nothing, the done-to wears -എ.
+[a table of 4 rows, read aloud]
+അധ്യാപകനെ (adhyāpakane) — the teacher. takes -എ?: yes — a person.
+കുട്ടിയെ — the child. takes -എ?: yes — a person.
+അവനെ (avane) — him. takes -എ?: yes — a person.
+പുസ്തകം — the book. takes -എ?: no — a thing.
+Being the object is not what decides it. What decides it is the kind of thing the object is. A living thing being acted on takes the ending; a lifeless one ordinarily does not — a question no European language the reader is likely to know asks in quite that way.
+How it attaches is nothing new: a vowel-final word takes a -യ- to join, and a word ending in the standalone ൻ opens it back into a plain ന. The same last sound that decided the owner-ending decides this one.
+
+What you've built.
+A sentence that does not depend on word order to say who did what.
+English separates I see the teacher from the teacher sees me only by which word came first. Malayalam marks it on the word, so the marking survives wherever the word stands.
+And the pronoun cost nothing. English keeps a second form — he becomes him — and Spanish shrinks the object into a small piece that leans on the verb. Malayalam keeps the ordinary word and adds the ordinary ending, so there is no separate object pronoun to learn at all.
+Where a European language keeps a special form, Malayalam usually keeps the ordinary word and adds the ordinary ending. That has now been true of the owner-ending, the place-words, the company words and this.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: adhyāpakane, kuṭṭiye, avane]
+[pause 8 seconds for the answer]
+[your turn — say: ñān avane kāṇunnu]
+[pause 8 seconds for the answer]
+[your turn — say: ñān pustakaṁ vāyikkunnu, and say why the book is bare]
+[pause 8 seconds for the answer]
+[your turn — say: what decides whether an object takes the ending]
+[pause 8 seconds for the answer]
+[your turn — say: what English uses instead of the ending]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does -എ mark? (The one a verb happens to.) Which objects take it? (Living ones.) And is there a separate object pronoun to memorise? (No.)

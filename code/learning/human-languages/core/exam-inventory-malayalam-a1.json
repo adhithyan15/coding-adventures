@@ -899,7 +899,11 @@
       "id": "ML-A1-CASE-04",
       "category": "Vibhakti (case endings and postpositions)",
       "label": "the accusative -e, and marking a human object",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C87-ACCUSATIVE-01",
+        "ML-GRAMMAR-C87-ANIMACY-01",
+        "ML-LEX-C87-OBJECT-PRONOUN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -910,7 +914,7 @@
         "A1-PRON-02"
       ],
       "malayalamSpecific": false,
-      "note": "Not taught. Spanish marks a human direct object with a and can replace it with an unstressed clitic; Malayalam has no clitic object pronoun at all -- the object stays a full noun and takes -e. Neither the suffix nor the animacy rule appears anywhere, so both Spanish points are open on one missing suffix."
+      "note": "Chapter 87, and it closes the CASE column at 7/7. The old note named all three pieces and the chapter takes them in that order. THE ENDING: -e marks the one a verb happens to, and unlike every case ending before it, it does not place the noun anywhere -- it says what role the noun has. The doer wears nothing. English does that job with WORD ORDER alone ('I see the teacher' against 'the teacher sees me'), so a marked object is doing work English spends its word order on. THE ANIMACY RULE, which is the part worth the chapter: the rule is not about being the object, it is about WHAT KIND OF THING the object is. A living thing acted on takes -e; a lifeless one ordinarily does not, so kuttiye takes it and pustakam does not, both sitting in the same slot before the same kind of verb. NO CLITIC: the note was right that Malayalam has none. English keeps a second form (he / him) and Spanish shrinks the object into an unstressed piece that leans on the verb; Malayalam keeps the ordinary pronoun and adds the ordinary ending, so avane costs nothing to learn. That is the generalisation the recall states and four chapters now support -- where a European language keeps a special form, Malayalam usually keeps the ordinary word and adds the ordinary ending. NO NEW VOCABULARY: adhyaapakan, kutti, pustakam, avan, kaanuka and vaayikkuka are all taught, and the joining rule (-y- after a vowel, chillu opening into a plain consonant) is the genitive's."
     },
     {
       "id": "ML-A1-CASE-05",

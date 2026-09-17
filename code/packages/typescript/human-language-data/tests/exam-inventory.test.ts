@@ -2173,8 +2173,19 @@ describe("the committed Malayalam A1 inventory", () => {
     // the noun -- and it is an ending the learner ALREADY OWNS, since -aal on a VERB
     // is chapter 75's conditional. Identical ending, unrelated meanings, so the
     // lesson teaches the habit rather than the form: look at the HOST first.
-    expect(coverage.covered).toBe(191);
-    expect(coverage.unmapped).toBe(52);
+    // 191 -> 192: ML-A1-CASE-04, the accusative, which closes the CASE column at
+    // 7/7. Unlike every case ending before it, -e does not PLACE the noun anywhere;
+    // it says what ROLE the noun has, and the doer wears nothing. English does that
+    // job with word order alone, so a marked object is doing work English spends its
+    // word order on. The part worth the chapter is the ANIMACY rule: it is not about
+    // being the object but about WHAT KIND OF THING the object is -- kuttiye takes
+    // the ending, pustakam does not, in the same slot before the same kind of verb.
+    // And there is no clitic: English keeps a second form (he/him) and Spanish
+    // shrinks the object onto the verb, while Malayalam keeps the ordinary pronoun
+    // and adds the ordinary ending, so avane costs nothing. No new vocabulary at
+    // all, and the joining rule is the genitive's.
+    expect(coverage.covered).toBe(192);
+    expect(coverage.unmapped).toBe(51);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2217,7 +2228,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 191/243 points covered (79%)",
+      "malayalam A1 (partial inventory): 192/243 points covered (79%)",
     );
   }, 60_000);
 });

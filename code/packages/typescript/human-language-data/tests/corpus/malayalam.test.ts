@@ -337,8 +337,19 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // the noun -- and it is an ending the learner ALREADY OWNS, since -aal on a VERB
   // is chapter 75's conditional. Identical ending, unrelated meanings, so the
   // lesson teaches the habit rather than the form: look at the HOST first.
-  expect(coverage.covered).toBe(191);
-  expect(coverage.unmapped).toBe(52);
+  // 191 -> 192: ML-A1-CASE-04, the accusative, which closes the CASE column at
+  // 7/7. Unlike every case ending before it, -e does not PLACE the noun anywhere;
+  // it says what ROLE the noun has, and the doer wears nothing. English does that
+  // job with word order alone, so a marked object is doing work English spends its
+  // word order on. The part worth the chapter is the ANIMACY rule: it is not about
+  // being the object but about WHAT KIND OF THING the object is -- kuttiye takes
+  // the ending, pustakam does not, in the same slot before the same kind of verb.
+  // And there is no clitic: English keeps a second form (he/him) and Spanish
+  // shrinks the object onto the verb, while Malayalam keeps the ordinary pronoun
+  // and adds the ordinary ending, so avane costs nothing. No new vocabulary at
+  // all, and the joining rule is the genitive's.
+  expect(coverage.covered).toBe(192);
+  expect(coverage.unmapped).toBe(51);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -350,6 +361,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 191/243 points covered (79%)",
+    "malayalam A1 (partial inventory): 192/243 points covered (79%)",
   );
 }, 60_000);
