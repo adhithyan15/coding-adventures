@@ -110,6 +110,12 @@ and expression-bound names must remain live in repeated rows and lower to
 `contentDescription`, SwiftUI `.accessibilityLabel`, or WinUI
 `AutomationProperties.Name` as appropriate.
 
+`HostButton.selected` is the button's application-owned selected state: whether
+it is the current option of a set. It is specified in
+[UI86](UI86-hostbutton-selected.md), including why it lowers to `aria-pressed`
+on the web, why XAML emits a `ToggleButton`, and why group arrow-key traversal
+is a separate primitive.
+
 ### 2.2 Inclusion criteria
 
 A primitive belongs in the kernel iff:

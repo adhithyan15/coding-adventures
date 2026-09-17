@@ -361,6 +361,10 @@ selected"`). This is a stand-in, not the target: a screen reader hears
 the word rather than the platform's selected trait. Arrow-key traversal
 within a group is likewise not expressible. Both are kernel gaps, to be
 specified once against the tree rather than patched per component.
+[UI86](UI86-hostbutton-selected.md) specifies the selected state
+(`HostButton ( selected : … )`) and the toolkit migration that retires the
+name stand-in. Group traversal is deferred to #15457, and `Nav`'s
+current-page state to #15458.
 
 ---
 
