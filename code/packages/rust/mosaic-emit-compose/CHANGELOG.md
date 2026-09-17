@@ -9,6 +9,23 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — `HostButton` `selected` lowers to `semantics { selected }` (UI86, #15420)
+
+`selected : …` adds `this.selected = …` to the button's `Modifier.semantics`
+block, after any `contentDescription`. With a name as well, both go in one
+block.
+
+- **Why `this.`:** a slot named `selected` would otherwise shadow the semantics
+  property.
+- **Accepted values:** literals, slots, loop bindings and expressions, through
+  `_mosaicTruthy`.
+- **Import:** `androidx.compose.ui.semantics.selected` is imported only when a
+  layout uses the prop.
+- **Unchanged output:** a button without `selected` produces exactly the
+  output it did before.
+- **Predicate:** `host_button_selected_is_native(node)` is the artifact
+  builder's check.
+
 ### Fixed -- an empty run-time accessible name became an empty contentDescription (#15427)
 
 An accessible name known only at run time can be empty, and an empty override is not the same as no override. Not every accessibility service treats an empty

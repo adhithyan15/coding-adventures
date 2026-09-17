@@ -5029,6 +5029,38 @@ fn emit_host_button_qml(
         _ => {}
     }
 
+    // UI86: the application-owned selected state, on the Accessible attached
+    // object only. The Button's own `checkable` stays false, so a click never
+    // toggles anything (and the role stays Button, not CheckBox); the host
+    // decides, and the next props say so.
+    //
+    // Qt Quick Controls fights this once. When accessibility becomes active,
+    // `QQuickAbstractButton::accessibilityActiveChanged` writes the Button's
+    // own `checked` and `checkable` (both false here) onto this attached
+    // object, from C++. Nothing re-evaluates a constant, so `checkable: true`
+    // would be lost for good, and `checked` would be wrong until the selection
+    // next changed.
+    //
+    // So the state lives in a property of its own, `mosaicSelected`, and the
+    // attached values are *pushed* from it: on every selection change, and
+    // whenever something else overwrites them. That holds whether or not an
+    // overwrite removes the `Accessible.checked` binding, so the lowering does
+    // not depend on the difference between a C++ write and a QML one.
+    if let Some(selected) = host_button_selected_qml(node)? {
+        for line in [
+            format!("property bool mosaicSelected: {selected}"),
+            "Accessible.checkable: true".to_string(),
+            "Accessible.checked: mosaicSelected".to_string(),
+            "onMosaicSelectedChanged: Accessible.checked = mosaicSelected".to_string(),
+            "Accessible.onCheckableChanged: if (!Accessible.checkable) Accessible.checkable = true"
+                .to_string(),
+            "Accessible.onCheckedChanged: if (Accessible.checked !== mosaicSelected) Accessible.checked = mosaicSelected"
+                .to_string(),
+        ] {
+            writeln!(out, "{inner_pad}{line}").unwrap();
+        }
+    }
+
     // enabled: !<slot or literal> — inverted from `disabled`.
     if let Some(line) = build_disabled_to_enabled_attribute(node) {
         writeln!(out, "{inner_pad}{line}").unwrap();
@@ -6049,6 +6081,38 @@ fn emit_host_number_input_qml(
 
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
+}
+
+/// The QML boolean for a `HostButton`'s `selected:` (UI86), or `None` when
+/// the prop is absent or is not a state (a string or number, which the
+/// artifact builder reports). Every dynamic value is wrapped in `Boolean()`
+/// so the attached property only ever receives a boolean. Unlike
+/// `build_checked_attribute`, an expression is lowered rather than silently
+/// becoming `false`.
+fn host_button_selected_qml(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    match node
+        .props
+        .iter()
+        .find(|prop| prop.name == "selected")
+        .map(|prop| &prop.value)
+    {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" || k == "false" => Ok(Some(k.clone())),
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(format!("Boolean({camel})")))
+        }
+        Some(LayoutPropValue::Expr(expr)) if !expr.trim().is_empty() => {
+            Ok(Some(format!("Boolean({})", expr.trim())))
+        }
+        _ => Ok(None),
+    }
+}
+
+/// Whether a `HostButton`'s authored `selected:` reaches
+/// `Accessible.checked`. The artifact builder asks this same predicate.
+pub fn host_button_selected_is_native(node: &LayoutNode) -> bool {
+    matches!(host_button_selected_qml(node), Ok(Some(_)))
 }
 
 /// Build the `checked: <slot|literal>` attribute used by both
@@ -10130,6 +10194,73 @@ mod tests {
             "missing onClicked in:\n{}",
             result.output
         );
+    }
+
+    /// UI86: `selected:` reaches the Accessible attached object, never the
+    /// Button's own `checkable`.
+    #[test]
+    fn host_button_selected_lowers_to_accessible_checked() {
+        let m = component("X", vec![], vec![]);
+        let button = |props: Vec<LayoutProp>| LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: "HostButton".to_string(),
+                part_name: None,
+                props,
+                children: Vec::new(),
+            },
+        };
+        let selected = |value: LayoutPropValue| LayoutProp {
+            name: "selected".to_string(),
+            value,
+        };
+        for (value, expected) in [
+            (
+                LayoutPropValue::Keyword("false".into()),
+                "property bool mosaicSelected: false",
+            ),
+            (
+                LayoutPropValue::SlotRef("is-current".into()),
+                "property bool mosaicSelected: Boolean(isCurrent)",
+            ),
+            (
+                LayoutPropValue::Keyword("flag".into()),
+                "property bool mosaicSelected: Boolean(flag)",
+            ),
+            (
+                LayoutPropValue::Expr("( i == selectedIndex )".into()),
+                "property bool mosaicSelected: Boolean(( i == selectedIndex ))",
+            ),
+        ] {
+            let l = button(vec![selected(value)]);
+            assert!(host_button_selected_is_native(&l.root));
+            let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+            // Controls overwrites the attached values when accessibility
+            // activates; they are pushed back from `mosaicSelected`.
+            for line in [
+                "Accessible.checkable: true",
+                "Accessible.checked: mosaicSelected",
+                "onMosaicSelectedChanged: Accessible.checked = mosaicSelected",
+                "Accessible.onCheckableChanged: if (!Accessible.checkable) Accessible.checkable = true",
+                "Accessible.onCheckedChanged: if (Accessible.checked !== mosaicSelected) Accessible.checked = mosaicSelected",
+            ] {
+                assert!(out.contains(line), "missing {line} in:\n{out}");
+            }
+            assert!(!out.contains("\n        checkable:"), "the Button itself must not toggle:\n{out}");
+        }
+        let plain = button(vec![]);
+        assert!(!host_button_selected_is_native(&plain.root));
+        let out = from_pipeline(&m, &plain, &empty_style("X")).unwrap().output;
+        assert!(!out.contains("Accessible.check"), "{out}");
+        assert!(!out.contains("mosaicSelected"), "{out}");
+        let string = button(vec![selected(LayoutPropValue::String("true".into()))]);
+        assert!(!host_button_selected_is_native(&string.root));
+        let unsafe_name = button(vec![selected(LayoutPropValue::Keyword("x; y".into()))]);
+        assert!(matches!(
+            from_pipeline(&m, &unsafe_name, &empty_style("X")),
+            Err(PipelineEmitError::UnsafeSlotName(_))
+        ));
     }
 
     #[test]

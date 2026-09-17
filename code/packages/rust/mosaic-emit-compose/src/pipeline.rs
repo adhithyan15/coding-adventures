@@ -148,6 +148,7 @@ pub fn from_pipeline(
     let uses_drag = layout_contains_tag(&layout.root, "HostDraggable")
         || layout_contains_tag(&layout.root, "HostDropTarget");
     let uses_checkbox_indeterminate = layout_has_checkbox_indeterminate(&layout.root);
+    let uses_button_selected = layout_has_button_selected(&layout.root);
     let uses_radio_group = layout_has_radio_group(&layout.root);
     // UI39 — `Path`'s `circle` kind reuses `.background`/`.border` with a
     // `CircleShape`; `line`/`curve` need a `Canvas` + Compose's own
@@ -497,6 +498,9 @@ pub fn from_pipeline(
             "import androidx.compose.ui.semantics.collectionItemInfo"
         )
         .unwrap();
+    }
+    if uses_button_selected {
+        writeln!(out, "import androidx.compose.ui.semantics.selected").unwrap();
     }
     writeln!(out, "import androidx.compose.ui.semantics.semantics").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
@@ -6685,25 +6689,31 @@ fn emit_host_button(
         let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
         modifier_expr = Some(format!("{base}.wrapContentWidth(unbounded = true)"));
     }
+    let mut semantics: Vec<String> = Vec::new();
     if let Some(accessible_label) = text_prop_expr(node, "a11y-label")? {
         // A name that is only known at run time can be empty, and an empty
         // contentDescription is not "no description" to every accessibility
         // service. Set it only when there is something to say, so the
         // button's own Text names it otherwise (#15427). A literal "" is
         // dropped outright.
-        let semantics = match find_prop_value(node, "a11y-label") {
-            Some(LayoutPropValue::String(text)) if text.is_empty() => None,
+        match find_prop_value(node, "a11y-label") {
+            Some(LayoutPropValue::String(text)) if text.is_empty() => {}
             Some(LayoutPropValue::String(_)) => {
-                Some(format!("contentDescription = {accessible_label}"))
+                semantics.push(format!("contentDescription = {accessible_label}"))
             }
-            _ => Some(format!(
+            _ => semantics.push(format!(
                 "({accessible_label}).toString().takeIf {{ it.isNotEmpty() }}?.let {{ contentDescription = it }}"
             )),
-        };
-        if let Some(semantics) = semantics {
-            let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
-            modifier_expr = Some(format!("{base}.semantics {{ {semantics} }}"));
         }
+    }
+    // UI86: the application-owned selected state. `this.` because a slot
+    // named `selected` would otherwise shadow the semantics property.
+    if let Some(selected) = host_button_selected_expr(node)? {
+        semantics.push(format!("this.selected = {selected}"));
+    }
+    if !semantics.is_empty() {
+        let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
+        modifier_expr = Some(format!("{base}.semantics {{ {} }}", semantics.join("; ")));
     }
 
     let mut out = String::new();
@@ -7130,6 +7140,37 @@ fn checkbox_indeterminate_expr(node: &LayoutNode) -> Result<Option<String>, Pipe
 /// lowering.
 pub fn host_checkbox_has_native_semantics(node: &LayoutNode) -> bool {
     matches!(checkbox_indeterminate_expr(node), Ok(Some(_)))
+}
+
+/// The Kotlin `Boolean` for a `HostButton`'s `selected:` (UI86), or `None`
+/// when the prop is absent or is not a state (a string or number, which the
+/// artifact builder reports). Loop bindings are accepted as well as slots,
+/// unlike `bool_prop_expr`, because the toolkit's call sites are inside
+/// `For`.
+fn host_button_selected_expr(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, "selected") {
+        Some(LayoutPropValue::Keyword(k)) if k == "true" || k == "false" => Ok(Some(k.clone())),
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(format!("_mosaicTruthy({camel})")))
+        }
+        Some(LayoutPropValue::Expr(expr)) if !expr.trim().is_empty() => {
+            Ok(Some(format!("_mosaicTruthy({expr})")))
+        }
+        _ => Ok(None),
+    }
+}
+
+/// Whether a `HostButton`'s authored `selected:` reaches
+/// `semantics { selected }`. The artifact builder asks this same predicate.
+pub fn host_button_selected_is_native(node: &LayoutNode) -> bool {
+    matches!(host_button_selected_expr(node), Ok(Some(_)))
+}
+
+fn layout_has_button_selected(node: &LayoutNode) -> bool {
+    (node.tag == "HostButton" && host_button_selected_is_native(node))
+        || node.children.iter().any(layout_has_button_selected)
 }
 
 fn layout_has_checkbox_indeterminate(node: &LayoutNode) -> bool {
@@ -9413,6 +9454,79 @@ mod tests {
             "got:\n{out}"
         );
         assert!(out.contains("import androidx.compose.ui.platform.testTag"));
+    }
+
+    /// UI86: `selected:` joins the button's semantics block, alongside any
+    /// accessible name, and imports the property only when used.
+    #[test]
+    fn host_button_selected_lowers_to_semantics_selected() {
+        let m = component("Bar", vec![], vec![]);
+        let selected = |value: LayoutPropValue| LayoutProp {
+            name: "selected".to_string(),
+            value,
+        };
+        for (value, expected) in [
+            (LayoutPropValue::Keyword("false".into()), "this.selected = false"),
+            (
+                LayoutPropValue::SlotRef("is-current".into()),
+                "this.selected = _mosaicTruthy(isCurrent)",
+            ),
+            (
+                LayoutPropValue::Keyword("flag".into()),
+                "this.selected = _mosaicTruthy(flag)",
+            ),
+            (
+                LayoutPropValue::Expr("( i == selectedIndex )".into()),
+                "this.selected = _mosaicTruthy(( i == selectedIndex ))",
+            ),
+        ] {
+            let node = styled_node("HostButton", "toggle", vec![selected(value)], vec![]);
+            assert!(host_button_selected_is_native(&node));
+            let out = from_pipeline(&m, &layout("Bar", node), &empty_style("Bar"))
+                .unwrap()
+                .output;
+            assert!(
+                out.contains(&format!(".semantics {{ {expected} }}")),
+                "expected {expected} in:\n{out}"
+            );
+            assert!(out.contains("import androidx.compose.ui.semantics.selected"));
+        }
+
+        // With a name, both land in one block, name first.
+        let node = styled_node(
+            "HostButton",
+            "toggle",
+            vec![
+                expr_prop("a11y-label", "( row [ 16 ] )"),
+                selected(LayoutPropValue::Keyword("true".into())),
+            ],
+            vec![],
+        );
+        let out = from_pipeline(&m, &layout("Bar", node), &empty_style("Bar"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("?.let { contentDescription = it }; this.selected = true }"),
+            "{out}"
+        );
+
+        // Absent: no import, no semantics.
+        let node = styled_node("HostButton", "toggle", vec![], vec![]);
+        assert!(!host_button_selected_is_native(&node));
+        let out = from_pipeline(&m, &layout("Bar", node), &empty_style("Bar"))
+            .unwrap()
+            .output;
+        assert!(!out.contains("semantics.selected"), "{out}");
+        assert!(!out.contains(".semantics {"), "{out}");
+
+        // A string is not a state.
+        let node = styled_node(
+            "HostButton",
+            "toggle",
+            vec![selected(LayoutPropValue::String("true".into()))],
+            vec![],
+        );
+        assert!(!host_button_selected_is_native(&node));
     }
 
     #[test]

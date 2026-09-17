@@ -5166,12 +5166,53 @@ fn emit_host_button(
     let style_arg = host_button_style_arg(node, part_styles);
     let button =
         format!("ElevatedButton(onPressed: {on_pressed_expr}{style_arg}, child: {label_expr})");
-    Ok(match accessibility_label {
+    // UI86: the application-owned selected state rides on the same
+    // `Semantics` node that names the button. A button with a state but no
+    // authored name still needs that node, so it is named by its visible
+    // label (the wrapper excludes the button's own semantics).
+    let selected = host_button_selected_expression(node)?;
+    let selected_arg = selected
+        .as_deref()
+        .map(|value| format!(", selected: {value}"))
+        .unwrap_or_default();
+    let label = match (accessibility_label, &selected) {
+        (Some(label), _) => Some(label),
+        (None, Some(_)) => Some(visible_text.clone()),
+        (None, None) => None,
+    };
+    Ok(match label {
         Some(label) => format!(
-            "{pad}Semantics(label: {label}, button: true, enabled: {semantics_enabled_expr}, onTap: {on_pressed_expr}, excludeSemantics: true, child: {button})\n"
+            "{pad}Semantics(label: {label}, button: true, enabled: {semantics_enabled_expr}{selected_arg}, onTap: {on_pressed_expr}, excludeSemantics: true, child: {button})\n"
         ),
         None => format!("{pad}{button}\n"),
     })
+}
+
+/// The Dart `bool` for a `HostButton`'s `selected:` (UI86), or `None` when
+/// the prop is absent or is not a state (a string or number, which the
+/// artifact builder reports). Unlike `bool_prop_expression`, a loop binding
+/// is accepted: the toolkit's call sites are inside `For`.
+fn host_button_selected_expression(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, "selected") {
+        Some(LayoutPropValue::Keyword(keyword)) if keyword == "true" || keyword == "false" => {
+            Ok(Some(keyword.clone()))
+        }
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&camel)?;
+            Ok(Some(format!("_mosaicTruthy({camel})")))
+        }
+        Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
+            Ok(Some(format!("_mosaicTruthy(({}))", expression.trim())))
+        }
+        _ => Ok(None),
+    }
+}
+
+/// Whether a `HostButton`'s authored `selected:` reaches
+/// `Semantics(selected:)`. The artifact builder asks this same predicate.
+pub fn host_button_selected_is_native(node: &LayoutNode) -> bool {
+    matches!(host_button_selected_expression(node), Ok(Some(_)))
 }
 
 fn host_button_event_args(emit: &EmitDecl, ctx: TableCtx) -> Result<String, PipelineEmitError> {
@@ -8292,6 +8333,60 @@ mod tests {
             out.contains("Semantics(label: ((item).isEmpty ? (item) : (item)), button: true, enabled:"),
             "expected HostButton accessible name to use the For expression, got:\n{out}"
         );
+    }
+
+    /// UI86: `selected:` lands on the button's `Semantics` node, after
+    /// `enabled` (the release-lane contract pins the text before it).
+    #[test]
+    fn host_button_selected_lowers_to_semantics_selected() {
+        let m = component("X", vec![], vec![]);
+        let button = |props: Vec<LayoutProp>| LayoutNode {
+            tag: "HostButton".to_string(),
+            part_name: None,
+            props,
+            children: vec![],
+        };
+        let label = LayoutProp {
+            name: "label".into(),
+            value: LayoutPropValue::String("Board".into()),
+        };
+        let selected = |value: LayoutPropValue| LayoutProp {
+            name: "selected".into(),
+            value,
+        };
+        for (value, expected) in [
+            (LayoutPropValue::Keyword("true".into()), "selected: true"),
+            (
+                LayoutPropValue::SlotRef("is-current".into()),
+                "selected: _mosaicTruthy(isCurrent)",
+            ),
+            (LayoutPropValue::Keyword("flag".into()), "selected: _mosaicTruthy(flag)"),
+            (
+                LayoutPropValue::Expr("( i == selectedIndex )".into()),
+                "selected: _mosaicTruthy((( i == selectedIndex )))",
+            ),
+        ] {
+            let node = button(vec![label.clone(), selected(value)]);
+            assert!(host_button_selected_is_native(&node));
+            let out = from_pipeline(&m, &layout("X", node), &empty_style("X"))
+                .unwrap()
+                .output;
+            assert!(
+                out.contains(&format!(
+                    "Semantics(label: \"Board\", button: true, enabled: true, {expected}, onTap:"
+                )),
+                "expected {expected} in:\n{out}"
+            );
+        }
+        let plain = button(vec![label]);
+        assert!(!host_button_selected_is_native(&plain));
+        let out = from_pipeline(&m, &layout("X", plain), &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(!out.contains("Semantics("), "absent selected must add nothing:\n{out}");
+        assert!(!host_button_selected_is_native(&button(vec![selected(
+            LayoutPropValue::Number(1.0)
+        )])));
     }
 
     #[test]
