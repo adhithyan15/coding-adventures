@@ -340,6 +340,19 @@ export function makeController(engine: any, init: ControllerInit = {}) {
   // Which view is showing. A string rather than a set of booleans, so the six
   // states can't contradict each other.
   let view: "list" | "board" | "timeline" | "sheet" | "calendar" | "notes" = "list";
+  // The view switcher's order (#14016), shared with task-mosaic-app's
+  // ViewMode::SWITCHER_ORDER. Timeline is last and only offered to a Full
+  // project, so leaving it out never shifts another view's index.
+  const SWITCHER_VIEWS = [
+    ["list", "List"],
+    ["board", "Board"],
+    ["sheet", "Sheet"],
+    ["calendar", "Calendar"],
+    ["notes", "Notes"],
+    ["timeline", "Timeline"],
+  ] as const;
+  const switcherViews = () =>
+    activeProjectComplexity() === "full" ? SWITCHER_VIEWS : SWITCHER_VIEWS.slice(0, 5);
   // Sheet toolbar state.
   let sheetFilterText = "";
   let sheetSortField = ""; // a SHEET_FIELDS label, or "" for unsorted
@@ -872,6 +885,17 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         themeIsDark: "",
         complexityLabel: complexity === "full" ? "Full CPM" : "Board",
         allowTimeline: complexity === "full" ? "full" : "",
+        // [label, accessible-name] rows for the toolkit SegmentedControl. The
+        // showing view's name says so until HostButton has a selected state
+        // (#15420).
+        navOptions: switcherViews().map(([key, label]) => [
+          label,
+          key === view ? `${label}, selected` : label,
+        ]),
+        navSelectedIndex: Math.max(
+          0,
+          switcherViews().findIndex(([key]) => key === view),
+        ),
         timelineMode: view === "timeline" ? "timeline" : "",
         boardMode: view === "board" ? "board" : "",
         boardColumns: board.columns,
@@ -1026,6 +1050,14 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         case "showNotes":
           view = "notes";
           break;
+        case "showView": {
+          // An index into the views THIS project offers; anything else
+          // (Timeline on a Board-tier project, a stale or bogus index) is
+          // ignored rather than guessed at.
+          const entry = switcherViews()[event.index];
+          if (entry) view = entry[0];
+          break;
+        }
         case "cardDropped": {
           // A drop is a PROPOSAL. The engine owns what a status change means — as of
           // ensure_default_workflow/set_status's completed-cascade fix (task-core

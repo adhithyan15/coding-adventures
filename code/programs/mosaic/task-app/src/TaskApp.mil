@@ -92,11 +92,22 @@ component TaskApp {
   // code/specs/task-app-complexity-config-v1.md. `complexity-label` names the
   // active project's CURRENT tier ("Board" / "Full CPM"), for a single small
   // topbar button that flips it. `allow-timeline` is non-empty only when the
-  // active project is Full — it gates the Timeline button out of the
-  // view-switcher entirely for a Board-tier project, since the engine keeps
+  // active project is Full — the engine leaves Timeline out of `nav-options`
+  // entirely for a Board-tier project, since the engine keeps
   // computing CPM either way but Board tier deliberately never shows it.
   slot complexity-label : text ;
   slot allow-timeline   : text ;
+
+  // The view switcher, drawn by mosaic-pkg-toolkit's SegmentedControl
+  // (#14016): one [ label, accessible-name ] row per view in the order List,
+  // Board, Sheet, Calendar, Notes, and Timeline last -- present only when the
+  // project is Full, which is how the switcher honours `allow-timeline` now.
+  // Timeline being last means dropping it never shifts another index. The
+  // selected view's name says so ("Board, selected") until HostButton has a
+  // selected state (#15420).
+  slot nav-options        : list<list<text>> ;
+  // Index of the showing view in nav-options.
+  slot nav-selected-index : number ;
 
   // Timeline (Gantt). `timeline-mode` is non-empty when the timeline is showing instead
   // of the task list, and `view-toggle-label` names the view you'd switch TO.
@@ -274,6 +285,9 @@ component TaskApp {
   emit onShowSheet ;
   emit onShowCalendar ;
   emit onShowNotes ;
+  // The switcher's selection, as an index into nav-options. The six named
+  // events above stay for anything that names a view directly.
+  emit onShowView ( index : number ) ;
 
   // A drop is a PROPOSAL: the engine decides whether the move is legal and performs
   // it. The payload is the UI35 contract — what moved, of what kind, onto which
