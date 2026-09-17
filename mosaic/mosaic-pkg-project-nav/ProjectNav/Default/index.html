@@ -17,14 +17,14 @@
           <!-- mosaic-for each="projectRows" as="p" index="pi" -->
             <div style="display: flex; flex-direction: row; gap: 4px; align: center-vertical">
               <!-- mosaic-if when="( p [ 2 ] )" -->
-                <span style="color: #9b9289; font-size: 13px">{{p [ 2 ]}}</span>
+                <span style="color: #9b9289; font-size: 13px">{{p.2}}</span>
               <!-- /mosaic-if -->
               <!-- mosaic-if when="( p [ 1 ] )" -->
                 <!-- emit "onSelectProject" dropped: HTML is static -->
-                <button data-on-click="onSelectProject" style="width: 100%; background: #fffdfa; color: #2b2723; font-size: 13px; font-weight: bold; text-align: left; padding: 8px; border-radius: 8px; border-width: 0; box-shadow: 0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05); elevation: raised">{{p [ 0 ]}}</button>
+                <button data-on-click="onSelectProject" style="width: 100%; background: #fffdfa; color: #2b2723; font-size: 13px; font-weight: bold; text-align: left; padding: 8px; border-radius: 8px; border-width: 0; box-shadow: 0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05); elevation: raised">{{p.0}}</button>
               <!-- mosaic-else -->
                 <!-- emit "onSelectProject" dropped: HTML is static -->
-                <button data-on-click="onSelectProject" style="width: 100%; background: transparent; color: #6a625a; font-size: 13px; text-align: left; padding: 8px; border-radius: 8px; border-width: 0">{{p [ 0 ]}}</button>
+                <button data-on-click="onSelectProject" style="width: 100%; background: transparent; color: #6a625a; font-size: 13px; text-align: left; padding: 8px; border-radius: 8px; border-width: 0">{{p.0}}</button>
               <!-- /mosaic-if -->
             </div>
           <!-- /mosaic-for -->

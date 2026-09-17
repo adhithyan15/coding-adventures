@@ -53,7 +53,7 @@
       <div style="display: flex; flex-direction: row; gap: 6px">
         <!-- mosaic-for each="schematicAnalysisCardRows" as="card" index="card-index" -->
           <!-- emit "onSelectSchematicAnalysisCard" dropped: HTML is static -->
-          <button data-on-click="onSelectSchematicAnalysisCard" style="background: #eef2ff; color: #4338ca; border-width: 1px; border-color: #a5b4fc; border-radius: 3px; padding: 6px">{{card [ 0 ]}}</button>
+          <button data-on-click="onSelectSchematicAnalysisCard" style="background: #eef2ff; color: #4338ca; border-width: 1px; border-color: #a5b4fc; border-radius: 3px; padding: 6px">{{card.0}}</button>
         <!-- /mosaic-for -->
       </div>
       <span style="color: #6d28d9; font-weight: bold">{{selectedSchematicAnalysisLabel}}</span>
@@ -163,7 +163,7 @@
         <span style="font-size: 12px; font-weight: bold; color: #475569">{{analysisLabel}}</span>
         <!-- mosaic-for each="analysisRows" as="analysis" index="analysis-index" -->
           <!-- emit "onSelectAnalysis" dropped: HTML is static -->
-          <button data-on-click="onSelectAnalysis" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 7px">{{analysis [ 0 ]}}</button>
+          <button data-on-click="onSelectAnalysis" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 7px">{{analysis.0}}</button>
         <!-- /mosaic-for -->
         <span style="color: #0369a1; font-weight: bold">{{selectedAnalysisLabel}}</span>
       </div>

@@ -8,9 +8,9 @@
       <!-- mosaic-for each="deckRows" as="d" index="i" -->
         <div style="display: flex; flex-direction: row; align: center-vertical; gap: 8px; border-bottom-width: 1px; border-bottom-color: #e2e8f0; border-bottom-style: solid">
           <!-- emit "onSelectDeck" dropped: HTML is static -->
-          <button data-on-click="onSelectDeck" style="flex-grow: 1; text-align: left; background: transparent; border-width: 0; border-radius: 6px; color: #0f172a; font-size: 13px; font-weight: 600; padding: 8px">{{d [ 0 ]}}</button>
-          <span style="width: 56px; text-align: right; color: #b45309; font-size: 12px; font-weight: 700">{{d [ 1 ]}}</span>
-          <span style="width: 56px; text-align: right; color: #1d4ed8; font-size: 12px; font-weight: 700">{{d [ 2 ]}}</span>
+          <button data-on-click="onSelectDeck" style="flex-grow: 1; text-align: left; background: transparent; border-width: 0; border-radius: 6px; color: #0f172a; font-size: 13px; font-weight: 600; padding: 8px">{{d.0}}</button>
+          <span style="width: 56px; text-align: right; color: #b45309; font-size: 12px; font-weight: 700">{{d.1}}</span>
+          <span style="width: 56px; text-align: right; color: #1d4ed8; font-size: 12px; font-weight: 700">{{d.2}}</span>
         </div>
       <!-- /mosaic-for -->
     </div>

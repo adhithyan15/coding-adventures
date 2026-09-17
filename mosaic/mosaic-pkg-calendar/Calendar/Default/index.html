@@ -34,16 +34,16 @@
           <!-- mosaic-for each="calendarCells" as="cell" index="ci" -->
             <div style="display: flex; flex-direction: column; width: 14.2857%; min-height: 96px; padding: 6px; gap: 3px; border-right-width: 1px; border-right-color: #efe8dd; border-right-style: solid; border-bottom-width: 1px; border-bottom-color: #efe8dd; border-bottom-style: solid">
               <!-- mosaic-if when="( cell [ 2 ] )" -->
-                <span style="width: 21px; height: 21px; border-radius: 20px; text-align: center; font-size: 11px; font-weight: bold; background: #e0942a; color: #ffffff">{{cell [ 0 ]}}</span>
+                <span style="width: 21px; height: 21px; border-radius: 20px; text-align: center; font-size: 11px; font-weight: bold; background: #e0942a; color: #ffffff">{{cell.0}}</span>
               <!-- mosaic-else -->
-                <span style="font-size: 12px; color: #6a625a">{{cell [ 0 ]}}</span>
+                <span style="font-size: 12px; color: #6a625a">{{cell.0}}</span>
               <!-- /mosaic-if -->
               <!-- emit "onEventDropped" dropped: HTML is static -->
               <div data-mosaic-drop-key="{{cell.1}}" data-on-drop="onEventDropped" style="width: 100%; flex-grow: 1; gap: 3px">
                 <!-- mosaic-for each="calendarEvents" as="ev" index="ei" -->
                   <!-- mosaic-if when="( ev [ 2 ] == cell [ 1 ] )" -->
                     <div data-mosaic-drag-key="{{ev.0}}" data-mosaic-drag-kind="task" data-mosaic-drag-label="{{ev.1}}" tabindex="0" role="button" aria-roledescription="draggable" style="touch-action: none; width: 100%; padding-top: 2px; padding-right: 7px; padding-bottom: 2px; padding-left: 7px; border-radius: 5px; border-left-width: 3px; border-left-color: #e0942a; border-left-style: solid; background: #faedd6; color: #b6741a; font-size: 11px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis">
-                      <span style="font-size: 11px">{{ev [ 1 ]}}</span>
+                      <span style="font-size: 11px">{{ev.1}}</span>
                       <!-- mosaic-if when="( ev [ 3 ] )" -->
                         <span style="font-size: 10px; font-weight: bold; color: #cf4b34">Critical</span>
                       <!-- /mosaic-if -->
