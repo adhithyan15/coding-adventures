@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-R77-marks-recall",
+    "language": "kannada",
+    "chapter": 77,
+    "sequence": 2730,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:955de8deba0f220f",
+    "detachableSegments": [
+      "Script: the whole set, sorted by what it asks of you"
+    ]
+  },
+  "findings": []
+}

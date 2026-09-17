@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "KA-S153-question-mark",
+    "language": "kannada",
+    "chapter": 77,
+    "sequence": 2710,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b98178418932303e",
+    "detachableSegments": [
+      "Script you'll notice: the question mark",
+      "Writing: ?"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
