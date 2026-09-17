@@ -8,6 +8,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed -- an empty run-time accessible name made VoiceOver read just "Button" (#15427)
+
+An accessible name known only at run time can be empty, and an empty override is not the same as no override. `.accessibilityLabel(Text(""))` *replaces* the
+button's label. Slot, keyword and expression names now go through a
+generated `_mosaicA11yName(name, fallback: label)`, which speaks the visible
+label when the name is empty (the same idea the Icon lowering already used).
+An empty literal is treated as no name.
+
 ### Fixed -- the CSS `border` shorthand was dropped whole (#15272)
 
 SwiftUI read `border-width`, `border-color` and `border-style`, and read

@@ -3723,6 +3723,14 @@ fn emit_view_struct(
         "    private func _mosaicButton(_ label: Any, action: @escaping () -> Void) -> AnyView {{ AnyView(Button(action: action) {{ _mosaicText(label) }}) }}"
     )
     .unwrap();
+    // An authored accessible name that evaluates to "" must not replace the
+    // button's visible label with nothing: VoiceOver would announce an
+    // unnamed "Button" (#15427). Fall back to what the button shows.
+    writeln!(
+        out,
+        "    private func _mosaicA11yName(_ name: Any, fallback: Any) -> Text {{ let spoken = String(describing: name); return Text(verbatim: spoken.isEmpty ? String(describing: fallback) : spoken) }}"
+    )
+    .unwrap();
     if layout_contains_tag(layout_root, "Icon") {
         writeln!(
             out,
@@ -5285,6 +5293,30 @@ fn emit_host_input(
 ///
 /// If no click/tap emit is bound the action closure is `{ }` (a no-op);
 /// the file still compiles and the button is effectively decorative.
+/// HostButton's accessible name. Unlike [`swift_accessibility_label_for`],
+/// a name that is not a literal can be empty at run time, and
+/// `.accessibilityLabel(Text(""))` would *replace* the visible label, so
+/// dynamic names go through `_mosaicA11yName`, which falls back to the
+/// button's own label (#15427). A literal `""` is treated as no name.
+fn host_button_accessibility_label(
+    node: &LayoutNode,
+    label_expr: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Option<String> {
+    match find_prop_value(node, "a11y-label")? {
+        LayoutPropValue::String(label) if label.is_empty() => None,
+        LayoutPropValue::SlotRef(name) | LayoutPropValue::Keyword(name) => Some(format!(
+            "_mosaicA11yName({}, fallback: {label_expr})",
+            to_camel_case_first_lower(name)
+        )),
+        LayoutPropValue::Expr(expression) => Some(format!(
+            "_mosaicA11yName({}, fallback: {label_expr})",
+            swift_collection_index_expr(expression.trim(), for_payload)
+        )),
+        _ => swift_accessibility_label_for(node, for_payload),
+    }
+}
+
 fn emit_host_button(
     node: &LayoutNode,
     indent: usize,
@@ -5346,7 +5378,7 @@ fn emit_host_button(
             escape_swift_string(part_name)
         ));
     }
-    if let Some(label) = swift_accessibility_label_for(node, for_payload) {
+    if let Some(label) = host_button_accessibility_label(node, &label_expr, for_payload) {
         closing.push_str(&format!(".accessibilityLabel({label})"));
     }
     if let Some(slot) = find_slot_ref_prop(node, "disabled") {
@@ -9345,7 +9377,8 @@ mod tests {
             "expected HostButton label to use For item binding, got:\n{out}"
         );
         assert!(
-            out.contains(".accessibilityLabel(_mosaicText(item))"),
+            // An empty name falls back to the visible label (#15427).
+            out.contains(".accessibilityLabel(_mosaicA11yName(item, fallback: item))"),
             "expected HostButton accessible name to use the For expression, got:\n{out}"
         );
     }

@@ -4998,12 +4998,18 @@ fn emit_host_button_qml(
     // Keep the authored accessible name independent from the compact visual
     // label. TaskApp uses an expression here so each repeated completion
     // button announces the action and task name instead of only "○" / "✓".
+    //
+    // Setting `Accessible.name` replaces the Controls default binding
+    // (`name` follows `text`), so a run-time name that turns out empty would
+    // leave the button unnamed. Dynamic names fall back to the button's own
+    // `text` with `||`, and a literal "" is not written at all (#15427).
     match node
         .props
         .iter()
         .find(|prop| prop.name == "a11y-label")
         .map(|prop| &prop.value)
     {
+        Some(LayoutPropValue::String(label)) if label.is_empty() => {}
         Some(LayoutPropValue::String(label)) => {
             writeln!(
                 out,
@@ -5015,10 +5021,10 @@ fn emit_host_button_qml(
         Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
             let camel = to_camel_case_first_lower(name);
             validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-            writeln!(out, "{inner_pad}Accessible.name: {camel}").unwrap();
+            writeln!(out, "{inner_pad}Accessible.name: ({camel}) || text").unwrap();
         }
         Some(LayoutPropValue::Expr(expr)) => {
-            writeln!(out, "{inner_pad}Accessible.name: {expr}").unwrap();
+            writeln!(out, "{inner_pad}Accessible.name: ({}) || text", expr.trim()).unwrap();
         }
         _ => {}
     }
@@ -9735,7 +9741,8 @@ mod tests {
             r.output
         );
         assert!(
-            r.output.contains("Accessible.name: item"),
+            // An empty name falls back to the button text (#15427).
+            r.output.contains("Accessible.name: (item) || text"),
             "expected HostButton accessible name to use the For expression, got:\n{}",
             r.output
         );
