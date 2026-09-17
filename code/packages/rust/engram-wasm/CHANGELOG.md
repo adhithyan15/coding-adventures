@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+**Regenerated `pkg/engram_engine.wasm` for the Study empty-state props
+(#15440).** The rebuilt engine returns `study-empty` and its copy;
+`js/smoke.mjs` passes against it.
+
 **Regenerated `pkg/engram_engine.wasm` for the screen-switcher props
 (#14063).** The rebuilt engine returns `nav-options` / `nav-selected-index` and
 accepts `onShowScreen`; `js/smoke.mjs` passes against it.

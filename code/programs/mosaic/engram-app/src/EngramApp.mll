@@ -101,42 +101,52 @@ layout EngramApp {
           total-label : slot: total-label ,
           total-value : slot: total-value
         )
-        Box [ review-region ] {
-          pkg::mosaic-pkg-review-card::ReviewCard (
-            deck-name : slot: deck-name ,
-            prompt-label : slot: prompt-label ,
-            prompt : slot: prompt ,
-            answer-label : slot: answer-label ,
-            answer : slot: answer ,
-            answer-visible : slot: answer-visible ,
-            type-answer-active : slot: type-answer-active ,
-            type-answer-label : slot: type-answer-label ,
-            type-answer-value : slot: type-answer-value ,
-            type-answer-placeholder : slot: type-answer-placeholder ,
-            type-answer-comparison-label : slot: type-answer-comparison-label ,
-            type-answer-comparison-value : slot: type-answer-comparison-value ,
-            type-answer-correct : slot: type-answer-correct ,
-            progress-label : slot: progress-label ,
-            onReveal : emit: onReveal ,
-            onTypeAnswerChange : emit: onTypeAnswerChange ,
-            onAgain : emit: onAgain ,
-            onHard : emit: onHard ,
-            onGood : emit: onGood ,
-            onEasy : emit: onEasy
+        If ( when: slot: study-empty ) {
+          pkg::mosaic-pkg-toolkit::EmptyState (
+            title : slot: study-empty-title ,
+            message : slot: study-empty-message ,
+            action-label : slot: study-empty-action-label ,
+            onAction : emit: onShowDecks
           )
         }
-        pkg::mosaic-pkg-review-actions::ReviewActions (
-          undo-label : slot: action-undo-label ,
-          bury-card-label : slot: action-bury-card-label ,
-          bury-siblings-label : slot: action-bury-siblings-label ,
-          suspend-card-label : slot: action-suspend-card-label ,
-          mark-label : slot: action-mark-label ,
-          onUndo : emit: onUndo ,
-          onBuryCard : emit: onBuryCard ,
-          onBurySiblings : emit: onBurySiblings ,
-          onSuspendCard : emit: onSuspendCard ,
-          onToggleMark : emit: onToggleMark
-        )
+        Else {
+          Box [ review-region ] {
+            pkg::mosaic-pkg-review-card::ReviewCard (
+              deck-name : slot: deck-name ,
+              prompt-label : slot: prompt-label ,
+              prompt : slot: prompt ,
+              answer-label : slot: answer-label ,
+              answer : slot: answer ,
+              answer-visible : slot: answer-visible ,
+              type-answer-active : slot: type-answer-active ,
+              type-answer-label : slot: type-answer-label ,
+              type-answer-value : slot: type-answer-value ,
+              type-answer-placeholder : slot: type-answer-placeholder ,
+              type-answer-comparison-label : slot: type-answer-comparison-label ,
+              type-answer-comparison-value : slot: type-answer-comparison-value ,
+              type-answer-correct : slot: type-answer-correct ,
+              progress-label : slot: progress-label ,
+              onReveal : emit: onReveal ,
+              onTypeAnswerChange : emit: onTypeAnswerChange ,
+              onAgain : emit: onAgain ,
+              onHard : emit: onHard ,
+              onGood : emit: onGood ,
+              onEasy : emit: onEasy
+            )
+          }
+          pkg::mosaic-pkg-review-actions::ReviewActions (
+            undo-label : slot: action-undo-label ,
+            bury-card-label : slot: action-bury-card-label ,
+            bury-siblings-label : slot: action-bury-siblings-label ,
+            suspend-card-label : slot: action-suspend-card-label ,
+            mark-label : slot: action-mark-label ,
+            onUndo : emit: onUndo ,
+            onBuryCard : emit: onBuryCard ,
+            onBurySiblings : emit: onBurySiblings ,
+            onSuspendCard : emit: onSuspendCard ,
+            onToggleMark : emit: onToggleMark
+          )
+        }
       }
     }
 

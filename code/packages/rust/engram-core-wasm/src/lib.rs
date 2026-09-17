@@ -2574,6 +2574,36 @@ fn engram_app_props_for_state(
         "nav-selected-index".to_string(),
         json!(active_screen.switcher_index()),
     );
+    // The Study screen's empty state (#15440): the toolkit `EmptyState`
+    // replaces the review card and its actions when nothing is queued, rather
+    // than a card whose prompt reads "No cards queued" above a Reveal button
+    // and five review actions that have nothing to act on. The copy
+    // distinguishes "no session" from "a session with nothing left", since
+    // the way forward is the same (pick a deck) but the reason is not.
+    let (study_empty_message, study_empty_action) = if progress.is_some() {
+        (
+            "Every card in this session has been reviewed or set aside.",
+            "Back to decks",
+        )
+    } else {
+        ("Choose a deck to start a study session.", "Choose a deck")
+    };
+    props_object.insert(
+        "study-empty".to_string(),
+        Value::Bool(active_card.is_none()),
+    );
+    props_object.insert(
+        "study-empty-title".to_string(),
+        Value::String("No cards queued".to_string()),
+    );
+    props_object.insert(
+        "study-empty-message".to_string(),
+        Value::String(study_empty_message.to_string()),
+    );
+    props_object.insert(
+        "study-empty-action-label".to_string(),
+        Value::String(study_empty_action.to_string()),
+    );
     props_object.insert("host-status-visible".to_string(), Value::Bool(false));
     props_object.insert("host-status-kind".to_string(), Value::String(String::new()));
     props_object.insert(
@@ -10432,6 +10462,20 @@ mod tests {
             .unwrap()
             .is_empty());
         assert_eq!(suspended["props"]["prompt"], "No cards queued");
+        // With the queue empty, the Study screen shows the empty state instead
+        // of a card, and says the session ran out rather than never started.
+        assert_eq!(suspended["props"]["study-empty"], true);
+        assert_eq!(suspended["props"]["study-empty-title"], "No cards queued");
+        assert_eq!(
+            suspended["props"]["study-empty-message"],
+            "Every card in this session has been reviewed or set aside."
+        );
+        assert_eq!(
+            suspended["props"]["study-empty-action-label"],
+            "Back to decks"
+        );
+        // ...and while a card was queued, it did not.
+        assert_eq!(buried_current["props"]["study-empty"], false);
     }
 
     #[test]

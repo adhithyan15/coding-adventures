@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added — props for the Study screen's empty state (#15440)
+
+`engram_app_props_for_state` now sets `study-empty` (true when no card is
+active) and the empty state's copy. The message says whether the session ran
+out ("Every card in this session has been reviewed or set aside." / "Back to
+decks") or never started ("Choose a deck to start a study session." / "Choose a
+deck"). Inserted after the props literal, which is at `json!`'s recursion limit.
+The `prompt` placeholder "No cards queued" is unchanged. The suspend test now
+asserts the empty props once the queue drains, and that they were off while a
+card was queued.
+
 ### Added — props and an indexed event for the SegmentedControl screen switcher (#14063)
 
 `engram_app_props` now also returns:
