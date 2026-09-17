@@ -76,8 +76,8 @@ the nearest one rather than inventing a role:
   primitive (§6), which is where `role="tab"` and `role="radio"` belong.
 - `aria-current` means "the current item within a set of *locations*" and is the
   right surface for `HostLink` (§7), not for a button that switches a view.
-- `aria-pressed` is the WAI-ARIA toggle-button state, is valid on `button`, and
-  is what the APG's toolbar and segmented-button examples use.
+- `aria-pressed` is the WAI-ARIA toggle-button state and is valid on
+  `button`; the APG's toolbar example uses it for its toggle buttons.
 
 ### 3.2 Absent is not the same as false
 
