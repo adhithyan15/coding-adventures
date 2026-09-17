@@ -1947,7 +1947,7 @@ describe("the committed Malayalam A1 inventory", () => {
     }
   });
 
-  it("reports a joining column of 4 out of 11, and a script 9 characters short", () => {
+  it("reports a joining column of 5 out of 11, and a script 9 characters short", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
     const { lessons } = loadEverything();
@@ -2006,8 +2006,23 @@ describe("the committed Malayalam A1 inventory", () => {
     // early; the lesson moved to sequence 1405, immediately before the first use,
     // which returned forwardReferences to its baseline of 12 and paid a debt that
     // predated this work.
-    expect(coverage.covered).toBe(167);
-    expect(coverage.unmapped).toBe(76);
+    // 167 -> 169: ML-A1-JOIN-05 (because) and ML-A1-Q-07 (why), which are ONE
+    // PIECE OF WORK and whose notes said so -- cause could be handled in NEITHER
+    // direction, so closing one without the other leaves a learner able to ask a
+    // question nobody can answer. Both notes were verified: entukondu, kaaranam
+    // and entukondennaal each returned ZERO files across the whole corpus.
+    // MOST OF THE CHAPTER IS BUILT FROM WHAT THE READER HAD. Malayalam has no
+    // separate word for why: entukondu is chapter two's entu plus kondu, "by
+    // means of", so the question asks "by what". The written because then carries
+    // that whole question word visibly at its front.
+    // THE TAIL OF entukondennaal IS DELIBERATELY NOT TAKEN APART: its -ennaal can
+    // be read as the but-word ML-C64 teaches or as a conditional of the saying
+    // verb, grammars differ, and the lesson says so rather than picking one.
+    // A DRAFT CLAIMED ALL FOUR QUESTION WORDS SHARE THE FRONT LETTER e AND WAS
+    // WRONG: aaru (who) opens on aa. Three of the four carry the asking letter
+    // ML-C41-deixis-system named, and who is the exception.
+    expect(coverage.covered).toBe(169);
+    expect(coverage.unmapped).toBe(74);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2032,7 +2047,7 @@ describe("the committed Malayalam A1 inventory", () => {
     // THE TITLE MOVED WITH THE NUMBER, for the third time. A test name carrying
     // a stale count reads as a finding and is not one.
     const joining = coverage.byCategory["Samuchayam (joining and subordination)"]!;
-    expect(joining).toEqual({ enumerated: 11, covered: 4 });
+    expect(joining).toEqual({ enumerated: 11, covered: 5 });
     // DO NOT CARRY ANOTHER TRACK'S SCRIPT SHAPE HERE. Tamil came back 52 of 52,
     // Kannada 50 of 69. Malayalam was measured on its own and is 58 of the 67
     // distinct characters its headwords use -- 87 per cent. The nine open ones,
@@ -2046,7 +2061,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 167/243 points covered (69%)",
+      "malayalam A1 (partial inventory): 169/243 points covered (70%)",
     );
   }, 60_000);
 });

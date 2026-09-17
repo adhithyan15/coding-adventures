@@ -1,0 +1,15 @@
+{
+  "id": "ML-PATH-73-CAUSE",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "ML-C73-enthukondu",
+    "ML-C73-kaaranam",
+    "ML-C73-enthukondennaal",
+    "ML-R73-cause-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-73-CAUSE"
+  ],
+  "after": []
+}

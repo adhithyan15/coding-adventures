@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:47bec3ed902987e7",
+  "lessonIds": [
+    "ML-C73-enthukondu",
+    "ML-C73-kaaranam",
+    "ML-C73-enthukondennaal",
+    "ML-R73-cause-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch73-why-and-because.tex"
+}

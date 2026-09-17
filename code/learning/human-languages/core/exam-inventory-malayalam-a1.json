@@ -1585,7 +1585,9 @@
       "id": "ML-A1-Q-07",
       "category": "Chodyam (asking questions)",
       "label": "enthukondu: why",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C73-WHY-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1596,7 +1598,7 @@
         "A1-SUB-06"
       ],
       "malayalamSpecific": false,
-      "note": "Neither the question word nor the because-word is taught, so cause cannot be asked about or given. See ML-A1-JOIN-05."
+      "note": "CLOSED by chapter 73 -- see ML-A1-JOIN-05, which the same chapter closes. The note was right that neither half existed. The question word is entukondu, and it is transparent: entu (what, chapter two) plus kondu (by means of). THREE OF THE FOUR QUESTION WORDS NOW OPEN ON E -- entu, evide and entukondu -- which is the asking letter ML-C41-deixis-system already named when it taught i- for near, a- for far and e- for a question. AARU (who) is the exception and starts on aa; a draft of the lesson claimed all four shared the letter and was corrected."
     },
     {
       "id": "ML-A1-Q-08",
@@ -2041,7 +2043,11 @@
       "id": "ML-A1-JOIN-05",
       "category": "Samuchayam (joining and subordination)",
       "label": "because: giving a reason",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C73-WHY-01",
+        "ML-LEX-C73-KAARANAM-01",
+        "ML-GRAMMAR-C73-BECAUSE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -2051,7 +2057,7 @@
         "A1-SUB-06"
       ],
       "malayalamSpecific": false,
-      "note": "enthukondennaal and kaaranam are both absent. Combined with the missing 'why' at ML-A1-Q-07, cause cannot be asked for or supplied in either direction."
+      "note": "CLOSED by chapter 73, together with ML-A1-Q-07. Both notes were accurate and both were verified: enthukondu, kaaranam and enthukondennaal each returned ZERO files across the whole corpus. THE TWO POINTS ARE ONE PIECE OF WORK and the notes said so -- cause could be handled in NEITHER direction, so closing one without the other would have left a learner able to ask a question nobody could answer or to answer one nobody could ask. MOST OF THE CHAPTER IS BUILT FROM MATERIAL THE READER ALREADY HAS. Malayalam has no separate word for why: entukondu is chapter two's entu (what) plus kondu, the ending meaning by means of, so the question literally asks 'by what'. The written because, entukondennaal, then carries that whole question word visibly at its front. KAARANAM IS THE ONE FOR SPEECH and is a noun first -- a reason, a cause -- taken whole from Sanskrit kaarana, which puts it beside cinta and suprabhaatam as nouns this track borrows unreshaped. THE TAIL OF ENTUKONDENNAAL IS DELIBERATELY NOT TAKEN APART. Its -ennaal can be read as the but-word ML-C64 teaches or as a conditional of the saying-verb, and grammars differ; the lesson says so rather than picking one. That is the same refusal this campaign applies to an unsourced stroke order."
     },
     {
       "id": "ML-A1-JOIN-06",

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C73-enthukondennaal",
+    "language": "malayalam",
+    "chapter": 73,
+    "sequence": 2530,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:41cf4b5f18d3153c"
+  },
+  "findings": []
+}

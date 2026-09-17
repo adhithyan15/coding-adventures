@@ -1,0 +1,17 @@
+{
+  "chapter": 73,
+  "title": "Why, and Because",
+  "label": "ch:ml-kaaranam",
+  "canDo": "I can ask why something is so, and give a reason in speech or in writing.",
+  "payoff": {
+    "lesson": "ML-R73-cause-recall",
+    "kind": "production",
+    "summary": "From cold: the question word and the two ways to answer it, which of them belongs in speech, and the word from chapter two that the question is built on.",
+    "assesses": [
+      "ML-LEX-C73-WHY-01",
+      "ML-LEX-C73-KAARANAM-01",
+      "ML-GRAMMAR-C73-BECAUSE-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. It closes both halves of a two-way gap: until now cause could neither be asked about nor supplied."
+  }
+}
