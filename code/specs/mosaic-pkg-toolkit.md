@@ -168,6 +168,7 @@ the model.
 | `DropdownMenu` | `Stack { HostButton[trigger], If open { Box[menu] { For (items) { HostButton } } } }` |
 | `Accordion`    | `Column { For (sections) { Box[section] { HostButton[header], If open { Box[body] } } } }` |
 | `Select`       | uses `DropdownMenu` |
+| `EmptyState` | `Column { Text[title, heading], If message { Text }, If action-label { HostButton } }` |
 | `SegmentedControl` | `Row { For (options) { If selected { HostButton[option-selected] } Else { HostButton[option] } } }` |
 
 ### 3.3 Tier 3 — needs new infrastructure

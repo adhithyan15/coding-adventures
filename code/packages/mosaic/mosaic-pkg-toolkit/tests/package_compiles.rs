@@ -36,7 +36,7 @@ use std::path::PathBuf;
 /// list. Reorder both together if it ever changes.
 const COMPONENTS: &[&str] = &[
     "Accordion", "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
-    "Checkbox", "DropdownMenu", "Field", "Input", "InputGroup",
+    "Checkbox", "DropdownMenu", "EmptyState", "Field", "Input", "InputGroup",
     "ListGroup", "Modal", "Nav", "Navbar", "NumberInput", "Pagination",
     "Radio", "SegmentedControl", "Select", "Spinner", "Tabs", "Toast", "Tooltip",
 ];
@@ -83,8 +83,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.13.0",
-        "[package].version must be 0.13.0 for the vertical SegmentedControl release"
+        version, "0.14.0",
+        "[package].version must be 0.14.0 for the EmptyState release"
     );
 
     let exports = value
@@ -918,6 +918,61 @@ fn tabs_active_header_part_compiles_and_is_styled() {
             "{style_filename} active tab background mismatch"
         );
     }
+}
+
+/// EmptyState (#15440) — what a view shows when it has nothing yet.
+#[test]
+fn empty_state_interface_matches_spec() {
+    let out = mosmodel_compiler::compile(&read_source("EmptyState.mil")).unwrap();
+    let slots: Vec<&str> = out.component.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slots, vec!["title", "message", "action-label"]);
+    let emits: Vec<&str> = out.component.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emits, vec!["onAction"]);
+}
+
+/// The two properties that make this component worth sharing: the title is
+/// a heading for assistive technology, and the action button exists only
+/// when it has a label (an unlabelled one would be an unnamed button). The
+/// message is gated too, so a title-only state has no empty line under it.
+#[test]
+fn empty_state_title_is_a_heading_and_optional_parts_are_gated() {
+    let mil = mosmodel_compiler::compile(&read_source("EmptyState.mil")).unwrap();
+    let mll = moslayout_compiler::compile(&read_source("EmptyState.mll"), Some(&mil.descriptor_json))
+        .expect("EmptyState.mll compiles");
+
+    let root = &mll.def.root;
+    assert_eq!(root.tag, "Column");
+    let prop = |node: &moslayout_compiler::LayoutNode, name: &str| {
+        node.props
+            .iter()
+            .find(|p| p.name == name)
+            .map(|p| format!("{:?}", p.value))
+    };
+
+    let title = &root.children[0];
+    assert_eq!(title.tag, "Text");
+    assert_eq!(title.part_name.as_deref(), Some("empty-state-title"));
+    assert_eq!(prop(title, "a11y-role").as_deref(), Some("Keyword(\"heading\")"));
+
+    let gate = |index: usize, slot: &str, tag: &str, part: &str| {
+        let branch = &root.children[index];
+        assert_eq!(branch.tag, "If", "child {index} must be conditional");
+        assert_eq!(
+            prop(branch, "when"),
+            Some(format!("SlotRef({slot:?})")),
+            "child {index} must be gated on {slot}"
+        );
+        assert_eq!(branch.children.len(), 1);
+        assert_eq!(branch.children[0].tag, tag);
+        assert_eq!(branch.children[0].part_name.as_deref(), Some(part));
+    };
+    gate(1, "message", "Text", "empty-state-message");
+    gate(2, "action-label", "HostButton", "empty-state-action");
+    assert_eq!(root.children.len(), 3, "nothing else is drawn");
+
+    let action = &root.children[2].children[0];
+    assert_eq!(prop(action, "label").as_deref(), Some("SlotRef(\"action-label\")"));
+    assert_eq!(prop(action, "onClick").as_deref(), Some("EmitRef(\"onAction\")"));
 }
 
 /// SegmentedControl — a row of options, one selected. The host owns

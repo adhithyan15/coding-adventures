@@ -1,0 +1,35 @@
+// EmptyState.mil — interface for the toolkit's EmptyState (#15440).
+//
+// What a view shows when it has nothing to show yet: a heading, a line
+// saying what to do next, and optionally one button that does it.
+//
+//   ┌──────────────────────────────────────┐
+//   │          Your Inbox is ready         │   title   (a heading)
+//   │  Add your first task above. …        │   message
+//   │            [ Add a task ]            │   action  (only if labelled)
+//   └──────────────────────────────────────┘
+//
+// Every product needs one (#14415 counts it in all four), and each had
+// started drawing its own: TaskApp's List view, Engram's "No cards queued".
+// A shared component gives them one set of spacing, colours and — the part
+// that is easy to get wrong by hand — one heading semantics, so a screen
+// reader lands on the empty state the same way everywhere.
+//
+// Why the action is text-gated rather than a bool
+// -----------------------------------------------
+// An action with no label would be an unnamed button. Making the label the
+// switch means the component cannot be asked for one.
+
+component EmptyState {
+  // The heading. Announced with the heading role.
+  slot title : text ;
+
+  // What to do next. May be empty.
+  slot message : text ;
+
+  // Label of the optional action button. Empty means no button.
+  slot action-label : text ;
+
+  // Fired when the action button is activated.
+  emit onAction ;
+}
