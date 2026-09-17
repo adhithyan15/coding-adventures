@@ -7,6 +7,19 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.2.0` accumulate here until the next version is
 cut.
 
+### Changed -- the empty List is the toolkit EmptyState (#15440)
+
+The first-run "Your Inbox is ready" panel was a hand-built `Column` with
+three styled parts per theme. It is now
+`pkg::mosaic-pkg-toolkit::EmptyState`, with the same title and message and
+no action (the composer directly above is the action). The heading keeps its
+heading role; the three parts are gone from both themes. The toolkit
+dependency moves to 0.14.0.
+
+Verified in a browser on the production web build: the title is an `<h2>`,
+the message renders, and no empty button is drawn. The web host passes
+vitest 57/57 and `tsc && vite build` succeeds.
+
 ### Changed -- the view switcher is the toolkit SegmentedControl (#14016)
 
 The switcher was a six-way `If`/`Else` chain wrapped around six

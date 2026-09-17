@@ -8,7 +8,7 @@ license = "MIT OR Apache-2.0"
 exports = ["TaskApp"]
 
 [dependencies]
-mosaic-pkg-toolkit = "0.13.0"
+mosaic-pkg-toolkit = "0.14.0"
 mosaic-pkg-sheet = "0.1.0"
 mosaic-pkg-calendar = "0.1.0"
 mosaic-pkg-notes = "0.2.0"
