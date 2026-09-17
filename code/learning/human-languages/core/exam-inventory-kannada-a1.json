@@ -4451,7 +4451,9 @@
       "id": "KA-A1-L-12",
       "category": "Lipi (script and orthography)",
       "label": "the full stop and the comma",
-      "probe": null,
+      "probe": [
+        "KA-SCRIPT-RECOG-152"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -4461,13 +4463,15 @@
         "A1-O3-01",
         "A1-O3-02"
       ],
-      "note": "Untaught. Modern Kannada uses the Latin full stop and comma, and the older danda; no lesson mentions punctuation at all."
+      "note": "Untaught, and the sharp part was that the corpus had been PRINTING them from chapter one -- every Kannada sentence in every reading passage ends in a Latin full stop -- while no lesson named either mark. KA-S152-full-stop-and-comma closes it at chapter 77, opening on exactly that: look at the end of any line in the previous chapter and something is sitting there no lesson has named. Kannada borrows both marks whole from the Latin alphabet, shape and job together, so there is no second system to learn. The older upright stroke is named as something a reader may meet in old printing rather than something to write."
     },
     {
       "id": "KA-A1-L-13",
       "category": "Lipi (script and orthography)",
       "label": "the question mark",
-      "probe": null,
+      "probe": [
+        "KA-SCRIPT-RECOG-153"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -4476,13 +4480,15 @@
       "derivedFrom": [
         "A1-O3-04"
       ],
-      "note": "Untaught as a convention, though it is used throughout the books. Kannada does not use the inverted opening marks Spanish does."
+      "note": "Untaught as a convention though used throughout the books. KA-S153-question-mark closes it. The load-bearing fact is the one the Spanish demand this derives from makes visible by contrast: SPANISH OPENS A QUESTION WITH A SECOND, INVERTED MARK AND KANNADA DOES NOT, so a Kannada reader meets the mark at the end or not at all and the WORDS have to carry the question until then. That changes reading aloud, which is why the lesson says it."
     },
     {
       "id": "KA-A1-L-14",
       "category": "Lipi (script and orthography)",
       "label": "other punctuation: colon, quotation marks, parentheses, dash",
-      "probe": null,
+      "probe": [
+        "KA-SCRIPT-RECOG-154"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -4496,7 +4502,7 @@
         "A1-O3-08",
         "A1-O3-09"
       ],
-      "note": "Untaught. Six Spanish points collapse here because Kannada borrows the Latin set wholesale and the corpus teaches none of it."
+      "note": "Six Spanish points collapse into this one because Kannada borrows the Latin set wholesale. KA-S154-other-marks closes it as a RECOGNITION point: the colon, the brackets, the quotation marks and the dash are what a notice or a form puts in front of a reader, and at A1 the demand is knowing what each signals rather than placing one. The chapter's recall lesson sorts the whole set into the three a reader writes -- full stop, comma, question mark -- and the rest they read."
     },
     {
       "id": "KA-A1-L-15",

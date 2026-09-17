@@ -1,0 +1,18 @@
+{
+  "language": "kannada",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:99407c31a083f5b6",
+  "lessonIds": [
+    "KA-S152-full-stop-and-comma",
+    "KA-S153-question-mark",
+    "KA-S154-other-marks",
+    "KA-R77-marks-recall"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch77.txt",
+  "json": "kannada/narration/ch77.json",
+  "textHash": "fnv1a64:6eb6469e9428b099",
+  "jsonHash": "fnv1a64:184d2374ecffbc08",
+  "findings": []
+}
