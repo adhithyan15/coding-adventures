@@ -50,6 +50,15 @@ component SegmentedControl {
   // component never changes it, it only reports activations.
   slot selected-index : number ;
 
+  // Stack the options vertically instead of in a row. For narrow
+  // layouts: Engram's touch shell stacks its screen switcher because six
+  // options side by side overflow a phone-width screen (#15432).
+  //
+  // A bool, not `one-of horizontal vertical`: a layout `If` on a bool slot
+  // is the form every backend already lowers (Engram's show-*-screen
+  // flags), whereas no layout anywhere compares a one-of slot to a string.
+  slot vertical : bool ;
+
   // Disables every option at once. A partly-disabled segmented control
   // is a different widget (a toolbar), so there is no per-option flag.
   slot disabled : bool ;

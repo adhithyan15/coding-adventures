@@ -1,0 +1,651 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 85,
+  "title": "The People Not Here",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:f23cc1dcdcba55ec",
+  "lessons": [
+    {
+      "id": "TA-C85-avan-aval",
+      "sequence": 3520,
+      "title": "அவன் / அவள் (avaṉ / avaḷ) — the pair underneath the respectful word",
+      "headword": "அவன் / அவள்",
+      "romanization": "avaṉ / avaḷ",
+      "gloss": "he and she, the familiar pair the respectful word was built out of",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd0afc02721db0be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the respectful word for a person who is not here. Say whether it tells you anything about their sex. (It does not.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Today's two words do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அவன் and அவள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அவன் — avaṉ — he அவள் — avaḷ — she."
+            },
+            {
+              "kind": "speech",
+              "text": "These are the plain, familiar words, and அவர் was built on top of them: the lesson that taught இவர் said so in passing, that it comes from இவன் and இவள் with the same -அர் that makes நண்பர் out of நண்பன்."
+            },
+            {
+              "kind": "speech",
+              "text": "So the ending you met on a word for friend is the same ending that turns a familiar he into a respectful that person. One suffix, three words, and it does the same job in all of them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: choosing between them",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "about",
+                "you say"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "about: a man, familiarly. you say: அவன்.",
+                "about: a woman, familiarly. you say: அவள்.",
+                "about: either, respectfully. you say: அவர்."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The choice is about the relationship, not about the grammar. அவன் and அவள் go with somebody younger, a close friend, a child — the people you would use the familiar நீ with rather than நீங்கள். Reaching for அவன் about a stranger or an elder lands the way the familiar you would."
+            },
+            {
+              "kind": "speech",
+              "text": "A learner in doubt is safer with அவர். Being a shade too polite passes without comment; the other direction does not."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "அவன், அவள்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: அவன், அவள்]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three words hides the person's sex",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three words hides the person's sex]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one you would use about somebody's grandmother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one you would use about somebody's grandmother]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the ending that அவர் and நண்பர் have in common",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the ending that அவர் and நண்பர் have in common]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word is she? (அவள்.) Which is he? (அவன்.) Which one would you choose if you were unsure of the relationship? (அவர்.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C85-avargal",
+      "sequence": 3530,
+      "title": "அவர்கள் (avarkaḷ) — they, and an ending hiding in a word you already say",
+      "headword": "அவர்கள்",
+      "romanization": "avarkaḷ",
+      "gloss": "they — the respectful word with the plural ending you have been saying since chapter two",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:212da8a4ac75b137",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the polite word for you. Look at its last syllable."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have been carrying a plural ending around since chapter two without being told it was one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அவர்கள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அவர்கள் — avarkaḷ — they."
+            },
+            {
+              "kind": "speech",
+              "text": "It is அவர் with -கள் on the end, and -கள் is Tamil's plural. The same piece is sitting on the end of நீங்கள், which is why that word does double duty as a polite singular you and a plain plural you."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "one",
+                "more than one"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "one: நீ. more than one: நீங்கள்.",
+                "one: அவர். more than one: அவர்கள் (avarkaḷ)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The ending you have been pronouncing for eighty chapters turns out to be a word-building piece, and now it builds something for you rather than arriving pre-attached."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the same double duty",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அவர்கள் (avarkaḷ) carries the same ambiguity as நீங்கள். About several people it is plainly they; about one person it is a step more respectful still than அவர் — the way some languages use a plural to raise the register."
+            },
+            {
+              "kind": "speech",
+              "text": "Context settles which, and context usually settles it easily: a room with three people in it needs no disambiguation."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "அவர்கள் (avarkaḷ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: அவர்கள்]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two pieces it is made of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two pieces it is made of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word for polite you, and point at the same piece inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word for polite *you*, and point at the same piece inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what அவர்கள் (avarkaḷ) can mean about a single person",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what அவர்கள் can mean about a single person]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is Tamil's plural ending? (-கள்.) What is அவர்கள் (avarkaḷ) built from? (அவர் plus that ending.) Which other word you already say carries it? (நீங்கள்.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C85-naam-naangal",
+      "sequence": 3540,
+      "title": "நாம் / நாங்கள் (nām / nāṅgaḷ) — two words for \"we\", and you have to choose",
+      "headword": "நாம் / நாங்கள்",
+      "romanization": "nām / nāṅgaḷ",
+      "gloss": "the two words for we — one that takes the listener in and one that leaves them out",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d0efc7c4ead8064",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word for I."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say we. Tamil will ask you a question first, and English never has."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நாம் and நாங்கள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாம் — nām — we, counting the person you are talking to நாங்கள் — nāṅgaḷ — we, not counting them."
+            },
+            {
+              "kind": "speech",
+              "text": "English has one we and hides which it means. Tamil has two and makes you decide every time."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "you mean",
+                "you say"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "you mean: you and me. you say: நாம்.",
+                "you mean: me and them, but not you. you say: நாங்கள்."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "\"Shall we go?\" said to a friend is நாம் — the invitation is the point. \"We went yesterday\" said to somebody who stayed behind is நாங்கள், and using நாம் there would tell them they had been present when they were not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the piece you can already see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாங்கள் ends in the plural -கள் met in the lesson before this one. நாம் does not, and that is a useful shape to hold on to: the shorter word is the one that gathers everybody in."
+            },
+            {
+              "kind": "speech",
+              "text": "This distinction has no English equivalent to lean on, so it is worth practising as a question rather than as a pair of words. Before saying we, ask whether the person listening is inside it. The answer picks the word for you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "நாம், நாங்கள்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: நாம், நாங்கள்]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one you would use to invite a friend somewhere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one you would use to invite a friend somewhere]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one you would use telling a friend about a trip they missed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one you would use telling a friend about a trip they missed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two carries the plural ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two carries the plural ending]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which we includes the listener? (நாம்.) Which leaves them out? (நாங்கள்.) What question do you ask yourself before choosing? (Whether the person listening is inside the we.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R85-avarkal-recall",
+      "sequence": 3550,
+      "title": "(the people not here) (avarkaḷ ninaivu) — four words, from cold",
+      "headword": "(the people not here)",
+      "romanization": "avarkaḷ ninaivu",
+      "gloss": "cold retrieval of the third person and the two we-words, and the question each one answers",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2a0a0c6f384a6b24",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the four lessons before this one. Say the word for this person, the one you have had since chapter thirty-seven."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the table, filled in",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "near",
+                "far"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "respectfully. near: இவர். far: அவர்.",
+                "he / she. near: —. far: அவன் / அவள் (avaṉ / avaḷ).",
+                "more than one. near: —. far: அவர்கள் (avarkaḷ)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The far column was empty and its pattern had been taught. That is the shape of this chapter: the pointing system arrived long ago, correct and complete as a rule, with only half its cells ever handed over."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the question behind each choice",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "before you say",
+                "ask yourself"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "before you say: he or she. ask yourself: how close is this person to me.",
+                "before you say: we. ask yourself: is my listener inside it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both questions are ones English lets a speaker skip. Tamil asks them every time, and neither has a safe default you can lean on forever — though a learner in doubt about the first is better off one shade too polite."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four words this chapter taught, from memory",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four words this chapter taught, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which front letter all but one of them carry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which front letter all but one of them carry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which we invites the listener along",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which *we* invites the listener along]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plural ending, and two words you know that carry it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plural ending, and two words you know that carry it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word is respectful and hides the person's sex? (அவர்.) Which is they? (அவர்கள் (avarkaḷ).) Which we leaves the listener out? (நாங்கள்.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

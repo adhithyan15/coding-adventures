@@ -1584,8 +1584,24 @@ describe("the committed Tamil A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(262);
-    expect(coverage.covered).toBe(175);
-    expect(coverage.unmapped).toBe(87);
+    // 175 -> 176: TA-A1-PRON-03, the rest of the subject paradigm. THE GAP WAS
+    // INSIDE A RULE THAT HAD ALREADY BEEN TAUGHT: TA-C37-ivar teaches the i-/a-
+    // pointing system and its table says in as many words that a- points away --
+    // and the a- column had never been filled, so a reader could state what a-
+    // meant and had no a- person word to say. avar now sits one lesson after
+    // ivar, where that table shows the column; avan and aval are the familiar
+    // pair ivar's own lesson already named as what it was built from; avarkaL is
+    // avar plus the plural -kaL the reader has been pronouncing inside niingaL
+    // since chapter two. naam against naangaL is the point the note called out as
+    // the one Spanish does not make, and it is taught as a QUESTION -- is my
+    // listener inside this 'we' -- rather than as a pair of words.
+    // TA-A1-V-06'S NOTE WAS HALF WRONG AND IS CORRECTED IN THE INVENTORY: it said
+    // 'no lesson puts a verb into the past', and TA-C32-po prints poogiReen /
+    // pooneen / pooveen in a three-row table and glosses pooneen as 'I went'. The
+    // real gap is PRODUCTIVITY, not exposure -- shown for one verb, never taught
+    // as an atom -- which is a different and cheaper problem than described.
+    expect(coverage.covered).toBe(176);
+    expect(coverage.unmapped).toBe(86);
     // 174 -> 175: the HL-C354 ordinal tranche closed TA-A1-NUM-04 (chapters
     // 82-83). It is the ONLY point that moved, and the numeral column below
     // says so on its own line rather than leaving the total to speak for it.
@@ -1608,7 +1624,7 @@ describe("the committed Tamil A1 inventory", () => {
     expect(coverage.byCategory["Vinaiccol (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Tamiḻ eḻuttu (script and orthography)"]!.covered).toBeGreaterThan(5);
     expect(formatExamCoverage(coverage)).toContain(
-      "tamil A1 (partial inventory): 175/262 points covered (67%)",
+      "tamil A1 (partial inventory): 176/262 points covered (67%)",
     );
   }, 60_000);
 });
@@ -1935,8 +1951,25 @@ describe("the committed Malayalam A1 inventory", () => {
     // both, chaayayoo kaappiyoo for one of them.
     // MALAYALAM HAS NO UNTRANSFERABLE POINTS, unlike Kannada's four, so its
     // ceiling is the full 243.
-    expect(coverage.covered).toBe(164);
-    expect(coverage.unmapped).toBe(79);
+    // 164 -> 166: ML-A1-PRON-03 (third person) and ML-A1-PRON-04 (first and second
+    // person plural). VERIFIED WORSE THAN THE NOTES SAID: avan, aval, avar and
+    // njangal appeared in ZERO lesson files -- not as headwords, not anywhere in a
+    // body. A learner with seventy chapters of vocabulary could say I and you and
+    // could not say he, she, they or we.
+    // naam LOOKED taught and was not: it appeared as a headword in ML-C67-first,
+    // ML-C67-third and ML-C68-eleventh, where it is a SUBSTRING of the ordinals
+    // onnaam, moonnaam and pathinonnaam. Every ordinal ending -nnaam is a false
+    // positive for naam -- the same trap the Hindi campaign recorded when every
+    // ordinal matched its own cardinal. Check the token, not the substring.
+    // THE GAP SAT INSIDE A SYSTEM ALREADY TAUGHT. ML-C41-that teaches the i-/a-
+    // pointing pair and says in as many words that a- means far, and the corpus
+    // only ever used it on THINGS. avan, aval and avar carry the same a-, so the
+    // column for people was predicted and never filled -- the same shape as Tamil's
+    // TA-A1-PRON-03, closed in the chapter before this one. avar additionally
+    // reuses ML-C02's own rule that a plural raises the register (nii -> ningal,
+    // avan -> avar), so two of the three new words run on machinery already held.
+    expect(coverage.covered).toBe(166);
+    expect(coverage.unmapped).toBe(77);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -1970,7 +2003,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 164/243 points covered (67%)",
+      "malayalam A1 (partial inventory): 166/243 points covered (68%)",
     );
   }, 60_000);
 });

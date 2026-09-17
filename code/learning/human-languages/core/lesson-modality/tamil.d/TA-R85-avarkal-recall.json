@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R85-avarkal-recall",
+    "language": "tamil",
+    "chapter": 85,
+    "sequence": 3550,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2a0a0c6f384a6b24"
+  },
+  "findings": []
+}

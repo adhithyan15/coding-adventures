@@ -1,0 +1,17 @@
+{
+  "chapter": 85,
+  "title": "The People Not Here",
+  "label": "ch:ta-avarkal",
+  "canDo": "I can talk about somebody who is not in the room, choosing between the familiar and respectful words, and I can say we in the two ways Tamil requires.",
+  "payoff": {
+    "lesson": "TA-R85-avarkal-recall",
+    "kind": "production",
+    "summary": "From cold: the four third-person and we-words, the front letter that marks distance, and the question each choice answers.",
+    "assesses": [
+      "TA-LEX-C85-AVAN-AVAL-01",
+      "TA-LEX-C85-AVARGAL-01",
+      "TA-LEX-C85-NAAM-NAANGAL-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. avar itself moved to chapter 37, beside the lesson whose own table had been showing the a- column without ever naming a word for it."
+  }
+}

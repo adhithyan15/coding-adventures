@@ -439,7 +439,12 @@
       "id": "TA-A1-PRON-03",
       "category": "Pratippeyar (pronouns)",
       "label": "the rest of the subject paradigm: avaṉ, avaḷ, avar, nām / nāṅgaḷ, avarkaḷ",
-      "probe": null,
+      "probe": [
+        "TA-LEX-C37-AVAR-01",
+        "TA-LEX-C85-AVAN-AVAL-01",
+        "TA-LEX-C85-AVARGAL-01",
+        "TA-LEX-C85-NAAM-NAANGAL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "TA-CORPUS",
@@ -448,7 +453,7 @@
       "derivedFrom": [
         "A1-PRON-01"
       ],
-      "note": "Only nāṉ and nī/nīṅgaḷ are taught. The third person is missing entirely except for the demonstrative ivar, and so is the inclusive/exclusive we -- nām against nāṅgaḷ -- which is a distinction Spanish does not make and Tamil requires on every first plural."
+      "note": "Only naan and nii/niingaL were taught. Chapter 85 closes it, and the sharp part is WHERE the gap was: TA-C37-ivar had already taught the i-/a- pointing system as a RULE, with a table saying in as many words that a- points away -- and the a- column had never been filled. A reader could state what a- meant and had no a- person word to say. That is the ordinary way a gap survives: the pattern gets taught, the pattern is correct, and nobody notices half of what it predicts was never handed over. AVAR IS TAUGHT IN CHAPTER 37, NOT 85, AND THE MOVE IS THE POINT: leaving it at the end of the book made ivar's own table a forward reference to it (forwardReferences 7 -> 8), so it now sits one slot after ivar where the table shows the a- column. It costs one letter off ivar; avan and aval are the familiar pair that ivar's own lesson already named as what it was built from; avarkaL is avar plus the plural -kaL the reader has been pronouncing inside niingaL since chapter two. naam against naangaL is the distinction the note named as the one Spanish does not make: Tamil asks on every first plural whether the listener is inside the 'we', and the lesson teaches it as that question rather than as a pair of words."
     },
     {
       "id": "TA-A1-PRON-04",
@@ -1018,7 +1023,7 @@
         "A1-V-10",
         "A1-V-14"
       ],
-      "note": "EIGHT Spanish points collapse here and NONE of it is taught. Chapter 32 names the middle bead as the tense slot and shows that it can be past, present or future, but no lesson gives the past marker, and no lesson puts a verb into the past. A candidate cannot say a single thing that happened."
+      "note": "HALF THIS NOTE WAS WRONG AND THE CORRECTION MATTERS FOR WHOEVER PICKS IT UP. It said 'no lesson gives the past marker, and no lesson puts a verb into the past'. TA-C32-po DOES put a verb into the past: it prints a three-row table -- poogiReen, pooneen, pooveen -- naming the middle bead -giR-, -n-, -v- for present, past and future, and glosses pooneen as 'I went'. What is true is that this is SHOWN FOR ONE VERB IN ONE TABLE and never taught as an atom or as anything productive: the lesson's atoms are the word and the three-slot structure, not the past marker. So the gap is PRODUCTIVITY, not exposure, which is a different and cheaper problem than the note described. It is still real -- a candidate cannot put an arbitrary verb into the past -- and it is still not cheap, because Tamil's past marker varies by verb class and the six verbs of chapter 32 span several of them (irundeen, paartteen, pooneen, saappitteen, terindeen, vandeen). An honest chapter teaches the past per verb for the verbs the corpus has, rather than inventing a single rule."
     },
     {
       "id": "TA-A1-V-07",

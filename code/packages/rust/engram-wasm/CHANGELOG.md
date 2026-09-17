@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+**Regenerated `pkg/engram_engine.wasm` for the screen-switcher props
+(#14063).** The rebuilt engine returns `nav-options` / `nav-selected-index` and
+accepts `onShowScreen`; `js/smoke.mjs` passes against it.
+
+
 **Regenerated `pkg/engram_engine.wasm`, which was two months stale.** The
 committed artifact dated from 2026-07-03 and still contained the old
 `"handled by native hosts for WASM shells"` stub — it predated the change that
