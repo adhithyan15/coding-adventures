@@ -2945,6 +2945,29 @@ jobs:
             throw "Native-complete XAML HostButton selected WinUI build failed with exit code $selectedBuildExitCode"
           }
 
+          # UI29-6 (#15481) slice K-xaml: HostNavigationSplit lowers to
+          # NavigationView. The fixture nests an adaptive split inside a
+          # pinned one, so the XAML compiler checks both collapse modes,
+          # both title shapes, and a NavigationView living inside another
+          # NavigationView's content.
+          $navSplitOutput = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-host-navigation-split'
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-xaml/fixtures/host-navigation-split --backend xaml --output $navSplitOutput --emit-project --profile native-complete --runtime-library $library.Path
+          if ($LASTEXITCODE -ne 0) {
+            throw "Native-complete XAML HostNavigationSplit generation failed with exit code $LASTEXITCODE"
+          }
+          $navSplitReport = Get-Content (Join-Path $navSplitOutput 'xaml/mosaic-degradations.json') -Raw | ConvertFrom-Json
+          if (!$navSplitReport.nativeComplete -or $navSplitReport.degradations.Count -ne 0) {
+            throw 'Native-complete XAML HostNavigationSplit generation reported degradations'
+          }
+          $navSplitProject = Join-Path $navSplitOutput 'xaml/Shell.csproj'
+          Push-Location (Split-Path -Parent $navSplitProject)
+          dotnet build (Split-Path -Leaf $navSplitProject) -c Debug -p:Platform=x64 --nologo
+          $navSplitBuildExitCode = $LASTEXITCODE
+          Pop-Location
+          if ($navSplitBuildExitCode -ne 0) {
+            throw "Native-complete XAML HostNavigationSplit WinUI build failed with exit code $navSplitBuildExitCode"
+          }
+
           $bundledOutput = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-bundled-conformance'
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend xaml --output $bundledOutput --emit-project --profile native-complete --runtime-library $library.Path
           if ($LASTEXITCODE -ne 0) {

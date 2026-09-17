@@ -3128,6 +3128,11 @@ fn emit_xaml_node(
 
         "HostScroll" => emit_host_scroll(node, indent, part_styles, ctx),
 
+        // UI29-6 — the adaptive navigation container. WinUI's own
+        // `NavigationView`; see the banner above `emit_host_navigation_split`
+        // for why a pair of `Column`s is not the same thing.
+        "HostNavigationSplit" => emit_host_navigation_split(node, indent, part_styles, ctx),
+
         // PR-4: HostTable.
         "HostTable" => emit_host_table(node, indent, part_styles, ctx),
 
@@ -11028,6 +11033,181 @@ fn emit_host_scroll(
     Ok(out)
 }
 
+
+// =====================================================================
+// UI29-6-K-xaml: HostNavigationSplit (UI29-6 Section 4.2)
+// =====================================================================
+//
+// `HostNavigationSplit` lowers to WinUI 3's `NavigationView`, which is
+// the whole reason the primitive exists. Two `Column`s side by side draw
+// the same pixels at desktop width; what they cannot do is fold the pane
+// into a flyout as the window narrows, because that adaptation happens
+// inside NavigationView's own layout pass. UI48 Section 5.6 rules out
+// routing it through an event, and Mosaic's variant selection (UI30) is
+// build-time, so composition has no way to reach it at all.
+//
+//   collapse: auto (the default)  ->  PaneDisplayMode="Auto"
+//   collapse: never               ->  PaneDisplayMode="Left"
+//                                     IsPaneToggleButtonVisible="False"
+//
+// `Auto` is WinUI's own adaptive ladder: the pane sits open beside the
+// content on a wide window, narrows to an icon strip, and finally
+// becomes a flyout behind the toggle button on a narrow one. `Left`
+// pins it open at every width, which is what a workbench whose pane
+// *is* the content wants (UI29-6 Section 4.1).
+//
+// The pane goes in `PaneCustomContent`, not `MenuItems`. The kernel
+// hands us an arbitrary subtree; `MenuItems` would force every child
+// through `NavigationViewItem` and silently discard anything that is
+// not a navigation entry.
+//
+// `IsSettingsVisible="False"` and `IsBackButtonVisible="Collapsed"`
+// switch off the two affordances NavigationView adds on its own and
+// that no Mosaic prop controls. Leaving them on would put a settings
+// row and a back arrow in every product's shell that no layout asked
+// for, and wire them to nothing.
+//
+// `pane-title` becomes `PaneTitle`: WinUI draws it in the pane header
+// and hands it to UIA as the pane's name. That is exactly what the prop
+// is required for -- an unnamed landmark is the defect UI29-6 Section 3
+// set out to fix.
+
+/// Lower one of `HostNavigationSplit`'s text-valued props onto an
+/// attribute, accepting every value shape the kernel allows: a literal,
+/// a slot, a `For` binding or index, and an expression.
+fn navigation_split_text_attr(
+    node: &LayoutNode,
+    prop: &str,
+    attr: &str,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    Ok(match find_prop_value(node, prop) {
+        Some(LayoutPropValue::String(text)) => {
+            format!(" {attr}=\"{}\"", escape_xaml_attr(text))
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => format!(
+            " {attr}=\"{{x:Bind {}, Mode=OneWay}}\"",
+            ctx.slot_xbind_path(slot)
+        ),
+        Some(LayoutPropValue::Keyword(name)) => {
+            let path = if ctx.lookup_for_index(name).is_some() {
+                "Index".to_string()
+            } else if ctx.lookup_for_binding(name).is_some() {
+                kebab_to_pascal_case(name)
+            } else {
+                ctx.slot_xbind_path(name)
+            };
+            format!(" {attr}=\"{{x:Bind {path}, Mode=OneWay}}\"")
+        }
+        Some(LayoutPropValue::Expr(source)) => match lower_expr_for_xbind(source, ctx) {
+            ExprLowering::Bindable(path) | ExprLowering::Helper(path) => {
+                format!(" {attr}=\"{{x:Bind {path}, Mode=OneWay}}\"")
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
+        // A number reads as text on a title; an emit reference does not,
+        // and silently dropping it would leave the pane unnamed.
+        Some(LayoutPropValue::Number(n)) => format!(" {attr}=\"{n}\""),
+        Some(LayoutPropValue::EmitRef(_)) => {
+            return Err(PipelineEmitError::UnsupportedExpression(format!(
+                "HostNavigationSplit `{prop}` takes text, not an emit reference"
+            )));
+        }
+        None => String::new(),
+    })
+}
+
+/// `HostNavigationSplit` -> `<NavigationView>` per UI29-6 Section 4.2.
+fn emit_host_navigation_split(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &PartStyleMap,
+    ctx: &mut EmitContext<'_>,
+) -> Result<String, PipelineEmitError> {
+    // moslayout already refuses any other count (UI29-6 Section 4.1).
+    // This is the second line of defence, for a caller that assembled a
+    // tree without going through validation.
+    let (pane, detail) = match node.children.as_slice() {
+        [pane, detail] => (pane, detail),
+        other => {
+            return Err(PipelineEmitError::UnsupportedPrimitive(format!(
+                "HostNavigationSplit takes exactly two children -- the pane, then the detail -- got {}",
+                other.len()
+            )));
+        }
+    };
+
+    let pad = " ".repeat(indent);
+    let style = part_style_attr(node, part_styles);
+    let x_name = host_x_name(node, "HostNavigationSplit", ctx);
+
+    let mut attrs = String::new();
+    if let Some(part_name) = &node.part_name {
+        attrs.push_str(&format!(
+            " AutomationProperties.AutomationId=\"{}\"",
+            escape_xaml_attr(part_name)
+        ));
+    }
+    attrs.push_str(&navigation_split_text_attr(
+        node,
+        "pane-title",
+        "PaneTitle",
+        ctx,
+    )?);
+
+    // `collapse` picks the display mode. Absent means `auto`, the
+    // adaptive one, so a layout that says nothing gets the behaviour the
+    // primitive exists for rather than a pinned pane.
+    let pinned = match find_prop_value(node, "collapse") {
+        None => false,
+        Some(LayoutPropValue::Keyword(keyword)) if keyword == "auto" => false,
+        Some(LayoutPropValue::Keyword(keyword)) if keyword == "never" => true,
+        Some(_) => {
+            return Err(PipelineEmitError::UnsupportedExpression(
+                "HostNavigationSplit `collapse` takes the keyword `auto` or `never`".to_string(),
+            ));
+        }
+    };
+    if pinned {
+        attrs.push_str(" PaneDisplayMode=\"Left\" IsPaneToggleButtonVisible=\"False\"");
+    } else {
+        attrs.push_str(" PaneDisplayMode=\"Auto\"");
+    }
+
+    // `pane-width` is the *preferred* width, and `OpenPaneLength` is
+    // exactly that: WinUI keeps its own compact width when the pane
+    // narrows, and its own flyout width when the pane folds away.
+    if let Some(LayoutPropValue::Number(width)) = find_prop_value(node, "pane-width") {
+        attrs.push_str(&format!(" OpenPaneLength=\"{width}\""));
+    }
+
+    attrs.push_str(" IsSettingsVisible=\"False\" IsBackButtonVisible=\"Collapsed\"");
+
+    // Both slots take a single UIElement, so a pane or detail that
+    // lowered to several siblings (a bare `For`, say) goes through the
+    // same neutral StackPanel wrapper every other single-content host
+    // here uses.
+    let mut out = format!("{pad}<NavigationView x:Name=\"{x_name}\"{attrs}{style}>\n");
+    writeln!(out, "{pad}    <NavigationView.PaneCustomContent>").unwrap();
+    out.push_str(&emit_xaml_single_content_children(
+        std::slice::from_ref(pane),
+        indent + 8,
+        part_styles,
+        ctx,
+    )?);
+    writeln!(out, "{pad}    </NavigationView.PaneCustomContent>").unwrap();
+    out.push_str(&emit_xaml_single_content_children(
+        std::slice::from_ref(detail),
+        indent + 4,
+        part_styles,
+        ctx,
+    )?);
+    writeln!(out, "{pad}</NavigationView>").unwrap();
+    Ok(out)
+}
+
 // =====================================================================
 // U29-1-K-xaml: HostDialog (UI29-1 §3.6)
 // =====================================================================
@@ -13577,6 +13757,275 @@ mod tests {
             r.xaml.contains("<QuadraticBezierSegment Point1=\"10,-8\" Point2=\"20,0\"/>"),
             "got:\n{}",
             r.xaml
+        );
+    }
+
+    // =================================================================
+    // UI29-6 slice K-xaml: HostNavigationSplit -> NavigationView
+    // =================================================================
+
+    fn nav_text(content: &str) -> LayoutNode {
+        LayoutNode {
+            tag: "Text".to_string(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".to_string(),
+                value: LayoutPropValue::String(content.to_string()),
+            }],
+            children: Vec::new(),
+        }
+    }
+
+    /// A split with the two children the primitive requires, plus any
+    /// extra props the test wants on it.
+    fn nav_split(props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: "HostNavigationSplit".to_string(),
+            part_name: Some("app-shell".to_string()),
+            props,
+            children: vec![nav_text("PANE-SIDE"), nav_text("DETAIL-SIDE")],
+        }
+    }
+
+    fn pane_title(value: LayoutPropValue) -> LayoutProp {
+        LayoutProp {
+            name: "pane-title".to_string(),
+            value,
+        }
+    }
+
+    #[test]
+    fn navigation_split_lowers_to_a_navigation_view() {
+        let c = component("Shell", vec![], vec![]);
+        let l = layout_with_root(
+            "Shell",
+            nav_split(vec![
+                pane_title(LayoutPropValue::String("Projects".to_string())),
+                LayoutProp {
+                    name: "pane-width".to_string(),
+                    value: LayoutPropValue::Number(236.0),
+                },
+            ]),
+        );
+        let r = compile(&c, &l, &empty_style("Shell"));
+
+        assert!(r.xaml.contains("<NavigationView "), "got:\n{}", r.xaml);
+        // The pane's name, which is the whole point of the prop.
+        assert!(r.xaml.contains("PaneTitle=\"Projects\""), "got:\n{}", r.xaml);
+        // The adaptive mode is the default, not an opt-in.
+        assert!(
+            r.xaml.contains("PaneDisplayMode=\"Auto\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("OpenPaneLength=\"236\""),
+            "got:\n{}",
+            r.xaml
+        );
+        // Chrome NavigationView adds on its own, that no Mosaic prop drives.
+        assert!(
+            r.xaml.contains("IsSettingsVisible=\"False\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("IsBackButtonVisible=\"Collapsed\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml
+                .contains("AutomationProperties.AutomationId=\"app-shell\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// The order the kernel fixes -- pane first, detail second -- has to
+    /// survive lowering, and the two have to land in *different* slots.
+    /// Asserting both markers appear would pass even if both were in the
+    /// pane, so this asserts where each one sits.
+    #[test]
+    fn the_pane_goes_in_the_pane_slot_and_the_detail_does_not() {
+        let c = component("Shell", vec![], vec![]);
+        let l = layout_with_root(
+            "Shell",
+            nav_split(vec![pane_title(LayoutPropValue::String(
+                "Projects".to_string(),
+            ))]),
+        );
+        let r = compile(&c, &l, &empty_style("Shell"));
+
+        let open = r
+            .xaml
+            .find("<NavigationView.PaneCustomContent>")
+            .unwrap_or_else(|| panic!("no pane slot in:\n{}", r.xaml));
+        let close = r
+            .xaml
+            .find("</NavigationView.PaneCustomContent>")
+            .unwrap_or_else(|| panic!("no pane slot close in:\n{}", r.xaml));
+        let pane = r
+            .xaml
+            .find("PANE-SIDE")
+            .unwrap_or_else(|| panic!("no pane content in:\n{}", r.xaml));
+        let detail = r
+            .xaml
+            .find("DETAIL-SIDE")
+            .unwrap_or_else(|| panic!("no detail content in:\n{}", r.xaml));
+
+        assert!(
+            open < pane && pane < close,
+            "the pane must be inside PaneCustomContent:\n{}",
+            r.xaml
+        );
+        assert!(
+            detail > close,
+            "the detail must be the content, not part of the pane:\n{}",
+            r.xaml
+        );
+        // `detail > close` alone is not enough: a detail emitted into a
+        // *second* pane slot also sits after the first one's close, and an
+        // earlier draft of this test passed under exactly that mutation.
+        // One split has one pane.
+        assert_eq!(
+            r.xaml.matches("<NavigationView.PaneCustomContent>").count(),
+            1,
+            "a split has exactly one pane slot:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `collapse: never` is for a layout whose pane *is* the content
+    /// (UI29-6 §4.1). Pinning it means both the display mode and the
+    /// toggle button: leaving the toggle would let the user collapse by
+    /// hand the pane the author pinned.
+    #[test]
+    fn collapse_never_pins_the_pane_open() {
+        let c = component("Shell", vec![], vec![]);
+        let l = layout_with_root(
+            "Shell",
+            nav_split(vec![
+                pane_title(LayoutPropValue::String("Sheets".to_string())),
+                LayoutProp {
+                    name: "collapse".to_string(),
+                    value: LayoutPropValue::Keyword("never".to_string()),
+                },
+            ]),
+        );
+        let r = compile(&c, &l, &empty_style("Shell"));
+
+        assert!(
+            r.xaml.contains("PaneDisplayMode=\"Left\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.xaml.contains("IsPaneToggleButtonVisible=\"False\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("PaneDisplayMode=\"Auto\""),
+            "a pinned pane must not also claim the adaptive mode:\n{}",
+            r.xaml
+        );
+    }
+
+    /// `collapse: auto` said out loud is the same as saying nothing.
+    #[test]
+    fn collapse_auto_is_the_adaptive_mode() {
+        let c = component("Shell", vec![], vec![]);
+        let l = layout_with_root(
+            "Shell",
+            nav_split(vec![
+                pane_title(LayoutPropValue::String("Notes".to_string())),
+                LayoutProp {
+                    name: "collapse".to_string(),
+                    value: LayoutPropValue::Keyword("auto".to_string()),
+                },
+            ]),
+        );
+        let r = compile(&c, &l, &empty_style("Shell"));
+        assert!(
+            r.xaml.contains("PaneDisplayMode=\"Auto\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("IsPaneToggleButtonVisible=\"False\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// An unknown keyword is refused rather than quietly read as `auto`:
+    /// a typo'd `collapse: nevr` would otherwise ship a pane that folds
+    /// away in exactly the product that asked it not to.
+    #[test]
+    fn an_unknown_collapse_keyword_is_refused() {
+        let c = component("Shell", vec![], vec![]);
+        let l = layout_with_root(
+            "Shell",
+            nav_split(vec![
+                pane_title(LayoutPropValue::String("Notes".to_string())),
+                LayoutProp {
+                    name: "collapse".to_string(),
+                    value: LayoutPropValue::Keyword("sometimes".to_string()),
+                },
+            ]),
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Shell"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedExpression(ref t) if t.contains("collapse")),
+            "{err:?}"
+        );
+    }
+
+    /// A slot title binds one-way rather than freezing at build time --
+    /// the pane's name follows the product's state like every other
+    /// bound text in this emitter.
+    #[test]
+    fn a_slot_pane_title_binds() {
+        let c = component(
+            "Shell",
+            vec![slot("nav-title", SlotType::Text, true)],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Shell",
+            nav_split(vec![pane_title(LayoutPropValue::SlotRef(
+                "nav-title".to_string(),
+            ))]),
+        );
+        let r = compile(&c, &l, &empty_style("Shell"));
+        assert!(
+            r.xaml
+                .contains("PaneTitle=\"{x:Bind NavTitle, Mode=OneWay}\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// The emitter's own second line of defence. moslayout refuses this
+    /// first; a tree assembled without validation must still not lower to
+    /// a NavigationView with a guessed pane.
+    #[test]
+    fn a_wrong_child_count_is_refused_by_the_emitter_too() {
+        let c = component("Shell", vec![], vec![]);
+        let l = layout_with_root(
+            "Shell",
+            LayoutNode {
+                tag: "HostNavigationSplit".to_string(),
+                part_name: Some("app-shell".to_string()),
+                props: vec![pane_title(LayoutPropValue::String("Projects".to_string()))],
+                children: vec![nav_text("ONLY-ONE")],
+            },
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Shell"), None, &opts()).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsupportedPrimitive(ref t) if t.contains("exactly two children")),
+            "{err:?}"
         );
     }
 
