@@ -2,6 +2,68 @@
 
 ## [Unreleased]
 
+### Added — `SegmentedControl` (v0.12.0, #14016)
+
+A row of mutually exclusive options, one selected: the widget Engram and
+TaskApp each built inline for their view switchers (#14063). It is one of
+the three components every product in #14415 needs.
+
+```
+slot options        : list<list<text>> ;   // [label, accessible-name]
+slot selected-index : number ;             // -1 for none
+slot disabled       : bool ;
+emit onSelect ( index : number ) ;
+```
+
+**Selection costs two parts, however many options there are.** TaskApp's
+switcher is a six-way If/Else chain *around* its buttons: every branch
+re-declares all six, and each copy needs its own part, so six views cost
+36 parts. Here the If/Else sits *inside* the `For` and chooses between
+`segmented-option` and `segmented-option-selected`. A test pins the part map
+to exactly those two plus the row, so per-option parts cannot creep back.
+
+**The selected state reaches a screen reader through the name, for now.**
+`HostButton` has no selected/pressed state, and the layout language cannot
+concatenate strings, so the host supplies each option's accessible name and
+writes the state into it (`"Board, selected"`). The host already owns the
+selection, which makes it the right place to do this; it is still a
+stand-in for the platform's selected trait. #15420 tracks the kernel state,
+and arrow-key traversal within the group with it.
+
+**Why it is not built on `Button`.** #14016 asked for that, and it is
+possible: a package can place its own component as
+`pkg::mosaic-pkg-toolkit::Button`, and that compiles. But `Button` has no
+`a11y-label` slot, so doing it would drop the accessible name above. #15421
+adds the slot and then moves this component onto `Button`. A bare
+`Button [ part ]` does not work at all; it resolves to the legacy kernel
+primitive, which no pipeline emitter supports.
+
+The selected option differs from the others in fill, text colour and border
+in both themes, and a test asserts all three so selection is never shown by
+colour alone.
+
+Nine stories cover two, three, six and eight options, the selection first,
+middle, last and absent, long labels, and disabled. A test checks every
+story names only declared slots and that every option row has both columns,
+since MosaicBook's own fixture validation is still #14031's open half.
+
+Measured before merging: `mosaic-compile pkg` emits it on all eight
+backends (React, HTML, WebComponent, Qt, SwiftUI, Compose, Flutter, XAML)
+with **no degradations** for this component, and the MosaicBook story check
+passes (57 components, 100 stories). The three new tests were
+mutation-checked: making the dark selected fill match the unselected one,
+dropping one branch's `a11y-label`, and mislabelling a story's selected
+option each fail a test.
+
+The smoke harness reads `.stories.json` through the in-house
+`coding_adventures_bounded_json` crate rather than adding `serde_json`
+(#14414).
+
+Not in this change: the per-component demo app and documentation-site entry
+that `mosaic-component-program-v1.md` §7 asks for (#14015, #14026 have no
+lane yet), and adopting the component in Engram and TaskApp. Each app moves
+over in its own change.
+
 ### Changed — "remove an entry the moment its issue is fixed" is now enforced
 
 The gate's own instructions have always said that. Nothing checked it.
