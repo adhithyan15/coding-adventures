@@ -1,0 +1,17 @@
+{
+  "language": "malayalam",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:07bf08ab6a0a09f6",
+  "lessonIds": [
+    "ML-C78-nre",
+    "ML-C78-ude",
+    "ML-R78-genitive-recall"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "malayalam/narration/ch78.txt",
+  "json": "malayalam/narration/ch78.json",
+  "textHash": "fnv1a64:f63785519d9319bc",
+  "jsonHash": "fnv1a64:e07271e0588655c0",
+  "findings": []
+}

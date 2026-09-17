@@ -242,8 +242,15 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // had ZERO, so "I am not a teacher" was unsayable. Both alla and alle returned
   // zero files before this chapter, so neither created a forward reference --
   // checked BEFORE writing, after venam needed rehoming for exactly that.
-  expect(coverage.covered).toBe(177);
-  expect(coverage.unmapped).toBe(66);
+  // 177 -> 178: ML-A1-POS-02, the genitive suffix itself. enre and ninre were
+  // taught WHOLE and the suffix inside them was never named, so the learner
+  // owned two possessors and could not make a third. Naming it turns a closed
+  // pair into an OPEN RULE: any taught noun can now own something.
+  // BOTH ALLOMORPHS, one per lesson, because the choice is not the speaker's:
+  // -nre after a consonant, -yude after a vowel. Verified before writing that NO
+  // third genitive existed in the corpus, so this created no forward reference.
+  expect(coverage.covered).toBe(178);
+  expect(coverage.unmapped).toBe(65);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -255,6 +262,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 177/243 points covered (73%)",
+    "malayalam A1 (partial inventory): 178/243 points covered (73%)",
   );
 }, 60_000);

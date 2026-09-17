@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C78-ude",
+    "language": "malayalam",
+    "chapter": 78,
+    "sequence": 2700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a001d6fee366afe"
+  },
+  "findings": []
+}

@@ -596,7 +596,10 @@
       "id": "ML-A1-POS-02",
       "category": "Sambandham (possession)",
       "label": "the genitive suffix itself: -nre / -ude on any noun",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C78-GENITIVE-NRE-01",
+        "ML-GRAMMAR-C78-GENITIVE-UDE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -608,7 +611,7 @@
         "A1-SN-01"
       ],
       "malayalamSpecific": false,
-      "note": "enre and ninre are both taught whole, and the suffix inside them is never named. So the learner owns two possessives and cannot make a third -- 'the teacher's book' is out of reach although both nouns are taught."
+      "note": "Chapter 78. The note was exact: enre and ninre were taught WHOLE and the suffix inside them was never named, so the learner owned two possessors and could not make a third. Naming it turns a closed pair into an open rule -- any taught noun can now own something. BOTH ALLOMORPHS are taught, one per lesson, because the choice is not the speaker's: -nre after a consonant (adhyaapakan-re), -yude after a vowel (ammayude). Verified before writing: NO third genitive existed anywhere in the corpus, so teaching the suffix here created no forward reference -- the only bare -nre token was the script decomposition inside ML-C02-enre, which showed the conjunct as a SHAPE. The chapter says so: something introduced as a shape often turns out later to be a part."
     },
     {
       "id": "ML-A1-POS-03",

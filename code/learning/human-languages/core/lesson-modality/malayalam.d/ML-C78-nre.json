@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C78-nre",
+    "language": "malayalam",
+    "chapter": 78,
+    "sequence": 2690,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0f50b540a05fbd65"
+  },
+  "findings": []
+}
