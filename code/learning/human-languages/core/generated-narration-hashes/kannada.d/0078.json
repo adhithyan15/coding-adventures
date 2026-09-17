@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 78,
-  "sourceHash": "fnv1a64:f6f7e2be21ad328b",
+  "sourceHash": "fnv1a64:06ebf89b99ac7e7d",
   "lessonIds": [
     "KA-S155-letter-aa",
     "KA-S156-letter-e",
@@ -15,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "kannada/narration/ch78.txt",
   "json": "kannada/narration/ch78.json",
-  "textHash": "fnv1a64:57a74cbd7d108acb",
-  "jsonHash": "fnv1a64:e0a9643052abf90e",
+  "textHash": "fnv1a64:a6142a95adc8d5dd",
+  "jsonHash": "fnv1a64:07db0d5b1a4c62cb",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "The Vowels That Start a Word",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f6f7e2be21ad328b",
+  "sourceHash": "fnv1a64:06ebf89b99ac7e7d",
   "lessons": [
     {
       "id": "KA-S155-letter-aa",
@@ -974,9 +974,9 @@
     {
       "id": "KA-S160-letter-vocalic-r",
       "sequence": 2790,
-      "title": "ಋ (r̥) — the vowel that sounds like a consonant",
+      "title": "ಋ (ṛ) — the vowel that sounds like a consonant",
       "headword": "ಋ",
-      "romanization": "r̥",
+      "romanization": "ṛ",
       "gloss": "the single character ಋ — the borrowed vowel, and the most work your pen has done for one letter",
       "script": "kannada",
       "modality": "pen",
@@ -986,7 +986,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:728e637a28e28766",
+      "sourceHash": "fnv1a64:be33154adcbbd4ac",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1034,15 +1034,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಋ — r̥."
+              "text": "ಋ — ṛ."
             },
             {
               "kind": "speech",
-              "text": "It is an independent vowel — the shape r̥ takes when a word begins with it, rather than the sign it becomes inside one."
+              "text": "It is an independent vowel — the shape ṛ takes when a word begins with it, rather than the sign it becomes inside one."
             },
             {
               "kind": "speech",
-              "text": "ಋತು r̥tu — season, from the seasons chapter."
+              "text": "ಋತು ṛtu — season, from the seasons chapter."
             },
             {
               "kind": "speech",
@@ -1095,7 +1095,7 @@
             {
               "kind": "prompt",
               "action": "LOOK",
-              "instruction": "at the word below and find ಋ (r̥) at its front",
+              "instruction": "at the word below and find ಋ (ṛ) at its front",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -1108,7 +1108,7 @@
             {
               "kind": "prompt",
               "action": "TRACE",
-              "instruction": "ಋ (r̥) three times, counting the two lifts as you go",
+              "instruction": "ಋ (ṛ) three times, counting the two lifts as you go",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
@@ -1138,7 +1138,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which character is this — ಋ (r̥)? Is it a vowel or a consonant? (A vowel — it holds a syllable on its own, however close it sounds to r.) How many times does your pen leave the page? (Twice.)"
+              "text": "Which character is this — ಋ (ṛ)? Is it a vowel or a consonant? (A vowel — it holds a syllable on its own, however close it sounds to r.) How many times does your pen leave the page? (Twice.)"
             }
           ]
         }
@@ -1147,7 +1147,7 @@
     {
       "id": "KA-R78-vowels-recall",
       "sequence": 2800,
-      "title": "(ಆ (ā) ಎ ಏ (ē) ಒ ಐ (ai) ಋ (r̥)) (svaragalu) — six letters, sorted by the pen",
+      "title": "(ಆ (ā) ಎ ಏ (ē) ಒ ಐ (ai) ಋ (ṛ)) (svaragalu) — six letters, sorted by the pen",
       "headword": "(ಆ ಎ ಏ ಒ ಐ ಋ)",
       "romanization": "svaragalu",
       "gloss": "cold retrieval of the six vowel letters this chapter taught, sorted by what the pen does",
@@ -1194,7 +1194,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಆ (ā), ಎ (e), ಏ (ē), ಒ (o), ಐ (ai), ಋ (r̥)."
+              "text": "ಆ (ā), ಎ (e), ಏ (ē), ಒ (o), ಐ (ai), ಋ (ṛ)."
             },
             {
               "kind": "speech",
@@ -1212,7 +1212,7 @@
               "utterances": [
                 "pen lifts: none. characters: ಎ, ಒ, ಐ (ai). what that means: one run, start to finish.",
                 "pen lifts: one. characters: ಆ (ā), ಏ (ē). what that means: a body, then one added piece.",
-                "pen lifts: two. characters: ಋ (r̥). what that means: three separate runs."
+                "pen lifts: two. characters: ಋ (ṛ). what that means: three separate runs."
               ]
             },
             {
@@ -1291,7 +1291,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the six needs two lifts? (ಋ (r̥).) Which three need none? (ಎ, ಒ, ಐ (ai).) Which one is the long partner of ಎ? (ಏ (ē).) And what does this book do about a character whose stroke order nobody has published? (Teaches it by copying, and says so.)"
+              "text": "Which of the six needs two lifts? (ಋ (ṛ).) Which three need none? (ಎ, ಒ, ಐ (ai).) Which one is the long partner of ಎ? (ಏ (ē).) And what does this book do about a character whose stroke order nobody has published? (Teaches it by copying, and says so.)"
             }
           ]
         }

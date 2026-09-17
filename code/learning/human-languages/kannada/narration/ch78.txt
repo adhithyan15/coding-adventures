@@ -221,7 +221,7 @@ Which character is this — ಐ? What sound does it carry? (ai.) Which number op
 
 
 Lesson 6 of 7.
-ಋ (r̥) — the vowel that sounds like a consonant.
+ಋ (ṛ) — the vowel that sounds like a consonant.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಋ and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -232,9 +232,9 @@ Before the new one: ಐ (ai) — what sound, and how many movements?
 Today's is the last of this chapter's six, and the one your pen works hardest for.
 
 Script you'll notice: ಋ.
-ಋ — r̥.
-It is an independent vowel — the shape r̥ takes when a word begins with it, rather than the sign it becomes inside one.
-ಋತು r̥tu — season, from the seasons chapter.
+ಋ — ṛ.
+It is an independent vowel — the shape ṛ takes when a word begins with it, rather than the sign it becomes inside one.
+ಋತು ṛtu — season, from the seasons chapter.
 A vowel that sounds like an r is a strange thing to be told, and it is the honest description. This vowel came into Kannada with Sanskrit vocabulary, and it behaves like a vowel — it can hold a syllable on its own — while sounding close to the r you already make. Telugu writes ఋ for the same sound, in the same borrowed words; so does Hindi, with ऋ.
 It is rare, and that is the reason it goes last rather than the reason to skip it: a rare shape inside a word you already know is exactly where a reader cannot tell whether the word or the printing is at fault.
 
@@ -247,20 +247,20 @@ This is one attested teaching order and not a national standard — Kannada hand
 
 Guided Practice.
 [pause 1 second]
-[your turn — look: at the word below and find ಋ (r̥) at its front]
+[your turn — look: at the word below and find ಋ (ṛ) at its front]
 [pause 8 seconds for the answer]
 ಋತು.
-[once you have stopped driving — trace: ಋ (r̥) three times, counting the two lifts as you go]
+[once you have stopped driving — trace: ಋ (ṛ) three times, counting the two lifts as you go]
 [your turn — say: which of this chapter's characters took no lift at all]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which character is this — ಋ (r̥)? Is it a vowel or a consonant? (A vowel — it holds a syllable on its own, however close it sounds to r.) How many times does your pen leave the page? (Twice.)
+Which character is this — ಋ (ṛ)? Is it a vowel or a consonant? (A vowel — it holds a syllable on its own, however close it sounds to r.) How many times does your pen leave the page? (Twice.)
 
 
 Lesson 7 of 7.
-(ಆ (ā) ಎ ಏ (ē) ಒ ಐ (ai) ಋ (r̥)) (svaragalu) — six letters, sorted by the pen.
+(ಆ (ā) ಎ ಏ (ē) ಒ ಐ (ai) ಋ (ṛ)) (svaragalu) — six letters, sorted by the pen.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the six, sorted by what the pen does and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -269,12 +269,12 @@ Warm-up.
 Close the lessons before this one. Count from one to ten in Kannada, and name the two characters that open numbers in that list.
 
 Script: the six, sorted by what the pen does.
-ಆ (ā), ಎ (e), ಏ (ē), ಒ (o), ಐ (ai), ಋ (r̥).
+ಆ (ā), ಎ (e), ಏ (ē), ಒ (o), ಐ (ai), ಋ (ṛ).
 Sorting them by sound gives you a list to memorise. Sorting them by what your hand does gives you something to check yourself against:
 [a table of 3 rows, read aloud]
 pen lifts: none. characters: ಎ, ಒ, ಐ (ai). what that means: one run, start to finish.
 pen lifts: one. characters: ಆ (ā), ಏ (ē). what that means: a body, then one added piece.
-pen lifts: two. characters: ಋ (r̥). what that means: three separate runs.
+pen lifts: two. characters: ಋ (ṛ). what that means: three separate runs.
 Every one of these is attested rather than invented. Each lesson printed the animation it came from, frame count and all, because a stroke order nobody published is a stroke order this book will not teach. The characters still waiting on a source keep the older instruction — copy what you see — and will until one turns up.
 Five of the six open a word you can already say:
 ಆರು, ಎರಡು, ಏಳು, ಒಂದು, ಐದು.
@@ -291,4 +291,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which of the six needs two lifts? (ಋ (r̥).) Which three need none? (ಎ, ಒ, ಐ (ai).) Which one is the long partner of ಎ? (ಏ (ē).) And what does this book do about a character whose stroke order nobody has published? (Teaches it by copying, and says so.)
+Which of the six needs two lifts? (ಋ (ṛ).) Which three need none? (ಎ, ಒ, ಐ (ai).) Which one is the long partner of ಎ? (ಏ (ē).) And what does this book do about a character whose stroke order nobody has published? (Teaches it by copying, and says so.)

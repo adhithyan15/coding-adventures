@@ -8,7 +8,7 @@ delivery: script
 type: writing
 headword: "ಋ"
 gloss: "the single character ಋ — the borrowed vowel, and the most work your pen has done for one letter"
-romanization: "r̥"
+romanization: "ṛ"
 concept_tag: KA-SCRIPT-160
 prerequisites: [KA-S159-letter-ai]
 sounds: []
@@ -42,11 +42,11 @@ hardest for.
 ## Script you'll notice: ಋ
 <!-- hl-knowledge: introduces=[KA-SCRIPT-RECOG-160]; assesses=[] -->
 
-**ಋ** — *r̥*.
+**ಋ** — *ṛ*.
 
-It is an **independent vowel** — the shape *r̥* takes when a word begins with it, rather than the sign it becomes inside one.
+It is an **independent vowel** — the shape *ṛ* takes when a word begins with it, rather than the sign it becomes inside one.
 
-- **ಋತು** *r̥tu* — season, from the seasons chapter
+- **ಋತು** *ṛtu* — season, from the seasons chapter
 
 **A vowel that sounds like an *r* is a strange thing to be told**, and it is the
 honest description. This vowel came into Kannada with Sanskrit vocabulary, and

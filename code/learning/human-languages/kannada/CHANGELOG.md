@@ -86,6 +86,24 @@ A second draft claim, that ಏನು "was the second word this book taught you",
 also wrong: it is the eleventh lesson. It now says what it is — the last word of
 the first question the book teaches.
 
+### A third one the gates did not catch
+
+`data/scripts/kannada.json` gives ಋ the ISO-15919 sound **`r̥`** — a plain `r`
+plus U+0325 COMBINING RING BELOW — and the first draft copied that straight into
+the lesson. `validate` passed. All twelve `check:*` gates passed. The full suite
+did not:
+
+```
+kannada/book/chapters/ch78-the-vowels-that-start-a-word.tex U+0325 (main)
+```
+
+Latin Modern Roman has no glyph for that combining mark, so the generated
+chapter would have printed a hole. **The track already had a renderable
+convention**: every other Kannada and Telugu lesson writes this sound `ṛ`
+(U+1E5B, precomposed), including `KA-S131-vowel-sign-vocalic-r` in this very
+track. A data file's `sound` field is reference data, not learner-facing prose.
+Recorded in `lessons.d/`.
+
 ## Chapter 77 — the marks the book had been printing and never named
 
 `KA-A1-L-12`, `KA-A1-L-13` and `KA-A1-L-14`. Kannada A1 coverage
