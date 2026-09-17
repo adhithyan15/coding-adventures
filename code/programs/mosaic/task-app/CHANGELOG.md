@@ -7,6 +7,40 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.2.0` accumulate here until the next version is
 cut.
 
+### Changed -- the view switcher is the toolkit SegmentedControl (#14016)
+
+The switcher was a six-way `If`/`Else` chain wrapped around six
+`HostButton`s. Every branch re-declared all six buttons, and each copy needed
+its own part, so six views cost 36 hand-styled `seg-*` parts plus `seg`. It is
+now one `pkg::mosaic-pkg-toolkit::SegmentedControl` in `Row [ view-switch ]`.
+The row stays out of the topbar, as #14847 requires.
+
+- **Interface:**
+  - New slots `nav-options` (`[label, accessible-name]` per view) and
+    `nav-selected-index`.
+  - New `emit onShowView ( index : number )`. The six `onShow*` events stay.
+  - The order is List, Board, Sheet, Calendar, Notes, and Timeline last.
+    Timeline appears only for a Full project, which is how the switcher
+    honours `allow-timeline` now; being last, it never shifts another index.
+- **Engine:** `task-mosaic-app` (native) and `host/web/src/main.tsx` (web)
+  both produce the rows and handle the index. A Board-tier project refuses
+  index 5.
+- **Accessibility:** the selected view is announced through its name ("Board,
+  selected") until `HostButton` has a selected state (#15420).
+- **Styles:** both themes lose the 37 `seg` parts and gain a plain
+  `view-switch` row. **Known visual change:** the warm pill track and raised
+  "on" chip give way to the toolkit's look; restyling a dependency from the
+  app is theming work, not settled here.
+- **Dependency:** `mosaic-pkg-toolkit = "0.13.0"`.
+- **Tests:** `tests/package_compiles.rs` now pins that the switcher is the
+  toolkit control, that no `seg` part remains in the layout or either
+  theme, and that the toolkit is a declared dependency.
+- **Verified:**
+  - in a browser, on the production web build, clicking Board and Timeline
+    switches the view and moves "…, selected";
+  - flipping the project to Full adds Timeline;
+  - web host vitest passes 57/57, and `tsc && vite build` succeeds.
+
 ### Fixed -- the release gate has been refusing this file since #15224
 
 `Release TaskApp`'s "Validate release identity" job has failed on every branch
