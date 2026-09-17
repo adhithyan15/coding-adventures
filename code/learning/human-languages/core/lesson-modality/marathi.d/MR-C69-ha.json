@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C69-ha",
+    "language": "marathi",
+    "chapter": 69,
+    "sequence": 2820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f6a4d2038b9de81"
+  },
+  "findings": []
+}

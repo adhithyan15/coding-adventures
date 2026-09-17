@@ -1,0 +1,22 @@
+{
+  "chapter": 69,
+  "title": "This One and That One",
+  "label": "ch:mr-ha-to",
+  "canDo": "I can point at something near or far in the right gender, and I can talk about a third person.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "MR-R69-dem-recall",
+    "kind": "production",
+    "summary": "From cold: the two-by-three grid of pointing words, the fact that the front carries distance while the ending carries the noun's gender, and the far row doing double duty as he, she and it.",
+    "assesses": [
+      "MR-LEX-HA-HI-HE",
+      "MR-LEX-TO-TI-TE",
+      "MR-GRAMMAR-DEM-TWO-WAY",
+      "MR-GRAMMAR-DEM-DOUBLES-AS-PRONOUN",
+      "MR-GRAMMAR-DEM-PRENOMINAL"
+    ],
+    "note": "The chapter introduces exactly these five atoms and the payoff assesses all five. It adds no new nouns: mitra, kholi and ghar carry every example, and their genders are stated in the corpus rather than assumed."
+  }
+}

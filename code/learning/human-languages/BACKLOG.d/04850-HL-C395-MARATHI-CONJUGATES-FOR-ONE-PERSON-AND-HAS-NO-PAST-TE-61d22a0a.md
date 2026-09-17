@@ -94,6 +94,33 @@ tranche; it is its own unit, and `V-06`, `V-07` and `V-09` (irregular stems
    observes is past-tense by genre.
 5. Then `MR-A1-NT-02`, which now has tenses to sit in.
 
+### A measurement note, found when the demonstratives were finally taught
+
+Teaching हा/ही/हे and तो/ती/ते took Marathi's `forwardReferences` from **4 to
+10**. That looks like a regression and is worth reading correctly.
+
+**`forwardReferences` counts uses of material a LATER lesson teaches. A word
+that is never taught at all is invisible to it.** So giving a previously
+untaught word an owner does not create debt — it converts *invisible* debt into
+*visible* debt, which is the same blind spot `HL-C393` described for coverage.
+
+Of the six new ones, **five are metalinguistic**: `MR-C01-yeto` writes
+**ये** + **तो** → *yeto* to decompose a syllable, and `MR-C07-yene` /
+`MR-C07-asne` name **हे** as the stroke inside **आहे**. Those are the letter
+being named, not the word being used, and no placement fixes them because they
+sit in chapters 1 and 7.
+
+**One is genuine and pre-existing.** `MR-C37-kon` (sequence 1510) asks
+**तो कोण आहे?** — *who is he?* — using a third-person pronoun the track had
+never taught.
+
+Fixing that one properly means relocating the demonstratives **before sequence
+1510**, and that is a restructure rather than a tweak: घर and खोली, whose
+genders the corpus actually states, are at 1640 and 1650 — *after* the use. A
+relocation would need a feminine and a neuter noun sourced before 1510, and a
+chapter number to live at. Worth doing deliberately, not as a rider on a
+tranche.
+
 ### The NT-02 note is also wrong and should be corrected when that lands
 
 It says *"udyaa occurs only inside fixed farewells."* उद्या **arrives** inside

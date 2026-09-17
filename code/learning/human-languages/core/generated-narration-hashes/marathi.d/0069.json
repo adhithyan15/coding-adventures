@@ -1,0 +1,18 @@
+{
+  "language": "marathi",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:5f08b5a5a3ebf77f",
+  "lessonIds": [
+    "MR-C69-ha",
+    "MR-C69-to",
+    "MR-C69-dem-system",
+    "MR-R69-dem-recall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "marathi/narration/ch69.txt",
+  "json": "marathi/narration/ch69.json",
+  "textHash": "fnv1a64:ec813e471aa7bc32",
+  "jsonHash": "fnv1a64:9c1825a42cdcb8c5",
+  "findings": []
+}

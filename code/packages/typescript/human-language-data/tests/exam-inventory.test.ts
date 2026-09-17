@@ -1447,12 +1447,18 @@ describe("the committed Marathi A1 inventory", () => {
     // the node now omits only GREETING-DAY, matching every track that realizes
     // it. Three greetings for ONE new word, taught for reading, with namaskaar
     // named as what is actually spoken at any hour.
-    expect(coverage.covered).toBe(168);
-    expect(coverage.unmapped).toBe(133);
+    // 168 -> 171: chapter 69 closes ALL THREE MR-A1-DEM points at once, because
+    // they describe one grid: the six forms, the two-way near/far, and the
+    // prenominal position. DEMONSTRATIVES LEAVES THE EMPTY-COLUMN LIST BELOW,
+    // and that is the movement. It was worked before the verb column because
+    // to / tee / te are the third-person PRONOUNS too (HL-C395), so V-01's
+    // "all persons" had no third person to conjugate for.
+    expect(coverage.covered).toBe(171);
+    expect(coverage.unmapped).toBe(130);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
-    for (const empty of ["Demonstratives", "Personal identity"]) {
+    for (const empty of ["Personal identity"]) {
       expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
     }
     // "Temporal notions" was the third empty column and is not any more. It is
@@ -1464,7 +1470,7 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 168/301 points covered (56%)",
+      "marathi A1 (partial inventory): 171/301 points covered (57%)",
     );
   }, 60_000);
 });
