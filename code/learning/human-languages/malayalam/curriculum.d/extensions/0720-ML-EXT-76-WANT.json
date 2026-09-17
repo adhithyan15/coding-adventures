@@ -1,0 +1,14 @@
+{
+  "id": "ML-EXT-76-WANT",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask somebody whether they want something.",
+  "prerequisites": [
+    "ML-EXT-75-WHEN-IF"
+  ],
+  "lessons": [
+    "ML-C76-veno",
+    "ML-R76-want-recall"
+  ]
+}

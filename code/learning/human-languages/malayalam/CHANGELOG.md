@@ -1,5 +1,111 @@
 # Changelog
 
+## Chapter 77 — not there, not so
+
+`ML-A1-NEG-02` (**alla**) and `ML-A1-Q-09` (the tag question) both close.
+Coverage **175/243 → 177/243 (73%)**.
+
+They close together because **അല്ലേ is built on അല്ല and visibly carries it**,
+so the second lesson confirms what the first made possible.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 175/243 → **177/243 (73%)** |
+| atoms taught | 396 → 399 |
+| measurable lessons | 325 → 328 |
+| `forwardReferences` | unchanged (12) |
+
+### Malayalam negates twice where English negates once
+
+| | denies | pairs with |
+|---|---|---|
+| **ഇല്ല** | that it is **there** | *is there any?* |
+| **അല്ല** | that it is **so** | *is it that?* |
+
+**ഇല്ല had 27 occurrences and അല്ല had zero**, so the track could deny that
+something was present and not that something was what you called it. *"I am not
+a teacher"* was unsayable.
+
+അല്ല is taught as the negative of **ആണ്**, closing a sentence in the same place
+ആണ് closes it. The split is framed as **a decision English never makes you
+make**: look at the question you are answering, not at the word you would use at
+home.
+
+### The tag costs almost nothing
+
+> **നിങ്ങൾ അധ്യാപകൻ ആണ്, അല്ലേ?**
+
+`ML-A1-Q-09`'s note framed it exactly right — *"the -o particle asks a genuine
+question; a tag question invites agreement"* — so the lesson contrasts what the
+two endings **want back** rather than what they mean:
+
+| | |
+|---|---|
+| **-ഓ** | *I do not know; tell me* |
+| **അല്ലേ** | *I think I know; agree with me* |
+
+**ചായ വേണോ?** from the previous chapter genuinely does not know. **അല്ലേ** is
+fairly sure and is checking.
+
+### Checked before writing, not after
+
+Both **അല്ല** and **അല്ലേ** returned **zero files** before this chapter, so
+neither created a forward reference. That check came first this time — the
+previous chapter needed **വേണം** rehomed into chapter 58 for exactly that
+reason, and the same grep would have caught it earlier.
+
+**ഒരു** was considered for this tranche and set aside for the same reason: it
+already appears in eight lessons from chapter 18 onward, so `ML-A1-ART-02` is a
+relocation rather than the one-word lesson its note describes.
+
+## Chapter 76 — asking for it (and a lesson moved into chapter 58)
+
+`ML-A1-V-23` (wanting) closes. Coverage **174/243 → 175/243**; the verb column
+**19/23 → 20/23**.
+
+The point's own note called this *"the single cheapest fix in this file"* and
+was right — but it was cheap in a way that took a restructure to collect.
+
+### The learner could refuse an offer they had no way of making
+
+**വേണ്ട** (*no need*) was taught. **വേണം** (*wanted*) appeared **exactly once**
+in the whole corpus — inside `ML-C58-no-need`, which names it as *"the negative
+partner of വേണം"* and then goes on without handing it over.
+
+### So the lesson went where the word was already needed
+
+A first version taught വേണം in chapter 76. That made `ML-C58-no-need`'s mention
+a **forward reference eighty lessons early**, and Malayalam's pin caught it:
+13 against a ceiling of 12.
+
+The fix was not to raise the pin. **വേണം now lives in chapter 58 at sequence
+1815, immediately before its own negative**, and `ML-C58-no-need` takes it as a
+prerequisite — which is what it had been assuming all along. Forward references
+are back to **12**, with none for വേണം.
+
+Chapter 58 was already the short-answers chapter (*more*, *less*, *a little*,
+*no need*, *that will do*). It is now **six** short answers, and the new one is
+the only one that makes an offer rather than answering one.
+
+### What stayed in chapter 76
+
+| | |
+|---|---|
+| **ചായ വേണോ?** | do you want tea? |
+| **വേണം** | yes |
+| **വേണ്ട** | no |
+
+**വേണോ** is വേണം plus the **-ഓ** question particle `ML-C70-o` already taught, so
+the reader builds it in the warm-up and the lesson confirms rather than teaches.
+One genuinely new atom.
+
+### Nobody wants anything in Malayalam
+
+> **എനിക്ക് വെള്ളം വേണം** — *to me, water is wanted*
+
+**The water is the subject; you are not.** That is the dative-subject shape
+`ML-A1-V-15` already covers, arriving again — knowing and age took it too.
+
 ## Chapter 75 — when, and if
 
 `ML-A1-Q-06` (*when?*), `ML-A1-JOIN-07` (*when* it happens) and `ML-A1-JOIN-08`

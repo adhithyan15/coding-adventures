@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "ML-C58-no-need",
+    "id": "ML-C77-alla",
     "language": "malayalam",
-    "chapter": 58,
-    "sequence": 1820,
+    "chapter": 77,
+    "sequence": 2660,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a563df4a4c6ca02d"
+    "sourceHash": "fnv1a64:cd603384874c7941"
   },
   "findings": []
 }

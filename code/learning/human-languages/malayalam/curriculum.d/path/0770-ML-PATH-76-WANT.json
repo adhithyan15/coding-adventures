@@ -1,0 +1,13 @@
+{
+  "id": "ML-PATH-76-WANT",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "lessons": [
+    "ML-C76-veno",
+    "ML-R76-want-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-76-WANT"
+  ],
+  "after": []
+}

@@ -9,13 +9,13 @@ headword: "വേണ്ട"
 gloss: "no need, no thank you"
 romanization: "vēṇṭa"
 concept_tag: ML-WORD-NO-NEED
-prerequisites: [ML-C58-a-little, ML-C56-vessel]
+prerequisites: [ML-C58-venam, ML-C58-a-little, ML-C56-vessel]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [ML-LEX-C58-ANSWER-03]
+  knowledge: [ML-LEX-C58-ANSWER-03, ML-LEX-C58-WANT-01]
 introduces:
   knowledge: [ML-LEX-C58-ANSWER-04]
 practises:
