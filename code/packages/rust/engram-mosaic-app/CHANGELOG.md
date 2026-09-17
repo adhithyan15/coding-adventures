@@ -25,6 +25,9 @@ deserialised into a borrowed `&RawValue` (a slice of the reply, not a tree) and
 serialised back out verbatim. Restore borrows the fragment the same way and
 hands it to the facade.
 
+Restore borrows the fragment too: the facade is handed the slice in place
+rather than a second copy of the collection.
+
 **Compatibility.** Versions 1 and 2 still restore, and both are covered by
 tests: version 1 is a bare collection, version 2 the merged document.
 

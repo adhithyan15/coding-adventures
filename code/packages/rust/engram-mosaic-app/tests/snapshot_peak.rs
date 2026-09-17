@@ -147,7 +147,10 @@ fn snapshot_does_not_materialise_the_collection() {
     // and **18.8x** with the version-2 `Value` round trip restored in its
     // place, which is the regression this bounds.
     let bound = bytes * 8;
-    eprintln!("payload {bytes} bytes, peak heap growth {peak} bytes ({:.1}x)", peak as f64 / bytes as f64);
+    eprintln!(
+        "payload {bytes} bytes, peak heap growth {peak} bytes ({:.1}x)",
+        peak as f64 / bytes as f64
+    );
     assert!(
         peak < bound,
         "snapshot() held {peak} bytes for a {bytes}-byte payload; a version that does \

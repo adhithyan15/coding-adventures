@@ -726,15 +726,26 @@ impl MosaicApp for EngramMosaicApp {
             adapter_selected_deck_id: String,
         }
 
-        let (session_json, version_3_deck_id) = if version >= 3 {
-            let halves: Halves = serde_json::from_str(&json)
-                .map_err(|error| EngramAppError::InvalidSnapshot(error.to_string()))?;
-            (halves.session.get().to_string(), Some(halves.adapter_selected_deck_id))
-        } else {
-            (json.clone(), None)
+        // Borrowed from `json`, not copied: handing the facade
+        // `halves.session.get()` keeps the fragment in place, where
+        // `to_string()` here would put a second copy of the whole collection on
+        // the heap -- in the change that exists to stop doing that.
+        let halves = match version >= 3 {
+            true => Some(
+                serde_json::from_str::<Halves>(&json)
+                    .map_err(|error| EngramAppError::InvalidSnapshot(error.to_string()))?,
+            ),
+            false => None,
         };
+        let session_json = match &halves {
+            Some(halves) => halves.session.get(),
+            None => json.as_str(),
+        };
+        let version_3_deck_id = halves
+            .as_ref()
+            .map(|halves| halves.adapter_selected_deck_id.clone());
 
-        let reply = self.session.load_session_snapshot(&session_json);
+        let reply = self.session.load_session_snapshot(session_json);
         if let Some(message) = facade_error(&reply) {
             return Err(EngramAppError::InvalidSnapshot(message));
         }
@@ -974,7 +985,10 @@ mod tests {
             "the facade's document must be stored verbatim:
 {document}"
         );
-        assert!(document.contains(r#""adapterSelectedDeckId":"deck-1""#), "{document}");
+        assert!(
+            document.contains(r#""adapterSelectedDeckId":"deck-1""#),
+            "{document}"
+        );
 
         // And it still round-trips.
         let mut restored = EngramMosaicApp::default();
@@ -1491,4 +1505,3 @@ mod untrusted_input_tests {
         assert_eq!(MAX_EFFECT_ID, mosaic_app_runtime::MAX_EFFECT_ID);
     }
 }
-
