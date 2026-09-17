@@ -815,7 +815,7 @@
         "A1-NG2-04"
       ],
       "malayalamSpecific": false,
-      "note": "valiya and cheriya give size as a quality. No unit of measure, no word for distance or weight, is taught."
+      "note": "valiya and cheriya give size as a quality. No unit of measure, no word for distance or weight, is taught. UPDATE, chapter 81: the DISTANCE half is now partly paid -- dooram (distance) and the question ethra dooram? are taught, so distance is nameable and askable. This point stays OPEN because it asks for UNITS: no measure of length, no measure of weight, and no number past twenty to put in front of one (see ML-A1-NUM-04, which blocks this). Closing it needs the numbers first, then a unit lesson; it is not a vocabulary add on its own."
     },
     {
       "id": "ML-A1-NUM-09",
@@ -1845,7 +1845,12 @@
       "id": "ML-A1-ADV-09",
       "category": "Kriyaavisheshanam (adverbs)",
       "label": "near and far, and how far away something is",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C81-DISTANCE-01",
+        "ML-LEX-C81-DISTANCE-02",
+        "ML-LEX-C81-DISTANCE-03",
+        "ML-LEX-C81-HOW-MUCH-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1856,7 +1861,7 @@
         "A1-NG3-03"
       ],
       "malayalamSpecific": false,
-      "note": "aduthu and akale are not taught. ivide and avide give a two-way here/there and no way to say that something is FAR, so distance can be pointed at and not measured."
+      "note": "Chapter 81. The old note stated the problem exactly: ivide and avide give a two-way here/there and no way to say that something is FAR, so distance could be pointed at and not measured. The chapter separates the two jobs and says so on the page -- the deictic pair POINTS (my side or not my side, and something avide may be a step away or a country away) while aduthu and akale MEASURE. ethra dooram? then asks for a number. One of the four atoms cost nothing: ethra was already inside the age question the learner knows whole, doing exactly this job, and the chapter lifts it out rather than teaching it fresh -- which is a habit the lesson names, because a long sentence learned whole usually holds two or three words that work on their own. The chapter also asks the learner to REFUSE a pattern: akale opens with a and the deictic distal prefix is a-, but the a in akale is part of the word. The test given is whether the other members of the set exist -- there is no ikale and no ekale, so there is no set and no pattern. Verified before writing: aduthu, akale and dooram all returned ZERO files."
     },
     {
       "id": "ML-A1-S-01",

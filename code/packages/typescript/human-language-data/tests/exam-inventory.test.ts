@@ -2104,8 +2104,17 @@ describe("the committed Malayalam A1 inventory", () => {
     // the person-word in front UNCHANGED -- the same position the quality word and
     // the degree word already occupy. Verified before writing: uuru, Keralam, India
     // and Malayali all returned ZERO files.
-    expect(coverage.covered).toBe(182);
-    expect(coverage.unmapped).toBe(61);
+    // 182 -> 183: ML-A1-ADV-09, near and far. ivide and avide POINT -- my side or
+    // not my side -- and something avide may be a step away or a country away, so
+    // the track could point at a distance and not measure one. aduthu and akale
+    // measure; ethra dooram? asks for a number. One of the four atoms cost nothing:
+    // ethra was already inside the age question, doing exactly this job, and the
+    // chapter lifts it out. The chapter also asks the learner to REFUSE a pattern --
+    // akale opens with a and the distal deictic prefix is a-, but here it is part of
+    // the word, and the test is whether the other members exist (no ikale, no ekale,
+    // so no set). Verified before writing: all three new words returned ZERO files.
+    expect(coverage.covered).toBe(183);
+    expect(coverage.unmapped).toBe(60);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2148,7 +2157,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 182/243 points covered (75%)",
+      "malayalam A1 (partial inventory): 183/243 points covered (75%)",
     );
   }, 60_000);
 });

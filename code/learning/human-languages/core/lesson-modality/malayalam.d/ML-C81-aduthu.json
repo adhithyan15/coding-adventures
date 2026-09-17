@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C81-aduthu",
+    "language": "malayalam",
+    "chapter": 81,
+    "sequence": 2800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4fa9d21a740cc720"
+  },
+  "findings": []
+}

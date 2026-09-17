@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:6536495093981c3d",
+  "lessonIds": [
+    "ML-C81-aduthu",
+    "ML-C81-akale",
+    "ML-C81-dooram",
+    "ML-R81-distance-recall"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch81.txt",
+  "json": "malayalam/narration/ch81.json",
+  "textHash": "fnv1a64:997d02fcecc744f4",
+  "jsonHash": "fnv1a64:3434023d8f9be220",
+  "findings": []
+}

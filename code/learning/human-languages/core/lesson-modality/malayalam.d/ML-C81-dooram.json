@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C81-dooram",
+    "language": "malayalam",
+    "chapter": 81,
+    "sequence": 2820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e846f145d2ef33c2"
+  },
+  "findings": []
+}
