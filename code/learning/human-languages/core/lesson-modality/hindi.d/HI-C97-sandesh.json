@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "HI-C97-sandesh",
+    "language": "hindi",
+    "chapter": 105,
+    "sequence": 4510,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e3ddaaba4f28ea38",
+    "detachableSegments": [
+      "Writing: the three parts, with the model in front of you"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
