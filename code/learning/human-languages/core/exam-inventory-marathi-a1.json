@@ -2708,8 +2708,13 @@
       "id": "MR-A1-NT-01",
       "category": "Temporal notions",
       "label": "the clock, and the parts of the day",
-      "probe": null,
-      "note": "SPINE-TIME-OF-DAY is an A1 core node with NO realization at all: all nine concepts omitted. The listening paper's announcements are about times.",
+      "probe": [
+        "MR-LEX-VAJLE",
+        "MR-LEX-VAJTA",
+        "MR-LEX-SAKAL",
+        "MR-LEX-RATRA"
+      ],
+      "note": "Chapters 66 and 67, which are also the first realization SPINE-TIME-OF-DAY has had on this track -- the node is \"core\": true and its ledger read segments: [] with all nine concepts omitted. Chapter 66 gives the four parts of the day plus the whole day, and the -ii ending that places an event in one of them; divas refuses that ending and takes -aa because it is masculine where the four parts are feminine. Chapter 67 gives the clock and adds NO new numbers: all twelve cardinals were already taught and had nothing to do but count. kiti vaajle asks literally 'how many have sounded'; the telling verb counts (vaajlaa after ek, vaajle after the rest) and the placing form vaajtaa never changes. The four GREETING-* concepts of the node stay omitted and are the next chapter.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-spine"

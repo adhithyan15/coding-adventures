@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C66-ratra",
+    "language": "marathi",
+    "chapter": 66,
+    "sequence": 2720,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:682d030f56db55b3"
+  },
+  "findings": []
+}

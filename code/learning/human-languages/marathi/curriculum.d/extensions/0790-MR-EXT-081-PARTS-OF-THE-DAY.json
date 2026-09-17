@@ -1,0 +1,18 @@
+{
+  "id": "MR-EXT-081-PARTS-OF-THE-DAY",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the parts of the day and place an event in one of them.",
+  "prerequisites": [
+    "MR-EXT-080-STANDING-VOWELS"
+  ],
+  "lessons": [
+    "MR-C66-sakal",
+    "MR-C66-dupar",
+    "MR-C66-sandhyakal",
+    "MR-C66-ratra",
+    "MR-C66-divas",
+    "MR-R66-day-recall"
+  ]
+}

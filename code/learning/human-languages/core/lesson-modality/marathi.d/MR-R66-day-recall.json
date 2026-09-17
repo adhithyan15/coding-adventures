@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R66-day-recall",
+    "language": "marathi",
+    "chapter": 66,
+    "sequence": 2740,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1229ed99a415a277"
+  },
+  "findings": []
+}
