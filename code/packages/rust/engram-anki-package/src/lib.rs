@@ -662,7 +662,10 @@ const _: () = assert!(MEDIA_EXPANSION_CEILING < u64::MAX);
 /// [`read_member_bounded`]): the ZIP layer is refused up front from the
 /// entry's declared size, and the Zstandard layer is decoded with
 /// `zstd::decompress_with_limit`, which stops at the first block that would
-/// cross it. The output buffers never hold more than the budget allows.
+/// cross it. The decoded bytes never exceed the budget. The allocation
+/// around them is a small multiple of it, because a growing `Vec` holds its
+/// old and new buffers together while it moves; `tests/media_budget_peak.rs`
+/// measures that and holds it under twice the budget.
 pub fn read_media_files(data: &[u8]) -> Result<Vec<ResolvedMediaFile>, ApkgError> {
     let archive_len = data.len();
     let reader = ZipReader::new(data).map_err(apkg_error)?;

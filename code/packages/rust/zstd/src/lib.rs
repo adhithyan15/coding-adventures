@@ -2639,8 +2639,11 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
 /// than decoding in full and measuring afterwards: measuring afterwards means
 /// the process has *already* held the whole output — up to the crate ceiling
 /// — before it learns the input was too large. Here the refusal happens at
-/// the first block that would cross `max_output`, so the output buffer never
-/// holds more than `max_output` bytes.
+/// the first block that would cross `max_output`, so the output never grows
+/// past `max_output` bytes. (Its *capacity* can, as with any growing `Vec`:
+/// up to about twice the length, with the old buffer briefly alive beside the
+/// new one during a move. That is a constant factor on the caller's limit,
+/// not the crate ceiling.)
 ///
 /// A `max_output` above the crate ceiling is clamped to it; this function can
 /// only tighten the bomb guard, never loosen it.
