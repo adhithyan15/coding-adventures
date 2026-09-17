@@ -154,6 +154,38 @@ the real defect fails is [[i-built-the-exact-vacuous-check-i-had-spent-the-day-c
 what this adds is that the failure can be a *layout* mismatch between probe and target, invisible in
 a probe that otherwise mentions all the right words.
 
+**A control built from the same selector as the measurement is not a control.** Both arms can be
+blind in the same way, agree, and certify nothing. Three instances in one session, the selector each
+time being a raw substring search:
+
+    needle                              raw   flattened / stripped
+    a sentence spanning a line wrap       0    1
+    a phrase whose source held backticks  0    1
+    a positive CONTROL spanning a wrap    0    1
+
+Named, so a reader can re-derive rather than take them: row 1 is `Rows are AST-derived except the
+reach row`, which wraps after `the`, searched against a commit message. Row 2 is `reaching secrets at
+all`, whose source writes `secrets` in backticks, searched against a pull-request body. Row 3 is `Run
+this in a scratch directory`, which wraps after `scratch`, searched against this file on `main` — that
+one was the control arm.
+
+A fourth near-miss the same night is deliberately **not** in that table: a needle whose backticks were
+eaten by the shell before the search ran. It also reported 0, but the mechanism is quoting, not
+selector blindness, and folding it in would have turned three measured instances into four by
+grouping — the failure this entry keeps having.
+
+The first two were measurements, caught only because a differently-shaped check disagreed. The third
+was the **control arm itself**, checking whether a sentence had reached `main`: it read 0, the
+negative arm also read 0, and a rule I had applied all session — that arms which do not differ make
+everything below them uninterpretable — was the only thing that stopped the reading. A control that
+shares the measurement's blind spot does not fail loudly; it agrees.
+
+The general form is already written down: [[a-conflict-resolver-s-assertions-must-be-able-to-see-what-it]]
+— do not verify a selecting transform with the same selector, verify by something the selector is
+not. What this adds is that a **control arm is a verification too**, and inherits that rule. Normalise
+before matching (collapse whitespace, strip formatting), or use a token short enough that no wrap or
+markup can split it, and confirm the control can fire on text you know contains the thing.
+
 Related: [[a-probe-that-reports-nothing-where-you-have-already-seen-the-thing]] — there the
 instrument contradicted something already seen by eye, which is the one case where the diagnosis is
 closed before it begins.
