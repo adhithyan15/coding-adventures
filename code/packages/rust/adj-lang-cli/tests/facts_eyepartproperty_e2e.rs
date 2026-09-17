@@ -158,16 +158,20 @@ fn every_part_answer_carries_its_own_sentence() {
 fn the_retina_row_carries_the_pages_no_break_spaces() {
     assert_eq!(RETINA.matches('\u{a0}').count(), 2, "two U+00A0 in the retina sentence");
     // SCOPED TO `source "` LINES, not the whole table block -- the correction
-    // #15337 made for plant-parts and #15338 for solar-eclipse-type.
+    // #15337 made for plant-parts, #15338 for solar-eclipse-type, and #15413
+    // here, in figurative-language-type and in eye-parts.
     //
-    // This table is the LIVE case for that defect, not a hypothetical one: it
-    // carries four `%` comment lines between its rows and its envelope, and
-    // `shipped_table()` slices from `table ...` to end of file, so those
-    // comments are inside `body`. Measured on the shipped block with the
-    // ordinary-space form planted in a comment: the unscoped arm sees it and
-    // fails a correct file, the scoped arm does not.
+    // WHAT WAS MEASURED, STATED AS MEASURED: this table carries four `%`
+    // comment lines between its rows and its envelope, and `shipped_table()`
+    // slices from `table ...` to end of file, so those comments are inside
+    // `body`. With the ordinary-space form PLANTED in one of them the unscoped
+    // arm sees it and fails a correct file; the scoped arm does not. This test
+    // was green before that mutant and is green after it -- an earlier wording
+    // called this table the LIVE case, which no green test supports. Four
+    // comments mean the hazard needs one more comment line here, not that it
+    // is firing.
     //
-    // The trade, recorded in shards 03560 and 03670: scoping lets a
+    // The trade, recorded in shards 03560, 03670 and 03680: scoping lets a
     // comment-borne ordinary-space form survive. Nothing now pins "no
     // ordinary-space form anywhere in the block", only "no `source` line
     // carries one". That is the right trade -- the shipped string is what
