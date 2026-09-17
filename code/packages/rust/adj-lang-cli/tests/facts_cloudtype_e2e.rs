@@ -116,7 +116,20 @@ fn the_stratus_sentence_carries_the_pages_non_breaking_space() {
     let out = ask("nbsp", "cloud_type(stratus, $V)");
     assert!(out.contains(&row_citation(stratus)), "the answer carries the page's character: {out}");
     assert!(!out.contains(&json(STRATUS_PLAIN)), "the ordinary-space string reaches no answer: {out}");
-    assert!(!shipped_table().contains(STRATUS_PLAIN), "and it is shipped nowhere in the table");
+    // SCOPED TO `source "` LINES (#15415), the correction #15337, #15338 and
+    // #15417 made for their tables. `shipped_table()` runs to end of file and
+    // four `%` comment lines sit inside this block, so, read against that slice,
+    // this arm FAILED A CORRECT FILE when a comment quoted the old sentence --
+    // measured by mutant, not reasoned. A comment is not a shipped citation.
+    //
+    // The trade: nothing now pins "not anywhere in the block", only "no
+    // `source` line carries it".
+    let source_lines: String = shipped_table()
+        .lines()
+        .filter(|l| l.trim_start().starts_with("source \""))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!source_lines.contains(STRATUS_PLAIN), "and no `source` line ships it: {source_lines}");
 }
 
 #[test]
