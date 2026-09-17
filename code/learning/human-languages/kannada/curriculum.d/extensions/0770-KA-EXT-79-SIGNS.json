@@ -1,0 +1,19 @@
+{
+  "id": "KA-EXT-79-SIGNS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can read the three vowel signs this book had never named, and tell Kannada's n letters and s letters apart.",
+  "prerequisites": [
+    "KA-EXT-78-VOWELS"
+  ],
+  "lessons": [
+    "KA-S161-vowel-sign-ii",
+    "KA-S162-vowel-sign-ai",
+    "KA-S163-vowel-sign-au",
+    "KA-S164-letter-nna",
+    "KA-S165-letter-sha",
+    "KA-S166-letter-ssa",
+    "KA-R79-signs-and-sibilants"
+  ]
+}

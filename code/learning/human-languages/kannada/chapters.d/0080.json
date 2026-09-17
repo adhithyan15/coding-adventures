@@ -1,0 +1,21 @@
+{
+  "chapter": 80,
+  "title": "The Breath",
+  "label": "ch:ka-usiru",
+  "canDo": "I can recognise the seven Kannada consonants that carry the breath, and say which plain letter each one is built on.",
+  "payoff": {
+    "lesson": "KA-R80-the-breath",
+    "kind": "production",
+    "summary": "From cold: pair each of the seven breathy consonants with the plain letter it is built on, and say why the romanization's ph is not the f of phone.",
+    "assesses": [
+      "KA-SCRIPT-RECOG-167",
+      "KA-SCRIPT-RECOG-168",
+      "KA-SCRIPT-RECOG-169",
+      "KA-SCRIPT-RECOG-170",
+      "KA-SCRIPT-RECOG-171",
+      "KA-SCRIPT-RECOG-172",
+      "KA-SCRIPT-RECOG-173"
+    ],
+    "note": "The chapter introduces exactly these seven atoms and the payoff assesses all seven. Seven characters, one move: it is deliberately one idea per chapter rather than thirteen atoms in one, which would have broken the twelve-per-chapter budget."
+  }
+}

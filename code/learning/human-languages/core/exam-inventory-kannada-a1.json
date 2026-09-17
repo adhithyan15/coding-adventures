@@ -4403,8 +4403,36 @@
     {
       "id": "KA-A1-L-09",
       "category": "Lipi (script and orthography)",
-      "label": "THE SCRIPT IS NOT CLOSED: 13 characters are used but never taught",
-      "probe": null,
+      "label": "the script closed: every character the book prints has a lesson",
+      "probe": [
+        "KA-SCRIPT-RECOG-134",
+        "KA-SCRIPT-RECOG-135",
+        "KA-SCRIPT-RECOG-136",
+        "KA-SCRIPT-RECOG-137",
+        "KA-SCRIPT-RECOG-138",
+        "KA-SCRIPT-RECOG-139",
+        "KA-SCRIPT-RECOG-150",
+        "KA-SCRIPT-RECOG-151",
+        "KA-SCRIPT-RECOG-155",
+        "KA-SCRIPT-RECOG-156",
+        "KA-SCRIPT-RECOG-157",
+        "KA-SCRIPT-RECOG-158",
+        "KA-SCRIPT-RECOG-159",
+        "KA-SCRIPT-RECOG-160",
+        "KA-SCRIPT-RECOG-161",
+        "KA-SCRIPT-RECOG-162",
+        "KA-SCRIPT-RECOG-163",
+        "KA-SCRIPT-RECOG-164",
+        "KA-SCRIPT-RECOG-165",
+        "KA-SCRIPT-RECOG-166",
+        "KA-SCRIPT-RECOG-167",
+        "KA-SCRIPT-RECOG-168",
+        "KA-SCRIPT-RECOG-169",
+        "KA-SCRIPT-RECOG-170",
+        "KA-SCRIPT-RECOG-171",
+        "KA-SCRIPT-RECOG-172",
+        "KA-SCRIPT-RECOG-173"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -4413,7 +4441,7 @@
       "derivedFrom": [
         "A1-O1-03"
       ],
-      "note": "STILL OPEN, AND THE REMAINING SET IS NOW EXACTLY ONE KIND OF PROBLEM. Chapter 78 teaches the six independent vowels that were left -- aa, e, ee, o, ai and vocalic r -- and the count of characters the corpus prints without teaching falls 19 to 13. IT WAS 27 WHEN THIS POINT WAS FIRST MEASURED, then 19 after chapters 67-73, and 13 now. ALL SIX ARE TAUGHT AS WRITING RATHER THAN RECOGNITION, because all six have a sourced stroke order: data/scripts/kannada.json carries a cited Wikimedia Commons animation for each, and every lesson prints the citation with its frame count. The chapter also sorts them by pen lifts -- none for e, o and ai; one for aa and ee; two for vocalic r -- which is a check a learner can run on their own hand. THE THIRTEEN THAT REMAIN HAVE NO SOURCED DUCTUS ANYWHERE IN THIS PROJECT: the vowel signs ii, ai and au, and kha, gha, ttha, ddha, nna, dha, pha, bha, sha and ssa. The honest fallback for an unsourced letter is the recognition lesson this ladder already writes, and thirteen more of those is its own tranche. Nothing here invents a stroke path to make a count move. NO EXAM POINT MOVES WITH THIS CHAPTER -- kannada stays at 197/258 -- because this point demands the whole used set. The debt is pinned instead in tests/corpus/kannada.test.ts, as a ceiling that may fall and must never grow."
+      "note": "CLOSED. Every Kannada character this corpus prints now has a lesson -- counted over every Kannada lesson body, characters used but untaught stands at ZERO. THE PROBE IS THE TWENTY-SEVEN THIS POINT WAS OPENED FOR. It counted 27 untaught characters when first measured; chapters 67-73 taught the eight most-used (ma, a, the uu sign, la, the ee sign, va, ja, tta), chapter 78 taught the six independent vowels that had a sourced stroke order, and chapters 79-80 taught the remaining thirteen. The probe names all 27, so the point reopens if any one of them loses its lesson. THE THIRTEEN SPLIT BY WHAT COULD BE SOURCED, NOT BY DIFFICULTY. None of them has a stroke order anywhere in this project, so all thirteen are RECOGNITION lessons and each keeps the standing block quote refusing to state a pen path without a source. Chapter 78's six had cited Wikimedia Commons animations and are taught as writing; these do not and are not. Nothing here invents a ductus to make a count move. THEY REDUCE TO THREE IDEAS rather than thirteen shapes: a vowel that is long or moves (the signs ii, ai, au); a tongue curled back, which Kannada writes and English never marks (nna beside na, ssa beside sa, with sha as the third sibilant); and a consonant with the breath let out, which accounts for SEVEN of the thirteen (kha gha ttha ddha dha pha bha, each built on a letter the reader already had). SPLIT ACROSS TWO CHAPTERS ON PURPOSE: thirteen atoms in one chapter breaks the twelve-per-chapter budget in core/chapter-policy.json and showed up as an atomChapterSpikes regression in the snapshot diff. Chapter 79 carries the six, chapter 80 the seven. ONE CHARACTER IS STILL NOT TAUGHT AND IS NOT DEBT: the independent vowel au, whose stroke order this project has no source for and which the corpus never prints. Its vowel SIGN is taught, and the sign is what a reader meets."
     },
     {
       "id": "KA-A1-L-10",

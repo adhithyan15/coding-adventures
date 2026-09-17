@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S164-letter-nna",
+    "language": "kannada",
+    "chapter": 79,
+    "sequence": 2840,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:096a158bd861b4e2",
+    "detachableSegments": [
+      "Script you'll notice: ಣ",
+      "Writing: ಣ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
