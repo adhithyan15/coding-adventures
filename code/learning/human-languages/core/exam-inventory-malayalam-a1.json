@@ -450,7 +450,10 @@
       "id": "ML-A1-PRON-03",
       "category": "Sarvanaamam (pronouns)",
       "label": "third person: avan, aval, athu -- he, she, it",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C71-AVAN-AVAL-01",
+        "ML-LEX-C71-AVAR-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -460,13 +463,15 @@
         "A1-PRON-01"
       ],
       "malayalamSpecific": false,
-      "note": "Not taught. The i-/a- deixis lesson gives ith and ath for THINGS, and aar ('who') for asking, but no third-person pronoun for a PERSON exists anywhere in the corpus. So a learner can say 'I' and 'you' and cannot say 'he' -- which also blocks every reported statement."
+      "note": "Not taught, and VERIFIED WORSE THAN THE NOTE SAID: avan, aval and avar appeared in ZERO lesson files -- not as headwords and not anywhere in a body. A learner could say I and you and could not say he. Chapter 71 closes it, and the gap turns out to sit inside a system already taught: ML-C41-that teaches the i-/a- pointing pair and says in as many words that a- means far, and the corpus only ever used it on THINGS. avan, aval and avar carry the same a-, so the column for people was predicted and never filled. avar also reuses ML-C02's own rule that a plural raises the register -- nii to ningal, avan to avar -- so two of the three words run on machinery the reader already had."
     },
     {
       "id": "ML-A1-PRON-04",
       "category": "Sarvanaamam (pronouns)",
       "label": "first and second person plural: njangal, naam, ningal",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C71-NJANGAL-NAAM-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -476,7 +481,7 @@
         "A1-PRON-01"
       ],
       "malayalamSpecific": false,
-      "note": "Only ningal is taught, and it is taught as respectful singular rather than as a plural. No word for 'we' exists, which is a large hole for a level whose functions include invitations and proposals."
+      "note": "Only ningal was taught, as a respectful singular, and NO WORD FOR 'WE' EXISTED. The check that proved it is worth recording: njangal appeared in zero files, and naam appeared as a headword in three -- ML-C67-first, ML-C67-third and ML-C68-eleventh -- where it is a SUBSTRING of the ordinals onnaam, moonnaam and pathinonnaam and not the pronoun at all. Every ordinal ending in -nnaam is a false positive for naam, the same trap the Hindi campaign recorded when every ordinal matched its own cardinal. Chapter 71 teaches the pair as the question Malayalam asks and English does not: is the person listening inside this 'we'? njangal leaves them out and is built on njaan with a plural; naam takes them in."
     },
     {
       "id": "ML-A1-PRON-05",

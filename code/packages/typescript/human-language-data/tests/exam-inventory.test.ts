@@ -1951,8 +1951,25 @@ describe("the committed Malayalam A1 inventory", () => {
     // both, chaayayoo kaappiyoo for one of them.
     // MALAYALAM HAS NO UNTRANSFERABLE POINTS, unlike Kannada's four, so its
     // ceiling is the full 243.
-    expect(coverage.covered).toBe(164);
-    expect(coverage.unmapped).toBe(79);
+    // 164 -> 166: ML-A1-PRON-03 (third person) and ML-A1-PRON-04 (first and second
+    // person plural). VERIFIED WORSE THAN THE NOTES SAID: avan, aval, avar and
+    // njangal appeared in ZERO lesson files -- not as headwords, not anywhere in a
+    // body. A learner with seventy chapters of vocabulary could say I and you and
+    // could not say he, she, they or we.
+    // naam LOOKED taught and was not: it appeared as a headword in ML-C67-first,
+    // ML-C67-third and ML-C68-eleventh, where it is a SUBSTRING of the ordinals
+    // onnaam, moonnaam and pathinonnaam. Every ordinal ending -nnaam is a false
+    // positive for naam -- the same trap the Hindi campaign recorded when every
+    // ordinal matched its own cardinal. Check the token, not the substring.
+    // THE GAP SAT INSIDE A SYSTEM ALREADY TAUGHT. ML-C41-that teaches the i-/a-
+    // pointing pair and says in as many words that a- means far, and the corpus
+    // only ever used it on THINGS. avan, aval and avar carry the same a-, so the
+    // column for people was predicted and never filled -- the same shape as Tamil's
+    // TA-A1-PRON-03, closed in the chapter before this one. avar additionally
+    // reuses ML-C02's own rule that a plural raises the register (nii -> ningal,
+    // avan -> avar), so two of the three new words run on machinery already held.
+    expect(coverage.covered).toBe(166);
+    expect(coverage.unmapped).toBe(77);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -1986,7 +2003,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 164/243 points covered (67%)",
+      "malayalam A1 (partial inventory): 166/243 points covered (68%)",
     );
   }, 60_000);
 });

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C71-avan-aval",
+    "language": "malayalam",
+    "chapter": 71,
+    "sequence": 2430,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f054a10762f93496"
+  },
+  "findings": []
+}
