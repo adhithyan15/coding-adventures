@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "Long, Moving and Curled",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b05d4d1a97abcd2b",
+  "sourceHash": "fnv1a64:645cce14f52d377e",
   "lessons": [
     {
       "id": "KA-S161-vowel-sign-ii",
@@ -359,7 +359,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1b2fdd290c1e8b58",
+      "sourceHash": "fnv1a64:0d3e43c7eeb00442",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -413,7 +413,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every vowel in this script has two forms — a letter for the front of a word, a sign for inside one. This one's letter form is the single independent vowel whose stroke order this project has no source for, so chapter 78 stopped short of it. The sign is what a reader actually meets on these pages, and it is the form this book can hand over honestly."
+              "text": "Every vowel in this script has two forms — a letter for the front of a word, a sign for inside one. This one's letter form is the single independent vowel whose stroke order this project has no source for, so the chapter that taught you to write the vowel letters stopped one short. The sign is what a reader actually meets on these pages, and it is the form this book can hand over honestly."
             },
             {
               "kind": "speech",

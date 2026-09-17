@@ -265,7 +265,7 @@ Which character is this — ಠ? What sound does it carry? (ṭha.) Which letter
 Lesson 8 of 8.
 (ಖ (kha) ಘ (gha) ಠ (ṭha) ಢ (ḍha) ಧ (dha) ಫ (pha) ಭ (bha)) (usiru) — seven characters, one move.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Script: seven shapes, one move until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: seven shapes, one move until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 3 seconds]
@@ -273,8 +273,15 @@ Close the lessons before this one. Say thank you, and say good morning. Name the
 
 Script: seven shapes, one move.
 Seven characters, and they are one move done seven times: take a consonant you already read and let the breath out after it. Hold a hand in front of your mouth and the difference is not subtle.
-There is a table here I cannot read to you — 8 columns and 1 rows, and it has more columns than can be held in the ear at once. Its columns are: no breath, ಕ, ಗ, ಟ, ಡ, ದ, ಪ, ಬ. Come back and look at it when you have stopped.
-Read the bottom row against the top and the shapes stop being seven new things to memorise. English does not write this difference at all, which is why the romanization has to spell it with an added h — and why ph on that line is a p with breath, never the f of phone.
+[a table of 7 rows, read aloud]
+no breath: ಕ ka. breath: ಖ kha.
+no breath: ಗ ga. breath: ಘ gha.
+no breath: ಟ ṭa. breath: ಠ ṭha.
+no breath: ಡ ḍa. breath: ಢ ḍha.
+no breath: ದ da. breath: ಧ dha.
+no breath: ಪ pa. breath: ಫ pha.
+no breath: ಬ ba. breath: ಭ bha.
+Read the right-hand column against the left and the shapes stop being seven new things to memorise. English does not write this difference at all, which is why the romanization has to spell it with an added h — and why ph on that line is a p with breath, never the f of phone.
 Two of the seven are in one word each, and both words are months: ಮಾಘ and ಆಷಾಢ. ಠ (ṭha) is in ಜ್ಯೇಷ್ಠ, three times in the whole book, and it was the last character these pages printed that nothing had taught.
 
 Guided Practice.

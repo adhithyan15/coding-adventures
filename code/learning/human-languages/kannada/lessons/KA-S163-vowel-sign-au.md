@@ -51,9 +51,10 @@ are showing.
 
 Every vowel in this script has two forms — a letter for the front of a word, a
 sign for inside one. This one's letter form is the single independent vowel
-whose stroke order this project has no source for, so chapter 78 stopped short
-of it. **The sign is what a reader actually meets on these pages**, and it is
-the form this book can hand over honestly.
+whose stroke order this project has no source for, so the chapter that taught
+you to write the vowel letters stopped one short. **The sign is what a reader
+actually meets on these pages**, and it is the form this book can hand over
+honestly.
 
 You already say these:
 

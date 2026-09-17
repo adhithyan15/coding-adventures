@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "The Breath",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ab758d1ea03a23a2",
+  "sourceHash": "fnv1a64:f4906290b685ad1c",
   "lessons": [
     {
       "id": "KA-S167-letter-dha",
@@ -1191,19 +1191,19 @@
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block",
-        "wide-table"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:15c96171039691d0",
+      "sourceHash": "fnv1a64:7d356a1aa83ee19a",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page",
-          "your eyes for one table that cannot be read aloud"
+          "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
           "Script: seven shapes, one move"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Script: seven shapes, one move until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: seven shapes, one move until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1233,25 +1233,26 @@
               "text": "Seven characters, and they are one move done seven times: take a consonant you already read and let the breath out after it. Hold a hand in front of your mouth and the difference is not subtle."
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 8,
-              "rowCount": 1,
+              "kind": "table",
               "headers": [
                 "no breath",
-                "ಕ",
-                "ಗ",
-                "ಟ",
-                "ಡ",
-                "ದ",
-                "ಪ",
-                "ಬ"
+                "breath"
               ],
-              "text": "There is a table here I cannot read to you — 8 columns and 1 rows, and it has more columns than can be held in the ear at once. Its columns are: no breath, ಕ, ಗ, ಟ, ಡ, ದ, ಪ, ಬ. Come back and look at it when you have stopped."
+              "columns": 2,
+              "rowCount": 7,
+              "utterances": [
+                "no breath: ಕ ka. breath: ಖ kha.",
+                "no breath: ಗ ga. breath: ಘ gha.",
+                "no breath: ಟ ṭa. breath: ಠ ṭha.",
+                "no breath: ಡ ḍa. breath: ಢ ḍha.",
+                "no breath: ದ da. breath: ಧ dha.",
+                "no breath: ಪ pa. breath: ಫ pha.",
+                "no breath: ಬ ba. breath: ಭ bha."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Read the bottom row against the top and the shapes stop being seven new things to memorise. English does not write this difference at all, which is why the romanization has to spell it with an added h — and why ph on that line is a p with breath, never the f of phone."
+              "text": "Read the right-hand column against the left and the shapes stop being seven new things to memorise. English does not write this difference at all, which is why the romanization has to spell it with an added h — and why ph on that line is a p with breath, never the f of phone."
             },
             {
               "kind": "speech",

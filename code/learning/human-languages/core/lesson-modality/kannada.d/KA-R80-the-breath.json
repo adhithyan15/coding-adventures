@@ -9,14 +9,14 @@
     "drivable": false,
     "reasons": [
       "script-block",
-      "wide-table"
+      "sight-cue"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:15c96171039691d0",
+    "sourceHash": "fnv1a64:7d356a1aa83ee19a",
     "detachableSegments": [
       "Script: seven shapes, one move"
     ]

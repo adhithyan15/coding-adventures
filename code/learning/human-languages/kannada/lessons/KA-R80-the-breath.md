@@ -43,12 +43,18 @@ Seven characters, and **they are one move done seven times**: take a consonant
 you already read and let the breath out after it. Hold a hand in front of your
 mouth and the difference is not subtle.
 
-| no breath | ಕ | ಗ | ಟ | ಡ | ದ | ಪ | ಬ |
-|---|---|---|---|---|---|---|---|
-| **breath** | ಖ | ಘ | ಠ | ಢ | ಧ | ಫ | ಭ |
+| no breath | breath |
+|---|---|
+| ಕ *ka* | ಖ *kha* |
+| ಗ *ga* | ಘ *gha* |
+| ಟ *ṭa* | ಠ *ṭha* |
+| ಡ *ḍa* | ಢ *ḍha* |
+| ದ *da* | ಧ *dha* |
+| ಪ *pa* | ಫ *pha* |
+| ಬ *ba* | ಭ *bha* |
 
-Read the bottom row against the top and the shapes stop being seven new things
-to memorise. **English does not write this difference at all**, which is why the
+Read the right-hand column against the left and the shapes stop being seven new
+things to memorise. **English does not write this difference at all**, which is why the
 romanization has to spell it with an added *h* — and why *ph* on that line is a
 *p* with breath, never the *f* of *phone*.
 
