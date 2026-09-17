@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C70-um",
+    "language": "malayalam",
+    "chapter": 70,
+    "sequence": 2390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16097d1e928adc79"
+  },
+  "findings": []
+}

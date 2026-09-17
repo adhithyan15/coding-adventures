@@ -1,0 +1,156 @@
+Malayalam, chapter 70: Joining Things Together.
+4 lessons. All 4 can be done entirely by ear.
+
+
+Lesson 1 of 4.
+വെള്ളവും അരിയും (veḷḷavuṁ ariyuṁ) — where Malayalam puts its "and".
+
+Warm-up.
+[pause 2 seconds]
+Say the word for water. Say the word for rice, the raw grain.
+[pause 3 seconds]
+Now try to say the two of them together, as one list. You have had both words since chapter fifteen and no way to put them side by side.
+
+You'll want to know.
+Malayalam's "and" is not a word that stands between two things. It is a syllable that goes on the end of each of them.
+വെള്ളവും അരിയും — veḷḷavuṁ ariyuṁ — "water and rice".
+The piece doing the work is -ഉം (-uṁ), and it appears twice — once on water, once on rice. English hangs one and in the gap between two nouns; Malayalam hangs one -ഉം off the back of every noun in the list and leaves the gap empty.
+[a table of 1 row, read aloud]
+English: water and rice. Malayalam: water-uṁ rice-uṁ.
+Count the joins, not the gaps. Two items means two -ഉം, and a list with only one of them on it is a list that is still waiting for something.
+
+The word, taken apart.
+The ending changes the word slightly as it lands, and the two changes here are the two you will meet most:
+വെള്ളം ends in -ം. That -ം becomes -വും: വെള്ളവും.
+അരി ends in a vowel. A യ് slides in to keep the two vowels apart: അരിയും.
+Neither is a special case to memorise. Both are the same instinct a mouth has when one sound runs into another, and Malayalam writes down what the mouth already does.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: വെള്ളവും അരിയും (veḷḷavuṁ ariyuṁ)]
+[pause 8 seconds for the answer]
+[your turn — say: how many times the joining piece appears in that list]
+[pause 8 seconds for the answer]
+[your turn — say: what sits in the gap between the two words (nothing)]
+[pause 8 seconds for the answer]
+[your turn — say: which of the two words changed its last letter, and to what]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does Malayalam put its "and" — between the items or on them? (On them.) How many -ഉം does a two-item list carry? (Two.) What is in the space between the two words? (Nothing at all.)
+
+
+Lesson 2 of 4.
+വെള്ളവും അരിയും പാലും (veḷḷavuṁ ariyuṁ pāluṁ) — every item, however many there are.
+
+Warm-up.
+[pause 2 seconds]
+Say water and rice. Count the joining endings in it.
+[pause 2 seconds]
+Now say the word for milk on its own.
+
+You'll want to know.
+വെള്ളവും അരിയും പാലും — veḷḷavuṁ ariyuṁ pāluṁ — "water, rice and milk".
+Three items, three endings. English changes shape as a list grows — it drops commas in and saves its single and for the last pair. Malayalam changes nothing: every item carries the ending, and a list of five would carry five.
+[a table of 1 row, read aloud]
+English: water, rice and milk. Malayalam: water-uṁ rice-uṁ milk-uṁ.
+That is a rule you can extend without being taught the extension, which is worth noticing because English lists are one of the fiddlier things a learner of English has to absorb.
+
+The word, taken apart.
+പാൽ gives the third landing, and it completes the set you need:
+a noun ending in -ം becomes -വും: വെള്ളം, വെള്ളവും.
+a noun ending in a vowel becomes a യ് slides in: അരി, അരിയും.
+a noun ending in ൽ becomes the letter unfurls to ല and takes the ending plainly: പാൽ, പാലും.
+That last one looks like a change and is not. ൽ is the compressed, end-of-word form of ല; putting anything after it gives the full letter back, because it is no longer at the end.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: വെള്ളവും അരിയും പാലും (veḷḷavuṁ ariyuṁ pāluṁ)]
+[pause 8 seconds for the answer]
+[your turn — say: how many endings a list of five items would carry]
+[pause 8 seconds for the answer]
+[your turn — say: what English does to a list that Malayalam does not]
+[pause 8 seconds for the answer]
+[your turn — say: why പാൽ ends up as പാലും rather than പാൽും]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does the ending go on every item or only the last? (Every one.) What happens to ൽ when something follows it? (It unfurls back to ല.) How many endings in a four-item list? (Four.)
+
+
+Lesson 3 of 4.
+ചായയോ കാപ്പിയോ (cāyayō kāppiyō) — the same trick, a different answer.
+
+Warm-up.
+[pause 2 seconds]
+Say the word for tea. Say the word for coffee.
+[pause 3 seconds]
+Now try to offer somebody the pair of them — not both, one or the other.
+
+You'll want to know.
+ചായയോ കാപ്പിയോ? — cāyayō kāppiyō? — "tea or coffee?"
+-ഓ (-ō) is the ending for a choice, and it works exactly the way the joining ending does: one on each item, nothing in the gap.
+[a table of 2 rows, read aloud]
+ending: -ഉം... -ഉം. what a list of two means: both of them.
+ending: -ഓ... -ഓ. what a list of two means: one of them.
+The construction is identical and only the vowel changes. Having learned where Malayalam puts a joining ending, you already know where it puts a choosing one — which is the reason these two belong in one chapter rather than fifty pages apart.
+The യ് glide appears again on both words here, for the same reason it appeared on അരി: both end in a vowel, and two vowels meeting want something between them.
+
+The word, taken apart.
+There is also a separate word, അല്ലെങ്കിൽ (alleṅkil), which stands between two options the way English or does:
+ചായ അല്ലെങ്കിൽ കാപ്പി.
+Both are heard. The ending is the shorter and more usual thing in a spoken question; the standing word is easier to reach for while the ending is still new, and it is the one that will look familiar on a page because it sits where an English reader expects or to sit.
+Reach for whichever arrives first. A learner who says the long one has said the thing; the ending will come with hearing it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ചായയോ കാപ്പിയോ (cāyayō kāppiyō)]
+[pause 8 seconds for the answer]
+[your turn — say: the same offer using the standing word instead]
+[pause 8 seconds for the answer]
+[your turn — say: what ചായയും കാപ്പിയും would mean instead]
+[pause 8 seconds for the answer]
+[your turn — say: which single letter is the whole difference between the two]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which ending offers a choice? (-ഓ.) Which one means you get both? (-ഉം.) Where do they go — between the items or on them? (On them, one each.)
+
+
+Lesson 4 of 4.
+ചേർക്കുക (cērkkuka) — two endings, from cold.
+
+Warm-up.
+[pause 3 seconds]
+Close the three lessons before this one. Say the word for water and the word for tea, with nothing in front of you.
+
+You'll want to know.
+[a table of 2 rows, read aloud]
+you want: both. you say: വെള്ളവും അരിയും (veḷḷavuṁ ariyuṁ).
+you want: one of them. you say: ചായയോ കാപ്പിയോ (cāyayō kāppiyō).
+One habit covers both: the ending goes on every item and the gap stays empty. Change the vowel and you change the question from both to which.
+That is the whole of this chapter, and it is worth saying how late it arrives. Sixty-nine chapters of this book gave you words and no way to put two of them side by side — five body parts, five animals, five kitchen words, and until now no way to ask for two of them at once.
+
+The word, taken apart.
+The ending lands three ways, and all three are the mouth rather than a rule:
+-ം becomes -വും — വെള്ളം, വെള്ളവും.
+a vowel takes a യ് first — അരി, അരിയും, ചായ, ചായയോ.
+ൽ unfurls to ല — പാൽ, പാലും.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: water and rice, from memory]
+[pause 8 seconds for the answer]
+[your turn — say: tea or coffee, from memory]
+[pause 8 seconds for the answer]
+[your turn — say: water, rice and milk — three items, three endings]
+[pause 8 seconds for the answer]
+[your turn — say: which vowel turns a list into a choice]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does a joining ending go? (On every item.) What sits between the items? (Nothing.) Which ending asks somebody to pick one? (-ഓ.)

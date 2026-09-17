@@ -129,8 +129,29 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   const { lessons } = loadEverything();
   const coverage = measureExamCoverage(loadExamInventory("malayalam", "A1"), lessons);
   expect(coverage.enumerated).toBe(243);
-  expect(coverage.covered).toBe(163);
-  expect(coverage.unmapped).toBe(80);
+  // 163 -> 164: ML-A1-JOIN-02 (or). ONE POINT FOR FOUR LESSONS, AND THE RATIO
+  // IS THE WRONG WAY TO READ THIS CHANGE. What chapter 70 actually does is give
+  // Malayalam its 'and': the language coordinates with the clitic -um repeated
+  // on EACH item, and NOTHING IN 307 LESSONS TAUGHT IT. Verified rather than
+  // taken from the note -- -um appeared in exactly one lesson file, inside an
+  // etymology note as a component of the word for evening, and the nine files
+  // carrying the sequence u+m all had it INSIDE a word (veendum, kudumbam,
+  // hrudayam, the month names). A learner owning 69 chapters of vocabulary could
+  // not say 'water and rice'.
+  // ML-A1-JOIN-01 STAYS OPEN ON PURPOSE. Its label is 'joining two nouns, AND
+  // joining two clauses', and this chapter delivers the noun half only. The
+  // everyday clause link in this corpus is the -i participle already covered by
+  // ML-A1-JOIN-11, and claiming clause coordination off the noun lessons would
+  // claim a range the corpus does not teach. Same call as TE-A1-L-10.
+  // ML-A1-JOIN-04 (distributive) also stays open, but its blocker is gone: its
+  // note said it depended on the missing coordinator, which now exists.
+  // -o IS TAUGHT BESIDE -um BECAUSE THEY ARE ONE HABIT: both go on every item
+  // with nothing in the gap, and only the vowel differs -- veLLavum ariyum for
+  // both, chaayayoo kaappiyoo for one of them.
+  // MALAYALAM HAS NO UNTRANSFERABLE POINTS, unlike Kannada's four, so its
+  // ceiling is the full 243.
+  expect(coverage.covered).toBe(164);
+  expect(coverage.unmapped).toBe(79);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -142,6 +163,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 163/243 points covered (67%)",
+    "malayalam A1 (partial inventory): 164/243 points covered (67%)",
   );
 }, 60_000);
