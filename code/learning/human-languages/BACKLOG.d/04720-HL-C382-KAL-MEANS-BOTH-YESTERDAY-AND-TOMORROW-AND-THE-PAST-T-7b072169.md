@@ -29,3 +29,19 @@ is really about — and **पहले** and **बाद** are the other half of
 Grouping कल, परसों, पहले and बाद into one short time-reference chapter after the
 past tense would close `HI-A1-T-09` and make the past chapter's sentences
 usable in a mock answer rather than only grammatical.
+
+
+### Correction: the payoff named here has already happened
+
+This entry proposed grouping **कल**, **परसों**, **पहले** and **बाद** into a time
+chapter and said that would close `HI-A1-T-09`. **`HI-A1-T-09` closed at chapter
+98**, on पहले and के बाद, without कल or परसों being touched.
+
+So the stated payoff is gone, and what is left is the honest remainder: कल and
+परसों each carry **two senses** and the corpus teaches one apiece. That is a real
+gap in reading — *कल मैं घर पर था* and *कल मैं घर पर हूँगा* are different days —
+but it **closes no inventory point**, and this entry should be ranked on that
+basis rather than on a closure it can no longer deliver.
+
+The `introduces_senses` machinery and the registry entry it needs are still the
+right shape for the work.
