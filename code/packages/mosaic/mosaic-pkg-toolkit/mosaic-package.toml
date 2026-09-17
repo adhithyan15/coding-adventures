@@ -15,7 +15,7 @@
 
 [package]
 name        = "mosaic-pkg-toolkit"
-version     = "0.11.0"
+version     = "0.12.0"
 description = "Bootstrap-shaped Mosaic UI component library — ready-made components composed purely from UI29 kernel primitives"
 license     = "MIT OR Apache-2.0"
 
@@ -34,13 +34,14 @@ license     = "MIT OR Apache-2.0"
 # v0.9: DropdownMenu (toggle button + revealed item list).
 # v0.10: Navbar (top-of-page brand + HostLink nav row).
 # v0.11: Select (dropdown selector, closes the Tier-2 batch).
+# v0.12: SegmentedControl (one-of-N option row; #14016).
 # Remaining Tier-1 (Card, Container) blocked on UI29-2 children
 # pass-through spec; ship when that lands.
 exports = [
   "Accordion", "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
   "Checkbox", "DropdownMenu", "Field", "Input", "InputGroup",
   "ListGroup", "Modal", "Nav", "Navbar", "NumberInput", "Pagination",
-  "Radio", "Select", "Spinner", "Tabs", "Toast", "Tooltip",
+  "Radio", "SegmentedControl", "Select", "Spinner", "Tabs", "Toast", "Tooltip",
 ]
 
 [dependencies]

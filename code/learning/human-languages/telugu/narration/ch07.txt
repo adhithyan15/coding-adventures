@@ -1,8 +1,8 @@
 Telugu, chapter 7: Numbers One to Ten.
-3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 ఒకటి, రెండు, మూడు, నాలుగు, ఐదు — one to five.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called You'll want to know: The five and Script you'll notice: A Telugu shape to notice until you have stopped, and I will say so again when we reach it.
@@ -42,7 +42,7 @@ Wrap-up Recall.
 Count to five in Telugu. (Okaṭi, reṇḍu, mūḍu, nālugu, aidu.) Which number does Telugu form unlike the rest of the family, and what do the others say? (One — Telugu okaṭi vs oṉṟu / ondu / onnu.) How does reṇḍu relate to Tamil iraṇṭu? (The opening vowel was dropped.) What vowel do most Telugu words here end in? (‑u.) Next: six to ten.
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 ◌ూ (ū) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ూ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -80,7 +80,7 @@ Which character is this — ◌ూ? What vowel does it put on the consonant it a
 One more, from much earlier: ౫ — what amount does it stand for?
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 ఆరు, ఏడు, ఎనిమిది, తొమ్మిది, పది — six to ten.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for 2 tables that cannot be read aloud. You can listen to everything else now — leave the sections called You'll want to know: The five and The word, taken apart - Eight and nine strike out alone until you have stopped, and I will say so again when we reach it.
@@ -113,3 +113,40 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Count six to ten in Telugu. (Āru, ēḍu, enimidi, tommidi, padi.) What became of Tamil's ḻ (in ēḻu) by the time it reached Telugu ēḍu? (It hardened all the way to ḍ.) Which two numbers can't you derive from Tamil by regular correspondence? (Eight and nine — learn enimidi, tommidi fresh.) How does padi relate to Tamil pattu? (A worn-down relative of the same pat‑ "ten".)
+
+
+Lesson 4 of 4.
+ొ — the short one of the pair.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ొ and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ◌ూ (ū) — is it a letter or a sign, and what does it do?
+[pause 2 seconds]
+Count from six to ten out loud. One of those numbers needs today's sign.
+
+Script you'll notice: ొ.
+ొ — o.
+It is a sign, like the long ో you have already met, and it carries the short o where that one carries the long ō.
+తొమ్మిది tommidi — nine (tommidi).
+Telugu keeps short and long vowels apart as separate signs, and the difference changes words. English writes one o and leaves the length to the ear; here the page tells you, which is one less thing to guess at.
+
+Writing: ొ — copy what you see.
+Put your pen on ొ and follow its line. Copy the shape you can see — slowly, and larger than it is printed. Then write it attached to a consonant, the way it actually appears.
+This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at the number below and find the consonant carrying ొ]
+[pause 8 seconds for the answer]
+తొమ్మిది.
+[once you have stopped driving — trace: ొ three times, saying o as you finish each one]
+[your turn — say: which of ొ and ో is the long one]
+[pause 8 seconds for the answer]
+[your turn — look: at సంతోషం and find the long one riding its consonant]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is ొ a letter or a sign? (A sign.) Which number from this chapter uses it? (తొమ్మిది, nine.) Which of the two o signs is longer? (ో.)

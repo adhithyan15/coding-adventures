@@ -1838,9 +1838,22 @@
       "id": "TE-A1-L-04",
       "category": "Telugu lipi (script and orthography)",
       "label": "every vowel sign an everyday word needs",
-      "probe": null,
+      "probe": [
+        "TE-SCRIPT-RECOG-02",
+        "TE-SCRIPT-RECOG-07",
+        "TE-SCRIPT-RECOG-08",
+        "TE-SCRIPT-RECOG-115",
+        "TE-SCRIPT-RECOG-119",
+        "TE-SCRIPT-RECOG-120",
+        "TE-SCRIPT-RECOG-131",
+        "TE-SCRIPT-RECOG-133",
+        "TE-SCRIPT-RECOG-134",
+        "TE-SCRIPT-RECOG-136",
+        "TE-SCRIPT-RECOG-153",
+        "TE-SCRIPT-RECOG-154"
+      ],
       "derivedFrom": "ES:A1-O1-02",
-      "note": "Ten of Telugu's twelve everyday vowel signs have a recognition lesson of their own. The two that do not are the o and oo signs, and both are used by the track's own pages -- the oo sign 211 times and the o sign 144, counted over the 301 lesson files -- in roju, nooru, gooda, koodi, dooma and bhoojanam among others. See the scope note for why this is not a contradiction of the script-closure gate."
+      "note": "Ten of Telugu's twelve everyday vowel signs had a recognition lesson; the o and oo signs did not, and both are used constantly by the track's own pages -- counted over every Telugu lesson body, the oo sign 224 times and the o sign 175. TE-S153-vowel-sign-oo and TE-S154-vowel-sign-o close the set, each placed one slot after the word that first needs it: the oo sign after santoosham and the o sign after tommidi. THE OLD NOTE MISNAMED ONE OF THEM: it treated the character at U+0C42 as the oo sign, and that is the UU sign, taught since chapter 7 by TE-S134-vowel-sign-uu. The genuinely untaught pair was U+0C4A and U+0C4B. The probe names all twelve signs, so the point closes only while every one of them is taught."
     },
     {
       "id": "TE-A1-L-05",
@@ -1904,7 +1917,7 @@
       "label": "the consonant letters, as a set a reader can finish a page with",
       "probe": null,
       "derivedFrom": "ES:A1-O1-03",
-      "note": "Twenty-three of about thirty-six have a recognition lesson. Of the thirteen that do not, seven are used by the track's own pages and were counted there: ma 636 times, ta 292, ba 169, sha 105, dha 100, ssa 59 and pha 4. `ma` is in the very first word the book teaches, namaskaaram."
+      "note": "Twenty-three of about thirty-six consonants had a recognition lesson. TE-S150-letter-ma and TE-S151-letter-dha now add the two that cost a reader most: MA IS THE MOST-USED CHARACTER IN THE TRACK, 756 uses counted over every Telugu lesson body, and it sits in the second syllable of namaskaaram, the very first word the book teaches; dha opens dhanyavaadamulu, the second. THE POINT STAYS OPEN because the demand is the consonant set as something a reader can finish a page with, and eleven are still untaught -- ba (180 uses), sha (126), ssa (72) and pha (4) among them. THE OLD NOTE'S OWN LIST WAS WRONG ON ONE ENTRY: it counted 'ta 292 times' among the untaught, and dental ta has been taught since chapter 5 by TE-S01-copy-in-a-word. The 292-count letter is RETROFLEX ta, which is TE-A1-L-12's business -- the claim had been duplicated across two points."
     },
     {
       "id": "TE-A1-L-11",
@@ -1941,9 +1954,15 @@
       "id": "TE-A1-L-12",
       "category": "Telugu lipi (script and orthography)",
       "label": "the retroflex series, which Telugu spells out and English does not distinguish",
-      "probe": null,
+      "probe": [
+        "TE-SCRIPT-RECOG-152",
+        "TE-SCRIPT-RECOG-155",
+        "TE-SCRIPT-RECOG-123",
+        "TE-SCRIPT-RECOG-139",
+        "TE-SCRIPT-RECOG-126"
+      ],
       "derivedFrom": "ES:A1-O1-03",
-      "note": "dda, ddha and nna have recognition lessons; ta and tha do not. Retroflex ta is used 292 times across the track's pages -- in eemiti, maatlaadu, ganta, paata and baata, every one of them taught as a word."
+      "note": "dda, ddha and nna had recognition lessons; retroflex ta and tha did not. TE-S152-letter-tta and TE-S155-letter-ttha close the row. RETROFLEX TA IS THE SECOND MOST-USED UNTAUGHT CHARACTER IN THE TRACK -- 362 uses counted over every Telugu lesson body, in eemiti, maatlaadu, ganta, paata and baata, every one of them taught as a word. ttha is the opposite case at 3 uses, and is taught anyway because one of them is a month name: a reader who meets an unfamiliar shape inside a familiar list cannot tell whether the word or the printing is at fault. The two lessons teach the pair as one tongue position with and without the breath, which is the distinction English does not mark and the romanization marks badly."
     },
     {
       "id": "TE-A1-L-13",

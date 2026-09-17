@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S151-letter-dha",
+    "language": "telugu",
+    "chapter": 1,
+    "sequence": 22,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:42a924478114327b",
+    "detachableSegments": [
+      "Script you'll notice: ధ",
+      "Writing: ధ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-S156-script-recall",
+    "language": "telugu",
+    "chapter": 17,
+    "sequence": 444,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a7cabaeb599f56d",
+    "detachableSegments": [
+      "Script: the six, side by side"
+    ]
+  },
+  "findings": []
+}

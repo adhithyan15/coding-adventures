@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:32d08969d31a6687",
+  "sourceHash": "fnv1a64:e9726e66eeb5e88b",
   "lessons": [
     {
       "id": "TE-C01-namaskaram",
@@ -398,6 +398,318 @@
             {
               "kind": "speech",
               "text": "Read ధన్యవాదములు (dhanyavādamulu). What is Sanskrit in it, and what is Telugu? (dhanya-vāda is Sanskrit; the plural -mulu is Telugu.) What does \"agglutinative\" mean for how Telugu builds words? (It glues endings onto a stem.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S150-letter-ma",
+      "sequence": 21,
+      "title": "మ (ma) — one character, and it is in the first word of the book",
+      "headword": "మ",
+      "romanization": "ma",
+      "gloss": "the single character మ — recognised inside words you already say",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:76c234ad3ed84e05",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: మ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: మ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the greeting this book opened with. Then say the word for thank you. You have both of them in your mouth already."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: మ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మ — ma."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not m, it is ma."
+            },
+            {
+              "kind": "speech",
+              "text": "Both of the words you said a moment ago carry it:"
+            },
+            {
+              "kind": "speech",
+              "text": "నమస్కారం namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+            },
+            {
+              "kind": "speech",
+              "text": "ధన్యవాదములు dhanyavādamulu — thank you (dhanyavādamulu — \"utterances of 'worthy'\")."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the character the book uses more than any other. It sits in the second syllable of the very first word you were taught, and it will be in front of you on nearly every page from here on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: మ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on మ (ma) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these two words, and find మ (ma) in each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these two words, and find మ in each]"
+            },
+            {
+              "kind": "speech",
+              "text": "నమస్కారం (namaskāram), ధన్యవాదములు (dhanyavādamulu)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "మ three times, saying ma as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: మ three times, saying *ma* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the greeting again and say which syllable మ (ma) carries",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the greeting again and say which syllable మ carries]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — మ? What sound does it carry? (ma.) Name the two words in this chapter that contain it. (నమస్కారం (namaskāram) and ధన్యవాదములు (dhanyavādamulu) — once each.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S151-letter-dha",
+      "sequence": 22,
+      "title": "ధ (dha) — the character the thank-you word opens with",
+      "headword": "ధ",
+      "romanization": "dha",
+      "gloss": "the single character ధ — recognised inside a word you already say",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:42a924478114327b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ధ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ధ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: మ (ma) — what sound does it carry?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This one is at the very front of the word for thank you, where your eye lands first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ధ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ధ — dha."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a consonant, and in this script a consonant is never bare: it comes with an a already in it. So it is not dh, it is dha."
+            },
+            {
+              "kind": "speech",
+              "text": "ధన్యవాదములు dhanyavādamulu — thank you (dhanyavādamulu — \"utterances of 'worthy'\")."
+            },
+            {
+              "kind": "speech",
+              "text": "One word so far, and it is the one this character opens. The dh is a single sound made at the teeth with a puff of breath after it, not the English th of this. More words with ధ (dha) arrive as the book goes on; this is where the shape gets into your eye."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ధ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ధ (dha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the word below, and find ధ (dha) at its front and మ (ma) further in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the word below, and find ధ at its front and మ further in]"
+            },
+            {
+              "kind": "speech",
+              "text": "ధన్యవాదములు (dhanyavādamulu)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ధ three times, saying dha as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ధ three times, saying *dha* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the two characters side by side and say which is which",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the two characters side by side and say which is which]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ధ? What sound does it carry? (dha.) Where in the thank-you word does it sit? (At the front.)"
             }
           ]
         }

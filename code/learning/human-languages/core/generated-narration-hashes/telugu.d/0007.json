@@ -1,17 +1,18 @@
 {
   "language": "telugu",
   "chapter": 7,
-  "sourceHash": "fnv1a64:9057567f104bda12",
+  "sourceHash": "fnv1a64:84d65eda65b3c5c7",
   "lessonIds": [
     "TE-C07-numbers-1-5",
     "TE-S134-vowel-sign-uu",
-    "TE-C07-numbers-6-10"
+    "TE-C07-numbers-6-10",
+    "TE-S154-vowel-sign-o"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "telugu/narration/ch07.txt",
   "json": "telugu/narration/ch07.json",
-  "textHash": "fnv1a64:6d8b41c47e12abea",
-  "jsonHash": "fnv1a64:53543017cb2a3609",
+  "textHash": "fnv1a64:c526735150e1a295",
+  "jsonHash": "fnv1a64:dc388b0164fe829c",
   "findings": []
 }
