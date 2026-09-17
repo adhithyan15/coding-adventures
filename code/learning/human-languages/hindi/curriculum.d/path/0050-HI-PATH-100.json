@@ -57,7 +57,10 @@
     "HI-S144-vowel-sign-vocalic-r",
     "HI-S145-letter-sha",
     "HI-S146-letter-va",
-    "HI-S147-letter-na-retroflex"
+    "HI-S147-letter-na-retroflex",
+    "HI-S148-sign-anusvara",
+    "HI-S149-vowel-sign-uu",
+    "HI-S150-vowel-sign-o"
   ],
   "before": [],
   "inline": [

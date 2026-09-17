@@ -1,16 +1,17 @@
 {
   "language": "hindi",
   "chapter": 17,
-  "sourceHash": "fnv1a64:7ff519ca33bed902",
+  "sourceHash": "fnv1a64:d49296ff4bd5b809",
   "lessonIds": [
     "HI-C17-dopahar-aadhi-raat",
-    "HI-S121-letter-la"
+    "HI-S121-letter-la",
+    "HI-S149-vowel-sign-uu"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "hindi/narration/ch17.txt",
   "json": "hindi/narration/ch17.json",
-  "textHash": "fnv1a64:0bfe549183eb7321",
-  "jsonHash": "fnv1a64:5861e36b20861742",
+  "textHash": "fnv1a64:ac0f79a643bee36d",
+  "jsonHash": "fnv1a64:8e17440ecdbb1347",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 30,
-  "sourceHash": "fnv1a64:9feb5046915e4197",
+  "sourceHash": "fnv1a64:0078a2e5ca5288d0",
   "lessonIds": [
     "HI-C30-dopahar-widened",
     "HI-S132-letter-ja"
@@ -11,6 +11,6 @@
   "text": "hindi/narration/ch30.txt",
   "json": "hindi/narration/ch30.json",
   "textHash": "fnv1a64:189b8ad6a6cb9b66",
-  "jsonHash": "fnv1a64:54cd96cf5333a7ce",
+  "jsonHash": "fnv1a64:2e0560a3b9c92486",
   "findings": []
 }

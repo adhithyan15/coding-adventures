@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ed5aced2fc996820",
+  "sourceHash": "fnv1a64:19cfed5d9efafe9a",
   "lessons": [
     {
       "id": "HI-C16-mahine",
@@ -300,6 +300,201 @@
             {
               "kind": "speech",
               "text": "Which character is this — ◌ु? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts u on; takes the built-in a off.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-S148-sign-anusvara",
+      "sequence": 632,
+      "title": "◌ं (ṃ) — the dot above the line",
+      "headword": "ं",
+      "romanization": "ṃ",
+      "gloss": "the single mark ◌ं — the dot you have been reading in मैं and हैं since your first week",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:53792bf3ce51af35",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ◌ं",
+          "Script: you have been saying it all along",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ◌ं, Script: you have been saying it all along and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The hook from before sat below the consonant. Say what it did."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Today's mark sits above the head-line, and you have been reading it since your first week."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ◌ं",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌ं (ṃ) — the anusvāra. A single dot, sitting on top of the shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "It sends the syllable through the nose. It is not a vowel and it does not replace one: the vowel stays exactly as it was, and the air changes route."
+            },
+            {
+              "kind": "speech",
+              "text": "Worked through: स + ◌ं (ṃ) = सं."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: you have been saying it all along",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at the dot above the line in each of these:"
+            },
+            {
+              "kind": "speech",
+              "text": "मैं — I."
+            },
+            {
+              "kind": "speech",
+              "text": "हैं — are."
+            },
+            {
+              "kind": "speech",
+              "text": "मिलेंगे — we will meet."
+            },
+            {
+              "kind": "speech",
+              "text": "में — in."
+            },
+            {
+              "kind": "speech",
+              "text": "हिंदी — Hindi."
+            },
+            {
+              "kind": "speech",
+              "text": "These are not decorative words. मैं and हैं are how you say who you are and how things stand, and you have been reading that dot in them without a lesson ever naming it."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a second nasal mark, a crescent with a dot inside it, and which of the two a word takes depends on what else is sitting above the letter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing: ◌ं — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Draw the letter and its head-line as you already do. Then put one dot above the line, over the middle of the letter."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these two words and find the dot above the line",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these two words and find the dot above the line]"
+            },
+            {
+              "kind": "speech",
+              "text": "मैं, हैं."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "मैं three times, saying maĩ as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: मैं three times, saying *maĩ* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether this mark changes the vowel or the air",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether this mark changes the vowel or the air]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does ◌ं (ṃ) sit? (Above the head-line.) What does it change? (The route of the air, not the vowel.) Name the word for I that carries it."
             }
           ]
         }

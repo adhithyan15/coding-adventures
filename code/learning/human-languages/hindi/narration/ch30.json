@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9feb5046915e4197",
+  "sourceHash": "fnv1a64:0078a2e5ca5288d0",
   "lessons": [
     {
       "id": "HI-C30-dopahar-widened",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5ba7960b9fe9703",
+      "sourceHash": "fnv1a64:e9ebc08e4ebf23ba",
       "notice": null,
       "blocks": [
         {
