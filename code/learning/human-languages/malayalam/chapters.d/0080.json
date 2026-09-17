@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Where You Are From",
+  "label": "ch:ml-origin",
+  "canDo": "I can answer where I am from with a place rather than with a category, and say that somebody is a Malayali.",
+  "payoff": {
+    "lesson": "ML-R80-origin-recall",
+    "kind": "production",
+    "summary": "From cold: the three place words in order of scale, the person word and where it came from, and the fact that placing somebody needs no new grammar at all.",
+    "assesses": [
+      "ML-LEX-C80-ORIGIN-01",
+      "ML-LEX-C80-ORIGIN-02",
+      "ML-LEX-C80-ORIGIN-03",
+      "ML-LEX-C80-ORIGIN-04",
+      "ML-CONCEPT-C80-GENTILIC-01"
+    ],
+    "note": "The chapter introduces exactly these five atoms and the payoff assesses all five. No new grammar is added: the gentilic uses the stands-in-front rule the adjective chapter already established, which is the chapter's own finding rather than an omission."
+  }
+}

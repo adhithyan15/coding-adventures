@@ -6,7 +6,8 @@
     "ML-PATH-034",
     "ML-PATH-46-ASK",
     "ML-PATH-55-GROUND",
-    "ML-PATH-65-ASK"
+    "ML-PATH-65-ASK",
+    "ML-PATH-80-ORIGIN"
   ],
   "omits": [],
   "relocates": {}

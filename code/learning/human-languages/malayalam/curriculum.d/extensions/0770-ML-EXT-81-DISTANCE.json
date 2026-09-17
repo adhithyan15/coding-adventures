@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-81-DISTANCE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can measure a distance instead of only pointing along one.",
+  "prerequisites": [
+    "ML-EXT-80-ORIGIN"
+  ],
+  "lessons": [
+    "ML-C81-aduthu",
+    "ML-C81-akale",
+    "ML-C81-dooram",
+    "ML-R81-distance-recall"
+  ]
+}

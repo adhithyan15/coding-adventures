@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:451572dcb298bf69",
+  "lessonIds": [
+    "ML-C81-aduthu",
+    "ML-C81-akale",
+    "ML-C81-dooram",
+    "ML-R81-distance-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch81-how-far-away.tex"
+}

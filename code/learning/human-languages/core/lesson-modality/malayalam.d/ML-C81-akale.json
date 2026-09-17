@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C81-akale",
+    "language": "malayalam",
+    "chapter": 81,
+    "sequence": 2810,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:674e4d01fdbbee69"
+  },
+  "findings": []
+}

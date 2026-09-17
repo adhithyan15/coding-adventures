@@ -1,0 +1,18 @@
+{
+  "chapter": 81,
+  "title": "How Far Away",
+  "label": "ch:ml-distance",
+  "canDo": "I can say that something is near or far, and ask how far away it is.",
+  "payoff": {
+    "lesson": "ML-R81-distance-recall",
+    "kind": "production",
+    "summary": "From cold: both ends of the distance scale, the question that reads it, and the difference between pointing at a place and measuring across to it.",
+    "assesses": [
+      "ML-LEX-C81-DISTANCE-01",
+      "ML-LEX-C81-DISTANCE-02",
+      "ML-LEX-C81-DISTANCE-03",
+      "ML-LEX-C81-HOW-MUCH-01"
+    ],
+    "note": "The chapter introduces exactly these four atoms and the payoff assesses all four. One of them, ethra, was already inside the age question the learner knows whole; the chapter lifts it out rather than teaching it fresh."
+  }
+}

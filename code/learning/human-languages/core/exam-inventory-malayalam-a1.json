@@ -82,7 +82,13 @@
       "id": "ML-A1-N-02",
       "category": "Naamam (the noun)",
       "label": "place names: the town you live in, and the country you are from",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C80-ORIGIN-01",
+        "ML-LEX-C80-ORIGIN-02",
+        "ML-LEX-C80-ORIGIN-03",
+        "ML-LEX-C80-ORIGIN-04",
+        "ML-CONCEPT-C80-GENTILIC-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -93,7 +99,7 @@
         "A1-NE20-02"
       ],
       "malayalamSpecific": false,
-      "note": "naadu ('home country', ML-C55-homeland) is the nearest thing taught, and it names a KIND of place rather than one. No settlement name, no name of Kerala or of India, appears anywhere in 292 lessons -- so a learner can answer 'where are you from' only with a category. One lesson teaching uuru ('town') plus Keralam would close this and ML-A1-NG3-07 together."
+      "note": "Chapter 80. The chapter teaches uuru (a town, the small end of the scale naadu floats over) and then two fixed points on that scale, Keralam and India. All three can answer 'where are you from', and the lesson says the choice among them is the same one English makes: you pick the one your listener will recognise. Before this, naadu named a KIND of place rather than one, so the question could only be answered with a category. CORRECTION TO THIS NOTE'S OWN EARLIER TEXT: it claimed no settlement name appeared anywhere in the corpus, and that was WRONG. Kochi appears in FIVE lesson files -- ML-C05-taamasikkuka and ML-C05-practice use kocciyil ('in Kochi') inside the 'I live in' sentence, and three script lessons use it as a reading example. It is never a headword, so no lesson OWNS it, which is why a headword-based count missed it. The claim should have been that no settlement name is TAUGHT, which is a different and weaker statement. Consequence to carry forward: Kochi is untaught material already in use, so if any future lesson takes it as a headword those five uses become forward references at once -- the same trap that ML-C82-chechi-address hit with chechi. Verified before writing chapter 80: uuru, Keralam, India and Malayali all returned ZERO files."
     },
     {
       "id": "ML-A1-N-03",
@@ -233,7 +239,13 @@
       "id": "ML-A1-ADJ-04",
       "category": "Visheshanam (the adjective)",
       "label": "relational adjectives: naming where a person or thing is from",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C80-ORIGIN-01",
+        "ML-LEX-C80-ORIGIN-02",
+        "ML-LEX-C80-ORIGIN-03",
+        "ML-LEX-C80-ORIGIN-04",
+        "ML-CONCEPT-C80-GENTILIC-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -243,7 +255,7 @@
         "A1-ADJ-02"
       ],
       "malayalamSpecific": false,
-      "note": "No gentilic is taught. There is no word for 'Indian', 'Keralite' or 'Malayali' anywhere, which is the same hole as ML-A1-N-02 seen from the adjective's side."
+      "note": "Chapter 80, the same tranche as ML-A1-N-02, because the old note was exact that this is the same hole seen from the adjective's side. The gentilic is Malayali, and it needed NO NEW GRAMMAR, which is the chapter's own finding rather than a shortcut: English keeps two shapes for this job (India / Indian, Kerala / Keralite) and Malayalam keeps one, placing somebody by standing the person-word in front of the noun UNCHANGED -- Malayali adhyaapakan. That is the same position the quality word and the degree word already occupy, so the point closes on a rule the learner has held since the adjective chapter. The word is also derivable on sight: Malayalam and Malayali are identical up to the last piece, and the learner has owned the language word since the fifth chapter's sentence."
     },
     {
       "id": "ML-A1-ADJ-05",
@@ -803,7 +815,7 @@
         "A1-NG2-04"
       ],
       "malayalamSpecific": false,
-      "note": "valiya and cheriya give size as a quality. No unit of measure, no word for distance or weight, is taught."
+      "note": "valiya and cheriya give size as a quality. No unit of measure, no word for distance or weight, is taught. UPDATE, chapter 81: the DISTANCE half is now partly paid -- dooram (distance) and the question ethra dooram? are taught, so distance is nameable and askable. This point stays OPEN because it asks for UNITS: no measure of length, no measure of weight, and no number past twenty to put in front of one (see ML-A1-NUM-04, which blocks this). Closing it needs the numbers first, then a unit lesson; it is not a vocabulary add on its own."
     },
     {
       "id": "ML-A1-NUM-09",
@@ -1833,7 +1845,12 @@
       "id": "ML-A1-ADV-09",
       "category": "Kriyaavisheshanam (adverbs)",
       "label": "near and far, and how far away something is",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C81-DISTANCE-01",
+        "ML-LEX-C81-DISTANCE-02",
+        "ML-LEX-C81-DISTANCE-03",
+        "ML-LEX-C81-HOW-MUCH-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1844,7 +1861,7 @@
         "A1-NG3-03"
       ],
       "malayalamSpecific": false,
-      "note": "aduthu and akale are not taught. ivide and avide give a two-way here/there and no way to say that something is FAR, so distance can be pointed at and not measured."
+      "note": "Chapter 81. The old note stated the problem exactly: ivide and avide give a two-way here/there and no way to say that something is FAR, so distance could be pointed at and not measured. The chapter separates the two jobs and says so on the page -- the deictic pair POINTS (my side or not my side, and something avide may be a step away or a country away) while aduthu and akale MEASURE. ethra dooram? then asks for a number. One of the four atoms cost nothing: ethra was already inside the age question the learner knows whole, doing exactly this job, and the chapter lifts it out rather than teaching it fresh -- which is a habit the lesson names, because a long sentence learned whole usually holds two or three words that work on their own. The chapter also asks the learner to REFUSE a pattern: akale opens with a and the deictic distal prefix is a-, but the a in akale is part of the word. The test given is whether the other members of the set exist -- there is no ikale and no ekale, so there is no set and no pattern. Verified before writing: aduthu, akale and dooram all returned ZERO files."
     },
     {
       "id": "ML-A1-S-01",
