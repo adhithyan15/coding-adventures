@@ -1,12 +1,15 @@
 {
   "language": "telugu",
   "chapter": 7,
-  "sourceHash": "fnv1a64:eae1a61486c94384",
+  "sourceHash": "fnv1a64:a9318161623e9aa6",
   "lessonIds": [
     "TE-C07-numbers-1-5",
+    "TE-S164-letter-ai",
     "TE-S134-vowel-sign-uu",
     "TE-C07-numbers-6-10",
-    "TE-S154-vowel-sign-o"
+    "TE-S154-vowel-sign-o",
+    "TE-S165-letter-o",
+    "TE-S166-letter-aa"
   ],
   "tex": "telugu/book/chapters/ch07-numbers-1-10.tex"
 }

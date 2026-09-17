@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "TE-S166-letter-aa",
+    "language": "telugu",
+    "chapter": 7,
+    "sequence": 343,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dec7ded40a1a2771",
+    "detachableSegments": [
+      "Script you'll notice: ఆ",
+      "Writing: ఆ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

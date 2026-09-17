@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 2,
-  "sourceHash": "fnv1a64:26264c3fed91a541",
+  "sourceHash": "fnv1a64:7eac86c07e7ce30f",
   "lessonIds": [
     "TE-C02-peru",
     "TE-S109-letter-na",
@@ -13,6 +13,7 @@
     "TE-S05-sign-virama",
     "TE-C02-emiti",
     "TE-S152-letter-tta",
+    "TE-S163-letter-ee",
     "TE-S141-digit-2",
     "TE-C02-mii-peru-emiti",
     "TE-S08-vowel-sign-i",
