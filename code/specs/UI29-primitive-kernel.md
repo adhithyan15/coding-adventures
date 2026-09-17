@@ -153,6 +153,13 @@ Examples of components that look kernel-ish but are not:
 The litmus test: if you can write the component's `.mll` file using
 *only* kernel primitives, it doesn't belong in the kernel.
 
+The test is about what the composition *loses*, not whether it compiles. A
+checkbox is a `HostButton` underneath and is still in the kernel (UI29-2),
+because the role and the keyboard semantics are not composable. A navigation
+pane beside a detail area is two `Column`s underneath and is in the kernel for
+the same reason ([UI29-6](UI29-6-host-navigation-split.md)): the platform's own
+adaptive collapse and the landmark structure are not.
+
 ### 2.4 The kernel is versioned and frozen
 
 Once a kernel primitive ships, its slot/emit surface is **stable**.
