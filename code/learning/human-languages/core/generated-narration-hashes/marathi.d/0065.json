@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:2502223c98151612",
+  "lessonIds": [
+    "MR-W65-ii-independent",
+    "MR-W65-o-independent",
+    "MR-W65-ai-independent",
+    "MR-W65-au-independent",
+    "MR-R65-standing-vowels"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch65.txt",
+  "json": "marathi/narration/ch65.json",
+  "textHash": "fnv1a64:77da4cbd80ce4d2f",
+  "jsonHash": "fnv1a64:84b974ffb6521f9c",
+  "findings": []
+}
