@@ -1,0 +1,15 @@
+{
+  "id": "ML-EXT-72-QUOTATIVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can report what somebody said, thought, knew or asked.",
+  "prerequisites": [
+    "ML-EXT-71-PRONOUNS"
+  ],
+  "lessons": [
+    "ML-C72-ennu",
+    "ML-C72-ennu-more",
+    "ML-R72-ennu-recall"
+  ]
+}

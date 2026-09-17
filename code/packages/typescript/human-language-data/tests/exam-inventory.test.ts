@@ -1991,8 +1991,23 @@ describe("the committed Malayalam A1 inventory", () => {
     // TA-A1-PRON-03, closed in the chapter before this one. avar additionally
     // reuses ML-C02's own rule that a plural raises the register (nii -> ningal,
     // avan -> avar), so two of the three new words run on machinery already held.
-    expect(coverage.covered).toBe(166);
-    expect(coverage.unmapped).toBe(77);
+    // 166 -> 167: ML-A1-JOIN-06, the quotative ennu. THE NOTE WAS VERIFIED BY
+    // TOKEN RATHER THAN SUBSTRING, and that mattered: the string `enna` appears
+    // nine times in the corpus, and every one is inside ennaal, the word for
+    // "but" that ML-C64 teaches. The quotative -- with the virama -- was nowhere.
+    // ONE MARKER BUYS BACK THE WHOLE CORPUS: ennu leaves the quoted sentence
+    // untouched, so every sentence the reader can build becomes something they
+    // can report, think, claim to know or ask. Two atoms, four verb frames, all
+    // four verbs already taught.
+    // THE SAYING-VERB WAS A SECOND FINDING AND IS FIXED IN CHAPTER 50, NOT 72:
+    // parayuka was never a headword anywhere, while ML-C50-farewell built
+    // `vita parayuka` and called it "the speaking-verb" for want of a name.
+    // Teaching it at 72 made those uses forward references 104 and 106 lessons
+    // early; the lesson moved to sequence 1405, immediately before the first use,
+    // which returned forwardReferences to its baseline of 12 and paid a debt that
+    // predated this work.
+    expect(coverage.covered).toBe(167);
+    expect(coverage.unmapped).toBe(76);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2026,7 +2041,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 166/243 points covered (68%)",
+      "malayalam A1 (partial inventory): 167/243 points covered (69%)",
     );
   }, 60_000);
 });

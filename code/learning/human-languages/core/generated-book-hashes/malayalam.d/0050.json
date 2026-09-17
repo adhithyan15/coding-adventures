@@ -1,10 +1,11 @@
 {
   "language": "malayalam",
   "chapter": 50,
-  "sourceHash": "fnv1a64:a499d594eb92e776",
+  "sourceHash": "fnv1a64:5e14cfa64075f68b",
   "lessonIds": [
     "ML-C50-now",
     "ML-C50-day-after",
+    "ML-C50-parayuka",
     "ML-C50-journey",
     "ML-C50-set-out",
     "ML-C50-farewell"
