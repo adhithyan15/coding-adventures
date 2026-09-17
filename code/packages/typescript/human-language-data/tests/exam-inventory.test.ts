@@ -1442,8 +1442,13 @@ describe("the committed Marathi A1 inventory", () => {
     // ONE point for five lessons, and the ratio is honest: four letters that each
     // need their own shape practised, plus the review. All four had a sign the
     // reader already drew, so the gap was in the POSITION rather than the sound.
-    expect(coverage.covered).toBe(167);
-    expect(coverage.unmapped).toBe(134);
+    // 167 -> 168: chapter 68 closes MR-A1-F5-03, choosing a greeting that fits
+    // the time of day. That completes the SPINE-TIME-OF-DAY repair begun in 66:
+    // the node now omits only GREETING-DAY, matching every track that realizes
+    // it. Three greetings for ONE new word, taught for reading, with namaskaar
+    // named as what is actually spoken at any hour.
+    expect(coverage.covered).toBe(168);
+    expect(coverage.unmapped).toBe(133);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -1459,7 +1464,7 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 167/301 points covered (55%)",
+      "marathi A1 (partial inventory): 168/301 points covered (56%)",
     );
   }, 60_000);
 });
