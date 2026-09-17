@@ -12,6 +12,8 @@
 //! citation. It now pins the METAPHOR answer to the metaphor sentence, which
 //! is also the row carrying the curly apostrophe that pin exists to protect.
 
+mod common;
+
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -155,7 +157,13 @@ fn the_table_shape_matches_the_measured_rows() {
     // Not `"\n    cites "`: that is indent-scoped and would miss a row-level
     // `cites` at eight spaces. The per-type test's closed needle catches one
     // either way, but this assertion should stand on its own.
-    assert!(!body.contains("cites "), "no corroboration at any indent");
+    let whole_adj = std::fs::read_to_string(facts_stdlib().join("language/figurative-language-type.adj")).expect("read shipped figurative-language-type.adj");
+    // CODE ONLY (#15425): `common::has_code_word` reads the WHOLE file as ADJ's
+    // lexer does -- comments dropped, strings blanked across lines, numbers
+    // consumed whole -- and looks for a `cites` token anywhere in it. Not from
+    // the table on: no line-based search finds the declaration reliably, and a
+    // corroboration above the table would warrant these rows just the same.
+    assert!(!common::has_code_word(&whole_adj, "cites"), "no corroboration at any indent");
     assert!(
         !body.contains("\n        locator ") && !body.contains("\n        trust "),
         "no row restates a locator line or trust"
