@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C83-ninnu",
+    "language": "malayalam",
+    "chapter": 83,
+    "sequence": 2880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a7eeeccf99e2a34"
+  },
+  "findings": []
+}
