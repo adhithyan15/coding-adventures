@@ -12,18 +12,18 @@ headword: पढ़ना / पढ़ / पढ़ता / पढ़ती / प�
 gloss: to read or study / stem / masculine, feminine, and respectful-plural present forms / studies / to teach
 romanization: "paṛhnā / paṛh / paṛhtā / paṛhtī / paṛhte / paṛhāī / paṛhānā"
 concept_tag: VERB-READ
-prerequisites: [HI-C34-samajhna, HI-C06-numbers-1-5, HI-C21-numbers-6-10]
+prerequisites: [HI-S137-letter-dha-retroflex, HI-C34-samajhna, HI-C06-numbers-1-5, HI-C21-numbers-6-10]
 sounds: [retroflex-flap-rha, nuqta]
 roots: [path-recite]
 etymology_hook: "पढ़ना (paṛhnā) covers BOTH 'to read' and 'to study' — पढ़ाई (paṛhāī) is 'studies' and पढ़ाना (paṛhānā) is 'to teach' — because its Sanskrit ancestor पठति (paṭhati) meant 'recites, reads ALOUD', in a culture where the Veda was śruti, 'that which is heard'; the ṭh softened between vowels through Prakrit paḍhaï into the flapped retroflex ṛh written ढ़, ढ carrying the nuqta dot already met under माफ़; and the root paṭh- has NO secure Indo-European ancestry at all — no English cousin exists, and the lesson says so"
 duration:
   max_seconds: 250
 requires:
-  knowledge: [HI-CONCEPT-C34-SAMAJHNA-01, HI-CONCEPT-C09-MAAF-KIJIYE-01, HI-CONCEPT-C06-NUMBERS-1-5-01, HI-CONCEPT-C21-NUMBERS-6-10-01]
+  knowledge: [HI-CONCEPT-C34-SAMAJHNA-01, HI-CONCEPT-C09-MAAF-KIJIYE-01, HI-CONCEPT-C06-NUMBERS-1-5-01, HI-CONCEPT-C21-NUMBERS-6-10-01, HI-SCRIPT-RECOG-137]
 introduces:
   knowledge: [HI-CONCEPT-C34-PADHNA-01, HI-CONCEPT-C34-PADHNA-02]
 practises:
-  knowledge: [HI-CONCEPT-C34-PADHNA-01, HI-CONCEPT-C34-PADHNA-02, HI-CONCEPT-C34-SAMAJHNA-01, HI-CONCEPT-C09-MAAF-KIJIYE-01, HI-CONCEPT-C06-NUMBERS-1-5-01, HI-CONCEPT-C21-NUMBERS-6-10-01]
+  knowledge: [HI-CONCEPT-C34-PADHNA-01, HI-CONCEPT-C34-PADHNA-02, HI-CONCEPT-C34-SAMAJHNA-01, HI-CONCEPT-C09-MAAF-KIJIYE-01, HI-CONCEPT-C06-NUMBERS-1-5-01, HI-CONCEPT-C21-NUMBERS-6-10-01, HI-SCRIPT-RECOG-137]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [HI-C34-samajhna, HI-C09-maaf-kijiye, HI-C06-numbers-1-5, HI-C21-num
 # पढ़ना (paṛhnā) — "to read," and just as often "to study"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C34-SAMAJHNA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C34-SAMAJHNA-01, HI-SCRIPT-RECOG-137] -->
 
 [PAUSE 2s] One verb, two English words. And one letter you have never had to
 say out loud before.

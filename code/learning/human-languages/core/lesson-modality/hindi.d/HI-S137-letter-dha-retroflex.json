@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S137-letter-dha-retroflex",
+    "language": "hindi",
+    "chapter": 15,
+    "sequence": 622,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bd843d44444588fb",
+    "detachableSegments": [
+      "Script you'll notice: ढ",
+      "Script: the shortest build, and the last one early",
+      "Writing: ढ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

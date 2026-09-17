@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 34,
-  "sourceHash": "fnv1a64:b5da7303a8c0ffeb",
+  "sourceHash": "fnv1a64:f6a823b4cbfc849a",
   "lessonIds": [
     "HI-C34-sochna",
     "HI-S135-letter-au",
@@ -14,6 +14,6 @@
   "text": "hindi/narration/ch34.txt",
   "json": "hindi/narration/ch34.json",
   "textHash": "fnv1a64:36273c6110f4e98c",
-  "jsonHash": "fnv1a64:06d57595b8a0b0f4",
+  "jsonHash": "fnv1a64:4fe4cd6b07d66be1",
   "findings": []
 }

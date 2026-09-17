@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S136-letter-gha",
+    "language": "hindi",
+    "chapter": 14,
+    "sequence": 612,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2085a439e58b35c2",
+    "detachableSegments": [
+      "Script you'll notice: घ",
+      "Script: ahead of its words, on purpose",
+      "Writing: घ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
