@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C68-shubh-sandhyakal",
+    "language": "marathi",
+    "chapter": 68,
+    "sequence": 2800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1eadbf94b765aaa6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 68,
+  "title": "Three Greetings, One Word",
+  "label": "ch:mr-shubh",
+  "canDo": "I can read the time-of-day greetings, and I know which greeting Marathi speakers actually use at any hour.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MR-R68-greetings-recall",
+    "kind": "production",
+    "summary": "From cold: the three shubh greetings in the order the day runs, the one new word they are all built from, and the greeting that replaces all of them in speech.",
+    "assesses": [
+      "MR-LEX-SHUBH",
+      "MR-PHRASE-SHUBH-SAKAL",
+      "MR-PHRASE-SHUBH-DUPAR",
+      "MR-PHRASE-SHUBH-SANDHYAKAL"
+    ],
+    "note": "The chapter introduces exactly these four atoms and the payoff assesses all four. Only ONE is a new word: the three greetings are shubh plus parts of the day chapter 66 already taught."
+  }
+}
