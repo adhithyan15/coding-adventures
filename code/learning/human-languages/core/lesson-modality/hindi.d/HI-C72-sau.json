@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "HI-C75-fifth",
+    "id": "HI-C72-sau",
     "language": "hindi",
-    "chapter": 82,
-    "sequence": 3200,
+    "chapter": 79,
+    "sequence": 3055,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b9f567b70377f827"
+    "sourceHash": "fnv1a64:fd908263aa9d225a"
   },
   "findings": []
 }

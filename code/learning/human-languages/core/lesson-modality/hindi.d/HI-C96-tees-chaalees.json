@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "HI-C75-fifth",
+    "id": "HI-C96-tees-chaalees",
     "language": "hindi",
-    "chapter": 82,
-    "sequence": 3200,
+    "chapter": 104,
+    "sequence": 4420,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b9f567b70377f827"
+    "sourceHash": "fnv1a64:36e6c4e18479ca58"
   },
   "findings": []
 }

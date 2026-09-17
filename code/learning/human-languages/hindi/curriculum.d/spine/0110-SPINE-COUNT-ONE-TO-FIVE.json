@@ -4,7 +4,8 @@
     "HI-PATH-022",
     "HI-PATH-75-ORDINAL",
     "HI-PATH-76-ORDINAL",
-    "HI-PATH-77-ORDER"
+    "HI-PATH-77-ORDER",
+    "HI-PATH-104-GINTI"
   ],
   "omits": [
     "NUMBER-ONE-TO-FIVE"

@@ -111,7 +111,7 @@ it("pins Hindi lesson-content budgets", () =>
     // chapters after the reader met them. neverTaughtGlyphs and
     // scriptClosureViolations DO NOT MOVE, because measureScriptClosure already
     // credited both (HL-C383). By the honest count undrawn goes 7 -> 5.
-    lessons: 495, // 359 -> 360: HI-C79-dopahar-raat-ka-khana // 360 -> 362: HI-C80-aasaan-mushkil, HI-C80-sundar-badsurat // 362 -> 366: HI-C81 school pair plus its two retrieval lessons
+    lessons: 501, // 495 -> 501 (chapter 104, the tens, plus sau moved into the money chapter). NUM-03 IS DELIBERATELY NOT PROBED: the chapter teaches the seven rungs thirty to ninety and chapter 79 teaches sau, which covers every price, age and house number that LANDS ON a rung including mock 2's pachaas rupaye, but not the seventy-two eroded words between them. HL-C386 is the precedent for not claiming a range the corpus does not teach. SAU WAS DRAFTED IN CHAPTER 104 AND MOVED: HI-C75-fifth teaches sauvaan (hundredth) at chapter 82, so teaching sau at 104 made that a forward reference and forward-language went 22 -> 23. Moving it to chapter 79 fixed the ordering rather than the metric -- sau now sits beside rupayaa where a price needs it, and HI-C75-fifth pays it off. // 359 -> 360: HI-C79-dopahar-raat-ka-khana // 360 -> 362: HI-C80-aasaan-mushkil, HI-C80-sundar-badsurat // 362 -> 366: HI-C81 school pair plus its two retrieval lessons
     idioms: 21,
     // +2: HI-C70-song declares gana's singing sense and HI-C73-drink declares
     // khana's eating sense, which is what covers HI-A1-V-26.
