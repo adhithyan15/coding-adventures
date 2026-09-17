@@ -1,0 +1,21 @@
+{
+  "chapter": 104,
+  "title": "Counting Past Twenty",
+  "label": "ch:hi-ginti",
+  "canDo": "I can count the tens from twenty to ninety, and say a price out loud.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C96-sintesis-daam",
+    "kind": "production",
+    "summary": "Say pachaas rupaye, then tiis, chaaliis, sattar and sau rupaye, and say which of the two words carries the number.",
+    "assesses": [
+      "HI-LEX-C96-TENS-01",
+      "HI-LEX-C96-TENS-02",
+      "HI-LEX-C96-TENS-03",
+      "HI-LEX-C96-TENS-05"
+    ],
+    "note": "Closes nothing on its own and is not probed for HI-A1-NUM-03. The point asks for twenty-one to a hundred; this chapter teaches SEVEN RUNGS (sau moved to the money chapter, see below) and treats the seventy-two numbers between them as recognition, because Hindi does not build them from parts a learner can reassemble -- ikkiis is not ek plus biis in any workable sense. HL-C388 records that decision and says to leave the probe off and state what is covered rather than claim the range, which is what this does. What the chapter does buy is every price, age and house number that lands on a rung, including mock 2 reading item 4 (pachaas rupaye), and the honest rule that Hindi puts the small number FIRST -- ikkiis opens with ek's sound -- which is the one thing about the in-betweens a reader can rely on. SAU IS NOT IN THIS CHAPTER. It was drafted here and moved to chapter 79, the money chapter, because HI-C75-fifth teaches sauvaan (hundredth) at chapter 82 and teaching sau at 104 made the ordinal a forward reference -- forward-language went 22 -> 23. Moving it fixes the ordering rather than the metric: sau now sits beside rupayaa and khariidnaa where a price needs it, and HI-C75-fifth pays it off. The oddity it was drafted to comment on was real, and the fix was to stop it being true."
+  }
+}

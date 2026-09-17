@@ -1,0 +1,18 @@
+{
+  "id": "ES-PATH-428-PIEZAS",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "ES-C428-arroba",
+    "ES-C428-guion-bajo",
+    "ES-C428-felicidades",
+    "ES-C428-salud-brindis",
+    "ES-C428-animal",
+    "ES-C428-repaso-cortesia",
+    "ES-C428-sintesis-cumpleanos"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-428-PIEZAS"
+  ],
+  "after": []
+}

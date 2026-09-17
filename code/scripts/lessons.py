@@ -61,6 +61,69 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+# `index` prints lesson TITLES, and 7 of them carry a character the Windows
+# console codepage cannot encode -- U+2192 in five, U+2260 in the other two,
+# measured over the 526-shard corpus at 83e38b3a3b and unchanged at 528 since.
+# On a cp1252 stdout the command dies partway with
+# UnicodeEncodeError, having printed 31 lines of 526, and exits 1. The traceback
+# goes to stderr, so a redirect or a pipe hides it and the truncated listing
+# looks like a short, complete corpus.
+#
+# That is worse than a crash: `_meta.md` points at `index` as the way to survey
+# lessons before adding one, and a near-duplicate check run on Windows silently
+# checks 6% of the corpus.
+#
+# IT SURVIVED BECAUSE NO TEST EVER TOUCHED A REAL STREAM -- not because of
+# where CI runs. Measured: the pre-fix suite at 83e38b3a3b calls `cmd_index`
+# ZERO times, and its 14 command invocations all route through the `run()`
+# helper, which captures via `io.StringIO`. StringIO accepts every codepoint on
+# every platform. Running that suite against this unfixed module under
+# PYTHONIOENCODING=cp1252 gives "Ran 28 tests ... OK", exit 0 -- so adding it to
+# a Windows leg would have been green too.
+#
+# Two earlier versions of this comment blamed CI topology instead, and both were
+# conclusions published ahead of their measurement:
+#   1. "every CI runner is Linux" -- false; the repo also uses windows-latest,
+#      windows-2025, macos-latest, macos-15, macos-15-intel, macos-14.
+#   2. "code/scripts/tests really is run on Windows by release-engram.yml and
+#      release-venture.yml" -- also false. That came from a grep showing each
+#      FILE contains a Windows runner AND a discover line; both files' discover
+#      sites actually sit in a `validate` job on ubuntu-latest. FILE-LEVEL
+#      CO-OCCURRENCE IS NOT JOB-LEVEL CO-OCCURRENCE.
+# Both are recorded rather than quietly replaced, because the shape recurred.
+#
+# The reconfigure lives at MODULE scope, not inside a command, because
+# `contextlib.redirect_stdout(io.StringIO())` -- which the test suite uses for
+# all 14 of its command calls -- rebinds `sys.stdout` to an object with no
+# `.reconfigure`, so a call-time version would raise AttributeError in every
+# test. At import it runs once, on the real stream, before any redirect.
+#
+# `hasattr` guard: this module is imported by the test suite and could be
+# imported under a replaced stdout. Re-applying UTF-8 to a UTF-8 stream is a
+# no-op, so the guard is the only condition worth checking.
+#
+# STDOUT ONLY, and the reason is the stream, not the payload. `validate` writes
+# its problems to stderr, which CPython opens with `errors="backslashreplace"`
+# on every platform, while stdout gets `errors="strict"`. Measured here:
+#
+#     sys.stdout  cp1252 / strict            <- can raise
+#     sys.stderr  cp1252 / backslashreplace  <- cannot, whatever the payload
+#
+# That asymmetry is the whole bug. No stderr write can raise regardless of what
+# it interpolates, so `validate` needs nothing.
+#
+# An earlier version of this comment justified it differently -- that problem
+# strings only ever carry a filename, a slug or a category, and that `slugify`
+# maps `[^a-z0-9]+` to `-` so those are ASCII by construction. Two thirds true:
+# filenames and slugs are (526 titles produce 0 non-ASCII slugs), but `category`
+# is free text from a shard's frontmatter, checked only against `_meta.md`,
+# which is free text too. All 24 categories happen to be ASCII today; nothing
+# enforces it. Reproduced on a cp1252 stderr with a non-ASCII CATEGORY and a
+# duplicated unencodable title: rc 1, three problem lines, no exception --
+# right conclusion, wrong reason.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LESSONS_DIR = REPO_ROOT / "lessons.d"
 META = "_meta.md"

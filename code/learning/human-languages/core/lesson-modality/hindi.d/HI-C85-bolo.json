@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C85-bolo",
+    "language": "hindi",
+    "chapter": 93,
+    "sequence": 3600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f73f1aa2833378b3"
+  },
+  "findings": []
+}

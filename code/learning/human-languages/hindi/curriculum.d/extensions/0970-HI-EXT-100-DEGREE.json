@@ -1,0 +1,17 @@
+{
+  "id": "HI-EXT-100-DEGREE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can hedge, compare, ask a quantity and admire something.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C92-thoda",
+    "HI-C92-achchha-buraa",
+    "HI-C92-se-comparison",
+    "HI-C92-kitna",
+    "HI-C92-kitna-achchha",
+    "HI-C92-repaso-maatra",
+    "HI-C92-sintesis-maatra"
+  ]
+}

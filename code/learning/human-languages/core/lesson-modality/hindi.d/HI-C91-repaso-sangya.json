@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C91-repaso-sangya",
+    "language": "hindi",
+    "chapter": 99,
+    "sequence": 4110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41f6b2258d73bfcf"
+  },
+  "findings": []
+}

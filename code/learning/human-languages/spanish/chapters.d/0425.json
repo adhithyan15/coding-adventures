@@ -1,0 +1,22 @@
+{
+  "chapter": 425,
+  "title": "The Letters Themselves",
+  "label": "ch:abecedario",
+  "canDo": "I can name every letter of the Spanish alphabet, spell a name aloud over a telephone, tell b from v when somebody asks, and say where a word may and may not be broken.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C425-sintesis-deletreo",
+    "kind": "task",
+    "summary": "Spell a surname aloud letter by letter, say that a vowel carries its accent, and settle the b-or-v question the way a Spanish speaker does.",
+    "assesses": [
+      "ES-ORTH-C425-01",
+      "ES-ORTH-C425-02",
+      "ES-ORTH-C425-03",
+      "ES-ORTH-C425-04",
+      "ES-ORTH-C425-05"
+    ],
+    "note": "Closes A1-O1-01 (the alphabet and the names of the letters), A1-O1-02 (the vowel letters), A1-O1-03 (consonants and digraphs) and A1-O1-07 (syllable division and double spellings), taking the Ortografia de letras y palabras category from 0/7 to 4/7. The letter NAMES are the load-bearing part rather than the shapes: a listening paper dictates a name letter by letter, and hache, jota and equis are not guessable from English. The b-and-v lesson exists because the two are homophones in Spanish, which is why the language grew be larga and ve corta -- a disambiguation an English speaker never needs and a Spanish speaker uses constantly."
+  }
+}

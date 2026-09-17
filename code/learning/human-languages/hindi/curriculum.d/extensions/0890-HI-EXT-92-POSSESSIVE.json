@@ -1,0 +1,18 @@
+{
+  "id": "HI-EXT-92-POSSESSIVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can name any owner, use the reflexive possessive when the owner is the subject, and say what I have.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C84-uska",
+    "HI-C84-hamara",
+    "HI-C84-tumhara",
+    "HI-C84-apna",
+    "HI-C84-mere-paas",
+    "HI-C84-mere-liye",
+    "HI-C84-repaso-kiska",
+    "HI-C84-sintesis-mere-paas"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 422,
+  "title": "The Web Page",
+  "label": "ch:pagina-web",
+  "canDo": "I can name a web page, say why it is feminine and why web never takes a plural -s, and read the line a form prints without its article.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C422-sintesis-buscar",
+    "kind": "task",
+    "summary": "Read the bare noun on a printed form and say the same thing aloud with its article, which is the difference between how a reading paper and a listening paper present the identical word.",
+    "assesses": [
+      "ES-LEX-C422-TECH-01",
+      "ES-LEX-INTERNET",
+      "ES-LEX-ORDENADOR",
+      "ES-LEX-CORREO-ELECTRONICO"
+    ],
+    "note": "One word closes A1-NE16-02 (computing and new technology). The source lists four A1 exponents and the corpus already taught three of them in chapter 393: ordenador, internet and correo electronico. pagina web was the single missing exponent, so the point had stayed uncovered on one word for as long as the inventory has existed. The chapter carries two retrieval lessons for the same terminal-lesson reason as chapter 421."
+  }
+}

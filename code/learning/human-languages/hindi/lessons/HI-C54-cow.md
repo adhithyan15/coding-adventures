@@ -12,17 +12,17 @@ headword: "गाय"
 gloss: "a cow"
 romanization: "gāy"
 concept_tag: HI-NOUN-COW
-prerequisites: [HI-C53-lip, HI-C52-rice, HI-C53-shoulder]
+prerequisites: [HI-S138-letter-ga, HI-C53-lip, HI-C52-rice, HI-C53-shoulder]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [HI-LEX-C53-BODY-05]
+  knowledge: [HI-LEX-C53-BODY-05, HI-SCRIPT-RECOG-138]
 introduces:
   knowledge: [HI-LEX-C54-ANIMAL-01]
 practises:
-  knowledge: [HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01, HI-LEX-C52-KITCHEN-01, HI-LEX-C53-BODY-01]
+  knowledge: [HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05, HI-LEX-C54-ANIMAL-01, HI-LEX-C52-KITCHEN-01, HI-LEX-C53-BODY-01, HI-SCRIPT-RECOG-138]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,7 +34,7 @@ reviews_of: [HI-C53-lip]
 # गाय (gāy) — a cow
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05, HI-SCRIPT-RECOG-138] -->
 
 [PAUSE 2s] Before the new run of words: what did the last two words of the chapter before mean?
 

@@ -1,0 +1,17 @@
+{
+  "id": "HI-PATH-93-IMPERATIVE",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "lessons": [
+    "HI-C85-bolo",
+    "HI-C85-boliye",
+    "HI-C85-tum-ho",
+    "HI-C85-mat",
+    "HI-C85-repaso-adesh",
+    "HI-C85-sintesis-suchna"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-93-IMPERATIVE"
+  ],
+  "after": []
+}

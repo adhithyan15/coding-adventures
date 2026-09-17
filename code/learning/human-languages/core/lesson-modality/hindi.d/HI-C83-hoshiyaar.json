@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C83-hoshiyaar",
+    "language": "hindi",
+    "chapter": 91,
+    "sequence": 3450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad5ac8232927409d"
+  },
+  "findings": []
+}

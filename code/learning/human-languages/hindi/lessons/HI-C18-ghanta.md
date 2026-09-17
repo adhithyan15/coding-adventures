@@ -12,18 +12,18 @@ headword: घंटा / बजना / बज रहा है / बज रह�
 gloss: hour or bell / to strike or toll / singular time frame / plural time frame
 romanization: "ghaṇṭā / bajnā / baj rahā hai / baj rahe haiṁ"
 concept_tag: HI-TIME-HOUR
-prerequisites: [HI-C17-dopahar-aadhi-raat]
+prerequisites: [HI-S148-sign-anusvara, HI-S136-letter-gha, HI-C17-dopahar-aadhi-raat]
 sounds: [devanagari-anusvara, devanagari-conjunct-none]
 roots: [sanskrit-ghanta-bell]
 etymology_hook: "घंटा (ghanṭā, 'hour') comes from Sanskrit घण्टा (ghaṇṭā), 'bell, gong' — the SAME word Hindi still uses for an actual bell, because clocks and towns once marked the hour by striking one; telling time uses बजना (bajnā), 'to strike/toll,' the same imagery"
 duration:
   max_seconds: 222
 requires:
-  knowledge: [HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01, HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02]
+  knowledge: [HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01, HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02, HI-SCRIPT-RECOG-136, HI-SCRIPT-RECOG-148]
 introduces:
   knowledge: [HI-CONCEPT-C18-GHANTA-01, HI-CONCEPT-C18-GHANTA-02]
 practises:
-  knowledge: [HI-CONCEPT-C18-GHANTA-01, HI-CONCEPT-C18-GHANTA-02]
+  knowledge: [HI-CONCEPT-C18-GHANTA-01, HI-CONCEPT-C18-GHANTA-02, HI-SCRIPT-RECOG-136, HI-SCRIPT-RECOG-148]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [HI-C17-dopahar-aadhi-raat]
 # घंटा / बजना — the bell and the hours that strike
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-148] -->
 
 [PAUSE 2s] Here's a word that wears its history on its sleeve: Hindi's word for
 "hour" is the exact same word as "bell."
@@ -66,7 +66,7 @@ switches **बज रहा है** (singular) to **बज रहे हैं*
 one — matching the number, not just tacking on "o'clock."
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C18-GHANTA-01, HI-CONCEPT-C18-GHANTA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C18-GHANTA-01, HI-CONCEPT-C18-GHANTA-02, HI-SCRIPT-RECOG-136] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ghanṭā" — hour, also "bell"]

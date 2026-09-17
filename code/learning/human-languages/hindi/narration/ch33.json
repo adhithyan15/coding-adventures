@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Good Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3e3045f0a63c8964",
+  "sourceHash": "fnv1a64:5b725e5c1b914f39",
   "lessons": [
     {
       "id": "HI-C33-shubh-dopahar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bb053e09dad37aa",
+      "sourceHash": "fnv1a64:63464486bcd09a0d",
       "notice": null,
       "blocks": [
         {
@@ -115,6 +115,207 @@
             {
               "kind": "speech",
               "text": "Does शुभ दोपहर (shubh dopahar) use दोपहर's narrow \"noon\" sense or its widened \"afternoon\" sense? (The widened sense — \"good afternoon,\" not \"good [exact] noon.\") Is शुभ दोपहर (shubh dopahar) the most, or least, commonly used of this arc's three शुभ+timeword greetings? (Least — described as the rarest of the three in actual spoken use.) What covers the real everyday afternoon greeting instead? (नमस्ते/नमस्कार.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-S134-vowel-sign-au",
+      "sequence": 855,
+      "title": "◌ौ (au) — the same mark, one stroke more",
+      "headword": "ौ",
+      "romanization": "au",
+      "gloss": "the single character ौ — one stroke more than a mark you already read",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:ede847e0c6266d68",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ◌ौ",
+          "Script: the pair that differs by one stroke",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ◌ौ, Script: the pair that differs by one stroke and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: झ — what sound does it carry?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now look at दो and find the mark riding on the द. The new one is that mark with a second stroke added."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ◌ौ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌ौ — au."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a vowel sign, so it never stands alone: it attaches to a consonant and replaces the a built into it."
+            },
+            {
+              "kind": "speech",
+              "text": "Where it sits: the ā bar on the right, plus a double stroke above."
+            },
+            {
+              "kind": "speech",
+              "text": "Worked through: क + ◌ौ = कौ — kau."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: the pair that differs by one stroke",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "mark",
+                "sound",
+                "above the bar"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "mark: ◌ो. sound: o. above the bar: one stroke.",
+                "mark: ◌ौ. sound: au. above the bar: two strokes."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The only difference is the count, which makes this the easiest mark in the script to misread and the easiest to fix: when you meet one, stop and count the strokes above the headline."
+            },
+            {
+              "kind": "speech",
+              "text": "You already say these, and every one has ◌ौ (au) somewhere inside it:"
+            },
+            {
+              "kind": "speech",
+              "text": "नौ — nine."
+            },
+            {
+              "kind": "speech",
+              "text": "मौसम — weather."
+            },
+            {
+              "kind": "speech",
+              "text": "चौदह — fourteen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing: ◌ौ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ◌ौ (au) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these two words and say which mark each one carries",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these two words and say which mark each one carries]"
+            },
+            {
+              "kind": "speech",
+              "text": "दो, नौ."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "◌ौ three times, saying au as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ◌ौ three times, saying *au* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one thing that tells the two marks apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one thing that tells the two marks apart]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What vowel does ◌ौ put on its consonant? (au.) How does it differ from ◌ो? (One more stroke above the bar.) Name a number you already say that contains it."
             }
           ]
         }

@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "What Hands Work With",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e801e13392465bb5",
+  "sourceHash": "fnv1a64:979760d9b44a1fdc",
   "lessons": [
     {
       "id": "HI-C62-rope",
@@ -543,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04eea174c29d7801",
+      "sourceHash": "fnv1a64:2de37857559971cf",
       "notice": null,
       "blocks": [
         {

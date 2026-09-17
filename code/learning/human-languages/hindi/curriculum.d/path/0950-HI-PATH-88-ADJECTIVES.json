@@ -1,0 +1,13 @@
+{
+  "id": "HI-PATH-88-ADJECTIVES",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "HI-C80-aasaan-mushkil",
+    "HI-C80-sundar-badsurat"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-88-ADJECTIVES"
+  ],
+  "after": []
+}

@@ -1,8 +1,8 @@
 Hindi, chapter 26: Night.
-1 lesson. All 1 can be done entirely by ear.
+2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
+Lesson 1 of 2.
 रात (raat) — "night," and an honest false cousin of Latin's nox.
 
 Warm-up.
@@ -27,3 +27,53 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Where have you already met रात before this lesson? (आधी रात, ādhī rāt, "midnight.") What Sanskrit word, and what sound-change chain, gives Hindi raat? (रात्रि rātri becomes Prakrit ratti becomes raat.) Are raat and Latin's nox true cognates, the way din and diēs are? (No — genuinely different PIE roots, h₁reh₁- "to rest" vs. nókʷts — a false cousin, despite both meaning "night.")
+
+
+Lesson 2 of 2.
+फ (pha) — the fourth breath pair.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: फ, Script: four pairs, one idea and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ग — what sound does it carry?
+[pause 2 seconds]
+Now say प, then say it again with a puff of air behind it.
+
+Script you'll notice: फ.
+फ — pha.
+It is the breathy partner of प, the fourth such pair you have met.
+What it is made of:
+a left stem joined through the lower bowl to a rising and retraced central stem.
+a separate clockwise right arch.
+the top shirorekhā.
+
+Script: four pairs, one idea.
+[a table of 4 rows, read aloud]
+plain: त. breathy: थ.
+plain: च. breathy: छ.
+plain: ज. breathy: झ.
+plain: प. breathy: फ (pha).
+Four pairs now. The distinction was learned once and each pair since has cost only a shape.
+Like ग, this one is late: फिर — again, in see you again — has been yours since the fourth chapter, and the letter opening it went unnamed until now.
+
+Writing: फ.
+1. descend the left stem, curve right around the lower bowl, rise along the central side to the headline, then retrace down the central stem without lifting.
+2. lift at the central junction and sweep clockwise over and down through the open right arch.
+3. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 2. The pen comes up 2 times and no more.
+Verified three-stroke teaching form; another learner source stages the components differently.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari pʰ फ (pha).gif’, strokes 1–3, Wikimedia Commons, 29 March 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at प and फ (pha) side by side, and say which one carries the puff]
+[pause 8 seconds for the answer]
+प, फ (pha).
+[once you have stopped driving — trace: फ three times, saying pha as you finish each one]
+[your turn — say: the three earlier pairs that work the same way]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which letter is फ (pha) the breathy partner of? (प.) How many breath pairs have you met? (Four.) Name a word you have said since early on that begins with it. (फिर.)

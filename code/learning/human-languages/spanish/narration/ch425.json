@@ -1,0 +1,1195 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 425,
+  "title": "The Letters Themselves",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:eb28e64360a73601",
+  "lessons": [
+    {
+      "id": "ES-C425-abecedario",
+      "sequence": 10010,
+      "title": "el abecedario — twenty-seven letters, and one that English does not have",
+      "headword": "el abecedario",
+      "romanization": "el abecedario",
+      "gloss": "the alphabet — twenty-seven letters, and a name built out of the first four of them",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9edaf7757cfdb7eb",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last chapter gave you the marks that go between the letters. This chapter is about the letters themselves — which you have been reading for four hundred chapters and have never been asked to name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el abecedario — \"the alphabet.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the name: a-be-ce-de. It is the first four letters, read aloud and glued together. Spanish also says el alfabeto, from the Greek alpha and beta doing the identical trick in another language."
+            },
+            {
+              "kind": "speech",
+              "text": "The Spanish alphabet has twenty-seven letters: the twenty-six of English, plus ñ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the letters, and what each is called",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Knowing the shapes is not enough. To spell a name over a telephone you need the names, and most of them are not what an English speaker would guess:"
+            },
+            {
+              "kind": "speech",
+              "text": "The names are not a list to memorise. A letter is named by putting a vowel beside its sound, and there are only three patterns."
+            },
+            {
+              "kind": "speech",
+              "text": "The five vowels are called by their own sound, and that is the whole rule for them: a, e, i, o, u."
+            },
+            {
+              "kind": "speech",
+              "text": "Most consonants take an -e after:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "name"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "letter: b, c, d. name: be, ce, de.",
+                "letter: g, p, t. name: ge, pe, te.",
+                "letter: v, y. name: uve, ye."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Five take an e- before instead:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "name"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "letter: f, l. name: efe, ele.",
+                "letter: m, n. name: eme, ene.",
+                "letter: s. name: ese."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And the leftovers have names of their own, which are the ones to learn deliberately:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "name"
+              ],
+              "columns": 2,
+              "rowCount": 9,
+              "utterances": [
+                "letter: h. name: hache.",
+                "letter: j. name: jota.",
+                "letter: k. name: ka.",
+                "letter: q. name: cu.",
+                "letter: r. name: erre.",
+                "letter: w. name: uve doble.",
+                "letter: x. name: equis.",
+                "letter: z. name: zeta.",
+                "letter: ñ. name: eñe."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Nine irregular names out of twenty-seven letters is a small thing to carry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el abecedario\", and hear the four letters inside the word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el abecedario\", and hear the four letters inside the word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how many letters Spanish has (twenty-seven)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how many letters Spanish has (twenty-seven)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one Spanish has and English does not (eñe)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one Spanish has and English does not (*eñe*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the names of the letters in your own first name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the names of the letters in your own first name]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the word abecedario come from? (The first four letters said aloud.) What is h called? (Hache.) What is j called? (Jota.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C425-dos-nombres",
+      "sequence": 10020,
+      "title": "be larga o be corta — the letters that needed a second name",
+      "headword": "be larga o be corta",
+      "romanization": "be larga o be corta",
+      "gloss": "the letters with more than one name — which matters because b and v sound identical in Spanish, so the name is how a speaker tells them apart",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09ec62f837914d16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the names of b and v. Now say the two letters out loud as sounds, and notice the problem you have created."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In Spanish, b and v are pronounced identically. There is no v sound in the language at all."
+            },
+            {
+              "kind": "speech",
+              "text": "That is fine while you are speaking and a catastrophe while you are spelling. So Spanish grew extra names whose whole job is to tell the two apart:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "plain name",
+                "the disambiguating names"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "letter: b. plain name: be. the disambiguating names: be larga, be alta, be grande.",
+                "letter: v. plain name: uve. the disambiguating names: ve corta, ve baja, ve chica."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Larga and alta describe the tall stem of b; corta and baja describe the short v. A Spanish speaker dictating an address will reach for these without thinking, and a listening paper will play them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the other letters with two names",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "names"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "letter: w. names: uve doble, doble ve, doble u.",
+                "letter: y. names: ye, i griega.",
+                "letter: z. names: zeta, ceta."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Y is the interesting one. I griega means \"Greek i\" — the letter arrived from Greek upsilon and Spanish named it after where it came from, while calling the ordinary i i latina when it needs the contrast. The Academy now recommends ye, and both are in use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "be larga and ve corta, and say which letter each one is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *be larga* and *ve corta*, and say which letter each one is]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why Spanish needed the second names at all",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why Spanish needed the second names at all]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two names for y",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two names for **y**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what i griega literally means, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *i griega* literally means, and why]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Do b and v sound different in Spanish? (No — they are identical.) So what are be larga and ve corta for? (Telling the two apart when spelling aloud.) What does i griega mean? (Greek i.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C425-vocales",
+      "sequence": 10030,
+      "title": "las cinco vocales — five letters, five sounds, and no exceptions",
+      "headword": "las cinco vocales",
+      "romanization": "las cinco vocales",
+      "gloss": "the five vowel letters — a closed set that never grew, and the two marks one of them can carry",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4100cec172a13c20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the five vowels in Spanish. You have been saying them since the first chapter without being told they were a closed set."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "las cinco vocales — \"the five vowels\": a, e, i, o, u."
+            },
+            {
+              "kind": "speech",
+              "text": "Vocal is from Latin vox, \"voice\" — a vowel is the part of a word you can actually sing. The same root gives voz, vocabulario and English vocal."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the part that makes Spanish kind to a reader: each of the five has one sound, and it keeps it. English a is different in cat, car, cake and about. Spanish a is the same in every word that has ever been written."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the two marks a vowel can carry",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Only vowels take marks in Spanish, and there are exactly two:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "mark",
+                "name",
+                "what it does"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "mark: á é í ó ú. name: la tilde, el acento. what it does: marks which syllable is stressed.",
+                "mark: ü. name: la diéresis. what it does: makes a silent u speak."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "La tilde never changes the sound of the vowel — it only says stress this one. That is why it can tell two identical words apart: el is the, él is he; si is if, sí is yes."
+            },
+            {
+              "kind": "speech",
+              "text": "La diéresis appears on ü and nowhere else. In guerra the u is silent; in pingüino the two dots say pronounce me. Two dots, one job."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the vocabulary trap: Spanish tilde means the accent mark. The squiggle over ñ is la virgulilla, and English calls that one the tilde. The two languages use the word for different marks."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the five vowels in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the five vowels in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between el and él, and what the mark is doing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between *el* and *él*, and what the mark is doing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pingüino, and say what the two dots are for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pingüino*, and say what the two dots are for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how many sounds Spanish a has (one)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how many sounds Spanish **a** has (one)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la tilde do to the sound of a vowel? (Nothing — it marks stress.) Which letter carries la diéresis? (Only ü.) In Spanish, is tilde the mark on ñ? (No — that is la virgulilla.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C425-digrafos",
+      "sequence": 10040,
+      "title": "los dígrafos — two letters, one sound, and a change made in 1994",
+      "headword": "los dígrafos",
+      "romanization": "los dígrafos",
+      "gloss": "the two-letter combinations that spell one sound — and two of them used to be letters in their own right until 1994",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df1c5e0dcf700779",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say chico, llave and perro. Each of those has two identical or paired letters doing a single job. Name how many sounds the doubled part makes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "un dígrafo — \"a digraph\": two letters that spell one sound."
+            },
+            {
+              "kind": "speech",
+              "text": "Greek di- two + graphē writing. Spanish has five:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "digraph",
+                "example",
+                "one sound"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "digraph: ch. example: chico. one sound: as in English church.",
+                "digraph: ll. example: llave. one sound: a y sound for most speakers.",
+                "digraph: rr. example: perro. one sound: the long rolled r.",
+                "digraph: gu. example: guerra. one sound: a hard g, with the u silent.",
+                "digraph: qu. example: queso. one sound: a k, with the u silent."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The last two are the ones that catch a reader out. In guerra and queso the u is not pronounced. It is there to keep the g and c hard in front of e and i — which is exactly why pingüino needs the two dots to cancel the silence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the 1994 change, and why a dictionary moved",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ch and ll used to be letters of the alphabet in their own right, with their own names (che, elle) and their own sections in a dictionary. Chico came after every word beginning with c, not inside them."
+            },
+            {
+              "kind": "speech",
+              "text": "In 1994 they stopped being separate letters. A dictionary printed before then and one printed after put the same word in a different place:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "before 1994",
+                "after"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "word: chico. before 1994: its own ch section. after: under c.",
+                "word: llave. before 1994: its own ll section. after: under l."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "They are still digraphs and still spell one sound. What changed is only how they are filed. If you use an older Spanish dictionary and cannot find a word, this is usually why."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the five digraphs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the five digraphs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guerra and queso, and say what the u is doing in each (nothing audible — it keeps the first letter hard)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guerra* and *queso*, and say what the **u** is doing in each (nothing audible — it keeps the first letter hard)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where you would look up chico in a dictionary printed today",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where you would look up *chico* in a dictionary printed today]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why pingüino needs the two dots",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *pingüino* needs the two dots]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many sounds does a digraph spell? (One.) Is the u of queso pronounced? (No.) What happened to ch and ll in 1994? (They stopped being separate letters of the alphabet and are filed under c and l.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C425-silabas",
+      "sequence": 10050,
+      "title": "la sílaba — what you may break, and what you may not",
+      "headword": "la sílaba",
+      "romanization": "la sílaba",
+      "gloss": "the syllable — what may be split at the end of a line and what may never be, plus the words Spanish accepts two spellings for",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c94e1f80def9c8c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say chico slowly, in pieces. Say where you would break it if the line ran out — and note that the answer cannot be between the c and the h."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la sílaba — \"the syllable.\" Greek syllabḗ, \"a taking together\" — letters taken together into one beat."
+            },
+            {
+              "kind": "speech",
+              "text": "When a word will not fit at the end of a line, Spanish breaks it between syllables and marks the break with el guion. What matters for a written paper is which groups may never be split:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "never split",
+                "because"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "never split: ch, ll, rr, gu, qu. because: each is one sound.",
+                "never split: a consonant + l or r. because: bl, br, cl, cr, pl, pr, tr… hold together.",
+                "never split: a diphthong. because: two vowels in one beat stay in it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So chi-co, never c-hico. Ha-blar, never hab-lar. Pe-rro, never per-ro."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: words Spanish spells two ways",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A small set of words has two accepted spellings, and an exam will not mark either wrong:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "both accepted",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "both accepted: sicología, psicología.",
+                "both accepted: setiembre, septiembre.",
+                "both accepted: quiosco, kiosco."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The pattern is a simplified form beside the older one that keeps a consonant cluster the language stopped pronouncing. Spanish spelling follows the mouth more closely than English does, so when a cluster goes quiet the spelling is eventually allowed to follow."
+            },
+            {
+              "kind": "speech",
+              "text": "One last rule a form actually tests: a number written in figures is never split across a line. 2026 stays whole."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where hablar may be broken (ha-blar)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where *hablar* may be broken (*ha-blar*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why chico cannot be broken between c and h",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *chico* cannot be broken between **c** and **h**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two accepted spellings of the word for September",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two accepted spellings of the word for September]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether a year in figures may be split (no)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether a year in figures may be split (no)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does Greek syllabḗ mean? (A taking together.) May br be split? (No.) Is sicología a spelling mistake? (No — both spellings are accepted.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C425-repaso-letras",
+      "sequence": 10060,
+      "title": "veintisiete letras — the whole set, sorted three ways",
+      "headword": "veintisiete letras",
+      "romanization": "veintisiete letras",
+      "gloss": "twenty-seven letters — sorted into the vowels that never change, the consonants named by a pattern, and the pairs that spell one sound",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4e0e20fc220d458",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say how many letters Spanish has, and name the one English lacks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: what you now know about each group",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "group",
+                "the useful fact"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "group: the five vowels. the useful fact: one sound each, and it never varies.",
+                "group: most consonants. the useful fact: named by adding -e, or e- in front.",
+                "group: nine consonants. the useful fact: have names of their own to learn.",
+                "group: five digraphs. the useful fact: two letters, one sound."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And the marks, which only vowels take:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "mark",
+                "on",
+                "job"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "mark: la tilde. on: any vowel. job: marks the stressed syllable.",
+                "mark: la diéresis. on: only ü. job: makes a silent u speak."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the three things that stop a line break",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A break may fall between syllables but never inside:"
+            },
+            {
+              "kind": "speech",
+              "text": "a digraph — chi-co, not c-hico."
+            },
+            {
+              "kind": "speech",
+              "text": "a consonant plus l or r — ha-blar, not hab-lar."
+            },
+            {
+              "kind": "speech",
+              "text": "a diphthong, or a number in figures."
+            },
+            {
+              "kind": "speech",
+              "text": "Those three cover nearly everything a written paper can test, and all three come from one idea: do not break what is said in one beat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the nine letters with names of their own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the nine letters with names of their own]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the five digraphs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the five digraphs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two names for b and the two for v, and why they exist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two names for **b** and the two for **v**, and why they exist]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three places a line may not be broken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three places a line may not be broken]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does Spanish need be larga and ve corta? (B and v sound identical.) How many sounds does a digraph spell? (One.) What single idea governs where a line may break? (Do not break what is said in one beat.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C425-sintesis-deletreo",
+      "sequence": 10070,
+      "title": "¿Cómo se escribe? — the task the letter names are for",
+      "headword": "¿Cómo se escribe?",
+      "romanization": "¿Cómo se escribe?",
+      "gloss": "spelling a name aloud over a telephone, which is the one task every letter name in this chapter exists for",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d8b5688837ec803",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Somebody on a telephone asks how your surname is written. Spell it aloud in Spanish before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the question, and what it is not",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "question",
+                "what it asks for"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "question: ¿Cómo se escribe? what it asks for: how it is written — spell it.",
+                "question: ¿Cómo se dice? what it asks for: how it is said — the word itself."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A form-filling exchange uses the first. An exam's listening paper uses it to dictate a name at you letter by letter, which is the one situation where knowing hache and jota and equis is the difference between hearing a name and writing it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read this exchange aloud:"
+            },
+            {
+              "kind": "speech",
+              "text": "— ¿Cómo se escribe su apellido? — Vázquez. Uve, a con tilde, zeta, cu, u, e, zeta. — ¿Uve o be? — Uve. Ve corta."
+            },
+            {
+              "kind": "speech",
+              "text": "The last two turns are the reason the second names exist. The listener could not tell b from v by ear, asked, and got an answer that settles it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿Cómo se escribe?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"¿Cómo se escribe?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own first name, letter by letter, in Spanish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own first name, letter by letter, in Spanish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how you would say that a letter carries a written accent (con tilde)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how you would say that a letter carries a written accent (*con tilde*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how you would settle it if somebody could not tell your b from a v",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how you would settle it if somebody could not tell your **b** from a **v**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where your surname would break if it ran off the end of a line, and name one group inside it that may not be split",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where your surname would break if it ran off the end of a line, and name one group inside it that may not be split]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which question asks for a spelling rather than a word? (¿Cómo se escribe?) How do you say that a vowel carries its accent mark? (Con tilde.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

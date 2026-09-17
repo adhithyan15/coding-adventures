@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C429-nota",
+    "language": "spanish",
+    "chapter": 429,
+    "sequence": 10320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1db967465893c6ae"
+  },
+  "findings": []
+}

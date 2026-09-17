@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C425-sintesis-deletreo",
+    "language": "spanish",
+    "chapter": 425,
+    "sequence": 10070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d8b5688837ec803"
+  },
+  "findings": []
+}

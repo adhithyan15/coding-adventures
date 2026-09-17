@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C87-thii",
+    "language": "hindi",
+    "chapter": 95,
+    "sequence": 3750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69fa4c2fb90d2f31"
+  },
+  "findings": []
+}

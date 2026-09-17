@@ -1,0 +1,11 @@
+{
+  "language": "spanish",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:9230c46a18e0d136",
+  "lessonIds": [
+    "ES-C422-pagina-web",
+    "ES-C422-repaso-red",
+    "ES-C422-sintesis-buscar"
+  ],
+  "tex": "spanish/book/chapters/ch422-pagina-web.tex"
+}

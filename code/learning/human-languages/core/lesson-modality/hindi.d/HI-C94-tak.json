@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C94-tak",
+    "language": "hindi",
+    "chapter": 102,
+    "sequence": 4290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e59af705f37ef8aa"
+  },
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": "HI-EXT-97-CONTINUOUS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what is happening right now, for any person, and keep it apart from the habit.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C89-kar-raha-hun",
+    "HI-C89-kar-rahi-hun",
+    "HI-C89-kar-raha-hai",
+    "HI-C89-kar-rahe-hain",
+    "HI-C89-karta-vs-kar-raha",
+    "HI-C89-repaso-jaari",
+    "HI-C89-sintesis-jaari"
+  ]
+}

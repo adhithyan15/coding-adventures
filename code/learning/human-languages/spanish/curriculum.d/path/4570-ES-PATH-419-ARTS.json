@@ -1,0 +1,12 @@
+{
+  "id": "ES-PATH-419-ARTS",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "lessons": [
+    "ES-C419-bailar"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-419-ARTS"
+  ],
+  "after": []
+}

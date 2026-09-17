@@ -1,0 +1,17 @@
+{
+  "id": "ES-EXT-429-EDUCACION",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the secondary school, the mark, and the verbs for passing and failing.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C429-instituto",
+    "ES-C429-nota",
+    "ES-C429-calificacion",
+    "ES-C429-aprobar",
+    "ES-C429-suspender",
+    "ES-C429-repaso-notas",
+    "ES-C429-sintesis-boletin"
+  ]
+}

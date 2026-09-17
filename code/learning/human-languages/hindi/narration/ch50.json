@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Courtesy Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e152e80d5ed20c52",
+  "sourceHash": "fnv1a64:8e2710f66dfccbd0",
   "lessons": [
     {
       "id": "HI-C50-gratitude",
@@ -543,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e518fb2afa7d7f88",
+      "sourceHash": "fnv1a64:adda0362df67e41c",
       "notice": null,
       "blocks": [
         {

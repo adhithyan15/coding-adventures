@@ -1,0 +1,11 @@
+{
+  "id": "HI-EXT-87-MEALS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name lunch and dinner, and see that both are built from a time word and khana rather than learned as new words.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C79-dopahar-raat-ka-khana"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C429-repaso-notas",
+    "language": "spanish",
+    "chapter": 429,
+    "sequence": 10360,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dac71d5ad86819ca"
+  },
+  "findings": []
+}

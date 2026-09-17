@@ -1,0 +1,16 @@
+{
+  "id": "HI-PATH-104-GINTI",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "lessons": [
+    "HI-C96-tees-chaalees",
+    "HI-C96-pachaas-saath",
+    "HI-C96-sattar-assi-nabbe",
+    "HI-C96-repaso-ginti",
+    "HI-C96-sintesis-daam"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-104-GINTI"
+  ],
+  "after": []
+}

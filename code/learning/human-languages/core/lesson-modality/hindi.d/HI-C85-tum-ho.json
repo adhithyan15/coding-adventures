@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C85-tum-ho",
+    "language": "hindi",
+    "chapter": 93,
+    "sequence": 3620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4e1fdb891fd6b0f"
+  },
+  "findings": []
+}

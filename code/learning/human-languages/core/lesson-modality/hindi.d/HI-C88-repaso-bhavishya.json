@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C88-repaso-bhavishya",
+    "language": "hindi",
+    "chapter": 96,
+    "sequence": 3870,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9af6031f0e9ac4d1"
+  },
+  "findings": []
+}

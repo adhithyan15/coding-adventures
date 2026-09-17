@@ -1,0 +1,17 @@
+{
+  "id": "ES-EXT-425-ABECEDARIO",
+  "stage": "A1",
+  "kind": "required",
+  "category": "orthography",
+  "canDo": "I can name every letter of the Spanish alphabet and spell a name aloud.",
+  "prerequisites": [],
+  "lessons": [
+    "ES-C425-abecedario",
+    "ES-C425-dos-nombres",
+    "ES-C425-vocales",
+    "ES-C425-digrafos",
+    "ES-C425-silabas",
+    "ES-C425-repaso-letras",
+    "ES-C425-sintesis-deletreo"
+  ]
+}

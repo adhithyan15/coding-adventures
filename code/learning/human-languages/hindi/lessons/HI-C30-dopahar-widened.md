@@ -12,18 +12,18 @@ headword: दोपहर
 gloss: "afternoon" — the same word already met meaning precisely "noon" (two pahars after sunrise, HI-C17), now widened in modern everyday usage to cover the whole afternoon stretch, not just the exact midday moment
 romanization: "dopahar"
 concept_tag: TIME-AFTERNOON
-prerequisites: [HI-C17-dopahar-aadhi-raat, HI-C29-shaam]
+prerequisites: [HI-S150-vowel-sign-o, HI-C17-dopahar-aadhi-raat, HI-C29-shaam]
 sounds: [devanagari-vowel-sign-o, devanagari-aspirated-pa]
 roots: [do-two, pahar-traditional-watch]
 etymology_hook: "दोपहर (dopahar) is the SAME word already met in HI-C17 meaning precisely 'noon' ('two pahars,' a traditional ~3-hour Indian time-unit, counted from sunrise) — but in modern everyday Hindi, its meaning has genuinely WIDENED: दोपहर now covers the whole afternoon stretch, roughly noon through late afternoon (a meeting 'दोपहर में,' 'in the dopahar,' could mean anywhere from 1pm to 4pm), not just the precise midday instant its etymology points to"
 duration:
   max_seconds: 258
 requires:
-  knowledge: [HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01, HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02, HI-CONCEPT-C29-SHAAM-01, HI-CONCEPT-C29-SHAAM-02]
+  knowledge: [HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-01, HI-CONCEPT-C17-DOPAHAR-AADHI-RAAT-02, HI-CONCEPT-C29-SHAAM-01, HI-CONCEPT-C29-SHAAM-02, HI-SCRIPT-RECOG-150]
 introduces:
   knowledge: [HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02]
 practises:
-  knowledge: [HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02]
+  knowledge: [HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02, HI-SCRIPT-RECOG-150]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [HI-C17-dopahar-aadhi-raat, HI-C29-shaam]
 # दोपहर — the same word, a wider job than its etymology promised
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-150] -->
 
 [PAUSE 2s] You already know दोपहर means "noon" — two pahars after
 sunrise, precisely. This lesson's honest twist is that the word doesn't

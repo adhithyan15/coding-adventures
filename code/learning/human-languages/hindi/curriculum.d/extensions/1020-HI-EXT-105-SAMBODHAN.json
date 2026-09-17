@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-105-SAMBODHAN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can address somebody by name and write a short message to a named reader.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C97-naam-ji",
+    "HI-C97-priya",
+    "HI-C97-repaso-sambodhan",
+    "HI-C97-sandesh",
+    "HI-C97-sintesis-sandesh"
+  ]
+}

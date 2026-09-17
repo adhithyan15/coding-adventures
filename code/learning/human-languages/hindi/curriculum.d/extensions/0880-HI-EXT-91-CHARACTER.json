@@ -1,0 +1,18 @@
+{
+  "id": "HI-EXT-91-CHARACTER",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a person's settled character with seven adjectives and tell from each ending whether it changes for a woman.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C83-buraa",
+    "HI-C83-hoshiyaar",
+    "HI-C83-mehnati",
+    "HI-C83-sharmeela",
+    "HI-C83-milansaar",
+    "HI-C83-gambhir",
+    "HI-C83-repaso-svabhaav",
+    "HI-C83-sintesis-svabhaav"
+  ]
+}

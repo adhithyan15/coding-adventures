@@ -4199,8 +4199,10 @@
       "id": "MR-A1-OR-05",
       "category": "Devanagari letters and signs",
       "label": "the retroflex row tta ttha dda ddha nna",
-      "probe": null,
-      "note": "Four fifths taught -- MR-SCRIPT-TTA-01, -TTHA-01, -DDA-01 and -NNA-01 -- and the fifth missing: no atom introduces DDHA. A row a reader can only rebuild four ways is not a row, and DDHA is not rare (dhag, gadhav, vaadh). Its dental neighbour MR-A1-OR-06 closed in chapter 39 by exactly this route, one script lesson for one missing letter, so the fix is known and cheap.",
+      "probe": [
+        "MR-SCRIPT-DDHA-01"
+      ],
+      "note": "Four fifths taught -- MR-SCRIPT-TTA-01, -TTHA-01, -DDA-01 and -NNA-01 -- and the fifth missing. MR-W64-ddha closes it at chapter 64, the route its dental neighbour MR-A1-OR-06 took at chapter 39: one script lesson for one missing letter. The lesson leads on the confusion that actually costs a reader, which is not the shape but the ROMANIZATION -- ध and ढ are both written dh and are different letters in different rows, so the spelling meant to help tells them apart less well than the page does.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-assessment"
@@ -4232,8 +4234,10 @@
       "id": "MR-A1-OR-07",
       "category": "Devanagari letters and signs",
       "label": "the labial row pa pha ba bha ma",
-      "probe": null,
-      "note": "PA, BA, BHA and MA are taught; PHA has no atom. Without it a candidate cannot read phon, phal or the very common phakta.",
+      "probe": [
+        "MR-SCRIPT-PHA-01"
+      ],
+      "note": "PA, BA, BHA and MA were taught and PHA had no atom. MR-W64-pha closes it at chapter 64 and completes the FIFTH and last plain-and-aspirated pair, so every stop in the script now has its partner. It also records the drift the row does not predict: in borrowed words such as फोन many speakers give फ the sound of an English f rather than the puffed p, so one shape covers two sounds.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-assessment"
@@ -4504,8 +4508,10 @@
       "id": "MR-A1-PU-01",
       "category": "Punctuation and written conventions",
       "label": "the danda, and the full stop that has largely replaced it",
-      "probe": null,
-      "note": "Every headword in the corpus punctuates with a full stop. A candidate who has never seen a danda meets it on the first authentic notice.",
+      "probe": [
+        "MR-SCRIPT-DANDA"
+      ],
+      "note": "Every headword in the corpus punctuates with a full stop, which is what Marathi does now, and a candidate who had never seen a danda met it on the first authentic notice. MR-W64-danda closes it at chapter 64. It is the FIRST MARK IN THE TRACK TAUGHT FOR RECOGNITION RATHER THAN PRODUCTION -- the reader keeps writing the full stop and learns to read the upright stroke in poetry, older printing and signs nobody has reset -- and the lesson names that distinction because it recurs.",
       "anchorIds": [
         "ca-spanish-a1-proxy",
         "ca-marathi-assessment"

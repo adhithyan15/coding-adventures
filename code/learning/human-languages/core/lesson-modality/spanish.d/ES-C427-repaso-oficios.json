@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C427-repaso-oficios",
+    "language": "spanish",
+    "chapter": 427,
+    "sequence": 10220,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f5e8332f86ef26d6"
+  },
+  "findings": []
+}

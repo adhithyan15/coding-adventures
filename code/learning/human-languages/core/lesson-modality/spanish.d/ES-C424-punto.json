@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C424-punto",
+    "language": "spanish",
+    "chapter": 424,
+    "sequence": 9910,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f1e621f5b0c68f96"
+  },
+  "findings": []
+}

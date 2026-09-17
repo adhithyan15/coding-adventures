@@ -11,7 +11,10 @@
     "HI-PATH-69-KI",
     "HI-PATH-70-INFINITIVE",
     "HI-PATH-72-WHEN",
-    "HI-PATH-73-KAR"
+    "HI-PATH-73-KAR",
+    "HI-PATH-93-IMPERATIVE",
+    "HI-PATH-97-CONTINUOUS",
+    "HI-PATH-98-ROUTINE"
   ],
   "omits": [
     "VERB-INFINITIVE",

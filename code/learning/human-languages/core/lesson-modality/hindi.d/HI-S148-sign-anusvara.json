@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "HI-S148-sign-anusvara",
+    "language": "hindi",
+    "chapter": 16,
+    "sequence": 632,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:53792bf3ce51af35",
+    "detachableSegments": [
+      "Script you'll notice: ◌ं",
+      "Script: you have been saying it all along",
+      "Writing: ◌ं — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

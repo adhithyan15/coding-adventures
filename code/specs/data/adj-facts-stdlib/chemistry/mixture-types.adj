@@ -15,7 +15,8 @@
 %
 % Like every FACTS library this is a native `table` (ADJ-TABLES RS-5): each `row`
 % lowers to a ground relation `mixture_example(mixture_type, example)` carrying
-% the table's citation, so the lookup above is the ordinary SLD binding query —
+% THAT ROW'S OWN citation, with the envelope's locator and trust inherited
+% (RS-5e, #14986), so the lookup above is the ordinary SLD binding query —
 % the engine returns the example WITH its source, on the CPU, with zero model
 % calls, and abstains on a kind that is not in the table. It also runs BACKWARD
 % (bind an example, recall the kind the source classifies it as):
@@ -37,12 +38,16 @@
 %                                       suspension."
 %     colloid         milk             "Homogenized milk is a colloid."
 %
-%     (cue column only -- the FULL verbatim spans are listed below and shipped
-%      as source + cites. The previous cues elided with "..." mid-quote, the
-%      same constructed-span shape as the data defect this change repairs.
-%      NOTE on `suspension`: the page's FIRST mention of salad dressing calls
-%      it a "liquid mixture" and never says suspension; the sentence that does
-%      is four blocks later. Reading every occurrence is what caught that.)
+%     (cue column only -- the FULL verbatim spans are listed below, and each
+%      is now shipped as its OWN row's `source`. The previous cues elided
+%      with "..." mid-quote, the same constructed-span shape as the data
+%      defect this change repairs.
+%      NOTE on `suspension`: the page's FIRST mention of salad dressing lists
+%      it among "liquid mixtures" (plural, and with a U+00A0 before the word)
+%      and never says suspension; the sentence that does is later on the page.
+%      Reading every occurrence is what caught that. The earlier wording here
+%      scare-quoted "liquid mixture" singular -- a paraphrase, not a verbatim
+%      span, which is the same hazard this change is about.)
 %
 % Note that `salt_water` appears TWICE — as the example for both `homogeneous`
 % and `solution`. That is not a mistake but the source's own point: a solution IS
@@ -79,36 +84,60 @@
 %   colloid → milk
 %       "Homogenized milk is a colloid."
 %
-% The `source` below holds ONE of those blocks verbatim and the other four ride
-% as `cites` corroborations on the same envelope, so every row's evidence is
-% independently checkable AS THE PAGE DISPLAYS IT.
+% EACH of those five blocks is now that row's OWN `source`, carried in an RS-5e
+% row block (#14986). None of them rides as a corroboration any more, so the
+% corroborations array on every answer is EMPTY. The table-level `source` is
+% the page's framing definition of a mixture -- its "...is a combination of two
+% or more substances in any proportion." sentence -- which names no row key as
+% a whole word, so it warrants no row by itself. Rows inherit the locator and
+% trust field-by-field.
 %
-% (This previously read "An ADJ `table` carries ONE provenance envelope, so the
-%  `source` below holds the five verbatim example sentences (joined with …)".
-%  The first clause is still true -- a table has one source/locator/trust -- but
-%  the conclusion is not: `cites` carries the rest. The joined value was a span
-%  no page displays, which is what made it a #14070 defect. See #14099: 82
-%  library headers still carry that obsolete rationale.) LibreTexts is a
-% SECONDARY teaching reference (a college course text, not a primary standards
-% body), so `trust consensus` — the honest tier for a teaching summary, per the
-% standard-library trust convention. (See ../README.md;
-% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% THE ENVELOPE'S SPACES ARE U+00A0. The page writes that sentence's first two
+% gaps as NON-BREAKING spaces. Counted on the fetched page: that spelling
+% occurs once, and the same sentence with ASCII spaces occurs ZERO times, so
+% shipping the ASCII form would cite a sentence the source does not contain.
+% The envelope is extracted from the fetched page rather than retyped, and it
+% is deliberately NOT quoted in full in this header -- an ASCII-spaced copy
+% sitting in a comment is the very twin the tests below look for.
+%
+% (TWO earlier rationales are corrected here, and BOTH were accurate when
+%  written. The first read "An ADJ `table` carries ONE provenance envelope, so
+%  the `source` below holds the five verbatim example sentences (joined with
+%  …)"; that joined value was a span no page displays, a #14070 defect. The
+%  second, which replaced it, read "The `source` below holds ONE of those
+%  blocks verbatim and the other four ride as `cites` corroborations on the
+%  same envelope" -- true under the pre-RS-5e model, and its method stands,
+%  but a row's evidence sitting in a TABLE-LEVEL corroboration still never
+%  reached that row's own answer. That is #14986, and repairing it is what
+%  this change does.)
+%
+% LibreTexts is a SECONDARY teaching reference (a college course text, not a
+% primary standards body), so `trust consensus` — the honest tier for a
+% teaching summary, per the standard-library trust convention. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table mixture_example {
     columns mixture_type, example
 
-    row (homogeneous, salt_water)
-    row (solution, salt_water)
-    row (heterogeneous, vegetable_soup)
-    row (suspension, salad_dressing)
-    row (colloid, milk)
+    row (homogeneous, salt_water) {
+        source "A homogeneous mixture is a mixture in which the composition is uniform throughout the mixture. The salt water described above is homogeneous because the dissolved salt is evenly distributed throughout the entire salt water sample."
+    }
+    row (solution, salt_water) {
+        source "When the salt is thoroughly mixed into the water in this glass, it will form a solution."
+    }
+    row (heterogeneous, vegetable_soup) {
+        source "A heterogeneous mixture is a mixture in which the composition is not uniform throughout the mixture. Vegetable soup is a heterogeneous mixture."
+    }
+    row (suspension, salad_dressing) {
+        source "The salad dressing in this bottle is a suspension."
+    }
+    row (colloid, milk) {
+        source "Homogenized milk is a colloid."
+    }
 
-    source "A homogeneous mixture is a mixture in which the composition is uniform throughout the mixture. The salt water described above is homogeneous because the dissolved salt is evenly distributed throughout the entire salt water sample."
+    source "A mixture is a combination of two or more substances in any proportion."
     locator "https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"
     trust consensus
-    cites "When the salt is thoroughly mixed into the water in this glass, it will form a solution." locator "https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"
-    cites "A heterogeneous mixture is a mixture in which the composition is not uniform throughout the mixture. Vegetable soup is a heterogeneous mixture." locator "https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"
-    cites "The salad dressing in this bottle is a suspension." locator "https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"
-    cites "Homogenized milk is a colloid." locator "https://chem.libretexts.org/Courses/Mendocino_College/Introduction_to_Chemistry_(CHM_200)/09:_Solutions_and_Aqueous_Mixtures/9.01:_Mixtures"
 }

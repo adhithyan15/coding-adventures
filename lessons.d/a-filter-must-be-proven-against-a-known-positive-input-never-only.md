@@ -25,17 +25,13 @@ passes on a filter that is still broken**, and the same `grep -c $'
 '` proves it.
 
 Re-run in Git Bash here, the command fails a *third* way. Not "matches the letter `r`": the
-pattern degrades to **empty**, and an empty pattern matches **every line**.
+pattern degrades to **empty**, and an empty pattern matches **every line**. Run this in a scratch
+directory: it truncates `pos.txt` and `neg.txt`, and the byte-level check further down reads a file
+it expects you to have named `f`.
 
 ```
-printf 'a
-b
-' > pos.txt ; grep -c $'
-' pos.txt   # 2   <- known-positive: looks correct
-printf 'a
-b
-'     > neg.txt ; grep -c $'
-' neg.txt   # 2   <- known-NEGATIVE: same answer
+printf 'a\r\nb\r\n' > pos.txt ; grep -c $'\n' pos.txt   # 2   <- known-positive: looks correct
+printf 'a\nb\n'     > neg.txt ; grep -c $'\n' neg.txt   # 2   <- known-NEGATIVE: same answer
 ```
 
 `neg.txt` contains no carriage return *and no letter `r`*. A known-positive test alone returns 2
@@ -52,12 +48,144 @@ line count, which is indistinguishable from a file that is genuinely all-CRLF.
 **Use a byte-level check instead**, which has no pattern to degrade:
 
 ```
-python -c "b=open('f','rb').read(); print(len(b), b.count(b'
-'), b.count(b'
-'))"
+python -c "b=open('f','rb').read(); print(len(b), b.count(b'\r'), b.count(b'\n'))"
 ```
 
 The wider point, and the reason this is a correction rather than a new entry: **#13190 documented
 one failure of this command and then left behind a remediation carrying the same defect.** A wrong
 lesson recorded as a lesson is worse than no lesson, because the next reader trusts it instead of
 re-deriving it. When an entry prescribes a fix, the fix needs the same evidence the diagnosis got.
+
+### Correction: this entry shipped its own defect a third time, in the remedy
+
+Both blocks above were written with `\r` and `\n` escapes and shipped without them. The damage was
+not cosmetic, and it landed in the two places that carry the argument.
+
+**The two probes were byte-identical.** Both `printf` calls emitted `a`, newline, `b`, newline — so
+`pos.txt` was a copy of `neg.txt`. The known-positive was not positive. The block's whole point, that
+a known-positive and a known-negative return the same answer, was true for the wrong reason: they
+were the same file. A reader following it literally would reproduce agreement that proves nothing.
+Restored, the probes measure 6 bytes with 2 CR against 4 bytes with 0 CR, and the `# 2` results are
+unchanged, because the pattern is a newline either way.
+
+**The prescribed remedy counted the same byte twice.** `b.count(b'\r'), b.count(b'\n')` lost both
+escapes and became two arms counting a literal newline, so the byte-level check this entry recommends
+*as the fix* could not distinguish CR from LF at all. Measured on the restored probes:
+
+    corrected, two distinct arms   pos -> 6 2 2     neg -> 4 0 2
+    the broken form it shipped     pos -> 6 2 2     neg -> 4 2 2
+
+The corrected form differs on the CR column, 2 against 0. The broken one reads 2 on both, because it
+has no CR column to differ on. That is exactly why a known-positive alone could never expose it —
+this entry's own thesis, arriving a third time, inside the correction written to end it.
+
+**The `# 2` comments were left alone.** Measured, they were already right: 2 and 2 for the intended
+probes, and 2 and 2 for the corrupted identical ones. The first instinct was to "refresh" them along
+with everything else, which would have replaced a correct number with a differently-derived one for
+no reason. A figure that is already correct is not improved by being rewritten.
+
+**A control that runs AFTER the target measurement cannot stop you reading the target.** The rule
+above says prove a filter against a known-positive *and* a known-negative and require the answers to
+differ. It does not say *when*, and ordering turns out to matter as much as existence. In one session
+the same broken CR-counting command ran three ways, and each time the control came last:
+
+    grep -c $'\r' file        # read as "all CRLF"
+    grep -c "$(printf '\r')"  # read as "clean"
+    od -An -c | grep '^\r$'   # read as "clean"
+
+**The three fail for three different reasons, and saying otherwise was itself an unchecked claim.** A
+first draft of this section called all three "the empty-pattern failure this entry already
+documents". Measured on a probe holding two CR bytes: `grep -c ""` returns the line count on a CRLF
+file *and* on an LF file — an empty pattern matches **every** line and distinguishes nothing. Two of
+the three reported **no** lines matched, which is the opposite signature. The third is an
+anchoring mismatch: `od -An -c` prints many escaped bytes per output line, so a whole-line anchor
+around a single literal `r` can never match whatever the input contains. What the three share is not
+a mechanism but an **ordering** — in each, the control came after the number.
+
+**Both readings reproduce here at once, and they are different PATTERNS rather than different
+machines.** Measured in one shell, on probes Python confirms hold 2 CR bytes and 0:
+
+    grep -c $'\r'            -> 0 on the CRLF probe, 0 on the LF probe
+    grep -c $'<real newline>' -> 2 on the CRLF probe, 2 on the LF probe
+    grep -c ''                -> 2 and 2, identical to the line above
+
+The first is correctly escaped and returns 0 because this grep treats CRLF as the **line
+terminator**, so a line-ending CR is gone before matching — though a CR *mid*-line still matches
+(`printf 'a\rb\n' | grep -c $'\r'` returns 1), so it is not stripping CR generally. The second is the
+form the block above actually contains, where `$'…'` encloses a **real newline byte**: grep splits
+that on the newline into two empty patterns, and an empty pattern matches every line. That is where
+the "matches every line" signature comes from, and the paragraph recording it is correct for the
+command it describes.
+
+*A draft of this section said that signature "does not reproduce in this worktree" and called it
+environment-specific. That was wrong in the opposite direction to the error above — it cast doubt on
+true text. Re-running the correctly escaped pattern and getting 0 says nothing about the mangled one.
+Two wrong causal stories about the same three commands, one asserting a shared mechanism and one
+inventing an environmental difference, and both were fixed only because a review asked for the
+measurement rather than the explanation.*
+
+The numbers were printed, read and half-believed *before* any probe file existed. A later attempt
+finally put a known-CRLF probe first, and it failed instantly — the same probe would have failed
+instantly on the first run.
+
+**Why a trailing control is weaker than no control at all.** A control run afterwards is a control
+run *only if the answer already looks wrong*. When a broken instrument happens to print a plausible
+number — and the empty-pattern form above lands exactly on the file's line count, indistinguishable
+from a genuinely all-CRLF file — nothing prompts you to reach for it. It becomes a tiebreaker
+consulted when already suspicious, rather than a gate deciding whether the measurement is admissible
+at all. It certifies nothing.
+
+**The operational form.** Print the control arms first, and make the script refuse to report when
+they do not differ:
+
+    if not (positive_fires and not negative_fires):
+        print("INSTRUMENT BROKEN -- no count below is interpretable.")
+        raise SystemExit(1)
+
+A sweep written that way aborted on its own first run later in the same session, naming a real bug in
+its own needle: the guard forbade a hash *between* the number and the noun, which does nothing when
+the hash sits before the digits. That refusal is why the wrong figure did not ship.
+
+**A control probe must reproduce the defect's SHAPE, not merely its subject.** A later probe in that
+session was meant to test a phrase wrapping across a line break, and instead put the whole phrase on
+line two of a two-line string. The line-anchored arm found it, the arms stopped differing, and the
+guard aborted — on a probe that never wrapped anything. That the probe must be able to fail the way
+the real defect fails is [[i-built-the-exact-vacuous-check-i-had-spent-the-day-criticising]]'s point;
+what this adds is that the failure can be a *layout* mismatch between probe and target, invisible in
+a probe that otherwise mentions all the right words.
+
+**A control built from the same selector as the measurement is not a control.** Both arms can be
+blind in the same way, agree, and certify nothing. Three instances in one session, the selector each
+time being a raw substring search:
+
+    needle                              raw   flattened / stripped
+    a sentence spanning a line wrap       0    1
+    a phrase whose source held backticks  0    1
+    a positive CONTROL spanning a wrap    0    1
+
+Named, so a reader can re-derive rather than take them: row 1 is `Rows are AST-derived except the
+reach row`, which wraps after `the`, searched against a commit message. Row 2 is `reaching secrets at
+all`, whose source writes `secrets` in backticks, searched against a pull-request body. Row 3 is `Run
+this in a scratch directory`, which wraps after `scratch`, searched against this file on `main` — that
+one was the control arm.
+
+A fourth near-miss the same night is deliberately **not** in that table: a needle whose backticks were
+eaten by the shell before the search ran. It also reported 0, but the mechanism is quoting, not
+selector blindness, and folding it in would have turned three measured instances into four by
+grouping — the failure this entry keeps having.
+
+The first two were measurements, caught only because a differently-shaped check disagreed. The third
+was the **control arm itself**, checking whether a sentence had reached `main`: it read 0, the
+negative arm also read 0, and a rule I had applied all session — that arms which do not differ make
+everything below them uninterpretable — was the only thing that stopped the reading. A control that
+shares the measurement's blind spot does not fail loudly; it agrees.
+
+The general form is already written down: [[a-conflict-resolver-s-assertions-must-be-able-to-see-what-it]]
+— do not verify a selecting transform with the same selector, verify by something the selector is
+not. What this adds is that a **control arm is a verification too**, and inherits that rule. Normalise
+before matching (collapse whitespace, strip formatting), or use a token short enough that no wrap or
+markup can split it, and confirm the control can fire on text you know contains the thing.
+
+Related: [[a-probe-that-reports-nothing-where-you-have-already-seen-the-thing]] — there the
+instrument contradicted something already seen by eye, which is the one case where the diagnosis is
+closed before it begins.

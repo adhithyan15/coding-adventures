@@ -1,0 +1,22 @@
+{
+  "chapter": 429,
+  "title": "The Instituto, And What A Mark Is Called",
+  "label": "ch:instituto-y-nota",
+  "canDo": "I can name the school a Spanish teenager goes to, read a report card, say what mark I got, and say whether I passed or failed.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C429-sintesis-boletin",
+    "kind": "task",
+    "summary": "Read a three-row report card from a Spanish secondary school, say which subjects passed and which hangs, and answer the spoken version of the same question.",
+    "assesses": [
+      "ES-LEX-C429-EDU-01",
+      "ES-LEX-C429-EDU-02",
+      "ES-LEX-C429-EDU-03",
+      "ES-LEX-C429-EDU-04",
+      "ES-LEX-C429-EDU-05"
+    ],
+    "note": "Closes two points and corrects the notes on both. A1-NE06-01 lists instituto, universidad, clase and biblioteca, and its note claimed the corpus taught none of the four; universidad (ES-C394), clase (ES-C358) and biblioteca (ES-C353) were all already introduced, so the gap was one word wide. instituto is the one that mattered, because it is the false friend and the missing middle rung: the corpus could name the primary school and the university and had nothing for the years between them. A1-NE06-05's note is the careful one -- it had already corrected an earlier false claim about examen, and held the point uncovered because the MARKS half was wholly absent. That was right, and this chapter supplies the marks half: nota, calificacion, aprobar and suspender. The four carry three Latin pictures worth keeping -- a nota is a scratch cut into a surface, aprobar is a thing tested and found good, and suspender is a thing left hanging, which is still literally true in Spain where a failed subject follows the student to a resit."
+  }
+}

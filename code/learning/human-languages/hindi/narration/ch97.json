@@ -1,0 +1,1232 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 97,
+  "title": "What Is Going On Right Now",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:44b917d8154e5ad4",
+  "lessons": [
+    {
+      "id": "HI-C89-kar-raha-hun",
+      "sequence": 3890,
+      "title": "कर रहा हूँ (kar rahā hū̃) — one word slid into the middle",
+      "headword": "कर रहा हूँ",
+      "romanization": "kar rahā hū̃",
+      "gloss": "I am doing, right now — three words, and the middle one is the only new thing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75b836dd8cda2603",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I do — the habit. Now try to say what you are doing at this moment, and notice the habit form does not quite mean it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कर रहा हूँ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कर रहा हूँ (kar rahā hū̃) — \"I am doing,\" right now, said by a man."
+            },
+            {
+              "kind": "speech",
+              "text": "Three words: the bare stem, then रहा, then the copula you have had since your third chapter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "what it carries"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "piece: कर. what it carries: the action, bare.",
+                "piece: रहा. what it carries: that it is in progress.",
+                "piece: हूँ. what it carries: who, and that it is now."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "रहा is the past participle of रहना, \"to stay, to remain.\" So the sentence says, almost literally, doing — having stayed — I am. The action is pictured as one you are still inside."
+            },
+            {
+              "kind": "speech",
+              "text": "English does the same thing from a different angle: I am doing uses a participle too, and I remain at work is the same metaphor spelled out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the stem is bare, and that is the point",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at what happens to the verb in each tense:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you say",
+                "the verb"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you say: I do (habit). the verb: करता.",
+                "what you say: I am doing (now). the verb: कर."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The habit puts an ending on the stem. The continuous takes the ending off and puts a separate word after it instead. Nothing else in the sentence moves."
+            },
+            {
+              "kind": "speech",
+              "text": "That means the pattern works on any verb you know. Take the stem, add रहा, keep the copula: बोल रहा हूँ, जा रहा हूँ, खा रहा हूँ."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"कर रहा हूँ (kar rahā hū̃)\" — I am doing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"कर रहा हूँ\" — I am doing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"बोल रहा हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"बोल रहा हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three pieces, and what each one carries",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three pieces, and what each one carries]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what रहना means on its own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what रहना means on its own]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word carries in progress? (रहा.) What shape is the verb stem in? (Bare — the habit ending comes off.) What does रहना mean by itself? (To stay, to remain.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C89-kar-rahi-hun",
+      "sequence": 3900,
+      "title": "कर रही हूँ (kar rahī hū̃) — which of the three words listens",
+      "headword": "कर रही हूँ",
+      "romanization": "kar rahī hū̃",
+      "gloss": "I am doing, said by a woman — the middle word bends and the other two do not",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f277d99165d6db6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "रहा ends in -आ. Before reading on, guess what it does when a woman is speaking, and guess which of the other two words joins in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कर रही हूँ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कर रही हूँ (kar rahī hū̃) — \"I am doing,\" said by a woman."
+            },
+            {
+              "kind": "speech",
+              "text": "One letter has changed, and it is in the middle word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "speaker",
+                "the three words"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "speaker: a man. the three words: कर रहा हूँ (kar rahā hū̃).",
+                "speaker: a woman. the three words: कर रही हूँ (kar rahī hū̃)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The stem stays bare either way. The copula हूँ is about who is speaking rather than about gender, so it does not move. Only रहा bends, and it bends the way every -आ word you have met bends."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the tidiest arrangement you have seen yet: one word per job, and only the one that describes the action listens to gender."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the same ending, a fourth time",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "masculine",
+                "feminine"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "masculine: काला. feminine: काली.",
+                "masculine: बोलता. feminine: बोलती.",
+                "masculine: था. feminine: थी.",
+                "masculine: रहा. feminine: रही."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four places, one alternation. Every time a Hindi word ends in -आ and describes somebody, -ई is what it becomes for a woman — and by now you should expect it before you are told."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"कर रही हूँ (kar rahī hū̃)\" — I am doing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"कर रही हूँ\" — I am doing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both forms one after the other, and hear the one letter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both forms one after the other, and hear the one letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"बोल रही हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"बोल रही हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three words does not care about gender, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three words does not care about gender, and why]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the three words bends? (The middle one, रहा / रही.) Why does the copula stay put? (It is about who, not about gender.) What is the fourth pair on the list? (रहा / रही.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C89-kar-raha-hai",
+      "sequence": 3910,
+      "title": "कर रहा है (kar rahā hai) — two words doing two different jobs",
+      "headword": "कर रहा है",
+      "romanization": "kar rahā hai",
+      "gloss": "he is doing, she is doing — the last word changes for who, the middle one for what they are",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93eaa274884f4bd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I am doing. Now point at somebody else and change only what has to change."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कर रहा है",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वह कर रहा है (kar rahā hai)। — He is doing (it). वह कर रही है। — She is doing (it)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Only the last word moved when the subject changed from I to he:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "middle",
+                "last"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "subject: मैं. middle: रहा / रही. last: हूँ.",
+                "subject: वह. middle: रहा / रही. last: है."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two independent dials. The middle word answers what is the subject like and the last word answers which person is it. Turning one does nothing to the other, which is why you can build any combination without a table to memorise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: it works on things as well as people",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "वह जा रहा है। means He is going.",
+                "वह आ रही है। means She is coming."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A noun that is not a person still has a gender, and the middle word follows the noun rather than any person. That is how the weather sentence you learned long ago was put together — the rain is feminine, so the middle word ended in -ई — and the review lesson takes it apart."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"वह कर रहा है (kar rahā hai)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"वह कर रहा है\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same about a woman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same about a woman]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word changed when you moved from I to he",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word changed when you moved from *I* to *he*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"वह जा रहा है\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"वह जा रहा है\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word answers which person? (The last one.) Which answers what is the subject like? (The middle one.) Do the two ever interfere? (No — they are separate dials.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C89-kar-rahe-hain",
+      "sequence": 3920,
+      "title": "कर रहे हैं (kar rahe haiṁ) — both dials turned to plural",
+      "headword": "कर रहे हैं",
+      "romanization": "kar rahe haiṁ",
+      "gloss": "we are doing, they are doing, and the form आप takes — the plural, in both dials at once",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfe255d456eb68e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have two dials: the middle word and the last. Say the pronoun for we, and guess what a group does to each dial."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कर रहे हैं",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हम कर रहे हैं। — We are doing (it). आप क्या कर रहे हैं? (āp kyā kar rahe haiṁ?) — What are you doing?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This time both words move:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "middle",
+                "last"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "subject: मैं. middle: रहा. last: हूँ.",
+                "subject: वह. middle: रहा. last: है.",
+                "subject: हम, वे, आप. middle: रहे. last: हैं."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "रहे is the plural of the same -आ / -ई / -ए set. हैं is the plural copula. Nothing here is new — it is the two dials you already have, both turned one notch."
+            },
+            {
+              "kind": "speech",
+              "text": "At the तुम level the last word is हो: तुम क्या कर रहे हो?"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the question a listening paper asks",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "level",
+                "the question"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "level: आप. the question: आप क्या कर रहे हैं? (āp kyā kar rahe haiṁ?)",
+                "level: तुम. the question: तुम क्या कर रहे हो?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "What are you doing? is one of the commonest openings in spoken Hindi, and the whole difference between the two rows is the last word. That is the level decision again, settling one more system."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"हम कर रहे हैं (kar rahe haiṁ)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"हम कर रहे हैं\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"आप क्या कर रहे हैं? (āp kyā kar rahe haiṁ?)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"आप क्या कर रहे हैं?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same question at the tum level",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same question at the *tum* level]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which two words moved, and which stayed bare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which two words moved, and which stayed bare]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the plural of रहा? (रहे.) Which word separates the āp question from the tum one? (The last — हैं against हो.) What shape is the stem in, still? (Bare.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C89-karta-vs-kar-raha",
+      "sequence": 3930,
+      "title": "do vartamān — the habit and the moment",
+      "headword": "दो वर्तमान",
+      "romanization": "do vartamān",
+      "gloss": "what I do against what I am doing — the distinction English keeps and most languages do not",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:338827e00ca852ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say both forms of to do that you now have — the habit and the one in progress — and try to say in English what separates them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the pair",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Hindi",
+                "English"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "मैं हिंदी बोलता हूँ। means I speak Hindi.",
+                "मैं हिंदी बोल रहा हूँ। means I am speaking Hindi."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The first is a fact about you. The second is a report about this minute."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This distinction is worth pausing on, because English speakers have it and most European learners of Hindi do not. French, German and Spanish all translate both of those lines with a single present tense; Hindi and English each keep two."
+            },
+            {
+              "kind": "speech",
+              "text": "So the good news is that your instinct is already right. Where English says I am doing, Hindi says कर रहा हूँ (kar rahā hū̃). Where English says I do, Hindi says करता हूँ. Translate the shape, not the words."
+            },
+            {
+              "kind": "speech",
+              "text": "One caution. Hindi leans on the habit form in a place English does not: for something happening in the near future that is already arranged, Hindi is happy with the habitual, where English reaches for I am."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: which word in the sentence tells you",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                "the shape of the verb"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "form: habit. the shape of the verb: stem + -ता, then the copula.",
+                "form: in progress. the shape of the verb: bare stem, then रहा, then the copula."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The copula is in both, so it tells you nothing. What decides it is whether the stem carries -ता or stands bare with रहा behind it."
+            },
+            {
+              "kind": "speech",
+              "text": "अभी — the word for right now — sits comfortably with the second and strangely with the first, which is the quickest way to hear the difference."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं हिंदी बोलता हूँ\" — the fact",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं हिंदी बोलता हूँ\" — the fact]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं हिंदी बोल रहा हूँ\" — the minute",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं हिंदी बोल रहा हूँ\" — the minute]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one you would use to answer what are you doing?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one you would use to answer *what are you doing?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that takes अभी without sounding odd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that takes **अभी** without sounding odd]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form states a fact about you? (The habit, with -ता.) Which reports this minute? (The one with रहा.) Does the copula help you tell them apart? (No — it is in both.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C89-repaso-jaari",
+      "sequence": 3940,
+      "title": "abhī kī tālikā — two dials, and two sentences you already knew",
+      "headword": "अभी की तालिका",
+      "romanization": "abhī kī tālikā",
+      "gloss": "the table of what is going on — two dials, and the two old sentences that were built this way all along",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9dd5a402b33a1f1f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the three pieces of a continuous sentence, and say which two of them move, before you look at the table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the grid",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "middle and last"
+              ],
+              "columns": 2,
+              "rowCount": 6,
+              "utterances": [
+                "subject: मैं (m). middle and last: रहा हूँ.",
+                "subject: मैं (f). middle and last: रही हूँ.",
+                "subject: वह (m). middle and last: रहा है.",
+                "subject: वह (f). middle and last: रही है.",
+                "subject: हम, वे, आप. middle and last: रहे हैं.",
+                "subject: तुम. middle and last: रहे हो."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The stem in front of all of them is bare, every time. Six rows and not one of them touches the verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two sentences that were built this way all along",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have been saying this pattern for a long time without being given it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "what it is"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "sentence: एक बज रहा है. what it is: baj- bare, रहा, है.",
+                "sentence: बारिश हो रही है. what it is: ho- bare, रही, है."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Neither was a lump. The clock one is masculine and the rain one is feminine, which is the only difference between them, and it is the middle word that shows it — exactly as the grid above says it should."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: against the habit",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                "the verb"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "form: habit. the verb: बोलता हूँ.",
+                "form: in progress. the verb: बोल रहा हूँ.",
+                "form: earlier habit. the verb: बोलता था."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three tenses off one stem, and the only thing you have to look at is what sits immediately after it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all six rows of the grid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all six rows of the grid]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the clock sentence, and name its three pieces",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the clock sentence, and name its three pieces]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rain sentence, and say why its middle word ends in -ई",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rain sentence, and say why its middle word ends in **-ई**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the habit and the continuous of to speak, one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the habit and the continuous of *to speak*, one after the other]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What shape is the stem in, in every row? (Bare.) Why does the rain sentence use रही? (Bārish is feminine.) What separates the habit from the continuous? (What sits after the stem.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C89-sintesis-jaari",
+      "sequence": 3950,
+      "title": "आप क्या कर रहे हैं? (āp kyā kar rahe haiṁ?) — the question, and four ways to answer it",
+      "headword": "आप क्या कर रहे हैं?",
+      "romanization": "āp kyā kar rahe haiṁ?",
+      "gloss": "what are you doing? — the commonest opening in spoken Hindi, and answering it about yourself",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33b3379f31a7d4bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have क्या for what. Put it in front of the plural continuous and you have the question this lesson is about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— आप क्या कर रहे हैं? (āp kyā kar rahe haiṁ?) — मैं हिंदी बोल रहा हूँ।."
+            },
+            {
+              "kind": "speech",
+              "text": "Three things are at work. क्या asks. रहे हैं is the plural because the question is to somebody addressed as आप. The answer drops back to रहा हूँ, because the answer is about one man speaking for himself — a woman answers बोल रही हूँ, and the question does not change, because the asker does not know yet who will answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "How to answer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Answer it four ways, out loud:"
+            },
+            {
+              "kind": "speech",
+              "text": "you are speaking Hindi."
+            },
+            {
+              "kind": "speech",
+              "text": "you are going home."
+            },
+            {
+              "kind": "speech",
+              "text": "you are eating."
+            },
+            {
+              "kind": "speech",
+              "text": "and then say what you do in general, rather than now."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The fourth one is the trap and the test. What are you doing? takes the continuous; what do you do? takes the habit, and the two questions sound nearly the same in English."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: what a listening paper does with this",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you hear",
+                "what it tells you"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what you hear: ...रहा है. what it tells you: one man, right now.",
+                "what you hear: ...रही है. what it tells you: one woman, right now.",
+                "what you hear: ...रहे हैं. what it tells you: more than one, or आप."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The middle word is doing almost all the work, and it sits at the end of the sentence where a listener hears it last. Train the ear on those three shapes and a personal-account listening item becomes three decisions instead of one guess."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"आप क्या कर रहे हैं? (āp kyā kar rahe haiṁ?)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"आप क्या कर रहे हैं?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं हिंदी बोल रहा हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं हिंदी बोल रहा हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the answer a woman would give",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the answer a woman would give]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence as a habit rather than as a moment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence as a habit rather than as a moment]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is the question रहे हैं and the answer रहा हूँ? (The question is to आप; the answer is about one person.) Which word carries the gender? (The middle one.) Which form answers what do you do? (The habit.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

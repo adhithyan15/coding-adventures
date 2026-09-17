@@ -1,0 +1,23 @@
+{
+  "chapter": 101,
+  "title": "Two Words Where English Has One",
+  "label": "ch:hi-sambandh",
+  "canDo": "I can say who I am with and without, place a thing in front of, behind or near a landmark, say who something is for, and say what I am doing something in order to do.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "HI-C93-sintesis-sambandh",
+    "kind": "task",
+    "summary": "Answer a directions question with a landmark rather than a distance, and say which of the three place words would be the wrong answer to a question about side.",
+    "assesses": [
+      "HI-LEX-C93-REL-01",
+      "HI-LEX-C93-REL-03",
+      "HI-LEX-C93-REL-04",
+      "HI-LEX-C93-REL-05",
+      "HI-LEX-C93-REL-06",
+      "HI-LEX-C93-REL-07"
+    ],
+    "note": "Closes three points -- HI-A1-POST-07 (ke saath and ke binaa), HI-A1-POST-08 (ke paas, ke saamne, ke piichhe) and HI-A1-POST-10 (ke liye and the oblique infinitive) -- on six new words and NO new grammar. POST-10's note said neither the postposition nor the oblique infinitive is taught: half of that was already stale, because HI-C84-mere-liye teaches mere liye in chapter 92. What was genuinely missing was ke liye after a NOUN and the oblique infinitive, and only the second of those is machinery. The chapter's thread is that Hindi has no prepositions at all: every one of these is a possessive phrase whose head noun names a relation, so dost ke saath is the friend's company and ghar ke paas is the house's nearness. That reading explains the middle word for free -- it is ke rather than kaa because a further word follows, which is the same oblique rule chapters 92 and 99 already taught -- and it explains why a pronoun needs no middle word, since mere already carries the -e. The infinitive is the FIFTH kind of word to wear the oblique ending and the first that is a verb, which costs no new rule because -naa ends in -aa and bends exactly as bacchaa does. Also the first payoff for chapter 100's chha, which piichhe needs."
+  }
+}

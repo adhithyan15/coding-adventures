@@ -1,0 +1,20 @@
+{
+  "chapter": 64,
+  "title": "Rows Closed",
+  "label": "ch:mr-oli-purna",
+  "canDo": "I can write the two aspirated letters that were missing from the curled and lip rows, and recognise the danda where an older text ends a sentence.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MR-R64-rows-closed",
+    "kind": "production",
+    "summary": "From cold, with nothing open: write the aspirated retroflex d, the aspirated lip p, and the mark an older text ends a sentence with.",
+    "assesses": [
+      "MR-SCRIPT-DDHA-01",
+      "MR-SCRIPT-PHA-01",
+      "MR-SCRIPT-DANDA"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three, with no model on the page."
+  }
+}

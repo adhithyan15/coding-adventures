@@ -1,0 +1,23 @@
+{
+  "chapter": 94,
+  "title": "The Pronouns, And The Article Hindi Does Not Have",
+  "label": "ch:hi-sarvanam",
+  "canDo": "I can use the whole subject-pronoun set including we and they, choose the right oblique pronoun for the person I am addressing, and stop reaching for a word to translate the.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES",
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C86-sintesis-sarvanam",
+    "kind": "task",
+    "summary": "Read the station sentence a mock paper prints, notice that no word for the appears in it, and ask the liking question at both levels of address.",
+    "assesses": [
+      "HI-LEX-C86-PRON-01",
+      "HI-LEX-C86-PRON-02",
+      "HI-LEX-C86-PRON-03",
+      "HI-LEX-C86-PRON-04",
+      "HI-LEX-C86-PRON-05"
+    ],
+    "note": "Closes three points. HI-A1-PRON-04 wanted the subject paradigm as a whole, and its note names the item that needed it: mock 2 reading item 10 is ham station par milenge, which was unreadable from its first word. HI-A1-PRON-06 wanted the oblique set, of which only mujhe existed and only inside the pasand frame -- this chapter shows that frame was never a lump but a pronoun in a case, and supplies the rest. HI-A1-DET-01 is called the single largest structural difference from the proxy language, and the corpus had never stated it: Hindi has no article, and ek and vah do the work when specificity matters, ek being the numeral one pressed into service rather than a cafe formula. The chapter is the FOURTH system in which the aap/tum level decision appears, after the possessive, the copula and the command, and the review lesson sets all four side by side to make the point that one decision settles them together."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:f6e00a824b7d6bc3",
+  "lessonIds": [
+    "ES-C420-teatro",
+    "ES-C420-exposicion",
+    "ES-C420-circo",
+    "ES-C420-repaso-lugares",
+    "ES-C420-sintesis-salir"
+  ],
+  "tex": "spanish/book/chapters/ch420-teatro-exposicion-circo.tex"
+}

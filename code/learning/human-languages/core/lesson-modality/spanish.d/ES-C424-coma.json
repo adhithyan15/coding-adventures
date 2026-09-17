@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C424-coma",
+    "language": "spanish",
+    "chapter": 424,
+    "sequence": 9920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd3c397d640f102b"
+  },
+  "findings": []
+}

@@ -1,0 +1,22 @@
+{
+  "language": "hindi",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:e7bc8e6633b26c3c",
+  "lessonIds": [
+    "HI-C87-par",
+    "HI-C87-thaa",
+    "HI-C87-thii",
+    "HI-C87-the",
+    "HI-C87-nahin-thaa",
+    "HI-C87-bolta-thaa",
+    "HI-C87-repaso-atit",
+    "HI-C87-sintesis-atit"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch95.txt",
+  "json": "hindi/narration/ch95.json",
+  "textHash": "fnv1a64:8ea9cbde02de21d5",
+  "jsonHash": "fnv1a64:0b457a482f395f2b",
+  "findings": []
+}

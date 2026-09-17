@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C90-repaso-dincharya",
+    "language": "hindi",
+    "chapter": 98,
+    "sequence": 4020,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8d73c4930b75cd9b"
+  },
+  "findings": []
+}

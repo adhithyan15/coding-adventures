@@ -1,0 +1,21 @@
+{
+  "chapter": 93,
+  "title": "Telling Somebody To Do Something",
+  "label": "ch:hi-adesh",
+  "canDo": "I can give a command at the right level of politeness, say you are at the familiar level, tell somebody not to do something, and read the negative notices a public sign is made of.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "HI-C85-sintesis-suchna",
+    "kind": "task",
+    "summary": "Read a public notice and say the same thing as a friend would say it, noticing that a sign is at the aap level because it addresses a stranger.",
+    "assesses": [
+      "HI-LEX-C85-IMP-01",
+      "HI-LEX-C85-IMP-02",
+      "HI-LEX-C85-IMP-03",
+      "HI-LEX-C85-IMP-04"
+    ],
+    "note": "Closes three points that are the same choice made in three places. HI-A1-V-16 wanted bol, bolo and boliye as a SERIES, and its note said only the -iye form was introduced and only inside two fixed courtesy phrases; this chapter takes maaf kijiye apart and shows it was a respectful command all along. HI-A1-V-17 wanted the negative imperative, and its note names the exact mock item it is tested by: Mock 2 reading item 3 is yahan mat baithiye, which the synthesis lesson reads verbatim. HI-A1-V-03 wanted the tum copula ho, whose note said it occurs inside the age frame but that no atom introduces it independently of that one memorised question. The chapter is built on the aap/tum/tu grid the possessive chapter established, so choosing a level now picks a whole row -- possessive, copula and command together -- rather than three separate facts. The tu column is taught for RECOGNITION only, and says so: the risk of using it wrongly is much larger than the benefit of using it."
+  }
+}

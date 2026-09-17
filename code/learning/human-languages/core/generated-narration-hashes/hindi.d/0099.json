@@ -1,0 +1,23 @@
+{
+  "language": "hindi",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:0695db8e7657c590",
+  "lessonIds": [
+    "HI-C91-bacche-plural",
+    "HI-C91-kitaben",
+    "HI-C91-bhashaen",
+    "HI-C91-aadmi-unchanged",
+    "HI-C91-ko",
+    "HI-C91-bacche-ko",
+    "HI-C91-yah-kitab",
+    "HI-C91-repaso-sangya",
+    "HI-C91-sintesis-sangya"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch99.txt",
+  "json": "hindi/narration/ch99.json",
+  "textHash": "fnv1a64:9ae184d0fd0ee806",
+  "jsonHash": "fnv1a64:c316e42ef6d38542",
+  "findings": []
+}

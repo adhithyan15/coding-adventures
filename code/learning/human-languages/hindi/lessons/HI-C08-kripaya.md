@@ -12,18 +12,18 @@ headword: कृपया
 gloss: please (kṛpayā — "kindly," from kṛpā "grace/compassion")
 romanization: "kṛpayā"
 concept_tag: COURTESY-PLEASE
-prerequisites: [HI-C01-dhanyavad]
+prerequisites: [HI-S144-vowel-sign-vocalic-r, HI-C01-dhanyavad]
 sounds: [vocalic-r-matra, retroflex-flap]
 roots: [krpa-sanskrit]
 etymology_hook: "कृपया kṛpayā is 'kindly', from Sanskrit kṛpā 'grace, compassion' — the same 'invoke grace' idea as Arabic min faḍlik"
 duration:
   max_seconds: 226
 requires:
-  knowledge: []
+  knowledge: [HI-SCRIPT-RECOG-144]
 introduces:
   knowledge: [HI-CONCEPT-C08-KRIPAYA-01, HI-CONCEPT-C08-KRIPAYA-02]
 practises:
-  knowledge: [HI-CONCEPT-C08-KRIPAYA-01, HI-CONCEPT-C08-KRIPAYA-02]
+  knowledge: [HI-CONCEPT-C08-KRIPAYA-01, HI-CONCEPT-C08-KRIPAYA-02, HI-SCRIPT-RECOG-144]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [HI-C01-dhanyavad]
 # कृपया (kṛpayā) — please (kindly)
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-144] -->
 
 [PAUSE 2s] Hindi's dictionary word for "please" is really the word **compassion**
 in disguise — and it's more formal than you might expect.

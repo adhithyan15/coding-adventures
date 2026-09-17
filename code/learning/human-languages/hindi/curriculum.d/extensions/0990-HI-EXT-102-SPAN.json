@@ -1,0 +1,17 @@
+{
+  "id": "HI-EXT-102-SPAN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say a span with se and tak, and correct one option with another.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C94-tak",
+    "HI-C94-se-tak-din",
+    "HI-C94-se-tak-samay",
+    "HI-C94-train",
+    "HI-C94-se-nahin",
+    "HI-C94-repaso-safar",
+    "HI-C94-sintesis-safar"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "HI-EXT-98-ROUTINE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can describe a day in order, naming how I travel and what comes before and after.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C90-se",
+    "HI-C90-bas",
+    "HI-C90-uthna",
+    "HI-C90-kaam",
+    "HI-C90-pahle",
+    "HI-C90-baad",
+    "HI-C90-repaso-dincharya",
+    "HI-C90-sintesis-dincharya"
+  ]
+}

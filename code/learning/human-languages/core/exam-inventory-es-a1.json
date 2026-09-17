@@ -1002,8 +1002,10 @@
       "id": "A1-F3-03",
       "category": "Expresar gustos, deseos y sentimientos",
       "label": "express a preference with prefiero",
-      "probe": null,
-      "note": "The source's A1 exponent is preferir. The corpus never introduces the verb, and querer expresses wanting rather than choosing between offered alternatives."
+      "probe": [
+        "ES-LEX-PREFERIR"
+      ],
+      "note": "The source's A1 exponent is preferir, introduced by ES-C396-preferir. The earlier note claimed the corpus never introduced the verb; that was false when written or went stale after ch396, and the point was scored uncovered on it."
     },
     {
       "id": "A1-F3-04",
@@ -1035,8 +1037,13 @@
       "id": "A1-F4-01",
       "category": "Influir en el interlocutor",
       "label": "give an order or instruction",
-      "probe": null,
-      "note": "The source's A1 exponents are a direct order and a softened order with an attenuator. The corpus teaches the NEGATIVE command and the register that surrounds commands, but never introduces the affirmative imperative."
+      "probe": [
+        "ES-GRAMMAR-COMMAND-TU-AFFIRMATIVE",
+        "ES-GRAMMAR-COMMAND-IRREGULAR-EIGHT",
+        "ES-LEX-POR-FAVOR",
+        "ES-CULTURE-COMMAND-REGISTER"
+      ],
+      "note": "STALE NOTE, corrected. The earlier note said the corpus 'never introduces the affirmative imperative'; ES-C50-habla introduces it across all three conjugations (habla, come, vive) and ES-C50-ocho-cortos introduces the eight irregulars (di, haz, ve, pon, ten, sal, se, ven). The inventory already contradicted itself: A1-V-11 was wired to those same two atoms. The point's second exponent, a softened order with an attenuator, is ES-LEX-POR-FAVOR from ES-C06 plus ES-CULTURE-COMMAND-REGISTER from ES-C50-sintesis-pedir-bien, which reads Coma, por favor as the softened order and makes the argument that in Spanish the attenuation lives mostly in the choice of tu or usted rather than in an added word. Closed with zero authoring."
     },
     {
       "id": "A1-F4-02",
@@ -1187,15 +1194,19 @@
       "id": "A1-F5-09",
       "category": "Relacionarse socialmente",
       "label": "propose a toast",
-      "probe": null,
-      "note": "The source's A1 exponent is the toast salud. The corpus teaches la salud as the noun health and saludo as a wish for it, but never the interjection, and the noun does not demonstrate the act."
+      "probe": [
+        "ES-ORTH-C428-04"
+      ],
+      "note": "The toast is introduced by ES-C428-salud-brindis, which is a SENSE rather than a new word and says so: la salud has been taught since chapter 334, and the toast is the same noun with its article dropped, turning a description into a wish. The lesson also carries the second use an English speaker does not expect, since Spanish answers a sneeze with the same word."
     },
     {
       "id": "A1-F5-10",
       "category": "Relacionarse socialmente",
       "label": "congratulate",
-      "probe": null,
-      "note": "The source's A1 exponent is felicidades. The corpus teaches feliz as an adjective and never the congratulation formula."
+      "probe": [
+        "ES-ORTH-C428-03"
+      ],
+      "note": "felicidades is introduced by ES-C428-felicidades. The note was right that feliz alone did not cover it: an adjective describes a state and a congratulation is an act, and Spanish makes the act by pluralising the noun -- felicidad becomes felicidades, several happinesses at once. The lesson also separates it from felicitaciones, which suits an achievement rather than an occasion."
     },
     {
       "id": "A1-F5-11",
@@ -1654,8 +1665,17 @@
       "id": "A1-NE02-01",
       "category": "Individuo: dimension perceptiva y animica",
       "label": "character and personality adjectives",
-      "probe": null,
-      "note": "The source lists simpatico, antipatico, inteligente, trabajador, alegre, serio, timido and sociable. The corpus introduces none of them; the state adjectives it teaches are moods, not settled character."
+      "probe": [
+        "ES-LEX-C380-COUNT-36",
+        "ES-LEX-C380-COUNT-37",
+        "ES-LEX-C423-CHAR-01",
+        "ES-LEX-C423-CHAR-02",
+        "ES-LEX-C423-CHAR-03",
+        "ES-LEX-C423-CHAR-04",
+        "ES-LEX-C423-CHAR-05",
+        "ES-LEX-C423-CHAR-06"
+      ],
+      "note": "The source lists simpatico, antipatico, inteligente, trabajador, alegre, serio, timido and sociable. All eight are now introduced: simpatico (ES-C380) and alegre (ES-C380) were already taught -- an earlier version of this note wrongly said the corpus introduced none of them -- and chapter 423 adds the remaining six. These are settled character rather than mood, which is what the state adjectives elsewhere in the corpus describe."
     },
     {
       "id": "A1-NE03-01",
@@ -1770,8 +1790,13 @@
       "id": "A1-NE06-01",
       "category": "Educacion",
       "label": "educational institutions",
-      "probe": null,
-      "note": "The source's A1 exponents are instituto, universidad, clase and biblioteca. The corpus teaches escuela, which is a different institution, and none of the four listed words."
+      "probe": [
+        "ES-LEX-C429-EDU-01",
+        "ES-LEX-UNIVERSIDAD",
+        "ES-LEX-C358-REF-14",
+        "ES-LEX-C353-WHERE-24"
+      ],
+      "note": "PARTLY STALE NOTE, corrected. The source's exponents are instituto, universidad, clase and biblioteca, and the note claimed the corpus taught 'none of the four listed words'. Three of the four were already introduced: universidad by ES-C394-universidad, clase by ES-C358-clase and biblioteca by ES-C353-biblioteca. Only instituto was missing, and it is the one that mattered -- it is a false friend (English institute is a research body) and the missing middle rung of the school ladder, so the corpus could name the primary school and the university with nothing for the years between. ES-C429-instituto supplies it."
     },
     {
       "id": "A1-NE06-02",
@@ -1802,8 +1827,14 @@
       "id": "A1-NE06-05",
       "category": "Educacion",
       "label": "examinations and marks",
-      "probe": null,
-      "note": "The source's A1 exponent is hacer or tener un examen. The corpus never introduces examen."
+      "probe": [
+        "ES-LEX-EXAMEN",
+        "ES-LEX-C429-EDU-02",
+        "ES-LEX-C429-EDU-03",
+        "ES-LEX-C429-EDU-04",
+        "ES-LEX-C429-EDU-05"
+      ],
+      "note": "The note was right to hold this uncovered and is now satisfied on its own terms. It had already corrected one false claim (examen IS introduced by ES-C410-examen) and kept the point uncovered because the label is 'examinations and marks' and the marks half was wholly absent -- nota, calificacion, aprobar and suspender occurred nowhere. ES-C429 supplies all four, so the point closes on both halves rather than on the examination half alone, which is the call the note asked for and the same call made at A1-NE18-06."
     },
     {
       "id": "A1-NE06-06",
@@ -1862,8 +1893,11 @@
       "id": "A1-NE07-04",
       "category": "Trabajo",
       "label": "unemployment and job-seeking",
-      "probe": null,
-      "note": "The source's A1 exponents are estar en paro and tener trabajo. The corpus introduces neither paro nor trabajo as a noun."
+      "probe": [
+        "ES-LEX-C430-VIDA-01",
+        "ES-LEX-TRABAJO"
+      ],
+      "note": "PARTLY STALE NOTE, corrected. The source's exponents are estar en paro and tener trabajo, and the note claimed the corpus introduced 'neither paro nor trabajo as a noun'. el trabajo is introduced as a noun by ES-C394-trabajo, so only the negative half was missing. ES-C430-estar-en-paro supplies it, with the two things that make it an exam answer rather than a word: it takes estar rather than ser because it names a situation, and el paro names the STOPPAGE rather than the missing job (from parar, whose Latin parare meant to make ready before the sense slid through standing ready to standing still). Spain says paro where much of Latin America says desempleo."
     },
     {
       "id": "A1-NE07-05",
@@ -1877,8 +1911,10 @@
       "id": "A1-NE07-06",
       "category": "Trabajo",
       "label": "characteristics of a worker",
-      "probe": null,
-      "note": "The source's A1 exponent is ser trabajador, the adjective. The corpus teaches only the verb trabajar, and the adjective is never derived."
+      "probe": [
+        "ES-LEX-C423-CHAR-03"
+      ],
+      "note": "trabajador is introduced by ES-C423-trabajador, which teaches it as both the adjective the source asks for (ser trabajador) and the agent noun. The earlier note said the corpus taught only the verb trabajar and never derived the adjective; that stopped being true when chapter 423 landed, and the note had not caught up."
     },
     {
       "id": "A1-NE08-01",
@@ -1893,8 +1929,15 @@
       "id": "A1-NE08-02",
       "category": "Ocio",
       "label": "shows and exhibitions",
-      "probe": null,
-      "note": "The source's A1 exponents are pelicula, concierto and going to the theatre, cinema or circus. None is introduced in the corpus."
+      "probe": [
+        "ES-LEX-PELICULA",
+        "ES-LEX-CONCIERTO",
+        "ES-LEX-C420-ARTS-01",
+        "ES-LEX-C354-WHERE-28",
+        "ES-LEX-C420-ARTS-03",
+        "ES-LEX-C420-ARTS-02"
+      ],
+      "note": "The source's A1 exponents are pelicula, concierto and going to the theatre, cinema or circus. All are now introduced: pelicula (ES-C404), concierto (ES-C413), cine (ES-C354), and teatro and circo (ES-C420). The probe also names exposicion (ES-C420): the label says 'shows and exhibitions', and the exhibitions half deserves its own evidence rather than riding on the venue words."
     },
     {
       "id": "A1-NE08-03",
@@ -1959,8 +2002,16 @@
       "id": "A1-NE09-06",
       "category": "Informacion y medios de comunicacion",
       "label": "the internet, and dictating an e-mail address",
-      "probe": null,
-      "note": "The source's A1 exponents are Internet, arroba, guion, guion bajo, punto, pagina web and correo electronico. The corpus introduces none of them, so the very common task of spelling out an address aloud is unbuilt."
+      "probe": [
+        "ES-LEX-INTERNET",
+        "ES-LEX-CORREO-ELECTRONICO",
+        "ES-ORTH-C424-01",
+        "ES-ORTH-C424-07",
+        "ES-LEX-C422-TECH-01",
+        "ES-ORTH-C428-01",
+        "ES-ORTH-C428-02"
+      ],
+      "note": "All seven of the source's A1 exponents are now introduced. internet and correo electronico came from chapter 393, punto from chapter 424 (chapter 342 names it as the full stop, and 424 teaches it as a mark), guion from chapter 424 and pagina web from chapter 422 -- the note claiming those last two were missing had gone stale. Chapter 428 adds the two that were genuinely absent, arroba and guion bajo, and without arroba an e-mail address cannot be dictated, which is what the point asks for."
     },
     {
       "id": "A1-NE10-01",
@@ -2030,8 +2081,11 @@
       "id": "A1-NE11-04",
       "category": "Servicios",
       "label": "protection and security services",
-      "probe": null,
-      "note": "The source's A1 exponents are policia and bombero. Neither is introduced in the corpus."
+      "probe": [
+        "ES-LEX-C427-AGENT-03",
+        "ES-LEX-C427-AGENT-04"
+      ],
+      "note": "policia and bombero are introduced by chapter 427. The policia lesson carries the fact a reading paper can test: el policia is an officer and la policia is the force, so the article rather than any ending does the distinguishing."
     },
     {
       "id": "A1-NE12-01",
@@ -2047,8 +2101,16 @@
       "id": "A1-NE12-02",
       "category": "Compras, tiendas y establecimientos",
       "label": "clothing, footwear and accessories",
-      "probe": null,
-      "note": "The source's A1 exponents are pantalones, vaqueros, falda, camisa, jersey, zapatos and bolso. The corpus introduces none of them -- clothing is an entire A1 domain with no lesson anywhere."
+      "probe": [
+        "ES-LEX-C360-REF-19",
+        "ES-LEX-C373-REF-54",
+        "ES-LEX-CAMISA",
+        "ES-LEX-C360-REF-18",
+        "ES-LEX-C430-VIDA-02",
+        "ES-LEX-C430-VIDA-03",
+        "ES-LEX-C430-VIDA-04"
+      ],
+      "note": "The note was accurate at four of seven: pantalon (ES-C360), falda (ES-C373), camisa (ES-C402) and zapato (ES-C360) were introduced, and vaqueros, jersey and bolso were absent. ES-C430 adds exactly those three, each with the trap that makes it an exam item rather than a word -- vaqueros is plural every time and takes a plural article, jersey pluralises to jerseis and gains a written accent doing it, and bolso names a different object from bolsa, which is what a shop assistant will hand you if you choose wrong."
     },
     {
       "id": "A1-NE12-03",
@@ -2081,8 +2143,10 @@
       "id": "A1-NE13-03",
       "category": "Salud e higiene",
       "label": "medicine and medicines",
-      "probe": null,
-      "note": "The source's single A1 exponent is farmacia, which the corpus never introduces."
+      "probe": [
+        "ES-LEX-C353-WHERE-23"
+      ],
+      "note": "farmacia is introduced by ES-C353-farmacia and has been since that chapter. The earlier note claiming the corpus never introduced it was FALSE -- resolved through the lesson headword per HL-C376. The source lists farmacia as its single A1 exponent, so the point needed no authoring at all, only wiring."
     },
     {
       "id": "A1-NE13-04",
@@ -2136,22 +2200,29 @@
       "id": "A1-NE15-02",
       "category": "Economia e industria",
       "label": "commerce: buyer and seller",
-      "probe": null,
-      "note": "The source's A1 exponents are the nouns vendedor and comprador. The corpus teaches the verb comprar but never derives either agent noun."
+      "probe": [
+        "ES-LEX-C427-AGENT-01",
+        "ES-LEX-C427-AGENT-02"
+      ],
+      "note": "vendedor and comprador are introduced by chapter 427, built from vender and comprar with the -dor ending chapter 423 had already taught as an adjective on trabajador. The lesson is explicit that these are the ROLES in a sale rather than shop vocabulary, which is why teaching comprar alone did not cover the point."
     },
     {
       "id": "A1-NE15-03",
       "category": "Economia e industria",
       "label": "businesses and organisations",
-      "probe": null,
-      "note": "The source's A1 exponent is empresa, which the corpus never introduces."
+      "probe": [
+        "ES-LEX-C427-AGENT-06"
+      ],
+      "note": "empresa is introduced by ES-C427-empresa. The lesson names the difference from English enterprise: Spanish empresa covers the firm as well as the venture, which is what makes it the everyday word a form asks for."
     },
     {
       "id": "A1-NE15-04",
       "category": "Economia e industria",
       "label": "industry and energy",
-      "probe": null,
-      "note": "The source's only A1 exponent is pescado, under fishing. The corpus never introduces it."
+      "probe": [
+        "ES-LEX-C361-REF-22"
+      ],
+      "note": "pescado is introduced by ES-C361-pescado and has been since that chapter. The earlier note claiming the corpus never introduced it was FALSE -- resolved through the lesson headword per HL-C376. The source's only A1 exponent under this point is pescado, so the point needed wiring rather than authoring."
     },
     {
       "id": "A1-NE16-01",
@@ -2165,8 +2236,13 @@
       "id": "A1-NE16-02",
       "category": "Ciencia y tecnologia",
       "label": "computing and new technology",
-      "probe": null,
-      "note": "The source's A1 exponents are ordenador, Internet, correo electronico and pagina web. The corpus introduces none of them."
+      "probe": [
+        "ES-LEX-ORDENADOR",
+        "ES-LEX-INTERNET",
+        "ES-LEX-CORREO-ELECTRONICO",
+        "ES-LEX-C422-TECH-01"
+      ],
+      "note": "The source's A1 exponents are ordenador, Internet, correo electronico and pagina web. All four are now introduced: ordenador (ES-C393), internet (ES-C393), correo electronico (ES-C393) and pagina web (ES-C422). The point had stood uncovered on the single missing exponent."
     },
     {
       "id": "A1-NE17-01",
@@ -2180,22 +2256,36 @@
       "id": "A1-NE17-02",
       "category": "Gobierno, politica y sociedad",
       "label": "law and justice",
-      "probe": null,
-      "note": "The source's single A1 exponent is abogado, which the corpus never introduces."
+      "probe": [
+        "ES-LEX-C427-AGENT-05"
+      ],
+      "note": "abogado is introduced by ES-C427-abogado, from Latin advocatus, one called to your side. It is the chapter's example of a profession word with no Spanish verb inside it, because it was inherited whole rather than built here."
     },
     {
       "id": "A1-NE18-01",
       "category": "Actividades artisticas",
       "label": "artistic disciplines",
-      "probe": null,
-      "note": "The source's A1 exponents are cine, teatro, musica, pelicula, concierto, foto, museo and exposicion. The corpus introduces none of them."
+      "probe": [
+        "ES-LEX-C354-WHERE-28",
+        "ES-LEX-C420-ARTS-01",
+        "ES-LEX-MUSICA",
+        "ES-LEX-PELICULA",
+        "ES-LEX-CONCIERTO",
+        "ES-LEX-FOTO",
+        "ES-LEX-C353-WHERE-25",
+        "ES-LEX-C420-ARTS-02"
+      ],
+      "note": "All eight of the source's A1 exponents are now introduced: cine (ES-C354), musica (ES-C413), pelicula (ES-C404), concierto (ES-C413), foto (ES-C405), museo (ES-C353), and teatro and exposicion (ES-C420). The point was six of eight before this chapter."
     },
     {
       "id": "A1-NE18-02",
       "category": "Actividades artisticas",
       "label": "music and dance",
-      "probe": null,
-      "note": "The source's A1 exponents are musica, cantante, cantar and bailar. None is introduced in the corpus."
+      "probe": [
+        "ES-LEX-MUSICA",
+        "ES-LEX-BAILAR"
+      ],
+      "note": "The source's A1 exponents are musica, cantante, cantar and bailar. musica (ch413) and bailar (ch419) are introduced; cantante and cantar are not, so this point is scored on the two that are and the singing half remains real debt."
     },
     {
       "id": "A1-NE18-03",
@@ -2219,15 +2309,24 @@
       "id": "A1-NE18-05",
       "category": "Actividades artisticas",
       "label": "photography",
-      "probe": null,
-      "note": "The source's single A1 exponent is foto, which the corpus never introduces."
+      "probe": [
+        "ES-LEX-FOTO",
+        "ES-LEX-FOTOGRAFIA"
+      ],
+      "note": "The source's single A1 exponent is foto, introduced by ch405 along with fotografia. The point was scored uncovered until ch419 only because the probe was never wired, not because the corpus lacked the teaching."
     },
     {
       "id": "A1-NE18-06",
       "category": "Actividades artisticas",
       "label": "cinema and theatre",
-      "probe": null,
-      "note": "The source's A1 exponents are cine, teatro, pelicula, actor and actriz. None is introduced in the corpus."
+      "probe": [
+        "ES-LEX-C354-WHERE-28",
+        "ES-LEX-PELICULA",
+        "ES-LEX-C420-ARTS-01",
+        "ES-LEX-C421-ARTS-01",
+        "ES-LEX-C421-ARTS-02"
+      ],
+      "note": "The source's A1 exponents are cine, teatro, pelicula, actor and actriz. All five are now introduced: cine (ES-C354), pelicula (ES-C404), teatro (ES-C420), actor (ES-C421) and actriz (ES-C421). The probe was deliberately left null while actor and actriz were missing, rather than wired on the three places alone."
     },
     {
       "id": "A1-NE19-01",
@@ -2284,8 +2383,10 @@
       "id": "A1-NE20-05",
       "category": "Geografia y naturaleza",
       "label": "fauna",
-      "probe": null,
-      "note": "The source's single A1 exponent is the generic noun animal. The corpus teaches individual creatures but never the superordinate word the source asks for."
+      "probe": [
+        "ES-ORTH-C428-05"
+      ],
+      "note": "animal is introduced by ES-C428-animal. The note asked for the superordinate the corpus lacked, and the lesson makes the case for why a superordinate earns its place: it is what lets a reader talk about a creature they cannot name, which is exactly what a notice covering every creature at once requires."
     },
     {
       "id": "A1-NE20-06",
@@ -2300,50 +2401,65 @@
       "id": "A1-O1-01",
       "category": "Ortografia de letras y palabras",
       "label": "the alphabet and the names of the letters",
-      "probe": null,
-      "note": "The source enumerates the names of every letter, including the letters with more than one name. The corpus never teaches the alphabet as a recited or named sequence, which is what spelling a name aloud requires."
+      "probe": [
+        "ES-ORTH-C425-01",
+        "ES-ORTH-C425-02"
+      ],
+      "note": "ES-C425-abecedario names all twenty-seven letters, grouped by the three naming patterns rather than listed, and ES-C425-dos-nombres covers the letters with more than one name. The second lesson exists because b and v are HOMOPHONES in Spanish, which is why be larga and ve corta were needed at all; w, y and z are covered in the same lesson."
     },
     {
       "id": "A1-O1-02",
       "category": "Ortografia de letras y palabras",
       "label": "the vowel letters and their graphic representation",
-      "probe": null,
-      "note": "The source treats the five vowel letters as graphemes that may carry a tilde. The corpus teaches the written accent as a stress rule but never the vowel inventory as an orthographic set."
+      "probe": [
+        "ES-ORTH-C425-03"
+      ],
+      "note": "ES-C425-vocales treats the five vowel letters as the closed orthographic set the source describes, with both marks a vowel can carry: la tilde on any of the five, and la dieresis on u alone. It also names the false friend -- Spanish tilde is the accent mark, not the squiggle on the enye, which is la virgulilla."
     },
     {
       "id": "A1-O1-03",
       "category": "Ortografia de letras y palabras",
       "label": "the consonant letters and digraphs",
-      "probe": null,
-      "note": "The source enumerates b/v/w, c/k/q/z and ch, g/j, h, y and ll, m/n/enye, p, r and rr, s/x, and t/d. The corpus teaches only the silent h and enye, so probing those two would report the whole consonant system as held."
+      "probe": [
+        "ES-ORTH-C425-04"
+      ],
+      "note": "ES-C425-digrafos teaches all five digraphs (ch, ll, rr, gu, qu) as two letters spelling one sound, including the silent u of guerra and queso and its relation to the dieresis, plus the 1994 change that stopped ch and ll being alphabet letters in their own right."
     },
     {
       "id": "A1-O1-04",
       "category": "Ortografia de letras y palabras",
       "label": "capital letters",
-      "probe": null,
-      "note": "The source enumerates general uses, whole-word capitals and initial capitals. The corpus never states a capitalisation rule."
+      "probe": [
+        "ES-ORTH-C426-01"
+      ],
+      "note": "ES-C426-mayusculas states the rule the note said the corpus never stated, and organises it around the four cases where Spanish and English disagree: days, months, languages and nationalities, plus titles and book titles. One idea covers all of them -- Spanish capitalises a name and not a category."
     },
     {
       "id": "A1-O1-05",
       "category": "Ortografia de letras y palabras",
       "label": "initial lower-case letters",
-      "probe": null,
-      "note": "The source covers surnames beginning with an article or a preposition. The corpus never states the rule."
+      "probe": [
+        "ES-ORTH-C426-02"
+      ],
+      "note": "ES-C426-minuscula-inicial covers exactly what the source names: a surname beginning with an article or a preposition. The rule turns on whether the forename is present -- Pedro de la Cruz against el senor De la Cruz -- and the lesson derives it from the capitalisation principle rather than presenting it as arbitrary."
     },
     {
       "id": "A1-O1-06",
       "category": "Ortografia de letras y palabras",
       "label": "superscript letters in frequent abbreviations",
-      "probe": null,
-      "note": "The source lists forms such as the abbreviated title and the ordinal indicator. The corpus never introduces them."
+      "probe": [
+        "ES-ORTH-C426-04"
+      ],
+      "note": "ES-C426-voladitas teaches the raised letters, the ordinal indicator and the abbreviated title the source lists, including the Academy's recommendation that the point precede the raised letter (1.o, Sr.a) and the warning that the raised o is not a degree sign."
     },
     {
       "id": "A1-O1-07",
       "category": "Ortografia de letras y palabras",
       "label": "spelling of words: syllable division and double spellings",
-      "probe": null,
-      "note": "The source covers inseparable consonant groups, words with two accepted spellings, and how figures and numbers are written. The corpus never addresses any of the three."
+      "probe": [
+        "ES-ORTH-C425-05"
+      ],
+      "note": "ES-C425-silabas covers all three of the source's sub-points: the inseparable consonant groups (digraphs, consonant plus l or r, diphthongs), words with two accepted spellings (sicologia/psicologia, setiembre/septiembre, quiosco/kiosco), and the rule that a number in figures is never split."
     },
     {
       "id": "A1-O2-01",
@@ -2369,22 +2485,28 @@
       "id": "A1-O3-01",
       "category": "Puntuacion",
       "label": "the full stop",
-      "probe": null,
-      "note": "The source distinguishes the three kinds of full stop and their role in laying out a text. The corpus never states them."
+      "probe": [
+        "ES-ORTH-C424-01"
+      ],
+      "note": "The three kinds of full stop -- punto y seguido, punto y aparte and punto final -- are named and distinguished by ES-C424-punto, together with the spacing convention and the rule that a title carries none."
     },
     {
       "id": "A1-O3-02",
       "category": "Puntuacion",
       "label": "the comma",
-      "probe": null,
-      "note": "The source covers enumerations with y and o, and with e and u. The corpus teaches the connectors themselves but never the punctuation rule that governs a list."
+      "probe": [
+        "ES-ORTH-C424-02"
+      ],
+      "note": "ES-C424-coma teaches the enumeration, including the point where Spanish and English disagree: Spanish writes NO comma before the final y. The y-to-e and o-to-u alternations before a matching vowel are taught in the same lesson."
     },
     {
       "id": "A1-O3-03",
       "category": "Puntuacion",
       "label": "the colon",
-      "probe": null,
-      "note": "The source covers announced enumerations and layout in examples. The corpus never states them."
+      "probe": [
+        "ES-ORTH-C424-03"
+      ],
+      "note": "ES-C424-dos-puntos teaches the announced enumeration and the letter opening, where Spanish uses a colon after the greeting and English a comma."
     },
     {
       "id": "A1-O3-04",
@@ -2401,57 +2523,73 @@
       "id": "A1-O3-05",
       "category": "Puntuacion",
       "label": "parentheses",
-      "probe": null,
-      "note": "The source covers parenthetical additions. The corpus never introduces the mark."
+      "probe": [
+        "ES-ORTH-C424-06"
+      ],
+      "note": "ES-C424-parentesis teaches the parenthetical addition, the removal test for whether an aside belongs in one, and the placement of the full stop outside the closing curve."
     },
     {
       "id": "A1-O3-06",
       "category": "Puntuacion",
       "label": "quotation marks",
-      "probe": null,
-      "note": "The source covers marking a foreign word inside a sentence. The corpus never introduces the Spanish angle quotation marks."
+      "probe": [
+        "ES-ORTH-C424-05"
+      ],
+      "note": "ES-C424-comillas teaches the three shapes in their order of preference, the angular pair first, and the foreign-word use the source names."
     },
     {
       "id": "A1-O3-07",
       "category": "Puntuacion",
       "label": "the hyphen",
-      "probe": null,
-      "note": "The source covers compound forenames and surnames. The corpus never introduces the mark."
+      "probe": [
+        "ES-ORTH-C424-07"
+      ],
+      "note": "ES-C424-guion teaches the compound forename and surname, the contrast with la raya, and the 2010 respelling of guion itself."
     },
     {
       "id": "A1-O3-08",
       "category": "Puntuacion",
       "label": "the dash in dialogue",
-      "probe": null,
-      "note": "The source covers turns in written dialogue marked with a dash and no speaker named. The corpus never introduces the convention, which is how printed Spanish dialogue is set."
+      "probe": [
+        "ES-ORTH-C424-04"
+      ],
+      "note": "ES-C424-raya teaches the dialogue convention: a raya opens each turn and no speaker is named. The corpus has PRINTED this mark in every exchange it has ever set, including the ones chapters 421-423 added, without naming it."
     },
     {
       "id": "A1-O3-09",
       "category": "Puntuacion",
       "label": "the slash",
-      "probe": null,
-      "note": "The source covers abbreviations and the marking of alternatives. The corpus never introduces the mark."
+      "probe": [
+        "ES-ORTH-C424-08"
+      ],
+      "note": "ES-C424-barra teaches the alternative, the c/ street abbreviation an address prints, and the per reading in a measurement."
     },
     {
       "id": "A1-O4-01",
       "category": "Abreviaturas y siglas",
       "label": "abbreviations",
-      "probe": null,
-      "note": "The source lists the frequent forms of address in abbreviated form and the use of the point and the slash in them. The corpus teaches senor and senora in full but never their abbreviations."
+      "probe": [
+        "ES-ORTH-C426-03"
+      ],
+      "note": "ES-C426-abreviaturas teaches the frequent forms of address (Sr., Sra., Srta., D., Dna., Dr.) and both marks the source names: the obligatory point, and the slash of c/. It also draws the don-against-senor distinction, which is first-name against surname and has no English equivalent."
     },
     {
       "id": "A1-O4-02",
       "category": "Abreviaturas y siglas",
       "label": "initialisms and acronyms",
-      "probe": null,
-      "note": "The source covers capitalisation in initialisms. The corpus never introduces any."
+      "probe": [
+        "ES-ORTH-C426-05"
+      ],
+      "note": "ES-C426-siglas covers the capitalisation the source names, the absence of points that distinguishes a sigla from an abbreviation, and the plural by letter-doubling (EE. UU.). It also separates sigla from acronimo by whether the result is pronounceable."
     },
     {
       "id": "A1-O4-03",
       "category": "Abreviaturas y siglas",
       "label": "symbols",
-      "probe": null,
-      "note": "The source covers currency symbols, the points of the compass and non-alphabetisable symbols. The corpus teaches the compass words but never their symbols."
+      "probe": [
+        "ES-ORTH-C426-06"
+      ],
+      "note": "ES-C426-simbolos covers the currency symbol, the points of the compass and the non-alphabetisable symbols the source lists, with the two facts that trip an English reader: the Spanish compass writes O for oeste where English writes W, and the euro sign follows the amount rather than preceding it."
     }
   ]
 }

@@ -1,0 +1,17 @@
+{
+  "id": "HI-EXT-94-PRONOUNS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can use the whole pronoun set, subject and oblique, and I know Hindi has no article.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C86-ham",
+    "HI-C86-ve",
+    "HI-C86-hamen-tumhen",
+    "HI-C86-aapko-use",
+    "HI-C86-koi-article",
+    "HI-C86-repaso-sarvanam",
+    "HI-C86-sintesis-sarvanam"
+  ]
+}

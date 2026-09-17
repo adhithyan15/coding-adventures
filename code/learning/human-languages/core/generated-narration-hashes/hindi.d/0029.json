@@ -1,15 +1,16 @@
 {
   "language": "hindi",
   "chapter": 29,
-  "sourceHash": "fnv1a64:2557b5dc6ff31802",
+  "sourceHash": "fnv1a64:9d8b66b25efb0482",
   "lessonIds": [
-    "HI-C29-shaam"
+    "HI-C29-shaam",
+    "HI-S131-letter-e"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "hindi/narration/ch29.txt",
   "json": "hindi/narration/ch29.json",
-  "textHash": "fnv1a64:7d6c1e42b6f5a781",
-  "jsonHash": "fnv1a64:062e352b8201efed",
+  "textHash": "fnv1a64:e909d7cb95620db7",
+  "jsonHash": "fnv1a64:ad8d011afe67a5a6",
   "findings": []
 }

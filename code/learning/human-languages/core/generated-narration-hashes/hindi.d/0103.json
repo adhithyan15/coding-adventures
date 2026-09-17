@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:4d3028ba5891dfbe",
+  "lessonIds": [
+    "HI-C95-jaanta-hun",
+    "HI-C95-jaante-hain",
+    "HI-C95-chahiye",
+    "HI-C95-mujhe-chahiye",
+    "HI-C95-repaso-chaah",
+    "HI-C95-sintesis-chaay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch103.txt",
+  "json": "hindi/narration/ch103.json",
+  "textHash": "fnv1a64:a59402c1f250d9bb",
+  "jsonHash": "fnv1a64:6d10083e507a01a2",
+  "findings": []
+}

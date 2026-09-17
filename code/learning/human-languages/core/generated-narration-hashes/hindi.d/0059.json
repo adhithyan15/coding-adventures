@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 59,
-  "sourceHash": "fnv1a64:76a14bc2c646d613",
+  "sourceHash": "fnv1a64:b2a344b1a216a8c4",
   "lessonIds": [
     "HI-W12-schwa-drop",
     "HI-W12-ii-matra",
@@ -19,7 +19,7 @@
   "drivablePrefix": 0,
   "text": "hindi/narration/ch59.txt",
   "json": "hindi/narration/ch59.json",
-  "textHash": "fnv1a64:00a2135b6717e737",
-  "jsonHash": "fnv1a64:65945b96e5713040",
+  "textHash": "fnv1a64:13ec52bc0f04fb3f",
+  "jsonHash": "fnv1a64:3502d29bd8c002db",
   "findings": []
 }

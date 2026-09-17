@@ -96,17 +96,25 @@
       "id": "HI-A1-N-07",
       "category": "Sangya (the noun)",
       "label": "number: forming the plural of a masculine -a noun, a feminine -i noun, and a consonant-final noun",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C91-NOUN-01",
+        "HI-LEX-C91-NOUN-02",
+        "HI-LEX-C91-NOUN-03",
+        "HI-LEX-C91-NOUN-04"
+      ],
       "derivedFrom": "ES:A1-N-05",
-      "note": "No atom teaches plural morphology; `log` ('people') is introduced as a lexical item and nothing else. Mock 1 item 16 and mock 2 item 20 both turn on `do bhashaen bolti hai`."
+      "note": "Chapter 99 supplies all four plural shapes, one lesson each, using ZERO new nouns -- baccha, kitaab, bhaasha and aadmi were all already taught, so the chapter is pure morphology on known vocabulary. The note is exactly right that no atom taught plural morphology and that log was a lexical item only. The item it names, do bhaashaaen boltii hai, is read back in the synthesis lesson. The organising question is gender FIRST and ending second: a masculine -aa noun swaps the vowel, both feminine shapes add a nasal, and a masculine noun not ending in -aa does nothing at all, so the number lives in the numeral, the verb and any adjective rather than in the word."
     },
     {
       "id": "HI-A1-N-08",
       "category": "Sangya (the noun)",
       "label": "the oblique form a noun takes before a postposition (larka -> larke ko)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C91-NOUN-06",
+        "HI-LEX-C91-NOUN-05"
+      ],
       "derivedFrom": "hindi-specific",
-      "note": "No Spanish counterpart: Spanish nouns do not inflect for case. The corpus teaches `me` and the `ka` genitive but never the case change the noun in front of them undergoes."
+      "note": "The oblique is introduced by HI-C91-bacche-ko. The note is right that the corpus taught me and the ka genitive without the case change the noun undergoes -- and the lesson's point is that this is NOT a new rule: the -aa to -e bend in front of a postposition has been taught four times already on other kinds of word (the possessive mera -> mere paas, uska -> uske baad, the adjective, the habitual, the past copula), and a noun is the fourth and last kind to wear it. The load-bearing consequence is that -e now means two different things: bacce with nothing behind it is a plural, bacce with a postposition behind it is ONE child in the oblique, and the postposition is the only signal. A reader who misses it miscounts every sentence that has one."
     },
     {
       "id": "HI-A1-N-09",
@@ -122,9 +130,11 @@
       "id": "HI-A1-DET-01",
       "category": "Nirdeshak (determiners and definiteness)",
       "label": "Hindi has no article: definiteness is carried by bareness, by ek, and by a demonstrative",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C86-PRON-05"
+      ],
       "derivedFrom": "ES:A1-ART-01, ES:A1-ART-02, ES:A1-ART-03, ES:A1-ART-04",
-      "note": "The single largest structural difference from the proxy language, and the corpus never states it. Spanish spends four A1 points on the article; a learner arriving from English or Spanish needs to be told once that Hindi has none and what does the work instead. `ek chay dijiye` is taught, but as a cafe formula, not as indefiniteness."
+      "note": "HI-C86-koi-article states what the note said the corpus never stated: Hindi has no article, and a bare noun covers both a book and the book. It names the three things that carry specificity when it matters -- ek, vah, or nothing at all -- and makes the point the note asked for about ek chay dijiye, that ek is the numeral one doing indefiniteness work rather than a fixed cafe formula. The lesson ends on the habit rather than the fact: the commonest correct translation of English the is nothing."
     },
     {
       "id": "HI-A1-DET-02",
@@ -141,9 +151,11 @@
       "id": "HI-A1-DET-03",
       "category": "Nirdeshak (determiners and definiteness)",
       "label": "a demonstrative used adnominally, in front of its noun (yah kitab)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C91-NOUN-07"
+      ],
       "derivedFrom": "ES:A1-DEM-03",
-      "note": "The deixis chapter teaches yah and vah as standalone pronouns -- 'this one', 'that one' -- and never puts either in front of a noun."
+      "note": "PARTLY STALE NOTE, corrected. It said the deixis chapter teaches yah and vah as standalone pronouns and never puts either in front of a noun. The corpus DOES print the adnominal shape -- HI-C69-verb-last has yah kitaab hai and HI-C78-pehla-paath has vah kitaab padhtaa hai -- but neither lesson introduces it, so the point was genuinely uncovered and the precise complaint is that the shape was SHOWN and never TAUGHT. HI-C91-yah-kitab teaches it, and adds the reason it matters more in Hindi than the English parallel suggests: with no article in the language, yah and vah are what a writer reaches for where English would have used the, so vah aadmi is often best read as THE man rather than THAT man."
     },
     {
       "id": "HI-A1-DET-04",
@@ -167,17 +179,23 @@
       "id": "HI-A1-DET-06",
       "category": "Nirdeshak (determiners and definiteness)",
       "label": "the remaining possessives: uska, hamara, tumhara",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C84-POSS-01",
+        "HI-LEX-C84-POSS-02",
+        "HI-LEX-C84-POSS-03"
+      ],
       "derivedFrom": "ES:A1-POS-01, ES:A1-POS-02",
-      "note": "Only mera and apka are introduced. A learner cannot say whose anything is unless it is their own or the addressee's."
+      "note": "uska, hamara and tumhara are introduced by chapter 92, beside the mera and apka the track already had. The chapter teaches them as one system rather than three words: all six end in -aa and all six agree with the THING OWNED rather than with the owner, which is the opposite of English."
     },
     {
       "id": "HI-A1-DET-07",
       "category": "Nirdeshak (determiners and definiteness)",
       "label": "the reflexive possessive apna, which replaces the possessive when the owner is the subject",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C84-POSS-04"
+      ],
       "derivedFrom": "ES:A1-PRON-04",
-      "note": "Hindi's counterpart to Spanish reflexive `se`, and it is not optional: `main mera dost` is wrong where `main apna dost` is right. BOTH mocks' personal accounts use it -- `apne dost ke sath`, `apne parivar ke sath` -- and nothing in the corpus introduces it."
+      "note": "apna is introduced by HI-C84-apna, which states the requirement the note named: main mera kaam is wrong where main apna kaam is right. One Hindi word covers my own, your own, their own and our own, and it also removes an ambiguity English cannot -- uski kitab is somebody else's book, apni kitab is his own."
     },
     {
       "id": "HI-A1-ADJ-01",
@@ -249,17 +267,22 @@
       "id": "HI-A1-ADJ-08",
       "category": "Visheshan (the adjective)",
       "label": "thoda as a hedging quantifier",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C92-DEG-01"
+      ],
       "derivedFrom": "ES:A1-NG2-03",
-      "note": "Mock 1 listening item 12 keys on `han, thodi`."
+      "note": "thoda is introduced by HI-C92-thoda, and the note's item is what the lesson is built on: mock 1 listening item 12 keys on haan, thodii. The lesson makes the ending the subject rather than the word, because that is what the item actually tests -- the answer is thodii and not thoda because hindii is feminine and the hedge agrees with what it hedges, not with the person speaking. An English speaker is caught out here because a little is a fixed lump in English and an adjective in Hindi."
     },
     {
       "id": "HI-A1-ADJ-09",
       "category": "Visheshan (the adjective)",
       "label": "comparison: X is bigger than Y",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C92-DEG-03",
+        "HI-LEX-C90-ROUT-01"
+      ],
       "derivedFrom": "ES:A1-NG2-02",
-      "note": "Hindi compares with the postposition `se`, which is untaught. See HI-A1-POST-04."
+      "note": "STALE NOTE, corrected. It said Hindi compares with the postposition se, which is untaught, and pointed at HI-A1-POST-04 -- and se was introduced by HI-C90-se in chapter 98, so this point was waiting on work already done. HI-C92-se-comparison supplies the construction. The teachable part is that Hindi has NO comparative form: English carries two machines for this, -er on short adjectives and more in front of long ones, and Hindi carries neither -- the adjective does not change and the thing measured against takes se, which is the same idea as the postposition's other uses, the comparison PROCEEDING FROM the thing measured against. The one thing to drill is word order, because English puts than X after the adjective and Hindi puts it before, which follows from the verb-final rule the track has taught since its first sentence."
     },
     {
       "id": "HI-A1-PRON-01",
@@ -293,9 +316,12 @@
       "id": "HI-A1-PRON-04",
       "category": "Sarvanam (pronouns)",
       "label": "the subject pronoun paradigm as a whole, including ham and the plural third person",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C86-PRON-01",
+        "HI-LEX-C86-PRON-02"
+      ],
       "derivedFrom": "ES:A1-PRON-01",
-      "note": "`ham` is never introduced -- mock 2 reading item 10 is `ham station par milenge` -- and neither is the plural `ve`. Three of the paradigm's slots are taught and the rest are absent."
+      "note": "ham and ve are introduced by chapter 94, completing the subject paradigm beside the main and vah the track already had. The note named the item that needed it -- mock 2 reading item 10, ham station par milenge -- and the synthesis lesson reads that sentence. The ham lesson also carries the use an English speaker does not expect: ham often stands in for main, said modestly or as part of a household, which is the same instinct that makes hamaara parivaar the natural way to say my family."
     },
     {
       "id": "HI-A1-PRON-05",
@@ -310,17 +336,23 @@
       "id": "HI-A1-PRON-06",
       "category": "Sarvanam (pronouns)",
       "label": "the other oblique pronouns: apko, use, hamen, tumhen",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C86-PRON-03",
+        "HI-LEX-C86-PRON-04"
+      ],
       "derivedFrom": "ES:A1-PRON-02, ES:A1-SV-05",
-      "note": "Only mujhe is introduced, and only as part of the pasand frame rather than as a paradigm."
+      "note": "hamen, tumhen, aapko and use are introduced by chapter 94. The note was right that mujhe existed only inside the pasand frame; the chapter's finding is that the frame was never a lump -- mujhe is main in its oblique form, and once the set is visible the liking question can be asked at any level of address. Two of the five obliques show ko plainly and three take the nasal ending."
     },
     {
       "id": "HI-A1-PRON-07",
       "category": "Sarvanam (pronouns)",
       "label": "a pronoun in front of a postposition (mere liye, mere sath, mere pas)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C84-POSS-06",
+        "HI-LEX-C84-POSS-05"
+      ],
       "derivedFrom": "ES:A1-PRON-08",
-      "note": "Hindi's counterpart to the proxy's stressed post-prepositional pronouns. Needs the oblique possessive plus a compound postposition, and neither is taught."
+      "note": "mere liye, mere saath and mere paas are taught together as one pattern by HI-C84-mere-liye and HI-C84-mere-paas. The oblique the note said was untaught is the chapter's central insight: chapter 2 taught mere as the PLURAL of mera, and it is also the oblique, so -aa becomes -e in front of any postposition. Identical spelling, two jobs, and only what follows tells you which."
     },
     {
       "id": "HI-A1-PRON-08",
@@ -344,9 +376,12 @@
       "id": "HI-A1-PRON-10",
       "category": "Sarvanam (pronouns)",
       "label": "the exclamative: kitna accha!",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C92-DEG-05",
+        "HI-LEX-C92-DEG-04"
+      ],
       "derivedFrom": "ES:A1-PRON-07",
-      "note": "`kitna` is introduced only inside the memorised age question."
+      "note": "The exclamative is introduced by HI-C92-kitna-achchha, and the note is exactly right that kitna was introduced only inside the memorised age question. HI-C92-kitna lets the word out of that sentence first -- it bends like every other -aa word, and Hindi does not split how much from how many the way English does, because English sorts nouns into countable and uncountable and Hindi asks one question and lets the noun answer. The exclamative then adds nothing at all: it is the question word in front of an adjective with the verb and the rising voice taken away, exactly as English turns how good is it into how good. Both words bend together, so the phrase rhymes with itself in either gender, and the rhyme is a usable check."
     },
     {
       "id": "HI-A1-NUM-01",
@@ -373,7 +408,7 @@
       "label": "the numerals twenty-one to one hundred",
       "probe": null,
       "derivedFrom": "ES:A1-Q-01, ES:A1-NG2-01",
-      "note": "The corpus stops at bis. Mock 2 reading item 4 prices tea at `pachas rupaye`, and no price, no age over twenty and no house number can be read or said."
+      "note": "STAYS OPEN ON PURPOSE, and what is now covered is worth stating precisely. Chapter 104 teaches the SEVEN RUNGS from thirty to ninety -- tiis, chaaliis, pachaas, saath, sattar, assii, nabbe -- and chapter 79 teaches sau beside the rupee. That is every price, age and house number that LANDS ON a rung, including mock 2 reading item 4 (pachaas rupaye), which the old note named as unreadable. IT IS NOT THE WHOLE RANGE. Hindi does not build 21-99 from parts a learner can reassemble: pacciis is not paanch plus biis in any workable sense, and the seventy-two numbers between the rungs are each individually eroded and have to be met as words. The chapter says so rather than inventing a rule, and teaches the one thing that does hold -- HINDI PUTS THE SMALL NUMBER FIRST, so pacciis opens with the sound of paanch, the opposite of English. Probing this point on the rungs alone would claim a range the corpus does not teach; HL-C386 is the precedent for why that is not done. To close it honestly the track needs the in-between words themselves, which is a vocabulary tranche rather than a chapter."
     },
     {
       "id": "HI-A1-NUM-04",
@@ -448,9 +483,11 @@
       "id": "HI-A1-V-03",
       "category": "Kriya (the verb)",
       "label": "the copula with tum: ho",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C85-IMP-03"
+      ],
       "derivedFrom": "ES:A1-V-01",
-      "note": "`ho` occurs inside the age frame but no atom introduces the tum copula, so nothing demonstrates it independently of that one memorised question."
+      "note": "ho is introduced by HI-C85-tum-ho, which completes the copula set (hun, ho, hain, hai) for the first time. The note's complaint was precise -- ho occurred inside the age frame as a lump and no atom introduced it independently -- so the lesson gives it on its own and then shows the level matching end to end, where tum takes ho and bolo while aap takes hain and boliye."
     },
     {
       "id": "HI-A1-V-04",
@@ -483,9 +520,15 @@
       "id": "HI-A1-V-07",
       "category": "Kriya (the verb)",
       "label": "the present continuous raha/rahi/rahe hai as a productive pattern",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C89-CONT-01",
+        "HI-LEX-C89-CONT-02",
+        "HI-LEX-C89-CONT-03",
+        "HI-LEX-C89-CONT-04",
+        "HI-LEX-C89-CONT-05"
+      ],
       "derivedFrom": "ES:A1-V-03, ES:A1-V-13",
-      "note": "It appears twice as a fixed frame -- `ek baj raha hai` in the hour lesson, `barish ho rahi hai` in the weather lesson -- but no atom presents it as a pattern applying to any stem, the way the habitual lesson does for -ta."
+      "note": "Chapter 97 supplies the pattern, one lesson per row of the grid plus a lesson on the contrast with the habitual. The note was exactly right and needed no correction: the pattern existed only as two fixed frames, ek baj rahaa hai in the hour lesson and baarish ho rahii hai in the weather lesson, with no atom presenting it as something that applies to any stem. Those two frames are COLLECTED rather than left as lumps -- the review lesson takes both apart and shows that the only difference between them is the gender of the subject, which is what the middle word was reporting all along. The shape is unusually tidy: three words with one job each, and the stem stays BARE, which is what makes it productive where the habitual needs an ending on the stem. The chapter also names what an English speaker gets for free, because English keeps the same do/am-doing split Hindi keeps where French, German and Spanish translate both with one present tense."
     },
     {
       "id": "HI-A1-V-08",
@@ -500,9 +543,11 @@
       "id": "HI-A1-V-09",
       "category": "Kriya (the verb)",
       "label": "possession: mere pas X hai",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C84-POSS-05"
+      ],
       "derivedFrom": "ES:A1-NG1-01",
-      "note": "Hindi has no verb 'to have'; possession is `at me there is`, which needs `pas` and the oblique possessive. Neither is taught, so a learner cannot say they have anything."
+      "note": "mere paas is introduced by HI-C84-mere-paas. The lesson teaches the construction as the note describes it -- Hindi has no verb to have, so possession is at me there is -- and makes the agreement explicit: the thing owned is the subject, so hai agrees with it and not with the possessor."
     },
     {
       "id": "HI-A1-V-10",
@@ -517,17 +562,28 @@
       "id": "HI-A1-V-11",
       "category": "Kriya (the verb)",
       "label": "forming the future productively: -unga / -ega / -engi and its agreement",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C88-FUT-01",
+        "HI-LEX-C88-FUT-02",
+        "HI-LEX-C88-FUT-03",
+        "HI-LEX-C88-FUT-04",
+        "HI-LEX-C88-FUT-05"
+      ],
       "derivedFrom": "ES:A1-F3-05, ES:A1-F3-06",
-      "note": "Both mocks depend on it in the first scored part: mock 1 reading item 8 `main panch baje aunga`, item 11 `bas das minat me aegi`, mock 2 items 8 and 13. `milenge` is taught as one memorised farewell, not as a tense."
+      "note": "Chapter 96 supplies the paradigm the point asks for: one lesson per row, mai/tum/vah/ham-ve-aap, with the -aa/-ii gender pair on every form. HALF THE OLD NOTE WAS TOO STRONG and is corrected here. milenge is NOT taught as one memorised farewell: HI-C04-milenge takes it apart, names the root mil-, names -enge as the plural future, and states that Hindi marks the future with an ending on the stem rather than a helper word. What chapter 4 gives is ONE CELL of a grid -- the plural, with no person and no gender -- which is why the point was genuinely uncovered, and the new chapter reads that farewell back as a stem plus this ending. The chapter was blocked on script rather than on grammar: aaungaa and jaaungaa put a long u where the stem ends in a vowel, so nothing can carry the matra and it has to be written as the independent letter uu, which had never been taught. HI-S127/128/129 teach u, uu and o, and aaoge needs the third for the same reason."
     },
     {
       "id": "HI-A1-V-12",
       "category": "Kriya (the verb)",
       "label": "the past copula tha/thi, and the past habitual",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C87-PAST-01",
+        "HI-LEX-C87-PAST-02",
+        "HI-LEX-C87-PAST-03",
+        "HI-LEX-C87-PAST-05"
+      ],
       "derivedFrom": "ES:A1-V-04, ES:A1-V-05",
-      "note": "Nothing in the corpus is past-tense. The proxy spends five A1 points on past morphology; Hindi needs at minimum `tha` to say where one was or what one used to do."
+      "note": "Chapter 95 supplies the whole of what the note asked for. tha, thi and the are each introduced by their own lesson, the negative nahin tha by another, and the past habitual by HI-C87-bolta-thaa, which is the present habitual the track has taught since chapter 5 with its final word swapped -- so the past costs one substitution rather than a new conjugation. The note's claim that NOTHING in the corpus was past-tense had a mechanical cause worth recording: the letter tha was never taught anywhere in the track, so every past-tense form was a glyph the reader had not been given. HI-S126-letter-tha teaches it, which is what unblocked this point."
     },
     {
       "id": "HI-A1-V-13",
@@ -559,17 +615,22 @@
       "id": "HI-A1-V-16",
       "category": "Kriya (the verb)",
       "label": "the plain and familiar imperatives (bol, bolo, boliye as a series)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C85-IMP-01",
+        "HI-LEX-C85-IMP-02"
+      ],
       "derivedFrom": "ES:A1-V-11",
-      "note": "Only the -iye form is introduced, and only inside two fixed courtesy phrases."
+      "note": "Chapter 93 teaches the series the point asks for. bolo (-o, the tum level) and boliye (-iye, the aap level) are each introduced by their own lesson, and the bare-stem tu form is taught in the same chapter for RECOGNITION rather than production, because using it wrongly costs far more than using it gains. The -iye lesson also takes maaf kijiye apart, which the note named as the only place the form had appeared: it was a respectful command all along."
     },
     {
       "id": "HI-A1-V-17",
       "category": "Kriya (the verb)",
       "label": "the negative imperative with mat",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C85-IMP-04"
+      ],
       "derivedFrom": "ES:A1-F4-06",
-      "note": "Mock 2 reading item 3 is exactly this: `yahan mat baithiye`."
+      "note": "mat is introduced by HI-C85-mat as the negative Hindi RESERVES for commands, distinct from the statement negative the track already had -- which is the error an English speaker makes, because English uses not for both. The synthesis lesson reads the exact item the note cites, yahan mat baithiye, and takes it apart into its three taught pieces."
     },
     {
       "id": "HI-A1-V-18",
@@ -605,9 +666,12 @@
       "id": "HI-A1-V-21",
       "category": "Kriya (the verb)",
       "label": "chahiye for wanting and needing",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C95-NEED-01",
+        "HI-LEX-C95-NEED-02"
+      ],
       "derivedFrom": "ES:A1-F3-04",
-      "note": "Still untaught, and now clearly distinct from what IS taught. chaahnaa has an atom (HI-LEX-CHAHNA-01, chapter 70) and takes another VERB; chaahiye takes a noun, is the form the mocks actually use (mujhe chaay chaahiye), and has no exponent. It also needs the independent vowel e, which no Hindi writing lesson has drawn -- so this is a script lesson as much as a vocabulary one."
+      "note": "Introduced by HI-C95-chahiye and HI-C95-mujhe-chahiye. THE NOTE WAS RIGHT ON BOTH COUNTS, including the one a mechanical check denied. It said chaahiye needs the independent vowel e, which no Hindi writing lesson has drawn -- and the glyph check answered ok, because measureScriptClosure credits a glyph to any script lesson whose BODY contains it, and HI-S117-letter-ca lists `ek do tiin chaar paanch`. The letter was credited to the cha lesson. HI-S131-letter-e now draws it, at chapter 29. The note is also right that chaahnaa (HI-LEX-CHAHNA-01, chapter 70) is a different thing: chaahtaa takes another VERB and chaahiye takes a NOUN, so the two are told apart by what FOLLOWS rather than by what they mean, since English says want for both. Two further teachables the note does not name: chaahiye NEVER BENDS -- no gender, no number, the same five letters whoever is speaking -- and its wanter is DATIVE, which makes `mujhe chaay chaahiye` the liking sentence with one word swapped. Wanting a thing and liking a thing happen to you; wanting to act is something you do, and Hindi draws that line with the case of the first word."
     },
     {
       "id": "HI-A1-V-22",
@@ -634,9 +698,12 @@
       "id": "HI-A1-V-24",
       "category": "Kriya (the verb)",
       "label": "janna, to know",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C95-KNOW-01",
+        "HI-LEX-C95-KNOW-02"
+      ],
       "derivedFrom": "ES:A1-F2-13, ES:A1-F2-14, ES:A1-NG7-01",
-      "note": "The negation lesson's own example sentence is `main nahin janta`, so the learner meets the word, but no atom introduces it and it cannot be used affirmatively."
+      "note": "Introduced by HI-C95-jaanta-hun and HI-C95-jaante-hain. The note is right and the defect is SHARPER than it states. It says the negation lesson's example sentence is `main nahiin jaantaa` so the learner meets the word while no atom introduces it. In fact jaantaa is in HI-C07-nahin's HEADWORD -- `nahiin / jaantaa` -- glossed as the masculine present form of to know, while all three of that lesson's atoms are about nahiin itself: its Sanskrit root, its Indo-European cousins, its two jobs. THE HEADWORD PROMISED A WORD THE ATOMS NEVER DELIVERED, so a learner could deny knowing something and not claim it. The affirmative needs no new grammar: take nahiin out and huun comes back, because a Hindi present needs its copula and the negative drops it. It did need a LETTER -- ja, which the corrected glyph check found had never been drawn either, and which HI-S132-letter-ja now teaches at chapter 30."
     },
     {
       "id": "HI-A1-V-25",
@@ -702,57 +769,78 @@
       "id": "HI-A1-POST-04",
       "category": "Parsarg (postpositions and case)",
       "label": "se for origin, instrument and means (Dilli se, bas se)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C90-ROUT-01",
+        "HI-LEX-C90-ROUT-02"
+      ],
       "derivedFrom": "ES:A1-NG3-07, ES:A1-F1-03",
-      "note": "Load-bearing in both mocks: `Aman Dilli se hai`, `Ravi bas se school jata hai`, `ap kahan se hain?`, `main Bhopal se hun`, `train se kam par jata hai`. Never introduced, and the A1 speaking interview's origin question cannot be answered without it."
+      "note": "se is introduced by HI-C90-se, and the note needed no correction: it was never introduced, it is load-bearing in both mocks (Aman Dilli se hai, Ravi bas se school jata hai, ap kahan se hain, main Bhopal se hun, train se kam par jata hai), and the speaking interview's origin question cannot be answered without it. The lesson teaches origin and means as ONE relation rather than two words -- the thing proceeds from the noun, whether that noun is a city or a hand -- which is why a vehicle takes the same postposition. HI-C90-bas then supplies the vehicle the mocks use, and it is a second word rather than a second sense: the Persian bas meaning enough and the English bus shortened from omnibus are spelled alike, and what tells them apart is whether a postposition follows."
     },
     {
       "id": "HI-A1-POST-05",
       "category": "Parsarg (postpositions and case)",
       "label": "par for location at a point (ghar par, station par)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C87-POST-01"
+      ],
       "derivedFrom": "ES:A1-NG3-01",
-      "note": "Mock 1 reading item 14 and mock 2 item 10 both turn on it."
+      "note": "par is introduced by HI-C87-par. The note is precise about where it was needed: mock 1 reading item 14 is mai ghar par hu, which the chapter reads back word for word in its synthesis lesson. par had appeared in the corpus only inside the chapter-94 phrase ham station par milenge, where it was carried as part of a lump and no atom presented it as a word. The lesson also states the ordering that makes the whole class learnable -- the small word trails its noun, which is what POSTposition means."
     },
     {
       "id": "HI-A1-POST-06",
       "category": "Parsarg (postpositions and case)",
       "label": "ko marking an animate or definite object, and a recipient",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C91-NOUN-05"
+      ],
       "derivedFrom": "ES:A1-SV-04, ES:A1-SV-05, ES:A1-PRON-02",
-      "note": "The exact counterpart of the proxy's `a` before a human direct object -- the same demand, a different marker. Only the fused `mujhe` is present; `ko` itself is never introduced."
+      "note": "ko is introduced by HI-C91-ko, and the note is exactly right that only the fused mujhe was present. The lesson takes aapko apart in front of the reader -- aap plus ko -- so the postposition is recovered from a word they already say rather than presented as new. It teaches both jobs the point names: the recipient (bacce ko, TO the child) and the marker a definite or human object wears (aadmi ko). The note's own observation is carried into the lesson, that this is the exact counterpart of the proxy's a before a human direct object, so the demand is not unique to Hindi and only the marker is."
     },
     {
       "id": "HI-A1-POST-07",
       "category": "Parsarg (postpositions and case)",
       "label": "ke sath for accompaniment, and ke bina for its absence",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C93-REL-01",
+        "HI-LEX-C93-REL-02"
+      ],
       "derivedFrom": "ES:A1-NG1-02",
-      "note": "Mock 1's account has `apne dost ke sath` and mock 2's has `apne parivar ke sath`."
+      "note": "ke saath is introduced by HI-C93-ke-saath and ke binaa by HI-C93-ke-binaa, and the note's own examples are constructible as printed: apnaa, dost and parivaar were all already taught, so mock 1's `apne dost ke saath` and mock 2's `apne parivaar ke saath` need nothing beyond the one new word. The teachable part is that these are not prepositions. dost ke saath is, piece by piece, THE FRIEND'S COMPANY -- a possessive phrase whose head noun happens to name a relation -- which is why the middle word is ke and never kaa, and why a pronoun needs no middle word at all. binaa is the one relation word in the family that may also stand in FRONT of its noun (binaa chaay ke), and the lesson teaches the ordinary order and flags the other so a reader is not surprised by it."
     },
     {
       "id": "HI-A1-POST-08",
       "category": "Parsarg (postpositions and case)",
       "label": "spatial compound postpositions: ke pas, ke samne, ke piche",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C93-REL-03",
+        "HI-LEX-C93-REL-04",
+        "HI-LEX-C93-REL-05"
+      ],
       "derivedFrom": "ES:A1-NG3-02, ES:A1-NG3-03, ES:A1-NG3-05",
-      "note": "Mock 2 listening item 6 `bas station ke samne hai` and item 11 `nahin, pas hai`. The proxy spends three A1 points on relative position, distance and direction; Hindi routes all three through this construction and none of it is taught."
+      "note": "All three are introduced in chapter 101: ke paas by HI-C93-ke-paas, ke saamne by HI-C93-ke-saamne and ke piichhe by HI-C93-ke-piichhe, so the note's mock 2 items -- listening item 6 `bas station ke saamne hai` and item 11 `nahiin, paas hai` -- are both now decodable. The note is right that the proxy spends three separate A1 points on relative position, distance and direction while Hindi routes all three through one construction, and that is exactly why one chapter closes all three. The load-bearing distinction the lessons drill is that paas answers a DIFFERENT QUESTION from the other two: it gives distance and no direction, while saamne and piichhe give a side and say nothing about distance. Mock 2's own pair of items tests precisely that, since item 11 concedes the weaker claim after item 6 made the stronger one. paas also arrives with a debt already paid: HI-C84-mere-paas taught it in chapter 92 as the phrase for HAVING without ever saying what the word means, and the physical sense taught here is the one the possessive sense was borrowed from."
     },
     {
       "id": "HI-A1-POST-09",
       "category": "Parsarg (postpositions and case)",
       "label": "se ... tak for a span of days or hours",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C94-SPAN-01",
+        "HI-LEX-C94-SPAN-02",
+        "HI-LEX-C94-SPAN-03"
+      ],
       "derivedFrom": "ES:A1-NG3-06",
-      "note": "Mock 2's account opens `somvar se shukravar tak`. The weekday nouns are taught; the frame that spans them is not."
+      "note": "Introduced by HI-C94-tak (the tak postposition on its own), HI-C94-se-tak-din (somvaar se shukravaar tak) and HI-C94-se-tak-samay (the same frame over parts of a day and over clock hours). The note was EXACTLY RIGHT and needed no correction: the weekday nouns were taught in chapter 10 and se in chapter 98, so the only thing missing was tak and the permission to use the two together. The teachable part is that English builds a span out of from and to standing IN FRONT of their days while Hindi marks each end from behind, so the phrase reads as two packages rather than one long string: [somvaar se] [shukravaar tak]. tak does not require se -- paanch baje tak is complete on its own and is how the word most often appears on a sign -- so the lessons teach it alone before pairing it."
     },
     {
       "id": "HI-A1-POST-10",
       "category": "Parsarg (postpositions and case)",
       "label": "ke liye for purpose and benefit",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C93-REL-06",
+        "HI-LEX-C93-REL-07"
+      ],
       "derivedFrom": "ES:A1-SUB-07, ES:A1-PRON-08",
-      "note": "The proxy expresses purpose with para plus an infinitive; Hindi uses the oblique infinitive plus ke liye. Neither the postposition nor the oblique infinitive is taught."
+      "note": "The note's claim that neither the postposition nor the oblique infinitive is taught was half stale: HI-C84-mere-liye teaches `mere liye` in chapter 92, so the postposition was already in the corpus with a pronoun in front of it. What was genuinely missing was `ke liye` after a NOUN -- which needs the separate `ke` a pronoun carries inside itself -- and the oblique infinitive, which chapter 101 supplies as the fifth kind of word to wear the oblique -e."
     },
     {
       "id": "HI-A1-ADV-01",
@@ -808,9 +896,13 @@
       "id": "HI-A1-ADV-06",
       "category": "Kriya-visheshan (adverbs)",
       "label": "evaluative manner: doing something well, and doing it badly",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C92-DEG-02",
+        "HI-LEX-C41-ADJ-03",
+        "HI-LEX-C83-CHAR-01"
+      ],
       "derivedFrom": "ES:A1-ADV-04, ES:A1-NG6-07",
-      "note": "`thik` and `achha` cover 'well'. No word for 'badly' -- neither `bura` nor `kharab` -- is introduced, so the proxy's bien/mal pair is half present and cannot be contrasted."
+      "note": "STALE NOTE, corrected. It said no word for badly, neither bura nor kharab, is introduced, so the proxy's bien/mal pair is half present and cannot be contrasted. buraa IS introduced, by HI-C83-buraa in chapter 91, which landed after the note was written -- so the pair was already whole in the corpus and what was actually missing was the ADVERBIAL use of both. HI-C92-achchha-buraa supplies it, and the observation worth keeping is that Hindi needs no second shelf of words: English splits good/well and bad/badly and marks the second with -ly, while Hindi uses the same word and lets its POSITION say which job it is doing. It still bends for gender even when it is doing an English adverb's work, which is the second half of the same instinct to unlearn."
     },
     {
       "id": "HI-A1-ADV-07",
@@ -974,9 +1066,12 @@
       "id": "HI-A1-NEG-03",
       "category": "Nishedh (negation)",
       "label": "contrasting two alternatives negatively (X se nahin, Y se)",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C94-SPAN-05",
+        "HI-LEX-C94-SPAN-04"
+      ],
       "derivedFrom": "ES:A1-CO-02",
-      "note": "Mock 2 reading item 13 is `main bas se nahin, train se jaunga`. Needs `se`."
+      "note": "Introduced by HI-C94-se-nahiin, with the one new noun tren supplied by HI-C94-train. The note was EXACTLY RIGHT that the frame needs se, and se was taught in chapter 98 -- and bas se with it, so mock 2 reading item 13 (main bas se nahiin, tren se jaaungaa) cost a single word. Two things are worth drilling. First, EACH OPTION KEEPS ITS OWN se: English drops the second by, Hindi does not, so counting the se tells a reader whether a swap is being offered. Second, the POSITION of nahiin says how much is being denied -- in front of the verb it denies the whole sentence, after a noun-plus-postposition it denies only that phrase -- and an item asking how the speaker will travel is answered by the phrase AFTER the negative, which is why the paper prints the rejected option first."
     },
     {
       "id": "HI-A1-NEG-04",
@@ -1011,25 +1106,32 @@
       "id": "HI-A1-S-03",
       "category": "Vakya (the sentence)",
       "label": "the vocative: addressing a named reader or hearer",
-      "probe": null,
+      "probe": [
+        "HI-CONCEPT-C97-ADDRESS-01"
+      ],
       "derivedFrom": "ES:A1-SN-04",
-      "note": "The writing task in both mocks is addressed to a named person -- Reema, Mohan -- and the rubric awards 10 of that task's 60 points for a clear named reader. No atom covers address."
+      "note": "The writing task in both mocks is addressed to a named person -- Reema, Mohan -- and the rubric awards 10 of that task's 60 points for a clear named reader. HI-C97-naam-ji introduces the address itself: a name with जी after it, the honorific the track taught long ago, now in a new position. HI-C97-priya adds the written opening that sits on the other side of the name, but the probe rests on the address atom alone, which is what the rubric line names."
     },
     {
       "id": "HI-A1-S-04",
       "category": "Vakya (the sentence)",
       "label": "closing a written sentence with the danda",
-      "probe": null,
+      "probe": [
+        "HI-SCRIPT-DANDA-01"
+      ],
       "derivedFrom": "hindi-specific",
-      "note": "No Spanish counterpart -- the proxy's punctuation points are about the full stop, the comma and the inverted question mark. HI-W06-name-sentence-stop teaches the danda and declares an EMPTY `introduces` list, so it contributes no atom and cannot be probed. The gap is in the lesson's knowledge contract, not in the teaching."
+      "note": "CLOSED AS A METADATA REPAIR, exactly as this note predicted: 'the gap is in the lesson's knowledge contract, not in the teaching'. HI-W06-name-sentence-stop shows the danda, explains that it is not part of the preceding word, and grades a written activity on it -- and declared an EMPTY introduces list, so it contributed no atom and could not be probed. It now introduces HI-SCRIPT-DANDA-01, and HI-W06-two-sentence-no-model pays it off: that lesson asks for two sentences with no model on the page, so the reader has to produce the mark unaided. No new teaching, no new prose, no duration change. A rare case where a note was precisely right about its own cause and the fix cost nothing."
     },
     {
       "id": "HI-A1-S-05",
       "category": "Vakya (the sentence)",
       "label": "producing a connected two-sentence message for a named reader",
-      "probe": null,
+      "probe": [
+        "HI-CONCEPT-C97-MESSAGE-01",
+        "HI-CONCEPT-C97-ADDRESS-01"
+      ],
       "derivedFrom": "ES:A1-NE09-02",
-      "note": "HI-W06-two-sentence-card and HI-W06-two-sentence-no-model teach it and, like HI-A1-S-04, declare empty introduces lists. The A1 writing paper's second task -- 30 to 40 words to a named reader, 60 of that paper's 100 points -- rests on this rung."
+      "note": "The A1 writing paper's second task -- 30 to 40 words to a named reader, 60 of that paper's 100 points -- rests on this rung. HI-W06-two-sentence-card and HI-W06-two-sentence-no-model deliver the connected two-sentence half with empty introduces lists and no named reader at all; they write a card, not a message to somebody. HI-C97-sandesh supplies the missing half as an atom -- the three stacked parts of a message, opening line naming the reader, sentences underneath, writer's name at the foot -- and HI-C97-sintesis-sandesh has the reader produce all three from a cue with no model. The probe pairs that shape with the address it opens with. The task's word count is still well above what the corpus asks a reader to produce here."
     },
     {
       "id": "HI-A1-CJ-01",
@@ -1146,9 +1248,11 @@
       "id": "HI-A1-T-06",
       "category": "Samay aur tarikh (time and date)",
       "label": "naming a clock time as an appointment: X baje",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C88-TIME-01"
+      ],
       "derivedFrom": "ES:A1-NG4-01, ES:A1-NG1-04",
-      "note": "The hour lesson teaches the predicate `ek baj raha hai` -- it IS one o'clock -- but not the adverbial `baje` that both mocks use throughout: `panch baje aunga`, `nau baje shuru hoga`, `sat baje uthti hun`, `char baje`. Reading the hour is taught; arranging to meet at it is not."
+      "note": "baje is introduced by HI-C88-baje. The note is exactly right about what was missing: chapter 18 teaches bajnaa as a PREDICATE -- ek baj rahaa hai, it IS one o'clock -- and never the adverbial form that sits beside a number to fix a time to act at. The lesson teaches it as the same bell verb in a different shape, states that Hindi has no separate word for 'at', and places the time phrase in the seat the place phrase already took, after the person and before the verb. It pairs with the future in the same chapter because that is how both mocks print it: a number, baje, and a future verb."
     },
     {
       "id": "HI-A1-T-07",
@@ -1172,9 +1276,12 @@
       "id": "HI-A1-T-09",
       "category": "Samay aur tarikh (time and date)",
       "label": "before and after: pahle and baad",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C90-ROUT-05",
+        "HI-LEX-C90-ROUT-06"
+      ],
       "derivedFrom": "ES:A1-NG4-03, ES:A1-NG3-06",
-      "note": "Nothing can be sequenced in time."
+      "note": "pahle and ke baad are introduced by HI-C90-pahle and HI-C90-baad. The note read in full 'Nothing can be sequenced in time', and that was true: the track could state facts about a day and not put two of them in an order, so a one-minute prepared description was four unrelated statements. The pair is asymmetric and the lessons say so rather than inventing a reason -- before takes se (X se pahle) and after takes ke (X ke baad) -- and ke baad is shown to be the possessive ka/ke/ki already taught for uska and hamara, used as glue: the after OF work."
     },
     {
       "id": "HI-A1-SCR-01",
@@ -1238,10 +1345,11 @@
       "label": "the nasalisation marks: candrabindu, and the anusvara it is confused with",
       "probe": [
         "HI-SCRIPT-CHANDRABINDU-01",
-        "HI-CONCEPT-C07-HAAN-01"
+        "HI-CONCEPT-C07-HAAN-01",
+        "HI-SCRIPT-RECOG-148"
       ],
       "derivedFrom": "ES:A1-O2-02",
-      "note": "Mapped to the proxy's diacritic point: both are a mark that changes a word without changing a letter."
+      "note": "THIS POINT WAS HALF TRUE WHILE MARKED COVERED. Its label names the candrabindu AND the anusvaara it is confused with; the candrabindu had a lesson, the anusvaara had none, and HI-W12-chandrabindu said so in its own body -- 'there is a plain dot without the crescent ... FOR NOW: crescent plus dot means through the nose'. A lesson recording a debt it has no way to notice being paid, which is the fifth variety of stale claim catalogued in lessons.d. THE ANUSVAARA IS THE MOST-USED GLYPH THE CORPUS NEVER TAUGHT: 60 headwords, from chapter 2, including main, hain, mein and hindii. HI-S148-sign-anusvara draws it at chapter 16 and the candrabindu's deferral is rewritten to point back at it rather than forward at nothing."
     },
     {
       "id": "HI-A1-SCR-08",
@@ -1311,25 +1419,39 @@
       "id": "HI-A1-SCR-14",
       "category": "Devanagari lipi (script and orthography)",
       "label": "the remaining matras: uu, o, au and the vocalic ri",
-      "probe": null,
+      "probe": [
+        "HI-SCRIPT-RECOG-149",
+        "HI-SCRIPT-RECOG-150",
+        "HI-SCRIPT-RECOG-134",
+        "HI-SCRIPT-RECOG-144"
+      ],
       "derivedFrom": "ES:A1-O1-02",
-      "note": "No atom introduces them, so a word as ordinary as `do` or `kaun` cannot be decoded from taught pieces."
+      "note": "All four are now drawn, and three of them were on the undrawn list only because nobody had checked which lesson was actually teaching them. The uu-maatraa was credited to HI-W06-name-sentence-stop, a lesson about the DANDA whose headword is puurna viraam; the o-maatraa to HI-W01-shirorekha-na-ma, a lesson about the HEAD-LINE whose headword is shirorekhaa (HL-C386). The au-maatraa had a real lesson already. The vocalic-r sign is the one that arrives ON TIME, at chapter 7, because its carrier ka is drawn at chapter 7 and its only headword kripayaa is at chapter 8 -- HL-C384 had wrongly listed it among glyphs that can never be on time, counting Sanskrit roots quoted in etymology notes as first use. The uu-maatraa is taught off its short twin (same hook, longer tail, longer vowel) and the o-maatraa off DO, one consonant and one mark, the plainest example in the language."
     },
     {
       "id": "HI-A1-SCR-15",
       "category": "Devanagari lipi (script and orthography)",
       "label": "the full consonant series, ka-varga through pa-varga and the semivowels and sibilants",
-      "probe": null,
+      "probe": [
+        "HI-SCRIPT-RECOG-142",
+        "HI-SCRIPT-RECOG-143",
+        "HI-SCRIPT-RECOG-145",
+        "HI-SCRIPT-RECOG-146",
+        "HI-SCRIPT-RECOG-147"
+      ],
       "derivedFrom": "ES:A1-O1-01, ES:A1-O1-03",
-      "note": "The proxy's alphabet point, and the place the proxy most understates Hindi's demand. The track has letter atoms for eighteen consonants (na ma ka ta ra sa pa ha ya ca ssa la kha da dha bha ba retroflex-da). Fifteen more that ordinary A1 text needs -- ga gha cha ja jha retroflex-ta retroflex-tha retroflex-dha retroflex-na tha pha plain-ba va sha -- have none. Since the A1 reading paper forbids romanization, the letters with no atom are a hard ceiling on it."
+      "note": "CLOSED ON THE SECOND ATTEMPT, and the first attempt is the more useful record. The original note claimed FIFTEEN consonants were missing and named them. An earlier change probed this point as covered on a series that looked complete with two letters left; THAT PROBE WAS WITHDRAWN BEFORE MERGE, because the audit helper credited a glyph to any script lesson whose HEADWORD contained it and a headword can be a whole word -- a lesson about the head-line (shirorekhaa) was silently teaching sha, one about the danda (puurna viraam) was teaching va, and a form lesson carrying a name was teaching retroflex-na. HL-C383's bug one level up, logged as HL-C386. Under the corrected rule -- a glyph is taught only when its lesson's headword is a GLYPH INVENTORY, every token a base plus at most one combining mark -- sha, va and retroflex-na were real debt and are now drawn (HI-S145, HI-S146, HI-S147), alongside retroflex ta and tha. Every varga is complete. TWO GLYPHS REMAIN AND NEITHER IS DEBT: nya appears three times in the corpus and never standalone, always inside the conjunct j-nya that HI-W05-conjuncts teaches as one of its three special shapes; nga appears zero times and is not in data/scripts/devanagari.json at all (HL-C385). If that reasoning is rejected, this is the probe to remove -- and it has been removed once already."
     },
     {
       "id": "HI-A1-SCR-16",
       "category": "Devanagari lipi (script and orthography)",
       "label": "the nuqta letters qa, kha, ga, za, fa and the flapped ra, rha",
-      "probe": null,
+      "probe": [
+        "HI-SCRIPT-RECOG-140",
+        "HI-SCRIPT-RECOG-141"
+      ],
       "derivedFrom": "hindi-specific",
-      "note": "The single sharpest finding in this file, and one the proxy could never have surfaced. The corpus's own headwords are FULL of nuqta: shukriya, khushi, zarur, safed, darvaza, mez, sabzi, zyada, safar, tohfa, bukhar, fasal, khushbu, mulaqat. Learners are shown the letters constantly and never taught the mark."
+      "note": "Was the single sharpest finding in this file. The corpus's own headwords carry a nuqta in 36 places -- khushi, maaf, safed, farvari, padhna, darvaza, bada, zarur, safar, mulaqat, mez, sabzi, sadak, bazar, tohfa, khushbu, bukhar, zyada, fasal and more -- the first of them in the second chapter, and the mark itself was never taught. HI-C37-khaana named it for ONE pair, khaanaa against khaanaa, as a fact about those two words; nothing generalised it to the other 34. HI-S140-nuqta draws the dot and the two flaps it makes; HI-S141-nuqta-borrowed draws the four that carry borrowed sounds. The mark had to wait for its carriers: retroflex da was not drawn until chapter 59, so no honest lesson could come earlier. A CORRECTION TO THIS NOTE'S OWN EVIDENCE: it used to lead with shukriya, which carries no nuqta at all. Fourteen examples, one of them wrong, and nobody had checked. Of the seven carriers the script data inventories, ga is the one the corpus never once uses with a dot, so neither lesson teaches it."
     },
     {
       "id": "HI-A1-SCR-17",
@@ -1424,9 +1546,11 @@
       "id": "HI-A1-PH-05",
       "category": "Uccharan (pronunciation)",
       "label": "the borrowed consonants z, f and q as sounds, not just as spellings",
-      "probe": null,
+      "probe": [
+        "HI-SCRIPT-RECOG-141"
+      ],
       "derivedFrom": "hindi-specific",
-      "note": "The spoken twin of HI-A1-SCR-16."
+      "note": "The spoken twin of HI-A1-SCR-16, closed the way PH-01 through PH-04 were: on a script atom that teaches the contrast rather than a separate pronunciation lesson. HI-S141-nuqta-borrowed names z, f, x and q as sounds, places the last two further back in the mouth than their plain letters, and says plainly that many speakers merge them. It builds on HI-C37-khaana, which had already named the nuqta for ONE pair -- khaanaa food against khaanaa a compartment -- as a fact about those two words, and told the truth that the dot is often left off in print."
     },
     {
       "id": "HI-A1-PH-06",
@@ -1988,9 +2112,16 @@
       "id": "HI-A1-F-59",
       "category": "Sanvad-karya (communicative functions)",
       "label": "describe a daily routine",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C90-ROUT-03",
+        "HI-LEX-C90-ROUT-04",
+        "HI-LEX-C90-ROUT-01",
+        "HI-LEX-C90-ROUT-05",
+        "HI-LEX-C90-ROUT-06",
+        "HI-LEX-C88-TIME-01"
+      ],
       "derivedFrom": "ES:A1-V-03",
-      "note": "The one-minute prepared description and the personal-account listening part in both mocks are routines. The habitual tense is taught, but `jana`, `uthna`, `baje`, `se` and `par` -- everything a routine is made of besides the tense -- are not."
+      "note": "PARTLY STALE NOTE, corrected. It said the habitual tense is taught but jana, uthna, baje, se and par -- everything a routine is made of besides the tense -- are not. THREE of those five were already covered by the time it was re-read: jaana has been a headword since HI-C69-go, par was introduced by HI-C87-par in chapter 95, and baje by HI-C88-baje in chapter 96. The real gap was uthna and se, plus the sequencing words the note did not mention, and chapter 98 supplies all of them. The synthesis lesson reads a four-sentence routine in which every word is taught, then asks the reader to say their own and repeat it as the other gender changing nothing but the endings -- which is exactly the shape of the one-minute prepared description both mocks set."
     },
     {
       "id": "HI-A1-F-60",
@@ -2088,9 +2219,12 @@
       "id": "HI-A1-LEX-04",
       "category": "Shabd-bhandar (core lexis)",
       "label": "attractiveness: beautiful and ugly",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C80-LOOKS-01",
+        "HI-LEX-C80-LOOKS-02"
+      ],
       "derivedFrom": "ES:A1-NG6-03",
-      "note": "Neither `sundar` nor any opposite is introduced."
+      "note": "sundar and its opposite badsurat are both introduced by HI-C80-sundar-badsurat. sundar carries the Sanskrit su- the track already met in suprabhat; badsurat is Persian bad plus Arabic surat, literally bad-faced."
     },
     {
       "id": "HI-A1-LEX-05",
@@ -2104,9 +2238,12 @@
       "id": "HI-A1-LEX-06",
       "category": "Shabd-bhandar (core lexis)",
       "label": "ease and difficulty",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C80-EASE-01",
+        "HI-LEX-C80-EASE-02"
+      ],
       "derivedFrom": "ES:A1-NG6-10",
-      "note": "`asan` and `mushkil` are both untaught, so a learner cannot say the language is hard."
+      "note": "asan and mushkil are both introduced by HI-C80-aasaan-mushkil, so a learner can now say the language is hard. Both are loans ending in a consonant and neither agrees, which the lesson teaches off the kaalaa/safed contrast rather than as a new rule."
     },
     {
       "id": "HI-A1-LEX-07",
@@ -2136,9 +2273,14 @@
       "id": "HI-A1-LEX-09",
       "category": "Shabd-bhandar (core lexis)",
       "label": "physical characteristics of a person",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C82-BODY-01",
+        "HI-LEX-C82-BODY-02",
+        "HI-LEX-C82-BODY-03",
+        "HI-LEX-C82-BODY-04"
+      ],
       "derivedFrom": "ES:A1-NE01-02",
-      "note": "`bara` and `chhota` are taught for things. No word for tall, short, thin or heavy, and the `purana` lesson says explicitly that it is used of things and not of people."
+      "note": "All four characteristics the source names are now introduced by chapter 90: lambaa (tall), naataa (short in height), patlaa (thin) and motaa (stout). chhota is deliberately NOT part of the probe even though it is taught: about a person it means YOUNGER, not short, which is why naataa had to be authored rather than the point wired on the size words the track already had."
     },
     {
       "id": "HI-A1-LEX-10",
@@ -2155,9 +2297,17 @@
       "id": "HI-A1-LEX-11",
       "category": "Shabd-bhandar (core lexis)",
       "label": "character and personality adjectives",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C41-ADJ-03",
+        "HI-LEX-C83-CHAR-01",
+        "HI-LEX-C83-CHAR-02",
+        "HI-LEX-C83-CHAR-03",
+        "HI-LEX-C83-CHAR-04",
+        "HI-LEX-C83-CHAR-05",
+        "HI-LEX-C83-CHAR-06"
+      ],
       "derivedFrom": "ES:A1-NE02-01",
-      "note": "Only `achha`. Nothing describes a person's disposition."
+      "note": "achha was the only disposition word the track had. Chapter 91 adds six: buraa (bad), hoshiyaar (clever), mehnati (hard-working), sharmeela (shy), milansaar (sociable) and gambhir (serious). These are settled character rather than mood, which is the distinction the point turns on, and the sharmeela lesson makes it explicit: the -ila ending builds a standing trait where -i would only say the person has the thing."
     },
     {
       "id": "HI-A1-LEX-12",
@@ -2227,9 +2377,13 @@
       "id": "HI-A1-LEX-18",
       "category": "Shabd-bhandar (core lexis)",
       "label": "the meals of the day",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C79-MEALS-01",
+        "HI-LEX-C79-MEALS-02",
+        "HI-LEX-C73-EATING-02"
+      ],
       "derivedFrom": "ES:A1-NE05-01",
-      "note": "`nashta` ('breakfast') is now taught in HI-C73-breakfast, and the doing-word sense of `khana` is taught in HI-C73-drink and covered at HI-A1-V-26. Lunch and dinner are still unnamed, so two thirds of the label's demand remains."
+      "note": "nashta ('breakfast') is taught in HI-C73-breakfast and the doing-word sense of khana in HI-C73-drink. HI-C79-dopahar-raat-ka-khana now names the other two meals as the transparent compounds they are -- dopahar ka khana and rat ka khana -- so all three meals of the day are nameable. Neither new name adds a word the track did not already own."
     },
     {
       "id": "HI-A1-LEX-19",
@@ -2281,9 +2435,12 @@
       "id": "HI-A1-LEX-23",
       "category": "Shabd-bhandar (core lexis)",
       "label": "educational institutions",
-      "probe": null,
+      "probe": [
+        "HI-LEX-C81-SCHOOL-01",
+        "HI-LEX-C81-SCHOOL-02"
+      ],
       "derivedFrom": "ES:A1-NE06-01",
-      "note": "`school` appears in four separate mock items across the two papers and is introduced nowhere."
+      "note": "skool and vidyalaya are both introduced by chapter 89. The note's original finding stands as the reason this was urgent: school appeared in four separate mock items across the two papers while the track could name the teacher, the student and the act of studying but not the building. Both registers are taught because the reading paper is built of signs and notices, where vidyalaya appears, and the listening paper of people talking, where skool does."
     },
     {
       "id": "HI-A1-LEX-24",

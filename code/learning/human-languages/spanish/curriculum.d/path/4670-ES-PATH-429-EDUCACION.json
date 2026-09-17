@@ -1,0 +1,18 @@
+{
+  "id": "ES-PATH-429-EDUCACION",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "ES-C429-instituto",
+    "ES-C429-nota",
+    "ES-C429-calificacion",
+    "ES-C429-aprobar",
+    "ES-C429-suspender",
+    "ES-C429-repaso-notas",
+    "ES-C429-sintesis-boletin"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-429-EDUCACION"
+  ],
+  "after": []
+}

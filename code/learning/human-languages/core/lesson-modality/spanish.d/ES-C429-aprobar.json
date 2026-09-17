@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C429-aprobar",
+    "language": "spanish",
+    "chapter": 429,
+    "sequence": 10340,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d1d791d887c0d9e0"
+  },
+  "findings": []
+}

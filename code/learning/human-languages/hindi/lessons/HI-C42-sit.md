@@ -12,17 +12,17 @@ headword: "बैठना"
 gloss: "to sit"
 romanization: "baiṭhnā"
 concept_tag: HI-VERB-SIT
-prerequisites: [HI-C42-come]
+prerequisites: [HI-S143-letter-tha-retroflex, HI-C42-come]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [HI-LEX-COME]
+  knowledge: [HI-LEX-COME, HI-SCRIPT-RECOG-143]
 introduces:
   knowledge: [HI-LEX-SIT]
 practises:
-  knowledge: [HI-LEX-COME, HI-LEX-SIT]
+  knowledge: [HI-LEX-COME, HI-LEX-SIT, HI-SCRIPT-RECOG-143]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,7 +34,7 @@ reviews_of: [HI-C42-come]
 # बैठना (baiṭhnā) — to sit
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-COME] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-COME, HI-SCRIPT-RECOG-143] -->
 
 [PAUSE 2s] Before the new one: what did *ānā* mean?
 

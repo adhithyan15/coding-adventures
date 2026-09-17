@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "First, Second, Third",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a0fcda8c0dac89bb",
+  "sourceHash": "fnv1a64:e3d40c9d7fe54e85",
   "lessons": [
     {
       "id": "HI-C75-first",
@@ -729,7 +729,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c53e697c48516b5",
+      "sourceHash": "fnv1a64:b9f567b70377f827",
       "notice": null,
       "blocks": [
         {

@@ -12,17 +12,17 @@ headword: "लकड़ी"
 gloss: "wood, a stick of firewood"
 romanization: "lakṛī"
 concept_tag: HI-NOUN-WOOD
-prerequisites: [HI-C62-clay, HI-C60-peacock, HI-C61-stove]
+prerequisites: [HI-S140-nuqta, HI-C62-clay, HI-C60-peacock, HI-C61-stove]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [HI-LEX-C62-HANDS-04]
+  knowledge: [HI-LEX-C62-HANDS-04, HI-SCRIPT-RECOG-140]
 introduces:
   knowledge: [HI-LEX-C62-HANDS-05]
 practises:
-  knowledge: [HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05, HI-LEX-C60-YARD-05, HI-LEX-C61-FIRE-05]
+  knowledge: [HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05, HI-LEX-C60-YARD-05, HI-LEX-C61-FIRE-05, HI-SCRIPT-RECOG-140]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,7 +34,7 @@ reviews_of: [HI-C62-clay]
 # लकड़ी (lakṛī) — wood, a stick of firewood
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04, HI-SCRIPT-RECOG-140] -->
 
 [PAUSE 2s] Name the 4 words of this chapter so far.
 

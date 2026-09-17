@@ -329,11 +329,17 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
             // representation), and `:ets` holds arbitrary terms natively,
             // so no new representation is needed — confirmed on real `erl`,
             // see `code/specs/BEAM06-string-array-representation.md`.
+            // BEAM07: `call_builtin "input_str"` has type_hint "str" — BASIC
+            // string `INPUT A$` reads a whole line as a runtime string, the
+            // same "str" type_hint every other string-producing op here
+            // carries. Check 6b below further restricts `call_builtin` to
+            // its known builtin-name set; this check only decides whether
+            // the OP is allowed to carry a "str" type_hint at all.
             if instr.type_hint == "str"
                 && !matches!(
                     instr.op.as_str(),
                     "str_const" | "str_concat" | "str_slice" | "call" | "ret" | "mov"
-                        | "array_set" | "array_get"
+                        | "array_set" | "array_get" | "call_builtin"
                 )
             {
                 errors.push(format!(
@@ -530,20 +536,27 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
 
             // ── Check 6b: call_builtin — predicates and integer output ───
             //
-            // `call_builtin` supports the McCarthy predicates, print_i64 and putchar;
-            // any other builtin name has no BEAM
-            // lowering. We reject it here (not just at lowering) so that a
-            // validated module is always lowerable — `generate()` panics on a
-            // lowering error, assuming validation already screened the module.
+            // `call_builtin` supports the McCarthy predicates, print_i64,
+            // putchar, and (BEAM07) the host-input builtins `input_more`/
+            // `input_i64`/`input_str` (BASIC `INPUT` and FlowMatic
+            // `READ-ITEM`'s EOF peek — see `lower.rs`'s "BEAM07: host-input
+            // atoms and imports" comment); any other builtin name has no
+            // BEAM lowering. We reject it here (not just at lowering) so
+            // that a validated module is always lowerable — `generate()`
+            // panics on a lowering error, assuming validation already
+            // screened the module.
             if instr.op == "call_builtin" {
                 let supported = matches!(
                     instr.srcs.first(),
-                    Some(Operand::Var(n)) if BEAM_PREDICATE_BUILTINS.contains(&n.as_str()) || matches!(n.as_str(), "print_i64" | "putchar")
+                    Some(Operand::Var(n)) if BEAM_PREDICATE_BUILTINS.contains(&n.as_str())
+                        || matches!(n.as_str(), "print_i64" | "putchar"
+                            | "input_more" | "input_i64" | "input_str")
                 );
                 if !supported {
                     errors.push(format!(
                         "UnsupportedOp: function {:?}, call_builtin {:?} is not in the \
-                         BEAM builtin set (pair?/equal?/not/print_i64/putchar)",
+                         BEAM builtin set (pair?/equal?/not/print_i64/putchar/\
+                         input_more/input_i64/input_str)",
                         func.name, instr.srcs.first()
                     ));
                 }

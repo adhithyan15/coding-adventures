@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Six Words for Where It Hurts",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:928d72c883992c4f",
+  "sourceHash": "fnv1a64:861b5f7d92477340",
   "lessons": [
     {
       "id": "HI-C38-aankh",
@@ -549,7 +549,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5e492ae0bcc04f44",
+      "sourceHash": "fnv1a64:8e7a46ffd7ee358d",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:e75e10403c00ec21",
+  "lessonIds": [
+    "HI-C86-ham",
+    "HI-C86-ve",
+    "HI-C86-hamen-tumhen",
+    "HI-C86-aapko-use",
+    "HI-C86-koi-article",
+    "HI-C86-repaso-sarvanam",
+    "HI-C86-sintesis-sarvanam"
+  ],
+  "tex": "hindi/book/chapters/ch94-sarvanam.tex"
+}

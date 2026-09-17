@@ -4,6 +4,15 @@
 % ============================================================================
 % Three queries: forward recall with citation for each hormone, and a
 % backward recall (bind a level, find which hormone responds to it).
+%
+% EACH ROW ANSWERS WITH ITS OWN SENTENCE (RS-5e, #14986), the locator and
+% trust inherited from the table envelope. Until that conversion the envelope
+% was the insulin sentence and the glucagon one rode as a `cites`, so a
+% glucagon recall was warranted primarily by a sentence about insulin.
+%
+% The page spells the hormone "glucagons" inside the shipped span; it ships
+% verbatim, because citing a sentence the page does not contain is the defect
+% that conversion exists to remove.
 % ============================================================================
 
 import "insulin-glucagon-trigger.adj"

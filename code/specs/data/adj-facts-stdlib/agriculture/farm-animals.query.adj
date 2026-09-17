@@ -4,8 +4,35 @@
 % The shape a learner (or an LLM) produces to ANSWER "what does a chicken give
 % us?": it states no farm fact — it only `import`s the grounded table and asks
 % binding queries. The engine resolves each `?` against the `farm_animal_product`
-% rows and returns the product + the table's source/locator/trust. An animal not
-% in the table abstains honestly — the engine never invents a product.
+% rows and returns the product + the provenance of the row it selected. An animal
+% not in the table abstains honestly — the engine never invents a product.
+%
+% AFTER THE RS-5e CONVERSION (#14986) EACH ANSWER CITES ITS OWN SENTENCE.
+% Before it, every one of these answers was warranted by the table's single
+% envelope — the SHEEP sentence — so asking what a chicken gives returned `eggs`
+% evidenced by a sentence about sheep. Measured on the shipped file through this
+% CLI, across the four non-sheep queries: the sheep sentence occurred **8** times
+% and each row's own span **0**; after the conversion the sheep sentence occurs
+% **0** times there and each row's own span **2** (one answer rendered on two
+% surfaces — `citations`, and the steps array's `"kind":"fact"` entry).
+%
+% The reverse bind is worth running for a second reason: `milk` selects exactly
+% one animal, while `eggs` and `wool` each name two, so a reverse query on a
+% shared product returns both rows — each with its own sentence, which is the
+% whole point of per-row provenance.
+%
+% WHAT THIS COMPANION ACTUALLY EMITS, measured rather than predicted: **5
+% queries, 4 citations arrays, 1 abstention, 8 empty-corroboration occurrences
+% and 0 non-empty**. Span occurrences are **chicken x2, sheep x2, goat x4, duck
+% x0, rabbit x0**, and the envelope reaches **zero** answers.
+%
+% THE GOAT READS FOUR, AND THE FOUR IS CORRECT. It is the only row bound twice —
+% once forward by `farm_animal_product(goat, $Product)` and once by the reverse
+% bind on `milk` — and each answer renders its citation on two surfaces
+% (`citations`, and the steps array's `"kind":"fact"` entry). Duck and rabbit
+% read zero because this companion does not query them; their spans are exercised
+% by the test suite, not here. An earlier draft of this header implied all five
+% spans would appear and is corrected by the run.
 %
 % Run (from this directory so the relative import resolves):
 %     ../../../../packages/rust/target/debug/adj-lang-cli farm-animals.query.adj
@@ -13,6 +40,8 @@
 
 import "farm-animals.adj"
 
-? farm_animal_product(chicken, $Product)     % expect eggs
-? farm_animal_product(sheep, $Product)        % expect wool
+? farm_animal_product(chicken, $Product)     % expect eggs — cited by the chicken sentence, which names no chicken (the page puts the species in a heading)
+? farm_animal_product(sheep, $Product)        % expect wool — the only row the old envelope legitimately warranted
+? farm_animal_product(goat, $Product)         % expect milk — cited by the goat sentence
+? farm_animal_product($Animal, milk)          % reverse bind — expect goat, the only animal whose product is milk
 ? farm_animal_product(tiger, $Product)        % expect abstain — a tiger is not a farm animal

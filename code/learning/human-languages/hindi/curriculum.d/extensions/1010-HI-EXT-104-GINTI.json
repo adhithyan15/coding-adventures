@@ -1,0 +1,15 @@
+{
+  "id": "HI-EXT-104-GINTI",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can count the tens to a hundred and say a price.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C96-tees-chaalees",
+    "HI-C96-pachaas-saath",
+    "HI-C96-sattar-assi-nabbe",
+    "HI-C96-repaso-ginti",
+    "HI-C96-sintesis-daam"
+  ]
+}

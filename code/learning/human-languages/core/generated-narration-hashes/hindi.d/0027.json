@@ -1,15 +1,16 @@
 {
   "language": "hindi",
   "chapter": 27,
-  "sourceHash": "fnv1a64:ce7fb636d4fcf9d7",
+  "sourceHash": "fnv1a64:a66731e521b2874f",
   "lessonIds": [
-    "HI-C27-shubh-raatri"
+    "HI-C27-shubh-raatri",
+    "HI-S142-letter-ta-retroflex"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "hindi/narration/ch27.txt",
   "json": "hindi/narration/ch27.json",
-  "textHash": "fnv1a64:59f0982b9216ae03",
-  "jsonHash": "fnv1a64:e54c5c3a8dcb1c09",
+  "textHash": "fnv1a64:21a7c6089149f824",
+  "jsonHash": "fnv1a64:a6bb46bf9487c1bd",
   "findings": []
 }

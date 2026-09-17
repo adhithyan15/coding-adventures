@@ -1,0 +1,25 @@
+{
+  "chapter": 424,
+  "title": "The Marks Themselves",
+  "label": "ch:signos",
+  "canDo": "I can name eight Spanish punctuation marks, say what each one does to a sentence, and write a short note that uses six of them correctly.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C424-sintesis-nota",
+    "kind": "task",
+    "summary": "Write a short note that opens with a colon after the name, lists three things without a comma before the final y, carries an aside in parentheses and an address abbreviated with a slash.",
+    "assesses": [
+      "ES-ORTH-C424-01",
+      "ES-ORTH-C424-02",
+      "ES-ORTH-C424-03",
+      "ES-ORTH-C424-04",
+      "ES-ORTH-C424-05",
+      "ES-ORTH-C424-06",
+      "ES-ORTH-C424-07",
+      "ES-ORTH-C424-08"
+    ],
+    "note": "Eight points close at once, all from the Puntuacion category, which the coverage test names as the corpus's emptiest column at 1/9. Every one of these marks has been PRINTED by the corpus for hundreds of chapters and never once named: the dialogue raya opens every printed exchange in the book, including the ones chapters 421-423 added, and the corpus had never told the reader what it was. That is what makes this a teaching gap rather than a vocabulary gap -- the reader has been decoding these marks by guess. The comma lesson is the one with an exam consequence a marker can see: Spanish writes NO comma before the final y of a list, and an English-trained hand puts one there."
+  }
+}

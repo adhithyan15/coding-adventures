@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C94-se-tak-samay",
+    "language": "hindi",
+    "chapter": 102,
+    "sequence": 4310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6483df87c10c5c3"
+  },
+  "findings": []
+}

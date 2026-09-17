@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:671e0623647fd452",
+  "lessonIds": [
+    "ES-C426-mayusculas",
+    "ES-C426-minuscula-inicial",
+    "ES-C426-abreviaturas",
+    "ES-C426-voladitas",
+    "ES-C426-siglas",
+    "ES-C426-simbolos",
+    "ES-C426-repaso-cortas",
+    "ES-C426-sintesis-formulario"
+  ],
+  "tex": "spanish/book/chapters/ch426-mayusculas.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "ES-PATH-426-MAYUSCULAS",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "ES-C426-mayusculas",
+    "ES-C426-minuscula-inicial",
+    "ES-C426-abreviaturas",
+    "ES-C426-voladitas",
+    "ES-C426-siglas",
+    "ES-C426-simbolos",
+    "ES-C426-repaso-cortas",
+    "ES-C426-sintesis-formulario"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-426-MAYUSCULAS"
+  ],
+  "after": []
+}

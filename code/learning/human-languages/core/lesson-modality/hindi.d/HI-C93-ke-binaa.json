@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C93-ke-binaa",
+    "language": "hindi",
+    "chapter": 101,
+    "sequence": 4210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46adf79bd8fbbd5c"
+  },
+  "findings": []
+}

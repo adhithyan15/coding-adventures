@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C422-repaso-red",
+    "language": "spanish",
+    "chapter": 422,
+    "sequence": 9810,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:43eaf43191afcda8"
+  },
+  "findings": []
+}

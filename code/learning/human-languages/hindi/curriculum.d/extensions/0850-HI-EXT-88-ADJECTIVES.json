@@ -1,0 +1,12 @@
+{
+  "id": "HI-EXT-88-ADJECTIVES",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can use easy, difficult, beautiful and ugly, and predict from the ending that none of them changes shape.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C80-aasaan-mushkil",
+    "HI-C80-sundar-badsurat"
+  ]
+}

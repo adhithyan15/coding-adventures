@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S142-letter-ta-retroflex",
+    "language": "hindi",
+    "chapter": 27,
+    "sequence": 785,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4cbadc6409bc1a8a",
+    "detachableSegments": [
+      "Script you'll notice: ट",
+      "Script: the tongue goes back",
+      "Writing: ट"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

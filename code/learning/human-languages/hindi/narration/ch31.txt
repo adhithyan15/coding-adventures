@@ -1,8 +1,8 @@
 Hindi, chapter 31: Good Morning.
-1 lesson. All 1 can be done entirely by ear.
+2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 1.
+Lesson 1 of 2.
 सुप्रभात / प्रभात (suprabhāt / prabhāt) — "good morning," built from "dawn".
 
 Warm-up.
@@ -29,3 +29,54 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Does सुप्रभात share a root with सुबह? (No — सुबह is Persian/Arabic; प्रभात, inside suprabhāt, is native Sanskrit, ultimately from भा, "to shine.") What does प्रभात mean by itself? (Dawn, daybreak.) Is सुप्रभात commonly used in casual spoken Hindi? (Not especially — it skews formal/written, with नमस्ते commonly covering mornings in everyday speech.) Is it being displaced by English "good morning," the way some sources (thinly) suggested for other languages' night greetings? (No strong evidence of that — its own story is a formal/everyday split, not an English substitution.)
+
+
+Lesson 2 of 2.
+झ (jha) — the puff, on the letter you drew last.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: झ, Script: the third pair and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Before the new one: ज — what sound does it carry?
+[pause 2 seconds]
+You know what is coming. It has happened twice already.
+
+Script you'll notice: झ.
+झ — jha.
+It is the breathy partner of ज, the third such pair you have met. Say ja, then say it again with a puff of air behind it.
+What it is made of:
+a joined short upper stem, upper bowl, lower loop, and diagonal tail.
+a left-to-right middle crossbar.
+a top-to-bottom right stem.
+the top shirorekhā.
+
+Script: the third pair.
+[a table of 3 rows, read aloud]
+plain: त. breathy: थ.
+plain: च. breathy: छ.
+plain: ज. breathy: झ (jha).
+Three pairs now, one distinction. This script pairs its letters by breath, and each pair has cost less than the last because the idea was learned once and only the shapes change.
+This one arrives before any word that needs it — the first letter in this book to do so. There is nothing to find it inside yet. Learn the shape and the breath, and the word will arrive already readable.
+
+Writing: झ.
+1. descend the short upper stem, turn left and curve clockwise around the upper bowl, continue through the waist and clockwise around the lower loop, then finish down-right through the diagonal tail without lifting.
+2. lift at the central junction and draw the middle crossbar left-to-right.
+3. lift and draw the right stem top-to-bottom.
+4. lift and draw the top shirorekhā left-to-right.
+Pen lifts: 3. The pen comes up 3 times and no more — one more than ज, because of the crossbar.
+Verified four-stroke teaching form fitted to the bundled printed outline; everyday handwriting may join the crossbar to the bowl.
+This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-झ (jha)-order.gif’, strokes 1–4, Wikimedia Commons, 10 May 2009.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at ज and झ (jha) side by side, and say which one carries the puff]
+[pause 8 seconds for the answer]
+ज, झ (jha).
+[once you have stopped driving — trace: झ three times, saying jha as you finish each one]
+[your turn — say: the two earlier pairs that work the same way]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which letter is झ (jha) the breathy partner of? (ज.) How many pen lifts does it take, and why one more than ज? (Three — the crossbar.) Have you met a word that uses it yet? (No — this is the first letter taught ahead of its words.)

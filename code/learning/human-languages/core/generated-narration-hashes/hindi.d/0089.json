@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:79bd4cab6b9f3711",
+  "lessonIds": [
+    "HI-C81-skool",
+    "HI-C81-vidyalaya",
+    "HI-C81-repaso-skool",
+    "HI-C81-sintesis-skool"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "hindi/narration/ch89.txt",
+  "json": "hindi/narration/ch89.json",
+  "textHash": "fnv1a64:345fcb0caedf2df7",
+  "jsonHash": "fnv1a64:883c9299ee59f928",
+  "findings": []
+}

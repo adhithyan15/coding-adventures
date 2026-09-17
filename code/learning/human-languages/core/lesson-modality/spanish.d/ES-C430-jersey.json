@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C430-jersey",
+    "language": "spanish",
+    "chapter": 430,
+    "sequence": 10400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6245c83ac1c6b83"
+  },
+  "findings": []
+}

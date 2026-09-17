@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C426-mayusculas",
+    "language": "spanish",
+    "chapter": 426,
+    "sequence": 10080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a08a3a7e08a45fdb"
+  },
+  "findings": []
+}

@@ -12,17 +12,17 @@ headword: "प्रणाम"
 gloss: "a bow, a salutation"
 romanization: "praṇām"
 concept_tag: HI-NOUN-SALUTATION
-prerequisites: [HI-C50-blessing, HI-C48-absolutely, HI-C49-meeting]
+prerequisites: [HI-S147-letter-na-retroflex, HI-C50-blessing, HI-C48-absolutely, HI-C49-meeting]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [HI-LEX-C50-COURTESY-04]
+  knowledge: [HI-LEX-C50-COURTESY-04, HI-SCRIPT-RECOG-147]
 introduces:
   knowledge: [HI-LEX-C50-COURTESY-05]
 practises:
-  knowledge: [HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05, HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-05]
+  knowledge: [HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05, HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-05, HI-SCRIPT-RECOG-147]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,7 +34,7 @@ reviews_of: [HI-C50-blessing]
 # प्रणाम (praṇām) — a bow, a salutation
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04, HI-SCRIPT-RECOG-147] -->
 
 [PAUSE 2s] Before the new one: what did *āśīrvād* mean?
 

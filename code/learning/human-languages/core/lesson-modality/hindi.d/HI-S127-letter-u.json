@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S127-letter-u",
+    "language": "hindi",
+    "chapter": 22,
+    "sequence": 703,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ae8355dca25d0990",
+    "detachableSegments": [
+      "Script you'll notice: उ",
+      "Script: two ways to write one sound",
+      "Writing: उ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

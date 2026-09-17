@@ -1,0 +1,12 @@
+{
+  "language": "marathi",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:c51fe60ae8424290",
+  "lessonIds": [
+    "MR-W64-ddha",
+    "MR-W64-pha",
+    "MR-W64-danda",
+    "MR-R64-rows-closed"
+  ],
+  "tex": "marathi/book/chapters/ch64-rows-closed.tex"
+}

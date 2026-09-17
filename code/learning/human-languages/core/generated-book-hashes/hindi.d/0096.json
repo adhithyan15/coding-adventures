@@ -1,0 +1,16 @@
+{
+  "language": "hindi",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:f8225d46849276f2",
+  "lessonIds": [
+    "HI-C88-karunga",
+    "HI-C88-aaunga",
+    "HI-C88-aaega",
+    "HI-C88-aaenge",
+    "HI-C88-aaoge",
+    "HI-C88-baje",
+    "HI-C88-repaso-bhavishya",
+    "HI-C88-sintesis-bhavishya"
+  ],
+  "tex": "hindi/book/chapters/ch96-bhavishya.tex"
+}

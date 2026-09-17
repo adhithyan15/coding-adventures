@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C428-arroba",
+    "language": "spanish",
+    "chapter": 428,
+    "sequence": 10240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a6dbf3d5aa12366"
+  },
+  "findings": []
+}

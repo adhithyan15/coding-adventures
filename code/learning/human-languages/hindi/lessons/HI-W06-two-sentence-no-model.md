@@ -18,11 +18,11 @@ roots: [sanskrit-namas, hindi-word-spacing]
 duration:
   max_seconds: 180
 requires:
-  knowledge: [HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01]
+  knowledge: [HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01]
 introduces:
   knowledge: []
 practises:
-  knowledge: [HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01]
+  knowledge: [HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01]
 skills: [writing]
 modes: [presentational]
 strands: [meaning-output, language-focus]
@@ -34,7 +34,7 @@ reviews_of: [HI-W05-namaste-dictation, HI-W06-name-sentence-delayed, HI-W06-two-
 # No model — greet and give the name
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01] -->
 
 Close the preceding lesson. Wait ten seconds. Keep only this purpose cue:
 
@@ -43,7 +43,7 @@ Close the preceding lesson. Wait ten seconds. Keep only this purpose cue:
 There is no Devanagari model and no romanized answer.
 
 ## Writing — independent delayed checkpoint
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01] -->
 <!-- hl-writing-stage: connected-composition -->
 
 Write two sentences from the purpose cue. Do not reopen the model until the
@@ -57,7 +57,7 @@ attempt is complete. Then compare in four separate passes:
 Choose the first differing pass, repair only that dimension, and stop.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01] -->
 <!-- hl-activity: {"id":"HI-W06-two-sentence-no-model-check","kind":"text","assesses":["HI-CONCEPT-W05-WRITE-NAMASTE-01","HI-CONCEPT-W05-WRITE-NAMASTE-02","HI-CONCEPT-C02-MERANAAMHAI-01"],"prompt":"With no model, greet a new classmate and give the practice name Mira in two Hindi sentences.","answer":"नमस्ते। मेरा नाम मीरा है।","accepted":[],"feedback":{"correct":"Two independently produced sentences fulfil the named purpose.","incorrect":"Reveal the model only now, find the first differing dimension, and make one bounded repair."},"response_seconds":50} -->
 
 This completes only the short connected pre-A1 writing bridge. It is not a
