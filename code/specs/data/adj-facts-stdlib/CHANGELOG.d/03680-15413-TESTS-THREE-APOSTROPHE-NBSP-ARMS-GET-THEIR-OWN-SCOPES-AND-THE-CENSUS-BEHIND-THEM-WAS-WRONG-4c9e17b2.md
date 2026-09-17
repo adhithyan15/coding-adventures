@@ -87,6 +87,14 @@
   variant once, compare it to a named constant, and assert the **constant** against the block, so the
   arm's needle is not a `.replace` at all. A filter count is not a classifier; what the arm reads is.
 
+  The classifier written to find them reproduced the same fault in miniature. It looked for a needle
+  on the assertion's own line, matching either a `.replace` or an upper-case `_PLAIN`/`_BEFORE`
+  constant; in `mixturetypes`, `plantparts`, `solareclipsetype` and `sunlayer` the needle is a
+  **lower-case local** (`ascii_variant`, `ascii`) bound a line or two above, so it reported "no
+  `.contains` arm" for all four. Those four are correctly scoped — verified one at a time — so the
+  census reached the right answer about them for the wrong reason, and a census that is right for the
+  wrong reason is one input away from being wrong.
+
   ### The trade
 
   Scoping lets a comment-borne variant survive. Nothing now pins "no variant anywhere in the block",

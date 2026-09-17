@@ -187,8 +187,8 @@ fn the_table_shape_matches_the_measured_rows() {
     // zone or only one more comment line. An earlier wording here called this
     // one AVAILABLE and that one ACTIVE. The count does not carry that.
     //
-    // Both arms were observed firing, this one at its own assert line. Every
-    // route below is a panic line from a mutant run, not a deduction:
+    // All THREE arms this change scopes were observed firing, this one at its
+    // own assert line. Every route below is a panic line from a mutant run:
     //
     //   ASCII on the metaphor row        -> :173  row-keeps-U+2019 (arm unreached)
     //   ASCII replacing the envelope     -> :163  envelope-is-framing-sentence
