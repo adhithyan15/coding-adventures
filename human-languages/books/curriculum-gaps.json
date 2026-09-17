@@ -4227,7 +4227,7 @@
         "language": "hindi",
         "chapter": 2,
         "lessonId": "HI-W06-two-sentence-no-model",
-        "message": "hindi chapter 2 payoff assesses 3/21 of the chapter's atoms (0.14), below the 0.5 floor."
+        "message": "hindi chapter 2 payoff assesses 3/22 of the chapter's atoms (0.14), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -5709,18 +5709,18 @@
         "lessonCount": 15
       },
       {
+        "language": "hindi",
+        "chapter": 2,
+        "atoms": 22,
+        "budget": 12,
+        "lessonCount": 24
+      },
+      {
         "language": "malayalam",
         "chapter": 2,
         "atoms": 22,
         "budget": 12,
         "lessonCount": 20
-      },
-      {
-        "language": "hindi",
-        "chapter": 2,
-        "atoms": 21,
-        "budget": 12,
-        "lessonCount": 24
       },
       {
         "language": "italian",
@@ -11222,6 +11222,19 @@
           "R4"
         ],
         "revisits": 0
+      },
+      {
+        "atom": "HI-SCRIPT-DANDA-01",
+        "language": "hindi",
+        "introducedBy": "HI-W06-name-sentence-stop",
+        "introducedAt": 29,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "HI-SCRIPT-RECOG-01",
@@ -90173,7 +90186,7 @@
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 533,
+        "atomsTaught": 534,
         "atomsNeverRevisited": 33,
         "forwardReferences": 22
       },
@@ -90343,14 +90356,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 8623,
+      "atomsTaught": 8624,
       "atomsNeverRevisited": 495,
       "neverRevisitedPercent": 6,
       "missedByWindow": {
-        "R1": 1720,
-        "R2": 3885,
-        "R3": 5491,
-        "R4": 4099
+        "R1": 1721,
+        "R2": 3886,
+        "R3": 5492,
+        "R4": 4100
       },
       "forwardReferences": 791
     }
@@ -110514,14 +110527,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 22,
-        "atomsTaught": 533,
+        "atomsTaught": 534,
         "atomsNeverRevisited": 33,
-        "reinforcementWindowMisses": 1257,
+        "reinforcementWindowMisses": 1261,
         "reinforcementMissesByWindow": {
-          "R1": 165,
-          "R2": 252,
-          "R3": 449,
-          "R4": 391
+          "R1": 166,
+          "R2": 253,
+          "R3": 450,
+          "R4": 392
         },
         "payoffSurprises": 13,
         "writingPracticeLessons": 124,
@@ -110559,7 +110572,7 @@
           {
             "language": "hindi",
             "kind": "reinforcement",
-            "count": 1257,
+            "count": 1261,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -112241,7 +112254,7 @@
       {
         "language": "hindi",
         "kind": "reinforcement",
-        "count": 1257,
+        "count": 1261,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -112790,8 +112803,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "44 atom(s) at or below pre-A1 are revisited fewer than twice",
-            "shortfall": 44
+            "detail": "45 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 45
           }
         ],
         "vocabulary": 345
