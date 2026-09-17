@@ -1,0 +1,14 @@
+{
+  "id": "MR-EXT-079-ROWS-CLOSED",
+  "stage": "A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the aspirated retroflex and lip stops, and read the danda as a sentence-ender.",
+  "prerequisites": [],
+  "lessons": [
+    "MR-W64-ddha",
+    "MR-W64-pha",
+    "MR-W64-danda",
+    "MR-R64-rows-closed"
+  ]
+}
