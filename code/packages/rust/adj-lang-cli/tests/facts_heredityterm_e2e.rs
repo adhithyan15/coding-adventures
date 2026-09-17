@@ -5,6 +5,8 @@
 //! its own defining sentence from NHGRI's Talking Glossary of Genomic and
 //! Genetic Terms. 0 answer-time model calls.
 
+mod common;
+
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -376,8 +378,12 @@ fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
     // The six `cites` were PROMOTED into the rows they define, not dropped:
     // every one is asserted above as some row's own `source`, at the
     // envelope's tier rather than untiered.
+    // CODE ONLY (#15425): `common::has_code_word` reads the text as ADJ's lexer
+    // does -- comments dropped, strings blanked across lines, numbers consumed
+    // whole -- and looks for `cites` as an identifier token, so the keyword counts
+    // however it is spaced or glued, and a comment or a sentence never does.
     assert!(
-        !adj.contains("cites \""),
+        !common::has_code_word(&adj, "cites"),
         "no corroboration survives at table level: each is now a row's own source"
     );
 }

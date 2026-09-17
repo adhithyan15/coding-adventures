@@ -12,6 +12,8 @@
 //! trait, "involuntary", is only in the second of its two sentences ("They are
 //! called involuntary muscles."), so its source is the two-sentence span.
 
+mod common;
+
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -159,7 +161,13 @@ fn the_table_shape_matches_the_measured_rows() {
         assert!(body.contains(&expected), "row ({muscle}, {trait_atom}) is shipped in its measured shape");
     }
     assert_eq!(body.matches("\n        source \"").count(), 3, "three row sources");
-    assert!(!body.contains("cites "), "no corroboration anywhere in the table");
+    let whole_adj = std::fs::read_to_string(facts_stdlib().join("biology/muscle-types.adj")).expect("read shipped muscle-types.adj");
+    // CODE ONLY (#15425): `common::has_code_word` reads the WHOLE file as ADJ's
+    // lexer does -- comments dropped, strings blanked across lines, numbers
+    // consumed whole -- and looks for a `cites` token anywhere in it. Not from
+    // the table on: no line-based search finds the declaration reliably, and a
+    // corroboration above the table would warrant these rows just the same.
+    assert!(!common::has_code_word(&whole_adj, "cites"), "no corroboration anywhere in the table");
     assert!(
         !body.contains("\n        locator ") && !body.contains("\n        trust "),
         "no row restates a locator line or trust"
