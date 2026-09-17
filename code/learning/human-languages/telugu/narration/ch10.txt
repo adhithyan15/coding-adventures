@@ -1,8 +1,8 @@
 Telugu, chapter 10: Days of the Week.
-3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+4 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 సోమవారం to ఆదివారం — Telugu's week, with a twist on Sunday.
 
 Warm-up.
@@ -36,7 +36,7 @@ Wrap-up Recall.
 What does ఆదివారం literally mean, and is it a planet-name? ("The first day" — ādi "beginning" — not a planet-name, unlike the other six.) What ending do the other six Telugu weekdays share? (‑వారం -vāram, Sanskrit "day," each paired with a planet-deity.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 శ (śa) — the third s, and the last one.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: శ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -78,7 +78,7 @@ Wrap-up Recall.
 Which character is this — శ? What sound does it carry? (śa.) Which two days of the week begin with it? (శుక్రవారం and శనివారం.) How many separate s letters does Telugu print? (Three — స, ష, శ.)
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 ల (la) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ల and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -115,3 +115,40 @@ Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — ల? What sound does it carry? (la.) Name one word you already say that contains it.
 One more, from much earlier: ప — what does it do?
+
+
+Lesson 4 of 4.
+ఐదు అచ్చులు (aidu acchulu) — five vowel letters, from cold.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: the five, and the one question behind them and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+Close the lessons before this one. Say the word for yes and the number six, and name the character each of them opens on.
+
+Script: the five, and the one question behind them.
+అ, ఆ, ఏ, ఐ, ఒ.
+Five letters, and every one of them is on the page for the same reason: a vowel turned up at the front of a word with no consonant to sit inside.
+[a table of 5 rows, read aloud]
+letter: అ. sound: a. the word it opens: అవును — yes.
+letter: ఆ. sound: ā. the word it opens: ఆరు — six.
+letter: ఏ. sound: ē. the word it opens: ఏమిటి — what?
+letter: ఐ. sound: ai. the word it opens: ఐదు — five.
+letter: ఒ. sound: o. the word it opens: ఒకటి — one.
+Look down the right-hand column. Three of the five open a number you can already count with, and the other two open two of the commonest words in the book. None of these is an exotic letter kept for later; they were on your pages from chapter one, and only now do you have the shapes for them.
+The question to ask of any vowel in Telugu is the same each time: is a consonant carrying it? If yes, a sign. If no, a letter.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these words and name the vowel letter each one begins with]
+[pause 8 seconds for the answer]
+ఒకటి, ఆరు, అవును, ఏమిటి.
+[your turn — say: which two of the five are the short and long pair]
+[pause 8 seconds for the answer]
+[your turn — say: which one of the five is a vowel your mouth has to move through]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: each of the five once, saying its sound]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of the five opens the number one? (ఒ.) Which opens the number five? (ఐ.) Which pair differs only in length? (అ and ఆ.) And what has to be true of a vowel before Telugu writes it as a letter? (Nothing is carrying it — no consonant in front.)

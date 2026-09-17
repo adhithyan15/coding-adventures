@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:86e84d219b99d051",
+  "sourceHash": "fnv1a64:48b83cf25ba31d08",
   "lessons": [
     {
       "id": "TE-C10-vaaram",
@@ -487,6 +487,163 @@
             {
               "kind": "speech",
               "text": "One more, from much earlier: ప — what does it do?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S167-script-recall-vowels",
+      "sequence": 376,
+      "title": "ఐదు అచ్చులు (aidu acchulu) — five vowel letters, from cold",
+      "headword": "ఐదు అచ్చులు",
+      "romanization": "aidu acchulu",
+      "gloss": "cold retrieval of the five vowel letters this pass added, and the one question they all answer",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:295a6bd130411269",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script: the five, and the one question behind them",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: the five, and the one question behind them and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say the word for yes and the number six, and name the character each of them opens on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: the five, and the one question behind them",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అ, ఆ, ఏ, ఐ, ఒ."
+            },
+            {
+              "kind": "speech",
+              "text": "Five letters, and every one of them is on the page for the same reason: a vowel turned up at the front of a word with no consonant to sit inside."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "sound",
+                "the word it opens"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "letter: అ. sound: a. the word it opens: అవును — yes.",
+                "letter: ఆ. sound: ā. the word it opens: ఆరు — six.",
+                "letter: ఏ. sound: ē. the word it opens: ఏమిటి — what?",
+                "letter: ఐ. sound: ai. the word it opens: ఐదు — five.",
+                "letter: ఒ. sound: o. the word it opens: ఒకటి — one."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Look down the right-hand column. Three of the five open a number you can already count with, and the other two open two of the commonest words in the book. None of these is an exotic letter kept for later; they were on your pages from chapter one, and only now do you have the shapes for them."
+            },
+            {
+              "kind": "speech",
+              "text": "The question to ask of any vowel in Telugu is the same each time: is a consonant carrying it? If yes, a sign. If no, a letter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these words and name the vowel letter each one begins with",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these words and name the vowel letter each one begins with]"
+            },
+            {
+              "kind": "speech",
+              "text": "ఒకటి, ఆరు, అవును, ఏమిటి."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which two of the five are the short and long pair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which two of the five are the short and long pair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one of the five is a vowel your mouth has to move through",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one of the five is a vowel your mouth has to move through]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "each of the five once, saying its sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: each of the five once, saying its sound]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the five opens the number one? (ఒ.) Which opens the number five? (ఐ.) Which pair differs only in length? (అ and ఆ.) And what has to be true of a vowel before Telugu writes it as a letter? (Nothing is carrying it — no consonant in front.)"
             }
           ]
         }

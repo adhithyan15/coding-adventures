@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8e97368956c95d0c",
+  "sourceHash": "fnv1a64:c04e680014a2aaaa",
   "lessons": [
     {
       "id": "TE-C02-peru",
@@ -1249,7 +1249,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ఏ (independent long ē) + మి (mi) + టి (ṭi, retroflex) becomes ēmiṭi."
+              "text": "ఏ (ē) (independent long ē) + మి (mi) + టి (ṭi, retroflex) becomes ēmiṭi."
             }
           ]
         },
@@ -1454,6 +1454,171 @@
             {
               "kind": "speech",
               "text": "Which character is this — ట? What sound does it carry? (ṭa.) Which word from this chapter contains it? (ఏమిటి (ēmiṭi).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-S163-letter-ee",
+      "sequence": 112,
+      "title": "ఏ (ē) — the sign you know, as a letter",
+      "headword": "ఏ",
+      "romanization": "ē",
+      "gloss": "the single character ఏ — the long e you already read as a sign, now as a letter at the front of a word",
+      "script": "telugu",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1392e4fcea00ebfb",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ఏ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఏ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two from before: ◌ే — what does it do to the consonant it sits on? And అ — why does that one need no mark?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Today the two ideas meet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ఏ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఏ — ē."
+            },
+            {
+              "kind": "speech",
+              "text": "It is an independent vowel — a vowel that is a letter in its own right, not a mark hung on a consonant."
+            },
+            {
+              "kind": "speech",
+              "text": "You have read ◌ే, the long-ē sign, since the first chapter. It rides on a consonant and needs one to exist. ఏ is that same vowel with nothing in front of it."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the pattern behind every vowel in the script. A vowel has two written forms — a sign for when a consonant carries it, a letter for when the vowel opens the word. అ was the odd one out because its sign is the absence of any sign at all; ఏ (ē) is the ordinary case, and from here you can expect the pair everywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "ఏమిటి ēmiṭi — what?"
+            },
+            {
+              "kind": "speech",
+              "text": "The question word you have been saying opens on today's letter, and the i inside it is carried by a sign. One word, both forms."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ఏ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ఏ (ē) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the word below and find ఏ (ē) at its front",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the word below and find ఏ at its front]"
+            },
+            {
+              "kind": "speech",
+              "text": "ఏమిటి (ēmiṭi)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ఏ three times, saying ē as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ఏ three times, saying *ē* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which form of a vowel goes at the front of a word, the sign or the letter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which form of a vowel goes at the front of a word, the sign or the letter]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ఏ? What sound does it carry? (ē.) When does Telugu write the letter ఏ rather than the sign ◌ే? (When the vowel has no consonant in front of it.) And which vowel met so far has a letter but no sign? (అ.)"
             }
           ]
         }

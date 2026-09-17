@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "TE-S167-script-recall-vowels",
+    "language": "telugu",
+    "chapter": 10,
+    "sequence": 376,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:295a6bd130411269",
+    "detachableSegments": [
+      "Script: the five, and the one question behind them"
+    ]
+  },
+  "findings": []
+}

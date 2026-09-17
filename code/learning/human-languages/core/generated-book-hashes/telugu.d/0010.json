@@ -1,11 +1,12 @@
 {
   "language": "telugu",
   "chapter": 10,
-  "sourceHash": "fnv1a64:c6f03c3414823552",
+  "sourceHash": "fnv1a64:b886c2f4f909fb73",
   "lessonIds": [
     "TE-C10-vaaram",
     "TE-S159-letter-sha",
-    "TE-S114-letter-la"
+    "TE-S114-letter-la",
+    "TE-S167-script-recall-vowels"
   ],
   "tex": "telugu/book/chapters/ch10-days.tex"
 }
