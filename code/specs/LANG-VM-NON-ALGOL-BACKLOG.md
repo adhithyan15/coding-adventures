@@ -1,12 +1,103 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-15
+Status date: 2026-09-16
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
 `LANG-FULL-IMPLEMENTATION.md`; when the two disagree about landed behavior,
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
+
+## BEAM08 — `RND` on BEAM: VM-018 closed, the non-ALGOL BEAM matrix is COMPLETE (selected by the user after BEAM07)
+
+`git fetch origin && git merge origin/main` fast-forwarded cleanly onto the
+BEAM07 merge (below, PR #15339). `gh pr list --state open --limit 50` showed
+no other LANG-VM-related PR in flight, and specifically nothing touching
+`iir-to-beam`, `dartmouth-basic-iir-compiler`, or `lang_matrix.rs`'s
+`run_beam`. (A separate agent was reported concurrently working on T2
+exceptions — a different runtime track, different files/crates — no overlap.)
+
+BEAM07's own trailing note left exactly one item in this entire backlog:
+`RND` (VM-018), the module-global design question every prior slice
+(VM-LOOP-24, BEAM04, BEAM06, BEAM07) explicitly declined to force. The user
+picked it directly: "RND sounds like a good one to fix up... please plan it
+and execute on it."
+
+Full research, decision, and validation: `code/specs/BEAM08-rnd-beam-support.md`.
+Summary:
+
+- **`RND` was never a genuinely new design question.** Direct inspection of
+  `dartmouth-basic-iir-compiler`'s `emit_rnd_state_init`/`rnd_helper_function`
+  shows `RND` shares its Park–Miller seed through the SAME `global_store`/
+  `global_load` module-global substrate every other module-level BASIC/
+  COBOL/Twig variable already uses — no bespoke RND-specific IIR op, no
+  `DEF FN`-specific lowering. "RND's full DEF-FN-and-module-global chain"
+  (VM-018's original framing) was, on inspection, just "a function that
+  reads and writes a module global."
+- **The trap (`{badarith,[{erlang,'*',[undefined,...]}]}`) matches a KNOWN,
+  already-scoped bug exactly**: BEAM07's own VM-D036 discovery (issue
+  [#15332](https://github.com/adhithyan15/coding-adventures/issues/15332))
+  found `global_store` lowers `erlang:put/2` via `gc_bif2` — wrong, per real
+  `erlc -S` disassembly, because `put/2` is not a guard-safe BIF and
+  `gc_bif2`'s `Live` count cannot protect a co-live x-register across it.
+  `main`'s initial `global_store` of the RND seed silently failed to stick
+  under this bug, so the helper's first `global_load` read back `undefined`.
+- **Confirmed concretely, not assumed**: converting `global_store` to
+  `call_ext` (mirroring BEAM07's own fix for its new `put/2` usage) — with
+  ZERO changes to `dartmouth-basic-iir-compiler`'s existing RND lowering —
+  makes the exact promoted `RND` row produce the correct sequence on real
+  `erl`. This confirms #15332 was both a NECESSARY and SUFFICIENT
+  prerequisite, so it was fixed as part of this PR (a genuine dependency,
+  not a drive-by) and closed, referencing this PR.
+- **Fix**: `global_store`'s lowering converted from `gc_bif2` to `call_ext`
+  (staging its value operand through a scratch register first — a
+  parallel-move hazard, since the source register may already be x0 or x1
+  — then `move key→x0`, `move value→x1`, `call_ext erlang:put/2`), protected
+  by the existing `save_live_across_imported_call!`/
+  `restore_live_across_imported_call!` Y-register machinery. Also added
+  `"global_store"` to `iir-to-beam`'s `live_across` liveness filter, per
+  issue #15332's own scope note — it was absent the whole time `gc_bif2`
+  was assumed non-clobbering.
+- **Re-verified the wide blast radius** issue #15332 flagged: `global_store`
+  is used by every BASIC/COBOL/Twig program with a module-level variable.
+  The full `iir-to-beam` suite (118 tests) and the full `lang_matrix.rs`
+  BEAM test group (34 tests, spanning Twig/Nib/Oct/Brainfuck/COBOL-60/
+  FlowMatic/Dartmouth BASIC) all pass unchanged — zero regressions. A full
+  `non_algol_matrix_every_proven_cell_agrees` capstone rerun also passed
+  clean (210 programs, 1467 cells exercised, 210 skipped for the
+  host-wide missing `ilasm`, zero failures).
+
+### Validation
+
+`iir-to-beam` 0.16.0 → 0.17.0: `global_store`'s `call_ext` conversion +
+`live_across` fix; 2 new tests —
+`test_114_global_store_emits_call_ext_not_gc_bif2` (instruction-shape) and
+`test_115_real_erl_global_store_survives_live_across_call` (the disposable
+control test from issue #15332's own reproduction, made permanent: a
+co-live `str_const` heap value now survives the call intact, and the
+stored global reads back correctly). 118 tests total (up from 116);
+`cargo clippy --all-targets -- -D warnings` clean.
+
+`lang-aot` 0.345.0 → 0.346.0: the `RND` row promoted to declare `Beam` via
+`portable_text_stdout_dartmouth_basic_beam_rnd`, executed against real
+`erl` before promotion, per this backlog's "probe before declaring,
+promote only proven cells" discipline — confirms stdout
+`22\n85032\n85032\n601352`, matching every other standard backend exactly.
+`feature_coverage_doc_counts_match_programs_source` updated (Dartmouth
+BASIC tuple `(51, 407)` → `(51, 408)`); `LANG-VM-FEATURE-COVERAGE.md`'s
+Dartmouth BASIC row, grand-total prose, and "Implemented feature families"
+narrative row all updated to match.
+
+**Dartmouth BASIC now declares all 51/51 rows on `Beam`.** Combined with
+Twig (49/49), Nib (26/26), Oct (12/12), COBOL-60 (58/58), FLOW-MATIC (8/8),
+and Brainfuck (3/6, intentional — real stdin-as-tape host support is a
+separate, unscoped item unrelated to `RND`), **this closes every non-ALGOL
+BEAM gap in this backlog.** The multi-month non-ALGOL BEAM completion track
+this backlog has been driving since BEAM01 is now COMPLETE. Reprioritize
+after this merges: the non-ALGOL BEAM matrix has no remaining probe-first,
+design-question, or bounded-research items left; future non-ALGOL work in
+this backlog (if any) would need a newly-scoped item (e.g. Brainfuck's
+stdin-as-tape host support) rather than continuing this track.
 
 ## BEAM07 — BEAM host input: `INPUT`/`READ-ITEM` EOF peek, closing every non-ALGOL BEAM gap except `RND` (selected by the user after BEAM06)
 

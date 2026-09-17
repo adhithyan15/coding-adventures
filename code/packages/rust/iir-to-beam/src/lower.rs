@@ -1180,6 +1180,15 @@ pub fn lower_iir_to_beam(
                     // see the `import_sqrt`/… comment above.
                     | "f64_sqrt" | "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp"
                     | "f64_atan" | "f64_tan"
+                    // BEAM08/issue #15332: `global_store` emits `erlang:put/2`
+                    // via `call_ext` (previously `gc_bif2` — see the
+                    // `"global_store"` match arm below for the full
+                    // real-`erl` evidence this was wrong). It was missing
+                    // from this list the whole time `gc_bif2` was assumed
+                    // non-clobbering; now that it is a genuine `call_ext`,
+                    // any OTHER live variable must be Y-spilled across it
+                    // exactly like every other imported call here.
+                    | "global_store"
             ) && !(instr.op == "call_builtin" && matches!(instr.srcs.first(),
                 // BEAM07: `input_more`/`input_i64`/`input_str` each emit a
                 // real `call_ext` (`io:get_line/1`, and `input_i64`/
@@ -3601,13 +3610,83 @@ pub fn lower_iir_to_beam(
                 // is a per-process key-value store (`erlang:put/2`, `erlang:get/1`).
                 // Each global name is interned as a BEAM atom so lookups are O(1).
                 //
-                // IIR:  global_store Str("name"), Var("%v")
-                // BEAM: move {a,atom("name")} {x,tmp}
-                //       gc_bif2 {f,0} {u,live} {a,import_put} {x,tmp} {x,rv} {x,dummy_dst}
+                // BEAM08/issue #15332: this used to lower `erlang:put/2` via
+                // `gc_bif2`, the exact bug BEAM07's VM-D036 discovery flagged
+                // as pre-existing here and deliberately deferred (see this
+                // backlog's BEAM07 section and issue #15332's full writeup).
+                // Real `erlc -S` disassembly confirms `erlang:put/2` always
+                // compiles to a genuine `call_ext`, never `gc_bif2` — growing
+                // the process dictionary's hash table can allocate, and
+                // `put/2` does not honor a guard BIF's "only touch the
+                // declared Dest" contract, so `gc_bif2`'s `Live` count cannot
+                // correctly protect any OTHER live x-register across the
+                // call. This was the confirmed root cause of `RND` trapping
+                // with `{badarith,[{erlang,'*',[undefined,48271],...}]}`:
+                // `main`'s `global_store` of the seed silently failed to
+                // stick (or corrupted a co-live register) under `gc_bif2`,
+                // so the helper's very first `global_load` read back
+                // `undefined` instead of the seed. Fixed the same way
+                // BEAM07 fixed its own new `put/2` usage (`input_more`/
+                // `input_i64`/`input_str`): `call_ext`, protected by the
+                // existing `save_live_across_imported_call!`/
+                // `restore_live_across_imported_call!` Y-register machinery.
                 //
-                // `tmp` and `dummy_dst` both use `meta.next_reg` (the first register
-                // beyond all SSA-variable assignments in this function).  `dummy_dst`
-                // is `next_reg + 1` — a second scratch slot we never read.
+                // IIR:  global_store Str("name"), Var("%v")
+                // BEAM: move {x,rv} {x,s_val}          ; stage the value away
+                //                                       ; first (parallel-move
+                //                                       ; hazard: rv may already
+                //                                       ; be x0 or x1)
+                //       move {a,atom("name")} {x,0}
+                //       move {x,s_val} {x,1}
+                //       call_ext {u,2} {u,import_put}
+                //
+                // `s_val` uses `meta.next_reg` (the first register beyond all
+                // SSA-variable assignments in this function) — the same
+                // "stage every source into scratch BEFORE any call" discipline
+                // `array_set`'s `:ets` path above follows for the identical
+                // reason.  The call's return value (the OLD process-dictionary
+                // value) lands in x0 and is discarded; `global_store` has no
+                // dest.
+                "global_store" => {
+                    let global_name = match instr.srcs.first() {
+                        Some(Operand::Str(s)) => s.clone(),
+                        _ => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "global_store: srcs[0] must be Operand::Str(name)".into(),
+                        }),
+                    };
+                    let rv = operand_reg!(get_src!(instr, 1));
+                    let name_atom = atoms.intern(&global_name);
+                    let top = meta.next_reg.checked_add(1).filter(|t| *t < 255);
+                    let Some(_) = top else {
+                        return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "global_store: needs 1 scratch register but none remain below x255".to_string(),
+                        });
+                    };
+                    let s_val = meta.next_reg;
+                    let cur_idx = instr_idx - 1;
+
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(rv), BEAMOperand::x(s_val),
+                    ]));
+
+                    save_live_across_imported_call!(cur_idx);
+
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(name_atom), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(s_val), BEAMOperand::x(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2),
+                        BEAMOperand::u(import_put as u64),
+                    ]));
+
+                    restore_live_across_imported_call!(cur_idx);
+                }
+
                 // ── alloc_bytes / alloc_array → atomics:new(N, []) ──────────
                 //
                 // Both allocate a fixed-size mutable integer array; the only
@@ -3998,46 +4077,6 @@ pub fn lower_iir_to_beam(
                         ]));
                     }
                     restore_live_across_imported_call!(cur_idx);
-                }
-
-                "global_store" => {
-                    // srcs[0] = Str("name"), srcs[1] = Var(val_reg)
-                    let global_name = match instr.srcs.first() {
-                        Some(Operand::Str(s)) => s.clone(),
-                        _ => return Err(IIRBeamError::InvalidOperand {
-                            function: fn_name.clone(),
-                            detail: "global_store: srcs[0] must be Operand::Str(name)".into(),
-                        }),
-                    };
-                    let rv = operand_reg!(get_src!(instr, 1));
-                    let name_atom = atoms.intern(&global_name);
-                    let tmp = meta.next_reg;
-                    // `dummy_dst` must be a distinct register from `tmp`.
-                    // `saturating_add` would silently alias when next_reg == 255,
-                    // making erlang:put/2's return value overwrite the atom key.
-                    // Use checked_add and return a clear error instead.
-                    let dummy_dst = meta.next_reg.checked_add(1).ok_or_else(|| {
-                        IIRBeamError::UnsupportedOp {
-                            function: fn_name.clone(),
-                            op: "global_store: function uses too many registers (255); \
-                                 no scratch register available for global_store".to_string(),
-                        }
-                    })?;
-
-                    // move {a, atom("name")} {x, tmp}
-                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                        BEAMOperand::a(name_atom),
-                        BEAMOperand::x(tmp),
-                    ]));
-                    // gc_bif2 {f,0} {u,live} {u,import_put} {x,tmp} {x,rv} {x,dummy_dst}
-                    instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
-                        BEAMOperand::f(0),
-                        BEAMOperand::u(meta.next_reg as u64),
-                        BEAMOperand::u(import_put as u64), // U-type (OTP 25+)
-                        BEAMOperand::x(tmp),
-                        BEAMOperand::x(rv),
-                        BEAMOperand::x(dummy_dst),
-                    ]));
                 }
 
                 // ── global_load → erlang:get(atom_key) → dest ───────────────────────

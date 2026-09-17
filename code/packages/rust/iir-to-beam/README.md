@@ -133,7 +133,7 @@ assert_eq!(&bytes[0..4], b"FOR1");
 | `load_byte` / `array_get` (not f64/str) | `idx+1` (`gc_bif2 erlang:+/2`), `call_ext atomics:get/2` |
 | `array_get` (f64 or str) | `call_ext ets:lookup_element/3` (BEAM04/BEAM06 — position `2` of the `{Idx,Val}` tuple; traps `badarg` on a missing key) |
 
-| `global_store` | `gc_bif2 erlang:put/2` (process dictionary) |
+| `global_store` | `call_ext erlang:put/2` (process dictionary; BEAM08/#15332 — was `gc_bif2`, wrong: `put/2` is not a guard-safe BIF) |
 | `global_load` | `gc_bif1 erlang:get/1` |
 | `io_out` | `gc_bif1 erlang:display/1` |
 | `alloc_closure` | `put_list` chain: `[fn_atom \| cap0, cap1, …]` |
