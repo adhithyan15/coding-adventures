@@ -657,7 +657,15 @@ fn app_package_light_theme_selects_light_app_shell_styles() {
     assert_eq!(result.components_built, vec!["EngramApp"]);
     let react = read_artifact(tmp.path(), "react/EngramApp.tsx");
     assert_contains(&react, "#ffffff");
-    assert_contains(&react, "#1e40af");
+    // The app header's own light style. This used to check `#1e40af`, which
+    // only the six nav-*-active parts set in this stylesheet; those parts
+    // went away when the switcher became a toolkit SegmentedControl
+    // (#14063), and the colour still appears in dependency packages, so it no
+    // longer proved anything about THIS theme.
+    assert_contains(
+        &react,
+        "alignItems: \"center\", background: \"#ffffff\", borderColor: \"#e2e8f0\"",
+    );
     assert!(
         !react.contains("#101827"),
         "light-theme build should not select the dark app-shell background"

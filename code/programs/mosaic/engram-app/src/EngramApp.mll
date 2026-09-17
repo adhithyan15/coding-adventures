@@ -7,78 +7,15 @@ layout EngramApp {
         content : slot: app-title
       )
       Row [ app-nav ] {
-        If ( when: slot: show-decks-screen ) {
-          HostButton [ nav-decks-active ] (
-            label : "Decks" ,
-            onClick : emit: onShowDecks
-          )
-        }
-        Else {
-          HostButton [ nav-decks-button ] (
-            label : "Decks" ,
-            onClick : emit: onShowDecks
-          )
-        }
-        If ( when: slot: show-study-screen ) {
-          HostButton [ nav-study-active ] (
-            label : "Study" ,
-            onClick : emit: onShowStudy
-          )
-        }
-        Else {
-          HostButton [ nav-study-button ] (
-            label : "Study" ,
-            onClick : emit: onShowStudy
-          )
-        }
-        If ( when: slot: show-browse-screen ) {
-          HostButton [ nav-browse-active ] (
-            label : "Browse" ,
-            onClick : emit: onShowBrowse
-          )
-        }
-        Else {
-          HostButton [ nav-browse-button ] (
-            label : "Browse" ,
-            onClick : emit: onShowBrowse
-          )
-        }
-        If ( when: slot: show-add-screen ) {
-          HostButton [ nav-add-active ] (
-            label : "Add" ,
-            onClick : emit: onShowAdd
-          )
-        }
-        Else {
-          HostButton [ nav-add-button ] (
-            label : "Add" ,
-            onClick : emit: onShowAdd
-          )
-        }
-        If ( when: slot: show-stats-screen ) {
-          HostButton [ nav-stats-active ] (
-            label : "Stats" ,
-            onClick : emit: onShowStats
-          )
-        }
-        Else {
-          HostButton [ nav-stats-button ] (
-            label : "Stats" ,
-            onClick : emit: onShowStats
-          )
-        }
-        If ( when: slot: show-options-screen ) {
-          HostButton [ nav-options-active ] (
-            label : "Options" ,
-            onClick : emit: onShowOptions
-          )
-        }
-        Else {
-          HostButton [ nav-options-button ] (
-            label : "Options" ,
-            onClick : emit: onShowOptions
-          )
-        }
+        // One control instead of six If/Else HostButton pairs (#14063):
+        // the engine supplies the rows and the selected index.
+        pkg::mosaic-pkg-toolkit::SegmentedControl (
+          options : slot: nav-options ,
+          selected-index : slot: nav-selected-index ,
+          vertical : false ,
+          disabled : false ,
+          onSelect : emit: onShowScreen
+        )
       }
     }
 
