@@ -359,8 +359,19 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // data/scripts/malayalam.json omits, so writing it trips uncovered-glyphs. Giving
   // a number by ear before its written form is this track's own precedent -- see
   // ML-C07-numbers-6-10. Recorded as backlog item HL-C398.
-  expect(coverage.covered).toBe(193);
-  expect(coverage.unmapped).toBe(50);
+  // 193 -> 194: ML-A1-F-28, giving an opinion, AND THE POINT'S NOTE WAS
+  // SUBSTANTIALLY WRONG, which is why it had looked like the most expensive item
+  // in the file. It said "I think that ... needs ennu plus cintikkuka" as though
+  // neither existed. BOTH ARE TAUGHT -- ennu in chapter 72, cintikkuka in 33 --
+  // and ML-C72-ennu-more already pairs them, with the worked example "I think I
+  // know Malayalam". So the assembly was on the page before this chapter existed.
+  // Only the EVALUATION VOCABULARY was missing, and there the note was right:
+  // nallathu and mosham both returned ZERO files. The chapter teaches TWO WORDS
+  // AND NO GRAMMAR -- -athu lets a quality stand without a noun to lean on and is
+  // visibly the word athu, "that"; mosham fills the hole left by five qualities of
+  // which none was negative; the third lesson only assembles.
+  expect(coverage.covered).toBe(194);
+  expect(coverage.unmapped).toBe(49);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -372,6 +383,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 193/243 points covered (79%)",
+    "malayalam A1 (partial inventory): 194/243 points covered (80%)",
   );
 }, 60_000);

@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:2ad1aab1f292a8cb",
+  "lessonIds": [
+    "ML-C89-nallathu",
+    "ML-C89-mosham",
+    "ML-C89-opinion",
+    "ML-R89-opinion-recall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch89.txt",
+  "json": "malayalam/narration/ch89.json",
+  "textHash": "fnv1a64:299d47d75ca66ab5",
+  "jsonHash": "fnv1a64:50fbfb2c338bc8ca",
+  "findings": []
+}
