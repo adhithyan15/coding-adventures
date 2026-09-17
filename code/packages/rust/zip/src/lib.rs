@@ -736,6 +736,22 @@ impl<'a> ZipReader<'a> {
         &self.entries
     }
 
+    /// Look up an entry by name without reading it.
+    ///
+    /// This is how a caller with a memory budget checks an entry's declared
+    /// uncompressed size *before* paying for it: [`read`](Self::read) inflates
+    /// to exactly `entry.size` bytes (and refuses anything else), so a caller
+    /// that refuses `entry.size > budget` here has bounded the read without
+    /// the reader needing to know about budgets at all.
+    ///
+    /// Constant time, via the same index [`read_by_name`](Self::read_by_name)
+    /// uses — a linear scan of [`entries`](Self::entries) per lookup would be
+    /// quadratic across an archive whose central directory lists tens of
+    /// thousands of entries, which is itself an attacker-controlled count.
+    pub fn entry_by_name(&self, name: &str) -> Option<&ZipEntry> {
+        self.by_name.get(name).map(|&index| &self.entries[index])
+    }
+
     /// Decompress and return the data for `entry`. Verifies CRC-32.
     ///
     /// Returns `Err` on CRC mismatch, unsupported method, or corrupt data.
@@ -1181,6 +1197,17 @@ mod tests {
         let reader  = ZipReader::new(&archive).unwrap();
         assert_eq!(reader.read_by_name("beta.txt").unwrap(), b"BBB");
         assert!(reader.read_by_name("nope.txt").is_err());
+    }
+
+    #[test]
+    fn test_zip_entry_by_name_reports_size_without_reading() {
+        let archive = zip(&[("alpha.txt", b"AAAA"), ("beta.txt", b"BBB")]);
+        let reader = ZipReader::new(&archive).unwrap();
+        let entry = reader.entry_by_name("beta.txt").expect("present");
+        assert_eq!(entry.name, "beta.txt");
+        assert_eq!(entry.size, 3);
+        assert_eq!(reader.read(entry).unwrap(), b"BBB");
+        assert!(reader.entry_by_name("nope.txt").is_none());
     }
 
     // ── ZIP: real-world dynamic-Huffman entry ─────────────────────────────

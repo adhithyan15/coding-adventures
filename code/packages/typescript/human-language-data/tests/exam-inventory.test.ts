@@ -1947,7 +1947,7 @@ describe("the committed Malayalam A1 inventory", () => {
     }
   });
 
-  it("reports a joining column of 3 out of 11, and a script 9 characters short", () => {
+  it("reports a joining column of 4 out of 11, and a script 9 characters short", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
     const { lessons } = loadEverything();
@@ -1991,8 +1991,23 @@ describe("the committed Malayalam A1 inventory", () => {
     // TA-A1-PRON-03, closed in the chapter before this one. avar additionally
     // reuses ML-C02's own rule that a plural raises the register (nii -> ningal,
     // avan -> avar), so two of the three new words run on machinery already held.
-    expect(coverage.covered).toBe(166);
-    expect(coverage.unmapped).toBe(77);
+    // 166 -> 167: ML-A1-JOIN-06, the quotative ennu. THE NOTE WAS VERIFIED BY
+    // TOKEN RATHER THAN SUBSTRING, and that mattered: the string `enna` appears
+    // nine times in the corpus, and every one is inside ennaal, the word for
+    // "but" that ML-C64 teaches. The quotative -- with the virama -- was nowhere.
+    // ONE MARKER BUYS BACK THE WHOLE CORPUS: ennu leaves the quoted sentence
+    // untouched, so every sentence the reader can build becomes something they
+    // can report, think, claim to know or ask. Two atoms, four verb frames, all
+    // four verbs already taught.
+    // THE SAYING-VERB WAS A SECOND FINDING AND IS FIXED IN CHAPTER 50, NOT 72:
+    // parayuka was never a headword anywhere, while ML-C50-farewell built
+    // `vita parayuka` and called it "the speaking-verb" for want of a name.
+    // Teaching it at 72 made those uses forward references 104 and 106 lessons
+    // early; the lesson moved to sequence 1405, immediately before the first use,
+    // which returned forwardReferences to its baseline of 12 and paid a debt that
+    // predated this work.
+    expect(coverage.covered).toBe(167);
+    expect(coverage.unmapped).toBe(76);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2011,8 +2026,13 @@ describe("the committed Malayalam A1 inventory", () => {
     // covered point is the -i participle inside the goodbye poyi varaam, which
     // the corpus teaches without ever naming it as a way of joining clauses.
     // Same shape as Kannada's chapter 64 finding, measured independently.
+    // 3 -> 4: ML-A1-JOIN-06, the quotative ennu -- the point's own note calls it
+    // Malayalam's single most productive subordinator, and chapter 72 spends two
+    // atoms to open four verb frames whose verbs were all already taught.
+    // THE TITLE MOVED WITH THE NUMBER, for the third time. A test name carrying
+    // a stale count reads as a finding and is not one.
     const joining = coverage.byCategory["Samuchayam (joining and subordination)"]!;
-    expect(joining).toEqual({ enumerated: 11, covered: 3 });
+    expect(joining).toEqual({ enumerated: 11, covered: 4 });
     // DO NOT CARRY ANOTHER TRACK'S SCRIPT SHAPE HERE. Tamil came back 52 of 52,
     // Kannada 50 of 69. Malayalam was measured on its own and is 58 of the 67
     // distinct characters its headwords use -- 87 per cent. The nine open ones,
@@ -2026,7 +2046,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 166/243 points covered (68%)",
+      "malayalam A1 (partial inventory): 167/243 points covered (69%)",
     );
   }, 60_000);
 });

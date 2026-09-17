@@ -3,7 +3,13 @@
 ## Unreleased
 
 **Regenerated `pkg/engram_engine.wasm` for the Study empty-state props
-(#15440).** The rebuilt engine returns `study-empty` and its copy;
+(#15440).** The rebuilt engine returns `study-empty` and its copy. It was
+rebuilt on a tree that already contains the bounded media decode (#13672), so
+it carries both; `js/smoke.mjs` passes against it.
+
+**Regenerated `pkg/engram_engine.wasm` for the bounded media decode
+(#13672).** The rebuilt engine refuses an over-budget Anki package before it
+decodes the member that would cross the 32 MiB media budget, rather than after;
 `js/smoke.mjs` passes against it.
 
 **Regenerated `pkg/engram_engine.wasm` for the screen-switcher props

@@ -1,0 +1,11 @@
+{
+  "language": "malayalam",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:fd6012877e16cf80",
+  "lessonIds": [
+    "ML-C72-ennu",
+    "ML-C72-ennu-more",
+    "ML-R72-ennu-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch72-the-thing-said.tex"
+}

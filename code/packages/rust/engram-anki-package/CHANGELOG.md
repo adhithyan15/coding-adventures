@@ -2,6 +2,64 @@
 
 ## Unreleased
 
+### Fixed — the media budget now bounds peak memory, not just what is kept (#13672)
+
+`read_media_files` checked its budget *after* decoding each entry in full: add
+the length, compare, refuse. That bounds retained media, but the entry that
+crossed the line had already been held in memory -- up to each decoder's own
+256 MiB ceiling -- when it was refused. On wasm the budget is 32 MiB precisely
+because memory is scarce, and `panic = "abort"` makes the allocation itself the
+failure.
+
+Every package member is now read through `read_member_bounded`, with a limit
+applied before each layer can expand:
+
+- **ZIP / DEFLATE:** the entry's declared size is refused up front if it is past
+  the limit (for a modern member, past the largest Zstandard frame that could
+  carry the limit). `ZipReader::read` inflates to exactly that size and refuses
+  anything else, so nothing inflates past it. Uses the new
+  `ZipReader::entry_by_name`.
+- **Zstandard:** decoded with `zstd::decompress_with_limit`, which refuses at the
+  first block that would cross the limit, or at the frame header when the
+  declared size is already past it.
+
+The limits:
+
+- **Media files:** the *remaining* media budget, in `read_media_files`;
+  `read_media_file` now applies `media_budget` too, where before it had only
+  the decoders' 256 MiB. The post-decode check stays as a backstop.
+- **Collection:** `COLLECTION_DECODE_CEILING`, 256 MiB. That is the decoders'
+  existing ceiling, now owned here rather than inherited; it is deliberately
+  not lowered on wasm without measurements of real collections.
+- **Media map:** `MEDIA_MAP_DECODE_CEILING`, 16 MiB, room for well over 100,000
+  entries.
+- **Package `meta`:** `META_DECODE_CEILING`, 64 KiB, for a message holding one
+  enum.
+
+An unreadable media map or `meta` is still treated as absent, as before; only a
+size refusal is new, and it propagates.
+
+**Measured, not argued.** `tests/media_budget_peak.rs` runs `read_media_files`
+under a counting global allocator (a moving `realloc` is counted with both
+buffers live) against three packages whose payloads are at least twice their
+bound:
+
+| case | payload | peak heap growth after | on `main` before |
+| --- | --- | --- | --- |
+| legacy, DEFLATE | 64 MiB | 1,959 B | 134,219,184 B (fails) |
+| zstd, size declared | 128 MiB | 5,816 B | 25,172,044 B with the up-front check disabled (fails) |
+| zstd, size undeclared | 128 MiB | 25,172,043 B, under the 2x-budget bound | 201,332,811 B with the limit removed (fails) |
+
+The DEFLATE bomb is a hand-built fixed-Huffman stream in a hand-built ZIP,
+because `zip::raw_deflate` takes minutes on 64 MiB in a debug build. The test
+reads it back through `ZipReader` first as a positive control, so the refusal is
+the budget's and not a corrupt-archive error.
+
+Unit tests: `zstd_frame_len_bound` covers libzstd's frames for incompressible
+input (both streaming and one-shot) and never wraps; a media map and a `meta`
+member one byte past their ceilings are refused by name, with a positive control
+at the ceiling.
+
 ### Tested — the media budget is now proven to fire, not just to compute
 
 The budget itself was already here and already correct. What was missing is the

@@ -1,8 +1,8 @@
 Malayalam, chapter 50: Taking Leave.
-5 lessons. All 5 can be done entirely by ear.
+6 lessons. All 6 can be done entirely by ear.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 ഇപ്പോൾ (ippōḷ) — now.
 
 Warm-up.
@@ -34,7 +34,7 @@ Wrap-up Recall.
 What does ഇപ്പോൾ (ippōḷ) mean? ("now".) Say it once more.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 മറ്റന്നാൾ (maṟṟannāḷ) — the day after tomorrow.
 
 Warm-up.
@@ -66,7 +66,44 @@ Wrap-up Recall.
 What does മറ്റന്നാൾ (maṟṟannāḷ) mean? ("the day after tomorrow".) Say it once more.
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
+പറയുക (paṟayuka) — the verb behind the goodbye.
+
+Warm-up.
+[pause 2 seconds]
+Say ñān cintikkunnu. One word for the present, whoever is doing it.
+[pause 2 seconds]
+Today's verb runs on the same machine, and you have met it before without being told what it was.
+
+You'll want to know.
+പറയുക — paṟayuka — to say, to tell.
+ഞാൻ പറയുന്നു. — ñān paṟayunnu — "I say."
+Past പറഞ്ഞു (paṟaññu), future paṟayuṁ. And like cintikkunnu, പറയുന്നു is the whole present tense — one word for ñān, nī and avar alike.
+You have met this verb once already without being told. The politeness chapter printed paṟayū, "please tell me" — the respectful request form, stem plus -ൂ. The stem under it is today's word.
+It arrives here because the rest of this chapter needs it: Malayalam does not have a single word for to say goodbye. It names the thing being given — a journey, a leave — and hangs this verb off it.
+
+The word, taken apart.
+പറ (paṟa) is the stem, and the റ in it is the hard ṟ — made further back in the mouth than the ordinary r, and one of the letters this script keeps apart where English has a single shape.
+Where the other three verbs in this strand came from Sanskrit nouns — cintikkuka from ചിന്ത, cōdikkuka from a Sanskrit word for pushing — this one did not. പറ is a native Dravidian stem, and it is the one this language reaches for when somebody speaks, with no other job attached.
+-ഉക (-uka) is the dictionary ending you have seen on every verb in this book: aṟiyuka, cintikkuka, cōdikkuka, cērkkuka.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: paṟayuka … ñān paṟayunnu]
+[pause 8 seconds for the answer]
+[your turn — say: ñān cintikkunnu and ñān paṟayunnu one after the other]
+[pause 8 seconds for the answer]
+[your turn — say: which part of those two words is the same, and what it does]
+[pause 8 seconds for the answer]
+[your turn — say: the request form from the politeness chapter — paṟayū]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is to say? (Paṟayuka.) What is I say? (Ñān paṟayunnu.) Does that form change when somebody else is the one saying? (No — one present tense for everybody.) Which ending does it share with every other verb in this book? (-ഉക.)
+
+
+Lesson 4 of 6.
 യാത്ര (yātra) — a journey.
 
 Warm-up.
@@ -76,7 +113,7 @@ Before the new one: what did maṟṟannāḷ mean?
 You'll want to know: യാത്ര.
 യാത്ര (yātra) — "a journey".
 Sanskrit yātrā, off a root meaning simply 'to go'. A journey is a going, with a noun ending on it.
-Malayalam then does something with the word that Sanskrit did not: യാത്ര (yātra) പറയുക, literally 'to say journey', is how a speaker takes leave of a household. The noun for travelling became the verb phrase for saying goodbye, because what you announce at the door is that you are going.
+Malayalam then does something with the word that Sanskrit did not: യാത്ര (yātra) പറയുക (paṟayuka), literally 'to say journey', is how a speaker takes leave of a household. The noun for travelling became the verb phrase for saying goodbye, because what you announce at the door is that you are going.
 Kannada's ಪ್ರಯಾಣ (prayāṇa) is the same root with a prefix in front of it — a going-forth. The sisters borrowed from the same shelf and reached for neighbouring jars.
 
 What you've built.
@@ -98,7 +135,7 @@ Wrap-up Recall.
 What does യാത്ര (yātra) mean? ("a journey".) Say it once more.
 
 
-Lesson 4 of 5.
+Lesson 5 of 6.
 പുറപ്പെടുക (puṟappeṭuka) — to set out.
 
 Warm-up.
@@ -130,7 +167,7 @@ Wrap-up Recall.
 What does പുറപ്പെടുക (puṟappeṭuka) mean? ("to set out".) Say it once more.
 
 
-Lesson 5 of 5.
+Lesson 6 of 6.
 വിട (viṭa) — leave, a farewell.
 
 Warm-up.
@@ -140,7 +177,7 @@ Before the new one: what did puṟappeṭuka mean?
 You'll want to know: വിട.
 വിട (viṭa) — "leave, a farewell".
 A short word off a plain verb: വിടുക (viṭuka) is 'to let go, to release'. വിട (viṭa) is the letting-go itself.
-And it is used exactly as the journey-word was: വിട (viṭa) പറയുക, 'to say farewell'. Malayalam has two ways to announce a departure, one naming the going and one naming the release, and both are built by hanging the speaking-verb off a noun.
+And it is used exactly as the journey-word was: വിട (viṭa) പറയുക (paṟayuka), 'to say farewell'. Malayalam has two ways to announce a departure, one naming the going and one naming the release, and both are built by hanging the speaking-verb off a noun.
 Kannada's word here, ಬೀಳ್ಕೊಡುಗೆ (bīḷkoḍuge), is longer and made of its own native parts — a giving of leave. Three languages could hardly agree less on how to say goodbye, and each of them is transparent once opened.
 
 What you've built.
