@@ -98,21 +98,55 @@ fn list_fixtures_reach_every_browser_backend_under_strict_mode() {
 }
 
 #[test]
-fn a_list_the_backend_cannot_render_fails_only_under_strict_mode() {
+fn list_fixtures_reach_every_native_backend_under_strict_mode() {
     let dir = scratch("native");
-    let lenient = compile("swiftui", &dir, &[]);
-    assert!(lenient.status.success(), "a dropped list is a warning by default");
-    assert!(
-        String::from_utf8_lossy(&lenient.stderr).contains("warning"),
-        "the drop must still be reported"
-    );
+    for backend in ["swiftui", "qt", "flutter", "xaml"] {
+        let result = compile(backend, &dir, &["--strict-fixtures"]);
+        assert!(
+            result.status.success(),
+            "{backend} should accept a list fixture under --strict-fixtures:
+{}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+    }
+}
 
-    let strict = compile("swiftui", &dir, &["--strict-fixtures"]);
-    assert!(!strict.status.success(), "a dropped list must fail under --strict-fixtures");
-    let stderr = String::from_utf8_lossy(&strict.stderr);
+/// A value no backend renders (an object) is still a warning by default and
+/// a failure under --strict-fixtures, naming the slot.
+#[test]
+fn an_unrenderable_fixture_fails_only_under_strict_mode() {
+    let dir = scratch("object");
+    let src = repository_root().join("code/packages/mosaic/mosaic-pkg-toolkit/src");
+    let fixtures = dir.join("fixtures.json");
+    fs::write(&fixtures, r#"{ "options": { "not": "a list" } }"#).unwrap();
+    let run = |extra: &[&str]| {
+        let mut args = vec![
+            "--interface".to_string(),
+            src.join("SegmentedControl.mil").to_str().unwrap().to_string(),
+            "--layout".to_string(),
+            src.join("SegmentedControl.mll").to_str().unwrap().to_string(),
+            "--fixtures".to_string(),
+            fixtures.to_str().unwrap().to_string(),
+            "--backend".to_string(),
+            "react".to_string(),
+            "--output".to_string(),
+            dir.join("out.tsx").to_str().unwrap().to_string(),
+        ];
+        args.extend(extra.iter().map(|s| s.to_string()));
+        Command::new(env!("CARGO_BIN_EXE_mosaic-compile"))
+            .args(&args)
+            .output()
+            .expect("run mosaic-compile")
+    };
+    let lenient = run(&[]);
+    assert!(lenient.status.success(), "an unrenderable value is a warning by default");
+    assert!(String::from_utf8_lossy(&lenient.stderr).contains("warning"));
+
+    let strict = run(&["--strict-fixtures"]);
+    assert!(!strict.status.success(), "it must fail under --strict-fixtures");
     assert!(
-        stderr.contains("slot `options`") && stderr.contains("swiftui"),
-        "the failure must name the slot and the backend: {stderr}"
+        String::from_utf8_lossy(&strict.stderr).contains("slot `options`"),
+        "the failure must name the slot"
     );
 }
 

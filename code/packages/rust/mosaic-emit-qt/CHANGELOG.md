@@ -8,6 +8,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed -- list story fixtures reach the generated `main.cpp` (#15428)
+
+`qvariant_literal_for_fixture` turns a text-list fixture into a
+`QVariant(QVariantList{…})`, with nested `QVariantList`s for rows. That is
+what a QML `var` list property reads from `initialProperties`. A shape that
+does not match the slot inserts an empty list.
+
 ### Fixed -- an empty run-time accessible name left a HostButton unnamed (#15427)
 
 An accessible name known only at run time can be empty, and an empty override is not the same as no override. Writing `Accessible.name` replaces the Controls

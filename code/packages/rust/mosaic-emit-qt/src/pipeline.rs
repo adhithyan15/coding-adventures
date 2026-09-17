@@ -7550,6 +7550,32 @@ fn qvariant_literal_for_fixture(slot_type: &SlotType, fixture: &str) -> String {
             "false" => "false".to_string(),
             _ => format!("QStringLiteral(\"{}\")", escape_qml_string(fixture)),
         },
+        // Lists arrive as JSON text (#15428), and become a `QVariantList` (of
+        // `QVariantList`s for rows) -- the shape a QML `var` list property
+        // reads. A shape that does not match the slot is not inserted, so the
+        // QML default stays.
+        SlotType::List(_) => {
+            let strings = |items: &[String]| {
+                let cells: Vec<String> = items
+                    .iter()
+                    .map(|item| format!("QVariant(QStringLiteral(\"{}\"))", escape_qml_string(item)))
+                    .collect();
+                format!("QVariantList{{{}}}", cells.join(", "))
+            };
+            match mosmodel_compiler::fixtures::parse_list_fixture(slot_type, fixture) {
+                Some(mosmodel_compiler::fixtures::ListFixture::Text(items)) => {
+                    format!("QVariant({})", strings(&items))
+                }
+                Some(mosmodel_compiler::fixtures::ListFixture::TextRows(rows)) => format!(
+                    "QVariant(QVariantList{{{}}})",
+                    rows.iter()
+                        .map(|row| format!("QVariant({})", strings(row)))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                ),
+                None => "QVariant(QVariantList{})".to_string(),
+            }
+        }
         _ => format!("QStringLiteral(\"{}\")", escape_qml_string(fixture)),
     }
 }
@@ -15598,6 +15624,22 @@ mod tests {
             render(&[("variant", "primary")])
         );
         assert_eq!(render(&[("variant", "danger")]), render(&[]));
+    }
+
+    /// #15428: list fixtures become QVariantLists for `initialProperties`.
+    #[test]
+    fn list_fixtures_render_as_qvariant_lists() {
+        let rows = mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(Box::new(mosmodel_compiler::ListInnerType::Text))));
+        assert_eq!(
+            qvariant_literal_for_fixture(&rows, r#"[["A","a"]]"#),
+            "QVariant(QVariantList{QVariant(QVariantList{QVariant(QStringLiteral(\"A\")), QVariant(QStringLiteral(\"a\"))})})"
+        );
+        let quoted = qvariant_literal_for_fixture(&rows, r#"[["x\"y"]]"#);
+        assert!(!quoted.contains("x\"y\""), "raw quote must not survive: {quoted}");
+        assert_eq!(
+            qvariant_literal_for_fixture(&rows, r#"["flat"]"#),
+            "QVariant(QVariantList{})"
+        );
     }
 
     #[test]

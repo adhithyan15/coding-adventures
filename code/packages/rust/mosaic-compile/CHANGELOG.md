@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+### Changed - list story fixtures reach the native backends too (#15428, PR-2)
+
+xaml, swiftui, qt and flutter now render text-list fixtures, so every
+backend that renders fixture content takes them. `ListFixtures::Unsupported`
+is gone; only paint, which uses fixtures just to pick style states, skips
+lists.
+
+`--strict-fixtures` still fails on values no backend renders (objects, other
+list shapes). The CLI tests now check that:
+
+- the four native backends accept a list fixture under strict mode;
+- an object fixture warns by default and fails under strict mode, naming
+  the slot.
+
 ### Fixed - list story fixtures reach the browser backends; `--strict-fixtures` (#15428)
 
 `pipeline_slot_values` dropped every list-typed fixture with a warning. So

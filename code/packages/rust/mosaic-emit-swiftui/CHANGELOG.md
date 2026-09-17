@@ -8,6 +8,14 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed -- list story fixtures reach the generated app (#15428)
+
+`swift_literal_for_fixture` renders a text-list fixture as a Swift array
+(`[["Board", "Board, selected"]]`) for the `fallback:` of
+`MosaicHostValue.stringList` / `stringListList`, so a story's rows show
+before a host attaches. A shape that does not match the slot keeps the
+sample.
+
 ### Fixed -- an empty run-time accessible name made VoiceOver read just "Button" (#15427)
 
 An accessible name known only at run time can be empty, and an empty override is not the same as no override. `.accessibilityLabel(Text(""))` *replaces* the

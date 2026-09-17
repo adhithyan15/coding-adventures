@@ -866,6 +866,25 @@ fn swift_literal_for_fixture(slot_type: &SlotType, value: &str) -> String {
             "false" => "false".to_string(),
             _ => format!("\"{}\"", escape_swift_string(value)),
         },
+        // Lists arrive as JSON text (#15428). A shape that does not match the
+        // slot keeps the generated sample, so the project still compiles.
+        SlotType::List(_) => {
+            let strings = |items: &[String]| {
+                let cells: Vec<String> = items
+                    .iter()
+                    .map(|item| format!("\"{}\"", escape_swift_string(item)))
+                    .collect();
+                format!("[{}]", cells.join(", "))
+            };
+            match mosmodel_compiler::fixtures::parse_list_fixture(slot_type, value) {
+                Some(mosmodel_compiler::fixtures::ListFixture::Text(items)) => strings(&items),
+                Some(mosmodel_compiler::fixtures::ListFixture::TextRows(rows)) => format!(
+                    "[{}]",
+                    rows.iter().map(|row| strings(row)).collect::<Vec<_>>().join(", ")
+                ),
+                None => sample_value_for_slot_type(slot_type, ""),
+            }
+        }
         _ => format!("\"{}\"", escape_swift_string(value)),
     }
 }
@@ -8005,6 +8024,21 @@ mod tests {
     /// A fixture value is written as a Swift literal of the slot's declared
     /// type. The fallback is passed to `MosaicHostValue.double`/`.bool`, so a
     /// numeric slot emitting `"42"` would not compile in the generated app.
+    /// #15428: list fixtures render as Swift arrays; a mismatched shape keeps
+    /// the sample.
+    #[test]
+    fn list_fixtures_render_as_swift_arrays() {
+        let rows = mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(Box::new(mosmodel_compiler::ListInnerType::Text))));
+        let text = mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::Text));
+        assert_eq!(
+            swift_literal_for_fixture(&rows, r#"[["Board","Board, selected"]]"#),
+            r#"[["Board", "Board, selected"]]"#
+        );
+        assert_eq!(swift_literal_for_fixture(&text, r#"["a","b"]"#), r#"["a", "b"]"#);
+        assert!(!swift_literal_for_fixture(&text, r#"["a\"b"]"#).contains("a\"b\""));
+        assert_eq!(swift_literal_for_fixture(&rows, r#"["flat"]"#), "[]");
+    }
+
     #[test]
     fn fixtures_render_as_typed_swift_literals() {
         assert_eq!(swift_literal_for_fixture(&SlotType::Bool, "true"), "true");

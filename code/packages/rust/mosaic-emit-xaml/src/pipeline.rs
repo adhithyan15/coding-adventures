@@ -7423,6 +7423,28 @@ fn csharp_literal_for_fixture(t: &SlotType, fixture: &str) -> String {
             "false" => "false".to_string(),
             _ => format!("\"{}\"", escape_csharp_string(fixture)),
         },
+        // Lists arrive as JSON text (#15428). A shape that does not match the
+        // slot keeps the generated sample, so the project still builds.
+        SlotType::List(_) => {
+            let strings = |items: &[String]| {
+                let cells: Vec<String> = items
+                    .iter()
+                    .map(|item| format!("\"{}\"", escape_csharp_string(item)))
+                    .collect();
+                format!(
+                    "new System.Collections.Generic.List<string> {{ {} }}",
+                    cells.join(", ")
+                )
+            };
+            match mosmodel_compiler::fixtures::parse_list_fixture(t, fixture) {
+                Some(mosmodel_compiler::fixtures::ListFixture::Text(items)) => strings(&items),
+                Some(mosmodel_compiler::fixtures::ListFixture::TextRows(rows)) => format!(
+                    "new System.Collections.Generic.List<System.Collections.Generic.IReadOnlyList<string>> {{ {} }}",
+                    rows.iter().map(|row| strings(row)).collect::<Vec<_>>().join(", ")
+                ),
+                None => stub_value_for_slot(t, ""),
+            }
+        }
         _ => format!("\"{}\"", escape_csharp_string(fixture)),
     }
 }
@@ -21796,6 +21818,27 @@ mod tests {
             render(&[("variant", "primary")])
         );
         assert_eq!(render(&[("variant", "danger")]), render(&[]));
+    }
+
+    /// #15428: list fixtures render as typed C# collection initializers.
+    #[test]
+    fn list_fixtures_render_as_csharp_collections() {
+        let rows = mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(Box::new(mosmodel_compiler::ListInnerType::Text))));
+        let text = mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::Text));
+        assert_eq!(
+            csharp_literal_for_fixture(&rows, r#"[["Board","Board, selected"]]"#),
+            "new System.Collections.Generic.List<System.Collections.Generic.IReadOnlyList<string>> \
+             { new System.Collections.Generic.List<string> { \"Board\", \"Board, selected\" } }"
+        );
+        assert_eq!(
+            csharp_literal_for_fixture(&text, r#"["a"]"#),
+            "new System.Collections.Generic.List<string> { \"a\" }"
+        );
+        // A mismatched shape keeps the stub's type.
+        assert_eq!(
+            csharp_literal_for_fixture(&rows, r#"["flat"]"#),
+            stub_value_for_slot(&rows, "")
+        );
     }
 
     #[test]
