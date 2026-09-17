@@ -4575,7 +4575,7 @@
         "A1-O1-02"
       ],
       "malayalamSpecific": false,
-      "note": "The vowel signs are taught as shapes; no lesson says that length changes the word."
+      "note": "MEASURED, NOT ESTIMATED, and the estimate was wrong. This point was scoped as costing zero new words, on the assumption that the corpus could demonstrate vowel length from its own vocabulary. It cannot. All 292 taught Malayalam tokens were normalised by mapping every long vowel sign to its short counterpart and grouped: the number of vowel-length minimal pairs among taught words is ZERO. So a lesson that shows length CHANGING a word must introduce at least one contrast partner as a taught word of its own -- which is fine, but it is not free, and it must be a pair verified against a dictionary rather than constructed. Do not write this on a guessed pair. Candidate work for a future pass: find a taught word whose lengthened or shortened counterpart is independently attested, and teach that counterpart properly rather than mentioning it."
     },
     {
       "id": "ML-A1-PHON-04",
@@ -4591,7 +4591,7 @@
         "A1-O1-07"
       ],
       "malayalamSpecific": false,
-      "note": "The chandrakkala is taught and the doubling it writes is never named as a contrast, although it appears in dozens of taught headwords."
+      "note": "MEASURED. 102 of the 292 taught tokens contain a doubled consonant -- amma, illa, uppu, ucca, adutthu and ninety-seven more -- so the note's 'dozens of taught headwords' was an undercount, and the raw material is abundant. But the same normalisation run that checked vowel length also checked gemination: the number of gemination minimal pairs AMONG TAUGHT WORDS is ZERO, so the CONTRAST the note asks for cannot be shown from taught vocabulary alone either. It is cheap to fix, unlike PHON-03: kutti (child) is taught as a headword in ML-C36-kutti, and kudi (drinking) returned ZERO files, so kutti/kudi is a genuine minimal pair with one member already owned and the other free to introduce. That is the intended shape -- one new taught word, and the doubling named as a held sound the reader can already hear in a hundred words they know."
     },
     {
       "id": "ML-A1-PHON-05",
@@ -4607,7 +4607,7 @@
         "A1-O2-01"
       ],
       "malayalamSpecific": false,
-      "note": "Not taught anywhere. Malayalam's stress is regular, which is exactly why one lesson would settle it for good."
+      "note": "Still the cheapest of the three and genuinely needs NO minimal pair, which is why it should not be blocked behind PHON-03. Malayalam stress is regular, so the lesson is a rule statement rather than a contrast. The point worth making to an English speaker is not only WHERE the stress falls but that Malayalam does not use stress to tell words apart the way English does, so a learner who imports English's habit of leaning hard on one syllable will sound wrong without being wrong about any single word. Pair it with PHON-04 rather than with PHON-03."
     },
     {
       "id": "ML-A1-REG-01",
