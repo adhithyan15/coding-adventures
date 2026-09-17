@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C426-repaso-cortas",
+    "language": "spanish",
+    "chapter": 426,
+    "sequence": 10140,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3950decf1c7e7cb7"
+  },
+  "findings": []
+}

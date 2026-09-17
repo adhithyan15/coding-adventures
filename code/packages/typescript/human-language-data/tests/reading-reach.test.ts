@@ -118,3 +118,49 @@ describe("a passage is the quoted text, not the lesson around it", () => {
     expect(passageLength("> コーヒー 100")).toBe(5);
   });
 });
+
+// ---------------------------------------------------------------------------
+// DECLARING A1 MADE A GAP VISIBLE THAT NOTHING HAD MEASURED.
+//
+// Eight tracks gained `task-shapes/a1.json` in one tranche. Every one of them
+// already had a reading rung and a pre-A1 inventory, and every one of them
+// measured 3/3 or 2/2 at pre-A1 -- which is exactly the kind of green that
+// hides a bigger number one rung up.
+//
+// At A1 all eight measure 0/3. The shared A1 envelope asks for a shortest input
+// of 70 words, and the longest comprehension passage any of them holds is 53:
+//
+//     malayalam 53   sanskrit 51   italian 47   portuguese 42
+//     bengali   36   kannada  31   tamil    30   telugu     25
+//
+// That is not a defect introduced here. It is the first time the distance was
+// stated as a number rather than left as an absence, and the distance is the
+// point: a track is not "nearly at A1 reading" -- it is between seventeen and
+// forty-five words short, per track, and now says so.
+//
+// This test pins the MEASURABILITY rather than the zero. A floor of 0 asserts
+// nothing, so what must not regress is that these rows exist and publish a
+// stimulus length at all; the moment a passage grows past 70, its floor goes in.
+// ---------------------------------------------------------------------------
+describe("the A1 rung the eight new inventories opened", () => {
+  const NEWLY_MEASURABLE = [
+    "bengali", "italian", "kannada", "malayalam",
+    "portuguese", "sanskrit", "tamil", "telugu",
+  ];
+
+  it("measures every one of them at A1 instead of leaving the rung absent", () => {
+    for (const language of NEWLY_MEASURABLE) {
+      const row = report.rows.find((r) => r.language === language && r.level === "A1");
+      expect(row, `${language} A1 must appear in the reading-reach table`).toBeDefined();
+      expect(row!.status, `${language} A1 status`).toBe("measurable");
+      expect(row!.partsMeasurable, `${language} A1 measurable parts`).toBe(3);
+    }
+  });
+
+  it("keeps the pre-A1 rung it already had, so the A1 zero is not a regression", () => {
+    for (const language of NEWLY_MEASURABLE) {
+      const row = report.rows.find((r) => r.language === language && r.level === "pre-A1");
+      expect(row?.partsWithinReach, `${language} pre-A1 parts in reach`).toBeGreaterThan(0);
+    }
+  });
+});

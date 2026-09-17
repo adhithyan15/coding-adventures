@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "MW-W03-ghadi-saathe",
+    "language": "marwadi",
+    "chapter": 42,
+    "sequence": 3460,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d289b7779baeb140",
+    "detachableSegments": [
+      "Writing — timed production"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

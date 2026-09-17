@@ -1,0 +1,12 @@
+{
+  "id": "PA-PATH-047-CONNECTED",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "lessons": [
+    "PA-W11-jodi-hoiyan-lineaan"
+  ],
+  "before": [],
+  "inline": [
+    "PA-EXT-047-CONNECTED"
+  ],
+  "after": []
+}

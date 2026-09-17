@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2557b5dc6ff31802",
+  "sourceHash": "fnv1a64:9d8b66b25efb0482",
   "lessons": [
     {
       "id": "HI-C29-shaam",
@@ -115,6 +115,216 @@
             {
               "kind": "speech",
               "text": "Is शाम Sanskrit or Persian? (Persian — from شام, śām, like subah.) Is शाम related to Sanskrit श्यामा (śyāmā, \"dark\")? (No — a genuine false cognate; the resemblance is coincidental, not a shared root.) What do subah and shaam have in common, beyond both meaning a time of day? (Both are Persian loanwords — Hindi's morning/evening pair, unlike din/raat, isn't Sanskrit at all.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-S131-letter-e",
+      "sequence": 805,
+      "title": "ए — the vowel that had only ever been a mark",
+      "headword": "ए",
+      "romanization": "e",
+      "gloss": "the single character ए — the standing form of a mark you have been reading since the greetings",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6716775e4701230b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ए",
+          "Script: two shapes, one sound",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ए, Script: two shapes, one sound and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ◌े — what does it do to the consonant it sits on?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That mark has a standing form, and this is it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ए",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ए — e."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the independent vowel. The mark ◌े is what this sound looks like when it rides on a consonant; ए is what it looks like when it stands on its own, with no consonant to attach to."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a long left stem joined to the descending tail."
+            },
+            {
+              "kind": "speech",
+              "text": "a shorter right stem with an inward hook."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: two shapes, one sound",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you see",
+                "where it stands"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you see: ◌े. where it stands: on a consonant.",
+                "what you see: ए. where it stands: alone."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every vowel in this script works this way, and you have met the arrangement twice before with अ / ◌ा and with उ / ◌ु. A vowel sign and its letter are the same vowel in two postures, and which one a word uses is decided by whether a consonant is there to carry it."
+            },
+            {
+              "kind": "speech",
+              "text": "ए turns up at the ends of words far more than at the beginnings, because that is where a vowel most often has nothing in front of it to ride on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing: ए",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. descend the left stem, curve right through the lower shoulder, and sweep down through the tail without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and descend the shorter right stem into its inward hook."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified modern printed teaching form; everyday handwriting may simplify the curves."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari ए stroke order.svg’, panels 1–3, Wikimedia Commons, 5 August 2023."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the mark and the letter side by side, and say what they share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the mark and the letter side by side, and say what they share]"
+            },
+            {
+              "kind": "speech",
+              "text": "◌े, ए (e)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ए three times, saying e as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ए three times, saying *e* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what decides which of the two a word uses",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what decides which of the two a word uses]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What sound is ए? (e.) What is the sitting version of it? (◌े.) What decides which one a word uses? (Whether there is a consonant for the vowel to ride on.)"
             }
           ]
         }

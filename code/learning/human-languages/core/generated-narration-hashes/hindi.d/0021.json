@@ -1,16 +1,17 @@
 {
   "language": "hindi",
   "chapter": 21,
-  "sourceHash": "fnv1a64:4b2cdac8303f3c8e",
+  "sourceHash": "fnv1a64:232e2743e883a7d0",
   "lessonIds": [
+    "HI-S130-letter-chha",
     "HI-C21-numbers-6-10",
     "HI-C21-six-nine-ten-history"
   ],
   "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "drivablePrefix": 0,
   "text": "hindi/narration/ch21.txt",
   "json": "hindi/narration/ch21.json",
-  "textHash": "fnv1a64:8d45def483162073",
-  "jsonHash": "fnv1a64:82a87a6c612cf490",
+  "textHash": "fnv1a64:b4bfaf292f0f973a",
+  "jsonHash": "fnv1a64:e49ac0b65c0ee12f",
   "findings": []
 }

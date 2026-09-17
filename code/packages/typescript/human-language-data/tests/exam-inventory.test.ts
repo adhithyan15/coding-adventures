@@ -224,17 +224,112 @@ describe("the committed A1 inventory", () => {
     // it needs, `ES-LEX-SABER`, has existed since #13154 and nothing pointed at it.
     // A null whose stated reason has expired is worse than a bare null, because the
     // note is precisely what the loop below trusts to prove the null was considered.
+    // 44 -> 41. THE THREE POINTS CHAPTER 420 REFUSED TO CLAIM, plus the one whose
+    // note had gone stale. `A1-NE18-06` (cinema and theatre) was held null on
+    // purpose while actor and actriz were absent; chapters 421-423 author them,
+    // so it leaves the list by the only route this project accepts. `A1-NE16-02`
+    // stood uncovered on ONE missing exponent -- three of its four had been
+    // taught since chapter 393 -- and `pagina web` supplies it.
+    //
+    // `A1-NE02-01` is the HL-C376 class again, and worse than a bare null: its
+    // note said "the corpus introduces none of them" while `simpatico`
+    // (ES-C380-simpatico) and `alegre` (ES-C380-alegre) were both headwords. The
+    // note is corrected in the same change that authors the remaining six, so
+    // the point does not close on a correction -- it closes on six lessons.
+    // 41 -> 33. THE WHOLE `Puntuacion` GAP CLOSES AT ONCE, which is the second
+    // time a complete category has moved in one chapter and the first time it
+    // was the emptiest one. The comment below named it as the work queue at
+    // 1/9; chapter 424 takes it to 9/9.
+    //
+    // These eight are a different KIND of gap from every vocabulary point this
+    // campaign has closed. The corpus has PRINTED all eight marks for hundreds
+    // of chapters and named none of them: the dialogue `raya` opens every
+    // exchange the book has ever set, including the three chapters merged
+    // immediately before this one, and the reader was left to decode it by
+    // guess. So nothing here is a new word — it is the book finally saying what
+    // its own typography has been doing.
+    // 33 -> 18. THE ORTHOGRAPHY DIMENSION CLOSES ENTIRELY. Chapters 425 and 426
+    // take `Ortografia de letras y palabras` 0/7 -> 7/7 and `Abreviaturas y
+    // siglas` 0/3 -> 3/3, and with `Puntuacion` closed one chapter earlier,
+    // every O-* point in the inventory is now covered.
+    //
+    // The eighteen that remain are ALL notions and functions -- no grammar, no
+    // orthography. That is a change in the SHAPE of the remaining work, not
+    // only its size: what is left needs vocabulary and exponents rather than
+    // rules, so the next tranches will look like chapters 421-423 again rather
+    // than like 424-426.
+    //
+    // A1-O1-04 (capitals) is the one of the ten with a consequence a marker sees
+    // on every line rather than a fact a reader can look up: an English-trained
+    // hand capitalises `lunes`, `enero`, `espanol` and every word of a book
+    // title, and Spanish capitalises none of them.
+    // 18 -> 11, and THREE of the seven cost no authoring at all. `A1-NE13-03`
+    // (farmacia), `A1-NE15-04` (pescado) and `A1-NE07-06` (ser trabajador) each
+    // enumerate ONE exponent, and each of those three was already a lesson
+    // headword -- ES-C353, ES-C361 and ES-C423 respectively. Their notes said
+    // the corpus never introduced them, and all three notes were false.
+    //
+    // This is the HL-C375 class, found again by the HL-C376 method: resolve
+    // every exponent through a lesson `headword:`, never through an atom id.
+    // Two of the three had been wrong for many chapters; the third went stale
+    // the moment chapter 423 landed `trabajador` and nothing re-read the note.
+    // A null whose stated reason has expired is worse than a bare null, because
+    // the note is exactly what the loop below trusts to prove the null was
+    // considered.
+    //
+    // The other four are chapter 427's, and they are ordinary authoring.
+    // 11 -> 7, and every one of chapter 428's five words was the LAST MISSING
+    // PIECE of something the corpus could otherwise nearly do.
+    //
+    // `A1-NE09-06` needed two symbol names out of seven exponents: punto, guion
+    // and pagina web had joined internet and correo electronico across chapters
+    // 342, 422 and 424, and the note had not caught up -- the SECOND stale note
+    // found in two tranches by the HL-C376 headword method.
+    //
+    // `A1-F5-10` and `A1-F5-09` are a shape worth naming: `feliz` and `la salud`
+    // were BOTH already taught, and neither covered its point, because an
+    // adjective does not congratulate and a noun does not toast. The fix is the
+    // same word put to a different use -- felicidad pluralised into an act, and
+    // salud with its article dropped. Coverage is about what the corpus can DO,
+    // not only which strings it contains.
+    //
+    // The seven that remain are the residue, and two of them are meant to stay
+    // null: `A1-F2-10` and `A1-F6-06` argue in their own notes that A1 has no
+    // linguistic exponent to probe, and wiring either would be the over-claim
+    // this campaign has refused since `A1-NE18-06`.
+    // 7 -> 2. THE INVENTORY REACHES ITS CEILING, and the shape of the last five
+    // is the finding: THREE of them were stale notes rather than gaps.
+    //
+    // `A1-F4-01` (give an order) closes with ZERO authoring. Its note said the
+    // corpus "never introduces the affirmative imperative" while ES-C50-habla
+    // teaches habla/come/vive and ES-C50-ocho-cortos teaches the eight
+    // irregulars. The inventory was contradicting ITSELF: `A1-V-11` had been
+    // wired to those same two atoms all along. The softened-order exponent is
+    // `por favor` plus ES-C50-sintesis-pedir-bien, which reads *Coma, por favor*
+    // and argues the attenuation lives in the tu/usted choice.
+    //
+    // `A1-NE06-01` and `A1-NE07-04` were PARTLY stale. NE06-01's note claimed
+    // the corpus taught "none of the four listed words" while universidad,
+    // clase and biblioteca were all headwords -- the gap was ONE word wide, and
+    // `instituto` is the one that mattered, being both a false friend and the
+    // missing middle rung between escuela and universidad. NE07-04's note
+    // claimed neither `paro` nor `trabajo` as a noun existed, and ES-C394-trabajo
+    // introduces the noun -- so only the negative half was missing.
+    //
+    // The other two are ordinary authoring. `A1-NE12-02` was accurate at four of
+    // seven and chapter 430 adds vaqueros, jersey and bolso. `A1-NE06-05` is the
+    // one whose note was RIGHT: it had already corrected a false claim about
+    // `examen` and held the point uncovered because the MARKS half was wholly
+    // absent, and chapter 429 supplies all four of nota, calificacion, aprobar
+    // and suspender, so it closes on both halves rather than on one.
+    //
+    // Five stale notes in four tranches, all found by the HL-C376 headword
+    // method. The notes are the least-maintained part of the inventory because
+    // nothing re-reads them when a chapter lands.
+    //
+    // The two that remain are meant to remain. 271/273 IS the ceiling.
     expect(unmapped.sort()).toEqual([
-      "A1-F2-10", "A1-F3-03", "A1-F4-01", "A1-F5-09",
-      "A1-F5-10", "A1-F6-06", "A1-NE02-01", "A1-NE06-01", "A1-NE06-05",
-      "A1-NE07-04", "A1-NE07-06", "A1-NE08-02", "A1-NE09-06", "A1-NE11-04",
-      "A1-NE12-02", "A1-NE13-03", "A1-NE15-02", "A1-NE15-03", "A1-NE15-04",
-      "A1-NE16-02", "A1-NE17-02", "A1-NE18-01", "A1-NE18-02", "A1-NE18-05",
-      "A1-NE18-06", "A1-NE20-05",
-      "A1-O1-01", "A1-O1-02", "A1-O1-03", "A1-O1-04", "A1-O1-05",
-      "A1-O1-06", "A1-O1-07", "A1-O3-01", "A1-O3-02", "A1-O3-03", "A1-O3-05",
-      "A1-O3-06", "A1-O3-07", "A1-O3-08", "A1-O3-09", "A1-O4-01", "A1-O4-02",
-      "A1-O4-03",
+      "A1-F2-10", "A1-F6-06",
     ]);
 
     // Every null must SAY why it is null. The note is what stops a null from
@@ -519,9 +614,9 @@ describe("what the corpus actually covers", () => {
     // Both behaviours are correct and neither is evidence on its own, which is the
     // argument for pinning `covered` and `unmapped` beside it.
     expect(coverage.enumerated).toBe(273); // 85 grammar + 54 functions + 113 notions + 21 orthography
-    expect(coverage.covered).toBe(229); // 85 grammar (unchanged) + 144 newly mapped // ...and 262-266 close the last four enumerated points. The inventory scope remains partial. // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
-    expect(coverage.percent).toBe(84); // 53 -> 56 -> 60 -> 64 -> 66 -> 68 -> 71 -> 77 -> 81 -> 85/85 grammar-only, then 223/273 across four dimensions
-    expect(coverage.unmapped).toBe(44); // was 0 while only grammar was enumerated
+    expect(coverage.covered).toBe(271); // 266 -> 271 (ch429-430): the LAST FIVE enumerated points, and three of the five were stale notes rather than gaps. A1-F4-01 closes with zero authoring -- the affirmative imperative has been taught by ES-C50-habla and ES-C50-ocho-cortos all along, and the inventory contradicted itself because A1-V-11 was already wired to those same atoms. A1-NE06-01 needed only instituto (universidad, clase and biblioteca were headwords), and A1-NE07-04 needed only estar en paro (ES-C394-trabajo introduces the noun). A1-NE12-02 and A1-NE06-05 are ordinary authoring: three garments and the four marks words. 271/273 is the CEILING, not a stopping point chosen for convenience -- A1-F2-10 and A1-F6-06 argue in their own notes that A1 has no linguistic exponent to probe. // 262 -> 266 (ch428): A1-NE09-06 (dictating an e-mail address, which needed only arroba and guion bajo), A1-F5-10 (felicidades), A1-F5-09 (the toast salud) and A1-NE20-05 (the superordinate animal). Two of the four close on a word the corpus ALREADY had, used differently: feliz does not congratulate and la salud does not toast, so the chapter supplies the act rather than the string. // 255 -> 262 (ch427): FOUR points authored -- A1-NE15-02 (vendedor, comprador), A1-NE11-04 (policia, bombero), A1-NE17-02 (abogado) and A1-NE15-03 (empresa) -- and THREE wired at no cost, because farmacia (ES-C353), pescado (ES-C361) and trabajador (ES-C423) were already headwords whose notes claimed they were absent. The chapter is organised by HOW each profession word was built rather than by what the person does, because that is what makes an unfamiliar one readable: -dor on a verb, -ero on a thing, policia from its institution, abogado inherited from Latin whole. // 245 -> 255 (ch425-426): the ENTIRE orthography dimension. Ortografia de letras y palabras 0/7 -> 7/7 and Abreviaturas y siglas 0/3 -> 3/3, on top of Puntuacion closed in ch424. Ten points, and like ch424 not one of them is a vocabulary gap: the letters have been on every page since chapter one and the corpus had never named them. The letter NAMES are the load-bearing part -- a listening paper dictates a surname letter by letter, and hache, jota and equis are not guessable from English. // 237 -> 245 (ch424): the ENTIRE Puntuacion category, 1/9 -> 9/9. Eight marks the corpus printed constantly and never named. Two of the eight carry a consequence a marker can see rather than a fact a reader can look up: Spanish writes NO comma before the final y of a list, where an English-trained hand puts one, and a Spanish letter opens with a colon after the greeting where English uses a comma. // 234 -> 237 (ch421-423): A1-NE18-06 (cinema and theatre), A1-NE16-02 (computing and new technology) and A1-NE02-01 (character and personality adjectives). Nine headwords across three chapters. NE18-06 is the one chapter 420 deliberately left null pending actor and actriz, and it closes here by authoring them rather than by loosening the claim. NE16-02 needed a single exponent, pagina web, against three taught since ch393. NE02-01 needed six of eight, and its note wrongly said the corpus taught none of the eight while simpatico and alegre were headwords -- corrected here, but the point closes on the six new lessons, not on the correction. // 232 -> 234 (ch420): A1-NE18-01 (artistic disciplines) and A1-NE08-02 (shows and exhibitions). Three words -- teatro, exposicion, circo -- close two points, because six of NE18-01's eight exponents were already taught. A1-NE18-06 (cinema and theatre) is deliberately LEFT NULL: it also wants actor and actriz, and wiring it on teatro alone would repeat the over-claim blocked on A1-NE06-05. // 231 -> 232: A1-F3-03, whose note said the corpus never introduced preferir while ES-C396-preferir does. A1-NE06-05 was wired here too and REVERTED before merge: its label is "examinations and marks" and the marks half (nota, calificacion, aprobar, suspender) is absent, so wiring it on examen alone would have contradicted the call at A1-NE18-06, where pelicula without teatro is held not to buy "cinema and theatre". The 21% figure in the older comment below is WITHDRAWN -- see HL-C376; it came from a keyword scan, and the ES-LEX-<WORD> scan that replaced it was also wrong because half the corpus uses chain ids (ES-LEX-C354-WHERE-28 is el cine). Resolve an exponent through the lesson headword, never an atom id. // 229 -> 231 (ch419). TWO points, ONE new lesson, and the split is the finding: A1-NE18-02 (music and dance) needed authoring -- ES-LEX-BAILAR did not exist -- while A1-NE18-05 (photography) needed NOTHING but a probe: ES-LEX-FOTO and ES-LEX-FOTOGRAFIA have been introduced by ch405 all along and the point was counted uncovered only because nobody wired it. A corpus-wide scan puts 451 of the 2,189 uncovered points (21%) in that second class. // 85 grammar (unchanged) + 144 newly mapped // ...and 262-266 close the last four enumerated points. The inventory scope remains partial. // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-256 // +4 ch257-261: the four rules the book had always demonstrated and never stated // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250 // +6 ch251-255: the half-taught sets finished, plus bastante which was already taught and merely unwired // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245 // +3 ch246-250: the stressed pronouns, the exclamative and the vocative // +3 ch221-225 // +4 ch226-229 // +4 ch230-235 // +2 ch236-240 // +2 ch241-245: the vosotros preterite and the imperfect plural, both promised in chapter 204 // +3: ch221-225 demonstratives // +4: ch226-229 degree words // +4: ch230-235 joining words // +2: ch236-240 the gerund and the personal a // +3: chapters 221-225 teach the demonstratives // +4: chapters 226-229 teach muy, bastante and mal // +4: chapters 230-235 teach al/del, quien, o and ni
+    expect(coverage.percent).toBe(99); // 97 -> 99 (ch429-430) // 96 -> 97 (ch428) // 93 -> 96 (ch427) // 90 -> 93 (ch425-426) // 87 -> 90 (ch424) // 86 -> 87 (ch421-423) // 85 -> 86 (ch420) // 84 -> 85 (ch419) // 53 -> 56 -> 60 -> 64 -> 66 -> 68 -> 71 -> 77 -> 81 -> 85/85 grammar-only, then 223/273 across four dimensions
+    expect(coverage.unmapped).toBe(2); // 7 -> 2 (ch429-430), and the 2 are the deliberate nulls // 11 -> 7 (ch428) // 18 -> 11 (ch427) // 28 -> 18 (ch425-426) // 36 -> 28 (ch424) // 39 -> 36 (ch421-423) // 41 -> 39 (ch420) // 42 -> 41 // 44 -> 42 (ch419): NE18-02 authored, NE18-05 merely wired // was 0 while only grammar was enumerated
 
     // Whole categories missing is a different failure from thin coverage, and
     // the report has to keep them distinguishable. These three are GRAMMAR
@@ -534,8 +629,8 @@ describe("what the corpus actually covers", () => {
     // The two categories that are now entirely absent from the book. Naming
     // them is the point of the per-category tally: "82%" is a mood, "the
     // orthography inventory is 2/21 and clothing is 0/3" is a work queue.
-    expect(coverage.byCategory["Ortografia de letras y palabras"]).toEqual({ enumerated: 7, covered: 0 });
-    expect(coverage.byCategory["Puntuacion"]).toEqual({ enumerated: 9, covered: 1 });
+    expect(coverage.byCategory["Ortografia de letras y palabras"]).toEqual({ enumerated: 7, covered: 7 }); // 0 -> 7 (ch425-426): the category this comment named as entirely absent, closed entire
+    expect(coverage.byCategory["Puntuacion"]).toEqual({ enumerated: 9, covered: 9 }); // 1 -> 9 (ch424): the category the comment above named as the work queue, closed entire
   });
 
   it("reports the shortfall in a form somebody can act on", () => {
@@ -543,8 +638,8 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1 (partial inventory): 229/273 points covered (84%)");
-    expect(report).toContain("44 with no corresponding atom");
+    expect(report).toContain("spanish A1 (partial inventory): 271/273 points covered (99%)");
+    expect(report).toContain("2 with no corresponding atom");
     // Worst category first, not alphabetical. This USED to be checkable against
     // the real corpus, whose emptiest category kept changing as the campaign
     // closed points — `El sintagma adjetival` at 0/1, then `Los cuantificadores`
@@ -1319,11 +1414,26 @@ describe("the committed Marathi A1 inventory", () => {
     // nantar, mag -- rather than more ordinals, and none of the three is taught
     // anywhere in the track. Its note now says so rather than saying
     // "Untaught".
+    //
+    // 162 -> 165: chapter 64 closes MR-A1-OR-05 (ddha), MR-A1-OR-07 (pha) and
+    // MR-A1-PU-01 (the danda). THREE POINTS FOR FOUR LESSONS, and unlike the
+    // ordinal tranche above the ratio is good because script points are single
+    // shapes: the notes named exactly which letters were missing and every one
+    // of them was genuinely missing when checked under the glyph-inventory rule.
+    // With pha the script has five plain-and-aspirated pairs and no stop left
+    // without a partner. The danda is the first mark in the track taught for
+    // RECOGNITION rather than production -- the corpus punctuates with a full
+    // stop, which is what Marathi does now.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(162);
-    expect(coverage.unmapped).toBe(139);
+    //
+    // 165 -> 166: chapter 65 closes MR-A1-OR-12, the independent ii, o, ai and au.
+    // ONE point for five lessons, and the ratio is honest: four letters that each
+    // need their own shape practised, plus the review. All four had a sign the
+    // reader already drew, so the gap was in the POSITION rather than the sound.
+    expect(coverage.covered).toBe(166);
+    expect(coverage.unmapped).toBe(135);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -1334,7 +1444,7 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 162/301 points covered (54%)",
+      "marathi A1 (partial inventory): 166/301 points covered (55%)",
     );
   }, 60_000);
 });

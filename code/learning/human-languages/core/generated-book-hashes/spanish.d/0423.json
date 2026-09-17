@@ -1,0 +1,16 @@
+{
+  "language": "spanish",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:0d98aab5543d0fb1",
+  "lessonIds": [
+    "ES-C423-antipatico",
+    "ES-C423-inteligente",
+    "ES-C423-trabajador",
+    "ES-C423-serio",
+    "ES-C423-timido",
+    "ES-C423-sociable",
+    "ES-C423-repaso-caracter",
+    "ES-C423-sintesis-persona"
+  ],
+  "tex": "spanish/book/chapters/ch423-caracter.tex"
+}

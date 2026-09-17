@@ -12,18 +12,18 @@ headword: दूध
 gloss: milk — masculine, and literally "the milked thing", a past participle that hardened into a noun
 romanization: "dūdh"
 concept_tag: HI-DRINK-MILK
-prerequisites: [HI-C37-chai, HI-C15-paani-roti, HI-C35-lena, HI-C35-puchna, HI-C35-madad]
+prerequisites: [HI-S149-vowel-sign-uu, HI-C37-chai, HI-C15-paani-roti, HI-C35-lena, HI-C35-puchna, HI-C35-madad]
 sounds: [devanagari-long-uu, aspirated-dha]
 roots: [dugdha-sanskrit, pie-dhewgh]
 etymology_hook: "दूध (dūdh) is Sanskrit दुग्ध (dugdha), which is not a noun but a past participle — 'milked' — so दूध names the liquid by what was done to it, exactly the trick पानी plays by naming water 'the drinkable thing'; the root दुह् duh- goes back to PIE *dʰewgʰ- 'to be strong, to yield', which also gives Greek teúkhein and English doughty, though English dough is NOT related and comes from a different root entirely"
 duration:
   max_seconds: 235
 requires:
-  knowledge: [HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-CHAI-02, HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C36-KURSI-01]
+  knowledge: [HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-CHAI-02, HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C36-KURSI-01, HI-SCRIPT-RECOG-149]
 introduces:
   knowledge: [HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02]
 practises:
-  knowledge: [HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-CHAI-02, HI-CONCEPT-C37-CHAI-03, HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C36-KURSI-01, HI-CONCEPT-C35-LENA-01, HI-CONCEPT-C35-LENA-02, HI-CONCEPT-C35-PUCHNA-01, HI-CONCEPT-C35-PUCHNA-02, HI-CONCEPT-C35-MADAD-01, HI-CONCEPT-C35-MADAD-02]
+  knowledge: [HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C37-DUDH-02, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-CHAI-02, HI-CONCEPT-C37-CHAI-03, HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C36-KURSI-01, HI-CONCEPT-C35-LENA-01, HI-CONCEPT-C35-LENA-02, HI-CONCEPT-C35-PUCHNA-01, HI-CONCEPT-C35-PUCHNA-02, HI-CONCEPT-C35-MADAD-01, HI-CONCEPT-C35-MADAD-02, HI-SCRIPT-RECOG-149]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [HI-C37-chai, HI-C15-paani-roti, HI-C36-kursi]
 # दूध (dūdh) — "milk," which is really a verb wearing a noun's coat
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-CHAI-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-CHAI-02, HI-SCRIPT-RECOG-149] -->
 
 [PAUSE 2s] What goes into the tea. And it is named the same sly way **पानी**
 was — by what happens to it, not by what it is.

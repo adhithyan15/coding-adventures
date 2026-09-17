@@ -80,7 +80,7 @@ and larger than it is printed.
 > शुक्रिया  ·  नमस्ते
 
 - [YOU TRACE: ◌ु three times, saying *u* as you finish each one]
-- [YOU LOOK: back at any page of this chapter and find ◌ु once more]
+- [YOU LOOK: back at any page and find ◌ु once more]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-120] -->

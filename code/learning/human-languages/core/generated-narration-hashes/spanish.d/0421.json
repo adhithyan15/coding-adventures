@@ -1,0 +1,18 @@
+{
+  "language": "spanish",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:3a995cdb8f9b0ef2",
+  "lessonIds": [
+    "ES-C421-actor",
+    "ES-C421-actriz",
+    "ES-C421-repaso-escena",
+    "ES-C421-sintesis-espectaculo"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch421.txt",
+  "json": "spanish/narration/ch421.json",
+  "textHash": "fnv1a64:52d5a0b01b38dcc3",
+  "jsonHash": "fnv1a64:ff7067146f5d4a43",
+  "findings": []
+}

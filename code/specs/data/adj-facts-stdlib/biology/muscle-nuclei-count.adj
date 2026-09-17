@@ -28,25 +28,106 @@
 %
 % This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
 % lookup): each `row` lowers to a ground relation `muscle_nuclei_count(
-% muscle, nuclei)` carrying the citation, so the lookup above is the
+% muscle, nuclei)` carrying THAT ROW'S OWN citation, with the envelope's
+% locator and trust inherited (RS-5e, #14986), so the lookup above is the
 % ordinary SLD binding query — the engine returns the nuclei-count fact
 % WITH its source, on the CPU, with zero model calls. Only skeletal and
 % cardiac muscle have a nuclei-count fact stated in this cited span
-% (smooth muscle, tabled by the sibling `muscle-striation.adj`, is not part
-% of `tissue-types.adj`'s own muscle citation at all), so this sibling is
-% HONESTLY NARROW: it grounds exactly these two muscle types and abstains
-% on smooth muscle or any other word. The query also runs BACKWARD — bind
-% a nuclei value and recall which muscle type has it:
+% (smooth muscle, tabled by the sibling `muscle-striation.adj`, is not named
+% in the two sentences `tissue-types.adj` quotes in its header -- it IS named
+% in that table's shipped `cites`, which states no nuclei count), so this
+% sibling is HONESTLY NARROW: it grounds exactly these two muscle types and
+% abstains on smooth muscle or any other word. The query also runs BACKWARD --
+% bind a nuclei value and recall which muscle type has it:
 %
 %     ? muscle_nuclei_count($Muscle, single_nucleus)
 %       % cardiac
 %
-% Provenance: reproduces, byte-for-byte, the SAME two NCI SEER Training
-% Modules sentences already quoted inside `tissue-types.adj`'s own header
-% (its `muscle → cardiac_or_skeletal` row) — no new WebFetch, only a
-% different schema decoding the nuclei-count half of each already-verified
-% quote. This is a DIFFERENT leftover fact from the one `muscle-striation.
-% adj` already decoded off `muscle-types.adj` (a different existing parent
+% Provenance: EACH ROW CARRIES ITS OWN span as its `source` (RS-5e,
+% #14986); the locator and trust are inherited from the envelope
+% field-by-field. Until this change the envelope WAS the skeletal
+% sentence and the cardiac sentence rode as a table-level `cites`, so a
+% `cardiac` recall was warranted primarily by a sentence about SKELETAL
+% muscle and its own sentence reached no answer. Relocating it empties
+% the corroborations array on every answer.
+%
+% The table-level `source` is now the page's framing sentence, "Muscle
+% tissue is composed of cells that have the special ability to shorten or
+% contract in order to produce movement of the body parts.", which names
+% NO muscle type -- not skeletal, not cardiac, and not SMOOTH, which is a
+% real third type this page describes and which is deliberately no row
+% here. Naming no ROW KEY is not enough for a frame: a sentence about
+% smooth muscle names neither row and would still frame the wrong thing.
+% A test arm forbids the whole taxonomy.
+%
+% ONE NARROWING, because this paragraph talks about the PAGE while the
+% paragraph above talks about a narrower scope. "Only skeletal and cardiac
+% muscle have a nuclei-count fact stated in this cited span" is true of the
+% TWO SENTENCES `tissue-types.adj` QUOTES IN ITS HEADER, which is where this
+% table's two facts were mined from. It is not true of that table's shipped
+% `cites` either -- that span reads "Muscle tissue can be categorized into
+% skeletal muscle tissue, smooth muscle tissue, and cardiac muscle tissue."
+% (final period included, because a quotation missing one is the error class
+% this batch exists to remove), which names smooth and gives no nuclei count
+% at all. And it is not true of the page, which states one for smooth muscle
+% too ("Smooth muscle cells are spindle shaped, have a single, centrally
+% located nucleus, and lack striations."). Smooth muscle stays out of this
+% table for the reason given above, not for want of a stated fact.
+%
+% Both spans and the envelope were re-measured on the cited page: each
+% occurs exactly once, and zero times against a 404 control on the same
+% host. HOW they were counted belongs to that claim, because the obvious
+% way returns a FALSE ZERO here. SEER wraps glossary terms in inline <a>
+% tags. Take two recipes that COLLAPSE WHITESPACE and differ in one thing
+% only, what an inline tag becomes: send it to a space and the cardiac
+% span scores x0, send it to the EMPTY string and all three spans score
+% x1. One variable, so the comparison means something. (Drop the collapse
+% from the first and the envelope fails too, on the doubled spaces the
+% substitution leaves behind -- a third recipe, not the naive one, and
+% the reason the collapse is named in both.)
+%
+% The three sentences do not behave alike, and the split is three ways
+% rather than two. Skeletal carries no markup at all: its raw region is 94
+% characters for a 94-character span, and it matches the bytes with no
+% normalisation whatever. The envelope carries one anchor, around
+% "tissue". Cardiac carries two, around "cell" and "intercalated disks".
+% Yet only CARDIAC falls to zero, because what matters is not whether a
+% sentence carries markup but WHERE: the envelope's anchor is
+% space-flanked ("Muscle <a>tissue</a> is"), so tag-to-space leaves only
+% extra whitespace and the collapse eats it, while BOTH of cardiac's abut
+% punctuation ("cell</a>," and "disks</a>."), so the same substitution
+% inserts a space the span does not have. Either site alone is enough:
+% repair the comma and it still scores x0, repair the period and it still
+% scores x0, repair both and it reaches x1. That is the whole mechanism,
+% written down instead of left for the next reader to rediscover as a
+% defect in a file that is correct.
+%
+% The page carries ZERO bytes above 127, and encodes no non-ASCII as an
+% HTML entity either. That second half was measured with ONE GENERAL
+% PATTERN rather than a list of entity names, because a needle list can
+% only find what it already suspects: the page holds exactly ONE distinct
+% entity form, `&amp;` (x18), which decodes to ASCII, and unescaping the
+% whole document leaves zero non-ASCII characters. Both levels matter,
+% since neither alone is conclusive -- a byte scan passes a page that
+% spells its dashes as entities, and an entity scan passes one carrying
+% the raw codepoints. Shards 03570 (`mixture-types`, an NBSP envelope) and
+% 03590 (`sun-layer`, which ships U+2013 twice and U+2019 once across its
+% rows) each shipped such a character; 03580 (`blood-cell-types`) ships
+% none, measured over its six shipped evidence lines. What that does NOT
+% establish is whether ITS page contained any: nobody scanned it, so the
+% absence is unexplained rather than measured, and no claim about
+% conversions in general is made here.
+%
+% This library carries the SAME two NCI SEER Training Modules sentences already
+% quoted inside `tissue-types.adj`'s own header (its `muscle →
+% cardiac_or_skeletal` row), decoding with a different schema the nuclei-count
+% half of each. The paragraph above used to end "no new WebFetch";
+% that is retired, because the spans ARE now measured against the page itself
+% (see the re-measurement above) -- the same retirement the sibling
+% `muscle-striation.adj` already made.
+%
+% This is a DIFFERENT leftover fact from the one `muscle-striation.adj`
+% already decoded off `muscle-types.adj` (a different existing parent
 % table that happens to cite the same underlying SEER muscle page) — not a
 % duplicate, since each parent table is its own distinct library with its
 % own citation envelope, and "striated" and "nuclei count" are two
@@ -60,12 +141,14 @@
 table muscle_nuclei_count {
     columns muscle, nuclei
 
-    row (skeletal, multinucleated)    % SEER: "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
-    row (cardiac, single_nucleus)     % SEER: "Cardiac muscle has branching fibers, one nucleus per cell, striations, and intercalated disks."
+    row (skeletal, multinucleated) {
+        source "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
+    }
+    row (cardiac, single_nucleus) {
+        source "Cardiac muscle has branching fibers, one nucleus per cell, striations, and intercalated disks."
+    }
 
-    source "Skeletal muscle fibers are cylindrical, multinucleated, striated, and under voluntary control."
+    source "Muscle tissue is composed of cells that have the special ability to shorten or contract in order to produce movement of the body parts."
     locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
     trust authoritative
-
-    cites "Cardiac muscle has branching fibers, one nucleus per cell, striations, and intercalated disks." locator "https://training.seer.cancer.gov/anatomy/cells_tissues_membranes/tissues/muscle.html"
 }

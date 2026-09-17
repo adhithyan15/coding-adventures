@@ -28,7 +28,10 @@
     "ES-PATH-413-MUSIC",
     "ES-PATH-413-REVIEWS",
     "ES-PATH-415-PACKAGE",
-    "ES-PATH-415-REVIEWS"
+    "ES-PATH-415-REVIEWS",
+    "ES-PATH-421-ARTS-PEOPLE",
+    "ES-PATH-422-WEB-PAGE",
+    "ES-PATH-427-OFICIOS"
   ],
   "omits": [],
   "relocates": {}

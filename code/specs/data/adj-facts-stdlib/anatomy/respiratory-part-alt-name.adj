@@ -26,12 +26,13 @@
 %
 % This is a native `table` (ADJ-TABLES RS-5, a TWO-column table like the
 % parent's own): each `row` lowers to a ground relation
-% `respiratory_part_alt_name(part, alt_name)` carrying the citation, so the
-% lookup above is the ordinary SLD binding query -- the engine returns the
-% alternate name WITH its source, on the CPU, with zero model calls, and
-% abstains on anything that is not one of these two parts (it never invents
-% an alternate name). The query also runs BACKWARD -- bind an alternate name
-% and recall the part it names:
+% `respiratory_part_alt_name(part, alt_name)` carrying THAT ROW'S OWN citation
+% -- its own `source` and its own `locator` (RS-5e, #14986) -- with `trust`
+% inherited from the envelope, so the lookup above is the ordinary SLD binding
+% query -- the engine returns the alternate name WITH its source, on the CPU,
+% with zero model calls, and abstains on anything that is not one of these two
+% parts (it never invents an alternate name). The query also runs BACKWARD --
+% bind an alternate name and recall the part it names:
 %
 %     ? respiratory_part_alt_name($Part, air_sacs)   % alveoli
 %
@@ -43,13 +44,66 @@
 % quoted spans in the parent table never supply a second, everyday name for
 % the part itself.
 %
-% Provenance: reproduces, byte-for-byte, the SAME two sentences already
-% quoted inside `respiratory-parts.adj`'s own header, from the SAME NCI SEER
-% Training Modules pages that table already cites -- no new WebFetch, only a
-% different schema decoding a different clause of each already-verified
-% quote. `trust authoritative` -- the same tier the parent table already
-% carries (NCI SEER Training is a primary U.S. government teaching
-% resource).
+% Provenance: EACH ROW CARRIES ITS OWN span as its `source` AND ITS OWN
+% `locator` (RS-5e, #14986); `trust` is inherited from the envelope, one tier
+% for both SEER pages. The two sentences are the same two already quoted inside
+% `respiratory-parts.adj`'s own header, decoding a different clause of each --
+% the alternate NAME rather than the stated function.
+%
+% THIS FIXED TWO DEFECTS IN ONE ROW, not one. Until this change the envelope WAS
+% the trachea sentence, so an `alveoli` recall was warranted by a sentence about
+% the TRACHEA -- and the single shipped `locator` was larynx.html, so that answer
+% was also ADDRESSED TO A PAGE ITS SENTENCE IS NOT ON. Measured on one run of the
+% 3-query companion, 2026-09-16:
+%
+%                                      before   after
+%     trachea span                       x4       x2
+%     alveoli span                       x0       x2
+%     larynx.html                        x4       x2
+%     bronchi.html                       x0       x2
+%     alveoli answer on trachea span     x1       x0
+%
+% The corroborations arrays were EMPTY before this change and remain so -- 2
+% citations arrays, 4 empty, 0 non-empty, both before and after. Nothing here is
+% a corroboration claim. The envelope span reaches ZERO answers in both captures
+% and so does the module-index locator: every row overrides both fields.
+%
+% TWO PAGES FOR TWO ROWS, so BOTH rows restate their `locator`. ADJ-TABLES §4
+% says restate a row locator only when its page DIFFERS from the envelope's;
+% here the envelope is the module index and neither row is on it. (The parent's
+% `lungs` row inherits for exactly the opposite reason -- its sentence IS on the
+% index. No row here is in that position.)
+%
+% SPANS WERE EXTRACTED FROM THE PAGE BYTES, not lifted from this header. Each
+% occurs EXACTLY ONCE on its own page, ZERO times on the other two, and ZERO
+% times against a REAL 404 control -- this host returns a 19,393-byte 404
+% against 41-46 KB real pages, so absence here is a real absence, not the
+% content-based-only kind that `oceans` and `plant-parts` are limited to.
+%
+% HOW they were counted belongs to the claim, because the recipe decides two of
+% the three. Two recipes that both collapse whitespace and differ in one thing
+% only, what an inline tag becomes: send it to the EMPTY string and all three
+% spans score x1; send it to a SPACE and the trachea and alveoli spans score x0.
+% The envelope scores x1 under both. So those zeros are the INSTRUMENT, not the
+% pages. Shards 03600 and 03630 found the same split: SEER for 03600, nps.gov
+% for 03630. That is TWO hosts across THREE tables -- and 03600 is on THIS
+% file's own host, so it is not an "other host" at all. (An earlier draft of
+% this line said "two other hosts", which was wrong in both halves: it
+% re-read 03630's "a different host (SEER)" -- different from NPS, said from
+% 03630's vantage point -- as though it were said from this file's.)
+%
+% The paragraph this replaces said the spans reproduced the parent
+% "byte-for-byte ... no new WebFetch". That is retired: they ARE now measured
+% against the pages themselves, which is a stronger statement than the one it
+% was avoiding making.
+%
+% WHAT THIS TABLE CLAIMS, AND ITS CEILING. Nothing here carries a `quote ... at
+% <byte_offset> snapshot "<sha256>"` annotation, the repo's byte-provenance
+% mechanism. The spans are labelled with the page they were read from and
+% nothing more: this table claims no more than `source_labeled`.
+%
+% `trust authoritative` -- the same tier the parent table already carries (NCI
+% SEER Training is a primary U.S. government teaching resource).
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -57,10 +111,16 @@
 table respiratory_part_alt_name {
     columns part, alt_name
 
-    row (trachea, windpipe)
-    row (alveoli, air_sacs)
+    row (trachea, windpipe) {
+        source "The trachea, commonly called the windpipe, is the main airway to the lungs."
+        locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/larynx.html"
+    }
+    row (alveoli, air_sacs) {
+        source "The bronchi branch into smaller and smaller passageways until they terminate in tiny air sacs called alveoli."
+        locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/bronchi.html"
+    }
 
-    source "The trachea, commonly called the windpipe, is the main airway to the lungs."
-    locator "https://training.seer.cancer.gov/anatomy/respiratory/passages/larynx.html"
+    source "Respiration is the sequence of events that results in the exchange of oxygen and carbon dioxide between the atmosphere and the body cells."
+    locator "https://training.seer.cancer.gov/anatomy/respiratory/"
     trust authoritative
 }

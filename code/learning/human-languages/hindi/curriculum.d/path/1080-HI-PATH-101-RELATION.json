@@ -1,0 +1,20 @@
+{
+  "id": "HI-PATH-101-RELATION",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "lessons": [
+    "HI-C93-ke-saath",
+    "HI-C93-ke-binaa",
+    "HI-C93-ke-paas",
+    "HI-C93-ke-saamne",
+    "HI-C93-ke-piichhe",
+    "HI-C93-ke-liye",
+    "HI-C93-karne-ke-liye",
+    "HI-C93-repaso-sambandh",
+    "HI-C93-sintesis-sambandh"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-101-RELATION"
+  ],
+  "after": []
+}

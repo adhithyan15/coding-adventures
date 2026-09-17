@@ -1,0 +1,19 @@
+{
+  "id": "HI-EXT-99-NOUN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can form any A1 plural, read an oblique noun, and use a demonstrative in front of a noun.",
+  "prerequisites": [],
+  "lessons": [
+    "HI-C91-bacche-plural",
+    "HI-C91-kitaben",
+    "HI-C91-bhashaen",
+    "HI-C91-aadmi-unchanged",
+    "HI-C91-ko",
+    "HI-C91-bacche-ko",
+    "HI-C91-yah-kitab",
+    "HI-C91-repaso-sangya",
+    "HI-C91-sintesis-sangya"
+  ]
+}

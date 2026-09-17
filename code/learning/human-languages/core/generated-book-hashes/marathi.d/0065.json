@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:e0a4d51a448d9d2f",
+  "lessonIds": [
+    "MR-W65-ii-independent",
+    "MR-W65-o-independent",
+    "MR-W65-ai-independent",
+    "MR-W65-au-independent",
+    "MR-R65-standing-vowels"
+  ],
+  "tex": "marathi/book/chapters/ch65-standing-vowels.tex"
+}

@@ -1,9 +1,10 @@
 {
   "language": "hindi",
   "chapter": 60,
-  "sourceHash": "fnv1a64:1da8c8ccc2501f92",
+  "sourceHash": "fnv1a64:f7822878b1e80cff",
   "lessonIds": [
     "HI-C60-monkey",
+    "HI-S140-nuqta",
     "HI-C60-snake",
     "HI-C60-hen",
     "HI-C60-buffalo",

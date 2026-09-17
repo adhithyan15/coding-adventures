@@ -1,0 +1,31 @@
+{
+  "lesson": {
+    "id": "HI-S143-letter-tha-retroflex",
+    "language": "hindi",
+    "chapter": 28,
+    "sequence": 795,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:64346811ab1cf13a",
+    "detachableSegments": [
+      "Script you'll notice: ठ",
+      "Script: the fifth breath pair",
+      "Writing: ठ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fef9dadfd07e3b56",
+  "sourceHash": "fnv1a64:537e3f8f78e610e0",
   "lessons": [
     {
       "id": "HI-C14-ritu",
@@ -301,6 +301,199 @@
             {
               "kind": "speech",
               "text": "Which character is this — ◌ँ (candrabindu)? What does it add to the syllable before it? (A nasal.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-S136-letter-gha",
+      "sequence": 612,
+      "title": "घ (gha) — a letter arriving before its words",
+      "headword": "घ",
+      "romanization": "gha",
+      "gloss": "the single character घ — one of the last two letters in this book that arrive before the words that need them",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2085a439e58b35c2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: घ",
+          "Script: ahead of its words, on purpose",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: घ, Script: ahead of its words, on purpose and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ँ (candrabindu) — what does it do to the vowel it sits over?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This next character is one you have not met inside anything yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: घ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घ — gha, with a puff of breath."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a continuous upper curl, middle hook, lower bowl, and rising right side."
+            },
+            {
+              "kind": "speech",
+              "text": "a short descending lower stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: ahead of its words, on purpose",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Almost every character in this book was taught out of a word you were already saying — you met the shape inside something familiar and then learned to draw it. This one has nothing to be found inside yet."
+            },
+            {
+              "kind": "speech",
+              "text": "That is deliberate and it will not happen again after the next letter. Only two characters are still ahead of their first word; the rest of the alphabet has already been overtaken by the vocabulary, and those will have to be met the other way round."
+            },
+            {
+              "kind": "speech",
+              "text": "So learn the shape and the breath now. The word will arrive already readable, which is the order this ought to happen in and rarely does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing: घ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start below the headline at the upper-left, curve down and clockwise around the upper curl, turn back left through the middle hook, continue clockwise around the lower bowl, and rise along the right side to the headline without lifting."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift at the lower right-side junction and descend the short stem below the bowl."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The pen comes up 2 times and no more."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified three-stroke teaching form fitted to the bundled printed outline; everyday handwriting may divide the curl and bowl differently."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: Opiaterein, ‘Deva-घ (gha)-order.gif’, strokes 1–3, Wikimedia Commons, 9 May 2009."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "घ three times, saying gha as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: घ three times, saying *gha* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how many times the pen comes up (two)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how many times the pen comes up (two)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what is unusual about when this letter arrived",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what is unusual about when this letter arrived]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What sound does घ carry? (gha, with breath.) Have you met a word that uses it yet? (No — it arrived first.) How many pen lifts? (Two.)"
             }
           ]
         }

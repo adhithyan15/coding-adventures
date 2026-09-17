@@ -214,6 +214,24 @@ const OP_IS_NIL: u8 = 52;
 /// primitive BEAM type-guard. OTP 28: opcode 56.
 const OP_IS_NONEMPTY_LIST: u8 = 56;
 
+/// `{is_integer, {f,Fail}, Src}` — fall through if Src is an integer; branch
+/// to Fail otherwise. BEAM07 (host input): used to distinguish
+/// `string:to_integer/1`'s success shape (`{Int, Rest}`, first element an
+/// integer) from its failure shape (`{error, Reason}`, first element the
+/// atom `error`) after `get_tuple_element` has pulled out element 0 — the
+/// same "test the value, not the sentinel" idiom `is_nonempty_list` already
+/// uses for `pair?`. Confirmed via `beam_opcodes:opcode(is_integer, 2)` on
+/// this host's real `erl` (OTP 29, erts-17.0.5): `-> 45`.
+const OP_IS_INTEGER: u8 = 45;
+
+/// `{get_tuple_element, Src, {u,Index}, Dst}` — `Dst = element(Index+1, Src)`
+/// (0-based here; BEAM's `element/2` BIF is 1-based). BEAM07: pulls the
+/// integer-or-`error` first element out of `string:to_integer/1`'s result
+/// tuple. Confirmed via `beam_opcodes:opcode(get_tuple_element, 3)` on this
+/// host's real `erl` (OTP 29, erts-17.0.5): `-> 66`. Does not trigger GC (no
+/// `test_heap` needed) — it only reads an existing tuple's storage.
+const OP_GET_TUPLE_ELEMENT: u8 = 66;
+
 // ===========================================================================
 // IIRBeamConfig
 // ===========================================================================
@@ -567,6 +585,62 @@ pub fn lower_iir_to_beam(
     let import_get     = imports.intern(erlang_atom, atom_get,     1); // erlang:get/1
     let import_put_chars = imports.intern(io_atom, atom_put_chars, 1); // io:put_chars/1
 
+    // ── BEAM07: host-input atoms and imports (`INPUT`/READ-ITEM EOF) ──────
+    //
+    // BASIC's `INPUT X`/`INPUT A$` and FlowMatic's `READ-ITEM` (peek-then-
+    // read) share one primitive: read the next line from the *real* process
+    // stdin (unlike WASM/VM/JIT, BEAM has no in-process host to call back
+    // into — `erl` is a genuine subprocess, so this must be actual Erlang
+    // I/O). Confirmed directly on real `erl` (OTP 29, erts-17.0.5, this
+    // host — `code/specs/BEAM07-beam-host-input.md` has the full probe
+    // transcript):
+    //
+    //   io:get_line('')       -> "5\n" | "5" (no trailing \n on the last,
+    //                             newline-less line) | the atom `eof`
+    //   string:to_integer(S)  -> {Int, Rest} on a leading integer,
+    //                             {error, no_integer} otherwise (mirrors
+    //                             the C `sscanf` "parse a leading int, 0 on
+    //                             failure" contract every other backend's
+    //                             `input_i64` already uses)
+    //   string:trim(S, trailing, "\n") -> S with one trailing "\n" removed
+    //                             if present, unchanged otherwise (matches
+    //                             `drain_stdin_line`'s "consume the
+    //                             delimiter, don't include it" contract for
+    //                             `input_str`)
+    //
+    // All three are ordinary (non-guard) library functions — confirmed via
+    // `erlc -S` disassembly showing `call_ext` against `io:get_line/1`,
+    // `string:to_integer/1`, `string:trim/3` — never a `gc_bif`, the same
+    // `math:pow/2`-family reasoning already used above.
+    //
+    // `input_more` (FlowMatic's EOF peek) has no native peek primitive:
+    // `io:get_line` always consumes. The BEAM lowering below emulates a
+    // peek with a one-line lookahead cached in the process dictionary under
+    // a private key that can never collide with a user global (BASIC/
+    // FlowMatic variable names are user identifiers; `$`-prefixed keys are
+    // not lexer-reachable) — `input_more` reads-and-caches without
+    // consuming the cache, `input_i64`/`input_str` atomically read-and-
+    // clear it via `erlang:put/2`'s "returns the OLD value" contract so a
+    // cached line is delivered exactly once. `erlang:put/2`/`erlang:get/1`
+    // are already lowered via `gc_bif2`/`gc_bif1` for `global_store`/
+    // `global_load` above and do NOT clobber other x-registers the way a
+    // real `call_ext` does (LANG32 precedent, exercised by every
+    // multi-variable BASIC program already on `Beam`) — only the three
+    // `call_ext`s above need the `save_live_across_imported_call!` dance.
+    let atom_get_line  = atoms.intern("get_line");
+    let atom_eof       = atoms.intern("eof");
+    let atom_undefined = atoms.intern("undefined");
+    let atom_empty     = atoms.intern(""); // io:get_line('') — no prompt text
+    let atom_input_peek_key = atoms.intern("$lang_vm_input_peek");
+    let string_atom    = atoms.intern("string");
+    let atom_to_integer = atoms.intern("to_integer");
+    let atom_trim      = atoms.intern("trim");
+    let atom_trailing  = atoms.intern("trailing");
+
+    let import_get_line   = imports.intern(io_atom, atom_get_line, 1);      // io:get_line/1
+    let import_to_integer = imports.intern(string_atom, atom_to_integer, 1); // string:to_integer/1
+    let import_trim       = imports.intern(string_atom, atom_trim, 3);       // string:trim/3
+
     // ── BEAM03: f64 numeric-conversion atoms and imports ──────────────────
     //
     // `int_to_real`/`real_to_int_trunc` are ordinary (gc_bif-eligible) BIFs
@@ -661,7 +735,7 @@ pub fn lower_iir_to_beam(
     let import_atomics_put = imports.intern(atomics_atom, atom_put, 3); // atomics:put/3
     let import_atomics_get = imports.intern(atomics_atom, atom_get, 2); // atomics:get/2
 
-    // ── BEAM04: mutable memory for f64-typed arrays — the `:ets` module ───
+    // ── BEAM04/BEAM06: mutable memory for f64/str-typed arrays — `:ets` ────
     //
     // `:atomics` above cannot hold `f64` cells: it is a fixed-size array of
     // 64-bit INTEGERS only, so `atomics:put(Ref, I, 40.0)` raises `badarg`
@@ -675,10 +749,23 @@ pub fn lower_iir_to_beam(
     // op below is an ordinary `call_ext`/`put_list`, the same shapes
     // `math:*`/`call_closure` already use).
     //
-    // BASIC arrays are `array<f64>` (BA7-1b routes every scalar numeric
-    // value through the shared f64 track), so every `alloc_array`/
+    // BASIC numeric arrays are `array<f64>` (BA7-1b routes every scalar
+    // numeric value through the shared f64 track), so every `alloc_array`/
     // `array_set`/`array_get` with `type_hint == "array<f64>"`/`"f64"`
     // dispatches to this substrate instead of `:atomics`.
+    //
+    // BEAM06 extends the SAME substrate, completely unchanged, to
+    // `type_hint == "array<str>"`/`"str"` (BASIC's `DIM A$(n)` string
+    // arrays and its mixed numeric/string `DATA` pool's string pool —
+    // `dartmouth-basic-iir-compiler`'s E4d-BA-arr lowering). This needed
+    // ZERO new representation work: a `str` value is already an ordinary
+    // Erlang character list (see the `"str_const"` arm below), and `:ets`
+    // stores arbitrary Erlang terms natively — a string element is no
+    // different from a float element as far as `ets:insert`/
+    // `ets:lookup_element` are concerned. Confirmed directly on real `erl`
+    // (round-trip, overwrite, concatenation of two round-tripped array
+    // elements, and the empty-string edge case) — see
+    // `code/specs/BEAM06-string-array-representation.md`.
     //
     // `ets:new/2` needs no size argument (unlike `atomics:new/2`) — ets
     // tables grow dynamically, so `alloc_array`'s length source is simply
@@ -1094,7 +1181,15 @@ pub fn lower_iir_to_beam(
                     | "f64_sqrt" | "f64_sin" | "f64_cos" | "f64_ln" | "f64_exp"
                     | "f64_atan" | "f64_tan"
             ) && !(instr.op == "call_builtin" && matches!(instr.srcs.first(),
-                Some(Operand::Var(name)) if name == "putchar")) {
+                // BEAM07: `input_more`/`input_i64`/`input_str` each emit a
+                // real `call_ext` (`io:get_line/1`, and `input_i64`/
+                // `input_str` additionally `string:to_integer/1` /
+                // `string:trim/3`) somewhere in their expansion — the same
+                // "every call_ext-emitting op must be listed" rule `putchar`
+                // already follows just above.
+                Some(Operand::Var(name)) if matches!(
+                    name.as_str(), "putchar" | "input_more" | "input_i64" | "input_str"
+                ))) {
                 continue;
             }
 
@@ -1225,6 +1320,40 @@ pub fn lower_iir_to_beam(
                 BEAMOperand::u(meta.n_yregs as u64),  // StackNeed
                 BEAMOperand::u(meta.arity as u64),    // Live (function arity)
             ]));
+
+            // BEAM07 discovery: `allocate` reserves `n_yregs` stack slots but
+            // does NOT initialize them — a real `erlc` always follows it with
+            // `init_yregs` to zero every freshly-allocated slot before first
+            // use, precisely because a GC that runs before a slot's first
+            // write would otherwise scan whatever garbage word was already on
+            // the stack (leftover from a prior call frame) as if it were a
+            // live Erlang term. This backend never emitted the equivalent of
+            // `init_yregs`, and every prior op happened to save its ONE live
+            // variable into its ONE Y-slot before the first `call`/`gc_bif`
+            // inside that same function could trigger a GC — so the gap was
+            // latent. `input_str`/`input_i64` (BEAM07) is the first op to put
+            // TWO independent call-sites in one straight-line function, each
+            // introducing a NEW live variable into a NEW Y-slot only at its
+            // OWN save point: `input_str A$` populates y0, then `input_str
+            // B$`'s OWN `io:get_line`/`string:trim` calls can trigger a GC
+            // while y1 (for B$, not written until after B$'s read
+            // completes) is still uninitialized stack garbage — confirmed by
+            // a real-`erl` round-trip that printed a corrupted, clearly-
+            // garbage list for the FIRST read's result after the SECOND
+            // read's own calls ran (see `code/specs/BEAM07-beam-host-input.md`
+            // for the disassembly that pinned this down). Filed as a
+            // pre-existing framework gap this slice fixes at the source
+            // (every function that allocates a stack frame benefits, not
+            // just the new host-input ops): initialize every slot to BEAM's
+            // nil sentinel `{a,0}` (an immediate — always a completely safe
+            // value for the GC to "scan", it has no referents) immediately
+            // after `allocate`, exactly mirroring what `init_yregs` achieves
+            // without needing a new operand-list encoding.
+            for slot in 0..meta.n_yregs {
+                instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                    BEAMOperand::a(0), BEAMOperand::y(slot),
+                ]));
+            }
         }
 
         // ── Translate each IIR instruction ──────────────────────────────────
@@ -1364,6 +1493,23 @@ pub fn lower_iir_to_beam(
                         ]));
                     }
                 }
+            }};
+        }
+
+        // BEAM07: allocate one fresh synthetic label, expanding the exact
+        // `label_counter.checked_add(1).ok_or_else(...)` boilerplate every
+        // other multi-label arm (e.g. `str_cmp` above) repeats by hand. The
+        // host-input builtins need several labels each, so this macro is
+        // pulled out rather than re-typed per label.
+        macro_rules! alloc_synth_label {
+            ($what:expr) => {{
+                label_counter = label_counter.checked_add(1).ok_or_else(|| {
+                    IIRBeamError::UnsupportedOp {
+                        function: fn_name.clone(),
+                        op: format!("label counter overflow — too many {}", $what),
+                    }
+                })?;
+                label_counter
             }};
         }
 
@@ -2513,6 +2659,346 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(meta.next_reg),
                     ]));
                 }
+                // ── call_builtin "input_more" → FlowMatic READ-ITEM EOF peek ──
+                //
+                // BEAM07. No native "peek stdin" primitive exists on real
+                // `erl` (unlike C's `ungetc`), so a one-line lookahead is
+                // cached in the process dictionary under a private key
+                // (`atom_input_peek_key`, `$`-prefixed so no BASIC/FlowMatic
+                // user variable name can ever collide with it — those come
+                // from the source's own identifiers). `input_more` reads
+                // that cache (or populates it from a fresh `io:get_line` on
+                // a miss) WITHOUT clearing it, so the very next
+                // `input_i64`/`input_str` sees the same line.
+                //
+                // dest = 1 when a line remains, 0 at EOF — the same 0/1
+                // BASIC/native/WASM/VM/JIT `input_more`/`__twig_input_more`
+                // contract (see `MISC_IO_RUNTIME_C` and `lang_matrix.rs`'s
+                // `drain_stdin_line` doc comment).
+                "call_builtin" if matches!(instr.srcs.first(),
+                    Some(Operand::Var(name)) if name == "input_more") => {
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "call_builtin \"input_more\" must have a dest".into(),
+                        }),
+                    };
+                    let top = meta.next_reg.checked_add(1).filter(|t| *t < 255);
+                    let Some(_) = top else {
+                        return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!(
+                                "call_builtin \"input_more\": needs 2 scratch registers but only {} remain below x255",
+                                255u16 - meta.next_reg as u16
+                            ),
+                        });
+                    };
+                    let t_key = meta.next_reg;
+                    let t_result = meta.next_reg + 1;
+                    let cur_idx = instr_idx - 1;
+                    save_live_across_imported_call!(cur_idx);
+
+                    let have_cache = alloc_synth_label!("host-input peeks");
+                    let converge = alloc_synth_label!("host-input peeks");
+                    let is_line = alloc_synth_label!("host-input peeks");
+
+                    // Peek the cache (do NOT clear it — `erlang:get/1`, not
+                    // `put/2`): t_result = cached Result, or 'undefined' on
+                    // a miss. `global_load` already proves this exact
+                    // gc_bif1 shape doesn't clobber other x-registers.
+                    //
+                    // `live` is 0, not `meta.next_reg`: `next_reg` is the
+                    // FUNCTION's total register count, computed once over
+                    // EVERY instruction — including ones that haven't run
+                    // yet. Passing it here told the GC that every
+                    // not-yet-computed IIR variable's pre-allocated register
+                    // (garbage at this point in the instruction stream) was
+                    // a live heap reference to preserve/relocate, which a
+                    // real GC pass then dutifully "followed" — an access
+                    // violation crash on a real-`erl` round-trip test with
+                    // several sequential `input_more`/`input_i64` calls
+                    // pinned this down (see `code/specs/BEAM07-beam-host-
+                    // input.md`). `erlang:get/1`'s own argument (`t_key`, an
+                    // atom — an immediate, never a heap pointer) needs no
+                    // protection at all, and nothing else is live yet at
+                    // this point in the expansion, so 0 is correct.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(atom_input_peek_key), BEAMOperand::x(t_key),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
+                        BEAMOperand::f(0), BEAMOperand::u(0),
+                        BEAMOperand::u(import_get as u64),
+                        BEAMOperand::x(t_key), BEAMOperand::x(t_result),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                        BEAMOperand::f(have_cache), BEAMOperand::x(t_result), BEAMOperand::a(atom_undefined),
+                    ]));
+                    // Miss: read one real line from stdin and cache it.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(atom_empty), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(1), BEAMOperand::u(import_get_line as u64),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(0), BEAMOperand::x(t_result),
+                    ]));
+                    // Cache <- t_result via `erlang:put/2`. Confirmed on
+                    // real `erl` (`erlc -S`, matching `code/specs/BEAM07-
+                    // beam-host-input.md`'s probe transcript): unlike
+                    // `erlang:get/1` (a zero-GC `bif`, safe via `gc_bif1` —
+                    // proven by every passing real-`erl` test above),
+                    // `erlang:put/2` compiles to a genuine `call_ext`, NEVER
+                    // `gc_bif2`, because growing the process dictionary's
+                    // hash table can allocate. Lowering it as `gc_bif2`
+                    // anyway (this arm's first cut, matching the existing
+                    // — and, this slice discovered, equally wrong —
+                    // `global_store` precedent) passed every test with only
+                    // immediates or a single live value in play, then
+                    // produced a genuine access violation the moment a
+                    // SEPARATE heap-allocated value (a `str_const` list) was
+                    // also live across the call: `gc_bif2`'s `Live` count
+                    // cannot protect it correctly because `erlang:put/2`
+                    // does not honor gc_bif's "only touch the declared Dest"
+                    // contract — it is not a guard-safe BIF at all. `call_ext`
+                    // clobbers every x-register, which is exactly the
+                    // contract `save_live_across_imported_call!` above
+                    // already exists to handle correctly.
+                    //
+                    // Args must be staged into x0/x1; `t_key`/`t_result`
+                    // themselves get clobbered by the call, so afterward
+                    // `t_result` is stale — but a plain `erlang:get/1`
+                    // re-fetch (proven safe above) immediately hands back
+                    // the SAME value we just stored, avoiding the need to
+                    // preserve anything across the call at all.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(atom_input_peek_key), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(t_result), BEAMOperand::x(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2), BEAMOperand::u(import_put as u64),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(atom_input_peek_key), BEAMOperand::x(t_key),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
+                        BEAMOperand::f(0), BEAMOperand::u(0),
+                        BEAMOperand::u(import_get as u64),
+                        BEAMOperand::x(t_key), BEAMOperand::x(t_result),
+                    ]));
+
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(have_cache as u64)]));
+                    // t_result = Result (a Line char-list, or the atom `eof`).
+                    instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                        BEAMOperand::f(is_line), BEAMOperand::x(t_result), BEAMOperand::a(atom_eof),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(0), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(converge)]));
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(is_line as u64)]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(1), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(converge as u64)]));
+
+                    restore_live_across_imported_call!(cur_idx);
+                }
+
+                // ── call_builtin "input_i64"/"input_str" → BASIC `INPUT` ──────
+                //
+                // BEAM07. Both are a "consuming read": drain the one-line
+                // `input_more` lookahead cache if `input_more` populated it,
+                // otherwise read a fresh line directly — either way the line
+                // is consumed exactly once. `erlang:put(key, undefined)`
+                // does the check-and-clear atomically by exploiting its
+                // "returns the OLD value" contract: the old value IS the
+                // cached Result (or 'undefined' if `input_more` was never
+                // called for this read, e.g. every BASIC `INPUT`, which has
+                // no peek step at all).
+                "call_builtin" if matches!(instr.srcs.first(),
+                    Some(Operand::Var(name)) if name == "input_i64" || name == "input_str") => {
+                    let is_str = matches!(instr.srcs.first(),
+                        Some(Operand::Var(name)) if name == "input_str");
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "call_builtin \"input_i64\"/\"input_str\" must have a dest".into(),
+                        }),
+                    };
+                    let top = meta.next_reg.checked_add(1).filter(|t| *t < 255);
+                    let Some(_) = top else {
+                        return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!(
+                                "call_builtin \"input_i64\"/\"input_str\": needs 2 scratch registers but only {} remain below x255",
+                                255u16 - meta.next_reg as u16
+                            ),
+                        });
+                    };
+                    let t_key = meta.next_reg;
+                    let t_result = meta.next_reg + 1;
+                    let cur_idx = instr_idx - 1;
+                    save_live_across_imported_call!(cur_idx);
+
+                    let have_result = alloc_synth_label!("host-input reads");
+                    let is_eof = alloc_synth_label!("host-input reads");
+                    let converge = alloc_synth_label!("host-input reads");
+
+                    // Atomically check-and-clear the `input_more` lookahead:
+                    // t_result = old cached value (or 'undefined' on a
+                    // miss). `live=0`: `t_key`/`t_undef` are atoms (no
+                    // protection needed) and `t_result` is this
+                    // instruction's own Dest (not yet holding anything);
+                    // nothing else is live at this point — see the peek
+                    // `gc_bif1` comment above for why `meta.next_reg` is
+                    // the wrong value here (it counts registers belonging
+                    // to IIR variables that have not been computed yet at
+                    // this point in the instruction stream).
+                    // `erlang:put/2` is a genuine `call_ext` on real `erl`,
+                    // never `gc_bif2` — see the matching comment on
+                    // `input_more`'s populate step above for the full
+                    // real-`erl` disassembly evidence and the access-
+                    // violation this caused when lowered as `gc_bif2`.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(atom_input_peek_key), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(atom_undefined), BEAMOperand::x(1),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(2), BEAMOperand::u(import_put as u64),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(0), BEAMOperand::x(t_result),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                        BEAMOperand::f(have_result), BEAMOperand::x(t_result), BEAMOperand::a(atom_undefined),
+                    ]));
+                    // Miss: nothing was cached — read a fresh line directly.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::a(atom_empty), BEAMOperand::x(0),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                        BEAMOperand::u(1), BEAMOperand::u(import_get_line as u64),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(0), BEAMOperand::x(t_result),
+                    ]));
+
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(have_result as u64)]));
+                    // t_result = Result (a Line char-list, or the atom
+                    // `eof`). `is_eq_exact` FALLS THROUGH when equal, so the
+                    // EOF handling sits directly after it (fallthrough) and
+                    // the line-processing code sits behind the jump target
+                    // `is_line` (reached exactly when t_result != eof) —
+                    // the same direction `input_more`'s own eof check above
+                    // already uses correctly.
+                    instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                        BEAMOperand::f(is_eof), BEAMOperand::x(t_result), BEAMOperand::a(atom_eof),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        if is_str { BEAMOperand::a(0) } else { BEAMOperand::i(0) },
+                        BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(converge)]));
+
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(is_eof as u64)]));
+                    if is_str {
+                        // Line case: `string:trim(Line, trailing, "\n")` —
+                        // strip exactly one trailing newline, the same
+                        // "consume the delimiter, don't include it" contract
+                        // `drain_stdin_line`/`__twig_input_str` already use.
+                        //
+                        // `put_list` allocates a cons cell on the process
+                        // heap and does NOT itself check/grow the heap — a
+                        // preceding `test_heap` is required (mirrors the
+                        // `call_builtin "putchar"` arm above, which reserves
+                        // 2 words for its own single cons cell the same
+                        // way). Without it this silently walked off the end
+                        // of the heap and corrupted unrelated data.
+                        //
+                        // `live` for `test_heap` is a plain COUNT: registers
+                        // `x0..x(live-1)` are the GC's root set, everything
+                        // at or above `live` is ignored. `t_result` (the
+                        // Line, real heap data) must be in that root set —
+                        // but it sits at a HIGH scratch register (`next_reg
+                        // + 2`), and a `live` wide enough to include it would
+                        // ALSO include every OTHER register between 0 and
+                        // there, including IIR variables' pre-allocated
+                        // registers that have not been computed yet at this
+                        // point in the instruction stream (`rd` itself,
+                        // among others) — raw, uninitialized register
+                        // content the GC would then "helpfully" try to
+                        // preserve/relocate as if it were a real term. A
+                        // real-`erl` round-trip test with two sequential
+                        // `input_str` reads turned that into a genuine
+                        // access violation (see `code/specs/BEAM07-beam-
+                        // host-input.md`), the same root cause as the
+                        // `live=0` fix on the `gc_bif1`/`gc_bif2` calls
+                        // above. The fix here: move `t_result` down into x0
+                        // FIRST — the one register a real compiler would
+                        // also compact live data into before a GC point —
+                        // so `live=1` is both correct AND minimal.
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(t_result), BEAMOperand::x(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_TEST_HEAP, vec![
+                            BEAMOperand::u(2), BEAMOperand::u(1),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::a(0), BEAMOperand::x(t_key),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
+                            BEAMOperand::i(b'\n' as u64), BEAMOperand::x(t_key), BEAMOperand::x(t_key),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(t_key), BEAMOperand::x(2),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::a(atom_trailing), BEAMOperand::x(1),
+                        ]));
+                        // x0 already holds the Line (moved there before
+                        // `test_heap` above) — no need to move it again.
+                        instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                            BEAMOperand::u(3), BEAMOperand::u(import_trim as u64),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(0), BEAMOperand::x(rd),
+                        ]));
+                    } else {
+                        // Line case: `string:to_integer(Line)` -> {Int,Rest}
+                        // on a leading integer, {error,Reason} otherwise —
+                        // the same "parse a leading int, 0 on failure"
+                        // contract every other backend's `input_i64` uses.
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(t_result), BEAMOperand::x(0),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_CALL_EXT, vec![
+                            BEAMOperand::u(1), BEAMOperand::u(import_to_integer as u64),
+                        ]));
+                        let parse_fail = alloc_synth_label!("host-input reads");
+                        instrs.push(BEAMInstruction::new(OP_GET_TUPLE_ELEMENT, vec![
+                            BEAMOperand::x(0), BEAMOperand::u(0), BEAMOperand::x(rd),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_IS_INTEGER, vec![
+                            BEAMOperand::f(parse_fail), BEAMOperand::x(rd),
+                        ]));
+                        instrs.push(BEAMInstruction::new(OP_JUMP, vec![BEAMOperand::f(converge)]));
+                        instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(parse_fail as u64)]));
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::i(0), BEAMOperand::x(rd),
+                        ]));
+                    }
+
+                    instrs.push(BEAMInstruction::new(OP_LABEL, vec![BEAMOperand::u(converge as u64)]));
+                    restore_live_across_imported_call!(cur_idx);
+                }
+
                 "call_builtin" => {
                     let builtin = match instr.srcs.first() {
                         Some(Operand::Var(n)) => n.clone(),
@@ -3131,11 +3617,11 @@ pub fn lower_iir_to_beam(
                 //
                 //   x0 = N ; x1 = [] ; call_ext 2 atomics:new/2 ; dest = x0
                 //
-                // EXCEPT `alloc_array` with `type_hint == "array<f64>"`
-                // (BEAM04): that path allocates an `:ets` table instead (see
-                // the module-setup comment above) — `ets:new/2` takes no size
-                // argument, so the length source `N` is validated for shape
-                // but otherwise unused.
+                // EXCEPT `alloc_array` with `type_hint == "array<f64>"` or
+                // `"array<str>"` (BEAM04/BEAM06): that path allocates an
+                // `:ets` table instead (see the module-setup comment above)
+                // — `ets:new/2` takes no size argument, so the length source
+                // `N` is validated for shape but otherwise unused.
                 "alloc_bytes" | "alloc_array" => {
                     let rd = match &instr.dest {
                         Some(name) => var_reg!(name),
@@ -3144,9 +3630,11 @@ pub fn lower_iir_to_beam(
                             detail: format!("{} must have a dest", instr.op),
                         }),
                     };
-                    if instr.op == "alloc_array" && instr.type_hint == "array<f64>" {
-                        // BEAM04: ets-backed float array — see the `:ets`
-                        // module-setup comment above.
+                    if instr.op == "alloc_array"
+                        && matches!(instr.type_hint.as_str(), "array<f64>" | "array<str>")
+                    {
+                        // BEAM04/BEAM06: ets-backed float/string array — see
+                        // the `:ets` module-setup comment above.
                         let _ = get_src!(instr, 0); // shape check only; size is unused
                         let cur_idx = instr_idx - 1;
                         save_live_across_imported_call!(cur_idx);
@@ -3205,9 +3693,16 @@ pub fn lower_iir_to_beam(
                 // staging registers cannot be collected out from under us even
                 // though they hold the `atomics` reference.
                 "store_byte" | "array_set" => {
-                    if instr.op == "array_set" && instr.type_hint == "f64" {
-                        // BEAM04: array_set on an ets-backed float array — see
-                        // the `:ets` module-setup comment above.
+                    if instr.op == "array_set"
+                        && matches!(instr.type_hint.as_str(), "f64" | "str")
+                    {
+                        // BEAM04/BEAM06: array_set on an ets-backed
+                        // float/string array — see the `:ets` module-setup
+                        // comment above. The instruction sequence is
+                        // identical regardless of element type: `:ets`
+                        // stores whatever term `Val` holds, a character
+                        // list for `str` exactly as much as a boxed float
+                        // for `f64`.
                         let r_ref = operand_reg!(get_src!(instr, 0));
                         let r_idx = operand_reg!(get_src!(instr, 1));
                         let r_val = operand_reg!(get_src!(instr, 2));
@@ -3217,8 +3712,8 @@ pub fn lower_iir_to_beam(
                             return Err(IIRBeamError::UnsupportedOp {
                                 function: fn_name.clone(),
                                 op: format!(
-                                    "array_set (f64/ets): needs 4 scratch registers but only {} \
-                                     remain below x255",
+                                    "array_set (f64/str via ets): needs 4 scratch registers but \
+                                     only {} remain below x255",
                                     255u16 - meta.next_reg as u16
                                 ),
                             });
@@ -3391,13 +3886,17 @@ pub fn lower_iir_to_beam(
                             detail: format!("{} must have a dest", instr.op),
                         }),
                     };
-                    if instr.op == "array_get" && instr.type_hint == "f64" {
-                        // BEAM04: array_get on an ets-backed float array —
-                        // see the `:ets` module-setup comment above.
-                        // `ets:lookup_element(Tab, Idx, 2)` returns the value
-                        // directly (position 2 of the `{Idx, Val}` tuple) —
-                        // no list/tuple destructuring needed on this path,
-                        // unlike the `atomics` branch's index-only +1 below.
+                    if instr.op == "array_get"
+                        && matches!(instr.type_hint.as_str(), "f64" | "str")
+                    {
+                        // BEAM04/BEAM06: array_get on an ets-backed
+                        // float/string array — see the `:ets` module-setup
+                        // comment above. `ets:lookup_element(Tab, Idx, 2)`
+                        // returns the value directly (position 2 of the
+                        // `{Idx, Val}` tuple) — no list/tuple destructuring
+                        // needed on this path, unlike the `atomics` branch's
+                        // index-only +1 below. Identical for `str` and
+                        // `f64`: `:ets` returns whatever term was stored.
                         let r_ref = operand_reg!(get_src!(instr, 0));
                         let r_idx = operand_reg!(get_src!(instr, 1));
 
@@ -3406,8 +3905,8 @@ pub fn lower_iir_to_beam(
                             return Err(IIRBeamError::UnsupportedOp {
                                 function: fn_name.clone(),
                                 op: format!(
-                                    "array_get (f64/ets): needs 3 scratch registers but only {} \
-                                     remain below x255",
+                                    "array_get (f64/str via ets): needs 3 scratch registers but \
+                                     only {} remain below x255",
                                     255u16 - meta.next_reg as u16
                                 ),
                             });

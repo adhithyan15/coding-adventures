@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:64ecce3ceafbb3b0",
+  "sourceHash": "fnv1a64:cc5e2b06ff1ccca5",
   "lessons": [
     {
       "id": "HI-C02-naam",
@@ -2563,7 +2563,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:faee79ca1917fd91",
+      "sourceHash": "fnv1a64:15998bfbdaaf5d1f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2622,7 +2622,8 @@
               "id": "HI-W06-name-sentence-stop-check",
               "prompt": "Write the visible Mira sentence and close it with the Hindi sentence stop.",
               "assesses": [
-                "HI-CONCEPT-C02-MERANAAMHAI-01"
+                "HI-CONCEPT-C02-MERANAAMHAI-01",
+                "HI-SCRIPT-DANDA-01"
               ],
               "responseSeconds": 25,
               "acceptedResponses": [
@@ -2923,7 +2924,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:2858edc5bb2df246",
+      "sourceHash": "fnv1a64:16bd55915b871284",
       "notice": {
         "modality": "pen",
         "needs": [

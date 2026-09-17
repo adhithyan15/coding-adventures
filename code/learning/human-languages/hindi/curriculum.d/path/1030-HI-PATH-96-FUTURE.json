@@ -1,0 +1,19 @@
+{
+  "id": "HI-PATH-96-FUTURE",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "lessons": [
+    "HI-C88-karunga",
+    "HI-C88-aaunga",
+    "HI-C88-aaega",
+    "HI-C88-aaenge",
+    "HI-C88-aaoge",
+    "HI-C88-baje",
+    "HI-C88-repaso-bhavishya",
+    "HI-C88-sintesis-bhavishya"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-96-FUTURE"
+  ],
+  "after": []
+}

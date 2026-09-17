@@ -1,0 +1,21 @@
+{
+  "id": "ES-PATH-424-SIGNOS",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "lessons": [
+    "ES-C424-punto",
+    "ES-C424-coma",
+    "ES-C424-dos-puntos",
+    "ES-C424-raya",
+    "ES-C424-comillas",
+    "ES-C424-parentesis",
+    "ES-C424-guion",
+    "ES-C424-barra",
+    "ES-C424-repaso-signos",
+    "ES-C424-sintesis-nota"
+  ],
+  "before": [],
+  "inline": [
+    "ES-EXT-424-SIGNOS"
+  ],
+  "after": []
+}

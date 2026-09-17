@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C81-repaso-skool",
+    "language": "hindi",
+    "chapter": 89,
+    "sequence": 3370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e2bdc5cdb2a8b2a"
+  },
+  "findings": []
+}

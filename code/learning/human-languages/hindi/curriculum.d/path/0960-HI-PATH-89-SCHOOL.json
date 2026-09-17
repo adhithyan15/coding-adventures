@@ -1,0 +1,15 @@
+{
+  "id": "HI-PATH-89-SCHOOL",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "HI-C81-skool",
+    "HI-C81-vidyalaya",
+    "HI-C81-repaso-skool",
+    "HI-C81-sintesis-skool"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-89-SCHOOL"
+  ],
+  "after": []
+}

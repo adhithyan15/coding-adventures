@@ -11,7 +11,8 @@
 %     ? plant_part_function(roots, $Function)   % absorb_water
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `plant_part_function(part, function)` carrying the table's citation,
+% relation `plant_part_function(part, function)` carrying THAT ROW'S OWN
+% citation, with the envelope's locator and trust inherited (RS-5e, #14986),
 % so the lookup above is the ordinary SLD binding query — the engine returns the
 % function atom WITH its source, on the CPU, with zero model calls, and abstains
 % on anything that is not one of these parts. The query also runs BACKWARD —
@@ -39,26 +40,60 @@
 % Provenance: every part name and its `function` atom is grounded in the plant
 % "Organs" article on UF/IFAS Extension (University of Florida Institute of Food
 % and Agricultural Sciences) Pasco County — the citable artifact at the
-% `locator`. The `source` span below is the VERBATIM sentence for the FIRST data
-% row (roots), copied character-for-character from that page; the other three
-% rows' atoms are each grounded in the same page's verbatim sentence shown in the
-% table above. `trust authoritative` — a university-extension publication is a
+% `locator`. Each row carries its OWN verbatim sentence as its `source`, and
+% the four sentences quoted in the table above ARE those row `source` values,
+% so each function atom is checkable from the row that states it.
+% `trust authoritative` — a university-extension publication is a
 % primary educational reference (contrast the `consensus` tier reserved for a
 % collaboratively edited encyclopedia). Nothing here is asserted from memory;
 % any part whose function the article did not state would have been dropped.
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the roots span, so a stem, leaves or flower answer was warranted
+% primarily by a sentence about roots, and those three sentences reached no
+% answer at all. The envelope is now the page's sentence framing the organs
+% as a set, which names no part:
+%
+%     "Each of the plant’s organs play a vital role in the plant’s
+%      survival."
+%
+% That envelope carries the page's own U+2019 apostrophes. Counted on the
+% fetched page: that spelling occurs once, and the same sentence with ASCII
+% apostrophes occurs zero times. (The count is about the quoted span; this
+% header's prose uses ASCII apostrophes throughout.)
+%
+% Measured 2026-09-16 UTC by this table's own fetch. The page answered 200
+% in 100998 bytes. THERE IS NO 404 CONTROL FOR THIS HOST: a nonsense path
+% answers 200 as well, with a real 63918-byte page, so absence is
+% content-based only -- each span scores zero against that page rather than
+% against an error stub. Tags removed without a space and only ASCII
+% whitespace collapsed: each row's span and the envelope each occur exactly
+% once, inside one `<p>`, scripts set aside and over the whole file, with no
+% `<head>` copy. Every row's page is the envelope's, so no row restates a
+% `locator` line and no row repeats the `trust` tier.
+%
 % (See ../README.md; feedback_nothing_human_authored,
-% feedback_adj_only_shipped_artifacts, feedback_adjudication_no_interpretive_gating.)
+% feedback_adj_only_shipped_artifacts,
+% feedback_adjudication_no_interpretive_gating.)
 % ============================================================================
 
 table plant_part_function {
     columns part, function
 
-    row (roots, absorb_water)
-    row (stem, support)
-    row (leaves, photosynthesis)
-    row (flower, reproduction)
+    row (roots, absorb_water) {
+        source "Roots anchor a plant in the soil and absorb air, water, and nutrients."
+    }
+    row (stem, support) {
+        source "Stems provide structural support and transport water and nutrients between roots, leaves, and flowers."
+    }
+    row (leaves, photosynthesis) {
+        source "Leaves capture sunlight for photosynthesis."
+    }
+    row (flower, reproduction) {
+        source "Flowers are the reproductive structures of plants, classified as perfect (having both male and female parts) or imperfect (male or female)."
+    }
 
-    source "Roots anchor a plant in the soil and absorb air, water, and nutrients."
+    source "Each of the plant’s organs play a vital role in the plant’s survival."
     locator "https://blogs.ifas.ufl.edu/pascoco/2025/01/23/plant-biology-organs/"
     trust authoritative
 }

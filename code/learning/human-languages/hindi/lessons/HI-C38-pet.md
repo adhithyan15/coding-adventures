@@ -12,18 +12,18 @@ headword: पेट
 gloss: stomach, belly — masculine, and the one word in this chapter with no clean ancestry at all
 romanization: "peṭ"
 concept_tag: HI-BODY-BELLY
-prerequisites: [HI-C38-pair, HI-W03-matras-naam]
+prerequisites: [HI-S142-letter-ta-retroflex, HI-C38-pair, HI-W03-matras-naam]
 sounds: [matra-e, retroflex-tta]
 roots: [prakrit-petta, dravidian-substrate]
 etymology_hook: "पेट (peṭ) comes through Prakrit पेट्ट (peṭṭa), and there the clean chain stops — the mainstream account treats it as a Dravidian loan into Indo-Aryan (compare Proto-Dravidian *poṭṭ-), while Turner's dictionary only notes a resemblance to Indo-Aryan words for 'basket' without deriving it from them; after three body words that were flawless Indo-European cousins, this is the honest counterexample, and the retroflex ट is itself the sound most often credited to Dravidian contact"
 duration:
   max_seconds: 250
 requires:
-  knowledge: [HI-CONCEPT-C38-PAIR-01, HI-CONCEPT-C38-PAIR-02, HI-CONCEPT-C38-DAANT-01, HI-CONCEPT-C38-DAANT-02, HI-CONCEPT-C38-AANKH-01, HI-CONCEPT-C38-AANKH-02, HI-CONCEPT-C13-SIR-01, HI-CONCEPT-C13-HAATH-01, HI-CONCEPT-C13-HAATH-02, HI-CONCEPT-C07-NAHIN-02, HI-CONCEPT-C07-NAHIN-03, HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02, HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03]
+  knowledge: [HI-CONCEPT-C38-PAIR-01, HI-CONCEPT-C38-PAIR-02, HI-CONCEPT-C38-DAANT-01, HI-CONCEPT-C38-DAANT-02, HI-CONCEPT-C38-AANKH-01, HI-CONCEPT-C38-AANKH-02, HI-CONCEPT-C13-SIR-01, HI-CONCEPT-C13-HAATH-01, HI-CONCEPT-C13-HAATH-02, HI-CONCEPT-C07-NAHIN-02, HI-CONCEPT-C07-NAHIN-03, HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02, HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03, HI-SCRIPT-RECOG-142]
 introduces:
   knowledge: [HI-CONCEPT-C38-PET-01, HI-CONCEPT-C38-PET-02]
 practises:
-  knowledge: [HI-CONCEPT-C38-PET-01, HI-CONCEPT-C38-PET-02, HI-CONCEPT-C38-PAIR-01, HI-CONCEPT-C38-PAIR-02, HI-CONCEPT-C38-DAANT-01, HI-CONCEPT-C38-DAANT-02, HI-CONCEPT-C38-AANKH-01, HI-CONCEPT-C38-AANKH-02, HI-CONCEPT-C13-SIR-01, HI-CONCEPT-C13-HAATH-01, HI-CONCEPT-C13-HAATH-02, HI-CONCEPT-C07-NAHIN-02, HI-CONCEPT-C07-NAHIN-03, HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02, HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03, HI-CONCEPT-C37-KITAAB-01, HI-CONCEPT-C36-KURSI-01]
+  knowledge: [HI-CONCEPT-C38-PET-01, HI-CONCEPT-C38-PET-02, HI-CONCEPT-C38-PAIR-01, HI-CONCEPT-C38-PAIR-02, HI-CONCEPT-C38-DAANT-01, HI-CONCEPT-C38-DAANT-02, HI-CONCEPT-C38-AANKH-01, HI-CONCEPT-C38-AANKH-02, HI-CONCEPT-C13-SIR-01, HI-CONCEPT-C13-HAATH-01, HI-CONCEPT-C13-HAATH-02, HI-CONCEPT-C07-NAHIN-02, HI-CONCEPT-C07-NAHIN-03, HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02, HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03, HI-CONCEPT-C37-KITAAB-01, HI-CONCEPT-C36-KURSI-01, HI-SCRIPT-RECOG-142]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [HI-C38-pair, HI-C38-daant, HI-C38-aankh, HI-C13-sir, HI-C13-haath, 
 # पेट (peṭ) — the belly, and a trail that genuinely stops
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C38-PAIR-01, HI-CONCEPT-C38-AANKH-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C38-PAIR-01, HI-CONCEPT-C38-AANKH-01, HI-SCRIPT-RECOG-142] -->
 
 [PAUSE 2s] Three clean cousins in a row. This one breaks the run — and the
 break is worth more than another neat answer.

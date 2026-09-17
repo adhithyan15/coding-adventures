@@ -37,6 +37,16 @@
 % BINDS and RENDERS the full exact decimal (a `Number::Exact` big-decimal, never a
 % rounded f64), and a formula that consumes the constant computes and prints its
 % result exactly too. Keys are lowercase atoms.
+% THE ENVELOPE CARRIES TWO NON-BREAKING SPACES (U+00A0), which a comment cannot
+% show: "value of" NBSP "the speed of light", and "where the" NBSP "second".
+% The NIST page writes them there. The span used to have ordinary spaces in
+% both places, and in that form it occurred ZERO times on the page (measured
+% 2026-09-15: inline tags removed without a space, only ASCII whitespace
+% collapsed, so U+00A0 is kept). With the page's characters it occurs exactly
+% once, inside one <p>. "Copied verbatim" above is true of the span only with
+% them. The row VALUES are not spans: `6.62607015e-34` is ADJ's literal for
+% the page's "6.62607015 ×10−34", not the page's spelling.
+%
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -50,7 +60,7 @@ table physical_constant {
     row (boltzmann_constant, 1.380649e-23)   % k   — joules per kelvin (J K^-1)
     row (avogadro_constant, 6.02214076e23)   % N_A — per mole          (mol^-1)
 
-    source "The meter is defined by taking the fixed numerical value of the speed of light in vacuum c to be 299,792,458 when expressed in the unit m s−1, where the second is defined in terms of ∆νCs."
+    source "The meter is defined by taking the fixed numerical value of the speed of light in vacuum c to be 299,792,458 when expressed in the unit m s−1, where the second is defined in terms of ∆νCs."
     locator "https://www.nist.gov/si-redefinition/definitions-si-base-units"
     trust authoritative
 }

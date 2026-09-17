@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S130-letter-chha",
+    "language": "hindi",
+    "chapter": 21,
+    "sequence": 685,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7f8ff9baf6b8a0fe",
+    "detachableSegments": [
+      "Script you'll notice: छ",
+      "Script: the pattern, a second time",
+      "Writing: छ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -12,17 +12,17 @@ headword: "फल"
 gloss: "a fruit"
 romanization: "phal"
 concept_tag: HI-NOUN-FRUIT
-prerequisites: [HI-C44-people, HI-C43-look]
+prerequisites: [HI-S139-letter-pha, HI-C44-people, HI-C43-look]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [HI-LEX-PEOPLE]
+  knowledge: [HI-LEX-PEOPLE, HI-SCRIPT-RECOG-139]
 introduces:
   knowledge: [HI-LEX-C45-ASK-01]
 practises:
-  knowledge: [HI-LEX-FAMILY, HI-LEX-PEOPLE, HI-LEX-C45-ASK-01, HI-LEX-LOOK]
+  knowledge: [HI-LEX-FAMILY, HI-LEX-PEOPLE, HI-LEX-C45-ASK-01, HI-LEX-LOOK, HI-SCRIPT-RECOG-139]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -34,7 +34,7 @@ reviews_of: [HI-C44-people]
 # फल (phal) — a fruit
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-FAMILY, HI-LEX-PEOPLE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-FAMILY, HI-LEX-PEOPLE, HI-SCRIPT-RECOG-139] -->
 
 [PAUSE 2s] Before the new run of words: what did *parivār* mean, and what did *log* mean?
 

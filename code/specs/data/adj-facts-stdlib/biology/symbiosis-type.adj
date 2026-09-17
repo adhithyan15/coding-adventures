@@ -31,43 +31,67 @@
 %     parasitism        the_parasite_benefits_while_the_host_is_harmed                      "In a parasitic relationship, the parasite benefits while the host is harmed."
 %
 % Provenance: quoted verbatim from Wikipedia's "Symbiosis" article, which
-% gives each of these three types its own standalone defining sentence.
-% This is a MULTI-SOURCE-STYLE table (see `ocean-current-drivers.adj`,
-% `seed-dispersal-mechanism.adj`) in the sense that each row's quote comes
-% from a different part of the same page rather than a single shared
-% sentence — this `table`'s own `source` field carries the first row's
-% (mutualism) quote; the other two rows' quotes are documented above in
-% this header's truth table and are independently checkable against the
-% same `locator`. WebFetch-verified across two passes before writing, the
-% second pass pulling the full surrounding paragraph for each candidate
-% sentence to confirm it stands alone grammatically and isn't qualified or
-% contradicted by an adjacent sentence. `trust consensus` — Wikipedia, the
+% gives each of these three types its own defining sentence (the mutualism
+% one opens "Finally," as the last of a list of relationships). This
+% paragraph used to say the table's own `source` carried only the first
+% row's quote, with the other two documented here, and that the quotes were
+% "WebFetch-verified across two passes"; each row now carries its own
+% sentence, measured against the page (see below). `trust consensus` —
+% Wikipedia, the
 % same tier this stdlib already reserves for other Wikipedia citations
 % (e.g. `pond-zone.adj`, `seed-dispersal-mechanism.adj`).
 %
-% Two related terms the SAME article's opening paragraph also names are
-% deliberately NOT rows here, so a recall ABSTAINS on them rather than
-% inventing a description: `competition` and `amensalism`. Both are
-% real ecological interaction categories the source names, but its own
-% defining sentence bundles them together as a single semicolon-joined
-% compound sentence ("Where the interaction reduces both parties' fitness,
-% it is called competition; where just one party's fitness is reduced, it
-% is called amensalism.") rather than stating one clean fact each the way
-% mutualism/commensalism/parasitism do. Picked using the mandatory
-% full-tree-grep-before-scoping discipline — zero hits for
-% "symbiosis_type"/"mutualism"/"commensalism"/"parasitism" before this
-% file was written. (See ../README.md; feedback_nothing_human_authored,
+% Two related terms the same article names are deliberately NOT rows here,
+% so a recall ABSTAINS on them rather than inventing a description:
+% `competition` and `amensalism`. They are left out as a scope choice: this
+% table covers mutualism, commensalism and parasitism only. (This used to
+% say their only defining sentence is the semicolon-joined one in the
+% paragraph the envelope opens, "Where the interaction reduces both
+% parties' fitness, it is called competition; where just one party's
+% fitness is reduced, it is called amensalism." The page also gives each a
+% sentence of its own in its own section: "Competition is an interaction in
+% which one organism's fitness is reduced by another's presence." and
+% "Amensalism is a non-mutualistic, asymmetric interaction where one species
+% is harmed or killed by the other, and one is unaffected by the other.")
+% When this file was written, a full-tree grep found zero hits for
+% "symbiosis_type"/"mutualism"/"commensalism"/"parasitism".
+% (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the mutualism sentence, the primary source of all three
+% answers. Each quoted sentence above names its type and what defines it, so
+% every row now takes its own as a `source`. The envelope is now a framing
+% sentence from the page, which names no type and no description:
+%
+%     "Symbiosis is diverse and can be classified in multiple ways."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the three row sentences and the envelope each occur
+% exactly once, each inside a `<p>`. On the page the parasitism sentence is
+% followed by a "[49]" citation marker, which is not part of the quote.
+% Every row's page is the envelope's, so no row restates a `locator` line or
+% `trust` (ADJ-TABLES §4).
 % ============================================================================
 
 table symbiosis_type {
     columns type, description
 
-    row (mutualism, both_parties_benefit)
-    row (commensalism, one_organism_benefits_and_the_other_is_not_significantly_harmed_or_helped)
-    row (parasitism, the_parasite_benefits_while_the_host_is_harmed)
+    row (mutualism, both_parties_benefit) {
+        source "Finally, where both parties benefit, the relationship is described as mutualistic."
+    }
+    row (commensalism, one_organism_benefits_and_the_other_is_not_significantly_harmed_or_helped) {
+        source "Commensalism describes a relationship between two living organisms where one benefits and the other is not significantly harmed or helped."
+    }
+    row (parasitism, the_parasite_benefits_while_the_host_is_harmed) {
+        source "In a parasitic relationship, the parasite benefits while the host is harmed."
+    }
 
-    source "Finally, where both parties benefit, the relationship is described as mutualistic."
+    % THE ENVELOPE WAS THE MUTUALISM ROW'S OWN SENTENCE, the primary source of
+    % all three answers. It is now a framing sentence that names no type.
+    % Every row overrides it, so it reaches no answer.
+    source "Symbiosis is diverse and can be classified in multiple ways."
     locator "https://en.wikipedia.org/wiki/Symbiosis"
     trust consensus
 }

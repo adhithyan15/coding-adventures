@@ -74,7 +74,7 @@ and larger than it is printed.
 > शिरोरेखा  ·  ख़ुशी  ·  नमस्ते
 
 - [YOU TRACE: ख three times, saying *kha* as you finish each one]
-- [YOU LOOK: back at any page of this chapter and find ख once more]
+- [YOU LOOK: back at any page and find ख once more]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-122] -->

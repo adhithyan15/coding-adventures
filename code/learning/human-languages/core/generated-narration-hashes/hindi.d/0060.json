@@ -1,19 +1,20 @@
 {
   "language": "hindi",
   "chapter": 60,
-  "sourceHash": "fnv1a64:b855ce2bf5217579",
+  "sourceHash": "fnv1a64:47f2a156bdbeec48",
   "lessonIds": [
     "HI-C60-monkey",
+    "HI-S140-nuqta",
     "HI-C60-snake",
     "HI-C60-hen",
     "HI-C60-buffalo",
     "HI-C60-peacock"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "drivablePrefix": 1,
   "text": "hindi/narration/ch60.txt",
   "json": "hindi/narration/ch60.json",
-  "textHash": "fnv1a64:536891dc2552ac8b",
-  "jsonHash": "fnv1a64:f06df706762ee0b1",
+  "textHash": "fnv1a64:d6238011279fbf8f",
+  "jsonHash": "fnv1a64:97126adb1d800f8b",
   "findings": []
 }

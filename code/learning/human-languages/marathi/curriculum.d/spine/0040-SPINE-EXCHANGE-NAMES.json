@@ -8,7 +8,9 @@
     "MR-PATH-007",
     "MR-PATH-016",
     "MR-PATH-020",
-    "MR-PATH-026"
+    "MR-PATH-026",
+    "MR-PATH-066",
+    "MR-PATH-067"
   ],
   "omits": [
     "PRONOUN-ME"

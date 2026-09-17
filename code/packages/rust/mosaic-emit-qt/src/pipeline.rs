@@ -2163,11 +2163,70 @@ fn emit_path_qml(node: &LayoutNode, depth: usize, ctx: &EmitCtx) -> Result<Strin
     }
 }
 
-fn qml_padding(props: &[StyleProp]) -> Option<String> {
-    style_prop(props, "padding")
-        .or_else(|| style_prop(props, "padding-top"))
-        .or_else(|| style_prop(props, "padding-bottom"))
-        .and_then(qml_px_or_none)
+/// One padding length, PARSED and re-serialised rather than passed through.
+///
+/// `qml_px_or_none` is a CHARSET filter, not a numeric parse: it admits any
+/// arrangement of `[0-9.-]`, so `-`, `1.2.3`, `1..2` and `5-` all survive it.
+/// Interpolated raw those emit `x: -` (the generated QML does not parse at
+/// all) or `implicitWidth: .. + 1-2` (it parses, and the trailing `-2` binds
+/// to the whole sum -- silently wrong geometry).
+///
+/// Raised in review of #15247, because that change routes `padding-left` and
+/// `padding-right` into generated source for the first time. The idiom is
+/// already in this file -- `qml_font_pixel_size` parses and re-formats, with
+/// a comment naming this exact failure -- so this follows it.
+///
+/// A NEGATIVE inset is declined rather than clamped. CSS has no negative
+/// padding, and the emitter's job is to decline what it cannot express, not
+/// to invent a value the author did not write.
+///
+/// The wider exposure is not fixed here: ~35 other call sites take
+/// `qml_px_or_none` raw. Filed separately rather than widened blind.
+fn qml_padding_px(value: &str) -> Option<String> {
+    let parsed = qml_px_or_none(value)?.parse::<f64>().ok()?;
+    if !parsed.is_finite() || parsed < 0.0 || parsed > f64::from(i32::MAX) {
+        return None;
+    }
+    Some(format!("{parsed}"))
+}
+
+/// A part's padding resolved PER EDGE, as CSS resolves it: a longhand wins
+/// over the shorthand, edge by edge, and an edge nobody mentions is zero.
+///
+/// Returned as `(left, top, right, bottom)`.
+///
+/// `qml_padding` reads ONE value -- `padding`, else `padding-top`, else
+/// `padding-bottom` -- and that single value was fanned to all four edges.
+/// `padding-left` and `padding-right` were never read at all, and the
+/// `or_else` chain meant a longhand was skipped entirely whenever the
+/// shorthand was also present. Trestle's emitted QML had 42 padding groups of
+/// four and all 42 were internally uniform, against 19+ parts authoring four
+/// different edges -- `task-detail` is `15 / 16 / 16 / 47` and rendered 15 on
+/// every side (#15247).
+fn qml_padding_edges(props: &[StyleProp]) -> (String, String, String, String) {
+    let short = style_prop(props, "padding").and_then(qml_padding_px);
+    let edge = |name: &str| {
+        style_prop(props, name)
+            .and_then(qml_padding_px)
+            .or_else(|| short.clone())
+            .unwrap_or_else(|| "0".to_string())
+    };
+    (
+        edge("padding-left"),
+        edge("padding-top"),
+        edge("padding-right"),
+        edge("padding-bottom"),
+    )
+}
+
+/// Does this part declare any padding at all, by shorthand or longhand?
+///
+/// Asked by `needs_container_wrapper`: a part whose ONLY padding is a
+/// longhand still needs the wrapper, or the inset reaches nothing.
+fn has_any_padding(props: &[StyleProp]) -> bool {
+    ["padding", "padding-left", "padding-top", "padding-right", "padding-bottom"]
+        .iter()
+        .any(|name| style_prop(props, name).and_then(qml_padding_px).is_some())
 }
 
 /// UI79 -- splits `border-<edge>-<width|color>` into an edge index and
@@ -2263,7 +2322,7 @@ fn qml_per_edge_border_lines(props: &[StyleProp], pad: &str) -> Vec<String> {
 }
 
 fn needs_container_wrapper(props: &[StyleProp]) -> bool {
-    qml_padding(props).is_some()
+    has_any_padding(props)
         || style_prop(props, "background")
             .or_else(|| style_prop(props, "background-color"))
             .and_then(qml_hex_color_or_none)
@@ -2373,7 +2432,7 @@ fn emit_styled_layout_container_qml(
         return Ok(Some(out));
     }
 
-    let inset = qml_padding(props).unwrap_or_else(|| "0".to_string());
+    let (pad_left, pad_top, pad_right, pad_bottom) = qml_padding_edges(props);
     let paint_lines = qml_rectangle_paint_lines_with_states(props, &state_layers);
     let has_fixed_width = style_prop(props, "width")
         .and_then(qml_px_or_none)
@@ -2414,10 +2473,10 @@ fn emit_styled_layout_container_qml(
         ),
     };
     if !has_fixed_width {
-        writeln!(out, "{inner_pad}implicitWidth: {w_src} + {inset}").unwrap();
+        writeln!(out, "{inner_pad}implicitWidth: {w_src} + {pad_right}").unwrap();
     }
     if !has_fixed_height {
-        writeln!(out, "{inner_pad}implicitHeight: {h_src} + {inset}").unwrap();
+        writeln!(out, "{inner_pad}implicitHeight: {h_src} + {pad_bottom}").unwrap();
     }
     if paint_lines.iter().all(|line| !line.starts_with("color:")) {
         writeln!(out, "{inner_pad}color: \"transparent\"").unwrap();
@@ -2432,8 +2491,8 @@ fn emit_styled_layout_container_qml(
     if let Some(id) = &content_id {
         writeln!(out, "{inner_pad}    id: {id}").unwrap();
     }
-    writeln!(out, "{inner_pad}    x: {inset}").unwrap();
-    writeln!(out, "{inner_pad}    y: {inset}").unwrap();
+    writeln!(out, "{inner_pad}    x: {pad_left}").unwrap();
+    writeln!(out, "{inner_pad}    y: {pad_top}").unwrap();
     for line in qml_layout_container_lines(props)
         .into_iter()
         .filter(|line| line.starts_with("spacing:"))
@@ -7920,6 +7979,125 @@ mod tests {
             name: name.to_string(),
             r#type: t,
         }
+    }
+
+    /// Four different padding edges survive (#15247).
+    ///
+    /// `qml_padding` read ONE value -- `padding`, else `padding-top`, else
+    /// `padding-bottom` -- and fanned it to all four edges; `padding-left`
+    /// and `padding-right` were never read at all. Trestle's emitted QML had
+    /// 42 padding groups of four and all 42 were internally uniform, against
+    /// 19+ parts authoring four different edges.
+    ///
+    /// `childrenRect.x` IS the left inset, because the inner element sits at
+    /// `x: left` -- so the trailing term on `implicitWidth` supplies the
+    /// RIGHT side, not a second copy of the left. The values below are all
+    /// different so a swapped edge fails rather than passing by symmetry.
+    #[test]
+    fn four_distinct_padding_edges_survive() {
+        let m = component("X", vec![], vec![]);
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "detail".into(),
+                base: vec![
+                    sp("padding-left", "47px"),
+                    sp("padding-top", "15px"),
+                    sp("padding-right", "16px"),
+                    sp("padding-bottom", "17px"),
+                    sp("background", "#252019"),
+                ],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "X".into(),
+            root: LayoutNode {
+                tag: "Column".into(),
+                part_name: Some("detail".into()),
+                props: vec![],
+                // The inset is applied to the inner CONTENT element, so a
+                // childless Box has nothing to inset and emits no x/y at all.
+                children: vec![LayoutNode {
+                    tag: "Text".into(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("hi".into()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        assert!(out.contains("x: 47"), "left inset:\n{out}");
+        assert!(out.contains("y: 15"), "top inset:\n{out}");
+        assert!(
+            out.contains("implicitWidth: childrenRect.x + childrenRect.width + 16"),
+            "the trailing term is the RIGHT edge:\n{out}"
+        );
+        assert!(
+            out.contains("implicitHeight: childrenRect.y + childrenRect.height + 17"),
+            "the trailing term is the BOTTOM edge:\n{out}"
+        );
+    }
+
+    /// A malformed length is declined, not passed through.
+    ///
+    /// `qml_px_or_none` is a charset filter, so `1.2.3` and `-` survive it
+    /// and would reach the generated QML verbatim -- `x: -` does not parse at
+    /// all, and `implicitWidth: .. + 1-2` parses with the `-2` binding to the
+    /// whole sum. Raised in review of #15247.
+    #[test]
+    fn a_malformed_padding_length_is_declined() {
+        for bad in ["1.2.3", "-", "..", "5-"] {
+            assert!(
+                qml_padding_px(bad).is_none(),
+                "{bad:?} must not reach generated QML"
+            );
+        }
+        // The control: well-formed lengths still pass, and re-serialise to
+        // exactly what they were, so this cannot pass by rejecting everything.
+        assert_eq!(qml_padding_px("12px").as_deref(), Some("12"));
+        assert_eq!(qml_padding_px("12.5").as_deref(), Some("12.5"));
+        assert_eq!(qml_padding_px("0").as_deref(), Some("0"));
+        // CSS has no negative padding; decline rather than clamp.
+        assert!(qml_padding_px("-3px").is_none());
+    }
+
+    /// A longhand alone still earns the wrapper.
+    ///
+    /// `needs_container_wrapper` asked only about the shorthand, so a part
+    /// whose only padding was `padding-left` got no wrapper and the inset
+    /// reached nothing.
+    #[test]
+    fn a_padding_longhand_alone_still_earns_a_wrapper() {
+        let m = component("X", vec![], vec![]);
+        let style = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "detail".into(),
+                base: vec![sp("padding-left", "12px")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let l = LayoutDef {
+            component_name: "X".into(),
+            root: LayoutNode {
+                tag: "Column".into(),
+                part_name: Some("detail".into()),
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".into(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("hi".into()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        assert!(out.contains("x: 12"), "the longhand must reach the inset:\n{out}");
+        // ...and the edges nobody mentioned are zero, not a copy of the left.
+        assert!(out.contains("y: 0"), "an unmentioned edge is zero:\n{out}");
     }
 
     /// The CSS `border` shorthand reaches the emitted QML (#15255).

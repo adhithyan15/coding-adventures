@@ -99,7 +99,38 @@ it("pins Marathi lesson-content budgets", () =>
     // message, and an 83-word paragraph. It declares NO new word: every
     // Devanagari token in all three was checked to occur in a lesson with a
     // lower sequence number. The count moves because reading is its own skill.
-    lessons: 337,
+    // 337 -> 338: the timed A1 writing paper -- one lesson, no new atoms, and
+    // the last of the seven writing stages. Marathi already proved the other
+    // six; this is the one that asks whether the writing survives conditions
+    // the candidate does not choose.
+    // 338 -> 342: CHAPTER 64 CLOSES BOTH REMAINING STOP ROWS AND THE DANDA.
+    // MR-A1-OR-05 wanted ddha, the fifth of the curled row, and MR-A1-OR-07
+    // wanted pha, the gap in the lip row -- one script lesson each, the route
+    // MR-A1-OR-06 took at chapter 39. With pha the script has FIVE plain-and-
+    // aspirated pairs and no stop is left without a partner. MR-A1-PU-01 is the
+    // danda, and it is the FIRST MARK IN THE TRACK TAUGHT FOR RECOGNITION RATHER
+    // THAN PRODUCTION: the corpus punctuates with a full stop, which is what
+    // Marathi does now, so the reader keeps writing that and learns to read the
+    // upright stroke in poetry, older printing and unreset signs. The fourth
+    // lesson is a cold-retrieval review, and it is there for a measured reason --
+    // an atom introduced by a chapter's LAST lesson can never be revisited, so
+    // the danda would have moved atomsNeverRevisited on its own. Marathi's script
+    // closure was CLEAN before this chapter (0 violations, 0 never-taught glyphs,
+    // 50 taught) and stays clean: every example word uses only those 50 glyphs
+    // plus the letter being taught.
+    // 342 -> 347: CHAPTER 65 GIVES FOUR VOWELS THE POSITION THEY WERE MISSING.
+    // MR-A1-OR-12 wanted the independent ii, o, ai and au. Every one of the four
+    // had a SIGN the reader already drew -- ii and o since chapter ONE, ai and au
+    // at 59 and 56 -- so the gap was never in the sound but in the POSITION, which
+    // is exactly what made it easy to miss. A sign hangs on a consonant; a letter
+    // starts a word; the two shapes look nothing alike and are learned separately.
+    // That is why the point stays distinct from MR-A1-OR-14, which is those same
+    // signs and closed at 56 and 59. It was blocking a number sitting in the middle
+    // of an ordinary counting sequence -- ऐंशी, eighty, opens with the independent
+    // ai -- and nothing about a word like that announces that one of its four
+    // shapes had never been drawn. The fifth lesson is the cold-retrieval review,
+    // there for the same measured reason as chapter 64's.
+    lessons: 347,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -336,6 +367,17 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["61", 6],
     // chapter 62 — the reading rung: labels, a message, and an 83-word paragraph
     ["62", 3],
+    // Chapter 63 is one lesson and always will be: the timed A1 writing paper.
+    // It is the last of the seven writing stages, it introduces no atom, and it
+    // adds only the condition the six stages before it deliberately withheld --
+    // a clock the candidate does not control.
+    ["63", 1],
+    // Chapter 64: ddha, pha, the danda, and the cold-retrieval review that
+    // keeps the danda from being an atom nothing revisits.
+    ["64", 4],
+    // Chapter 65: the four standing vowels plus the review that keeps the last
+    // of them from being an atom nothing revisits.
+    ["65", 5],
   ]);
 });
 

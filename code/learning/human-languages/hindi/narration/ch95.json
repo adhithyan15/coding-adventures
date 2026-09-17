@@ -1,0 +1,1446 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 95,
+  "title": "The Past, And Where You Were",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e7bc8e6633b26c3c",
+  "lessons": [
+    {
+      "id": "HI-C87-par",
+      "sequence": 3730,
+      "title": "पर (par) — the word that follows the place instead of leading it",
+      "headword": "पर",
+      "romanization": "par",
+      "gloss": "at a point — the postposition that pins you to a house or a platform, and sits after the place rather than before it",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21c9573c541de282",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can name घर and स्टेशन. Try to say at home — and notice that you have the place and no way to stand in it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पर (par) — \"at,\" pinning you to one point."
+            },
+            {
+              "kind": "speech",
+              "text": "घर पर (par) — at home. स्टेशन पर (par) — at the station."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English sets at in front of the place. Hindi sets पर (par) behind it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "Hindi"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "English: at home. Hindi: घर पर (par).",
+                "English: at the station. Hindi: स्टेशन पर (par)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That ordering is why these words are called postpositions. Every one of them trails its noun, so once you have the noun you know exactly where the small word goes."
+            },
+            {
+              "kind": "speech",
+              "text": "What पर (par) wants is a point rather than an interior — a house you are at, a platform you are standing on. A place you are inside reaches for a different small word, which arrives later."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: where the pieces land",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "मैं घर पर (par) हूँ। means I am at home.",
+                "वह स्टेशन पर (par) है। means He is at the station."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Person, then place, then the small word, then the verb. The verb goes last and stays last, which is the shape every Hindi sentence you have met so far has had."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"घर पर (par)\" — at home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"घर पर\" — at home]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं घर पर (par) हूँ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं घर पर हूँ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"वह स्टेशन पर (par) है\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"वह स्टेशन पर है\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether पर (par) goes before or after the place it marks",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether पर goes before or after the place it marks]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does पर (par) sit, before the place or after it? (After.) Say at the station. (स्टेशन पर (par).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C87-thaa",
+      "sequence": 3740,
+      "title": "था (thā) — one word swapped, and the sentence is behind you",
+      "headword": "था",
+      "romanization": "thā",
+      "gloss": "was — the single word that moves a sentence you can already build into the past",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:010db34986aa3e68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I am at home in Hindi. Now try to say where you were an hour ago, and watch the sentence stop at its last word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: था",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "था (thā) — \"was,\" spoken by or about a male subject."
+            },
+            {
+              "kind": "speech",
+              "text": "Every other word in the sentence stays where it is. Take out the present-tense word, put था (thā) in its place, and you have moved:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "now",
+                "earlier"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "now: मैं घर पर (par) हूँ।. earlier: मैं घर पर (par) था (thā)।.",
+                "now: वह स्टेशन पर (par) है।. earlier: वह स्टेशन पर (par) था (thā)।."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "था (thā) is worn down from Sanskrit स्थित (sthita), \"standing, situated.\" To have been somewhere was, once, to have been standing there."
+            },
+            {
+              "kind": "speech",
+              "text": "English arrives at the same picture along a different road. Station comes from Latin stāre, to stand — and Latin stāre and Sanskrit sthā- are the same inherited word, separated long before either language was written down. The Hindi for was and the English for station are distant relatives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: two present words, one past word",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "now",
+                "earlier"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "subject: मैं. now: हूँ. earlier: था (thā).",
+                "subject: वह. now: है. earlier: था (thā)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "In the present, the verb changes to match who you are talking about. In the past it stops caring about that. One word covers both rows — which is a small mercy, and a short-lived one, because the next lesson shows what the past listens to instead."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at था (thā) and name the character carrying its first sound (थ), the one you met in हाथ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **था** and name the character carrying its first sound (**थ**), the one you met in **हाथ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"था\" — thā, was",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"था\" — *thā*, was]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं घर पर (par) था (thā)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं घर पर था\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"वह स्टेशन पर (par) था (thā)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"वह स्टेशन पर था\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word in मैं घर पर (par) हूँ you replace, and which words you leave alone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word in *मैं घर पर हूँ* you replace, and which words you leave alone]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words change when you move मैं घर पर (par) हूँ into the past? (One.) What did the Sanskrit ancestor of था (thā) mean? (Standing, situated.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C87-thii",
+      "sequence": 3750,
+      "title": "थी (thī) — the ending you have bent a dozen times, arriving somewhere new",
+      "headword": "थी",
+      "romanization": "thī",
+      "gloss": "was, said by or about a woman — the past copula bends where the present one refused to",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69fa4c2fb90d2f31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "था (thā) ends in -आ. Before reading on: what has every other word ending in -आ done when a woman was the subject?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: थी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थी (thī) — \"was,\" spoken by or about a female subject."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "speaker",
+                "earlier"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "speaker: a man. earlier: मैं घर पर (par) था (thā)।.",
+                "speaker: a woman. earlier: मैं घर पर (par) थी (thī)।."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is not a new pattern. It is the oldest one you have:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "masculine",
+                "feminine"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "masculine: काला. feminine: काली.",
+                "masculine: बोलता. feminine: बोलती.",
+                "masculine: था (thā). feminine: थी (thī)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A word ending in -आ swaps that ending for -ई. You learned it on adjectives, met it again on the habitual verb, and here it is a third time. The past copula behaves like an adjective because, historically, it once was one — a participle meaning situated, agreeing with whoever was situated."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: what each tense listens to",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "tense",
+                "listens to the person",
+                "listens to gender"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "tense: present. listens to the person: yes (हूँ, है, हैं). listens to gender: no.",
+                "tense: past. listens to the person: no. listens to gender: yes (था (thā), थी (thī))."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The two tenses divide the work differently, and neither one asks you to track both at once. A woman says थी (thī) whether she is talking about herself or about another woman."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"थी\" — thī, was",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"थी\" — *thī*, was]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं घर पर (par) थी (thī)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं घर पर थी\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"वह स्टेशन पर (par) थी (thī)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"वह स्टेशन पर थी\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two endings that mark the pair, and one adjective that shows them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two endings that mark the pair, and one adjective that shows them]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending replaces -आ for a female subject? (-ई.) Does the present-tense verb bend for gender the way था (thā) does? (No — that is what is new here.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C87-the",
+      "sequence": 3760,
+      "title": "थे — the third ending, and the politeness you have already paid for",
+      "headword": "थे",
+      "romanization": "the",
+      "gloss": "were — the plural past, and the form आप takes even for one person",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a5e5519cf8fcbf0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have था (thā) and थी (thī) for one person. Name the pronoun for we, and guess which ending a group will want."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: थे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थे (the) — \"were.\""
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "earlier"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "subject: हम. earlier: हम घर पर (par) थे (the)।.",
+                "subject: वे. earlier: वे स्टेशन पर (par) थे (the)।.",
+                "subject: आप. earlier: आप कहाँ थे? (āp kahā̃ the?)"
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-ए is the plural ending on the same family of words as -आ and -ई, so थे sits beside था (thā) and थी (thī) without being a new thing to learn."
+            },
+            {
+              "kind": "speech",
+              "text": "The row worth pausing on is the last one. आप takes थे even when you are speaking to exactly one person, for the same reason it takes हैं for one person: the polite level in Hindi is built out of plural forms. Asking a single guest आप कहाँ थे? (āp kahā̃ the?) is grammatically a question to a crowd, and that is the courtesy."
+            },
+            {
+              "kind": "speech",
+              "text": "For a group of women, थे (the) adds a nasal and becomes थीं — worth recognising on a page now, and not worth drilling yet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the level decision, once more",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "system",
+                "at the तुम level",
+                "at the आप level"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "system: copula now. at the तुम level: हो. at the आप level: हैं.",
+                "system: command. at the तुम level: बोलो. at the आप level: बोलिए.",
+                "system: copula earlier. at the तुम level: थे. at the आप level: थे."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The past does not split the two levels at all: तुम and आप both take थे. One fewer decision, in the one place you might have expected another."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"थे\" — the, were",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"थे\" — *the*, were]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"हम घर पर (par) थे (the)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"हम घर पर थे\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"वे स्टेशन पर (par) थे (the)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"वे स्टेशन पर थे\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question where were you? to one person you address as आप",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question *where were you?* to one person you address as आप]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending does आप take in the past, for one person? (थे.) Why does a single person get a plural word? (The polite level is built out of plurals.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C87-nahin-thaa",
+      "sequence": 3770,
+      "title": "नहीं था (nahīṃ thā) — saying where you were not",
+      "headword": "नहीं था",
+      "romanization": "nahīṃ thā",
+      "gloss": "was not — the negative you already have, standing in the one slot it has always stood in",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:642ad4bc6c4df6b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does नहीं stand in a present-tense sentence? Put it there in a past-tense one and check yourself against what follows."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नहीं था",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नहीं था (nahīṃ thā) — \"was not.\""
+            },
+            {
+              "kind": "speech",
+              "text": "नहीं keeps the seat it has always had: directly in front of the verb, at the end of the sentence."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "present",
+                "past"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "present: मैं घर पर (par) नहीं हूँ।. past: मैं घर पर (par) नहीं था (nahīṃ thā)।.",
+                "present: वह स्टेशन पर (par) नहीं है।. past: वह स्टेशन पर (par) नहीं थी (thī)।."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English rebuilds the sentence to negate it: I am at home becomes I am not at home, and I was becomes I was not — but I go has to become I do not go, with a helper verb appearing out of nowhere."
+            },
+            {
+              "kind": "speech",
+              "text": "Hindi asks for none of that. One word, one seat, every tense. Learning the past costs you nothing extra here, because there was nothing extra to learn."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the seat in front of the verb",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "who is speaking"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "sentence: मैं घर पर (par) नहीं था (nahīṃ thā)।. who is speaking: a man.",
+                "sentence: मैं घर पर (par) नहीं थी (thī)।. who is speaking: a woman.",
+                "sentence: हम घर पर (par) नहीं थे (the)।. who is speaking: a group."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "नहीं never changes shape. Everything that bends in these three lines bends after it, not because of it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं घर पर (par) नहीं था (nahīṃ thā)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं घर पर नहीं था\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence as a woman would say it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence as a woman would say it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"हम स्टेशन पर (par) नहीं थे (the)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"हम स्टेशन पर नहीं थे\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word in the sentence नहीं stands in front of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word in the sentence नहीं stands in front of]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does नहीं take a different shape in the past? (No.) Where does it stand? (Immediately before the verb, which is at the end.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C87-bolta-thaa",
+      "sequence": 3780,
+      "title": "बोलता था (boltā thā) — what you used to do",
+      "headword": "बोलता था",
+      "romanization": "boltā thā",
+      "gloss": "used to speak — the habit you already build, with the time word swapped",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e2dd32f32da7cfeb",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I speak Hindi. Then look at the last word of it and ask what you would put there instead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बोलता था",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बोलता था (boltā thā) — \"used to speak.\""
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "now",
+                "earlier"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "now: मैं हिंदी बोलता हूँ।. earlier: मैं हिंदी बोलता था (boltā thā)।."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One word replaced, and the habit is one you no longer have."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two pieces, two jobs:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "its job"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "piece: बोलता. its job: this happens repeatedly.",
+                "piece: हूँ / था (thā). its job: and it happens now / it happened then."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "-ता carries the habit. The word after it carries the time. They were never welded together, which is why moving the sentence into the past costs a single swap rather than a new conjugation."
+            },
+            {
+              "kind": "speech",
+              "text": "English needs a whole phrase for this — used to — and Hindi needs one letter's worth of change."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: both halves bend",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "speaker",
+                "earlier"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "speaker: a man. earlier: मैं हिंदी बोलता था (boltā thā)।.",
+                "speaker: a woman. earlier: मैं हिंदी बोलती थी (thī)।."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both words end in -आ for a man and both swap to -ई for a woman. They move together, so you are still tracking one decision rather than two."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं हिंदी बोलता था (boltā thā)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं हिंदी बोलता था\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence as a woman would say it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence as a woman would say it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which piece carries the habit and which carries the time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which piece carries the habit and which carries the time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I did not use to speak Hindi, putting नहीं in its usual seat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I did not use to speak Hindi*, putting नहीं in its usual seat]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words change between बोलता हूँ and बोलता था (boltā thā)? (One.) What does the -ता ending tell you, in either tense? (That the action is a habit rather than a single event.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C87-repaso-atit",
+      "sequence": 3790,
+      "title": "atīt kī tālikā — the past, on one page",
+      "headword": "अतीत की तालिका",
+      "romanization": "atīt kī tālikā",
+      "gloss": "the table of the past — three endings, one swap, and the postposition that says where",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:35e0f6db28d9021b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name all three past endings and say who each one belongs to, before you look at the table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the three endings",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "earlier"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "subject: मैं, वह — a man. earlier: था (thā).",
+                "subject: मैं, वह — a woman. earlier: थी (thī).",
+                "subject: हम, वे, आप, तुम. earlier: थे (the)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three words, and their endings are -आ, -ई and -ए — the same three you have been bending adjectives with since the colours."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the swap, in every sentence you own",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "now",
+                "earlier"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "now: मैं घर पर (par) हूँ।. earlier: मैं घर पर (par) था (thā)।.",
+                "now: वह स्टेशन पर (par) है।. earlier: वह स्टेशन पर (par) था (thā)।.",
+                "now: मैं हिंदी बोलता हूँ।. earlier: मैं हिंदी बोलता था (boltā thā)।."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One word out, one word in. The place phrase, the postposition पर (par) and the word order all sit still while the tense moves around them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: with नहीं",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "हम घर पर (par) नहीं थे (the)। means We were not at home.",
+                "वे स्टेशन पर (par) नहीं थे। means They were not at the station."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three past endings in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three past endings in order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं घर पर (par) था (thā)\" and then the same thing as a woman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं घर पर था\" and then the same thing as a woman]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"आप कहाँ थे? (āp kahā̃ the?)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"आप कहाँ थे?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं हिंदी बोलता था (boltā thā)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं हिंदी बोलता था\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "any one of those four with नहीं added in the right seat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: any one of those four with नहीं added in the right seat]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which past word does आप take? (थे.) Which side of the place does पर (par) go? (After it.) Which piece of बोलता था (boltā thā) carries the habit? (-ता.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C87-sintesis-atit",
+      "sequence": 3800,
+      "title": "आप कहाँ थे? (āp kahā̃ the?) — the paper's own sentence, one step into the past",
+      "headword": "आप कहाँ थे?",
+      "romanization": "āp kahā̃ the?",
+      "gloss": "where were you? — the question and its answer, built from the sentence a mock paper prints",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47fbfafac6c126e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read this and say what it means before reading on."
+            },
+            {
+              "kind": "speech",
+              "text": "मैं घर पर (par) हूँ।."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the sentence a paper prints",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That line is reading item 14 of the first practice paper, word for word. Until this chapter it had one unreadable piece in it, and the piece was पर (par)."
+            },
+            {
+              "kind": "speech",
+              "text": "Now take one step:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the paper's line",
+                "one step back"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "the paper's line: मैं घर पर (par) हूँ।. one step back: मैं घर पर (par) था (thā)।."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Everything that made the first line readable makes the second line readable too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— आप कहाँ थे? (āp kahā̃ the?) — मैं घर पर (par) था (thā)।."
+            },
+            {
+              "kind": "speech",
+              "text": "Three things are doing their job at once here. कहाँ asks for a place. पर (par) attaches the answer to one. थे is the past word आप takes, and था (thā) is the one the answer needs, because the answer is about one man speaking for himself."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman answering the same question says मैं घर पर (par) थी (thī), and the question itself does not change: the asker does not know yet who will answer."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "How to answer — three ways",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Answer the question three ways, out loud:"
+            },
+            {
+              "kind": "speech",
+              "text": "you were at home."
+            },
+            {
+              "kind": "speech",
+              "text": "you were at the station."
+            },
+            {
+              "kind": "speech",
+              "text": "you were not at home."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then ask it of somebody you address as आप, and listen for which of था (thā), थी (thī) or थे (the) comes back."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"आप कहाँ थे? (āp kahā̃ the?)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"आप कहाँ थे?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं घर पर (par) था (thā)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं घर पर था\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं स्टेशन पर (par) नहीं था (nahīṃ thā)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं स्टेशन पर नहीं था\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the answer a woman would give to the same question",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the answer a woman would give to the same question]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which past word does the question to आप use? (थे.) Which one does a man use to answer about himself? (था (thā).) Which word in the answer puts him at a place? (पर (par).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

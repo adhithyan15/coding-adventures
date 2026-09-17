@@ -16,7 +16,13 @@ it("pins Marwadi lesson-content budgets", () =>
     // 341 -> 344: chapter 40, the reading rung. Three lessons and NO new word --
     // every Devanagari token in all three was checked to occur in a lesson with
     // a lower sequence number. The count moves because reading is its own skill.
-    lessons: 344,
+    //
+    // 344 -> 346: chapters 41-42, the two writing stages Marwadi could honestly
+    // prove. connected-composition is NOT among them and the changelog says why:
+    // the track teaches no conjunction at all -- no and, but, because or or --
+    // so a lesson asking for connected sentences would be asking for something
+    // the book has not paid for.
+    lessons: 346,
     idioms: 7,
     senses: 3,
     cultureClaims: 5,
@@ -200,17 +206,26 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
     "guided-copy",
     "dictation-transcription",
     "dictation-transcription",
+    // 171 -> 173. Chapters 41-42 add the two A1 stages Marwadi could honestly
+    // prove: a composition with no model, then the same under the clock.
+    //
+    // The third A1-and-above stage, connected-composition, is NOT here, and its
+    // absence is the finding rather than an oversight: this track teaches no
+    // conjunction at all -- no and, but, because or or -- so a lesson asking for
+    // connected sentences would ask for something the book has not paid for.
+    "controlled-composition",
+    "timed-assessment-production",
   ]);
 });
 
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
-  expect(lessons).toHaveLength(344);
+  expect(lessons).toHaveLength(346);
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set(Array.from({ length: 40 }, (unused, index) => index + 1)),
+    new Set(Array.from({ length: 42 }, (unused, index) => index + 1)),
   );
   const activities = lessons.flatMap((lesson) => compileLessonActivities(lesson.blocks));
-  expect(activities).toHaveLength(344);
+  expect(activities).toHaveLength(346);
   expect(lessons.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
   expect(activities.map((activity) => activity.id).sort()).toEqual([
     "MW-C01-practice-answer",
@@ -514,7 +529,9 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W01-saa-build",
     "MW-W02-aa-independent-choice",
     "MW-W02-bha-sound",
+    "MW-W02-mharo-khud-ro-line-topline",
     "MW-W03-anusvara-add",
+    "MW-W03-ghadi-saathe-split",
     "MW-W03-ha-read",
     "MW-W04-ii-matra-build",
     "MW-W04-nna-contrast",
@@ -562,7 +579,7 @@ it("pins Marwadi-owned chapters and objective activities", () => {
   const closure = measureScriptClosure(lessons);
   expect(closure.violations.filter((violation) => violation.language === "marwadi")).toEqual([]);
   expect(closure.tracks.find((track) => track.language === "marwadi")).toMatchObject({
-    lessonCount: 344,
+    lessonCount: 346,
     neverTaughtGlyphs: 0,
     violations: 0,
   });

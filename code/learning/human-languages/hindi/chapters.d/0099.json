@@ -1,0 +1,22 @@
+{
+  "chapter": 99,
+  "title": "The Noun, And The Ending That Means Two Things",
+  "label": "ch:hi-sangya",
+  "canDo": "I can make any A1 noun plural, read the oblique form a noun takes in front of a postposition, and put a demonstrative in front of a noun.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C91-sintesis-sangya",
+    "kind": "task",
+    "summary": "Read the clause a practice paper prints in a personal account -- do bhaashaaen boltii hai -- and tell a plural -e apart from an oblique one by the postposition behind it.",
+    "assesses": [
+      "HI-LEX-C91-NOUN-01",
+      "HI-LEX-C91-NOUN-03",
+      "HI-LEX-C91-NOUN-04",
+      "HI-LEX-C91-NOUN-06",
+      "HI-LEX-C91-NOUN-07"
+    ],
+    "note": "Closes four points using ZERO new nouns: every example is a word the track already taught, so the chapter is pure morphology on known vocabulary. HI-A1-N-07 wanted plural morphology and its note names the item, do bhaashaaen boltii hai, which appears in both papers. HI-A1-N-08 wanted the oblique, which is the -aa to -e bend the track has already taught FOUR TIMES on other kinds of word -- possessives, adjectives, the habitual, the past copula -- so this is the same system arriving on its last kind rather than a new one. HI-A1-POST-06 wanted ko, and its note is exactly right that only the fused mujhe was present; the lesson takes aapko apart to show ko was inside it. HI-A1-DET-03's note is PARTLY STALE: it says the corpus never puts yah or vah in front of a noun, and HI-C69-verb-last prints yah kitaab hai while HI-C78-pehla-paath prints vah kitaab padhtaa hai -- but neither is an atom, so the point was genuinely uncovered and the precise complaint is that the shape is SHOWN and never TAUGHT. The chapter's load-bearing observation is that -e means two different things, plural and singular-oblique, and the postposition behind the noun is the only signal -- a reader who misses it miscounts every sentence that has one."
+  }
+}

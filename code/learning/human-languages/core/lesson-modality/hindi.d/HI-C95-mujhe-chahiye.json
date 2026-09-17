@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C95-mujhe-chahiye",
+    "language": "hindi",
+    "chapter": 103,
+    "sequence": 4390,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c531a99e70f7d8e0"
+  },
+  "findings": []
+}

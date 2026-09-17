@@ -1,0 +1,1439 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 96,
+  "title": "The Future, And The Two Letters It Needed",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:485390e229d481e0",
+  "lessons": [
+    {
+      "id": "HI-C88-karunga",
+      "sequence": 3810,
+      "title": "करूँगा (karūṅgā) — the third tense, and the one with no helper word",
+      "headword": "करूँगा",
+      "romanization": "karūṅgā",
+      "gloss": "I will do — the future is an ending on the stem, and Hindi has no word for will",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d862ff615da523d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say what you do and what you did. Say the stem of to do, and hold it — the next tense attaches to it rather than standing beside it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: करूँगा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "करूँगा (karūṅgā) — \"I will do,\" said by a man. करूँगी (karūṅgī) — the same, said by a woman."
+            },
+            {
+              "kind": "speech",
+              "text": "The stem is कर-. Everything after it is the tense."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three pieces, and each one has a job:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "what it carries"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "piece: कर-. what it carries: the action.",
+                "piece: -ऊँ-. what it carries: who is acting — I.",
+                "piece: -गा / -गी. what it carries: the future itself, agreeing with the speaker."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English needs a second word for this: I will do. Hindi has none. The tense is welded onto the verb, the way the person is welded into hūṁ and hai."
+            },
+            {
+              "kind": "speech",
+              "text": "You have met the -गा family once before, in the farewell milenge, where the plural -एंगे was named as the future ending. That was one cell of a grid. This chapter is the grid."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the piece that comes from the old subjunctive",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-गा is not a random syllable. It comes from Sanskrit गत (gata), \"gone\" — the participle of to go. A future in Hindi is built out of a word meaning gone, which is the same instinct behind English I am going to do it."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "speaker",
+                "form"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "speaker: a man. form: करूँगा (karūṅgā).",
+                "speaker: a woman. form: करूँगी."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Only the last letter moves, and it moves the way every -आ / -ई pair in this language moves."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"करूँगा\" — karūṅgā, I will do",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"करूँगा\" — *karūṅgā*, I will do]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same as a woman would say it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same as a woman would say it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three pieces, and what each one carries",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three pieces, and what each one carries]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how many words English needs for this, and how many Hindi needs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how many words English needs for this, and how many Hindi needs]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which piece carries the future? (-गा, agreeing as -गी.) What did its Sanskrit ancestor mean? (Gone.) How many separate words does Hindi use to say will? (None — it is an ending.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C88-aaunga",
+      "sequence": 3820,
+      "title": "आऊँगा (āūṅgā) — the same ending, and the letter that was waiting for it",
+      "headword": "आऊँगा",
+      "romanization": "āūṅgā",
+      "gloss": "I will come — the same ending on a stem that ends in a vowel, which is where the long independent ū finally appears",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a834f2ec766af452",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I will do. Now take the stem of to come and try to put the same ending on it — and listen for what happens when two vowels meet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आऊँगा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आऊँगा (āūṅgā) — \"I will come,\" said by a man. आऊँगी (āūṅgī) — the same, said by a woman."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new has been added. The stem आ- has taken the ending you learned one lesson ago."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "stem",
+                "first person, future"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "stem: कर-. first person, future: करूँगा (karūṅgā).",
+                "stem: आ-. first person, future: आऊँगा (āūṅgā)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is identical. What changes is how it has to be written, and that is worth a moment."
+            },
+            {
+              "kind": "speech",
+              "text": "कर- ends in a consonant, so the long ū rides underneath it as the small mark you have used for a long time. आ- ends in a vowel, so there is nothing to ride on — and the ū has to be written as a full letter of its own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the letter arrives where it was promised",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Find ऊ inside the word:"
+            },
+            {
+              "kind": "speech",
+              "text": "आ ऊँ गा."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the letter you were told was coming — the one with the extra loop on the right — and this is the word it was waiting for. A vowel that opens a syllable needs the full letter, and the first-person future of every vowel-stem verb puts one there."
+            },
+            {
+              "kind": "speech",
+              "text": "The same thing happens to to go:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "I will"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "verb: आना. I will: आऊँगा (āūṅgā).",
+                "verb: जाना. I will: जाऊँगा."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both of these appear on a practice paper, in the first scored part."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"आऊँगा\" — āūṅgā, I will come",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"आऊँगा\" — *āūṅgā*, I will come]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same as a woman would say it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same as a woman would say it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at आऊँगा (āūṅgā) and put your finger on the letter ऊ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at आऊँगा and put your finger on the letter **ऊ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why this word needs the full letter where karūṅgā needs only a mark",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why this word needs the full letter where *karūṅgā* needs only a mark]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What decides whether the long ū is a mark or a full letter? (Whether the stem ends in a consonant or a vowel.) Say I will go. (Jāūṅgā — जाऊँगा.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C88-aaega",
+      "sequence": 3830,
+      "title": "आएगा (āegā) — the ending that tells you who, not when",
+      "headword": "आएगा",
+      "romanization": "āegā",
+      "gloss": "he will come, she will come — the third-person future, and the ending changes for who rather than for you",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f89233dd13423b7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say I will come. Point at somebody else and try to say it about them — and notice which part of the word has to move."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आएगा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आएगा (āegā) — \"he will come.\" आएगी (āegī) — \"she will come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "वह आएगा (āegā)। — He will come. वह आएगी। — She will come."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Set the two first persons beside the third:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who",
+                "ending"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "who: मैं. ending: -ऊँगा.",
+                "who: वह. ending: -एगा."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The -गा has not moved. It is the piece in front of it that changed, from -ऊँ- to -ए-, and that piece is the one carrying the person."
+            },
+            {
+              "kind": "speech",
+              "text": "So the future has the same division of labour the present had: one slot for who, one slot for when. Learning the tense is learning that the two slots are separate."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the form a paper prints",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the commonest future in reading material, because most sentences on a page are about somebody other than the reader:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "वह आएगा (āegā)। means He will come.",
+                "वह जाएगी। means She will go."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A bus, a train or a shop takes the same ending as a person, and the gender of the noun decides which one. A practice paper prints the bus will come with -एगी, because बस is feminine."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"वह आएगा (āegā)\" — he will come",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"वह आएगा\" — he will come]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"वह आएगी\" — she will come",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"वह आएगी\" — she will come]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which slot changed between āūṅgā and āegā, and which stayed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which slot changed between *āūṅgā* and *āegā*, and which stayed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"वह जाएगी\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"वह जाएगी\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which piece of the future word says who? (The one before -गा.) Which piece says when? (-गा itself.) What ending does a feminine noun take? (-एगी.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C88-aaenge",
+      "sequence": 3840,
+      "title": "आएँगे (āeṅge) — the ending you have been saying since the first goodbye",
+      "headword": "आएँगे",
+      "romanization": "āeṅge",
+      "gloss": "we will come, they will come, and the form आप takes — the ending the farewell had all along",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8600a0ef749406fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the farewell that means see you again. The last two syllables of it are about to become a rule."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आएँगे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आएँगे (āeṅge) — \"we will come,\" \"they will come,\" and \"you will come\" to somebody you address as आप."
+            },
+            {
+              "kind": "speech",
+              "text": "हम आएँगे (āeṅge)। — We will come. आप कब आएँगे (āeṅge)? — When will you come?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You met this ending in your fourth chapter, inside मिलेंगे — we will meet. It was named there as the plural future, and it was true, but it was one word. Now it is a slot you can fill:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "stem",
+                "plural future"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "stem: मिल-. plural future: मिलेंगे.",
+                "stem: आ-. plural future: आएँगे (āeṅge).",
+                "stem: कर-. plural future: करेंगे."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The farewell was never a lump. It was this ending, on a verb meaning to meet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: आप takes the plural, again",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "future"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "subject: हम. future: आएँगे (āeṅge).",
+                "subject: वे. future: आएँगे (āeṅge).",
+                "subject: आप. future: आएँगे (āeṅge)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "आप takes the plural ending even for one person, for the reason it has taken a plural everywhere else: the polite level in this language is built out of plural forms. That is now the fifth system in which one decision about how you address somebody settles the whole row."
+            },
+            {
+              "kind": "speech",
+              "text": "For a group of women, the ending nasalises differently and becomes आएँगी — worth recognising, because a practice paper asks आप कब आएँगी? of a woman."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"हम आएँगे (āeṅge)\" — we will come",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"हम आएँगे\" — we will come]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"आप कब आएँगे (āeṅge)?\" — when will you come?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"आप कब आएँगे?\" — when will you come?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the farewell, and then name the ending inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the farewell, and then name the ending inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"हम करेंगे\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"हम करेंगे\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending does आप take in the future? (The plural one.) Which familiar farewell is built from it? (Milenge.) What was that farewell really made of? (A stem plus this ending.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C88-aaoge",
+      "sequence": 3850,
+      "title": "आओगे (āoge) — the तुम row, and a vowel that has shown up before",
+      "headword": "आओगे",
+      "romanization": "āoge",
+      "gloss": "you will come, at the tum level — the one row of the grid that has its own vowel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f238e03ed1eecd11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the command you would give a friend using तुम. Hold on to the vowel at its end — the future is about to reuse it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आओगे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आओगे (āoge) — \"you will come,\" to somebody you address as तुम. करोगे (karoge) — \"you will do,\" at the same level."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The तुम level has a vowel of its own, and you have already used it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "where",
+                "form"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "where: the command. form: बोलो.",
+                "where: the future. form: आओगे (āoge)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both are -ओ. That is not two facts to learn — it is one vowel that belongs to तुम wherever it appears, and you have had it since the commands chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: where the full letter shows up again",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The same writing question as the first person, and the same answer:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "stem",
+                "you will"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "stem: कर-. you will: करोगे.",
+                "stem: आ-. you will: आओगे (āoge)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "करोगे carries the o as a mark on the consonant. आओगे (āoge) cannot, because आ- is a vowel, so the o is written as the full letter ओ — the one built on आ with an arc above it."
+            },
+            {
+              "kind": "speech",
+              "text": "Two vowel-stem words in one chapter, two full letters, and the same rule producing both."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"तुम आओगे (āoge)\" — you will come",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"तुम आओगे\" — you will come]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"तुम करोगे\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"तुम करोगे\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at आओगे (āoge) and put your finger on the letter ओ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at आओगे and put your finger on the letter **ओ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same question at the आप level instead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same question at the आप level instead]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which vowel belongs to the तुम level? (-ओ.) Where else have you used it? (On the command.) Why does āoge need the full letter and karoge does not? (The stem ends in a vowel, so nothing can carry the mark.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C88-baje",
+      "sequence": 3860,
+      "title": "पाँच बजे (pā̃c baje) — reading the hour, and arranging to meet at it",
+      "headword": "पाँच बजे",
+      "romanization": "pā̃c baje",
+      "gloss": "at five o'clock — the bell already taught as a statement, now used to arrange a time",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:046fae8d1cb5937c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say what the clock is doing — the verb that strikes. Now try to say at five, and notice that telling the time and fixing a time are not the same job."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पाँच बजे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पाँच बजे (pā̃c baje) — \"at five o'clock.\""
+            },
+            {
+              "kind": "speech",
+              "text": "मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā)। — I will come at five."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बजे comes from the verb you already have — the one meaning to strike, to toll, because clocks and towns once marked the hour by striking a bell."
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is the shape of it. You learned it as something the clock is doing right now. This form is not doing anything: it sits beside a number and turns it into a time to meet at."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what it does",
+                "the form"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what it does: tells you the hour. the form: the striking form you know.",
+                "what it does: fixes a time to act. the form: बजे."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "There is no separate word for at. The number plus बजे is the whole of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: where it stands in the sentence",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "sentence",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā)। means I will come at five.",
+                "वह चार बजे आएगी। means She will come at four."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The time phrase goes after the person and before the verb, in the same seat the place phrase took. Hindi keeps the verb at the end and fills the middle with whatever the sentence needs."
+            },
+            {
+              "kind": "speech",
+              "text": "Both practice papers ask for exactly this pairing — a number, बजे, and a future verb — in the first scored part."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"पाँच बजे (pā̃c baje)\" — at five",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"पाँच बजे\" — at five]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं पाँच बजे आऊँगा\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence as a woman would say it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence as a woman would say it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word Hindi uses for at, and hear that there is none",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word Hindi uses for *at*, and hear that there is none]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which verb is बजे from? (The one meaning to strike.) How does Hindi say at in front of a clock time? (It does not — the number plus बजे carries it.) Where does the time phrase stand? (After the person, before the verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C88-repaso-bhavishya",
+      "sequence": 3870,
+      "title": "bhaviṣya kī tālikā — the future, on one page",
+      "headword": "भविष्य की तालिका",
+      "romanization": "bhaviṣya kī tālikā",
+      "gloss": "the table of the future — one ending, five rows, and the three tenses finally side by side",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9af6031f0e9ac4d1",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the ending for I and the ending for he, and say which piece of each one is the tense, before you look at the table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the grid",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "with आ-"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "subject: मैं. with आ-: आऊँगा (āūṅgā) / आऊँगी.",
+                "subject: तुम. with आ-: आओगे (āoge).",
+                "subject: वह. with आ-: आएगा (āegā) / आएगी.",
+                "subject: हम, वे, आप. with आ-: आएँगे (āeṅge) / आएँगी."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four rows, one verb, and -गा in every single cell. What moves is the vowel in front of it, and that vowel is the person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two slots, three tenses",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "tense",
+                "how it is built"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "tense: now. how it is built: stem + -ता + हूँ / है.",
+                "tense: earlier. how it is built: stem + -ता + था.",
+                "tense: later. how it is built: stem + person vowel + -गा."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The first two share a shape: the habit is in -ता and the time is in the word after it. The future is the odd one out — it has no separate word at all, and packs the person and the tense into one ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: where the full letters appear",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "stem ends in",
+                "how the vowel is written"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "stem ends in: a consonant (कर-). how the vowel is written: a mark on the letter.",
+                "stem ends in: a vowel (आ-, जा-). how the vowel is written: a full letter — ऊ or ओ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole reason two new letters were needed before this chapter could be written."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four rows of the grid, top to bottom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four rows of the grid, top to bottom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same grid with कर- instead of आ-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same grid with **कर-** instead of **आ-**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं पाँच बजे आऊँगा\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which two forms need a full letter, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which two forms need a full letter, and why]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which piece is in every cell of the grid? (-गा.) Which tense uses no separate word for time? (The future.) How does Hindi say at five? (Pā̃c baje — no word for at.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C88-sintesis-bhavishya",
+      "sequence": 3880,
+      "title": "मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā) — the item the paper prints",
+      "headword": "मैं पाँच बजे आऊँगा",
+      "romanization": "maiṁ pā̃c baje āūṅgā",
+      "gloss": "I will come at five — reading item 8 of the first practice paper, word for word",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72308eddf11039ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read this out loud before reading on."
+            },
+            {
+              "kind": "speech",
+              "text": "मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā)।."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: four words, four things you were taught",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That line is reading item 8 of the first practice paper, word for word. Until this chapter two of its four words were unreadable."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what it does"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: मैं. what it does: who.",
+                "word: पाँच बजे (pā̃c baje). what it does: when.",
+                "word: आऊँगा (āūṅgā). what it does: the verb, carrying the tense."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The answer the paper wants is I will come at five, and the two wrong answers offered are past and present. The only thing telling them apart is the ending on the last word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The second paper asks the same thing as a conversation:"
+            },
+            {
+              "kind": "speech",
+              "text": "— आप कब आएँगे (āeṅge)? — चार बजे।."
+            },
+            {
+              "kind": "speech",
+              "text": "आएँगे (āeṅge) because the question is to somebody addressed as आप. The answer needs no verb at all: a number and बजे is a complete reply, the way at four is in English."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "How to answer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say each of these out loud:"
+            },
+            {
+              "kind": "speech",
+              "text": "you will come at five."
+            },
+            {
+              "kind": "speech",
+              "text": "you will go by train, not by bus."
+            },
+            {
+              "kind": "speech",
+              "text": "she will come in ten minutes."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The second and third are items 13 and 11 of the same papers. All three are the same shape: a person, a circumstance, and a verb whose ending does the work."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मैं पाँच बजे आऊँगा (maiṁ pā̃c baje āūṅgā)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मैं पाँच बजे आऊँगा\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence as a woman would say it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence as a woman would say it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"आप कब आएँगे (āeṅge)?\" and answer it with two words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"आप कब आएँगे?\" and answer it with two words]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"वह आएगी\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"वह आएगी\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which single word in the paper's line tells you it is the future? (आऊँगा (āūṅgā) — its ending.) How many words does a full answer to when need? (Two — the number and बजे.) Which ending does a question to आप take? (The plural, आएँगे (āeṅge).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

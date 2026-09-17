@@ -1,9 +1,10 @@
 {
   "language": "hindi",
   "chapter": 31,
-  "sourceHash": "fnv1a64:d0fc7706fc1670fd",
+  "sourceHash": "fnv1a64:fb0af583825971cd",
   "lessonIds": [
-    "HI-C31-suprabhat"
+    "HI-C31-suprabhat",
+    "HI-S133-letter-jha"
   ],
   "tex": "hindi/book/chapters/ch31-good-morning.tex"
 }

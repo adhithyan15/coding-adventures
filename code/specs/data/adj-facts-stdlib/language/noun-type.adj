@@ -1,5 +1,5 @@
 % ============================================================================
-% noun-type — three named noun types and what each actually is
+% noun-type — six named noun types and what each actually is
 % (adj-facts-stdlib, LANGUAGE).
 % ============================================================================
 % Nouns fall into several overlapping categories: a common noun is the
@@ -32,12 +32,14 @@
 %     countable_noun      can_be_counted                                "Countable nouns can be counted, even if the resulting number would be extraordinarily high"
 %     uncountable_noun    impossible_to_count                           "Uncountable nouns, or mass nouns, are nouns that are impossible to count"
 %
-% Provenance: quoted verbatim from Grammarly's "Nouns: Definition and
-% Examples" article, which gives a clean, single-sentence definition for
+% Provenance: quoted from Grammarly's "What Is a Noun? Definition, Types,
+% and Examples" article (its page heading; the header used to give the title
+% as "Nouns: Definition and Examples", which the page does not write), which
+% gives a clean, single-sentence definition for
 % each of common, proper, concrete, abstract, collective, singular,
-% plural, countable, uncountable, and gerund nouns. WebFetch-verified
-% before writing (three times total across this file's original three
-% rows and this extension's three added rows). `trust consensus` —
+% plural, countable, uncountable, and gerund nouns. The original authoring
+% note said the quotes were "WebFetch-verified before writing"; the
+% raw-page measurement below supersedes it. `trust consensus` —
 % Grammarly is a reputable, widely-cited grammar-content company, the
 % same tier this stdlib already reserves for other non-.gov language
 % sources and the same source family already cited by
@@ -76,19 +78,55 @@
 % "what is a possessive noun" that this file would need). (See
 % ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The envelope
+% used to be the common-noun row's own sentence, the primary source of all
+% six answers. Each quoted sentence above names its type and its definition,
+% so every row now takes its own as a `source`. The envelope is now a
+% framing sentence from the article, which names no type and no definition:
+%
+%     "Nouns are everywhere in our writing."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the six row sentences and the envelope each occur
+% exactly once, each inside a `<p>`. Every row's page is the envelope's, so
+% no row restates a `locator` line or `trust` (ADJ-TABLES §4).
+%
+% NOT EVERY QUOTE ABOVE IS VERBATIM. The countable and uncountable quotes in
+% the truth table stop before their sentence ends and carry no period: the
+% page goes on with "(like the number of humans in the world)." and with a
+% clause beginning "whether because they name". Those two rows carry the
+% whole sentence. The capitalized AND in the three bundled-fact quotes is
+% emphasis added here; the page writes "and".
 % ============================================================================
 
 table noun_type {
     columns type, definition
 
-    row (common_noun, generic_name_of_an_item_in_a_class_or_group)
-    row (collective_noun, denotes_a_group_or_collection_of_people_or_things)
-    row (abstract_noun, cannot_be_perceived_by_the_senses)
-    row (concrete_noun, perceived_by_the_senses_physical_or_tangible)
-    row (countable_noun, can_be_counted)
-    row (uncountable_noun, impossible_to_count)
+    row (common_noun, generic_name_of_an_item_in_a_class_or_group) {
+        source "A common noun is the generic name of an item in a class or group."
+    }
+    row (collective_noun, denotes_a_group_or_collection_of_people_or_things) {
+        source "A collective noun denotes a group or collection of people or things."
+    }
+    row (abstract_noun, cannot_be_perceived_by_the_senses) {
+        source "An abstract noun is something that cannot be perceived by the senses."
+    }
+    row (concrete_noun, perceived_by_the_senses_physical_or_tangible) {
+        source "A concrete noun is something that is perceived by the senses, something physical or tangible."
+    }
+    row (countable_noun, can_be_counted) {
+        source "Countable nouns can be counted, even if the resulting number would be extraordinarily high (like the number of humans in the world)."
+    }
+    row (uncountable_noun, impossible_to_count) {
+        source "Uncountable nouns, or mass nouns, are nouns that are impossible to count, whether because they name intangible concepts (information, animal husbandry, wealth), collections of things that are considered as wholes (jewelry, equipment, the working class), or homogeneous physical substances (milk, sand, air)."
+    }
 
-    source "A common noun is the generic name of an item in a class or group."
+    % THE ENVELOPE WAS THE COMMON-NOUN ROW'S OWN SENTENCE, the primary source
+    % of all six answers. It is now a framing sentence that names no type.
+    % Every row overrides it, so it reaches no answer.
+    source "Nouns are everywhere in our writing."
     locator "https://www.grammarly.com/blog/parts-of-speech/nouns/"
     trust consensus
 }

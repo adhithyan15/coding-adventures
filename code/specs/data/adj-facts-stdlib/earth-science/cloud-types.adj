@@ -45,18 +45,32 @@
 % the high deck (cirrus, cirrostratus, cirrocumulus), the mid-level deck
 % (altostratus, altocumulus) and the low deck (stratus, cumulus). They are NOT
 % adjacent -- 1443 characters of other prose and photo captions sit between
-% the first and second, and 1446 between the second and third -- so the
-% `source` field now holds the HIGH-deck sentence alone, and the other two are
-% `cites` carrying the same locator. Each of the three is a real contiguous
-% span; the string that welded them was not.
+% the first and second, and 1446 between the second and third, measured with
+% U+00A0 folded to a space; collapsing ONLY ASCII whitespace, which is the
+% rule the counts below are measured under, the same gaps are 1704 and
+% 1483 -- so the
+% three deck sentences are now carried one per row, each by the rows whose
+% cloud it names. Each of the three is a real contiguous span; the
+% string that welded them into one was not.
 %
-% Worth knowing when reading an answer: a `table` has ONE citation block, and
-% the engine attaches the whole object -- `source` plus both corroborations --
-% to every row. So an `altostratus` or `stratus` answer's PRIMARY `source` is
-% the HIGH-deck sentence, which does not name that cloud; the sentence that
-% does is a corroboration. The union of the three covers all seven rows, and
-% nothing is fabricated, but the primary attribution alone does not support
-% every row and a reader should not have to discover that.
+% EACH ROW CARRIES ITS OWN DECK SENTENCE (ADJ-TABLES RS-5e, #14986). The
+% envelope used to be the HIGH-deck sentence and the other two decks were
+% table-level `cites`, so every answer carried all three sentences and four
+% rows -- altostratus, altocumulus, stratus, cumulus -- had a PRIMARY source
+% that named a different cloud. Each row now carries the one deck sentence
+% that names its own cloud, and the envelope is the page's classification
+% sentence, which names no cloud and no level:
+%
+%     "Clouds are classified according to their height above and
+%      appearance (texture) from the ground."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns a real 404 that holds none of these sentences), with inline
+% tags removed without a space and only ASCII whitespace collapsed: each of
+% the three deck sentences occurs exactly once, inside one `<p>`, with no
+% `<head>` copy; the envelope likewise occurs exactly once inside one `<p>`.
+% Every row's page is the envelope's, so no row restates a `locator` line or
+% `trust` (ADJ-TABLES section 4).
 %
 % Two things that look like defects and are not. FIRST, the mid-level sentence
 % reads "The two main TYPE of mid-level clouds", singular, and that is the
@@ -88,17 +102,29 @@
 table cloud_altitude {
     columns cloud, altitude
 
-    row (cirrus, high)
-    row (cirrostratus, high)
-    row (cirrocumulus, high)
-    row (altostratus, middle)
-    row (altocumulus, middle)
-    row (stratus, low)
-    row (cumulus, low)
+    row (cirrus, high) {
+        source "The three main types of high clouds are cirrus, cirrostratus, and cirrocumulus."
+    }
+    row (cirrostratus, high) {
+        source "The three main types of high clouds are cirrus, cirrostratus, and cirrocumulus."
+    }
+    row (cirrocumulus, high) {
+        source "The three main types of high clouds are cirrus, cirrostratus, and cirrocumulus."
+    }
+    row (altostratus, middle) {
+        source "The two main type of mid-level clouds are altostratus and altocumulus."
+    }
+    row (altocumulus, middle) {
+        source "The two main type of mid-level clouds are altostratus and altocumulus."
+    }
+    row (stratus, low) {
+        source "The two main types of low clouds include stratus, which develop horizontally, and cumulus, which develop vertically."
+    }
+    row (cumulus, low) {
+        source "The two main types of low clouds include stratus, which develop horizontally, and cumulus, which develop vertically."
+    }
 
-    source "The three main types of high clouds are cirrus, cirrostratus, and cirrocumulus."
+    source "Clouds are classified according to their height above and appearance (texture) from the ground."
     locator "https://www.weather.gov/lmk/cloud_classification"
-    cites "The two main type of mid-level clouds are altostratus and altocumulus." locator "https://www.weather.gov/lmk/cloud_classification"
-    cites "The two main types of low clouds include stratus, which develop horizontally, and cumulus, which develop vertically." locator "https://www.weather.gov/lmk/cloud_classification"
     trust authoritative
 }

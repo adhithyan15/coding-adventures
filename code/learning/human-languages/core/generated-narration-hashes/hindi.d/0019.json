@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 19,
-  "sourceHash": "fnv1a64:e974a8044811de5d",
+  "sourceHash": "fnv1a64:723c13ec505c916e",
   "lessonIds": [
     "HI-C19-umr",
     "HI-C19-age-grammar",
@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch19.txt",
   "json": "hindi/narration/ch19.json",
-  "textHash": "fnv1a64:eca56c30500006ad",
-  "jsonHash": "fnv1a64:0689a5403d466524",
+  "textHash": "fnv1a64:736fc801e4b379df",
+  "jsonHash": "fnv1a64:25b317c1ec83f1bc",
   "findings": []
 }

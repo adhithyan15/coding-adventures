@@ -1,0 +1,24 @@
+{
+  "chapter": 426,
+  "title": "Capitals, Short Forms And Symbols",
+  "label": "ch:mayusculas-abreviaturas",
+  "canDo": "I can keep days, months, languages and nationalities lower-case the way Spanish does, tell an abbreviation from an initialism from a symbol by whether it takes a point, and read a filled-in form line by line.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C426-sintesis-formulario",
+    "kind": "task",
+    "summary": "Read a completed personal-details form, saying each short form aloud in full and explaining why each lower-case word is lower-case.",
+    "assesses": [
+      "ES-ORTH-C426-01",
+      "ES-ORTH-C426-02",
+      "ES-ORTH-C426-03",
+      "ES-ORTH-C426-04",
+      "ES-ORTH-C426-05",
+      "ES-ORTH-C426-06",
+      "ES-ORTH-C425-01"
+    ],
+    "note": "Closes six points at once: A1-O1-04 (capitals), A1-O1-05 (initial lower-case in surnames), A1-O1-06 (superscript letters in abbreviations), A1-O4-01 (abbreviations), A1-O4-02 (initialisms and acronyms) and A1-O4-03 (symbols). With chapter 425 this takes Ortografia de letras y palabras from 0/7 to 7/7 and Abreviaturas y siglas from 0/3 to 3/3. The capitalisation lesson is the highest-value one in either chapter and is the only orthography point in the inventory with a consequence a marker sees on every line: an English-trained hand capitalises lunes, enero, espanol and a book title, and Spanish capitalises none of them. The chapter is built around one idea that covers all four -- Spanish capitalises a NAME and not a CATEGORY -- and the same idea then explains why de is small in Pedro de la Cruz and capital in De la Cruz."
+  }
+}

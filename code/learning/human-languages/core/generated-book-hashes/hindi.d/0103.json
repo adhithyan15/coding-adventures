@@ -1,0 +1,14 @@
+{
+  "language": "hindi",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:b07824e269fc52dd",
+  "lessonIds": [
+    "HI-C95-jaanta-hun",
+    "HI-C95-jaante-hain",
+    "HI-C95-chahiye",
+    "HI-C95-mujhe-chahiye",
+    "HI-C95-repaso-chaah",
+    "HI-C95-sintesis-chaay"
+  ],
+  "tex": "hindi/book/chapters/ch103-chaah.tex"
+}

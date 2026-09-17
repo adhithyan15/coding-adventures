@@ -465,24 +465,44 @@ const PROGRAMS: &[Prog] = &[
     // `=`/`+`/`-`/`*` builtins the tag-test and arms use — so union `match` runs on
     // **all seven engines**. (`match` here needs no `is_null`, so no nil-handle
     // disambiguation is required; that is only for list `null?`.)
+    // **VM-041 (BEAM05 follow-up) — the `Beam` column, closing Twig to 49/49.**
+    // `emit_union_def`'s per-field cons cell used to emit `alloc`, then `box`
+    // (boxing the field for the tagged backends' match/unbox round-trip), THEN
+    // the two `field_store`s — the interleaved `box` broke `iir-to-beam`'s
+    // `alloc`+`field_store`+`field_store` → `put_list` fusion look-ahead
+    // (adjacency-only, not a general scan), which made every `match`/`union`
+    // Twig program fail BEAM lowering. Fixed by hoisting `box` to before
+    // `alloc` (no data dependency between them — `box` only reads the field
+    // value, not the freshly allocated cell register), restoring adjacency;
+    // mirrors the same function's tag/head cons cell, which already computed
+    // its `box` before its own `alloc`. See
+    // `twig-ir-compiler`'s `union_constructor_alloc_immediately_followed_by_
+    // its_two_field_stores` test and `LANG-VM-NON-ALGOL-BACKLOG.md`'s VM-041
+    // section for the full pinned-down shape and real-`erl` proof.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — E6d-6: matching the SECOND variant (`None`) proves the tag dispatch
     // actually discriminates — the boxed-bool branch takes the right arm, not
     // always the first. `(match (None) ((Some v) v) ((None) 42))` = 42. This is the
     // cell the raw-tag bug broke on the tagged backends (`unbox(raw 1)=0`); E6d-6b's
     // boxed tag fixes it. Runs on all seven engines (Clr via E6d-6c, Vm/Jit above).
+    // VM-041: the SECOND variant's match arm exercises the same `None`
+    // constructor (no fields — its cons chain has no per-field cell, only the
+    // tag/head cell, which was never interleaved) plus the tag-dispatch `=`
+    // comparison on `Beam`; both were already proven working on `Beam` by the
+    // `Some` row above, this row proves discrimination (not always the first
+    // arm) end to end.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Twig — **E6d-8: dynamic globals on the code-gen backends.** A value global
     // `g` that is *forward-referenced* (read inside `f` before its `define`) is
@@ -5040,9 +5060,13 @@ const PROGRAMS: &[Prog] = &[
     // `42` plus `OK`; RESTORE rewinds the same pointer, then a numeric scalar
     // and a string scalar read the first two items again and print `20` plus
     // `O`. This proves ordered mixed storage, both scalar and array string READ,
-    // numeric READ, and representation-independent rewind on all seven standard
-    // backends. Every READ also checks the runtime kind tag before loading its
-    // typed value pool, so dynamic control flow cannot silently cross types.
+    // numeric READ, and representation-independent rewind on all eight standard
+    // backends (BEAM06 — real `erl` proves the string-array pool's `array<str>`
+    // element runs on the same `:ets` substrate BEAM04 built for `array<f64>`,
+    // with the runtime kind-tag check unaffected: `array<i64>` stays on
+    // `:atomics` exactly as before). Every READ also checks the runtime kind
+    // tag before loading its typed value pool, so dynamic control flow cannot
+    // silently cross types.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
@@ -5050,7 +5074,7 @@ const PROGRAMS: &[Prog] = &[
               30 READ A, S$(0), B, S$(1)\n40 PRINT A + B\n50 PRINT S$(0) + S$(1)\n\
               60 RESTORE\n70 READ C, T$\n80 PRINT C\n90 PRINT T$\n100 END\n",
         expect: Expect::Stdout("42\nOK\n20\nO"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — *unstructured `GOSUB` / `RETURN`* (LANG-FULL BA1, enabler
     // **E7**). The headline proof that one `RETURN` resumes at the *dynamically
@@ -5226,7 +5250,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 INPUT X\n20 PRINT X\n30 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — two sequential `INPUT` reads, then arithmetic (BA-INPUT).
     // This proves that two independent calls to `input_i64` drain successive lines
@@ -5238,7 +5262,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 INPUT A\n20 INPUT B\n30 PRINT A + B\n40 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — a *runtime (non-foldable) string* chosen by control flow
     // (LANG-FULL E4-dyn foothold). `INPUT N` reads an integer at run time, so
@@ -5269,7 +5293,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 INPUT N\n20 IF N > 0 THEN 50\n30 LET A$ = \"LO\"\n40 GOTO 60\n50 LET A$ = \"HI\"\n60 PRINT A$\n70 END\n",
         expect: Expect::Stdout("HI"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — **string** `INPUT A$` (LANG-FULL E4-dyn, BA string INPUT
     // foothold). Unlike the numeric `INPUT X` (which parses the line to an i64) and
@@ -5312,7 +5336,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 INPUT A$\n20 PRINT A$\n30 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // BA runtime string CONCAT — `str_concat` over two operands that are *both* read
     // from `INPUT`, so neither carries any compile-time string metadata (no data-segment
@@ -5353,7 +5377,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bas",
         src: "10 INPUT A$\n20 INPUT B$\n30 PRINT A$ + B$\n40 END\n",
         expect: Expect::Stdout("OK!"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — **string arrays** (LANG-FULL E4-dyn, work item
     // E4d-BA-arr).  `DIM A$(2)` allocates an `array<str>`: the E5 length-
@@ -5363,7 +5387,7 @@ const PROGRAMS: &[Prog] = &[
     // reads them back through two `str`-typed `array_get`s and concatenates —
     // so the printed `OK` (not `OO`/`KK`) proves the two element slots are
     // distinct and the handles survive a store→load round-trip through the
-    // aggregate.  Runs on **all seven backends**, each with its native
+    // aggregate.  Runs on **all eight backends**, each with its native
     // representation of a `str` element:
     //   • **VM/JIT** — a tagged `Value::Str` array element.
     //   • **WASM** — a 4-byte i32 handle per element (`i32.store`/`i32.load`, the
@@ -5374,13 +5398,18 @@ const PROGRAMS: &[Prog] = &[
     //     `native_array_elem_size` accepts `str` as an 8-byte element on x86_64/aarch64.
     //   • **JVM** — a `java.lang.String[]` (`anewarray` + `aaload`/`aastore`).
     //   • **CLR** — a `System.String[]` (`newarr` + `ldelem.ref`/`stelem.ref`).
+    //   • **Beam** (BEAM06) — an ordinary Erlang character list, the exact
+    //     `str_const` scalar representation, stored directly in the SAME
+    //     `:ets` table substrate BEAM04 built for `array<f64>` — zero new
+    //     BEAM opcodes, confirmed on real `erl`; see
+    //     `code/specs/BEAM06-string-array-representation.md`.
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 DIM A$(2)\n20 LET A$(0) = \"O\"\n30 LET A$(1) = \"K\"\n\
                40 PRINT A$(0) + A$(1)\n50 END\n",
         expect: Expect::Stdout("OK"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // VM-044: three loop-carried additions wrap 250 + 30 to 24, then the
     // function returns that value across a call boundary for visible output.
@@ -6773,10 +6802,10 @@ const PROGRAMS: &[Prog] = &[
     },
 
     // VM-039a: real stdin and EOF on the shared native/LLVM runtime.
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
-    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("5\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT EMPTY FILE-A ; OUTPUT OUT FILE-C .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE N (A) TO N (C) ; WRITE-ITEM FILE-C .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout(""), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; IF END OF DATA GO TO OPERATION 4 .\n(2) MOVE Q (A) TO Q (A) ; MOVE UP (A) TO UP (A) ; WRITE-ITEM FILE-A .\n(3) JUMP TO OPERATION 1 .\n(4) STOP .", expect: Expect::Stdout("3 100\n7 0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::FlowMatic, ext: "fm", src: "(0) INPUT SRC FILE-A ; OUTPUT OUT FILE-A .\n(1) READ-ITEM FILE-A ; MOVE N (A) TO N (A) ; WRITE-ITEM FILE-A .\n(2) READ-ITEM FILE-A ; READ-ITEM FILE-A ; WRITE-ITEM FILE-A ; STOP .", expect: Expect::Stdout("9\n9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
 
 ];
 
@@ -8269,7 +8298,8 @@ fn run_beam(p: &Prog) -> Option<RunResult> {
     std::fs::write(dir.path().join(format!("{module}.beam")), &bytes)
         .expect("beam: write .beam");
 
-    let out = Command::new("erl")
+    let mut cmd = Command::new("erl");
+    cmd
         // A `str_slice` bounds trap (or any other uncaught error) makes `erl`
         // write `erl_crash.dump` to its current directory during boot. Anchor
         // that in the same disposable temp dir as the `.beam` file rather than
@@ -8287,9 +8317,17 @@ fn run_beam(p: &Prog) -> Option<RunResult> {
         // is then confidently wrong.
         .arg(format!(
             "io:format(\"<<R>>~w<</R>>~n\",[{module}:main()]),halt(0)."
-        ))
-        .output()
-        .expect("beam: spawn erl");
+        ));
+    // BEAM07 (host input): pipe the program's declared stdin bytes through to
+    // the real `erl` process, exactly like `output_with_stdin` already does
+    // for native/LLVM/JVM/CLR. Before this, `run_beam` never wired stdin at
+    // all — every BASIC `INPUT`/FlowMatic `READ-ITEM` row failed BEAM
+    // validation outright (no `input_i64`/`input_more` lowering existed), so
+    // the missing pipe was never a live gap until this slice's IIR-level
+    // lowering made it one. `program_stdin` returns `b""` for every other
+    // cell, so `output_with_stdin`'s `write_all(b"")` is a no-op for them —
+    // this is a pure extension, not a behavior change for existing rows.
+    let out = output_with_stdin(cmd, program_stdin(p)).expect("beam: spawn erl");
 
     let raw = String::from_utf8_lossy(&out.stdout);
     // A non-zero exit is a failure even when stdout happens to parse. OTP writes
@@ -9412,6 +9450,19 @@ fn matrix_every_proven_cell_agrees() {
 /// (VM-018's module-global design question, unaffected by array
 /// representation).
 ///
+/// It changed again (400 → 402, BEAM06) once `iir-to-beam` gained `str`-
+/// typed array element support on the SAME `:ets` substrate BEAM04 built,
+/// with ZERO new representation work: a `str` value is already an ordinary
+/// Erlang character list (the `str_const` scalar lowering), and `:ets`
+/// stores that exactly as natively as a float, confirmed on real `erl`
+/// (see `code/specs/BEAM06-string-array-representation.md`). The `DIM
+/// A$(2)` string-array row and the mixed numeric/string `DATA` row — both
+/// explicitly deferred by BEAM04 as needing a separate, larger design —
+/// each gained a real, `erl`-proven `Beam` declaration.  Dartmouth BASIC
+/// now declares 45/51 rows on `Beam`; only the 5 `INPUT` rows (VM-060b)
+/// and `RND` (VM-018) remain, both unscoped design questions rather than
+/// probe-and-promote items.
+///
 /// COBOL-60's expected cell count changed again after VM-040's boolean/
 /// EVALUATE slice (422 → 426) and again in this slice (426 → 430): four more
 /// rows (alphanumeric EVALUATE subject via `str_cmp`, and three reference-
@@ -9435,23 +9486,33 @@ fn matrix_every_proven_cell_agrees() {
 /// variable survives across a `call_closure` call), a probe-first sweep of
 /// EVERY not-yet-`Beam` Twig row (29 of 49) found 27 that already ran
 /// correctly with zero further lowering changes — including the two closure
-/// rows the fix directly protects. One row's blocker (`match`/`union`) was
-/// also *partly* diagnosed: `iir-to-beam`'s validator rejected a `mov` op
-/// carrying a `ref<LispyPair>` type_hint even though `lower.rs`'s `"mov"`
-/// arm already lowers it correctly for any type (an unconditional
-/// register-to-register `move`); relaxing the validator (mirroring the
-/// existing `"str"`-type_hint exception) is safe and tested
-/// (`test_99_real_erl_mov_ref_lispy_pair_lowers_correctly` in
-/// `iir-to-beam`'s suite) but is NOT by itself sufficient — the two
-/// `match`/`union` rows still fail with a SEPARATE, deeper error
-/// (`field_store: found outside of alloc+field_store+field_store pattern`)
-/// once validation passes, in the synthesized union-variant constructor
-/// function. That is a real, still-open design/implementation gap (the
-/// `alloc`+2×`field_store` → `put_list` fusion only recognizes the three
-/// instructions immediately adjacent; the union-variant constructor
-/// interleaves a `mov` between them) — left deferred, NOT forced. See
-/// `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-041" section for the full probe
-/// transcript and the exact remaining gap description.
+/// rows the fix directly protects. The remaining 2 (`match`/`union`) needed
+/// two further fixes, landed in this same VM-041 arc: (1) `iir-to-beam`'s
+/// validator rejected a `mov` op carrying a `ref<LispyPair>` type_hint even
+/// though `lower.rs`'s `"mov"` arm already lowers it correctly for any type
+/// (an unconditional register-to-register `move`) — relaxed to mirror the
+/// existing `"str"`-type_hint exception, proven by
+/// `test_99_real_erl_mov_ref_lispy_pair_lowers_correctly` in `iir-to-beam`'s
+/// suite; (2) a SEPARATE, deeper gap in the synthesized union-variant
+/// constructor: `twig-ir-compiler::emit_union_def`'s per-field cons cell
+/// emitted `alloc`, then a `box` (E6d-6b: boxing the field for the tagged
+/// backends' round-trip), THEN the two `field_store`s — the interleaved
+/// `box` broke `iir-to-beam`'s `alloc`+2×`field_store` → `put_list` fusion,
+/// which only recognizes the three instructions when textually adjacent (a
+/// `[idx]`/`[idx+1]` look-ahead peek, not a general scan). Pinned down by
+/// direct IIR inspection to be exactly `[alloc, box, field_store,
+/// field_store]` — the `box` sits between `alloc` and the FIRST
+/// `field_store`. Fixed by hoisting the `box` above the `alloc` in
+/// `twig-ir-compiler` (not by teaching `iir-to-beam` to tolerate
+/// interleaving): `box` has no data dependency on the freshly allocated cell
+/// register, so the reorder is a pure no-op on every other backend and
+/// mirrors this same function's tag/head cons cell, which already boxed
+/// before allocating. Proven by `twig-ir-compiler`'s
+/// `union_constructor_alloc_immediately_followed_by_its_two_field_stores`
+/// (adjacency, direct on the IIR) and `lang-aot`'s `twig_beam_match_union`
+/// (full pipeline, real `erl`, both promoted rows) — Twig is now **49/49**
+/// on `Beam`. See `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-041" section for the
+/// full probe transcript and this follow-up's pinned-down shape.
 #[test]
 fn feature_coverage_doc_counts_match_programs_source() {
     fn rows_and_cells(lang: Language) -> (usize, usize) {
@@ -9464,12 +9525,12 @@ fn feature_coverage_doc_counts_match_programs_source() {
     // (language, expected rows, expected total declared cells — all backends
     // including Beam). Order matches the doc table.
     let expected = [
-        (Language::Twig, 49, 390),
+        (Language::Twig, 49, 392),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 45),
-        (Language::DartmouthBasic, 51, 400),
+        (Language::DartmouthBasic, 51, 407),
         (Language::Oct, 12, 96),
-        (Language::FlowMatic, 8, 60),
+        (Language::FlowMatic, 8, 64),
         (Language::Cobol60, 58, 464),
     ];
 
@@ -15507,6 +15568,33 @@ fn portable_text_stdout_flow_matic_beam_output() {
     eprintln!("FLOW-MATIC BEAM output: {executed} programs executed");
 }
 
+/// BEAM07: `READ-ITEM`'s `input_more` EOF peek + `input_i64` field reads on
+/// real `erl` — the four rows `portable_text_stdout_flow_matic_beam_output`
+/// deliberately excludes (`!p.src.contains("READ-ITEM")`). Covers: a
+/// `READ-ITEM`/`IF END OF DATA` loop over two records then EOF, the same
+/// loop over a genuinely empty file (EOF on the very first peek), a
+/// two-field-per-record loop (`Q`/`UP`), and two sequential bare
+/// `READ-ITEM`s with no EOF check at all. Each row is executed against
+/// real `erl` with its declared stdin piped through `run_beam` — see
+/// `code/specs/BEAM07-beam-host-input.md`.
+#[test]
+fn portable_text_stdout_flow_matic_beam_read_item_and_eof() {
+    if !erl_ok() {
+        eprintln!("SKIP FLOW-MATIC BEAM READ-ITEM/EOF: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
+    for program in PROGRAMS.iter().filter(|p|
+        p.lang == Language::FlowMatic && p.src.contains("READ-ITEM")) {
+        assert!(program.backends.contains(&Beam), "selected FlowMatic READ-ITEM row must declare Beam");
+        let result = run_beam(program).expect("detected erl must execute FLOW-MATIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 4, "exactly the four READ-ITEM/EOF rows are checked here");
+    eprintln!("FLOW-MATIC BEAM READ-ITEM/EOF: {executed} programs executed");
+}
+
 /// VM-042/VM-D031: the three non-input Brainfuck rows execute correctly on real
 /// `erl` through the SAME `:atomics`-backed `store_byte`/`load_byte`/`putchar`
 /// lowering every other byte-tape/array BEAM program already uses — `README`'s
@@ -16193,6 +16281,96 @@ fn portable_text_stdout_dartmouth_basic_beam_arrays_and_data() {
     eprintln!("Dartmouth BASIC BEAM arrays and DATA: {executed} programs executed");
 }
 
+/// BEAM06: Dartmouth BASIC **string-array** and mixed numeric/string `DATA`
+/// rows — the 2 rows BEAM04 explicitly left deferred as "a separate, larger
+/// gap" because `iir-to-beam` had no `str`-typed array element
+/// representation at all (`UnsupportedType` at validation, independent of
+/// BEAM04's float-storage fix). Research found this needed ZERO new
+/// representation work: a `str` value is already an ordinary Erlang
+/// character list (the `str_const` scalar lowering), and BEAM04's
+/// `:ets`-backed array substrate already stores arbitrary Erlang terms
+/// natively — confirmed on real `erl` (round-trip, overwrite, concatenation,
+/// empty-string edge case). Now that `type_hint == "array<str>"`/`"str"`
+/// dispatches to the SAME `:ets` substrate as `"array<f64>"`/`"f64"` (see
+/// `code/specs/BEAM06-string-array-representation.md`), both rows run
+/// correctly: `DIM A$(2)` (plain string array) and the mixed numeric/string
+/// `DATA`/`READ`/`RESTORE` row (VM-017's parallel kind/numeric/string
+/// pools — traced directly to confirm the pools are three separate typed
+/// arrays, never one heterogeneous array, so no tagged/variant element
+/// representation was needed).
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_string_arrays() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM string arrays: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, &str)] = &[
+        (
+            "10 DIM A$(2)\n20 LET A$(0) = \"O\"\n30 LET A$(1) = \"K\"\n\
+             40 PRINT A$(0) + A$(1)\n50 END\n",
+            "OK",
+        ),
+        (
+            "10 DIM S$(1)\n20 DATA 20, \"O\", 22, \"K\"\n\
+             30 READ A, S$(0), B, S$(1)\n40 PRINT A + B\n50 PRINT S$(0) + S$(1)\n\
+             60 RESTORE\n70 READ C, T$\n80 PRINT C\n90 PRINT T$\n100 END\n",
+            "42\nOK\n20\nO",
+        ),
+    ];
+    let mut executed = 0;
+    for (src, stdout) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::DartmouthBasic && p.src == *src)
+            .unwrap_or_else(|| panic!("DartmouthBasic row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected BASIC row must declare Beam");
+        assert!(matches!(program.expect, Expect::Stdout(value) if value == *stdout),
+            "selected BASIC expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 2);
+    eprintln!("Dartmouth BASIC BEAM string arrays: {executed} programs executed");
+}
+
+/// BEAM07: `INPUT`/`INPUT A$` on real `erl`, closing out the last Dartmouth
+/// BASIC BEAM gap besides `RND` (VM-018, a separate module-global design
+/// question) — see `code/specs/BEAM07-beam-host-input.md`. Each row is
+/// executed against real `erl` with its declared stdin bytes piped through
+/// `run_beam` (the harness fix this slice made — `run_beam` never wired
+/// stdin at all before): numeric `INPUT X`/two sequential `INPUT`s summed/
+/// a branch-selected string chosen by a runtime `INPUT N`/string `INPUT A$`/
+/// two string `INPUT`s concatenated. "Probe before declaring, promote only
+/// proven cells" — these five rows are proven here, not assumed from the
+/// instruction-shape proofs in `iir-to-beam`'s own test suite.
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_input() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM input: erl unavailable");
+        return;
+    }
+    let srcs: &[&str] = &[
+        "10 INPUT X\n20 PRINT X\n30 END\n",
+        "10 INPUT A\n20 INPUT B\n30 PRINT A + B\n40 END\n",
+        "10 INPUT N\n20 IF N > 0 THEN 50\n30 LET A$ = \"LO\"\n40 GOTO 60\n50 LET A$ = \"HI\"\n60 PRINT A$\n70 END\n",
+        "10 INPUT A$\n20 PRINT A$\n30 END\n",
+        "10 INPUT A$\n20 INPUT B$\n30 PRINT A$ + B$\n40 END\n",
+    ];
+    let mut executed = 0;
+    for src in srcs {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::DartmouthBasic && p.src == *src)
+            .unwrap_or_else(|| panic!("DartmouthBasic row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected BASIC INPUT row must declare Beam");
+        assert!(!program_stdin(program).is_empty(), "selected row must declare stdin");
+        let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 5, "exactly the five INPUT rows are checked here");
+    eprintln!("Dartmouth BASIC BEAM input: {executed} programs executed");
+}
+
 // VM-041: fixed a confirmed silent-corruption bug first — `call_closure`
 // lowers to TWO `call_ext` instructions (`erlang:'++'/2` then
 // `erlang:apply/3`), and neither was wrapped in
@@ -16319,4 +16497,66 @@ fn twig_beam_string_ops() {
 
     assert_eq!(executed, 19);
     eprintln!("Twig BEAM string ops: {executed} programs executed");
+}
+
+// VM-041 follow-up (BEAM05 §3.2 / this slice): the `match`/`union` fusion
+// gap, pinned down and fixed. `iir-to-beam`'s `alloc`+`field_store`+
+// `field_store` → `put_list` fusion only recognizes the three instructions
+// when textually adjacent; `twig-ir-compiler::emit_union_def`'s per-field
+// cons cell used to emit `alloc`, then a `box` (E6d-6b: boxing the field for
+// the tagged backends' `match`/`unbox` round-trip), THEN the two
+// `field_store`s — confirmed by direct IIR inspection (a scratch probe
+// dumping the `Some` constructor's instruction list, discarded before this
+// PR) to be `[alloc, box, field_store, field_store]`, i.e. the `box` sits
+// between `alloc` and the FIRST `field_store` (not between the two
+// `field_store`s, as BEAM05 §3.2 had left unpinned). Every other Twig BEAM
+// row was already proven (VM-041's first cut, 47/49); these were the only 2
+// still undeclared.
+//
+// Fixed in `twig-ir-compiler` (not `iir-to-beam`): hoisted the `box` to
+// before the `alloc` in `emit_union_def`'s per-field loop. `box` only reads
+// the field value — it has no data dependency on the freshly allocated cell
+// register — so the reorder changes no semantics on any of the five other
+// backends (record/union constructors on WASM/JVM/CLR/NativeAot/LLVM/Vm/Jit
+// all still pass their existing `lang_matrix` rows unchanged) and merely
+// restores the `alloc, field_store, field_store` adjacency `iir-to-beam`'s
+// fusion look-ahead requires — exactly mirroring this same function's
+// tag/head cons cell, which already computed its own `box` before its
+// `alloc`. Chosen over teaching the fusion look-ahead itself to tolerate
+// interleaved instructions: the concrete case has exactly one interleaved
+// instruction shape (a `box` with no aliasing to the alloc'd cell), so a
+// general N-instruction-skip scanner in `iir-to-beam` would be strictly more
+// machinery for the same proven outcome, touching the backend every OTHER
+// frontend also relies on instead of the one crate that produced the gap.
+//
+// Proven correct (not just "compiles"): `twig-ir-compiler`'s
+// `union_constructor_alloc_immediately_followed_by_its_two_field_stores`
+// asserts the adjacency directly on the emitted IIR; this test proves the
+// full pipeline — source → IIR → BEAM bytes → real `erl` execution — for
+// both promoted rows, closing Twig to **49/49** BEAM rows (the last 2 of the
+// original 49).
+#[test]
+fn twig_beam_match_union() {
+    if !erl_ok() {
+        eprintln!("SKIP Twig BEAM match/union: erl unavailable");
+        return;
+    }
+    let cases: &[(&str, i32)] = &[
+        ("(union Opt (Some (v : int)) (None)) (match (Some 42) ((Some v) v) ((None) 0))", 42),
+        ("(union Opt (Some (v : int)) (None)) (match (None) ((Some v) v) ((None) 42))", 42),
+    ];
+    let mut executed = 0;
+    for (src, exit_code) in cases {
+        let program = PROGRAMS.iter()
+            .find(|p| p.lang == Language::Twig && p.src == *src)
+            .unwrap_or_else(|| panic!("Twig row with src {src:?} not found"));
+        assert!(program.backends.contains(&Beam), "selected Twig row must declare Beam");
+        assert!(matches!(program.expect, Expect::Exit(n) if n == *exit_code),
+            "selected Twig expectation changed");
+        let result = run_beam(program).expect("detected erl must execute Twig");
+        assert_cell(Beam, program, result);
+        executed += 1;
+    }
+    assert_eq!(executed, 2);
+    eprintln!("Twig BEAM match/union: {executed} programs executed (Twig now 49/49 on Beam)");
 }

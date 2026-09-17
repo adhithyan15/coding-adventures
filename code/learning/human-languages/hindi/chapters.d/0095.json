@@ -1,0 +1,22 @@
+{
+  "chapter": 95,
+  "title": "The Past, And Where You Were",
+  "label": "ch:hi-atit",
+  "canDo": "I can say where I was and what I used to do, put the sentence in the negative, and use the postposition that pins a person to a place.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "HI-C87-sintesis-atit",
+    "kind": "task",
+    "summary": "Ask where somebody was and answer for yourself, using the exact sentence the first practice paper prints as reading item 14 and moving it one step into the past.",
+    "assesses": [
+      "HI-LEX-C87-POST-01",
+      "HI-LEX-C87-PAST-01",
+      "HI-LEX-C87-PAST-02",
+      "HI-LEX-C87-PAST-03",
+      "HI-LEX-C87-PAST-04"
+    ],
+    "note": "Closes two points. HI-A1-V-12 said nothing in the corpus was past-tense at all, and that Hindi needs at minimum tha to say where one was or what one used to do -- the chapter supplies tha, thi and the, the negative, and the past habitual, which is the present habitual the track has taught since chapter 5 with its final word swapped. HI-A1-POST-05 is named in the inventory as turning two mock items: par had never been introduced as a word, only carried inside the chapter-94 phrase ham station par milenge, where it was a lump. The chapter also pays down script debt: the letter tha had never been taught anywhere in the track, which is why no past-tense lesson could be written before now, and HI-S126-letter-tha teaches it."
+  }
+}

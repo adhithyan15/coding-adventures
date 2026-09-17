@@ -32,26 +32,66 @@
 % Provenance: quoted verbatim from NASA Space Place's "What Is a Comet?"
 % page, which introduces each of these three physical parts in its own
 % sentence before going on to further sub-divide the tail into a dust tail
-% and an ion tail. WebFetch-verified before writing (twice). `trust
-% authoritative` — NASA is a primary .gov source, the same tier the
-% sibling `moon-phases.adj`/`solar-eclipse-type.adj` (the other libraries
-% in this directory) already use for their NASA citations. A comet-related
-% term that is NOT one of these three — "short_period_comet", a real
-% classification the same page also names, but one that sorts comets by
-% ORBITAL PERIOD rather than by physical anatomy, a different axis from
-% nucleus/coma/tail — is deliberately NOT a row, so a recall ABSTAINS on
-% it rather than inventing a physical-part description. (See ../README.md;
-% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% and an ion tail. The original authoring note said the quotes were
+% "WebFetch-verified before writing (twice)"; the raw-page measurement
+% below supersedes it. `trust authoritative` — NASA is a primary .gov
+% source, the same tier the sibling `moon-phases.adj` and
+% `solar-eclipse-type.adj` (the other libraries in this directory) already
+% use for their NASA citations. A comet-related term that is NOT one of
+% these three — "short_period_comet", a real classification the same page
+% also names, but one that sorts comets by ORBITAL PERIOD rather than by
+% physical anatomy, a different axis from nucleus/coma/tail — is
+% deliberately NOT a row, so a recall ABSTAINS on it rather than inventing
+% a physical-part description.
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The
+% envelope used to be the nucleus span, so a coma or tail answer was
+% warranted primarily by a sentence about the nucleus, and those two
+% sentences reached no answer at all. Each row now carries the sentence
+% introducing its own part, and the envelope is the page's sentence
+% framing the anatomy as a whole, which names no part:
+%
+%     "This diagram is not to scale, but it shows the anatomy of a
+%      comet."
+%
+% The three spans quoted in the truth table above ARE the row `source`
+% values, so each description is checkable from the row that states it.
+%
+% NOTE FOR ANY FUTURE TEST: all three spans mention the nucleus, because
+% the coma is a cloud AROUND the nucleus and the tail streams AWAY FROM
+% it. A negative assertion must therefore name a WHOLE SPAN; the bare
+% word `nucleus` is satisfied by all three.
+%
+% Measured 2026-09-16 UTC by this table's own fetch. The page answered
+% 200 in about 21830 bytes and a nonsense path on the same host answered
+% 404 with a full styled page of about 11280 bytes -- so the control is
+% that the spans are absent from a page of COMPARABLE SIZE, not that the
+% page is empty. Those byte counts are measured-at-a-moment, not
+% properties of the page: two fetches minutes apart returned 21823 and
+% 21830 bytes. Tags removed without a space and only ASCII whitespace
+% collapsed: each row's span and the envelope each occur exactly once,
+% inside one `<p>`, scripts set aside and over the whole file, with no
+% `<head>` copy. Every row's page is the envelope's, so no row restates a
+% `locator` line and no row repeats the `trust` tier.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table comet_part {
     columns part, description
 
-    row (nucleus, solid_frozen_core_at_the_heart_of_the_comet)
-    row (coma, fuzzy_cloud_of_gas_and_dust_around_the_nucleus)
-    row (tail, streams_away_from_the_nucleus_pushed_by_sunlight_and_solar_particles)
+    row (nucleus, solid_frozen_core_at_the_heart_of_the_comet) {
+        source "At the heart of every comet is a solid, frozen core called the nucleus."
+    }
+    row (coma, fuzzy_cloud_of_gas_and_dust_around_the_nucleus) {
+        source "The gas and dust create a huge, fuzzy cloud around the nucleus called the coma."
+    }
+    row (tail, streams_away_from_the_nucleus_pushed_by_sunlight_and_solar_particles) {
+        source "As dust and gases stream away from the nucleus, sunlight and particles coming from the Sun push them into a bright tail that stretches away from the Sun for millions of miles."
+    }
 
-    source "At the heart of every comet is a solid, frozen core called the nucleus."
+    source "This diagram is not to scale, but it shows the anatomy of a comet."
     locator "https://spaceplace.nasa.gov/comets/en/"
     trust authoritative
 }

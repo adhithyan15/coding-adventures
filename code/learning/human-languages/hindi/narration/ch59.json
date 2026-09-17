@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "The Vowel You Write and Do Not Say",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:76a14bc2c646d613",
+  "sourceHash": "fnv1a64:b2a344b1a216a8c4",
   "lessons": [
     {
       "id": "HI-W12-schwa-drop",
@@ -754,7 +754,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c0acd15e99afb4a5",
+      "sourceHash": "fnv1a64:77ddb344a2f7eb73",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -808,7 +808,7 @@
             },
             {
               "kind": "speech",
-              "text": "There is a plain dot without the crescent that does a related job, and which of the two you write depends on what else is sitting above the letter. For now: crescent plus dot means through the nose."
+              "text": "You already draw the plain dot without the crescent — the anusvāra — and it does the same job. Which of the two a word takes depends on what else is sitting above the letter: where there is no room for the crescent, the plain dot does the work. Crescent plus dot, or dot alone, both mean through the nose."
             }
           ]
         },

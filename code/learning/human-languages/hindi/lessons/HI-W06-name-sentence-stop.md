@@ -20,9 +20,9 @@ duration:
 requires:
   knowledge: [HI-CONCEPT-C02-MERANAAMHAI-01]
 introduces:
-  knowledge: []
+  knowledge: [HI-SCRIPT-DANDA-01]
 practises:
-  knowledge: [HI-CONCEPT-C02-MERANAAMHAI-01]
+  knowledge: [HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -39,7 +39,7 @@ reviews_of: [HI-W06-name-sentence-frame]
 Read **मेरा नाम मीरा है**. Count four word groups. Do not change their order.
 
 ## Writing — add only the boundary
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERANAAMHAI-01] -->
+<!-- hl-knowledge: introduces=[HI-SCRIPT-DANDA-01]; assesses=[HI-CONCEPT-C02-MERANAAMHAI-01] -->
 <!-- hl-writing-stage: controlled-composition -->
 
 Hindi can close this sentence with the vertical **पूर्ण विराम**:
@@ -53,7 +53,7 @@ Write the known sentence once and add **।**. Check the four spaces first, then
 the one stop.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERANAAMHAI-01] -->
-<!-- hl-activity: {"id":"HI-W06-name-sentence-stop-check","kind":"text","assesses":["HI-CONCEPT-C02-MERANAAMHAI-01"],"prompt":"Write the visible Mira sentence and close it with the Hindi sentence stop.","answer":"मेरा नाम मीरा है।","accepted":["मेरा नाम अरुण है।"],"feedback":{"correct":"The four word groups end with one separate ।.","incorrect":"Repair either the word spacing or the final ।, not both at once."},"response_seconds":25} -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERANAAMHAI-01, HI-SCRIPT-DANDA-01] -->
+<!-- hl-activity: {"id":"HI-W06-name-sentence-stop-check","kind":"text","assesses":["HI-CONCEPT-C02-MERANAAMHAI-01","HI-SCRIPT-DANDA-01"],"prompt":"Write the visible Mira sentence and close it with the Hindi sentence stop.","answer":"मेरा नाम मीरा है।","accepted":["मेरा नाम अरुण है।"],"feedback":{"correct":"The four word groups end with one separate ।.","incorrect":"Repair either the word spacing or the final ।, not both at once."},"response_seconds":25} -->
 
 Stop after one sentence and one single-dimension repair.

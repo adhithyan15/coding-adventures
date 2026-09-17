@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C426-siglas",
+    "language": "spanish",
+    "chapter": 426,
+    "sequence": 10120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7f73ff34aad2df3"
+  },
+  "findings": []
+}

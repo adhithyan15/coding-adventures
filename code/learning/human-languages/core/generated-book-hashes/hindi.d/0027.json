@@ -1,9 +1,10 @@
 {
   "language": "hindi",
   "chapter": 27,
-  "sourceHash": "fnv1a64:323a7aa9f6caf23a",
+  "sourceHash": "fnv1a64:ca79faff90876ca1",
   "lessonIds": [
-    "HI-C27-shubh-raatri"
+    "HI-C27-shubh-raatri",
+    "HI-S142-letter-ta-retroflex"
   ],
   "tex": "hindi/book/chapters/ch27-good-night.tex"
 }

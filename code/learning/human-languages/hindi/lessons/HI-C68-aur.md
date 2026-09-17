@@ -10,20 +10,20 @@ chapter: 68
 type: word
 headword: और
 romanization: "aur"
-gloss: and — the commonest word in Hindi that this book has never taught, and the one that turns two sentences into one
+gloss: and — the commonest word in Hindi that this book had never taught, and the one that turns two sentences into one
 concept_tag: HI-JOIN-AUR
-prerequisites: [HI-C37-chai, HI-C37-dudh, HI-C35-pasand, HI-C66-seed, HI-C66-crop]
+prerequisites: [HI-C37-chai, HI-C37-dudh, HI-C35-pasand, HI-C66-seed, HI-C66-crop, HI-S135-letter-au]
 sounds: [diphthong-au]
 roots: []
 etymology_hook: "और descends from Sanskrit अपर (apara, 'other, further'), so Hindi's word for adding one more thing began, like Marathi's आणि from अन्य, as a word for the OTHER thing — two Indo-Aryan languages made the same move out of two different words for other, and English does it from the third side with an other becoming another"
 duration:
   max_seconds: 220
 requires:
-  knowledge: [HI-CONCEPT-C35-PASAND-01, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-DUDH-01]
+  knowledge: [HI-CONCEPT-C35-PASAND-01, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-DUDH-01, HI-SCRIPT-RECOG-135]
 introduces:
   knowledge: [HI-JOIN-AUR-01]
 practises:
-  knowledge: [HI-JOIN-AUR-01, HI-CONCEPT-C35-PASAND-01, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-DUDH-01, HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02]
+  knowledge: [HI-JOIN-AUR-01, HI-CONCEPT-C35-PASAND-01, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-DUDH-01, HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-SCRIPT-RECOG-135]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ variety: standard-hindi
 reviews_of: [HI-C37-chai, HI-C37-dudh, HI-C35-pasand]
 ---
 
-# *aur* — "and", and the one letter this book still owes you
+# *aur* — "and", and the letter this book owed you
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-DUDH-01] -->
@@ -59,18 +59,17 @@ It joins two whole sentences the same way, and that is the use that matters most
 thing out of a different Sanskrit word, *anya*, and English does it from the
 third side: *another* is *an other*.
 
-## The letters in this word — one is still owed to you
-<!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-AUR-01] -->
+## The letters in this word — the debt is paid
+<!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-AUR-01, HI-SCRIPT-RECOG-135] -->
 
-Look at the headword above and then use the word by ear. Its opening vowel is
-the independent *au*, and **this book has not taught that letter**. You have met
-it exactly once, inside *aurat*, and no writing lesson has ever
-drawn it.
+Look at the headword above and **read** it. Its opening vowel is the independent
+*au*, and you were taught to draw it thirty-four chapters ago — the standing
+form with two arcs, whose sitting version rides on the **k** of *nau*.
 
-So this lesson is deliberately **gloss-first**: the Devanagari sits in the
-headword where you can start to recognise its shape, the body says the word in
-Roman letters, and the debt is written down rather than hidden. Learn *aur* now
-by ear — it is far too useful to wait for — and the letter will come.
+This lesson is still written **gloss-first**, with the body in Roman letters,
+because it was composed while that letter was still owed and the debt was
+written down rather than hidden. The roman is now a crutch you no longer need:
+the headword is four characters you can take apart.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-JOIN-AUR-01, HI-CONCEPT-C37-CHAI-01, HI-CONCEPT-C37-DUDH-01, HI-CONCEPT-C35-PASAND-01, HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02] -->

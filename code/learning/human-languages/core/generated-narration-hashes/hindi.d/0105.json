@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:fb07dc3d020b7f96",
+  "lessonIds": [
+    "HI-C97-naam-ji",
+    "HI-C97-priya",
+    "HI-C97-repaso-sambodhan",
+    "HI-C97-sandesh",
+    "HI-C97-sintesis-sandesh"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch105.txt",
+  "json": "hindi/narration/ch105.json",
+  "textHash": "fnv1a64:a4587f3ba0ad9c7e",
+  "jsonHash": "fnv1a64:8b90c6ff92f27029",
+  "findings": []
+}

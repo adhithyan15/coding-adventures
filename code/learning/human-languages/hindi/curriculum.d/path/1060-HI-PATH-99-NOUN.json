@@ -1,0 +1,20 @@
+{
+  "id": "HI-PATH-99-NOUN",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "HI-C91-bacche-plural",
+    "HI-C91-kitaben",
+    "HI-C91-bhashaen",
+    "HI-C91-aadmi-unchanged",
+    "HI-C91-ko",
+    "HI-C91-bacche-ko",
+    "HI-C91-yah-kitab",
+    "HI-C91-repaso-sangya",
+    "HI-C91-sintesis-sangya"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-99-NOUN"
+  ],
+  "after": []
+}

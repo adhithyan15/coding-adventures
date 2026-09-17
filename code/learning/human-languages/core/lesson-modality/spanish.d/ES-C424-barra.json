@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C424-barra",
+    "language": "spanish",
+    "chapter": 424,
+    "sequence": 9980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d845805c90da2ac"
+  },
+  "findings": []
+}

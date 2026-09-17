@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:f1a11c745aec02e9",
+  "lessonIds": [
+    "HI-C86-ham",
+    "HI-C86-ve",
+    "HI-C86-hamen-tumhen",
+    "HI-C86-aapko-use",
+    "HI-C86-koi-article",
+    "HI-C86-repaso-sarvanam",
+    "HI-C86-sintesis-sarvanam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch94.txt",
+  "json": "hindi/narration/ch94.json",
+  "textHash": "fnv1a64:4840caa969a359d4",
+  "jsonHash": "fnv1a64:9ed923157dd1405f",
+  "findings": []
+}

@@ -1,10 +1,11 @@
 {
   "language": "hindi",
   "chapter": 15,
-  "sourceHash": "fnv1a64:d983cbfc44f68b63",
+  "sourceHash": "fnv1a64:71395e20db4eb1d0",
   "lessonIds": [
     "HI-C15-paani-roti",
-    "HI-S119-letter-ssa"
+    "HI-S119-letter-ssa",
+    "HI-S137-letter-dha-retroflex"
   ],
   "tex": "hindi/book/chapters/ch15-water-and-bread.tex"
 }

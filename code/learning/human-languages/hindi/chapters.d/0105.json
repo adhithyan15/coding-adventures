@@ -1,0 +1,20 @@
+{
+  "chapter": 105,
+  "title": "Speaking to Somebody",
+  "label": "ch:hi-sambodhan",
+  "canDo": "I can address somebody by name, in speech and on paper, and write a short message to a named reader.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C97-sintesis-sandesh",
+    "kind": "production",
+    "summary": "Write the whole message to a named reader from a purpose cue alone: the opening line that names them, two sentences underneath, and your own name at the foot.",
+    "assesses": [
+      "HI-CONCEPT-C97-MESSAGE-01",
+      "HI-CONCEPT-C97-ADDRESS-01",
+      "HI-LEX-C97-PRIYA-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three, with no model on the page."
+  }
+}

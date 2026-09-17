@@ -6,7 +6,7 @@
 % category 4 hurricane do?": it states no meteorology fact of its own — it only
 % `import`s the grounded table and asks binding queries. The engine resolves
 % each `?` against the `damage_level` rows and returns the descriptor + the
-% table's source/locator/trust.
+% ROW's own NHC sentence, with the table's locator and trust inherited.
 %
 % The fifth query runs the relation BACKWARD (bind the descriptor
 % `catastrophic_damage`, recall which categories carry it — HONESTLY category_4

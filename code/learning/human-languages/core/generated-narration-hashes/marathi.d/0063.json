@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:413d513369d5abf7",
+  "lessonIds": [
+    "MR-W10-a1-con-reloj"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "marathi/narration/ch63.txt",
+  "json": "marathi/narration/ch63.json",
+  "textHash": "fnv1a64:e0afee4ab2334905",
+  "jsonHash": "fnv1a64:4f201d1ac44f7809",
+  "findings": []
+}

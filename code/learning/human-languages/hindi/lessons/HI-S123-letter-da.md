@@ -84,7 +84,7 @@ You already say these, and every one of them has द somewhere inside it:
 > धन्यवाद  ·  अलविदा  ·  नमस्ते
 
 - [YOU TRACE: द three times, saying *da* as you finish each one]
-- [YOU LOOK: back at any page of this chapter and find द once more]
+- [YOU LOOK: back at any page and find द once more]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-123] -->

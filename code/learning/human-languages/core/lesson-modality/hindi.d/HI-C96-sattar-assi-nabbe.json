@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C96-sattar-assi-nabbe",
+    "language": "hindi",
+    "chapter": 104,
+    "sequence": 4440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7e8423605b70db0"
+  },
+  "findings": []
+}

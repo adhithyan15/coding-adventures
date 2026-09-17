@@ -3,8 +3,8 @@
   "language": "hindi",
   "chapter": 79,
   "title": "What It Costs",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e495079dc437c707",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:878afb368ef192d2",
   "lessons": [
     {
       "id": "HI-C72-money",
@@ -719,6 +719,145 @@
             {
               "kind": "speech",
               "text": "What does ख़रीदना (kharīdnā) mean? (\"to buy\".) Ask what a thing costs."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C72-sau",
+      "sequence": 3055,
+      "title": "सौ (sau) — the round figure",
+      "headword": "सौ",
+      "romanization": "sau",
+      "gloss": "a hundred — two letters, and the round figure every price reaches for",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd908263aa9d225a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word for a rupee, and the word for buying. You can ask what a thing costs — but you cannot yet say the number the answer usually is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सौ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सौ (sau) — a hundred."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two letters, and the number a price lands on",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "said",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "सौ (sau) means a hundred.",
+                "सौ (sau) रुपये means a hundred rupees."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Number first, then the thing. That is the whole construction, and both halves are now yours."
+            },
+            {
+              "kind": "speech",
+              "text": "रुपये rather than रुपया (rupayā), because more than one is being counted — the same bend the track has been making since the adjectives, costing nothing new here."
+            },
+            {
+              "kind": "speech",
+              "text": "It is two letters, the shortest number word you will meet, and it does more work than any of the bigger ones: a price, an age, a distance, and the round figure anybody reaches for when they mean a great many."
+            },
+            {
+              "kind": "speech",
+              "text": "Your counting still stops at बीस, so the numbers between twenty and this one are still ahead of you. सौ (sau) arrives early because a price cannot wait for them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "सौ (sau)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: सौ]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "सौ (sau) रुपये",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: सौ रुपये]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why the last word is रुपये rather than रुपया (rupayā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why the last word is रुपये rather than रुपया]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What number is सौ (sau)? How do you say a hundred rupees? Which comes first, the number or the thing?"
             }
           ]
         }

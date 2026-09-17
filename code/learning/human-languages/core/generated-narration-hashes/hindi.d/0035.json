@@ -1,9 +1,10 @@
 {
   "language": "hindi",
   "chapter": 35,
-  "sourceHash": "fnv1a64:ba1cdb55da4b84ed",
+  "sourceHash": "fnv1a64:aad4ad02c91be722",
   "lessonIds": [
     "HI-C35-lena",
+    "HI-S146-letter-va",
     "HI-C35-puchna",
     "HI-C35-madad",
     "HI-C35-pasand"
@@ -12,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "hindi/narration/ch35.txt",
   "json": "hindi/narration/ch35.json",
-  "textHash": "fnv1a64:ac6417d8fd99ef2d",
-  "jsonHash": "fnv1a64:6e55b07cfa0c3bca",
+  "textHash": "fnv1a64:cfa62b12c58bc6de",
+  "jsonHash": "fnv1a64:d3c22fc3f85cd1da",
   "findings": []
 }

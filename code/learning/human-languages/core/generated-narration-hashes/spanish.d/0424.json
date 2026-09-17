@@ -1,0 +1,24 @@
+{
+  "language": "spanish",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:e8dcfa92a298e8f3",
+  "lessonIds": [
+    "ES-C424-punto",
+    "ES-C424-coma",
+    "ES-C424-dos-puntos",
+    "ES-C424-raya",
+    "ES-C424-comillas",
+    "ES-C424-parentesis",
+    "ES-C424-guion",
+    "ES-C424-barra",
+    "ES-C424-repaso-signos",
+    "ES-C424-sintesis-nota"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch424.txt",
+  "json": "spanish/narration/ch424.json",
+  "textHash": "fnv1a64:eaac8fa133355869",
+  "jsonHash": "fnv1a64:d77d72deab8f47bf",
+  "findings": []
+}

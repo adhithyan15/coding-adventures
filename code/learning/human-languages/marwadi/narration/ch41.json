@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 41,
+  "title": "Writing --- My Own Line",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:a079c8adf346317a",
+  "lessons": [
+    {
+      "id": "MW-W02-mharo-khud-ro-line",
+      "sequence": 3450,
+      "title": "My own line — the first writing with no model",
+      "headword": "(my own line)",
+      "romanization": "khud ro line",
+      "gloss": "your own line, chosen from a closed supply, with nothing to copy",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:99050d8b2f9d13f0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have read signs and notices. Now write one."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything you have written so far had something to reach for. This does not."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — controlled composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write one line about yourself, choosing the words yourself from a supply that is closed: only what this book has taught you."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One thing to decide deliberately before you start. The letters hang from a line drawn across the top, and that line belongs to the word, not to each letter. Draw the bodies first and the top line last, running it across the whole word."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the line. Then read it back and check that top line before you check anything else — one long stroke, not a row of short ones."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does the top line belong to a letter or to a word? (To the word.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And what did you have to choose here that the earlier lessons chose for you? (The words.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W02-mharo-khud-ro-line-topline",
+              "prompt": "Does the line across the top belong to a letter or to a word?",
+              "assesses": [
+                "MW-SKILL-READ-SIGNBOARD"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "to the word",
+                "word",
+                "the word"
+              ],
+              "feedback": {
+                "correct": "To the word -- so it is drawn last, and it runs the whole way.",
+                "incorrect": "To the word. Draw the bodies first and the top line last."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

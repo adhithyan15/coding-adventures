@@ -5,11 +5,12 @@
 % ============================================================================
 % A sibling to the already-shipped `hormone-glands.adj`
 % (`hormone_gland(hormone, gland)`, WHICH gland secretes a hormone — insulin
-% → pancreas, glucagon → pancreas, etc.). That table's own header already
-% quotes, verbatim, the trigger condition for the pancreas's two glucose
-% hormones, and buried in those two spans, alongside the gland the parent
-% table already captures, is a second fact the hormone→gland schema had no
-% room for: WHAT blood-glucose condition triggers each hormone's release.
+% → pancreas, glucagon → pancreas, etc.). That table already ships, verbatim,
+% as the `source` on each of those two rows, the trigger condition for the
+% pancreas's two glucose hormones, and buried in those two spans, alongside
+% the gland the parent table already captures, is a second fact the
+% hormone→gland schema had no room for: WHAT blood-glucose condition
+% triggers each hormone's release.
 %
 %   insulin → high
 %     "Beta cells in the pancreatic islets secrete the hormone insulin in
@@ -26,23 +27,79 @@
 %
 % This is a native `table` (ADJ-TABLES RS-5, an ordinary two-column EXACT
 % lookup): each `row` lowers to a ground relation `secretion_trigger(hormone,
-% blood_glucose_level)` carrying the citation, so the lookup above is the
-% ordinary SLD binding query — the engine returns the trigger condition WITH
-% its source, on the CPU, with zero model calls. Only these two hormones
-% among `hormone-glands.adj`'s twelve have a blood-glucose trigger stated in
-% this cited span, so this sibling is HONESTLY NARROW: it grounds exactly
-% the pancreas's two glucose-regulating hormones and abstains on every other
-% hormone (thyroxine, cortisol, etc.), which the source never ties to a
-% blood-glucose trigger at all. The query also runs BACKWARD — bind a level
-% and recall which hormone responds to it:
+% blood_glucose_level)` carrying THAT ROW'S OWN citation, with the
+% envelope's locator and trust inherited (RS-5e, #14986), so the lookup
+% above is the ordinary SLD binding query — the engine returns the
+% trigger condition WITH its source, on the CPU, with zero model calls.
+% Only these two hormones among `hormone-glands.adj`'s twelve have a
+% blood-glucose trigger stated in this cited span, so this sibling is
+% HONESTLY NARROW: it grounds exactly the pancreas's two glucose-regulating
+% hormones and abstains on every other hormone (thyroxine, cortisol, etc.),
+% which the source never ties to a blood-glucose trigger at all. The query
+% also runs BACKWARD — bind a level and recall which hormone responds to it:
 %
 %     ? secretion_trigger($Hormone, low)
 %       % glucagon
 %
-% Provenance: reproduces, byte-for-byte, the SAME two NCI SEER Training
-% Modules spans already quoted inside `hormone-glands.adj`'s own header — no
-% new WebFetch, only a different schema decoding the trigger-condition half
-% of each already-verified quote. `trust authoritative` — the same tier
+% Provenance: EACH ROW CARRIES ITS OWN span as its `source` (RS-5e,
+% #14986); the locator and trust are inherited from the envelope
+% field-by-field. Until this change the envelope WAS the insulin sentence
+% and the glucagon sentence rode as a table-level `cites`, so a `glucagon`
+% recall was warranted primarily by a sentence about INSULIN, and its own
+% sentence reached no answer. Relocating it empties the corroborations
+% array on every answer.
+%
+% The table-level `source` is now the page's framing sentence, "The pancreas
+% is a long, soft organ that lies transversely along the posterior abdominal
+% wall, posterior to the stomach, and extends from the region of the duodenum
+% to the spleen.", which names NO hormone and NO cell type. Naming neither
+% ROW KEY is not enough for a frame: this page's very next sentence frames
+% the EXOCRINE pancreas ("This gland has an exocrine portion that secretes
+% digestive enzymes that are carried through a duct to the duodenum."), and
+% it too names no hormone -- yet it would frame the wrong half of the organ,
+% since this table is entirely about the ENDOCRINE islets. A test arm
+% forbids the page's whole hormone and cell-type taxonomy AND requires the
+% frame to name the organ: forbidding alone would admit this page's own
+% left-nav strings, which name no hormone and frame nothing at all.
+%
+% THE PLURAL IS THE PAGE'S. The glucagon span reads "the hormone glucagons".
+% Measured on the fetched page: it writes "glucagons" in both of its prose
+% sentences. That ships VERBATIM, under the #15320 precedent where the
+% `balance` row quoted its page's own typo rather than a repaired form --
+% correcting it to "glucagon" would cite a sentence this page does not
+% contain, which is the defect this batch exists to remove.
+%
+% Both spans and the envelope were re-measured on the cited page: each occurs
+% exactly once, and zero times against a real 404 control on the same host.
+% The page's 41,705 bytes are pure ASCII -- zero above 127 -- and none of
+% U+00A0, U+2013 or U+2019 appears in it. It DOES encode U+2014 three times
+% as `&mdash;`, in the <title>, the <h1> and the suggested-citation block,
+% so "pure ASCII" is a claim about the page's MARKUP, not about its decoded
+% text; none of the three shipped spans touches any of the three. There is
+% no invisible-byte hazard in what this table quotes, checked rather than
+% assumed -- because two of the four conversions already merged in this
+% batch DO ship non-ASCII on an evidence line: 03590 (`sun-layer`) has an en
+% dash on two row sources and a right single quote sharing one of them, and
+% 03570 (`mixture-types`) has a NON-BREAKING SPACE in its envelope, the
+% worse of the two for being invisible. 03580 (`blood-cell-types`) and 03600
+% (`muscle-nuclei-count`) are pure ASCII on those lines. Two of four, counted
+% across the batch rather than inferred from the one I happened to remember.
+%
+% ONE NARROWING. "Only these two hormones ... have a blood-glucose trigger
+% stated in this cited span", above, is scoped to the two sentences this
+% table quotes. It is not a claim about the PAGE, which also says "The
+% endocrine portion consists of the pancreatic islets, which secrete
+% glucagons and insulin." -- naming both hormones while stating no trigger
+% at all.
+%
+% This library carries the SAME two NCI SEER Training Modules spans that
+% `hormone-glands.adj` already ships as its own per-row `source` values --
+% that table is RS-5e too -- decoding with a different schema the
+% trigger-condition half of each. This paragraph used to say the
+% spans were reproduced "byte-for-byte" with "no new WebFetch"; that is
+% retired, because the spans ARE now measured against the page itself (see
+% the re-measurement above) -- the same retirement the sibling
+% `muscle-striation.adj` already made. `trust authoritative` — the same tier
 % `hormone-glands.adj` already carries for this pair (U.S. National Cancer
 % Institute, a primary U.S. government teaching resource).
 % (See ../README.md; feedback_nothing_human_authored,
@@ -52,12 +109,14 @@
 table secretion_trigger {
     columns hormone, blood_glucose_level
 
-    row (insulin, high)    % SEER: "Beta cells in the pancreatic islets secrete the hormone insulin in response to a high concentration of glucose in the blood."
-    row (glucagon, low)    % SEER: "Alpha cells in the pancreatic islets secrete the hormone glucagons in response to a low concentration of glucose in the blood."
+    row (insulin, high) {
+        source "Beta cells in the pancreatic islets secrete the hormone insulin in response to a high concentration of glucose in the blood."
+    }
+    row (glucagon, low) {
+        source "Alpha cells in the pancreatic islets secrete the hormone glucagons in response to a low concentration of glucose in the blood."
+    }
 
-    source "Beta cells in the pancreatic islets secrete the hormone insulin in response to a high concentration of glucose in the blood."
+    source "The pancreas is a long, soft organ that lies transversely along the posterior abdominal wall, posterior to the stomach, and extends from the region of the duodenum to the spleen."
     locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/pancreas.html"
     trust authoritative
-
-    cites "Alpha cells in the pancreatic islets secrete the hormone glucagons in response to a low concentration of glucose in the blood." locator "https://training.seer.cancer.gov/anatomy/endocrine/glands/pancreas.html"
 }

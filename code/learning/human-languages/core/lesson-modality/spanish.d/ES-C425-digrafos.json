@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C425-digrafos",
+    "language": "spanish",
+    "chapter": 425,
+    "sequence": 10040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df1c5e0dcf700779"
+  },
+  "findings": []
+}

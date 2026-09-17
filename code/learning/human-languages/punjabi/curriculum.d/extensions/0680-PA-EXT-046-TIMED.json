@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-046-TIMED",
+  "stage": "A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can complete the A1 writing paper's two tasks inside its published twenty minutes.",
+  "prerequisites": [],
+  "lessons": [
+    "PA-W10-a1-con-reloj"
+  ]
+}

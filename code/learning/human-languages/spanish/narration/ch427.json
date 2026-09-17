@@ -1,0 +1,1293 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 427,
+  "title": "People Named By What They Do",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:216478e277241e30",
+  "lessons": [
+    {
+      "id": "ES-C427-vendedor",
+      "sequence": 10160,
+      "title": "el vendedor — the ending you already have, doing its real job",
+      "headword": "el vendedor",
+      "romanization": "el vendedor",
+      "gloss": "the seller — vender plus the same -dor ending that turned trabajar into trabajador, which is how Spanish makes a person out of an action",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb5fb0e60b4eee83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say vender. Say trabajador. You have the verb and you have the ending. Put them together before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el vendedor — \"the seller, the shop assistant.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take vender, drop the -er, add -dor. That is the whole operation, and you met the ending as an adjective in the character chapter. Here it does what it was built for: making a person out of an action."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "the one who does it"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "verb: trabajar. the one who does it: el trabajador.",
+                "verb: vender. the one who does it: el vendedor.",
+                "verb: jugar. the one who does it: el jugador.",
+                "verb: ganar. the one who does it: el ganador."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is productive, which is the property worth having. You are not learning a word; you are learning a machine that turns any verb you know into the person who does it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: where the ending puts the stress",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every -dor noun stresses its last syllable: vende-DOR, trabaja-DOR, juga-DOR. None of them carries a written accent, because a word ending in -r is stressed on the last syllable by default and the accent marks only departures from the default."
+            },
+            {
+              "kind": "speech",
+              "text": "The feminine adds -a and nothing else: la vendedora, la trabajadora."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el vendedor\" — vende-DOR",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el vendedor\" — *vende-DOR*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the feminine form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the feminine form]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two steps that build it from vender",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two steps that build it from *vender*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the person-word for somebody who plays, built the same way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the person-word for somebody who plays, built the same way]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the -dor ending do to a verb? (Makes a person out of it.) Why does vendedor carry no written accent? (A word ending in -r is stressed on the last syllable anyway.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C427-comprador",
+      "sequence": 10170,
+      "title": "el comprador — the other side of the counter",
+      "headword": "el comprador",
+      "romanization": "el comprador",
+      "gloss": "the buyer — the other half of a sale, built from comprar with the same ending, so the pair costs one rule rather than two words",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:011b9874ee37380a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el vendedor. Say comprar. Build the person who does the second thing, using the machine from the first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el comprador — \"the buyer.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Comprar minus -ar, plus -dor. No new rule, which is the point of teaching the pair together: one ending buys both halves of a transaction."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "side",
+                "verb",
+                "person"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "side: sells. verb: vender. person: el vendedor.",
+                "side: buys. verb: comprar. person: el comprador."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the pair that names an economy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These two words are how a form, a contract or a news item names the parties to a sale. They are not shop vocabulary — el vendedor in a shop is the assistant, but vendedor and comprador together are the roles, the way English says seller and buyer rather than shopkeeper and customer."
+            },
+            {
+              "kind": "speech",
+              "text": "That distinction is why the source lists them under commerce rather than under shopping, and why knowing comprar was not enough to cover it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el comprador\" — compra-DOR",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el comprador\" — *compra-DOR*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair, seller then buyer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair, seller then buyer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both in the feminine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both in the feminine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two you are when you hand over the money",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two you are when you hand over the money]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two steps build comprador from comprar? (Drop the -ar, add -dor.) Are vendedor and comprador shop words or role words? (Roles — the two parties to a sale.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C427-policia",
+      "sequence": 10180,
+      "title": "el policía — where the article changes the meaning",
+      "headword": "el policía",
+      "romanization": "el policía",
+      "gloss": "the police officer — Greek polis, the city, so the word names the person by the thing they keep in order; and the article changes what it means",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efd846ae9436a9e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el comprador and la compradora, where the article follows the person. The word in this lesson does something different, and it is worth noticing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el policía — \"the police officer.\" Greek pólis, \"the city,\" through Latin politia, \"the administration of a state.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The root is unusually productive, and every word on it is about the city:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the city in it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: política. the city in it: the running of the city.",
+                "word: metrópolis. the city in it: the mother-city.",
+                "word: policía. the city in it: the keeping of the city's order."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So a police officer is named after the city, not after policing. The institution came first and the person was named from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the article does the distinguishing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the fact a reading paper can test, and it catches people:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "el policía means a police officer, a man.",
+                "la policía means the police force — or a woman officer."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The word does not change. The article carries the whole difference, and la policía is ambiguous between the force and a female officer in a way that only context settles."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare it with the -dor pair from the last two lessons, where the ending moved and the article merely followed. Here the ending is fixed at -ía and the article is doing all the work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el policía\" — po-li-CÍ-a, four syllables",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el policía\" — *po-li-CÍ-a*, four syllables]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what la policía means, and why it has two readings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *la policía* means, and why it has two readings]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which Greek word is inside it, and what it meant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which Greek word is inside it, and what it meant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how this differs from el vendedor / la vendedora",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how this differs from *el vendedor* / *la vendedora*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does Greek pólis mean? (The city.) What is the difference between el policía and la policía? (The first is an officer; the second is the force, or a woman officer.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C427-bombero",
+      "sequence": 10190,
+      "title": "el bombero — named after the pump, not the fire",
+      "headword": "el bombero",
+      "romanization": "el bombero",
+      "gloss": "the firefighter — named from la bomba, the pump, so Spanish calls them the pump-person while English calls them the fire-person",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d02c3d7473de9278",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el policía. The other emergency service has a name built a different way again — and it is named after a piece of equipment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el bombero — \"the firefighter.\""
+            },
+            {
+              "kind": "speech",
+              "text": "From la bomba, which in Spanish means a pump as well as a bomb. A bombero is the person who works the pump."
+            },
+            {
+              "kind": "speech",
+              "text": "English names the same person after what they fight: fire-fighter, fire-man. Spanish names them after what they carry. Two languages looking at the same person and choosing opposite halves of the scene."
+            },
+            {
+              "kind": "speech",
+              "text": "The -ero ending is the third person-making ending in this chapter, and it attaches to things rather than to verbs:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "thing",
+                "the person who works with it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "thing: la bomba — the pump. the person who works with it: el bombero.",
+                "thing: el pan — bread. the person who works with it: el panadero.",
+                "thing: la carta — the letter. the person who works with it: el cartero."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So Spanish has -dor for the one who does the action and -ero for the one who works with the thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: three endings, three logics",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "ending",
+                "built from",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "ending: -dor. built from: a verb. example: vendedor.",
+                "ending: -ero. built from: a thing. example: bombero.",
+                "ending: -ía. built from: an institution. example: policía."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "None of the three is guessable from the meaning; all three are readable once you know which is which. That is the honest position: you cannot predict which ending a profession takes, but you can take any profession apart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el bombero\" — bom-BE-ro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el bombero\" — *bom-BE-ro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what la bomba means besides a bomb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *la bomba* means besides a bomb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the feminine form (la bombera)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the feminine form (*la bombera*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between what -dor and -ero attach to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between what **-dor** and **-ero** attach to]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a bombero named after? (The pump.) What does -ero attach to, as against -dor? (A thing, where -dor attaches to a verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C427-abogado",
+      "sequence": 10200,
+      "title": "el abogado — somebody called to your side",
+      "headword": "el abogado",
+      "romanization": "el abogado",
+      "gloss": "the lawyer — Latin advocatus, one called to your side; English advocate is the same word, and it explains what the job originally was",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a939a90750754f4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el bombero, named after his pump. The next profession is named after something nobody carries: a summons."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el abogado — \"the lawyer.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin advocatus: ad- to + vocatus, \"called.\" Literally one called to your side — in a Roman court, the friend you summoned to speak for you."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed the same word twice and kept both:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the calling in it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: advocate. the calling in it: one called to your side.",
+                "word: vocation. the calling in it: a calling, in the older sense.",
+                "word: convoke. the calling in it: to call together."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Vocare, \"to call,\" is the root under all of them, and it is the same root as voz, the voice."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish wore advocatus down to abogado while English kept the Latin shape intact, which is the ordinary difference between a word that was inherited and a word that was borrowed — the same distinction actor and trabajador demonstrated."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the profession without a visible ending",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "profession",
+                "how the word was made"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "profession: vendedor. how the word was made: Spanish added -dor to a Spanish verb.",
+                "profession: bombero. how the word was made: Spanish added -ero to a Spanish noun.",
+                "profession: abogado. how the word was made: Latin made it, and Spanish inherited it whole."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Abogado has no ending you can remove to find a Spanish verb, because it was never built in Spanish. It arrived finished."
+            },
+            {
+              "kind": "speech",
+              "text": "The feminine is the ordinary swap: la abogada."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"el abogado\" — a-bo-GA-do",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"el abogado\" — *a-bo-GA-do*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the feminine form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the feminine form]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the two Latin pieces mean (to, and called)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the two Latin pieces mean (to, and called)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which English word is the same Latin word kept whole (advocate)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which English word is the same Latin word kept whole (*advocate*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did advocatus literally mean? (One called to your side.) Can you find a Spanish verb inside abogado? (No — it was inherited whole from Latin rather than built in Spanish.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C427-empresa",
+      "sequence": 10210,
+      "title": "la empresa — a thing taken on",
+      "headword": "la empresa",
+      "romanization": "la empresa",
+      "gloss": "the company — literally a thing taken on, from the same root as English enterprise, which Spanish uses for the firm itself rather than only for the venture",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1f437a082ffa2b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el vendedor and el comprador. You can name both parties to a sale. Say where the seller works, and notice you have no word for it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la empresa — \"the company, the firm.\""
+            },
+            {
+              "kind": "speech",
+              "text": "From Latin in- + prehendere, \"to take hold of.\" An empresa is literally a thing taken on — an undertaking."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the same idea through French and got enterprise, from entre-."
+            },
+            {
+              "kind": "speech",
+              "text": "prendre, the same two pieces in the other Romance language. The words are cousins built to the same plan."
+            },
+            {
+              "kind": "speech",
+              "text": "The difference is what each language did with it afterwards. English enterprise mostly means the venture; Spanish empresa means both the venture and the firm that carries it out. For an A1 form asking where you work, empresa is the everyday word — it is what English calls the company."
+            },
+            {
+              "kind": "speech",
+              "text": "Prehendere is generous, and two of its descendants are already useful to you: aprender, to learn, is to take hold of something; and sorprender, to surprise, is to take somebody from above."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a workplace rather than a worker",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The chapter has named five people by what they do. La empresa is the one word in it that names a place and an organisation instead:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what it names"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: el vendedor. what it names: a person.",
+                "word: el abogado. what it names: a person.",
+                "word: la empresa. what it names: the organisation they work for."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is why a form has two separate lines, profesión and empresa, and why answering one does not answer the other."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"la empresa\" — em-PRE-sa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"la empresa\" — *em-PRE-sa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the two Latin pieces mean (in, and take hold of)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the two Latin pieces mean (in, and take hold of)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousin, and the one difference in what it covers",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousin, and the one difference in what it covers]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which verb for learning comes from the same root (aprender)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which verb for learning comes from the same root (*aprender*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does empresa literally describe? (A thing taken on.) Does it mean the venture or the firm? (Both — where English enterprise mostly means only the venture.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C427-repaso-oficios",
+      "sequence": 10220,
+      "title": "cinco personas y un lugar — sorted by how each name was built",
+      "headword": "cinco personas y un lugar",
+      "romanization": "cinco personas y un lugar",
+      "gloss": "five people and one organisation — sorted by how each name was built, which is the only thing that makes a profession word readable",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:f5e8332f86ef26d6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name as many of the six as you can before reading the table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: four ways to name a person",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "built from"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "word: el vendedor. built from: the verb vender, plus -dor.",
+                "word: el comprador. built from: the verb comprar, plus -dor.",
+                "word: el bombero. built from: the noun bomba, plus -ero.",
+                "word: el policía. built from: the institution, la policía.",
+                "word: el abogado. built from: nothing in Spanish — inherited whole from Latin."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four different methods for five words, which is the honest summary: Spanish does not have one way of naming a profession. What it has is a small set of methods, and knowing them lets you take a profession apart even when you could not have predicted it."
+            },
+            {
+              "kind": "speech",
+              "text": "The -dor pair is the only one that is productive for you: give it any verb you know and it gives you back the person — which is how trabajar gave trabajador in the character chapter, before you had any use for the ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: which ones change, and how",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "masculine",
+                "feminine"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "masculine: el vendedor. feminine: la vendedora.",
+                "masculine: el bombero. feminine: la bombera.",
+                "masculine: el abogado. feminine: la abogada.",
+                "masculine: el policía. feminine: la policía — and the word also means the force."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three behave ordinarily. Policía is the exception worth remembering, because the article is carrying a distinction no ending marks."
+            },
+            {
+              "kind": "speech",
+              "text": "And la empresa is not a person at all — it is where several of these people work, which is why a form asks for it on its own line."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two built with -dor, and the verb inside each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two built with **-dor**, and the verb inside each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one built with -ero, and the thing inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one built with **-ero**, and the thing inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one whose article changes the meaning, and both readings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one whose article changes the meaning, and both readings]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that is not a person",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that is not a person]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the endings can you apply to a new verb yourself? (-dor.) Which word's meaning is decided by its article? (Policía.) Which of the six is not a person? (La empresa.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C427-sintesis-profesion",
+      "sequence": 10230,
+      "title": "¿A qué se dedica? — the question about work",
+      "headword": "¿A qué se dedica?",
+      "romanization": "¿A qué se dedica?",
+      "gloss": "the question a form and a stranger both ask about work, and the answers these six words make possible",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:706908f51ac144bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el abogado and la empresa. One answers what somebody does and one answers where. A conversation about work needs both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: naming a profession takes no article",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the one grammatical trap in the answer, and English speakers fall into it every time:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "correct, Soy abogado.",
+                "wrong, Soy un abogado."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English says I am a lawyer. Spanish drops the article when the sentence states nothing but the profession, because the bare noun is working as a description rather than picking out one individual."
+            },
+            {
+              "kind": "speech",
+              "text": "The article comes back as soon as you add anything to it: Soy un abogado trabajador — \"I am a hard-working lawyer.\" Adding the adjective turns the description into a particular kind of thing, and a particular thing takes an article."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read aloud. Every word has been taught:"
+            },
+            {
+              "kind": "speech",
+              "text": "— ¿A qué se dedica? — Soy abogado. Trabajo en una empresa grande. — ¿Y su hermana? — Es policía. Mi hermano es bombero."
+            },
+            {
+              "kind": "speech",
+              "text": "Three professions, no article on any of them, and una empresa taking one because it is a thing rather than a description."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"¿A qué se dedica?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"¿A qué se dedica?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Soy abogado\", and stop yourself before putting un in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Soy abogado\", and stop yourself before putting *un* in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence with an adjective added, where the article returns",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence with an adjective added, where the article returns]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own answer, with the profession and the company",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own answer, with the profession and the company]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is it Soy abogado and not Soy un abogado? (A bare profession is a description, and a description takes no article.) When does the article come back? (As soon as an adjective is added.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

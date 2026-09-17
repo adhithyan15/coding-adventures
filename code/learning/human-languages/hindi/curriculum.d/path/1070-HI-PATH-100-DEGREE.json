@@ -1,0 +1,18 @@
+{
+  "id": "HI-PATH-100-DEGREE",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "lessons": [
+    "HI-C92-thoda",
+    "HI-C92-achchha-buraa",
+    "HI-C92-se-comparison",
+    "HI-C92-kitna",
+    "HI-C92-kitna-achchha",
+    "HI-C92-repaso-maatra",
+    "HI-C92-sintesis-maatra"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-100-DEGREE"
+  ],
+  "after": []
+}

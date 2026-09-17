@@ -30,6 +30,10 @@ fn run(program: &Path) -> (bool, String) {
     (out.status.success(), String::from_utf8(out.stdout).unwrap())
 }
 
+/// The table's `source`, as the NIST page writes it: U+00A0 after "value of"
+/// and after "where the", U+2212 in "s−1", and "∆νCs".
+const ENVELOPE: &str = "The meter is defined by taking the fixed numerical value of\u{a0}the speed of light in vacuum c to be 299,792,458 when expressed in the unit m s\u{2212}1, where the\u{a0}second is defined in terms of \u{2206}\u{3bd}Cs.";
+
 #[test]
 fn physics_constants_recall_binds_exact_values_with_nist_citation() {
     let dir = scratch("constants");
@@ -63,11 +67,21 @@ fn physics_constants_recall_binds_exact_values_with_nist_citation() {
         out.contains("\"C\":\"speed_of_light\""),
         "reverse recall 299792458 -> speed_of_light: {out}"
     );
-    // The answer carries the NIST citation as its proof.
+    // The answer carries the NIST citation as its proof -- as ONE contiguous
+    // run (sentence, locator, tier, no corroborations), not a host needle and a
+    // trust needle that could each match a different citation (#15209).
     assert!(
-        out.contains("nist.gov/si-redefinition")
-            && out.contains("\"trust\":\"authoritative\""),
-        "carries the NIST source citation at authoritative trust: {out}"
+        out.contains(&format!(
+            "\"source\":\"{ENVELOPE}\",\"locator\":\"https://www.nist.gov/si-redefinition/definitions-si-base-units\",\"trust\":\"authoritative\",\"corroborations\":[]"
+        )),
+        "carries the whole NIST citation at authoritative trust: {out}"
+    );
+    // The page writes U+00A0 at two places the span used to have an ordinary
+    // space; with those spaces the span occurred zero times on the page.
+    assert_eq!(ENVELOPE.matches('\u{a0}').count(), 2, "the envelope carries the page's two U+00A0");
+    assert!(
+        !out.contains(&ENVELOPE.replace('\u{a0}', " ")),
+        "the ordinary-space form, which the page never writes, reaches no answer: {out}"
     );
     // The Newtonian gravitational constant is NOT one of the exact defining SI
     // constants and is absent from the table — honest abstention, never a

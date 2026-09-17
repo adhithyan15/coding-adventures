@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C430-estar-en-paro",
+    "language": "spanish",
+    "chapter": 430,
+    "sequence": 10380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4edbbd9d0d28fbfb"
+  },
+  "findings": []
+}

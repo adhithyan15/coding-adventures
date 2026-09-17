@@ -1,0 +1,21 @@
+{
+  "chapter": 89,
+  "title": "School: The Borrowed Word and the Built One",
+  "label": "ch:hi-skool-vidyalaya",
+  "canDo": "I can name the school in both registers, say who is in it, and tell which of the two words belongs on a sign and which in a spoken sentence.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C81-sintesis-skool",
+    "kind": "task",
+    "summary": "Say where the teacher and the student are using the casual word, then read the sign that calls the same building by the formal one.",
+    "assesses": [
+      "HI-LEX-C81-SCHOOL-01",
+      "HI-LEX-C81-SCHOOL-02",
+      "HI-LEX-C47-ROLE-01",
+      "HI-LEX-C47-ROLE-02"
+    ],
+    "note": "Closes HI-A1-LEX-23 (educational institutions), whose note recorded that school appears in four separate mock items across the two papers and was introduced nowhere. The track could already name the teacher (HI-C47), the student (HI-C47) and the act of studying (HI-C34) but not the building they share. Two retrieval lessons follow the two word lessons because atoms introduced at the end of a track have nowhere to be retrieved otherwise, which cost Spanish its attained level in chapter 420."
+  }
+}

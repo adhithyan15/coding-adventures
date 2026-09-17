@@ -12,18 +12,18 @@ headword: दरवाज़ा
 gloss: door — masculine, a Persian loan whose first syllable is the same ancient word as English "door"
 romanization: "darvāzā"
 concept_tag: HI-HOME-DOOR
-prerequisites: [HI-C36-ghar, HI-W05-write-namaste, HI-C27-shubh-raatri]
+prerequisites: [HI-S146-letter-va, HI-C36-ghar, HI-W05-write-namaste, HI-C27-shubh-raatri]
 sounds: [nuqta-za, devanagari-long-aa]
 roots: [persian-dar, pie-dhwer]
 etymology_hook: "दरवाज़ा (darvāzā) is Persian دروازه — and Persian dar 'door' descends from the same PIE *dʰwer- as English door, Latin forēs, Greek thúrā and Sanskrit द्वार dvāra, so the borrowed word and Hindi's own inherited द्वार are one ancient word arriving twice by different roads; the second element is usually connected to a Persian word for 'open' but its source is disputed, and the ज़ carries a nuqta because Persian brought a z Devanagari had no letter for"
 duration:
   max_seconds: 250
 requires:
-  knowledge: [HI-CONCEPT-C36-GHAR-01, HI-CONCEPT-C36-GHAR-02, HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03, HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C27-SHUBH-RAATRI-01, HI-CONCEPT-C27-SHUBH-RAATRI-02]
+  knowledge: [HI-CONCEPT-C36-GHAR-01, HI-CONCEPT-C36-GHAR-02, HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03, HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C27-SHUBH-RAATRI-01, HI-CONCEPT-C27-SHUBH-RAATRI-02, HI-SCRIPT-RECOG-146]
 introduces:
   knowledge: [HI-CONCEPT-C36-DARVAAZA-01, HI-CONCEPT-C36-DARVAAZA-02, HI-CONCEPT-C36-DARVAAZA-03]
 practises:
-  knowledge: [HI-CONCEPT-C36-DARVAAZA-01, HI-CONCEPT-C36-DARVAAZA-02, HI-CONCEPT-C36-DARVAAZA-03, HI-CONCEPT-C36-GHAR-01, HI-CONCEPT-C36-GHAR-02, HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03, HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C27-SHUBH-RAATRI-01, HI-CONCEPT-C27-SHUBH-RAATRI-02]
+  knowledge: [HI-CONCEPT-C36-DARVAAZA-01, HI-CONCEPT-C36-DARVAAZA-02, HI-CONCEPT-C36-DARVAAZA-03, HI-CONCEPT-C36-GHAR-01, HI-CONCEPT-C36-GHAR-02, HI-CONCEPT-W03-MATRAS-NAAM-01, HI-CONCEPT-W03-MATRAS-NAAM-02, HI-CONCEPT-W03-MATRAS-NAAM-03, HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-CONCEPT-W05-WRITE-NAMASTE-02, HI-CONCEPT-C27-SHUBH-RAATRI-01, HI-CONCEPT-C27-SHUBH-RAATRI-02, HI-SCRIPT-RECOG-146]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [HI-C36-ghar, HI-W03-matras-naam, HI-W05-write-namaste, HI-C27-shubh
 # दरवाज़ा (darvāzā) — the door, and the oldest word you already know
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C36-GHAR-01, HI-CONCEPT-W05-WRITE-NAMASTE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C36-GHAR-01, HI-CONCEPT-W05-WRITE-NAMASTE-01, HI-SCRIPT-RECOG-146] -->
 
 [PAUSE 2s] You have a house. This is what you stand at to be let into one —
 and it is where **नमस्ते** is said and where **शुभ रात्रि** is said back.

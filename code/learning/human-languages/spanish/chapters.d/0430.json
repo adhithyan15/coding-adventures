@@ -1,0 +1,21 @@
+{
+  "chapter": 430,
+  "title": "The Wardrobe, And The Word For Having No Work",
+  "label": "ch:paro-y-ropa",
+  "canDo": "I can say that somebody is out of work, read a clothes-shop price list, and name the three garments the corpus was missing.",
+  "spineNodes": [
+    "SPINE-READ-SIGNS-AND-NOTICES"
+  ],
+  "payoff": {
+    "lesson": "ES-C430-sintesis-anuncio",
+    "kind": "task",
+    "summary": "Read a sale board with three garments and three prices, say which is cheapest and what you would buy, and answer whether you are working.",
+    "assesses": [
+      "ES-LEX-C430-VIDA-01",
+      "ES-LEX-C430-VIDA-02",
+      "ES-LEX-C430-VIDA-03",
+      "ES-LEX-C430-VIDA-04"
+    ],
+    "note": "Closes two points, and one of the two notes was stale. A1-NE07-04 lists estar en paro and tener trabajo, and its note claimed the corpus introduced neither paro nor trabajo as a noun; el trabajo is introduced as a noun by ES-C394-trabajo, so only the negative half was missing. A1-NE12-02 was accurate at four of seven -- pantalon, falda, camisa and zapato were taught and vaqueros, jersey and bolso were not -- so this chapter adds exactly the three. Each of the four new words carries its own trap: en paro takes estar rather than ser, vaqueros is plural every time, jersey pluralises to jerseis and gains a written accent doing it, and bolso names a different object from bolsa. Three of the four are named after something other than themselves -- a stopping, a cowherd, an island -- which is the habit that lets a reader guess at a word they have not met."
+  }
+}

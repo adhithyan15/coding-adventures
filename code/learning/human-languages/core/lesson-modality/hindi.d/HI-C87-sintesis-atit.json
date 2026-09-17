@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C87-sintesis-atit",
+    "language": "hindi",
+    "chapter": 95,
+    "sequence": 3800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47fbfafac6c126e7"
+  },
+  "findings": []
+}

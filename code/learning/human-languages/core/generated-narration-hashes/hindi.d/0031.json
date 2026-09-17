@@ -1,15 +1,16 @@
 {
   "language": "hindi",
   "chapter": 31,
-  "sourceHash": "fnv1a64:3488c4c143f84328",
+  "sourceHash": "fnv1a64:084e3e57dcc1ae5c",
   "lessonIds": [
-    "HI-C31-suprabhat"
+    "HI-C31-suprabhat",
+    "HI-S133-letter-jha"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "hindi/narration/ch31.txt",
   "json": "hindi/narration/ch31.json",
-  "textHash": "fnv1a64:173631e991a542fa",
-  "jsonHash": "fnv1a64:b1f0649e2a7c3d1f",
+  "textHash": "fnv1a64:772f0985f729dd7e",
+  "jsonHash": "fnv1a64:7d4ce66fa1128555",
   "findings": []
 }

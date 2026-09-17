@@ -6,8 +6,7 @@
 % (what MOVES the water, not how deep light reaches). Ocean currents are
 % classified by what drives them: tides drive tidal currents, wind drives
 % near-surface currents, and density differences (from temperature and
-% salinity) drive the deep, slow global circulation. Recall is a binding
-% query:
+% salinity) drive thermohaline circulation. Recall is a binding query:
 %
 %     ? ocean_current_driver(wind_driven_currents, $D)   % wind
 %
@@ -28,19 +27,17 @@
 %     tidal_currents             tides                                        "Tides create a current in the oceans, which are strongest near the shore, and
 %                                                                                in bays and estuaries along the coast."
 %     wind_driven_currents       wind                                         "Winds drive currents that are at or near the ocean's surface."
-%     thermohaline_circulation   density_differences_from_temperature_and_    "This is a process driven by density differences in water due to temperature
-%                                 salinity                                     (thermo) and salinity (haline) variations in different parts of the ocean."
+%     thermohaline_circulation   density_differences_from_temperature_and_    "3. Thermohaline circulation. This is a process driven by density differences
+%                                 salinity                                     in water due to temperature (thermo) and salinity (haline) variations in
+%                                                                              different parts of the ocean."
 %
-% Provenance: quoted verbatim from NOAA National Ocean Service's "What is a
+% Provenance: quoted from NOAA National Ocean Service's "What is a
 % current?" page, which numbers exactly these three driving mechanisms as
-% its own answer to that question, each in its own paragraph. This is a
-% MULTI-SOURCE-STYLE table (see `animal-survival-adaptation.adj`) in the
-% sense that each row's quote comes from a different paragraph of the same
-% page rather than a single shared sentence — this `table`'s own `source`
-% field carries the first row's (tidal_currents) quote; the other two rows'
-% quotes are documented above in this header's truth table and are
-% independently checkable against the same `locator`. WebFetch-verified
-% before writing (twice, across two cycles of this loop). `trust
+% its own answer to that question, each in its own paragraph. This
+% paragraph used to say the table's own `source` carried only the first
+% row's quote, with the other two documented here, and that the quotes
+% were "WebFetch-verified"; each row now carries its own span, measured
+% against the page (see below). `trust
 % authoritative` — NOAA is a primary .gov source, the same tier the sibling
 % `ocean-observing-instruments.adj` (the other library in this directory)
 % already uses for its NOAA citations, distinct from the `consensus` tier
@@ -48,20 +45,49 @@
 % that is NOT one of these three driver categories — `gulf_stream`, a real,
 % specific named current the same page mentions ("The warm Gulf Stream, for
 % instance, brings milder winter weather to Bergen, Norway, than to New
-% York") but not a row here, since it names a PARTICULAR current, not a
+% York ...") but not a row here, since it names a PARTICULAR current, not a
 % DRIVER category — is deliberately NOT a row, so a recall ABSTAINS on it
 % rather than inventing a driver. (See ../README.md;
 % feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+%
+% EACH ROW CARRIES ITS OWN SPAN (ADJ-TABLES RS-5e, #14986). The envelope used
+% to be the tidal row's own sentence, the primary source of all three
+% answers. The tidal and wind rows take the sentences quoted for them above.
+% The thermohaline row takes its numbered label and sentence together,
+% "3. Thermohaline circulation. This is a process driven by density
+% differences ...", because "This is a process" alone names no current type.
+% The envelope is now a framing sentence from the page, which names no
+% current type and no driver:
+%
+%     "Oceanic currents describe the movement of water from one location to
+%      another."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200), with inline tags removed
+% without a space and only ASCII whitespace collapsed: the three row spans
+% and the envelope each occur exactly once, each inside a `<p>`. A nonsense
+% path on the same host also returns 200 (a soft-404 page titled "Page Not
+% Found: Error 404"), so the control is its content: it holds none of them.
+% Every row's page is the envelope's,
+% so no row restates a `locator` line or `trust` (ADJ-TABLES §4).
 % ============================================================================
 
 table ocean_current_driver {
     columns current_type, driver
 
-    row (tidal_currents, tides)
-    row (wind_driven_currents, wind)
-    row (thermohaline_circulation, density_differences_from_temperature_and_salinity)
+    row (tidal_currents, tides) {
+        source "Tides create a current in the oceans, which are strongest near the shore, and in bays and estuaries along the coast."
+    }
+    row (wind_driven_currents, wind) {
+        source "Winds drive currents that are at or near the ocean's surface."
+    }
+    row (thermohaline_circulation, density_differences_from_temperature_and_salinity) {
+        source "3. Thermohaline circulation. This is a process driven by density differences in water due to temperature (thermo) and salinity (haline) variations in different parts of the ocean."
+    }
 
-    source "Tides create a current in the oceans, which are strongest near the shore, and in bays and estuaries along the coast."
+    % THE ENVELOPE WAS THE TIDAL ROW'S OWN SENTENCE, the primary source of
+    % all three answers. It is now a framing sentence that names no current
+    % type and no driver. Every row overrides it, so it reaches no answer.
+    source "Oceanic currents describe the movement of water from one location to another."
     locator "https://oceanservice.noaa.gov/facts/current.html"
     trust authoritative
 }

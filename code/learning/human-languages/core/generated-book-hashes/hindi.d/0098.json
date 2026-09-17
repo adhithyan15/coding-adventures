@@ -1,0 +1,16 @@
+{
+  "language": "hindi",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:110cff520df999a0",
+  "lessonIds": [
+    "HI-C90-se",
+    "HI-C90-bas",
+    "HI-C90-uthna",
+    "HI-C90-kaam",
+    "HI-C90-pahle",
+    "HI-C90-baad",
+    "HI-C90-repaso-dincharya",
+    "HI-C90-sintesis-dincharya"
+  ],
+  "tex": "hindi/book/chapters/ch98-dincharya.tex"
+}

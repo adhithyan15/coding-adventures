@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:7c0aaba6e09a3e1e",
+  "lessonIds": [
+    "HI-C89-kar-raha-hun",
+    "HI-C89-kar-rahi-hun",
+    "HI-C89-kar-raha-hai",
+    "HI-C89-kar-rahe-hain",
+    "HI-C89-karta-vs-kar-raha",
+    "HI-C89-repaso-jaari",
+    "HI-C89-sintesis-jaari"
+  ],
+  "tex": "hindi/book/chapters/ch97-jaari.tex"
+}

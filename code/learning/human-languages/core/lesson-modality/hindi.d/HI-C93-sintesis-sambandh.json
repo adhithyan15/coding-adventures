@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C93-sintesis-sambandh",
+    "language": "hindi",
+    "chapter": 101,
+    "sequence": 4280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a3ebd2166d5421c"
+  },
+  "findings": []
+}

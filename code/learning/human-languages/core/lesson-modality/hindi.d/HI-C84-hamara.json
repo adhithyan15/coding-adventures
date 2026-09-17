@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C84-hamara",
+    "language": "hindi",
+    "chapter": 92,
+    "sequence": 3530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d28a1084f7d55a1"
+  },
+  "findings": []
+}

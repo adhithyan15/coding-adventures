@@ -1,0 +1,12 @@
+{
+  "language": "hindi",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:08674dac2f97be37",
+  "lessonIds": [
+    "HI-C81-skool",
+    "HI-C81-vidyalaya",
+    "HI-C81-repaso-skool",
+    "HI-C81-sintesis-skool"
+  ],
+  "tex": "hindi/book/chapters/ch89-skool-vidyalaya.tex"
+}

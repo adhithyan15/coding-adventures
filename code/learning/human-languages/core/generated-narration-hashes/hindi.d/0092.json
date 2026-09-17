@@ -1,0 +1,22 @@
+{
+  "language": "hindi",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:cb00a653d67e767b",
+  "lessonIds": [
+    "HI-C84-uska",
+    "HI-C84-hamara",
+    "HI-C84-tumhara",
+    "HI-C84-apna",
+    "HI-C84-mere-paas",
+    "HI-C84-mere-liye",
+    "HI-C84-repaso-kiska",
+    "HI-C84-sintesis-mere-paas"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch92.txt",
+  "json": "hindi/narration/ch92.json",
+  "textHash": "fnv1a64:5fdc87ecb7e43e83",
+  "jsonHash": "fnv1a64:c0a6dc5fec547f57",
+  "findings": []
+}

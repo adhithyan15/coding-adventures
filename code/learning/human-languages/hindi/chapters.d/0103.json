@@ -1,0 +1,20 @@
+{
+  "chapter": 103,
+  "title": "What I Know and What I Want",
+  "label": "ch:hi-chaah",
+  "canDo": "I can say that I know something rather than only that I do not, ask somebody whether they know, and ask for a thing at a counter.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "HI-C95-sintesis-chaay",
+    "kind": "task",
+    "summary": "Answer the counter question aapko kyaa chaahiye with mujhe chaay chaahiye, and say which of the three words carries the information.",
+    "assesses": [
+      "HI-LEX-C95-KNOW-02",
+      "HI-LEX-C95-NEED-01",
+      "HI-LEX-C95-NEED-02"
+    ],
+    "note": "Closes HI-A1-V-21 (chaahiye) and HI-A1-V-24 (jaannaa). BOTH NOTES WERE RIGHT, and V-21's was right about the thing my own glyph check denied: it said chaahiye needs the independent vowel e, which no Hindi writing lesson has drawn, and the check answered ok because measureScriptClosure credits a glyph to any script lesson whose BODY contains it. HI-S117-letter-ca lists ek do tiin chaar paanch, so e was credited to the cha lesson. The same artifact hid ja, which jaannaa needs, and the corrected check found both. So this chapter carries THREE letter lessons for letters whose sourced stroke data had been sitting bundled and unused: e at chapter 29, ja at chapter 30 and jha at chapter 31, the last placed immediately before saanjh at sequence 830. ja and jha are the third breath pair after ta/tha and cha/chha. V-24's defect is sharper than its note says: HI-C07-nahin's HEADWORD is nahiin / jaantaa and glosses jaantaa as the masculine present of to know, but all three of its atoms are about nahiin itself, so the headword promised a word the atoms never delivered and a learner could deny knowing something without being able to claim it. The chahnaa/chaahiye split is taught as a question about what FOLLOWS rather than what it means, since both are want in English: chaahtaa takes a verb, chaahiye takes a noun. chaahiye never bends, and its wanter is dative, which makes it the liking sentence with one word swapped -- wanting a thing and liking a thing happen to you, while wanting to act is something you do."
+  }
+}

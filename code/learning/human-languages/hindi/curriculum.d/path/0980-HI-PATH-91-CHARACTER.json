@@ -1,0 +1,19 @@
+{
+  "id": "HI-PATH-91-CHARACTER",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "HI-C83-buraa",
+    "HI-C83-hoshiyaar",
+    "HI-C83-mehnati",
+    "HI-C83-sharmeela",
+    "HI-C83-milansaar",
+    "HI-C83-gambhir",
+    "HI-C83-repaso-svabhaav",
+    "HI-C83-sintesis-svabhaav"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-91-CHARACTER"
+  ],
+  "after": []
+}

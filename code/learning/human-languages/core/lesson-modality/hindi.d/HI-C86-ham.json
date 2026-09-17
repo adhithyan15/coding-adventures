@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C86-ham",
+    "language": "hindi",
+    "chapter": 94,
+    "sequence": 3660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2434e3a29d85d36f"
+  },
+  "findings": []
+}

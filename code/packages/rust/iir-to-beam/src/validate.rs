@@ -152,8 +152,12 @@ const UNSUPPORTED_OPS: &[&str] = &[
 ///    We require the frontend to have resolved types before lowering.
 ///
 /// 4. **UnsupportedType** — `type_hint` must not be `"str"` (no string
-///    arithmetic in this backend) or start with `"ref<"` (heap pointers have
-///    no BEAM equivalent in this lowering).
+///    arithmetic in this backend, except the `str_const`/`str_concat`/
+///    `str_slice`/`call`/`ret`/`mov`/`array_set`/`array_get` ops this
+///    backend does lower — the last two are BEAM06's `str`-typed array
+///    element read/write, reusing BEAM04's `:ets` substrate unmodified) or
+///    start with `"ref<"` (heap pointers have no BEAM equivalent in this
+///    lowering).
 ///
 /// 5. **UnsupportedType for float const** — `op == "const"` with an
 ///    `Operand::Float` source and `type_hint != "f64"` is rejected. BEAM03
@@ -315,10 +319,27 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
             //   - `is_null` with `"bool"` → is_nil synthesis
             //
             // Any other ref<…> type on any other op is rejected as before.
+            // BEAM06: `array_set`/`array_get` with `type_hint == "str"` are
+            // a `str`-typed array element read/write (Dartmouth BASIC's
+            // `array<str>` — `DIM A$(n)` — and its mixed numeric/string
+            // `DATA` pool's string pool). These dispatch to the exact same
+            // `:ets` substrate BEAM04 built for `array<f64>` (see the
+            // module-setup comment in `lower.rs`): a `str` value is already
+            // an ordinary Erlang character list (the `str_const` scalar
+            // representation), and `:ets` holds arbitrary terms natively,
+            // so no new representation is needed — confirmed on real `erl`,
+            // see `code/specs/BEAM06-string-array-representation.md`.
+            // BEAM07: `call_builtin "input_str"` has type_hint "str" — BASIC
+            // string `INPUT A$` reads a whole line as a runtime string, the
+            // same "str" type_hint every other string-producing op here
+            // carries. Check 6b below further restricts `call_builtin` to
+            // its known builtin-name set; this check only decides whether
+            // the OP is allowed to carry a "str" type_hint at all.
             if instr.type_hint == "str"
                 && !matches!(
                     instr.op.as_str(),
                     "str_const" | "str_concat" | "str_slice" | "call" | "ret" | "mov"
+                        | "array_set" | "array_get" | "call_builtin"
                 )
             {
                 errors.push(format!(
@@ -515,20 +536,27 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
 
             // ── Check 6b: call_builtin — predicates and integer output ───
             //
-            // `call_builtin` supports the McCarthy predicates, print_i64 and putchar;
-            // any other builtin name has no BEAM
-            // lowering. We reject it here (not just at lowering) so that a
-            // validated module is always lowerable — `generate()` panics on a
-            // lowering error, assuming validation already screened the module.
+            // `call_builtin` supports the McCarthy predicates, print_i64,
+            // putchar, and (BEAM07) the host-input builtins `input_more`/
+            // `input_i64`/`input_str` (BASIC `INPUT` and FlowMatic
+            // `READ-ITEM`'s EOF peek — see `lower.rs`'s "BEAM07: host-input
+            // atoms and imports" comment); any other builtin name has no
+            // BEAM lowering. We reject it here (not just at lowering) so
+            // that a validated module is always lowerable — `generate()`
+            // panics on a lowering error, assuming validation already
+            // screened the module.
             if instr.op == "call_builtin" {
                 let supported = matches!(
                     instr.srcs.first(),
-                    Some(Operand::Var(n)) if BEAM_PREDICATE_BUILTINS.contains(&n.as_str()) || matches!(n.as_str(), "print_i64" | "putchar")
+                    Some(Operand::Var(n)) if BEAM_PREDICATE_BUILTINS.contains(&n.as_str())
+                        || matches!(n.as_str(), "print_i64" | "putchar"
+                            | "input_more" | "input_i64" | "input_str")
                 );
                 if !supported {
                     errors.push(format!(
                         "UnsupportedOp: function {:?}, call_builtin {:?} is not in the \
-                         BEAM builtin set (pair?/equal?/not/print_i64/putchar)",
+                         BEAM builtin set (pair?/equal?/not/print_i64/putchar/\
+                         input_more/input_i64/input_str)",
                         func.name, instr.srcs.first()
                     ));
                 }

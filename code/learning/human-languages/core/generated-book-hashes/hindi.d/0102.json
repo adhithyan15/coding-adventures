@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:d92e046aaf6d4caa",
+  "lessonIds": [
+    "HI-C94-tak",
+    "HI-C94-se-tak-din",
+    "HI-C94-se-tak-samay",
+    "HI-C94-train",
+    "HI-C94-se-nahin",
+    "HI-C94-repaso-safar",
+    "HI-C94-sintesis-safar"
+  ],
+  "tex": "hindi/book/chapters/ch102-safar.tex"
+}

@@ -85,7 +85,7 @@ You already say these, and every one of them has ध somewhere inside it:
 > धन्यवाद  ·  नमस्ते
 
 - [YOU TRACE: ध three times, saying *dha* as you finish each one]
-- [YOU LOOK: back at any page of this chapter and find ध once more]
+- [YOU LOOK: back at any page and find ध once more]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-124] -->

@@ -53,6 +53,53 @@ paint a background or border at all (#15276). Host controls still drop
 was tried and changed zero bytes of output, so it was reverted rather
 than shipped as an unexercised fix.
 
+### Fixed -- padding collapsed to one value, so no part could be asymmetric
+
+`qml_padding` read ONE value -- `padding`, else `padding-top`, else
+`padding-bottom` -- and fanned it to all four edges. `padding-left` and
+`padding-right` were never read at all, and the `or_else` chain skipped a
+longhand entirely whenever the shorthand was also present.
+
+Measured in Trestle's emitted QML: **42 padding groups of four, and all 42
+internally uniform**, against 19+ parts authoring four different edges.
+`task-detail` is `15 / 16 / 16 / 47` and rendered 15 on every side.
+
+| | before | after |
+| --- | ---: | ---: |
+| x/y inset pairs | 34 | 34 |
+| **pairs with x != y** | **0** | **10** |
+| Qt style drops, all products | 649 | **590** |
+| properties that INCREASED | — | **none** |
+
+Padding now resolves per edge as CSS resolves it -- a longhand wins over the
+shorthand edge by edge, an unmentioned edge is zero.
+
+The arithmetic generalises rather than changes: `childrenRect.x` **is** the
+left inset, because the inner content element sits at `x: left`, so the
+trailing term on `implicitWidth` supplies the RIGHT side. For uniform padding
+all four edges are equal and the emitted QML is unchanged, which is why the
+existing `x: 12` / `y: 12` test still passes untouched.
+
+`needs_container_wrapper` now asks about longhands too. It asked only about
+the shorthand, so a part whose only padding was `padding-left` got no wrapper
+and the inset reached nothing.
+
+**This does not resolve every padding drop.** 59 of the 649 went away, not the
+~226 the category totals suggest: the reporter records what each lowering path
+asks, and this fixes the container path. The rest are other paths -- host
+controls read `padding` but not the longhands (#15254) -- which is the same
+per-path pattern that explained the `elevation` discrepancy on #14709.
+
+Padding lengths are now **parsed and re-serialised** rather than passed
+through. `qml_px_or_none` validates a charset, not a number, so `1.2.3`, `-`
+and `5-` survive it -- and this change routes `padding-left`/`-right` into
+generated QML for the first time. Raised in review; the wider exposure (37
+other call sites) is #15269, deliberately not swept blind.
+
+Two pinned drops in `native_complete_gate` retired themselves as a result
+(`Qt: padding-top` in deck-stats and card-browser); the inverse ratchet caught
+both and its message is right -- a pin left after the gap closes stops
+recording a known limitation and starts licensing its return.
 
 ### Fixed -- the CSS `border` shorthand reached nothing, so VisiCalc had no borders
 

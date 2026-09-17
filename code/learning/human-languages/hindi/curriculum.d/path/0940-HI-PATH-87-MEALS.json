@@ -1,0 +1,12 @@
+{
+  "id": "HI-PATH-87-MEALS",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "lessons": [
+    "HI-C79-dopahar-raat-ka-khana"
+  ],
+  "before": [],
+  "inline": [
+    "HI-EXT-87-MEALS"
+  ],
+  "after": []
+}

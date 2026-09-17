@@ -32,27 +32,65 @@
 %
 % Provenance: quoted verbatim from NASA's "Types of Solar Eclipses" page,
 % which defines each of these three eclipse types in its own single
-% sentence. WebFetch-verified before writing (twice). `trust
-% authoritative` — NASA is a primary .gov source, the same tier the
-% sibling `moon-phases.adj` (the other library in this directory) already
-% uses for its NASA citation. An eclipse type that is NOT one of these
-% three — "hybrid_solar_eclipse", a real eclipse type the same page also
-% names, but whose own explanation takes TWO sentences (how Earth's curved
-% surface lets an eclipse shift between annular and total) rather than one
-% clean quotable sentence like the three tabled here — is deliberately NOT
-% a row, so a recall ABSTAINS on it rather than inventing a
-% single-sentence description the source never gave. (See ../README.md;
-% feedback_nothing_human_authored, feedback_adj_only_shipped_artifacts.)
+% sentence. The original authoring note said the quotes were
+% "WebFetch-verified before writing (twice)"; the raw-page measurement
+% below supersedes it. `trust authoritative` — NASA is a primary .gov
+% source, the same tier the sibling `moon-phases.adj` (the other library
+% in this directory) already uses for its NASA citation. An eclipse type
+% that is NOT one of these three — "hybrid_solar_eclipse", a real eclipse
+% type the same page also names, but whose own explanation takes TWO
+% sentences (how Earth's curved surface lets an eclipse shift between
+% annular and total) rather than one clean quotable sentence like the
+% three tabled here — is deliberately NOT a row, so a recall ABSTAINS on
+% it rather than inventing a single-sentence description the source never
+% gave.
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The
+% envelope used to be the total_solar_eclipse span, so an annular or
+% partial answer was warranted primarily by a sentence about a TOTAL
+% eclipse, and those two sentences reached no answer at all. Each row now
+% carries the sentence defining its own type, and the envelope is the
+% page's sentence defining a solar eclipse as such, which names none of
+% the three types:
+%
+%     "A solar eclipse happens when the Moon passes between the Sun and
+%      Earth, casting a shadow on Earth that either fully or partially
+%      blocks the Sun’s light in some areas."
+%
+% The quoted envelope above carries the page's own U+2019 apostrophe in
+% “Sun’s”. Counted on the fetched page: that spelling of the ENVELOPE
+% SENTENCE occurs once, and the same sentence with an ASCII apostrophe
+% occurs zero times. (The prose of this header uses ASCII apostrophes
+% throughout; the count is about the quoted span, not about the file.)
+%
+% Measured 2026-09-16 UTC by this table's own fetch: the page answers 200
+% in 276381 bytes, and a nonsense path on the same host answers 404 with a
+% full styled 223301-byte error page rather than a small stub -- so the
+% control here is that the spans are absent from a LARGE page, not that
+% the page is empty. Tags removed without a space and only ASCII
+% whitespace collapsed: each row's span and the envelope each occur
+% exactly once, inside one `<p>`, scripts set aside and over the whole
+% file, with no `<head>` copy. Every row's page is the envelope's, so no
+% row restates a `locator` line and no row repeats the `trust` tier.
+%
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
 % ============================================================================
 
 table solar_eclipse_type {
     columns type, description
 
-    row (total_solar_eclipse, completely_blocking_the_face_of_the_sun)
-    row (annular_solar_eclipse, moon_at_or_near_its_farthest_point_from_earth)
-    row (partial_solar_eclipse, sun_moon_and_earth_not_perfectly_lined_up)
+    row (total_solar_eclipse, completely_blocking_the_face_of_the_sun) {
+        source "A total solar eclipse happens when the Moon passes between the Sun and Earth, completely blocking the face of the Sun."
+    }
+    row (annular_solar_eclipse, moon_at_or_near_its_farthest_point_from_earth) {
+        source "An annular solar eclipse happens when the Moon passes between the Sun and Earth, but when it is at or near its farthest point from Earth."
+    }
+    row (partial_solar_eclipse, sun_moon_and_earth_not_perfectly_lined_up) {
+        source "A partial solar eclipse happens when the Moon passes between the Sun and Earth but the Sun, Moon, and Earth are not perfectly lined up."
+    }
 
-    source "A total solar eclipse happens when the Moon passes between the Sun and Earth, completely blocking the face of the Sun."
+    source "A solar eclipse happens when the Moon passes between the Sun and Earth, casting a shadow on Earth that either fully or partially blocks the Sun’s light in some areas."
     locator "https://science.nasa.gov/eclipses/types/"
     trust authoritative
 }

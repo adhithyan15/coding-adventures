@@ -14,11 +14,11 @@
 %     ? boundary_motion(divergent, $Motion)      % rip_apart
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `boundary_motion(boundary, motion)` carrying the table's citation, so
-% the lookup above is the ordinary SLD binding query — the engine returns the
-% motion WITH its source, on the CPU, with zero model calls, and abstains on a
-% word that is not one of these three boundary types (it never invents a
-% motion).
+% relation `boundary_motion(boundary, motion)` carrying THAT ROW'S OWN citation,
+% with the envelope's locator and trust inherited (RS-5e, #14986), so the lookup
+% above is the ordinary SLD binding query — the engine returns the motion WITH
+% its source, on the CPU, with zero model calls, and abstains on a word that is
+% not one of these three boundary types (it never invents a motion).
 %
 % Each of the three plate-boundary types and how the source says the plates move
 % there, as a little truth table:
@@ -63,9 +63,9 @@
 %   convergent → subducts
 %     https://www.nps.gov/subjects/geology/plate-tectonics-types-of-plate-boundaries.htm
 %     (National Park Service — U.S. Department of the Interior)
-%     "At a convergent plate boundary, one plate dives (\"subducts\") beneath the
+%     "At a convergent plate boundary, one plate dives (“subducts”) beneath the
 %      other, resulting in a variety of earthquakes and a line of volcanoes on
-%      the overriding plate."
+%      the overriding plate;"
 %
 %   transform → slide_past
 %     https://www.nps.gov/subjects/geology/plate-tectonics-types-of-plate-boundaries.htm
@@ -74,12 +74,47 @@
 %      another, producing shallow earthquakes but little or no volcanic
 %      activity."
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the NPS statement that fixes the
-% first row (divergent → rip_apart). Every OTHER row's per-fact source and
-% verbatim span is listed above, so each motion remains independently checkable.
+% EACH ROW CARRIES ITS OWN span as its `source` (RS-5e, #14986); the locator and
+% trust are inherited from the envelope field-by-field. Until this
+% change the envelope WAS the divergent sentence, so a `convergent` or
+% `transform` recall was warranted primarily by a sentence about DIVERGENT
+% boundaries, and those two rows' own sentences reached no answer at all.
+%
+% Measured on one run of the 5-query companion, 2026-09-16: the divergent span
+% occurred x8 across the answers and the other two x0. After the change the
+% three spans occur x2, x2 and x4. TRANSFORM READS FOUR, NOT TWO, and the reason
+% is worth stating rather than rounding away: it is the only row bound TWICE —
+% once by the forward query and once by the reverse query on `slide_past` — and
+% each answer renders its citation on two surfaces. The corroborations arrays
+% were already empty before this change and remain so; nothing here is a
+% corroboration claim.
+%
+% The envelope is now the page's framing sentence, which names no boundary type
+% and no motion verb.
+%
+% THE CONVERGENT SPAN WAS CORRECTED, NOT MERELY RELOCATED. This header used to
+% quote it with ASCII quotes and a terminating PERIOD. That form occurs ZERO
+% times on the page under either counting recipe: the page writes CURLY quotes
+% around “subducts” and ends the sentence with a SEMICOLON, because there it is
+% item 2 of a three-item list. A fragment punctuated into a sentence is the exact
+% defect `plate_boundary_citation_keeps_the_pages_semicolon` exists to catch, and
+% it had been sitting in this header the whole time.
+%
+% HOW the spans were counted belongs to the claim, because the recipe changes the
+% answer. Two recipes that both collapse whitespace and differ in one thing only,
+% what an inline tag becomes: send it to a SPACE and the divergent and convergent
+% spans score x0; send it to the EMPTY string and all four score x1. The transform
+% span and the envelope score x1 under both. So those x0 results are the
+% INSTRUMENT, not the page — and the divergent span they would have condemned is
+% the one this file has shipped, green, all along.
+%
 % All sources are the U.S. National Park Service, a primary U.S. government
 % (Department of the Interior) teaching resource, so `trust authoritative`.
+%
+% WHAT THIS FILE CLAIMS, AND ITS CEILING. Nothing here carries a `quote ... at
+% <byte_offset> snapshot "<sha256>"` annotation, which is the repo's
+% byte-provenance mechanism. The spans are labelled with the page they were read
+% from and nothing more: this table claims no more than `source_labeled`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -87,11 +122,17 @@
 table boundary_motion {
     columns boundary, motion
 
-    row (divergent, rip_apart)
-    row (convergent, subducts)
-    row (transform, slide_past)
+    row (divergent, rip_apart) {
+        source "Plates rip apart at a divergent plate boundary, causing volcanic activity and shallow earthquakes;"
+    }
+    row (convergent, subducts) {
+        source "At a convergent plate boundary, one plate dives (“subducts”) beneath the other, resulting in a variety of earthquakes and a line of volcanoes on the overriding plate;"
+    }
+    row (transform, slide_past) {
+        source "Transform plate boundaries are where plates slide laterally past one another, producing shallow earthquakes but little or no volcanic activity."
+    }
 
-    source "Plates rip apart at a divergent plate boundary, causing volcanic activity and shallow earthquakes;"
+    source "The landscapes of our national parks, as well as geologic hazards such as earthquakes and volcanic eruptions, are due to the movement of the large plates of Earth’s outer shell."
     locator "https://www.nps.gov/subjects/geology/plate-tectonics-types-of-plate-boundaries.htm"
     trust authoritative
 }

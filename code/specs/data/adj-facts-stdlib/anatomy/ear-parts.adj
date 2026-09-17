@@ -68,12 +68,32 @@
 %      and send them to the cochlea, a snail-shaped structure filled with fluid,
 %      in the inner ear."
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single strongest span: the NIDCD sentence that fixes
-% the cochlea → inner_ear row ("... send them to the cochlea, ... in the inner
-% ear."). The other rows' per-fact source spans are listed above, so each pair
-% remains independently checkable. NIDCD is a primary U.S. government NIH
-% institute, so `trust authoritative`.
+% EACH ROW CARRIES THE PROVENANCE ITS SENTENCES SUPPORT (ADJ-TABLES RS-5e,
+% #14986). This paragraph used to say an ADJ `table` carries ONE provenance
+% envelope; per-row blocks exist, and the envelope was the cochlea sentence,
+% so it was the primary source of all five answers. Now:
+%
+%   - cochlea takes its sentence as its `source`: it names the structure and
+%     the region.
+%   - ear_canal `cites` its sentence. The sentence says sound enters the outer
+%     ear and travels through the ear canal; the canal's region is read off
+%     that, not stated in so many words.
+%   - malleus, incus and stapes each `cites` both bone sentences, because
+%     "These bones" names the bones only through the sentence before it.
+%
+% The envelope is now the page's framing sentence, which names no structure
+% and no region, and it stays the primary source of the four `cites` rows:
+%
+%     "Hearing depends on a series of complex steps that change sound waves
+%      in the air into electrical signals."
+%
+% Measured 2026-09-15 with inline tags removed without a space and only ASCII
+% whitespace collapsed (HTTP 200; a nonsense path on the same host returns
+% 404): each quoted sentence above occurs exactly once: the four path-of-sound
+% ones inside three `<li>` items, and the framing one inside a `<p>`. Every
+% row's page is the envelope's, so no row restates `locator` or `trust`
+% (ADJ-TABLES §4). NIDCD is a primary U.S. government NIH institute, so
+% `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
 % ============================================================================
@@ -81,13 +101,29 @@
 table ear_structure_region {
     columns structure, region
 
-    row (ear_canal, outer_ear)
-    row (malleus, middle_ear)
-    row (incus, middle_ear)
-    row (stapes, middle_ear)
-    row (cochlea, inner_ear)
+    row (ear_canal, outer_ear) {
+        cites "Sound waves enter the outer ear and travel through a narrow passageway called the ear canal, which leads to the eardrum." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+    }
+    row (malleus, middle_ear) {
+        cites "The eardrum vibrates from the incoming sound waves and sends these vibrations to three tiny bones in the middle ear." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+        cites "These bones are called the malleus, incus, and stapes." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+    }
+    row (incus, middle_ear) {
+        cites "The eardrum vibrates from the incoming sound waves and sends these vibrations to three tiny bones in the middle ear." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+        cites "These bones are called the malleus, incus, and stapes." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+    }
+    row (stapes, middle_ear) {
+        cites "The eardrum vibrates from the incoming sound waves and sends these vibrations to three tiny bones in the middle ear." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+        cites "These bones are called the malleus, incus, and stapes." locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
+    }
+    row (cochlea, inner_ear) {
+        source "The bones in the middle ear amplify, or increase, the sound vibrations and send them to the cochlea, a snail-shaped structure filled with fluid, in the inner ear."
+    }
 
-    source "The bones in the middle ear amplify, or increase, the sound vibrations and send them to the cochlea, a snail-shaped structure filled with fluid, in the inner ear."
+    % THE ENVELOPE WAS THE COCHLEA'S OWN SENTENCE, the primary source of all
+    % five answers. It is now the page's framing sentence, which names no
+    % structure and no region; it stays primary for the four `cites` rows.
+    source "Hearing depends on a series of complex steps that change sound waves in the air into electrical signals."
     locator "https://www.nidcd.nih.gov/health/how-do-we-hear"
     trust authoritative
 }

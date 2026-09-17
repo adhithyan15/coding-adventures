@@ -11,7 +11,7 @@
 %     ? heart_chamber_function(right_atrium, $Job)   % receives_blood_from_body
 %
 % This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
-% relation `heart_chamber_function(chamber, function)` carrying the table's
+% relation `heart_chamber_function(chamber, function)` carrying its row's
 % citation, so the lookup above is the ordinary SLD binding query — the engine
 % returns the job WITH its source, on the CPU, with zero model calls, and
 % abstains on anything that is not one of the four chambers.
@@ -23,7 +23,7 @@
 %     right_atrium     receives_blood_from_body   deoxygenated, from the body
 %     right_ventricle  pumps_blood_to_lungs       out to the lungs for oxygen
 %     left_atrium      receives_blood_from_lungs  oxygenated, back from lungs
-%     left_ventricle   pumps_blood_to_body        out to the whole body
+%     left_ventricle   pumps_blood_to_body        out to the body (systemic)
 %
 % The RIGHT side of the heart handles used (deoxygenated) blood on its way to
 % the lungs; the LEFT side handles fresh (oxygenated) blood on its way to the
@@ -71,11 +71,27 @@
 %      pumps, sending freshly oxygenated blood to the systemic circulation
 %      through the aortic valve."
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single strongest span: the StatPearls sentence that
-% fixes the first row (right_atrium → receives_blood_from_body). Every OTHER
-% row's per-fact source and verbatim span is listed above, so each job remains
-% independently checkable. The source is a primary U.S. government NIH /
+% EACH ROW CARRIES ITS OWN SPAN (ADJ-TABLES RS-5e, #14986). This paragraph
+% used to say an ADJ `table` carries ONE provenance envelope, so the
+% right-atrium sentence was the `source` of all four answers while the other
+% spans were only listed above. Row blocks now let each row carry the span
+% quoted for it above (the left atrium's is two sentences: "All four of
+% these veins" alone never names the lungs). The left-ventricle sentence
+% says "the systemic circulation", not "body"; the page's only gloss of that
+% phrase is the right-atrium sentence ("the entire body except for the lungs
+% (the systemic circulation)"), so that row also `cites` it. The envelope is
+% now a framing sentence from the page, which names no chamber and no job:
+%
+%     "The heart is a muscular organ situated in the center of the chest
+%      behind the sternum."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the four spans above and the envelope each occur
+% exactly once, each inside a `<p>`, and "systemic circulation" occurs only
+% in the right-atrium and left-ventricle sentences. Every row's page is the
+% envelope's, so no row restates a `locator` line or `trust`
+% (ADJ-TABLES §4). The source is a primary U.S. government NIH /
 % National Library of Medicine reference (ncbi.nlm.nih.gov), so
 % `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
@@ -85,12 +101,24 @@
 table heart_chamber_function {
     columns chamber, function
 
-    row (right_atrium, receives_blood_from_body)
-    row (right_ventricle, pumps_blood_to_lungs)
-    row (left_atrium, receives_blood_from_lungs)
-    row (left_ventricle, pumps_blood_to_body)
+    row (right_atrium, receives_blood_from_body) {
+        source "The right atrium receives deoxygenated blood from the entire body except for the lungs (the systemic circulation) via the superior and inferior vena cavae."
+    }
+    row (right_ventricle, pumps_blood_to_lungs) {
+        source "The right ventricle pumps blood through the right ventricular outflow tract, across the pulmonic valve, and into the pulmonary artery that distributes it to the lungs for oxygenation."
+    }
+    row (left_atrium, receives_blood_from_lungs) {
+        source "This oxygenated blood is collected by the four pulmonary veins, two from each lung. All four of these veins open into the left atrium that acts as a collection chamber for oxygenated blood."
+    }
+    row (left_ventricle, pumps_blood_to_body) {
+        source "The left ventricle is the main pumping chamber of the left heart, then pumps, sending freshly oxygenated blood to the systemic circulation through the aortic valve."
+        cites "The right atrium receives deoxygenated blood from the entire body except for the lungs (the systemic circulation) via the superior and inferior vena cavae." locator "https://www.ncbi.nlm.nih.gov/books/NBK470256/"
+    }
 
-    source "The right atrium receives deoxygenated blood from the entire body except for the lungs (the systemic circulation) via the superior and inferior vena cavae."
+    % THE ENVELOPE WAS THE RIGHT-ATRIUM ROW'S OWN SENTENCE, the primary source
+    % of all four answers. It is now a framing sentence that names no
+    % chamber and no job. Every row overrides it, so it reaches no answer.
+    source "The heart is a muscular organ situated in the center of the chest behind the sternum."
     locator "https://www.ncbi.nlm.nih.gov/books/NBK470256/"
     trust authoritative
 }

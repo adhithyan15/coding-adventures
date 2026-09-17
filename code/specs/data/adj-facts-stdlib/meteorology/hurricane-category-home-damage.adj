@@ -9,11 +9,10 @@
 % catastrophic_damage): a new `hurricane_home_damage(category,
 % home_damage_effect)` table names the SPECIFIC structural effect the SAME
 % NHC page describes a well-built framed home suffering at each category,
-% decoded from spans already sitting unused inside `hurricane-categories.adj`'s
-% own provenance block — no new WebFetch. That table's `descriptor` column
-% has room for only ONE generic damage word per category; the SAME already-
-% quoted NHC sentences also carry a distinct, more concrete structural detail
-% for every category that never made it into a row:
+% carried by the same NHC sentences `hurricane-categories.adj` cites. That
+% table's `descriptor` column has room for only ONE generic damage word per
+% category, while the same sentences also carry a distinct, more concrete
+% structural detail for every category:
 %
 %   category_1 → "damage to roof, shingles, vinyl siding and gutters"
 %   category_2 → "major roof and siding damage"
@@ -46,16 +45,37 @@
 %     ? hurricane_home_damage($Category, total_roof_failure_and_wall_collapse)
 %       % category_5
 %
-% Provenance: reproduces, byte-for-byte, the SAME five spans already quoted
-% inside `hurricane-categories.adj`'s own provenance block, from the SAME
-% NOAA / National Hurricane Center "Saffir-Simpson Hurricane Wind Scale"
-% page that table already cites — no new WebFetch, only a different schema
-% decoding a part of each already-verified quote. An ADJ `table` carries ONE
-% provenance envelope (per `hurricane-categories.adj`'s own convention), so
-% `source`/`locator`/`trust` below hold the category-1 span; every other
-% row's own span is listed above for independent auditability. `trust
-% authoritative` — the same tier `hurricane-categories.adj` already carries
-% (NOAA / NHC, a primary U.S. government source).
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The
+% envelope used to be the category-1 span, so a category-2, -3, -4 or -5
+% answer was warranted primarily by a sentence about category 1, and the
+% other four NHC sentences reached no answer at all. Each row now carries
+% the sentence stating its own structural effect, and the envelope is the
+% page's scale-defining sentence, which names no category and no damage
+% value:
+%
+%     "The Saffir-Simpson Hurricane Wind Scale estimates potential property
+%      damage."
+%
+% The five spans are the same NHC sentences `hurricane-categories.adj`
+% cites, read for a different column: that table takes each sentence's
+% generic damage word, this one takes the structural detail in the same
+% sentence. Unlike that table's `descriptor` column, which honestly
+% duplicates `catastrophic_damage` across category_4 and category_5, all
+% five values here are DISTINCT, so every row's value is supported by
+% the span that row itself carries.
+%
+% Measured 2026-09-16 UTC on the raw page, by this table's OWN fetch rather
+% than figures carried over from the sibling conversion (HTTP 200, 27908
+% bytes; a nonsense path on the same host returns a real 404 of 16 bytes
+% holding none of these spans), tags removed without a space and only
+% ASCII whitespace collapsed: each row's span occurs exactly once, inside
+% one `<td>`, scripts set aside and over the whole file, with no `<head>`
+% copy; the envelope occurs exactly once, inside one `<p>`.
+% Every row's page is the envelope's, so no row restates a `locator`
+% line and no row repeats the `trust` tier.
+%
+% All spans are from the same NOAA / National Hurricane Center page,
+% a primary U.S. government source, so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
 % ============================================================================
@@ -63,13 +83,23 @@
 table hurricane_home_damage {
     columns category, home_damage_effect
 
-    row (category_1, damage_to_roof_shingles_vinyl_siding_and_gutters)
-    row (category_2, major_roof_and_siding_damage)
-    row (category_3, major_damage_or_removal_of_roof_decking_and_gable_ends)
-    row (category_4, severe_damage_with_loss_of_most_of_the_roof_structure_and_or_some_exterior_walls)
-    row (category_5, total_roof_failure_and_wall_collapse)
+    row (category_1, damage_to_roof_shingles_vinyl_siding_and_gutters) {
+        source "Very dangerous winds will produce some damage: Well-constructed frame homes could have damage to roof, shingles, vinyl siding and gutters."
+    }
+    row (category_2, major_roof_and_siding_damage) {
+        source "Extremely dangerous winds will cause extensive damage: Well-constructed frame homes could sustain major roof and siding damage."
+    }
+    row (category_3, major_damage_or_removal_of_roof_decking_and_gable_ends) {
+        source "Devastating damage will occur: Well-built framed homes may incur major damage or removal of roof decking and gable ends."
+    }
+    row (category_4, severe_damage_with_loss_of_most_of_the_roof_structure_and_or_some_exterior_walls) {
+        source "Catastrophic damage will occur: Well-built framed homes can sustain severe damage with loss of most of the roof structure and/or some exterior walls."
+    }
+    row (category_5, total_roof_failure_and_wall_collapse) {
+        source "Catastrophic damage will occur: A high percentage of framed homes will be destroyed, with total roof failure and wall collapse."
+    }
 
-    source "Very dangerous winds will produce some damage: Well-constructed frame homes could have damage to roof, shingles, vinyl siding and gutters."
+    source "The Saffir-Simpson Hurricane Wind Scale estimates potential property damage."
     locator "https://www.nhc.noaa.gov/aboutsshws.php"
     trust authoritative
 }

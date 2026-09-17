@@ -3,6 +3,15 @@
 //! the built CLI: a native `table` naming three solar eclipse types and
 //! what each actually is, quoted verbatim from NASA's "Types of Solar
 //! Eclipses" page. 0 answer-time model calls.
+//!
+//! EACH ROW CARRIES ITS OWN SENTENCE (RS-5e, #14986). The envelope used to be
+//! the total_solar_eclipse span, so an annular or partial answer was warranted
+//! primarily by a sentence about a TOTAL eclipse.
+//!
+//! THE ENVELOPE'S APOSTROPHE IS U+2019. The same sentence with an ASCII
+//! apostrophe occurs zero times on the page, so shipping one would cite a
+//! sentence the source does not contain; `the_envelope_keeps_the_pages_own_apostrophe`
+//! pins both directions.
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -54,18 +63,32 @@ fn solar_eclipse_type_recall_binds_the_description_directly() {
     // shipped. Pinning a fragment narrows that hole rather than closing
     // it, because `contains` on a fragment cannot see what precedes or
     // follows it. See issue #13918.
+    //
+    // RE-POINTED (RS-5e, #14986). This pinned the whole ENVELOPE sentence,
+    // which passed only because that sentence was the table's envelope and so
+    // rode on every answer -- including the annular and partial ones. It is
+    // now the total row's OWN citations array, closing on both the
+    // corroborations `]` and the citations `]`, so it can no longer be
+    // satisfied by a sentence about a different eclipse type.
     assert!(
-        out.contains("\"source\":\"A total solar eclipse happens when the Moon passes between the Sun and Earth, completely blocking the face of the Sun.\""),
-        "the citation is the whole source sentence, exactly: {out}"
+        out.contains(&only_citation(TOTAL)),
+        "the total answer carries the sentence defining a TOTAL eclipse, whole: {out}"
+    );
+    assert!(
+        !out.contains(ENVELOPE),
+        "the envelope is primary for no answer: {out}"
     );
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
         out.contains("\"D\":\"completely_blocking_the_face_of_the_sun\""),
         "total_solar_eclipse means completely_blocking_the_face_of_the_sun: {out}"
     );
+    // This was `contains("nasa.gov") && contains("\"trust\":\"authoritative\"")`,
+    // which any NASA citation satisfies and which constrains no sentence text.
+    // The whole-array needle above is what pins the sentence now.
     assert!(
-        out.contains("nasa.gov") && out.contains("\"trust\":\"authoritative\""),
-        "carries the NASA citation: {out}"
+        out.contains(&format!("\"locator\":\"{LOCATOR}\"")),
+        "carries the NASA locator: {out}"
     );
 }
 
@@ -105,4 +128,209 @@ fn solar_eclipse_type_abstains_honestly_on_an_untabled_type() {
         out.contains("\"abstained\":true"),
         "hybrid_solar_eclipse is a real eclipse type the source covers but not one of the three tabled here -- honest abstention, never invented: {out}"
     );
+}
+
+const LOCATOR: &str = "https://science.nasa.gov/eclipses/types/";
+/// The page's sentence defining a solar eclipse as such -- it names none of the
+/// three types. Quoted with the page's own U+2019 apostrophe in "Sun's"; the
+/// ASCII-apostrophe spelling occurs ZERO times on the page.
+const ENVELOPE: &str = "A solar eclipse happens when the Moon passes between the Sun and Earth, casting a shadow on Earth that either fully or partially blocks the Sun\u{2019}s light in some areas.";
+const TOTAL: &str = "A total solar eclipse happens when the Moon passes between the Sun and Earth, completely blocking the face of the Sun.";
+const ANNULAR: &str = "An annular solar eclipse happens when the Moon passes between the Sun and Earth, but when it is at or near its farthest point from Earth.";
+const PARTIAL: &str = "A partial solar eclipse happens when the Moon passes between the Sun and Earth but the Sun, Moon, and Earth are not perfectly lined up.";
+
+/// (type, its description atom, the NASA sentence defining that type)
+fn scale() -> Vec<(&'static str, &'static str, &'static str)> {
+    vec![
+        ("total_solar_eclipse", "completely_blocking_the_face_of_the_sun", TOTAL),
+        (
+            "annular_solar_eclipse",
+            "moon_at_or_near_its_farthest_point_from_earth",
+            ANNULAR,
+        ),
+        (
+            "partial_solar_eclipse",
+            "sun_moon_and_earth_not_perfectly_lined_up",
+            PARTIAL,
+        ),
+    ]
+}
+
+/// The whole citations array of a one-citation answer, as one contiguous run,
+/// closing on both the corroborations `]` and the citations `]` (#14735).
+fn only_citation(span: &str) -> String {
+    format!(
+        "\"citations\":[{{\"source\":\"{span}\",\"locator\":\"{LOCATOR}\",\"trust\":\"authoritative\",\"corroborations\":[]}}]"
+    )
+}
+
+fn shipped_table() -> String {
+    let adj = std::fs::read_to_string(facts_stdlib().join("astronomy/solar-eclipse-type.adj"))
+        .expect("read shipped solar-eclipse-type.adj");
+    adj[adj.find("table solar_eclipse_type").expect("table")..].to_string()
+}
+
+#[test]
+fn every_type_answer_carries_only_the_sentence_defining_that_type() {
+    for (kind, description, span) in scale() {
+        let dir = scratch(&format!("type_{kind}"));
+        place_lib(&dir);
+        std::fs::write(
+            dir.join("case.adj"),
+            format!("import \"solar-eclipse-type.adj\"\n? solar_eclipse_type({kind}, $D)\n"),
+        )
+        .unwrap();
+
+        let (ok, out) = run(&dir.join("case.adj"));
+        assert!(ok, "cli should succeed: {out}");
+        assert_eq!(
+            out.matches("\"citations\":[").count(),
+            1,
+            "one answer for {kind}: {out}"
+        );
+        assert!(
+            out.contains(&format!("\"D\":\"{description}\"")),
+            "{kind} -> {description}: {out}"
+        );
+        assert!(
+            out.contains(&only_citation(span)),
+            "{kind}: the NASA sentence defining it, whole, and the only citation: {out}"
+        );
+        for other in [TOTAL, ANNULAR, PARTIAL] {
+            if other != span {
+                assert!(
+                    !out.contains(other),
+                    "another type's sentence must not reach {kind}: {out}"
+                );
+            }
+        }
+        assert!(
+            !out.contains(ENVELOPE),
+            "the envelope is not primary for {kind}: {out}"
+        );
+    }
+}
+
+#[test]
+fn the_envelope_keeps_the_pages_own_apostrophe() {
+    // The page writes "Sun\u{2019}s" with U+2019. An ASCII-apostrophe spelling
+    // occurs ZERO times on the page, so shipping one would be a citation to a
+    // sentence the source does not contain -- the defect #15324 records for
+    // soil-texture-class, and the one volcano-type and metamorphism-cause both
+    // shipped before their conversions.
+    // SCOPED TO `source "` LINES, not the whole table block. Read against the
+    // block, this arm fails on a harmless in-table `%` comment that quotes the
+    // envelope in ASCII -- and a comment is not a shipped citation, so that
+    // would be a false alarm. What must be pinned is the string the table
+    // SHIPS as provenance.
+    let body = shipped_table();
+
+    // TWO DIFFERENT SCOPES, because the two arms make different claims.
+    //
+    // The POSITIVE arm is about the TABLE-LEVEL envelope, so it reads only
+    // four-space `source` lines. Scoped with `trim_start()` it would also see
+    // the eight-space row sources, and would then be satisfied by a mutant that
+    // deleted the envelope line and planted the string on a row -- leaving its
+    // message ("the envelope ships with...") claiming more than it checked.
+    // That second defect is backstopped here by the shape test's verbatim
+    // `source`/`locator`/`trust` block, as it is in plant-parts; this arm is
+    // being made honest about its own claim, not plugging an open hole.
+    // Measured: such a table is also refused at lowering with
+    // TableMissingProvenance, so that mutant could not ship regardless.
+    let envelope_line: String = body
+        .lines()
+        .filter(|l| l.starts_with("    source \""))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(
+        envelope_line.contains(ENVELOPE),
+        "the table-level envelope ships with the page's own U+2019: {envelope_line}"
+    );
+
+    // The NEGATIVE arm is about ANY shipped citation, so it reads every
+    // `source` line at any indent -- a row carrying an ASCII-apostrophe
+    // envelope is just as wrong as the envelope line carrying one. It stays
+    // scoped to `source` lines rather than the whole block, because a `%`
+    // comment quoting the sentence in ASCII is not a shipped citation.
+    //
+    // The trade, recorded in shard 03560: scoping this arm lets a
+    // comment-borne ASCII envelope survive. Nothing now pins "no ASCII
+    // envelope anywhere in the block", only "no `source` line carries one".
+    // That is the right trade -- the shipped string is what provenance means.
+    let source_lines: String = body
+        .lines()
+        .filter(|l| l.trim_start().starts_with("source \""))
+        .collect::<Vec<_>>()
+        .join("\n");
+    let ascii_variant = ENVELOPE.replace('\u{2019}', "'");
+    assert!(
+        !source_lines.contains(&ascii_variant),
+        "no `source` line at any indent may carry an ASCII-apostrophe envelope -- \
+         that spelling occurs zero times on the page: {source_lines}"
+    );
+}
+
+#[test]
+fn the_table_shape_matches_the_measured_rows() {
+    // Every row overrides the envelope, so the envelope's wording reaches no
+    // answer; this file-shape test is what pins it, including the tier.
+    let body = shipped_table();
+    assert_eq!(
+        body.matches("\n        source \"").count(),
+        3,
+        "three row sources"
+    );
+    // Keyword-anchored, not indent-scoped: a row-level `cites` at eight spaces
+    // must fail this too, without false-positiving on prose in a comment.
+    assert!(
+        !body.lines().any(|l| l.trim_start().starts_with("cites")),
+        "no corroboration at any indent"
+    );
+    // Indent-independent, unlike the `cites` arm above -- `cites` can assert
+    // ABSENCE because no table-level `cites` exists, whereas the envelope has a
+    // `locator` and a `trust` of its own. So the pin is EXACTLY one of each.
+    assert_eq!(
+        body.lines()
+            .filter(|l| l.trim_start().starts_with("locator "))
+            .count(),
+        1,
+        "exactly one locator line, the envelope's: {body}"
+    );
+    assert_eq!(
+        body.lines()
+            .filter(|l| l.trim_start().starts_with("trust "))
+            .count(),
+        1,
+        "exactly one trust line, the envelope's: {body}"
+    );
+    assert!(
+        body.contains(&format!(
+            "\n    source \"{ENVELOPE}\"\n    locator \"{LOCATOR}\"\n    trust authoritative\n"
+        )),
+        "the envelope is the page's eclipse-defining sentence, at the authoritative tier"
+    );
+    assert!(
+        !body.contains(&format!("\n    source \"{TOTAL}\"\n    locator")),
+        "not the total_solar_eclipse span as the envelope again"
+    );
+    // WHOLE WORDS, not substrings. The shipped envelope contains "partially",
+    // and a bare `contains("partial")` matches inside it -- the assertion would
+    // fail on a correct envelope. Split on non-alphanumerics and compare whole
+    // tokens, the same fix the hurricane bare-word needle needed in reverse.
+    let shipped_envelope = body
+        .lines()
+        .find(|l| l.starts_with("    source \""))
+        .expect("the table has an envelope source line")
+        .to_lowercase();
+    let tokens: Vec<&str> = shipped_envelope
+        .split(|c: char| !c.is_ascii_alphanumeric())
+        .filter(|t| !t.is_empty())
+        .collect();
+    for word in ["total", "annular", "partial", "hybrid"] {
+        assert!(
+            !tokens.contains(&word),
+            "the shipped envelope must name no eclipse type, but contains {word:?} \
+             as a whole word: {shipped_envelope}"
+        );
+    }
 }

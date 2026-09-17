@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C79-dopahar-raat-ka-khana",
+    "language": "hindi",
+    "chapter": 87,
+    "sequence": 3320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00bdca1bb47f9bb9"
+  },
+  "findings": []
+}

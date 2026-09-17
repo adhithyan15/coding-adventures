@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C93-ke-paas",
+    "language": "hindi",
+    "chapter": 101,
+    "sequence": 4220,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:079ad2f5e3ce31d3"
+  },
+  "findings": []
+}

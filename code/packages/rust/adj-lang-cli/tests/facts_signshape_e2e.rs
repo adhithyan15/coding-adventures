@@ -20,6 +20,12 @@
 //! the library assert something the same document refutes two sections
 //! later.
 //!
+//! EACH ROW CARRIES ITS OWN SENTENCE (RS-5e, #14986). The envelope used to
+//! be the regulatory default, so the STOP answer cited "Regulatory signs
+//! shall be rectangular" first. The envelope is now Chapter 2A's framing
+//! sentence, which every row overrides, and each row's citation is pinned
+//! whole.
+//!
 //! Every assertion uses the JOINT binding form rather than independent
 //! substring scans, and both abstention tests carry positive controls.
 //!
@@ -61,6 +67,37 @@ fn case(dir: &Path, query: &str) -> PathBuf {
     path
 }
 
+const PART2A: &str = "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2a.htm";
+const PART2B: &str = "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm";
+const PART2C: &str = "https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm";
+
+const ENVELOPE: &str = "Standardized colors and shapes are specified so that the several classes of traffic signs can be promptly recognized.";
+const REGULATORY: &str = "Regulatory signs shall be rectangular unless specifically designated otherwise.";
+const STOP: &str = "The STOP sign shall be an octagon with a white legend and border on a red background.";
+const YIELD: &str = "The YIELD (R1-2) sign (see Figure 2B-1) shall be a downward-pointing equilateral triangle with a wide red border and the legend YIELD in red on a white background.";
+const WARNING: &str = "Except as provided in Paragraph 2 or unless specifically designated otherwise, all warning signs shall be diamond-shaped (square with one diagonal vertical) with a black legend and border on a yellow background.";
+const NO_PASSING_ZONE: &str = "The NO PASSING ZONE (W14-3) sign (see Figure 2C-8) shall be a pennant-shaped isosceles triangle with its longer axis horizontal and pointing to the right.";
+
+/// (sign, shape, its own sentence, the chapter that sentence was measured on)
+const ROWS: [(&str, &str, &str, &str); 5] = [
+    ("regulatory_sign", "rectangular_unless_specifically_designated_otherwise", REGULATORY, PART2B),
+    ("stop_sign", "octagon", STOP, PART2B),
+    ("yield_sign", "downward_pointing_equilateral_triangle", YIELD, PART2B),
+    ("warning_sign", "diamond_shaped_unless_specifically_designated_otherwise", WARNING, PART2C),
+    ("no_passing_zone_sign", "pennant_shaped_isosceles_triangle", NO_PASSING_ZONE, PART2C),
+];
+
+/// The whole citation a row's answer carries, as one contiguous run.
+fn citation(sentence: &str, locator: &str) -> String {
+    format!("\"source\":\"{sentence}\",\"locator\":\"{locator}\",\"trust\":\"authoritative\",\"corroborations\":[]")
+}
+
+fn shipped_table() -> String {
+    let adj = std::fs::read_to_string(facts_stdlib().join("transportation/sign-shape.adj"))
+        .expect("read shipped sign-shape.adj");
+    adj[adj.find("table sign_shape").expect("table")..].to_string()
+}
+
 #[test]
 fn a_stop_sign_is_an_octagon() {
     let dir = scratch("stop");
@@ -69,29 +106,19 @@ fn a_stop_sign_is_an_octagon() {
 
     let (ok, out) = run(&program);
     assert!(ok, "cli should succeed: {out}");
-    // FULL ANCHORED CITATION PIN. A fragment needle elsewhere in this
-    // file matched only part of the sentence, which let the citation be
-    // truncated AT that point -- deleting everything after it -- while
-    // the test stayed green. Anchoring on the `"source":"` key and
-    // closing on the terminating quote pins head, tail, punctuation and
-    // length at once. See issues #13916 and #13918.
+    // FULL ANCHORED CITATION PIN, now the whole contiguous run. This used
+    // to pin the REGULATORY DEFAULT as the STOP answer's primary source -- a
+    // sentence saying regulatory signs are rectangular, grounding an
+    // octagon. See issues #13916, #13918 and #14986.
     assert!(
-        out.contains("\"source\":\"Regulatory signs shall be rectangular unless specifically designated otherwise.\""),
-        "the citation is the whole source sentence, exactly: {out}"
+        out.contains(&citation(STOP, PART2B)),
+        "the citation is the STOP sentence at Chapter 2B, whole: {out}"
     );
+    assert!(!out.contains(REGULATORY), "the regulatory default does not ground STOP: {out}");
     assert!(out.contains("\"recall\""), "has a recall section: {out}");
     assert!(
         out.contains("\"bindings\":{\"S\":\"octagon\"}"),
         "the STOP sign is an octagon: {out}"
-    );
-    assert!(
-        out.contains("The STOP sign shall be an octagon with a white legend and border on a red background."),
-        "carries the grounding sentence verbatim: {out}"
-    );
-    assert!(
-        out.contains("mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm")
-            && out.contains("\"trust\":\"authoritative\""),
-        "carries the MUTCD citation: {out}"
     );
 }
 
@@ -129,33 +156,33 @@ fn the_reverse_lookup_names_the_eight_sided_sign() {
 
 #[test]
 fn each_sentence_is_attributed_to_the_chapter_it_came_from() {
-    let dir = scratch("locators");
-    place(&dir);
-    let program = case(&dir, "sign_shape(stop_sign, $S)");
-
-    let (ok, out) = run(&program);
-    assert!(ok, "cli should succeed: {out}");
-    // THE STRUCTURAL NOVELTY OF THIS LIBRARY IS THAT ITS CORROBORATIONS
-    // POINT AT TWO DIFFERENT PAGES, and that property needs a joint
-    // assertion rather than a bare locator scan. Asserting only that
-    // "part2b.htm" appears somewhere would survive swapping every locator,
-    // because part2b would still be present -- and part2c would never be
-    // checked at all. These pin sentence-to-locator pairs instead.
-    assert!(
-        out.contains(
-            "\"source\":\"The NO PASSING ZONE (W14-3) sign (see Figure 2C-8) shall be a \
-             pennant-shaped isosceles triangle with its longer axis horizontal and pointing to \
-             the right.\",\"locator\":\"https://mutcd.fhwa.dot.gov/htm/2009/part2/part2c.htm\""
-        ),
-        "the pennant sentence is attributed to Chapter 2C: {out}"
-    );
-    assert!(
-        out.contains(
-            "\"source\":\"The STOP sign shall be an octagon with a white legend and border on a \
-             red background.\",\"locator\":\"https://mutcd.fhwa.dot.gov/htm/2009/part2/part2b.htm\""
-        ),
-        "the STOP sentence is attributed to Chapter 2B: {out}"
-    );
+    // THE ROWS POINT AT TWO DIFFERENT CHAPTERS, and that property needs a
+    // joint assertion rather than a bare locator scan: asserting only that
+    // "part2b.htm" appears somewhere would survive swapping every locator.
+    // Each row's answer is pinned to its own sentence-and-chapter pair, and
+    // must carry no other row's sentence and not the envelope.
+    for (sign, shape, sentence, locator) in ROWS {
+        let dir = scratch(&format!("locators_{sign}"));
+        place(&dir);
+        let program = case(&dir, &format!("sign_shape({sign}, $S)"));
+        let (ok, out) = run(&program);
+        assert!(ok, "cli should succeed: {out}");
+        assert_eq!(out.matches("\"citations\":[").count(), 1, "one answer for {sign}: {out}");
+        assert!(
+            out.contains(&format!("\"bindings\":{{\"S\":\"{shape}\"}}")),
+            "{sign} is {shape}: {out}"
+        );
+        assert!(
+            out.contains(&citation(sentence, locator)),
+            "{sign} carries its own sentence at its own chapter, whole: {out}"
+        );
+        for (other, _, other_sentence, _) in ROWS {
+            if other != sign {
+                assert!(!out.contains(other_sentence), "the {other} sentence must not reach {sign}: {out}");
+            }
+        }
+        assert!(!out.contains(ENVELOPE), "the envelope is not primary for {sign}: {out}");
+    }
 }
 
 #[test]
@@ -187,9 +214,9 @@ fn both_defaults_keep_their_defeasibility_in_the_atom() {
     // sentence OPENS with its exception clause; quoting from "all warning
     // signs" would have been tidier and would have left an atom saying
     // "unless designated otherwise" backed by a quotation appearing to say
-    // no such thing.
+    // no such thing. The warning row's own source now carries it, whole.
     assert!(
-        out.contains("Except as provided in Paragraph 2 or unless specifically designated otherwise, all warning signs shall be diamond-shaped"),
+        out.contains(&citation(WARNING, PART2C)),
         "the quoted evidence includes the exception clause it is used to justify: {out}"
     );
 }
@@ -264,4 +291,31 @@ fn a_sign_governed_only_by_the_default_abstains() {
         out.contains("\"bindings\":{\"S\":\"pennant_shaped_isosceles_triangle\"}"),
         "control: a named sign with a stated shape still binds: {out}"
     );
+}
+
+#[test]
+fn the_table_shape_matches_the_measured_rows() {
+    // Every row overrides the envelope, so the envelope's wording reaches no
+    // answer; this file-shape test is what pins it.
+    let body = shipped_table();
+    for (sign, shape, sentence, locator) in ROWS {
+        let expected = format!(
+            "    row ({sign}, {shape}) {{\n        source \"{sentence}\"\n        locator \"{locator}\"\n    }}"
+        );
+        assert!(body.contains(&expected), "row ({sign}, {shape}) is shipped in its measured shape");
+    }
+    assert_eq!(body.matches("\n        source \"").count(), 5, "five row sources");
+    assert_eq!(body.matches("\n        locator \"").count(), 5, "five row locators");
+    assert!(!body.contains("\n        trust "), "no row restates trust");
+    assert!(!body.contains("\n    cites "), "no table-level corroboration");
+    assert!(!body.contains("\n        cites "), "no row corroboration");
+    assert!(
+        body.contains(&format!("\n    source \"{ENVELOPE}\"\n    locator \"{PART2A}\"\n    trust authoritative\n")),
+        "the envelope is Chapter 2A's framing sentence"
+    );
+    assert!(!body.contains(&format!("\n    source \"{REGULATORY}\"\n    locator")), "not the regulatory default as the envelope again");
+    let folded = ENVELOPE.to_lowercase();
+    for word in ["stop", "yield", "warning", "regulatory", "octagon", "triangle", "diamond", "pennant", "rectangular"] {
+        assert!(!folded.contains(word), "the envelope must name no sign or shape, but contains {word:?}");
+    }
 }

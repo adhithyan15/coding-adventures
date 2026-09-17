@@ -1,0 +1,1097 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 94,
+  "title": "The Pronouns, And The Article Hindi Does Not Have",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:f1a11c745aec02e9",
+  "lessons": [
+    {
+      "id": "HI-C86-ham",
+      "sequence": 3660,
+      "title": "हम — the word that was already inside hamārā",
+      "headword": "हम",
+      "romanization": "ham",
+      "gloss": "we — the pronoun a mock reading item needs, and the one Hindi also reaches for when an English speaker would say I",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2434e3a29d85d36f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say hamārā. You learned it as \"our\" and were told what it was built on. Say that word on its own — you have been carrying it for a chapter without being given it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हम (ham) — \"we.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The possessive chapter said hamārā was built on हम, and there the matter rested. Here is the word itself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: where Hindi says \"we\" and English says \"I\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हम (ham) does a second job that has no English equivalent. In much ordinary speech it stands in for मैं, \"I,\" when the speaker is being modest or speaking as part of a household:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "said",
+                "usually means"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "said: ham jāte haiṅ. usually means: we go — or, often, I go.",
+                "said: hamārā ghar. usually means: our house — or my house."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "This is the same instinct that made hamārā parivār the natural way to say \"my family.\" A Hindi speaker places themselves inside a group by default where an English speaker steps out of it."
+            },
+            {
+              "kind": "speech",
+              "text": "A listening paper will play you ham where you expect maiṅ, and nothing marks the difference but context."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"हम\" — ham, we",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"हम\" — *ham*, we]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the possessive built on it (hamārā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the possessive built on it (*hamārā*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ham and maiṅ one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ham* and *maiṅ* one after the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why a speaker might choose ham when talking about themselves",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why a speaker might choose *ham* when talking about themselves]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What possessive is built on हम? (Hamārā.) What else can ham mean besides \"we\"? (I, said modestly or as part of a household.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C86-ve",
+      "sequence": 3670,
+      "title": "वे (ve) — they, and the respect that looks like a plural",
+      "headword": "वे",
+      "romanization": "ve",
+      "gloss": "they — the plural of vah, and the form a speaker also uses about one person they wish to honour",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:835b51685a5d0c22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say वह and हम (ham). You can point at one person and you can include yourself in a group. Say \"they,\" and notice the gap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वे (ve) — \"they.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is the plural of वह, and the relationship is visible: the same word with a different vowel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the plural that is also a courtesy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The same habit you met with आप appears here. Hindi shows respect by using a plural form for one person:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                "about"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "form: वह. about: one person, familiar or neutral.",
+                "form: वे. about: several people — or one person spoken of with respect."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So ve ā rahe haiṅ can be \"they are coming\" or \"he is coming,\" said of someone senior. This is the third time the pattern has appeared: āp for a respected listener, the -iye command for a respected listener, and now ve for a respected third person."
+            },
+            {
+              "kind": "speech",
+              "text": "In everyday speech many speakers say वो for both vah and ve. Recognise it; write the forms above."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"वे\" — ve, they",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"वे\" — *ve*, they]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "वह and वे together, and hear that only the vowel moves",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **वह** and **वे** together, and hear that only the vowel moves]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two things ve can mean",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two things *ve* can mean]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the other place Hindi uses a plural to show respect (āp)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the other place Hindi uses a plural to show respect (*āp*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is वे the plural of? (वह.) What else can it mean about one person? (Respect.) What do many speakers say for both in conversation? (Vo.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C86-hamen-tumhen",
+      "sequence": 3680,
+      "title": "हमें / तुम्हें (hamẽ / tumhẽ) — what mujhe was all along",
+      "headword": "हमें / तुम्हें",
+      "romanization": "hamẽ / tumhẽ",
+      "gloss": "to us, to you — the oblique pronouns, which is what mujhe has quietly been all along",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:1d34fcd8380fc35a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say mujhe … pasand hai. You learned it as a frame for saying what you like. Say the first word on its own and ask what it actually is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हमें and तुम्हें",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हमें (hamẽ) — \"to us.\" तुम्हें (tumhẽ) — \"to you,\" at the tum level."
+            },
+            {
+              "kind": "speech",
+              "text": "Mujhe is the same kind of word: मैं in its oblique form, meaning to me. The liking frame was never a lump — it was a pronoun in a case, and now the rest of the set arrives with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the same bend, a third time",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "oblique",
+                "meaning"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "subject: मैं. oblique: mujhe. meaning: to me.",
+                "subject: हम (ham). oblique: हमें. meaning: to us.",
+                "subject: तुम. oblique: तुम्हें. meaning: to you."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The possessive chapter bent -आ to -ए in front of a postposition. The imperative chapter bent the verb to match the listener. Here the pronoun itself bends, and the ending it takes is the nasal -ें."
+            },
+            {
+              "kind": "speech",
+              "text": "That is three separate systems doing the same thing, which is the reason Hindi rewards a learner who looks for patterns rather than lists: the language keeps asking the same question — what stands after this word? — and answering it the same way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"हमें\" and \"तुम्हें\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"हमें\" and \"तुम्हें\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mujhe … pasand hai, and then the same frame about us",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mujhe … pasand hai*, and then the same frame about *us*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what mujhe actually is, now that you can see the set",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *mujhe* actually is, now that you can see the set]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three subjects and their oblique forms in a run",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three subjects and their oblique forms in a run]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is mujhe the oblique of? (मैं.) What ending do these oblique pronouns take? (The nasal -ें.) How would you say \"we like it\"? (Hamẽ … pasand hai.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C86-aapko-use",
+      "sequence": 3690,
+      "title": "āpko / use — the paradigm closes",
+      "headword": "आपको / उसे",
+      "romanization": "āpko / use",
+      "gloss": "to you, to him or her — the two obliques built with ko, which completes a paradigm the track had one corner of",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:861323124183094f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say hamẽ and tumhẽ. Two corners of the set are filled. Say the respectful one and the third-person one, and notice you cannot yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: āpko and use",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आपको (āpko) — \"to you,\" respectfully. use — \"to him, to her.\""
+            },
+            {
+              "kind": "speech",
+              "text": "These two are built differently from the last pair. Instead of the nasal ending they take को (ko), the postposition meaning to:"
+            },
+            {
+              "kind": "speech",
+              "text": "आप + को becomes आपको."
+            },
+            {
+              "kind": "speech",
+              "text": "Use is the worn-down version of the same thing: us + ko, squeezed together by centuries of use, exactly as maiṅ + ko became mujhe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the whole set, at last",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "oblique"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "subject: मैं. oblique: mujhe.",
+                "subject: हम (ham). oblique: हमें.",
+                "subject: तुम. oblique: तुम्हें.",
+                "subject: आप. oblique: आपको.",
+                "subject: वह. oblique: use."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Five forms, and only the first and the last look irregular — because they are the two that wore down. The middle three still show their parts."
+            },
+            {
+              "kind": "speech",
+              "text": "वे (ve) has one too — unhẽ — built the same way, which the review lesson adds."
+            },
+            {
+              "kind": "speech",
+              "text": "Note that the level you learned to choose in the possessive and imperative chapters is here too: tumhẽ to a friend, āpko to a stranger. The same decision, for the fourth time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"आपको\", and name the two pieces it is built from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"आपको\", and name the two pieces it is built from]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "use, and say which subject it belongs to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *use*, and say which subject it belongs to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five obliques in a run",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five obliques in a run]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one you would use asking a stranger what they like",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one you would use asking a stranger what they like]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What postposition is inside āpko? (को, to.) Which two of the five wore down until their parts stopped showing? (Mujhe and use.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C86-koi-article",
+      "sequence": 3700,
+      "title": "binā ārṭikal — the word Hindi does not have",
+      "headword": "बिना आर्टिकल",
+      "romanization": "binā ārṭikal",
+      "gloss": "without an article — Hindi has no the and no a, and this lesson says what carries the work instead",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64d666e4d44ac1a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say वह, \"that.\" Now try to say \"the book\" in Hindi, and read on when you find you have no word for the."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: there is no article",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hindi has no article. No word for the, and no word for a."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the largest single structural difference between Hindi and English, and it is worth being told once rather than discovered slowly:"
+            },
+            {
+              "kind": "speech",
+              "text": "किताब — kitāb — can mean a book or the book."
+            },
+            {
+              "kind": "speech",
+              "text": "The bare noun covers both. Nothing is missing from the sentence; the slot the English article fills does not exist."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what does the work instead",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hindi has three ways to be more specific when it needs to be, and you have all three already:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "want to say",
+                "Hindi reaches for",
+                "example"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "want to say: a book, one book. Hindi reaches for: एक. example: ek kitāb.",
+                "want to say: that book, the one there. Hindi reaches for: वह. example: vah kitāb.",
+                "want to say: plain \"book\". Hindi reaches for: nothing at all. example: kitāb."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "एक is the numeral one, pressed into service when indefiniteness matters — which is why ek chāy dījiye is \"a tea, please\" rather than a fixed café formula. It was a number the whole time."
+            },
+            {
+              "kind": "speech",
+              "text": "वह points, and pointing is how Hindi says the when the really means that particular one."
+            },
+            {
+              "kind": "speech",
+              "text": "Most of the time neither is needed, and this is the habit to build: do not reach for a word to translate the. There isn't one, and putting vah in every place English puts the sounds as odd as saying that book in English every time you mean the book."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitāb, and give both English meanings it covers",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitāb*, and give both English meanings it covers]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek kitāb, and say what ek is doing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek kitāb*, and say what *ek* is doing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vah kitāb, and say when you would choose it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vah kitāb*, and say when you would choose it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you should do when you want to say \"the\" (nothing)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you should do when you want to say \"the\" (nothing)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āpko ek kitāb pasand hai, and notice there is still no article in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āpko ek kitāb pasand hai*, and notice there is still no article in it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many articles does Hindi have? (None.) What was ek before it marked indefiniteness? (The numeral one.) What is the commonest correct translation of English the? (Nothing at all.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C86-repaso-sarvanam",
+      "sequence": 3710,
+      "title": "sarvanām kī tālikā — subject and oblique, side by side",
+      "headword": "सर्वनाम की तालिका",
+      "romanization": "sarvanām kī tālikā",
+      "gloss": "the pronoun table — subject and oblique together, and the fourth system in which the same level decision appears",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:1edfa3577ce0c9fe",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the five subject pronouns and as many obliques as you can, before reading the table."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the table, complete",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "subject",
+                "oblique"
+              ],
+              "columns": 2,
+              "rowCount": 6,
+              "utterances": [
+                "subject: मैं. oblique: mujhe.",
+                "subject: हम (ham). oblique: हमें.",
+                "subject: तुम. oblique: तुम्हें.",
+                "subject: आप. oblique: आपको.",
+                "subject: वह. oblique: use.",
+                "subject: वे (ve). oblique: unhẽ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two of the obliques are visibly को attached — āpko plainly, use after wear. Three take the nasal ending. The set is small and none of it is arbitrary once you know that a postposition is hiding in each one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the fourth appearance of one decision",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "system",
+                "at the tum level",
+                "at the āp level"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "system: possessive. at the tum level: तुम्हारा. at the āp level: आपका.",
+                "system: copula. at the tum level: हो. at the āp level: हैं.",
+                "system: command. at the tum level: बोलो. at the āp level: बोलिए.",
+                "system: oblique pronoun. at the tum level: तुम्हें. at the āp level: आपको."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four systems, one decision. Choosing how to address someone settles all four at once, which is why the grid has been worth building across three chapters rather than learning four unrelated lists."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the six subject pronouns",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the six subject pronouns]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the obliques that take को, and the ones that take the nasal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the obliques that take **को**, and the ones that take the nasal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the tum row across all four systems",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the *tum* row across all four systems]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how many articles Hindi has, and what does the work instead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how many articles Hindi has, and what does the work instead]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which postposition is hiding inside every oblique pronoun? (को.) How many systems does the level decision now settle? (Four.) What translates English the? (Nothing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C86-sintesis-sarvanam",
+      "sequence": 3720,
+      "title": "हम स्टेशन पर मिलेंगे (ham sṭeśan par milẽge) — the sentence the paper actually prints",
+      "headword": "हम स्टेशन पर मिलेंगे",
+      "romanization": "ham sṭeśan par milẽge",
+      "gloss": "we will meet at the station — a sentence a mock reading paper prints, and it needs the pronoun this chapter supplies",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fb78668d7a068c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say हम (ham). Until this chapter the track could not say it, and a reading item that opens with it was unreadable from the first word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read aloud. Every word has been taught:"
+            },
+            {
+              "kind": "speech",
+              "text": "हम स्टेशन पर मिलेंगे (ham sṭeśan par milẽge)। वे (ve) भी आ रहे हैं।."
+            },
+            {
+              "kind": "speech",
+              "text": "Two sentences. Note what is not in the first one: no word for the in front of sṭeśan, because there is none to put there. An English speaker reads \"we will meet at the station\" and supplies the article themselves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: choosing between the obliques in a real question",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "asking",
+                "form"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "asking: a friend. form: तुम्हें क्या पसंद है?",
+                "asking: a stranger. form: आपको क्या पसंद है?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The frame is the one the track has had since its liking chapter. What is new is that the pronoun in it can now change — it was never a fixed phrase, and the first word was always a pronoun in a case."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"हम स्टेशन पर मिलेंगे (ham sṭeśan par milẽge)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"हम स्टेशन पर मिलेंगे\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what an English reader adds that the Hindi does not contain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what an English reader adds that the Hindi does not contain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the liking question to a friend, then to a stranger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the liking question to a friend, then to a stranger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one sentence about what you and somebody else will do, using ham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one sentence about what you and somebody else will do, using *ham*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What word for the appears before sṭeśan? (None — Hindi has no article.) Which oblique would you use asking a stranger? (Āpko.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

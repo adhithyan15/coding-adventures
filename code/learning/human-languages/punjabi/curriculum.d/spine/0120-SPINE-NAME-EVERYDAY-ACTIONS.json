@@ -3,7 +3,9 @@
     "PA-PATH-011-B",
     "PA-PATH-012-B",
     "PA-PATH-013-B",
-    "PA-PATH-044"
+    "PA-PATH-044",
+    "PA-PATH-046-TIMED",
+    "PA-PATH-047-CONNECTED"
   ],
   "omits": [
     "VERB-DRINK",

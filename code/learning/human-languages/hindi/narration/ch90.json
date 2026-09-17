@@ -1,0 +1,1025 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 90,
+  "title": "Four Adjectives That Always Agree",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:b7846bacfeee9501",
+  "lessons": [
+    {
+      "id": "HI-C82-lambaa",
+      "sequence": 3390,
+      "title": "लंबा (lambā) — tall and long are the same word, and this one bends",
+      "headword": "लंबा",
+      "romanization": "lambā",
+      "gloss": "tall, long — one word for both, because Hindi measures the same distance whether it stands up or lies down",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b1d25c62cb414834",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last chapter gave you four adjectives and not one of them changed its ending. Say आसान and remember why it stayed put. This chapter gives you three that do the opposite, and you can see it coming from the spelling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लंबा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लंबा (lambā) — \"tall,\" and also \"long.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Hindi does not split those two. A person is lambā, a road is lambā, a film is lambā. English keeps three words for one measurement and chooses between them by what the thing is doing: tall if it stands up, long if it lies down, lengthy if it is made of time. Hindi measures the distance and stops there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लंबा (lambā) is Sanskrit लम्ब (lamba), \"hanging down, drooping.\" The idea began as what dangles — and a thing that dangles is measured by how far down it reaches."
+            },
+            {
+              "kind": "speech",
+              "text": "That root travelled. Latin limbus is a hanging border or hem, and English took it twice:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the hanging thing"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: limb. the hanging thing: what hangs off the trunk.",
+                "word: limbo. the hanging thing: the edge, the hem of things."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So लंबा (lambā) and English limb are the same old idea about hanging, arrived at from opposite ends of a continent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: this one ends in -आ, so it bends",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Nothing new here — the shape you already learned, meeting a new word:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "shape",
+                "masculine singular",
+                "feminine"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "shape: ends in -आ. masculine singular: लंबा (lambā). feminine: लंबी.",
+                "shape: ends in a consonant. masculine singular: आसान. feminine: आसान."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "लंबा ends in -आ, so it behaves like काला: lambā for a man, lambī for a woman, lambe for more than one man."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the whole reason the easy-and-difficult lesson and this one belong next to each other. That one gave you four adjectives that never move, and every one of them ended in a consonant. These three all end in -आ, and every one of them moves. Nothing has to be memorised — look at the last letter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"लंबा\" — lambā, tall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"लंबा\" — *lambā*, tall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the form you would use about a woman (lambī)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the form you would use about a woman (*lambī*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"लंबा (lambā) रास्ता\" — a long road, the same word doing the other job",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"लंबा रास्ता\" — a long road, the same word doing the other job]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which English word for an arm or a leg comes from the same root (limb)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which English word for an arm or a leg comes from the same root (*limb*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many English words does लंबा (lambā) cover? (At least three: tall, long, lengthy.) What did the Sanskrit root mean? (Hanging down.) What tells you this adjective will bend? (It ends in -आ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C82-patlaa",
+      "sequence": 3400,
+      "title": "पतला (patlā) — thin, and a root that fell over",
+      "headword": "पतला",
+      "romanization": "patlā",
+      "gloss": "thin — Sanskrit for what has fallen flat, and the word Hindi uses for a thin person, a thin sheet and a thin soup alike",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3099aa7ad53e7d75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say लंबा (lambā) and its feminine form. The next word has the same ending, so you already know what it will do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पतला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पतला (patlā) — \"thin.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It works for a person, for a sheet of paper, and for a soup that has too much water in it. English needs thin, slim, slender and watery for that range; Hindi uses one word and lets the noun decide which English word you would have reached for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पतला (patlā) goes back to Sanskrit पत्र and the root पत् (pat), \"to fall.\" A thin thing is one that has fallen flat — flattened out until there is hardly anything left of it."
+            },
+            {
+              "kind": "speech",
+              "text": "The same root is sitting in two Hindi words you may already recognise:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the falling in it"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: पत्ता (pattā). the falling in it: a leaf — the thing that falls.",
+                "word: patjhaṛ. the falling in it: autumn — literally the leaf-fall."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Autumn in Hindi is named exactly the way American English names it: fall. Two languages that never discussed it reached for the same picture."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the second of the three",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "adjective",
+                "masculine",
+                "feminine"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "adjective: लंबा (lambā). masculine: लंबा (lambā). feminine: लंबी.",
+                "adjective: पतला (patlā). masculine: पतला (patlā). feminine: पतली."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same ending, same behaviour, no exception to learn. This is what a rule that actually works looks like: you were told the shape, and every new word that has the shape does the thing."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"पतला\" — patlā, thin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"पतला\" — *patlā*, thin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the feminine form (patlī)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the feminine form (*patlī*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lambā aur patlā — tall and thin, both bending the same way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lambā aur patlā* — tall and thin, both bending the same way]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what Hindi calls autumn, and what it literally means (patjhaṛ, the leaf-fall)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what Hindi calls autumn, and what it literally means (*patjhaṛ*, the leaf-fall)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did the Sanskrit root पत् mean? (To fall.) What is a thin thing, by that picture? (Something flattened, fallen out flat.) Which English name for autumn matches the Hindi one? (Fall.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C82-motaa",
+      "sequence": 3410,
+      "title": "मोटा (moṭā) — thick, and the word that refuses to be only about people",
+      "headword": "मोटा",
+      "romanization": "moṭā",
+      "gloss": "thick, heavy, stout — the opposite of patlaa across the whole range, from a person to a rope to a book",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5acdf67a5824bf7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say पतला (patlā) and its feminine. The word in this lesson is its opposite, and it ends the same way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मोटा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोटा (moṭā) — \"thick, stout, heavy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Set it against पतला (patlā) and the pair covers the whole range at once:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "thing",
+                "पतला",
+                "मोटा"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "thing: a person. पतला (patlā): slim. मोटा (moṭā): stout.",
+                "thing: a rope. पतला (patlā): thin. मोटा (moṭā): thick.",
+                "thing: a book. पतला (patlā): slim. मोटा (moṭā): fat.",
+                "thing: a voice. पतला (patlā): reedy. मोटा (moṭā): deep."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That last row is the one to keep. A मोटी आवाज़ is a deep voice, not a fat one — the metaphor runs from the thickness of the string to the lowness of the note, exactly as it does on any instrument."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोटा (moṭā) is from Sanskrit मूर्त by way of Prakrit, carrying the sense of something solid, with body to it — a shape that has taken form rather than staying an outline."
+            },
+            {
+              "kind": "speech",
+              "text": "Hindi extends it to mean rough or approximate, which follows from the same picture: a मोटा (moṭā) estimate is one drawn with a thick line rather than a thin one, so it has no fine detail. English does this with broadly, and the metaphor is identical."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: all three of them, and the rule holds",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "adjective",
+                "masculine",
+                "feminine"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "adjective: लंबा (lambā). masculine: लंबा (lambā). feminine: लंबी.",
+                "adjective: पतला (patlā). masculine: पतला (patlā). feminine: पतली.",
+                "adjective: मोटा (moṭā). masculine: मोटा (moṭā). feminine: मोटी."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three words, one ending, one behaviour. Against the four from the last chapter — none of which ended in -आ and none of which moved — that is the cleanest demonstration this book can give you that the ending is the rule."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"मोटा\" — moṭā, thick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"मोटा\" — *moṭā*, thick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the feminine form (moṭī)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the feminine form (*moṭī*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patlā aur moṭā — the pair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patlā aur moṭā* — the pair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what a मोटी आवाज़ is (a deep voice)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what a **मोटी आवाज़** is (a deep voice)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मोटा (moṭā) mean when it describes a voice? (Deep.) And when it describes an estimate? (Rough, approximate.) Does it bend? (Yes — it ends in -आ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C82-naataa",
+      "sequence": 3415,
+      "title": "नाटा (nāṭā) — the gap that a word you already knew could not fill",
+      "headword": "नाटा",
+      "romanization": "nāṭā",
+      "gloss": "short of stature — the word chhotaa cannot do, because chhotaa about a person means younger",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0fe29c2d724e162f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have लंबा (lambā) for tall. Reach for its opposite using a word you already know, and then read on to find out why that reach does not work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाटा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाटा (nāṭā) — \"short, of a person's height.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The obvious guess is choṭā, and the obvious guess is wrong — not because it is rude, but because it means something else."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the clearest case in the chapter of a word existing because another word is busy:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "about a thing",
+                "about a person"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "word: choṭā. about a thing: small. about a person: younger.",
+                "word: नाटा (nāṭā). about a thing: —. about a person: short in height."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Choṭā bhāī is a younger brother regardless of how tall he is. Hindi took the size word for a person's age and left the height meaning without an owner, and नाटा (nāṭā) is what filled the hole."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit नत (nata) is behind it, meaning bent, bowed, stooping — the same root as namaste, where the bowing is a greeting. A nāṭā person is pictured as one closer to the ground."
+            },
+            {
+              "kind": "speech",
+              "text": "A note on using it. नाटा (nāṭā) is plain rather than polite, and about a person it can land as blunt. When you want neutral, Hindi says qad meṅ choṭā, \"short in height\" — which spells out the height part that choṭā on its own leaves ambiguous. Recognise नाटा (nāṭā); reach for the longer phrase."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the fourth of four, and the rule has not moved",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "adjective",
+                "masculine",
+                "feminine"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "adjective: लंबा (lambā). masculine: लंबा (lambā). feminine: लंबी.",
+                "adjective: पतला (patlā). masculine: पतला (patlā). feminine: पतली.",
+                "adjective: मोटा (moṭā). masculine: मोटा (moṭā). feminine: मोटी.",
+                "adjective: नाटा (nāṭā). masculine: नाटा (nāṭā). feminine: नाटी."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four words for the shape of a person, all four ending in -आ, all four bending. You can now answer a question about anyone's build without once needing to remember which words agree."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"नाटा\" — nāṭā, short",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"नाटा\" — *nāṭā*, short]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the feminine form (nāṭī)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the feminine form (*nāṭī*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lambā and its real opposite, rather than the one you first reached for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lambā* and its real opposite, rather than the one you first reached for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the neutral phrase for short in height (qad meṅ choṭā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the neutral phrase for short in height (*qad meṅ choṭā*)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why can choṭā not mean short about a person? (About a person it means younger.) What did the Sanskrit root behind नाटा (nāṭā) mean? (Bent or bowed — the same idea as the bow in namaste.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C82-repaso-shareer",
+      "sequence": 3420,
+      "title": "chhah ākār — six shapes, and the two that were only ever about things",
+      "headword": "बड़ा, छोटा, लंबा, नाटा, पतला, मोटा",
+      "romanization": "baṛā, choṭā, lambā, nāṭā, patlā, moṭā",
+      "gloss": "six shapes — the two you had for things and the four now available for people, all six bending the same way",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17e99d8f407a0c08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the four new adjectives with their feminine forms before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: which ones a person can be",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You had two size words already, and they were taught about objects. The four new ones are the ones a person gets described with:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "adjective",
+                "feminine",
+                "used of a person?"
+              ],
+              "columns": 3,
+              "rowCount": 6,
+              "utterances": [
+                "adjective: बड़ा. feminine: बड़ी. used of a person?: as elder, not as large.",
+                "adjective: choṭā. feminine: choṭī. used of a person?: as younger, not as small.",
+                "adjective: लंबा (lambā). feminine: लंबी. used of a person?: yes — tall.",
+                "adjective: नाटा (nāṭā). feminine: नाटी. used of a person?: yes — short in height.",
+                "adjective: पतला (patlā). feminine: पतली. used of a person?: yes — thin.",
+                "adjective: मोटा (moṭā). feminine: मोटी. used of a person?: yes — stout."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The first two rows are the ones worth pausing on. बड़ा and choṭā applied to a person almost always mean older and younger, not big and small — baṛā bhāī is an elder brother, whatever his height. So the track could size a box long before it could describe a body, which is why these four were needed — and why nāṭā had to be a separate word rather than a reuse of choṭā."
+            },
+            {
+              "kind": "speech",
+              "text": "All six end in -आ. All six bend. That is not a coincidence: size and shape words are old inherited vocabulary, and inherited Hindi adjectives are the ones that kept the ending."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all six in the masculine, then all six in the feminine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all six in the masculine, then all six in the feminine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which two mean older and younger when they describe a person",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which two mean *older* and *younger* when they describe a person]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lambā aur patlā, then the same about a woman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lambā aur patlā*, then the same about a woman]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one that also means deep, about a voice (moṭā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one that also means *deep*, about a voice (*moṭā*)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बड़ा भाई mean — a big brother or an elder one? (An elder one.) Which of the six bend? (All of them: every one ends in -आ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C82-sintesis-shareer",
+      "sequence": 3430,
+      "title": "वह लंबी है (vah lambī hai) — the sentence that makes you choose the ending",
+      "headword": "वह लंबी है",
+      "romanization": "vah lambī hai",
+      "gloss": "describing a person out loud, where the adjective has to agree before the sentence can finish",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cec503a4820e126e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say लंबा (lambā) and पतला (patlā). In a list they sit still. In a sentence about a real person they will not."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending is chosen by who you are talking about",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "about",
+                "sentence",
+                "the ending"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "about: a man. sentence: वह लंबा (lambā) है. the ending: -आ.",
+                "about: a woman. sentence: वह लंबी है (vah lambī hai). the ending: -ई."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "वह does not change. है does not change. The adjective carries the whole load, which is the opposite of English, where he and she do the work and tall never moves."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth saying plainly: in English the pronoun tells you the gender and the adjective is inert. In Hindi the pronoun is silent about it and the adjective tells you. A listener who misses the ending has missed the information."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read aloud. Every word has been taught:"
+            },
+            {
+              "kind": "speech",
+              "text": "वह लंबी है (vah lambī hai)। वह पतली है। वह लंबा (lambā) है। वह मोटा (moṭā) है। वह नाटा (nāṭā) है।."
+            },
+            {
+              "kind": "speech",
+              "text": "Five sentences, two people, and the only thing telling you which is which is the last letter of the adjective."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"वह लंबा (lambā) है\" and then \"वह लंबी है (vah lambī hai)\", hearing only the ending move",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"वह लंबा है\" and then \"वह लंबी है\", hearing only the ending move]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same pair with पतला (patlā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same pair with **पतला**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same pair with मोटा (moṭā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same pair with **मोटा**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same pair with नाटा (nāṭā)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same pair with **नाटा**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two sentences describing someone you know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two sentences describing someone you know]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In वह लंबी है (vah lambī hai), which word tells you the person is a woman? (The adjective — वह is the same for both.) What would the masculine sentence be? (वह लंबा (lambā) है.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

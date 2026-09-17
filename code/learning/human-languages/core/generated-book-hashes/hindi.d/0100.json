@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:990a97baedc1e40d",
+  "lessonIds": [
+    "HI-C92-thoda",
+    "HI-C92-achchha-buraa",
+    "HI-C92-se-comparison",
+    "HI-C92-kitna",
+    "HI-C92-kitna-achchha",
+    "HI-C92-repaso-maatra",
+    "HI-C92-sintesis-maatra"
+  ],
+  "tex": "hindi/book/chapters/ch100-maatra.tex"
+}

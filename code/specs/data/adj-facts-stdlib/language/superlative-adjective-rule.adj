@@ -23,8 +23,8 @@
 %       % one_syllable_adjective
 %
 % Provenance: quoted verbatim from Grammarly's "What Are Superlative
-% Adjectives? Definition and Examples" article, which states each rule
-% directly:
+% Adjectives? Definition and Examples" article, which states rules 1 and 2
+% directly and rule 3 across two sentences (see below):
 %
 %     rule (this table's atom label)             description (this table's atom label)      rule quote (verbatim)
 %     -------------------------------------------  ------------------------------------------  --------------------------------------------------------------------------------
@@ -35,10 +35,36 @@
 %                                                                                                  last consonant and then add –est."
 %     adjective_ending_in_y                         change_y_to_i_before_est                     "To make the superlative, first change the y into an i and then add –est."
 %
-% WebFetch-verified before writing (twice, across two cycles of this loop —
-% the second pass specifically re-confirmed exact wording after an initial
-% fetch surfaced a bullet-list fragment for a DIFFERENT, ultimately
-% rejected rule about long adjectives). `trust consensus` — Grammarly is a
+% EACH ROW CARRIES THE PROVENANCE ITS SENTENCES SUPPORT (ADJ-TABLES RS-5e,
+% #14986). The envelope used to be rule 1's own sentence, the primary source
+% of all three answers. Rules 1 and 2 each have one sentence naming both the
+% spelling pattern and the action, so each row takes it as its `source`.
+% Rule 3's action sentence, quoted above, names its pattern only as "the y";
+% the pattern is the sentence before it, in the same paragraph:
+%
+%     "Adjectives with either one or two syllables have special spelling
+%      rules if they end in -y."
+%
+% So rule 3 `cites` both sentences, and the envelope stays its primary
+% source. The envelope is now the article's framing sentence, which names
+% no rule:
+%
+%     "You can make any adjective into a superlative."
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the same
+% host returns 404), with inline tags removed without a space and only ASCII
+% whitespace collapsed: the three quotes above, the pattern sentence and the
+% envelope each occur exactly once, each inside a `<p>`. The pattern sentence
+% writes "-y" with HYPHEN-MINUS, although the section heading above it
+% writes "–y" with an EN DASH; the row carries the sentence's own
+% character. Every row's page is the envelope's, so no row restates
+% `locator` or `trust` (ADJ-TABLES §4).
+%
+% The original authoring note said the quotes were "WebFetch-verified before
+% writing (twice, across two cycles of this loop ...)"; that note is superseded
+% by the raw-page measurement above, since WebFetch summaries are not verbatim
+% evidence.
+% `trust consensus` — Grammarly is a
 % reputable, widely-cited grammar-content company, the same tier this
 % stdlib already reserves for other non-.gov language sources and the same
 % source family already cited by `sentence-type.adj`/`part-of-speech.adj`/
@@ -56,11 +82,21 @@
 table superlative_adjective_rule {
     columns rule, description
 
-    row (one_syllable_adjective, add_est_suffix)
-    row (one_syllable_consonant_vowel_consonant, double_final_consonant_before_est)
-    row (adjective_ending_in_y, change_y_to_i_before_est)
+    row (one_syllable_adjective, add_est_suffix) {
+        source "If an adjective has only one syllable, most of the time you can simply add the suffix –est to the end of the word without changing the spelling."
+    }
+    row (one_syllable_consonant_vowel_consonant, double_final_consonant_before_est) {
+        source "If the last three letters of a one-syllable adjective follow a consonant-vowel-consonant format, like big or thin, you have to double the last consonant and then add –est."
+    }
+    row (adjective_ending_in_y, change_y_to_i_before_est) {
+        cites "Adjectives with either one or two syllables have special spelling rules if they end in -y." locator "https://www.grammarly.com/blog/parts-of-speech/superlative-adjectives/"
+        cites "To make the superlative, first change the y into an i and then add –est." locator "https://www.grammarly.com/blog/parts-of-speech/superlative-adjectives/"
+    }
 
-    source "If an adjective has only one syllable, most of the time you can simply add the suffix –est to the end of the word without changing the spelling."
+    % THE ENVELOPE WAS RULE 1'S OWN SENTENCE, the primary source of all three
+    % answers. It is now a framing sentence that names no rule; it stays
+    % primary for the `cites` row (rule 3).
+    source "You can make any adjective into a superlative."
     locator "https://www.grammarly.com/blog/parts-of-speech/superlative-adjectives/"
     trust consensus
 }

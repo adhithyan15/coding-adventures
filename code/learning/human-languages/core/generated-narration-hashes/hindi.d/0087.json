@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:8340106cc89e5095",
+  "lessonIds": [
+    "HI-C79-dopahar-raat-ka-khana"
+  ],
+  "voiceLessons": 1,
+  "drivablePrefix": 1,
+  "text": "hindi/narration/ch87.txt",
+  "json": "hindi/narration/ch87.json",
+  "textHash": "fnv1a64:751431871b2525f4",
+  "jsonHash": "fnv1a64:4f301f7422863f53",
+  "findings": []
+}

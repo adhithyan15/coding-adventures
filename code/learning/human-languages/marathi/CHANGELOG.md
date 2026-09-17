@@ -1,5 +1,162 @@
 # Changelog
 
+## Chapter 65 — the vowels that could not start a word
+
+`MR-A1-OR-12`: the independent **ई**, **ओ**, **ऐ** and **औ**. Marathi A1
+coverage **165/301 → 166/301**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 165/301 → **166/301 (55%)** |
+| atoms taught | 327 → 331 |
+| measurable lessons | 339 → 344 |
+| writing-practice lessons | 151 → 156 |
+| `forwardReferences` | unchanged |
+| `scriptClosureViolations` | unchanged (0) |
+| `durationViolations` | unchanged (0) |
+| `atomsNeverRevisited` | unchanged |
+| reinforcement-window misses | 362 → 373 |
+
+### The gap was in the position, not the sound
+
+Every one of these four vowels **already had a sign the reader could draw** —
+**ी** and **ो** since the opening chapter, **ै** and **ौ** from chapters 59 and
+56. What the reader could not do was put any of the four at the front of a word.
+
+That is what made the gap easy to miss. A vowel this script writes in two places
+has to be taught in both, and **teaching the sign is not teaching the letter**:
+the two shapes look nothing alike and are learned separately. The chapter is
+four short lessons because the rule stays fixed while the shapes change, so the
+shapes are what is worth practising.
+
+One rule decides between them, and it is stated in the first lesson and repeated
+in each: a consonant in front of the sound calls for the sign, nothing in front
+calls for the letter.
+
+### It was blocking a number nobody would look at twice
+
+**ऐंशी** — *eighty* — opens with the independent **ऐ**, so it could not be read
+at all. A number in the middle of an ordinary counting sequence looks like plain
+vocabulary, and nothing about it announces that one of its four shapes had never
+been drawn.
+
+The way such a gap gets found is by checking a word's letters against the ones a
+reader has met, rather than by looking at it and feeling that it seems familiar.
+**औषध**, *medicine*, is the other word this chapter makes readable.
+
+### Kept distinct from the signs
+
+`MR-A1-OR-14` is those same **ai** and **au** signs and closed at chapters 56 and
+59. The two points stay separate on purpose, and each lesson here sets its letter
+beside its sign so the reader meets the contrast rather than a repetition.
+
+### The fifth lesson, again for a measured reason
+
+`MR-R65-standing-vowels` introduces nothing. Without it the fourth vowel would
+have been an atom introduced by the chapter's last lesson, which nothing can
+revisit. It carries the chapter payoff, assessing all four new atoms from cold.
+
+Script closure stays clean — 0 violations, 0 never-taught glyphs. Every example
+word was checked against the taught inventory rather than assumed. Reinforcement
+misses go 362 → 373, the structural cost of a chapter at the end of a corpus.
+
+135 exam points remain open. Coverage means the teaching exists, not that a
+reader scores.
+
+
+## Chapter 64 — rows closed, and a mark you read but do not write
+
+Three exam points, four lessons. Marathi A1 coverage **162/301 → 165/301 (55%)**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 162/301 → **165/301 (55%)** |
+| atoms taught | 324 → 327 |
+| measurable lessons | 335 → 339 |
+| writing-practice lessons | 147 → 151 |
+| `forwardReferences` | unchanged |
+| `scriptClosureViolations` | unchanged (0) |
+| `durationViolations` | unchanged (0) |
+| `atomsNeverRevisited` | unchanged |
+| reinforcement-window misses | 352 → 362 |
+
+### Two letters that were the last of their rows
+
+`MR-A1-OR-05` wanted **ढ**, the fifth of the curled row, and `MR-A1-OR-07`
+wanted **फ**, the gap in the lip row. One script lesson each — the route
+`MR-A1-OR-06` already took at chapter 39.
+
+With **फ** the script has **five plain-and-aspirated pairs and no stop left
+without a partner**, which is worth saying out loud in the chapter: from here a
+plain letter has a predictable partner rather than a shape to memorise.
+
+Each lesson leads on the thing that actually costs a reader rather than on the
+stroke order. For **ढ** that is **the romanization**: ध and ढ are both written
+*dh* and are different letters in different rows, so the spelling meant to help
+tells them apart worse than the page does. For **फ** it is **the drift** — in
+borrowed words such as **फोन**, many speakers give it the sound of an English
+*f* rather than the puffed *p* the row predicts, so one shape covers two sounds.
+
+### The first mark taught for recognition rather than production
+
+`MR-A1-PU-01` is the **danda**. Everything printed in this track ends its
+sentences with a full stop, because that is what Marathi does now — and a
+candidate who had never seen the upright stroke met it on the first authentic
+notice with no way to tell whether the sentence had ended or the printing had
+gone wrong.
+
+The lesson names the split explicitly: **you keep writing the full stop, and you
+learn to read the danda** in poetry, older printing, and signs nobody has reset.
+That distinction recurs later in the track, so it is stated here rather than
+left implied.
+
+### The fourth lesson is there for a measured reason
+
+`MR-R64-rows-closed` is a cold-retrieval review that introduces nothing. Without
+it the danda would have been an atom introduced by the chapter's **last** lesson,
+which nothing can revisit, and `atomsNeverRevisited` would have moved on its own.
+It also carries the chapter payoff, assessing all three new atoms with no model
+on the page.
+
+### What the clean sheet cost to keep
+
+Marathi's script closure was **clean before this chapter** — 0 violations, 0
+never-taught glyphs, 50 taught — and stays clean. Every example word in the four
+lessons (**ढग**, **फोन**) uses only those 50 glyphs plus the letter being taught,
+checked rather than assumed.
+
+The debt was verified the same way, under the rule that a glyph counts as taught
+only when its script lesson's headword is a **glyph inventory**. The helper was
+sanity-checked against letters the exam notes claim *are* taught and found every
+one at the chapter implied. The notes were accurate.
+
+Reinforcement-window misses go 352 → 362 — the structural cost of adding a
+chapter at the end of a corpus, recorded rather than explained away.
+
+136 exam points remain open. Coverage means the teaching exists, not that a
+reader scores.
+
+
+## Chapter 63 — the writing paper, with a clock
+
+The seventh and last writing stage. Marathi already proved the other six; this
+is the one that asks whether the writing survives conditions the candidate does
+not choose. One lesson, no new atoms, and the track is now complete at **every
+level** from pre-A1 to C2 — six level-debts closed by one page.
+
+**Every number is read out of `task-shapes/a1.json`** rather than invented: 20
+minutes, two tasks, a six-to-eight-field form worth 40 points, and a 30–40 word
+message to a named reader worth 60.
+
+The lesson has the learner read that split before writing: the message is worth
+more and is shorter, so a perfected form field is time taken from the part that
+scores. Seven minutes, then thirteen.
+
+And two habits only a clock can teach — stop mid-line when time is up, because
+*an unfinished paper is information and an untimed one is not*; and check the
+form for **blanks before mistakes**, since a wrong field can still earn and an
+empty one cannot.
+
 ## The first paragraph clears the whole published A1 reading row
 
 The reading-reach report exposed the smallest honest next step after Latin and

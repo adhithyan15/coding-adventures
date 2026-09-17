@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 63,
+  "title": "Writing --- With A Clock",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:413d513369d5abf7",
+  "lessons": [
+    {
+      "id": "MR-W10-a1-con-reloj",
+      "sequence": 2590,
+      "title": "The same six fields, with a clock",
+      "headword": "(timed)",
+      "romanization": "",
+      "gloss": "the A1 writing paper's own clock, its own two tasks, and its own published lengths",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:90083efbe5d2b562",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have done this writing with as long as you liked."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A task you can only do untimed is not yet a task you can do. Here are the conditions the assessment actually publishes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — timed production",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What the contract publishes. This track's A1 writing paper runs 20 minutes and holds two tasks:"
+            },
+            {
+              "kind": "speech",
+              "text": "a practical form asking for six to eight completed fields, worth 40 of the paper's 100 points;"
+            },
+            {
+              "kind": "speech",
+              "text": "a message for a named reader and a stated purpose, 30 to 40 words, worth the other 60."
+            },
+            {
+              "kind": "speech",
+              "text": "Those numbers are read out of task-shapes/a1.json, the same file the assessment contract points at. They are not invented here."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what the split says before you write a word: the message is worth more than the form, and it is the shorter of the two. Time spent perfecting a field is time taken from the part that scores."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the form its share and no more: seven minutes, starting now. Fill every field. A blank field scores nothing and cannot be argued with."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now the message: thirteen minutes, thirty to forty words, to one named reader."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When the time is up, stop even if a line is unfinished. An unfinished paper is information. An untimed one is not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Count the words in your message. Under thirty and the task is half done; well past forty and you spent time the paper did not give you. Both are worth learning from your own clock rather than from an examiner."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then check the form, and check it for blanks before mistakes. A field with a wrong answer can still earn something; a field left empty cannot."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This is the last of the seven writing stages. Everything before it asked you to produce the language. This one asks whether you can produce it when the conditions are not yours to choose — which is the only version of the question an assessment ever asks."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

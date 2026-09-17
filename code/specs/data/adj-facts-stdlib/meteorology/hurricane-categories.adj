@@ -90,11 +90,35 @@
 %     "Catastrophic damage will occur: A high percentage of framed homes will be
 %      destroyed, with total roof failure and wall collapse."
 %
-% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
-% `trust` below hold the single cleanest span: the NHC statement that fixes the
-% category-1 row (category_1 → some_damage). Every OTHER row's per-fact source
-% and verbatim span is listed above, so each descriptor remains independently
-% checkable. All spans are from the same NOAA / National Hurricane Center page,
+% The five spans quoted above are the row `source` values themselves, so each
+% descriptor is checkable from the row that states it rather than from a list
+% in this header.
+%
+% EACH ROW CARRIES ITS OWN SENTENCE (ADJ-TABLES RS-5e, #14986). The
+% envelope used to be the category-1 span, so a category-3, -4 or -5
+% answer was warranted primarily by a sentence about category 1, and the
+% other four spans reached no answer at all. Each row now carries the NHC
+% sentence stating its own damage phrase, and the envelope is the page's
+% scale-defining sentence, which names no category and no damage value:
+%
+%     "The Saffir-Simpson Hurricane Wind Scale estimates potential property
+%      damage." -- the page's own scale-defining sentence
+%
+% THE HONEST DUPLICATE SURVIVES. category_4 and category_5 still share the
+% value `catastrophic_damage`, because the page opens both paragraphs with
+% "Catastrophic damage will occur." -- but their SPANS differ, so each row
+% now cites the paragraph that is actually about it rather than both
+% answers sharing one sentence.
+%
+% Measured 2026-09-15 on the raw page (HTTP 200; a nonsense path on the
+% same host returns 404 and holds none of these spans), tags removed
+% without a space and only ASCII whitespace collapsed: each row's span
+% occurs exactly once, inside one `<td>`, scripts set aside and over the
+% whole file; the envelope occurs exactly once, inside one `<p>`, with no
+% `<head>` copy. Every row's page is the envelope's, so no row restates a
+% `locator` line or a `trust` tier.
+%
+% All spans are from the same NOAA / National Hurricane Center page,
 % a primary U.S. government source, so `trust authoritative`.
 % (See ../README.md; feedback_nothing_human_authored,
 % feedback_adj_only_shipped_artifacts.)
@@ -103,13 +127,23 @@
 table damage_level {
     columns category, descriptor
 
-    row (category_1, some_damage)          % "Very dangerous winds will produce some damage"
-    row (category_2, extensive_damage)     % "Extremely dangerous winds will cause extensive damage"
-    row (category_3, devastating_damage)   % "Devastating damage will occur"
-    row (category_4, catastrophic_damage)  % "Catastrophic damage will occur" (category 4 paragraph)
-    row (category_5, catastrophic_damage)  % "Catastrophic damage will occur" (category 5 paragraph)
+    row (category_1, some_damage) {
+        source "Very dangerous winds will produce some damage: Well-constructed frame homes could have damage to roof, shingles, vinyl siding and gutters."
+    }
+    row (category_2, extensive_damage) {
+        source "Extremely dangerous winds will cause extensive damage: Well-constructed frame homes could sustain major roof and siding damage."
+    }
+    row (category_3, devastating_damage) {
+        source "Devastating damage will occur: Well-built framed homes may incur major damage or removal of roof decking and gable ends."
+    }
+    row (category_4, catastrophic_damage) {
+        source "Catastrophic damage will occur: Well-built framed homes can sustain severe damage with loss of most of the roof structure and/or some exterior walls."
+    }
+    row (category_5, catastrophic_damage) {
+        source "Catastrophic damage will occur: A high percentage of framed homes will be destroyed, with total roof failure and wall collapse."
+    }
 
-    source "Very dangerous winds will produce some damage: Well-constructed frame homes could have damage to roof, shingles, vinyl siding and gutters."
+    source "The Saffir-Simpson Hurricane Wind Scale estimates potential property damage."
     locator "https://www.nhc.noaa.gov/aboutsshws.php"
     trust authoritative
 }

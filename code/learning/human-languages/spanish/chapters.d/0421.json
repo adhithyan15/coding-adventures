@@ -1,0 +1,22 @@
+{
+  "chapter": 421,
+  "title": "The Actor and the Actress",
+  "label": "ch:actor-actriz",
+  "canDo": "I can name the actor and the actress, say why the feminine is actriz rather than actora, and ask who is in a film rather than only what the film is.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "ES-C421-sintesis-espectaculo",
+    "kind": "task",
+    "summary": "Ask who is in the film and answer with a person rather than a thing, choosing the article from the person's gender and not from the word's ending.",
+    "assesses": [
+      "ES-LEX-C421-ARTS-01",
+      "ES-LEX-C421-ARTS-02",
+      "ES-LEX-C420-ARTS-01",
+      "ES-LEX-C354-WHERE-28",
+      "ES-LEX-PELICULA"
+    ],
+    "note": "These two words close A1-NE18-06 (cinema and theatre). The point was left open on purpose in chapter 420: cine, pelicula and teatro were already taught, and wiring the probe on those three while actor and actriz were absent would have repeated the over-claim a review blocked on A1-NE06-05. The chapter carries a review lesson and a synthesis lesson after the two word lessons, budgeted rather than discovered, because the last atom introduced in a track has nowhere to be retrieved and the reinforcement criterion then falls short."
+  }
+}

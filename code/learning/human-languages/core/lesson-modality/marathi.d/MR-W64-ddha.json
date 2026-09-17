@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-W64-ddha",
+    "language": "marathi",
+    "chapter": 64,
+    "sequence": 2600,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4d10f24c2a6cd8d4",
+    "detachableSegments": [
+      "Script",
+      "Writing: guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

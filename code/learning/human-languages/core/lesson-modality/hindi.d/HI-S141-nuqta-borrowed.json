@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S141-nuqta-borrowed",
+    "language": "hindi",
+    "chapter": 61,
+    "sequence": 2265,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8798dd916b74a4fb",
+    "detachableSegments": [
+      "Script you'll notice: ज़ फ़ ख़ क़",
+      "Script: words you already say",
+      "Writing: the dotted four — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

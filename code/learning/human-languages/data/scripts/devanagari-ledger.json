@@ -429,6 +429,32 @@
           "lesson": "HI-C14-ritu"
         }
       ]
+    },
+    {
+      "position": 26,
+      "glyph": "थ",
+      "codePoint": "U+0925",
+      "unicodeName": "DEVANAGARI LETTER THA",
+      "kind": "letter",
+      "family": null,
+      "familySource": null,
+      "unlocks": [
+        {
+          "word": "हाथ",
+          "romanization": "hāth",
+          "lesson": "HI-C13-haath"
+        },
+        {
+          "word": "माथा",
+          "romanization": "māthā",
+          "lesson": "HI-C53-forehead"
+        },
+        {
+          "word": "थाली",
+          "romanization": "thālī",
+          "lesson": "HI-C57-platter"
+        }
+      ]
     }
   ]
 }

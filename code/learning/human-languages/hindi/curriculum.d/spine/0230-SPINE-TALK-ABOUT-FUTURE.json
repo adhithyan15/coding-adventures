@@ -1,7 +1,7 @@
 {
-  "segments": [],
-  "omits": [
-    "VERB-FUTURE"
+  "segments": [
+    "HI-PATH-96-FUTURE"
   ],
+  "omits": [],
   "relocates": {}
 }
