@@ -1,15 +1,16 @@
 {
   "language": "hindi",
   "chapter": 26,
-  "sourceHash": "fnv1a64:2f9ee743eb28668b",
+  "sourceHash": "fnv1a64:a3961de403203447",
   "lessonIds": [
-    "HI-C26-raat"
+    "HI-C26-raat",
+    "HI-S139-letter-pha"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "hindi/narration/ch26.txt",
   "json": "hindi/narration/ch26.json",
-  "textHash": "fnv1a64:586d43eb6258cc41",
-  "jsonHash": "fnv1a64:d69df3a57fbb8e00",
+  "textHash": "fnv1a64:2e3b2fd7e11c1d07",
+  "jsonHash": "fnv1a64:5e26fdcbc1ad9ec6",
   "findings": []
 }

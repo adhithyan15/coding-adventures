@@ -1,9 +1,10 @@
 {
   "language": "hindi",
   "chapter": 26,
-  "sourceHash": "fnv1a64:3f01f1b4e258bad8",
+  "sourceHash": "fnv1a64:2229021d0280f8ca",
   "lessonIds": [
-    "HI-C26-raat"
+    "HI-C26-raat",
+    "HI-S139-letter-pha"
   ],
   "tex": "hindi/book/chapters/ch26-night.tex"
 }

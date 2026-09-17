@@ -47,7 +47,9 @@
     "HI-W12-ba",
     "HI-W12-da-retroflex",
     "HI-S136-letter-gha",
-    "HI-S137-letter-dha-retroflex"
+    "HI-S137-letter-dha-retroflex",
+    "HI-S138-letter-ga",
+    "HI-S139-letter-pha"
   ],
   "before": [],
   "inline": [

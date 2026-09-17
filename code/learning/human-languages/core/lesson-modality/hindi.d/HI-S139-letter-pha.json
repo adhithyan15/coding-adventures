@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S139-letter-pha",
+    "language": "hindi",
+    "chapter": 26,
+    "sequence": 775,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5d72d0ad171ad1ef",
+    "detachableSegments": [
+      "Script you'll notice: फ",
+      "Script: four pairs, one idea",
+      "Writing: फ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,9 +1,10 @@
 {
   "language": "hindi",
   "chapter": 25,
-  "sourceHash": "fnv1a64:7beb736a69225b20",
+  "sourceHash": "fnv1a64:1c498cd164c76357",
   "lessonIds": [
-    "HI-C25-din"
+    "HI-C25-din",
+    "HI-S138-letter-ga"
   ],
   "tex": "hindi/book/chapters/ch25-day.tex"
 }
