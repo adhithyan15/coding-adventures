@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C82-greeting-register",
+    "language": "malayalam",
+    "chapter": 82,
+    "sequence": 2860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:258e3396756e3780"
+  },
+  "findings": []
+}

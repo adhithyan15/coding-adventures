@@ -1,0 +1,15 @@
+{
+  "id": "ML-PATH-82-ADDRESS",
+  "spine_node": "SPINE-MEET-GREET",
+  "lessons": [
+    "ML-C82-chettaa",
+    "ML-C82-chechi-address",
+    "ML-C82-greeting-register",
+    "ML-R82-address-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-82-ADDRESS"
+  ],
+  "after": []
+}

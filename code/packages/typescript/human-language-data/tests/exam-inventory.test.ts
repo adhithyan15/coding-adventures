@@ -2113,8 +2113,19 @@ describe("the committed Malayalam A1 inventory", () => {
     // akale opens with a and the distal deictic prefix is a-, but here it is part of
     // the word, and the test is whether the other members exist (no ikale, no ekale,
     // so no set). Verified before writing: all three new words returned ZERO files.
-    expect(coverage.covered).toBe(183);
-    expect(coverage.unmapped).toBe(60);
+    // 183 -> 186: ML-A1-S-07 (the vocative), ML-A1-F-35 (addressing somebody) and
+    // ML-A1-REG-05 (which greeting, when). The first two were cheaper than their
+    // notes suggested because the WORDS were already there: chettan and chechi have
+    // been taught since the family chapter, and in Kerala the sibling words are used
+    // outward -- you address a stranger as KIN. What was new is the CALLING form: a
+    // word ending in -an swaps it for -aa, so chettan becomes chettaa; chechi has no
+    // -an to swap and stands as it is. REG-05 teaches NO WORD AT ALL: all five
+    // greetings were already taught and the lesson states the rule the corpus's own
+    // register fields already encode -- namaskaram is respectful-neutral and never
+    // wrong, the four shubha greetings are formal and mostly read, suprabhaatham is
+    // the everyday exception inside its own family.
+    expect(coverage.covered).toBe(186);
+    expect(coverage.unmapped).toBe(57);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2157,7 +2168,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 183/243 points covered (75%)",
+      "malayalam A1 (partial inventory): 186/243 points covered (77%)",
     );
   }, 60_000);
 });

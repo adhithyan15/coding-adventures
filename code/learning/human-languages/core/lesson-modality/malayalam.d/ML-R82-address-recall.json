@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R82-address-recall",
+    "language": "malayalam",
+    "chapter": 82,
+    "sequence": 2870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41ce3a17addf887d"
+  },
+  "findings": []
+}

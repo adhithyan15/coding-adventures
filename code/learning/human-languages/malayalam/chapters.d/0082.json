@@ -1,0 +1,18 @@
+{
+  "chapter": 82,
+  "title": "Opening A Conversation",
+  "label": "ch:ml-address",
+  "canDo": "I can call out to somebody I have never met, and I know which of my greetings to use with them.",
+  "payoff": {
+    "lesson": "ML-R82-address-recall",
+    "kind": "production",
+    "summary": "From cold: both calling words, the ending that makes one of them and why the other has nothing to change, and the rule for choosing among the five greetings already owned.",
+    "assesses": [
+      "ML-LEX-C82-ADDRESS-01",
+      "ML-LEX-C82-ADDRESS-02",
+      "ML-CONCEPT-C82-VOCATIVE-01",
+      "ML-CONCEPT-C82-GREETING-REGISTER-01"
+    ],
+    "note": "The chapter introduces exactly these four atoms and the payoff assesses all four. The register lesson teaches NO word: all five greetings were already taught, and what was missing was which of them a person actually says."
+  }
+}
