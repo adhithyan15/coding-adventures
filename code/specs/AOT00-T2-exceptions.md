@@ -303,3 +303,224 @@ Ship this spec (spec-first). Then, gated on T1's frame-descriptor format existin
    this spec, gated by T7.
 
 Each subsequent rung/back-end is its own PR under this spec, in the roadmap's T2 slot.
+
+---
+
+## 12. Implementation sequencing (execution plan, 2026-09)
+
+This section supersedes §11's sketch with a concrete, slice-by-slice plan, mirroring
+how this initiative's T6 (non-ALGOL language completeness) track was actually
+executed — each slice is independently mergeable, individually tested, and gated by
+T7 agreement before the next one starts. **Do not attempt more than one slice per
+PR.** A slice's status is tracked inline below (`PLANNED` / `LANDED — PR #N`) and
+this section must be updated when a slice lands, so the plan stays truthful about
+what's actually shipped vs. still pending — the same discipline T1's own spec
+correction (top of `AOT00-T1-precise-gc.md`) models.
+
+### Why this order (recap of §5's per-backend split, turned into a PR ladder)
+
+§5 already establishes that four of seven engines (VM, JIT, JVM, CLR) either model
+unwinding as ordinary control flow or delegate to a host exception mechanism, while
+three (NativeAot, LLVM, WASM) need real unwind-table emission sharing T1's frame
+descriptor. That structural fact drives the ladder: get the *ops* and the *reference
+semantics* (VM/JIT) proven correct and differential-tested first — cheaply, with no
+codegen — then propagate to the delegating hosts (JVM/CLR, also cheap — they hand
+unwinding to a GC/runtime that already has it), and do the genuinely new engineering
+(NativeAot/LLVM/WASM unwind tables) last, each as its own PR, because that is where
+the shared-stack-walker risk with T1's GC lives and where a mistake is most
+expensive to unwind (pun intended) if it ships broken.
+
+### Slice 1 — IIR ops + exception value model (THIS PR)
+
+**Status: LANDED — PR #(filled in below once opened).**
+
+- Add `throw` / `catch` / `landingpad` to `interpreter-ir::opcodes` (taxonomy only:
+  `is_known_op`, `is_value_producing`, `has_side_effects`) — no crate outside
+  `interpreter-ir` is touched, so no program that exists today can even construct
+  one of these instructions, let alone execute it. This is the identical shape
+  LANG28 used to land its 27 concurrency opcodes before any backend understood them
+  ("Phase 28A — this file only").
+- Add `interpreter_ir::exception_kind` — dotted-path exception kind names
+  (`"Trap.Bounds"`, `"Trap.Null"`, `"Trap.DivZero"`, `"Trap.ConvRange"`, common
+  ancestor `"Trap"`, catch-all `"*"`) plus `kind_matches()`, the reference semantics
+  every later backend's `kind_mask` bitset must agree with.
+- Extend `IIRModule::validate()`: a `catch`'s `try_end_label`/`handler_label` must
+  resolve to a `label` in the same function (generalizing the existing
+  undefined-branch-target check), and `handler_label` must be immediately followed
+  by a `landingpad` — structural well-formedness, checked at the same layer that
+  already catches duplicate function names and undefined jump targets.
+- **Acceptance criterion (executable proof, not a design doc):** `cargo test -p
+  interpreter-ir` — new unit tests assert (a) the three ops are recognised /
+  correctly categorised, (b) `kind_matches` implements the exact-match /
+  ancestor-match / catch-all / no-cross-sibling-match truth table in the module doc
+  comment, (c) `validate()` accepts a well-formed hand-built try/catch IIR function
+  and rejects each of: undefined `try_end_label`, undefined `handler_label`, and a
+  `handler_label` not immediately followed by `landingpad`. All 104 existing
+  `interpreter-ir` unit tests plus new ones, and all 41 doctests, pass unmodified —
+  proving this slice is additive.
+- **Zero behavior change for every existing program:** confirmed by `cargo check -p
+  lang-aot` (which transitively compiles `vm-core`, `jit-core`, every `iir-to-*`
+  backend, and every frontend) building clean with no changes outside
+  `interpreter-ir` — nothing anywhere pattern-matches on these three new strings yet.
+- **Not decided here (deferred, not a blocker):** the exact IIR encoding chosen for
+  `catch` (three operands — kind name, try-end label, handler label — rather than a
+  separate `catch_end`/region-object) is a technical call, made because it mirrors
+  the existing `jmp`/`label` idiom this flat (non-basic-block) IR already uses
+  everywhere else. It is *not* pinned by the T2 design spec (§0/§11 name the three
+  op mnemonics but not their operand shape) and may be revisited in Slice 2 if the
+  `vm-core` dispatch loop wants a different shape (e.g. an explicit handler-frame
+  stack rather than scanning `catch` instructions inline) — that would be a
+  same-crate follow-up, not a rethink of this slice's public surface.
+
+### Slice 2 — VM/JIT throw/catch (the reference oracle)
+
+**Status: PLANNED.**
+
+- Model unwinding in `vm-core`'s dispatch loop: a `throw` produces an `Unwind(exc)`
+  control signal (alongside today's normal/`ret` signals) that the dispatch loop
+  propagates outward; a `catch` region pushes a handler descriptor (kind →
+  handler_label) onto a per-call-frame handler stack that `landingpad` binds from
+  when found.
+- Cleanup ordering: for this first cut, "cleanup" == running any `catch` whose kind
+  does *not* match but whose region *does* cover the unwind point — actually, more
+  precisely per §2 obligation 2/§4.2: any frame the exception passes through without
+  a matching handler needs a defined cleanup story. **Product/design question to
+  resolve at the start of this slice** (not blocking Slice 1): whether v1 ships
+  *only* `throw`/`catch` (no `finally`/destructor cleanups yet — cleanups deferred
+  to a slice of their own) or ships both together. The T2 spec's own contract (§2
+  obligation 2, §8.3 "cleanup-ordering property") treats cleanups as core, but VM/JIT
+  can prove `throw`/`catch` handler-selection correctness *before* adding cleanup
+  registration — recommend splitting: **Slice 2a = throw/catch handler selection
+  only, Slice 2b = cleanup/finally ordering**, both still VM/JIT-only, both gated by
+  T7, so neither PR is oversized.
+- `jit-core`: same signal, since it falls back to the VM's interpreter loop for
+  anything it hasn't compiled (per §5's "same as VM" row) — likely requires no new
+  JIT-specific code in the first cut, only that JIT-compiled code correctly
+  deopts/falls back across a `throw`.
+- **Acceptance criterion:** a hand-built IIR program that `throw`s inside a `catch`
+  region, is caught, and resumes execution after the handler — asserted by its
+  printed output — passing identically under both the plain interpreter and the JIT
+  path. This becomes the reference oracle every other engine's differential result is
+  compared against.
+
+### Slice 3 — Trap → `throw Trap{…}` migration (VM/JIT only)
+
+**Status: PLANNED.** Depends on Slice 2.
+
+- Each of the four existing trap sites (`array_get`/`array_set` bounds, `unbox`
+  null, integer `div`/`mod` by zero, `real_to_int_*` range) emits
+  `throw Trap.<Kind>{...}` instead of aborting, on VM/JIT only.
+- **Acceptance criterion — T7 trap-agreement (§8.1):** every existing
+  `lang_matrix.rs` `Expect::Trap` cell for VM/JIT must still observe **the same
+  process-exit signal** when no handler is installed (the new `throw` unwinds all
+  the way to the top of an empty handler stack and aborts exactly as today's trap
+  does) — a direct diff against current CI baselines, not a new assertion. A new
+  cell class (a `Expect::Trap` program wrapped in `catch "Trap"`) proves the new
+  *capability*: the program now exits 0 having printed a recovery message instead of
+  aborting.
+- This is the slice where a real regression would be easiest to introduce silently
+  (an exit-code or `stderr` text change on an existing trap program) — extra
+  scrutiny/review weight here specifically.
+
+### Slice 4 — Throw/catch differential harness
+
+**Status: PLANNED.** Depends on Slice 2 (needs the reference oracle) and benefits
+from Slice 3 (broadens the corpus with real trap-shaped programs) but does not
+strictly require it.
+
+- Extend `lang_matrix.rs` (or a sibling differential-test module) with generated
+  nested `try`/`catch`/`throw` programs (mix of caught vs. escaping kinds, nested
+  handlers, sibling-kind misses) over VM/JIT initially (WASM once Slice 7 lands).
+- **Acceptance criterion:** printed observables agree bit-for-bit across every
+  engine the harness currently covers, for every generated program, seeded
+  deterministically (matching this repo's existing seeded-PRNG differential style).
+
+### Slice 5 — NativeAot unwind tables + runtime unwinder
+
+**Status: PLANNED.** Depends on Slices 1–4 (needs a proven reference semantics to
+diff against) **and** on T1 Rung A's stack-map emission
+(`AOT00-T1-stackmap-emission.md`) landing first on NativeAot, since this slice's
+whole premise is reusing that same per-function frame-descriptor table (§3) rather
+than growing a second one.
+
+- Emit `UnwindRecord`s (§4.1) into the shared frame table at `catch` boundaries;
+  implement `__unwind_raise(exc)` doing the two-phase walk (§4.2) via the *same*
+  `caller_of()` step T1's GC root-enumeration walk uses.
+- **Acceptance criterion:** a NativeAot-compiled throw/catch program from Slice 4's
+  corpus produces output identical to the VM/JIT reference, **and** T1's existing GC
+  differential/stress tests (`AOT00-T1-precise-gc.md` §8) stay green — i.e. this
+  slice must not regress GC precision while extending the same walker. This is the
+  slice the "be extra conservative" guidance in this task is really about; if it
+  cannot be kept small, split further along §7's fallback boundary (e.g. land
+  cleanup-less `throw`/`catch` — abort-with-trace on any frame needing a cleanup —
+  before adding cleanup/finalizer support on native).
+
+### Slice 6 — LLVM backend
+
+**Status: PLANNED.** Per §5/§10: start with `setjmp`/`longjmp` per `catch` scope
+(simple, non-zero-cost, proves correctness) before graduating to `invoke` +
+`landingpad` + a personality function sharing NativeAot's tables (zero-cost,
+follow-up slice). Two sub-slices, not one.
+
+### Slice 7 — WASM backend
+
+**Status: PLANNED.** Shadow-unwinder first (portable, parity with NativeAot/LLVM's
+linear-memory model) per §5; Wasm-EH (`try`/`catch`/`throw` proposal) as a later,
+engine-capability-gated follow-up, exactly as `iir-to-wasm` already gates other
+proposal-dependent features.
+
+### Slice 8 — JVM delegate
+
+**Status: PLANNED.** Lower `throw`→`athrow`, `catch`→ a real exception-table entry,
+cleanups→`finally`; map IIR kind names to a small fixed hierarchy of generated JVM
+exception classes (one per built-in `Trap.*` kind plus a generic
+`FrontendException` carrying the kind name as a string field for anything else).
+**Product decision to flag:** whether frontend-defined kinds (a Lisp `condition`, an
+ALGOL `alarm`) get their own generated JVM class per kind, or all share one carrier
+class distinguished by the string field — affects what a JVM-side catch clause can
+express and is a real API-shape choice, not a technical implementation detail.
+
+### Slice 9 — CLR delegate
+
+**Status: PLANNED.** Symmetric to Slice 8 (`throw`, `.try`/`.catch`/`.finally`
+clauses); same product decision about per-kind vs. shared exception types applies
+and should be answered once, consistently, across both slices 8 and 9.
+
+### Slice 10 — Stack traces (LANG14/25 integration)
+
+**Status: PLANNED.** Per §7, this is nearly free once Slice 5 lands (native
+frame descriptors already resolve return addresses; LANG14's debug-info sidecar
+already maps those to `(function, line)` for the debugger) — wire the uncaught-
+exception path to render `kind: message` + `  at fn (file:line)` per frame before
+aborting, instead of a bare exit code. JVM/CLR (Slices 8/9) get traces from the host
+for free and need no work here beyond confirming trace *content* is comparably
+useful (not byte-identical — formats legitimately differ per §7).
+
+### Product/architecture decisions this plan surfaces (not resolved here)
+
+Per this task's explicit ask, three decisions in the slices above are real product
+calls, not technical details this loop should resolve unilaterally:
+
+1. **Slice 2:** whether v1 ships cleanups (`finally`/destructors) alongside
+   `throw`/`catch` or as a follow-on slice (2b). Recommendation above: split them.
+2. **Slices 8/9:** whether a frontend-defined exception kind gets its own generated
+   host exception class (JVM/CLR) or shares one generic carrier distinguished by a
+   string field. This determines what a *host-language* (Java/C#) caller catching
+   across an FFI boundary can express, which is a user-facing API surface, not an
+   implementation detail.
+3. **Not in this plan at all, flagged per §10's own non-goal:** how frontends with an
+   *existing*, differently-shaped error model — ALGOL's `alarm` (a labelled restart
+   point, closer to Common Lisp's `handler-bind`/restarts than to `try`/`catch`) and
+   Lisp's own `condition`/`error` system (which the language itself may eventually
+   want *resumable* semantics for) — should map onto `throw`/`catch`/`landingpad` at
+   all. §10 explicitly excludes resumable/condition-system semantics from T2's core.
+   Forcing ALGOL's `alarm` through a one-shot `throw`/`catch` mechanism may be either
+   the right generalisation or a lossy fit; that call belongs to whoever owns the
+   ALGOL/Lisp frontends when their slice comes up, not to this plan.
+
+### Explicitly out of scope for the whole T2 track (per §10, restated for the plan)
+
+Resumable/condition-system semantics, per-thread unwinder state (T3's job), and
+unwind-table participation in DCE/inlining (T4/T5's job) are not part of any slice
+above — each is either already a named non-goal (§10) or belongs to a different
+track (§9).
