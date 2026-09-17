@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:45bbb098ce3ab90b",
+  "lessonIds": [
+    "ML-C80-uuru",
+    "ML-C80-keralam",
+    "ML-C80-malayali",
+    "ML-R80-origin-recall"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "malayalam/narration/ch80.txt",
+  "json": "malayalam/narration/ch80.json",
+  "textHash": "fnv1a64:cd1f72efb3fe8229",
+  "jsonHash": "fnv1a64:10f624f59eef4b2f",
+  "findings": []
+}

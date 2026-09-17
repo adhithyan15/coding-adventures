@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C80-malayali",
+    "language": "malayalam",
+    "chapter": 80,
+    "sequence": 2780,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8b137f08659e5409"
+  },
+  "findings": []
+}

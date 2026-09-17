@@ -258,8 +258,18 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // down. The grammar lesson names the SLOT rather than the words, so the next
   // degree word the learner meets is understood on sight. Verified before
   // writing: valare and orupadu both returned ZERO files.
-  expect(coverage.covered).toBe(180);
-  expect(coverage.unmapped).toBe(63);
+  // 180 -> 182: ML-A1-N-02 and ML-A1-ADJ-04, one hole seen from two sides again.
+  // naadu named a KIND of place, so "where are you from" could only be answered
+  // with a category -- no settlement name and no name of Kerala or India existed
+  // anywhere. uuru pins the small end of the scale naadu floats over; Keralam and
+  // India are the two fixed points on it. The GENTILIC needed NO NEW GRAMMAR,
+  // which is the chapter's finding rather than a shortcut: English keeps two
+  // shapes (India / Indian) and Malayalam keeps one, placing somebody by standing
+  // the person-word in front UNCHANGED -- the same position the quality word and
+  // the degree word already occupy. Verified before writing: uuru, Keralam, India
+  // and Malayali all returned ZERO files.
+  expect(coverage.covered).toBe(182);
+  expect(coverage.unmapped).toBe(61);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -271,6 +281,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 180/243 points covered (74%)",
+    "malayalam A1 (partial inventory): 182/243 points covered (75%)",
   );
 }, 60_000);

@@ -1,0 +1,659 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 80,
+  "title": "Where You Are From",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:45bbb098ce3ab90b",
+  "lessons": [
+    {
+      "id": "ML-C80-uuru",
+      "sequence": 2760,
+      "title": "ഊര് (ūrŭ) — town",
+      "headword": "ഊര്",
+      "romanization": "ūrŭ",
+      "gloss": "town — the settled place you are from, the small end of what നാട് covers",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d04e2f0fad9c747",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was nāṭŭ? And when somebody asks you which one you are from, what could you say back?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഊര്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഊര് — ūrŭ — a town, a village, the settled place somebody is from."
+            },
+            {
+              "kind": "speech",
+              "text": "nāṭŭ was handed to you with a warning printed inside it: its scale floats. A nāṭŭ can be a country, a district or a home region, and the situation decides which. That is useful and it is also why the question which nāṭŭ are you from was, until now, a question you could not answer — you had the word for the category and no word for a place."
+            },
+            {
+              "kind": "speech",
+              "text": "ഊര് pins the small end down. Where nāṭŭ floats, ūrŭ is the settlement — somewhere with houses in it and a name."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "covers"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "ഊര് ūrŭ. covers: one settled place.",
+                "നാട് nāṭŭ. covers: anything from a district to a country."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "It is an old word and a shared one. Tamil says ūr for the same thing, and it is buried in place-names the length of the south — so a name you cannot read yet may still end in a piece you now know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The small end of the question you have been able to hear since the ground words, and not answer."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭŭ, then ūrŭ, and say which of the two has a fixed size",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭŭ*, then *ūrŭ*, and say which of the two has a fixed size]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is an ūrŭ? (A town — one settled place.) And which is the wider word, ūrŭ or nāṭŭ? (nāṭŭ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C80-keralam",
+      "sequence": 2770,
+      "title": "കേരളം ഇന്ത്യ (kēraḷaṁ indya) (kēraḷaṁ, indya) — Kerala and India",
+      "headword": "കേരളം ഇന്ത്യ",
+      "romanization": "kēraḷaṁ indya",
+      "gloss": "Kerala and India — two fixed points on the scale നാട് floats over",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b30debd73d09655",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word for a town, and say the wider word it sits inside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കേരളം, ഇന്ത്യ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കേരളം — kēraḷaṁ — Kerala, the state this language is spoken in."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇന്ത്യ — indya — India, the country Kerala is part of."
+            },
+            {
+              "kind": "speech",
+              "text": "Until this page, every place word you owned named a kind of place: ground, forest, home country, town. None of them named one. These two do, and that is the whole difference between describing where you are from and saying it."
+            },
+            {
+              "kind": "speech",
+              "text": "Now the floating word has fixed points to float between:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "ഊര് ūrŭ, a town.",
+                "കേരളം kēraḷaṁ, Kerala.",
+                "ഇന്ത്യ indya, India."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Each of the three can answer which nāṭŭ are you from, and choosing among them is the same choice English makes when it answers that question with a town, a region or a country: you pick the one your listener will recognise."
+            },
+            {
+              "kind": "speech",
+              "text": "Say kēraḷaṁ slowly and you will hear the retroflex ള in the middle of it — the sound you met in the name of the language itself. It is the same letter doing the same work, and it is worth noticing that the place and the tongue spoken there are built on the same sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An answer, where you had only a category."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēraḷaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēraḷaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three place words in order, smallest first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three place words in order, smallest first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three you would give to somebody far away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three you would give to somebody far away]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two is the state? (kēraḷaṁ.) Which is the country? (indya.) And which sound sits in the middle of the first one? (The retroflex ള.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C80-malayali",
+      "sequence": 2780,
+      "title": "മലയാളി (malayāḷi) — a Malayali",
+      "headword": "മലയാളി",
+      "romanization": "malayāḷi",
+      "gloss": "a Malayali — the person word built from the language word, and how Malayalam says \"from there\"",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:8b137f08659e5409",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I speak Malayalam, the sentence you have owned since almost the beginning. Then say the name of the state."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മലയാളി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മലയാളി — malayāḷi — a Malayali: a person of Kerala, a speaker of this language."
+            },
+            {
+              "kind": "speech",
+              "text": "You have had most of this word since your fifth chapter's sentence. Put the two side by side and only the tail is different:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "മലയാളം malayāḷaṁ, the language.",
+                "മലയാളി malayāḷi, the person."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Everything up to the last piece is shared. -ം ends the language, -ി ends the person, and you can see the join without being told where it is."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: the language, the hill and the place",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The language word is itself built out of two older pieces — മല mala, a hill, and a second piece meaning a place. The language is named after the country it grew in, and the person is then named after the language rather than after the state."
+            },
+            {
+              "kind": "speech",
+              "text": "So the chain runs hill becomes land becomes language becomes person, and malayāḷi sits at the far end of it. Nobody has to tell you that Kerala is hilly for the word to make sense; the word has been saying so the whole time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: Malayalam has no separate word for \"Keralite\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English keeps two shapes for this job — India the place and Indian the describing word, Kerala and Keralite. Malayalam keeps one."
+            },
+            {
+              "kind": "speech",
+              "text": "മലയാളി (malayāḷi) is a person-word, not a describing word, and when you need it to describe somebody you do what this language always does: stand it in front, unchanged."
+            },
+            {
+              "kind": "speech",
+              "text": "മലയാളി അധ്യാപകൻ — malayāḷi adhyāpakan — a Malayali teacher."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the rule you already have. A quality word stands in front of the thing; a degree word stands in front of the quality; and a person-word used to place somebody stands in front too, with nothing added and nothing altered. The gentilic costs you no new grammar at all — which is the reason it waited until now rather than arriving with the place names."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A way to say where somebody is from, and the discovery that it needed no machinery."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malayāḷaṁ, then malayāḷi, and say where they part",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malayāḷaṁ*, then *malayāḷi*, and say where they part]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malayāḷi adhyāpakan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malayāḷi adhyāpakan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you had to add to malayāḷi to make it describe the teacher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you had to add to *malayāḷi* to make it describe the teacher]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two older pieces the language word is built from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two older pieces the language word is built from]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a malayāḷi? (A person of Kerala, a speaker of this language.) Which ending makes the person out of the language? (-ി.) And what changes when you put the word in front of another one? (Nothing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R80-origin-recall",
+      "sequence": 2790,
+      "title": "(where you are from) (evideyāṇŭ enna ōrmma) — from cold",
+      "headword": "(where you are from)",
+      "romanization": "evideyāṇŭ enna ōrmma",
+      "gloss": "cold retrieval of the three place words, the person word, and the fact that placing somebody needs no new grammar",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbe06891a87b6293",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say the floating word for a home region, and then say the word that pins its small end down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a scale, and a person on it",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "ഊര് ūrŭ, a town.",
+                "കേരളം kēraḷaṁ, Kerala.",
+                "ഇന്ത്യ indya, India.",
+                "മലയാളി malayāḷi, a person from there."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The first three answer which nāṭŭ are you from, and you pick among them the way English does: the one your listener will recognise. The fourth is not a place at all — it is the person, built out of the language word you have owned since almost the beginning, with the tail changed:"
+            },
+            {
+              "kind": "speech",
+              "text": "മലയാളം becomes മലയാളി (malayāḷi)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The answer to a question you have been able to hear for a long time."
+            },
+            {
+              "kind": "speech",
+              "text": "And the chapter's real finding is what it did not need. English carries two shapes — India and Indian, Kerala and Keralite. Malayalam carries one, and places somebody by standing the person-word in front, unchanged:"
+            },
+            {
+              "kind": "speech",
+              "text": "മലയാളി അധ്യാപകൻ — malayāḷi adhyāpakan — a Malayali teacher."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same rule as the quality word before the thing and the degree word before the quality. Three different jobs, one position, nothing altered. When a language reuses a position this hard, learning the position is worth more than learning any of the words that fill it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three place words, smallest first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three place words, smallest first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malayāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malayāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where malayāḷi came from, and which piece of it is new",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where *malayāḷi* came from, and which piece of it is new]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malayāḷi adhyāpakan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malayāḷi adhyāpakan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what had to change about malayāḷi to put it in front of the teacher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what had to change about *malayāḷi* to put it in front of the teacher]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word names one settled place? (ūrŭ.) Which word names the person rather than the place? (malayāḷi.) And how many shapes does Malayalam keep for that job, where English keeps two? (One.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
