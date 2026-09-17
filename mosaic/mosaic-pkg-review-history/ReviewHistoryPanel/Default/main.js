@@ -463,7 +463,40 @@ function camelSlotName(name) {
 }
 
 function renderTemplate(source, context) {
-  return renderMustaches(renderIfs(renderLoops(source, context), context), context);
+  return renderMustaches(
+    renderPressed(renderIfs(renderLoops(source, context), context), context),
+    context,
+  );
+}
+
+// UI86: a HostButton's dynamic `selected` state. The emitter writes the
+// condition as `data-mosaic&pressed`; it is decided here by the same
+// evaluator as `mosaic-if`, after loops have bound their row, and replaced by
+// a plain `aria-pressed="true"` or `"false"`. Nothing else reaches the page.
+//
+// This pass scans text that already holds rendered host data (loop rows are
+// rendered before it runs), so the marker must be something host data can
+// never spell. The `&` guarantees that: `escapeHtml` turns every `&` in host
+// text into `&amp;`, and the emitter escapes every `&` in authored literals the
+// same way. A marker spelled with letters, `-` and `=` alone could be forged by
+// a task name, and the forged quote would shift every later attribute on the
+// line out of its quotes.
+function renderPressed(source, context) {
+  return source.replace(/\sdata-mosaic&pressed="([^"]*)"/g, (_match, condition) =>
+    ` aria-pressed="${evaluateCondition(unescapeAttribute(condition), context) ? "true" : "false"}"`,
+  );
+}
+
+// The condition was attribute-escaped (and brace-escaped) at emit time.
+function unescapeAttribute(value) {
+  return String(value)
+    .replaceAll("&#123;", "{")
+    .replaceAll("&#125;", "}")
+    .replaceAll("&quot;", "\"")
+    .replaceAll("&#39;", "'")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&amp;", "&");
 }
 
 function renderLoops(source, context) {
@@ -729,13 +762,22 @@ function formatValue(value) {
   return String(value);
 }
 
+// Host text is inserted into a template that later passes scan again, so it
+// is escaped against those passes as well as against HTML: `{` and `}` so a
+// value cannot become a `{{placeholder}}` (or an unescaped `{{{surface}}}`) that
+// the mustache pass would fill, and `=` so it cannot spell `name="` next to a
+// template quote. Each is an ordinary character reference, so the page shows
+// and `dataset` reads the original text.
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll("\"", "&quot;")
-    .replaceAll("'", "&#39;");
+    .replaceAll("'", "&#39;")
+    .replaceAll("=", "&#61;")
+    .replaceAll("{", "&#123;")
+    .replaceAll("}", "&#125;");
 }
 
 function escapeHtmlAttr(value) {
