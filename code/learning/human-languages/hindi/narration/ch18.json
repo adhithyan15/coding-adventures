@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:36c548d2b7bc682c",
+  "sourceHash": "fnv1a64:41a7cde03a704a64",
   "lessons": [
     {
       "id": "HI-C18-ghanta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e084194f435104b7",
+      "sourceHash": "fnv1a64:72ad0011a291a9ce",
       "notice": null,
       "blocks": [
         {
