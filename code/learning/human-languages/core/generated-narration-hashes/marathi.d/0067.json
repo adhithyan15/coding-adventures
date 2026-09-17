@@ -1,0 +1,17 @@
+{
+  "language": "marathi",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:a4cda3f4019e9090",
+  "lessonIds": [
+    "MR-C67-vajle",
+    "MR-C67-vajta",
+    "MR-R67-clock-recall"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "marathi/narration/ch67.txt",
+  "json": "marathi/narration/ch67.json",
+  "textHash": "fnv1a64:2bd78dae0c9f3c5a",
+  "jsonHash": "fnv1a64:13cc307fe61dd4a8",
+  "findings": []
+}

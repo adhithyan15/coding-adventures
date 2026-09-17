@@ -118,6 +118,18 @@ it("pins Marathi lesson-content budgets", () =>
     // closure was CLEAN before this chapter (0 violations, 0 never-taught glyphs,
     // 50 taught) and stays clean: every example word uses only those 50 glyphs
     // plus the letter being taught.
+    // 353 -> 356: CHAPTER 67 GIVES THE CLOCK, AND CLOSES MR-A1-NT-01.
+    // NT-01 is "the clock, AND the parts of the day"; chapter 66 did the second
+    // half and deliberately did not claim the point. This is the first half and
+    // the point now closes -- marathi coverage 166 -> 167 of 301.
+    // IT ADDS NO NEW NUMBERS. All twelve cardinals ek..baaraa were already
+    // taught and kiti was already the how-many question word, so the reader had
+    // both halves of "kiti vaajle?" before the chapter opened. Until now the
+    // only thing the numbers could do was count.
+    // TWO CLOCK WORDS, ONE OF WHICH COUNTS: the telling verb agrees in number
+    // (vaajlaa after ek, vaajle after every other hour) while the placing form
+    // vaajtaa is invariant. The lesson keeps that plural APART from the respect
+    // plural of tumhi kase aahaat -- same shape, different reason.
     // 347 -> 353: CHAPTER 66 REALIZES A CORE SPINE NODE THAT WAS EMPTY.
     // SPINE-TIME-OF-DAY is "core": true at stage A1 with only SPINE-MEET-GREET
     // before it, and Marathi's ledger read segments: [] with ALL NINE concepts
@@ -145,7 +157,7 @@ it("pins Marathi lesson-content budgets", () =>
     // ai -- and nothing about a word like that announces that one of its four
     // shapes had never been drawn. The fifth lesson is the cold-retrieval review,
     // there for the same measured reason as chapter 64's.
-    lessons: 353,
+    lessons: 356,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -396,6 +408,9 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // Chapter 66: the four parts of the day, the whole day, and the review that
     // keeps the last of them from being an atom nothing revisits.
     ["66", 6],
+    // Chapter 67: asking and telling the time, placing an event at an hour, and
+    // the review that keeps the last atom from being one nothing revisits.
+    ["67", 3],
   ]);
 });
 

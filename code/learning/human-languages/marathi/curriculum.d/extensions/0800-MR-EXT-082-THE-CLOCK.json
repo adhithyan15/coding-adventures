@@ -1,0 +1,15 @@
+{
+  "id": "MR-EXT-082-THE-CLOCK",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask and tell the time, and place an event at an hour.",
+  "prerequisites": [
+    "MR-EXT-081-PARTS-OF-THE-DAY"
+  ],
+  "lessons": [
+    "MR-C67-vajle",
+    "MR-C67-vajta",
+    "MR-R67-clock-recall"
+  ]
+}

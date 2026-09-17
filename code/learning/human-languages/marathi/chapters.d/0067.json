@@ -1,0 +1,20 @@
+{
+  "chapter": 67,
+  "title": "The Clock",
+  "label": "ch:mr-ghadyal",
+  "canDo": "I can ask what time it is, say what time it is, and say that something happens at a given hour.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MR-R67-clock-recall",
+    "kind": "production",
+    "summary": "From cold: ask the time, tell it with the verb that counts, and place an event at an hour with the form that never changes.",
+    "assesses": [
+      "MR-LEX-VAJLE",
+      "MR-LEX-VAJTA",
+      "MR-GRAMMAR-CLOCK-NUMBER-AGREEMENT"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. It adds NO new numbers: all twelve cardinals were already taught and had nothing to do but count."
+  }
+}
