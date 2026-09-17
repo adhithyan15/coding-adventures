@@ -17,10 +17,10 @@
             <!-- mosaic-for each="options" as="option" index="i" -->
               <!-- mosaic-if when="i == selectedIndex" -->
                 <!-- emit "onSelect" dropped: HTML is static -->
-                <button data-disabled="{{disabled}}" data-on-click="onSelect" aria-label="{{option.1}}" style="padding: 8px; background: #0d6efd; color: #ffffff; border-width: 1px; border-color: #0a58ca; font-size: 14px; border-radius: 0">{{option.0}}</button>
+                <button data-disabled="{{disabled}}" data-on-click="onSelect" aria-pressed="true" style="padding: 8px; background: #0d6efd; color: #ffffff; border-width: 1px; border-color: #0a58ca; font-size: 14px; border-radius: 0">{{option}}</button>
               <!-- mosaic-else -->
                 <!-- emit "onSelect" dropped: HTML is static -->
-                <button data-disabled="{{disabled}}" data-on-click="onSelect" aria-label="{{option.1}}" style="padding: 8px; background: #ffffff; color: #0d6efd; border-width: 1px; border-color: #dee2e6; font-size: 14px; border-radius: 0">{{option.0}}</button>
+                <button data-disabled="{{disabled}}" data-on-click="onSelect" aria-pressed="false" style="padding: 8px; background: #ffffff; color: #0d6efd; border-width: 1px; border-color: #dee2e6; font-size: 14px; border-radius: 0">{{option}}</button>
               <!-- /mosaic-if -->
             <!-- /mosaic-for -->
           </div>
@@ -29,10 +29,10 @@
             <!-- mosaic-for each="options" as="option" index="i" -->
               <!-- mosaic-if when="i == selectedIndex" -->
                 <!-- emit "onSelect" dropped: HTML is static -->
-                <button data-disabled="{{disabled}}" data-on-click="onSelect" aria-label="{{option.1}}" style="padding: 8px; background: #0d6efd; color: #ffffff; border-width: 1px; border-color: #0a58ca; font-size: 14px; border-radius: 0">{{option.0}}</button>
+                <button data-disabled="{{disabled}}" data-on-click="onSelect" aria-pressed="true" style="padding: 8px; background: #0d6efd; color: #ffffff; border-width: 1px; border-color: #0a58ca; font-size: 14px; border-radius: 0">{{option}}</button>
               <!-- mosaic-else -->
                 <!-- emit "onSelect" dropped: HTML is static -->
-                <button data-disabled="{{disabled}}" data-on-click="onSelect" aria-label="{{option.1}}" style="padding: 8px; background: #ffffff; color: #0d6efd; border-width: 1px; border-color: #dee2e6; font-size: 14px; border-radius: 0">{{option.0}}</button>
+                <button data-disabled="{{disabled}}" data-on-click="onSelect" aria-pressed="false" style="padding: 8px; background: #ffffff; color: #0d6efd; border-width: 1px; border-color: #dee2e6; font-size: 14px; border-radius: 0">{{option}}</button>
               <!-- /mosaic-if -->
             <!-- /mosaic-for -->
           </div>

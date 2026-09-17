@@ -42,10 +42,10 @@
           <!-- mosaic-for each="results" as="item" index="i" -->
             <!-- mosaic-if when="i == selectedIndex" -->
               <!-- emit "onSelectResult" dropped: HTML is static -->
-              <button data-on-click="onSelectResult" style="padding: 12px; background: #1d4ed8; color: #ffffff; border-width: 0; font-size: 14px; border-radius: 0">{{item}}</button>
+              <button data-on-click="onSelectResult" aria-pressed="true" style="padding: 12px; background: #1d4ed8; color: #ffffff; border-width: 0; font-size: 14px; border-radius: 0">{{item}}</button>
             <!-- mosaic-else -->
               <!-- emit "onSelectResult" dropped: HTML is static -->
-              <button data-on-click="onSelectResult" style="padding: 12px; background: transparent; color: #f1f5f9; border-width: 0; font-size: 14px; border-radius: 0">{{item}}</button>
+              <button data-on-click="onSelectResult" aria-pressed="false" style="padding: 12px; background: transparent; color: #f1f5f9; border-width: 0; font-size: 14px; border-radius: 0">{{item}}</button>
             <!-- /mosaic-if -->
           <!-- /mosaic-for -->
         </div>

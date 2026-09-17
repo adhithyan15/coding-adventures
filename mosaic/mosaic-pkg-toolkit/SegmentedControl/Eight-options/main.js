@@ -4,38 +4,14 @@ const componentName = "SegmentedControl";
 const fallbackProps = {
   "disabled": false,
   "options": [
-    [
-      "Mon",
-      "Mon"
-    ],
-    [
-      "Tue",
-      "Tue"
-    ],
-    [
-      "Wed",
-      "Wed"
-    ],
-    [
-      "Thu",
-      "Thu"
-    ],
-    [
-      "Fri",
-      "Fri"
-    ],
-    [
-      "Sat",
-      "Sat"
-    ],
-    [
-      "Sun",
-      "Sun"
-    ],
-    [
-      "All",
-      "All, selected"
-    ]
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat",
+    "Sun",
+    "All"
   ],
   "selectedIndex": 7.0,
   "vertical": false

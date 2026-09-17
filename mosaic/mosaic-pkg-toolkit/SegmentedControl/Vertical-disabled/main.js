@@ -4,18 +4,9 @@ const componentName = "SegmentedControl";
 const fallbackProps = {
   "disabled": true,
   "options": [
-    [
-      "List",
-      "List, selected"
-    ],
-    [
-      "Board",
-      "Board"
-    ],
-    [
-      "Sheet",
-      "Sheet"
-    ]
+    "List",
+    "Board",
+    "Sheet"
   ],
   "selectedIndex": 0.0,
   "vertical": true

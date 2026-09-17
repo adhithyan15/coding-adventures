@@ -4,18 +4,9 @@ const componentName = "SegmentedControl";
 const fallbackProps = {
   "disabled": false,
   "options": [
-    [
-      "Everything assigned to me",
-      "Everything assigned to me"
-    ],
-    [
-      "Due this week across every project",
-      "Due this week across every project, selected"
-    ],
-    [
-      "Done",
-      "Done"
-    ]
+    "Everything assigned to me",
+    "Due this week across every project",
+    "Done"
   ],
   "selectedIndex": 1.0,
   "vertical": false
