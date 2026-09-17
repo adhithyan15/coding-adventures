@@ -1636,26 +1636,7 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
     let mut textarea_value = String::new();
     attrs.push_str(&build_style_attr(node, "", part_styles));
 
-    if let Some(prop) = node.props.iter().find(|prop| prop.name == "a11y-label") {
-        match &prop.value {
-            LayoutPropValue::String(label) => attrs.push_str(&format!(
-                r#" aria-label="{}""#,
-                escape_html_attribute(label)
-            )),
-            LayoutPropValue::SlotRef(slot) => {
-                let camel = to_camel_case_first_lower(slot);
-                if is_safe_identifier(&camel) {
-                    attrs.push_str(&format!(
-                        r#" aria-label="${{escapeHtmlAttribute({camel})}}""#
-                    ));
-                }
-            }
-            LayoutPropValue::Expr(expr) => attrs.push_str(&format!(
-                r#" aria-label="${{escapeHtmlAttribute({expr})}}""#
-            )),
-            _ => {}
-        }
-    }
+    attrs.push_str(&accessible_name_attr(node));
 
     // value="${slot}"
     if let Some(slot) = find_slot_ref(node, "value") {
@@ -1801,9 +1782,62 @@ fn emit_host_button(
         }
     }
 
+    // The portable accessible name (UI29 §2.1). This used to be dropped
+    // here without a degradation (#15426), so every slot- or
+    // expression-bound HostButton name was lost on this backend while
+    // React, Qt, SwiftUI, Compose, Flutter and XAML kept it.
+    attrs.push_str(&accessible_name_attr(node));
+
     let body = host_button_label_body(node);
 
     format!("<button{attrs}>{body}</button>")
+}
+
+/// Lower a node's portable `a11y-label` to an ` aria-label="…"` attribute
+/// fragment, or to nothing when the node has none.
+///
+/// | authored form          | emitted                                          |
+/// |------------------------|--------------------------------------------------|
+/// | `a11y-label : "Name"`  | ` aria-label="Name"` (escaped at emit time)      |
+/// | `a11y-label : slot: s` | ` aria-label="${escapeHtmlAttribute(s)}"`        |
+/// | `a11y-label : item`    | ` aria-label="${escapeHtmlAttribute(item)}"`     |
+/// | `a11y-label : ( e )`   | ` aria-label="${escapeHtmlAttribute(e)}"`        |
+///
+/// Every dynamic value goes through `escapeHtmlAttribute` at render time,
+/// because this attribute sits inside `innerHTML`: an unescaped `"` in a
+/// host-supplied name would end the attribute and start markup. Slot and
+/// keyword names that are not safe JS identifiers are dropped, the same
+/// rule `template_identifier_body` applies to labels.
+///
+/// An empty runtime value yields `aria-label=""`, which the accessible-name
+/// computation treats as absent, so the button's text still names it.
+fn accessible_name_attr(node: &LayoutNode) -> String {
+    let Some(prop) = node.props.iter().find(|prop| prop.name == "a11y-label") else {
+        return String::new();
+    };
+    let dynamic = |js: &str| format!(r#" aria-label="${{escapeHtmlAttribute({js})}}""#);
+    match &prop.value {
+        LayoutPropValue::String(label) => {
+            format!(r#" aria-label="{}""#, escape_html_attribute(label))
+        }
+        LayoutPropValue::SlotRef(name) | LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            if is_safe_identifier(&camel) {
+                dynamic(&camel)
+            } else {
+                String::new()
+            }
+        }
+        LayoutPropValue::Expr(expr) => {
+            let trimmed = strip_outer_parens(expr.trim());
+            if trimmed.is_empty() {
+                String::new()
+            } else {
+                dynamic(trimmed)
+            }
+        }
+        _ => String::new(),
+    }
 }
 
 fn host_button_dispatch_bits(emit_name: &str, ctx: &RenderCtx<'_>) -> Option<(String, String)> {
@@ -4462,6 +4496,79 @@ mod tests {
             let out = from_pipeline(&m, &l, &empty_style("Edit")).unwrap().output;
             assert!(out.contains(expected), "expected {expected} in:\n{out}");
         }
+    }
+
+    /// #15426: HostButton's portable name was never read on this backend.
+    /// Every dynamic form must go through `escapeHtmlAttribute`, because
+    /// the attribute lands inside `innerHTML`.
+    #[test]
+    fn host_button_accessible_name_lowers_every_authored_form() {
+        let m = component(
+            "Btn",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::String("Close \"dialog\"".into()),
+                r#"aria-label="Close &quot;dialog&quot;""#,
+            ),
+            (
+                LayoutPropValue::SlotRef("spoken-title".into()),
+                r#"aria-label="${escapeHtmlAttribute(spokenTitle)}""#,
+            ),
+            (
+                LayoutPropValue::Keyword("item".into()),
+                r#"aria-label="${escapeHtmlAttribute(item)}""#,
+            ),
+            (
+                LayoutPropValue::Expr("( option [ 1 ] )".into()),
+                r#"aria-label="${escapeHtmlAttribute(option [ 1 ])}""#,
+            ),
+        ] {
+            let l = root_layout(
+                "Btn",
+                leaf_with_props(
+                    "HostButton",
+                    vec![
+                        LayoutProp {
+                            name: "label".into(),
+                            value: LayoutPropValue::String("Go".into()),
+                        },
+                        LayoutProp {
+                            name: "a11y-label".into(),
+                            value,
+                        },
+                    ],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("Btn")).unwrap().output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+            assert!(
+                out.contains(&format!("<button {expected}>Go</button>")),
+                "the name must sit on the button itself, got:\n{out}"
+            );
+        }
+    }
+
+    /// A slot or keyword whose camel form is not a JS identifier would be
+    /// spliced into a template literal, so it is dropped, as labels are.
+    #[test]
+    fn host_button_accessible_name_drops_unsafe_identifiers() {
+        let m = component("Btn", vec![], vec![]);
+        let l = root_layout(
+            "Btn",
+            leaf_with_props(
+                "HostButton",
+                vec![LayoutProp {
+                    name: "a11y-label".into(),
+                    value: LayoutPropValue::Keyword("x)}${alert(1)".into()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Btn")).unwrap().output;
+        assert!(!out.contains("aria-label"), "unexpected aria-label in:\n{out}");
+        assert!(!out.contains("alert(1)"), "unsafe name reached output:\n{out}");
     }
 
     // -------- K4: HostButton with literal label + onTap → onclick --------
