@@ -1,0 +1,17 @@
+{
+  "chapter": 86,
+  "title": "The One It Is Done To",
+  "label": "ch:ta-ai",
+  "canDo": "I can mark the object of a verb with -ai, say me and you as objects, and tell when the ending is compulsory and when it is a choice that means 'the'.",
+  "payoff": {
+    "lesson": "TA-R86-ai-recall",
+    "kind": "production",
+    "summary": "From cold: the accusative ending and which end of the word it sits on, the two pronoun objects and the changed bodies they stand on, and the one question — is the object a person — that decides whether the ending may be left off.",
+    "assesses": [
+      "TA-GRAMMAR-C86-AI-01",
+      "TA-LEX-C86-ENNAI-UNNAI-01",
+      "TA-GRAMMAR-C86-RATIONAL-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. Every example keeps a FIRST-PERSON SUBJECT: the lessons have third-person objects, and the third-person ending -aar appears once in the whole track, so a first-person subject keeps each example inside what the reader has been taught."
+  }
+}

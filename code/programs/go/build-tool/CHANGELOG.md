@@ -6,6 +6,22 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- A bare `set -e`/`set -eu` line at the top of a `BUILD` file — POSIX
+  strict-mode preamble, present in 20+ Rust crates' `BUILD` scripts —
+  crashed the whole package's Windows build. `runPackageBuild` runs each
+  `BuildCommands` line as its own separate process via `cmd /C` on Windows,
+  where bare `set` is cmd's own builtin for reading/defining an environment
+  variable: `set -eu` with no `=` means "print the value of a variable
+  named `-eu`", which cmd reports as `Environment variable -eu not
+  defined` and fails the package. The directive was already functionally
+  inert on every platform (the executor already checks each line's exit
+  code independently before starting the next one — `set -e` never reached
+  across that process boundary), so `readLines` now drops bare
+  `set <short-flags>` lines everywhere rather than special-casing Windows.
+  Real `set VAR=value` / `set "VAR=value"` assignments (used throughout
+  this repo's `*_windows` `BUILD` files) are untouched, since the filter
+  only matches a lone flag cluster with no `=`.
+
 - `packageCost` now weighs a Rust package higher when its build commands
   invoke `cargo tarpaulin`: coverage instrumentation measurably costs several
   times a plain `cargo test`, but the shard cost model treated every Rust

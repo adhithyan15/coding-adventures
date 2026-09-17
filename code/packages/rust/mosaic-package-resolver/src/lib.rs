@@ -685,6 +685,7 @@ impl LayoutPackageResolver {
         let mut bindings = resolved.default_bindings;
         bindings.extend(build_binding_map(&call_props));
         rewrite_bindings(target, &bindings);
+        fold_constant_conditionals(target);
 
         let exports = self.package_exports(pkg)?;
         qualify_local_refs(target, pkg, &exports);
@@ -929,6 +930,90 @@ fn rewrite_bindings(node: &mut LayoutNode, bindings: &HashMap<String, LayoutProp
     }
     for child in &mut node.children {
         rewrite_bindings(child, bindings);
+    }
+}
+
+/// Resolve `If`/`Else` pairs whose condition became a literal during binding.
+///
+/// A component that branches on a bool slot (`If ( when: slot: vertical )`)
+/// and a caller that passes a literal (`vertical : false`) leave an `If` whose
+/// `when:` is the keyword `false`. The layout validator only accepts a slot
+/// or an expression there, so the consumer failed to compile (#15432, found
+/// adopting SegmentedControl in Engram). Rewriting the keyword into an
+/// expression is not safe either: the static-HTML runtime resolves a bare
+/// `true` as a data path, which is undefined, so the branch would invert.
+///
+/// Instead the choice is made here, once: the branch that applies is spliced
+/// into the parent in the `If`'s place and the other is dropped.
+///
+/// ```text
+/// Column { If (when: false) { A }  Else { B } }   →   Column { B }
+/// Column { If (when: true)  { A }  Else { B } }   →   Column { A }
+/// Column { If (when: false) { A } }               →   Column { }
+/// ```
+///
+/// Splicing is sound because `If`/`Else` are not containers: every emitter
+/// lays a branch's children out in the enclosing container. An `If` at the
+/// root of the component is folded only when the chosen branch is exactly
+/// one node, since a layout must keep a single root.
+fn fold_constant_conditionals(node: &mut LayoutNode) {
+    fold_constant_children(node);
+
+    // Only the component root is folded in place. Doing this at every level
+    // would replace a nested `If` before its parent could pair it with its
+    // `Else`, leaving the `Else` orphaned.
+    if let Some(condition) = literal_condition(node) {
+        if condition && node.children.len() == 1 {
+            *node = node.children.remove(0);
+        }
+    }
+}
+
+fn fold_constant_children(node: &mut LayoutNode) {
+    for child in &mut node.children {
+        fold_constant_children(child);
+    }
+
+    if node.children.iter().any(|child| literal_condition(child).is_some()) {
+        let mut folded = Vec::with_capacity(node.children.len());
+        let mut children = std::mem::take(&mut node.children).into_iter().peekable();
+        while let Some(child) = children.next() {
+            let Some(condition) = literal_condition(&child) else {
+                folded.push(child);
+                continue;
+            };
+            let else_branch = children.next_if(|next| next.tag == "Else");
+            if condition {
+                folded.extend(child.children);
+            } else if let Some(else_branch) = else_branch {
+                folded.extend(else_branch.children);
+            }
+        }
+        node.children = folded;
+    }
+}
+
+/// `Some(bool)` when `node` is an `If` whose `when:` is a literal boolean.
+fn literal_condition(node: &LayoutNode) -> Option<bool> {
+    if node.tag != "If" {
+        return None;
+    }
+    let when = node.props.iter().find(|prop| prop.name == "when")?;
+    let text = match &when.value {
+        LayoutPropValue::Keyword(word) => word.as_str(),
+        LayoutPropValue::Expr(expr) => expr.trim(),
+        // A literal bound into a text or number slot the component gates on
+        // (`title : "Inbox"` into `If ( when: slot: title )`). Truthiness is
+        // the kernel's: a text is true when non-empty, a number when non-zero,
+        // the same rule every emitter's runtime truthiness helper applies.
+        LayoutPropValue::String(text) => return Some(!text.is_empty()),
+        LayoutPropValue::Number(number) => return Some(*number != 0.0),
+        _ => return None,
+    };
+    match text {
+        "true" => Some(true),
+        "false" => Some(false),
+        _ => None,
     }
 }
 
@@ -1883,6 +1968,113 @@ version = "1"
             }),
             "nested direct slot binding should still be rewritten"
         );
+    }
+
+    /// #15432: a literal bool bound into a component's `If` used to leave
+    /// `when: false`, which the validator rejects. The branch is now chosen at
+    /// resolution time.
+    #[test]
+    fn literal_bool_binding_folds_the_branch_it_selects() {
+        let tmp = TempDir::new().unwrap();
+        let pkgs = tmp.path().join("packages");
+        fs::create_dir_all(&pkgs).unwrap();
+        let mini = make_pkg(&pkgs, "mosaic-pkg-axis", "mosaic-pkg-axis", &["Axis"]);
+        write_component(
+            &mini,
+            "Axis",
+            r#"component Axis {
+  slot vertical : bool ;
+  slot label : text ;
+}"#,
+            r#"layout Axis {
+  Column [ root ] {
+    If ( when: slot: vertical ) {
+      Column [ stacked ] { }
+    }
+    Else {
+      Row [ inline ] { }
+    }
+    Text [ caption ] ( slot: label )
+  }
+}"#,
+        );
+        let resolver = LayoutPackageResolver::new(vec![pkgs]);
+
+        for (literal, kept) in [("false", "inline"), ("true", "stacked")] {
+            let mut layout = consumer_layout(&format!(
+                r#"layout Demo {{
+  pkg::mosaic-pkg-axis::Axis ( vertical : {literal} , label : slot: outer )
+}}"#
+            ));
+            resolver.resolve(&mut layout).expect("layout resolves");
+            let parts: Vec<_> = layout
+                .root
+                .children
+                .iter()
+                .map(|child| (child.tag.as_str(), child.part_name.as_deref()))
+                .collect();
+            let (tag, part) = if literal == "true" { ("Column", kept) } else { ("Row", kept) };
+            assert_eq!(
+                parts,
+                vec![(tag, Some(part)), ("Text", Some("caption"))],
+                "vertical: {literal}"
+            );
+        }
+
+        // A slot binding is not a literal and must stay a runtime branch.
+        let mut layout = consumer_layout(
+            r#"layout Demo {
+  pkg::mosaic-pkg-axis::Axis ( vertical : slot: stacked , label : slot: outer )
+}"#,
+        );
+        resolver.resolve(&mut layout).expect("layout resolves");
+        let tags: Vec<_> = layout.root.children.iter().map(|c| c.tag.as_str()).collect();
+        assert_eq!(tags, vec!["If", "Else", "Text"]);
+    }
+
+    #[test]
+    fn constant_fold_drops_an_unmatched_false_branch_and_keeps_expressions() {
+        let node = |tag: &str, when: Option<LayoutPropValue>, children: Vec<LayoutNode>| LayoutNode {
+            tag: tag.to_string(),
+            part_name: None,
+            props: when
+                .into_iter()
+                .map(|value| LayoutProp { name: "when".to_string(), value })
+                .collect(),
+            children,
+        };
+        let leaf = |tag: &str| node(tag, None, vec![]);
+        let mut root = node(
+            "Column",
+            None,
+            vec![
+                node("If", Some(LayoutPropValue::Keyword("false".into())), vec![leaf("A")]),
+                leaf("B"),
+                node("If", Some(LayoutPropValue::Expr(" true ".into())), vec![leaf("C"), leaf("D")]),
+                node("Else", None, vec![leaf("E")]),
+                node("If", Some(LayoutPropValue::Expr("i == 0".into())), vec![leaf("F")]),
+            ],
+        );
+        fold_constant_conditionals(&mut root);
+        let tags: Vec<_> = root.children.iter().map(|c| c.tag.as_str()).collect();
+        assert_eq!(tags, vec!["B", "C", "D", "If"]);
+    }
+
+    /// A literal string or number bound into a gated slot folds by kernel
+    /// truthiness: empty text and zero are false.
+    #[test]
+    fn literal_text_and_number_bindings_fold_by_truthiness() {
+        let when = |value: LayoutPropValue| LayoutNode {
+            tag: "If".to_string(),
+            part_name: None,
+            props: vec![LayoutProp { name: "when".to_string(), value }],
+            children: vec![],
+        };
+        assert_eq!(literal_condition(&when(LayoutPropValue::String(String::new()))), Some(false));
+        assert_eq!(literal_condition(&when(LayoutPropValue::String("Inbox".into()))), Some(true));
+        assert_eq!(literal_condition(&when(LayoutPropValue::Number(0.0))), Some(false));
+        assert_eq!(literal_condition(&when(LayoutPropValue::Number(3.0))), Some(true));
+        assert_eq!(literal_condition(&when(LayoutPropValue::SlotRef("s".into()))), None);
     }
 
     #[test]

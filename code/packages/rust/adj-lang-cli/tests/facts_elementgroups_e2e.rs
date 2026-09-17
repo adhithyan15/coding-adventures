@@ -5,6 +5,8 @@
 //! Wikipedia citation, and abstains on an element not in the table (gold) —
 //! 0 model calls.
 
+mod common;
+
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -357,8 +359,12 @@ fn the_framing_envelope_never_reaches_an_answer_and_is_pinned() {
     // Indentation-INSENSITIVE: an earlier form matched a literal four-space
     // `"    cites "`, which a re-added corroboration at any other indent would
     // have slipped straight past.
+    // CODE ONLY (#15425): `common::has_code_word` reads the text as ADJ's lexer
+    // does -- comments dropped, strings blanked across lines, numbers consumed
+    // whole -- and looks for `cites` as an identifier token, so the keyword counts
+    // however it is spaced or glued, and a comment or a sentence never does.
     assert!(
-        !adj.contains("cites \""),
+        !common::has_code_word(&adj, "cites"),
         "no corroboration survives at table level: each is now a row's own source"
     );
 }

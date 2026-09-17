@@ -1,0 +1,17 @@
+{
+  "chapter": 71,
+  "title": "The People in the Sentence",
+  "label": "ch:ml-aalukal",
+  "canDo": "I can talk about somebody who is not in the room, at either level of respect, and I can say we in the two ways Malayalam requires.",
+  "payoff": {
+    "lesson": "ML-R71-pronoun-recall",
+    "kind": "production",
+    "summary": "From cold: the five third-person and we-words, the front letter that points away, and the question each choice answers.",
+    "assesses": [
+      "ML-LEX-C71-AVAN-AVAL-01",
+      "ML-LEX-C71-AVAR-01",
+      "ML-LEX-C71-NJANGAL-NAAM-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three, with nothing open in front of the reader."
+  }
+}

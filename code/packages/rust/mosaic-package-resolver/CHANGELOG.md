@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+### Fixed — a literal text or number bound into a gated slot is folded too
+
+`fold_constant_conditionals` handled only `true`/`false`. A component that
+gates on a text slot (`If ( when: slot: action-label )`) and receives a
+literal (`action-label : ""`) was left with a string `when:`, which the
+validator rejects. Text now folds as true when non-empty, and numbers as
+true when non-zero, the same truthiness every emitter's runtime helper uses.
+Found adopting EmptyState in TaskApp (#15440).
+
+### Fixed — a literal bool bound into a component's `If` failed to compile
+
+A component that branches on a bool slot (`If ( when: slot: vertical )`),
+used with a literal (`vertical : false`), was left with `when: false` after
+binding. The layout validator accepts only a slot or an expression there, so
+the consuming app failed with "`If` prop `when:` must be a slot reference or
+expression". Found adopting SegmentedControl in Engram (#14063, #15432).
+
+`fold_constant_conditionals` now makes the choice while inlining: the branch
+that applies replaces the `If`/`Else` pair, and the other is dropped. This is
+safe because `If`/`Else` are not containers. An `If` at the component root is
+folded only into a single node.
+
+Rewriting the keyword as an expression was rejected: the static-HTML runtime
+reads a bare `true` as a data path, which resolves to undefined and would
+invert the branch.
+
+Tests: both literals select the right branch; a slot binding stays a runtime
+`If`/`Else`; expression and keyword forms fold; non-literal conditions are
+left alone. The first attempt folded a nested `If` before its parent could
+pair it with its `Else`. The test caught it, and the root-only rule now
+lives in its own step.
+
+
 - Remove unforwarded dependency event bindings at the composition boundary.
   Omitted child events no longer leak undeclared names into the parent model.
 

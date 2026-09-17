@@ -4,6 +4,14 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Changed
+
+- The view switcher's props (#14016). `navOptions` holds
+  `[label, accessible-name]` rows in the same order as `task-mosaic-app`,
+  with Timeline only for a Full project; `navSelectedIndex` is the showing
+  view. The controller handles `showView` by index into the views the
+  project offers, and ignores an index it does not offer.
+
 ### Fixed
 
 - `vitest.config.ts` now resolves aliases from the ESM-native

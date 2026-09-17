@@ -5,6 +5,31 @@ this file.
 
 ## [Unreleased]
 
+### Fixed -- list story fixtures reach the generated app (#15428)
+
+The generated `mosaicStringList` and `mosaicStringListList` readers ignored
+fallbacks entirely and returned an empty list when the host had not sent the
+slot. So even a supported fixture could never show on Flutter.
+
+- **Readers:** both now take an optional positional fallback.
+- **Call sites:** `host_value_for_slot` passes one only when a text-list
+  fixture applies, so output for fixture-less builds is byte-identical.
+- **Literals:** `dart_literal_for_fixture` renders the fixture as a `const`
+  typed list.
+
+Checked with `dart analyze` on an emitted SegmentedControl story: the call,
+its `const <List<String>>` fallback and a `$` escaped as `\$` all resolve.
+
+### Fixed -- an empty run-time accessible name produced an unnamed button (#15427)
+
+An accessible name known only at run time can be empty, and an empty override is not the same as no override. HostButton's `Semantics` wrapper sets
+`excludeSemantics: true`, which hides the button's own `Text`, so
+`label: ""` left nothing to announce. Dynamic names now lower to
+`((<name>).isEmpty ? (<visible label>) : (<name>))`, and an empty literal
+drops the wrapper. Checked against a real toolchain: the emitted TaskApp
+(`label: ((( row [ 16 ] )).isEmpty ? (( row [ 0 ] )) : ...)`) passes
+`dart analyze` with no issues.
+
 
 
 ### Changed -- the two box writers now share one decoration builder

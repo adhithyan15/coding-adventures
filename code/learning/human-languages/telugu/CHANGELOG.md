@@ -1,5 +1,261 @@
 # Changelog
 
+## Zero characters used but untaught
+
+`TE-A1-L-08` — *the independent vowel letters, for a vowel that starts a word*
+— closes. Telugu A1 coverage **217/326 → 218/326**; the script column
+**14/23 → 15/23**.
+
+**The number that matters is not the coverage one.** Counted over every Telugu
+lesson body, the characters this track prints without teaching now stand at
+**zero**. Three passes ago that number was fifteen.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 217/326 → **218/326 (67%)** |
+| characters used but untaught | **5 → 0** |
+| uses of an untaught character | **489 → 0** |
+| atoms taught | 474 → 479 |
+| measurable lessons | 365 → 371 |
+| writing-practice lessons | 97 → 103 |
+| `forwardReferences` | unchanged |
+| `scriptClosureViolations` | unchanged (8) |
+| `durationViolations` | unchanged (0) |
+| `atomsNeverRevisited` | unchanged |
+| `payoffSurprises` | unchanged (0) |
+| reinforcement-window misses | 879 → 898 |
+
+### What was wrong
+
+Four of Telugu's independent vowel letters had a lesson — *i*, *u*, *e* and
+vocalic *r*. Five more were on the track's own pages with nothing teaching
+them:
+
+> అ 303 · ఆ 104 · ఏ 57 · ఐ 13 · ఒ 12
+
+**అ was the most-used untaught character left in the track.** It opens అవును,
+the word for *yes*, in chapter one — and it is the vowel every consonant
+lesson had already been describing without ever showing the reader its letter.
+
+### What was added
+
+| lesson | seq | ch | character | anchored in |
+|---|---|---|---|---|
+| `TE-S162-letter-a` | 31 | 1 | అ | అవును |
+| `TE-S163-letter-ee` | 112 | 2 | ఏ | ఏమిటి |
+| `TE-S164-letter-ai` | 331 | 7 | ఐ | ఐదు |
+| `TE-S165-letter-o` | 342 | 7 | ఒ | ఒకటి |
+| `TE-S166-letter-aa` | 343 | 7 | ఆ | ఆరు |
+| `TE-S167-script-recall-vowels` | 376 | 10 | — | cold retrieval of all five |
+
+**The tranche is built around one question, not five shapes**: *is a consonant
+carrying this vowel?* If yes, a sign; if no, a letter. Every lesson here asks
+it again.
+
+- **అ** is the odd one out and goes first, at sequence 31, before any vowel
+  sign has been taught. It is the vowel whose sign is the absence of a sign —
+  which is why క is *ka* and not *k* — so it can be taught with nothing else in
+  place, and the first actual sign (◌ా) follows four slots later.
+- **ఏ** is the ordinary case, and it is placed where the reader has had ◌ే
+  since chapter one. Sign known, letter new, pattern stated.
+- **ఒ** sits one slot after ◌ొ, the short-*o* sign, so the pair lands on
+  facing pages inside the same list of numbers: తొమ్మిది carries the sign,
+  ఒకటి carries the letter.
+- **ఆ** closes the *a* square — short and long, carried and standing alone,
+  with the one empty cell called out as the surprise it is.
+- **ఐ** is the diphthong, and the point of its lesson is that Telugu spends one
+  character on a vowel English writes with a digraph, a silent letter or
+  nothing at all, depending on the word.
+
+### Why the point closed, and what it does not claim
+
+Nine of Telugu's fourteen independent vowel letters now have a lesson. The five
+without one — ఈ, ఊ, ఌ, ఓ, ఔ — have **zero occurrences across all 365 lesson
+bodies**, on the same terms as the five consonants left open by `TE-A1-L-10`
+one pass earlier. The closure is against the point's label — *for a vowel that
+starts a word* — and not against a full vowel chart. `HL-C391` carries the
+chart as a separate future entry.
+
+### One of those absences is not a script problem
+
+**ఈ is the everyday Telugu word for "this" in front of a noun**, and it appears
+nowhere in the corpus. `TE-C41` teaches the pronouns ఇది and అది — *this one*,
+*that one* — and never the adjective pair ఈ / ఆ. A reader finishing this track
+can point at something and cannot say "this book".
+
+Teaching the letter would not have fixed that; the word has to land first, and
+then the letter has an anchor like every other script lesson here. `BACKLOG.d`
+`HL-C392` carries it as **lexical** work, which is where it belongs. It is the
+same shape as the gaps Malayalam and Tamil turned up in their pronoun columns:
+a rule taught correctly, with half of what it predicts never handed over.
+
+## Four letters the page needed, and a point closed against its own label
+
+`TE-A1-L-10` — *the consonant letters, as a set a reader can finish a page
+with* — closes. Telugu A1 coverage **216/326 → 217/326**; the script column
+goes **13/23 → 14/23**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 216/326 → **217/326 (67%)** |
+| characters used but untaught | **9 → 5** |
+| uses of an untaught character | **898 → 489** |
+| atoms taught | 470 → 474 |
+| measurable lessons | 360 → 365 |
+| `forwardReferences` | unchanged |
+| `durationViolations` | unchanged (0) |
+| `atomsNeverRevisited` | unchanged |
+| `payoffSurprises` | unchanged (0) |
+| `scriptClosureViolations` | 9 → 8 |
+| reinforcement-window misses | 864 → 879 |
+
+### What was wrong
+
+Four consonants were printed on this track's pages with nothing teaching them.
+Counted over every Telugu lesson body before this pass:
+
+> బ 185 · శ 136 · ష 86 · ఫ 4
+
+**బ opens బాగా**, the word this book answers *"how are you?"* with, in chapter
+three. **శ opens two of the seven day names**, శుక్రవారం and శనివారం, in a
+chapter whose whole job is reciting that list. **ష closes సంతోషం**, taught in
+chapter two: స at that word's other end gets its lesson in chapter five, and
+until this pass ష got none at all, so a reader reached chapter five able to
+read one end of the word and not the other.
+
+### What was added
+
+| lesson | seq | ch | character | anchored in |
+|---|---|---|---|---|
+| `TE-S157-letter-ba` | 181 | 3 | బ | బాగా / బాగున్నాను |
+| `TE-S158-letter-ssa` | 276 | 5 | ష | సంతోషం |
+| `TE-S159-letter-sha` | 371 | 10 | శ | శుక్రవారం / శనివారం |
+| `TE-S160-letter-pha` | 445 | 17 | ఫ | ఫాల్గుణం |
+| `TE-S161-script-recall-four` | 446 | 17 | — | cold retrieval of all four |
+
+**Not one of the four is taught as a shape on its own.** ష and శ are taught
+against స, which was already known, as the three s-letters Telugu keeps apart
+and Tamil's own alphabet has none of. ఫ is taught against ప exactly as ఠ was
+taught against ట a page earlier — one position, with and without the breath.
+బ is taught against the fact that Tamil writes no separate letter for the
+sound at all.
+
+Placement follows this track's design: each letter sits after the word that
+first needs it, not before. ష is the one exception and the reason is
+deliberate — its anchor word is in chapter two, but స is not taught until
+chapter five, and teaching the curled sibilant before the plain one would put
+the contrast in the wrong order. It sits one slot after స instead.
+
+### Why the point closed, and what it does not claim
+
+Thirty-one of Telugu's thirty-six consonant letters now have a lesson. The five
+without one — ఙ, ఛ, ఝ, ఱ, ఴ — have **zero occurrences across all 365 lesson
+bodies**. Every consonant the corpus prints anywhere is now taught, which is
+precisely what this point's label asks for.
+
+The closure is against the label and **not** against the full varga table.
+A point demanding all thirty-six is a different demand and needs its own
+inventory entry; `BACKLOG.d` `HL-C391` writes it down, including why the five
+cannot be taught the way this track teaches a letter — every script lesson here
+anchors on a word the reader already says, and none of the five has one.
+
+`U+0C29` is not among the five because it is not a letter: it is an unassigned
+code point that an earlier count mistook for missing script debt.
+
+### What is left
+
+The five characters still used-but-untaught are all **independent vowels** —
+అ 301, ఆ 104, ఏ 57, ఐ 13, ఒ 12 — and all of them are `TE-A1-L-08`'s business.
+That point is left open, and its note now says so.
+
+## Six characters the book was already using and had never taught
+
+`TE-A1-L-04` (the vowel signs) and `TE-A1-L-12` (the retroflex row) close.
+Telugu A1 coverage **214/326 → 216/326**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 214/326 → **216/326 (66%)** |
+| characters used but untaught | **15 → 9** |
+| uses of an untaught character | **~2,450 → 754** |
+| atoms taught | 464 → 470 |
+| measurable lessons | 353 → 360 |
+| `forwardReferences` | unchanged |
+| `scriptClosureViolations` | unchanged |
+| `durationViolations` | unchanged (0) |
+| `atomsNeverRevisited` | unchanged (8) |
+| `payoffSurprises` | unchanged (0) |
+| reinforcement-window misses | 844 → 864 |
+
+### What was actually wrong
+
+Counted over every Telugu lesson body, **fifteen characters appeared on this
+track's own pages with nothing teaching them**:
+
+> మ 756 · ట 362 · అ 282 · ో 224 · బ 180 · ొ 175 · శ 126 · ఆ 97 · ధ 92 ·
+> ష 72 · ఏ 57 · ఐ 13 · ఒ 12 · ఫ 4 · ఠ 3
+
+**మ is the most-used character in the track.** It sits in the second syllable of
+**నమస్కారం**, the very first word the book teaches, and `TE-S109-letter-na` prints
+that word and **ధన్యవాదములు** as its own examples — showing both మ and ధ on the
+page while teaching neither.
+
+**The gate said none of this was happening.** `measureScriptClosure` reported
+`neverTaughtGlyphs: 0` and `taughtGlyphs: 64`, because it credits a glyph to any
+script lesson whose *body* contains it. Under the rule that a glyph counts as
+taught only when a script lesson's **headword** is a glyph inventory, 49 were
+taught. The metric understated the debt by fifteen characters.
+
+### Two of the three exam notes were wrong
+
+- `TE-A1-L-10` counted **"ta 292 times"** among untaught consonants. **Dental త
+  has been taught since chapter 5** by `TE-S01-copy-in-a-word`. The 292-count
+  letter is *retroflex* ట — the claim had been duplicated from `TE-A1-L-12`.
+- `TE-A1-L-04` called **ూ** the *oo* sign. That is the **uu** sign, taught at
+  chapter 7. The genuinely untaught pair was ొ and ో.
+
+Both notes are corrected in place.
+
+### The six, and where each sits
+
+**This track teaches a letter just after the word that needs it**, not before —
+its script lessons are titled *"recognised inside words you already say"*. Each
+of the six is placed one slot after its own first use, wedged at
+content-sequence + 1 exactly as `TE-S136` through `TE-S139` already are:
+
+| character | placed after | because |
+|---|---|---|
+| మ, ధ | నమస్కారం, ధన్యవాదములు | the book's first two words |
+| ట, ో | ఏమిటి, సంతోషం | chapter two's question and its answer |
+| ొ | తొమ్మిది | the number nine |
+| ఠ | జ్యేష్ఠం | a month name |
+
+**ఠ is rare — three uses — and is taught anyway.** A reader who meets an
+unfamiliar shape inside a familiar list has no way to tell whether the word or
+the printing is at fault.
+
+### `TE-A1-L-10` stays open, deliberately
+
+మ and ధ are taught because they cost a reader most. The point itself asks for
+the consonant set as *something a reader can finish a page with*, and **eleven
+consonants are still untaught** — బ (180 uses), శ (126), ష (72) and ఫ (4) among
+them. Probing it now would claim a range the corpus does not teach.
+
+### Two regressions the snapshot diff caught
+
+- **`payoffSurprises` 0 → 1.** A fifth introduced atom took chapter 16's payoff
+  to 2/5, under the 0.5 floor. **ఠ moved to chapter 17** — one slot later than
+  its first use, which this track's design already allows.
+- **`atomsNeverRevisited` 8 → 12.** Four of the six atoms had nothing later to
+  revisit them. Each lesson now practises the one before it, and
+  `TE-S156-script-recall` introduces nothing and closes the chain.
+
+Neither was visible in any of the twelve gates.
+
+110 exam points remain open. Coverage means the teaching exists, not that a
+reader scores.
+
+
 ## Assessment: the A1 task inventory, and the distance it measures
 
 `task-shapes/a1.json` is checked in, realising the A1 envelope this track's own

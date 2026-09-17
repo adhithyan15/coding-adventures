@@ -1,5 +1,431 @@
 # Changelog
 
+## Chapter 75 — when, and if
+
+`ML-A1-Q-06` (*when?*), `ML-A1-JOIN-07` (*when* it happens) and `ML-A1-JOIN-08`
+(*if* it happens) all close. Coverage **171/243 → 174/243 (72%)**; the joining
+column **6/11 → 8/11**, the question column **8/10 → 9/10**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 171/243 → **174/243 (72%)** |
+| atoms taught | 391 → 394 |
+| measurable lessons | 318 → 322 |
+| `atomsNeverRevisited` | 25 → **24** |
+| `forwardReferences` | unchanged (12) |
+| `atomChapterSpikes` | unchanged |
+| `durationViolations` | unchanged (0) |
+| `payoffSurprises` | unchanged (0) |
+| reinforcement-window misses | 820 → 827 |
+
+### Three points, one piece
+
+The three close together because they are one thing: **പോൾ**.
+
+| | |
+|---|---|
+| **ഇപ്പോൾ** *ippōḷ* | now |
+| **അപ്പോൾ** *appōḷ* | then |
+| **എപ്പോൾ** *eppōḷ* | when? |
+
+`ML-C50-now` handed over the top two rows and stopped. `ML-C41-deixis-system`
+had already promised, in so many words, that meeting a new word in this family
+means being *"taught one and work out the others."* The question form is the
+missing third, and the chapter is that promise being kept.
+
+Then the same piece turns up on a verb — **വരുമ്പോൾ**, *when he comes* — and the
+conditional **വന്നാൽ** is taught beside it, because one ending is the entire
+difference between the two sentences.
+
+Verified before writing: **എപ്പോൾ**, **മ്പോൾ**, *eppol* and *mbol* each returned
+**zero files** across 333 lessons, and every existing `-ാൽ` in the corpus was
+lexical (പാൽ *milk*, കാൽ *leg*) or one of the two frozen words എന്നാൽ and
+എന്തുകൊണ്ടെന്നാൽ.
+
+### A ramp defect found on the way in, and repaired first
+
+**`ML-C32-pokuka` named all three tenses and printed none of them.** Its table
+gave *pōkunnu / pōyi / pōkuṁ* in romanization from end to end; extracting every
+Malayalam-script token from the lesson body returned പോകുക, പോ, പോക്, ഉക and
+പോയി. Across the whole corpus **പോകും and വരും each appeared zero times**, and
+every script word ending in `-ും` was something else — the coordinator, or a
+frozen adverb.
+
+So a reader had been told the future ending, could say it aloud, and had never
+seen a Malayalam verb in the future tense written down.
+
+`ML-A1-V-05` was **not** mis-marked: the atom is introduced and the point is
+probed. Coverage cannot see this, and `glyph-coverage` cannot either, since
+every glyph in പോകും is taught elsewhere. It is not a glyph debt — it is a word
+the reader can say and cannot read.
+
+It is repaired **here rather than later**, because `-ുമ്പോൾ` is built on വരും,
+and meeting വരും for the first time inside a longer subordinate form is the ramp
+inverted. Filed as `HL-C393`.
+
+### The past form is not about the past
+
+The conditional builds on the past — വന്നു → **വന്നാൽ**, പോയി → **പോയാൽ** — and
+the sentence it builds is not about the past at all. *Avan vannāl ñān pōkuṁ*:
+**he has not come**, and he may never come.
+
+The lesson slows down there, because the obvious reading is the wrong one. The
+time of the sentence is carried by the verb at the end, which is the same habit
+the purpose chapter pointed at from the other direction.
+
+### What the chapter refuses to do
+
+**It does not settle എന്നാൽ.** Chapter 73 declined to take the tail of
+എന്തുകൊണ്ടെന്നാൽ apart, because grammars read it different ways. Knowing `-ആൽ`
+does not change that, and `ML-C75-aal` says so on the page instead of quietly
+claiming the win.
+
+It also does not claim **പോൾ** is a word. It is not one you can use alone, and
+the lesson says that rather than leaving a reader hunting for it in a sentence.
+
+## Chapter 74 — one ending, two sentences
+
+`ML-A1-JOIN-09` (purpose) and `ML-A1-V-22` (ability) both close. Coverage
+**169/243 → 171/243 (70%)**; the joining column **5/11 → 6/11**, the verb column
+**18/23 → 19/23**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 169/243 → **171/243 (70%)** |
+| atoms taught | 388 → 391 |
+| measurable lessons | 314 → 318 |
+| `forwardReferences` | unchanged (12) |
+| `atomChapterSpikes` | unchanged |
+| `durationViolations` | unchanged (0) |
+| `atomsNeverRevisited` | unchanged |
+| `payoffSurprises` | unchanged (0) |
+
+### The note predicted the pair
+
+`JOIN-09` said it plainly: *"the -aan purpose form is not taught, which also
+blocks the ability frame at ML-A1-V-22 — both are built on it."* That was
+correct, and both forms returned **zero files** before anything was written.
+
+### One swap, and what it buys
+
+**-ഉക off, -ആൻ on, stem untouched.** The word that *follows* the -ആൻ form is
+what decides which sentence you have said:
+
+| what follows | what it says |
+|---|---|
+| another verb | **in order to** — *vāyikkāṉ pōkunnu* |
+| **കഴിയും** | **can** — *enikku vāyikkāṉ kaḻiyuṁ* |
+
+**The purpose goes in front and the event at the back**: *ñān vāyikkāṉ pōkunnu*
+reads *I — to-read — go*. English puts the purpose after the verb and usually
+needs a word for it; Malayalam needs none, because the ending is the whole of
+it. That is the verb-last habit the quotative chapter already named, turning up
+again.
+
+### Ability arrives at you, and the track had already said so
+
+**എനിക്ക് വായിക്കാൻ കഴിയും** is literally *reading is possible to me*, with the
+person in the **dative** — which is exactly how this book teaches knowing.
+`ML-C32-ariyuka`'s own warm-up says *knowing **arrived** at you, so the "I" left
+the subject slot*:
+
+| | |
+|---|---|
+| **എനിക്ക് മലയാളം അറിയാം** | Malayalam is known to me |
+| **എനിക്ക് വായിക്കാൻ കഴിയും** | reading is possible to me |
+
+English makes both an action with *I* in front. Malayalam marks which things are
+done by you and which arrive at you, rather than leaving a reader to guess.
+
+### One new word in the whole chapter
+
+Every verb it uses — *vāyikkuka*, *pōkuka*, *kāṇuka*, *varuka*, *paṟayuka* —
+comes from the reading and going chapters. **കഴിയും** is the only genuinely new
+piece, and two points closed on it.
+
+## Chapter 73 — why, and because
+
+`ML-A1-Q-07` and `ML-A1-JOIN-05` both close. Coverage **167/243 → 169/243
+(70%)**; the question column **7/10 → 8/10**, the joining column **4/11 → 5/11**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 167/243 → **169/243 (70%)** |
+| atoms taught | 385 → 388 |
+| measurable lessons | 310 → 314 |
+| `forwardReferences` | unchanged (12) |
+| `atomChapterSpikes` | unchanged |
+| `durationViolations` | unchanged (0) |
+| `atomsNeverRevisited` | unchanged |
+| `payoffSurprises` | unchanged (0) |
+| reinforcement-window misses | 799 → 810 |
+
+### Two points, one piece of work
+
+Both notes said the same thing from opposite ends: **cause could be handled in
+neither direction.** There was no way to ask what was behind something and no
+way to give it. Closing one without the other would leave a learner able to ask
+a question nobody could answer.
+
+Verified before writing: **എന്തുകൊണ്ട്**, **കാരണം** and **എന്തുകൊണ്ടെന്നാൽ**
+each returned zero files across the whole corpus.
+
+### Most of the chapter was already in the reader's hands
+
+**Malayalam has no separate word for *why*.** എന്തുകൊണ്ട് is chapter two's
+**എന്ത്** — *what* — plus **കൊണ്ട്**, the ending meaning *by means of*. The
+question asks, literally, **"by what?"**
+
+And the written because carries the whole question word at its front:
+
+| | |
+|---|---|
+| **എന്തുകൊണ്ട്** | why |
+| **എന്തുകൊണ്ടെന്നാൽ** | because |
+
+A long unfamiliar word with a word you know at the front of it stops being
+unfamiliar. That is the lesson, and it needs no new machinery.
+
+**കാരണം is the one for speech.** It is a noun first — a reason, a cause — taken
+whole from Sanskrit **कारण**, which puts it beside ചിന്ത and സുപ്രഭാതം as nouns
+this track borrows unreshaped.
+
+### What the chapter refuses to do
+
+**It does not take the tail of എന്തുകൊണ്ടെന്നാൽ apart.** The `-ennaal` can be
+read as the *but*-word chapter 64 teaches, or as a conditional of the saying
+verb, and grammars differ. The lesson says so on the page rather than picking
+one and teaching a reader something that might be wrong.
+
+That is the same refusal this campaign applies to an unsourced stroke order: the
+visible containment of എന്തുകൊണ്ട് is checkable and worth teaching; the
+decomposition of the rest is not.
+
+### A draft claim that was wrong
+
+The first version said all four question words share the front letter **എ**.
+**ആര്** — *who* — opens on ആ.
+
+What is true is more useful: three of the four carry the asking letter that
+`ML-C41-deixis-system` already named when it taught ഇ- for near, അ- for far and
+എ- for a question, and *who* is the exception. Question words are a family, not
+a rule.
+
+## Chapter 72 — the thing said, and a verb moved to chapter 50
+
+`ML-A1-JOIN-06` closes — the quotative **എന്ന്**, which the point's own note
+calls Malayalam's single most productive subordinator. Malayalam A1 coverage
+**166/243 → 167/243 (69%)**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 166/243 → **167/243 (69%)** |
+| atoms taught | 382 → 385 |
+| measurable lessons | 306 → 310 |
+| `forwardReferences` | unchanged (12) |
+| `scriptClosureViolations` | unchanged |
+| `durationViolations` | unchanged (0) |
+| `atomsNeverRevisited` | unchanged |
+| `payoffSurprises` | unchanged (0) |
+| reinforcement-window misses | 791 → 799 |
+
+### Checked by token, not by substring
+
+The note said the quotative was untaught. The string **എന്ന** *does* appear in
+the corpus — five times in `ML-C64-but` and four in `ML-C69` — but every one of
+those is inside **എന്നാൽ**, the word for *but* that chapter 64 teaches. The
+quotative, with the virama, appeared nowhere.
+
+That is the same trap the Malayalam pronoun chapter hit two passes ago, when
+നാം looked taught because it is a substring of three ordinals. **Check the
+token.**
+
+### One marker, and the corpus becomes reportable
+
+**എന്ന് leaves the quoted sentence completely alone.**
+
+> **"എനിക്ക് മലയാളം അറിയാം" എന്ന് ഞാൻ പറയുന്നു.**
+
+The quoted half is the same five syllables the reader has said since chapter
+nine. English rebuilds a reported clause — *I know Malayalam* becomes *that I
+know Malayalam*, with more changes for a different person or tense — and
+Malayalam does not.
+
+**It opens four verbs that were already taught**: പറയുക, ചിന്തിക്കുക, അറിയാം and
+ചോദിക്കുക. Two atoms, four frames, no new verb shapes. That is why the point's
+note called it the most productive subordinator in the language.
+
+### The saying-verb was a second finding, and it belongs to chapter 50
+
+**പറയുക was never a headword anywhere in this book**, and the corpus had been
+using it since chapter 50: `ML-C50-farewell` builds *viṭa paṟayuka* and calls it
+**"the speaking-verb"** — because there was no name to give it — and
+`ML-C50-journey` uses it too.
+
+Teaching it in chapter 72 turned both of those into forward references, **104 and
+106 lessons early**, and `forwardReferences` went 12 → 14.
+
+**The lesson moved rather than the prose.** It now sits at sequence 1405,
+immediately before the first use, inside the chapter whose farewell is built on
+it — which returned the metric to its baseline and paid a debt that predated
+this work. Malayalam has no single word for *to say goodbye*: it names the thing
+given, a journey or a leave, and hangs this verb off it, so the verb belongs in
+that chapter on its own merits.
+
+### Two claims removed before shipping
+
+A draft derived പറ from Tamil **பற**- via *paṟai*, "to proclaim". That is an
+etymology this project has no source for, and it came out. What replaced it is
+checkable from the corpus: the other three verbs in this strand are Sanskrit —
+*cintikkuka* from ചിന്ത, *cōdikkuka* from a Sanskrit word for pushing — and
+this one is not.
+
+A draft also said the farewell lesson *built* the phrase after the verb was
+taught. With the lesson moved, that is no longer true, and the prose now points
+only at the request form **പറയൂ** from the politeness chapter, which genuinely
+comes earlier.
+
+## Chapter 71 — the people in the sentence
+
+`ML-A1-PRON-03` and `ML-A1-PRON-04` close. Malayalam A1 coverage
+**164/243 → 166/243 (68%)**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 164/243 → **166/243 (68%)** |
+| atoms taught | 379 → 382 |
+| measurable lessons | 302 → 306 |
+| `forwardReferences` | unchanged |
+| `scriptClosureViolations` | unchanged |
+| `durationViolations` | unchanged |
+| `atomsNeverRevisited` | unchanged |
+| `payoffSurprises` | unchanged |
+| reinforcement-window misses | 777 → 791 |
+
+### Seventy chapters with nobody in them but the two people in the room
+
+**അവൻ, അവൾ, അവർ and ഞങ്ങൾ appeared in zero lesson files** — not as headwords,
+not anywhere in a body. A learner could say *I* and *you* and could not say
+*he*, *she*, *they* or *we*.
+
+### നാം looked taught and was not
+
+It appeared as a headword in three lessons — `ML-C67-first`, `ML-C67-third` and
+`ML-C68-eleventh` — where it is a **substring** of the ordinals **ഒന്നാം**,
+**മൂന്നാം** and **പതിനൊന്നാം**. Every ordinal ending in **-ന്നാം** is a false
+positive for the pronoun.
+
+That is the same trap the Hindi campaign recorded when every ordinal matched its
+own cardinal. **Check the token, not the substring.**
+
+### The gap sat inside a system already taught
+
+`ML-C41-that` teaches the **ഇ-/അ-** pointing pair and says in as many words that
+**അ-** means far — and the corpus only ever used it on **things**. അവൻ, അവൾ and
+അവർ carry that same **അ-**, so the column for *people* was predicted by a rule
+the reader already had and never filled.
+
+That is the third chapter in a row to find a gap of exactly this shape, after
+Tamil's `TA-A1-PRON-03` and Kannada's punctuation. **The pattern gets taught,
+the pattern is correct, and half of what it predicts never arrives.**
+
+### Two of the three new words cost nothing new
+
+- **അവർ** reuses `ML-C02`'s own rule that **a plural raises the register** —
+  the move that turned നീ into നിങ്ങൾ in chapter two, turning അവൻ into അവർ here.
+  Learning it once buys it twice.
+- **അവൻ / അവൾ** split on **-ൻ** against **-ൾ**, endings that recur elsewhere.
+
+Only the two we-words are genuinely new, and the question behind them has no
+English equivalent: **ഞങ്ങൾ** leaves the listener out, **നാം** takes them in, and
+Malayalam makes you choose every time. Tamil draws the same line with nearly the
+same sounds, which this track's comparative voice says out loud.
+
+77 exam points remain open. Coverage means the teaching exists, not that a
+reader scores.
+
+
+## Chapter 70 — the "and" that was missing from sixty-nine chapters
+
+`ML-A1-JOIN-02` closes. Malayalam A1 coverage **163/243 → 164/243**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 163/243 → **164/243 (67%)** |
+| joining column | 2/11 → **3/11** |
+| atoms taught | 376 → 379 |
+| measurable lessons | 298 → 302 |
+| `forwardReferences` | unchanged |
+| `scriptClosureViolations` | unchanged |
+| `durationViolations` | unchanged (0) |
+| `atomsNeverRevisited` | unchanged |
+| `payoffSurprises` | unchanged |
+| reinforcement-window misses | 768 → 777 |
+
+**One exam point for four lessons is the wrong way to read this change.**
+
+### Malayalam had no "and"
+
+The language coordinates with the clitic **-ഉം**, repeated on each item, and
+**nothing in 307 lessons taught it**. A learner who owned sixty-nine chapters of
+vocabulary — five body parts, five animals, five kitchen words — could not say
+*water and rice*.
+
+That was verified rather than taken on trust. **-ഉം** appeared in exactly **one**
+lesson file, inside an *etymology note* as a morphological component of the word
+for evening. The sequence **ും** appeared in nine files and every one of them had
+it **inside a word** — വീണ്ടും, കുടുംബം, ഹൃദയം, തീർച്ചയായും, പോരും, the month
+names. Not one taught it as a coordinator, and the track carried no joining atom
+at all.
+
+### What the chapter teaches
+
+**English hangs one *and* in the gap between two nouns. Malayalam hangs one
+-ഉം off the back of every item and leaves the gap empty.** Count the joins, not
+the gaps.
+
+> **വെള്ളവും അരിയും** — water and rice
+> **വെള്ളവും അരിയും പാലും** — water, rice and milk
+
+A list of five would carry five. That is a rule a reader can extend without
+being taught the extension, unlike English lists, which change shape as they
+grow.
+
+Three sandhi landings cover the cases the examples need: **-ം** becomes
+**-വും**, a vowel-final noun takes a **യ്** glide, and the chillu **ൽ** unfurls
+back to **ല** because it is no longer at the end.
+
+### The choosing ending belongs in the same chapter
+
+> **ചായയോ കാപ്പിയോ?** — tea or coffee?
+
+**-ഓ** is built exactly like **-ഉം** and differs from it only in the vowel: one
+on each item, nothing in the gap. Having learned where Malayalam puts a joining
+ending, a reader already knows where it puts a choosing one — which is why these
+sit together rather than fifty pages apart. **അല്ലെങ്കിൽ** is taught alongside as
+the standing word an English reader expects to find in the gap.
+
+### What stays open, and why
+
+**`ML-A1-JOIN-01` is not probed.** Its label is *"joining two nouns, and joining
+two clauses"*, and this chapter delivers the noun half. The everyday clause link
+in this corpus is the **-i** participle already covered by `ML-A1-JOIN-11`, and
+claiming clause coordination on the strength of the noun lessons would claim a
+range the corpus does not teach.
+
+`ML-A1-JOIN-04` (the distributive) also stays open, but **its blocker is gone**:
+its own note said it depended on the missing coordinator, which now exists.
+
+Nine of the eleven points in this column were open before this chapter. Eight
+still are.
+
+**Malayalam has no untransferable points**, unlike Kannada's four, so its ceiling
+is the full 243.
+
+79 exam points remain open. Coverage means the teaching exists, not that a
+reader scores.
+
+
 ## Assessment: the A1 task inventory, and the distance it measures
 
 `task-shapes/a1.json` is checked in, realising the A1 envelope this track's own

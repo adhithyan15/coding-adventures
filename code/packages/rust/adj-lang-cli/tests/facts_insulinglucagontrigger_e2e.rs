@@ -31,6 +31,8 @@
 //! ships verbatim (the #15320 balance-typo precedent): repairing it would
 //! cite a sentence the page does not contain.
 
+mod common;
+
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -353,8 +355,12 @@ fn no_cites_remains_and_locator_and_trust_are_stated_once() {
     // SCOPE: this pins a convention local to THIS table, not a language rule.
     // `lower.rs`'s row path accepts Source, Locator, Trust, Cites and Quote,
     // and other shipped tables do carry a row-level `cites`.
+    // CODE ONLY (#15425): `common::has_code_word` reads the text as ADJ's lexer
+    // does -- comments dropped, strings blanked across lines, numbers consumed
+    // whole -- and looks for `cites` as an identifier token, so the keyword counts
+    // however it is spaced or glued, and a comment or a sentence never does.
     assert!(
-        !text.contains("cites \""),
+        !common::has_code_word(&text, "cites"),
         "the glucagon sentence moved to its row; no `cites` should remain at \
          any indent: {text}"
     );

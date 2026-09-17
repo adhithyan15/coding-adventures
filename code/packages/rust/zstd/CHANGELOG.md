@@ -1,5 +1,27 @@
 # Changelog — zstd
 
+## Unreleased
+
+**`decompress_with_limit(data, max_output)`: a caller-chosen output cap,
+enforced while decoding (#13672).** `decompress` could only be told the
+crate-wide 256 MiB ceiling, so a caller with a smaller budget had to decode in
+full and measure afterwards — by which point the process had already held the
+whole output. engram-anki-package's media budget (32 MiB on wasm) was exactly
+that: a refusal that arrived after the allocation it existed to prevent.
+
+- The limit is threaded into `check_output_budget` and `decompress_block`, so
+  every point where output grows refuses at the first block that would cross it.
+- A declared `Frame_Content_Size` past the limit is refused before any block is
+  decoded.
+- A limit above the crate ceiling is clamped to it: the caller can tighten the
+  bomb guard, never loosen it. `decompress` is now `decompress_with_limit` with
+  the ceiling, and its behaviour is unchanged apart from the error text naming
+  the limit that applied.
+
+Tests: exact-limit accepted and one byte under refused (incremental path, and a
+limit landing mid-frame); declared size past the limit refused up front, with a
+positive control at the limit; a `usize::MAX` limit reports the crate ceiling.
+
 ## 0.2.0 — 2026-08-31
 
 **Security fixes found by review of this release's decoder.**

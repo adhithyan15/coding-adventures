@@ -56,3 +56,50 @@ fn manifest_declares_task_app() {
     assert_eq!(package.package.name, "task-app");
     assert_eq!(package.components.exports, ["TaskApp"]);
 }
+
+/// #14016: the view switcher is one toolkit SegmentedControl, not a six-way
+/// If/Else around 36 hand-styled `seg-*` parts. Pinned so the inline copy
+/// cannot come back piecemeal.
+#[test]
+fn view_switcher_is_the_toolkit_segmented_control() {
+    let mil = mosmodel_compiler::compile(&read("TaskApp.mil")).expect("TaskApp.mil should compile");
+    let slots: Vec<&str> = mil.component.slots.iter().map(|s| s.name.as_str()).collect();
+    assert!(slots.contains(&"nav-options"));
+    assert!(slots.contains(&"nav-selected-index"));
+    let show_view = mil
+        .component
+        .emits
+        .iter()
+        .find(|e| e.name == "onShowView")
+        .expect("onShowView must be declared");
+    assert_eq!(show_view.params.len(), 1, "onShowView carries the option index");
+
+    let layout = read("TaskApp.mll");
+    assert!(layout.contains("pkg::mosaic-pkg-toolkit::SegmentedControl"));
+    assert!(layout.contains("onSelect : emit: onShowView"));
+    let mll = moslayout_compiler::compile(&layout, Some(&mil.descriptor_json)).unwrap();
+    let stale: Vec<&str> = mll
+        .parts
+        .iter()
+        .map(|p| p.name.as_str())
+        .filter(|name| *name == "seg" || name.starts_with("seg-"))
+        .collect();
+    assert!(stale.is_empty(), "inline switcher parts are back: {stale:?}");
+    for theme in ["light", "dark"] {
+        let style = read(&format!("TaskApp.{theme}.msl"));
+        assert!(
+            !style.contains("part seg"),
+            "TaskApp.{theme}.msl still styles the removed seg parts"
+        );
+    }
+
+    let manifest = fs::read_to_string(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("mosaic-package.toml"),
+    )
+    .unwrap();
+    let package = mosaic_package_manifest::parse(&manifest).unwrap();
+    assert!(
+        package.dependencies.contains_key("mosaic-pkg-toolkit"),
+        "the toolkit must be a declared dependency"
+    );
+}

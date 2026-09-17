@@ -1,0 +1,22 @@
+{
+  "language": "kannada",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:f4906290b685ad1c",
+  "lessonIds": [
+    "KA-S167-letter-dha",
+    "KA-S168-letter-bha",
+    "KA-S169-letter-pha",
+    "KA-S170-letter-kha",
+    "KA-S171-letter-gha",
+    "KA-S172-letter-ddha",
+    "KA-S173-letter-ttha",
+    "KA-R80-the-breath"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch80.txt",
+  "json": "kannada/narration/ch80.json",
+  "textHash": "fnv1a64:8cb40998a6564c96",
+  "jsonHash": "fnv1a64:bc056666c69259e4",
+  "findings": []
+}

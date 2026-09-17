@@ -13,6 +13,8 @@
 //! page's framing sentence, which every row overrides. The retina sentence
 //! carries the page's U+00A0 no-break spaces.
 
+mod common;
+
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -157,8 +159,40 @@ fn every_part_answer_carries_its_own_sentence() {
 #[test]
 fn the_retina_row_carries_the_pages_no_break_spaces() {
     assert_eq!(RETINA.matches('\u{a0}').count(), 2, "two U+00A0 in the retina sentence");
+    // SCOPED TO `source "` LINES, not the whole table block -- the correction
+    // #15337 made for plant-parts, #15338 for solar-eclipse-type, and #15413
+    // here, in figurative-language-type and in eye-parts.
+    //
+    // WHAT WAS MEASURED, STATED AS MEASURED: this table carries four `%`
+    // comment lines between its rows and its envelope, and `shipped_table()`
+    // slices from `table ...` to end of file, so those comments are inside
+    // `body`. With the ordinary-space form PLANTED in one of them the unscoped
+    // arm sees it and fails a correct file; the scoped arm does not. This test
+    // was green before that mutant and is green after it -- an earlier wording
+    // called this table the LIVE case, which no green test supports. Four
+    // comments mean the hazard needs one more comment line here, not that it
+    // is firing.
+    //
+    // The trade, recorded in shards 03560, 03670 and 03680: scoping lets a
+    // comment-borne ordinary-space form survive. Nothing now pins "no
+    // ordinary-space form anywhere in the block", only "no `source` line
+    // carries one". That is the right trade -- the shipped string is what
+    // provenance means -- but it is a gap, so it is written down.
+    //
+    // The positive half needs no new scoping here: the shape test pins all
+    // three `row (part, property) { source "..." }` blocks verbatim and counts
+    // the row sources, so a mutant that moved this span could not pass it.
     let body = shipped_table();
-    assert!(!body.contains(&RETINA.replace('\u{a0}', " ")), "the ordinary-space form is not in the table");
+    let source_lines: String = body
+        .lines()
+        .filter(|l| l.trim_start().starts_with("source \""))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(
+        !source_lines.contains(&RETINA.replace('\u{a0}', " ")),
+        "no `source` line may carry the ordinary-space form, which the page never \
+         writes: {source_lines}"
+    );
 }
 
 #[test]
@@ -171,7 +205,13 @@ fn the_table_shape_matches_the_measured_rows() {
         assert!(body.contains(&expected), "row ({part}, {property}) is shipped in its measured shape");
     }
     assert_eq!(body.matches("\n        source \"").count(), 3, "three row sources");
-    assert!(!body.contains("cites "), "no corroboration anywhere in the table");
+    let whole_adj = std::fs::read_to_string(facts_stdlib().join("anatomy/eye-part-property.adj")).expect("read shipped eye-part-property.adj");
+    // CODE ONLY (#15425): `common::has_code_word` reads the WHOLE file as ADJ's
+    // lexer does -- comments dropped, strings blanked across lines, numbers
+    // consumed whole -- and looks for a `cites` token anywhere in it. Not from
+    // the table on: no line-based search finds the declaration reliably, and a
+    // corroboration above the table would warrant these rows just the same.
+    assert!(!common::has_code_word(&whole_adj, "cites"), "no corroboration anywhere in the table");
     assert!(
         !body.contains("\n        locator ") && !body.contains("\n        trust "),
         "no row restates a locator line or trust"

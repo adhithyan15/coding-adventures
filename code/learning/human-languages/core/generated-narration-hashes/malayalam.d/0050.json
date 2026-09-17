@@ -1,19 +1,20 @@
 {
   "language": "malayalam",
   "chapter": 50,
-  "sourceHash": "fnv1a64:2200f62eb17c6716",
+  "sourceHash": "fnv1a64:5bbd4a44245c6e53",
   "lessonIds": [
     "ML-C50-now",
     "ML-C50-day-after",
+    "ML-C50-parayuka",
     "ML-C50-journey",
     "ML-C50-set-out",
     "ML-C50-farewell"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
   "text": "malayalam/narration/ch50.txt",
   "json": "malayalam/narration/ch50.json",
-  "textHash": "fnv1a64:3e15f14856fee305",
-  "jsonHash": "fnv1a64:c54141891a92e3b6",
+  "textHash": "fnv1a64:b2d2f420b5a920dc",
+  "jsonHash": "fnv1a64:c37dbdf497920a06",
   "findings": []
 }

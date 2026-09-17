@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C75-eppol",
+    "language": "malayalam",
+    "chapter": 75,
+    "sequence": 2590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cd8cc5f32a72a5c"
+  },
+  "findings": []
+}

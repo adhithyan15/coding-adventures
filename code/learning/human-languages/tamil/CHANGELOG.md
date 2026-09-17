@@ -1,5 +1,163 @@
 # Changelog
 
+## Chapter 86 — the one it is done to
+
+`TA-A1-PRON-04` closes. Tamil A1 coverage **176/262 → 177/262 (68%)**; the
+pronoun column **5/9 → 6/9**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 176/262 → **177/262 (68%)** |
+| atoms taught | 501 → 504 |
+| measurable lessons | 410 → 414 |
+| `forwardReferences` | unchanged (8) |
+| `scriptClosureViolations` | unchanged (0) |
+| `durationViolations` | unchanged (0) |
+| `atomsNeverRevisited` | unchanged |
+| `payoffSurprises` | unchanged (0) |
+| reinforcement-window misses | 1057 → 1070 |
+
+### The gap, checked before anything was written
+
+The point's note said Tamil had **no case suffix taught but the dative**. That
+was verified rather than assumed: `-உக்கு` is taught across three chapter-6
+lessons including a four-sister comparison, and no other case existed anywhere
+in the track. The single lesson body containing the word *accusative* is
+`TA-C26-kaalai`, in an etymology aside about whether *kālai* is an
+accusative-type form of *kāl* — which is not teaching a case.
+
+### A second piece of evidence, not a new system
+
+`TA-C06-dative-ukku` opens by saying that English puts a word in front and Tamil
+sticks a piece on the back, and calls that the biggest structural fact about the
+language. **-ஐ is that same move in a second place**, so the chapter is built as
+evidence for a rule the reader already holds rather than as new machinery.
+
+**என்னை and உன்னை cost nothing new.** They stand on the changed bodies *eṉ-* and
+*uṉ-* that the dative already built for *enakku* and *unakku*, so the lesson is
+one new column on a table the reader has, not two new words:
+
+| the word | to / for | the one it is done to |
+|---|---|---|
+| நான் | எனக்கு | என்னை |
+| நீ | உனக்கு | உன்னை |
+
+### The rational split, taught as a choice that means something
+
+The point's demand is that **-ai** is obligatory on a rational noun and optional
+on others, and the chapter teaches the optionality as carrying meaning rather
+than as a shrug: bare **தேநீர்** is tea in general, **தேநீரை** is *that* tea.
+Tamil has no word for *the*, and this is one of the places the job gets done
+instead.
+
+**The Spanish personal *a* is named directly** — *veo la casa* against *veo a
+María* — because that is the demand this point derives from. The useful half of
+the comparison is not that both languages mark a human object; it is that
+**Spanish puts the marker in front as a separate word and Tamil puts it on the
+back**, which is the difference the dative chapter opened with.
+
+### Two constraints the examples were built around
+
+**Every example keeps a first-person subject**, and the reason is narrower than
+it first looked. A draft of this entry said `-ēṉ` was the only person ending the
+track teaches; counting says `-ēṉ` appears 61 times and `-īrgaḷ` 14, so both are
+well established. **It is the third-person `-ār` that is not** — one occurrence
+in the whole track — and these lessons have third-person *objects*, so keeping
+the subject first-person is what holds every example inside what the reader has.
+A bare stem is already a command, so *eṉṉai ninai* is a whole sentence with
+nothing unfamiliar in it.
+
+**No example needs the object-verb consonant doubling.** Tamil doubles a verb's
+initial consonant after an object in *k, c, t, p*, and this book has never
+taught that. The verbs were chosen so it never arises: *ninai* and *vāṅgu* both
+begin with letters that do not double.
+
+### A forward reference the snapshot diff caught
+
+The first draft gave the third lesson the headword **அவரை**, and
+`forwardReferences` went 8 → 9: the *first* lesson is what teaches that word, so
+the checker read the first lesson as pointing two lessons ahead at the third.
+
+The headword moved to **தேநீர் / தேநீரை**, the pair the third lesson actually
+teaches. Better as a headword too — the lesson is about when the ending is a
+choice, and the tea pair is the choice.
+
+## Chapter 85 — the people not here, and a column that was never filled
+
+`TA-A1-PRON-03` closes. Tamil A1 coverage **175/262 → 176/262**.
+
+| metric | before → after |
+|---|---|
+| exam-point coverage | 175/262 → **176/262 (67%)** |
+| atoms taught | 497 → 501 |
+| measurable lessons | 405 → 410 |
+| `forwardReferences` | 7 → 8 — see below |
+| `scriptClosureViolations` | unchanged |
+| `durationViolations` | unchanged |
+| `atomsNeverRevisited` | unchanged |
+| `payoffSurprises` | unchanged (10) |
+| reinforcement-window misses | 1041 → 1057 |
+
+### The gap was inside a rule that had already been taught
+
+`TA-C37-ivar` teaches Tamil's pointing system, and its own table says in as many
+words that **இ-** points near and **அ-** points away. **The அ- column was never
+filled.** A reader could state what அ- meant and had no அ- word for a person to
+say — only **இவர்**, and then eighty chapters of nothing.
+
+That is the ordinary way a gap survives: **the pattern gets taught, the pattern
+is correct, and nobody notices that half of what it predicts was never handed
+over.**
+
+### Four words, each one step from something already known
+
+- **அவர்** is இவர் with one letter changed.
+- **அவன் / அவள்** are the familiar pair that இவர்'s own lesson already named as
+  what it was built from, with the same **-அர்** that makes நண்பர் out of நண்பன்.
+- **அவர்கள்** is அவர் plus **-கள்** — the plural the reader has been pronouncing
+  inside **நீங்கள்** since chapter two without being told it was one.
+- **நாம்** against **நாங்கள்** is the distinction Spanish does not make. It is
+  taught as a *question* rather than as a pair of words: before saying *we*, ask
+  whether the person listening is inside it.
+
+### அவர் moved to chapter 37, and the move is the point
+
+Drafted at the end of the book, **அவர் turned இவர்'s own table into a forward
+reference to it** — `forwardReferences` 7 → 8, at a distance of **241 lessons**.
+Teaching the far cell eighty chapters after the table that predicts it is
+backwards, so the lesson moved to sit **one slot after இவர்**, where that table
+is on the page.
+
+**The count stayed at 8 and the distance fell to 1.** A one-lesson-early
+reference between a near/far pair is this track's own established pattern —
+`TA-C40` already carries three of them, here/there, this/that and who/where, all
+at exactly one lesson early. Avoiding it entirely would mean teaching அவர்
+*before* இவர், putting the far cell in front of the anchor that teaches the
+system.
+
+The test that capped forward references at 7 was rewritten rather than bumped:
+it now caps the total at 8 **and** asserts separately that references at a real
+distance have not grown, which is the thing the cap was there to protect.
+
+### A correction to `TA-A1-V-06`, for whoever picks it up
+
+That point's note said *"no lesson gives the past marker, and no lesson puts a
+verb into the past."* **The second half is false.** `TA-C32-po` prints a
+three-row table — *pōgiṟēṉ / pōṉēṉ / pōvēṉ* — names the middle bead *-giṟ- /
+-ṉ- / -v-*, and glosses *pōṉēṉ* as "I went".
+
+What is true is that this is **shown for one verb in one table and never taught
+as an atom**. The gap is *productivity*, not exposure — a different and cheaper
+problem than the note described, though still real, and still not trivial:
+Tamil's past marker varies by verb class, and chapter 32's six verbs span
+several. The note now says so.
+
+**Tamil has no untransferable points**, so its ceiling is the full 262.
+
+86 exam points remain open. Coverage means the teaching exists, not that a
+reader scores.
+
+
 ## Assessment: the A1 task inventory, and the distance it measures
 
 `task-shapes/a1.json` is checked in, realising the A1 envelope this track's own

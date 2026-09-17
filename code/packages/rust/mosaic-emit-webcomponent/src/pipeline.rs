@@ -188,6 +188,11 @@ pub enum PipelineEmitError {
     /// `"/about"`) is unaffected -- only an explicit, disallowed
     /// scheme is rejected.
     UnsafeUriScheme(String),
+    /// A prop value has a shape the prop does not accept -- for example a
+    /// string literal where `HostButton`'s `selected:` needs a bool
+    /// (UI86 §4). Refused rather than dropped, so an authored state is
+    /// never silently lost.
+    InvalidPropValue(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -211,6 +216,7 @@ impl std::fmt::Display for PipelineEmitError {
                 f,
                 "HostLink href {href:?} uses a disallowed URI scheme (only http, https, mailto, or a relative reference are allowed)"
             ),
+            PipelineEmitError::InvalidPropValue(message) => write!(f, "{message}"),
         }
     }
 }
@@ -656,8 +662,33 @@ fn js_literal_for_fixture(slot_type: &SlotType, value: &str) -> String {
             "false" => "false".to_string(),
             _ => format!("\"{}\"", escape_js_string(value)),
         },
+        // Lists arrive as JSON text (#15428). A shape that does not match the
+        // slot keeps the generated sample.
+        SlotType::List(_) => match mosmodel_compiler::fixtures::parse_list_fixture(slot_type, value)
+        {
+            Some(mosmodel_compiler::fixtures::ListFixture::Text(items)) => js_string_array(&items),
+            Some(mosmodel_compiler::fixtures::ListFixture::TextRows(rows)) => format!(
+                "[{}]",
+                rows.iter()
+                    .map(|row| js_string_array(row))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ),
+            None => sample_js_value_for_slot_type(slot_type, ""),
+        },
         _ => format!("\"{}\"", escape_js_string(value)),
     }
+}
+
+fn js_string_array(items: &[String]) -> String {
+    format!(
+        "[{}]",
+        items
+            .iter()
+            .map(|item| format!("\"{}\"", escape_js_string(item)))
+            .collect::<Vec<_>>()
+            .join(", ")
+    )
 }
 
 fn sample_js_value_for_slot(slot: &SlotDecl) -> String {
@@ -1120,7 +1151,7 @@ fn emit_html_tree(
     match node.tag.as_str() {
         "HostSurface" => return Ok(emit_host_surface(node, part_styles)),
         "HostInput" | "Input" => return Ok(emit_host_input(node, part_styles)),
-        "HostButton" => return Ok(emit_host_button(node, ctx, part_styles)),
+        "HostButton" => return emit_host_button(node, ctx, part_styles),
         "HostDialog" => return emit_host_dialog(node, ctx, part_styles),
 
         // UI29-2 — `HostCheckbox` and `HostRadio` lower to native
@@ -1636,26 +1667,7 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HashMap<String, String>) -> 
     let mut textarea_value = String::new();
     attrs.push_str(&build_style_attr(node, "", part_styles));
 
-    if let Some(prop) = node.props.iter().find(|prop| prop.name == "a11y-label") {
-        match &prop.value {
-            LayoutPropValue::String(label) => attrs.push_str(&format!(
-                r#" aria-label="{}""#,
-                escape_html_attribute(label)
-            )),
-            LayoutPropValue::SlotRef(slot) => {
-                let camel = to_camel_case_first_lower(slot);
-                if is_safe_identifier(&camel) {
-                    attrs.push_str(&format!(
-                        r#" aria-label="${{escapeHtmlAttribute({camel})}}""#
-                    ));
-                }
-            }
-            LayoutPropValue::Expr(expr) => attrs.push_str(&format!(
-                r#" aria-label="${{escapeHtmlAttribute({expr})}}""#
-            )),
-            _ => {}
-        }
-    }
+    attrs.push_str(&accessible_name_attr(node));
 
     // value="${slot}"
     if let Some(slot) = find_slot_ref(node, "value") {
@@ -1772,7 +1784,7 @@ fn emit_host_button(
     node: &LayoutNode,
     ctx: &RenderCtx<'_>,
     part_styles: &HashMap<String, String>,
-) -> String {
+) -> Result<String, PipelineEmitError> {
     let mut attrs = String::new();
     attrs.push_str(&build_style_attr(node, "", part_styles));
 
@@ -1801,9 +1813,109 @@ fn emit_host_button(
         }
     }
 
+    // The portable accessible name (UI29 §2.1). This used to be dropped
+    // here without a degradation (#15426), so every slot- or
+    // expression-bound HostButton name was lost on this backend while
+    // React, Qt, SwiftUI, Compose, Flutter and XAML kept it.
+    attrs.push_str(&accessible_name_attr(node));
+    attrs.push_str(&host_button_pressed_attr(node)?);
+
     let body = host_button_label_body(node);
 
-    format!("<button{attrs}>{body}</button>")
+    Ok(format!("<button{attrs}>{body}</button>"))
+}
+
+/// Lower `HostButton`'s `selected:` (UI86) to an ` aria-pressed="…"`
+/// attribute fragment, or to nothing when the prop is absent.
+///
+/// | authored form            | emitted                                              |
+/// |--------------------------|------------------------------------------------------|
+/// | (absent)                 | nothing: an ordinary push button                     |
+/// | `selected : true`        | ` aria-pressed="true"`                               |
+/// | `selected : slot: s`     | ` aria-pressed="${(s) ? 'true' : 'false'}"`          |
+/// | `selected : item`        | ` aria-pressed="${(item) ? 'true' : 'false'}"`       |
+/// | `selected : ( i == n )`  | ` aria-pressed="${(i == n) ? 'true' : 'false'}"`     |
+/// | a string or number       | refused: `InvalidPropValue`                          |
+///
+/// The ternary is the whole point: the attribute sits inside `innerHTML`,
+/// and only the two literals `'true'` and `'false'` can be written into it,
+/// whatever the value is. Truthiness is JavaScript's, the same as
+/// `If ( when: … )` on this backend. The expression is the layout
+/// compiler's token reconstruction, as for `If`.
+fn host_button_pressed_attr(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    let Some(prop) = node.props.iter().find(|prop| prop.name == "selected") else {
+        return Ok(String::new());
+    };
+    let condition = match &prop.value {
+        LayoutPropValue::Keyword(k) if k == "true" || k == "false" => {
+            return Ok(format!(r#" aria-pressed="{k}""#));
+        }
+        LayoutPropValue::SlotRef(name) | LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            if !is_safe_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            camel
+        }
+        LayoutPropValue::Expr(expr) if !strip_outer_parens(expr.trim()).is_empty() => {
+            strip_outer_parens(expr.trim()).to_string()
+        }
+        _ => {
+            return Err(PipelineEmitError::InvalidPropValue(
+                "HostButton `selected:` must be a slot reference, `true`/`false`, a loop binding, or an expression (UI86 §4)".to_string(),
+            ))
+        }
+    };
+    Ok(format!(
+        r#" aria-pressed="${{({condition}) ? 'true' : 'false'}}""#
+    ))
+}
+
+/// Lower a node's portable `a11y-label` to an ` aria-label="…"` attribute
+/// fragment, or to nothing when the node has none.
+///
+/// | authored form          | emitted                                          |
+/// |------------------------|--------------------------------------------------|
+/// | `a11y-label : "Name"`  | ` aria-label="Name"` (escaped at emit time)      |
+/// | `a11y-label : slot: s` | ` aria-label="${escapeHtmlAttribute(s)}"`        |
+/// | `a11y-label : item`    | ` aria-label="${escapeHtmlAttribute(item)}"`     |
+/// | `a11y-label : ( e )`   | ` aria-label="${escapeHtmlAttribute(e)}"`        |
+///
+/// Every dynamic value goes through `escapeHtmlAttribute` at render time,
+/// because this attribute sits inside `innerHTML`: an unescaped `"` in a
+/// host-supplied name would end the attribute and start markup. Slot and
+/// keyword names that are not safe JS identifiers are dropped, the same
+/// rule `template_identifier_body` applies to labels.
+///
+/// An empty runtime value yields `aria-label=""`, which the accessible-name
+/// computation treats as absent, so the button's text still names it.
+fn accessible_name_attr(node: &LayoutNode) -> String {
+    let Some(prop) = node.props.iter().find(|prop| prop.name == "a11y-label") else {
+        return String::new();
+    };
+    let dynamic = |js: &str| format!(r#" aria-label="${{escapeHtmlAttribute({js})}}""#);
+    match &prop.value {
+        LayoutPropValue::String(label) => {
+            format!(r#" aria-label="{}""#, escape_html_attribute(label))
+        }
+        LayoutPropValue::SlotRef(name) | LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            if is_safe_identifier(&camel) {
+                dynamic(&camel)
+            } else {
+                String::new()
+            }
+        }
+        LayoutPropValue::Expr(expr) => {
+            let trimmed = strip_outer_parens(expr.trim());
+            if trimmed.is_empty() {
+                String::new()
+            } else {
+                dynamic(trimmed)
+            }
+        }
+        _ => String::new(),
+    }
 }
 
 fn host_button_dispatch_bits(emit_name: &str, ctx: &RenderCtx<'_>) -> Option<(String, String)> {
@@ -3597,6 +3709,22 @@ mod tests {
         );
     }
 
+    /// #15428: list fixtures arrive as JSON text and render as JS arrays;
+    /// a shape that does not match the slot keeps the sample `[]`.
+    #[test]
+    fn list_fixtures_render_as_js_arrays() {
+        let rows = SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(Box::new(mosmodel_compiler::ListInnerType::Text))));
+        let text = SlotType::List(Box::new(mosmodel_compiler::ListInnerType::Text));
+        assert_eq!(
+            super::js_literal_for_fixture(&rows, r#"[["Board","Board, selected"]]"#),
+            r#"[["Board", "Board, selected"]]"#
+        );
+        assert_eq!(super::js_literal_for_fixture(&text, r#"["a","b"]"#), r#"["a", "b"]"#);
+        let quoted = super::js_literal_for_fixture(&text, r#"["a\"b"]"#);
+        assert!(!quoted.contains("a\"b\""), "raw quote must not survive: {quoted}");
+        assert_eq!(super::js_literal_for_fixture(&rows, r#"["flat"]"#), "[]");
+    }
+
     /// A fixture must be escaped like any other emitted string, so a value
     /// containing a quote cannot break out of the slot table.
     #[test]
@@ -4462,6 +4590,146 @@ mod tests {
             let out = from_pipeline(&m, &l, &empty_style("Edit")).unwrap().output;
             assert!(out.contains(expected), "expected {expected} in:\n{out}");
         }
+    }
+
+    /// #15426: HostButton's portable name was never read on this backend.
+    /// Every dynamic form must go through `escapeHtmlAttribute`, because
+    /// the attribute lands inside `innerHTML`.
+    #[test]
+    fn host_button_accessible_name_lowers_every_authored_form() {
+        let m = component(
+            "Btn",
+            vec![slot("spoken-title", SlotType::Text, true)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::String("Close \"dialog\"".into()),
+                r#"aria-label="Close &quot;dialog&quot;""#,
+            ),
+            (
+                LayoutPropValue::SlotRef("spoken-title".into()),
+                r#"aria-label="${escapeHtmlAttribute(spokenTitle)}""#,
+            ),
+            (
+                LayoutPropValue::Keyword("item".into()),
+                r#"aria-label="${escapeHtmlAttribute(item)}""#,
+            ),
+            (
+                LayoutPropValue::Expr("( option [ 1 ] )".into()),
+                r#"aria-label="${escapeHtmlAttribute(option [ 1 ])}""#,
+            ),
+        ] {
+            let l = root_layout(
+                "Btn",
+                leaf_with_props(
+                    "HostButton",
+                    vec![
+                        LayoutProp {
+                            name: "label".into(),
+                            value: LayoutPropValue::String("Go".into()),
+                        },
+                        LayoutProp {
+                            name: "a11y-label".into(),
+                            value,
+                        },
+                    ],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("Btn")).unwrap().output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+            assert!(
+                out.contains(&format!("<button {expected}>Go</button>")),
+                "the name must sit on the button itself, got:\n{out}"
+            );
+        }
+    }
+
+    /// UI86: only the literals `'true'` and `'false'` can be written into
+    /// `aria-pressed`, whatever the bound value is.
+    #[test]
+    fn host_button_selected_lowers_every_authored_form() {
+        let m = component("Btn", vec![], vec![]);
+        for (value, expected) in [
+            (LayoutPropValue::Keyword("true".into()), r#" aria-pressed="true""#),
+            (LayoutPropValue::Keyword("false".into()), r#" aria-pressed="false""#),
+            (
+                LayoutPropValue::SlotRef("is-current".into()),
+                r#" aria-pressed="${(isCurrent) ? 'true' : 'false'}""#,
+            ),
+            (
+                LayoutPropValue::Keyword("item".into()),
+                r#" aria-pressed="${(item) ? 'true' : 'false'}""#,
+            ),
+            (
+                LayoutPropValue::Expr("( i == selectedIndex )".into()),
+                r#" aria-pressed="${(i == selectedIndex) ? 'true' : 'false'}""#,
+            ),
+        ] {
+            let l = root_layout(
+                "Btn",
+                leaf_with_props(
+                    "HostButton",
+                    vec![LayoutProp {
+                        name: "selected".into(),
+                        value,
+                    }],
+                ),
+            );
+            let out = from_pipeline(&m, &l, &empty_style("Btn")).unwrap().output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+        }
+        let plain = root_layout("Btn", leaf_with_props("HostButton", vec![]));
+        let out = from_pipeline(&m, &plain, &empty_style("Btn")).unwrap().output;
+        assert!(!out.contains("aria-pressed"), "absent selected must emit nothing:\n{out}");
+    }
+
+    #[test]
+    fn host_button_selected_refuses_non_bool_and_unsafe_values() {
+        let m = component("Btn", vec![], vec![]);
+        for (value, unsafe_name) in [
+            (LayoutPropValue::String("true".into()), false),
+            (LayoutPropValue::Number(1.0), false),
+            (LayoutPropValue::Expr("( )".into()), false),
+            (LayoutPropValue::Keyword("x)}${alert(1)".into()), true),
+        ] {
+            let l = root_layout(
+                "Btn",
+                leaf_with_props(
+                    "HostButton",
+                    vec![LayoutProp {
+                        name: "selected".into(),
+                        value,
+                    }],
+                ),
+            );
+            let result = from_pipeline(&m, &l, &empty_style("Btn"));
+            if unsafe_name {
+                assert!(matches!(result, Err(PipelineEmitError::UnsafeSlotName(_))));
+            } else {
+                assert!(matches!(result, Err(PipelineEmitError::InvalidPropValue(_))));
+            }
+        }
+    }
+
+    /// A slot or keyword whose camel form is not a JS identifier would be
+    /// spliced into a template literal, so it is dropped, as labels are.
+    #[test]
+    fn host_button_accessible_name_drops_unsafe_identifiers() {
+        let m = component("Btn", vec![], vec![]);
+        let l = root_layout(
+            "Btn",
+            leaf_with_props(
+                "HostButton",
+                vec![LayoutProp {
+                    name: "a11y-label".into(),
+                    value: LayoutPropValue::Keyword("x)}${alert(1)".into()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Btn")).unwrap().output;
+        assert!(!out.contains("aria-label"), "unexpected aria-label in:\n{out}");
+        assert!(!out.contains("alert(1)"), "unsafe name reached output:\n{out}");
     }
 
     // -------- K4: HostButton with literal label + onTap → onclick --------

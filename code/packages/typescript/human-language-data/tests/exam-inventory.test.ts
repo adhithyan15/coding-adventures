@@ -1427,8 +1427,13 @@ describe("the committed Marathi A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(165);
-    expect(coverage.unmapped).toBe(136);
+    //
+    // 165 -> 166: chapter 65 closes MR-A1-OR-12, the independent ii, o, ai and au.
+    // ONE point for five lessons, and the ratio is honest: four letters that each
+    // need their own shape practised, plus the review. All four had a sign the
+    // reader already drew, so the gap was in the POSITION rather than the sound.
+    expect(coverage.covered).toBe(166);
+    expect(coverage.unmapped).toBe(135);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -1439,7 +1444,7 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 165/301 points covered (55%)",
+      "marathi A1 (partial inventory): 166/301 points covered (55%)",
     );
   }, 60_000);
 });
@@ -1579,8 +1584,35 @@ describe("the committed Tamil A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(262);
-    expect(coverage.covered).toBe(175);
-    expect(coverage.unmapped).toBe(87);
+    // 175 -> 176: TA-A1-PRON-03, the rest of the subject paradigm. THE GAP WAS
+    // INSIDE A RULE THAT HAD ALREADY BEEN TAUGHT: TA-C37-ivar teaches the i-/a-
+    // pointing system and its table says in as many words that a- points away --
+    // and the a- column had never been filled, so a reader could state what a-
+    // meant and had no a- person word to say. avar now sits one lesson after
+    // ivar, where that table shows the column; avan and aval are the familiar
+    // pair ivar's own lesson already named as what it was built from; avarkaL is
+    // avar plus the plural -kaL the reader has been pronouncing inside niingaL
+    // since chapter two. naam against naangaL is the point the note called out as
+    // the one Spanish does not make, and it is taught as a QUESTION -- is my
+    // listener inside this 'we' -- rather than as a pair of words.
+    // TA-A1-V-06'S NOTE WAS HALF WRONG AND IS CORRECTED IN THE INVENTORY: it said
+    // 'no lesson puts a verb into the past', and TA-C32-po prints poogiReen /
+    // pooneen / pooveen in a three-row table and glosses pooneen as 'I went'. The
+    // real gap is PRODUCTIVITY, not exposure -- shown for one verb, never taught
+    // as an atom -- which is a different and cheaper problem than described.
+    // 176 -> 177: TA-A1-PRON-04, the accusative -ai on a person -- Tamil's answer
+    // to Spanish's personal a, and the track's SECOND case ending after the
+    // dative -ukku. The point's note was accurate and was verified before the
+    // chapter was written: -ukku really was the only case taught anywhere.
+    // THE GAP IS STILL GRAMMAR-SHAPED, which is what this test is named for, and
+    // the pronoun column below moves on its own line rather than leaving the
+    // total to speak for it.
+    expect(coverage.covered).toBe(177);
+    expect(coverage.unmapped).toBe(85);
+    expect(coverage.byCategory["Pratippeyar (pronouns)"]!).toEqual({
+      enumerated: 9,
+      covered: 6,
+    });
     // 174 -> 175: the HL-C354 ordinal tranche closed TA-A1-NUM-04 (chapters
     // 82-83). It is the ONLY point that moved, and the numeral column below
     // says so on its own line rather than leaving the total to speak for it.
@@ -1603,7 +1635,7 @@ describe("the committed Tamil A1 inventory", () => {
     expect(coverage.byCategory["Vinaiccol (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Tamiḻ eḻuttu (script and orthography)"]!.covered).toBeGreaterThan(5);
     expect(formatExamCoverage(coverage)).toContain(
-      "tamil A1 (partial inventory): 175/262 points covered (67%)",
+      "tamil A1 (partial inventory): 177/262 points covered (68%)",
     );
   }, 60_000);
 });
@@ -1716,8 +1748,30 @@ describe("the committed Kannada A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(258);
-    expect(coverage.covered).toBe(194);
-    expect(coverage.unmapped).toBe(64);
+    // 194 -> 197: KA-A1-L-12 (the full stop and the comma), KA-A1-L-13 (the
+    // question mark) and KA-A1-L-14 (colon, brackets, quotes, dash). THE CORPUS
+    // HAD BEEN PRINTING THESE MARKS SINCE CHAPTER ONE while no lesson named any
+    // of them -- every Kannada sentence in every reading passage ends in a Latin
+    // full stop -- so chapter 77 opens by pointing at the end of a line in the
+    // previous chapter and saying that something is sitting there nothing has
+    // named. Kannada borrows the whole Latin set, shape and job together, which
+    // is why three points cost one short chapter and nothing in it looks
+    // unfamiliar.
+    // L-13 CARRIES THE ONE LOAD-BEARING CONTRAST: the Spanish demand it derives
+    // from opens a question with a second inverted mark and Kannada does not, so
+    // a Kannada reader meets the mark at the end or not at all and the WORDS have
+    // to carry the question until then.
+    // L-14 IS PROBED AS A RECOGNITION POINT, not a production one: at A1 the
+    // demand is knowing what a colon or a bracket signals on a notice, and the
+    // recall lesson sorts the set into the three a reader writes and the rest
+    // they read. KA-A1-L-15 (abbreviations and symbols) stays open.
+    // FOUR OF KANNADA'S UNMAPPED POINTS ARE STRUCTURALLY UNCOVERABLE and are
+    // marked untransferable in the inventory: capital letters, written
+    // accentuation and superscript abbreviation letters have no Kannada
+    // counterpart at all, and neither does Spanish's mid-distance demonstrative.
+    // The real ceiling for this track is 254/258, not 258/258.
+    expect(coverage.covered).toBe(198);
+    expect(coverage.unmapped).toBe(60);
     expect(coverage.partial).toBe(0);
     // 193 -> 194: the HL-C354 ordinal tranche closed KA-A1-NUM-07 (chapters
     // 74-75). It is the ONLY point that moved, and the numeral column below
@@ -1745,13 +1799,35 @@ describe("the committed Kannada A1 inventory", () => {
     // most-used untaught characters. `ma` alone appears in 36 headwords and was
     // never taught. Nineteen characters remain, six of which have a sourced
     // ductus this project has not spent and thirteen of which have none.
-    expect(coverage.byCategory["Lipi (script and orthography)"]!.covered).toBeLessThan(10);
+    // THE COUNT ONCE MOVED 8 -> 11 WITHOUT THE CHARACTER DEBT SHRINKING BY ONE.
+    // Those three points were PUNCTUATION -- the full stop and comma, the
+    // question mark, and the colon/brackets/quotes/dash -- which Kannada borrows
+    // whole from the Latin alphabet and which this column happens to house
+    // alongside the characters. A count over the column is the wrong proxy for
+    // "the script is still short", so the assertion named the thing it meant:
+    // KA-A1-L-09, whose own label used to read "THE SCRIPT IS NOT CLOSED: N
+    // characters are used but never taught", with N going 27, 19, 13.
+    // IT IS NOW CLOSED, AND THE ASSERTION IS REWRITTEN RATHER THAN FLIPPED. A
+    // bare `.covered` toBe(true) would pass on a probe that had been quietly
+    // emptied, so the probe's own size is asserted beside it: the point carries
+    // all TWENTY-SEVEN characters it was opened for -- the eight chapters 67-73
+    // taught, the six chapter 78 taught as writing from cited stroke-order
+    // animations, and the thirteen chapters 79 and 80 taught as recognition
+    // because no ductus for them exists anywhere in this project.
+    // The character count itself is pinned at an exact zero in
+    // tests/corpus/kannada.test.ts, which is where a regression would show.
+    const scriptClosed = coverage.points.find((p) => p.id === "KA-A1-L-09")!;
+    expect(scriptClosed.covered).toBe(true);
+    expect(
+      loadExamInventory("kannada", "A1").points.find((p) => p.id === "KA-A1-L-09")!.probe,
+    ).toHaveLength(27);
+    expect(coverage.byCategory["Lipi (script and orthography)"]!.covered).toBe(12);
     // The two columns that carry this track, and they are not the ones French
     // and German lead on.
     expect(coverage.byCategory["Kriyaapada (the verb)"]!.covered).toBeGreaterThan(12);
     expect(coverage.byCategory["Padakosha (lexicon by domain)"]!.covered).toBeGreaterThan(45);
     expect(formatExamCoverage(coverage)).toContain(
-      "kannada A1 (partial inventory): 194/258 points covered (75%)",
+      "kannada A1 (partial inventory): 198/258 points covered (77%)",
     );
   }, 60_000);
 });
@@ -1871,14 +1947,98 @@ describe("the committed Malayalam A1 inventory", () => {
     }
   });
 
-  it("reports a joining column of 2 out of 11, and a script 9 characters short", () => {
+  it("reports a joining column of 8 out of 11, and a script 9 characters short", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(243);
-    expect(coverage.covered).toBe(163);
-    expect(coverage.unmapped).toBe(80);
+    // 163 -> 164: ML-A1-JOIN-02 (or). ONE POINT FOR FOUR LESSONS, AND THE RATIO
+    // IS THE WRONG WAY TO READ THIS CHANGE. What chapter 70 actually does is give
+    // Malayalam its 'and': the language coordinates with the clitic -um repeated
+    // on EACH item, and NOTHING IN 307 LESSONS TAUGHT IT. Verified rather than
+    // taken from the note -- -um appeared in exactly one lesson file, inside an
+    // etymology note as a component of the word for evening, and the nine files
+    // carrying the sequence u+m all had it INSIDE a word (veendum, kudumbam,
+    // hrudayam, the month names). A learner owning 69 chapters of vocabulary could
+    // not say 'water and rice'.
+    // ML-A1-JOIN-01 STAYS OPEN ON PURPOSE. Its label is 'joining two nouns, AND
+    // joining two clauses', and this chapter delivers the noun half only. The
+    // everyday clause link in this corpus is the -i participle already covered by
+    // ML-A1-JOIN-11, and claiming clause coordination off the noun lessons would
+    // claim a range the corpus does not teach. Same call as TE-A1-L-10.
+    // ML-A1-JOIN-04 (distributive) also stays open, but its blocker is gone: its
+    // note said it depended on the missing coordinator, which now exists.
+    // -o IS TAUGHT BESIDE -um BECAUSE THEY ARE ONE HABIT: both go on every item
+    // with nothing in the gap, and only the vowel differs -- veLLavum ariyum for
+    // both, chaayayoo kaappiyoo for one of them.
+    // MALAYALAM HAS NO UNTRANSFERABLE POINTS, unlike Kannada's four, so its
+    // ceiling is the full 243.
+    // 164 -> 166: ML-A1-PRON-03 (third person) and ML-A1-PRON-04 (first and second
+    // person plural). VERIFIED WORSE THAN THE NOTES SAID: avan, aval, avar and
+    // njangal appeared in ZERO lesson files -- not as headwords, not anywhere in a
+    // body. A learner with seventy chapters of vocabulary could say I and you and
+    // could not say he, she, they or we.
+    // naam LOOKED taught and was not: it appeared as a headword in ML-C67-first,
+    // ML-C67-third and ML-C68-eleventh, where it is a SUBSTRING of the ordinals
+    // onnaam, moonnaam and pathinonnaam. Every ordinal ending -nnaam is a false
+    // positive for naam -- the same trap the Hindi campaign recorded when every
+    // ordinal matched its own cardinal. Check the token, not the substring.
+    // THE GAP SAT INSIDE A SYSTEM ALREADY TAUGHT. ML-C41-that teaches the i-/a-
+    // pointing pair and says in as many words that a- means far, and the corpus
+    // only ever used it on THINGS. avan, aval and avar carry the same a-, so the
+    // column for people was predicted and never filled -- the same shape as Tamil's
+    // TA-A1-PRON-03, closed in the chapter before this one. avar additionally
+    // reuses ML-C02's own rule that a plural raises the register (nii -> ningal,
+    // avan -> avar), so two of the three new words run on machinery already held.
+    // 166 -> 167: ML-A1-JOIN-06, the quotative ennu. THE NOTE WAS VERIFIED BY
+    // TOKEN RATHER THAN SUBSTRING, and that mattered: the string `enna` appears
+    // nine times in the corpus, and every one is inside ennaal, the word for
+    // "but" that ML-C64 teaches. The quotative -- with the virama -- was nowhere.
+    // ONE MARKER BUYS BACK THE WHOLE CORPUS: ennu leaves the quoted sentence
+    // untouched, so every sentence the reader can build becomes something they
+    // can report, think, claim to know or ask. Two atoms, four verb frames, all
+    // four verbs already taught.
+    // THE SAYING-VERB WAS A SECOND FINDING AND IS FIXED IN CHAPTER 50, NOT 72:
+    // parayuka was never a headword anywhere, while ML-C50-farewell built
+    // `vita parayuka` and called it "the speaking-verb" for want of a name.
+    // Teaching it at 72 made those uses forward references 104 and 106 lessons
+    // early; the lesson moved to sequence 1405, immediately before the first use,
+    // which returned forwardReferences to its baseline of 12 and paid a debt that
+    // predated this work.
+    // 167 -> 169: ML-A1-JOIN-05 (because) and ML-A1-Q-07 (why), which are ONE
+    // PIECE OF WORK and whose notes said so -- cause could be handled in NEITHER
+    // direction, so closing one without the other leaves a learner able to ask a
+    // question nobody can answer. Both notes were verified: entukondu, kaaranam
+    // and entukondennaal each returned ZERO files across the whole corpus.
+    // MOST OF THE CHAPTER IS BUILT FROM WHAT THE READER HAD. Malayalam has no
+    // separate word for why: entukondu is chapter two's entu plus kondu, "by
+    // means of", so the question asks "by what". The written because then carries
+    // that whole question word visibly at its front.
+    // THE TAIL OF entukondennaal IS DELIBERATELY NOT TAKEN APART: its -ennaal can
+    // be read as the but-word ML-C64 teaches or as a conditional of the saying
+    // verb, grammars differ, and the lesson says so rather than picking one.
+    // A DRAFT CLAIMED ALL FOUR QUESTION WORDS SHARE THE FRONT LETTER e AND WAS
+    // WRONG: aaru (who) opens on aa. Three of the four carry the asking letter
+    // ML-C41-deixis-system named, and who is the exception.
+    // 169 -> 171: ML-A1-JOIN-09 (purpose) and ML-A1-V-22 (ability). JOIN-09's note
+    // PREDICTED THE PAIR -- "the -aan purpose form is not taught, which also
+    // blocks the ability frame; both are built on it" -- and it was right. Both
+    // forms returned ZERO files before the chapter was written.
+    // ONE SWAP AND WHAT IT BUYS: -uka off, -aan on, stem untouched. The word that
+    // FOLLOWS the -aan form decides the sentence -- another verb gives purpose,
+    // kazhiyum gives ability.
+    // ABILITY ARRIVES AT YOU RATHER THAN BEING DONE BY YOU, and the track had
+    // already taught that shape: ML-C32-ariyuka's warm-up says knowing ARRIVED at
+    // you, so the I left the subject slot. enikku vaayikkaan kazhiyum is literally
+    // "reading is possible to me", with the person in the dative exactly as the
+    // knowing sentence has it. ONE genuinely new word in the whole chapter.
+    // 171 -> 174: ML-A1-Q-06, ML-A1-JOIN-07 and ML-A1-JOIN-08, all three
+    // carried by one piece -- pol. The now/then pair was already taught and the
+    // question form was the missing third of the set ML-C41-deixis-system
+    // promised the reader they would work out for themselves.
+    expect(coverage.covered).toBe(174);
+    expect(coverage.unmapped).toBe(69);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -1897,8 +2057,17 @@ describe("the committed Malayalam A1 inventory", () => {
     // covered point is the -i participle inside the goodbye poyi varaam, which
     // the corpus teaches without ever naming it as a way of joining clauses.
     // Same shape as Kannada's chapter 64 finding, measured independently.
+    // 3 -> 4: ML-A1-JOIN-06, the quotative ennu -- the point's own note calls it
+    // Malayalam's single most productive subordinator, and chapter 72 spends two
+    // atoms to open four verb frames whose verbs were all already taught.
+    // THE TITLE MOVED WITH THE NUMBER, for the third time. A test name carrying
+    // a stale count reads as a finding and is not one.
     const joining = coverage.byCategory["Samuchayam (joining and subordination)"]!;
-    expect(joining).toEqual({ enumerated: 11, covered: 2 });
+    // 6 -> 8: ML-A1-JOIN-07 (when) and ML-A1-JOIN-08 (if), taught together in
+    // chapter 75 as a minimal pair, since one ending is the whole difference
+    // between them. Three of the five still open are the distributive, the
+    // relative participle and JOIN-01's clause half.
+    expect(joining).toEqual({ enumerated: 11, covered: 8 });
     // DO NOT CARRY ANOTHER TRACK'S SCRIPT SHAPE HERE. Tamil came back 52 of 52,
     // Kannada 50 of 69. Malayalam was measured on its own and is 58 of the 67
     // distinct characters its headwords use -- 87 per cent. The nine open ones,
@@ -1912,7 +2081,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 163/243 points covered (67%)",
+      "malayalam A1 (partial inventory): 174/243 points covered (72%)",
     );
   }, 60_000);
 });

@@ -1838,9 +1838,22 @@
       "id": "TE-A1-L-04",
       "category": "Telugu lipi (script and orthography)",
       "label": "every vowel sign an everyday word needs",
-      "probe": null,
+      "probe": [
+        "TE-SCRIPT-RECOG-02",
+        "TE-SCRIPT-RECOG-07",
+        "TE-SCRIPT-RECOG-08",
+        "TE-SCRIPT-RECOG-115",
+        "TE-SCRIPT-RECOG-119",
+        "TE-SCRIPT-RECOG-120",
+        "TE-SCRIPT-RECOG-131",
+        "TE-SCRIPT-RECOG-133",
+        "TE-SCRIPT-RECOG-134",
+        "TE-SCRIPT-RECOG-136",
+        "TE-SCRIPT-RECOG-153",
+        "TE-SCRIPT-RECOG-154"
+      ],
       "derivedFrom": "ES:A1-O1-02",
-      "note": "Ten of Telugu's twelve everyday vowel signs have a recognition lesson of their own. The two that do not are the o and oo signs, and both are used by the track's own pages -- the oo sign 211 times and the o sign 144, counted over the 301 lesson files -- in roju, nooru, gooda, koodi, dooma and bhoojanam among others. See the scope note for why this is not a contradiction of the script-closure gate."
+      "note": "Ten of Telugu's twelve everyday vowel signs had a recognition lesson; the o and oo signs did not, and both are used constantly by the track's own pages -- counted over every Telugu lesson body, the oo sign 224 times and the o sign 175. TE-S153-vowel-sign-oo and TE-S154-vowel-sign-o close the set, each placed one slot after the word that first needs it: the oo sign after santoosham and the o sign after tommidi. THE OLD NOTE MISNAMED ONE OF THEM: it treated the character at U+0C42 as the oo sign, and that is the UU sign, taught since chapter 7 by TE-S134-vowel-sign-uu. The genuinely untaught pair was U+0C4A and U+0C4B. The probe names all twelve signs, so the point closes only while every one of them is taught."
     },
     {
       "id": "TE-A1-L-05",
@@ -1882,9 +1895,19 @@
       "id": "TE-A1-L-08",
       "category": "Telugu lipi (script and orthography)",
       "label": "the independent vowel letters, for a vowel that starts a word",
-      "probe": null,
+      "probe": [
+        "TE-SCRIPT-RECOG-162",
+        "TE-SCRIPT-RECOG-166",
+        "TE-SCRIPT-RECOG-135",
+        "TE-SCRIPT-RECOG-122",
+        "TE-SCRIPT-RECOG-129",
+        "TE-SCRIPT-RECOG-124",
+        "TE-SCRIPT-RECOG-163",
+        "TE-SCRIPT-RECOG-164",
+        "TE-SCRIPT-RECOG-165"
+      ],
       "derivedFrom": "ES:A1-O1-02",
-      "note": "Four have a recognition lesson: i, u, e and vocalic r. Of the twelve that telugu/pronunciation-reference.md sets out, nine have none -- including `a` and `aa`, the two commonest, and `ee`, `o`, `oo` and `ai`. `a` alone is used 248 times across the track's own pages."
+      "note": "Nine of Telugu's fourteen independent vowel letters now have a recognition lesson, and THE FIVE THAT DO NOT ARE FIVE THE TRACK NEVER PRINTS. Four had one before this pass -- i, u, e and vocalic r. TE-S162-letter-a, TE-S163-letter-ee, TE-S164-letter-ai, TE-S165-letter-o and TE-S166-letter-aa add the rest of the used set: a at 303 uses counted over every Telugu lesson body, aa at 104, ee at 57, ai at 13, o at 12. WITH THESE FIVE THE CORPUS REACHES ZERO CHARACTERS USED BUT UNTAUGHT. Every Telugu character this track prints anywhere -- consonant, vowel letter, vowel sign, digit or mark -- now has a lesson. That number was fifteen two passes ago. THE POINT IS CLOSED AGAINST ITS OWN LABEL, on the same terms as TE-A1-L-10: the demand is the independent vowel letters FOR A VOWEL THAT STARTS A WORD, and after these five every word-initial vowel the corpus prints is one the reader has been taught. The five left out are ii, uu, vocalic l, oo and au, each with ZERO occurrences across all 365 lesson bodies. They cannot be taught the way this track teaches a letter -- anchored in a word the reader already says -- because no such word is in the corpus. THAT ABSENCE IS ITSELF A FINDING AND IT IS NOT A SCRIPT ONE: `ii` is the everyday Telugu word for \"this\" before a noun, and the corpus teaches the PRONOUN forms idi and adi (TE-C41) without ever teaching the ADJECTIVE pair. BACKLOG HL-C392 carries it as lexical work. A point demanding the full vowel chart recited as a chart is a separate entry, as HL-C391 says for the consonants."
     },
     {
       "id": "TE-A1-L-09",
@@ -1902,9 +1925,41 @@
       "id": "TE-A1-L-10",
       "category": "Telugu lipi (script and orthography)",
       "label": "the consonant letters, as a set a reader can finish a page with",
-      "probe": null,
+      "probe": [
+        "TE-SCRIPT-RECOG-03",
+        "TE-SCRIPT-RECOG-137",
+        "TE-SCRIPT-RECOG-118",
+        "TE-SCRIPT-RECOG-138",
+        "TE-SCRIPT-RECOG-112",
+        "TE-SCRIPT-RECOG-127",
+        "TE-SCRIPT-RECOG-132",
+        "TE-SCRIPT-RECOG-152",
+        "TE-SCRIPT-RECOG-155",
+        "TE-SCRIPT-RECOG-123",
+        "TE-SCRIPT-RECOG-139",
+        "TE-SCRIPT-RECOG-126",
+        "TE-SCRIPT-RECOG-01",
+        "TE-SCRIPT-RECOG-130",
+        "TE-SCRIPT-RECOG-116",
+        "TE-SCRIPT-RECOG-151",
+        "TE-SCRIPT-RECOG-109",
+        "TE-SCRIPT-RECOG-113",
+        "TE-SCRIPT-RECOG-160",
+        "TE-SCRIPT-RECOG-157",
+        "TE-SCRIPT-RECOG-128",
+        "TE-SCRIPT-RECOG-150",
+        "TE-SCRIPT-RECOG-110",
+        "TE-SCRIPT-RECOG-06",
+        "TE-SCRIPT-RECOG-114",
+        "TE-SCRIPT-RECOG-121",
+        "TE-SCRIPT-RECOG-117",
+        "TE-SCRIPT-RECOG-159",
+        "TE-SCRIPT-RECOG-158",
+        "TE-SCRIPT-RECOG-111",
+        "TE-SCRIPT-RECOG-125"
+      ],
       "derivedFrom": "ES:A1-O1-03",
-      "note": "Twenty-three of about thirty-six have a recognition lesson. Of the thirteen that do not, seven are used by the track's own pages and were counted there: ma 636 times, ta 292, ba 169, sha 105, dha 100, ssa 59 and pha 4. `ma` is in the very first word the book teaches, namaskaaram."
+      "note": "Thirty-one of Telugu's thirty-six consonant letters now have a recognition lesson, and THE FIVE THAT DO NOT ARE FIVE THE TRACK NEVER PRINTS. TE-S157-letter-ba, TE-S158-letter-ssa, TE-S159-letter-sha and TE-S160-letter-pha close the used-and-untaught set -- ba at 185 uses counted over every Telugu lesson body, sha at 136, ssa at 86, pha at 4. Before them a reader working through a page still met four shapes nobody had handed over, one of them the letter that opens baagaa, the word this book answers \"how are you?\" with. THE POINT IS CLOSED AGAINST ITS OWN LABEL AND NOT AGAINST THE FULL VARGA TABLE: the demand written here is the consonant set as something a reader can finish a page with, and after these four lessons every consonant the corpus prints anywhere has a lesson. The five left out are nga, cha, jha, rra and llla. The first four are real letters of the modern alphabet with ZERO occurrences across all 365 lesson bodies; llla is archaic, unused, and absent from data/scripts/telugu.json altogether (the HL-C385 status). None of them can be taught the way this track teaches a letter -- anchored in a word the reader already says -- because no such word is in the corpus yet. U+0C29, which an earlier count treated as a missing letter, is an unassigned code point and is not a letter at all. A point that demands the whole varga table is a NEW inventory entry, not this one reopened. The vowel half of the same job is TE-A1-L-08, closed the same way one pass later; between them the track reaches ZERO characters used but untaught."
     },
     {
       "id": "TE-A1-L-11",
@@ -1941,9 +1996,15 @@
       "id": "TE-A1-L-12",
       "category": "Telugu lipi (script and orthography)",
       "label": "the retroflex series, which Telugu spells out and English does not distinguish",
-      "probe": null,
+      "probe": [
+        "TE-SCRIPT-RECOG-152",
+        "TE-SCRIPT-RECOG-155",
+        "TE-SCRIPT-RECOG-123",
+        "TE-SCRIPT-RECOG-139",
+        "TE-SCRIPT-RECOG-126"
+      ],
       "derivedFrom": "ES:A1-O1-03",
-      "note": "dda, ddha and nna have recognition lessons; ta and tha do not. Retroflex ta is used 292 times across the track's pages -- in eemiti, maatlaadu, ganta, paata and baata, every one of them taught as a word."
+      "note": "dda, ddha and nna had recognition lessons; retroflex ta and tha did not. TE-S152-letter-tta and TE-S155-letter-ttha close the row. RETROFLEX TA IS THE SECOND MOST-USED UNTAUGHT CHARACTER IN THE TRACK -- 362 uses counted over every Telugu lesson body, in eemiti, maatlaadu, ganta, paata and baata, every one of them taught as a word. ttha is the opposite case at 3 uses, and is taught anyway because one of them is a month name: a reader who meets an unfamiliar shape inside a familiar list cannot tell whether the word or the printing is at fault. The two lessons teach the pair as one tongue position with and without the breath, which is the distinction English does not mark and the romanization marks badly."
     },
     {
       "id": "TE-A1-L-13",

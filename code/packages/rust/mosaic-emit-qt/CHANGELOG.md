@@ -8,6 +8,93 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Security -- a story fixture could inject C++ into `main.cpp` (#15443)
+
+`qvariant_literal_for_fixture` escaped fixture text with the QML escaper,
+which passes a bare carriage return through. C++ splices a backslash and a
+line ending before it reads literals, and GCC and Clang count a bare CR as a
+line ending. So backslash, CR, quote closed the `QStringLiteral`, and the
+rest of the fixture compiled as C++. The security review of #15428 found it
+and confirmed it with GCC and Clang. It was already on `main` for text
+fixtures, before list fixtures existed.
+
+**Fix:** `escape_cpp_string` now handles every C++ literal built from
+fixture text:
+
+- backslash, quote and `?` are escaped;
+- control characters and DEL become exactly three octal digits (not hex,
+  because hex escapes are greedy);
+- non-ASCII becomes a `\u` or `\U` universal character name.
+
+`escape_qml_string` also escapes CR now, since a raw one would break a QML
+string.
+
+**Test:** `cpp_fixture_literals_cannot_be_split_or_closed` uses the
+reviewer's payload in both the text and list paths. Mutation-checked: with
+the old escaper it fails.
+
+### Fixed -- list story fixtures reach the generated `main.cpp` (#15428)
+
+`qvariant_literal_for_fixture` turns a text-list fixture into a
+`QVariant(QVariantList{…})`, with nested `QVariantList`s for rows. That is
+what a QML `var` list property reads from `initialProperties`. A shape that
+does not match the slot inserts an empty list.
+
+### Fixed -- an empty run-time accessible name left a HostButton unnamed (#15427)
+
+An accessible name known only at run time can be empty, and an empty override is not the same as no override. Writing `Accessible.name` replaces the Controls
+default binding, where the name follows `text`, so an empty slot or
+expression name used to announce a button with no name. Dynamic names now
+lower to `Accessible.name: (<name>) || text`, and an empty literal is not
+written at all. The emitted TaskApp QML passes `qmllint`; the only notice on
+the changed line is the unqualified-`row` warning the repeater already
+produced.
+
+### Fixed -- a state layer changed the background but never the border (#15275)
+
+`background` and `opacity` were built as conditional expressions over a
+part's state layers. `border-color`, `border-width` and `border-radius`
+were read from the base part alone.
+
+So a variant changed the fill and left the outline behind. In
+`mosaic-pkg-toolkit` every Alert and every Toast emitted
+`border.color: "#055160"` -- the `info` variant's border -- whatever its
+`variant`, while the background beside it changed correctly. A `danger`
+alert wore an `info` border. Button and Input author `border-radius` per
+size and rendered every size with the base corner.
+
+Qt assembles a Rectangle's paint properties in **four** places, and this
+was wrong in a different way in each. All four now route the three
+border properties through the same conditional builders `background`
+already used.
+
+A second defect was found while fixing the first, and it is the more
+interesting one. `conditional_number_expr` converts a layer's value with
+`qml_number_or_none`, which **rejects any value carrying a unit**.
+Routing `border-width` and `border-radius` through it silently skipped
+every `2px` override and produced a conditional expression made only of
+the base -- a constant that compiles, renders, and is wrong. The new
+`conditional_px_expr` converts with `qml_px_or_none`; both now delegate
+to one shared body whose only difference is the converter.
+
+That bug survived a green test run and a green package gate. What caught
+it was a test asserting the exact emitted string, which is the only
+instrument that can tell "the expression was built" from "the expression
+was built out of nothing".
+
+Measured on `mosaic-pkg-toolkit`: unexpected Qt style drops 60 -> 38.
+The four product programs' generated QML is **byte-identical** to
+`origin/main` -- none of them authors a state-varying border, so this
+reaches the toolkit package and nothing else.
+
+**What this does not do.** `Stack` lowers to a QML `Item` built
+elsewhere, and still ignores state layers entirely -- Spinner's three
+sizes all render at the base's 24px (#15277). `Text` parts still cannot
+paint a background or border at all (#15276). Host controls still drop
+`font-size` (#15254). Extending the Rectangle path to `width`/`height`
+was tried and changed zero bytes of output, so it was reverted rather
+than shipped as an unexercised fix.
+
 ### Fixed -- padding collapsed to one value, so no part could be asymmetric
 
 `qml_padding` read ONE value -- `padding`, else `padding-top`, else

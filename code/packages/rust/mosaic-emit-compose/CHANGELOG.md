@@ -9,6 +9,15 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed -- an empty run-time accessible name became an empty contentDescription (#15427)
+
+An accessible name known only at run time can be empty, and an empty override is not the same as no override. Not every accessibility service treats an empty
+`contentDescription` as absent. Dynamic HostButton names now set it only
+when non-empty
+(`(<name>).toString().takeIf { it.isNotEmpty() }?.let { contentDescription = it }`),
+and an empty literal writes no `.semantics` at all, so the button's own
+`Text` names it.
+
 ### Fixed -- `border-width: 0` asked Compose for a hairline instead of nothing
 
 An authored `border-width: 0` means NO border. The emitter lowered it to

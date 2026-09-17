@@ -2,6 +2,57 @@
 
 ## Unreleased
 
+### Changed - list story fixtures reach the native backends too (#15428, PR-2)
+
+xaml, swiftui, qt and flutter now render text-list fixtures, so every
+backend that renders fixture content takes them. `ListFixtures::Unsupported`
+is gone; only paint, which uses fixtures just to pick style states, skips
+lists.
+
+`--strict-fixtures` still fails on values no backend renders (objects, other
+list shapes). The CLI tests now check that:
+
+- the four native backends accept a list fixture under strict mode;
+- an object fixture warns by default and fails under strict mode, naming
+  the slot.
+
+### Fixed - list story fixtures reach the browser backends; `--strict-fixtures` (#15428)
+
+`pipeline_slot_values` dropped every list-typed fixture with a warning. So
+every list-driven component (ButtonGroup, Tabs, SegmentedControl, most of
+Engram) previewed empty in every story, while the MosaicBook story check
+passed.
+
+**How lists travel now.** A list of text, or a list of lists of text, travels
+as compact JSON in the existing `slot -> String` map, and each backend is
+told what to do with it:
+
+- **react, html, webcomponent:** rendered, via
+  `mosmodel_compiler::fixtures::parse_list_fixture`.
+- **paint:** skipped silently. It uses fixtures only to pick style states,
+  so nothing is lost.
+- **xaml, swiftui, qt, flutter:** dropped with a warning naming the backend,
+  until they learn to render list fixtures.
+
+Object values, and lists of anything else, are still dropped for every
+backend.
+
+**New `--strict-fixtures` flag.** It turns every such drop into exit 1. The
+MosaicBook catalogue check now passes it, so a story can no longer pass on
+content it never rendered.
+
+**`--strict-style` works.** It was documented, and read by `main.rs`, but was
+never registered in `code/specs/mosaic-compile.json`. Passing it therefore
+failed with "Unknown flag '--strict-style'". Both strict flags are now
+registered.
+
+**Tests.** `tests/list_fixtures.rs` compiles SegmentedControl on react, html
+and webcomponent with a list fixture under `--strict-fixtures`, and checks
+that the escaped rows reach each project's fallback props. It also checks
+that swiftui fails only under strict mode and names the slot and backend,
+and that `--strict-style` is accepted. Mutation-checked: making the browser
+path drop lists fails the first test.
+
 ### Fixed - load manifest palettes in standalone browser compilation
 
 Standalone HTML, Web Component, and React compilation now loads the owning

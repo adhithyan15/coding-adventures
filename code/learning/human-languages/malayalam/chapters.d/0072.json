@@ -1,0 +1,16 @@
+{
+  "chapter": 72,
+  "title": "The Thing Said",
+  "label": "ch:ml-ennu",
+  "canDo": "I can report what somebody said, thought, knew or asked, by putting the quotative ennu after a sentence I can already say.",
+  "payoff": {
+    "lesson": "ML-R72-ennu-recall",
+    "kind": "production",
+    "summary": "From cold: the marker that turns any sentence into the thing said, and the four verbs it can hand that sentence to — with nothing inside the quoted sentence rebuilt.",
+    "assesses": [
+      "ML-GRAMMAR-C72-ENNU-01",
+      "ML-GRAMMAR-C72-ENNU-VERBS-01"
+    ],
+    "note": "The chapter introduces exactly these two atoms and the payoff assesses both. The saying-verb this chapter is built on moved to chapter 50, where the corpus had been using it since the farewell lesson without teaching it."
+  }
+}

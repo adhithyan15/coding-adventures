@@ -36,9 +36,9 @@ use std::path::PathBuf;
 /// list. Reorder both together if it ever changes.
 const COMPONENTS: &[&str] = &[
     "Accordion", "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
-    "Checkbox", "DropdownMenu", "Field", "Input", "InputGroup",
+    "Checkbox", "DropdownMenu", "EmptyState", "Field", "Input", "InputGroup",
     "ListGroup", "Modal", "Nav", "Navbar", "NumberInput", "Pagination",
-    "Radio", "Select", "Spinner", "Tabs", "Toast", "Tooltip",
+    "Radio", "SegmentedControl", "Select", "Spinner", "Tabs", "Toast", "Tooltip",
 ];
 
 /// Themes shipped per component. Both must compile.
@@ -83,8 +83,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.11.0",
-        "[package].version must be 0.11.0 for the Select release"
+        version, "0.14.0",
+        "[package].version must be 0.14.0 for the EmptyState release"
     );
 
     let exports = value
@@ -920,6 +920,269 @@ fn tabs_active_header_part_compiles_and_is_styled() {
     }
 }
 
+/// EmptyState (#15440) — what a view shows when it has nothing yet.
+#[test]
+fn empty_state_interface_matches_spec() {
+    let out = mosmodel_compiler::compile(&read_source("EmptyState.mil")).unwrap();
+    let slots: Vec<&str> = out.component.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slots, vec!["title", "message", "action-label"]);
+    let emits: Vec<&str> = out.component.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emits, vec!["onAction"]);
+}
+
+/// The two properties that make this component worth sharing: the title is
+/// a heading for assistive technology, and the action button exists only
+/// when it has a label (an unlabelled one would be an unnamed button). The
+/// message is gated too, so a title-only state has no empty line under it.
+#[test]
+fn empty_state_title_is_a_heading_and_optional_parts_are_gated() {
+    let mil = mosmodel_compiler::compile(&read_source("EmptyState.mil")).unwrap();
+    let mll = moslayout_compiler::compile(&read_source("EmptyState.mll"), Some(&mil.descriptor_json))
+        .expect("EmptyState.mll compiles");
+
+    let root = &mll.def.root;
+    assert_eq!(root.tag, "Column");
+    let prop = |node: &moslayout_compiler::LayoutNode, name: &str| {
+        node.props
+            .iter()
+            .find(|p| p.name == name)
+            .map(|p| format!("{:?}", p.value))
+    };
+
+    let title = &root.children[0];
+    assert_eq!(title.tag, "Text");
+    assert_eq!(title.part_name.as_deref(), Some("empty-state-title"));
+    assert_eq!(prop(title, "a11y-role").as_deref(), Some("Keyword(\"heading\")"));
+
+    let gate = |index: usize, slot: &str, tag: &str, part: &str| {
+        let branch = &root.children[index];
+        assert_eq!(branch.tag, "If", "child {index} must be conditional");
+        assert_eq!(
+            prop(branch, "when"),
+            Some(format!("SlotRef({slot:?})")),
+            "child {index} must be gated on {slot}"
+        );
+        assert_eq!(branch.children.len(), 1);
+        assert_eq!(branch.children[0].tag, tag);
+        assert_eq!(branch.children[0].part_name.as_deref(), Some(part));
+    };
+    gate(1, "message", "Text", "empty-state-message");
+    gate(2, "action-label", "HostButton", "empty-state-action");
+    assert_eq!(root.children.len(), 3, "nothing else is drawn");
+
+    let action = &root.children[2].children[0];
+    assert_eq!(prop(action, "label").as_deref(), Some("SlotRef(\"action-label\")"));
+    assert_eq!(prop(action, "onClick").as_deref(), Some("EmitRef(\"onAction\")"));
+}
+
+/// SegmentedControl — a row of options, one selected. The host owns
+/// `selected-index` and supplies each option as `[label, accessible-name]`.
+#[test]
+fn segmented_control_interface_matches_spec() {
+    let mil_src = read_source("SegmentedControl.mil");
+    let out = mosmodel_compiler::compile(&mil_src).unwrap();
+    let c = &out.component;
+    let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slot_names, vec!["options", "selected-index", "vertical", "disabled"]);
+    let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emit_names, vec!["onSelect"]);
+    // The payload is what lets a host map a click back to an option.
+    let on_select = &c.emits[0];
+    let params: Vec<&str> = on_select.params.iter().map(|p| p.name.as_str()).collect();
+    assert_eq!(params, vec!["index"], "onSelect must carry the option index");
+}
+
+/// The point of this component (#14016) is that selection costs TWO
+/// parts however many options there are — TaskApp's inline switcher
+/// spends 36 on six. So this pins the structure, not just that it
+/// compiles:
+///
+/// - exactly the three authored parts reach the part map, so a future
+///   edit cannot quietly reintroduce per-option parts;
+/// - the selection branch compares the loop index against the camelCase
+///   slot identifier (the kebab spelling compiles and is wrong on web);
+/// - both branches bind the host-supplied accessible name, because the
+///   selected state reaches assistive tech only through that name;
+/// - in both themes the selected part differs from the unselected one in
+///   fill, text colour AND border, so selection is never colour-alone.
+#[test]
+fn segmented_control_selection_costs_two_parts_and_is_distinct() {
+    let mil_src = read_source("SegmentedControl.mil");
+    let mil_out = mosmodel_compiler::compile(&mil_src).unwrap();
+
+    let mll_src = read_source("SegmentedControl.mll");
+    let code: String = mll_src
+        .lines()
+        .filter(|line| !line.trim_start().starts_with("//"))
+        .map(|line| line.split_whitespace().collect::<Vec<_>>().join(" "))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(
+        code.contains("If ( when: i == selectedIndex )"),
+        "SegmentedControl.mll must select by comparing the loop index with selectedIndex"
+    );
+    assert!(
+        !code.contains("selected-index )"),
+        "the kebab-case slot name inside an expression emits a subtraction on web"
+    );
+    // Two orientations x (selected, unselected).
+    assert_eq!(
+        code.matches("a11y-label : ( option[1] )").count(),
+        4,
+        "every branch must bind the host-supplied accessible name"
+    );
+    assert_eq!(
+        code.matches("label : ( option[0] )").count(),
+        4,
+        "every branch must bind the visible label"
+    );
+    assert!(
+        code.contains("If ( when: slot: vertical )"),
+        "orientation must be chosen by the bool slot"
+    );
+
+    let mll_out = moslayout_compiler::compile(&mll_src, Some(&mil_out.descriptor_json))
+        .expect("SegmentedControl.mll should compile against SegmentedControl.mil");
+    let mut parts: Vec<&str> = mll_out.parts.iter().map(|p| p.name.as_str()).collect();
+    parts.sort_unstable();
+    parts.dedup();
+    assert_eq!(
+        parts,
+        vec![
+            "segmented",
+            "segmented-option",
+            "segmented-option-selected",
+            "segmented-root",
+            "segmented-vertical",
+            "segmented-vertical-option",
+            "segmented-vertical-option-selected",
+        ],
+        "selection must cost exactly two option parts per orientation"
+    );
+
+    for theme in THEMES {
+        let style_filename = format!("SegmentedControl.{theme}.msl");
+        let style_src = read_source(&style_filename);
+        let style_out = mosstyle_compiler::compile(&style_src, Some(&mll_out.part_map_json))
+            .unwrap_or_else(|e| panic!("{style_filename} failed to compile:\n{:#?}", e));
+        let prop = |part: &str, name: &str| -> String {
+            style_out
+                .def
+                .parts
+                .iter()
+                .find(|p| p.name == part)
+                .unwrap_or_else(|| panic!("{style_filename} missing part {part}"))
+                .base
+                .iter()
+                .find(|p| p.name == name)
+                .unwrap_or_else(|| panic!("{style_filename} {part} missing {name}"))
+                .value
+                .clone()
+        };
+        for axis in ["segmented", "segmented-vertical"] {
+            let (plain, selected) = (format!("{axis}-option"), format!("{axis}-option-selected"));
+            for name in ["background", "color", "border-color"] {
+                assert_ne!(
+                    prop(&plain, name),
+                    prop(&selected, name),
+                    "{style_filename}: {axis} selected and unselected options share `{name}`"
+                );
+                // The two orientations are one control; they must look alike.
+                assert_eq!(
+                    prop(&plain, name),
+                    prop("segmented-option", name),
+                    "{style_filename}: {plain} drifted from segmented-option on `{name}`"
+                );
+                assert_eq!(
+                    prop(&selected, name),
+                    prop("segmented-option-selected", name),
+                    "{style_filename}: {selected} drifted on `{name}`"
+                );
+            }
+        }
+    }
+}
+
+/// Every story must name only declared slots, and every option row must
+/// carry both columns: a one-column row leaves the accessible name unset.
+/// (MosaicBook's own fixture validation is #14031's open half; this pins
+/// this component's stories without waiting for it.)
+#[test]
+fn segmented_control_stories_are_well_formed() {
+    use coding_adventures_bounded_json::{parse, JsonNumber, JsonValue};
+
+    fn field<'a>(value: &'a JsonValue, key: &str) -> Option<&'a JsonValue> {
+        match value {
+            JsonValue::Object(members) => members.iter().find(|(k, _)| k == key).map(|(_, v)| v),
+            _ => None,
+        }
+    }
+    fn text(value: &JsonValue) -> &str {
+        match value {
+            JsonValue::String(s) => s,
+            other => panic!("expected a string, found {other:?}"),
+        }
+    }
+
+    let doc = parse(&read_source("SegmentedControl.stories.json")).expect("stories file is JSON");
+    let Some(JsonValue::Array(stories)) = field(&doc, "stories") else {
+        panic!("a stories array");
+    };
+    assert!(stories.len() >= 8, "stories must cover the states #14016 lists");
+
+    let declared = ["options", "selected-index", "vertical", "disabled"];
+    let mut selections = Vec::new();
+    let mut saw_disabled = false;
+    for story in stories {
+        let name = text(field(story, "name").expect("a story name"));
+        let Some(fixtures @ JsonValue::Object(members)) = field(story, "fixtures") else {
+            panic!("{name}: a fixtures object");
+        };
+        for (key, _) in members {
+            assert!(declared.contains(&key.as_str()), "{name}: undeclared slot `{key}`");
+        }
+        let Some(JsonValue::Array(options)) = field(fixtures, "options") else {
+            panic!("{name}: an options array");
+        };
+        let Some(JsonValue::Number(JsonNumber::Integer(selected))) =
+            field(fixtures, "selected-index")
+        else {
+            panic!("{name}: an integer selected-index");
+        };
+        let selected = *selected;
+        for (i, row) in options.iter().enumerate() {
+            let JsonValue::Array(row) = row else {
+                panic!("{name}: option {i} is not a row");
+            };
+            assert_eq!(row.len(), 2, "{name}: option {i} must be [label, accessible-name]");
+            let (label, a11y) = (text(&row[0]), text(&row[1]));
+            if i as i64 == selected {
+                assert_eq!(a11y, format!("{label}, selected"), "{name}: selected name");
+            } else {
+                assert_eq!(a11y, label, "{name}: only the selected option says selected");
+            }
+        }
+        let count = options.len() as i64;
+        assert!((-1..count).contains(&selected), "{name}: selection in range");
+        selections.push((selected, count));
+        saw_disabled |= field(fixtures, "disabled") == Some(&JsonValue::Bool(true));
+    }
+    assert!(selections.iter().any(|(_, n)| *n == 2), "a two-option story");
+    assert!(selections.iter().any(|(_, n)| *n == 8), "an eight-option story");
+    assert!(selections.iter().any(|(s, _)| *s == 0), "selected first");
+    assert!(selections.iter().any(|(s, n)| *n > 2 && *s == n - 1), "selected last");
+    assert!(selections.iter().any(|(s, n)| *s > 0 && *s < n - 1), "selected middle");
+    assert!(selections.iter().any(|(s, _)| *s == -1), "no selection");
+    assert!(saw_disabled, "a disabled story");
+    let verticals = stories
+        .iter()
+        .filter(|story| {
+            field(story, "fixtures").and_then(|f| field(f, "vertical")) == Some(&JsonValue::Bool(true))
+        })
+        .count();
+    assert!(verticals >= 1, "a vertical story (#15432)");
+}
+
 /// DropdownMenu — toggle button + revealed item list. Two emits:
 /// onToggle (no payload) and onSelect(index).
 #[test]
@@ -990,6 +1253,7 @@ fn every_disabled_slot_binds_a_real_disabled_prop() {
         "InputGroup",
         "NumberInput",
         "Radio",
+        "SegmentedControl",
         "Select",
     ];
 

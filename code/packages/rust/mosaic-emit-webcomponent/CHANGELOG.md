@@ -4,6 +4,57 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added -- `HostButton` `selected` lowers to `aria-pressed` (UI86, #15420)
+
+`selected : …` emits `aria-pressed`:
+
+| authored | emitted |
+| --- | --- |
+| `true` / `false` | `aria-pressed="true"` / `"false"` |
+| slot, loop binding or expression | `aria-pressed="${(…) ? 'true' : 'false'}"` |
+
+- **Only a boolean can be written.** The attribute sits inside `innerHTML`,
+  so the ternary guarantees that only the literals `'true'` and `'false'` can
+  land in it, whatever the value is.
+- **Truthiness is JavaScript's**, matching `If` on this backend.
+- **Invalid values are refused.** Absent `selected` emits nothing. A string or
+  number literal, or an empty expression, returns the new
+  `PipelineEmitError::InvalidPropValue`, and an unsafe binding name returns
+  `UnsafeSlotName`.
+- **Signature change:** `emit_host_button` now returns a `Result` so it can
+  report these errors.
+
+Checked in Node: the emitted template for a three-option `For` was evaluated
+with `selectedIndex` 0, 2, `"2"` and -1, and every state was `true` or
+`false`, as expected.
+
+### Fixed — list story fixtures render as JS arrays in the slot table (#15428)
+
+`js_literal_for_fixture` turns a list fixture into an escaped array literal
+for the slot table's `fallback:`. A shape that does not match the slot keeps
+the generated `[]`.
+
+### Fixed — `HostButton`'s accessible name was never emitted (#15426)
+
+`emit_host_button` never read `a11y-label` and reported no degradation, so
+every authored button name was lost on this backend while React, Qt,
+SwiftUI, Compose, Flutter and XAML kept it. One helper,
+`accessible_name_attr`, now lowers the name for both `HostButton` and
+`HostInput`:
+
+- a literal name is escaped when emitted;
+- slot, keyword and expression names go through `escapeHtmlAttribute`
+  when rendered, since the attribute sits inside `innerHTML`;
+- a slot or keyword whose camel form is not a JS identifier is dropped,
+  as labels already were;
+- `HostInput` also gains the keyword form, and its expression form now
+  strips outer parentheses.
+
+Verified in a browser on SegmentedControl's generated element: the
+selected option is named "Board, selected". A name of
+`x" onfocus="…" autofocus="` stays inside `aria-label`; it adds no
+attribute and runs nothing.
+
 ### Changed — `HostScroll` honours its axis, and no longer scrolls both ways (UI61, #14854)
 
 Same deliberate narrowing as the html backend.

@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+### Added — `fixtures::parse_list_fixture` (#15428)
+
+One shared decoder for the JSON text `mosaic-compile` now writes for list
+story fixtures. It reads that text against the slot's declared type:
+
+- `list<text>` gives `ListFixture::Text`;
+- `list<list<text>>` gives `ListFixture::TextRows`;
+- anything else, or a mismatched shape, gives `None`, and the emitter keeps
+  its sample.
+
+It uses the in-house `bounded-json` parser rather than `serde_json` (#14414).
+Every emitter already depends on this crate, so the native backends can reuse
+the same decoder when they gain list fixtures.
+
 ### Added — `one-of`, a closed-set slot type (UI49, #14036)
 
 ```

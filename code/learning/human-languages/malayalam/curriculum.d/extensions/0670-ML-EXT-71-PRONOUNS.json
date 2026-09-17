@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-71-PRONOUNS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can name a person who is not present, at either level of respect, and choose between Malayalam's two words for we.",
+  "prerequisites": [
+    "ML-EXT-70-JOINING"
+  ],
+  "lessons": [
+    "ML-C71-avan-aval",
+    "ML-C71-avar",
+    "ML-C71-njangal-naam",
+    "ML-R71-pronoun-recall"
+  ]
+}

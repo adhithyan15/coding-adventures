@@ -1,5 +1,30 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — the view switcher's rows and index (#14016)
+
+`props()` now also returns:
+
+- `nav-options`: `[label, accessible-name]` for List, Board, Sheet, Calendar
+  and Notes, plus Timeline for a Full project. The showing view's name reads
+  "<label>, selected".
+- `nav-selected-index`.
+
+`onShowView` takes an `index` into the views this project offers.
+
+`ViewMode::SWITCHER_ORDER` is separate from the enum's declaration order,
+because the enum's order is snapshot history. Timeline is last so that
+omitting it never shifts another index.
+
+**Tests.** `view_switcher_rows_track_the_view_and_the_tier` covers:
+
+- the Board tier offers five views, and refuses index 5 without changing
+  state;
+- the Full tier adds Timeline last;
+- rows, index and the `*-mode` slots agree for every index;
+- dropping back to Board while on Timeline returns to List at index 0.
+
+The slot-name pin list and the every-event test include the new names.
+
 ## [Unreleased] — the sheet's column widths were ratios, not pixels (#15131)
 
 Three cells in Trestle's Sheet view measured **zero width** — the task name, the

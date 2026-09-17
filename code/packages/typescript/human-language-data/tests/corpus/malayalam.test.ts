@@ -129,8 +129,106 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   const { lessons } = loadEverything();
   const coverage = measureExamCoverage(loadExamInventory("malayalam", "A1"), lessons);
   expect(coverage.enumerated).toBe(243);
-  expect(coverage.covered).toBe(163);
-  expect(coverage.unmapped).toBe(80);
+  // 163 -> 164: ML-A1-JOIN-02 (or). ONE POINT FOR FOUR LESSONS, AND THE RATIO
+  // IS THE WRONG WAY TO READ THIS CHANGE. What chapter 70 actually does is give
+  // Malayalam its 'and': the language coordinates with the clitic -um repeated
+  // on EACH item, and NOTHING IN 307 LESSONS TAUGHT IT. Verified rather than
+  // taken from the note -- -um appeared in exactly one lesson file, inside an
+  // etymology note as a component of the word for evening, and the nine files
+  // carrying the sequence u+m all had it INSIDE a word (veendum, kudumbam,
+  // hrudayam, the month names). A learner owning 69 chapters of vocabulary could
+  // not say 'water and rice'.
+  // ML-A1-JOIN-01 STAYS OPEN ON PURPOSE. Its label is 'joining two nouns, AND
+  // joining two clauses', and this chapter delivers the noun half only. The
+  // everyday clause link in this corpus is the -i participle already covered by
+  // ML-A1-JOIN-11, and claiming clause coordination off the noun lessons would
+  // claim a range the corpus does not teach. Same call as TE-A1-L-10.
+  // ML-A1-JOIN-04 (distributive) also stays open, but its blocker is gone: its
+  // note said it depended on the missing coordinator, which now exists.
+  // -o IS TAUGHT BESIDE -um BECAUSE THEY ARE ONE HABIT: both go on every item
+  // with nothing in the gap, and only the vowel differs -- veLLavum ariyum for
+  // both, chaayayoo kaappiyoo for one of them.
+  // MALAYALAM HAS NO UNTRANSFERABLE POINTS, unlike Kannada's four, so its
+  // ceiling is the full 243.
+  // 164 -> 166: ML-A1-PRON-03 (third person) and ML-A1-PRON-04 (first and second
+  // person plural). VERIFIED WORSE THAN THE NOTES SAID: avan, aval, avar and
+  // njangal appeared in ZERO lesson files -- not as headwords, not anywhere in a
+  // body. A learner with seventy chapters of vocabulary could say I and you and
+  // could not say he, she, they or we.
+  // naam LOOKED taught and was not: it appeared as a headword in ML-C67-first,
+  // ML-C67-third and ML-C68-eleventh, where it is a SUBSTRING of the ordinals
+  // onnaam, moonnaam and pathinonnaam. Every ordinal ending -nnaam is a false
+  // positive for naam -- the same trap the Hindi campaign recorded when every
+  // ordinal matched its own cardinal. Check the token, not the substring.
+  // THE GAP SAT INSIDE A SYSTEM ALREADY TAUGHT. ML-C41-that teaches the i-/a-
+  // pointing pair and says in as many words that a- means far, and the corpus
+  // only ever used it on THINGS. avan, aval and avar carry the same a-, so the
+  // column for people was predicted and never filled -- the same shape as Tamil's
+  // TA-A1-PRON-03, closed in the chapter before this one. avar additionally
+  // reuses ML-C02's own rule that a plural raises the register (nii -> ningal,
+  // avan -> avar), so two of the three new words run on machinery already held.
+  // 166 -> 167: ML-A1-JOIN-06, the quotative ennu. THE NOTE WAS VERIFIED BY
+  // TOKEN RATHER THAN SUBSTRING, and that mattered: the string `enna` appears
+  // nine times in the corpus, and every one is inside ennaal, the word for
+  // "but" that ML-C64 teaches. The quotative -- with the virama -- was nowhere.
+  // ONE MARKER BUYS BACK THE WHOLE CORPUS: ennu leaves the quoted sentence
+  // untouched, so every sentence the reader can build becomes something they
+  // can report, think, claim to know or ask. Two atoms, four verb frames, all
+  // four verbs already taught.
+  // THE SAYING-VERB WAS A SECOND FINDING AND IS FIXED IN CHAPTER 50, NOT 72:
+  // parayuka was never a headword anywhere, while ML-C50-farewell built
+  // `vita parayuka` and called it "the speaking-verb" for want of a name.
+  // Teaching it at 72 made those uses forward references 104 and 106 lessons
+  // early; the lesson moved to sequence 1405, immediately before the first use,
+  // which returned forwardReferences to its baseline of 12 and paid a debt that
+  // predated this work.
+  // 167 -> 169: ML-A1-JOIN-05 (because) and ML-A1-Q-07 (why), which are ONE
+  // PIECE OF WORK and whose notes said so -- cause could be handled in NEITHER
+  // direction, so closing one without the other leaves a learner able to ask a
+  // question nobody can answer. Both notes were verified: entukondu, kaaranam
+  // and entukondennaal each returned ZERO files across the whole corpus.
+  // MOST OF THE CHAPTER IS BUILT FROM WHAT THE READER HAD. Malayalam has no
+  // separate word for why: entukondu is chapter two's entu plus kondu, "by
+  // means of", so the question asks "by what". The written because then carries
+  // that whole question word visibly at its front.
+  // THE TAIL OF entukondennaal IS DELIBERATELY NOT TAKEN APART: its -ennaal can
+  // be read as the but-word ML-C64 teaches or as a conditional of the saying
+  // verb, grammars differ, and the lesson says so rather than picking one.
+  // A DRAFT CLAIMED ALL FOUR QUESTION WORDS SHARE THE FRONT LETTER e AND WAS
+  // WRONG: aaru (who) opens on aa. Three of the four carry the asking letter
+  // ML-C41-deixis-system named, and who is the exception.
+  // 169 -> 171: ML-A1-JOIN-09 (purpose) and ML-A1-V-22 (ability). JOIN-09's note
+  // PREDICTED THE PAIR -- "the -aan purpose form is not taught, which also
+  // blocks the ability frame; both are built on it" -- and it was right. Both
+  // forms returned ZERO files before the chapter was written.
+  // ONE SWAP AND WHAT IT BUYS: -uka off, -aan on, stem untouched. The word that
+  // FOLLOWS the -aan form decides the sentence -- another verb gives purpose,
+  // kazhiyum gives ability.
+  // ABILITY ARRIVES AT YOU RATHER THAN BEING DONE BY YOU, and the track had
+  // already taught that shape: ML-C32-ariyuka's warm-up says knowing ARRIVED at
+  // you, so the I left the subject slot. enikku vaayikkaan kazhiyum is literally
+  // "reading is possible to me", with the person in the dative exactly as the
+  // knowing sentence has it. ONE genuinely new word in the whole chapter.
+  // 171 -> 174: ML-A1-Q-06 (eppol), ML-A1-JOIN-07 (-umbol) and ML-A1-JOIN-08
+  // (-aal). ONE CHAPTER FOR THREE POINTS BECAUSE THE THREE ARE ONE PIECE: pol.
+  // eppol, varumpol and the now/then pair the track already taught all carry it.
+  // Verified rather than assumed -- eppol, mbol and every spelling of them
+  // returned ZERO files across 333 lessons, and every existing -aal in the
+  // corpus was lexical (paal, kaal) or one of the two frozen words ennaal and
+  // enthukondennaal.
+  // THE CHAPTER PAYS OFF A PROMISE THE TRACK ALREADY MADE. ML-C41-deixis-system
+  // says in so many words that meeting a new word in this family means being
+  // taught one and working out the others; ML-C50-now handed over ippol and
+  // appol and stopped. The question form is the missing third.
+  // THE CONDITIONAL IS BUILT ON THE PAST FORM AND IS NOT ABOUT THE PAST, which
+  // is the one genuinely counter-intuitive thing in the chapter and is taught
+  // as such. -umbol and -aal are taught as a minimal pair because one ending is
+  // the entire difference between "when he comes" and "if he comes".
+  // CHAPTER 73'S REFUSAL IS LEFT STANDING. Knowing -aal does not settle ennaal
+  // or enthukondennaal, grammars still differ, and ML-C75-aal says so on the
+  // page rather than quietly claiming the win.
+  expect(coverage.covered).toBe(174);
+  expect(coverage.unmapped).toBe(69);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -142,6 +240,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 163/243 points covered (67%)",
+    "malayalam A1 (partial inventory): 174/243 points covered (72%)",
   );
 }, 60_000);

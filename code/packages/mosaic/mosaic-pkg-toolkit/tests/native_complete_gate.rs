@@ -58,14 +58,51 @@ use tempfile::TempDir;
 ///
 /// Every entry must reference its tracking issue.
 const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
-    // Empty, and that now MEANS something. When Compose gained reporting it
-    // immediately named 42 drops here across `border-radius`, `opacity` and
-    // `font-weight`; #14817, #14821 and #14818 fixed all three, and each
-    // removed its own entry rather than leaving it to rot.
+    // Compose was the first backend to report here: it immediately named 42
+    // drops across `border-radius`, `opacity` and `font-weight`; #14817,
+    // #14821 and #14818 fixed all three, and each removed its own entry
+    // rather than leaving it to rot. Compose has no entry below, and that
+    // emptiness is now a measurement rather than an absence of looking.
     //
-    // Before reporting existed this list could not have been written at all —
-    // the gate asserted emptiness and that emptiness meant "nobody looked".
-    // It is now measured.
+    // Qt gained reporting in #15245 and named 60 drops that had always been
+    // there. 16 are fixed: `border-color`, `border-width` and `border-radius`
+    // were read from the base part only, so an Alert or a Toast wore the base
+    // variant's border whatever its `variant` — the background beside them was
+    // already conditional, and the border was not. The 44 below are real, and
+    // each points at the issue that will retire it.
+    //
+    // #15276 — a `Text` part cannot paint. `background`, `border-color`,
+    // `border-width` and `padding` on `$style.tabs-panel`,
+    // `$style.input-group-prefix`/`-suffix` and `$style.accordion-body` reach
+    // a bare QML `Text`, which has no fill, no `border.*` and no padding.
+    // Its comment thread also covers Badge's `font-weight`, dropped because a
+    // `Rectangle` has no font group and nothing carries the value to the
+    // `Text` inside it.
+    (Backend::Qt, "background"),
+    (Backend::Qt, "border-color"),
+    (Backend::Qt, "border-width"),
+    (Backend::Qt, "font-weight"),
+    // #15276 and #15277 both — `padding` is dropped on Text parts (Accordion,
+    // InputGroup, Tabs) AND on host controls (Button, Field, Input, Navbar).
+    // It takes both fixes to retire this one entry, which is an argument for
+    // the finer-grained pin this list does not yet have.
+    (Backend::Qt, "padding"),
+    // #15277 — state-layer overrides are ignored outside the Rectangle
+    // builders. Spinner authors `width`/`height` per size variant and renders
+    // all three at the base's 24px. Extending the Rectangle path to
+    // `width`/`height` was tried and changed zero bytes of output, which is
+    // how we know those parts never traverse it -- Spinner is a `Stack` and
+    // lowers to a QML `Item`.
+    //
+    // `border-radius` was pinned here and is NOT any more: the fourth site
+    // that assembles a Rectangle (a host control's `background: Rectangle`)
+    // had a conditional `border.color` beside a base-only `radius`, so Button
+    // and Input rendered every size with the base corner. The inverse ratchet
+    // below is what caught it -- the pin was written, the site was fixed, and
+    // the assertion refused to let the stale entry stand.
+    (Backend::Qt, "font-size"),
+    (Backend::Qt, "height"),
+    (Backend::Qt, "width"),
 ];
 
 fn is_allowed_style_drop(backend: Backend, property: &str) -> bool {
@@ -187,6 +224,67 @@ fn toolkit_atoms_are_native_complete_or_explicitly_tracked() {
 /// `ALLOWED_STYLE_DROPS` deliberately gets no equivalent: it is empty, so the
 /// check would compare two empty sets and prove nothing. It is already as
 /// strict as it can be — every style drop fails.
+/// Every allowed style drop is still a drop.
+///
+/// The twin of `no_allowed_degradation_has_silently_been_fixed`, which this
+/// list did not have. That asymmetry is the one this file's own header warns
+/// about: Engram's copy of the pattern reached 11 stale pins out of 21,
+/// because a pin that is fixed and left in place stops recording a known gap
+/// and starts licensing its return. Nothing was watching these.
+#[test]
+fn no_allowed_style_drop_has_silently_been_fixed() {
+    let mut observed: Vec<(Backend, String)> = Vec::new();
+
+    for backend in [
+        Backend::Xaml,
+        Backend::SwiftUI,
+        Backend::Qt,
+        Backend::Flutter,
+        Backend::Compose,
+    ] {
+        let out = TempDir::new().expect("temp dir");
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: package_root(),
+                output_root: out.path().to_path_buf(),
+                backend,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .unwrap_or_else(|e| panic!("degradation analysis failed for {backend:?}: {e}"));
+
+        for entry in &report.style_degradations {
+            if let Some(property) = entry.primitive.as_deref() {
+                observed.push((backend, property.to_string()));
+            }
+        }
+    }
+
+    let stale: Vec<String> = ALLOWED_STYLE_DROPS
+        .iter()
+        .filter(|(backend, property)| {
+            !observed
+                .iter()
+                .any(|(seen_backend, seen_property)| {
+                    seen_backend == backend && seen_property == property
+                })
+        })
+        .map(|(backend, property)| format!("  {backend:?}: {property}"))
+        .collect();
+
+    assert!(
+        stale.is_empty(),
+        "{} allowed style drop(s) no longer occur:\n{}\n\n\
+         The emitter learned to lower these, so delete them from \
+         ALLOWED_STYLE_DROPS and close the issue each points at. Left in \
+         place they license the drop coming back.",
+        stale.len(),
+        stale.join("\n")
+    );
+}
+
 #[test]
 fn no_allowed_degradation_has_silently_been_fixed() {
     let mut observed: Vec<(Backend, String, String)> = Vec::new();

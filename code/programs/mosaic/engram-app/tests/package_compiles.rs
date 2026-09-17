@@ -281,6 +281,10 @@ fn app_sources_compile_without_owning_review_card_component() {
     assert!(source.contains("pkg::mosaic-pkg-review-actions::ReviewActions"));
     assert!(source.contains("pkg::mosaic-pkg-review-history::ReviewHistoryPanel"));
     assert!(source.contains("pkg::mosaic-pkg-session-progress::SessionProgress"));
+    // The Study screen's empty state is the toolkit's, in both layouts.
+    for layout in ["EngramApp.mll", "EngramApp.touch.mll"] {
+        assert!(read_source(layout).contains("pkg::mosaic-pkg-toolkit::EmptyState ("));
+    }
     assert!(!source.contains("layout CardBrowser"));
     assert!(!source.contains("layout CollectionActions"));
     assert!(!source.contains("layout DeckOptionsPanel"));
@@ -657,7 +661,15 @@ fn app_package_light_theme_selects_light_app_shell_styles() {
     assert_eq!(result.components_built, vec!["EngramApp"]);
     let react = read_artifact(tmp.path(), "react/EngramApp.tsx");
     assert_contains(&react, "#ffffff");
-    assert_contains(&react, "#1e40af");
+    // The app header's own light style. This used to check `#1e40af`, which
+    // only the six nav-*-active parts set in this stylesheet; those parts
+    // went away when the switcher became a toolkit SegmentedControl
+    // (#14063), and the colour still appears in dependency packages, so it no
+    // longer proved anything about THIS theme.
+    assert_contains(
+        &react,
+        "alignItems: \"center\", background: \"#ffffff\", borderColor: \"#e2e8f0\"",
+    );
     assert!(
         !react.contains("#101827"),
         "light-theme build should not select the dark app-shell background"
@@ -2168,7 +2180,9 @@ fn native_project_shells_expose_engram_host_contract() {
         &xaml_markup,
         // Dependency-owned axes that are absent from EngramApp must not add a
         // VisualStateManager wrapper or bind a nonexistent consumer property.
-        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">\n                                                <StackPanel Orientation=\"Vertical\">",
+        // The indentation is the ReviewCard's depth: since #15440 it sits in
+        // the Study screen's `Else`, beside the toolkit EmptyState.
+        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">\n                                                        <StackPanel Orientation=\"Vertical\">",
     );
     assert_contains(
         &xaml_markup,

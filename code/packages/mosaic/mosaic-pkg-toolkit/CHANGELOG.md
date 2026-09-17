@@ -2,6 +2,150 @@
 
 ## [Unreleased]
 
+### Added — `EmptyState` (v0.14.0, #15440)
+
+What a view shows when it has nothing to show yet. All four products in
+#14415 need one, and each had started drawing its own: TaskApp's List view,
+Engram's "No cards queued".
+
+```
+slot title        : text ;   // announced as a heading
+slot message      : text ;   // optional
+slot action-label : text ;   // optional; empty = no button
+emit onAction ;
+```
+
+**Design.**
+
+- The title carries `a11y-role : heading`. On React it lowers to an `<h2>`,
+  so a screen reader lands on an empty state the same way everywhere.
+- The action button is gated on its label, so the component cannot be asked
+  for an unnamed button.
+- The message is gated too, so a title-only state has no blank line under
+  it.
+- The stylesheet uses only properties every native backend lowers, since
+  the toolkit gate allows no style drops. That rules out `align`,
+  `text-align` and `border-style`.
+
+**Stories:** title only; title and message; with action; long text.
+
+**Verified:**
+
+- It emits on all eight backends with no `EmptyState` degradations.
+- The native gate passes 3/3, and the MosaicBook check passes
+  (58 components, 106 stories).
+- Two new tests pin the interface, the heading role, and the gating of
+  message and action.
+
+### Added — `SegmentedControl` stacks vertically (v0.13.0, #15432)
+
+`slot vertical : bool`. Engram's touch shell stacks its screen switcher,
+because six options side by side overflow a phone-width screen, so it
+could not adopt the control while the control could only draw a row.
+
+- **Why not wrapping:** `flex-wrap` is a pinned style drop on Qt and XAML,
+  so it would not reach two of the five native backends.
+- **Why a bool, not the issue's `one-of horizontal vertical`:** a layout
+  `If` on a bool slot is what every backend already lowers (Engram's
+  `show-*-screen` flags), while no layout anywhere compares a one-of slot
+  to a string.
+
+The axis is the container primitive, not a style property, so the vertical
+branch has its own parts: `segmented-vertical`,
+`segmented-vertical-option` and `segmented-vertical-option-selected`.
+Selection still costs two option parts per orientation. Both branches sit
+under a new `Column [ segmented-root ]`, because a layout may not start
+with `If`/`Else`. It is a Column rather than a Box because `Box` overlays
+its children on some backends (#14828).
+
+**Test changes:**
+
+- The part-map test now pins all seven parts.
+- A new assertion keeps the vertical parts identical in look to the
+  horizontal ones: fill, text colour and border, in both themes.
+- The stories test requires a vertical story. There are two new stories,
+  `Vertical` and `Vertical disabled`.
+
+**Verified:** emits on all eight backends with no `SegmentedControl`
+degradations; the toolkit's native gate passes 3/3; the MosaicBook check
+passes (57 components, 102 stories). React switches the inner container
+between `flexDirection: "column"` and `"row"` on `vertical`.
+
+### Added — `SegmentedControl` (v0.12.0, #14016)
+
+A row of mutually exclusive options, one selected: the widget Engram and
+TaskApp each built inline for their view switchers (#14063). It is one of
+the three components every product in #14415 needs.
+
+```
+slot options        : list<list<text>> ;   // [label, accessible-name]
+slot selected-index : number ;             // -1 for none
+slot disabled       : bool ;
+emit onSelect ( index : number ) ;
+```
+
+**Selection costs two parts, however many options there are.** TaskApp's
+switcher is a six-way If/Else chain *around* its buttons: every branch
+re-declares all six, and each copy needs its own part, so six views cost
+36 parts. Here the If/Else sits *inside* the `For` and chooses between
+`segmented-option` and `segmented-option-selected`. A test pins the part map
+to exactly those two plus the row, so per-option parts cannot creep back.
+
+**The selected state reaches a screen reader through the name, for now.**
+`HostButton` has no selected/pressed state, and the layout language cannot
+concatenate strings, so the host supplies each option's accessible name and
+writes the state into it (`"Board, selected"`). The host already owns the
+selection, which makes it the right place to do this; it is still a
+stand-in for the platform's selected trait. #15420 tracks the kernel state,
+and arrow-key traversal within the group with it.
+
+**Why it is not built on `Button`.** #14016 asked for that, and it is
+possible: a package can place its own component as
+`pkg::mosaic-pkg-toolkit::Button`, and that compiles. But `Button` has no
+`a11y-label` slot, so doing it would drop the accessible name above. #15421
+adds the slot and then moves this component onto `Button`. A bare
+`Button [ part ]` does not work at all; it resolves to the legacy kernel
+primitive, which no pipeline emitter supports.
+
+The selected option differs from the others in fill, text colour and border
+in both themes, and a test asserts all three so selection is never shown by
+colour alone.
+
+Nine stories cover two, three, six and eight options, the selection first,
+middle, last and absent, long labels, and disabled. A test checks every
+story names only declared slots and that every option row has both columns,
+since MosaicBook's own fixture validation is still #14031's open half.
+
+**The stories do not yet show their options.** `mosaic-compile` drops
+list-typed fixtures with only a warning (#15428), so each story renders with
+`options` empty: only `selected-index` and `disabled` arrive. The story
+check passes anyway, because it treats a warning as success. The stories are
+written for the content they should show, and will show it once #15428
+lands. Until then the rendering has been checked by supplying props
+directly (#15426).
+
+Measured before merging: `mosaic-compile pkg` emits it on all eight
+backends (React, HTML, WebComponent, Qt, SwiftUI, Compose, Flutter, XAML)
+with **no degradations** for this component, and the MosaicBook story check
+passes (57 components, 100 stories).
+
+"No degradations" is not the same as "names reach every backend". The HTML
+and Web Component emitters drop `HostButton.a11y-label` without reporting
+it (#15426), so on those two backends the selected state is not announced
+at all until that is fixed. The three new tests were
+mutation-checked: making the dark selected fill match the unselected one,
+dropping one branch's `a11y-label`, and mislabelling a story's selected
+option each fail a test.
+
+The smoke harness reads `.stories.json` through the in-house
+`coding_adventures_bounded_json` crate rather than adding `serde_json`
+(#14414).
+
+Not in this change: the per-component demo app and documentation-site entry
+that `mosaic-component-program-v1.md` §7 asks for (#14015, #14026 have no
+lane yet), and adopting the component in Engram and TaskApp. Each app moves
+over in its own change.
+
 ### Changed — "remove an entry the moment its issue is fixed" is now enforced
 
 The gate's own instructions have always said that. Nothing checked it.

@@ -118,7 +118,19 @@ it("pins Marathi lesson-content budgets", () =>
     // closure was CLEAN before this chapter (0 violations, 0 never-taught glyphs,
     // 50 taught) and stays clean: every example word uses only those 50 glyphs
     // plus the letter being taught.
-    lessons: 342,
+    // 342 -> 347: CHAPTER 65 GIVES FOUR VOWELS THE POSITION THEY WERE MISSING.
+    // MR-A1-OR-12 wanted the independent ii, o, ai and au. Every one of the four
+    // had a SIGN the reader already drew -- ii and o since chapter ONE, ai and au
+    // at 59 and 56 -- so the gap was never in the sound but in the POSITION, which
+    // is exactly what made it easy to miss. A sign hangs on a consonant; a letter
+    // starts a word; the two shapes look nothing alike and are learned separately.
+    // That is why the point stays distinct from MR-A1-OR-14, which is those same
+    // signs and closed at 56 and 59. It was blocking a number sitting in the middle
+    // of an ordinary counting sequence -- ऐंशी, eighty, opens with the independent
+    // ai -- and nothing about a word like that announces that one of its four
+    // shapes had never been drawn. The fifth lesson is the cold-retrieval review,
+    // there for the same measured reason as chapter 64's.
+    lessons: 347,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -363,6 +375,9 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // Chapter 64: ddha, pha, the danda, and the cold-retrieval review that
     // keeps the danda from being an atom nothing revisits.
     ["64", 4],
+    // Chapter 65: the four standing vowels plus the review that keeps the last
+    // of them from being an atom nothing revisits.
+    ["65", 5],
   ]);
 });
 

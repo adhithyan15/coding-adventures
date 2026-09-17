@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-73-CAUSE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask why, and answer with a reason.",
+  "prerequisites": [
+    "ML-EXT-72-QUOTATIVE"
+  ],
+  "lessons": [
+    "ML-C73-enthukondu",
+    "ML-C73-kaaranam",
+    "ML-C73-enthukondennaal",
+    "ML-R73-cause-recall"
+  ]
+}

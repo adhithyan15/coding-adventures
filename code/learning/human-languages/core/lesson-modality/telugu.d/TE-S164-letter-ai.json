@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "TE-S164-letter-ai",
+    "language": "telugu",
+    "chapter": 7,
+    "sequence": 331,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4974e6fcfa8ab362",
+    "detachableSegments": [
+      "Script you'll notice: ఐ",
+      "Writing: ఐ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

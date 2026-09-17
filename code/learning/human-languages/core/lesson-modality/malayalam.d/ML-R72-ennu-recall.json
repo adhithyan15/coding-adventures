@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R72-ennu-recall",
+    "language": "malayalam",
+    "chapter": 72,
+    "sequence": 2500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5663f98cf7751ff3"
+  },
+  "findings": []
+}

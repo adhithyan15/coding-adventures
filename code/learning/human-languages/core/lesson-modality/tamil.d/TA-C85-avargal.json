@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C85-avargal",
+    "language": "tamil",
+    "chapter": 85,
+    "sequence": 3530,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:212da8a4ac75b137"
+  },
+  "findings": []
+}

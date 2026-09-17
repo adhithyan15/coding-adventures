@@ -1,0 +1,36 @@
+{
+  "stories": [
+    {
+      "name": "Title only",
+      "fixtures": {
+        "title": "Nothing here yet",
+        "message": "",
+        "action-label": ""
+      }
+    },
+    {
+      "name": "Title and message",
+      "fixtures": {
+        "title": "Your Inbox is ready",
+        "message": "Add your first task above. Scheduling stays out of the way until you need it.",
+        "action-label": ""
+      }
+    },
+    {
+      "name": "With action",
+      "fixtures": {
+        "title": "No cards queued",
+        "message": "Every card in this deck is scheduled for later.",
+        "action-label": "Study ahead"
+      }
+    },
+    {
+      "name": "Long text",
+      "fixtures": {
+        "title": "No entries match every one of the filters you have applied to this journal",
+        "message": "Try removing a tag, widening the date range, or clearing the search. Entries are never deleted by a filter; they are only hidden until the filter changes.",
+        "action-label": "Clear all filters"
+      }
+    }
+  ]
+}

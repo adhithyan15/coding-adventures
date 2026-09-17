@@ -2,6 +2,86 @@
 
 ## [Unreleased]
 
+### Added -- `HostButton` `selected` lowers to `aria-pressed` (UI86, #15420)
+
+- **Literal values:** `selected : true` / `false` writes `aria-pressed`
+  directly.
+- **Dynamic values** (a slot, a loop binding, or an expression such as
+  `( i == selectedIndex )` inside `For`):
+  - The emitter writes `data-mosaic&pressed="…"`, attribute-escaped and
+    brace-escaped.
+  - The project runtime's new `renderPressed` pass decides it with the same
+    `evaluateCondition` that `mosaic-if` uses. The pass runs after loops and
+    `If`s are expanded and before mustaches are filled.
+  - It then replaces the attribute with `aria-pressed="true"` or `"false"`.
+- **Why not a placeholder:** a placeholder would write the bound *value* into
+  the attribute rather than a state, and an expression has no path to
+  substitute. UI86 §4.1.1 records the change from the draft.
+- **Safety:** the evaluator only understands paths, literals, `==`, `!=` and
+  `!`, so a condition is never executed as script.
+- **Absent `selected`** emits nothing. A string or number literal returns the
+  new `PipelineEmitError::InvalidPropValue`.
+
+**Why the marker is spelled `data-mosaic&pressed`.**
+- **The problem:** the pass scans text that already holds rendered loop rows.
+  The security review showed that a marker spelled with only letters, `-` and
+  `=` could be forged by host data such as a task name. The forged quote then
+  moved later attributes out of their quotes, and in a Node reproduction an
+  `onfocus` handler ran.
+- **Why `&` fixes it:** every `&` in host text and in authored literals is
+  escaped, so neither can spell a name containing a raw `&`.
+
+### Security -- runtime `escapeHtml` also encodes `=`, `{` and `}`
+
+- **What changed:** host text rendered by `main.js` now has `=`, `{` and `}`
+  encoded as character references. The page shows and `dataset` reads the
+  same text.
+- **Why `{` and `}`:** this closes a pre-existing hole. A loop item containing
+  `{{{key}}}` was expanded again by the outer mustache pass, through the
+  unescaped triple-mustache path, so any host string could inject markup.
+- **Why `=`:** host text can no longer help spell an attribute next to a
+  template quote.
+
+Checked beyond the unit tests: a `For` over three options with
+`selected : ( i == selectedIndex )` was compiled with `--emit-project`, and
+`main.js`'s render functions were run on it in Node.
+- With `selectedIndex: 1`, the output was `List=false Board=true Timeline=false`,
+  with no `data-mosaic&pressed` left.
+- A condition of `( globalThis.pwned = true )` rendered `aria-pressed="false"`
+  and did not run.
+
+### Fixed -- list story fixtures hydrate as JSON arrays (#15428)
+
+`json_value_for_fixture` turns a list fixture into a JSON array in
+`main.js`'s fallback props. Before this, a list-driven story rendered with
+no rows. A shape that does not match the slot keeps the generated `[]`.
+
+### Fixed -- `HostButton`'s accessible name was never emitted, and an indexed label rendered as literal braces (#15426)
+
+`emit_host_button` never read `a11y-label`, and reported no degradation for
+it, so every authored button name was lost on this backend. The literal,
+slot, keyword and expression forms now lower to `aria-label`. A literal is
+escaped when emitted; the dynamic forms become a `{{path}}` placeholder that
+the runtime fills with `escapeHtml`.
+
+The expression form exposed a second, older defect. The runtime fills only
+placeholders matching `[A-Za-z0-9_.-]+`, but `label : ( row[0] )` was
+emitted as `{{row [ 0 ]}}`, which does not match, so the page showed the
+braces. The `Text` content path had the same bug. A new `mustache_path`
+rewrites a plain data path (`row [ 16 ]` becomes `row.16`, `a.b[2]` becomes
+`a.b.2`) into the dotted form `readPath` walks. Anything else (operators,
+variable indices) is not a path:
+
+- for `aria-label`, the attribute is omitted rather than stamped with
+  literal braces; the button's text still names it;
+- for label and `Text` content, the old output is kept.
+
+`expr_to_mustache_path` (drag keys, path coordinates) now tries it first.
+
+Verified in a browser on SegmentedControl's generated project. Labels
+render, the selected option is named "Board, selected", and a label of
+`Say "hi" <b>` stays text in both the body and the attribute.
+
 
 ### Fixed -- a `;` inside a CSS value was read as a declaration separator (#15221)
 

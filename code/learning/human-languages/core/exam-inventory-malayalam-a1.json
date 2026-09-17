@@ -450,7 +450,10 @@
       "id": "ML-A1-PRON-03",
       "category": "Sarvanaamam (pronouns)",
       "label": "third person: avan, aval, athu -- he, she, it",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C71-AVAN-AVAL-01",
+        "ML-LEX-C71-AVAR-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -460,13 +463,15 @@
         "A1-PRON-01"
       ],
       "malayalamSpecific": false,
-      "note": "Not taught. The i-/a- deixis lesson gives ith and ath for THINGS, and aar ('who') for asking, but no third-person pronoun for a PERSON exists anywhere in the corpus. So a learner can say 'I' and 'you' and cannot say 'he' -- which also blocks every reported statement."
+      "note": "Not taught, and VERIFIED WORSE THAN THE NOTE SAID: avan, aval and avar appeared in ZERO lesson files -- not as headwords and not anywhere in a body. A learner could say I and you and could not say he. Chapter 71 closes it, and the gap turns out to sit inside a system already taught: ML-C41-that teaches the i-/a- pointing pair and says in as many words that a- means far, and the corpus only ever used it on THINGS. avan, aval and avar carry the same a-, so the column for people was predicted and never filled. avar also reuses ML-C02's own rule that a plural raises the register -- nii to ningal, avan to avar -- so two of the three words run on machinery the reader already had."
     },
     {
       "id": "ML-A1-PRON-04",
       "category": "Sarvanaamam (pronouns)",
       "label": "first and second person plural: njangal, naam, ningal",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C71-NJANGAL-NAAM-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -476,7 +481,7 @@
         "A1-PRON-01"
       ],
       "malayalamSpecific": false,
-      "note": "Only ningal is taught, and it is taught as respectful singular rather than as a plural. No word for 'we' exists, which is a large hole for a level whose functions include invitations and proposals."
+      "note": "Only ningal was taught, as a respectful singular, and NO WORD FOR 'WE' EXISTED. The check that proved it is worth recording: njangal appeared in zero files, and naam appeared as a headword in three -- ML-C67-first, ML-C67-third and ML-C68-eleventh -- where it is a SUBSTRING of the ordinals onnaam, moonnaam and pathinonnaam and not the pronoun at all. Every ordinal ending in -nnaam is a false positive for naam, the same trap the Hindi campaign recorded when every ordinal matched its own cardinal. Chapter 71 teaches the pair as the question Malayalam asks and English does not: is the person listening inside this 'we'? njangal leaves them out and is built on njaan with a plural; naam takes them in."
     },
     {
       "id": "ML-A1-PRON-05",
@@ -1351,7 +1356,10 @@
       "id": "ML-A1-V-22",
       "category": "Kriya (the verb)",
       "label": "ability: I can do it",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C74-AAN-01",
+        "ML-LEX-C74-KAZHIYUM-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1363,7 +1371,7 @@
         "A1-NG6-09"
       ],
       "malayalamSpecific": false,
-      "note": "kazhiyum and the -aan kazhiyum frame are not taught. Three Spanish points about ability and competence are open on one missing form."
+      "note": "CLOSED by chapter 74 -- see ML-A1-JOIN-09, which the same chapter closes. The note was right that kazhiyum and the -aan kazhiyum frame were both absent. ABILITY ARRIVES AT YOU IN MALAYALAM RATHER THAN BEING DONE BY YOU, and the track had already taught that shape: ML-C32-ariyuka's own warm-up says knowing ARRIVED at you, so the I left the subject slot. 'enikku vaayikkaan kazhiyum' is literally 'reading is possible to me', with the person in the dative exactly as the knowing sentence has it. So the ability frame costs one word and no new machinery: enikku was already held, the -aan form arrives two lessons earlier in the same chapter, and kazhiyum is the only genuinely new piece. The note said three Spanish points about ability and competence were open on this one missing form."
     },
     {
       "id": "ML-A1-V-23",
@@ -1564,7 +1572,9 @@
       "id": "ML-A1-Q-06",
       "category": "Chodyam (asking questions)",
       "label": "eppol: when",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C75-EPPOL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1574,13 +1584,15 @@
         "A1-NG4-02"
       ],
       "malayalamSpecific": false,
-      "note": "Not taught. The e- deixis lesson gives the pattern that would predict it, and the word itself never arrives -- so a learner who owns the days of the week cannot ask which one."
+      "note": "Chapter 75. The e- form of the now/then pair chapter 50 already taught, so the learner is owed one third of a set rather than a new word. Delivers the promise ML-C41-deixis-system makes in so many words: meet a new word in this family and you are taught one and work out the others."
     },
     {
       "id": "ML-A1-Q-07",
       "category": "Chodyam (asking questions)",
       "label": "enthukondu: why",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C73-WHY-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1591,7 +1603,7 @@
         "A1-SUB-06"
       ],
       "malayalamSpecific": false,
-      "note": "Neither the question word nor the because-word is taught, so cause cannot be asked about or given. See ML-A1-JOIN-05."
+      "note": "CLOSED by chapter 73 -- see ML-A1-JOIN-05, which the same chapter closes. The note was right that neither half existed. The question word is entukondu, and it is transparent: entu (what, chapter two) plus kondu (by means of). THREE OF THE FOUR QUESTION WORDS NOW OPEN ON E -- entu, evide and entukondu -- which is the asking letter ML-C41-deixis-system already named when it taught i- for near, a- for far and e- for a question. AARU (who) is the exception and starts on aa; a draft of the lesson claimed all four shared the letter and was corrected."
     },
     {
       "id": "ML-A1-Q-08",
@@ -1976,13 +1988,15 @@
         "A1-CO-01"
       ],
       "malayalamSpecific": false,
-      "note": "EMPTY, AND THIS IS THE HEADLINE FINDING. Malayalam's 'and' is the clitic -um, repeated on each item. It is not taught anywhere in 292 lessons. A learner who owns 66 chapters of vocabulary -- five body parts, five animals, five kitchen words -- cannot say 'rice and water'."
+      "note": "THE NOUN HALF IS NOW TAUGHT AND THE CLAUSE HALF IS NOT, so this point stays open. The finding that opened it was verified rather than assumed: the string -um appeared in exactly ONE of 307 lesson files, inside an etymology note as a morphological component of the word for evening, and the nine files containing the sequence u+m all had it INSIDE a word (veendum, kudumbam, hrudayam, the month names). Nothing taught it as a coordinator and the track had no joining atom at all -- a learner owning 69 chapters of vocabulary could not say 'water and rice'. Chapter 70 teaches exactly that: -um on EVERY item with nothing in the gap, across two lessons covering a pair and a longer list, with the three sandhi landings (-m to -vum, a y-glide after a vowel, and the chillu l unfurling). WHAT IT DOES NOT TEACH is this point's other half, joining two CLAUSES. That is deliberate: the everyday clause link in this corpus is the -i participle already covered by ML-A1-JOIN-11, and claiming clause coordination on the strength of the noun lessons would claim a range the corpus does not teach. Probe it when a lesson delivers it."
     },
     {
       "id": "ML-A1-JOIN-02",
       "category": "Samuchayam (joining and subordination)",
       "label": "or: offering two alternatives",
-      "probe": null,
+      "probe": [
+        "ML-CONCEPT-C70-O-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1993,7 +2007,7 @@
         "A1-F3-02"
       ],
       "malayalamSpecific": false,
-      "note": "athava and allengil are both absent. So the Spanish function 'ask about a preference by offering alternatives' has no form to be asked in."
+      "note": "athava and allengil were both absent, so the Spanish function 'ask about a preference by offering alternatives' had no form to be asked in. ML-C70-o closes it, and the form it leads on is not a standing word at all: Malayalam offers a choice with the CLITIC -o on each item, chaayayoo kaappiyoo, built exactly like the joining -um taught two lessons earlier and differing from it only in the vowel. allengil is taught alongside it as the standing word an English reader expects to find in the gap, because it is the easier thing to reach for while the ending is new."
     },
     {
       "id": "ML-A1-JOIN-03",
@@ -2028,13 +2042,17 @@
         "A1-CO-05"
       ],
       "malayalamSpecific": false,
-      "note": "Untaught, and dependent on the missing coordinator."
+      "note": "Untaught, and its blocker is now gone: the coordinator it depended on arrives in chapter 70. The distributive -- one thing, then the other -- is a construction of its own rather than a second use of -um, so it needs its own lesson. Re-read this note against chapter 70 before picking it up."
     },
     {
       "id": "ML-A1-JOIN-05",
       "category": "Samuchayam (joining and subordination)",
       "label": "because: giving a reason",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C73-WHY-01",
+        "ML-LEX-C73-KAARANAM-01",
+        "ML-GRAMMAR-C73-BECAUSE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -2044,13 +2062,16 @@
         "A1-SUB-06"
       ],
       "malayalamSpecific": false,
-      "note": "enthukondennaal and kaaranam are both absent. Combined with the missing 'why' at ML-A1-Q-07, cause cannot be asked for or supplied in either direction."
+      "note": "CLOSED by chapter 73, together with ML-A1-Q-07. Both notes were accurate and both were verified: enthukondu, kaaranam and enthukondennaal each returned ZERO files across the whole corpus. THE TWO POINTS ARE ONE PIECE OF WORK and the notes said so -- cause could be handled in NEITHER direction, so closing one without the other would have left a learner able to ask a question nobody could answer or to answer one nobody could ask. MOST OF THE CHAPTER IS BUILT FROM MATERIAL THE READER ALREADY HAS. Malayalam has no separate word for why: entukondu is chapter two's entu (what) plus kondu, the ending meaning by means of, so the question literally asks 'by what'. The written because, entukondennaal, then carries that whole question word visibly at its front. KAARANAM IS THE ONE FOR SPEECH and is a noun first -- a reason, a cause -- taken whole from Sanskrit kaarana, which puts it beside cinta and suprabhaatam as nouns this track borrows unreshaped. THE TAIL OF ENTUKONDENNAAL IS DELIBERATELY NOT TAKEN APART. Its -ennaal can be read as the but-word ML-C64 teaches or as a conditional of the saying-verb, and grammars differ; the lesson says so rather than picking one. That is the same refusal this campaign applies to an unsourced stroke order."
     },
     {
       "id": "ML-A1-JOIN-06",
       "category": "Samuchayam (joining and subordination)",
       "label": "that-clauses: saying what somebody said or thinks",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C72-ENNU-01",
+        "ML-GRAMMAR-C72-ENNU-VERBS-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -2062,13 +2083,15 @@
         "A1-F2-11"
       ],
       "malayalamSpecific": false,
-      "note": "The quotative ennu is Malayalam's single most productive subordinator -- it turns any sentence into the object of 'say', 'think', 'know' or 'ask'. It is not taught. The track teaches cintikkuka, ariyuka and codikkuka and gives none of them anything to take as an object."
+      "note": "CLOSED by chapter 72. The note's claim was verified by token rather than by substring, which mattered here: the string `enna` DOES appear in the corpus, five times in ML-C64-but and four in ML-C69, but every one of those is inside ennaal, the word for `but` that ML-C64 teaches. The QUOTATIVE ennu -- with the virama -- appeared nowhere. THE CHAPTER TEACHES ONE MARKER AND BUYS BACK THE WHOLE CORPUS: ennu leaves the quoted sentence untouched and marks it as the thing said, so every sentence the reader can already build becomes something they can report, think, claim to know or ask. English rebuilds a reported clause and Malayalam does not, which is the comparison the lessons lead with. IT OPENS FOUR VERBS THAT WERE ALREADY TAUGHT -- parayuka, cintikkuka, ariyuka and codikkuka -- so the chapter costs two atoms and reaches four frames. THE SAYING-VERB ITSELF WAS A SEPARATE FINDING AND IS FIXED IN CHAPTER 50, NOT HERE. parayuka was never a headword anywhere, while ML-C50-farewell built `vita parayuka` and called it `the speaking-verb` because there was no name to give it, and ML-C50-journey used it too. Teaching it at chapter 72 turned those two into forward references 104 and 106 lessons early, so the lesson moved to sequence 1405 -- immediately before the first use -- which took forwardReferences back to its baseline and paid a debt that predated this work."
     },
     {
       "id": "ML-A1-JOIN-07",
       "category": "Samuchayam (joining and subordination)",
       "label": "when: locating one event against another",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C75-UMBOL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -2078,13 +2101,15 @@
         "A1-SUB-08"
       ],
       "malayalamSpecific": false,
-      "note": "The -mbol form is not taught, and neither is the question word eppol."
+      "note": "Chapter 75. -umbol on the end of the verb, built visibly from the future form plus the same pol that sits inside eppol. Malayalam spends no word in front of the clause; the whole of 'when he comes' is one word."
     },
     {
       "id": "ML-A1-JOIN-08",
       "category": "Samuchayam (joining and subordination)",
       "label": "if: the conditional clause",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C75-AAL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -2094,13 +2119,16 @@
         "A1-SUB-08"
       ],
       "malayalamSpecific": false,
-      "note": "The -aal conditional is not taught. Recorded separately from 'when' because Malayalam builds them with different suffixes."
+      "note": "Chapter 75. -aal on the PAST form, which is the part worth slowing down for: the sentence is not about the past, and the time is carried by the verb at the end. Taught alongside -umbol as a minimal pair, since one ending is the entire difference between 'when he comes' and 'if he comes'. Chapter 73's refusal to decompose ennaal and enthukondennaal is left standing and said so on the page."
     },
     {
       "id": "ML-A1-JOIN-09",
       "category": "Samuchayam (joining and subordination)",
       "label": "in order to: purpose",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C74-AAN-01",
+        "ML-GRAMMAR-C74-PURPOSE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -2110,7 +2138,7 @@
         "A1-SUB-07"
       ],
       "malayalamSpecific": false,
-      "note": "The -aan purpose form is not taught, which also blocks the ability frame at ML-A1-V-22 -- both are built on it."
+      "note": "CLOSED by chapter 74, together with ML-A1-V-22 -- the note predicted that, because both are built on the same form. Verified first: the -aan form and kazhiyum each returned ZERO files across the corpus. THE CHAPTER IS ONE SWAP AND WHAT IT BUYS. Take -uka off a dictionary verb and put -aan on, stem untouched; the word that FOLLOWS the -aan form then decides which sentence you have said -- another verb gives purpose, kazhiyum gives ability. PURPOSE GOES IN FRONT, THE EVENT AT THE BACK: 'njaan vaayikkaan pokunnu' reads I - to-read - go. English puts the purpose after the verb and often needs a word for it; Malayalam needs none, because the ending is the whole of it. This is the same verb-last habit the quotative chapter named. ONLY ONE NEW WORD IN THE WHOLE CHAPTER. Every verb it uses comes from the reading and going chapters."
     },
     {
       "id": "ML-A1-JOIN-10",

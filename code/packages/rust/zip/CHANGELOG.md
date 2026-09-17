@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+**`ZipReader::entry_by_name`.** Look up an entry's metadata by name without
+reading it, in constant time through the reader's existing name index. A caller
+with a memory budget uses it to refuse an entry whose declared uncompressed size
+is already past the budget *before* inflating it; `read` inflates to exactly
+`entry.size` and refuses anything else, so that check bounds the read. Added for
+engram-anki-package's media budget (#13672).
+
 **Checked arithmetic in the reader — a 32-bit overflow was an unrecoverable trap
 on wasm.** `ZipReader::read` computed `data_start + entry.compressed_size` and
 `ZipReader::new` computed `cd_offset + cd_size`, `name_start + name_len`, and the

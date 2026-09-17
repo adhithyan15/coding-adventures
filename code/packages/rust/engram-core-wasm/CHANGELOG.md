@@ -2,6 +2,35 @@
 
 ## Unreleased
 
+### Added — props for the Study screen's empty state (#15440)
+
+`engram_app_props_for_state` now sets `study-empty` (true when no card is
+active) and the empty state's copy. The message says whether the session ran
+out ("Every card in this session has been reviewed or set aside." / "Back to
+decks") or never started ("Choose a deck to start a study session." / "Choose a
+deck"). Inserted after the props literal, which is at `json!`'s recursion limit.
+The `prompt` placeholder "No cards queued" is unchanged. The suspend test now
+asserts the empty props once the queue drains, and that they were off while a
+card was queued.
+
+### Added — props and an indexed event for the SegmentedControl screen switcher (#14063)
+
+`engram_app_props` now also returns:
+
+- `nav-options`: `[label, accessible-name]` for Decks, Study, Browse, Add,
+  Stats, Options, where the active screen's name reads "<label>, selected";
+- `nav-selected-index`.
+
+`handle_engram_app_event` accepts `onShowScreen` with an `index` and maps it
+through the same `EngramAppScreen::SWITCHER_ORDER`, so rows and indices
+cannot disagree. A missing, negative or out-of-range index is refused and
+the screen does not change.
+
+The two props are inserted after the main `json!` literal, because that
+literal is already at the macro's recursion limit. Tests check that the rows,
+the index and the six `show-*-screen` flags agree after every switch, and
+that bad indices are refused.
+
 ### Fixed — a name typed after saving from the collection was silently dropped
 
 `SaveNoteType` — the collection actions bar's save — did not reset the note-type

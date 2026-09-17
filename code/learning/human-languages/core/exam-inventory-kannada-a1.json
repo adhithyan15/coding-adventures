@@ -4403,8 +4403,36 @@
     {
       "id": "KA-A1-L-09",
       "category": "Lipi (script and orthography)",
-      "label": "THE SCRIPT IS NOT CLOSED: 27 characters are used but never taught",
-      "probe": null,
+      "label": "the script closed: every character the book prints has a lesson",
+      "probe": [
+        "KA-SCRIPT-RECOG-134",
+        "KA-SCRIPT-RECOG-135",
+        "KA-SCRIPT-RECOG-136",
+        "KA-SCRIPT-RECOG-137",
+        "KA-SCRIPT-RECOG-138",
+        "KA-SCRIPT-RECOG-139",
+        "KA-SCRIPT-RECOG-150",
+        "KA-SCRIPT-RECOG-151",
+        "KA-SCRIPT-RECOG-155",
+        "KA-SCRIPT-RECOG-156",
+        "KA-SCRIPT-RECOG-157",
+        "KA-SCRIPT-RECOG-158",
+        "KA-SCRIPT-RECOG-159",
+        "KA-SCRIPT-RECOG-160",
+        "KA-SCRIPT-RECOG-161",
+        "KA-SCRIPT-RECOG-162",
+        "KA-SCRIPT-RECOG-163",
+        "KA-SCRIPT-RECOG-164",
+        "KA-SCRIPT-RECOG-165",
+        "KA-SCRIPT-RECOG-166",
+        "KA-SCRIPT-RECOG-167",
+        "KA-SCRIPT-RECOG-168",
+        "KA-SCRIPT-RECOG-169",
+        "KA-SCRIPT-RECOG-170",
+        "KA-SCRIPT-RECOG-171",
+        "KA-SCRIPT-RECOG-172",
+        "KA-SCRIPT-RECOG-173"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -4413,7 +4441,7 @@
       "derivedFrom": [
         "A1-O1-03"
       ],
-      "note": "MEASURED AGAIN, AND STILL OPEN. The corpus now teaches 50 characters against the 69 it uses in headwords -- 72% closure, up from 42 of 69 (61%). Chapters 67 to 73 add the EIGHT most-used untaught characters, in order of the headwords that need them: ma (36 headwords), la, va, the vowel sign ee, tta, ja, a and the vowel sign uu. The worst case this note used to name is fixed: a learner who completes the script ladder can now read maatanaaDu, the verb chapter 5 is built on.\n\nNINETEEN CHARACTERS REMAIN, AND THEY SPLIT IN TWO. SIX are independent vowels -- aa, e, ee, o, ai and vocalic r -- whose stroke order IS sourced: data/scripts/kannada.json carries a cited Wikimedia Commons animation for each, and chapter 68 shows the shape a lesson built on one of them takes by teaching a with its attested four-movement order and the citation printed under it. THIRTEEN have no sourced ductus anywhere in this project: the vowel signs ii, ai and au, and kha, gha, ttha, ddha, nna, dha, pha, bha, sha and ssa. Those thirteen were NOT taught, because the honest fallback for an unsourced letter is the recognition lesson this ladder already writes -- and thirteen more of those is a separate tranche, not a footnote to this one. Nothing here invents a stroke path to make a count move."
+      "note": "CLOSED. Every Kannada character this corpus prints now has a lesson -- counted over every Kannada lesson body, characters used but untaught stands at ZERO. THE PROBE IS THE TWENTY-SEVEN THIS POINT WAS OPENED FOR. It counted 27 untaught characters when first measured; chapters 67-73 taught the eight most-used (ma, a, the uu sign, la, the ee sign, va, ja, tta), chapter 78 taught the six independent vowels that had a sourced stroke order, and chapters 79-80 taught the remaining thirteen. The probe names all 27, so the point reopens if any one of them loses its lesson. THE THIRTEEN SPLIT BY WHAT COULD BE SOURCED, NOT BY DIFFICULTY. None of them has a stroke order anywhere in this project, so all thirteen are RECOGNITION lessons and each keeps the standing block quote refusing to state a pen path without a source. Chapter 78's six had cited Wikimedia Commons animations and are taught as writing; these do not and are not. Nothing here invents a ductus to make a count move. THEY REDUCE TO THREE IDEAS rather than thirteen shapes: a vowel that is long or moves (the signs ii, ai, au); a tongue curled back, which Kannada writes and English never marks (nna beside na, ssa beside sa, with sha as the third sibilant); and a consonant with the breath let out, which accounts for SEVEN of the thirteen (kha gha ttha ddha dha pha bha, each built on a letter the reader already had). SPLIT ACROSS TWO CHAPTERS ON PURPOSE: thirteen atoms in one chapter breaks the twelve-per-chapter budget in core/chapter-policy.json and showed up as an atomChapterSpikes regression in the snapshot diff. Chapter 79 carries the six, chapter 80 the seven. ONE CHARACTER IS STILL NOT TAUGHT AND IS NOT DEBT: the independent vowel au, whose stroke order this project has no source for and which the corpus never prints. Its vowel SIGN is taught, and the sign is what a reader meets."
     },
     {
       "id": "KA-A1-L-10",
@@ -4451,7 +4479,9 @@
       "id": "KA-A1-L-12",
       "category": "Lipi (script and orthography)",
       "label": "the full stop and the comma",
-      "probe": null,
+      "probe": [
+        "KA-SCRIPT-RECOG-152"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -4461,13 +4491,15 @@
         "A1-O3-01",
         "A1-O3-02"
       ],
-      "note": "Untaught. Modern Kannada uses the Latin full stop and comma, and the older danda; no lesson mentions punctuation at all."
+      "note": "Untaught, and the sharp part was that the corpus had been PRINTING them from chapter one -- every Kannada sentence in every reading passage ends in a Latin full stop -- while no lesson named either mark. KA-S152-full-stop-and-comma closes it at chapter 77, opening on exactly that: look at the end of any line in the previous chapter and something is sitting there no lesson has named. Kannada borrows both marks whole from the Latin alphabet, shape and job together, so there is no second system to learn. The older upright stroke is named as something a reader may meet in old printing rather than something to write."
     },
     {
       "id": "KA-A1-L-13",
       "category": "Lipi (script and orthography)",
       "label": "the question mark",
-      "probe": null,
+      "probe": [
+        "KA-SCRIPT-RECOG-153"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -4476,13 +4508,15 @@
       "derivedFrom": [
         "A1-O3-04"
       ],
-      "note": "Untaught as a convention, though it is used throughout the books. Kannada does not use the inverted opening marks Spanish does."
+      "note": "Untaught as a convention though used throughout the books. KA-S153-question-mark closes it. The load-bearing fact is the one the Spanish demand this derives from makes visible by contrast: SPANISH OPENS A QUESTION WITH A SECOND, INVERTED MARK AND KANNADA DOES NOT, so a Kannada reader meets the mark at the end or not at all and the WORDS have to carry the question until then. That changes reading aloud, which is why the lesson says it."
     },
     {
       "id": "KA-A1-L-14",
       "category": "Lipi (script and orthography)",
       "label": "other punctuation: colon, quotation marks, parentheses, dash",
-      "probe": null,
+      "probe": [
+        "KA-SCRIPT-RECOG-154"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "KA-CORPUS",
@@ -4496,7 +4530,7 @@
         "A1-O3-08",
         "A1-O3-09"
       ],
-      "note": "Untaught. Six Spanish points collapse here because Kannada borrows the Latin set wholesale and the corpus teaches none of it."
+      "note": "Six Spanish points collapse into this one because Kannada borrows the Latin set wholesale. KA-S154-other-marks closes it as a RECOGNITION point: the colon, the brackets, the quotation marks and the dash are what a notice or a form puts in front of a reader, and at A1 the demand is knowing what each signals rather than placing one. The chapter's recall lesson sorts the whole set into the three a reader writes -- full stop, comma, question mark -- and the rest they read."
     },
     {
       "id": "KA-A1-L-15",

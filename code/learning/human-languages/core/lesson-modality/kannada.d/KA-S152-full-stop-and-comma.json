@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "KA-S152-full-stop-and-comma",
+    "language": "kannada",
+    "chapter": 77,
+    "sequence": 2700,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:82a8c6eb08f3684a",
+    "detachableSegments": [
+      "Script you'll notice: the full stop and the comma",
+      "Writing: . and ,"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

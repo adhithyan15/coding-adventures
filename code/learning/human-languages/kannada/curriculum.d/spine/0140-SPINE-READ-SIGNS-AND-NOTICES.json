@@ -1,6 +1,10 @@
 {
   "segments": [
-    "KA-PATH-76-READING"
+    "KA-PATH-76-READING",
+    "KA-PATH-77-MARKS",
+    "KA-PATH-78-VOWELS",
+    "KA-PATH-79-SIGNS",
+    "KA-PATH-80-BREATH"
   ],
   "omits": [],
   "relocates": {}

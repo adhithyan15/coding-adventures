@@ -343,6 +343,55 @@ enum EngramAppScreen {
     Options,
 }
 
+impl EngramAppScreen {
+    /// The screen switcher's order. `nav-options` rows and `onShowScreen`
+    /// indices both follow it, so the two cannot disagree (#14063).
+    const SWITCHER_ORDER: [Self; 6] = [
+        Self::Decks,
+        Self::Study,
+        Self::Browse,
+        Self::Add,
+        Self::Stats,
+        Self::Options,
+    ];
+
+    fn switcher_label(self) -> &'static str {
+        match self {
+            Self::Decks => "Decks",
+            Self::Study => "Study",
+            Self::Browse => "Browse",
+            Self::Add => "Add",
+            Self::Stats => "Stats",
+            Self::Options => "Options",
+        }
+    }
+
+    /// `[label, accessible-name]` rows for the toolkit SegmentedControl.
+    /// The active screen's name says so, because HostButton has no selected
+    /// state for assistive technology yet (#15420).
+    fn switcher_rows(active: Self) -> Vec<[String; 2]> {
+        Self::SWITCHER_ORDER
+            .iter()
+            .map(|&screen| {
+                let label = screen.switcher_label();
+                let name = if screen == active {
+                    format!("{label}, selected")
+                } else {
+                    label.to_string()
+                };
+                [label.to_string(), name]
+            })
+            .collect()
+    }
+
+    fn switcher_index(self) -> usize {
+        Self::SWITCHER_ORDER
+            .iter()
+            .position(|&screen| screen == self)
+            .unwrap_or(0)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[serde(default)]
@@ -1116,6 +1165,15 @@ impl EngramSession {
             match parsed.kind {
                 EngramAppEvent::ShowScreen(screen) => {
                     self.active_screen = screen;
+                }
+                EngramAppEvent::ShowScreenAt => {
+                    let value = parsed
+                        .number_value
+                        .ok_or_else(|| "onShowScreen is missing an index".to_string())?;
+                    let index = parse_nonnegative_index(value, "screen")?;
+                    self.active_screen = *EngramAppScreen::SWITCHER_ORDER
+                        .get(index)
+                        .ok_or_else(|| format!("onShowScreen index {index} is out of range"))?;
                 }
                 EngramAppEvent::SelectDeck => {
                     if let Some(value) = parsed.number_value {
@@ -2506,6 +2564,46 @@ fn engram_app_props_for_state(
     let props_object = props
         .as_object_mut()
         .expect("Engram app props literal must be a JSON object");
+    // The screen switcher (#14063). Inserted here rather than in the literal
+    // above, which is already at `json!`'s recursion limit.
+    props_object.insert(
+        "nav-options".to_string(),
+        json!(EngramAppScreen::switcher_rows(active_screen)),
+    );
+    props_object.insert(
+        "nav-selected-index".to_string(),
+        json!(active_screen.switcher_index()),
+    );
+    // The Study screen's empty state (#15440): the toolkit `EmptyState`
+    // replaces the review card and its actions when nothing is queued, rather
+    // than a card whose prompt reads "No cards queued" above a Reveal button
+    // and five review actions that have nothing to act on. The copy
+    // distinguishes "no session" from "a session with nothing left", since
+    // the way forward is the same (pick a deck) but the reason is not.
+    let (study_empty_message, study_empty_action) = if progress.is_some() {
+        (
+            "Every card in this session has been reviewed or set aside.",
+            "Back to decks",
+        )
+    } else {
+        ("Choose a deck to start a study session.", "Choose a deck")
+    };
+    props_object.insert(
+        "study-empty".to_string(),
+        Value::Bool(active_card.is_none()),
+    );
+    props_object.insert(
+        "study-empty-title".to_string(),
+        Value::String("No cards queued".to_string()),
+    );
+    props_object.insert(
+        "study-empty-message".to_string(),
+        Value::String(study_empty_message.to_string()),
+    );
+    props_object.insert(
+        "study-empty-action-label".to_string(),
+        Value::String(study_empty_action.to_string()),
+    );
     props_object.insert("host-status-visible".to_string(), Value::Bool(false));
     props_object.insert("host-status-kind".to_string(), Value::String(String::new()));
     props_object.insert(
@@ -5155,6 +5253,8 @@ fn note_type_from_editor_selection(
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum EngramAppEvent {
     ShowScreen(EngramAppScreen),
+    /// The switcher's selection, by index into `SWITCHER_ORDER`.
+    ShowScreenAt,
     SelectDeck,
     Reveal,
     Undo,
@@ -5225,6 +5325,7 @@ impl EngramAppEvent {
             Self::ShowScreen(EngramAppScreen::Add) => "onShowAdd",
             Self::ShowScreen(EngramAppScreen::Stats) => "onShowStats",
             Self::ShowScreen(EngramAppScreen::Options) => "onShowOptions",
+            Self::ShowScreenAt => "onShowScreen",
             Self::SelectDeck => "onSelectDeck",
             Self::Reveal => "onReveal",
             Self::Undo => "onUndo",
@@ -5488,6 +5589,7 @@ fn parse_engram_app_event_name(
         "showoptions" | "show-options" | "show_options" | "options" => {
             parsed(EngramAppEvent::ShowScreen(EngramAppScreen::Options))
         }
+        "showscreen" | "show-screen" | "show_screen" => parsed(EngramAppEvent::ShowScreenAt),
         "selectdeck" | "select-deck" | "select_deck" | "deckselect" | "deck-select"
         | "deck_select" => parsed(EngramAppEvent::SelectDeck),
         "reveal" => parsed(EngramAppEvent::Reveal),
@@ -9808,6 +9910,82 @@ mod tests {
         assert_eq!(options["props"]["show-add-screen"], false);
     }
 
+    /// #14063: the switcher is a SegmentedControl fed by `nav-options` /
+    /// `nav-selected-index`, and reports back through `onShowScreen(index)`.
+    /// Its rows, its index and the show-*-screen flags must describe the
+    /// same screen at every step.
+    #[test]
+    fn engram_app_screen_switcher_rows_track_the_active_screen() {
+        let mut session = EngramSession::new();
+
+        let initial: Value = serde_json::from_str(&session.engram_app_props("", NOW)).unwrap();
+        assert_eq!(initial["props"]["nav-selected-index"], 0);
+        assert_eq!(
+            initial["props"]["nav-options"],
+            json!([
+                ["Decks", "Decks, selected"],
+                ["Study", "Study"],
+                ["Browse", "Browse"],
+                ["Add", "Add"],
+                ["Stats", "Stats"],
+                ["Options", "Options"]
+            ])
+        );
+
+        let flags = [
+            "show-decks-screen",
+            "show-study-screen",
+            "show-browse-screen",
+            "show-add-screen",
+            "show-stats-screen",
+            "show-options-screen",
+        ];
+        for index in 0..flags.len() {
+            let event = json!({ "event": "onShowScreen", "index": index }).to_string();
+            let value: Value =
+                serde_json::from_str(&session.handle_engram_app_event(&event, "", NOW)).unwrap();
+            assert_eq!(value["ok"], true, "index {index}: {value}");
+            assert_eq!(value["event"], "onShowScreen");
+            let props = &value["props"];
+            assert_eq!(props["nav-selected-index"], index);
+            for (other, flag) in flags.iter().enumerate() {
+                assert_eq!(props[flag], other == index, "index {index}: {flag}");
+                let row = &props["nav-options"][other];
+                let label = row[0].as_str().unwrap();
+                let expected = if other == index {
+                    format!("{label}, selected")
+                } else {
+                    label.to_string()
+                };
+                assert_eq!(row[1], expected, "index {index}: row {other}");
+            }
+        }
+
+        // The named events and the indexed one agree.
+        let named: Value =
+            serde_json::from_str(&session.handle_engram_app_event("onShowBrowse", "", NOW))
+                .unwrap();
+        assert_eq!(named["props"]["nav-selected-index"], 2);
+    }
+
+    #[test]
+    fn engram_app_screen_switcher_rejects_bad_indices_without_moving() {
+        let mut session = EngramSession::new();
+        session.handle_engram_app_event(r#"{"event":"onShowScreen","index":3}"#, "", NOW);
+        for bad in [
+            r#"{"event":"onShowScreen","index":6}"#,
+            r#"{"event":"onShowScreen","index":-1}"#,
+            r#"{"event":"onShowScreen"}"#,
+        ] {
+            let value: Value =
+                serde_json::from_str(&session.handle_engram_app_event(bad, "", NOW)).unwrap();
+            assert_eq!(value["ok"], false, "{bad} should be refused: {value}");
+        }
+        let after: Value = serde_json::from_str(&session.engram_app_props("", NOW)).unwrap();
+        assert_eq!(after["props"]["nav-selected-index"], 3);
+        assert_eq!(after["props"]["show-add-screen"], true);
+    }
+
     #[test]
     fn engram_app_prunes_unused_media_assets_from_shared_state() {
         let mut session = EngramSession::new();
@@ -10284,6 +10462,20 @@ mod tests {
             .unwrap()
             .is_empty());
         assert_eq!(suspended["props"]["prompt"], "No cards queued");
+        // With the queue empty, the Study screen shows the empty state instead
+        // of a card, and says the session ran out rather than never started.
+        assert_eq!(suspended["props"]["study-empty"], true);
+        assert_eq!(suspended["props"]["study-empty-title"], "No cards queued");
+        assert_eq!(
+            suspended["props"]["study-empty-message"],
+            "Every card in this session has been reviewed or set aside."
+        );
+        assert_eq!(
+            suspended["props"]["study-empty-action-label"],
+            "Back to decks"
+        );
+        // ...and while a card was queued, it did not.
+        assert_eq!(buried_current["props"]["study-empty"], false);
     }
 
     #[test]

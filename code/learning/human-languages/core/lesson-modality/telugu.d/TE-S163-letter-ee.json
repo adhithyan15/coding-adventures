@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TE-S163-letter-ee",
+    "language": "telugu",
+    "chapter": 2,
+    "sequence": 112,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1392e4fcea00ebfb",
+    "detachableSegments": [
+      "Script you'll notice: ఏ",
+      "Writing: ఏ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

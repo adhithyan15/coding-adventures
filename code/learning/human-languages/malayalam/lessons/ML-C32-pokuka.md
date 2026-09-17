@@ -48,9 +48,9 @@ the ending that means "to ___."
 
 | when | Malayalam | the ending |
 |---|---|---|
-| now | *pōkunnu* | *-unnu* |
-| already | *pōyi* | *-i* |
-| not yet | *pōkuṁ* | *-uṁ* |
+| now | **പോകുന്നു** *pōkunnu* | *-unnu* |
+| already | **പോയി** *pōyi* | *-i* |
+| not yet | **പോകും** *pōkuṁ* | *-uṁ* |
 
 You have said the middle one already: the goodbye **പോയി വരാം** (*pōyi varāṁ*)
 opens with *pōyi*, "having gone."
@@ -76,10 +76,10 @@ Old Dravidian *p-* softened to *h-* in Kannada — "ten" is Malayalam **പത�
 
 In most languages a tense is a **list**. English has *I go / he goes*. Tamil,
 Malayalam's closest sister, needs an ending for every person: *pōgiṟēṉ* ("I
-go"), *pōgiṟāy* ("you go"), *pōgiṟāṉ* ("he goes"), *pōgiṟōm* ("we go").
+go"), *pōgiṟāy* ("you go"), *pōgiṟāṉ* ("he goes").
 
-Malayalam's present tense is one word long. *Ñān pōkunnu*, *nī pōkunnu*, *avan
-pōkunnu*, *avar pōkunnu* — I, you, he, they, and *pōkunnu* every time. So those
+Malayalam's present tense is one word long. *Ñān pōkunnu*, *nī pōkunnu*, *avar
+pōkunnu* — I, you, they, and *pōkunnu* every time. So those
 three forms are not the start of a conjugation. **They are the whole of it.**
 
 That is the bargain. Nothing to memorise on the verb — and the pronoun in front
@@ -91,6 +91,7 @@ can never be dropped, since it is now the only thing telling you who went.
 [PAUSE 1s]
 - [YOU SAY: "pōkuka" — to go]
 - [YOU SAY: the three times — "pōkunnu … pōyi … pōkuṁ"]
+- [YOU LOOK: at the three on the page — **പോകുന്നു**, **പോയി**, **പോകും**]
 - [YOU SAY: the pair that shares one sound-law — "pattŭ … hattu", "pō … hōgu"]
 - [YOU SAY: four people, one verb — "ñān, nī, avan, avar … pōkunnu"]
 - [YOU RECALL: read **ദിവസം**]
@@ -98,7 +99,7 @@ can never be dropped, since it is now the only thing telling you who went.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-UNDU-02, ML-CONCEPT-C32-POKUKA-01, ML-CONCEPT-C32-POKUKA-02] -->
 
-[PAUSE 3s] Say "I will go." (*Ñān pōkuṁ*.) How many words are in this verb's
-whole Malayalam present tense? (**One** — *pōkunnu*, for every person.) Is
+[PAUSE 3s] Say "I will go." (*Ñān pōkuṁ*) — and find it written: **ഞാൻ പോകും**.
+How many words are in this verb's whole Malayalam present tense? (**One** — *pōkunnu*, for every person.) Is
 Kannada's *hōgu* a different root from *pō*? (**No** — the same old *p* softened
 to *h*.) Next: the one place a Malayalam verb can still surprise you.

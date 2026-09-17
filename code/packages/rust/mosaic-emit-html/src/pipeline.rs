@@ -188,6 +188,11 @@ pub enum PipelineEmitError {
     /// is unaffected -- only an explicit, disallowed scheme is
     /// rejected.
     UnsafeUriScheme(String),
+    /// A prop value has a shape the prop does not accept -- for example a
+    /// string literal where `HostButton`'s `selected:` needs a bool
+    /// (UI86 §4). Refused rather than dropped, so an authored state is
+    /// never silently lost.
+    InvalidPropValue(String),
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -208,6 +213,7 @@ impl std::fmt::Display for PipelineEmitError {
                 f,
                 "HostLink href {href:?} uses a disallowed URI scheme (only http, https, mailto, or a relative reference are allowed)"
             ),
+            PipelineEmitError::InvalidPropValue(message) => write!(f, "{message}"),
         }
     }
 }
@@ -486,6 +492,20 @@ fn json_value_for_fixture(slot_type: &SlotType, value: &str) -> serde_json::Valu
             "false" => serde_json::Value::Bool(false),
             _ => serde_json::Value::String(value.to_string()),
         },
+        // Lists arrive as JSON text (#15428). A shape that does not match the
+        // slot keeps the generated sample.
+        SlotType::List(_) => {
+            let strings = |items: Vec<String>| {
+                serde_json::Value::Array(items.into_iter().map(serde_json::Value::String).collect())
+            };
+            match mosmodel_compiler::fixtures::parse_list_fixture(slot_type, value) {
+                Some(mosmodel_compiler::fixtures::ListFixture::Text(items)) => strings(items),
+                Some(mosmodel_compiler::fixtures::ListFixture::TextRows(rows)) => {
+                    serde_json::Value::Array(rows.into_iter().map(strings).collect())
+                }
+                None => sample_json_value_for_slot_type(slot_type, ""),
+            }
+        }
         _ => serde_json::Value::String(value.to_string()),
     }
 }
@@ -1021,7 +1041,40 @@ function camelSlotName(name) {
 }
 
 function renderTemplate(source, context) {
-  return renderMustaches(renderIfs(renderLoops(source, context), context), context);
+  return renderMustaches(
+    renderPressed(renderIfs(renderLoops(source, context), context), context),
+    context,
+  );
+}
+
+// UI86: a HostButton's dynamic `selected` state. The emitter writes the
+// condition as `data-mosaic&pressed`; it is decided here by the same
+// evaluator as `mosaic-if`, after loops have bound their row, and replaced by
+// a plain `aria-pressed="true"` or `"false"`. Nothing else reaches the page.
+//
+// This pass scans text that already holds rendered host data (loop rows are
+// rendered before it runs), so the marker must be something host data can
+// never spell. The `&` guarantees that: `escapeHtml` turns every `&` in host
+// text into `&amp;`, and the emitter escapes every `&` in authored literals the
+// same way. A marker spelled with letters, `-` and `=` alone could be forged by
+// a task name, and the forged quote would shift every later attribute on the
+// line out of its quotes.
+function renderPressed(source, context) {
+  return source.replace(/\sdata-mosaic&pressed="([^"]*)"/g, (_match, condition) =>
+    ` aria-pressed="${evaluateCondition(unescapeAttribute(condition), context) ? "true" : "false"}"`,
+  );
+}
+
+// The condition was attribute-escaped (and brace-escaped) at emit time.
+function unescapeAttribute(value) {
+  return String(value)
+    .replaceAll("&#123;", "{")
+    .replaceAll("&#125;", "}")
+    .replaceAll("&quot;", "\"")
+    .replaceAll("&#39;", "'")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&amp;", "&");
 }
 
 function renderLoops(source, context) {
@@ -1287,13 +1340,22 @@ function formatValue(value) {
   return String(value);
 }
 
+// Host text is inserted into a template that later passes scan again, so it
+// is escaped against those passes as well as against HTML: `{` and `}` so a
+// value cannot become a `{{placeholder}}` (or an unescaped `{{{surface}}}`) that
+// the mustache pass would fill, and `=` so it cannot spell `name="` next to a
+// template quote. Each is an ordinary character reference, so the page shows
+// and `dataset` reads the original text.
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll("\"", "&quot;")
-    .replaceAll("'", "&#39;");
+    .replaceAll("'", "&#39;")
+    .replaceAll("=", "&#61;")
+    .replaceAll("{", "&#123;")
+    .replaceAll("}", "&#125;");
 }
 
 function escapeHtmlAttr(value) {
@@ -1813,7 +1875,10 @@ fn emit_html_tree(
                 // `r == editRow`) survive the strip and reach the
                 // expander as the original text.
                 let trimmed = strip_outer_parens(e.trim());
-                let safe = escape_mustache_braces(&escape_html_text(trimmed));
+                // `row[1]` becomes `row.1`, the only index spelling the
+                // runtime's placeholder pattern accepts (#15426).
+                let path = mustache_path(trimmed).unwrap_or_else(|| trimmed.to_string());
+                let safe = escape_mustache_braces(&escape_html_text(&path));
                 writeln!(
                     out,
                     "{pad}<{tag_name}{extra_attrs}{style_attr}>{{{{{e}}}}}</{tag_name}>",
@@ -2098,6 +2163,10 @@ fn emit_input(node: &LayoutNode, indent: usize, part_styles: &HashMap<String, St
 /// |------------|-----------------------|--------------------|-----------------------------|
 /// | `label`    | `{{slot}}` as text    | escaped text       | (n/a)                       |
 /// | `disabled` | `data-disabled="..."` | (n/a)              | true → `disabled`; false → omit |
+/// | `selected` | `data-mosaic&pressed="..."` | refused | `aria-pressed="true"` / `"false"` |
+///
+/// `selected` (UI86) also accepts a loop binding or an expression, which take
+/// the SlotRef column's shape; see [`host_button_pressed_attr`].
 ///
 /// A `HostButton` with neither `label` nor `children` produces a bare
 /// `<button></button>` — the host can still drive content via slot
@@ -2124,6 +2193,40 @@ fn emit_host_button(
         append_emit_marker(&mut attrs, node, "onTap", "data-on-click");
     }
 
+    // Portable accessible name (UI29 §2.1). Dropped here without a
+    // degradation until #15426. Literal names are escaped now; dynamic
+    // ones become a placeholder for the host's template engine, whose
+    // attribute escaping applies when it substitutes. Keyword and
+    // expression names use the same placeholder shape the label body
+    // below uses, so a name inside `For` tracks the current row.
+    match find_prop(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => {
+            // Brace-escaped too, so an authored `{{x}}` stays literal text
+            // instead of becoming a placeholder the runtime fills.
+            let safe = escape_mustache_braces(&escape_html_attr(label));
+            write!(attrs, " aria-label=\"{safe}\"").unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            write!(attrs, " aria-label=\"{{{{{}}}}}\"", camel(slot)).unwrap();
+        }
+        Some(LayoutPropValue::Keyword(k)) => {
+            let safe = escape_mustache_braces(&escape_html_attr(k));
+            write!(attrs, " aria-label=\"{{{{{safe}}}}}\"").unwrap();
+        }
+        Some(LayoutPropValue::Expr(expr)) => {
+            // Only a data path can be substituted by the runtime; any other
+            // expression would be stamped into the page as literal braces,
+            // which is worse than no name (the button text still names it).
+            if let Some(path) = mustache_path(strip_outer_parens(expr.trim())) {
+                let safe = escape_mustache_braces(&escape_html_attr(&path));
+                write!(attrs, " aria-label=\"{{{{{safe}}}}}\"").unwrap();
+            }
+        }
+        _ => {}
+    }
+
+    attrs.push_str(&host_button_pressed_attr(node)?);
+
     let style_attr = build_style_attr(node, "", part_styles);
 
     // Body: `label:` prop wins over children. Slot ref → `{{slot}}`,
@@ -2147,7 +2250,11 @@ fn emit_host_button(
         }
         Some(LayoutPropValue::Expr(expr)) => {
             let trimmed = strip_outer_parens(expr.trim());
-            let safe = escape_mustache_braces(&escape_html_text(trimmed));
+            // `( row[0] )` must reach the runtime as `row.0`: its
+            // placeholder pattern only accepts dotted paths, so the
+            // bracketed spelling used to render literally (#15426).
+            let path = mustache_path(trimmed).unwrap_or_else(|| trimmed.to_string());
+            let safe = escape_mustache_braces(&escape_html_text(&path));
             Ok(format!(
                 "{pad}<button{attrs}{style_attr}>{{{{{safe}}}}}</button>\n"
             ))
@@ -3164,6 +3271,56 @@ fn try_emit_table_for_cell_html(
 // UI29 §3.1 / §3.2 — If / Else / For meta-primitive lowerings
 // =====================================================================
 
+/// Lower `HostButton`'s `selected:` (UI86) for the static-HTML backend.
+///
+/// A literal state is written directly. Anything dynamic -- a slot, a loop
+/// binding, or an expression such as `( i == selectedIndex )` -- cannot be a
+/// `{{placeholder}}`, because the runtime only substitutes data paths into
+/// attributes, and a placeholder would write the *value* (a number, a name)
+/// rather than a state. It is emitted instead as
+/// `data-mosaic&pressed="…"`, which `main.js` evaluates with the same
+/// `evaluateCondition` that decides `<!-- mosaic-if when="…" -->`, and
+/// replaces with `aria-pressed="true"` or `"false"`.
+///
+/// The `&` in the marker's name is deliberate. The runtime finds the marker
+/// by scanning text that already contains rendered host data, so the marker
+/// has to be unspellable by that data and by authored literals. Both are
+/// escaped so that no raw `&` survives (`escapeHtml` at run time,
+/// [`escape_html_attr`] / [`escape_html_text`] here). HTML allows `&` in an
+/// attribute name, so a page served without the runtime still parses. So the condition is
+/// evaluated with the loop's bindings in scope, only a boolean ever reaches
+/// the page, and the expression is never executed as script: the evaluator
+/// understands paths, literals, `==`, `!=` and `!`, nothing else.
+///
+/// | authored form            | emitted                                      |
+/// |--------------------------|----------------------------------------------|
+/// | (absent)                 | nothing                                      |
+/// | `selected : true`        | ` aria-pressed="true"`                       |
+/// | `selected : slot: s`     | ` data-mosaic&pressed="s"`              |
+/// | `selected : item`        | ` data-mosaic&pressed="item"`           |
+/// | `selected : ( i == n )`  | ` data-mosaic&pressed="( i == n )"`     |
+/// | a string or number       | refused: `InvalidPropValue`                  |
+fn host_button_pressed_attr(node: &LayoutNode) -> Result<String, PipelineEmitError> {
+    let condition = match find_prop(node, "selected") {
+        None => return Ok(String::new()),
+        Some(LayoutPropValue::Keyword(k)) if k == "true" || k == "false" => {
+            return Ok(format!(" aria-pressed=\"{k}\""));
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => camel(slot),
+        Some(LayoutPropValue::Keyword(binding)) => binding.clone(),
+        Some(LayoutPropValue::Expr(expr)) if !expr.trim().is_empty() => expr.clone(),
+        Some(_) => {
+            return Err(PipelineEmitError::InvalidPropValue(
+                "HostButton `selected:` must be a slot reference, `true`/`false`, a loop binding, or an expression (UI86 §4)".to_string(),
+            ))
+        }
+    };
+    // Brace-escaped as well as attribute-escaped, so an expression containing
+    // `{{` cannot become a placeholder the mustache pass fills.
+    let safe = escape_mustache_braces(&escape_html_attr(&condition));
+    Ok(format!(" data-mosaic&pressed=\"{safe}\""))
+}
+
 /// Lower an `If` node (plus its optional sibling `Else`, which is
 /// passed in *implicitly* — see `emit_children`) to a comment-bracketed
 /// template marker.
@@ -3455,6 +3612,9 @@ fn append_drag_value(attrs: &mut String, node: &LayoutNode, prop: &str, attr: &s
 /// through unchanged, which the template engine will fail to resolve — visibly empty
 /// rather than silently wrong.
 fn expr_to_mustache_path(text: &str) -> String {
+    if let Some(path) = mustache_path(strip_outer_parens(text.trim())) {
+        return path;
+    }
     let cleaned: String = text
         .chars()
         .filter(|c| !c.is_whitespace())
@@ -3922,6 +4082,60 @@ fn merge_styles(builtin: &str, author: &str) -> String {
 // =====================================================================
 // Name conversion
 // =====================================================================
+
+/// Rewrite a layout expression that is a plain data path into the dotted
+/// form the generated `main.js` resolves, or `None` if it is anything else.
+///
+/// | expression         | path        |
+/// |--------------------|-------------|
+/// | `item`             | `item`      |
+/// | `row [ 16 ]`       | `row.16`    |
+/// | `row[0][1]`        | `row.0.1`   |
+/// | `task.name`        | `task.name` |
+/// | `a + b`, `row[i]`  | `None`      |
+///
+/// The runtime's placeholder pattern is `[A-Za-z0-9_.-]+` and `readPath`
+/// walks it by `.`, so `row.16` indexes the array exactly as `row[16]`
+/// does in JavaScript. A variable index is not a path and is refused.
+fn mustache_path(expr: &str) -> Option<String> {
+    fn ident_len(s: &str) -> usize {
+        s.char_indices()
+            .take_while(|&(i, c)| c.is_ascii_alphabetic() || c == '_' || (i > 0 && c.is_ascii_digit()))
+            .count()
+    }
+
+    let mut rest = expr.trim();
+    let n = ident_len(rest);
+    if n == 0 {
+        return None;
+    }
+    let mut out = rest[..n].to_string();
+    rest = rest[n..].trim_start();
+    while !rest.is_empty() {
+        if let Some(after) = rest.strip_prefix('[') {
+            let after = after.trim_start();
+            let digits = after.chars().take_while(char::is_ascii_digit).count();
+            if digits == 0 {
+                return None;
+            }
+            let close = after[digits..].trim_start().strip_prefix(']')?;
+            out.push('.');
+            out.push_str(&after[..digits]);
+            rest = close.trim_start();
+        } else {
+            // Anything but `[` or `.` here (an operator, a call) is not a path.
+            let after = rest.strip_prefix('.')?.trim_start();
+            let n = ident_len(after);
+            if n == 0 {
+                return None;
+            }
+            out.push('.');
+            out.push_str(&after[..n]);
+            rest = after[n..].trim_start();
+        }
+    }
+    Some(out)
+}
 
 /// Escape `{` / `}` in interpolated content so a STRING literal
 /// inside a parsed expression cannot close a surrounding mustache
@@ -5069,6 +5283,239 @@ mod tests {
             out.contains("<button data-on-click=\"onSave\">{{label}}</button>"),
             "expected button with onTap alias hydration marker, got:\n{out}"
         );
+    }
+
+    /// #15426: HostButton's portable name was never read here, so every
+    /// authored name vanished on static HTML without a degradation.
+    #[test]
+    fn host_button_accessible_name_lowers_every_authored_form() {
+        let expr = |e: &str| LayoutProp {
+            name: "a11y-label".to_string(),
+            value: LayoutPropValue::Expr(e.to_string()),
+        };
+        let keyword = LayoutProp {
+            name: "a11y-label".to_string(),
+            value: LayoutPropValue::Keyword("item".to_string()),
+        };
+        for (prop, expected) in [
+            (prop_string("a11y-label", "Close \"dialog\""), "aria-label=\"Close &quot;dialog&quot;\""),
+            (prop_slot("a11y-label", "spoken-title"), "aria-label=\"{{spokenTitle}}\""),
+            (keyword, "aria-label=\"{{item}}\""),
+            (expr("( option [ 1 ] )"), "aria-label=\"{{option.1}}\""),
+        ] {
+            let l = layout(
+                "F",
+                node_with_props("HostButton", vec![prop_string("label", "Go"), prop]),
+            );
+            let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+                .unwrap()
+                .output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+        }
+    }
+
+    #[test]
+    fn text_indexed_content_becomes_a_dotted_path() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Expr("( row [ 1 ] )".to_string()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(out.contains(">{{row.1}}</span>"), "got:\n{out}");
+    }
+
+    /// UI86: literal states are written directly; everything dynamic becomes
+    /// a condition the runtime decides, never a placeholder that would write
+    /// the bound value itself into `aria-pressed`.
+    #[test]
+    fn host_button_selected_lowers_every_authored_form() {
+        let keyword = |k: &str| LayoutProp {
+            name: "selected".to_string(),
+            value: LayoutPropValue::Keyword(k.to_string()),
+        };
+        let expr = |e: &str| LayoutProp {
+            name: "selected".to_string(),
+            value: LayoutPropValue::Expr(e.to_string()),
+        };
+        for (prop, expected) in [
+            (keyword("true"), " aria-pressed=\"true\""),
+            (keyword("false"), " aria-pressed=\"false\""),
+            (prop_slot("selected", "is-current"), " data-mosaic&pressed=\"isCurrent\""),
+            (keyword("item"), " data-mosaic&pressed=\"item\""),
+            (
+                expr("( i == selectedIndex )"),
+                " data-mosaic&pressed=\"( i == selectedIndex )\"",
+            ),
+            // Escaped for the attribute and against the mustache pass.
+            (
+                expr("( name == \"{{x}}\" )"),
+                " data-mosaic&pressed=\"( name == &quot;&#123;&#123;x&#125;&#125;&quot; )\"",
+            ),
+        ] {
+            let l = layout(
+                "F",
+                node_with_props("HostButton", vec![prop_string("label", "Go"), prop]),
+            );
+            let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+                .unwrap()
+                .output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+            assert!(!out.contains("{{"), "no placeholder may carry the state:\n{out}");
+        }
+        let plain = layout("F", node_with_props("HostButton", vec![prop_string("label", "Go")]));
+        let out = from_pipeline(&component("F", vec![]), &plain, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(!out.contains("pressed"), "absent selected must emit nothing:\n{out}");
+    }
+
+    #[test]
+    fn host_button_selected_refuses_non_bool_values() {
+        for value in [
+            LayoutPropValue::String("true".into()),
+            LayoutPropValue::Number(1.0),
+        ] {
+            let l = layout(
+                "F",
+                node_with_props(
+                    "HostButton",
+                    vec![LayoutProp {
+                        name: "selected".to_string(),
+                        value,
+                    }],
+                ),
+            );
+            assert!(matches!(
+                from_pipeline(&component("F", vec![]), &l, &empty_style("F")),
+                Err(PipelineEmitError::InvalidPropValue(_))
+            ));
+        }
+    }
+
+    /// The project runtime decides the condition, after loops bind their row.
+    #[test]
+    fn project_runtime_renders_pressed_conditions() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "HostButton",
+                vec![LayoutProp {
+                    name: "selected".to_string(),
+                    value: LayoutPropValue::Keyword("item".to_string()),
+                }],
+            ),
+        );
+        let mut opts = EmitOptions::default();
+        opts.emit_project = true;
+        let result =
+            from_pipeline_with_options(&component("F", vec![]), &l, &empty_style("F"), &opts)
+                .unwrap();
+        let main_js = result.project.unwrap().main_js;
+        assert!(main_js.contains(
+            "renderPressed(renderIfs(renderLoops(source, context), context), context)"
+        ));
+        assert!(main_js.contains("data-mosaic&pressed"));
+        // Host text must not be able to spell the marker (`=`) or a
+        // placeholder (`{`, `}`) for a later pass to act on.
+        for escape in [
+            r#".replaceAll("=", "&#61;")"#,
+            r#".replaceAll("{", "&#123;")"#,
+            r#".replaceAll("}", "&#125;")"#,
+        ] {
+            assert!(main_js.contains(escape), "missing {escape}");
+        }
+        assert!(main_js.contains("evaluateCondition(unescapeAttribute(condition), context)"));
+    }
+
+    /// An expression the runtime cannot resolve must not be stamped into
+    /// the attribute as literal braces; the visible label still names the
+    /// button.
+    #[test]
+    fn host_button_accessible_name_skips_non_path_expressions() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "HostButton",
+                vec![
+                    prop_string("label", "Go"),
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::Expr("( a + b )".to_string()),
+                    },
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(!out.contains("aria-label"), "unexpected aria-label in:\n{out}");
+    }
+
+    /// The label body had the same defect: `{{option [ 0 ]}}` does not
+    /// match the runtime's placeholder pattern and rendered literally.
+    #[test]
+    fn host_button_indexed_label_becomes_a_dotted_path() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "HostButton",
+                vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::Expr("( option [ 0 ] )".to_string()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(out.contains(">{{option.0}}</button>"), "got:\n{out}");
+    }
+
+    #[test]
+    fn host_button_literal_accessible_name_cannot_become_a_placeholder() {
+        let l = layout(
+            "F",
+            node_with_props("HostButton", vec![prop_string("a11y-label", "{{secret}}")]),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("aria-label=\"&#123;&#123;secret&#125;&#125;\""),
+            "literal braces must be entity-escaped, got:
+{out}"
+        );
+    }
+
+    #[test]
+    fn mustache_path_accepts_only_data_paths() {
+        for (expr, expected) in [
+            ("item", Some("item")),
+            ("row [ 16 ]", Some("row.16")),
+            ("row[0][1]", Some("row.0.1")),
+            ("task.name", Some("task.name")),
+            ("task . name [ 2 ]", Some("task.name.2")),
+            ("_x1", Some("_x1")),
+            ("a + b", None),
+            ("row[i]", None),
+            ("row[", None),
+            ("row[1", None),
+            ("1abc", None),
+            ("row.", None),
+            ("", None),
+            ("x\"y", None),
+            ("x}}<script>", None),
+        ] {
+            assert_eq!(mustache_path(expr).as_deref(), expected, "for {expr:?}");
+        }
     }
 
     #[test]
@@ -7205,6 +7652,17 @@ mod tests {
     /// shipped `variant` slots that did nothing (#14036). Asserting that a
     /// fixtures build merely *succeeds* would not catch that -- the check has
     /// to be that two different fixture sets produce two different renders.
+    /// #15428: list fixtures arrive as JSON text and hydrate as JSON arrays.
+    #[test]
+    fn list_fixtures_hydrate_as_json_arrays() {
+        let rows = SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(Box::new(mosmodel_compiler::ListInnerType::Text))));
+        assert_eq!(
+            json_value_for_fixture(&rows, r#"[["Board","Board, selected"]]"#),
+            serde_json::json!([["Board", "Board, selected"]])
+        );
+        assert_eq!(json_value_for_fixture(&rows, r#"["flat"]"#), serde_json::json!([]));
+    }
+
     #[test]
     fn ui49_fixtures_beat_the_generated_sample_and_differ_from_each_other() {
         let m = component(

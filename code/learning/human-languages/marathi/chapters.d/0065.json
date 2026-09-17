@@ -1,0 +1,21 @@
+{
+  "chapter": 65,
+  "title": "Standing Vowels",
+  "label": "ch:mr-ubhe-svara",
+  "canDo": "I can write the four vowel letters that begin a word, and say which of them a word needs rather than the sign that hangs on a consonant.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MR-R65-standing-vowels",
+    "kind": "production",
+    "summary": "From cold, with nothing open: write the four standing vowels this chapter taught, in the order they were met.",
+    "assesses": [
+      "MR-SCRIPT-II-INDEPENDENT-01",
+      "MR-SCRIPT-O-INDEPENDENT-01",
+      "MR-SCRIPT-AI-INDEPENDENT-01",
+      "MR-SCRIPT-AU-INDEPENDENT-01"
+    ],
+    "note": "The chapter introduces exactly these four atoms and the payoff assesses all four, with no model on the page."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:f900f4dca2aca464",
+  "lessonIds": [
+    "ML-C70-um",
+    "ML-C70-um-more",
+    "ML-C70-o",
+    "ML-R70-cherkkuka"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch70.txt",
+  "json": "malayalam/narration/ch70.json",
+  "textHash": "fnv1a64:2905cd18c518e970",
+  "jsonHash": "fnv1a64:dc35df790ba89fac",
+  "findings": []
+}

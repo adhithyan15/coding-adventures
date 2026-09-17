@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:4ab37f823dd84826",
+  "sourceHash": "fnv1a64:911500c16c1d5dad",
   "lessons": [
     {
       "id": "ML-C32-undu",
@@ -196,7 +196,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69ff4165e212d3b8",
+      "sourceHash": "fnv1a64:4bb1d2a87d5c4000",
       "notice": null,
       "blocks": [
         {
@@ -239,9 +239,9 @@
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "when: now. Malayalam: pōkunnu. the ending: -unnu.",
-                "when: already. Malayalam: pōyi. the ending: -i.",
-                "when: not yet. Malayalam: pōkuṁ. the ending: -uṁ."
+                "when: now. Malayalam: പോകുന്നു pōkunnu. the ending: -unnu.",
+                "when: already. Malayalam: പോയി pōyi. the ending: -i.",
+                "when: not yet. Malayalam: പോകും pōkuṁ. the ending: -uṁ."
               ]
             },
             {
@@ -283,11 +283,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "In most languages a tense is a list. English has I go / he goes. Tamil, Malayalam's closest sister, needs an ending for every person: pōgiṟēṉ (\"I go\"), pōgiṟāy (\"you go\"), pōgiṟāṉ (\"he goes\"), pōgiṟōm (\"we go\")."
+              "text": "In most languages a tense is a list. English has I go / he goes. Tamil, Malayalam's closest sister, needs an ending for every person: pōgiṟēṉ (\"I go\"), pōgiṟāy (\"you go\"), pōgiṟāṉ (\"he goes\")."
             },
             {
               "kind": "speech",
-              "text": "Malayalam's present tense is one word long. Ñān pōkunnu, nī pōkunnu, avan pōkunnu, avar pōkunnu — I, you, he, they, and pōkunnu every time. So those three forms are not the start of a conjugation. They are the whole of it."
+              "text": "Malayalam's present tense is one word long. Ñān pōkunnu, nī pōkunnu, avar pōkunnu — I, you, they, and pōkunnu every time. So those three forms are not the start of a conjugation. They are the whole of it."
             },
             {
               "kind": "speech",
@@ -323,6 +323,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the three times — \"pōkunnu … pōyi … pōkuṁ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the three on the page — പോകുന്നു, പോയി, പോകും",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the three on the page — **പോകുന്നു**, **പോയി**, **പോകും**]"
             },
             {
               "kind": "prompt",
@@ -366,7 +375,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I will go.\" (Ñān pōkuṁ.) How many words are in this verb's whole Malayalam present tense? (One — pōkunnu, for every person.) Is Kannada's hōgu a different root from pō? (No — the same old p softened to h.) Next: the one place a Malayalam verb can still surprise you."
+              "text": "Say \"I will go.\" (Ñān pōkuṁ) — and find it written: ഞാൻ പോകും. How many words are in this verb's whole Malayalam present tense? (One — pōkunnu, for every person.) Is Kannada's hōgu a different root from pō? (No — the same old p softened to h.) Next: the one place a Malayalam verb can still surprise you."
             }
           ]
         }
