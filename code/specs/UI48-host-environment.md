@@ -258,7 +258,8 @@ provisionally `HostNavigationSplit` — should lower to `UISplitViewController`,
 `NavigationView`, and `NavigationSuiteScaffold`, consuming this environment
 rather than reimplementing it. It is deliberately not specified here: it is a
 kernel primitive under UI29's rules and needs its own spec and its own
-per-backend degradation story. Variant selection (§5.3) remains the general
+per-backend degradation story. That spec is now written:
+[UI29-6](UI29-6-host-navigation-split.md) (#15481). Variant selection (§5.3) remains the general
 mechanism for everything that is *not* a standard navigation shell.
 
 ---
