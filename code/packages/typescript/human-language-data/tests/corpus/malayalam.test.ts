@@ -326,8 +326,19 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // meaning is the wrong ear for a language that spends LENGTH. PHON-03 stays open
   // on purpose: no vowel-length minimal pair exists among taught words either, and
   // it must not be written on a constructed pair.
-  expect(coverage.covered).toBe(190);
-  expect(coverage.unmapped).toBe(53);
+  // 190 -> 191: ML-A1-CASE-05, the instrumental and the sociative, whose note
+  // named both halves -- neither -aal nor oppam was taught, so "with a friend" and
+  // "by bus" were both out of reach although suhruthu was taught. The chapter's
+  // point is that THEY ARE NOT THE SAME RELATIONSHIP: English spends one word on a
+  // companion and a tool, and Malayalam marks them differently, so the question is
+  // never "how do I say with" but WHICH KIND OF WITH THIS IS. Company (oppam,
+  // koode) stands after the owner-form in the slot chapter 84 established, and
+  // splits by register the way the degree words did. Instrument (-aal) glues onto
+  // the noun -- and it is an ending the learner ALREADY OWNS, since -aal on a VERB
+  // is chapter 75's conditional. Identical ending, unrelated meanings, so the
+  // lesson teaches the habit rather than the form: look at the HOST first.
+  expect(coverage.covered).toBe(191);
+  expect(coverage.unmapped).toBe(52);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -339,6 +350,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 190/243 points covered (78%)",
+    "malayalam A1 (partial inventory): 191/243 points covered (79%)",
   );
 }, 60_000);

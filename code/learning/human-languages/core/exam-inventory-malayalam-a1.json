@@ -916,7 +916,11 @@
       "id": "ML-A1-CASE-05",
       "category": "Vibhakti (case endings and postpositions)",
       "label": "the instrumental and sociative: with, by means of",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C86-WITH-01",
+        "ML-LEX-C86-WITH-02",
+        "ML-GRAMMAR-C86-INSTRUMENTAL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -926,7 +930,7 @@
         "A1-NG1-02"
       ],
       "malayalamSpecific": false,
-      "note": "Neither -aal nor oppam is taught, so 'with a friend' and 'by bus' are both out of reach although suhruthu is taught."
+      "note": "Chapter 86, and the old note named both halves correctly: neither -aal nor oppam was taught, so 'with a friend' and 'by bus' were both out of reach although suhruthu was taught. Both close here, and the chapter's point is that THEY ARE NOT THE SAME RELATIONSHIP. English spends one word on a companion and a tool -- 'I went with a friend', 'I cut it with a knife' -- and Malayalam marks them differently, so the question to ask is never 'how do I say with' but WHICH KIND OF WITH THIS IS. Company: oppam and koode, both standing after the owner-form in exactly the slot the place-words chapter established, so they cost no new arrangement. The pair splits by register the same way the degree words did -- oppam to the page, koode to the room. Instrument: -aal, glued onto the noun. THE INSTRUMENT ENDING IS ONE THE LEARNER ALREADY OWNS: -aal on a VERB is the conditional taught in chapter 75, and on a NOUN it is 'by means of'. The ending is identical and the meanings are unrelated, so the lesson teaches the habit rather than the form -- look at the HOST before reading the ending. Verified before writing: oppam and koode both returned ZERO files. The example noun is katti, which is taught; no vehicle word was invented for 'by bus'."
     },
     {
       "id": "ML-A1-CASE-06",

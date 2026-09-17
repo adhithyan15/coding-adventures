@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-86-WITH",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can tell a companion apart from an instrument, which English does not make me do.",
+  "prerequisites": [
+    "ML-EXT-85-HELD-SOUNDS"
+  ],
+  "lessons": [
+    "ML-C86-oppam",
+    "ML-C86-koode",
+    "ML-C86-aal-instrumental",
+    "ML-R86-with-recall"
+  ]
+}
