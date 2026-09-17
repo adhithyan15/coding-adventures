@@ -1414,11 +1414,21 @@ describe("the committed Marathi A1 inventory", () => {
     // nantar, mag -- rather than more ordinals, and none of the three is taught
     // anywhere in the track. Its note now says so rather than saying
     // "Untaught".
+    //
+    // 162 -> 165: chapter 64 closes MR-A1-OR-05 (ddha), MR-A1-OR-07 (pha) and
+    // MR-A1-PU-01 (the danda). THREE POINTS FOR FOUR LESSONS, and unlike the
+    // ordinal tranche above the ratio is good because script points are single
+    // shapes: the notes named exactly which letters were missing and every one
+    // of them was genuinely missing when checked under the glyph-inventory rule.
+    // With pha the script has five plain-and-aspirated pairs and no stop left
+    // without a partner. The danda is the first mark in the track taught for
+    // RECOGNITION rather than production -- the corpus punctuates with a full
+    // stop, which is what Marathi does now.
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
-    expect(coverage.covered).toBe(162);
-    expect(coverage.unmapped).toBe(139);
+    expect(coverage.covered).toBe(165);
+    expect(coverage.unmapped).toBe(136);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
@@ -1429,7 +1439,7 @@ describe("the committed Marathi A1 inventory", () => {
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 162/301 points covered (54%)",
+      "marathi A1 (partial inventory): 165/301 points covered (55%)",
     );
   }, 60_000);
 });

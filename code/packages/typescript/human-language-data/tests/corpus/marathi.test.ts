@@ -103,7 +103,22 @@ it("pins Marathi lesson-content budgets", () =>
     // the last of the seven writing stages. Marathi already proved the other
     // six; this is the one that asks whether the writing survives conditions
     // the candidate does not choose.
-    lessons: 338,
+    // 338 -> 342: CHAPTER 64 CLOSES BOTH REMAINING STOP ROWS AND THE DANDA.
+    // MR-A1-OR-05 wanted ddha, the fifth of the curled row, and MR-A1-OR-07
+    // wanted pha, the gap in the lip row -- one script lesson each, the route
+    // MR-A1-OR-06 took at chapter 39. With pha the script has FIVE plain-and-
+    // aspirated pairs and no stop is left without a partner. MR-A1-PU-01 is the
+    // danda, and it is the FIRST MARK IN THE TRACK TAUGHT FOR RECOGNITION RATHER
+    // THAN PRODUCTION: the corpus punctuates with a full stop, which is what
+    // Marathi does now, so the reader keeps writing that and learns to read the
+    // upright stroke in poetry, older printing and unreset signs. The fourth
+    // lesson is a cold-retrieval review, and it is there for a measured reason --
+    // an atom introduced by a chapter's LAST lesson can never be revisited, so
+    // the danda would have moved atomsNeverRevisited on its own. Marathi's script
+    // closure was CLEAN before this chapter (0 violations, 0 never-taught glyphs,
+    // 50 taught) and stays clean: every example word uses only those 50 glyphs
+    // plus the letter being taught.
+    lessons: 342,
     idioms: 5,
     senses: 4,
     cultureClaims: 7,
@@ -345,6 +360,9 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // adds only the condition the six stages before it deliberately withheld --
     // a clock the candidate does not control.
     ["63", 1],
+    // Chapter 64: ddha, pha, the danda, and the cold-retrieval review that
+    // keeps the danda from being an atom nothing revisits.
+    ["64", 4],
   ]);
 });
 

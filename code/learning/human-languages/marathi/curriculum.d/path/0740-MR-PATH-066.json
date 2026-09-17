@@ -1,0 +1,15 @@
+{
+  "id": "MR-PATH-066",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "MR-W64-ddha",
+    "MR-W64-pha",
+    "MR-W64-danda",
+    "MR-R64-rows-closed"
+  ],
+  "before": [],
+  "inline": [
+    "MR-EXT-079-ROWS-CLOSED"
+  ],
+  "after": []
+}
