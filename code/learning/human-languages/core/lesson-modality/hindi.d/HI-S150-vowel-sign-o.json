@@ -1,24 +1,28 @@
 {
   "lesson": {
-    "id": "HI-W12-chandrabindu",
+    "id": "HI-S150-vowel-sign-o",
     "language": "hindi",
-    "chapter": 59,
-    "sequence": 2160,
+    "chapter": 18,
+    "sequence": 652,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
-      "script-block"
+      "writing-block",
+      "script-block",
+      "sight-cue"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:77ddb344a2f7eb73",
+    "sourceHash": "fnv1a64:68b49c39e61878e5",
     "detachableSegments": [
-      "Script"
+      "Script you'll notice: ◌ो",
+      "Script: the second number you ever counted",
+      "Writing: ◌ो — copy what you see"
     ],
     "delivery": "script"
   },

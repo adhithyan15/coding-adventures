@@ -1,10 +1,11 @@
 {
   "language": "hindi",
   "chapter": 18,
-  "sourceHash": "fnv1a64:47fad440b9b11936",
+  "sourceHash": "fnv1a64:7e4ce666ab8b264f",
   "lessonIds": [
     "HI-C18-ghanta",
-    "HI-S122-letter-kha"
+    "HI-S122-letter-kha",
+    "HI-S150-vowel-sign-o"
   ],
   "tex": "hindi/book/chapters/ch18-telling-time.tex"
 }

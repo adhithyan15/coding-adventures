@@ -54,9 +54,10 @@ in the second is nasalised before you reach the *n*. Hindi writes what English
 leaves implicit, and here it is **meaning-bearing**: drop the mark and you have a
 different word.
 
-There is a plain dot without the crescent that does a related job, and which of the
-two you write depends on what else is sitting above the letter. For now: crescent
-plus dot means *through the nose*.
+You already draw the plain dot without the crescent — the anusvāra — and it does
+the same job. Which of the two a word takes depends on what else is sitting above
+the letter: where there is no room for the crescent, the plain dot does the work.
+Crescent plus dot, or dot alone, both mean *through the nose*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-SCHWA-DROP-01, HI-SCRIPT-II-MATRA-01, HI-SCRIPT-U-MATRA-01, HI-SCRIPT-AI-MATRA-01, HI-SCRIPT-AA-01, HI-SCRIPT-II-01, HI-SCRIPT-CHANDRABINDU-01] -->

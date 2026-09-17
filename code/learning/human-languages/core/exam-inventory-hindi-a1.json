@@ -1338,10 +1338,11 @@
       "label": "the nasalisation marks: candrabindu, and the anusvara it is confused with",
       "probe": [
         "HI-SCRIPT-CHANDRABINDU-01",
-        "HI-CONCEPT-C07-HAAN-01"
+        "HI-CONCEPT-C07-HAAN-01",
+        "HI-SCRIPT-RECOG-148"
       ],
       "derivedFrom": "ES:A1-O2-02",
-      "note": "Mapped to the proxy's diacritic point: both are a mark that changes a word without changing a letter."
+      "note": "THIS POINT WAS HALF TRUE WHILE MARKED COVERED. Its label names the candrabindu AND the anusvaara it is confused with; the candrabindu had a lesson, the anusvaara had none, and HI-W12-chandrabindu said so in its own body -- 'there is a plain dot without the crescent ... FOR NOW: crescent plus dot means through the nose'. A lesson recording a debt it has no way to notice being paid, which is the fifth variety of stale claim catalogued in lessons.d. THE ANUSVAARA IS THE MOST-USED GLYPH THE CORPUS NEVER TAUGHT: 60 headwords, from chapter 2, including main, hain, mein and hindii. HI-S148-sign-anusvara draws it at chapter 16 and the candrabindu's deferral is rewritten to point back at it rather than forward at nothing."
     },
     {
       "id": "HI-A1-SCR-08",
@@ -1411,9 +1412,14 @@
       "id": "HI-A1-SCR-14",
       "category": "Devanagari lipi (script and orthography)",
       "label": "the remaining matras: uu, o, au and the vocalic ri",
-      "probe": null,
+      "probe": [
+        "HI-SCRIPT-RECOG-149",
+        "HI-SCRIPT-RECOG-150",
+        "HI-SCRIPT-RECOG-134",
+        "HI-SCRIPT-RECOG-144"
+      ],
       "derivedFrom": "ES:A1-O1-02",
-      "note": "No atom introduces them, so a word as ordinary as `do` or `kaun` cannot be decoded from taught pieces."
+      "note": "All four are now drawn, and three of them were on the undrawn list only because nobody had checked which lesson was actually teaching them. The uu-maatraa was credited to HI-W06-name-sentence-stop, a lesson about the DANDA whose headword is puurna viraam; the o-maatraa to HI-W01-shirorekha-na-ma, a lesson about the HEAD-LINE whose headword is shirorekhaa (HL-C386). The au-maatraa had a real lesson already. The vocalic-r sign is the one that arrives ON TIME, at chapter 7, because its carrier ka is drawn at chapter 7 and its only headword kripayaa is at chapter 8 -- HL-C384 had wrongly listed it among glyphs that can never be on time, counting Sanskrit roots quoted in etymology notes as first use. The uu-maatraa is taught off its short twin (same hook, longer tail, longer vowel) and the o-maatraa off DO, one consonant and one mark, the plainest example in the language."
     },
     {
       "id": "HI-A1-SCR-15",

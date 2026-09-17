@@ -1,14 +1,15 @@
 {
   "lesson": {
-    "id": "HI-W12-chandrabindu",
+    "id": "HI-S149-vowel-sign-uu",
     "language": "hindi",
-    "chapter": 59,
-    "sequence": 2160,
+    "chapter": 17,
+    "sequence": 642,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
     "reasons": [
       "writing-type",
+      "writing-block",
       "script-block"
     ],
     "coreModality": "pen",
@@ -16,9 +17,11 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:77ddb344a2f7eb73",
+    "sourceHash": "fnv1a64:edf610481f7cac56",
     "detachableSegments": [
-      "Script"
+      "Script you'll notice: ◌ू",
+      "Script: length is the whole difference",
+      "Writing: ◌ू — copy what you see"
     ],
     "delivery": "script"
   },
