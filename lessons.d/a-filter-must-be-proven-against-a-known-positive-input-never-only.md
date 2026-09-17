@@ -25,17 +25,13 @@ passes on a filter that is still broken**, and the same `grep -c $'
 '` proves it.
 
 Re-run in Git Bash here, the command fails a *third* way. Not "matches the letter `r`": the
-pattern degrades to **empty**, and an empty pattern matches **every line**.
+pattern degrades to **empty**, and an empty pattern matches **every line**. Run this in a scratch
+directory: it truncates `pos.txt` and `neg.txt`, and the byte-level check further down reads a file
+it expects you to have named `f`.
 
 ```
-printf 'a
-b
-' > pos.txt ; grep -c $'
-' pos.txt   # 2   <- known-positive: looks correct
-printf 'a
-b
-'     > neg.txt ; grep -c $'
-' neg.txt   # 2   <- known-NEGATIVE: same answer
+printf 'a\r\nb\r\n' > pos.txt ; grep -c $'\n' pos.txt   # 2   <- known-positive: looks correct
+printf 'a\nb\n'     > neg.txt ; grep -c $'\n' neg.txt   # 2   <- known-NEGATIVE: same answer
 ```
 
 `neg.txt` contains no carriage return *and no letter `r`*. A known-positive test alone returns 2
@@ -52,15 +48,41 @@ line count, which is indistinguishable from a file that is genuinely all-CRLF.
 **Use a byte-level check instead**, which has no pattern to degrade:
 
 ```
-python -c "b=open('f','rb').read(); print(len(b), b.count(b'
-'), b.count(b'
-'))"
+python -c "b=open('f','rb').read(); print(len(b), b.count(b'\r'), b.count(b'\n'))"
 ```
 
 The wider point, and the reason this is a correction rather than a new entry: **#13190 documented
 one failure of this command and then left behind a remediation carrying the same defect.** A wrong
 lesson recorded as a lesson is worse than no lesson, because the next reader trusts it instead of
 re-deriving it. When an entry prescribes a fix, the fix needs the same evidence the diagnosis got.
+
+### Correction: this entry shipped its own defect a third time, in the remedy
+
+Both blocks above were written with `\r` and `\n` escapes and shipped without them. The damage was
+not cosmetic, and it landed in the two places that carry the argument.
+
+**The two probes were byte-identical.** Both `printf` calls emitted `a`, newline, `b`, newline — so
+`pos.txt` was a copy of `neg.txt`. The known-positive was not positive. The block's whole point, that
+a known-positive and a known-negative return the same answer, was true for the wrong reason: they
+were the same file. A reader following it literally would reproduce agreement that proves nothing.
+Restored, the probes measure 6 bytes with 2 CR against 4 bytes with 0 CR, and the `# 2` results are
+unchanged, because the pattern is a newline either way.
+
+**The prescribed remedy counted the same byte twice.** `b.count(b'\r'), b.count(b'\n')` lost both
+escapes and became two arms counting a literal newline, so the byte-level check this entry recommends
+*as the fix* could not distinguish CR from LF at all. Measured on the restored probes:
+
+    corrected, two distinct arms   pos -> 6 2 2     neg -> 4 0 2
+    the broken form it shipped     pos -> 6 2 2     neg -> 4 2 2
+
+The corrected form differs on the CR column, 2 against 0. The broken one reads 2 on both, because it
+has no CR column to differ on. That is exactly why a known-positive alone could never expose it —
+this entry's own thesis, arriving a third time, inside the correction written to end it.
+
+**The `# 2` comments were left alone.** Measured, they were already right: 2 and 2 for the intended
+probes, and 2 and 2 for the corrupted identical ones. The first instinct was to "refresh" them along
+with everything else, which would have replaced a correct number with a differently-derived one for
+no reason. A figure that is already correct is not improved by being rewritten.
 
 **A control that runs AFTER the target measurement cannot stop you reading the target.** The rule
 above says prove a filter against a known-positive *and* a known-negative and require the answers to
