@@ -1,0 +1,17 @@
+{
+  "chapter": 86,
+  "title": "Two Kinds Of With",
+  "label": "ch:ml-with",
+  "canDo": "I can say who came along with me and what I did something with, and I know those are different relationships in Malayalam.",
+  "payoff": {
+    "lesson": "ML-R86-with-recall",
+    "kind": "production",
+    "summary": "From cold: both company words and their register split, the instrument ending, and the question English never makes a speaker ask.",
+    "assesses": [
+      "ML-LEX-C86-WITH-01",
+      "ML-LEX-C86-WITH-02",
+      "ML-GRAMMAR-C86-INSTRUMENTAL-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. The company words reuse the genitive-plus-postposition slot the place-words chapter established, and the instrument ending is one the learner already owns from the conditional -- the chapter's point is that the host decides the reading."
+  }
+}

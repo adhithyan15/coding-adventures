@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:8453fc878eaa428f",
+  "lessonIds": [
+    "ML-C86-oppam",
+    "ML-C86-koode",
+    "ML-C86-aal-instrumental",
+    "ML-R86-with-recall"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "malayalam/narration/ch86.txt",
+  "json": "malayalam/narration/ch86.json",
+  "textHash": "fnv1a64:3056ba5892b465cb",
+  "jsonHash": "fnv1a64:f3a6b0fc1fec28b6",
+  "findings": []
+}

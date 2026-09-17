@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R86-with-recall",
+    "language": "malayalam",
+    "chapter": 86,
+    "sequence": 3030,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b127800582082a8c"
+  },
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:cc2c6fc057fce464",
+  "lessonIds": [
+    "ML-C86-oppam",
+    "ML-C86-koode",
+    "ML-C86-aal-instrumental",
+    "ML-R86-with-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch86-two-kinds-of-with.tex"
+}
