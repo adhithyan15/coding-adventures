@@ -1002,6 +1002,12 @@ fn literal_condition(node: &LayoutNode) -> Option<bool> {
     let text = match &when.value {
         LayoutPropValue::Keyword(word) => word.as_str(),
         LayoutPropValue::Expr(expr) => expr.trim(),
+        // A literal bound into a text or number slot the component gates on
+        // (`title : "Inbox"` into `If ( when: slot: title )`). Truthiness is
+        // the kernel's: a text is true when non-empty, a number when non-zero,
+        // the same rule every emitter's runtime truthiness helper applies.
+        LayoutPropValue::String(text) => return Some(!text.is_empty()),
+        LayoutPropValue::Number(number) => return Some(*number != 0.0),
         _ => return None,
     };
     match text {
@@ -2052,6 +2058,23 @@ version = "1"
         fold_constant_conditionals(&mut root);
         let tags: Vec<_> = root.children.iter().map(|c| c.tag.as_str()).collect();
         assert_eq!(tags, vec!["B", "C", "D", "If"]);
+    }
+
+    /// A literal string or number bound into a gated slot folds by kernel
+    /// truthiness: empty text and zero are false.
+    #[test]
+    fn literal_text_and_number_bindings_fold_by_truthiness() {
+        let when = |value: LayoutPropValue| LayoutNode {
+            tag: "If".to_string(),
+            part_name: None,
+            props: vec![LayoutProp { name: "when".to_string(), value }],
+            children: vec![],
+        };
+        assert_eq!(literal_condition(&when(LayoutPropValue::String(String::new()))), Some(false));
+        assert_eq!(literal_condition(&when(LayoutPropValue::String("Inbox".into()))), Some(true));
+        assert_eq!(literal_condition(&when(LayoutPropValue::Number(0.0))), Some(false));
+        assert_eq!(literal_condition(&when(LayoutPropValue::Number(3.0))), Some(true));
+        assert_eq!(literal_condition(&when(LayoutPropValue::SlotRef("s".into()))), None);
     }
 
     #[test]

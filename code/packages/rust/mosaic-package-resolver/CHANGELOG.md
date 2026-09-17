@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Fixed — a literal text or number bound into a gated slot is folded too
+
+`fold_constant_conditionals` handled only `true`/`false`. A component that
+gates on a text slot (`If ( when: slot: action-label )`) and receives a
+literal (`action-label : ""`) was left with a string `when:`, which the
+validator rejects. Text now folds as true when non-empty, and numbers as
+true when non-zero, the same truthiness every emitter's runtime helper uses.
+Found adopting EmptyState in TaskApp (#15440).
+
 ### Fixed — a literal bool bound into a component's `If` failed to compile
 
 A component that branches on a bool slot (`If ( when: slot: vertical )`),

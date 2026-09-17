@@ -491,10 +491,14 @@ layout TaskApp {
               }
 
               If ( when: slot: empty-list ) {
-                Column [ empty-state ] {
-                  Text [ empty-title ] ( content : "Your Inbox is ready" , a11y-role : heading )
-                  Text [ empty-body ] ( content : "Add your first task above. Scheduling stays out of the way until you need it." )
-                }
+                // The toolkit EmptyState (#15440): heading semantics and
+                // spacing shared with every other product. No action button:
+                // the composer directly above is the action.
+                pkg::mosaic-pkg-toolkit::EmptyState (
+                  title : "Your Inbox is ready" ,
+                  message : "Add your first task above. Scheduling stays out of the way until you need it." ,
+                  action-label : ""
+                )
               }
 
               Column [ task-list ] {
