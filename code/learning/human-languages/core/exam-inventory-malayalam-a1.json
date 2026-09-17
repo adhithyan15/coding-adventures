@@ -1356,7 +1356,10 @@
       "id": "ML-A1-V-22",
       "category": "Kriya (the verb)",
       "label": "ability: I can do it",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C74-AAN-01",
+        "ML-LEX-C74-KAZHIYUM-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1368,7 +1371,7 @@
         "A1-NG6-09"
       ],
       "malayalamSpecific": false,
-      "note": "kazhiyum and the -aan kazhiyum frame are not taught. Three Spanish points about ability and competence are open on one missing form."
+      "note": "CLOSED by chapter 74 -- see ML-A1-JOIN-09, which the same chapter closes. The note was right that kazhiyum and the -aan kazhiyum frame were both absent. ABILITY ARRIVES AT YOU IN MALAYALAM RATHER THAN BEING DONE BY YOU, and the track had already taught that shape: ML-C32-ariyuka's own warm-up says knowing ARRIVED at you, so the I left the subject slot. 'enikku vaayikkaan kazhiyum' is literally 'reading is possible to me', with the person in the dative exactly as the knowing sentence has it. So the ability frame costs one word and no new machinery: enikku was already held, the -aan form arrives two lessons earlier in the same chapter, and kazhiyum is the only genuinely new piece. The note said three Spanish points about ability and competence were open on this one missing form."
     },
     {
       "id": "ML-A1-V-23",
@@ -2116,7 +2119,10 @@
       "id": "ML-A1-JOIN-09",
       "category": "Samuchayam (joining and subordination)",
       "label": "in order to: purpose",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C74-AAN-01",
+        "ML-GRAMMAR-C74-PURPOSE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -2126,7 +2132,7 @@
         "A1-SUB-07"
       ],
       "malayalamSpecific": false,
-      "note": "The -aan purpose form is not taught, which also blocks the ability frame at ML-A1-V-22 -- both are built on it."
+      "note": "CLOSED by chapter 74, together with ML-A1-V-22 -- the note predicted that, because both are built on the same form. Verified first: the -aan form and kazhiyum each returned ZERO files across the corpus. THE CHAPTER IS ONE SWAP AND WHAT IT BUYS. Take -uka off a dictionary verb and put -aan on, stem untouched; the word that FOLLOWS the -aan form then decides which sentence you have said -- another verb gives purpose, kazhiyum gives ability. PURPOSE GOES IN FRONT, THE EVENT AT THE BACK: 'njaan vaayikkaan pokunnu' reads I - to-read - go. English puts the purpose after the verb and often needs a word for it; Malayalam needs none, because the ending is the whole of it. This is the same verb-last habit the quotative chapter named. ONLY ONE NEW WORD IN THE WHOLE CHAPTER. Every verb it uses comes from the reading and going chapters."
     },
     {
       "id": "ML-A1-JOIN-10",

@@ -1947,7 +1947,7 @@ describe("the committed Malayalam A1 inventory", () => {
     }
   });
 
-  it("reports a joining column of 5 out of 11, and a script 9 characters short", () => {
+  it("reports a joining column of 6 out of 11, and a script 9 characters short", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
     const { lessons } = loadEverything();
@@ -2021,8 +2021,20 @@ describe("the committed Malayalam A1 inventory", () => {
     // A DRAFT CLAIMED ALL FOUR QUESTION WORDS SHARE THE FRONT LETTER e AND WAS
     // WRONG: aaru (who) opens on aa. Three of the four carry the asking letter
     // ML-C41-deixis-system named, and who is the exception.
-    expect(coverage.covered).toBe(169);
-    expect(coverage.unmapped).toBe(74);
+    // 169 -> 171: ML-A1-JOIN-09 (purpose) and ML-A1-V-22 (ability). JOIN-09's note
+    // PREDICTED THE PAIR -- "the -aan purpose form is not taught, which also
+    // blocks the ability frame; both are built on it" -- and it was right. Both
+    // forms returned ZERO files before the chapter was written.
+    // ONE SWAP AND WHAT IT BUYS: -uka off, -aan on, stem untouched. The word that
+    // FOLLOWS the -aan form decides the sentence -- another verb gives purpose,
+    // kazhiyum gives ability.
+    // ABILITY ARRIVES AT YOU RATHER THAN BEING DONE BY YOU, and the track had
+    // already taught that shape: ML-C32-ariyuka's warm-up says knowing ARRIVED at
+    // you, so the I left the subject slot. enikku vaayikkaan kazhiyum is literally
+    // "reading is possible to me", with the person in the dative exactly as the
+    // knowing sentence has it. ONE genuinely new word in the whole chapter.
+    expect(coverage.covered).toBe(171);
+    expect(coverage.unmapped).toBe(72);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2047,7 +2059,7 @@ describe("the committed Malayalam A1 inventory", () => {
     // THE TITLE MOVED WITH THE NUMBER, for the third time. A test name carrying
     // a stale count reads as a finding and is not one.
     const joining = coverage.byCategory["Samuchayam (joining and subordination)"]!;
-    expect(joining).toEqual({ enumerated: 11, covered: 5 });
+    expect(joining).toEqual({ enumerated: 11, covered: 6 });
     // DO NOT CARRY ANOTHER TRACK'S SCRIPT SHAPE HERE. Tamil came back 52 of 52,
     // Kannada 50 of 69. Malayalam was measured on its own and is 58 of the 67
     // distinct characters its headwords use -- 87 per cent. The nine open ones,
@@ -2061,7 +2073,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 169/243 points covered (70%)",
+      "malayalam A1 (partial inventory): 171/243 points covered (70%)",
     );
   }, 60_000);
 });

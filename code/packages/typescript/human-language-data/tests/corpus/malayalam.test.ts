@@ -197,8 +197,20 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // A DRAFT CLAIMED ALL FOUR QUESTION WORDS SHARE THE FRONT LETTER e AND WAS
   // WRONG: aaru (who) opens on aa. Three of the four carry the asking letter
   // ML-C41-deixis-system named, and who is the exception.
-  expect(coverage.covered).toBe(169);
-  expect(coverage.unmapped).toBe(74);
+  // 169 -> 171: ML-A1-JOIN-09 (purpose) and ML-A1-V-22 (ability). JOIN-09's note
+  // PREDICTED THE PAIR -- "the -aan purpose form is not taught, which also
+  // blocks the ability frame; both are built on it" -- and it was right. Both
+  // forms returned ZERO files before the chapter was written.
+  // ONE SWAP AND WHAT IT BUYS: -uka off, -aan on, stem untouched. The word that
+  // FOLLOWS the -aan form decides the sentence -- another verb gives purpose,
+  // kazhiyum gives ability.
+  // ABILITY ARRIVES AT YOU RATHER THAN BEING DONE BY YOU, and the track had
+  // already taught that shape: ML-C32-ariyuka's warm-up says knowing ARRIVED at
+  // you, so the I left the subject slot. enikku vaayikkaan kazhiyum is literally
+  // "reading is possible to me", with the person in the dative exactly as the
+  // knowing sentence has it. ONE genuinely new word in the whole chapter.
+  expect(coverage.covered).toBe(171);
+  expect(coverage.unmapped).toBe(72);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -210,6 +222,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 169/243 points covered (70%)",
+    "malayalam A1 (partial inventory): 171/243 points covered (70%)",
   );
 }, 60_000);

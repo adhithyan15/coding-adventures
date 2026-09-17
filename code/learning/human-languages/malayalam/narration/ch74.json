@@ -1,0 +1,634 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 74,
+  "title": "One Ending, Two Sentences",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:813d4b68d7571256",
+  "lessons": [
+    {
+      "id": "ML-C74-aan",
+      "sequence": 2550,
+      "title": "-ആൻ (-āṉ) — one ending swapped for another",
+      "headword": "-ആൻ",
+      "romanization": "-āṉ",
+      "gloss": "the ending that turns a dictionary verb into \"to do it\" — swap -uka for -aan",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:513e20b16c3fc34e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the verb for to read. Then say two more verbs from that chapter, and listen to how all of them end."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "That shared ending is about to be replaced."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-ആൻ — -āṉ — the \"to do it\" form."
+            },
+            {
+              "kind": "speech",
+              "text": "Every verb you have met ends in -ഉക when it is sitting in a dictionary. Take that ending off and put -ആൻ (-āṉ) on instead:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the dictionary form",
+                "the -ആൻ form"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the dictionary form: വായിക്കുക vāyikkuka. the -ആൻ (-āṉ) form: വായിക്കാൻ vāyikkāṉ.",
+                "the dictionary form: പോകുക pōkuka. the -ആൻ (-āṉ) form: പോകാൻ pōkāṉ.",
+                "the dictionary form: കാണുക kāṇuka. the -ആൻ (-āṉ) form: കാണാൻ kāṇāṉ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing else in the word changes. The piece in front of the ending — the stem — stays exactly as it was, so a verb you can say you can already swap."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the ending Malayalam builds two separate things on, and the next two lessons are those two things. Getting the swap into your hand now makes both of them free."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāyikkuka … vāyikkāṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāyikkuka* … *vāyikkāṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōkuka … pōkāṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōkuka* … *pōkāṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṇuka … kāṇāṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṇuka* … *kāṇāṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which part of each word stayed still",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which part of each word stayed still]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending comes off? (-ഉക.) Which goes on? (-ആൻ (-āṉ).) And what happens to the rest of the word? (Nothing — the stem does not move.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C74-purpose",
+      "sequence": 2560,
+      "title": "വായിക്കാൻ പോകുന്നു (vāyikkāṉ pōkunnu) — going in order to do something",
+      "headword": "വായിക്കാൻ പോകുന്നു",
+      "romanization": "vāyikkāṉ pōkunnu",
+      "gloss": "in order to — the -aan form in front of a second verb, saying what you are going for",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4767c9d9a71c5d4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Swap the ending on three verbs: to read, to go, to see."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now put one of those in front of another verb and you have said why you are doing it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഞാൻ വായിക്കാൻ പോകുന്നു. ñān vāyikkāṉ pōkunnu — \"I am going in order to read.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The -ആൻ (-āṉ) form comes first, and the verb that actually happens comes last. Read it in that order and it says: I — to-read — go."
+            },
+            {
+              "kind": "speech",
+              "text": "English puts the purpose after the verb and often needs a word for it — I am going to read, I came to see you. Malayalam puts the purpose in front and needs no extra word at all: the ending is the whole of it."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "കാണാൻ വന്നു kāṇāṉ vannu, came in order to see.",
+                "പറയാൻ വന്നു paṟayāṉ vannu, came in order to say."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the order is the meaning",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Malayalam has put the important verb last all along — the quotative chapter said the same thing about a reported sentence, where the saying came at the end. This is that habit again. The reason goes in front, the event goes at the back, and the reader hears what you did last."
+            },
+            {
+              "kind": "speech",
+              "text": "That order is worth expecting rather than learning per construction: when a sentence in this language starts with something that is not a verb you can finish, keep going — the verb you need is at the end."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān vāyikkāṉ pōkunnu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān vāyikkāṉ pōkunnu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāṇāṉ vannu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāṇāṉ vannu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two verbs in each sentence is the thing that happened",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two verbs in each sentence is the thing that happened]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where English would put the purpose that Malayalam puts first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where English would put the purpose that Malayalam puts first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the dictionary form of the going-verb, and then its -ആൻ (-āṉ) form",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the dictionary form of the going-verb, and then its -ആൻ form]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which comes first, the purpose or the event? (The purpose.) How do you say \"I am going in order to read\"? (Ñān vāyikkāṉ pōkunnu.) And how many extra words does Malayalam need for in order to? (None — the ending does it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C74-kazhiyum",
+      "sequence": 2570,
+      "title": "കഴിയും (kaḻiyuṁ) — \"can\", built the way knowing is built",
+      "headword": "കഴിയും",
+      "romanization": "kaḻiyuṁ",
+      "gloss": "can — and it arrives at you in the dative, exactly the way knowing does",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:367fc2b045bbdbe8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say enikku malayāḷaṁ aṟiyāṁ. Say which word in it means I, and what shape that word is in."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Today's sentence is built the same way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് വായിക്കാൻ കഴിയും. enikku vāyikkāṉ kaḻiyuṁ — \"I can read.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, and two of them you already had: enikku, the dative to me that the knowing sentence uses, and vāyikkāṉ, the -ആൻ (-āṉ) form from two pages ago. The new word is കഴിയും (kaḻiyuṁ), and what it says is that the thing is possible."
+            },
+            {
+              "kind": "speech",
+              "text": "Ability arrives at you in Malayalam. It is not something you do. The knowing chapter said this in as many words — knowing arrives, so I leaves the subject slot and turns into to me. Can behaves identically:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "എനിക്ക് മലയാളം അറിയാം, Malayalam is known to me.",
+                "എനിക്ക് വായിക്കാൻ കഴിയും (kaḻiyuṁ), reading is possible to me."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English makes both of these an action with I at the front — I know, I can. Malayalam puts the person in the dative and lets the ability be the subject."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one ending, two jobs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The -ആൻ (-āṉ) form has now done both of the things this chapter promised:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "വായിക്കാൻ പോകുന്നു (vāyikkāṉ pōkunnu), going in order to read.",
+                "വായിക്കാൻ കഴിയും (kaḻiyuṁ), able to read."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same ending, same swap, two different sentences — and the word after it decides which one you are saying."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enikku vāyikkāṉ kaḻiyuṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enikku vāyikkāṉ kaḻiyuṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the knowing sentence and the can sentence one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the knowing sentence and the can sentence one after the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the two of them share at the front",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the two of them share at the front]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōkāṉ kaḻiyuṁ — being able to go",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōkāṉ kaḻiyuṁ* — being able to go]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say I can read? (Enikku vāyikkāṉ kaḻiyuṁ.) What shape is the word for I in? (The dative — to me.) And which sentence you already knew is built the same way? (The one about knowing Malayalam.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R74-aan-recall",
+      "sequence": 2580,
+      "title": "(one ending, two sentences) (āṉ ōrmma) — from cold",
+      "headword": "(one ending, two sentences)",
+      "romanization": "āṉ ōrmma",
+      "gloss": "cold retrieval of the -aan swap and the two things Malayalam builds on it",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f0e8a9b365adbd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Take to read, to go and to see out of the dictionary and swap their endings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the swap, and what it buys",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One swap: -ഉക off, -ആൻ (-āṉ) on, stem untouched."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what follows the -ആൻ form",
+                "what the sentence says"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what follows the -ആൻ (-āṉ) form: a verb that happened. what the sentence says: in order to — vāyikkāṉ pōkunnu.",
+                "what follows the -ആൻ (-āṉ) form: കഴിയും. what the sentence says: can — enikku vāyikkāṉ kaḻiyuṁ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two sentences from one ending, and the word after it decides which. Neither needed a new verb: every verb in this chapter came out of the reading and going chapters, and the only genuinely new word is kaḻiyuṁ."
+            },
+            {
+              "kind": "speech",
+              "text": "The ability sentence also puts the person in the dative, the way the knowing sentence does. That is the second time this language has said the same thing: some things are done by you, and some arrive at you — and it marks which is which rather than leaving you to guess."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the swap on three verbs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the swap on three verbs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān vāyikkāṉ pōkunnu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān vāyikkāṉ pōkunnu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enikku vāyikkāṉ kaḻiyuṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enikku vāyikkāṉ kaḻiyuṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of those two has the person in the dative, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of those two has the person in the dative, and why]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending comes off and which goes on? (-ഉക off, -ആൻ (-āṉ) on.) What does the -ആൻ (-āṉ) form mean in front of another verb? (In order to.) And what does it mean in front of kaḻiyuṁ? (Can.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

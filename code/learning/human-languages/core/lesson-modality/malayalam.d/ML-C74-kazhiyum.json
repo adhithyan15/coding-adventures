@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C74-kazhiyum",
+    "language": "malayalam",
+    "chapter": 74,
+    "sequence": 2570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:367fc2b045bbdbe8"
+  },
+  "findings": []
+}
