@@ -1419,9 +1419,18 @@
       "id": "HI-A1-SCR-15",
       "category": "Devanagari lipi (script and orthography)",
       "label": "the full consonant series, ka-varga through pa-varga and the semivowels and sibilants",
-      "probe": null,
+      "probe": [
+        "HI-SCRIPT-RECOG-132",
+        "HI-SCRIPT-RECOG-133",
+        "HI-SCRIPT-RECOG-136",
+        "HI-SCRIPT-RECOG-137",
+        "HI-SCRIPT-RECOG-138",
+        "HI-SCRIPT-RECOG-139",
+        "HI-SCRIPT-RECOG-142",
+        "HI-SCRIPT-RECOG-143"
+      ],
       "derivedFrom": "ES:A1-O1-01, ES:A1-O1-03",
-      "note": "The proxy's alphabet point, and the place the proxy most understates Hindi's demand. The track has letter atoms for eighteen consonants (na ma ka ta ra sa pa ha ya ca ssa la kha da dha bha ba retroflex-da). Fifteen more that ordinary A1 text needs -- ga gha cha ja jha retroflex-ta retroflex-tha retroflex-dha retroflex-na tha pha plain-ba va sha -- have none. Since the A1 reading paper forbids romanization, the letters with no atom are a hard ceiling on it."
+      "note": "THIS NOTE'S NUMBERS WERE ALL WRONG BY THE TIME IT CLOSED, and the correction is the useful part. It claimed the track had letter atoms for eighteen consonants and that FIFTEEN more were missing -- ga gha cha ja jha retroflex-ta retroflex-tha retroflex-dha retroflex-na tha pha plain-ba va sha -- and called that a hard ceiling on a reading paper that forbids romanization. Counted against the corpus now, every varga is complete: ka-varga, cha-varga, both ta-vargas and pa-varga, plus the semivowels, the sibilants and ha. The last two to arrive were retroflex ta and tha, drawn in chapters 27 and 28, twenty-six and twenty-five chapters after their first use. TWO GLYPHS IN THE SERIES ARE STILL UNDRAWN AND NEITHER IS DEBT. nya appears three times in the whole corpus and NEVER STANDALONE -- every occurrence is inside the conjunct j-nya, which HI-W05-conjuncts already teaches as one of the three special shapes. nga appears ZERO times and is not even in data/scripts/devanagari.json, which carries 44 letters including the Marathi la but not it (logged as a data gap). A letter the corpus never presents alone is not a letter the reader is failing to read. IF THAT REASONING IS REJECTED, this is the probe to remove."
     },
     {
       "id": "HI-A1-SCR-16",

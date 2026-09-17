@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4a1752ffd8f1c9a9",
+  "sourceHash": "fnv1a64:4b7026a666cb703d",
   "lessons": [
     {
       "id": "HI-C42-come",
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cee99eb406cd046",
+      "sourceHash": "fnv1a64:67cd808de4863f80",
       "notice": null,
       "blocks": [
         {

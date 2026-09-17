@@ -51,7 +51,9 @@
     "HI-S138-letter-ga",
     "HI-S139-letter-pha",
     "HI-S140-nuqta",
-    "HI-S141-nuqta-borrowed"
+    "HI-S141-nuqta-borrowed",
+    "HI-S142-letter-ta-retroflex",
+    "HI-S143-letter-tha-retroflex"
   ],
   "before": [],
   "inline": [
