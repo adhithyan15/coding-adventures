@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "MR-W65-o-independent",
+    "language": "marathi",
+    "chapter": 65,
+    "sequence": 2650,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:095d1760b5268bd5",
+    "detachableSegments": [
+      "Script",
+      "Writing: guided copy"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
