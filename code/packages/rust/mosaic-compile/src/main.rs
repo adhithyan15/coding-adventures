@@ -973,7 +973,7 @@ fn run_pipeline(
         "xaml" => {
             let opts = mosaic_emit_xaml::EmitOptions {
                 emit_project,
-                slot_values: pipeline_slot_values(fixtures, ListFixtures::Unsupported("xaml")),
+                slot_values: pipeline_slot_values(fixtures, ListFixtures::Json),
                 ..Default::default()
             };
             // Build the component registry: auto-register every name
@@ -1216,7 +1216,7 @@ fn run_pipeline(
             let sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions {
                 // Fixtures replace the generated fallback the app uses before a
                 // host attaches, so a story changes what a demo app shows (#14459).
-                slot_values: pipeline_slot_values(fixtures, ListFixtures::Unsupported("swiftui")),
+                slot_values: pipeline_slot_values(fixtures, ListFixtures::Json),
                 emit_project,
                 ..Default::default()
             };
@@ -1274,7 +1274,7 @@ fn run_pipeline(
             // Bare invocation is byte-identical to pre-UI32.
             let qt_opts = mosaic_emit_qt::pipeline::EmitOptions {
                 emit_project,
-                slot_values: pipeline_slot_values(fixtures, ListFixtures::Unsupported("qt")),
+                slot_values: pipeline_slot_values(fixtures, ListFixtures::Json),
                 ..Default::default()
             };
             let result = mosaic_emit_qt::pipeline::from_pipeline_with_options(
@@ -1322,7 +1322,7 @@ fn run_pipeline(
             // Bare invocation is byte-identical to pre-UI32.
             let fl_opts = mosaic_emit_flutter::pipeline::EmitOptions {
                 emit_project,
-                slot_values: pipeline_slot_values(fixtures, ListFixtures::Unsupported("flutter")),
+                slot_values: pipeline_slot_values(fixtures, ListFixtures::Json),
                 ..Default::default()
             };
             let result = mosaic_emit_flutter::pipeline::from_pipeline_with_options(
@@ -1655,9 +1655,6 @@ enum ListFixtures {
     /// The backend never renders fixture content (paint uses fixtures only to
     /// pick style states), so a list is not a loss and is skipped silently.
     NotRendered,
-    /// The backend cannot render list fixtures yet: dropping one is a loss,
-    /// reported as a warning, or as an error under `--strict-fixtures`.
-    Unsupported(&'static str),
 }
 
 /// Read `--fixtures` into the `slot -> value` map every emitter takes.
@@ -1668,12 +1665,15 @@ enum ListFixtures {
 /// list-driven component (ButtonGroup, Tabs, SegmentedControl, most of
 /// Engram) previewed empty in every story, and the story check still passed.
 ///
-/// | value                          | Json backend | NotRendered | Unsupported |
-/// |--------------------------------|--------------|-------------|-------------|
-/// | string / number / bool         | text         | text        | text        |
-/// | null                           | omitted      | omitted     | omitted     |
-/// | list of text / list of lists   | JSON text    | skipped     | dropped (!) |
-/// | object, mixed or deeper list   | dropped (!)  | dropped (!) | dropped (!) |
+/// Every backend that renders fixture content takes `Json`; only paint,
+/// which uses fixtures just to pick style states, takes `NotRendered`.
+///
+/// | value                          | Json backend | NotRendered |
+/// |--------------------------------|--------------|-------------|
+/// | string / number / bool         | text         | text        |
+/// | null                           | omitted      | omitted     |
+/// | list of text / list of lists   | JSON text    | skipped     |
+/// | object, mixed or deeper list   | dropped (!)  | dropped (!) |
 ///
 /// (!) warns, and exits 1 under `--strict-fixtures`.
 fn pipeline_slot_values(fixtures: FixtureSource<'_>, lists: ListFixtures) -> HashMap<String, String> {
@@ -1716,12 +1716,6 @@ fn pipeline_slot_values(fixtures: FixtureSource<'_>, lists: ListFixtures) -> Has
                     out.insert(name.clone(), v.to_string());
                 }
                 ListFixtures::NotRendered => {}
-                ListFixtures::Unsupported(backend) => drop_value(
-                    name,
-                    &format!(
-                        "is a list, which the {backend} backend cannot render as a fixture yet (#15428)"
-                    ),
-                ),
             },
             serde_json::Value::Array(_) => drop_value(
                 name,

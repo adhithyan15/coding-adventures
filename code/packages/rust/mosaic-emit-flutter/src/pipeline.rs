@@ -533,17 +533,22 @@ fn build_permissive_main_dart(
             "  }}\n",
             "  return fallback;\n",
             "}}\n\n",
-            "List<String> mosaicStringList(Map<String, Object?> props, String name) {{\n",
+            "List<String> mosaicStringList(\n",
+            "  Map<String, Object?> props,\n",
+            "  String name, [\n",
+            "  List<String> fallback = const <String>[],\n",
+            "]) {{\n",
             "  final value = props[name];\n",
             "  if (value is List) {{\n",
             "    return value.map((item) => item.toString()).toList(growable: false);\n",
             "  }}\n",
-            "  return const <String>[];\n",
+            "  return fallback;\n",
             "}}\n\n",
             "List<List<String>> mosaicStringListList(\n",
             "  Map<String, Object?> props,\n",
-            "  String name,\n",
-            ") {{\n",
+            "  String name, [\n",
+            "  List<List<String>> fallback = const <List<String>>[],\n",
+            "]) {{\n",
             "  final value = props[name];\n",
             "  if (value is List) {{\n",
             "    return value.map((row) {{\n",
@@ -553,7 +558,7 @@ fn build_permissive_main_dart(
             "      return const <String>[];\n",
             "    }}).toList(growable: false);\n",
             "  }}\n",
-            "  return const <List<String>>[];\n",
+            "  return fallback;\n",
             "}}\n\n",
             "List<double> mosaicDoubleList(Map<String, Object?> props, String name) {{\n",
             "  final value = props[name];\n",
@@ -1115,6 +1120,16 @@ fn host_value_for_slot(slot: &SlotDecl, slot_values: &HashMap<String, String>) -
         Some(fixture) => dart_literal_for_fixture(&slot.r#type, fixture),
         None => sample_value_for_slot(slot),
     };
+    // A text-list fixture (#15428) is passed as the readers' optional
+    // fallback. Without one the call keeps its old two-argument form, so
+    // output for fixture-less builds is unchanged.
+    let list_fallback = slot_values
+        .get(&slot.name)
+        .filter(|fixture| {
+            mosmodel_compiler::fixtures::parse_list_fixture(&slot.r#type, fixture).is_some()
+        })
+        .map(|_| format!(", {fallback}"))
+        .unwrap_or_default();
     match &slot.r#type {
         SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
             format!("mosaicString(_hostProps, \"{slot_name}\", {fallback})")
@@ -1123,7 +1138,7 @@ fn host_value_for_slot(slot: &SlotDecl, slot_values: &HashMap<String, String>) -
         SlotType::Bool => format!("mosaicBoolean(_hostProps, \"{slot_name}\", {fallback})"),
         SlotType::List(inner) => match inner.as_ref() {
             ListInnerType::Text | ListInnerType::Image | ListInnerType::Color => {
-                format!("mosaicStringList(_hostProps, \"{slot_name}\")")
+                format!("mosaicStringList(_hostProps, \"{slot_name}\"{list_fallback})")
             }
             ListInnerType::Number => format!("mosaicDoubleList(_hostProps, \"{slot_name}\")"),
             ListInnerType::Bool => format!("mosaicBooleanList(_hostProps, \"{slot_name}\")"),
@@ -1136,7 +1151,7 @@ fn host_value_for_slot(slot: &SlotDecl, slot_values: &HashMap<String, String>) -
                     ListInnerType::Text | ListInnerType::Image | ListInnerType::Color
                 ) =>
             {
-                format!("mosaicStringListList(_hostProps, \"{slot_name}\")")
+                format!("mosaicStringListList(_hostProps, \"{slot_name}\"{list_fallback})")
             }
             _ => fallback,
         },
@@ -1217,6 +1232,27 @@ fn dart_literal_for_fixture(slot_type: &SlotType, fixture: &str) -> String {
             "false" => "false".to_string(),
             _ => format!("\"{}\"", escape_dart_string(fixture)),
         },
+        // Lists arrive as JSON text (#15428). A shape that does not match the
+        // slot keeps the generated sample, so the project still compiles.
+        SlotType::List(_) => {
+            let strings = |items: &[String]| {
+                let cells: Vec<String> = items
+                    .iter()
+                    .map(|item| format!("\"{}\"", escape_dart_string(item)))
+                    .collect();
+                format!("<String>[{}]", cells.join(", "))
+            };
+            match mosmodel_compiler::fixtures::parse_list_fixture(slot_type, fixture) {
+                Some(mosmodel_compiler::fixtures::ListFixture::Text(items)) => {
+                    format!("const {}", strings(&items))
+                }
+                Some(mosmodel_compiler::fixtures::ListFixture::TextRows(rows)) => format!(
+                    "const <List<String>>[{}]",
+                    rows.iter().map(|row| strings(row)).collect::<Vec<_>>().join(", ")
+                ),
+                None => "const []".to_string(),
+            }
+        }
         _ => format!("\"{}\"", escape_dart_string(fixture)),
     }
 }
@@ -14239,6 +14275,20 @@ mod tests {
         // The sample the fixture displaced must be gone, not merely outranked.
         assert!(!main_dart.contains("Sample Label"), "got:\n{main_dart}");
         assert!(!main_dart.contains(r#""primary""#), "got:\n{main_dart}");
+    }
+
+    /// #15428: list fixtures render as const typed Dart lists, and `$` is
+    /// escaped so it cannot interpolate.
+    #[test]
+    fn list_fixtures_render_as_const_dart_lists() {
+        let rows = mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(Box::new(mosmodel_compiler::ListInnerType::Text))));
+        let text = mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::Text));
+        assert_eq!(
+            dart_literal_for_fixture(&rows, r#"[["Board","$x"]]"#),
+            r#"const <List<String>>[<String>["Board", "\$x"]]"#
+        );
+        assert_eq!(dart_literal_for_fixture(&text, r#"["a"]"#), r#"const <String>["a"]"#);
+        assert_eq!(dart_literal_for_fixture(&rows, r#"["flat"]"#), "const []");
     }
 
     #[test]
