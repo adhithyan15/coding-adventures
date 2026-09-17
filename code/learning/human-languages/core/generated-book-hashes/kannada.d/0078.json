@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:01043120038c3579",
+  "lessonIds": [
+    "KA-S155-letter-aa",
+    "KA-S156-letter-e",
+    "KA-S157-letter-ee",
+    "KA-S158-letter-o",
+    "KA-S159-letter-ai",
+    "KA-S160-letter-vocalic-r",
+    "KA-R78-vowels-recall"
+  ],
+  "tex": "kannada/book/chapters/ch78-the-vowels-that-start-a-word.tex"
+}

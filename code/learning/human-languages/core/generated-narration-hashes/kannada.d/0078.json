@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:f6f7e2be21ad328b",
+  "lessonIds": [
+    "KA-S155-letter-aa",
+    "KA-S156-letter-e",
+    "KA-S157-letter-ee",
+    "KA-S158-letter-o",
+    "KA-S159-letter-ai",
+    "KA-S160-letter-vocalic-r",
+    "KA-R78-vowels-recall"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "kannada/narration/ch78.txt",
+  "json": "kannada/narration/ch78.json",
+  "textHash": "fnv1a64:57a74cbd7d108acb",
+  "jsonHash": "fnv1a64:e0a9643052abf90e",
+  "findings": []
+}

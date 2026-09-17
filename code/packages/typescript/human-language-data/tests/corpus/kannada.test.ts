@@ -112,3 +112,60 @@ it("pins Kannada's pre-A1 writing ladder", () => {
     complete: true,
   });
 });
+
+// ---------------------------------------------------------------------------
+// THE ONLY PIN THIS TRANCHE MOVES, because no exam point moved with it.
+//
+// `KA-A1-L-09` demands the whole used set and thirteen characters are still
+// short of it, so chapter 78 leaves the coverage number exactly where it was at
+// 197/258. A unit that pays down real debt and shows up nowhere in CI is a unit
+// the next regression walks straight back through, so the debt itself is pinned
+// here.
+//
+// `measureScriptClosure` CANNOT BE USED FOR THIS. It credits a glyph to any
+// script lesson whose BODY contains it (HL-C383), which for this track reports
+// a closure the corpus does not have. The rule applied below is HL-C386's: a
+// glyph counts as taught only when its lesson's HEADWORD is a GLYPH INVENTORY —
+// every whitespace- or middot-separated token a base plus at most one combining
+// mark — so a headword that happens to be a whole word teaches nothing.
+//
+// A CEILING, NOT AN EQUALITY: this number may fall and must never grow. It was
+// 27 when `KA-A1-L-09` was first measured, 19 before chapter 78 and 13 after.
+// The thirteen left are exactly the set with no sourced ductus anywhere in this
+// project — the vowel signs ii, ai and au, and kha, gha, ttha, ddha, nna, dha,
+// pha, bha, sha and ssa — and they close as recognition lessons, which is a
+// different tranche and not a footnote to this one.
+// ---------------------------------------------------------------------------
+it("pins how many Kannada characters the corpus prints and never teaches", () => {
+  const lessons = loadTrackLessons("kannada", defaultCurriculumRoot());
+  const isInventory = (headword: string) =>
+    headword
+      .replace(/◌/g, "")
+      .trim()
+      .split(/[\s/·]+/)
+      .filter(Boolean)
+      .every((token) => [...token].length <= 2);
+
+  const taught = new Set<string>();
+  for (const lesson of lessons) {
+    const headword = lesson.frontmatter.headword ?? "";
+    if (!headword || !isInventory(headword)) continue;
+    for (const glyph of headword.replace(/◌/g, "")) taught.add(glyph);
+  }
+
+  const used = new Set<string>();
+  for (const lesson of lessons) {
+    for (const glyph of lesson.body) {
+      const code = glyph.codePointAt(0)!;
+      if (code >= 0x0c80 && code <= 0x0cff) used.add(glyph);
+    }
+  }
+
+  const untaught = [...used].filter((glyph) => !taught.has(glyph));
+  expect(untaught.length).toBeLessThanOrEqual(13);
+  // The six chapter 78 taught are gone from the list, named rather than left to
+  // a total that any other character could have shifted.
+  for (const glyph of ["ಆ", "ಎ", "ಏ", "ಒ", "ಐ", "ಋ"]) {
+    expect(untaught).not.toContain(glyph);
+  }
+});

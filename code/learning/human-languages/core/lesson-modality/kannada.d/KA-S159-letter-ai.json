@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S159-letter-ai",
+    "language": "kannada",
+    "chapter": 78,
+    "sequence": 2780,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2758dd0ad626a4fc",
+    "detachableSegments": [
+      "Script you'll notice: ಐ",
+      "Writing: ಐ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

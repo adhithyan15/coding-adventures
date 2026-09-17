@@ -4403,7 +4403,7 @@
     {
       "id": "KA-A1-L-09",
       "category": "Lipi (script and orthography)",
-      "label": "THE SCRIPT IS NOT CLOSED: 27 characters are used but never taught",
+      "label": "THE SCRIPT IS NOT CLOSED: 13 characters are used but never taught",
       "probe": null,
       "anchorIds": [
         "ES-A1-PROXY",
@@ -4413,7 +4413,7 @@
       "derivedFrom": [
         "A1-O1-03"
       ],
-      "note": "MEASURED AGAIN, AND STILL OPEN. The corpus now teaches 50 characters against the 69 it uses in headwords -- 72% closure, up from 42 of 69 (61%). Chapters 67 to 73 add the EIGHT most-used untaught characters, in order of the headwords that need them: ma (36 headwords), la, va, the vowel sign ee, tta, ja, a and the vowel sign uu. The worst case this note used to name is fixed: a learner who completes the script ladder can now read maatanaaDu, the verb chapter 5 is built on.\n\nNINETEEN CHARACTERS REMAIN, AND THEY SPLIT IN TWO. SIX are independent vowels -- aa, e, ee, o, ai and vocalic r -- whose stroke order IS sourced: data/scripts/kannada.json carries a cited Wikimedia Commons animation for each, and chapter 68 shows the shape a lesson built on one of them takes by teaching a with its attested four-movement order and the citation printed under it. THIRTEEN have no sourced ductus anywhere in this project: the vowel signs ii, ai and au, and kha, gha, ttha, ddha, nna, dha, pha, bha, sha and ssa. Those thirteen were NOT taught, because the honest fallback for an unsourced letter is the recognition lesson this ladder already writes -- and thirteen more of those is a separate tranche, not a footnote to this one. Nothing here invents a stroke path to make a count move."
+      "note": "STILL OPEN, AND THE REMAINING SET IS NOW EXACTLY ONE KIND OF PROBLEM. Chapter 78 teaches the six independent vowels that were left -- aa, e, ee, o, ai and vocalic r -- and the count of characters the corpus prints without teaching falls 19 to 13. IT WAS 27 WHEN THIS POINT WAS FIRST MEASURED, then 19 after chapters 67-73, and 13 now. ALL SIX ARE TAUGHT AS WRITING RATHER THAN RECOGNITION, because all six have a sourced stroke order: data/scripts/kannada.json carries a cited Wikimedia Commons animation for each, and every lesson prints the citation with its frame count. The chapter also sorts them by pen lifts -- none for e, o and ai; one for aa and ee; two for vocalic r -- which is a check a learner can run on their own hand. THE THIRTEEN THAT REMAIN HAVE NO SOURCED DUCTUS ANYWHERE IN THIS PROJECT: the vowel signs ii, ai and au, and kha, gha, ttha, ddha, nna, dha, pha, bha, sha and ssa. The honest fallback for an unsourced letter is the recognition lesson this ladder already writes, and thirteen more of those is its own tranche. Nothing here invents a stroke path to make a count move. NO EXAM POINT MOVES WITH THIS CHAPTER -- kannada stays at 197/258 -- because this point demands the whole used set. The debt is pinned instead in tests/corpus/kannada.test.ts, as a ceiling that may fall and must never grow."
     },
     {
       "id": "KA-A1-L-10",
