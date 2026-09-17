@@ -92,7 +92,9 @@ use interpreter_ir::{IIRModule, Operand};
 //
 // LANG32 — supported in BEAM backend (Phase 3):
 // - `io_out`        — lowered to `erlang:display/1` via gc_bif1.
-// - `global_store`  — lowered to `erlang:put/2` (process dictionary) via gc_bif2.
+// - `global_store`  — lowered to `erlang:put/2` (process dictionary) via
+//                     call_ext (BEAM08/issue #15332 — was gc_bif2, wrong:
+//                     `put/2` is not a guard-safe BIF).
 // - `global_load`   — lowered to `erlang:get/1` (process dictionary) via gc_bif1.
 //
 // LANG35 — supported in BEAM backend:
