@@ -6083,10 +6083,6 @@ fn emit_host_number_input_qml(
     Ok(out)
 }
 
-/// Build the `checked: <slot|literal>` attribute used by both
-/// `HostCheckbox` and `HostRadio`. Mirrors `build_open_attribute` for
-/// `HostDialog`'s `visible:` prop — same shape, just a different
-/// destination attribute name.
 /// The QML boolean for a `HostButton`'s `selected:` (UI86), or `None` when
 /// the prop is absent or is not a state (a string or number, which the
 /// artifact builder reports). Every dynamic value is wrapped in `Boolean()`
@@ -6119,6 +6115,10 @@ pub fn host_button_selected_is_native(node: &LayoutNode) -> bool {
     matches!(host_button_selected_qml(node), Ok(Some(_)))
 }
 
+/// Build the `checked: <slot|literal>` attribute used by both
+/// `HostCheckbox` and `HostRadio`. Mirrors `build_open_attribute` for
+/// `HostDialog`'s `visible:` prop — same shape, just a different
+/// destination attribute name.
 fn build_checked_attribute(node: &LayoutNode) -> Option<String> {
     let prop = node.props.iter().find(|p| p.name == "checked")?;
     Some(match &prop.value {
