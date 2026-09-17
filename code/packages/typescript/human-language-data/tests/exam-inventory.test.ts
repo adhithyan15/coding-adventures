@@ -1947,7 +1947,7 @@ describe("the committed Malayalam A1 inventory", () => {
     }
   });
 
-  it("reports a joining column of 3 out of 11, and a script 9 characters short", () => {
+  it("reports a joining column of 4 out of 11, and a script 9 characters short", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
     const { lessons } = loadEverything();
@@ -2026,8 +2026,13 @@ describe("the committed Malayalam A1 inventory", () => {
     // covered point is the -i participle inside the goodbye poyi varaam, which
     // the corpus teaches without ever naming it as a way of joining clauses.
     // Same shape as Kannada's chapter 64 finding, measured independently.
+    // 3 -> 4: ML-A1-JOIN-06, the quotative ennu -- the point's own note calls it
+    // Malayalam's single most productive subordinator, and chapter 72 spends two
+    // atoms to open four verb frames whose verbs were all already taught.
+    // THE TITLE MOVED WITH THE NUMBER, for the third time. A test name carrying
+    // a stale count reads as a finding and is not one.
     const joining = coverage.byCategory["Samuchayam (joining and subordination)"]!;
-    expect(joining).toEqual({ enumerated: 11, covered: 3 });
+    expect(joining).toEqual({ enumerated: 11, covered: 4 });
     // DO NOT CARRY ANOTHER TRACK'S SCRIPT SHAPE HERE. Tamil came back 52 of 52,
     // Kannada 50 of 69. Malayalam was measured on its own and is 58 of the 67
     // distinct characters its headwords use -- 87 per cent. The nine open ones,
