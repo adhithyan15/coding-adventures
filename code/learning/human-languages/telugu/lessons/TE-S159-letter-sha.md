@@ -36,7 +36,7 @@ reviews_of: [TE-S111-letter-sa, TE-S158-letter-ssa]
 [PAUSE 1s] You have two s-shapes already: స, and the curled one you met beside
 it. Say which of the two puts your tongue further back.
 
-[PAUSE 2s] Two of the day names you have just learned carry a third one.
+[PAUSE 2s] Two of the day names from this chapter carry a third one.
 
 ## Script you'll notice: శ
 <!-- hl-knowledge: introduces=[TE-SCRIPT-RECOG-159]; assesses=[] -->
@@ -48,8 +48,8 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 - **శుక్రవారం** *śukravāram* — Friday
 - **శనివారం** *śanivāram* — Saturday
 
-Both open on today's character. **The two ends of the week you have just
-recited begin with a letter you could not yet read.**
+Both open on today's character. **The two ends of the week you have been
+reciting begin with a letter you could not yet read.**
 
 Now you have the whole set:
 

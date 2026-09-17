@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:64e059899c307841",
+  "sourceHash": "fnv1a64:86e84d219b99d051",
   "lessons": [
     {
       "id": "TE-C10-vaaram",
@@ -150,7 +150,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5c50d73f3ff52242",
+      "sourceHash": "fnv1a64:34d40959cecede82",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -187,7 +187,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two of the day names you have just learned carry a third one."
+              "text": "Two of the day names from this chapter carry a third one."
             }
           ]
         },
@@ -214,7 +214,7 @@
             },
             {
               "kind": "speech",
-              "text": "Both open on today's character. The two ends of the week you have just recited begin with a letter you could not yet read."
+              "text": "Both open on today's character. The two ends of the week you have been reciting begin with a letter you could not yet read."
             },
             {
               "kind": "speech",

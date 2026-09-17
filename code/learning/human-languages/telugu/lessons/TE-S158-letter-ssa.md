@@ -52,8 +52,8 @@ Look at that word end to end. It opens on స and closes on ష, with the *o* si
 between them. **Two different s-shapes inside one short word**, and until
 now you could read the first and not the second.
 
-Your tongue makes them in two different places. For స the tip touches just
-behind your teeth. For ష it curls back along the roof of your mouth, the same
+Your tongue makes them in two different places. For స the tip touches the
+ridge behind your teeth. For ష it curls back along the roof of your mouth, the same
 backward curl you already make for ట. The romanization marks the difference
 with one dot under the letter — *s* against *ṣ* — which is easy to miss in
 print and impossible to miss on the page, where they are two unlike shapes.

@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 10,
-  "sourceHash": "fnv1a64:64e059899c307841",
+  "sourceHash": "fnv1a64:86e84d219b99d051",
   "lessonIds": [
     "TE-C10-vaaram",
     "TE-S159-letter-sha",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch10.txt",
   "json": "telugu/narration/ch10.json",
-  "textHash": "fnv1a64:7287df85162484de",
-  "jsonHash": "fnv1a64:8c65ac5fd2a0d0e8",
+  "textHash": "fnv1a64:f150a409a1c4ee06",
+  "jsonHash": "fnv1a64:dd579957eca4d112",
   "findings": []
 }
