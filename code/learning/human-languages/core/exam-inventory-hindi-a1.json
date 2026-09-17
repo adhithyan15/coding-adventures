@@ -1419,18 +1419,9 @@
       "id": "HI-A1-SCR-15",
       "category": "Devanagari lipi (script and orthography)",
       "label": "the full consonant series, ka-varga through pa-varga and the semivowels and sibilants",
-      "probe": [
-        "HI-SCRIPT-RECOG-132",
-        "HI-SCRIPT-RECOG-133",
-        "HI-SCRIPT-RECOG-136",
-        "HI-SCRIPT-RECOG-137",
-        "HI-SCRIPT-RECOG-138",
-        "HI-SCRIPT-RECOG-139",
-        "HI-SCRIPT-RECOG-142",
-        "HI-SCRIPT-RECOG-143"
-      ],
+      "probe": null,
       "derivedFrom": "ES:A1-O1-01, ES:A1-O1-03",
-      "note": "THIS NOTE'S NUMBERS WERE ALL WRONG BY THE TIME IT CLOSED, and the correction is the useful part. It claimed the track had letter atoms for eighteen consonants and that FIFTEEN more were missing -- ga gha cha ja jha retroflex-ta retroflex-tha retroflex-dha retroflex-na tha pha plain-ba va sha -- and called that a hard ceiling on a reading paper that forbids romanization. Counted against the corpus now, every varga is complete: ka-varga, cha-varga, both ta-vargas and pa-varga, plus the semivowels, the sibilants and ha. The last two to arrive were retroflex ta and tha, drawn in chapters 27 and 28, twenty-six and twenty-five chapters after their first use. TWO GLYPHS IN THE SERIES ARE STILL UNDRAWN AND NEITHER IS DEBT. nya appears three times in the whole corpus and NEVER STANDALONE -- every occurrence is inside the conjunct j-nya, which HI-W05-conjuncts already teaches as one of the three special shapes. nga appears ZERO times and is not even in data/scripts/devanagari.json, which carries 44 letters including the Marathi la but not it (logged as a data gap). A letter the corpus never presents alone is not a letter the reader is failing to read. IF THAT REASONING IS REJECTED, this is the probe to remove."
+      "note": "STAYS OPEN, and the reason it briefly looked closed is the finding. Its original claim -- that FIFTEEN consonants were missing and that this is a hard ceiling on a reading paper forbidding romanization -- is no longer accurate either: eleven of the fifteen it named are now drawn, the last two being retroflex ta and tha. FIVE ARE LEFT: nga, nya, retroflex-na, va and sha. THE FIRST PASS AT THIS COUNT SAID TWO, because the audit helper credited a glyph to any script lesson whose HEADWORD contained it, and a headword can be a whole word -- HI-W01-shirorekha-na-ma is a lesson about the head-line whose headword is shirorekhaa, and it was silently teaching sha and the o-matra; HI-W06-name-sentence-stop is about the danda and its headword puurna viraam was teaching va and the uu-matra; HI-A1F01-name-delayed is a form-filling lesson whose headword contains the name Arun, and it was teaching retroflex-na. THE SAME MEASUREMENT BUG AS HL-C383, ONE LEVEL UP: that one credited a glyph to any lesson BODY containing it, this one to any HEADWORD containing it, and a headword is not always a glyph. Logged as HL-C386. va and sha are the urgent ones -- vah, shukriyaa, vinatii and shaam are all taught vocabulary -- and both should be drawn before this point is reconsidered."
     },
     {
       "id": "HI-A1-SCR-16",

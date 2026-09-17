@@ -1,12 +1,12 @@
-## Unreleased — retroflex ṭa and ṭha, and the consonant series is finished
+## Unreleased — retroflex ṭa and ṭha, and a measurement bug caught mid-PR
 
-**`HI-A1-SCR-15` closes — the full consonant series.** It was the largest open
-script point in the file, and **every number in its note was wrong by the time
-it closed.**
+**No inventory point closes.** `HI-A1-SCR-15` was probed as covered in the first
+draft of this change and **the probe was withdrawn before merge**, because the
+audit helper that said the consonant series was complete was wrong.
 
 | metric | before → after |
 |---|---|
-| exam-point coverage | 234/282 → **235/282 (83%)** |
+| exam-point coverage | unchanged (234/282, 83%) |
 | **script-closure violations** | **24 → 21** |
 | atoms taught | 524 → 526 |
 | measurable lessons | 469 → 471 |
@@ -39,18 +39,29 @@ against the corpus now:
 | pa-varga | complete |
 | semivowels, sibilants, ह | complete |
 
-**Two left, and neither is debt.**
+**That table said two were left. Five are.**
 
-- **ञ** appears **three times in the whole corpus and never standalone.** Every
-  occurrence is inside the conjunct **ज्ञ**, which `HI-W05-conjuncts` already
-  teaches as one of its three special shapes. A letter the corpus never presents
-  alone is not a letter the reader is failing to read.
-- **ङ** appears **zero times**, and is not in `data/scripts/devanagari.json` at
-  all — 44 letters, including the Marathi **ळ**, and not this one. Logged as
-  `HL-C385`. Its sound is written with the anusvāra in modern Hindi (अंक, रंग),
-  so a reader meets the sound constantly and the letter never.
+The helper building it credited a glyph to any script lesson whose **headword**
+contained it — and **a headword can be a whole word**:
 
-If that reasoning is rejected, **the probe to remove is SCR-15's**.
+| lesson | headword | what it silently taught |
+|---|---|---|
+| `HI-W01-shirorekha-na-ma` | शिरोरेखा | **श** and **ो** |
+| `HI-W06-name-sentence-stop` | । / पूर्ण विराम | **व** and **ू** |
+| `HI-W05-virama-namaste` | नमस्ते | **ं** |
+| `HI-A1F01-name-delayed` | B → अरुण | **ण** |
+
+None of those four teaches the glyph credited to it. They are lessons about the
+head-line, the danda, the virama, and copying a name into a form.
+
+**This is `HL-C383`'s bug one level up** — that one credited any lesson *body*
+containing the glyph, this one any *headword* containing it — and it is logged
+as `HL-C386`. Corrected, the series leaves **ङ, ञ, ण, व and श**.
+
+**ण, व and श are real debt.** *vah*, *shukriyā*, *vinatī* and *shām* are all
+taught vocabulary. ङ needs no Hindi lesson (`HL-C385`); ञ appears only inside
+**ज्ञ**, which `HI-W05-conjuncts` teaches. **व and श are the next letters to
+draw**, and SCR-15 should not be reconsidered until they are.
 
 ### The two lessons
 
@@ -91,4 +102,7 @@ does use ङ standalone.
 Both chosen for a headword whose spelling turns on the letter. Neither needed
 new prose, so no duration moved.
 
-By the corrected headword-based check, never-drawn goes **4 → 2**.
+By the **stricter** check — a glyph is taught when the headword is a glyph
+inventory, every token a base plus at most one combining mark — never-drawn
+stands at **7**: ं ञ ण व श ू ो. Every earlier "undrawn goes N → M" figure in
+this changelog was too optimistic for the same reason.
