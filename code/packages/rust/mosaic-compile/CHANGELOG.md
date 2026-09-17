@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Changed — the list-fixture tests drive `SegmentedControl`'s new flat `options` (UI86, #15420)
+
+`tests/list_fixtures.rs` compiles the real component, whose `options` slot is
+`list<text>` since toolkit 0.15, so its fixture and needles are flat labels.
+Nested `list<list<text>>` fixtures are still covered by `mosmodel-compiler`'s
+`parse_list_fixture` tests and each emitter's literal tests.
+
 ### Changed - list story fixtures reach the native backends too (#15428, PR-2)
 
 xaml, swiftui, qt and flutter now render text-list fixtures, so every

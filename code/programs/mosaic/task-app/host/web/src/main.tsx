@@ -885,13 +885,9 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         themeIsDark: "",
         complexityLabel: complexity === "full" ? "Full CPM" : "Board",
         allowTimeline: complexity === "full" ? "full" : "",
-        // [label, accessible-name] rows for the toolkit SegmentedControl. The
-        // showing view's name says so until HostButton has a selected state
-        // (#15420).
-        navOptions: switcherViews().map(([key, label]) => [
-          label,
-          key === view ? `${label}, selected` : label,
-        ]),
+        // One label per view for the toolkit SegmentedControl, which reports
+        // the selected view through the kernel's selected state (UI86).
+        navOptions: switcherViews().map(([, label]) => label),
         navSelectedIndex: Math.max(
           0,
           switcherViews().findIndex(([key]) => key === view),

@@ -13,11 +13,10 @@ component EngramApp {
   slot show-stats-screen : bool = false ;
   slot show-options-screen : bool = false ;
   // The screen switcher, drawn by mosaic-pkg-toolkit's SegmentedControl
-  // (#14063): one [ label, accessible-name ] row per screen, in the order
-  // Decks, Study, Browse, Add, Stats, Options. The engine writes the
-  // selected state into the name ("Study, selected") because HostButton
-  // has no selected state of its own yet (#15420).
-  slot nav-options : list<list<text>> ;
+  // (#14063): one label per screen, in the order Decks, Study, Browse,
+  // Add, Stats, Options. The control reports which one is selected
+  // through the kernel's selected state (UI86, #15420).
+  slot nav-options : list<text> ;
   // Index of the active screen in nav-options.
   slot nav-selected-index : number ;
   slot host-status-visible : bool = false ;

@@ -1,5 +1,14 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — the view switcher sends plain labels (UI86, #15420)
+
+`nav-options` is a `list<text>`: one label per view, instead of
+`[label, accessible-name]` rows with ", selected" written into the showing
+view's name. Toolkit 0.15's `SegmentedControl` reports the selection through
+the kernel's selected state.
+
+The switcher test now asserts the labels never change with the selection.
+
 ## [Unreleased] — the view switcher's rows and index (#14016)
 
 `props()` now also returns:

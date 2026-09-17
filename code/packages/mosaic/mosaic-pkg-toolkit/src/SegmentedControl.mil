@@ -17,34 +17,24 @@
 // Tabs owns a body; a segmented control does not. The host decides what
 // the selection changes, which may be a whole screen.
 //
-// Why each option is a `[label, accessible-name]` pair
-// ----------------------------------------------------
+// How the selected option reaches a screen reader
+// ------------------------------------------------
 //
-// The selected option must be announced as selected by a screen reader.
-// The kernel's `HostButton` has no selected/pressed state to lower to
-// `aria-pressed`, `Semantics(selected:)`, `.isSelected` and friends
-// (tracked as a kernel gap), and the layout language has no string
-// concatenation, so the component cannot build "Board, selected" itself.
+// Through the platform's own selected state: every option is a
+// `HostButton ( selected : … )` (UI86), which lowers to `aria-pressed`,
+// `.isSelected`, `Semantics(selected:)`, `semantics { selected }`,
+// `Accessible.checked`, or a SelectionItem automation peer on WinUI.
 //
-// So the host supplies the accessible name: the same "fat engine, dumb
-// UI" contract TaskApp's task rows use (`a11y-label : ( row[16] )`). The
-// host already owns the selection, so it is the one place that knows
-// which name should carry the state:
-//
-//   options = [
-//     ["List",  "List"],
-//     ["Board", "Board, selected"],   // selected-index = 1
-//     ["Sheet", "Sheet"],
-//   ]
-//
-// Every row MUST carry both columns.
-//
-// Why not `list<text>` plus a parallel `list<text>` of names? Two
-// parallel lists can disagree in length; one list of pairs cannot.
+// Until 0.15 each option was a `[label, accessible-name]` pair and the
+// host wrote the state into the name ("Board, selected"), because the
+// kernel had no selected state and the layout language cannot concatenate
+// strings. That stand-in is gone: `options` is a plain list of labels,
+// and the label is the accessible name.
 
 component SegmentedControl {
-  // The options, in order: each row is `[label, accessible-name]`.
-  slot options : list<list<text>> ;
+  // The option labels, in order. Each label is also the option's
+  // accessible name; the selected state is announced separately.
+  slot options : list<text> ;
 
   // Index of the selected option, or -1 for none. Host-owned: the
   // component never changes it, it only reports activations.

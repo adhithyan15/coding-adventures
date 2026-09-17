@@ -78,13 +78,13 @@ for the architecture, component catalog, and phasing plan.
   `action-label` is set. Emit: `onAction`.
 - **`SegmentedControl`** — a row of mutually exclusive options,
   one selected (a view switcher, a Day/Week toggle). Slots:
-  `options: list<list<text>>` where each row is `[label,
-  accessible-name]`, `selected-index` (-1 for none), `disabled`.
+  `options: list<text>` (the labels, which are also the accessible
+  names), `selected-index` (-1 for none), `vertical`, `disabled`.
   Emit: `onSelect(index: number)`. Selection costs two parts
   (`segmented-option`, `segmented-option-selected`) however many
-  options there are. The host writes the selected state into the
-  accessible name (`"Board, selected"`) because the kernel's
-  `HostButton` has no selected state yet.
+  options there are, and the selected option reports the platform's
+  own selected state (`HostButton ( selected : … )`, UI86). Tabs and
+  ListGroup report it the same way.
 - **`DropdownMenu`** — toggle button + revealed item list. Host
   owns the open flag. Slots: `label`, `items: list<text>`, `open`.
   Emits: `onToggle`, `onSelect(index: number)`.

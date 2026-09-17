@@ -427,20 +427,12 @@ impl TaskMosaicApp {
         };
 
         let views = ViewMode::switcher_views(full);
-        // `[label, accessible-name]` per view for the toolkit SegmentedControl.
-        // The showing view's name says so, because HostButton has no selected
-        // state for assistive technology yet (#15420).
+        // One label per view for the toolkit SegmentedControl. The control
+        // reports which view is selected through the kernel's selected state
+        // (UI86), so no name carries ", selected" any more (#15420).
         let nav_options = views
             .iter()
-            .map(|&view| {
-                let label = view.switcher_label();
-                let name = if view == self.state.view {
-                    format!("{label}, selected")
-                } else {
-                    label.to_string()
-                };
-                [label.to_string(), name]
-            })
+            .map(|&view| view.switcher_label())
             .collect::<Vec<_>>();
         let nav_selected_index = views
             .iter()
@@ -2052,7 +2044,7 @@ mod tests {
                 .as_array()
                 .unwrap()
                 .iter()
-                .map(|row| row[0].as_str().unwrap().to_string())
+                .map(|label| label.as_str().unwrap().to_string())
                 .collect()
         };
 
@@ -2061,8 +2053,6 @@ mod tests {
         assert_eq!(labels(&board), ["List", "Board", "Sheet", "Calendar", "Notes"]);
         assert_eq!(board["nav-selected-index"], 1);
         assert_eq!(board["board-mode"], "board");
-        assert_eq!(board["nav-options"][1][1], "Board, selected");
-        assert_eq!(board["nav-options"][0][1], "List");
 
         // Index 5 is Timeline, which a Board-tier project does not offer.
         let before = app.snapshot().unwrap();
@@ -2092,15 +2082,13 @@ mod tests {
                 .unwrap()
                 .props;
             assert_eq!(props["nav-selected-index"], index, "index {index}");
-            for (other, row) in props["nav-options"].as_array().unwrap().iter().enumerate() {
-                let label = row[0].as_str().unwrap();
-                let expected = if other == index {
-                    format!("{label}, selected")
-                } else {
-                    label.to_string()
-                };
-                assert_eq!(row[1], expected, "index {index}, row {other}");
-            }
+            // The labels never change with the selection: the selected state
+            // is the control's to report (UI86), not a word in the name.
+            assert_eq!(
+                labels(&props),
+                ["List", "Board", "Sheet", "Calendar", "Notes", "Timeline"],
+                "index {index}"
+            );
             if !slot.is_empty() {
                 assert_eq!(props[*slot], *value, "index {index}");
             }
