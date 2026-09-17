@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "What the Body Tells You",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:581d437639cece2b",
+  "sourceHash": "fnv1a64:c1da353464574532",
   "lessons": [
     {
       "id": "HI-C63-hunger",
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90ebef7d6f545b1f",
+      "sourceHash": "fnv1a64:0ac3dcd08d0f33e5",
       "notice": null,
       "blocks": [
         {

@@ -90,3 +90,19 @@ completely would need the mātrā in chapter 14 or 15 as well — and those are 
 two slots घ and ढ want. **One of the three lessons cannot be served**, and
 chapter 16 is the one to leave, because the mātrā's placement already clears
 three violations where घ and ढ clear one between them.
+
+
+### Progress
+
+**Three of the eight** are now drawn late and say so: **ग** (chapter 25), **फ**
+(26) and the **nuqta**, in two lessons at chapters 60–61.
+
+The nuqta could not go earlier than 60 for a reason this entry did not
+anticipate. A lesson teaching a mark has to show it on carriers the reader can
+draw, and retroflex-**ड** is drawn only in the chapter-59 run — so the mark's
+placement was bounded by its *carriers*, not by its own first use at chapter 2.
+Any future mark lesson has the same constraint, and it is worth checking before
+picking a chapter.
+
+**Five remain:** the visarga, the vocalic-ṛ sign, **ट**, **ठ** and **इ**, all
+still bounded by the structural fact this entry records.

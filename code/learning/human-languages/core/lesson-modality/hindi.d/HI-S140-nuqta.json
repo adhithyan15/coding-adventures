@@ -1,0 +1,31 @@
+{
+  "lesson": {
+    "id": "HI-S140-nuqta",
+    "language": "hindi",
+    "chapter": 60,
+    "sequence": 2215,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:56b0dcbdbacb43d5",
+    "detachableSegments": [
+      "Script you'll notice: ◌़",
+      "Script: the two that flap",
+      "Writing: ◌़ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

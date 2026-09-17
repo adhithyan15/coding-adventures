@@ -1,8 +1,8 @@
 Hindi, chapter 60: Animals in the Yard.
-5 lessons. All 5 can be done entirely by ear.
+6 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 बंदर (bandar) — a monkey.
 
 Warm-up.
@@ -31,7 +31,56 @@ Wrap-up Recall.
 What does बंदर (bandar) mean? ("a monkey".) Say it once more.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
+◌़ (nuqtā) — the dot you have been reading and nobody named.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ◌़, Script: the two that flap and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+Two letters you can draw: ड and ढ. Say each one.
+[pause 2 seconds]
+Now look at बड़ा and पढ़ना. Something is under the letter in each of them that is not under the bare letter above.
+
+Script you'll notice: ◌़.
+◌़ (nuqtā) — a single dot, sitting below the consonant.
+It is not a vowel sign. A vowel sign changes the vowel a consonant carries. This one changes the consonant itself into a different sound, and the letter underneath keeps its shape.
+Worked through: ड + ◌़ (nuqtā) = ड़.
+The order is carrier first, dot second. The reference that defines this mark describes where the dot sits and what it combines with, not the order a hand should move in, so take carrier-first as a convention of this book rather than a rule handed down. Source: The Unicode Consortium, The Unicode Standard, Version 17.0, Core Specification, section 12.1.3 ‘Combining Marks’, U+093C Devanagari Sign Nukta, 2025.
+
+Script: the two that flap.
+[a table of 2 rows, read aloud]
+letter: ड. with the dot: ड़. sound: ṛa.
+letter: ढ. with the dot: ढ़. sound: ṛha.
+The tongue taps the roof of the mouth once and flicks forward. It is a flap rather than a held sound.
+Every one of these was yours long before this page:
+बड़ा — big.
+सड़क — road.
+खिड़की — window.
+पढ़ना — to read.
+सीढ़ी — stair.
+Read them again and this time the dot is part of what you are reading. Look at where in each word the dotted letter falls.
+
+Writing: ◌़ — copy what you see.
+Draw the consonant the way you already draw it. Then put one dot below it, under the middle of the letter, clear of the line.
+Put your pen on ड़ and follow it. Copy the shape slowly and larger than it is printed.
+This book does not tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at these two words and find the dot in each]
+[pause 8 seconds for the answer]
+सड़क, सीढ़ी.
+[once you have stopped driving — trace: ड़ three times, saying ṛa as you finish each one]
+[your turn — say: what the dot changes — the vowel, or the consonant]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does ◌़ (nuqtā) sit? (Below the consonant.) What does it change? (The consonant, not the vowel.) Name a word you have read for weeks that carries it.
+
+
+Lesson 3 of 6.
 साँप (sā̃p) — a snake.
 
 Warm-up.
@@ -60,7 +109,7 @@ Wrap-up Recall.
 What does साँप (sā̃p) mean? ("a snake".) Say it once more.
 
 
-Lesson 3 of 5.
+Lesson 4 of 6.
 मुर्गी (murgī) — a hen.
 
 Warm-up.
@@ -89,7 +138,7 @@ Wrap-up Recall.
 What does मुर्गी (murgī) mean? ("a hen".) Say it once more.
 
 
-Lesson 4 of 5.
+Lesson 5 of 6.
 भैंस (bhaĩs) — a buffalo.
 
 Warm-up.
@@ -118,7 +167,7 @@ Wrap-up Recall.
 What does भैंस (bhaĩs) mean? ("a buffalo".) Say it once more.
 
 
-Lesson 5 of 5.
+Lesson 6 of 6.
 मोर (mor) — a peacock.
 
 Warm-up.
