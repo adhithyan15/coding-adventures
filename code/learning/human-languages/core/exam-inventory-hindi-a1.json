@@ -1114,9 +1114,11 @@
       "id": "HI-A1-S-04",
       "category": "Vakya (the sentence)",
       "label": "closing a written sentence with the danda",
-      "probe": null,
+      "probe": [
+        "HI-SCRIPT-DANDA-01"
+      ],
       "derivedFrom": "hindi-specific",
-      "note": "No Spanish counterpart -- the proxy's punctuation points are about the full stop, the comma and the inverted question mark. HI-W06-name-sentence-stop teaches the danda and declares an EMPTY `introduces` list, so it contributes no atom and cannot be probed. The gap is in the lesson's knowledge contract, not in the teaching."
+      "note": "CLOSED AS A METADATA REPAIR, exactly as this note predicted: 'the gap is in the lesson's knowledge contract, not in the teaching'. HI-W06-name-sentence-stop shows the danda, explains that it is not part of the preceding word, and grades a written activity on it -- and declared an EMPTY introduces list, so it contributed no atom and could not be probed. It now introduces HI-SCRIPT-DANDA-01, and HI-W06-two-sentence-no-model pays it off: that lesson asks for two sentences with no model on the page, so the reader has to produce the mark unaided. No new teaching, no new prose, no duration change. A rare case where a note was precisely right about its own cause and the fix cost nothing."
     },
     {
       "id": "HI-A1-S-05",
