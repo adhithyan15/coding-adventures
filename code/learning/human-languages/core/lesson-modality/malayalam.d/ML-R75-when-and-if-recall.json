@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R75-when-and-if-recall",
+    "language": "malayalam",
+    "chapter": 75,
+    "sequence": 2620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b64bdc63ab793134"
+  },
+  "findings": []
+}

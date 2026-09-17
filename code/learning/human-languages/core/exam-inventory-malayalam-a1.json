@@ -1572,7 +1572,9 @@
       "id": "ML-A1-Q-06",
       "category": "Chodyam (asking questions)",
       "label": "eppol: when",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C75-EPPOL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -1582,7 +1584,7 @@
         "A1-NG4-02"
       ],
       "malayalamSpecific": false,
-      "note": "Not taught. The e- deixis lesson gives the pattern that would predict it, and the word itself never arrives -- so a learner who owns the days of the week cannot ask which one."
+      "note": "Chapter 75. The e- form of the now/then pair chapter 50 already taught, so the learner is owed one third of a set rather than a new word. Delivers the promise ML-C41-deixis-system makes in so many words: meet a new word in this family and you are taught one and work out the others."
     },
     {
       "id": "ML-A1-Q-07",
@@ -2087,7 +2089,9 @@
       "id": "ML-A1-JOIN-07",
       "category": "Samuchayam (joining and subordination)",
       "label": "when: locating one event against another",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C75-UMBOL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -2097,13 +2101,15 @@
         "A1-SUB-08"
       ],
       "malayalamSpecific": false,
-      "note": "The -mbol form is not taught, and neither is the question word eppol."
+      "note": "Chapter 75. -umbol on the end of the verb, built visibly from the future form plus the same pol that sits inside eppol. Malayalam spends no word in front of the clause; the whole of 'when he comes' is one word."
     },
     {
       "id": "ML-A1-JOIN-08",
       "category": "Samuchayam (joining and subordination)",
       "label": "if: the conditional clause",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C75-AAL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -2113,7 +2119,7 @@
         "A1-SUB-08"
       ],
       "malayalamSpecific": false,
-      "note": "The -aal conditional is not taught. Recorded separately from 'when' because Malayalam builds them with different suffixes."
+      "note": "Chapter 75. -aal on the PAST form, which is the part worth slowing down for: the sentence is not about the past, and the time is carried by the verb at the end. Taught alongside -umbol as a minimal pair, since one ending is the entire difference between 'when he comes' and 'if he comes'. Chapter 73's refusal to decompose ennaal and enthukondennaal is left standing and said so on the page."
     },
     {
       "id": "ML-A1-JOIN-09",

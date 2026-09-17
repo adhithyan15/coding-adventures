@@ -1,0 +1,749 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 75,
+  "title": "When, and If",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:fa97eb547d808634",
+  "lessons": [
+    {
+      "id": "ML-C75-eppol",
+      "sequence": 2590,
+      "title": "എപ്പോൾ (eppōḷ) — \"when?\"",
+      "headword": "എപ്പോൾ",
+      "romanization": "eppōḷ",
+      "gloss": "when? — the third of a set you already own two thirds of",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cd8cc5f32a72a5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words for time are already yours. Say the one that means now, then the one that means then. Listen to what is the same in them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: എപ്പോൾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എപ്പോൾ — eppōḷ — when?"
+            },
+            {
+              "kind": "speech",
+              "text": "The lesson that named the three beginnings promised that when you met a new word in this family, you would be taught one and work out the rest. Here is that promise, and you are owed only a third of it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "meaning"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "ഇപ്പോൾ ippōḷ means now.",
+                "അപ്പോൾ appōḷ means then.",
+                "എപ്പോൾ eppōḷ means when?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "You were handed the top two rows on the way to taking your leave. The bottom row changes the one letter at the front that ഇവിടെ / അവിടെ / എവിടെ changed, in the same direction: near, far, a question. Nothing else moves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That unmoving piece is പോൾ, and Tamil holds the set together the same way: the lesson that taught you now already showed you இப்போது (ippōtu), and the question form is எப்போது (eppōtu)."
+            },
+            {
+              "kind": "speech",
+              "text": "പോൾ is not a word you can use on its own — it only ever turns up carrying one of these three openers, so this book will not ask you to use it alone. Remember it anyway. It comes back in the next lesson, on a verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: asking rearranges nothing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിങ്ങൾ എപ്പോൾ പോകും? niṅṅaḷ eppōḷ pōkuṁ — \"When will you go?\""
+            },
+            {
+              "kind": "speech",
+              "text": "The question word sits in front of the verb, and the verb stays in the future form the tense lesson gave you. Nothing is rearranged to ask a question."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ippōḷ … appōḷ … eppōḷ, and hear the one letter walk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ippōḷ … appōḷ … eppōḷ*, and hear the one letter walk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ഇപ്പോൾ, അപ്പോൾ, എപ്പോൾ (eppōḷ) and find the part that is the same in all three",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ഇപ്പോൾ**, **അപ്പോൾ**, **എപ്പോൾ** and find the part that is the same in all three]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṅṅaḷ eppōḷ pōkuṁ?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṅṅaḷ eppōḷ pōkuṁ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three is a question, without looking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three is a question, without looking]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter did you change to get when? out of now? (The first one — ഇ to എ.) Can പോൾ stand alone? (No — it needs an opener.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C75-umbol",
+      "sequence": 2600,
+      "title": "വരുമ്പോൾ (varumpōḷ) — \"when he comes\"",
+      "headword": "വരുമ്പോൾ",
+      "romanization": "varumpōḷ",
+      "gloss": "when he comes — Malayalam puts \"when\" on the end of the verb, not in front of the clause",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4acf77871568df2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the question word for time. Then say the future of to go and the future of to come."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അവൻ വരുമ്പോൾ ഞാൻ പോകും. avan varumpōḷ ñān pōkuṁ — \"When he comes, I will go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "English needs a word in front of the clause: when he comes. Malayalam needs no word at all. It puts the whole idea on the end of the verb, and the clause is one word long."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the thing to take from this lesson. Look for the join at the end of a verb rather than in front of a clause, and a sentence that looked long stops being long."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write the future you already know, then put പോൾ after it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "step",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "step: the future, വരും varuṁ.",
+                "step: plus പോൾ, വരും + പോൾ.",
+                "step: written, വരുമ്പോൾ varumpōḷ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The ം that ends വരും is an m. When a letter follows it, that m is written joined to what comes next — മ്പ, the same shape you already read in ഒമ്പത് (ombatŭ), \"nine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "So the ending is not new material. It is a future form you have had since the tense lesson, with the time-piece from the last lesson stuck on the back."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil builds it the same way, from the same two parts: வரும்போது (varumpōtu)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: it is not a question any more",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എപ്പോൾ (eppōḷ) asks. വരുമ്പോൾ (varumpōḷ) does not."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "എപ്പോൾ (eppōḷ) വരും?, When will he come?",
+                "വരുമ്പോൾ (varumpōḷ), when he comes."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both carry പോൾ and they are related. But one waits for an answer, and the other fixes one event against another inside a sentence that keeps going. If പോൾ is on the end of a verb, nobody is being asked anything."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varuṁ, then varumpōḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varuṁ*, then *varumpōḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan varumpōḷ ñān pōkuṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan varumpōḷ ñān pōkuṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at വരുമ്പോൾ (varumpōḷ) and find the മ്പ you know from ഒമ്പത്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **വരുമ്പോൾ** and find the **മ്പ** you know from **ഒമ്പത്**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how many words Malayalam spends on when he comes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how many words Malayalam spends on *when he comes*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two verbs in the sentence is the one that happens last",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two verbs in the sentence is the one that happens last]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does Malayalam put when — in front of the clause, or on the end of the verb? (On the end of the verb.) What two pieces are inside വരുമ്പോൾ (varumpōḷ)? (വരും and പോൾ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C75-aal",
+      "sequence": 2610,
+      "title": "വന്നാൽ (vannāl) — \"if he comes\"",
+      "headword": "വന്നാൽ",
+      "romanization": "vannāl",
+      "gloss": "if he comes — the conditional, built on the past form of the verb and not about the past",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:becd946500ac6a7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say when he comes. Then say the past of to come — the one form on this track that reshapes its stem."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അവൻ വന്നാൽ ഞാൻ പോകും. avan vannāl ñān pōkuṁ — \"If he comes, I will go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Same shape as the last lesson: no word in front of the clause, the join on the end of the verb. One ending is the whole difference between two sentences:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "അവൻ വരുമ്പോൾ (varumpōḷ) ഞാൻ പോകും, when he comes, I will go.",
+                "അവൻ വന്നാൽ (vannāl) ഞാൻ പോകും, if he comes, I will go."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "When says it will happen and fixes your going to it. If does not say it will happen at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the past form and swap its last vowel for ആൽ:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "past",
+                "conditional"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "past: വന്നു vannu. conditional: വന്നാൽ vannāl.",
+                "past: പോയി pōyi. conditional: പോയാൽ pōyāl."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both rows lose a vowel and gain the same ending, and whatever the past did to the stem of to come, the conditional keeps."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the past form is not about the past",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read avan vannāl ñān pōkuṁ again. He has not come. He may never come. Yet the form it is built on is the one that means came."
+            },
+            {
+              "kind": "speech",
+              "text": "The obvious reading is the wrong one. The past form is doing no work about time here — it is the shape the language reaches for to build a condition, and the time is carried by പോകും at the end. Nothing in a Malayalam sentence is settled until you reach the last verb — the same habit the purpose lesson pointed at, from a different direction."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എന്നാൽ, the but-word, and എന്തുകൊണ്ടെന്നാൽ, the written because, both end in this shape. The lesson that taught the written because said it would not take that tail apart, because grammars read it different ways."
+            },
+            {
+              "kind": "speech",
+              "text": "That still stands. Knowing the ending does not settle those two words. What has changed is smaller and real: the ending is now yours on verbs where nobody disagrees about it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vannu, then vannāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vannu*, then *vannāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōyi, then pōyāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōyi*, then *pōyāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan vannāl ñān pōkuṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan vannāl ñān pōkuṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence with when instead of if",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence with *when* instead of *if*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at വന്നാൽ (vannāl) and വരുമ്പോൾ (varumpōḷ), and find where the two stop matching",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **വന്നാൽ** and **വരുമ്പോൾ**, and find where the two stop matching]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form does the conditional build on? (The past.) Does that make the sentence about the past? (No — the last verb carries the time.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R75-when-and-if-recall",
+      "sequence": 2620,
+      "title": "(when, and if) (eppōḷ ōrmma) — from cold",
+      "headword": "(when, and if)",
+      "romanization": "eppōḷ ōrmma",
+      "gloss": "cold retrieval of the question word for time and the two endings that join one event to another",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b64bdc63ab793134",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say the words for now and then, and then build the question word out of them without looking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one piece, three jobs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Everything in this chapter hangs off where the join sits."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "എപ്പോൾ (eppōḷ), asks — a question, waiting for an answer.",
+                "-ുമ്പോൾ, on a verb — when it happens, and it will.",
+                "-ആൽ, on a verb — if it happens, and it may not."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The first is a word of its own and stands in front of a verb. The other two are never words of their own — they arrive stuck to the back of one."
+            },
+            {
+              "kind": "speech",
+              "text": "So the test when you meet a long verb on a page is the same test every time. Read to the end of it. What is hanging off the back tells you whether the sentence is asking, fixing a time, or setting a condition."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two builds, from the forms the tense lesson gave you:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "start from",
+                "you get"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "start from: the future വരും. you get: വരുമ്പോൾ (varumpōḷ) — when he comes.",
+                "start from: the past വന്നു. you get: വന്നാൽ (vannāl) — if he comes."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One reaches for the future form, the other for the past, and neither one is about the time you would expect. The time of the whole sentence is settled by the verb at the end."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ippōḷ … appōḷ … eppōḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ippōḷ … appōḷ … eppōḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṅṅaḷ eppōḷ pōkuṁ?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṅṅaḷ eppōḷ pōkuṁ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan varumpōḷ ñān pōkuṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan varumpōḷ ñān pōkuṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence again, but only possibly — avan vannāl ñān pōkuṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence again, but only possibly — *avan vannāl ñān pōkuṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōyi, then its conditional",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōyi*, then its conditional]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at എപ്പോൾ (eppōḷ), വരുമ്പോൾ (varumpōḷ) and വന്നാൽ (vannāl), and say which of the three is asking you something",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **എപ്പോൾ**, **വരുമ്പോൾ** and **വന്നാൽ**, and say which of the three is asking you something]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the three can stand as a word on its own? (എപ്പോൾ (eppōḷ) — the other two only ever ride on a verb.) Which one says the thing will happen? (-ുമ്പോൾ.) Which one leaves it open? (-ആൽ.) And which form does each build on — future or past? (-ുമ്പോൾ on the future, -ആൽ on the past.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

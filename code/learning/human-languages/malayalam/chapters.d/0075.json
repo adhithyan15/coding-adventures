@@ -1,0 +1,17 @@
+{
+  "chapter": 75,
+  "title": "When, and If",
+  "label": "ch:ml-when-if",
+  "canDo": "I can ask when something will happen, say when one thing happens relative to another, and set a condition.",
+  "payoff": {
+    "lesson": "ML-R75-when-and-if-recall",
+    "kind": "production",
+    "summary": "From cold: the question word for time built out of the now/then pair, the -umbol ending that fixes one event against another, and the -aal ending that leaves it conditional — plus which tense form each one is built on.",
+    "assesses": [
+      "ML-LEX-C75-EPPOL-01",
+      "ML-GRAMMAR-C75-UMBOL-01",
+      "ML-GRAMMAR-C75-AAL-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. No new verb is added: every sentence is built from varuka and pokuka, and the pronouns come from chapter 71."
+  }
+}

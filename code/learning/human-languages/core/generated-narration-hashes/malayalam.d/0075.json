@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:fa97eb547d808634",
+  "lessonIds": [
+    "ML-C75-eppol",
+    "ML-C75-umbol",
+    "ML-C75-aal",
+    "ML-R75-when-and-if-recall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch75.txt",
+  "json": "malayalam/narration/ch75.json",
+  "textHash": "fnv1a64:7a1b742caed1009c",
+  "jsonHash": "fnv1a64:4dbec6040d6c5659",
+  "findings": []
+}

@@ -1947,7 +1947,7 @@ describe("the committed Malayalam A1 inventory", () => {
     }
   });
 
-  it("reports a joining column of 6 out of 11, and a script 9 characters short", () => {
+  it("reports a joining column of 8 out of 11, and a script 9 characters short", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
     const { lessons } = loadEverything();
@@ -2033,8 +2033,12 @@ describe("the committed Malayalam A1 inventory", () => {
     // you, so the I left the subject slot. enikku vaayikkaan kazhiyum is literally
     // "reading is possible to me", with the person in the dative exactly as the
     // knowing sentence has it. ONE genuinely new word in the whole chapter.
-    expect(coverage.covered).toBe(171);
-    expect(coverage.unmapped).toBe(72);
+    // 171 -> 174: ML-A1-Q-06, ML-A1-JOIN-07 and ML-A1-JOIN-08, all three
+    // carried by one piece -- pol. The now/then pair was already taught and the
+    // question form was the missing third of the set ML-C41-deixis-system
+    // promised the reader they would work out for themselves.
+    expect(coverage.covered).toBe(174);
+    expect(coverage.unmapped).toBe(69);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2059,7 +2063,11 @@ describe("the committed Malayalam A1 inventory", () => {
     // THE TITLE MOVED WITH THE NUMBER, for the third time. A test name carrying
     // a stale count reads as a finding and is not one.
     const joining = coverage.byCategory["Samuchayam (joining and subordination)"]!;
-    expect(joining).toEqual({ enumerated: 11, covered: 6 });
+    // 6 -> 8: ML-A1-JOIN-07 (when) and ML-A1-JOIN-08 (if), taught together in
+    // chapter 75 as a minimal pair, since one ending is the whole difference
+    // between them. Three of the five still open are the distributive, the
+    // relative participle and JOIN-01's clause half.
+    expect(joining).toEqual({ enumerated: 11, covered: 8 });
     // DO NOT CARRY ANOTHER TRACK'S SCRIPT SHAPE HERE. Tamil came back 52 of 52,
     // Kannada 50 of 69. Malayalam was measured on its own and is 58 of the 67
     // distinct characters its headwords use -- 87 per cent. The nine open ones,
@@ -2073,7 +2081,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 171/243 points covered (70%)",
+      "malayalam A1 (partial inventory): 174/243 points covered (72%)",
     );
   }, 60_000);
 });
