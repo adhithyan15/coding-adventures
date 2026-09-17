@@ -2033,10 +2033,15 @@ fn collect_native_degradations(
         // as HostSwitch and HostProgressRing were. Each emitter's PR removes
         // its own backend from this arm in the same change that adds the
         // lowering, so the report cannot outlive the gap or precede the fix.
-        "HostNavigationSplit" if backend.is_native() => Some((
-            "primitive.navigation-split-unimplemented",
-            "the backend does not yet lower HostNavigationSplit to its native adaptive split container",
-        )),
+        // Narrowed one backend at a time, exactly as HostProgressRing was:
+        // XAML lowers it to `NavigationView` (UI29-6 slice K-xaml), so XAML
+        // comes off this list in the same change that added the lowering.
+        "HostNavigationSplit" if backend.is_native() && !matches!(backend, Backend::Xaml) => {
+            Some((
+                "primitive.navigation-split-unimplemented",
+                "the backend does not yet lower HostNavigationSplit to its native adaptive split container",
+            ))
+        }
         "HostSwitch" if backend.is_native() => Some((
             "primitive.switch-unimplemented",
             "the backend does not yet lower HostSwitch to its native on/off control",
@@ -7556,6 +7561,47 @@ layout Settings {
         }
     }
 
+    /// UI29-6 slice K-xaml: `NavigationView` landed, so the report must
+    /// stop claiming a gap that is closed. UI84 Section 3 -- the lowering
+    /// records the drop, so removing the lowering's gap removes the drop.
+    #[test]
+    fn host_navigation_split_xaml_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-shell-xaml", &["Shell"]);
+        fs::write(
+            pkg.path().join("src/Shell.mll"),
+            r#"
+layout Shell {
+  HostNavigationSplit [ root ] (
+    pane-title: "Projects",
+    pane-width: 236
+  ) {
+    Column [ pane ] { }
+    Column [ detail ] { }
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Xaml,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("XAML navigation-split capability analysis");
+        assert!(
+            report.native_complete,
+            "XAML now has a native HostNavigationSplit lowering: {:?}",
+            report.degradations
+        );
+    }
+
     /// UI29-6 (#15481): registered before any backend lowers it, so every
     /// native backend must say so rather than emit two silent containers.
     #[test]
@@ -7577,12 +7623,14 @@ layout Shell {
         )
         .unwrap();
 
+        // XAML is absent on purpose: it lowers this now, and
+        // `host_navigation_split_xaml_now_has_a_native_lowering` below is
+        // the other half of the same statement.
         for backend in [
             Backend::Compose,
             Backend::Flutter,
             Backend::Qt,
             Backend::SwiftUI,
-            Backend::Xaml,
         ] {
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(

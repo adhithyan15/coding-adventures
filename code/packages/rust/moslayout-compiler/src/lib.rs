@@ -835,6 +835,21 @@ fn validate_node(
             ),
         });
     }
+    // UI29-6 §4.1 — `pane-title` is required, and this is where that is
+    // enforced rather than five times over in five emitters. An unnamed
+    // landmark is the defect the primitive exists to fix: a pane the screen
+    // reader announces as "pane" is no better than the two `Column`s it
+    // replaced, and by lowering time the author is gone.
+    if node.tag == "HostNavigationSplit"
+        && !node.props.iter().any(|prop| prop.name == "pane-title")
+    {
+        errors.push(CompileError {
+            kind: ErrorKind::InvalidPrimitiveUsage,
+            message:
+                "HostNavigationSplit requires `pane-title` — it names the pane for assistive technology"
+                    .to_string(),
+        });
+    }
     if let Some(slot_name) = node.child_slot_name() {
         *child_mount_count += 1;
         if *child_mount_count > 1 {
@@ -2055,6 +2070,21 @@ mod host_navigation_split_tests {
         let out = compile(&source, None).expect("a pane and a detail must compile");
         assert_eq!(out.def.root.tag, "HostNavigationSplit");
         assert_eq!(out.def.root.children.len(), 2);
+    }
+
+    /// UI29-6 §4.1: the pane must be named. Without this the primitive
+    /// lowers to a landmark a screen reader announces as nothing at all.
+    #[test]
+    fn a_pane_without_a_title_is_refused() {
+        let source = "layout Shell {\n  HostNavigationSplit [ shell ] {\n    Column [ pane ] { }\n    Column [ detail ] { }\n  }\n}\n";
+        let errors = compile(source, None).expect_err("an unnamed pane must not compile");
+        assert!(
+            errors.iter().any(|error| {
+                error.kind == ErrorKind::InvalidPrimitiveUsage
+                    && error.message.contains("requires `pane-title`")
+            }),
+            "the refusal must name the missing prop, got {errors:?}"
+        );
     }
 
     /// A different count is refused, not silently lowered: a one-child split

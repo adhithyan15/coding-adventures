@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added — `HostNavigationSplit` requires `pane-title` (UI29-6, #15481)
+
+UI29-6 §4.1 makes the prop required, and this is where that is enforced rather
+than five times over in five emitters. An unnamed landmark is the defect the
+primitive exists to fix: a pane a screen reader announces as "pane" is no
+better than the two `Column`s it replaced, and by lowering time the author is
+gone.
+
 ### Added — `HostNavigationSplit`, with its child rule (UI29-6, #15481)
 
 Registered in `PRIMITIVES`, and the layout compiler enforces what the spec

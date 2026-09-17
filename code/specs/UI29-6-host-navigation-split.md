@@ -90,7 +90,10 @@ HostNavigationSplit [ app-shell ] (
 | `collapse` | keyword `auto` \| `never` | no | `auto` (the default) lets the platform collapse the pane as the window narrows. `never` pins it side-by-side, for a layout whose pane is the content (VisiCalc's workbench). |
 
 **Children:** exactly two, in order — the pane, then the detail. A different
-count is a compile error in `moslayout-compiler`, not a silent drop. The kernel
+count is a compile error in `moslayout-compiler`, not a silent drop. A missing
+`pane-title` is a compile error in the same place, for the same reason: five
+emitters each inventing an answer to an absent name is five different unnamed
+panes, and by lowering time the author is gone. The kernel
 has no named child slots, and adding them for one primitive would be a grammar
 change; order is what `HostTable`'s rows already rely on.
 
@@ -124,7 +127,15 @@ the collapsed state, it arrives through UI48's environment, not through here.
   so this is stated here rather than reported.
 - **Every backend, before its lowering lands**, reports
   `primitive.navigation-split-unimplemented` — the `HostSwitch` pattern,
-  narrowed one backend at a time as `HostProgressRing` was.
+  narrowed one backend at a time as `HostProgressRing` was. **XAML** came off
+  that list in slice `K-xaml`; SwiftUI, Compose, Qt and Flutter remain.
+- **XAML** carries no gap of its own. `NavigationView`'s `Auto` mode is the
+  adaptive ladder this primitive exists to reach, `PaneTitle` is both the
+  drawn header and the UIA name, and `OpenPaneLength` is a preferred width in
+  exactly the sense §4.1 means it — WinUI keeps its own compact and flyout
+  widths when the pane narrows or folds. `collapse: never` pins the pane with
+  `PaneDisplayMode="Left"` plus `IsPaneToggleButtonVisible="False"`, so the
+  toggle cannot undo by hand what the author pinned.
 
 ## 5. Consumers, and the order they must land in
 
@@ -150,10 +161,19 @@ red until **every** native backend lowers it. The order is forced:
   guard in the same change that adds the lowering — so the report cannot drift
   from what is emitted (UI84 §3).
 - Every native lowering is checked against the real toolchain, as UI86's were:
-  a fixture package per backend, built, and — where the platform allows it —
-  driven through its accessibility API to prove the pane is a pane.
-- Collapse behaviour is asserted where it is native (SwiftUI, XAML, Compose) by
-  resizing the window in that check, not by reading the markup.
+  a fixture package per backend, generated native-complete with zero
+  degradations and built by that platform's compiler in CI.
+- Collapse behaviour is asserted by resizing a running window, not by reading
+  the markup back — but **not in the emitter fixtures**, which cannot do it.
+  A fixture component has no engine behind it, so its executable fail-fasts at
+  startup; the merged UI86 fixture behaves the same way, and
+  `xaml-selected-button-smoke.ps1` says in its own help that its runtime half
+  is for a locally patched build. The runtime proof therefore lands in the `P`
+  slice, against TaskApp, which is a real app with a real engine and already
+  has a UIA smoke in CI. Tracked as
+  [#15486](https://github.com/adhithyan15/coding-adventures/issues/15486),
+  including the `collapse: never` contrast case that is what actually
+  distinguishes `Auto` from `Left`.
 - The four consumers keep their current appearance: the same pane width, the
   same separator, and no new degradation in any package gate.
 
@@ -163,7 +183,8 @@ red until **every** native backend lowers it. The order is forced:
 | --- | --- |
 | `U29-6-0` | this spec |
 | `U29-6-G` | registration + child-count validation + the unconditional degradation |
-| `U29-6-K-swiftui` … `-xaml` … `-compose` … `-qt` … `-flutter` | one lowering each, in parallel |
+| `U29-6-K-xaml` | **done** — `NavigationView`, `PaneDisplayMode="Auto"` |
+| `U29-6-K-swiftui` … `-compose` … `-qt` … `-flutter` | one lowering each, in parallel |
 | `U29-6-K-web` | React, HTML, WebComponent landmarks |
 | `U29-6-P` | the four consumers, after every `K` has landed |
 

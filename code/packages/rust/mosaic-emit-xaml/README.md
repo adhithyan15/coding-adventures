@@ -40,6 +40,7 @@ mosstyle base styling:
 | `HostDraggable` | component-scoped `<ContentControl>` using WinUI `CanDrag`, pointer/touch drag events, keyboard operation, and UIA announcements |
 | `HostDropTarget` | component-scoped `<ContentControl>` using WinUI drop events, authored acceptance filtering, keyboard traversal, and UIA announcements |
 | `HostDialog` | `<ContentDialog>` / `<Flyout>` |
+| `HostNavigationSplit` | `<NavigationView>` — `PaneDisplayMode="Auto"` (or `"Left"` for `collapse : never`), pane in `PaneCustomContent`, `pane-title` as `PaneTitle`, `pane-width` as `OpenPaneLength` (UI29-6) |
 
 Plus the UI24 event-dispatch contract (one `Dispatch` event per UserControl)
 and slot → `DependencyProperty` translation.

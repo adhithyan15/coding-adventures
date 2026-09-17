@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Changed — XAML comes off `primitive.navigation-split-unimplemented` (UI29-6, #15481)
+
+The XAML emitter lowers `HostNavigationSplit` to `NavigationView` as of slice
+`K-xaml`, so XAML is no longer reported as missing it. UI84 §3: the lowering
+records the drop, so closing the gap closes the report, in the same change.
+
+SwiftUI, Compose, Qt and Flutter still report it, and each of their slices
+removes its own backend the same way.
+
 ## 2026-09-13
 
 ### Fixed — every Mosaic Flutter app failed its macOS release build

@@ -1,0 +1,9 @@
+// UI29-6 fixture: `HostNavigationSplit` in both collapse modes and both
+// title shapes, compiled native-complete and built with the real WinUI
+// toolchain in CI. The emitter tests prove what markup comes out; this
+// proves the XAML compiler accepts it.
+component Shell {
+  slot workspace-name : text ;
+  slot inbox-label : text ;
+  emit onOpenInbox ;
+}
