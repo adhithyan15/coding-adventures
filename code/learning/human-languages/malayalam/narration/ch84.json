@@ -1,0 +1,601 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 84,
+  "title": "Where A Thing Is",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:ab4716e0ebbf70af",
+  "lessons": [
+    {
+      "id": "ML-C84-mukalil",
+      "sequence": 2920,
+      "title": "മുകളിൽ (mukaḷil) — on top of",
+      "headword": "മുകളിൽ",
+      "romanization": "mukaḷil",
+      "gloss": "on top of, above — the first place-word, and the shape every one of them needs in front of it",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73290a3f2cc537d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word for a chair. Then put the owner-ending on it — the one a word ending in a vowel takes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the owner-ending comes first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുകളിൽ — mukaḷil — on top of, above."
+            },
+            {
+              "kind": "speech",
+              "text": "The track has given you a chair, a book and several other things in a room, and no way to say where any of them is. This is the first of four words that fix that, and the rule they all share is worth more than any one of them."
+            },
+            {
+              "kind": "speech",
+              "text": "The thing you are measuring from goes into the owner-form, and the place-word follows it."
+            },
+            {
+              "kind": "speech",
+              "text": "കസേരയുടെ മുകളിൽ — kasērayuṭe mukaḷil — on top of the chair."
+            },
+            {
+              "kind": "speech",
+              "text": "Read it literally and the logic is plain: the chair's top-part. Malayalam is not saying on the chair; it is naming a part that belongs to the chair and putting you there. That is why the owner-ending is needed — without it the two words are not connected at all."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "കസേരയുടെ, the chair's.",
+                "കസേരയുടെ മുകളിൽ (mukaḷil), on top of the chair."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So this costs you no new grammar either. The owner-ending is the one from the genitive chapter, unchanged, and it picks its shape by the last sound of the noun exactly as it did there."
+            },
+            {
+              "kind": "speech",
+              "text": "Put a thing in front and you have a sentence's worth:"
+            },
+            {
+              "kind": "speech",
+              "text": "പുസ്തകം കസേരയുടെ മുകളിൽ (mukaḷil) — the book is on top of the chair."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukaḷil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukaḷil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasērayuṭe mukaḷil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasērayuṭe mukaḷil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the chair had to take before the place-word could follow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the chair had to take before the place-word could follow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pustakaṁ kasērayuṭe mukaḷil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pustakaṁ kasērayuṭe mukaḷil*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mukaḷil mean? (On top of.) What must the noun before it carry? (The owner-ending.) And what is kasērayuṭe mukaḷil literally? (The chair's top-part.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C84-thaazhe",
+      "sequence": 2930,
+      "title": "താഴെ (tāḻe) — below",
+      "headword": "താഴെ",
+      "romanization": "tāḻe",
+      "gloss": "below, under — the opposite of the first place-word, built the same way and spelled unlike it",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2acdb6d834f58c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say on top of the chair, and say what the chair had to take first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: താഴെ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "താഴെ — tāḻe — below, under, down."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the opposite of the word before it, and it takes exactly the same shape around it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "കസേരയുടെ മുകളിൽ (mukaḷil), on top of the chair.",
+                "കസേരയുടെ താഴെ (tāḻe), under the chair."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The owner-ending does not change and the order does not change. Only the place-word swaps, which is the whole point of learning the pattern before the words: each new one after this costs a word and nothing else."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāḻe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāḻe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasērayuṭe tāḻe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasērayuṭe tāḻe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasērayuṭe mukaḷil, then kasērayuṭe tāḻe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasērayuṭe mukaḷil*, then *kasērayuṭe tāḻe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what changed between those two, and what did not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what changed between those two, and what did not]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tāḻe mean? (Below, under.) Does the noun in front of it behave any differently? (No — the same owner-ending.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C84-munnil-pinnil",
+      "sequence": 2940,
+      "title": "മുന്നിൽ പിന്നിൽ (munnil pinnil) (munnil, pinnil) — in front of, behind",
+      "headword": "മുന്നിൽ പിന്നിൽ",
+      "romanization": "munnil pinnil",
+      "gloss": "in front of and behind — the horizontal pair, closing the set of four",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:56ffa09340ccb5a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say on top of and below. You have the up-and-down pair; these two are the other axis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മുന്നിൽ, പിന്നിൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുന്നിൽ — munnil — in front of."
+            },
+            {
+              "kind": "speech",
+              "text": "പിന്നിൽ — pinnil — behind."
+            },
+            {
+              "kind": "speech",
+              "text": "Both go where the other two went, after a noun carrying the owner-ending, and the set is now closed:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "മുകളിൽ (mukaḷil), on top of.",
+                "താഴെ (tāḻe), below.",
+                "മുന്നിൽ, in front of.",
+                "പിന്നിൽ, behind."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "കസേരയുടെ മുന്നിൽ — in front of the chair. കസേരയുടെ പിന്നിൽ — behind the chair."
+            },
+            {
+              "kind": "speech",
+              "text": "The two new ones are a near-pair on the page as well as in meaning: munnil and pinnil differ in their first sound and agree in everything after it. Say them one after the other until the opening is what you hear, because that opening is the only thing carrying the difference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munnil, then pinnil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munnil*, then *pinnil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which sound is the only difference between them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which sound is the only difference between them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasērayuṭe munnil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasērayuṭe munnil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasērayuṭe pinnil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasērayuṭe pinnil*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which one means in front of? (munnil.) Which means behind? (pinnil.) And how many place-words do you now own? (Four.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R84-place-recall",
+      "sequence": 2950,
+      "title": "(where a thing is) (evide enna ōrmma) — from cold",
+      "headword": "(where a thing is)",
+      "romanization": "evide enna ōrmma",
+      "gloss": "cold retrieval of all four place-words, the shape they share, and a spelling pattern that holds for three of them",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:b6b294ad20a4669a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all four place-words, up and down first, then front and back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one shape, four fillers",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "കസേരയുടെ മുകളിൽ (mukaḷil), on top of the chair.",
+                "കസേരയുടെ താഴെ (tāḻe), under the chair.",
+                "കസേരയുടെ മുന്നിൽ, in front of the chair.",
+                "കസേരയുടെ പിന്നിൽ, behind the chair."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read the first column downward. Only the last word ever changes. The noun takes the owner-ending and stays put, and each new place-word costs a word and nothing else — which is why the chapter spent its first lesson on the shape rather than on the vocabulary."
+            },
+            {
+              "kind": "speech",
+              "text": "And the owner-ending is not new either. It is the one from the genitive chapter, picking its form by the last sound of the noun exactly as it did there, because കസേരയുടെ മുകളിൽ (mukaḷil) is literally the chair's top-part. Malayalam does not say on the chair — it names a part that belongs to the chair and puts you in it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: three of the four wear the in-ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at the ends of the four words themselves."
+            },
+            {
+              "kind": "speech",
+              "text": "മുകളിൽ (mukaḷil), മുന്നിൽ and പിന്നിൽ all finish in -ിൽ — the in-ending you have had since the first verbs. These are not really postpositions at all in origin: they are part-words already sitting in the in-form, which is why the chair's top-part reads the way it does."
+            },
+            {
+              "kind": "speech",
+              "text": "താഴെ (tāḻe) does not. It ends in -െ and it means the same kind of thing."
+            },
+            {
+              "kind": "speech",
+              "text": "So the pattern is real and it covers three of the four. That is worth stating plainly rather than tidying away: a pattern that explains most of a set is still useful, and the reader who notices the exception has read correctly rather than made a mistake. Learn the shape from the three, and learn താഴെ (tāḻe) as it stands."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four place-words in a row",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four place-words in a row]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasērayuṭe mukaḷil, then swap the last word three times",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasērayuṭe mukaḷil*, then swap the last word three times]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pustakaṁ kasērayuṭe mukaḷil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pustakaṁ kasērayuṭe mukaḷil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which three of the four end in the in-ending, and which one does not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which three of the four end in the in-ending, and which one does not]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the noun before a place-word carry? (The owner-ending.) Which of the four does not end in the in-ending? (tāḻe.) And what changes when you swap one place-word for another? (Nothing else.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

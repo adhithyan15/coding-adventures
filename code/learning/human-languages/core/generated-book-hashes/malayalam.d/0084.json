@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:11bad9c522135701",
+  "lessonIds": [
+    "ML-C84-mukalil",
+    "ML-C84-thaazhe",
+    "ML-C84-munnil-pinnil",
+    "ML-R84-place-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch84-where-a-thing-is.tex"
+}

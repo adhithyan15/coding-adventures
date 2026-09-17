@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R84-place-recall",
+    "language": "malayalam",
+    "chapter": 84,
+    "sequence": 2950,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b6b294ad20a4669a"
+  },
+  "findings": []
+}

@@ -953,7 +953,13 @@
       "id": "ML-A1-CASE-07",
       "category": "Vibhakti (case endings and postpositions)",
       "label": "spatial postpositions: on, under, behind, in front of",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C84-PLACE-01",
+        "ML-LEX-C84-PLACE-02",
+        "ML-LEX-C84-PLACE-03",
+        "ML-LEX-C84-PLACE-04",
+        "ML-GRAMMAR-C84-POSTPOSITION-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -963,7 +969,7 @@
         "A1-NG3-02"
       ],
       "malayalamSpecific": false,
-      "note": "None of mukalil, thaazhe, pinnil or munnil is taught. The track teaches five house objects and no way to say where any of them is."
+      "note": "Chapter 84. The old note was exact: 'the track teaches five house objects and no way to say where any of them is.' All four of the words it named are now taught -- mukalil, thaazhe, munnil, pinnil -- but the chapter's first lesson spends itself on the SHAPE rather than on vocabulary, because the shape is what makes each later place-word cost a word and nothing else. THE NOUN IN FRONT TAKES THE GENITIVE, and that is not new grammar: it is chapter 78's ending, unchanged, picking its form by the last sound of the noun. The reason is worth having -- kaseerayude mukalil is literally 'the chair's top-part', so Malayalam is not saying ON the chair but naming a part that BELONGS to it, which is exactly why the owner-ending is required to connect the two words at all. The recall lesson then states a pattern that covers THREE of the four: mukalil, munnil and pinnil visibly end in the locative -il, because they are part-words already sitting in the in-form, while thaazhe ends in -e and does not. That is stated plainly rather than tidied away, since a reader who notices the exception has read correctly. Verified before writing: all four returned ZERO files. MEESHA (table) was deliberately NOT taught even though the point's domain invites it: it already appears untaught in ML-C52-chair's etymology prose, so taking it as a headword would convert that use into a forward reference -- the ML-C82-chechi-address trap. The examples use kaseera, which is taught."
     },
     {
       "id": "ML-A1-V-01",
