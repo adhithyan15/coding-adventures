@@ -197,8 +197,38 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // A DRAFT CLAIMED ALL FOUR QUESTION WORDS SHARE THE FRONT LETTER e AND WAS
   // WRONG: aaru (who) opens on aa. Three of the four carry the asking letter
   // ML-C41-deixis-system named, and who is the exception.
-  expect(coverage.covered).toBe(169);
-  expect(coverage.unmapped).toBe(74);
+  // 169 -> 171: ML-A1-JOIN-09 (purpose) and ML-A1-V-22 (ability). JOIN-09's note
+  // PREDICTED THE PAIR -- "the -aan purpose form is not taught, which also
+  // blocks the ability frame; both are built on it" -- and it was right. Both
+  // forms returned ZERO files before the chapter was written.
+  // ONE SWAP AND WHAT IT BUYS: -uka off, -aan on, stem untouched. The word that
+  // FOLLOWS the -aan form decides the sentence -- another verb gives purpose,
+  // kazhiyum gives ability.
+  // ABILITY ARRIVES AT YOU RATHER THAN BEING DONE BY YOU, and the track had
+  // already taught that shape: ML-C32-ariyuka's warm-up says knowing ARRIVED at
+  // you, so the I left the subject slot. enikku vaayikkaan kazhiyum is literally
+  // "reading is possible to me", with the person in the dative exactly as the
+  // knowing sentence has it. ONE genuinely new word in the whole chapter.
+  // 171 -> 174: ML-A1-Q-06 (eppol), ML-A1-JOIN-07 (-umbol) and ML-A1-JOIN-08
+  // (-aal). ONE CHAPTER FOR THREE POINTS BECAUSE THE THREE ARE ONE PIECE: pol.
+  // eppol, varumpol and the now/then pair the track already taught all carry it.
+  // Verified rather than assumed -- eppol, mbol and every spelling of them
+  // returned ZERO files across 333 lessons, and every existing -aal in the
+  // corpus was lexical (paal, kaal) or one of the two frozen words ennaal and
+  // enthukondennaal.
+  // THE CHAPTER PAYS OFF A PROMISE THE TRACK ALREADY MADE. ML-C41-deixis-system
+  // says in so many words that meeting a new word in this family means being
+  // taught one and working out the others; ML-C50-now handed over ippol and
+  // appol and stopped. The question form is the missing third.
+  // THE CONDITIONAL IS BUILT ON THE PAST FORM AND IS NOT ABOUT THE PAST, which
+  // is the one genuinely counter-intuitive thing in the chapter and is taught
+  // as such. -umbol and -aal are taught as a minimal pair because one ending is
+  // the entire difference between "when he comes" and "if he comes".
+  // CHAPTER 73'S REFUSAL IS LEFT STANDING. Knowing -aal does not settle ennaal
+  // or enthukondennaal, grammars still differ, and ML-C75-aal says so on the
+  // page rather than quietly claiming the win.
+  expect(coverage.covered).toBe(174);
+  expect(coverage.unmapped).toBe(69);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -210,6 +240,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 169/243 points covered (70%)",
+    "malayalam A1 (partial inventory): 174/243 points covered (72%)",
   );
 }, 60_000);

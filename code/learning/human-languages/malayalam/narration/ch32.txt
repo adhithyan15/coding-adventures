@@ -56,9 +56,9 @@ You'll want to know.
 പോകുക — pōkuka — to go.
 Chapter 4 met this verb in passing, on the way to a farewell. Here it goes to work. The dictionary form is the stem പോക്- (pōk-) plus -ഉക (-uka), the ending that means "to ___."
 [a table of 3 rows, read aloud]
-when: now. Malayalam: pōkunnu. the ending: -unnu.
-when: already. Malayalam: pōyi. the ending: -i.
-when: not yet. Malayalam: pōkuṁ. the ending: -uṁ.
+when: now. Malayalam: പോകുന്നു pōkunnu. the ending: -unnu.
+when: already. Malayalam: പോയി pōyi. the ending: -i.
+when: not yet. Malayalam: പോകും pōkuṁ. the ending: -uṁ.
 You have said the middle one already: the goodbye പോയി വരാം (pōyi varāṁ) opens with pōyi, "having gone."
 
 Sounds you'll need: the letters in this word.
@@ -69,8 +69,8 @@ The word, taken apart.
 Kannada's everyday word is ಹೋಗು (hōgu), and that h is no different root. Old Dravidian p- softened to h- in Kannada — "ten" is Malayalam പത്ത് (pattŭ) against Kannada ಹತ್ತು (hattu), the very same swap.
 
 Grammar Lens: three forms are the whole conjugation.
-In most languages a tense is a list. English has I go / he goes. Tamil, Malayalam's closest sister, needs an ending for every person: pōgiṟēṉ ("I go"), pōgiṟāy ("you go"), pōgiṟāṉ ("he goes"), pōgiṟōm ("we go").
-Malayalam's present tense is one word long. Ñān pōkunnu, nī pōkunnu, avan pōkunnu, avar pōkunnu — I, you, he, they, and pōkunnu every time. So those three forms are not the start of a conjugation. They are the whole of it.
+In most languages a tense is a list. English has I go / he goes. Tamil, Malayalam's closest sister, needs an ending for every person: pōgiṟēṉ ("I go"), pōgiṟāy ("you go"), pōgiṟāṉ ("he goes").
+Malayalam's present tense is one word long. Ñān pōkunnu, nī pōkunnu, avar pōkunnu — I, you, they, and pōkunnu every time. So those three forms are not the start of a conjugation. They are the whole of it.
 That is the bargain. Nothing to memorise on the verb — and the pronoun in front can never be dropped, since it is now the only thing telling you who went.
 
 Guided Practice.
@@ -78,6 +78,8 @@ Guided Practice.
 [your turn — say: "pōkuka" — to go]
 [pause 8 seconds for the answer]
 [your turn — say: the three times — "pōkunnu … pōyi … pōkuṁ"]
+[pause 8 seconds for the answer]
+[your turn — look: at the three on the page — പോകുന്നു, പോയി, പോകും]
 [pause 8 seconds for the answer]
 [your turn — say: the pair that shares one sound-law — "pattŭ … hattu", "pō … hōgu"]
 [pause 8 seconds for the answer]
@@ -88,7 +90,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I will go." (Ñān pōkuṁ.) How many words are in this verb's whole Malayalam present tense? (One — pōkunnu, for every person.) Is Kannada's hōgu a different root from pō? (No — the same old p softened to h.) Next: the one place a Malayalam verb can still surprise you.
+Say "I will go." (Ñān pōkuṁ) — and find it written: ഞാൻ പോകും. How many words are in this verb's whole Malayalam present tense? (One — pōkunnu, for every person.) Is Kannada's hōgu a different root from pō? (No — the same old p softened to h.) Next: the one place a Malayalam verb can still surprise you.
 
 
 Lesson 3 of 6.

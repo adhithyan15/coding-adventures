@@ -1,0 +1,17 @@
+{
+  "chapter": 74,
+  "title": "One Ending, Two Sentences",
+  "label": "ch:ml-aan",
+  "canDo": "I can say what I am going somewhere in order to do, and say what I am able to do.",
+  "payoff": {
+    "lesson": "ML-R74-aan-recall",
+    "kind": "production",
+    "summary": "From cold: the -uka to -aan swap, the purpose sentence it builds in front of another verb, and the ability sentence it builds in front of kazhiyum — with the person in the dative, the way knowing already works.",
+    "assesses": [
+      "ML-GRAMMAR-C74-AAN-01",
+      "ML-GRAMMAR-C74-PURPOSE-01",
+      "ML-LEX-C74-KAZHIYUM-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. Only one new word is added: every verb it uses comes from the reading and going chapters."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-75-WHEN-IF",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask when, say when one thing happens against another, and set a condition.",
+  "prerequisites": [
+    "ML-EXT-74-AAN"
+  ],
+  "lessons": [
+    "ML-C75-eppol",
+    "ML-C75-umbol",
+    "ML-C75-aal",
+    "ML-R75-when-and-if-recall"
+  ]
+}

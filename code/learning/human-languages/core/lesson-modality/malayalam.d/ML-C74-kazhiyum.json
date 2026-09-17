@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "ML-C32-pokuka",
+    "id": "ML-C74-kazhiyum",
     "language": "malayalam",
-    "chapter": 32,
-    "sequence": 660,
+    "chapter": 74,
+    "sequence": 2570,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4bb1d2a87d5c4000"
+    "sourceHash": "fnv1a64:367fc2b045bbdbe8"
   },
   "findings": []
 }
