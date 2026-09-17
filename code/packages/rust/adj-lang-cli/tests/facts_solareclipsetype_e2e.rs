@@ -218,15 +218,55 @@ fn the_envelope_keeps_the_pages_own_apostrophe() {
     // sentence the source does not contain -- the defect #15324 records for
     // soil-texture-class, and the one volcano-type and metamorphism-cause both
     // shipped before their conversions.
+    // SCOPED TO `source "` LINES, not the whole table block. Read against the
+    // block, this arm fails on a harmless in-table `%` comment that quotes the
+    // envelope in ASCII -- and a comment is not a shipped citation, so that
+    // would be a false alarm. What must be pinned is the string the table
+    // SHIPS as provenance.
     let body = shipped_table();
+
+    // TWO DIFFERENT SCOPES, because the two arms make different claims.
+    //
+    // The POSITIVE arm is about the TABLE-LEVEL envelope, so it reads only
+    // four-space `source` lines. Scoped with `trim_start()` it would also see
+    // the eight-space row sources, and would then be satisfied by a mutant that
+    // deleted the envelope line and planted the string on a row -- leaving its
+    // message ("the envelope ships with...") claiming more than it checked.
+    // That second defect is backstopped here by the shape test's verbatim
+    // `source`/`locator`/`trust` block, as it is in plant-parts; this arm is
+    // being made honest about its own claim, not plugging an open hole.
+    // Measured: such a table is also refused at lowering with
+    // TableMissingProvenance, so that mutant could not ship regardless.
+    let envelope_line: String = body
+        .lines()
+        .filter(|l| l.starts_with("    source \""))
+        .collect::<Vec<_>>()
+        .join("\n");
     assert!(
-        body.contains(ENVELOPE),
-        "the envelope ships with the page's own U+2019: {body}"
+        envelope_line.contains(ENVELOPE),
+        "the table-level envelope ships with the page's own U+2019: {envelope_line}"
     );
+
+    // The NEGATIVE arm is about ANY shipped citation, so it reads every
+    // `source` line at any indent -- a row carrying an ASCII-apostrophe
+    // envelope is just as wrong as the envelope line carrying one. It stays
+    // scoped to `source` lines rather than the whole block, because a `%`
+    // comment quoting the sentence in ASCII is not a shipped citation.
+    //
+    // The trade, recorded in shard 03560: scoping this arm lets a
+    // comment-borne ASCII envelope survive. Nothing now pins "no ASCII
+    // envelope anywhere in the block", only "no `source` line carries one".
+    // That is the right trade -- the shipped string is what provenance means.
+    let source_lines: String = body
+        .lines()
+        .filter(|l| l.trim_start().starts_with("source \""))
+        .collect::<Vec<_>>()
+        .join("\n");
     let ascii_variant = ENVELOPE.replace('\u{2019}', "'");
     assert!(
-        !body.contains(&ascii_variant),
-        "an ASCII-apostrophe envelope occurs zero times on the page and must not ship: {body}"
+        !source_lines.contains(&ascii_variant),
+        "no `source` line at any indent may carry an ASCII-apostrophe envelope -- \
+         that spelling occurs zero times on the page: {source_lines}"
     );
 }
 
