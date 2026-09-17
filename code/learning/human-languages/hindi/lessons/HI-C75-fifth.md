@@ -12,18 +12,18 @@ headword: "पाँचवाँ / पाँचवीं / बीसवाँ / 
 gloss: "fifth / feminine fifth / twentieth / hundredth — where the rule finally arrives: number plus -वाँ"
 romanization: "pā̃cvā̃ / pā̃cvī̃ / bīsvā̃ / sauvā̃"
 concept_tag: HI-ORDINAL-FIFTH
-prerequisites: [HI-C75-fourth, HI-C74-late, HI-C70-infinitive-object, HI-C68-english, HI-S123-letter-da, HI-C27-shubh-raatri]
+prerequisites: [HI-C72-sau, HI-C75-fourth, HI-C74-late, HI-C70-infinitive-object, HI-C68-english, HI-S123-letter-da, HI-C27-shubh-raatri]
 sounds: []
 roots: []
 etymology_hook: "panch gives panchvan, and from five upward the ordinal is the plain cardinal with -van added; the nasal is written with a chandrabindu and there are two of them in this word"
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-LEX-C75-ORDINAL-05, HI-LEX-C74-SIGNS-05, HI-GRAMMAR-INFINITIVE-OBJECT-01, HI-LEX-C68-ORIGIN-05, HI-SCRIPT-RECOG-123, HI-CONCEPT-C27-SHUBH-RAATRI-01, HI-CONCEPT-C27-SHUBH-RAATRI-02]
+  knowledge: [HI-LEX-C75-ORDINAL-05, HI-LEX-C74-SIGNS-05, HI-GRAMMAR-INFINITIVE-OBJECT-01, HI-LEX-C68-ORIGIN-05, HI-SCRIPT-RECOG-123, HI-CONCEPT-C27-SHUBH-RAATRI-01, HI-CONCEPT-C27-SHUBH-RAATRI-02, HI-LEX-C72-HUNDRED-01]
 introduces:
   knowledge: [HI-LEX-C75-ORDINAL-06, HI-GRAMMAR-C75-ORDINAL-07]
 practises:
-  knowledge: [HI-LEX-C75-ORDINAL-06, HI-GRAMMAR-C75-ORDINAL-07, HI-LEX-C75-ORDINAL-05, HI-LEX-C74-SIGNS-05, HI-GRAMMAR-INFINITIVE-OBJECT-01, HI-LEX-C68-ORIGIN-05, HI-SCRIPT-RECOG-123, HI-CONCEPT-C27-SHUBH-RAATRI-01, HI-CONCEPT-C27-SHUBH-RAATRI-02, HI-LEX-C75-ORDINAL-01, HI-LEX-C75-ORDINAL-02, HI-LEX-C75-ORDINAL-03, HI-LEX-C75-ORDINAL-04]
+  knowledge: [HI-LEX-C75-ORDINAL-06, HI-GRAMMAR-C75-ORDINAL-07, HI-LEX-C75-ORDINAL-05, HI-LEX-C74-SIGNS-05, HI-GRAMMAR-INFINITIVE-OBJECT-01, HI-LEX-C68-ORIGIN-05, HI-SCRIPT-RECOG-123, HI-CONCEPT-C27-SHUBH-RAATRI-01, HI-CONCEPT-C27-SHUBH-RAATRI-02, HI-LEX-C75-ORDINAL-01, HI-LEX-C75-ORDINAL-02, HI-LEX-C75-ORDINAL-03, HI-LEX-C75-ORDINAL-04, HI-LEX-C72-HUNDRED-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [HI-C75-fourth, HI-C74-late, HI-C70-infinitive-object, HI-C68-englis
 # पाँचवाँ (pā̃cvā̃) — fifth, and the rule at last
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C75-ORDINAL-05, HI-LEX-C74-SIGNS-05, HI-GRAMMAR-INFINITIVE-OBJECT-01, HI-LEX-C68-ORIGIN-05, HI-SCRIPT-RECOG-123, HI-CONCEPT-C27-SHUBH-RAATRI-01, HI-CONCEPT-C27-SHUBH-RAATRI-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C75-ORDINAL-05, HI-LEX-C74-SIGNS-05, HI-GRAMMAR-INFINITIVE-OBJECT-01, HI-LEX-C68-ORIGIN-05, HI-SCRIPT-RECOG-123, HI-CONCEPT-C27-SHUBH-RAATRI-01, HI-CONCEPT-C27-SHUBH-RAATRI-02, HI-LEX-C72-HUNDRED-01] -->
 
 [PAUSE 2s] Recalls first, then the fifth — and the ending that ends the memorizing.
 
