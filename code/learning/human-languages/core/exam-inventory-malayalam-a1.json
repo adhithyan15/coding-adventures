@@ -712,7 +712,13 @@
       "id": "ML-A1-NUM-04",
       "category": "Sankhya (numerals and quantity)",
       "label": "counting past twenty, and the hundreds",
-      "probe": null,
+      "probe": [
+        "ML-CONCEPT-C88-TENS-01",
+        "ML-CONCEPT-C88-TENS-02",
+        "ML-CONCEPT-C88-NINETY-01",
+        "ML-CONCEPT-C88-HUNDRED-01",
+        "ML-GRAMMAR-C88-COMPOUND-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -723,7 +729,7 @@
         "A1-NG2-01"
       ],
       "malayalamSpecific": false,
-      "note": "The count stops at twenty. Prices, ages over twenty and years are all out of reach."
+      "note": "Chapter 88. The old note was right that the count stopped at twenty and that prices, ages over twenty and years were all out of reach. The chapter extends the pattern chapter 20 already made visible: irupathu is iru plus pathu, and every ten from thirty up is that same word with a different digit on the front. The digits appear in OLDER SHORT FORMS that survive only in compounds -- aaru shows as aru-, eezhu as ezhu- -- so the lesson says plainly that this is a pattern to READ WITH, NOT TO BUILD WITH, and that ampathu has worn furthest of all. NINETY BREAKS THE RUN and the chapter teaches a hundred FIRST so that it does not have to be memorised as noise: thonnooru carries nooru, not pathu, so ninety is named from ABOVE where the other tens are named from below. The compound rule then reuses a stem change the learner has already met -- a ten takes -tthi- before a digit, the same kind of change Keralam makes before its ending. EIGHTY IS TAUGHT BY EAR ONLY, in romanization, without its written form: enpathu needs the chillu NN, and that glyph is missing from data/scripts/malayalam.json even though ML-S131-chillu-nn teaches it, so any lesson writing it trips the uncovered-glyphs gate. Giving a number by ear before its written form is this track's own precedent -- ML-C07-numbers-6-10 does exactly that. See the backlog item for the inventory gap; when it is filled, enpathu should get its script form here."
     },
     {
       "id": "ML-A1-NUM-05",
@@ -815,7 +821,7 @@
         "A1-NG2-04"
       ],
       "malayalamSpecific": false,
-      "note": "valiya and cheriya give size as a quality. No unit of measure, no word for distance or weight, is taught. UPDATE, chapter 81: the DISTANCE half is now partly paid -- dooram (distance) and the question ethra dooram? are taught, so distance is nameable and askable. This point stays OPEN because it asks for UNITS: no measure of length, no measure of weight, and no number past twenty to put in front of one (see ML-A1-NUM-04, which blocks this). Closing it needs the numbers first, then a unit lesson; it is not a vocabulary add on its own."
+      "note": "valiya and cheriya give size as a quality. No unit of measure, no word for distance or weight, is taught. UPDATE, chapter 81: the DISTANCE half is now partly paid -- dooram (distance) and the question ethra dooram? are taught, so distance is nameable and askable. This point stays OPEN because it asks for UNITS: no measure of length, no measure of weight, and no number past twenty to put in front of one (see ML-A1-NUM-04, which blocks this). Closing it needs the numbers first, then a unit lesson; it is not a vocabulary add on its own. UPDATE, chapter 88: ML-A1-NUM-04 is now closed, so the numbers half of this point's blocker is gone -- a learner can count to a hundred and can say any number between twenty and a hundred. What remains is genuinely the UNITS: no measure of length, no measure of weight. That is now a vocabulary chapter on its own rather than something waiting on the numerals."
     },
     {
       "id": "ML-A1-NUM-09",

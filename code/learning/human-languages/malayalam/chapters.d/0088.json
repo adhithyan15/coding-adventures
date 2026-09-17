@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Counting Past Twenty",
+  "label": "ch:ml-tens",
+  "canDo": "I can count in tens to a hundred and say any number between twenty and a hundred.",
+  "payoff": {
+    "lesson": "ML-R88-numbers-recall",
+    "kind": "production",
+    "summary": "From cold: the six tens built on ten, the one built on a hundred instead, a hundred itself, and the stem change a ten makes before a digit.",
+    "assesses": [
+      "ML-CONCEPT-C88-TENS-01",
+      "ML-CONCEPT-C88-TENS-02",
+      "ML-CONCEPT-C88-NINETY-01",
+      "ML-CONCEPT-C88-HUNDRED-01",
+      "ML-GRAMMAR-C88-COMPOUND-01"
+    ],
+    "note": "The chapter introduces exactly these five atoms and the payoff assesses all five. The tens are grouped under shared atoms the way chapter 20 grouped the teens, and the stem change before a digit is the same kind the learner met on Keralam before its ending."
+  }
+}

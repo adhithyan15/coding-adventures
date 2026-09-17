@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:212f5021407ef1cb",
+  "lessonIds": [
+    "ML-C88-tens",
+    "ML-C88-ninety-hundred",
+    "ML-C88-compound-numbers",
+    "ML-R88-numbers-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch88-counting-past-twenty.tex"
+}

@@ -7,7 +7,8 @@
     "ML-PATH-45-FAMILY",
     "ML-PATH-78-GENITIVE",
     "ML-PATH-79-DEGREE",
-    "ML-PATH-87-ACCUSATIVE"
+    "ML-PATH-87-ACCUSATIVE",
+    "ML-PATH-88-TENS"
   ],
   "omits": [
     "GRAMMAR-THE"

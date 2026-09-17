@@ -348,8 +348,19 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // shrinks the object onto the verb, while Malayalam keeps the ordinary pronoun
   // and adds the ordinary ending, so avane costs nothing. No new vocabulary at
   // all, and the joining rule is the genitive's.
-  expect(coverage.covered).toBe(192);
-  expect(coverage.unmapped).toBe(51);
+  // 192 -> 193: ML-A1-NUM-04, counting past twenty. The chapter extends the
+  // pattern chapter 20 made visible -- irupathu is iru plus pathu, and every ten
+  // from thirty up is that word with a different digit in front. The digits appear
+  // in OLDER SHORT FORMS that survive only in compounds (aaru as aru-, eezhu as
+  // ezhu-), so the lesson says this is a pattern to READ WITH, NOT BUILD WITH.
+  // Ninety breaks the run, and the chapter teaches a hundred FIRST so it is not
+  // noise: thonnooru carries nooru, not pathu, and is named from ABOVE. EIGHTY IS
+  // TAUGHT BY EAR ONLY: enpathu needs the chillu NN, which ML-S131 teaches but
+  // data/scripts/malayalam.json omits, so writing it trips uncovered-glyphs. Giving
+  // a number by ear before its written form is this track's own precedent -- see
+  // ML-C07-numbers-6-10. Recorded as backlog item HL-C398.
+  expect(coverage.covered).toBe(193);
+  expect(coverage.unmapped).toBe(50);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -358,9 +369,9 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // aadyam against the pinne the track already had.
   expect(coverage.byCategory["Sankhya (numerals and quantity)"]!).toEqual({
     enumerated: 9,
-    covered: 7,
+    covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 192/243 points covered (79%)",
+    "malayalam A1 (partial inventory): 193/243 points covered (79%)",
   );
 }, 60_000);

@@ -1,0 +1,162 @@
+Malayalam, chapter 88: Counting Past Twenty.
+4 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+
+
+Lesson 1 of 4.
+മുപ്പത് — എഴുപത് (muppathŭ — eḻupathŭ) — the tens.
+
+Warm-up.
+[pause 2 seconds]
+Say twenty, and say the two pieces it is built from. Then count from six to ten.
+
+You'll want to know: the tens.
+Your counting has stopped at twenty since the numbers chapter. It does not have to, because ഇരുപത് already showed you how the tens are made: a digit in front, പത്ത് behind.
+Every ten from here up is that same word with a different digit on it.
+[a table of 6 rows, read aloud]
+മുപ്പത് muppathŭ, 30. built on: three.
+നാൽപത് nālpathŭ, 40. built on: four.
+അമ്പത് ampathŭ, 50. built on: five.
+അറുപത് aṟupathŭ, 60. built on: six.
+എഴുപത് eḻupathŭ, 70. built on: seven.
+eṇpathŭ, 80. built on: eight.
+Read the middle of each word. -പത്- is in all of them, and it is the word for ten you have had since you learned to count.
+Eighty is given here by ear only, without its written form. That is how this book handed you six to ten in the first place — heard and said before they were read — and the written shape comes when its letter does.
+
+Why it's said this way: the digits are worn, some more than others.
+The front of each word is the digit, but not in the shape you learned it in. These are older, shorter forms that survive only in compounds:
+[a table of 2 rows, read aloud]
+the digit alone: ആറ് āṟŭ six. inside the ten: അറു- in aṟupathŭ.
+the digit alone: ഏഴ് ēḻŭ seven. inside the ten: എഴു- in eḻupathŭ.
+Close enough to recognise, not close enough to predict. അമ്പത് has worn furthest — its connection to five is real and no longer visible on the page.
+So this is a pattern to read with, not to build with. Six words to learn, and the pattern makes them variations of one word rather than six unrelated ones — which is most of the work done.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the tens in order, thirty to eighty]
+[pause 8 seconds for the answer]
+[your turn — say: the piece all six share]
+[pause 8 seconds for the answer]
+[your turn — say: aṟupathŭ, then the digit it is built on]
+[pause 8 seconds for the answer]
+[your turn — say: which of the six no longer shows its digit]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is in the middle of every ten? (-പത്-, ten.) What is in front of it? (The digit, in an older short form.) And can you build a new one by guessing? (No — read with the pattern, do not build with it.)
+
+
+Lesson 2 of 4.
+തൊണ്ണൂറ് നൂറ് (toṇṇūṟŭ nūṟŭ) (toṇṇūṟŭ, nūṟŭ) — ninety, and a hundred.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Say the tens from the lesson before, and say the piece they all share.
+
+You'll want to know: നൂറ്, and then തൊണ്ണൂറ്.
+നൂറ് — nūṟŭ — a hundred. A single word, owing nothing to ten.
+Now the one that breaks the run:
+തൊണ്ണൂറ് — toṇṇūṟŭ — ninety.
+There is no -പത്- in it. Every other ten was digit plus ten, and this one is not built that way at all.
+Look at how it ends. The word for a hundred, a line above, is sitting inside it — toṇ- ṇūṟŭ. Ninety is named from above, as a hundred short of something, where the other tens are named from below as so many tens.
+[a table of 3 rows, read aloud]
+eṇpathŭ 80. built from: eight tens.
+തൊണ്ണൂറ് 90. built from: a hundred, reduced.
+നൂറ് 100. built from: itself.
+That is why the lesson gives you a hundred first. Learn toṇṇūṟŭ after nūṟŭ and it is one irregular word with a visible reason; learn it before, and it is noise.
+A run of regular forms tends to hold one member built on a different idea, and finding out which idea usually costs less than memorising the exception.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: nūṟŭ]
+[pause 8 seconds for the answer]
+[your turn — say: toṇṇūṟŭ]
+[pause 8 seconds for the answer]
+[your turn — say: which of the two you can hear inside the other]
+[pause 8 seconds for the answer]
+[your turn — say: eḻupathŭ, toṇṇūṟŭ, nūṟŭ in order]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is nūṟŭ? (A hundred.) Does ninety contain the word for ten? (No — it contains the word for a hundred.) And which is named from above rather than from below? (toṇṇūṟŭ.)
+
+
+Lesson 3 of 4.
+ഇരുപത്തിയൊന്ന് (irupatthiyonnŭ) — twenty-one.
+
+Warm-up.
+[pause 2 seconds]
+Say twenty. Say one. Then say what you would have to do to put them together.
+
+Grammar Lens: the ten changes shape before the digit.
+ഇരുപത്തിയൊന്ന് — irupatthiyonnŭ — twenty-one.
+The two halves are both yours. What is new is the join, and you have seen it before:
+[a table of 2 rows, read aloud]
+ഇരുപത്, twenty, standing alone.
+ഇരുപത്തി-, twenty, with something coming after it.
+The ten does not keep its standing-alone shape. It takes -ത്തി- and the digit follows. That should look familiar: കേരളം became കേരളത്തിൽ before its ending, by the same kind of change.
+A word wears one shape alone and another before something else, and this language does it often enough that it is worth expecting rather than learning case by case. You have now met it on a place name and on a number.
+The order is the plain one — ten first, digit second, exactly as English says twenty-one — so there is nothing to reverse in your head.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: irupathŭ, then irupatthiyonnŭ]
+[pause 8 seconds for the answer]
+[your turn — say: what happened to the ten when the digit arrived]
+[pause 8 seconds for the answer]
+[your turn — say: the earlier word that changed shape the same way before its ending]
+[pause 8 seconds for the answer]
+[your turn — say: which comes first in the compound, the ten or the digit]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does a ten do before a digit? (Changes shape, taking -ത്തി-.) Which comes first? (The ten.) And where have you seen that kind of stem change before? (On കേരളം before its ending.)
+
+
+Lesson 4 of 4.
+(counting past twenty) (irupathinŭ mēle enna ōrmma) — from cold.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 3 seconds]
+Close the lessons before this one. Count the tens aloud from twenty as far as you can get.
+
+Grammar Lens: six of one word, then two that are not.
+[a table of 8 rows, read aloud]
+മുപ്പത്, 30, digit + പത്ത്.
+നാൽപത്, 40, digit + പത്ത്.
+അമ്പത്, 50, digit + പത്ത്, worn.
+അറുപത്, 60, digit + പത്ത്.
+എഴുപത്, 70, digit + പത്ത്.
+eṇpathŭ, 80, digit + പത്ത്, by ear only so far.
+തൊണ്ണൂറ്, 90, നൂറ്, reduced.
+നൂറ്, 100, itself.
+Read the table downward and the break is visible. Six tens are one word with different digits on the front. Ninety is not a ten at all — it carries the word for a hundred, and is named from above where the others are named from below.
+The digits on the front are older short forms: āṟŭ appears as അറു-, ēḻŭ as എഴു-. Close enough to recognise, not close enough to predict — so this is a pattern to read with, not to build with.
+
+What you've built.
+Everything between twenty and a hundred.
+ഇരുപത്തിയൊന്ന് (irupatthiyonnŭ) — twenty-one. The ten changes shape before the digit, taking -ത്തി-, and the digit follows in the plain order English also uses.
+That stem change is the third thing in this book to do it. കേരളം became കേരളത്തിൽ before its ending; a ten does the same before a digit. A word wears one shape alone and another before something else — worth expecting from here on rather than learning case by case.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the tens from thirty to eighty]
+[pause 8 seconds for the answer]
+[your turn — say: toṇṇūṟŭ, and say which word is inside it]
+[pause 8 seconds for the answer]
+[your turn — say: nūṟŭ]
+[pause 8 seconds for the answer]
+[your turn — say: irupatthiyonnŭ, and say what the ten did]
+[pause 8 seconds for the answer]
+[your turn — say: which of the eight is not built on ten]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What sits inside every ten from thirty to eighty? (-പത്-.) What sits inside ninety instead? (നൂറ്, a hundred.) And what does a ten do before a digit? (Takes -ത്തി-.)
