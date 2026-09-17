@@ -201,7 +201,7 @@ fn the_pectoralis_sentence_carries_the_pages_non_breaking_space() {
     assert!(!out.contains(&json(&plain_sentence)), "the ordinary-space string reaches no answer: {out}");
     // SCOPED TO `source "` LINES (#15415), the correction #15337, #15338 and
     // #15417 made for their tables. `shipped_table()` runs to end of file and
-    // four `%` comment lines sit inside this block, so read against the slice
+    // four `%` comment lines sit inside this block, so, read against that slice,
     // this arm FAILED A CORRECT FILE when a comment quoted the old phrase --
     // measured by mutant, not reasoned. A comment is not a shipped citation.
     //
