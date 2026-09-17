@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:79ae662c1b62a910",
+  "sourceHash": "fnv1a64:f41cd1711fbf9e16",
   "lessons": [
     {
       "id": "HI-C08-kripaya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff86f5750abf71b1",
+      "sourceHash": "fnv1a64:dd767b79de7542f8",
       "notice": null,
       "blocks": [
         {

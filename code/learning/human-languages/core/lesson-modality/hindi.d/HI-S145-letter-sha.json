@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S145-letter-sha",
+    "language": "hindi",
+    "chapter": 32,
+    "sequence": 835,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:67a045c5438e65b5",
+    "detachableSegments": [
+      "Script you'll notice: श",
+      "Script: the third sibilant",
+      "Writing: श"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

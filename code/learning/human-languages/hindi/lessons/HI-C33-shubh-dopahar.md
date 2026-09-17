@@ -12,18 +12,18 @@ headword: शुभ दोपहर
 gloss: "good afternoon" (shubh dopahar) — uses दोपहर in its modern, widened "afternoon" sense (HI-C30), not the narrow etymological "noon"; the rarest of this arc's three शुभ+noun greetings in actual casual use, with नमस्ते/नमस्कार covering the afternoon in practice
 romanization: "shubh dopahar"
 concept_tag: GREETING-AFTERNOON
-prerequisites: [HI-C30-dopahar-widened, HI-C32-evening-register]
+prerequisites: [HI-S145-letter-sha, HI-C30-dopahar-widened, HI-C32-evening-register]
 sounds: [devanagari-vowel-sign-o, devanagari-aspirated-pa]
 roots: [su-good, do-two, pahar-traditional-watch]
 etymology_hook: "शुभ दोपहर (shubh dopahar, 'good afternoon') pairs शुभ with दोपहर IN ITS WIDENED MODERN SENSE (HI-C30's 'the whole afternoon,' not the narrow etymological 'exactly noon') — but of this arc's three शुभ+timeword greetings, this is the one described as most clearly rare/uncommon in actual spoken use, more so than सुप्रभात or शुभ संध्या; sources describe it as formal/written only, with casual alternatives like आपका दोपहर शुभ हो ('may your afternoon be good') existing but still uncommon, and नमस्ते/नमस्कार doing the real everyday work, all day including afternoon"
 duration:
   max_seconds: 262
 requires:
-  knowledge: [HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02, HI-CONCEPT-C32-EVENING-REGISTER-01]
+  knowledge: [HI-CONCEPT-C30-DOPAHAR-WIDENED-01, HI-CONCEPT-C30-DOPAHAR-WIDENED-02, HI-CONCEPT-C32-EVENING-REGISTER-01, HI-SCRIPT-RECOG-145]
 introduces:
   knowledge: [HI-CONCEPT-C33-SHUBH-DOPAHAR-01, HI-CONCEPT-C33-SHUBH-DOPAHAR-02]
 practises:
-  knowledge: [HI-CONCEPT-C33-SHUBH-DOPAHAR-01, HI-CONCEPT-C33-SHUBH-DOPAHAR-02]
+  knowledge: [HI-CONCEPT-C33-SHUBH-DOPAHAR-01, HI-CONCEPT-C33-SHUBH-DOPAHAR-02, HI-SCRIPT-RECOG-145]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [HI-C30-dopahar-widened, HI-C32-evening-register, HI-C32-shubh-sandh
 # शुभ दोपहर (shubh dopahar) — "good afternoon," this arc's rarest greeting
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-145] -->
 
 [PAUSE 2s] You already know दोपहर's meaning widened from "precisely
 noon" to "the afternoon." This greeting rides that widened sense — but

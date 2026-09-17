@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S147-letter-na-retroflex",
+    "language": "hindi",
+    "chapter": 36,
+    "sequence": 975,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:41d0cfc6f53e247e",
+    "detachableSegments": [
+      "Script you'll notice: ण",
+      "Script: the retroflex row is complete",
+      "Writing: ण"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

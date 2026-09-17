@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-S144-vowel-sign-vocalic-r",
+    "language": "hindi",
+    "chapter": 7,
+    "sequence": 507,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c9c58f98302677ed",
+    "detachableSegments": [
+      "Script you'll notice: ◌ृ",
+      "Script: the name and the sound have come apart",
+      "Writing: ◌ृ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

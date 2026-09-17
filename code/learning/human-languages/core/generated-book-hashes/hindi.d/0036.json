@@ -1,12 +1,13 @@
 {
   "language": "hindi",
   "chapter": 36,
-  "sourceHash": "fnv1a64:42b74356716e1a77",
+  "sourceHash": "fnv1a64:171cf74b87f67037",
   "lessonIds": [
     "HI-C36-ghar",
     "HI-C36-darvaaza",
     "HI-C36-kamra",
-    "HI-C36-kursi"
+    "HI-C36-kursi",
+    "HI-S147-letter-na-retroflex"
   ],
   "tex": "hindi/book/chapters/ch36-one-house-four-languages.tex"
 }

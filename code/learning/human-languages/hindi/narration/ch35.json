@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Taking, Asking, Helping — and Liking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ba1cdb55da4b84ed",
+  "sourceHash": "fnv1a64:aad4ad02c91be722",
   "lessons": [
     {
       "id": "HI-C35-lena",
@@ -144,6 +144,234 @@
             {
               "kind": "speech",
               "text": "Which Sanskrit verb is lenā, and which consonant did it lose? (लभते labhate; the -bh-.) Which Hindi noun still shows that consonant, and why? (लाभ — borrowed back from Sanskrit, so it never eroded.) Give the stem, then the masculine, feminine, and respectful or plural forms. (ले; लेता / लेती / लेते.) Say \"I'll have water.\" (Maiṁ pānī letā / letī hūṁ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-S146-letter-va",
+      "sequence": 905,
+      "title": "व (va) — the loop you have drawn before",
+      "headword": "व",
+      "romanization": "va",
+      "gloss": "the single character व — a shape you can already draw, with the loop closed lower down",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:648a0aeeafededbf",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: व",
+          "Script: the last of the four",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: व, Script: the last of the four and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: श — how many runs did its left side take?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "This one is easier, and its left side is a shape already in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: व",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "व — va, somewhere between an English v and w."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "a counterclockwise left loop."
+            },
+            {
+              "kind": "speech",
+              "text": "a top-to-bottom right stem."
+            },
+            {
+              "kind": "speech",
+              "text": "the top shirorekhā."
+            },
+            {
+              "kind": "speech",
+              "text": "Look back at ग and you have seen this before: the same counterclockwise loop and the same right stem. What differs is where the loop sits and how it meets the stem."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: the last of the four",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "sound"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "letter: य. sound: ya.",
+                "letter: र. sound: ra.",
+                "letter: ल. sound: la.",
+                "letter: व. sound: va."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "These four sit between the consonants and the vowels — you shape them like consonants and they glide like vowels. Three were already yours. This is the fourth, and the set is complete."
+            },
+            {
+              "kind": "speech",
+              "text": "Words you have said since the beginning:"
+            },
+            {
+              "kind": "speech",
+              "text": "धन्यवाद — thank you."
+            },
+            {
+              "kind": "speech",
+              "text": "अलविदा — goodbye."
+            },
+            {
+              "kind": "speech",
+              "text": "स्वागत — welcome."
+            },
+            {
+              "kind": "speech",
+              "text": "सोमवार — Monday."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing: व",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the upper-right of the body, travel left around the top, and continue counterclockwise around the loop to the right-side junction."
+            },
+            {
+              "kind": "speech",
+              "text": "2. lift and draw the right stem top-to-bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift and draw the top shirorekhā left-to-right."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2. The same count as श, over much less distance."
+            },
+            {
+              "kind": "speech",
+              "text": "Verified three-stroke teaching form; everyday handwriting may join or simplify the body differently."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested teaching order and not a national standard — handwriting here is taught with school-to-school variation. Source: JackPotte, ‘Devanagari v व.gif’, strokes 1–3, Wikimedia Commons, 29 March 2009."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these two words and find व (va) in each one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these two words and find व in each one]"
+            },
+            {
+              "kind": "speech",
+              "text": "धन्यवाद, अलविदा."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "व three times, saying va as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: व three times, saying *va* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which letter you already draw that shares its loop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which letter you already draw that shares its loop]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What sound does व carry? (va.) Which four letters glide between consonant and vowel? Name the word of thanks that ends in it."
             }
           ]
         }
