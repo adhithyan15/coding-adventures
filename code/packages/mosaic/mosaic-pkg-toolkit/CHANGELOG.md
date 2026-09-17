@@ -50,7 +50,12 @@ since MosaicBook's own fixture validation is still #14031's open half.
 Measured before merging: `mosaic-compile pkg` emits it on all eight
 backends (React, HTML, WebComponent, Qt, SwiftUI, Compose, Flutter, XAML)
 with **no degradations** for this component, and the MosaicBook story check
-passes (57 components, 100 stories). The three new tests were
+passes (57 components, 100 stories).
+
+"No degradations" is not the same as "names reach every backend". The HTML
+and Web Component emitters drop `HostButton.a11y-label` without reporting
+it (#15426), so on those two backends the selected state is not announced
+at all until that is fixed. The three new tests were
 mutation-checked: making the dark selected fill match the unselected one,
 dropping one branch's `a11y-label`, and mislabelling a story's selected
 option each fail a test.
