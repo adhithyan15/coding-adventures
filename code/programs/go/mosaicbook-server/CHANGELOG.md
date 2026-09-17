@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Changed - the story check compiles with `--strict-fixtures` (#15428)
+
+`compileContext` takes a `strictFixtures` flag, and `compilerArgs` passes
+`--strict-fixtures` alongside `--fixtures` when it is set. The catalogue
+check sets it, so a story whose fixture a backend cannot render fails the
+check instead of passing on an empty preview. The interactive preview does
+not set it, so a partly renderable story still shows what it can.
+
+With list fixtures now rendered, the check still passes under strict mode:
+57 components, 100 stories.
+
 ### Added
 
 - Add a bounded `--check` mode and a path-filtered GitHub Actions gate that

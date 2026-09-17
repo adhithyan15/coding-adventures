@@ -486,6 +486,20 @@ fn json_value_for_fixture(slot_type: &SlotType, value: &str) -> serde_json::Valu
             "false" => serde_json::Value::Bool(false),
             _ => serde_json::Value::String(value.to_string()),
         },
+        // Lists arrive as JSON text (#15428). A shape that does not match the
+        // slot keeps the generated sample.
+        SlotType::List(_) => {
+            let strings = |items: Vec<String>| {
+                serde_json::Value::Array(items.into_iter().map(serde_json::Value::String).collect())
+            };
+            match mosmodel_compiler::fixtures::parse_list_fixture(slot_type, value) {
+                Some(mosmodel_compiler::fixtures::ListFixture::Text(items)) => strings(items),
+                Some(mosmodel_compiler::fixtures::ListFixture::TextRows(rows)) => {
+                    serde_json::Value::Array(rows.into_iter().map(strings).collect())
+                }
+                None => sample_json_value_for_slot_type(slot_type, ""),
+            }
+        }
         _ => serde_json::Value::String(value.to_string()),
     }
 }
@@ -7431,6 +7445,17 @@ mod tests {
     /// shipped `variant` slots that did nothing (#14036). Asserting that a
     /// fixtures build merely *succeeds* would not catch that -- the check has
     /// to be that two different fixture sets produce two different renders.
+    /// #15428: list fixtures arrive as JSON text and hydrate as JSON arrays.
+    #[test]
+    fn list_fixtures_hydrate_as_json_arrays() {
+        let rows = SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(Box::new(mosmodel_compiler::ListInnerType::Text))));
+        assert_eq!(
+            json_value_for_fixture(&rows, r#"[["Board","Board, selected"]]"#),
+            serde_json::json!([["Board", "Board, selected"]])
+        );
+        assert_eq!(json_value_for_fixture(&rows, r#"["flat"]"#), serde_json::json!([]));
+    }
+
     #[test]
     fn ui49_fixtures_beat_the_generated_sample_and_differ_from_each_other() {
         let m = component(

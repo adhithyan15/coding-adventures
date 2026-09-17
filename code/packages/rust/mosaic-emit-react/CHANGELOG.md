@@ -8,6 +8,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed -- list story fixtures render as TypeScript arrays (#15428)
+
+`ts_literal_for_fixture` turns a list fixture into a typed array literal in
+`main.tsx`'s fallback props, e.g. `[["Board", "Board, selected"]]`, with
+every string escaped. A shape that does not match the slot keeps the
+generated `[]`, so the project still type-checks.
+
 
 ### Fixed -- a comma inside a style value could inject JavaScript into a generated `fill={...}` (#15221)
 

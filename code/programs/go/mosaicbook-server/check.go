@@ -217,7 +217,7 @@ func (s *Server) compileStoryForCheck(ctx context.Context, component Component, 
 		return fmt.Errorf("close output file: %w", err)
 	}
 	defer os.Remove(outputPath) //nolint:errcheck
-	if err := s.compileContext(ctx, component, backend, outputPath, story); err != nil {
+	if err := s.compileContext(ctx, component, backend, outputPath, story, true); err != nil {
 		return err
 	}
 	if backend == "paint" {

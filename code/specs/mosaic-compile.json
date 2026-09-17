@@ -85,6 +85,20 @@
       "required": false
     },
     {
+      "id": "strict-style",
+      "long": "strict-style",
+      "description": "Fail instead of warning when a style part matches no layout part.",
+      "type": "boolean",
+      "required": false
+    },
+    {
+      "id": "strict-fixtures",
+      "long": "strict-fixtures",
+      "description": "Fail instead of warning when a --fixtures value cannot reach the chosen backend (a node-typed value, a list of anything but text or lists of text, or a list on a backend that cannot render list fixtures yet). The MosaicBook story check passes this, so a story cannot pass on content it never rendered.",
+      "type": "boolean",
+      "required": false
+    },
+    {
       "id": "package-manifest",
       "long": "package-manifest",
       "description": "Optional path to a `mosaic-package.toml` that the current .mil/.mll and optional .msl belong to. When set, the backend's component-reference resolver auto-registers every name in `[components].exports` so the .mll can reference sibling components from the same package (e.g. Field referencing Input).",

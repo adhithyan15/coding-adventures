@@ -656,8 +656,33 @@ fn js_literal_for_fixture(slot_type: &SlotType, value: &str) -> String {
             "false" => "false".to_string(),
             _ => format!("\"{}\"", escape_js_string(value)),
         },
+        // Lists arrive as JSON text (#15428). A shape that does not match the
+        // slot keeps the generated sample.
+        SlotType::List(_) => match mosmodel_compiler::fixtures::parse_list_fixture(slot_type, value)
+        {
+            Some(mosmodel_compiler::fixtures::ListFixture::Text(items)) => js_string_array(&items),
+            Some(mosmodel_compiler::fixtures::ListFixture::TextRows(rows)) => format!(
+                "[{}]",
+                rows.iter()
+                    .map(|row| js_string_array(row))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ),
+            None => sample_js_value_for_slot_type(slot_type, ""),
+        },
         _ => format!("\"{}\"", escape_js_string(value)),
     }
+}
+
+fn js_string_array(items: &[String]) -> String {
+    format!(
+        "[{}]",
+        items
+            .iter()
+            .map(|item| format!("\"{}\"", escape_js_string(item)))
+            .collect::<Vec<_>>()
+            .join(", ")
+    )
 }
 
 fn sample_js_value_for_slot(slot: &SlotDecl) -> String {
@@ -3629,6 +3654,22 @@ mod tests {
             super::js_literal_for_fixture(&SlotType::Number, "abc"),
             "\"abc\"".to_string()
         );
+    }
+
+    /// #15428: list fixtures arrive as JSON text and render as JS arrays;
+    /// a shape that does not match the slot keeps the sample `[]`.
+    #[test]
+    fn list_fixtures_render_as_js_arrays() {
+        let rows = SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(Box::new(mosmodel_compiler::ListInnerType::Text))));
+        let text = SlotType::List(Box::new(mosmodel_compiler::ListInnerType::Text));
+        assert_eq!(
+            super::js_literal_for_fixture(&rows, r#"[["Board","Board, selected"]]"#),
+            r#"[["Board", "Board, selected"]]"#
+        );
+        assert_eq!(super::js_literal_for_fixture(&text, r#"["a","b"]"#), r#"["a", "b"]"#);
+        let quoted = super::js_literal_for_fixture(&text, r#"["a\"b"]"#);
+        assert!(!quoted.contains("a\"b\""), "raw quote must not survive: {quoted}");
+        assert_eq!(super::js_literal_for_fixture(&rows, r#"["flat"]"#), "[]");
     }
 
     /// A fixture must be escaped like any other emitted string, so a value
