@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Your Town, Your Friend",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:35ab5bef10c8172b",
+  "sourceHash": "fnv1a64:832227221bc5dfcc",
   "lessons": [
     {
       "id": "TA-C37-uur",
@@ -745,6 +745,175 @@
             {
               "kind": "speech",
               "text": "What do இ-, அ- and எ- do at the front of a word, and which question word you already knew is built on எ-? (Near; away; asks — and என்ன.) Does இவர் (ivar) tell you whether the person is a man or a woman? (No — it marks respect; spoken Tamil leans இவங்க for a woman.) How firmly should you hold the palm-leaf explanation for the curves? (As the standard account, not a settled fact.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C37-avar",
+      "sequence": 1125,
+      "title": "அவர் (avar) — the far half of a table you already have",
+      "headword": "அவர்",
+      "romanization": "avar",
+      "gloss": "that person — the far half of a pointing system whose pattern you were given without the words",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:88a100c0a11699a8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word for this person, the respectful one."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say which front letter points near and which points away. You were given both. The lesson before this one filled in only the near half."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அவர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அவர் — avar — that person (away from you, spoken of respectfully)."
+            },
+            {
+              "kind": "speech",
+              "text": "One letter is the whole change. இவர் (ivar) becomes அவர் (avar), and this person here becomes that person there — or, far more often, plain he or she about somebody who is not in the room."
+            },
+            {
+              "kind": "speech",
+              "text": "Like இவர் (ivar), it does not commit you to their sex, and like இவர் (ivar) it carries respect. The caution is the same one the earlier lesson gave: அவர் (avar) is heard mostly of men, and அவங்க (avaṅga) does the same respectful job for a woman in speech."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the column that was empty",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "near",
+                "far"
+              ],
+              "columns": 3,
+              "rowCount": 1,
+              "utterances": [
+                "a person, respectfully. near: இவர் (ivar). far: அவர் (avar)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The pointing system arrived a long way back, and it arrived as a rule about a front letter with only the near column filled in. A reader could say this person and could say what அ- would mean, and had no அ- word to say."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the ordinary way a gap survives: the pattern gets taught, the pattern is correct, and nobody notices that half of what it predicts was never handed over."
+            },
+            {
+              "kind": "speech",
+              "text": "Filling it costs one letter, and from here அவர் (avar) is the word you reach for whenever you talk about somebody who is not present — which is most of the talking anybody does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "அவர் (avar)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: அவர்]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the near partner of it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the near partner of it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which single letter is the difference",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which single letter is the difference]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether அவர் (avar) tells you the person is a man or a woman (it does not)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether அவர் tells you the person is a man or a woman (it does not)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அவர் (avar) mean? (That person, respectfully — or plain he or she about somebody elsewhere.) Which front letter does it carry, and what does that letter do? (அ-, which points away.)"
             }
           ]
         }

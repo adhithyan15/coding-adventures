@@ -1,19 +1,20 @@
 {
   "language": "tamil",
   "chapter": 37,
-  "sourceHash": "fnv1a64:35ab5bef10c8172b",
+  "sourceHash": "fnv1a64:832227221bc5dfcc",
   "lessonIds": [
     "TA-C37-uur",
     "TA-C37-nanban",
     "TA-W18-read-uur",
     "TA-C37-ivar",
+    "TA-C37-avar",
     "TA-C37-ivar-en-nanbar"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "tamil/narration/ch37.txt",
   "json": "tamil/narration/ch37.json",
-  "textHash": "fnv1a64:a39abe3d69af2f8c",
-  "jsonHash": "fnv1a64:d13059d30d302ffa",
+  "textHash": "fnv1a64:d555ba933b054122",
+  "jsonHash": "fnv1a64:35ebf90e23f4c974",
   "findings": []
 }

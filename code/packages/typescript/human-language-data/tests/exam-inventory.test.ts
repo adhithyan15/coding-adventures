@@ -1584,8 +1584,24 @@ describe("the committed Tamil A1 inventory", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(262);
-    expect(coverage.covered).toBe(175);
-    expect(coverage.unmapped).toBe(87);
+    // 175 -> 176: TA-A1-PRON-03, the rest of the subject paradigm. THE GAP WAS
+    // INSIDE A RULE THAT HAD ALREADY BEEN TAUGHT: TA-C37-ivar teaches the i-/a-
+    // pointing system and its table says in as many words that a- points away --
+    // and the a- column had never been filled, so a reader could state what a-
+    // meant and had no a- person word to say. avar now sits one lesson after
+    // ivar, where that table shows the column; avan and aval are the familiar
+    // pair ivar's own lesson already named as what it was built from; avarkaL is
+    // avar plus the plural -kaL the reader has been pronouncing inside niingaL
+    // since chapter two. naam against naangaL is the point the note called out as
+    // the one Spanish does not make, and it is taught as a QUESTION -- is my
+    // listener inside this 'we' -- rather than as a pair of words.
+    // TA-A1-V-06'S NOTE WAS HALF WRONG AND IS CORRECTED IN THE INVENTORY: it said
+    // 'no lesson puts a verb into the past', and TA-C32-po prints poogiReen /
+    // pooneen / pooveen in a three-row table and glosses pooneen as 'I went'. The
+    // real gap is PRODUCTIVITY, not exposure -- shown for one verb, never taught
+    // as an atom -- which is a different and cheaper problem than described.
+    expect(coverage.covered).toBe(176);
+    expect(coverage.unmapped).toBe(86);
     // 174 -> 175: the HL-C354 ordinal tranche closed TA-A1-NUM-04 (chapters
     // 82-83). It is the ONLY point that moved, and the numeral column below
     // says so on its own line rather than leaving the total to speak for it.
@@ -1608,7 +1624,7 @@ describe("the committed Tamil A1 inventory", () => {
     expect(coverage.byCategory["Vinaiccol (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Tamiḻ eḻuttu (script and orthography)"]!.covered).toBeGreaterThan(5);
     expect(formatExamCoverage(coverage)).toContain(
-      "tamil A1 (partial inventory): 175/262 points covered (67%)",
+      "tamil A1 (partial inventory): 176/262 points covered (67%)",
     );
   }, 60_000);
 });
