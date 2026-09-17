@@ -26,10 +26,33 @@
   SPAN** — an arm built on that word would fire for every part and prove nothing about which sentence
   reached an answer. The shipped header records this for whoever edits the test next.
 
-  **What actually carries the weight is `only_citation`**, which pins the whole citations array as one
-  contiguous run: given that, no other span can appear *inside* the citation block at all. The
-  cross-span negative arms are defense-in-depth against text outside it, not independent evidence.
-  Said plainly because the first draft of this entry implied they were doing the work.
+  **`only_citation` carries part of the weight**, pinning the whole citations array as one contiguous
+  run: given that, no other span can appear *inside* the citation block. But it constrains the
+  citations surface **only**, and each answered row renders its sentence on **two**. Measured
+  2026-09-17 UTC on this table's own query output, by JSON path rather than by byte position:
+
+      nucleus   /recall[0]/answers[0]/citations[0]/source   and   .../steps[0]/source
+      coma      /recall[1]/answers[0]/citations[0]/source   and   .../steps[0]/source
+
+  The mechanism is in the CLI: the `FromFact` arm of `trace_steps_json` calls `prov(&f.provenance)`
+  and inlines it into the step body. So the cross-span negative arms are the sole guard on the steps
+  surface **against another row's span**, and they carry independent weight.
+
+  Scoped deliberately, because "sole guard on the steps surface" full stop would be too strong: the
+  envelope arm `!out.contains(ENVELOPE)` is also a whole-output check and also reaches that surface.
+  Both arms read the whole stdout; what each *claims* differs.
+
+  An earlier draft of this entry called them "defense-in-depth against text outside it, not
+  independent evidence". That was wrong, and how it got in is the part worth keeping: a security
+  review reported the arms as dominated, reasoning only about the citations block, and I narrowed this
+  wording to match instead of re-deriving it. A later review contradicted it, and the byte offsets
+  were then measured rather than taking whichever reviewer spoke last. Shard 03550 records that
+  measurement on the sibling table; this correction was tracked as #15334 and re-measured here against
+  *this* table, because a count borrowed from a sibling is not a measurement — which is the same
+  mistake in a different costume.
+
+  The `tail` row's span appears zero times, and that is expected rather than a gap: the query file
+  asks only for `nucleus`, for the coma by its description, and for a term that abstains.
 
   This is the hurricane table's shared-`catastrophic_damage` trap in a different costume: there the
   shared token was a value, here it is a word inside three different sentences.
