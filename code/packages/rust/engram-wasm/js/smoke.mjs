@@ -44,6 +44,18 @@ check("host prop camelCase", initial.props.appTitle, "Engram");
 check("host deck name", initial.props.deckName, "Tamil");
 check("host list prop", initial.props.browserResultCardIds, ["card"]);
 check("host status hidden", initial.props.hostStatusVisible, false);
+// UI86: the switcher sends plain labels, and the SegmentedControl reports the
+// selection itself. A stale engine would send [label, "<label>, selected"]
+// rows here, which render as run-together labels rather than failing.
+check("host switcher labels", initial.props.navOptions, [
+  "Decks",
+  "Study",
+  "Browse",
+  "Add",
+  "Stats",
+  "Options",
+]);
+check("host switcher index", initial.props.navSelectedIndex, 0);
 
 engine.dispatch({
   type: "startSession",

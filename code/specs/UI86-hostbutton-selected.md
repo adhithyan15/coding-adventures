@@ -90,6 +90,13 @@ emitted whether it is true or false: `aria-pressed="false"`, `selected = false`,
 reader "this is one of a set, and it is not the current one." Emitting nothing
 for false would make the unselected options indistinguishable from push buttons.
 
+**Except on Apple platforms.** `AccessibilityTraits` has no negative, so
+`selected : false` adds no trait on SwiftUI and an unselected option is
+indistinguishable from a push button there. Every other backend carries the
+false state (`aria-pressed="false"`, `Accessible.checked: false`,
+`semantics { selected = false }`, `Semantics(selected: false)`, and WinUI's
+`IsSelected` false). This is a platform limitation, not a lowering choice.
+
 ## 4. Decision
 
 ```
