@@ -2,6 +2,40 @@
 
 ## [Unreleased]
 
+### Added — `SegmentedControl` stacks vertically (v0.13.0, #15432)
+
+`slot vertical : bool`. Engram's touch shell stacks its screen switcher,
+because six options side by side overflow a phone-width screen, so it
+could not adopt the control while the control could only draw a row.
+
+- **Why not wrapping:** `flex-wrap` is a pinned style drop on Qt and XAML,
+  so it would not reach two of the five native backends.
+- **Why a bool, not the issue's `one-of horizontal vertical`:** a layout
+  `If` on a bool slot is what every backend already lowers (Engram's
+  `show-*-screen` flags), while no layout anywhere compares a one-of slot
+  to a string.
+
+The axis is the container primitive, not a style property, so the vertical
+branch has its own parts: `segmented-vertical`,
+`segmented-vertical-option` and `segmented-vertical-option-selected`.
+Selection still costs two option parts per orientation. Both branches sit
+under a new `Column [ segmented-root ]`, because a layout may not start
+with `If`/`Else`. It is a Column rather than a Box because `Box` overlays
+its children on some backends (#14828).
+
+**Test changes:**
+
+- The part-map test now pins all seven parts.
+- A new assertion keeps the vertical parts identical in look to the
+  horizontal ones: fill, text colour and border, in both themes.
+- The stories test requires a vertical story. There are two new stories,
+  `Vertical` and `Vertical disabled`.
+
+**Verified:** emits on all eight backends with no `SegmentedControl`
+degradations; the toolkit's native gate passes 3/3; the MosaicBook check
+passes (57 components, 102 stories). React switches the inner container
+between `flexDirection: "column"` and `"row"` on `vertical`.
+
 ### Added — `SegmentedControl` (v0.12.0, #14016)
 
 A row of mutually exclusive options, one selected: the widget Engram and

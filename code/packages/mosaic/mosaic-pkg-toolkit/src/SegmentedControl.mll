@@ -1,11 +1,16 @@
 // SegmentedControl.mll — layout for the SegmentedControl.
 //
-//   Row [ segmented ]
-//     For (each: slot: options, as: option, index: i)
-//       If (when: i == selectedIndex)
-//         HostButton [ segmented-option-selected ] (...)
-//       Else
-//         HostButton [ segmented-option ] (...)
+//   Column [ segmented-root ]
+//   If (when: slot: vertical)
+//     Column [ segmented-vertical ]
+//       For (each: slot: options, as: option, index: i)
+//         If (when: i == selectedIndex)
+//           HostButton [ segmented-vertical-option-selected ] (...)
+//         Else
+//           HostButton [ segmented-vertical-option ] (...)
+//   Else
+//     Row [ segmented ]
+//       ... the same loop, with segmented-option(-selected)
 //
 // Why this shape removes TaskApp's 36 parts
 // -----------------------------------------
@@ -19,6 +24,11 @@
 // Here the If/Else sits *inside* the loop and chooses between exactly two
 // parts per option. The part count is 2 however many options there are:
 // the same pattern Tabs and ListGroup use.
+//
+// Orientation doubles that to 2 per axis (#15432). Two branches cannot
+// share part names, and a Row cannot be restyled into a column: the axis
+// is the primitive, not a style property. Wrapping was not an option
+// either, since `flex-wrap` is a pinned drop on Qt and XAML.
 //
 // Why `HostButton` and not the toolkit's own `Button`
 // ---------------------------------------------------
@@ -50,23 +60,51 @@
 // with the selected-state gap described in SegmentedControl.mil.
 
 layout SegmentedControl {
-  Row [ segmented ] {
-    For ( each: slot: options , as: option , index: i ) {
-      If ( when: i == selectedIndex ) {
-        HostButton [ segmented-option-selected ] (
-          label : ( option[0] ) ,
-          a11y-label : ( option[1] ) ,
-          disabled : slot: disabled ,
-          onClick : emit: onSelect
-        )
+  // One root: a layout may not start with If/Else (two roots). A Column,
+  // not a Box, because Box overlays its children on some backends (#14828).
+  Column [ segmented-root ] {
+    If ( when: slot: vertical ) {
+      Column [ segmented-vertical ] {
+        For ( each: slot: options , as: option , index: i ) {
+          If ( when: i == selectedIndex ) {
+            HostButton [ segmented-vertical-option-selected ] (
+              label : ( option[0] ) ,
+              a11y-label : ( option[1] ) ,
+              disabled : slot: disabled ,
+              onClick : emit: onSelect
+            )
+          }
+          Else {
+            HostButton [ segmented-vertical-option ] (
+              label : ( option[0] ) ,
+              a11y-label : ( option[1] ) ,
+              disabled : slot: disabled ,
+              onClick : emit: onSelect
+            )
+          }
+        }
       }
-      Else {
-        HostButton [ segmented-option ] (
-          label : ( option[0] ) ,
-          a11y-label : ( option[1] ) ,
-          disabled : slot: disabled ,
-          onClick : emit: onSelect
-        )
+    }
+    Else {
+      Row [ segmented ] {
+        For ( each: slot: options , as: option , index: i ) {
+          If ( when: i == selectedIndex ) {
+            HostButton [ segmented-option-selected ] (
+              label : ( option[0] ) ,
+              a11y-label : ( option[1] ) ,
+              disabled : slot: disabled ,
+              onClick : emit: onSelect
+            )
+          }
+          Else {
+            HostButton [ segmented-option ] (
+              label : ( option[0] ) ,
+              a11y-label : ( option[1] ) ,
+              disabled : slot: disabled ,
+              onClick : emit: onSelect
+            )
+          }
+        }
       }
     }
   }
