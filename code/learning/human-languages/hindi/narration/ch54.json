@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "Animals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3492707c6079d84d",
+  "sourceHash": "fnv1a64:54fe29af8cf9d4a4",
   "lessons": [
     {
       "id": "HI-C54-cow",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eff95cd7d8cffd7a",
+      "sourceHash": "fnv1a64:a43683c94fc8443f",
       "notice": null,
       "blocks": [
         {

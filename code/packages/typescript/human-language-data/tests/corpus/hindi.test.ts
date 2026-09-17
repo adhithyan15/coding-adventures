@@ -107,7 +107,11 @@ it("pins Hindi lesson-content budgets", () =>
     // TAUGHT BEFORE THEIR FIRST WORD (HL-C384). Every other undrawn character is
     // first used in chapters 1-5, before the HI-S* letter track begins at
     // chapter 6. Script only; no inventory point closes.
-    lessons: 482, // 359 -> 360: HI-C79-dopahar-raat-ka-khana // 360 -> 362: HI-C80-aasaan-mushkil, HI-C80-sundar-badsurat // 362 -> 366: HI-C81 school pair plus its two retrieval lessons
+    // 482 -> 484: ga and pha, the first two of the LATE letters -- drawn twenty-two
+    // chapters after the reader met them. neverTaughtGlyphs and
+    // scriptClosureViolations DO NOT MOVE, because measureScriptClosure already
+    // credited both (HL-C383). By the honest count undrawn goes 7 -> 5.
+    lessons: 484, // 359 -> 360: HI-C79-dopahar-raat-ka-khana // 360 -> 362: HI-C80-aasaan-mushkil, HI-C80-sundar-badsurat // 362 -> 366: HI-C81 school pair plus its two retrieval lessons
     idioms: 21,
     // +2: HI-C70-song declares gana's singing sense and HI-C73-drink declares
     // khana's eating sense, which is what covers HI-A1-V-26.
