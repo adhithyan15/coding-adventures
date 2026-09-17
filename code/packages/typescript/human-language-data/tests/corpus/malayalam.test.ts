@@ -227,8 +227,16 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // CHAPTER 73'S REFUSAL IS LEFT STANDING. Knowing -aal does not settle ennaal
   // or enthukondennaal, grammars still differ, and ML-C75-aal says so on the
   // page rather than quietly claiming the win.
-  expect(coverage.covered).toBe(174);
-  expect(coverage.unmapped).toBe(69);
+  // 174 -> 175: ML-A1-V-23 (wanting). The point's own note called it "the
+  // single cheapest fix in this file" and was right -- venda was already
+  // taught and venam appeared EXACTLY ONCE, inside ML-C58-no-need, which names
+  // it as "the negative partner of venam" and then goes on without handing it
+  // over. The learner could refuse an offer they had no way of making.
+  // ONE GENUINELY NEW WORD: the question form veno is venam plus the -o
+  // particle ML-C70-o already taught, so the reader builds it in the warm-up.
+  // The result is a three-way exchange on one root: veno? / venam / venda.
+  expect(coverage.covered).toBe(175);
+  expect(coverage.unmapped).toBe(68);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -240,6 +248,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 174/243 points covered (72%)",
+    "malayalam A1 (partial inventory): 175/243 points covered (72%)",
   );
 }, 60_000);

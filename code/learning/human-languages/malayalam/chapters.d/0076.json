@@ -1,0 +1,15 @@
+{
+  "chapter": 76,
+  "title": "Asking For It",
+  "label": "ch:ml-venam",
+  "canDo": "I can ask somebody whether they want something.",
+  "payoff": {
+    "lesson": "ML-R76-want-recall",
+    "kind": "production",
+    "summary": "From cold: offer tea, and give both answers -- the acceptance and the refusal the track already had.",
+    "assesses": [
+      "ML-LEX-C76-VENO-01"
+    ],
+    "note": "The chapter introduces exactly one atom and the payoff assesses it. veno is venam plus the -o particle ML-C70-o already taught, so the reader builds it in the warm-up; venam itself lives in chapter 58 beside its negative."
+  }
+}

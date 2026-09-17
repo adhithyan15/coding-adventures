@@ -4,7 +4,8 @@
     "ML-PATH-004",
     "ML-PATH-49-REPLY",
     "ML-PATH-58-ANSWER",
-    "ML-PATH-64-SMALL"
+    "ML-PATH-64-SMALL",
+    "ML-PATH-76-WANT"
   ],
   "omits": [
     "RESPONSE-YESNO"

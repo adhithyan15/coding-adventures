@@ -2063,8 +2063,16 @@ describe("the committed Malayalam A1 inventory", () => {
     // carried by one piece -- pol. The now/then pair was already taught and the
     // question form was the missing third of the set ML-C41-deixis-system
     // promised the reader they would work out for themselves.
-    expect(coverage.covered).toBe(174);
-    expect(coverage.unmapped).toBe(69);
+    // 174 -> 175: ML-A1-V-23 (wanting). The point's own note called it "the
+    // single cheapest fix in this file" and was right -- venda was already
+    // taught and venam appeared EXACTLY ONCE, inside ML-C58-no-need, which names
+    // it as "the negative partner of venam" and then goes on without handing it
+    // over. The learner could refuse an offer they had no way of making.
+    // ONE GENUINELY NEW WORD: the question form veno is venam plus the -o
+    // particle ML-C70-o already taught, so the reader builds it in the warm-up.
+    // The result is a three-way exchange on one root: veno? / venam / venda.
+    expect(coverage.covered).toBe(175);
+    expect(coverage.unmapped).toBe(68);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2107,7 +2115,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 174/243 points covered (72%)",
+      "malayalam A1 (partial inventory): 175/243 points covered (72%)",
     );
   }, 60_000);
 });
