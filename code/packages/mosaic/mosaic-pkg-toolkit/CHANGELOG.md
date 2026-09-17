@@ -47,6 +47,14 @@ middle, last and absent, long labels, and disabled. A test checks every
 story names only declared slots and that every option row has both columns,
 since MosaicBook's own fixture validation is still #14031's open half.
 
+**The stories do not yet show their options.** `mosaic-compile` drops
+list-typed fixtures with only a warning (#15428), so each story renders with
+`options` empty: only `selected-index` and `disabled` arrive. The story
+check passes anyway, because it treats a warning as success. The stories are
+written for the content they should show, and will show it once #15428
+lands. Until then the rendering has been checked by supplying props
+directly (#15426).
+
 Measured before merging: `mosaic-compile pkg` emits it on all eight
 backends (React, HTML, WebComponent, Qt, SwiftUI, Compose, Flutter, XAML)
 with **no degradations** for this component, and the MosaicBook story check
