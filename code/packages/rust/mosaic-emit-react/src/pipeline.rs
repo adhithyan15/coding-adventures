@@ -501,8 +501,33 @@ fn ts_literal_for_fixture(slot_type: &SlotType, value: &str) -> String {
             "false" => "false".to_string(),
             _ => js_string_literal(value),
         },
+        // Lists arrive as JSON text (#15428). A shape that does not match the
+        // slot keeps the generated sample, so the project still type-checks.
+        SlotType::List(_) => match mosmodel_compiler::fixtures::parse_list_fixture(slot_type, value)
+        {
+            Some(mosmodel_compiler::fixtures::ListFixture::Text(items)) => ts_string_array(&items),
+            Some(mosmodel_compiler::fixtures::ListFixture::TextRows(rows)) => format!(
+                "[{}]",
+                rows.iter()
+                    .map(|row| ts_string_array(row))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ),
+            None => sample_ts_value_for_slot_type(slot_type, ""),
+        },
         _ => js_string_literal(value),
     }
+}
+
+fn ts_string_array(items: &[String]) -> String {
+    format!(
+        "[{}]",
+        items
+            .iter()
+            .map(|item| js_string_literal(item))
+            .collect::<Vec<_>>()
+            .join(", ")
+    )
 }
 
 fn sample_ts_value_for_slot(slot: &SlotDecl) -> String {
@@ -6077,6 +6102,27 @@ mod tests {
             ts_literal_for_fixture(&SlotType::Bool, "yes"),
             "\"yes\"".to_string()
         );
+    }
+
+    /// #15428: list fixtures arrive as JSON text and render as TypeScript
+    /// arrays; a shape that does not match the slot keeps the sample `[]`.
+    #[test]
+    fn list_fixtures_render_as_typed_arrays() {
+        let rows = SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(Box::new(mosmodel_compiler::ListInnerType::Text))));
+        let text = SlotType::List(Box::new(mosmodel_compiler::ListInnerType::Text));
+        assert_eq!(
+            ts_literal_for_fixture(&rows, r#"[["Board","Board, selected"],["List","List"]]"#),
+            r#"[["Board", "Board, selected"], ["List", "List"]]"#
+        );
+        assert_eq!(ts_literal_for_fixture(&text, r#"["a","b"]"#), r#"["a", "b"]"#);
+        // Escaped like any other string literal.
+        assert_eq!(
+            ts_literal_for_fixture(&text, r#"["say \"hi\""]"#),
+            r#"["say \"hi\""]"#
+        );
+        // Wrong shape for the slot: the sample, not a string.
+        assert_eq!(ts_literal_for_fixture(&rows, r#"["flat"]"#), "[]");
+        assert_eq!(ts_literal_for_fixture(&text, "not json"), "[]");
     }
 
     /// Helper: build a component with the given name, slots, and emits.

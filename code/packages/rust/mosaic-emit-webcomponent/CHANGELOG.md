@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — list story fixtures render as JS arrays in the slot table (#15428)
+
+`js_literal_for_fixture` turns a list fixture into an escaped array literal
+for the slot table's `fallback:`. A shape that does not match the slot keeps
+the generated `[]`.
+
 ### Fixed — `HostButton`'s accessible name was never emitted (#15426)
 
 `emit_host_button` never read `a11y-label` and reported no degradation, so

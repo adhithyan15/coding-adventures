@@ -86,13 +86,18 @@ func (c *cappedWriter) String() string {
 // Compiler output captured for error messages is capped at maxCompilerOutputBytes
 // (via cappedWriter) to avoid holding unbounded buffers in memory.
 func (s *Server) compile(c Component, backend string, outputPath string, story *Story) error {
-	return s.compileContext(context.Background(), c, backend, outputPath, story)
+	return s.compileContext(context.Background(), c, backend, outputPath, story, false)
 }
 
 // compileContext is compile with cancellation. The interactive server uses a
 // background context, while the CI catalogue checker supplies a hard overall
 // deadline so a hung compiler cannot consume a runner indefinitely.
-func (s *Server) compileContext(ctx context.Context, c Component, backend string, outputPath string, story *Story) error {
+//
+// strictFixtures makes a fixture value the backend cannot render a compile
+// failure (mosaic-compile --strict-fixtures, #15428). The catalogue check sets
+// it, so a story cannot pass on content it never rendered; the interactive
+// preview does not, so a half-renderable story still shows what it can.
+func (s *Server) compileContext(ctx context.Context, c Component, backend string, outputPath string, story *Story, strictFixtures bool) error {
 	// A story's fixtures reach the compiler as a JSON file, the shape
 	// mosaic-compile's --fixtures expects: a flat object of slot name to
 	// value. Written per compile and removed after, so concurrent previews of
@@ -115,7 +120,7 @@ func (s *Server) compileContext(ctx context.Context, c Component, backend string
 		}
 	}
 
-	cmd := exec.CommandContext(ctx, s.compilerPath, compilerArgs(c, backend, outputPath, fixturesPath)...)
+	cmd := exec.CommandContext(ctx, s.compilerPath, compilerArgs(c, backend, outputPath, fixturesPath, strictFixtures)...)
 
 	// Capture combined stdout+stderr so we can surface compiler errors in the
 	// preview HTML page rather than just logging them server-side.
@@ -179,7 +184,7 @@ func (s *Server) compileContext(ctx context.Context, c Component, backend string
 // Two defences: three-file component names are constrained to identifiers at
 // discovery (validComponentBase), and the legacy positional source is placed
 // after a `--` end-of-options separator so it can never be read as a flag.
-func compilerArgs(c Component, backend string, outputPath string, fixturesPath string) []string {
+func compilerArgs(c Component, backend string, outputPath string, fixturesPath string, strictFixtures bool) []string {
 	if !c.isThreeFile() {
 		args := []string{"--backend", backend, "--output", outputPath}
 		if fixturesPath != "" {
@@ -199,6 +204,9 @@ func compilerArgs(c Component, backend string, outputPath string, fixturesPath s
 	// something.
 	if fixturesPath != "" {
 		args = append(args, "--fixtures", fixturesPath)
+		if strictFixtures {
+			args = append(args, "--strict-fixtures")
+		}
 	}
 	if c.StylePath != "" {
 		args = append(args, "--style", c.StylePath)

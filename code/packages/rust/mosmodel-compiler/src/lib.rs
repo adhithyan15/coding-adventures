@@ -58,6 +58,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 mod _grammar;
+pub mod fixtures;
 
 // ===========================================================================
 // Public output types
