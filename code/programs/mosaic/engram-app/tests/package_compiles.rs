@@ -281,6 +281,10 @@ fn app_sources_compile_without_owning_review_card_component() {
     assert!(source.contains("pkg::mosaic-pkg-review-actions::ReviewActions"));
     assert!(source.contains("pkg::mosaic-pkg-review-history::ReviewHistoryPanel"));
     assert!(source.contains("pkg::mosaic-pkg-session-progress::SessionProgress"));
+    // The Study screen's empty state is the toolkit's, in both layouts.
+    for layout in ["EngramApp.mll", "EngramApp.touch.mll"] {
+        assert!(read_source(layout).contains("pkg::mosaic-pkg-toolkit::EmptyState ("));
+    }
     assert!(!source.contains("layout CardBrowser"));
     assert!(!source.contains("layout CollectionActions"));
     assert!(!source.contains("layout DeckOptionsPanel"));
@@ -2176,7 +2180,9 @@ fn native_project_shells_expose_engram_host_contract() {
         &xaml_markup,
         // Dependency-owned axes that are absent from EngramApp must not add a
         // VisualStateManager wrapper or bind a nonexistent consumer property.
-        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">\n                                                <StackPanel Orientation=\"Vertical\">",
+        // The indentation is the ReviewCard's depth: since #15440 it sits in
+        // the Study screen's `Else`, beside the toolkit EmptyState.
+        "<ContentControl Visibility=\"{x:Bind AnswerVisible, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">\n                                                        <StackPanel Orientation=\"Vertical\">",
     );
     assert_contains(
         &xaml_markup,

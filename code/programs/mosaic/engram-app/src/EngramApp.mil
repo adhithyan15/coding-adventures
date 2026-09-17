@@ -243,6 +243,10 @@ component EngramApp {
   slot note-type-editor-cancel-label : text ;
   slot prompt-label : text ;
   slot prompt : text ;
+  slot study-empty : bool = false ;
+  slot study-empty-title : text ;
+  slot study-empty-message : text ;
+  slot study-empty-action-label : text ;
   slot answer-label : text ;
   slot answer : text ;
   slot answer-visible : bool ;
