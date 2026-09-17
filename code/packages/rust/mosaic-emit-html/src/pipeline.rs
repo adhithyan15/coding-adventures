@@ -1813,7 +1813,10 @@ fn emit_html_tree(
                 // `r == editRow`) survive the strip and reach the
                 // expander as the original text.
                 let trimmed = strip_outer_parens(e.trim());
-                let safe = escape_mustache_braces(&escape_html_text(trimmed));
+                // `row[1]` becomes `row.1`, the only index spelling the
+                // runtime's placeholder pattern accepts (#15426).
+                let path = mustache_path(trimmed).unwrap_or_else(|| trimmed.to_string());
+                let safe = escape_mustache_braces(&escape_html_text(&path));
                 writeln!(
                     out,
                     "{pad}<{tag_name}{extra_attrs}{style_attr}>{{{{{e}}}}}</{tag_name}>",
@@ -2124,6 +2127,35 @@ fn emit_host_button(
         append_emit_marker(&mut attrs, node, "onTap", "data-on-click");
     }
 
+    // Portable accessible name (UI29 §2.1). Dropped here without a
+    // degradation until #15426. Literal names are escaped now; dynamic
+    // ones become a placeholder for the host's template engine, whose
+    // attribute escaping applies when it substitutes. Keyword and
+    // expression names use the same placeholder shape the label body
+    // below uses, so a name inside `For` tracks the current row.
+    match find_prop(node, "a11y-label") {
+        Some(LayoutPropValue::String(label)) => {
+            write!(attrs, " aria-label=\"{}\"", escape_html_attr(label)).unwrap();
+        }
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            write!(attrs, " aria-label=\"{{{{{}}}}}\"", camel(slot)).unwrap();
+        }
+        Some(LayoutPropValue::Keyword(k)) => {
+            let safe = escape_mustache_braces(&escape_html_attr(k));
+            write!(attrs, " aria-label=\"{{{{{safe}}}}}\"").unwrap();
+        }
+        Some(LayoutPropValue::Expr(expr)) => {
+            // Only a data path can be substituted by the runtime; any other
+            // expression would be stamped into the page as literal braces,
+            // which is worse than no name (the button text still names it).
+            if let Some(path) = mustache_path(strip_outer_parens(expr.trim())) {
+                let safe = escape_mustache_braces(&escape_html_attr(&path));
+                write!(attrs, " aria-label=\"{{{{{safe}}}}}\"").unwrap();
+            }
+        }
+        _ => {}
+    }
+
     let style_attr = build_style_attr(node, "", part_styles);
 
     // Body: `label:` prop wins over children. Slot ref → `{{slot}}`,
@@ -2147,7 +2179,11 @@ fn emit_host_button(
         }
         Some(LayoutPropValue::Expr(expr)) => {
             let trimmed = strip_outer_parens(expr.trim());
-            let safe = escape_mustache_braces(&escape_html_text(trimmed));
+            // `( row[0] )` must reach the runtime as `row.0`: its
+            // placeholder pattern only accepts dotted paths, so the
+            // bracketed spelling used to render literally (#15426).
+            let path = mustache_path(trimmed).unwrap_or_else(|| trimmed.to_string());
+            let safe = escape_mustache_braces(&escape_html_text(&path));
             Ok(format!(
                 "{pad}<button{attrs}{style_attr}>{{{{{safe}}}}}</button>\n"
             ))
@@ -3455,6 +3491,9 @@ fn append_drag_value(attrs: &mut String, node: &LayoutNode, prop: &str, attr: &s
 /// through unchanged, which the template engine will fail to resolve — visibly empty
 /// rather than silently wrong.
 fn expr_to_mustache_path(text: &str) -> String {
+    if let Some(path) = mustache_path(strip_outer_parens(text.trim())) {
+        return path;
+    }
     let cleaned: String = text
         .chars()
         .filter(|c| !c.is_whitespace())
@@ -3941,6 +3980,60 @@ fn merge_styles(builtin: &str, author: &str) -> String {
 /// template engine — which processes the raw HTML string before
 /// browser parsing — sees the entities and ignores them as
 /// non-delimiters.
+/// Rewrite a layout expression that is a plain data path into the dotted
+/// form the generated `main.js` resolves, or `None` if it is anything else.
+///
+/// | expression         | path        |
+/// |--------------------|-------------|
+/// | `item`             | `item`      |
+/// | `row [ 16 ]`       | `row.16`    |
+/// | `row[0][1]`        | `row.0.1`   |
+/// | `task.name`        | `task.name` |
+/// | `a + b`, `row[i]`  | `None`      |
+///
+/// The runtime's placeholder pattern is `[A-Za-z0-9_.-]+` and `readPath`
+/// walks it by `.`, so `row.16` indexes the array exactly as `row[16]`
+/// does in JavaScript. A variable index is not a path and is refused.
+fn mustache_path(expr: &str) -> Option<String> {
+    fn ident_len(s: &str) -> usize {
+        s.char_indices()
+            .take_while(|&(i, c)| c.is_ascii_alphabetic() || c == '_' || (i > 0 && c.is_ascii_digit()))
+            .count()
+    }
+
+    let mut rest = expr.trim();
+    let n = ident_len(rest);
+    if n == 0 {
+        return None;
+    }
+    let mut out = rest[..n].to_string();
+    rest = rest[n..].trim_start();
+    while !rest.is_empty() {
+        if let Some(after) = rest.strip_prefix('[') {
+            let after = after.trim_start();
+            let digits = after.chars().take_while(char::is_ascii_digit).count();
+            if digits == 0 {
+                return None;
+            }
+            let close = after[digits..].trim_start().strip_prefix(']')?;
+            out.push('.');
+            out.push_str(&after[..digits]);
+            rest = close.trim_start();
+        } else {
+            // Anything but `[` or `.` here (an operator, a call) is not a path.
+            let after = rest.strip_prefix('.')?.trim_start();
+            let n = ident_len(after);
+            if n == 0 {
+                return None;
+            }
+            out.push('.');
+            out.push_str(&after[..n]);
+            rest = after[n..].trim_start();
+        }
+    }
+    Some(out)
+}
+
 fn escape_mustache_braces(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
     for c in s.chars() {
@@ -5069,6 +5162,120 @@ mod tests {
             out.contains("<button data-on-click=\"onSave\">{{label}}</button>"),
             "expected button with onTap alias hydration marker, got:\n{out}"
         );
+    }
+
+    /// #15426: HostButton's portable name was never read here, so every
+    /// authored name vanished on static HTML without a degradation.
+    #[test]
+    fn host_button_accessible_name_lowers_every_authored_form() {
+        let expr = |e: &str| LayoutProp {
+            name: "a11y-label".to_string(),
+            value: LayoutPropValue::Expr(e.to_string()),
+        };
+        let keyword = LayoutProp {
+            name: "a11y-label".to_string(),
+            value: LayoutPropValue::Keyword("item".to_string()),
+        };
+        for (prop, expected) in [
+            (prop_string("a11y-label", "Close \"dialog\""), "aria-label=\"Close &quot;dialog&quot;\""),
+            (prop_slot("a11y-label", "spoken-title"), "aria-label=\"{{spokenTitle}}\""),
+            (keyword, "aria-label=\"{{item}}\""),
+            (expr("( option [ 1 ] )"), "aria-label=\"{{option.1}}\""),
+        ] {
+            let l = layout(
+                "F",
+                node_with_props("HostButton", vec![prop_string("label", "Go"), prop]),
+            );
+            let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+                .unwrap()
+                .output;
+            assert!(out.contains(expected), "expected {expected} in:\n{out}");
+        }
+    }
+
+    #[test]
+    fn text_indexed_content_becomes_a_dotted_path() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Expr("( row [ 1 ] )".to_string()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(out.contains(">{{row.1}}</span>"), "got:\n{out}");
+    }
+
+    /// An expression the runtime cannot resolve must not be stamped into
+    /// the attribute as literal braces; the visible label still names the
+    /// button.
+    #[test]
+    fn host_button_accessible_name_skips_non_path_expressions() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "HostButton",
+                vec![
+                    prop_string("label", "Go"),
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::Expr("( a + b )".to_string()),
+                    },
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(!out.contains("aria-label"), "unexpected aria-label in:\n{out}");
+    }
+
+    /// The label body had the same defect: `{{option [ 0 ]}}` does not
+    /// match the runtime's placeholder pattern and rendered literally.
+    #[test]
+    fn host_button_indexed_label_becomes_a_dotted_path() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "HostButton",
+                vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::Expr("( option [ 0 ] )".to_string()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(out.contains(">{{option.0}}</button>"), "got:\n{out}");
+    }
+
+    #[test]
+    fn mustache_path_accepts_only_data_paths() {
+        for (expr, expected) in [
+            ("item", Some("item")),
+            ("row [ 16 ]", Some("row.16")),
+            ("row[0][1]", Some("row.0.1")),
+            ("task.name", Some("task.name")),
+            ("task . name [ 2 ]", Some("task.name.2")),
+            ("_x1", Some("_x1")),
+            ("a + b", None),
+            ("row[i]", None),
+            ("row[", None),
+            ("row[1", None),
+            ("1abc", None),
+            ("row.", None),
+            ("", None),
+            ("x\"y", None),
+            ("x}}<script>", None),
+        ] {
+            assert_eq!(mustache_path(expr).as_deref(), expected, "for {expr:?}");
+        }
     }
 
     #[test]
