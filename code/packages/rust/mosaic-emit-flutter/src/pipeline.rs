@@ -1306,6 +1306,8 @@ pub fn from_pipeline(
     layout: &LayoutDef,
     style: &StyleDef,
 ) -> Result<PipelineEmitResult, PipelineEmitError> {
+    // #15464 -- `$` inside an Expr string literal is Dart interpolation.
+    let layout = &layout_with_escaped_expr_strings(layout);
     if interface.component != layout.component_name {
         return Err(PipelineEmitError::ComponentNameMismatch {
             mosmodel: interface.component.clone(),
@@ -7358,6 +7360,100 @@ fn sanitize_dart_identifier(s: &str) -> String {
     }
 }
 
+// =====================================================================
+// Expression string literals: neutralise string-template interpolation
+// =====================================================================
+
+/// Escape every `$` that sits inside a quoted string literal of an
+/// `Expr`'s reconstructed source text (#15464).
+///
+/// `moslayout-compiler` rebuilds an `Expr` from its tokens and re-quotes
+/// each STRING token, escaping `"`, `\`, `\n`, `\r` and `\t`. That is
+/// enough for Swift, JavaScript and C#, but Dart expands `$name` and
+/// `${...}` inside a double-quoted string. So an authored
+///
+/// ```text
+/// If ( when: ( x == "${boom()}" ) ) { ... }
+/// ```
+///
+/// would reach the generated file as live code inside the string,
+/// getting around the grammar's restriction to names, literals and
+/// operators. The shared compiler can't add the escape itself, because
+/// `\$` is an invalid escape in Swift. So this backend does it, here.
+///
+/// A small scanner with two states:
+///
+/// | state         | on `"` or `'`           | on `\`           | on `$`     |
+/// |---------------|-------------------------|------------------|------------|
+/// | outside       | enter a string          | copy             | copy       |
+/// | inside string | leave if the same quote | copy + next char | emit `\$`  |
+///
+/// "copy + next char" keeps an existing escape intact. The compiler
+/// emits an author's backslash as `\\`, so `\\$` scans as the pair `\\`
+/// followed by a bare `$`, which becomes `\\\$`: a backslash, then a
+/// literal dollar. A `\$` that is already escaped stays as it is.
+/// Single quotes are tracked too. The grammar never produces them, but a
+/// hand-built IR could, and Dart interpolates inside single-quoted
+/// strings as well.
+///
+/// Text outside string literals is copied byte for byte, so an
+/// expression with no `$` inside a string comes out unchanged.
+fn escape_interpolation_in_expr(expr: &str) -> String {
+    let mut out = String::with_capacity(expr.len());
+    let mut quote: Option<char> = None;
+    let mut escaped = false;
+    for c in expr.chars() {
+        match quote {
+            None => {
+                if c == '"' || c == '\'' {
+                    quote = Some(c);
+                }
+                out.push(c);
+            }
+            Some(_) if escaped => {
+                escaped = false;
+                out.push(c);
+            }
+            Some(_) if c == '\\' => {
+                escaped = true;
+                out.push(c);
+            }
+            Some(_) if c == '$' => out.push_str("\\$"),
+            Some(q) => {
+                if c == q {
+                    quote = None;
+                }
+                out.push(c);
+            }
+        }
+    }
+    out
+}
+
+/// Return a copy of `layout` with [`escape_interpolation_in_expr`]
+/// applied to every `Expr` prop in the tree.
+///
+/// This runs once, at the entry point, instead of at each of the many
+/// sinks that splice `Expr` text into generated code. A sink added later
+/// is covered without anyone having to remember this issue.
+fn layout_with_escaped_expr_strings(layout: &LayoutDef) -> LayoutDef {
+    fn walk(node: &mut LayoutNode) {
+        for prop in &mut node.props {
+            if let LayoutPropValue::Expr(text) = &mut prop.value {
+                if text.contains('$') {
+                    *text = escape_interpolation_in_expr(text);
+                }
+            }
+        }
+        for child in &mut node.children {
+            walk(child);
+        }
+    }
+    let mut layout = layout.clone();
+    walk(&mut layout.root);
+    layout
+}
+
 /// Escape a string for inclusion inside a Dart `"..."` string literal.
 /// Handles backslash, double-quote, dollar sign (Dart interpolates
 /// `$ident` inside double-quoted strings), and newlines.
@@ -12592,6 +12688,67 @@ mod tests {
         assert!(
             !out.contains("Flexible(child:"),
             "a shrink-wrapped nested Row cannot host flex children:\n{out}"
+        );
+    }
+
+    /// `If ( when: <expr> ) { Text("yes") }`, for #15464.
+    fn dollar_if_tree(when: &str) -> LayoutNode {
+        if_node(LayoutPropValue::Expr(when.to_string()), vec![text_node("yes")])
+    }
+
+    // ----- #15464: `$` in an Expr string literal is not interpolation -----
+
+    #[test]
+    fn expr_string_dollar_scanner_escapes_only_inside_strings() {
+        let cases = [
+            (r#"( x == "${boom()}" )"#, r#"( x == "\${boom()}" )"#),
+            (r#"( x == "$y" )"#, r#"( x == "\$y" )"#),
+            // An author's backslash arrives as `\\`; the `$` after it is bare.
+            (r#"x == "a\\$b""#, r#"x == "a\\\$b""#),
+            // Already escaped: left alone, not double-escaped.
+            (r#"x == "\$b""#, r#"x == "\$b""#),
+            // An escaped quote does not end the string.
+            (r#"x == "\"$b""#, r#"x == "\"\$b""#),
+            // Two strings, with code between them.
+            (r#""$a" == "$b""#, r#""\$a" == "\$b""#),
+            // Single-quoted strings are tracked too.
+            (r#"a == 'q$'"#, r#"a == 'q\$'"#),
+            // Positive control: outside a string, byte for byte.
+            ("a$b == c", "a$b == c"),
+            (r#"( a == "x" ) && b$ != c"#, r#"( a == "x" ) && b$ != c"#),
+        ];
+        for (input, want) in cases {
+            assert_eq!(escape_interpolation_in_expr(input), want, "input: {input}");
+        }
+    }
+
+    #[test]
+    fn expr_string_literal_dollar_is_not_interpolated() {
+        let when = r#"( x == "${boom()}" || x == "$y" )"#;
+        let l = layout("X", dollar_if_tree(when));
+        let m = component("X", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains(r#"( x == "\${boom()}" || x == "\$y" )"#),
+            "expected both dollars escaped, got:\n{out}"
+        );
+        assert!(
+            !out.contains(r#"== "${boom"#),
+            "live ${{...}} template:\n{out}"
+        );
+        assert!(!out.contains(r#"== "$y""#), "live $name template:\n{out}");
+    }
+
+    #[test]
+    fn expr_without_string_dollar_is_emitted_unchanged() {
+        let when = r#"( status == "done" && count >= 2 )"#;
+        let l = layout("X", dollar_if_tree(when));
+        assert_eq!(layout_with_escaped_expr_strings(&l), l);
+        let m = component("X", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains(when),
+            "expected the Expr verbatim, got:\n{out}"
         );
     }
 
