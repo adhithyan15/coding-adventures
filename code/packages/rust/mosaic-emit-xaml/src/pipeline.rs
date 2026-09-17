@@ -4654,6 +4654,13 @@ fn emit_code_behind(
 /// `ElevationZ` exists for the same reason as on the drag source: WinUI's
 /// XAML compiler fails on `Translation` plus `<X.Shadow>` written on a custom
 /// subclass, so the depth is applied from C#.
+///
+/// Every framework type here is written out in full, `Microsoft.UI.Xaml.…`,
+/// because this class lands in the package's own namespace beside the
+/// generated components. The toolkit exports a component called `Button`,
+/// whose generated class is `sealed`, and an unqualified `Button` binds to
+/// *that* — "cannot derive from sealed type 'Button'" (found by CI building
+/// the whole toolkit, after a single-component fixture compiled fine).
 fn emit_selectable_button_support_source(component: &str) -> String {
     r#"
 
@@ -4662,7 +4669,7 @@ fn emit_selectable_button_support_source(component: &str) -> String {
 /// the UI Automation SelectionItem pattern, without changing how it looks or
 /// what a click does.
 /// </summary>
-public sealed class __COMPONENT__MosaicSelectableButton : Button
+public sealed class __COMPONENT__MosaicSelectableButton : Microsoft.UI.Xaml.Controls.Button
 {
     public bool MosaicSelected
     {
@@ -4670,22 +4677,22 @@ public sealed class __COMPONENT__MosaicSelectableButton : Button
         set => SetValue(MosaicSelectedProperty, value);
     }
 
-    public static readonly DependencyProperty MosaicSelectedProperty =
-        DependencyProperty.Register(
+    public static readonly Microsoft.UI.Xaml.DependencyProperty MosaicSelectedProperty =
+        Microsoft.UI.Xaml.DependencyProperty.Register(
             nameof(MosaicSelected),
             typeof(bool),
             typeof(__COMPONENT__MosaicSelectableButton),
-            new PropertyMetadata(false, OnMosaicSelectedChanged));
+            new Microsoft.UI.Xaml.PropertyMetadata(false, OnMosaicSelectedChanged));
 
-    private static void OnMosaicSelectedChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    private static void OnMosaicSelectedChanged(Microsoft.UI.Xaml.DependencyObject sender, Microsoft.UI.Xaml.DependencyPropertyChangedEventArgs args)
     {
         var button = (__COMPONENT__MosaicSelectableButton)sender;
-        if (FrameworkElementAutomationPeer.FromElement(button) is __COMPONENT__MosaicSelectableButtonAutomationPeer peer)
+        if (Microsoft.UI.Xaml.Automation.Peers.FrameworkElementAutomationPeer.FromElement(button) is __COMPONENT__MosaicSelectableButtonAutomationPeer peer)
         {
-            peer.RaisePropertyChangedEvent(SelectionItemPatternIdentifiers.IsSelectedProperty, args.OldValue, args.NewValue);
+            peer.RaisePropertyChangedEvent(Microsoft.UI.Xaml.Automation.SelectionItemPatternIdentifiers.IsSelectedProperty, args.OldValue, args.NewValue);
             if (args.NewValue is true)
             {
-                peer.RaiseAutomationEvent(AutomationEvents.SelectionItemPatternOnElementSelected);
+                peer.RaiseAutomationEvent(Microsoft.UI.Xaml.Automation.Peers.AutomationEvents.SelectionItemPatternOnElementSelected);
             }
         }
     }
@@ -4696,14 +4703,14 @@ public sealed class __COMPONENT__MosaicSelectableButton : Button
         set => SetValue(ElevationZProperty, value);
     }
 
-    public static readonly DependencyProperty ElevationZProperty =
-        DependencyProperty.Register(
+    public static readonly Microsoft.UI.Xaml.DependencyProperty ElevationZProperty =
+        Microsoft.UI.Xaml.DependencyProperty.Register(
             nameof(ElevationZ),
             typeof(string),
             typeof(__COMPONENT__MosaicSelectableButton),
-            new PropertyMetadata(string.Empty, OnElevationZChanged));
+            new Microsoft.UI.Xaml.PropertyMetadata(string.Empty, OnElevationZChanged));
 
-    private static void OnElevationZChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    private static void OnElevationZChanged(Microsoft.UI.Xaml.DependencyObject sender, Microsoft.UI.Xaml.DependencyPropertyChangedEventArgs args)
     {
         var button = (__COMPONENT__MosaicSelectableButton)sender;
         var z = args.NewValue as string;
@@ -4715,27 +4722,29 @@ public sealed class __COMPONENT__MosaicSelectableButton : Button
         else
         {
             button.Translation = new System.Numerics.Vector3(0, 0, float.Parse(z, System.Globalization.CultureInfo.InvariantCulture));
-            button.Shadow = new ThemeShadow();
+            button.Shadow = new Microsoft.UI.Xaml.Media.ThemeShadow();
         }
     }
 
-    protected override AutomationPeer OnCreateAutomationPeer() =>
+    protected override Microsoft.UI.Xaml.Automation.Peers.AutomationPeer OnCreateAutomationPeer() =>
         new __COMPONENT__MosaicSelectableButtonAutomationPeer(this);
 }
 
-public sealed class __COMPONENT__MosaicSelectableButtonAutomationPeer : ButtonAutomationPeer, ISelectionItemProvider
+public sealed class __COMPONENT__MosaicSelectableButtonAutomationPeer : Microsoft.UI.Xaml.Automation.Peers.ButtonAutomationPeer, Microsoft.UI.Xaml.Automation.Provider.ISelectionItemProvider
 {
     private readonly __COMPONENT__MosaicSelectableButton _owner;
 
     public __COMPONENT__MosaicSelectableButtonAutomationPeer(__COMPONENT__MosaicSelectableButton owner)
         : base(owner) => _owner = owner;
 
-    protected override object GetPatternCore(PatternInterface patternInterface) =>
-        patternInterface == PatternInterface.SelectionItem ? this : base.GetPatternCore(patternInterface);
+    protected override object GetPatternCore(Microsoft.UI.Xaml.Automation.Peers.PatternInterface patternInterface) =>
+        patternInterface == Microsoft.UI.Xaml.Automation.Peers.PatternInterface.SelectionItem
+            ? this
+            : base.GetPatternCore(patternInterface);
 
     public bool IsSelected => _owner.MosaicSelected;
 
-    public IRawElementProviderSimple SelectionContainer => null!;
+    public Microsoft.UI.Xaml.Automation.Provider.IRawElementProviderSimple SelectionContainer => null!;
 
     public void Select() => Invoke();
 
@@ -15693,10 +15702,12 @@ mod tests {
             assert!(r.xaml.contains(expected), "expected {expected} in:\n{}", r.xaml);
             assert!(!r.xaml.contains("<Button "), "got:\n{}", r.xaml);
             for needle in [
-                "public sealed class FooMosaicSelectableButton : Button",
-                "public sealed class FooMosaicSelectableButtonAutomationPeer : ButtonAutomationPeer, ISelectionItemProvider",
-                "patternInterface == PatternInterface.SelectionItem ? this : base.GetPatternCore(patternInterface)",
-                "SelectionItemPatternIdentifiers.IsSelectedProperty",
+                // Fully qualified, because the toolkit exports a sealed
+                // component class called `Button` into this same namespace.
+                "public sealed class FooMosaicSelectableButton : Microsoft.UI.Xaml.Controls.Button",
+                "public sealed class FooMosaicSelectableButtonAutomationPeer : Microsoft.UI.Xaml.Automation.Peers.ButtonAutomationPeer, Microsoft.UI.Xaml.Automation.Provider.ISelectionItemProvider",
+                "patternInterface == Microsoft.UI.Xaml.Automation.Peers.PatternInterface.SelectionItem",
+                "Microsoft.UI.Xaml.Automation.SelectionItemPatternIdentifiers.IsSelectedProperty",
                 "using Microsoft.UI.Xaml.Automation.Provider;",
                 "using Microsoft.UI.Xaml.Automation.Peers;",
             ] {
@@ -15806,7 +15817,13 @@ mod tests {
         assert!(r.xaml.contains("ElevationZ=\"4\""), "got:\n{}", r.xaml);
         assert!(!r.xaml.contains("Translation="), "got:\n{}", r.xaml);
         assert!(!r.xaml.contains(".Shadow>"), "got:\n{}", r.xaml);
-        assert!(r.code_behind.contains("button.Shadow = new ThemeShadow();"));
+        assert!(r.code_behind.contains("button.Shadow = new Microsoft.UI.Xaml.Media.ThemeShadow();"));
+        // Nothing in the generated class may name a framework type bare: the
+        // package's own components share this namespace.
+        for bare in [" : Button
+", "(DependencyObject ", " ButtonAutomationPeer,"] {
+            assert!(!r.code_behind.contains(bare), "unqualified {bare:?} in the code-behind");
+        }
     }
 
     #[test]
