@@ -8,6 +8,31 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Security -- a story fixture could inject C++ into `main.cpp` (#15443)
+
+`qvariant_literal_for_fixture` escaped fixture text with the QML escaper,
+which passes a bare carriage return through. C++ splices a backslash and a
+line ending before it reads literals, and GCC and Clang count a bare CR as a
+line ending. So backslash, CR, quote closed the `QStringLiteral`, and the
+rest of the fixture compiled as C++. The security review of #15428 found it
+and confirmed it with GCC and Clang. It was already on `main` for text
+fixtures, before list fixtures existed.
+
+**Fix:** `escape_cpp_string` now handles every C++ literal built from
+fixture text:
+
+- backslash, quote and `?` are escaped;
+- control characters and DEL become exactly three octal digits (not hex,
+  because hex escapes are greedy);
+- non-ASCII becomes a `\u` or `\U` universal character name.
+
+`escape_qml_string` also escapes CR now, since a raw one would break a QML
+string.
+
+**Test:** `cpp_fixture_literals_cannot_be_split_or_closed` uses the
+reviewer's payload in both the text and list paths. Mutation-checked: with
+the old escaper it fails.
+
 ### Fixed -- list story fixtures reach the generated `main.cpp` (#15428)
 
 `qvariant_literal_for_fixture` turns a text-list fixture into a
