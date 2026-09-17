@@ -199,7 +199,21 @@ fn the_pectoralis_sentence_carries_the_pages_non_breaking_space() {
     let out = ask("nbsp", "muscle_region(pectoralis_major, $R)");
     assert!(out.contains(&row_citation("pectoralis_major")), "the answer carries the page's character: {out}");
     assert!(!out.contains(&json(&plain_sentence)), "the ordinary-space string reaches no answer: {out}");
-    assert!(!shipped_table().contains(PECT_PLAIN), "and is shipped nowhere in the table");
+    // SCOPED TO `source "` LINES (#15415), the correction #15337, #15338 and
+    // #15417 made for their tables. `shipped_table()` runs to end of file and
+    // four `%` comment lines sit inside this block, so read against the slice
+    // this arm FAILED A CORRECT FILE when a comment quoted the old phrase --
+    // measured by mutant, not reasoned. A comment is not a shipped citation.
+    //
+    // PECT_PLAIN is a FRAGMENT, not a whole sentence, so this still guards
+    // every `source` line in the table, not only the pectoralis row. The
+    // trade: nothing now pins "not anywhere in the block".
+    let source_lines: String = shipped_table()
+        .lines()
+        .filter(|l| l.trim_start().starts_with("source \""))
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(!source_lines.contains(PECT_PLAIN), "and no `source` line ships it: {source_lines}");
 }
 
 #[test]
