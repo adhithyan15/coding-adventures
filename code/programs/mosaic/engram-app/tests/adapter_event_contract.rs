@@ -67,8 +67,8 @@ fn every_declared_event_is_routed_by_the_adapter() {
     let declared = declared_events();
     assert_eq!(
         declared.len(),
-        88,
-        "EngramApp.mil should declare 88 emits; if this changed, the adapter and \
+        89,
+        "EngramApp.mil should declare 89 emits (88 + onShowScreen, #14063); if this changed, the adapter and \
          this test both need to keep up rather than the count being edited away"
     );
 
