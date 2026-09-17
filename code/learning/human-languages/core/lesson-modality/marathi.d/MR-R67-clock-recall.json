@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R67-clock-recall",
+    "language": "marathi",
+    "chapter": 67,
+    "sequence": 2770,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2256dd1db78536ed"
+  },
+  "findings": []
+}

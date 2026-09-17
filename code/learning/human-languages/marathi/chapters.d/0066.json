@@ -1,0 +1,23 @@
+{
+  "chapter": 66,
+  "title": "The Parts of the Day",
+  "label": "ch:mr-divasache-bhag",
+  "canDo": "I can name the parts of the day and say that something happens in one of them.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MR-R66-day-recall",
+    "kind": "production",
+    "summary": "From cold: the four parts of the day in the order they happen, the whole day that holds them, and each one turned into an at-that-time word in front of a verb -- including the masculine one that takes -aa where the four feminine ones take -ii.",
+    "assesses": [
+      "MR-LEX-SAKAL",
+      "MR-LEX-DUPAR",
+      "MR-LEX-SANDHYAKAL",
+      "MR-LEX-RATRA",
+      "MR-LEX-DIVAS",
+      "MR-GRAMMAR-TIME-II"
+    ],
+    "note": "The chapter introduces exactly these atoms and the payoff assesses all of them. No new verb is added: every sentence uses yeto, which the track has had since its first chapter."
+  }
+}

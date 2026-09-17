@@ -1428,23 +1428,38 @@ describe("the committed Marathi A1 inventory", () => {
     const coverage = measureExamCoverage(inventory, lessons);
     expect(coverage.enumerated).toBe(301);
     //
+    // 166 -> 167: chapters 66 and 67 close MR-A1-NT-01, the clock and the parts
+    // of the day. TEMPORAL NOTIONS IS NO LONGER ONE OF THE EMPTY COLUMNS BELOW,
+    // and that is the point of the change rather than the single number: this
+    // track's SPINE-TIME-OF-DAY ledger read segments: [] with all nine concepts
+    // omitted, on a node the shared spine marks "core": true whose only
+    // prerequisite is greeting somebody. Filed as HL-C394, where the measurement
+    // is that TEN of twenty-three tracks omit all nine.
+    // Chapter 66 gives the parts of the day and the -ii that places an event in
+    // one; chapter 67 gives the clock and adds NO new numbers, because all twelve
+    // cardinals and the how-many question word were already taught.
     // 165 -> 166: chapter 65 closes MR-A1-OR-12, the independent ii, o, ai and au.
     // ONE point for five lessons, and the ratio is honest: four letters that each
     // need their own shape practised, plus the review. All four had a sign the
     // reader already drew, so the gap was in the POSITION rather than the sound.
-    expect(coverage.covered).toBe(166);
-    expect(coverage.unmapped).toBe(135);
+    expect(coverage.covered).toBe(167);
+    expect(coverage.unmapped).toBe(134);
     // Zero partials is a property of the "existing atoms only" rule above, not a
     // coincidence: with no guessed ids, a point is either fully probed or null.
     expect(coverage.partial).toBe(0);
-    for (const empty of ["Demonstratives", "Temporal notions", "Personal identity"]) {
+    for (const empty of ["Demonstratives", "Personal identity"]) {
       expect(coverage.byCategory[empty]?.covered, empty).toBe(0);
     }
+    // "Temporal notions" was the third empty column and is not any more. It is
+    // still the emptiest: five of its six points are open -- today/yesterday/
+    // tomorrow, the days, the months and a date, the seasons, and ordering two
+    // events.
+    expect(coverage.byCategory["Temporal notions"]!).toEqual({ enumerated: 6, covered: 1 });
     expect(coverage.byCategory["Coordination"]!.covered).toBe(5);
     expect(coverage.byCategory["Devanagari letters and signs"]!.covered).toBeGreaterThan(0);
     expect(coverage.byCategory["Sound system"]!.covered).toBeGreaterThan(0);
     expect(formatExamCoverage(coverage)).toContain(
-      "marathi A1 (partial inventory): 166/301 points covered (55%)",
+      "marathi A1 (partial inventory): 167/301 points covered (55%)",
     );
   }, 60_000);
 });

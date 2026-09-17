@@ -63,6 +63,71 @@ func TestReadLinesMissingFile(t *testing.T) {
 	}
 }
 
+// TestReadLinesStripsPosixSetFlagsPreamble covers the two forms actually
+// used across this repo's BUILD files (`set -e`, `set -eu`) plus a
+// multi-flag variant, confirming they never reach BuildCommands. On Windows
+// these lines run under `cmd /C`, where bare `set -eu` is cmd's own
+// "print variable -eu" syntax — it printed "Environment variable -eu not
+// defined" and failed the whole package build, even though the directive
+// was already inert everywhere (executor.go checks each BuildCommands
+// entry's exit code independently; `set -e` never reached across the
+// process boundary between one line and the next).
+func TestReadLinesStripsPosixSetFlagsPreamble(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"BUILD": "set -e\ncargo test -p widget\nset -eu\ncargo clippy -p widget\nset -ux\necho done\n",
+	})
+	lines := readLines(filepath.Join(root, "BUILD"))
+	want := []string{"cargo test -p widget", "cargo clippy -p widget", "echo done"}
+	if len(lines) != len(want) {
+		t.Fatalf("expected %d lines, got %d: %v", len(want), len(lines), lines)
+	}
+	for i, w := range want {
+		if lines[i] != w {
+			t.Fatalf("line %d: got %q, want %q (full: %v)", i, lines[i], w, lines)
+		}
+	}
+}
+
+// TestReadLinesKeepsWindowsSetAssignment guards the narrowness of the
+// filter: this repo's *_windows BUILD files legitimately use cmd's
+// `set VAR=value` / `set "VAR=value"` forms (e.g. `set
+// "RUSTDOCFLAGS=-D warnings" && cargo doc ...`), which must never be
+// stripped just because they start with the word "set".
+func TestReadLinesKeepsWindowsSetAssignment(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"BUILD_windows": "set \"RUSTDOCFLAGS=-D warnings\" && cargo doc -p widget --no-deps\n" +
+			"set CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=rust-lld\n" +
+			"set PYTHONPATH=src\n",
+	})
+	lines := readLines(filepath.Join(root, "BUILD_windows"))
+	if len(lines) != 3 {
+		t.Fatalf("expected all 3 assignment lines kept, got %d: %v", len(lines), lines)
+	}
+}
+
+func TestIsPosixSetFlagsPreamble(t *testing.T) {
+	cases := []struct {
+		line string
+		want bool
+	}{
+		{"set -e", true},
+		{"set -eu", true},
+		{"set -ux", true},
+		{"set -Eu", false}, // uppercase flag: not one of this repo's two real forms, left alone rather than guessed at
+		{"set", false},
+		{"set -", false},
+		{"set VAR=value", false},
+		{"set \"VAR=value\"", false},
+		{"set -eu extra", false},
+		{"setenv -e", false},
+	}
+	for _, c := range cases {
+		if got := isPosixSetFlagsPreamble(c.line); got != c.want {
+			t.Errorf("isPosixSetFlagsPreamble(%q) = %v, want %v", c.line, got, c.want)
+		}
+	}
+}
+
 // ---------------------------------------------------------------------------
 // Tests for parseExtraToolchains
 // ---------------------------------------------------------------------------

@@ -445,7 +445,7 @@ lang-aot <FILE> [-o <OUT>] [--lang <LANG>]
 | Twig            | `.twig`         | `twig-ir-compiler`       | full |
 | Nib             | `.nib`          | `nib-iir-compiler`       | full |
 | Brainfuck       | `.bf`, `.b`    | `brainfuck-iir-compiler` + BF07 lowering pass | full — `lang-aot foo.bf` compiles end-to-end (cells live in a 30000-byte `alloc_bytes` tape; `load_mem`/`store_mem` are rewritten to `load_byte`/`store_byte` per LANG76) |
-| Dartmouth BASIC | `.bas`, `.basic` | `dartmouth-basic-iir-compiler` | LET / PRINT / INPUT / IF / GOTO / FOR / NEXT / END / REM, GOSUB / RETURN, DEF FN, real and string DIM arrays, mixed numeric/string READ / DATA / RESTORE, real arithmetic and formatting, strings, general `^`, and deterministic seeded/repeatable `RND` compile and run end-to-end through all seven standard matrix backends |
+| Dartmouth BASIC | `.bas`, `.basic` | `dartmouth-basic-iir-compiler` | LET / PRINT / INPUT / IF / GOTO / FOR / NEXT / END / REM, GOSUB / RETURN, DEF FN, real and string DIM arrays, mixed numeric/string READ / DATA / RESTORE, real arithmetic and formatting, strings, general `^`, and deterministic seeded/repeatable `RND` compile and run end-to-end through all eight standard matrix backends (including `Beam`, BEAM08) |
 | Oct             | `.oct`          | `oct-iir-compiler` (OCT02 phases 1–4) | full — integer subset compiles end-to-end (`fn`/`let`/`if`/`while`/`loop`/`break`, recursion).  8008 hardware intrinsics (`in`, `out`, `adc`, `sbb`, `rlc`, `rrc`, `ral`, `rar`, `carry`, `parity`) rejected cleanly with a pointer to the dedicated Intel-8008 simulator backend |
 | McCarthy Lisp   | `.mcl`, `.lisp` | `mccarthy-lisp-iir-compiler` | **L3a** — the full Lisp 1.0 frontend (literals, `QUOTE`, `CONS`/`CAR`/`CDR`/`ATOM`/`EQ`, `COND`, `LAMBDA`/`LABEL` closures) produces an `IIRModule`, and **scalar** programs run end-to-end on the native AOT pipeline (`echo 42 > p.mcl; lang-aot p.mcl` → exits 42).  Symbol/cons-returning programs (e.g. `(CAR '(A B C))`) are accepted by the frontend but the native backend `BackendRefused`s them until the `dynval-runtime` value model is lowered into each backend (**L3b**) |
 
@@ -924,3 +924,29 @@ now declares 50 of 51 rows on `Beam` (only `RND`/VM-018 remains).
 FLOW-MATIC now declares all 8 of 8 rows on `Beam`. Combined with Twig,
 COBOL-60, Nib, Oct and Brainfuck's own fully-proven rows, this closes
 every non-ALGOL BEAM gap in `LANG-VM-NON-ALGOL-BACKLOG.md` except `RND`.
+
+### `RND` on BEAM (BEAM08) — VM-018 resolved, non-ALGOL BEAM matrix complete
+
+`RND` turned out not to need a new design at all: its frontend-emitted
+`__basic_rnd` helper shares its Park–Miller seed through the same
+`global_store`/`global_load` module-global substrate every other
+module-level BASIC/COBOL/Twig variable already uses. Its trap
+(`{badarith,[{erlang,'*',[undefined,...]}]}`) was caused entirely by
+`global_store`'s pre-existing `erlang:put/2`-via-`gc_bif2` bug — the exact
+class BEAM07 fixed for its own new `put/2` usage but deliberately left
+unfixed in `global_store` itself, filed as
+[#15332](https://github.com/adhithyan15/coding-adventures/issues/15332).
+Converting `global_store` to `call_ext` (mirroring BEAM07's fix exactly)
+closed both the issue and `RND` in one change — no new IIR op, no new
+BEAM opcode, no frontend change. Full research and decision:
+`code/specs/BEAM08-rnd-beam-support.md`.
+
+`RND` now declares `Beam`, proven against real `erl`
+(`portable_text_stdout_dartmouth_basic_beam_rnd`) with the exact
+Park–Miller sequence every other standard backend already proves
+(`22`, `85032`, `85032`, `601352`). **Dartmouth BASIC now declares all
+51 of 51 rows on `Beam`.** Combined with Twig (49/49), Nib (26/26), Oct
+(12/12), COBOL-60 (58/58), FLOW-MATIC (8/8), and Brainfuck (3/6,
+intentional — real stdin-as-tape host support is a separate, unscoped
+item), **this closes every non-ALGOL BEAM gap in
+`LANG-VM-NON-ALGOL-BACKLOG.md`.**

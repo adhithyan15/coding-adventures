@@ -2271,6 +2271,26 @@ fn ignored_native_property(
         // — never authored in practice, but not excluded by the grammar
         // either) still falls through to a real degradation report
         // rather than silently rendering as a plain two-state control.
+        // UI86: a HostButton's selected state. Each backend's own predicate is
+        // the one its emitter lowers with, so this cannot drift.
+        ("HostButton", "selected")
+            if backend.is_native()
+                && !(backend == Backend::Compose
+                    && mosaic_emit_compose::pipeline::host_button_selected_is_native(node))
+                && !(backend == Backend::Flutter
+                    && mosaic_emit_flutter::pipeline::host_button_selected_is_native(node))
+                && !(backend == Backend::Qt
+                    && mosaic_emit_qt::pipeline::host_button_selected_is_native(node))
+                && !(backend == Backend::SwiftUI
+                    && mosaic_emit_swiftui::pipeline::host_button_selected_is_native(node))
+                && !(backend == Backend::Xaml
+                    && mosaic_emit_xaml::pipeline::host_button_selected_is_native(node)) =>
+        {
+            Some((
+                "accessibility.button-selected-unsupported",
+                "the backend does not lower HostButton selected to its native selected or checked accessibility state",
+            ))
+        }
         ("HostCheckbox", "indeterminate")
             if matches!(
                 backend,
@@ -8159,6 +8179,98 @@ layout LeechAction {
 
         assert!(report.degradations.is_empty());
         assert!(report.native_complete);
+    }
+
+    /// UI86: every accepted shape of `HostButton` `selected:` is native on
+    /// Compose, Flutter, Qt and SwiftUI. XAML reports it until #15463, and a
+    /// string is reported everywhere.
+    #[test]
+    fn host_button_selected_is_native_where_it_is_lowered() {
+        let pkg = make_package("mosaic-pkg-selected-button", &["Picker"]);
+        fs::write(
+            pkg.path().join("src/Picker.mil"),
+            "component Picker {\n  slot on : bool ;\n  slot flags : list<bool> ;\n  slot items : list<text> ;\n  slot selected-index : number ;\n  emit onSelect ( index : number ) ;\n}\n",
+        )
+        .unwrap();
+        fs::write(
+            pkg.path().join("src/Picker.mll"),
+            r#"
+layout Picker {
+  Column [ root ] {
+    HostButton [ a ] ( label: "A", selected: slot: on )
+    HostButton [ b ] ( label: "B", selected: true )
+    For ( each: slot: flags , as: flag ) {
+      HostButton [ c ] ( label: "C", selected: flag )
+    }
+    For ( each: slot: items , as: item , index: i ) {
+      HostButton [ d ] ( label : item , selected : ( i == selectedIndex ) , onClick : emit: onSelect )
+    }
+  }
+}
+"#,
+        )
+        .unwrap();
+        for backend in [
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("selected-button analysis");
+            let selected: Vec<_> = report
+                .degradations
+                .iter()
+                .filter(|d| d.code == "accessibility.button-selected-unsupported")
+                .collect();
+            if backend == Backend::Xaml {
+                assert_eq!(selected.len(), 4, "XAML must report every selected button: {selected:?}");
+            } else {
+                assert!(
+                    report.native_complete && report.degradations.is_empty(),
+                    "unexpected {backend:?} degradation inventory: {:?}",
+                    report.degradations
+                );
+            }
+        }
+
+        let node = LayoutNode {
+            tag: "HostButton".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![],
+        };
+        let string = LayoutProp {
+            name: "selected".to_string(),
+            value: LayoutPropValue::String("true".to_string()),
+        };
+        let mut with_string = node.clone();
+        with_string.props.push(string.clone());
+        for backend in [
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+            Backend::SwiftUI,
+            Backend::Xaml,
+        ] {
+            assert_eq!(
+                ignored_native_property(backend, &with_string, &string, &HashSet::new(), None)
+                    .map(|(code, _)| code),
+                Some("accessibility.button-selected-unsupported"),
+                "{backend:?} must report a string selected value"
+            );
+        }
     }
 
     #[test]

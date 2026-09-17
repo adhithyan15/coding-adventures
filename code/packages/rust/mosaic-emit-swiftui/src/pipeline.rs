@@ -3750,6 +3750,13 @@ fn emit_view_struct(
         "    private func _mosaicA11yName(_ name: Any, fallback: Any) -> Text {{ let spoken = String(describing: name); return Text(verbatim: spoken.isEmpty ? String(describing: fallback) : spoken) }}"
     )
     .unwrap();
+    if layout_has_button_selected(layout_root) {
+        writeln!(
+            out,
+            "    private func _mosaicSelectedTraits(_ selected: Bool) -> AccessibilityTraits {{ selected ? .isSelected : [] }}"
+        )
+        .unwrap();
+    }
     if layout_contains_tag(layout_root, "Icon") {
         writeln!(
             out,
@@ -5400,6 +5407,14 @@ fn emit_host_button(
     if let Some(label) = host_button_accessibility_label(node, &label_expr, for_payload) {
         closing.push_str(&format!(".accessibilityLabel({label})"));
     }
+    // UI86: the application-owned selected state, after the name so both
+    // apply. `_mosaicSelectedTraits` keeps a `Bool ? .isSelected : []`
+    // ternary out of the result builder, where it slows type checking.
+    if let Some(selected) = host_button_selected_expr(node, for_payload)? {
+        closing.push_str(&format!(
+            ".accessibilityAddTraits(_mosaicSelectedTraits({selected}))"
+        ));
+    }
     if let Some(slot) = find_slot_ref_prop(node, "disabled") {
         let camel = to_camel_case_first_lower(slot);
         validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
@@ -5413,6 +5428,56 @@ fn emit_host_button(
     out.push_str(&closing);
 
     Ok(out)
+}
+
+/// The Swift `Bool` for a `HostButton`'s `selected:` (UI86), or `None` when
+/// the prop is absent or has a shape that is not a state.
+///
+/// | authored                | Swift                                   |
+/// |-------------------------|-----------------------------------------|
+/// | `true` / `false`        | the literal                             |
+/// | `slot: s` / loop `item` | `_mosaicTruthy(s)`                      |
+/// | boolean expression      | the expression, indices rewritten       |
+/// | other expression        | `_mosaicTruthy(expression)`             |
+/// | string, number, absent  | `None` (reported by the artifact builder) |
+///
+/// [`host_button_selected_is_native`] asks this same function, so what the
+/// package build reports cannot drift from what is emitted.
+fn host_button_selected_expr(
+    node: &LayoutNode,
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<Option<String>, PipelineEmitError> {
+    match find_prop_value(node, "selected") {
+        Some(LayoutPropValue::Keyword(value)) if value == "true" || value == "false" => {
+            Ok(Some(value.clone()))
+        }
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let field = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&field).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Ok(Some(format!("_mosaicTruthy({field})")))
+        }
+        Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
+            let lowered = swift_collection_index_expr(expression.trim(), for_payload);
+            if swift_expression_is_boolean(expression) {
+                Ok(Some(lowered))
+            } else {
+                Ok(Some(format!("_mosaicTruthy({lowered})")))
+            }
+        }
+        _ => Ok(None),
+    }
+}
+
+/// Whether a `HostButton`'s authored `selected:` reaches the native
+/// `.isSelected` trait. The artifact builder reports
+/// `accessibility.button-selected-unsupported` when it does not.
+pub fn host_button_selected_is_native(node: &LayoutNode) -> bool {
+    matches!(host_button_selected_expr(node, None), Ok(Some(_)))
+}
+
+fn layout_has_button_selected(node: &LayoutNode) -> bool {
+    (node.tag == "HostButton" && host_button_selected_is_native(node))
+        || node.children.iter().any(layout_has_button_selected)
 }
 
 // =====================================================================
@@ -15798,4 +15863,65 @@ mod tests {
         assert!(!out.contains("ZStack(spacing"), "got:\n{out}");
     }
 
+
+    /// UI86: every accepted shape of `selected:` becomes the `.isSelected`
+    /// trait; an absent prop adds nothing.
+    #[test]
+    fn host_button_selected_lowers_to_the_is_selected_trait() {
+        let button = |props: Vec<LayoutProp>| LayoutNode {
+            tag: "HostButton".to_string(),
+            part_name: None,
+            props,
+            children: vec![],
+        };
+        let prop = |value: LayoutPropValue| LayoutProp {
+            name: "selected".to_string(),
+            value,
+        };
+        for (value, expected) in [
+            (LayoutPropValue::Keyword("true".into()), "_mosaicSelectedTraits(true)"),
+            (
+                LayoutPropValue::SlotRef("is-current".into()),
+                "_mosaicSelectedTraits(_mosaicTruthy(isCurrent))",
+            ),
+            (
+                LayoutPropValue::Keyword("flag".into()),
+                "_mosaicSelectedTraits(_mosaicTruthy(flag))",
+            ),
+            (
+                LayoutPropValue::Expr("( i == selectedIndex )".into()),
+                "_mosaicSelectedTraits(( i == selectedIndex ))",
+            ),
+            (
+                LayoutPropValue::Expr("( row [ 3 ] )".into()),
+                "_mosaicSelectedTraits(_mosaicTruthy(",
+            ),
+        ] {
+            let node = button(vec![prop_string("label", "Go"), prop(value)]);
+            assert!(host_button_selected_is_native(&node));
+            let layout = layout_with("Bar", container_node("Box", vec![node]));
+            let out = from_pipeline(
+                &component("Bar", vec![], vec![]),
+                &layout,
+                &empty_style("Bar"),
+            )
+            .unwrap()
+            .output;
+            assert!(
+                out.contains(&format!(".accessibilityAddTraits({expected}")),
+                "expected {expected} in:\n{out}"
+            );
+            assert!(out.contains("private func _mosaicSelectedTraits(_ selected: Bool)"));
+        }
+        let plain = button(vec![prop_string("label", "Go")]);
+        assert!(!host_button_selected_is_native(&plain));
+        let layout = layout_with("Bar", container_node("Box", vec![plain]));
+        let out = from_pipeline(&component("Bar", vec![], vec![]), &layout, &empty_style("Bar"))
+            .unwrap()
+            .output;
+        assert!(!out.contains(".accessibilityAddTraits(_mosaicSelectedTraits"), "{out}");
+        // A string is not a state: not lowered, and reported by the builder.
+        let string = button(vec![prop(LayoutPropValue::String("true".into()))]);
+        assert!(!host_button_selected_is_native(&string));
+    }
 }

@@ -5155,7 +5155,7 @@ const PROGRAMS: &[Prog] = &[
               50 PRINT INT(RND(1) * 1000000)\n\
               60 END\n",
         expect: Expect::Stdout("22\n85032\n85032\n601352"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — `INT` (floor) built-in (LANG-FULL BA-builtins).
     // INT(X) = ⌊X⌋, returned as a real.  Lowers to real_to_int_floor +
@@ -9513,6 +9513,30 @@ fn matrix_every_proven_cell_agrees() {
 /// (full pipeline, real `erl`, both promoted rows) — Twig is now **49/49**
 /// on `Beam`. See `LANG-VM-NON-ALGOL-BACKLOG.md`'s "VM-041" section for the
 /// full probe transcript and this follow-up's pinned-down shape.
+///
+/// Dartmouth BASIC's expected cell count changed once more (407 → 408,
+/// BEAM08) once `RND` — the LAST undeclared non-ALGOL BEAM cell in this
+/// entire backlog — gained a real, `erl`-proven `Beam` declaration.
+/// `RND`'s frontend-emitted `__basic_rnd` helper shares its Park–Miller
+/// state through the same `global_store`/`global_load` module-global
+/// substrate every other module-level BASIC/COBOL/Twig variable already
+/// uses; the trap it hit (`{badarith,[{erlang,'*',[undefined,...]}]}`,
+/// first confirmed at VM-LOOP-24 and re-confirmed unresolved through
+/// BEAM04/BEAM06/BEAM07) turned out to be caused entirely by
+/// `global_store`'s pre-existing `gc_bif2`-for-`erlang:put/2` bug
+/// (BEAM07's VM-D036 discovery, deliberately deferred as issue #15332):
+/// `main`'s initial seed store silently failed to stick under `gc_bif2`,
+/// so the helper's first `global_load` read back `undefined` instead of
+/// the seed. Fixing #15332 (converting `global_store` to `call_ext`,
+/// mirroring BEAM07's own fix for its new `put/2` usage) was both
+/// necessary and sufficient — no new IIR op, no new BEAM opcode, and no
+/// change to `dartmouth-basic-iir-compiler`'s existing RND lowering. See
+/// `code/specs/BEAM08-rnd-beam-support.md` for the full research writeup.
+/// **Dartmouth BASIC is now 51/51 on `Beam`, and — combined with Twig
+/// (49/49), Nib (26/26), Oct (12/12), COBOL-60 (58/58), FLOW-MATIC (8/8),
+/// and Brainfuck (3/6, intentionally: the other 3 need real stdin-as-tape
+/// host support, a separate unscoped item) — this closes EVERY non-ALGOL
+/// BEAM gap in this entire multi-month backlog.**
 #[test]
 fn feature_coverage_doc_counts_match_programs_source() {
     fn rows_and_cells(lang: Language) -> (usize, usize) {
@@ -9528,7 +9552,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Twig, 49, 392),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 45),
-        (Language::DartmouthBasic, 51, 407),
+        (Language::DartmouthBasic, 51, 408),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 64),
         (Language::Cobol60, 58, 464),
@@ -16369,6 +16393,58 @@ fn portable_text_stdout_dartmouth_basic_beam_input() {
     }
     assert_eq!(executed, 5, "exactly the five INPUT rows are checked here");
     eprintln!("Dartmouth BASIC BEAM input: {executed} programs executed");
+}
+
+/// BEAM08 (VM-018 closed): `RND` on real `erl` — the last Dartmouth BASIC
+/// BEAM gap, closing the entire non-ALGOL BEAM matrix. See
+/// `code/specs/BEAM08-rnd-beam-support.md` for the full research writeup;
+/// summary here for the promotion record.
+///
+/// `RND`'s frontend-emitted `__basic_rnd` helper shares its Park–Miller
+/// state through `global_store`/`global_load` (the same module-global
+/// substrate every other module-level BASIC/COBOL/Twig variable uses).
+/// `global_store` lowered `erlang:put/2` via `gc_bif2` — the exact bug
+/// class BEAM07's VM-D036 discovery flagged as pre-existing here and
+/// deliberately deferred as issue #15332, because `put/2` is not a
+/// guard-safe BIF and `gc_bif2`'s `Live` count cannot protect a separate
+/// live x-register across it. This was a genuine PREREQUISITE for `RND`,
+/// not a drive-by fix: `main`'s `global_store` of the seed silently failed
+/// to stick under `gc_bif2`, so the helper's first `global_load` read back
+/// `undefined` — exactly the `{badarith,[{erlang,'*',[undefined,...]}]}`
+/// trap every prior probe (VM-LOOP-24, this backlog's own BEAM07 section)
+/// recorded. Fixing #15332 (converting `global_store` to `call_ext`,
+/// protected by the existing `save_live_across_imported_call!`/
+/// `restore_live_across_imported_call!` Y-register machinery, and adding
+/// `global_store` to the `live_across` liveness filter) was both necessary
+/// and sufficient — no new IIR op, no new BEAM opcode, no change to
+/// `dartmouth-basic-iir-compiler`'s existing RND lowering.
+///
+/// This row exercises negative-reseed (`FNR(-1)`), cross-function state
+/// sharing (`main`'s `RND(1)` continuing a `DEF FN`'s sequence), zero-
+/// repeat (`FNR(0)`), and another positive advance (`RND(1)`) — the same
+/// portable Park–Miller sequence every other standard backend already
+/// proves (`22`, `85032`, `85032`, `601352`).
+#[test]
+fn portable_text_stdout_dartmouth_basic_beam_rnd() {
+    if !erl_ok() {
+        eprintln!("SKIP Dartmouth BASIC BEAM RND: erl unavailable");
+        return;
+    }
+    let src = "10 DEF FNR(X) = RND(X)\n\
+               20 PRINT INT(FNR(-1) * 1000000)\n\
+               30 PRINT INT(RND(1) * 1000000)\n\
+               40 PRINT INT(FNR(0) * 1000000)\n\
+               50 PRINT INT(RND(1) * 1000000)\n\
+               60 END\n";
+    let program = PROGRAMS.iter()
+        .find(|p| p.lang == Language::DartmouthBasic && p.src == src)
+        .unwrap_or_else(|| panic!("DartmouthBasic RND row with src {src:?} not found"));
+    assert!(program.backends.contains(&Beam), "RND row must now declare Beam (VM-018 closed)");
+    assert!(matches!(program.expect, Expect::Stdout(value) if value == "22\n85032\n85032\n601352"),
+        "RND row's expected Park–Miller sequence must match every other backend");
+    let result = run_beam(program).expect("detected erl must execute Dartmouth BASIC");
+    assert_cell(Beam, program, result);
+    eprintln!("Dartmouth BASIC BEAM RND: 1 program executed — Dartmouth BASIC is now 51/51 on Beam");
 }
 
 // VM-041: fixed a confirmed silent-corruption bug first — `call_closure`

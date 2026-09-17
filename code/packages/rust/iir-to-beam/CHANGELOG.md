@@ -1,5 +1,70 @@
 # Changelog — iir-to-beam
 
+## 0.17.0 - 2026-09-16 - `global_store` lowers `erlang:put/2` via `call_ext`, not `gc_bif2` (BEAM08, closes #15332)
+
+Closed issue #15332, the `global_store`-side half of BEAM07's VM-D036
+discovery (deliberately deferred there as a properly-scoped follow-up):
+`global_store` lowered `erlang:put/2` via `gc_bif2`, exactly the bug class
+BEAM07 fixed for its own new `input_more`/`input_i64`/`input_str` `put/2`
+usage but explicitly left in the pre-existing `global_store` arm. Real
+`erlc -S` disassembly (already confirmed in BEAM07) shows `erlang:put/2`
+always compiles to a genuine `call_ext`, never `gc_bif2` — growing the
+process dictionary's hash table can allocate, and `put/2` does not honor a
+guard BIF's "only touch the declared Dest" contract, so `gc_bif2`'s `Live`
+count cannot correctly protect any OTHER live x-register across the call.
+
+This was the confirmed root cause of Dartmouth BASIC's `RND` trapping on
+real `erl` with `{badarith,[{erlang,'*',[undefined,48271],...}]}`:
+`RND`'s frontend-emitted `__basic_rnd` helper shares its Park–Miller seed
+through the ordinary `global_store`/`global_load` module-global substrate
+(no bespoke RND-specific lowering exists), so `main`'s initial seed store
+silently failed to stick under `gc_bif2`, and the helper's first
+`global_load` read back `undefined`. See
+`code/specs/BEAM08-rnd-beam-support.md` for the full research writeup
+(this was RND's ONLY blocker — closing it required no new IIR op, no new
+BEAM opcode, and no change to `dartmouth-basic-iir-compiler`).
+
+**Fix**, mirroring BEAM07's own `put/2` conversion exactly:
+
+- `global_store` now stages its value operand into a scratch register
+  (parallel-move hazard: the source register may already be x0 or x1),
+  then emits `move {a,atom(name)} {x,0}`, `move {x,scratch} {x,1}`,
+  `call_ext 2 import_put` — protected by the existing
+  `save_live_across_imported_call!`/`restore_live_across_imported_call!`
+  Y-register machinery, exactly like `str_concat`/`str_slice`/
+  `call_closure` already are.
+- Added `"global_store"` to the `live_across` liveness classification list
+  (`lower.rs`'s per-instruction call-site analysis) — it was absent the
+  whole time `gc_bif2` was assumed non-clobbering. Without this, the new
+  `call_ext` would clobber every x-register with no compensating Y-spill
+  for any OTHER live IIR variable: a silent wrong-VALUE bug, not a crash.
+
+`global_load`'s lowering is unchanged — `erlang:get/1` remains a
+confirmed zero-GC guard BIF, safe via `gc_bif1`.
+
+**New tests** (105 → 118 across BEAM07+BEAM08; 116 → 118 this slice):
+
+- `test_114_global_store_emits_call_ext_not_gc_bif2` — instruction-shape
+  proof (exactly one `call_ext`, zero `gc_bif2`), mirroring
+  `test_86_f64_pow_emits_call_ext_not_gc_bif2`'s style.
+- `test_115_real_erl_global_store_survives_live_across_call` — the
+  disposable control test from issue #15332's own reproduction
+  (`str_const` a list, an unrelated `global_store`, read the list back),
+  made permanent with a correctness assertion instead of just "did not
+  crash": the `str_const` value survives the call intact AND the stored
+  global reads back correctly (`OK42`). Before this fix, this exact shape
+  either silently corrupted the co-live value or crashed `erl` outright
+  with a Windows access violation (`ExitStatus(3221225477)` =
+  `0xC0000005`) — the same failure mode BEAM07 hit for its own new code
+  before its fix landed.
+
+**Re-verified the wide blast radius issue #15332 flagged**: `global_store`
+is used by every BASIC/COBOL/Twig program with a module-level variable.
+The full existing `iir-to-beam` suite (118 tests) and the full
+`lang_matrix.rs` BEAM test group (34 tests, spanning Twig/Nib/Oct/
+Brainfuck/COBOL-60/FlowMatic/Dartmouth BASIC) all pass unchanged — zero
+regressions. `cargo clippy --all-targets -- -D warnings` clean.
+
 ## 0.16.0 - 2026-09-15 - host input: `input_more`/`input_i64`/`input_str` (BEAM07)
 
 BASIC `INPUT X`/`INPUT A$` and FlowMatic `READ-ITEM`'s EOF peek all lowered
