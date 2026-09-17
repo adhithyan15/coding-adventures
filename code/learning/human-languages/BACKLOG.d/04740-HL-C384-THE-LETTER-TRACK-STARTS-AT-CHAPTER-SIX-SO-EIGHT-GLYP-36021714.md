@@ -7,10 +7,20 @@ was right and the cause is sharper than "least room". It is structural.**
 
 ### How the Hindi script track is actually built
 
-| chapters | what teaches the script | shape |
+| chapters | run | shape |
 |---|---|---|
-| 1–2 | the `HI-W*` run, sequences 60–266 | **whole words**: shirorekhā, नमस्ते, मेरा नाम, the danda, dictation |
-| 6–16 | the `HI-S*` run | **two letter lessons per chapter**, at sequences `N05` and `N06` |
+| 1–2 | `HI-W*`, sequences 60–266 | **whole words**: shirorekhā, नमस्ते, मेरा नाम, the danda, dictation |
+| 6–16 | `HI-S*` | **two letter lessons per chapter**, at sequences `N05` and `N06` |
+| 59 | `HI-W12-*`, sequences 2100–2200 | **eleven lessons catching up**: भ, य, ब, ड and four mātrās |
+
+**There are three runs, not two, and the third one already does the thing this
+entry recommends.** Chapter 59 goes back and draws characters the reader had
+been using for fifty chapters — **ड** among them, which is why it is not on the
+undrawn list below. That is the "teach it late and say so" pattern, already in
+the corpus, at scale.
+
+So the recommendation is not a new departure. It is **finishing a job the
+corpus already started once and stopped part-way through**.
 
 The opening teaches writing by **copying words the reader can already say**. It
 draws the shirorekhā, the mātrās, the virāma and two conjuncts, and it gets a
