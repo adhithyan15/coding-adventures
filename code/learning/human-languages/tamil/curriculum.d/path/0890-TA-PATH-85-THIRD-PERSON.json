@@ -1,0 +1,15 @@
+{
+  "id": "TA-PATH-85-THIRD-PERSON",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "lessons": [
+    "TA-C85-avan-aval",
+    "TA-C85-avargal",
+    "TA-C85-naam-naangal",
+    "TA-R85-avarkal-recall"
+  ],
+  "before": [],
+  "inline": [
+    "TA-EXT-85-THIRD-PERSON"
+  ],
+  "after": []
+}
