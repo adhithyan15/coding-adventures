@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C79-valare",
+    "language": "malayalam",
+    "chapter": 79,
+    "sequence": 2720,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:967f38c45e409bf4"
+  },
+  "findings": []
+}

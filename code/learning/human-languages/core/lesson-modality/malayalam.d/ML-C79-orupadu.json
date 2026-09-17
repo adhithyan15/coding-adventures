@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C79-orupadu",
+    "language": "malayalam",
+    "chapter": 79,
+    "sequence": 2730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b837b1cff92dae7c"
+  },
+  "findings": []
+}

@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:b2a0847dcc297312",
+  "lessonIds": [
+    "ML-C79-valare",
+    "ML-C79-orupadu",
+    "ML-C79-degree-slot",
+    "ML-R79-degree-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch79-how-much-of-it.tex"
+}
