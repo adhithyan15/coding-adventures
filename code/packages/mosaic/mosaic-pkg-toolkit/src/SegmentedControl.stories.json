@@ -14,6 +14,7 @@
           ]
         ],
         "selected-index": 0,
+        "vertical": false,
         "disabled": false
       }
     },
@@ -35,6 +36,7 @@
           ]
         ],
         "selected-index": 0,
+        "vertical": false,
         "disabled": false
       }
     },
@@ -56,6 +58,7 @@
           ]
         ],
         "selected-index": 1,
+        "vertical": false,
         "disabled": false
       }
     },
@@ -77,6 +80,7 @@
           ]
         ],
         "selected-index": 2,
+        "vertical": false,
         "disabled": false
       }
     },
@@ -110,6 +114,7 @@
           ]
         ],
         "selected-index": 3,
+        "vertical": false,
         "disabled": false
       }
     },
@@ -151,6 +156,7 @@
           ]
         ],
         "selected-index": 7,
+        "vertical": false,
         "disabled": false
       }
     },
@@ -172,6 +178,7 @@
           ]
         ],
         "selected-index": 1,
+        "vertical": false,
         "disabled": false
       }
     },
@@ -193,6 +200,7 @@
           ]
         ],
         "selected-index": -1,
+        "vertical": false,
         "disabled": false
       }
     },
@@ -214,6 +222,63 @@
           ]
         ],
         "selected-index": 1,
+        "vertical": false,
+        "disabled": true
+      }
+    },
+    {
+      "name": "Vertical",
+      "fixtures": {
+        "options": [
+          [
+            "List",
+            "List"
+          ],
+          [
+            "Board",
+            "Board, selected"
+          ],
+          [
+            "Sheet",
+            "Sheet"
+          ],
+          [
+            "Calendar",
+            "Calendar"
+          ],
+          [
+            "Notes",
+            "Notes"
+          ],
+          [
+            "Timeline",
+            "Timeline"
+          ]
+        ],
+        "selected-index": 1,
+        "vertical": true,
+        "disabled": false
+      }
+    },
+    {
+      "name": "Vertical disabled",
+      "fixtures": {
+        "options": [
+          [
+            "List",
+            "List, selected"
+          ],
+          [
+            "Board",
+            "Board"
+          ],
+          [
+            "Sheet",
+            "Sheet"
+          ]
+        ],
+        "selected-index": 0,
+        "vertical": true,
         "disabled": true
       }
     }

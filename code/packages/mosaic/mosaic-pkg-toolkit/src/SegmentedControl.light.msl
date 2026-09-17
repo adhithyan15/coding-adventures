@@ -5,6 +5,9 @@
 // segmented control on one screen agree.
 
 style SegmentedControl {
+  part segmented-root {
+    padding : 0 ;
+  }
   part segmented {
     padding : 0 ;
   }
@@ -18,6 +21,29 @@ style SegmentedControl {
     border-radius : 0 ;
   }
   part segmented-option-selected {
+    padding       : 8 ;
+    background    : "#0d6efd" ;
+    color         : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#0a58ca" ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+  // Vertical orientation (#15432): same look, stacked. The axis is the
+  // container primitive, so these are separate parts, not states.
+  part segmented-vertical {
+    padding : 0 ;
+  }
+  part segmented-vertical-option {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#0d6efd" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+  part segmented-vertical-option-selected {
     padding       : 8 ;
     background    : "#0d6efd" ;
     color         : "#ffffff" ;

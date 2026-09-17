@@ -83,8 +83,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.12.0",
-        "[package].version must be 0.12.0 for the SegmentedControl release"
+        version, "0.13.0",
+        "[package].version must be 0.13.0 for the vertical SegmentedControl release"
     );
 
     let exports = value
@@ -928,7 +928,7 @@ fn segmented_control_interface_matches_spec() {
     let out = mosmodel_compiler::compile(&mil_src).unwrap();
     let c = &out.component;
     let slot_names: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
-    assert_eq!(slot_names, vec!["options", "selected-index", "disabled"]);
+    assert_eq!(slot_names, vec!["options", "selected-index", "vertical", "disabled"]);
     let emit_names: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
     assert_eq!(emit_names, vec!["onSelect"]);
     // The payload is what lets a host map a click back to an option.
@@ -970,15 +970,20 @@ fn segmented_control_selection_costs_two_parts_and_is_distinct() {
         !code.contains("selected-index )"),
         "the kebab-case slot name inside an expression emits a subtraction on web"
     );
+    // Two orientations x (selected, unselected).
     assert_eq!(
         code.matches("a11y-label : ( option[1] )").count(),
-        2,
-        "both branches must bind the host-supplied accessible name"
+        4,
+        "every branch must bind the host-supplied accessible name"
     );
     assert_eq!(
         code.matches("label : ( option[0] )").count(),
-        2,
-        "both branches must bind the visible label"
+        4,
+        "every branch must bind the visible label"
+    );
+    assert!(
+        code.contains("If ( when: slot: vertical )"),
+        "orientation must be chosen by the bool slot"
     );
 
     let mll_out = moslayout_compiler::compile(&mll_src, Some(&mil_out.descriptor_json))
@@ -988,8 +993,16 @@ fn segmented_control_selection_costs_two_parts_and_is_distinct() {
     parts.dedup();
     assert_eq!(
         parts,
-        vec!["segmented", "segmented-option", "segmented-option-selected"],
-        "selection must cost exactly two option parts"
+        vec![
+            "segmented",
+            "segmented-option",
+            "segmented-option-selected",
+            "segmented-root",
+            "segmented-vertical",
+            "segmented-vertical-option",
+            "segmented-vertical-option-selected",
+        ],
+        "selection must cost exactly two option parts per orientation"
     );
 
     for theme in THEMES {
@@ -1011,12 +1024,26 @@ fn segmented_control_selection_costs_two_parts_and_is_distinct() {
                 .value
                 .clone()
         };
-        for name in ["background", "color", "border-color"] {
-            assert_ne!(
-                prop("segmented-option", name),
-                prop("segmented-option-selected", name),
-                "{style_filename}: selected and unselected options share `{name}`"
-            );
+        for axis in ["segmented", "segmented-vertical"] {
+            let (plain, selected) = (format!("{axis}-option"), format!("{axis}-option-selected"));
+            for name in ["background", "color", "border-color"] {
+                assert_ne!(
+                    prop(&plain, name),
+                    prop(&selected, name),
+                    "{style_filename}: {axis} selected and unselected options share `{name}`"
+                );
+                // The two orientations are one control; they must look alike.
+                assert_eq!(
+                    prop(&plain, name),
+                    prop("segmented-option", name),
+                    "{style_filename}: {plain} drifted from segmented-option on `{name}`"
+                );
+                assert_eq!(
+                    prop(&selected, name),
+                    prop("segmented-option-selected", name),
+                    "{style_filename}: {selected} drifted on `{name}`"
+                );
+            }
         }
     }
 }
@@ -1048,7 +1075,7 @@ fn segmented_control_stories_are_well_formed() {
     };
     assert!(stories.len() >= 8, "stories must cover the states #14016 lists");
 
-    let declared = ["options", "selected-index", "disabled"];
+    let declared = ["options", "selected-index", "vertical", "disabled"];
     let mut selections = Vec::new();
     let mut saw_disabled = false;
     for story in stories {
@@ -1092,6 +1119,13 @@ fn segmented_control_stories_are_well_formed() {
     assert!(selections.iter().any(|(s, n)| *s > 0 && *s < n - 1), "selected middle");
     assert!(selections.iter().any(|(s, _)| *s == -1), "no selection");
     assert!(saw_disabled, "a disabled story");
+    let verticals = stories
+        .iter()
+        .filter(|story| {
+            field(story, "fixtures").and_then(|f| field(f, "vertical")) == Some(&JsonValue::Bool(true))
+        })
+        .count();
+    assert!(verticals >= 1, "a vertical story (#15432)");
 }
 
 /// DropdownMenu — toggle button + revealed item list. Two emits:
