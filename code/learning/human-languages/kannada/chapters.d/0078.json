@@ -1,0 +1,20 @@
+{
+  "chapter": 78,
+  "title": "The Vowels That Start a Word",
+  "label": "ch:ka-svaragalu",
+  "canDo": "I can write the six independent vowels a Kannada word can begin with, name the words I already say that start on them, and say how many times my pen leaves the page for each.",
+  "payoff": {
+    "lesson": "KA-R78-vowels-recall",
+    "kind": "production",
+    "summary": "From cold: name the six vowel letters, sort them by how many pen lifts each one takes, name the word you already say that opens on each, and say what this book does about a character whose stroke order nobody has published.",
+    "assesses": [
+      "KA-SCRIPT-RECOG-155",
+      "KA-SCRIPT-RECOG-156",
+      "KA-SCRIPT-RECOG-157",
+      "KA-SCRIPT-RECOG-158",
+      "KA-SCRIPT-RECOG-159",
+      "KA-SCRIPT-RECOG-160"
+    ],
+    "note": "The chapter introduces exactly these six atoms and the payoff assesses all six. Every stroke order in the chapter is cited to a published animation; nothing here infers a pen path."
+  }
+}

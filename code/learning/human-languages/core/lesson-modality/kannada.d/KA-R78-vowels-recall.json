@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-R78-vowels-recall",
+    "language": "kannada",
+    "chapter": 78,
+    "sequence": 2800,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a28b85f24a928f0d",
+    "detachableSegments": [
+      "Script: the six, sorted by what the pen does"
+    ]
+  },
+  "findings": []
+}

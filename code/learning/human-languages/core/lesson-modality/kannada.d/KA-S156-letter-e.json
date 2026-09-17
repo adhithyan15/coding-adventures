@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S156-letter-e",
+    "language": "kannada",
+    "chapter": 78,
+    "sequence": 2750,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dd85b4e16ffe97d5",
+    "detachableSegments": [
+      "Script you'll notice: ಎ",
+      "Writing: ಎ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

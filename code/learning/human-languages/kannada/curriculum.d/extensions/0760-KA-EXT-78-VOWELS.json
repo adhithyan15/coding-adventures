@@ -1,0 +1,19 @@
+{
+  "id": "KA-EXT-78-VOWELS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write the six independent vowels a Kannada word can begin with.",
+  "prerequisites": [
+    "KA-EXT-77-MARKS"
+  ],
+  "lessons": [
+    "KA-S155-letter-aa",
+    "KA-S156-letter-e",
+    "KA-S157-letter-ee",
+    "KA-S158-letter-o",
+    "KA-S159-letter-ai",
+    "KA-S160-letter-vocalic-r",
+    "KA-R78-vowels-recall"
+  ]
+}
