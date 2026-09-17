@@ -1,0 +1,29 @@
+// SegmentedControl.light.msl — default light-theme styling.
+//
+// The selected option differs in fill, text colour AND border, never in
+// colour alone. The palette is shared with Tabs so a tab bar and a
+// segmented control on one screen agree.
+
+style SegmentedControl {
+  part segmented {
+    padding : 0 ;
+  }
+  part segmented-option {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#0d6efd" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+  part segmented-option-selected {
+    padding       : 8 ;
+    background    : "#0d6efd" ;
+    color         : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#0a58ca" ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+}

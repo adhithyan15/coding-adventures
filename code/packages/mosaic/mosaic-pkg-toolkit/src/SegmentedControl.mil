@@ -1,0 +1,61 @@
+// SegmentedControl.mil — interface for the toolkit's SegmentedControl.
+//
+// A row of mutually exclusive options, exactly one of which is selected.
+// iOS's `UISegmentedControl`, macOS's `NSSegmentedControl`, Material's
+// segmented button, WinUI's `Segmented`. It is the most generic widget
+// both shipping Mosaic apps own: Engram switches Decks / Study / Browse /
+// Add / Stats / Options with one, and TaskApp switches List / Board /
+// Sheet / Calendar / Notes / Timeline with another (#14016, #14063).
+//
+// How it differs from its neighbours
+// ----------------------------------
+//
+//   ButtonGroup       a row of buttons, no selection       (actions)
+//   Tabs              a row of headers + one body panel    (navigation + content)
+//   SegmentedControl  a row of options, one selected       (a choice, no body)
+//
+// Tabs owns a body; a segmented control does not. The host decides what
+// the selection changes, which may be a whole screen.
+//
+// Why each option is a `[label, accessible-name]` pair
+// ----------------------------------------------------
+//
+// The selected option must be announced as selected by a screen reader.
+// The kernel's `HostButton` has no selected/pressed state to lower to
+// `aria-pressed`, `Semantics(selected:)`, `.isSelected` and friends
+// (tracked as a kernel gap), and the layout language has no string
+// concatenation, so the component cannot build "Board, selected" itself.
+//
+// So the host supplies the accessible name: the same "fat engine, dumb
+// UI" contract TaskApp's task rows use (`a11y-label : ( row[16] )`). The
+// host already owns the selection, so it is the one place that knows
+// which name should carry the state:
+//
+//   options = [
+//     ["List",  "List"],
+//     ["Board", "Board, selected"],   // selected-index = 1
+//     ["Sheet", "Sheet"],
+//   ]
+//
+// Every row MUST carry both columns.
+//
+// Why not `list<text>` plus a parallel `list<text>` of names? Two
+// parallel lists can disagree in length; one list of pairs cannot.
+
+component SegmentedControl {
+  // The options, in order: each row is `[label, accessible-name]`.
+  slot options : list<list<text>> ;
+
+  // Index of the selected option, or -1 for none. Host-owned: the
+  // component never changes it, it only reports activations.
+  slot selected-index : number ;
+
+  // Disables every option at once. A partly-disabled segmented control
+  // is a different widget (a toolbar), so there is no per-option flag.
+  slot disabled : bool ;
+
+  // Fired when the user activates an option. Payload is its index.
+  // Activating the already-selected option still fires; whether that
+  // means anything is the host's decision, not the component's.
+  emit onSelect ( index : number ) ;
+}

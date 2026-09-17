@@ -33,6 +33,9 @@ moslayout-compiler             = { path = "../../rust/moslayout-compiler" }
 mosstyle-compiler               = { path = "../../rust/mosstyle-compiler" }
 mosaic-package-artifact-builder = { path = "../../rust/mosaic-package-artifact-builder" }
 toml                            = "0.8"
+# Zero-dependency in-house JSON parser, for reading .stories.json in the
+# tests (in preference to adding serde_json; see #14414).
+coding_adventures_bounded_json  = { path = "../../rust/bounded-json" }
 tempfile                        = "3"
 
 [[test]]

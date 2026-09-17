@@ -168,6 +168,7 @@ the model.
 | `DropdownMenu` | `Stack { HostButton[trigger], If open { Box[menu] { For (items) { HostButton } } } }` |
 | `Accordion`    | `Column { For (sections) { Box[section] { HostButton[header], If open { Box[body] } } } }` |
 | `Select`       | uses `DropdownMenu` |
+| `SegmentedControl` | `Row { For (options) { If selected { HostButton[option-selected] } Else { HostButton[option] } } }` |
 
 ### 3.3 Tier 3 — needs new infrastructure
 
@@ -349,6 +350,16 @@ possible (Modal → HostDialog, Input → HostInput, Button →
 HostButton). The kernel's a11y story is what each backend's native
 widget provides; the toolkit doesn't add anything beyond ARIA
 labels exposed as slots on each component (`aria-label: text`).
+
+**Selected state has no kernel surface yet.** `HostButton` exposes a
+name (`a11y-label`) but no selected/pressed state, and the layout
+language has no string concatenation. A component whose options can be
+selected (`SegmentedControl`) therefore takes each option's accessible
+name from the host, which writes the state into it (`"Board,
+selected"`). This is a stand-in, not the target: a screen reader hears
+the word rather than the platform's selected trait. Arrow-key traversal
+within a group is likewise not expressible. Both are kernel gaps, to be
+specified once against the tree rather than patched per component.
 
 ---
 
