@@ -789,6 +789,41 @@ jobs:
           body: |
             Engram ${{ needs.validate.outputs.version }} — web, desktop, and native.
 
+            ## New since 0.4.0
+
+            **Moving between screens is one control.** Decks, Study, Browse,
+            Add, Stats and Options are a segmented switcher instead of six
+            separate buttons, and it stacks vertically on a phone-width screen
+            rather than overflowing it.
+
+            **A screen reader hears which option is selected**, as the
+            platform's own selected state rather than a word appended to the
+            option's name. On Apple platforms an unselected option carries no
+            state, because the accessibility framework has no negative form.
+
+            **The Study screen says when there is nothing to review.** Instead
+            of an empty card with a Reveal button and five review actions that
+            do nothing, it shows what happened and a way back to the decks.
+
+            **An oversized Anki import is refused before it is decompressed.**
+            The media budget used to be checked after each file was fully
+            expanded, so the file that broke the limit had already been held in
+            memory — up to 256 MB, on a 32 MiB browser budget. Measured on a
+            hostile package: peak memory for the refused import fell from
+            134 MB to under 2 KB.
+
+            **Saving a collection uses about a fifth of the memory.** A save
+            re-parsed the whole collection to attach one field. Measured on a
+            1.4 MB collection: 27 MB of peak allocation, now 7 MB.
+
+            Plus the collection-integrity fixes of this cycle: commands naming
+            a deck or note type the collection does not contain are refused,
+            two notes can no longer generate the same card id, and deleting a
+            note type no longer reports success while removing nothing — or the
+            wrong model.
+
+            ## What is in this release
+
             The browser app, built from the Mosaic package on the Rust core.
             **Anki import and export run in the browser** — legacy `.apkg` and
             modern `.anki21b` / `.colpkg` alike. Earlier builds delegated both to
