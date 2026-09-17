@@ -1,9 +1,10 @@
 {
   "language": "telugu",
   "chapter": 10,
-  "sourceHash": "fnv1a64:3ce8c6a5d4628537",
+  "sourceHash": "fnv1a64:c6f03c3414823552",
   "lessonIds": [
     "TE-C10-vaaram",
+    "TE-S159-letter-sha",
     "TE-S114-letter-la"
   ],
   "tex": "telugu/book/chapters/ch10-days.tex"

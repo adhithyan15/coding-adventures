@@ -60,7 +60,12 @@
     "TE-S153-vowel-sign-oo",
     "TE-S154-vowel-sign-o",
     "TE-S155-letter-ttha",
-    "TE-S156-script-recall"
+    "TE-S156-script-recall",
+    "TE-S157-letter-ba",
+    "TE-S158-letter-ssa",
+    "TE-S159-letter-sha",
+    "TE-S160-letter-pha",
+    "TE-S161-script-recall-four"
   ],
   "before": [],
   "inline": [
