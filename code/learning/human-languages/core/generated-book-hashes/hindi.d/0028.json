@@ -1,9 +1,10 @@
 {
   "language": "hindi",
   "chapter": 28,
-  "sourceHash": "fnv1a64:2bcd5ee31ba17875",
+  "sourceHash": "fnv1a64:d96c3280aeaea0c5",
   "lessonIds": [
-    "HI-C28-subah"
+    "HI-C28-subah",
+    "HI-S143-letter-tha-retroflex"
   ],
   "tex": "hindi/book/chapters/ch28-morning.tex"
 }
