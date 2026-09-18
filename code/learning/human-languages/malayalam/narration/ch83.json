@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Where You Came From",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d804def84aecb8a1",
+  "sourceHash": "fnv1a64:0337a7b0c20682d9",
   "lessons": [
     {
       "id": "ML-C83-ninnu",
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba8a797e98f27081",
+      "sourceHash": "fnv1a64:e21b32e49739fbeb",
       "notice": null,
       "blocks": [
         {
@@ -392,7 +392,7 @@
             },
             {
               "kind": "speech",
-              "text": "Other kinds of ending do other things to it, and you will meet them in their own chapters. What this one shows you is the case endings."
+              "text": "Other kinds of ending do other things to it. You have met one already: the and ending puts വും there instead — വെള്ളം, വെള്ളവും — which is not this at all. What this chapter shows you is the case ending."
             },
             {
               "kind": "speech",

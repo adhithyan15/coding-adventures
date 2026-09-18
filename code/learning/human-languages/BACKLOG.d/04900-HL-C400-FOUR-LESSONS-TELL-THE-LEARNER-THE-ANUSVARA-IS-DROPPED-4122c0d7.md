@@ -60,14 +60,34 @@ sequence **320**, long before any of these sites, and `ML-C96-eluppam` (3410)
 already models the exact phrasing — *"A case ending takes the **ം** away and
 puts **ത്ത** in its place."*
 
-**The sweep was run wide before trusting this shard's list**, script and
-romanization, and it returned exactly these four lessons and nine lines — no
-fifth site. The recall partners `ML-R91-shopping-recall` and
-`ML-R92-eating-out-recall` were checked and are clean; **null result stated**.
+**The sweep returned exactly these four canonical lessons and nine lines**, and
+the recall partners `ML-R91-shopping-recall` and `ML-R92-eating-out-recall` were
+checked and are clean — **null result stated**.
 
-The shard's own advice was followed: the four-way picture is **not** taught in
-chapter 83, because the learner has met one of the four at that point. The early
-lessons simply stop claiming more than they show.
+**But the first version of this section claimed "no fifth site" after a sweep
+"script and romanization", and that was false.** Review found the identical
+sentence still asserted in romanization in `core/exam-inventory-malayalam-a1.json`
+(twice) and a now-stale *"still tell the learner"* record in
+`malayalam/chapters.d/0096.json`. All three are corrected in the same commit.
+The claim now says what it can support: four canonical lessons.
+
+**The four-way picture is deliberately not taught in chapter 83** — but not for
+the reason first given. The first version said *"the learner has met one of the
+four at that point"*, and that is wrong: they have met **two**. `ML-C70-um`
+(2390) teaches the **-ം → -വും** rule outright, 510 points earlier. So
+`ML-C83` now **names** that one — *"You have met one already: the and ending
+puts **വും** there instead"* — rather than promising it as something still to
+come. The other two (**ങ്ങൾ** at `ML-C93-angal`, **ആണ്**/**ഇല്ല** at
+`ML-C89`/`ML-C96`) genuinely do come later.
+
+**And the narrowing introduced a false claim of its own**, caught in review:
+`ML-C91-vila-panam` said the **ം** gives way *"exactly as it did on the state
+name and on the tens"*. Loose but harmless while the sentence said *"when
+something attaches"*; once narrowed to *"a case ending"* it asserted that a case
+ending removed a **ം** from the tens — which have **no ം** (they end in **ത്**)
+and take **no case ending** (their trigger is a following digit). Now *"on the
+state name and on the book"*. Three merged lessons that generalise stem
+alternation more broadly are filed separately as `HL-C404`, with a dissent.
 
 ### Shape of a fix (as originally proposed)
 

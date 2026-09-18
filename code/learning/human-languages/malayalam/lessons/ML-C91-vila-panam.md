@@ -53,7 +53,7 @@ English keeps them apart the same way, so there is nothing to untangle.
 
 **പണം ends in the ം**, which means you already know what it will do when
 a case ending attaches to it: the **ം** gives way, exactly as it did on the state
-name and on the tens. A word that ends this way tells you in advance how it will
+name and on the book. A word that ends this way tells you in advance how it will
 behave.
 
 **പുസ്തകത്തിന്റെ വില** — *pustakattinṟe vila* — the price of the book.

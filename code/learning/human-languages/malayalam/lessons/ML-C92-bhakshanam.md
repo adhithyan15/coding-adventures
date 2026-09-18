@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 250
 requires:
-  knowledge: [ML-CONCEPT-C40-OON-01, ML-CONCEPT-C15-VELLAM-ARI-01]
+  knowledge: [ML-CONCEPT-C40-OON-01, ML-CONCEPT-C15-VELLAM-ARI-01, ML-GRAMMAR-C83-OBLIQUE-AM-01]
 introduces:
   knowledge: [ML-LEX-C92-FOOD-01]
 practises:
-  knowledge: [ML-LEX-C92-FOOD-01, ML-CONCEPT-C40-OON-01, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C32-TINNUKA-01]
+  knowledge: [ML-LEX-C92-FOOD-01, ML-CONCEPT-C40-OON-01, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C32-TINNUKA-01, ML-GRAMMAR-C83-OBLIQUE-AM-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -37,7 +37,7 @@ reviews_of: [ML-C40-oon, ML-C15-vellam-ari]
 say **food** and notice that you cannot.
 
 ## You'll want to know: ഭക്ഷണം
-<!-- hl-knowledge: introduces=[ML-LEX-C92-FOOD-01]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ML-LEX-C92-FOOD-01]; assesses=[ML-GRAMMAR-C83-OBLIQUE-AM-01] -->
 
 **ഭക്ഷണം** — *bhakṣaṇaṁ* — food.
 

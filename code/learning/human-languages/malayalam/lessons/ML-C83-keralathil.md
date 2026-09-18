@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 270
 requires:
-  knowledge: [ML-GRAMMAR-C83-ABLATIVE-01, ML-LEX-C80-ORIGIN-02, ML-LEX-C80-ORIGIN-03, ML-LEX-C46-ASK-05, ML-CONCEPT-C05-POSTPOSITION-IL-01]
+  knowledge: [ML-GRAMMAR-C83-ABLATIVE-01, ML-LEX-C80-ORIGIN-02, ML-LEX-C80-ORIGIN-03, ML-LEX-C46-ASK-05, ML-CONCEPT-C05-POSTPOSITION-IL-01, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C70-UM-02]
 introduces:
   knowledge: [ML-GRAMMAR-C83-OBLIQUE-AM-01]
 practises:
-  knowledge: [ML-GRAMMAR-C83-OBLIQUE-AM-01, ML-GRAMMAR-C83-ABLATIVE-01, ML-LEX-C80-ORIGIN-02, ML-LEX-C80-ORIGIN-03, ML-LEX-C46-ASK-05, ML-CONCEPT-C05-POSTPOSITION-IL-01]
+  knowledge: [ML-GRAMMAR-C83-OBLIQUE-AM-01, ML-GRAMMAR-C83-ABLATIVE-01, ML-LEX-C80-ORIGIN-02, ML-LEX-C80-ORIGIN-03, ML-LEX-C46-ASK-05, ML-CONCEPT-C05-POSTPOSITION-IL-01, ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C70-UM-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -37,7 +37,7 @@ reviews_of: [ML-C80-keralam, ML-C46-book]
 ending that means **in**.
 
 ## Grammar Lens: two of your place names behave differently
-<!-- hl-knowledge: introduces=[ML-GRAMMAR-C83-OBLIQUE-AM-01]; assesses=[] -->
+<!-- hl-knowledge: introduces=[ML-GRAMMAR-C83-OBLIQUE-AM-01]; assesses=[ML-CONCEPT-C15-VELLAM-ARI-01, ML-CONCEPT-C70-UM-02] -->
 
 Put the in-ending on both names you learned and only one of them goes quietly.
 
@@ -69,8 +69,9 @@ than memorising two place names.
 and is named; the moment **a case ending** is added, the word changes into its
 working shape first. Look for that habit rather than for a list.
 
-**Other kinds of ending do other things to it**, and you will meet them in their
-own chapters. What this one shows you is the case endings.
+**Other kinds of ending do other things to it.** You have met one already: the
+*and* ending puts **വും** there instead — **വെള്ളം**, **വെള്ളവും** — which is
+not this at all. What this chapter shows you is the case ending.
 
 Now the whole chapter arrives at once:
 
