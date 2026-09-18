@@ -55,9 +55,10 @@ reviews_of: [ML-C99-paattu, ML-C98-kalikkuka]
 Say them one after the other and you will hear it: **പാട്ട്** holds the **ṭ**
 long, **പാടുക** does not.
 
-**Two words, one pattern between them — and that is all it is.** Do not go
-looking for a doubled letter in every noun that sits beside a verb. These two
-are the pair this chapter gives you, and the book has not shown you a third.
+**Two words, one pattern between them — and that is all it is.** The book has
+put other nouns beside their verbs — **വായന** beside **വായിക്കുക**, **ചോദ്യം**
+beside **ചോദിക്കുക** — and not one of them does this. **പാട്ട്**/**പാടുക** is
+the only pair in the book where the consonant itself changes weight.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C99-SING-01, ML-LEX-C99-SONG-01, ML-LEX-NJAAN-01] -->

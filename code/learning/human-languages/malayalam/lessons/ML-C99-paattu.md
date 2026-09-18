@@ -46,7 +46,7 @@ reviews_of: [ML-C98-sinima, ML-C89-nallathu]
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C99-SONG-01, ML-LEX-AANU-01, ML-GRAMMAR-C89-NOMINAL-01] -->
 
 **Listen to the join and you will hear nothing arrive.** **പാട്ട്** ends in the
-breathed half-u, and the chapter before last told you what those do when an
+breathed half-u, and the chapter before this one told you what those do when an
 ending comes: they step aside and let it land.
 
 | word | joined to **ആണ്** |

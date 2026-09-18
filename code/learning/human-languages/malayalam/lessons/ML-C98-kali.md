@@ -55,7 +55,7 @@ reviews_of: [ML-C97-bhangi]
 
 **You have seen this done before, and not only last chapter.** **കുട്ടി** has
 been taking the same **യ** since **ഇത് എന്റെ കുട്ടിയാണ്**, and for the same
-reason: the word ends in a vowel, **ആണ്** begins with one, and something has to
+reason: it ends in **ഇ** too, **ആണ്** begins with a vowel, and something has to
 stand between them.
 
 ## What you've built

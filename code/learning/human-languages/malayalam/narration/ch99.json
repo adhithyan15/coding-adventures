@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Songs and Stories",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:44ba777d9936c264",
+  "sourceHash": "fnv1a64:0e0e077a4fef0f0b",
   "lessons": [
     {
       "id": "ML-C99-paattu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4eb005c67ba04c3b",
+      "sourceHash": "fnv1a64:14c5f7e7db96280b",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Listen to the join and you will hear nothing arrive. പാട്ട് (pāṭṭŭ) ends in the breathed half-u, and the chapter before last told you what those do when an ending comes: they step aside and let it land."
+              "text": "Listen to the join and you will hear nothing arrive. പാട്ട് (pāṭṭŭ) ends in the breathed half-u, and the chapter before this one told you what those do when an ending comes: they step aside and let it land."
             },
             {
               "kind": "table",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ad71bc317c52a3c",
+      "sourceHash": "fnv1a64:ab9fda6b20a4640c",
       "notice": null,
       "blocks": [
         {
@@ -217,7 +217,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two words, one pattern between them — and that is all it is. Do not go looking for a doubled letter in every noun that sits beside a verb. These two are the pair this chapter gives you, and the book has not shown you a third."
+              "text": "Two words, one pattern between them — and that is all it is. The book has put other nouns beside their verbs — വായന beside വായിക്കുക, ചോദ്യം beside ചോദിക്കുക — and not one of them does this. പാട്ട് (pāṭṭŭ)/പാടുക (pāṭuka) is the only pair in the book where the consonant itself changes weight."
             }
           ]
         },
@@ -283,9 +283,9 @@
     {
       "id": "ML-C99-nrttham",
       "sequence": 3540,
-      "title": "നൃത്തം (nṛtthaṁ) — dance",
+      "title": "നൃത്തം (nṛttaṁ) — dance",
       "headword": "നൃത്തം",
-      "romanization": "nṛtthaṁ",
+      "romanization": "nṛttaṁ",
       "gloss": "dance — an anusvara word, so the join is the one the book has had longest",
       "script": "malayalam",
       "modality": "voice",
@@ -293,7 +293,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce09cc1b01dbb42b",
+      "sourceHash": "fnv1a64:486c6e9bea026c1f",
       "notice": null,
       "blocks": [
         {
@@ -320,11 +320,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "നൃത്തം — nṛtthaṁ — dance."
+              "text": "നൃത്തം — nṛttaṁ — dance."
             },
             {
               "kind": "speech",
-              "text": "ഇത് നല്ല നൃത്തമാണ്. — itŭ nalla nṛtthamāṇŭ — \"This is a good dance.\""
+              "text": "ഇത് നല്ല നൃത്തമാണ്. — itŭ nalla nṛttamāṇŭ — \"This is a good dance.\""
             }
           ]
         },
@@ -335,7 +335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This is the third join, and the book has had it longest. നൃത്തം (nṛtthaṁ) ends in the ം, and you have known since the good-and-bad chapter what that sign does when ആണ് arrives: it is already the m, and it takes the full letter മ so it can carry the vowel behind it."
+              "text": "This is the third join, and the one the book explained to you first. നൃത്തം (nṛttaṁ) ends in the ം, and you have known since the good-and-bad chapter what that sign does when ആണ് arrives: it is already the m, and it takes the full letter മ so it can carry the vowel behind it."
             },
             {
               "kind": "table",
@@ -347,7 +347,7 @@
               "rowCount": 2,
               "utterances": [
                 "word ends in: the half-u. joined to ആണ്: പാട്ടാണ് (pāṭṭāṇŭ).",
-                "word ends in: ം. joined to ആണ്: നൃത്തമാണ് (nṛtthamāṇŭ)."
+                "word ends in: ം. joined to ആണ്: നൃത്തമാണ് (nṛttamāṇŭ)."
               ]
             },
             {
@@ -370,29 +370,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "nṛtthaṁ",
+              "instruction": "nṛttaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *nṛtthaṁ*]"
+              "source": "[YOU SAY: *nṛttaṁ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "itŭ nalla nṛtthamāṇŭ",
+              "instruction": "itŭ nalla nṛttamāṇŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *itŭ nalla nṛtthamāṇŭ*]"
+              "source": "[YOU SAY: *itŭ nalla nṛttamāṇŭ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pāṭṭāṇŭ, then nṛtthamāṇŭ",
+              "instruction": "pāṭṭāṇŭ, then nṛttamāṇŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *pāṭṭāṇŭ*, then *nṛtthamāṇŭ*]"
+              "source": "[YOU SAY: *pāṭṭāṇŭ*, then *nṛttamāṇŭ*]"
             }
           ]
         },
@@ -409,7 +409,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is dance? (നൃത്തം (nṛtthaṁ).) What does its ം become before ആണ്? (മ — നൃത്തമാണ്.) And does the m sound change? (No — only its writing.)"
+              "text": "What is dance? (നൃത്തം (nṛttaṁ).) What does its ം become before ആണ്? (മ — നൃത്തമാണ്.) And does the m sound change? (No — only its writing.)"
             }
           ]
         }
@@ -488,7 +488,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is the whole chapter in three words. പാട്ട് (pāṭṭŭ) gives a sound up, നൃത്തം (nṛtthaṁ) re-spells one, and കഥ (katha) takes a letter in — three endings, three outcomes, and you were told each one before you met the word it lands on."
+              "text": "That is the whole chapter in three words. പാട്ട് (pāṭṭŭ) gives a sound up, നൃത്തം (nṛttaṁ) re-spells one, and കഥ (katha) takes a letter in — three endings, three outcomes, and you were told each one before you met the word it lands on."
             }
           ]
         },
@@ -564,7 +564,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69e7a380e6994d64",
+      "sourceHash": "fnv1a64:edc0f66b2f61fea9",
       "notice": null,
       "blocks": [
         {
@@ -591,7 +591,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Four words met ആണ് in this chapter and the one before, and no two of the three endings did the same thing:"
+              "text": "Five words met ആണ് in this chapter and the one before, and the three endings did three different things:"
             },
             {
               "kind": "table",
@@ -601,17 +601,18 @@
                 "what happened"
               ],
               "columns": 3,
-              "rowCount": 4,
+              "rowCount": 5,
               "utterances": [
                 "word: പാട്ട് (pāṭṭŭ). joined to ആണ്: പാട്ടാണ് (pāṭṭāṇŭ). what happened: ends in the half-u — a sound is given up.",
-                "word: നൃത്തം (nṛtthaṁ). joined to ആണ്: നൃത്തമാണ് (nṛtthamāṇŭ). what happened: ends in ം — the m is re-spelled.",
+                "word: നൃത്തം (nṛttaṁ). joined to ആണ്: നൃത്തമാണ് (nṛttamāṇŭ). what happened: ends in ം — the m is re-spelled.",
                 "word: കഥ. joined to ആണ്: കഥയാണ് (kathayāṇŭ). what happened: ends in അ — a യ is added.",
-                "word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ). what happened: ends in അ — a യ is added."
+                "word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ). what happened: ends in അ — a യ is added.",
+                "word: കളി. joined to ആണ്: കളിയാണ് (kaḷiyāṇŭ). what happened: ends in ഇ — a യ is added."
               ]
             },
             {
               "kind": "speech",
-              "text": "Given up, re-spelled, added — three different events, and the only thing that tells you which you are looking at is how the word ended."
+              "text": "Given up, re-spelled, added — three different events, and the only thing that tells you which you are looking at is how the word ended. Note the last two rows: അ and ഇ are different vowels and both call for യ, so it is the particular vowel that decides, not vowel-hood on its own."
             }
           ]
         },
@@ -644,11 +645,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pāṭṭŭ, pāṭuka, nṛtthaṁ, katha",
+              "instruction": "pāṭṭŭ, pāṭuka, nṛttaṁ, katha",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *pāṭṭŭ*, *pāṭuka*, *nṛtthaṁ*, *katha*]"
+              "source": "[YOU SAY: *pāṭṭŭ*, *pāṭuka*, *nṛttaṁ*, *katha*]"
             },
             {
               "kind": "prompt",
@@ -683,7 +684,7 @@
             },
             {
               "kind": "speech",
-              "text": "A song, dance, a story? (പാട്ട് (pāṭṭŭ), നൃത്തം (nṛtthaṁ), കഥ (katha).) Which of the three gives a sound up before ആണ്? (പാട്ട് (pāṭṭŭ) — it ends in the half-u.) And which adds one? (കഥ (katha) — it ends in അ, so a യ comes in.)"
+              "text": "A song, dance, a story? (പാട്ട് (pāṭṭŭ), നൃത്തം (nṛttaṁ), കഥ (katha).) Which of the three gives a sound up before ആണ്? (പാട്ട് (pāṭṭŭ) — it ends in the half-u.) And which adds one? (കഥ (katha) — it ends in അ, so a യ comes in.)"
             }
           ]
         }

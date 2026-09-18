@@ -14,7 +14,7 @@ You'll want to know.
 ഇത് നല്ല പാട്ടാണ്. — itŭ nalla pāṭṭāṇŭ — "This is a good song."
 
 The word, taken apart.
-Listen to the join and you will hear nothing arrive. പാട്ട് (pāṭṭŭ) ends in the breathed half-u, and the chapter before last told you what those do when an ending comes: they step aside and let it land.
+Listen to the join and you will hear nothing arrive. പാട്ട് (pāṭṭŭ) ends in the breathed half-u, and the chapter before this one told you what those do when an ending comes: they step aside and let it land.
 [a table of 2 rows, read aloud]
 word: നല്ലത്. joined to ആണ്: നല്ലതാണ് (nallathāṇŭ).
 word: പാട്ട് (pāṭṭŭ). joined to ആണ്: പാട്ടാണ് (pāṭṭāṇŭ).
@@ -51,7 +51,7 @@ Last chapter the noun sat inside the verb. This pair is not built that way.
 noun: കളി. verb: കളിക്കുക — the noun is there whole.
 noun: പാട്ട് (pāṭṭŭ). verb: പാടുക (pāṭuka) — the ട്ട thins to a single ട.
 Say them one after the other and you will hear it: പാട്ട് (pāṭṭŭ) holds the ṭ long, പാടുക (pāṭuka) does not.
-Two words, one pattern between them — and that is all it is. Do not go looking for a doubled letter in every noun that sits beside a verb. These two are the pair this chapter gives you, and the book has not shown you a third.
+Two words, one pattern between them — and that is all it is. The book has put other nouns beside their verbs — വായന beside വായിക്കുക, ചോദ്യം beside ചോദിക്കുക — and not one of them does this. പാട്ട് (pāṭṭŭ)/പാടുക (pāṭuka) is the only pair in the book where the consonant itself changes weight.
 
 Guided Practice.
 [pause 1 second]
@@ -68,35 +68,35 @@ What is to sing? (പാടുക (pāṭuka).) What is a song? (പാട്ട
 
 
 Lesson 3 of 5.
-നൃത്തം (nṛtthaṁ) — dance.
+നൃത്തം (nṛttaṁ) — dance.
 
 Warm-up.
 [pause 2 seconds]
 Say a song. Then say beautiful.
 
 You'll want to know.
-നൃത്തം — nṛtthaṁ — dance.
-ഇത് നല്ല നൃത്തമാണ്. — itŭ nalla nṛtthamāṇŭ — "This is a good dance."
+നൃത്തം — nṛttaṁ — dance.
+ഇത് നല്ല നൃത്തമാണ്. — itŭ nalla nṛttamāṇŭ — "This is a good dance."
 
 The word, taken apart.
-This is the third join, and the book has had it longest. നൃത്തം (nṛtthaṁ) ends in the ം, and you have known since the good-and-bad chapter what that sign does when ആണ് arrives: it is already the m, and it takes the full letter മ so it can carry the vowel behind it.
+This is the third join, and the one the book explained to you first. നൃത്തം (nṛttaṁ) ends in the ം, and you have known since the good-and-bad chapter what that sign does when ആണ് arrives: it is already the m, and it takes the full letter മ so it can carry the vowel behind it.
 [a table of 2 rows, read aloud]
 word ends in: the half-u. joined to ആണ്: പാട്ടാണ് (pāṭṭāṇŭ).
-word ends in: ം. joined to ആണ്: നൃത്തമാണ് (nṛtthamāṇŭ).
+word ends in: ം. joined to ആണ്: നൃത്തമാണ് (nṛttamāṇŭ).
 Two words, two different endings, and neither one gains a sound. The first gives one up; the second only changes how its m is written.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: nṛtthaṁ]
+[your turn — say: nṛttaṁ]
 [pause 8 seconds for the answer]
-[your turn — say: itŭ nalla nṛtthamāṇŭ]
+[your turn — say: itŭ nalla nṛttamāṇŭ]
 [pause 8 seconds for the answer]
-[your turn — say: pāṭṭāṇŭ, then nṛtthamāṇŭ]
+[your turn — say: pāṭṭāṇŭ, then nṛttamāṇŭ]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is dance? (നൃത്തം (nṛtthaṁ).) What does its ം become before ആണ്? (മ — നൃത്തമാണ്.) And does the m sound change? (No — only its writing.)
+What is dance? (നൃത്തം (nṛttaṁ).) What does its ം become before ആണ്? (മ — നൃത്തമാണ്.) And does the m sound change? (No — only its writing.)
 
 
 Lesson 4 of 5.
@@ -115,7 +115,7 @@ You have a word that ends exactly as this one does. കഥ (katha)'s last letter
 [a table of 2 rows, read aloud]
 ends in: അ. word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ).
 ends in: അ. word: കഥ. joined to ആണ്: കഥയാണ് (kathayāṇŭ).
-That is the whole chapter in three words. പാട്ട് (pāṭṭŭ) gives a sound up, നൃത്തം (nṛtthaṁ) re-spells one, and കഥ (katha) takes a letter in — three endings, three outcomes, and you were told each one before you met the word it lands on.
+That is the whole chapter in three words. പാട്ട് (pāṭṭŭ) gives a sound up, നൃത്തം (nṛttaṁ) re-spells one, and കഥ (katha) takes a letter in — three endings, three outcomes, and you were told each one before you met the word it lands on.
 
 Guided Practice.
 [pause 1 second]
@@ -139,13 +139,14 @@ Warm-up.
 Close the lessons before this one. Say a song, to sing, dance, a story.
 
 Grammar Lens: three endings, three different events.
-Four words met ആണ് in this chapter and the one before, and no two of the three endings did the same thing:
-[a table of 4 rows, read aloud]
+Five words met ആണ് in this chapter and the one before, and the three endings did three different things:
+[a table of 5 rows, read aloud]
 word: പാട്ട് (pāṭṭŭ). joined to ആണ്: പാട്ടാണ് (pāṭṭāṇŭ). what happened: ends in the half-u — a sound is given up.
-word: നൃത്തം (nṛtthaṁ). joined to ആണ്: നൃത്തമാണ് (nṛtthamāṇŭ). what happened: ends in ം — the m is re-spelled.
+word: നൃത്തം (nṛttaṁ). joined to ആണ്: നൃത്തമാണ് (nṛttamāṇŭ). what happened: ends in ം — the m is re-spelled.
 word: കഥ. joined to ആണ്: കഥയാണ് (kathayāṇŭ). what happened: ends in അ — a യ is added.
 word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ). what happened: ends in അ — a യ is added.
-Given up, re-spelled, added — three different events, and the only thing that tells you which you are looking at is how the word ended.
+word: കളി. joined to ആണ്: കളിയാണ് (kaḷiyāṇŭ). what happened: ends in ഇ — a യ is added.
+Given up, re-spelled, added — three different events, and the only thing that tells you which you are looking at is how the word ended. Note the last two rows: അ and ഇ are different vowels and both call for യ, so it is the particular vowel that decides, not vowel-hood on its own.
 
 What you've built.
 പാട്ട് (pāṭṭŭ) is the song; പാടുക (pāṭuka) is doing it. Unlike കളി and കളിക്കുക, the noun is not sitting whole inside the verb — the long ṭṭ thins to a single ṭ:
@@ -153,7 +154,7 @@ What you've built.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: pāṭṭŭ, pāṭuka, nṛtthaṁ, katha]
+[your turn — say: pāṭṭŭ, pāṭuka, nṛttaṁ, katha]
 [pause 8 seconds for the answer]
 [your turn — say: itŭ nalla pāṭṭāṇŭ, then itŭ nalla kathayāṇŭ]
 [pause 8 seconds for the answer]
@@ -162,4 +163,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-A song, dance, a story? (പാട്ട് (pāṭṭŭ), നൃത്തം (nṛtthaṁ), കഥ (katha).) Which of the three gives a sound up before ആണ്? (പാട്ട് (pāṭṭŭ) — it ends in the half-u.) And which adds one? (കഥ (katha) — it ends in അ, so a യ comes in.)
+A song, dance, a story? (പാട്ട് (pāṭṭŭ), നൃത്തം (nṛttaṁ), കഥ (katha).) Which of the three gives a sound up before ആണ്? (പാട്ട് (pāṭṭŭ) — it ends in the half-u.) And which adds one? (കഥ (katha) — it ends in അ, so a യ comes in.)

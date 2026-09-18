@@ -2376,9 +2376,11 @@ describe("the committed Malayalam A1 inventory", () => {
     // the three aaNu outcomes already taught: paattu ends in the half-u and gives a
     // sound up, nrttham ends in the anusvara and re-spells its m, katha ends in A
     // and takes the ya glide as sinima does. Given up, re-spelled, added.
-    // THE GLYPH CONTROL HAD ROTTED: the remembered control (U+0D7A chillu-NN must
-    // report NOT covered) now reports covered, because ML-S131-chillu-nn exists.
-    // Re-run with a control DERIVED from the data instead of recalled.
+    // THE REMEMBERED GLYPH CONTROL WAS SIMPLY WRONG: it held that U+0D7A chillu-NN
+    // must report NOT covered, and it reports covered because ML-S131-chillu-nn
+    // owns it -- at sequence 144, in the earliest script track, so it had not
+    // rotted recently, it had never been right. Re-run with a control DERIVED from
+    // the data instead of recalled.
     // Two inventions were caught before the first commit, both by checking the
     // corpus rather than the draft: sundaramaaya, an attributive form attested
     // NOWHERE, and the vocalic r romanized with a ring below where the track uses a
@@ -2386,6 +2388,29 @@ describe("the committed Malayalam A1 inventory", () => {
     // The recall's Grammar Lens was drafted FOUR columns wide and narrowed to three
     // before any test ran -- ch98 shipped that and only the narration refusal count
     // caught it, which leaves an audio learner a placeholder where evidence belongs.
+    // REVIEW CAUGHT THE ROMANIZATION IN THE LETTER BESIDE THE ONE I CHECKED.
+    // nrttham was written nRtthaM. The conjunct in that word is TA+VIRAMA+TA, the
+    // geminate tta, NOT TA+VIRAMA+THA: ML-S08 gives ta and ML-S130 gives tha for
+    // "the breathy partner of the ta", ~14 corpus words spell tta as tt against 2
+    // that do not, and vidyaartthi is genuinely TA+VIRAMA+THA. So nRtthaM wrote an
+    // unaspirated geminate as the aspirate, collapsing the exact contrast ML-S130
+    // exists to teach. It is nRttaM. The bullet above had DERIVED the vowel from
+    // suhRttu -- whose own tta is spelled tt, so the same witness settled the
+    // consonant too. Checking one letter and assuming the rest is what "derived,
+    // not invented" was supposed to prevent.
+    // Three overstatements went with it: "the chapter before last" (the half-u rule
+    // is chapter 98, the chapter before); "the book has had it longest" of the
+    // anusvara join (enthaaNu 130 < sukhamaaNo 170, and ML-C98-sinima says enthu
+    // has welded since the very first question); and "the book has not shown you a
+    // third" noun-beside-verb pair (ML-C33 names vaayana, ML-C34 names cOdyam).
+    // The recall said FOUR words met aaNu across the two chapters; it is five, and
+    // kali is now a fifth row -- ee and a are different vowels both choosing ya,
+    // which is the narrow rule ch98 took four rounds to reach.
+    // AND THE SWEEP RULE CAUGHT ITS OWN CHAPTER: an ELEVENTH ya-glide site,
+    // ML-C98-kali, chapter 98's own first lesson, still credited the ya to "the
+    // word ends in a vowel" -- untouched by the round-four fix, absent from the
+    // ten-name list and from HL-C402, contradicted by ML-C98-sinima two lessons
+    // later. Narrowed here to name ee.
     expect(coverage.covered).toBe(206);
     expect(coverage.unmapped).toBe(37);
     expect(coverage.partial).toBe(0);

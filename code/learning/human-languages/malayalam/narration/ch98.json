@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Games and Films",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3dca0d83a438453e",
+  "sourceHash": "fnv1a64:b1251b21292d51ac",
   "lessons": [
     {
       "id": "ML-C98-kali",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff546875e9cd0061",
+      "sourceHash": "fnv1a64:2168b906855da7d1",
       "notice": null,
       "blocks": [
         {
@@ -78,7 +78,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have seen this done before, and not only last chapter. കുട്ടി has been taking the same യ since ഇത് എന്റെ കുട്ടിയാണ്, and for the same reason: the word ends in a vowel, ആണ് begins with one, and something has to stand between them."
+              "text": "You have seen this done before, and not only last chapter. കുട്ടി has been taking the same യ since ഇത് എന്റെ കുട്ടിയാണ്, and for the same reason: it ends in ഇ too, ആണ് begins with a vowel, and something has to stand between them."
             }
           ]
         },
