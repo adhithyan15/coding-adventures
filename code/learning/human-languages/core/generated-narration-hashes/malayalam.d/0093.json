@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:9f4106bcb4e9b9fc",
+  "lessonIds": [
+    "ML-C93-kal",
+    "ML-C93-angal",
+    "ML-C93-counted",
+    "ML-R93-plural-recall"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch93.txt",
+  "json": "malayalam/narration/ch93.json",
+  "textHash": "fnv1a64:6c9e0a40dfba5f61",
+  "jsonHash": "fnv1a64:2208ee57885fc3da",
+  "findings": []
+}

@@ -1,0 +1,661 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 93,
+  "title": "More Than One",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:9f4106bcb4e9b9fc",
+  "lessons": [
+    {
+      "id": "ML-C93-kal",
+      "sequence": 3290,
+      "title": "കുട്ടികൾ (kuṭṭikaḷ) — children",
+      "headword": "കുട്ടികൾ",
+      "romanization": "kuṭṭikaḷ",
+      "gloss": "children — one ending on the end of the noun, and it is more than one",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:766468bd22062993",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a child. Say a shop. Both are one of the thing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending goes on the end",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every noun you own says one. To say more than one, put കൾ on the end:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "one",
+                "more than one"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "one: കുട്ടി kuṭṭi — a child. more than one: കുട്ടികൾ kuṭṭikaḷ — children.",
+                "one: കട kaṭa — a shop. more than one: കടകൾ kaṭakaḷ — shops."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The front of the word does not move. Nothing is inserted, nothing is replaced; the ending arrives on the end and the word you already had is still sitting there in front of it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same shape as everything Malayalam has asked of you so far. The in ending, the to ending, the of ending, the if ending — each one came onto the back of a word and left the front of it alone. A Malayalam word grows rightward, and this is one more thing growing there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now point at more than one of anything you can name, which is most of what this book has taught you. Two nouns became four in one line, and the same line will do it to every other noun you own."
+            },
+            {
+              "kind": "speech",
+              "text": "English gets this wrong often enough to have a page of exceptions for it — child and children share four letters and part company after them. Here the word you learned stays whole and visible."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭṭi, then kuṭṭikaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭṭi*, then *kuṭṭikaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭa, then kaṭakaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭa*, then *kaṭakaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at കുട്ടികൾ (kuṭṭikaḷ) and find where കുട്ടി ends",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **കുട്ടികൾ** and find where **കുട്ടി** ends]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which end of the word the new part arrived on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which end of the word the new part arrived on]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What makes a noun more than one? (കൾ on the end.) Does anything change at the front of the word? (No.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C93-angal",
+      "sequence": 3300,
+      "title": "പുസ്തകങ്ങൾ (pustakaṅṅaḷ) — books",
+      "headword": "പുസ്തകങ്ങൾ",
+      "romanization": "pustakaṅṅaḷ",
+      "gloss": "books — what a noun ending in ം does with the plural, and where you have been saying that ending all along",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:aad5f4c00864292a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a book. Say what its last letter is. Then make a child into children."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a noun ending in ം trades it away",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുസ്തകം does not become pustakaṁkaḷ. The ം comes off and ങ്ങൾ goes on in its place:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "one",
+                "more than one"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "one: പുസ്തകം pustakaṁ — a book. more than one: പുസ്തകങ്ങൾ pustakaṅṅaḷ — books.",
+                "one: മരം maraṁ — a tree. more than one: മരങ്ങൾ maraṅṅaḷ — trees."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The money lesson said that a word ending in ം tells you in advance how it will behave. This is one of the things it was telling you. You do not have to remember which nouns take which ending — you can see it on the page, in the last letter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now look at a word you have had since your first pages."
+            },
+            {
+              "kind": "speech",
+              "text": "നിങ്ങൾ niṅṅaḷ — you."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the end of it. That is the ending you learned a moment ago, sitting where it has always sat. The polite you was introduced to you as the plural you used for one person — and this is what made it plural."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing you were taught then was wrong, and nothing has to be unlearned. A piece of the language you had been pronouncing for months turns out to have a name and a job, and you can now put it on nouns of your own."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pustakaṁ, then pustakaṅṅaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pustakaṁ*, then *pustakaṅṅaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraṁ, then maraṅṅaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraṁ*, then *maraṅṅaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭṭi, then kuṭṭikaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭṭi*, then *kuṭṭikaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at നിങ്ങൾ and പുസ്തകങ്ങൾ (pustakaṅṅaḷ), and find the part they share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **നിങ്ങൾ** and **പുസ്തകങ്ങൾ**, and find the part they share]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which letter on the end of a noun sends you to this ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which letter on the end of a noun sends you to this ending]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What happens to the ം when the plural arrives? (It is traded for ങ്ങൾ.) Which noun tells you to expect that? (One whose last letter is ം.) Where else have you been saying that ending? (On the end of you and we.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C93-counted",
+      "sequence": 3310,
+      "title": "രണ്ട് പുസ്തകം (raṇṭŭ pustakaṁ) — two books",
+      "headword": "രണ്ട് പുസ്തകം",
+      "romanization": "raṇṭŭ pustakaṁ",
+      "gloss": "two books — with a number in front, the plural ending is not needed, and you have been leaving it off for chapters already",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11481a6d0584cdaa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Make a book into books. Then say fifty rupees."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the number has said it already",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രണ്ട് പുസ്തകം — raṇṭŭ pustakaṁ — two books."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is back to the shape it had before this chapter started, and the meaning is still more than one. രണ്ട് in front has done the counting, so the ending has nothing left to add and is left off."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "പുസ്തകങ്ങൾ (pustakaṅṅaḷ), books — how many is not said.",
+                "രണ്ട് പുസ്തകം (raṇṭŭ pustakaṁ), two books — the number says how many."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both are good Malayalam. The ending is carrying information, and where the number already carries it, the ending can go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is not new to you. Go back over your own sentences:"
+            },
+            {
+              "kind": "speech",
+              "text": "അമ്പത് രൂപ — fifty rupees. നൂറ് രൂപ — a hundred rupees. രണ്ട് മണി — two o'clock."
+            },
+            {
+              "kind": "speech",
+              "text": "Not one of those nouns took an ending, and every one of them was right. You had been counting this way for chapters before anybody handed you the ending, because the shape was correct and you had no reason to question it."
+            },
+            {
+              "kind": "speech",
+              "text": "So the lesson here costs you nothing to do and something to notice: an English speaker's instinct to reach for the plural after a number is the habit to put down. Say the number, then say the noun as you learned it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pustakaṅṅaḷ, then raṇṭŭ pustakaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pustakaṅṅaḷ*, then *raṇṭŭ pustakaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ampathŭ rūpa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ampathŭ rūpa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two ways says how many",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two ways says how many]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you would put after mūnnŭ to mean three books",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you would put after *mūnnŭ* to mean three books]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does a noun with a number in front need the plural ending? (No — the number has said how many.) Had you been doing that already? (Yes, every time you gave a price or an hour.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R93-plural-recall",
+      "sequence": 3320,
+      "title": "(more than one) (bahuvacanam enna ōrmma) — from cold",
+      "headword": "(more than one)",
+      "romanization": "bahuvacanam enna ōrmma",
+      "gloss": "cold retrieval of the plural ending, the form it takes after ം, and the case where it is left off",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:f65dcaa70efe6c68",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Make a child into children, and a book into books. The two answers do not end the same way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one ending, wearing two faces",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "one",
+                "more than one"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "one: കുട്ടി kuṭṭi. more than one: കുട്ടികൾ kuṭṭikaḷ.",
+                "one: കട kaṭa. more than one: കടകൾ kaṭakaḷ.",
+                "one: പുസ്തകം pustakaṁ. more than one: പുസ്തകങ്ങൾ pustakaṅṅaḷ.",
+                "one: മരം maraṁ. more than one: മരങ്ങൾ maraṅṅaḷ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The last letter of the noun decides which face you see. A noun ending in ം trades that letter for ങ്ങൾ; anything else takes കൾ on the end and keeps everything it had."
+            },
+            {
+              "kind": "speech",
+              "text": "Look down the right-hand column and read only the ends: ൾ closes all four. The two shapes are one ending, and the ം is what bends it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two things worth holding onto, and neither is a new word."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending was already in your mouth. നിങ്ങൾ — the respectful you — has carried it since your earliest pages, and it was plural in shape from the day you met it."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending comes off again when a number is there."
+            },
+            {
+              "kind": "speech",
+              "text": "രണ്ട് പുസ്തകം (raṇṭŭ pustakaṁ) — two books. അമ്പത് രൂപ — fifty rupees."
+            },
+            {
+              "kind": "speech",
+              "text": "The number in front has said how many, so the noun goes back to the form you first learned. Every price you have given and every hour you have told was already built this way."
+            },
+            {
+              "kind": "speech",
+              "text": "So this chapter added no vocabulary at all. What it added was a reading of material you already had: an ending you had been pronouncing, and a habit you had been performing correctly without being told why."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭṭi becomes kuṭṭikaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭṭi* → *kuṭṭikaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pustakaṁ becomes pustakaṅṅaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pustakaṁ* → *pustakaṅṅaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraṁ becomes maraṅṅaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraṁ* → *maraṅṅaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭŭ pustakaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭŭ pustakaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at നിങ്ങൾ, and say what its last part is doing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **നിങ്ങൾ**, and say what its last part is doing]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending does a noun ending in ം take? (ങ്ങൾ, in place of the ം.) Which does every other noun take? (കൾ, on the end.) And when a number stands in front? (Neither — the noun stays as it was.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

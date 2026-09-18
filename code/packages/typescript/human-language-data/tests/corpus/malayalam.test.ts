@@ -400,8 +400,27 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // English "hotel" and in Kerala ordinarily means A PLACE TO EAT, while bil kept
   // its meaning intact. One changed and one did not, so the habit taught is to
   // check each borrowing rather than trust the family.
-  expect(coverage.covered).toBe(199);
-  expect(coverage.unmapped).toBe(44);
+  // 199 -> 200: ML-A1-N-06, the plural, and THE NOTE'S EVIDENCE WAS WRONG -- it was
+  // checked before it was spent. The note called this "the cheapest grammar lesson
+  // available", on the claim that -kal already sat inside four taught headwords:
+  // nirangal, maasangal, shareera-bhaagangal, kaalangal. Those are FILE SLUGS. A
+  // token sweep of all 393 lesson files found the chillu-LL sequence -kal in exactly
+  // two words, thinkal (Monday) and makal (daughter), and NEITHER IS A PLURAL. The
+  // learner had met the suffix zero times, not four.
+  // What the same sweep DID find is better: NINGAL, the respectful you from chapter
+  // 2, ends in -ngngal, and ML-CONCEPT-C02-RESPECT-BY-PLURAL-01 had already told the
+  // learner that word IS a plural -- without ever isolating the ending that made it
+  // one. So the chapter reveals rather than introduces.
+  // The label's second half cost nothing at all: a noun with a numeral in front
+  // needs no ending, and the corpus was ALREADY doing it right in three attested
+  // lines -- ampathu rupa, nuru rupa, rantu mani. The lesson points at the learner's
+  // own sentences instead of asserting a rule. NO NEW VOCABULARY in the chapter.
+  // NJANGAL was cut from the reveal mid-draft: chapter 71 sits on
+  // SPINE-READ-SIGNS-AND-NOTICES, which the walk reaches AFTER
+  // SPINE-DEFINITE-REFERENCE, so its atom is not available here. Chapter number is
+  // not walk order.
+  expect(coverage.covered).toBe(200);
+  expect(coverage.unmapped).toBe(43);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -413,6 +432,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 199/243 points covered (82%)",
+    "malayalam A1 (partial inventory): 200/243 points covered (82%)",
   );
 }, 60_000);

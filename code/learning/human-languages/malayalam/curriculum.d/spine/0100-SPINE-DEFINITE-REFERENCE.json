@@ -9,7 +9,8 @@
     "ML-PATH-79-DEGREE",
     "ML-PATH-87-ACCUSATIVE",
     "ML-PATH-88-TENS",
-    "ML-PATH-90-PARTICIPLE"
+    "ML-PATH-90-PARTICIPLE",
+    "ML-PATH-93-PLURAL"
   ],
   "omits": [
     "GRAMMAR-THE"

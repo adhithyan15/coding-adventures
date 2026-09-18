@@ -1,0 +1,17 @@
+{
+  "chapter": 93,
+  "title": "More Than One",
+  "label": "ch:ml-plural",
+  "canDo": "I can say that there is more than one of something, and I know when to leave the ending off.",
+  "payoff": {
+    "lesson": "ML-R93-plural-recall",
+    "kind": "production",
+    "summary": "From cold: the plural ending on a plain noun, the shape it takes on a noun ending in the anusvara, and the case where a number in front makes the ending unnecessary.",
+    "assesses": [
+      "ML-GRAMMAR-C93-PLURAL-01",
+      "ML-GRAMMAR-C93-ANGAL-01",
+      "ML-CONCEPT-C93-COUNTED-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. No new vocabulary: every noun used is already owned, and the ending itself has been carried since the second chapter inside ningal."
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:461bc5fc67878093",
+  "lessonIds": [
+    "ML-C93-kal",
+    "ML-C93-angal",
+    "ML-C93-counted",
+    "ML-R93-plural-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch93-more-than-one.tex"
+}

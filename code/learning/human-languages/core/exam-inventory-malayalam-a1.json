@@ -165,7 +165,11 @@
       "id": "ML-A1-N-06",
       "category": "Naamam (the noun)",
       "label": "number: the plural suffix -kal and when a bare noun already reads as plural",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C93-PLURAL-01",
+        "ML-GRAMMAR-C93-ANGAL-01",
+        "ML-CONCEPT-C93-COUNTED-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -175,7 +179,7 @@
         "A1-N-05"
       ],
       "malayalamSpecific": false,
-      "note": "The plural is never taught. -kal appears inside taught headwords -- nirangal (colours), maasangal (months), shareera-bhaagangal (body parts), kaalangal (seasons) -- so the learner has met the suffix four times as part of a word and has never been told it is a suffix. That is the cheapest grammar lesson available to this track."
+      "note": "Chapter 93, and the old note's evidence was WRONG -- checked before it was used. It claimed -kal appeared inside four taught headwords, naming nirangal, maasangal, shareera-bhaagangal and kaalangal. Those four are FILE SLUGS, not headwords: ML-C11-nirangal carries the four colour words as its headword and ML-C16-kollavarsham-maasangal carries the twelve month names. A learner never reads a filename, so the suffix had been met zero times, not four, and this was not the free lesson the note advertised. A token sweep for the chillu-LL then found where it really was hiding: NINGAL (you, chapter 2) and NJANGAL (we, chapter 71) both end in -ngngal, and ML-CONCEPT-C02-RESPECT-BY-PLURAL-01 had already told the learner the respectful you IS a plural -- without ever isolating the ending that made it one. So the chapter reveals rather than introduces. It teaches -kal on a plain noun (kutti/kuttikal, kata/katakal), the -ngngal form a noun in anusvara takes in its place (pustakam/pustakangngal, maram/marangngal), and the label's second half -- a noun with a numeral in front needs no ending -- which the corpus was ALREADY doing correctly in three attested lines: ampathu rupa, nuru rupa, rantu mani. NO new vocabulary."
     },
     {
       "id": "ML-A1-ADJ-01",
