@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 7151,
+    "totalLessons": 7156,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 5655,
+    "drivableLessons": 5659,
     "drivablePercent": 79,
     "chaptersWithoutDrivablePrefix": 230,
     "unexplainedModalityOverrides": 0
@@ -2843,7 +2843,8 @@
           98,
           99,
           100,
-          101
+          101,
+          102
         ],
         "bookChapters": [
           1,
@@ -2946,7 +2947,8 @@
           98,
           99,
           100,
-          101
+          101,
+          102
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -4174,9 +4176,9 @@
       {
         "language": "malayalam",
         "status": "version-2",
-        "lessonCount": 435,
+        "lessonCount": 440,
         "versions": {
-          "2": 435
+          "2": 440
         }
       },
       {
@@ -4988,8 +4990,8 @@
       },
       {
         "language": "malayalam",
-        "bookChapters": 101,
-        "declaredChapters": 101,
+        "bookChapters": 102,
+        "declaredChapters": 102,
         "missingCapability": 0,
         "findings": 8,
         "clean": false
@@ -5084,8 +5086,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1595,
-      "declaredChapters": 1595,
+      "bookChapters": 1596,
+      "declaredChapters": 1596,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 87,
@@ -5097,10 +5099,10 @@
     }
   },
   "levels": {
-    "totalLessons": 7151,
+    "totalLessons": 7156,
     "byLevel": {
       "pre-A1": 3968,
-      "A1": 2439,
+      "A1": 2444,
       "A2": 660,
       "B1": 39,
       "B2": 17,
@@ -5277,10 +5279,10 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 435,
+        "lessonCount": 440,
         "byLevel": {
           "pre-A1": 247,
-          "A1": 171,
+          "A1": 176,
           "A2": 17,
           "B1": 0,
           "B2": 0,
@@ -6264,9 +6266,9 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 435,
-        "measurable": 426,
-        "unmeasurable": 9,
+        "lessonCount": 440,
+        "measurable": 430,
+        "unmeasurable": 10,
         "lessonViolations": 1,
         "chapterViolations": 3
       },
@@ -6823,7 +6825,7 @@
           "language": "malayalam",
           "script": "malayalam",
           "latinScript": false,
-          "lessonCount": 435,
+          "lessonCount": 440,
           "totalGlyphs": 67,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -6961,7 +6963,7 @@
     "summary": {
       "lessonViolations": 40,
       "chapterViolations": 61,
-      "unmeasurableLessons": 97,
+      "unmeasurableLessons": 98,
       "measurablePercent": 99,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -33786,6 +33788,18 @@
         "revisits": 2
       },
       {
+        "atom": "ML-CONCEPT-C83-WHERE-FROM-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C83-evide-ninnu",
+        "introducedAt": 357,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "ML-ETYMON-NAMASKARAM-BOW-01",
         "language": "malayalam",
         "introducedBy": "ML-C01-namaskaram",
@@ -33928,6 +33942,18 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "ML-GRAMMAR-C83-ABLATIVE-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C83-ninnu",
+        "introducedAt": 356,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ML-LEX-AANU-01",
@@ -34156,18 +34182,6 @@
           "R4"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "ML-LEX-C81-DISTANCE-03",
-        "language": "malayalam",
-        "introducedBy": "ML-C81-dooram",
-        "introducedAt": 350,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
       },
       {
         "atom": "ML-LEX-C82-ADDRESS-01",
@@ -54882,7 +54896,7 @@
           "R1",
           "R3"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "ML-CONCEPT-C06-DATIVE-IKKU-02",
@@ -54981,7 +54995,7 @@
           "R1",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 4
       },
       {
         "atom": "ML-CONCEPT-C12-KUDUMBAM-02",
@@ -55025,7 +55039,7 @@
           "R1",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 4
       },
       {
         "atom": "ML-CONCEPT-C19-VAYASSU-01",
@@ -55578,17 +55592,6 @@
         "revisits": 2
       },
       {
-        "atom": "ML-CONCEPT-C83-WHERE-FROM-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C83-evide-ninnu",
-        "introducedAt": 357,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ML-CONCEPT-C85-GEMINATION-01",
         "language": "malayalam",
         "introducedBy": "ML-C85-gemination",
@@ -55677,28 +55680,6 @@
         "revisits": 1
       },
       {
-        "atom": "ML-CONCEPT-C93-COUNTED-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C93-counted",
-        "introducedAt": 399,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "ML-CONCEPT-C94-THREE-DAYS-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C94-three-days",
-        "introducedAt": 403,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "ML-CONCEPT-C97-NOT-BEAUTIFUL-01",
         "language": "malayalam",
         "introducedBy": "ML-C97-alla-sundaram",
@@ -55765,15 +55746,15 @@
         "revisits": 3
       },
       {
-        "atom": "ML-GRAMMAR-C83-ABLATIVE-01",
+        "atom": "ML-GRAMMAR-C83-OBLIQUE-AM-01",
         "language": "malayalam",
-        "introducedBy": "ML-C83-ninnu",
-        "introducedAt": 356,
+        "introducedBy": "ML-C83-keralathil",
+        "introducedAt": 358,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
-        "revisits": 3
+        "revisits": 6
       },
       {
         "atom": "ML-GRAMMAR-C86-INSTRUMENTAL-01",
@@ -56788,15 +56769,15 @@
         "revisits": 3
       },
       {
-        "atom": "ML-LEX-C81-HOW-MUCH-01",
+        "atom": "ML-LEX-C81-DISTANCE-03",
         "language": "malayalam",
         "introducedBy": "ML-C81-dooram",
         "introducedAt": 350,
         "missed": [
           "R2",
-          "R4"
+          "R3"
         ],
-        "revisits": 4
+        "revisits": 2
       },
       {
         "atom": "ML-LEX-C84-PLACE-01",
@@ -56990,6 +56971,17 @@
         "language": "malayalam",
         "introducedBy": "ML-C96-prayaasam",
         "introducedAt": 410,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ML-LEX-C98-PLAY-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C98-kalikkuka",
+        "introducedAt": 417,
         "missed": [
           "R2",
           "R3"
@@ -77907,7 +77899,7 @@
         "missed": [
           "R3"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ML-CONCEPT-C34-EDUKKUKA-01",
@@ -77990,14 +77982,24 @@
         "revisits": 3
       },
       {
-        "atom": "ML-GRAMMAR-C83-OBLIQUE-AM-01",
+        "atom": "ML-CONCEPT-C93-COUNTED-01",
         "language": "malayalam",
-        "introducedBy": "ML-C83-keralathil",
-        "introducedAt": 358,
+        "introducedBy": "ML-C93-counted",
+        "introducedAt": 399,
         "missed": [
           "R2"
         ],
-        "revisits": 6
+        "revisits": 2
+      },
+      {
+        "atom": "ML-CONCEPT-C94-THREE-DAYS-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C94-three-days",
+        "introducedAt": 403,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 5
       },
       {
         "atom": "ML-GRAMMAR-C84-POSTPOSITION-01",
@@ -78088,6 +78090,46 @@
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "ML-LEX-C101-HEIGHT-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C101-uyaram",
+        "introducedAt": 433,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ML-LEX-C101-SHORT-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C101-kuriya",
+        "introducedAt": 430,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ML-LEX-C101-STOUT-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C101-thadicha",
+        "introducedAt": 432,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "ML-LEX-C101-THIN-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C101-melinja",
+        "introducedAt": 431,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ML-LEX-C41-DEIXIS-01",
@@ -78510,6 +78552,16 @@
         "revisits": 5
       },
       {
+        "atom": "ML-LEX-C81-HOW-MUCH-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C81-dooram",
+        "introducedAt": 350,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 6
+      },
+      {
         "atom": "ML-LEX-C85-DRINK-01",
         "language": "malayalam",
         "introducedBy": "ML-C85-kudikkuka",
@@ -78538,16 +78590,6 @@
           "R3"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "ML-LEX-C91-MONEY-03",
-        "language": "malayalam",
-        "introducedBy": "ML-C91-ethra-rupa",
-        "introducedAt": 390,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 4
       },
       {
         "atom": "ML-LEX-C91-SHOP-01",
@@ -78600,14 +78642,24 @@
         "revisits": 3
       },
       {
-        "atom": "ML-LEX-C98-PLAY-01",
+        "atom": "ML-LEX-C98-CINEMA-01",
         "language": "malayalam",
-        "introducedBy": "ML-C98-kalikkuka",
-        "introducedAt": 417,
+        "introducedBy": "ML-C98-sinima",
+        "introducedAt": 418,
         "missed": [
-          "R2"
+          "R3"
         ],
-        "revisits": 2
+        "revisits": 4
+      },
+      {
+        "atom": "ML-LEX-C98-GAME-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C98-kali",
+        "introducedAt": 416,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
       },
       {
         "atom": "ML-LEX-C99-DANCE-01",
@@ -93299,11 +93351,11 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 435,
+        "lessonCount": 440,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 485,
+        "atomsTaught": 488,
         "atomsNeverRevisited": 19,
         "forwardReferences": 12
       },
@@ -93423,14 +93475,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 8813,
+      "atomsTaught": 8816,
       "atomsNeverRevisited": 489,
       "neverRevisitedPercent": 6,
       "missedByWindow": {
         "R1": 1747,
-        "R2": 4044,
+        "R2": 4048,
         "R3": 5688,
-        "R4": 4248
+        "R4": 4249
       },
       "forwardReferences": 798
     }
@@ -93531,7 +93583,7 @@
       {
         "language": "malayalam",
         "script": "malayalam",
-        "lessonCount": 435,
+        "lessonCount": 440,
         "scriptLessons": 68,
         "taughtGlyphs": 67,
         "shownGlyphs": 67,
@@ -114085,9 +114137,9 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 435,
-        "atomMeasurableLessons": 426,
-        "atomMeasurementBlindLessons": 9,
+        "lessonCount": 440,
+        "atomMeasurableLessons": 430,
+        "atomMeasurementBlindLessons": 10,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
         "atomChapterSpikes": 3,
@@ -114101,14 +114153,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 12,
-        "atomsTaught": 485,
+        "atomsTaught": 488,
         "atomsNeverRevisited": 19,
-        "reinforcementWindowMisses": 1044,
+        "reinforcementWindowMisses": 1049,
         "reinforcementMissesByWindow": {
           "R1": 121,
-          "R2": 158,
+          "R2": 162,
           "R3": 423,
-          "R4": 342
+          "R4": 343
         },
         "payoffSurprises": 8,
         "writingPracticeLessons": 108,
@@ -114139,7 +114191,7 @@
           {
             "language": "malayalam",
             "kind": "reinforcement",
-            "count": 1044,
+            "count": 1049,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -114153,7 +114205,7 @@
           {
             "language": "malayalam",
             "kind": "measurement-blind",
-            "count": 9,
+            "count": 10,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -115490,7 +115542,7 @@
       {
         "language": "malayalam",
         "kind": "reinforcement",
-        "count": 1044,
+        "count": 1049,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -115740,16 +115792,16 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
-        "language": "punjabi",
+        "language": "malayalam",
         "kind": "measurement-blind",
         "count": 10,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
-        "language": "malayalam",
+        "language": "punjabi",
         "kind": "measurement-blind",
-        "count": 9,
+        "count": 10,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
@@ -115829,7 +115881,7 @@
       "tracksWithDetectedCliffs": 23,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 6,
-      "atomMeasurementBlindLessons": 97,
+      "atomMeasurementBlindLessons": 98,
       "findings": 114
     }
   },
@@ -116149,7 +116201,7 @@
             "shortfall": 46
           }
         ],
-        "vocabulary": 294
+        "vocabulary": 295
       },
       {
         "language": "marathi",
@@ -116437,11 +116489,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 7151,
-    "voice": 5114,
-    "sight": 795,
+    "totalLessons": 7156,
+    "voice": 5118,
+    "sight": 796,
     "pen": 1242,
-    "coreVoice": 5655,
+    "coreVoice": 5659,
     "lessonsWithWritingSegments": 759,
     "drivablePercent": 79,
     "tracks": [
@@ -124856,13 +124908,13 @@
       },
       {
         "language": "malayalam",
-        "lessonCount": 435,
-        "voice": 296,
-        "sight": 68,
+        "lessonCount": 440,
+        "voice": 300,
+        "sight": 69,
         "pen": 71,
-        "coreVoice": 335,
+        "coreVoice": 339,
         "drivablePercent": 77,
-        "drivablePrefixTotal": 281,
+        "drivablePrefixTotal": 284,
         "chapters": [
           {
             "language": "malayalam",
@@ -126337,6 +126389,21 @@
             ],
             "drivablePrefix": 5,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "malayalam",
+            "chapter": 102,
+            "lessonCount": 5,
+            "voice": 4,
+            "sight": 1,
+            "pen": 0,
+            "coreVoice": 4,
+            "modalities": [
+              "voice",
+              "sight"
+            ],
+            "drivablePrefix": 3,
+            "firstNonVoiceLesson": "ML-C102-day-and-hour"
           }
         ]
       },
@@ -140457,14 +140524,14 @@
   },
   "rootLedger": {
     "roots": 4187,
-    "underspent": 3749,
-    "neverSpent": 2611,
+    "underspent": 3748,
+    "neverSpent": 2610,
     "payoffDistribution": {
-      "0": 2611,
-      "1": 666,
-      "2": 472,
+      "0": 2610,
+      "1": 667,
+      "2": 471,
       "3": 240,
-      "4": 107,
+      "4": 108,
       "5": 44,
       "6": 21,
       "7": 14,
@@ -140477,7 +140544,7 @@
     "underspentPercent": 90
   },
   "infoDump": {
-    "lessons": 7151,
+    "lessons": 7156,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -140485,7 +140552,7 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 7151,
+    "lessons": 7156,
     "measuredLessons": 3806,
     "idiomMeasuredLessons": 3806,
     "senseMeasuredLessons": 3807,
@@ -140498,18 +140565,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 6701,
-    "usesBeforeIntroduction": 22336,
-    "technicalUsesBeforeIntroduction": 5545,
-    "technicalLessons": 3101,
+    "lessonsUsingTerms": 6706,
+    "usesBeforeIntroduction": 22354,
+    "technicalUsesBeforeIntroduction": 5551,
+    "technicalLessons": 3104,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 1737
+        "lessons": 1739
       },
       {
         "term": "noun",
-        "lessons": 1044
+        "lessons": 1045
       },
       {
         "term": "adjective",
@@ -140521,7 +140588,7 @@
       },
       {
         "term": "tense",
-        "lessons": 238
+        "lessons": 239
       },
       {
         "term": "article",
@@ -140530,12 +140597,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 7151,
+    "lessonsScanned": 7156,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1664,
+    "filesScanned": 1665,
     "mainCharacters": 133,
     "scriptCharacters": 799,
     "gaps": 0
