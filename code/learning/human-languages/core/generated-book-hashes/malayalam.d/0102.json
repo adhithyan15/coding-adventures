@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:03ca08acdc9e001e",
+  "lessonIds": [
+    "ML-C102-manikku",
+    "ML-C102-azhcha",
+    "ML-C102-ethra-manikku",
+    "ML-C102-day-and-hour",
+    "ML-R102-when-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch102-saying-when.tex"
+}

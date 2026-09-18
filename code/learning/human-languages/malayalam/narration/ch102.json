@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 102,
+  "title": "Saying When",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a1c705f0825dcac3",
+  "lessons": [
+    {
+      "id": "ML-C102-manikku",
+      "sequence": 3670,
+      "title": "രണ്ട് മണിക്ക് (raṇṭŭ maṇikkŭ) — at two o'clock",
+      "headword": "രണ്ട് മണിക്ക്",
+      "romanization": "raṇṭŭ maṇikkŭ",
+      "gloss": "at two o'clock — the ending you learned for \"to\" and \"for\", doing a third job",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5a7cc4ebf954a75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say two o'clock. Then say the ending chapter 6 gave you for to and for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രണ്ട് മണി names an hour. Add the dative and you are no longer naming it — you are putting something at it."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "രണ്ട് മണി, raṇṭŭ maṇi, two o'clock.",
+                "രണ്ട് മണിക്ക്, raṇṭŭ maṇikkŭ, at two o'clock."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing about the ending is new. You built this exact landing in chapter 6: ജോലി ends in ി, so it took ക്ക് and gave ജോലിക്ക്. മണി ends in that same letter and takes that same ending, with the same visible seam — മണി plus ക്ക്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chapter 6 glossed this ending to and for, and English will not accept either one here: to two o'clock is not a thing anybody says. English reaches for a third word, at."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a fact about English, not about the ending. Malayalam has not switched cases on you — the suffix on മണിക്ക് is letter for letter the one you put on ജോലി. What has changed is the English word you need to translate it, and English has three of them where Malayalam has one ending. When you meet this ending on an hour, read it at."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the slot at the front",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രണ്ട് മണിക്ക് ഞാൻ പോകും. — raṇṭŭ maṇikkŭ ñān pōkuṁ — \"At two o'clock I will go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You know that sentence already. Chapter 94 stood ഇന്ന് at the front of it, and നാളെ, and told you the verb at the back is what carries the tense. The front is a slot for saying when."
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is the toll. ഇന്ന് walked into that slot wearing nothing. An hour has to put an ending on before it is allowed in."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭŭ maṇi — naming the hour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭŭ maṇi* — naming the hour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭŭ maṇikkŭ — putting something at it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭŭ maṇikkŭ* — putting something at it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭŭ maṇikkŭ ñān pōkuṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭŭ maṇikkŭ ñān pōkuṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which chapter you first built this ending on, and on which word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which chapter you first built this ending on, and on which word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the difference between രണ്ട് മണി and രണ്ട് മണിക്ക് (raṇṭŭ maṇikkŭ)? (The first names the hour; the second puts something at it.) Which ending did you add? (ക്ക് — the dative from chapter 6.) Why does English need a different word here than it did for to me? (English splits the job across to, for and at; Malayalam does not.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C102-azhcha",
+      "sequence": 3680,
+      "title": "തിങ്കളാഴ്ച ഞാൻ പോകും (thiṅkaḷāzhcha ñān pōkuṁ) — on Monday I will go",
+      "headword": "തിങ്കളാഴ്ച ഞാൻ പോകും",
+      "romanization": "thiṅkaḷāzhcha ñān pōkuṁ",
+      "gloss": "on Monday I will go — the day-name walks into the when-slot with nothing added to it",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cfc25003e36c484c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the day-name for Monday. Then say at two o'clock."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Chapter 10 laid the seven day-names out in a table and left them there. You have read തിങ്കളാഴ്ച and never once used it. Use it now:"
+            },
+            {
+              "kind": "speech",
+              "text": "തിങ്കളാഴ്ച ഞാൻ പോകും. — thiṅkaḷāzhcha ñān pōkuṁ — \"On Monday I will go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Read that sentence twice and look for the ending. There is none. The day-name went into the when-slot exactly as it stands in chapter 10's table, with nothing added to the front of it and nothing added to the back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two words, one slot, one ending between them",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put the last lesson's sentence beside this one and the difference is the whole point of the chapter:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "രണ്ട് മണിക്ക് ഞാൻ പോകും, raṇṭŭ maṇikkŭ…, the hour took ക്ക്.",
+                "തിങ്കളാഴ്ച ഞാൻ പോകും (thiṅkaḷāzhcha ñān pōkuṁ), thiṅkaḷāzhcha…, the day took nothing."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both sentences answer when. Both put their answer at the front. One of the two answers had to put an ending on first, and it is the hour."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The day-name is in good company. ഇന്ന് and നാളെ stand in that same slot bare, and they have since chapter 94. A named day behaves like today and tomorrow, not like a clock time."
+            },
+            {
+              "kind": "speech",
+              "text": "So the line you can rely on, for what this book has taught you, runs between the named day and the named hour — and it is the hour that is the odd one. That is a description of what Malayalam does here, not a law with no exceptions: a day-name can take endings for other jobs. For saying when something happens, it does not need one."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thiṅkaḷāzhcha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thiṅkaḷāzhcha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thiṅkaḷāzhcha ñān pōkuṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thiṅkaḷāzhcha ñān pōkuṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raṇṭŭ maṇikkŭ ñān pōkuṁ, then the Monday line again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raṇṭŭ maṇikkŭ ñān pōkuṁ*, then the Monday line again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two answers carried an ending, and which carried none",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two answers carried an ending, and which carried none]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do you add to തിങ്കളാഴ്ച to say on Monday? (Nothing.) What do you add to രണ്ട് മണി to say at two? (ക്ക്.) Which two words from chapter 94 stand in that slot bare, the way the day-name does? (ഇന്ന് and നാളെ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C102-ethra-manikku",
+      "sequence": 3690,
+      "title": "എത്ര മണിക്ക് (ethra maṇikkŭ) — at what time?",
+      "headword": "എത്ര മണിക്ക്",
+      "romanization": "ethra maṇikkŭ",
+      "gloss": "at what time? — the question word that has asked age, distance and price, now asking the hour",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0785ff69d8fcaf9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say how far. Say how much. Then say at two o'clock."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എത്ര is not new. It asked how old in chapter 19, how far in chapter 81 and how much in chapter 91. Two of those three are built the way you need here — എത്ര, then the thing you want measured:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "എത്ര ദൂരം, ethra dūraṁ, how far?",
+                "എത്ര രൂപ, ethra rūpa, how much?",
+                "എത്ര മണിക്ക്, ethra maṇikkŭ, at what time?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Put a hand over the question word and what is left is a distance, a price, and an hour."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: which word wears the ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In how far and how much the noun stands bare. In എത്ര മണിക്ക് (ethra maṇikkŭ) it carries ക്ക്. എത്ര itself is identical in all three — the ending belongs to the hour, not to the question."
+            },
+            {
+              "kind": "speech",
+              "text": "And the answer gives it back:"
+            },
+            {
+              "kind": "speech",
+              "text": "— എത്ര മണിക്ക്? — ethra maṇikkŭ? — രണ്ട് മണിക്ക്. — raṇṭŭ maṇikkŭ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ending is doing some of the asking. Drop it and the question changes: എത്ര മണി asks somebody to name the hour, and എത്ര മണിക്ക് (ethra maṇikkŭ) asks at which hour a thing will happen."
+            },
+            {
+              "kind": "speech",
+              "text": "The day-name has no such pair, because it never took the ending at all."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ethra dūraṁ, ethra rūpa, ethra maṇikkŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ethra dūraṁ*, *ethra rūpa*, *ethra maṇikkŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question, then answer it — ethra maṇikkŭ? raṇṭŭ maṇikkŭ.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question, then answer it — *ethra maṇikkŭ? raṇṭŭ maṇikkŭ.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ethra maṇi?, then ethra maṇikkŭ? — and name the difference",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ethra maṇi?*, then *ethra maṇikkŭ?* — and name the difference]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word in the question carries the ending, and which does not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word in the question carries the ending, and which does not]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you ask at what time? (എത്ര മണിക്ക് (ethra maṇikkŭ).) Which of the two words carries the ending? (മണി — the question word never changes.) What does the answer wear? (The same ending — രണ്ട് മണിക്ക് (raṇṭŭ maṇikkŭ).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C102-day-and-hour",
+      "sequence": 3700,
+      "title": "തിങ്കളാഴ്ച രണ്ട് മണിക്ക് (thiṅkaḷāzhcha raṇṭŭ maṇikkŭ) — on Monday at two o'clock",
+      "headword": "തിങ്കളാഴ്ച രണ്ട് മണിക്ക്",
+      "romanization": "thiṅkaḷāzhcha raṇṭŭ maṇikkŭ",
+      "gloss": "on Monday at two o'clock — both answers in the same slot, the wider one first",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:562654c9dff9a388",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say on Monday. Say at two o'clock. Now say them one after the other, without stopping."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have two answers to when, and real arrangements usually need both:"
+            },
+            {
+              "kind": "speech",
+              "text": "തിങ്കളാഴ്ച രണ്ട് മണിക്ക് ഞാൻ പോകും. thiṅkaḷāzhcha raṇṭŭ maṇikkŭ ñān pōkuṁ \"On Monday at two o'clock I will go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Neither piece changed to make room for the other. The day-name is the bare word from chapter 10. The hour is the dative you built two lessons ago. They stand side by side in the one slot at the front, and the sentence behind them is untouched."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: wider first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The order is not free, and it is the order you would guess: the wider container goes first. A Monday holds a two o'clock; a two o'clock does not hold a Monday."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "day, then hour, തിങ്കളാഴ്ച രണ്ട് മണിക്ക് (thiṅkaḷāzhcha raṇṭŭ maṇikkŭ).",
+                "what English does, on Monday at two."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English arranges it the same way, which here is a genuine convenience rather than a trap — you can carry your instinct straight across."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Count what this chapter actually added: one ending, on one kind of word."
+            },
+            {
+              "kind": "speech",
+              "text": "Everything else was already yours — the hour from chapter 18, the day-names from chapter 10, the question word since chapter 19, the slot at the front from chapter 94. What was missing was never vocabulary. It was the joint, and the joint is ക്ക് on the hour and nothing at all on the day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thiṅkaḷāzhcha raṇṭŭ maṇikkŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thiṅkaḷāzhcha raṇṭŭ maṇikkŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole sentence — …ñān pōkuṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole sentence — *…ñān pōkuṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ethra maṇikkŭ? and answer it with the hour from that sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ethra maṇikkŭ?* and answer it with the hour from that sentence]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two front words carries an ending, and why the other does not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two front words carries an ending, and why the other does not]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which comes first, the day or the hour? (The day — the wider one.) Which of the two carries an ending? (The hour.) What did this chapter add that you did not already own? (One ending on one kind of word — the rest was already yours.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R102-when-recall",
+      "sequence": 3710,
+      "title": "(on Monday, at two o'clock, at what time?) (ethra maṇikkŭ enna ōrmma) — from cold",
+      "headword": "(on Monday, at two o'clock, at what time?)",
+      "romanization": "ethra maṇikkŭ enna ōrmma",
+      "gloss": "cold retrieval of the two ways of answering \"when\", and of which one takes an ending",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d17086899dc9243",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say on Monday, at two o'clock, and at what time?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one of them takes an ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two answers to the same question, and only one of them is dressed:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "തിങ്കളാഴ്ച, thiṅkaḷāzhcha, on Monday — bare.",
+                "രണ്ട് മണിക്ക്, raṇṭŭ maṇikkŭ, at two o'clock — ക്ക്."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "If you can remember which one is which, you have the chapter. The day-name stands in the when-slot the way ഇന്ന് and നാളെ have stood there since chapter 94. The hour does not; it takes the dative first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No word in this chapter was new. That is unusual enough to say out loud. The hour came from chapter 18, the day-names from chapter 10, the question word you have used since chapter 19, and the ending itself from chapter 6, where it meant to and for and landed on ജോലി exactly as it now lands on മണി."
+            },
+            {
+              "kind": "speech",
+              "text": "What you could not do before was fix an arrangement in time — and what was missing was one joint, not a vocabulary list."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thiṅkaḷāzhcha, then raṇṭŭ maṇikkŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thiṅkaḷāzhcha*, then *raṇṭŭ maṇikkŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ethra maṇikkŭ? and answer it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ethra maṇikkŭ?* and answer it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thiṅkaḷāzhcha raṇṭŭ maṇikkŭ ñān pōkuṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thiṅkaḷāzhcha raṇṭŭ maṇikkŭ ñān pōkuṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two words from chapter 94 that behave like the day-name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two words from chapter 94 that behave like the day-name]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On Monday? (തിങ്കളാഴ്ച — nothing added.) At two o'clock? (രണ്ട് മണിക്ക് (raṇṭŭ maṇikkŭ).) At what time? (എത്ര മണിക്ക് (ethra maṇikkŭ).) Which comes first when you say both? (The day.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

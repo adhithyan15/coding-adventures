@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:a1c705f0825dcac3",
+  "lessonIds": [
+    "ML-C102-manikku",
+    "ML-C102-azhcha",
+    "ML-C102-ethra-manikku",
+    "ML-C102-day-and-hour",
+    "ML-R102-when-recall"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch102.txt",
+  "json": "malayalam/narration/ch102.json",
+  "textHash": "fnv1a64:6d3117069cd0c3ad",
+  "jsonHash": "fnv1a64:d08d53f2243bdd6b",
+  "findings": []
+}

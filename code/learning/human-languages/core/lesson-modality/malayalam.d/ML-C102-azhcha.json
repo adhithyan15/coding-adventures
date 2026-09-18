@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C102-azhcha",
+    "language": "malayalam",
+    "chapter": 102,
+    "sequence": 3680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfc25003e36c484c"
+  },
+  "findings": []
+}

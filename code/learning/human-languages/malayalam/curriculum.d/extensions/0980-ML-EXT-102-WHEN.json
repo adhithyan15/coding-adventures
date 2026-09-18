@@ -1,0 +1,17 @@
+{
+  "id": "ML-EXT-102-WHEN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that something happens on a named day or at a named hour, and ask what time it happens.",
+  "prerequisites": [
+    "ML-EXT-101-BUILD"
+  ],
+  "lessons": [
+    "ML-C102-manikku",
+    "ML-C102-azhcha",
+    "ML-C102-ethra-manikku",
+    "ML-C102-day-and-hour",
+    "ML-R102-when-recall"
+  ]
+}
