@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C91-vila-panam",
+    "language": "malayalam",
+    "chapter": 91,
+    "sequence": 3210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c11259f6583f52a2"
+  },
+  "findings": []
+}

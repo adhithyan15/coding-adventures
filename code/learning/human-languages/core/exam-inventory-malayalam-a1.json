@@ -3761,7 +3761,14 @@
       "id": "ML-A1-LEX-30",
       "category": "Padakosham (lexicon by domain)",
       "label": "money, price and paying",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C91-SHOP-01",
+        "ML-LEX-C91-MONEY-01",
+        "ML-LEX-C91-MONEY-02",
+        "ML-LEX-C91-MONEY-03",
+        "ML-LEX-C91-BUY-01",
+        "ML-CONCEPT-C91-PRICE-QUESTION-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -3773,13 +3780,20 @@
         "A1-NG6-02"
       ],
       "malayalamSpecific": false,
-      "note": "No word for money, price, buying or selling appears anywhere. Three Spanish points, one gap, and it blocks the whole shopping scenario."
+      "note": "Chapter 91. The note was right that no word for money, price, buying or selling appeared anywhere, and right that it blocked the whole shopping scenario. It closes together with ML-A1-LEX-31 because the two are one situation. WHAT MADE IT CHEAP WAS CHAPTER 88. The price question is ethra roopa, and ethra was lifted out of the age question in chapter 81, so the question is two words of which one was already owned. The ANSWER is the part that had been impossible: before the tens were taught, the count stopped at twenty and every price above it was unsayable -- which is exactly what ML-A1-NUM-04's note had warned. So this chapter only had to name the unit being counted. vila and panam are the price and the money; panam ends in -am, which tells the learner in advance how it will behave when something attaches. vaanguka (to buy) is built on the -uka ending the verbs already use, and its object stays BARE -- pustakam takes no object ending because it is a thing and not a person, which is chapter 87's rule holding while the verb changed. Verified before writing: panam, vila, kada, roopa and vaanguka ALL returned ZERO files."
     },
     {
       "id": "ML-A1-LEX-31",
       "category": "Padakosham (lexicon by domain)",
       "label": "shops, and the people in them",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C91-SHOP-01",
+        "ML-LEX-C91-MONEY-01",
+        "ML-LEX-C91-MONEY-02",
+        "ML-LEX-C91-MONEY-03",
+        "ML-LEX-C91-BUY-01",
+        "ML-CONCEPT-C91-PRICE-QUESTION-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -3790,7 +3804,7 @@
         "A1-NE15-02"
       ],
       "malayalamSpecific": false,
-      "note": "kada is not taught. With ML-A1-LEX-30 this makes shopping unreachable in a track that teaches five kinds of vegetable oil's neighbours."
+      "note": "Chapter 91, closed by the same atoms as ML-A1-LEX-30, which its own note pointed at. kada is taught, and it takes the locative with a -y- join exactly as its last sound predicts, so kadayil costs no new rule. See ML-A1-LEX-30 for the account of why the chapter was cheap: the grammar under a vocabulary chapter decides its price, and here the numbers, the question word and the object rule were all already built."
     },
     {
       "id": "ML-A1-LEX-32",
