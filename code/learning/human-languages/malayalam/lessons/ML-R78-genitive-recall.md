@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-GRAMMAR-C78-GENITIVE-UDE-01]
+  knowledge: [ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-LEX-NII-NINGAL-01]
 introduces:
   knowledge: []
 practises:
-  knowledge: [ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-LEX-ENRE-01, ML-LEX-C48-ROLE-01, ML-CONCEPT-C12-KUDUMBAM-01, ML-LEX-C46-ASK-05]
+  knowledge: [ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-LEX-ENRE-01, ML-LEX-C48-ROLE-01, ML-CONCEPT-C12-KUDUMBAM-01, ML-LEX-C46-ASK-05, ML-LEX-NII-NINGAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -37,15 +37,16 @@ reviews_of: [ML-C78-nre, ML-C78-ude]
 last piece does when you put it on somebody else.
 
 ## Grammar Lens: two endings, one job, and the noun decides
-<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-LEX-C48-ROLE-01, ML-CONCEPT-C12-KUDUMBAM-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-LEX-C48-ROLE-01, ML-CONCEPT-C12-KUDUMBAM-01, ML-LEX-NII-NINGAL-01] -->
 
-| owner | ending | because it ends in |
-|---|---|---|
-| **അധ്യാപകന്റെ** | -ന്റെ | a consonant |
-| **അമ്മയുടെ** | -യുടെ | a vowel |
+| owner | ending |
+|---|---|
+| **അധ്യാപകന്റെ** | **-ന്റെ** |
+| **അമ്മയുടെ** | **-യുടെ** |
 
-One job — *whose it is* — and the choice is made by the **last sound of the
-noun**, not by you.
+One job — *whose it is* — and **which of the two endings a noun takes comes with
+the noun.** **നിന്റെ** already showed you that: **നീ** ends in a vowel, as
+**അമ്മ** does, and takes **-ന്റെ** all the same.
 
 Then the phrase is built the same way every time: **owner first with the ending,
 thing second and bare.** *adhyāpakanṟe pustakaṁ*, *ammayuṭe pustakaṁ*.
@@ -74,9 +75,10 @@ ending is usually doing the work.
 - [YOU SAY: which comes first in the phrase, the owner or the thing]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-GRAMMAR-C78-GENITIVE-UDE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-LEX-NII-NINGAL-01] -->
 
 [PAUSE 3s] Which ending does **അധ്യാപകൻ** take? (**-ന്റെ**.) And **അമ്മ**?
-(**-യുടെ**.) What decides it? (**The noun's last sound** — never you.) And what
-does either one do to the noun it lands on?
+(**-യുടെ**.) Can you tell which one a new noun will take by listening to its
+end? (**No** — **നീ** ends like **അമ്മ** and takes **നിന്റെ**.) And what does
+either one do to the noun it lands on?
 (**Makes it the owner**.)

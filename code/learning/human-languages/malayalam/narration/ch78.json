@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Whose It Is",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fd4d870369b0582a",
+  "sourceHash": "fnv1a64:08ab20fafa71f03f",
   "lessons": [
     {
       "id": "ML-C78-nre",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a1994c58a54ca32",
+      "sourceHash": "fnv1a64:79f84f6970328dd0",
       "notice": null,
       "blocks": [
         {
@@ -223,7 +223,7 @@
             },
             {
               "kind": "speech",
-              "text": "അമ്മ ends in a vowel, and that is why it takes -യുടെ. അധ്യാപകൻ ends in a consonant, so it took the other one."
+              "text": "അധ്യാപകൻ takes -ന്റെ. അമ്മ takes -യുടെ. Two nouns, two landings."
             },
             {
               "kind": "table",
@@ -234,13 +234,17 @@
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "this noun: അധ്യാപകൻ, ending in a consonant. ending: -ന്റെ.",
-                "this noun: അമ്മ, ending in a vowel. ending: -യുടെ."
+                "this noun: അധ്യാപകൻ. ending: -ന്റെ.",
+                "this noun: അമ്മ. ending: -യുടെ."
               ]
             },
             {
               "kind": "speech",
-              "text": "Two nouns, two landings — and not the whole story. Malayalam has more than these two, and this book will show you another before long. What holds already is the shape of the question: you do not choose between them. The noun in front does, and it decides by its last sound rather than by anything you mean. So the question to ask is never which ending do I want — it is what does this word end in."
+              "text": "Which of the two a noun takes is learned with the noun, not worked out from its last sound — and you have had the proof since your first chapter. നിന്റെ is the owner-form of നീ. നീ ends in a vowel, exactly as അമ്മ does, and it does not take -യുടെ at all."
+            },
+            {
+              "kind": "speech",
+              "text": "What is reliable is the shape of the phrase. Owner first with its ending, then the thing owned — that never varies, and it is what lets any noun in this book own something."
             }
           ]
         },
@@ -325,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47a208105ea52e43",
+      "sourceHash": "fnv1a64:aa10f3d0ae3ee8a5",
       "notice": null,
       "blocks": [
         {
@@ -354,19 +358,18 @@
               "kind": "table",
               "headers": [
                 "owner",
-                "ending",
-                "because it ends in"
+                "ending"
               ],
-              "columns": 3,
+              "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "owner: അധ്യാപകന്റെ (adhyāpakanṟe). ending: -ന്റെ. because it ends in: a consonant.",
-                "owner: അമ്മയുടെ (ammayuṭe). ending: -യുടെ. because it ends in: a vowel."
+                "owner: അധ്യാപകന്റെ (adhyāpakanṟe). ending: -ന്റെ.",
+                "owner: അമ്മയുടെ (ammayuṭe). ending: -യുടെ."
               ]
             },
             {
               "kind": "speech",
-              "text": "One job — whose it is — and the choice is made by the last sound of the noun, not by you."
+              "text": "One job — whose it is — and which of the two endings a noun takes comes with the noun. നിന്റെ already showed you that: നീ ends in a vowel, as അമ്മ does, and takes -ന്റെ all the same."
             },
             {
               "kind": "speech",
@@ -464,7 +467,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which ending does അധ്യാപകൻ take? (-ന്റെ.) And അമ്മ? (-യുടെ.) What decides it? (The noun's last sound — never you.) And what does either one do to the noun it lands on? (Makes it the owner.)"
+              "text": "Which ending does അധ്യാപകൻ take? (-ന്റെ.) And അമ്മ? (-യുടെ.) Can you tell which one a new noun will take by listening to its end? (No — നീ ends like അമ്മ and takes നിന്റെ.) And what does either one do to the noun it lands on? (Makes it the owner.)"
             }
           ]
         }

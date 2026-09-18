@@ -1,66 +1,76 @@
-### Fixed — `HL-C402`: the genitive table claimed to be exhaustive, and the fix needed no new morphology
+### Fixed — `HL-C402`: the genitive table was never accurate, and my first fix said it was
 
 - No coverage change. `ML-A1-LEX-06` stays closed at 208/243 (86%).
 
-#### Three chapters deferred this, and the blocker dissolved on inspection
+#### Two attempts, and the first one failed the way the shard did
 
-`HL-C402` recorded that `ML-C78-ude` (2700), its recall partner
-`ML-R78-genitive-recall` (2710) and `ML-C84-mukalil` (2920) all teach *"a noun
-that ends in a vowel takes **-യുടെ**"*, with a two-row table:
-`a consonant → -ന്റെ` / `a vowel → -യുടെ`.
+`HL-C402` recorded that `ML-C78-ude` (2700), `ML-R78-genitive-recall` (2710) and
+`ML-C84-mukalil` (2920) all teach *"a noun that ends in a vowel takes
+**-യുടെ**"*, with a two-row table. It proposed a third row — **പശു** →
+**പശുവിന്റെ** — and flagged that row as *the one claim resting on morphology
+rather than on a grep*. That kept it open across three chapters.
 
-The shard proposed adding a third row — **പശു** → **പശുവിന്റെ** — and flagged
-that row as *the one claim resting on morphology rather than on a grep*. That is
-why it sat open across chapters 99, 100 and 101.
+**The first attempt enumerated every genitive in the corpus and concluded the
+table was accurate for everything the learner had seen by 2700**, with the
+falsification arriving later at 3000 and 3210. On that basis it said the table
+was merely *not exhaustive* and promised a third landing later.
 
-**Enumerating every genitive the corpus actually attests dissolved it:**
+#### That enumeration was keyed on Malayalam script, and the corpus does not keep all its genitives in script
 
-| stem ends in | genitive | witness | first at |
-|---|---|---|---|
-| **അ** | **-യുടെ** | **അമ്മയുടെ**, **കസേരയുടെ** | 2700 |
-| chillu **ൻ** | **-ന്റെ** | **അധ്യാപകന്റെ** | 2690 |
-| half-u | **-ിന്റെ** | **സുഹൃത്തിന്റെ** | **3000** |
-| **ം** | **-ത്തിന്റെ** | **പുസ്തകത്തിന്റെ** | **3210** |
+| form | stem | stem ends in | ending | first at |
+|---|---|---|---|---|
+| **എന്റെ** | ഞാൻ (suppletive) | — | **-ന്റെ** | **80** |
+| **നിന്റെ** | **നീ** | **a vowel** | **-ന്റെ** | **130** |
+| *niṅṅaḷuṭe* | **നിങ്ങൾ** | **chillu — a consonant** | **-ുടെ**, no glide | **130** |
 
-**At sequence 2700 the table is accurate for everything the learner has seen** —
-only **അധ്യാപകന്റെ** (2690) and **അമ്മയുടെ** exist by then. The falsification
-arrives *later*, at 3000 and 3210, on stems that fit neither column.
+***niṅṅaḷuṭe* appears in the corpus only in romanization**, so a script-keyed
+grep returns zero for it. That is
+`lessons.d/a-census-keyed-on-one-of-a-construct-s-two-spellings-undercounts.md`,
+repeated verbatim: *"a census keyed on one of a construct's two spellings
+undercounts silently, and the number gets published."* The repo had the lesson
+on file and I made the mistake anyway.
 
-So the defect was never a missing row. **It was that the table presented itself
-as exhaustive** — and the fix is the same one-clause narrowing the ya-glide
-sites got, asserting no unattested form.
+**So the table was never accurate.** **നിന്റെ** breaks the vowel row and
+*niṅṅaḷuṭe* breaks the consonant row, **both at sequence 130** — 2,570 points
+before `ML-C78-ude`, in a lesson `ML-R78` itself points the learner back to.
 
-#### What changed
+#### The second attempt: stop claiming the ending is predictable at all
 
-- `ML-C78-ude` — the rule now names **അമ്മ** instead of all vowel-final nouns,
-  the table rows name their own nouns, and one sentence says it outright: *"Two
-  nouns, two landings — and not the whole story… this book will show you another
-  before long."*
-- `ML-R78-genitive-recall` — its Wrap-up **drilled the universal** (*"Which
-  ending follows a vowel?"*). It now asks about **അധ്യാപകൻ** and **അമ്മ** by
-  name, and adds *"What decides it? **The noun's last sound** — never you."*
-- `ML-C84-mukalil` — its Warm-up said *"the one a word ending in a vowel takes"*;
-  now *"the one **അമ്മ** took."*
+- `ML-C78-ude` — the table rows carry no *"because"*, and the text says it
+  plainly: *"Which of the two a noun takes is learned with the noun, not worked
+  out from its last sound — and you have had the proof since your first chapter.
+  **നിന്റെ** is the owner-form of **നീ**. **നീ** ends in a vowel, exactly as
+  **അമ്മ** does, and it does not take **-യുടെ** at all."* What survives is the
+  part that is reliable: the shape of the phrase.
+- `ML-R78-genitive-recall` — its Grammar Lens header **"because it ends in"** is
+  gone, and its Wrap-up now asks *"Can you tell which one a new noun will take
+  by listening to its end? (**No** — **നീ** ends like **അമ്മ** and takes
+  **നിന്റെ**.)"*
 
-**The forward promise was checked, not assumed.** `ML-C86-oppam` (3000) and
-`ML-C91-vila-panam` (3210) both **explain** their third landing — *"the
-owner-form takes the ending consonants take"* and *"**പുസ്തകം** changed shape
-before its ending"* — rather than merely using it. So *"will show you another
-before long"* is true and verifiable.
+  **The first attempt fixed this file's drill and left its table** — eighteen
+  lines above the file's own **എന്റെ**/**നിന്റെ** paragraph. That is the
+  `ML-C97-bhangi` failure mode, inside the very lesson this shard named as the
+  one to fix first, and the chapter-101 failure mode — refuted by its own file —
+  one PR later.
+- `ML-C84-mukalil` — Warm-up now says *"the one **അമ്മ** took."*
 
-**പശുവിന്റെ is asserted nowhere.** The corpus refuted the table with words
-already in the book, which is what three chapters of deferral were waiting for
-and never needed.
+#### The forward promise was dropped, not kept
 
-#### `HL-C403` filed
+The first attempt added *"this book will show you another before long."* **No
+lesson ever presents a third genitive ending as a third ending**:
+`ML-C86-oppam` (3000) folds **-ിന്റെ** into *"the ending consonants take"*, and
+`ML-C91-vila-panam` (3210) explains only the **ം → ത്ത** oblique. A promise the
+corpus does not honour is worse than no promise, so it is gone.
 
-`ML-C83-keralathil` (2900) says *"**Every** noun ending in **-ം** does it"* and
-*"the moment **anything** is added"*, of the **-ത്ത-** oblique. Five taught
-words put something after a **ം** with no **-ത്ത-** in sight — **മോശമാണ്**,
-**എളുപ്പമാണ്**, **സുന്ദരമാണ്**, **നൃത്തമാണ്**, **ഉയരമുണ്ട്** — and
-**സുന്ദരവും** goes a third way again.
+#### A duplicate shard was filed and withdrawn
 
-Unlike `HL-C400`–`402`, **this one's correction already exists in the corpus**:
-`ML-C96-eluppam` (3410) states the true version in full. It is only in the wrong
-place relative to the claim, which makes it a question about teaching order
-rather than about Malayalam — so it is filed rather than patched.
+The first attempt also filed `HL-C403` against `ML-C83-keralathil`'s *"every
+noun ending in **-ം**"*. **`HL-C400` is open and already covers that lesson with
+the same quote**, and covers it better: it names four behaviours rather than
+three, credits `ML-C70-um` and `ML-C93-angal`, and already establishes that
+**സാരമില്ല** has carried its **മ** since chapter 3 — so the universal was false
+when written, not falsified later as `HL-C403` claimed. `HL-C403` is deleted;
+`HL-C400` stands.
+
+**പശുവിന്റെ is asserted nowhere**, and no unattested form is used anywhere in
+the fix.

@@ -36,44 +36,74 @@ That refutes the table **twice over**:
 
 A learner reading the table predicts ✗**പശുയുടെ**.
 
-### RESOLVED — and the fix needed none of the morphology below
+### RESOLVED — and the first attempt at resolving it was wrong in the same way the shard was
 
-**Closed on the chapter-101 branch.** The blocker recorded here was that the
-third-row treatment rests on a claim about Malayalam rather than on a grep.
-**It turned out the third row was not needed at all.**
+**Closed on the chapter-101 branch, at the second attempt.** Both attempts are
+recorded, because the first one failed in a way worth keeping.
 
-Enumerating every genitive the corpus actually attests settles it:
+#### What the shard originally proposed, and why it sat open
 
-| stem ends in | genitive | witness | first at |
-|---|---|---|---|
-| **അ** | **-യുടെ** | **അമ്മയുടെ**, **കസേരയുടെ** | 2700 |
-| chillu **ൻ** | **-ന്റെ** | **അധ്യാപകന്റെ** | 2690 |
-| half-u | **-ിന്റെ** | **സുഹൃത്തിന്റെ** | **3000** |
-| **ം** | **-ത്തിന്റെ** | **പുസ്തകത്തിന്റെ** | **3210** |
+A third row — **പശു** → **പശുവിന്റെ** — flagged as *the one claim resting on
+morphology rather than on a grep*. That flag kept the item open across chapters
+99, 100 and 101.
 
-**At sequence 2700 the two-row table is accurate for everything the learner has
-seen** — only **അധ്യാപകന്റെ** (2690) and **അമ്മയുടെ** exist at that point. The
-falsification arrives *later*, at 3000 and 3210, on stems that fit neither
-column.
+#### The first attempt: an enumeration keyed on one spelling
 
-So the defect was never a missing row. It was that the table presented itself as
-**exhaustive**. The fix is the same one-clause narrowing the ya-glide sites got,
-and it asserts no unattested form:
+I enumerated every genitive in the corpus and concluded that **at sequence 2700
+the two-row table was accurate for everything the learner had seen**, with the
+falsification arriving later at 3000 and 3210. On that basis the fix was to say
+the table is not exhaustive and promise a third landing later.
 
-- `ML-C78-ude` — the rule now names **അമ്മ** rather than all vowel-final nouns,
-  the table rows name their nouns, and a sentence says outright: *"Two nouns,
-  two landings — and not the whole story… this book will show you another
-  before long."* That forward promise is honest: `ML-C86-oppam` (3000) and
-  `ML-C91-vila-panam` (3210) both **explain** their third landing, not merely
-  use it.
-- `ML-R78-genitive-recall` — the Wrap-up drilled the universal (*"Which ending
-  follows a vowel?"*). It now asks about **അധ്യാപകൻ** and **അമ്മ** by name and
-  adds *"What decides it? The noun's last sound — never you."*
-- `ML-C84-mukalil` — its Warm-up said *"the one a word ending in a vowel takes"*;
-  it now says *"the one **അമ്മ** took."*
+**That enumeration was keyed on Malayalam script, and the corpus does not keep
+all its genitives in script.** Three forms were missed:
 
-**പശുവിന്റെ is not asserted anywhere**, which is what kept this item open for
-three chapters. The corpus refuted the table using words already in the book.
+| form | stem | stem ends in | ending | first at |
+|---|---|---|---|---|
+| **എന്റെ** | ഞാൻ (suppletive) | — | **-ന്റെ** | **80** |
+| **നിന്റെ** | **നീ** | **a vowel** | **-ന്റെ** | **130** |
+| *niṅṅaḷuṭe* | **നിങ്ങൾ** | **chillu — a consonant** | **-ുടെ**, no glide | **130** |
+
+**`niṅṅaḷuṭe` appears in the corpus only in romanization**, so a script-keyed
+grep returns zero for it. This repeats
+`lessons.d/a-census-keyed-on-one-of-a-construct-s-two-spellings-undercounts.md`
+exactly: *"a census keyed on one of a construct's two spellings undercounts
+silently, and the number gets published."*
+
+**So the table was never accurate.** `നിന്റെ` breaks the vowel row and
+*niṅṅaḷuṭe* breaks the consonant row, both at **sequence 130** — 2,570 points
+before `ML-C78-ude`, in a lesson `ML-R78` itself points the learner back to.
+
+#### The second attempt: stop claiming the ending is predictable
+
+Since the two chapter-2 pronouns break both rows, the honest teaching is not
+*"here are two landings, more later"* — it is that **which ending a noun takes
+comes with the noun**:
+
+- `ML-C78-ude` — the table rows now carry no "because", and the text says
+  outright: *"Which of the two a noun takes is learned with the noun, not worked
+  out from its last sound — and you have had the proof since your first chapter.
+  **നിന്റെ** is the owner-form of **നീ**. **നീ** ends in a vowel, exactly as
+  **അമ്മ** does, and it does not take **-യുടെ** at all."* What is kept is the
+  part that is reliable: the shape of the phrase.
+- `ML-R78-genitive-recall` — its Grammar Lens header **"because it ends in"**
+  is gone, and its Wrap-up now asks *"Can you tell which one a new noun will
+  take by listening to its end? (**No** — **നീ** ends like **അമ്മ** and takes
+  **നിന്റെ**.)"* The first attempt had fixed this file's drill and **left its
+  table**, which is the `ML-C97-bhangi` failure mode inside the very lesson this
+  shard named as the one to fix first.
+- `ML-C84-mukalil` — Warm-up now says *"the one **അമ്മ** took."*
+
+**പശുവിന്റെ is asserted nowhere**, and no unattested form is used. The
+counterexamples are **നീ**/**നിന്റെ**, taught in chapter 2 and owned by
+`ML-C02-nii-ningal` (110) and `ML-C02-ninre-peru-entaanu` (130).
+
+#### The forward promise was dropped, not kept
+
+The first attempt added *"this book will show you another before long."* No
+lesson in the corpus ever presents a third genitive ending **as** a third
+ending: `ML-C86-oppam` (3000) folds **-ിന്റെ** into *"the ending consonants
+take"*, and `ML-C91-vila-panam` (3210) explains only the **ം → ത്ത** oblique.
+A promise the corpus does not honour is worse than no promise.
 
 ### The original candidate treatment, kept for the record — and the claim in it that needed checking first
 
