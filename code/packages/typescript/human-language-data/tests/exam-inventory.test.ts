@@ -2227,8 +2227,36 @@ describe("the committed Malayalam A1 inventory", () => {
     // object stays BARE -- pustakam takes no object ending because it is a thing,
     // which is chapter 87's rule holding while the verb changed. A vocabulary
     // chapter is cheap when the grammar under it is already built.
-    expect(coverage.covered).toBe(198);
-    expect(coverage.unmapped).toBe(45);
+    // 198 -> 199: ML-A1-LEX-55, eating out, whose blocker chapter 91 removed. Three
+    // words close it and the question ending the scene is chapter 91's, unchanged.
+    // bhakshanam is the general word for FOOD, which the book had never had -- it
+    // owned ari, choru and oon and no name for the category, which is what a
+    // vocabulary grown from the particular outward tends to leave out. THE TWO
+    // BORROWINGS ARE THE REAL LESSON and sit together on purpose: hottal came from
+    // English "hotel" and in Kerala ordinarily means A PLACE TO EAT, while bil kept
+    // its meaning intact. One changed and one did not, so the habit taught is to
+    // check each borrowing rather than trust the family.
+    // 199 -> 200: ML-A1-N-06, the plural, and THE NOTE'S EVIDENCE WAS WRONG -- it was
+    // checked before it was spent. The note called this "the cheapest grammar lesson
+    // available", on the claim that -kal already sat inside four taught headwords:
+    // nirangal, maasangal, shareera-bhaagangal, kaalangal. Those are FILE SLUGS. A
+    // token sweep of all 393 lesson files found the chillu-LL sequence -kal in exactly
+    // two words, thinkal (Monday) and makal (daughter), and NEITHER IS A PLURAL. The
+    // learner had met the suffix zero times, not four.
+    // What the same sweep DID find is better: NINGAL, the respectful you from chapter
+    // 2, ends in -ngngal, and ML-CONCEPT-C02-RESPECT-BY-PLURAL-01 had already told the
+    // learner that word IS a plural -- without ever isolating the ending that made it
+    // one. So the chapter reveals rather than introduces.
+    // The label's second half cost nothing at all: a noun with a numeral in front
+    // needs no ending, and the corpus was ALREADY doing it right in three attested
+    // lines -- ampathu rupa, nuru rupa, rantu mani. The lesson points at the learner's
+    // own sentences instead of asserting a rule. NO NEW VOCABULARY in the chapter.
+    // NJANGAL was cut from the reveal mid-draft: chapter 71 sits on
+    // SPINE-READ-SIGNS-AND-NOTICES, which the walk reaches AFTER
+    // SPINE-DEFINITE-REFERENCE, so its atom is not available here. Chapter number is
+    // not walk order.
+    expect(coverage.covered).toBe(200);
+    expect(coverage.unmapped).toBe(43);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2275,7 +2303,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 198/243 points covered (81%)",
+      "malayalam A1 (partial inventory): 200/243 points covered (82%)",
     );
   }, 60_000);
 });

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R93-plural-recall",
+    "language": "malayalam",
+    "chapter": 93,
+    "sequence": 3320,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f65dcaa70efe6c68"
+  },
+  "findings": []
+}
