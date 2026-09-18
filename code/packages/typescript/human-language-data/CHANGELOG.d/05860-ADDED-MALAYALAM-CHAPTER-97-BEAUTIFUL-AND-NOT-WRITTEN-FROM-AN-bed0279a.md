@@ -26,10 +26,12 @@
   against **സുന്ദരം → സുന്ദരമാണ്**, with **കുട്ടിയാണ്** as the precedent the
   learner already owns.
 - **അല്ല does weld, and the draft taught that it does not.** That doctrine was
-  read out of `ML-C77`'s single example — ഞാൻ അധ്യാപകൻ അല്ല — whose host ends in
-  a **chillu**, a consonant with no vowel to pass on. It is the one host in the
-  corpus that **cannot** show the rule either way, and the claim was repeated in
-  five places.
+  read out of `ML-C77`'s single example — ഞാൻ അധ്യാപകൻ അല്ല — which is written
+  apart as **a choice about writing**, not because anything blocks the weld. The
+  claim was repeated in five places.
+- A later round tried to explain that spacing by saying the chillu had "no vowel
+  to pass on". **That was invented and is also wrong** — അധ്യാപകൻ + അല്ല →
+  **അധ്യാപകനല്ല**, which the lesson now prints. See below.
 - The natural form is **ഇത് സുന്ദരമല്ല**. അല്ല is the negative of ആണ് and welds
   the same way, **same മ, same reason** — and the lesson now explains why the
   chapter-77 example looked separate.
@@ -47,3 +49,15 @@
   quality gives both ends of the line, which is the honest A1 shape.
 - All four candidates grepped as tokens first (zero occurrences each); glyph
   pre-check run with its control validated before the clean result was trusted.
+
+- **Corrections after the first review (rounds two to five), recorded because the
+  history is the useful part:** the invented "no vowel to pass on" cause was
+  removed; the replacement over-unified the chillu with the anusvara and was
+  scoped back to the one join they share; the scoping itself then deleted a
+  **true** conditioning clause and had to be restored — a chillu reverts **only
+  before a vowel**, and **നിങ്ങൾക്ക്** keeps its **ൾ** before a consonant; and
+  finally `ML-C87-accusative`, which chapter 97 cites by name, still taught the
+  position rule that counter-example refutes, so it was narrowed to the vowel
+  condition with the corpus's own reason (`ML-S06`: *"What does a chillu tell you
+  about the vowel? (That there isn't one.)"*). Tracked in `HL-C401`, where
+  `ML-C70-um-more` remains open.
