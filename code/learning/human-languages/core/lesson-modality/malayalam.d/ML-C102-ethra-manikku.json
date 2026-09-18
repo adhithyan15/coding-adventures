@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C102-ethra-manikku",
+    "language": "malayalam",
+    "chapter": 102,
+    "sequence": 3690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64eb42bcb3027501"
+  },
+  "findings": []
+}

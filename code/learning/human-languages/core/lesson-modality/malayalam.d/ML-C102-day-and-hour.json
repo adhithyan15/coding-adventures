@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C102-day-and-hour",
+    "language": "malayalam",
+    "chapter": 102,
+    "sequence": 3700,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ce88d15c118ee960"
+  },
+  "findings": []
+}

@@ -2501,8 +2501,32 @@ describe("the committed Malayalam A1 inventory", () => {
     // owner, leaving only joined forms built from owned pieces and metalinguistic
     // ending fragments. Also caught in draft: the adjective list said "every
     // adjective so far" while omitting nalla.
-    expect(coverage.covered).toBe(208);
-    expect(coverage.unmapped).toBe(35);
+    // 208 -> 209: ML-A1-TIME-10, locating an event in time. THE PERCENTAGE HOLDS at
+    // 86 (209/243 is 86.0); recomputed, not carried. THE POINT'S NOTE WAS HALF
+    // STALE, and the stale half was the CASE. It said the point "requires the
+    // locative on a time word, which is not taught", and Malayalam fixes a clock
+    // time with the DATIVE -- raNTu maNikku, no form in -il anywhere -- which
+    // ML-C06-dative-ikku has taught since sequence 320. The note's other half was
+    // right and is why this closes cheaply: "the parts are all present and are
+    // never assembled". CHAPTER 102 INTRODUCES NO NEW WORD AT ALL. mani is
+    // chapter 18, the day-names are chapter 10, ethra is chapter 81, the
+    // when-slot at the front of nyaan pOkuM is chapter 94, and the ending is
+    // chapter 6. What was missing was one joint: -kku on the hour, NOTHING on the
+    // named day, which stands bare exactly as innu and naaLe have since chapter
+    // 94. NOT ONE MALAYALAM TOKEN GAINS A FIRST OWNER. All four content headwords
+    // are multi-word, which continuity.ts keeps whole, so no earlier use becomes a
+    // forward reference -- the trap lessons.d records as "a multi-word headword
+    // owns no single token". thiNkaLaazhcha is the case that needed it: chapter
+    // 10 prints all seven day-names under a seven-word headword and owns none of
+    // them singly, so a one-word lesson for it would have turned chapter 10's own
+    // table into a forward reference. It is taught as a USE instead. maNikku is
+    // the same question from the other side -- the reader can already BUILD it,
+    // and lessons.d says a buildable word must not be introduced later as a word.
+    // THE CHAPTER REFUSES ONE CLAIM IT COULD HAVE MADE: that a day-name CANNOT
+    // take an ending. It can, for other jobs; it does not NEED one for saying
+    // when, and that is what the lesson says.
+    expect(coverage.covered).toBe(209);
+    expect(coverage.unmapped).toBe(34);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2549,7 +2573,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 208/243 points covered (86%)",
+      "malayalam A1 (partial inventory): 209/243 points covered (86%)",
     );
   }, 60_000);
 });
