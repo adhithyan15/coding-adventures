@@ -453,8 +453,23 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // validate reads frontmatter and atom comments; the gates read structure; this
   // suite reads banned words, glyphs and pins. None of them reads an assertion
   // about how words are built. Same family as HL-C399.
-  expect(coverage.covered).toBe(202);
-  expect(coverage.unmapped).toBe(41);
+  // 202 -> 203: ML-A1-LEX-54, ease and difficulty. NOTE THE PERCENTAGE ROLLS OVER
+  // AGAIN, 83% -> 84%; it was computed, not assumed, after a stale 82% shipped past
+  // every check but this one in chapter 94.
+  // TWO WORDS AND NO NEW GRAMMAR, and the corpus proves it rather than the lesson
+  // claiming it: eLuppam + aaNu -> eLuppamaaNu is the same welding as sukhamaaNu
+  // (chapter 3), ishtamaaNu (34), kudumbamaaNu (35) and moshamaaNu (89). The
+  // pattern sat in the learner's mouth for most of the book because until now they
+  // had no word of their own to put through it.
+  // The claims were settled BEFORE the prose this time -- romanization derived from
+  // the track (final anusvara 'ṁ', LLA 'ḷ', doubled pa 'pp') rather than invented,
+  // which is how chapter 95's th/tth drift happened. A draft line claiming the
+  // learner had been doing this "since your third week" was cut: chapters are not
+  // weeks and nothing here knows how long a learner takes.
+  // buddhimuttu was considered for a third lesson and DROPPED rather than assert
+  // register nuances that could not be defended under review.
+  expect(coverage.covered).toBe(203);
+  expect(coverage.unmapped).toBe(40);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -466,6 +481,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 202/243 points covered (83%)",
+    "malayalam A1 (partial inventory): 203/243 points covered (84%)",
   );
 }, 60_000);

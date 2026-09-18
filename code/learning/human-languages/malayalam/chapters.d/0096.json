@@ -1,0 +1,16 @@
+{
+  "chapter": 96,
+  "title": "Easy and Difficult",
+  "label": "ch:ml-ease",
+  "canDo": "I can say that something is easy or difficult.",
+  "payoff": {
+    "lesson": "ML-R96-ease-recall",
+    "kind": "production",
+    "summary": "From cold: the pair, and the welding of a word ending in anusvara onto aaNu, which the learner has been performing since near the beginning without being shown it.",
+    "assesses": [
+      "ML-LEX-C96-EASY-01",
+      "ML-LEX-C96-DIFFICULT-01"
+    ],
+    "note": "TWO atoms and NO NEW GRAMMAR. eLuppam + aaNu -> eLuppamaaNu is not a new rule: sukhamaaNu is attested from chapter 3, ishtamaaNu from 34, kudumbamaaNu from 35 and moshamaaNu from 89, so the pattern has been in the learner's mouth for most of the book with nothing to do about it. The chapter is the first time they own a word to put through it. Kept to two words deliberately: buddhimuttu was considered and dropped rather than assert register nuances that could not be defended."
+  }
+}

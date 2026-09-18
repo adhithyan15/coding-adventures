@@ -4219,7 +4219,10 @@
       "id": "ML-A1-LEX-54",
       "category": "Padakosham (lexicon by domain)",
       "label": "ease and difficulty",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C96-EASY-01",
+        "ML-LEX-C96-DIFFICULT-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -4229,7 +4232,7 @@
         "A1-NG6-10"
       ],
       "malayalamSpecific": false,
-      "note": "Not taught."
+      "note": "Chapter 96, and the claims were settled BEFORE the prose rather than asserted and caught in review, which is the correction taken from chapter 95. All four candidates -- eLuppam, prayaasam, buddhimuttu, kathinam -- were grepped as tokens (zero occurrences each) and glyph-checked with the control validated first. TWO WORDS AND NO NEW GRAMMAR: eLuppam + aaNu -> eLuppamaaNu is not a new rule, and the corpus proves it rather than the lesson claiming it -- sukhamaaNu is attested from chapter 3, ishtamaaNu from 34, kudumbamaaNu from 35, moshamaaNu from 89. The pattern sat in the learner's mouth for most of the book because until now they had no word of their own to put through it. Romanization was DERIVED from the track before being written: final anusvara is -am rendered 'ṁ' across the recent corpus, LLA is 'ḷ', doubled pa is 'pp'. A draft line saying the learner had been doing this 'since your third week' was cut -- chapters are not weeks and nothing in the repo knows how long a learner takes; it names the event instead. buddhimuttu was considered for a third lesson and DROPPED rather than assert register nuances that could not be defended under review; the point asks for ease and difficulty, and two words close it."
     },
     {
       "id": "ML-A1-LEX-55",

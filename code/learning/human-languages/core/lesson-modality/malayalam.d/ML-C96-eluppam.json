@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C96-eluppam",
+    "language": "malayalam",
+    "chapter": 96,
+    "sequence": 3410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0231ffd83681a20b"
+  },
+  "findings": []
+}
