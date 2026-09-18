@@ -61,9 +61,10 @@ In **സുന്ദരമാണ്** nothing is added at all. The **ം** is th
 stays; only its *writing* moves, because the bare sign cannot carry a vowel.
 **You were told that last chapter.**
 
-**ഭംഗി is the other case**, and you have met the reason before. It ends in a
-vowel, **ആണ്** begins with one, and Malayalam will not let two vowels sit
-together — so a **യ** slides in between them. **The joining chapter said exactly
+**ഭംഗി is the other case**, and you have met the reason before. It ends in
+**ഇ**, **ആണ്** begins with a vowel, and Malayalam will not let two vowels sit
+together — so a letter slides in between them, and after **ഇ** that letter is
+**യ**. **The joining chapter said exactly
 that** about **അരിയും**.
 
 What is new is only where it happens. **ഇത് എന്റെ കുട്ടിയാണ്** — *this is my

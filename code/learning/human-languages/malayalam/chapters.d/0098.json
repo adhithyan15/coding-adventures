@@ -1,0 +1,17 @@
+{
+  "chapter": 98,
+  "title": "Games and Films",
+  "label": "ch:ml-leisure",
+  "canDo": "I can name a game, say that I play, and name a film.",
+  "payoff": {
+    "lesson": "ML-R98-leisure-recall",
+    "kind": "production",
+    "summary": "From cold: the three leisure words, and what actually decides the letter that slides in before aaNu.",
+    "assesses": [
+      "ML-LEX-C98-GAME-01",
+      "ML-LEX-C98-PLAY-01",
+      "ML-LEX-C98-CINEMA-01"
+    ],
+    "note": "Three atoms. THE EXAM POINT'S OWN NOTE WAS OVERSTATED and is corrected here: it claimed not one leisure word was taught, but vaayikkuka, kaaNuka and pusthakam are all owned, and its lesson count had rotted. The real gap was sport, games and shows, and that is what this chapter closes. ozhivusamayam (free time) was REFUSED: samayam is not taught, so the compound would be built out of an unowned part -- the free-time limb of LEX-37 stays open on purpose. THE CHAPTER'S ONE GENERALISING SENTENCE WAS THE DANGER, as in 96 and 97. sinima is the first vowel-final word in the book to join aaNu without ending in -i, and the draft said the ya 'comes anyway' -- which reads as 'a vowel brings ya' and is FALSE of a word the learner already has: pashu (ML-C60-cow) gives pashuvaaNu, with va. The lesson now teaches that the last vowel CHOOSES the letter, shows the cow as the row that goes the other way, and the recall drills that distinction rather than the resemblance. Because this chapter states the narrow rule, three merged lessons that stated the broad one were narrowed with it: ML-C97-bhangi and ML-R97-beauty-recall both attributed the ya to vowel-hood, and ML-C70-um-more said 'a noun ending in a vowel gives a ya' of the -um ending, which has the same split. Each now names the environment -i rather than the resemblance. Also corrected before review: kalikkuka claimed 'eight verbs in this book already end that way' -- a token sweep found SEVEN -ikkuka headwords, and the count would rot on the next verb anyway, so the number was replaced by four named verbs. kali's 'first word for something done for its own sake' was a claim nothing could check, and 'the language had no way to name one' confused the book with Malayalam; both were narrowed to 'the book's first word for play'."
+  }
+}

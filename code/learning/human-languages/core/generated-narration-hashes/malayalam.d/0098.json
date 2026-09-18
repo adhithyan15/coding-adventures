@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:1995ec17b7d43b53",
+  "lessonIds": [
+    "ML-C98-kali",
+    "ML-C98-kalikkuka",
+    "ML-C98-sinima",
+    "ML-R98-leisure-recall"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "malayalam/narration/ch98.txt",
+  "json": "malayalam/narration/ch98.json",
+  "textHash": "fnv1a64:f20995bd58c957dd",
+  "jsonHash": "fnv1a64:09658d54d4dba0f7",
+  "findings": []
+}

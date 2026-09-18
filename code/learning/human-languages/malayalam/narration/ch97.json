@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Beautiful, and Not",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e17f7aec12324d3c",
+  "sourceHash": "fnv1a64:454e7ec25595b6c1",
   "lessons": [
     {
       "id": "ML-C97-sundaram",
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:119d6f100d44c9fb",
+      "sourceHash": "fnv1a64:f4a357e84f7136bb",
       "notice": null,
       "blocks": [
         {
@@ -222,7 +222,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഭംഗി (bhaṁgi) is the other case, and you have met the reason before. It ends in a vowel, ആണ് begins with one, and Malayalam will not let two vowels sit together — so a യ slides in between them. The joining chapter said exactly that about അരിയും."
+              "text": "ഭംഗി (bhaṁgi) is the other case, and you have met the reason before. It ends in ഇ, ആണ് begins with a vowel, and Malayalam will not let two vowels sit together — so a letter slides in between them, and after ഇ that letter is യ. The joining chapter said exactly that about അരിയും."
             },
             {
               "kind": "speech",
@@ -475,7 +475,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1ed09ed326558be",
+      "sourceHash": "fnv1a64:71125b3d66a796b2",
       "notice": null,
       "blocks": [
         {
@@ -518,7 +518,7 @@
             },
             {
               "kind": "speech",
-              "text": "The two halves are not the same event. In the top pair nothing is added — the m was always in the word, and only its writing moves once a vowel sits behind it. In the bottom pair a യ genuinely appears, because the word ends in a vowel and two vowels will not sit together."
+              "text": "The two halves are not the same event. In the top pair nothing is added — the m was always in the word, and only its writing moves once a vowel sits behind it. In the bottom pair a letter genuinely appears, because the word ends in a vowel and two vowels will not sit together; both of these end in ഇ, and after ഇ that letter is യ."
             },
             {
               "kind": "speech",

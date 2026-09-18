@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R98-leisure-recall",
+    "language": "malayalam",
+    "chapter": 98,
+    "sequence": 3510,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "wide-table"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "wide-table"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dc672210eec62230"
+  },
+  "findings": []
+}

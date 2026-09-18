@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Joining Things Together",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f900f4dca2aca464",
+  "sourceHash": "fnv1a64:9529b8a32456f9f2",
   "lessons": [
     {
       "id": "ML-C70-um",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6d9caf4023e2fd9",
+      "sourceHash": "fnv1a64:ab1d2103ca7e9c65",
       "notice": null,
       "blocks": [
         {
@@ -264,7 +264,7 @@
             },
             {
               "kind": "speech",
-              "text": "a noun ending in a vowel becomes a യ് slides in: അരി, അരിയും."
+              "text": "a noun ending in a vowel becomes a letter slides in, chosen by that vowel; after ഇ it is യ്: അരി, അരിയും."
             },
             {
               "kind": "speech",

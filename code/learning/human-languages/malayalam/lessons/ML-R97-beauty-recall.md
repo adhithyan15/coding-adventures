@@ -48,8 +48,9 @@ it.
 
 **The two halves are not the same event.** In the top pair nothing is added —
 the **m** was always in the word, and only its writing moves once a vowel sits
-behind it. In the bottom pair a **യ** genuinely appears, because the word ends
-in a vowel and two vowels will not sit together.
+behind it. In the bottom pair a letter genuinely appears, because the word ends
+in a vowel and two vowels will not sit together; both of these end in **ഇ**,
+and after **ഇ** that letter is **യ**.
 
 And **what attaches matters too**, not only how the word ended: the same
 **സുന്ദരം** gives **സുന്ദരവും** when the *and* ending arrives.

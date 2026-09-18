@@ -53,7 +53,7 @@ Two different things are happening here, and only one of them is new.
 സുന്ദരം (sundaraṁ) becomes സുന്ദരമാണ്, the m was already there.
 ഭംഗി (bhaṁgi) becomes ഭംഗിയാണ്, a യ is genuinely added.
 In സുന്ദരമാണ് nothing is added at all. The ം is the sound m, and it stays; only its writing moves, because the bare sign cannot carry a vowel. You were told that last chapter.
-ഭംഗി (bhaṁgi) is the other case, and you have met the reason before. It ends in a vowel, ആണ് begins with one, and Malayalam will not let two vowels sit together — so a യ slides in between them. The joining chapter said exactly that about അരിയും.
+ഭംഗി (bhaṁgi) is the other case, and you have met the reason before. It ends in ഇ, ആണ് begins with a vowel, and Malayalam will not let two vowels sit together — so a letter slides in between them, and after ഇ that letter is യ. The joining chapter said exactly that about അരിയും.
 What is new is only where it happens. ഇത് എന്റെ കുട്ടിയാണ് — this is my child — has the same യ, for the same reason.
 
 Guided Practice.
@@ -124,7 +124,7 @@ word: എളുപ്പം. joined to ആണ്: എളുപ്പമാണ്
 word: സുന്ദരം (sundaraṁ). joined to ആണ്: സുന്ദരമാണ്. what happened: the m was already there.
 word: കുട്ടി. joined to ആണ്: കുട്ടിയാണ്. what happened: a യ was added.
 word: ഭംഗി (bhaṁgi). joined to ആണ്: ഭംഗിയാണ്. what happened: a യ was added.
-The two halves are not the same event. In the top pair nothing is added — the m was always in the word, and only its writing moves once a vowel sits behind it. In the bottom pair a യ genuinely appears, because the word ends in a vowel and two vowels will not sit together.
+The two halves are not the same event. In the top pair nothing is added — the m was always in the word, and only its writing moves once a vowel sits behind it. In the bottom pair a letter genuinely appears, because the word ends in a vowel and two vowels will not sit together; both of these end in ഇ, and after ഇ that letter is യ.
 And what attaches matters too, not only how the word ended: the same സുന്ദരം (sundaraṁ) gives സുന്ദരവും when the and ending arrives.
 
 What you've built.

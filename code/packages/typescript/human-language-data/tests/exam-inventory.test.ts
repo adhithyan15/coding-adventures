@@ -2323,8 +2323,23 @@ describe("the committed Malayalam A1 inventory", () => {
     // call made about buddhimuttu in chapter 96. The far end is built with alla, which
     // ML-C77 teaches STANDING APART and never welded -- and the lesson makes the
     // not-welding its point, since sundaram keeps its anusvara because nothing attached.
-    expect(coverage.covered).toBe(204);
-    expect(coverage.unmapped).toBe(39);
+    // 204 -> 205: ML-A1-LEX-37, free time, sport, games and shows. THE POINT'S OWN
+    // NOTE WAS OVERSTATED and the chapter says so: it claimed not one leisure word
+    // is taught, while vaayikkuka, kaaNuka and pusthakam are all owned, and its
+    // "292 lessons" had rotted to 416 files. The real gap was sport, games and shows.
+    // FREE TIME IS LEFT OPEN ON PURPOSE -- ozhivusamayam needs samayam, which nothing
+    // teaches, and a compound of an unowned part is a headword smuggled in.
+    // THE ONE GENERALISING SENTENCE WAS AGAIN WHERE THE ERROR LIVED, three chapters
+    // running. sinima is the first vowel-final word in the book to weld to aaNu
+    // without ending in -i, and the draft said the ya "comes anyway". pashu, taught
+    // since chapter 60, gives pashuvaaNu with va. Nothing in the corpus attests a va
+    // glide, so no gate and no earlier lesson could contradict it -- latent-false, and
+    // caught only by asking what a taught word would do. The lesson now teaches that
+    // the last vowel CHOOSES the letter and exhibits the cow as the row that differs.
+    // ML-C97-bhangi, ML-R97-beauty-recall and ML-C70-um-more all stated the broad
+    // version and were narrowed to name -i as the environment in the same commit.
+    expect(coverage.covered).toBe(205);
+    expect(coverage.unmapped).toBe(38);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2371,7 +2386,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 204/243 points covered (84%)",
+      "malayalam A1 (partial inventory): 205/243 points covered (84%)",
     );
   }, 60_000);
 });

@@ -60,7 +60,7 @@ That is a rule you can extend without being taught the extension, which is worth
 The word, taken apart.
 പാൽ gives the third landing, and it completes the set you need:
 a noun ending in -ം becomes -വും: വെള്ളം, വെള്ളവും.
-a noun ending in a vowel becomes a യ് slides in: അരി, അരിയും.
+a noun ending in a vowel becomes a letter slides in, chosen by that vowel; after ഇ it is യ്: അരി, അരിയും.
 a noun ending in ൽ becomes the letter unfurls to ല and takes the ending plainly: പാൽ, പാലും.
 That last one looks like a change and is not. ൽ is the compressed, end-of-word form of ല; putting anything after it gives the full letter back, because it is no longer at the end.
 

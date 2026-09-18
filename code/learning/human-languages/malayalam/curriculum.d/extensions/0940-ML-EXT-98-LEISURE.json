@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-98-LEISURE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a game, say that I play, and name a film.",
+  "prerequisites": [
+    "ML-EXT-97-BEAUTY"
+  ],
+  "lessons": [
+    "ML-C98-kali",
+    "ML-C98-kalikkuka",
+    "ML-C98-sinima",
+    "ML-R98-leisure-recall"
+  ]
+}
