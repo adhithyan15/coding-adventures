@@ -55707,17 +55707,6 @@
         "revisits": 1
       },
       {
-        "atom": "ML-GRAMMAR-C89-NOMINAL-01",
-        "language": "malayalam",
-        "introducedBy": "ML-C89-nallathu",
-        "introducedAt": 380,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
         "atom": "ML-GRAMMAR-C90-PARTICIPLE-01",
         "language": "malayalam",
         "introducedBy": "ML-C90-participle",
@@ -77893,6 +77882,16 @@
         "revisits": 3
       },
       {
+        "atom": "ML-GRAMMAR-C89-NOMINAL-01",
+        "language": "malayalam",
+        "introducedBy": "ML-C89-nallathu",
+        "introducedAt": 380,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 5
+      },
+      {
         "atom": "ML-GRAMMAR-C93-ANGAL-01",
         "language": "malayalam",
         "introducedBy": "ML-C93-angal",
@@ -93292,7 +93291,7 @@
       "missedByWindow": {
         "R1": 1747,
         "R2": 4036,
-        "R3": 5678,
+        "R3": 5677,
         "R4": 4234
       },
       "forwardReferences": 798
@@ -113966,11 +113965,11 @@
         "forwardReferences": 12,
         "atomsTaught": 473,
         "atomsNeverRevisited": 19,
-        "reinforcementWindowMisses": 1012,
+        "reinforcementWindowMisses": 1011,
         "reinforcementMissesByWindow": {
           "R1": 121,
           "R2": 150,
-          "R3": 413,
+          "R3": 412,
           "R4": 328
         },
         "payoffSurprises": 8,
@@ -114002,7 +114001,7 @@
           {
             "language": "malayalam",
             "kind": "reinforcement",
-            "count": 1012,
+            "count": 1011,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -115353,7 +115352,7 @@
       {
         "language": "malayalam",
         "kind": "reinforcement",
-        "count": 1012,
+        "count": 1011,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
