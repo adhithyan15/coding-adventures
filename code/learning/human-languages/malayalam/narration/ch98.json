@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Games and Films",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:867331392943ba88",
+  "sourceHash": "fnv1a64:06dcc121cc76d19b",
   "lessons": [
     {
       "id": "ML-C98-kali",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:708812cbc37feb3d",
+      "sourceHash": "fnv1a64:ff546875e9cd0061",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say this is beauty — the word and the ending together."
+              "text": "Say this is beautiful — the word and the ending together."
             }
           ]
         },
@@ -66,19 +66,19 @@
             {
               "kind": "table",
               "headers": [
-                "",
-                ""
+                "word",
+                "joined to ആണ്"
               ],
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "ഭംഗി becomes ഭംഗിയാണ്, blank.",
-                "കളി (kaḷi) becomes കളിയാണ്, blank."
+                "word: ഭംഗി. joined to ആണ്: ഭംഗിയാണ് (bhaṁgiyāṇŭ).",
+                "word: കളി. joined to ആണ്: കളിയാണ് (kaḷiyāṇŭ)."
               ]
             },
             {
               "kind": "speech",
-              "text": "Two words now do this, and they do it for the same reason: the word ends in a vowel, ആണ് begins with one, and something has to stand between them."
+              "text": "You have seen this done before, and not only last chapter. കുട്ടി has been taking the same യ since ഇത് എന്റെ കുട്ടിയാണ്, and for the same reason: the word ends in a vowel, ആണ് begins with one, and something has to stand between them."
             }
           ]
         },
@@ -150,7 +150,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is a game? (കളി (kaḷi).) Which letter slides in before ആണ്? (യ — the same one ഭംഗി takes.)"
+              "text": "What is a game? (കളി (kaḷi).) കളി (kaḷi) ends in ഇ — which letter slides in before ആണ്? (യ — the same one ഭംഗി and കുട്ടി take.)"
             }
           ]
         }
@@ -317,7 +317,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:58adf16fc41bc4b0",
+      "sourceHash": "fnv1a64:998d4ff7af3bb9d4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -366,11 +366,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A borrowed word again, like the eating-place word — and this one came across without changing its meaning at all."
+              "text": "A borrowed word again, like the eating-place word — and this one kept far more of what it came with than that one did."
             },
             {
               "kind": "speech",
-              "text": "Its last letter is മ, and a consonant in this script carries an a of its own: മ is ma. So സിനിമ (sinima) ends in a vowel, ആണ് opens with one, and — as with കളി (kaḷi) — something has to stand between the two."
+              "text": "Its last letter is മ, and a consonant in this script carries an a of its own: മ is ma. So സിനിമ (sinima) ends in a full vowel, ആണ് opens with one, and — as with കളി (kaḷi) — something has to stand between the two."
             },
             {
               "kind": "speech",
@@ -390,15 +390,19 @@
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "ends in: ഇ. word: ഭംഗി. joined to ആണ്: ഭംഗിയാണ്.",
-                "ends in: ഇ. word: കളി (kaḷi). joined to ആണ്: കളിയാണ്.",
-                "ends in: അ. word: സിനിമ (sinima). joined to ആണ്: സിനിമയാണ്.",
-                "ends in: ഉ. word: പശു. joined to ആണ്: പശുവാണ്."
+                "ends in: ഇ. word: ഭംഗി. joined to ആണ്: ഭംഗിയാണ് (bhaṁgiyāṇŭ).",
+                "ends in: ഇ. word: കളി. joined to ആണ്: കളിയാണ് (kaḷiyāṇŭ).",
+                "ends in: അ. word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ).",
+                "ends in: ഉ. word: പശു. joined to ആണ്: പശുവാണ് (paśuvāṇŭ)."
               ]
             },
             {
               "kind": "speech",
-              "text": "The cow is the row to look at. ഇ and അ both take യ; ഉ takes വ. The gap gets filled either way — the vowel at the end says with what."
+              "text": "The cow is the row to look at. ഇ and അ both take യ; a full ഉ takes വ. The gap gets filled either way — the vowel at the end says with what."
+            },
+            {
+              "kind": "speech",
+              "text": "The faint half-u is not one of these vowels. Look back at the sentence above: ഇത് stands right beside സിനിമയാണ്, and nothing slides into ഇത് at all. That breathed -ŭ at the end of a word is not a full vowel — it simply steps out of the way. എന്ത് has been doing it since your very first question: എന്ത് + ആണ് is എന്താണ്, entāṇŭ, with nothing added and one sound quietly given up."
             }
           ]
         },
@@ -455,7 +459,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is a film? (സിനിമ (sinima).) What slides in before ആണ്? (യ.) And what does പശു take instead? (വ — പശുവാണ്.)"
+              "text": "What is a film? (സിനിമ (sinima).) സിനിമ (sinima) ends in അ — what slides in before ആണ്? (യ — സിനിമയാണ്.) And പശു, which ends in ഉ? (വ — പശുവാണ്, paśuvāṇŭ.)"
             }
           ]
         }
@@ -469,13 +473,20 @@
       "romanization": "kaḷiyuṁ sinimayuṁ enna ōrmma",
       "gloss": "cold retrieval of the three leisure words, and of the thing that decides which letter slides in before ആണ്",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:87c7d08804e9faea",
-      "notice": null,
+      "sourceHash": "fnv1a64:7dae23693ce649e2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -501,7 +512,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ആണ് opens with a vowel. A word that also ends in one cannot sit straight against it, so a letter comes in between. Which letter is not free — the word's own last vowel settles it:"
+              "text": "ആണ് opens with a vowel. A word that ends in a full vowel cannot sit straight against it, so a letter comes in between. Which letter is not free — the word's own last vowel settles it:"
             },
             {
               "kind": "table",
@@ -513,15 +524,19 @@
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "ends in: ഇ. word: ഭംഗി. joined to ആണ്: ഭംഗിയാണ്.",
-                "ends in: ഇ. word: കളി (kaḷi). joined to ആണ്: കളിയാണ്.",
-                "ends in: അ. word: സിനിമ (sinima). joined to ആണ്: സിനിമയാണ്.",
-                "ends in: ഉ. word: പശു. joined to ആണ്: പശുവാണ്."
+                "ends in: ഇ. word: ഭംഗി. joined to ആണ്: ഭംഗിയാണ് (bhaṁgiyāṇŭ).",
+                "ends in: ഇ. word: കളി. joined to ആണ്: കളിയാണ് (kaḷiyāṇŭ).",
+                "ends in: അ. word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ).",
+                "ends in: ഉ. word: പശു. joined to ആണ്: പശുവാണ് (paśuvāṇŭ)."
               ]
             },
             {
               "kind": "speech",
               "text": "Three rows out of four take യ, and that is exactly why the fourth is worth holding on to. If you carry away vowels take യ, the cow will catch you out. What you want is the last vowel decides — and ഇ and അ happen to decide the same way, while ഉ does not."
+            },
+            {
+              "kind": "speech",
+              "text": "And the breathed half-u at the end of a word is not in this table at all. എന്ത് + ആണ് is എന്താണ് — entāṇŭ — with nothing slid in and that faint -ŭ given up instead. ഇത് does the same. Those are not words ending in a full vowel, so the question the table answers never arises for them."
             }
           ]
         },
@@ -606,7 +621,7 @@
             },
             {
               "kind": "speech",
-              "text": "A game, to play, a film? (കളി, കളിക്കുക (kaḷikkuka), സിനിമ (sinima).) What decides the letter that slides in before ആണ്? (The vowel the word ends in.) And which of your words ends in ഉ? (പശു — പശുവാണ്.)"
+              "text": "A game, to play, a film? (കളി, കളിക്കുക (kaḷikkuka), സിനിമ (sinima).) What decides the letter that slides in before ആണ്? (The full vowel the word ends in.) Which of these four ends in ഉ? (പശു — പശുവാണ്, paśuvāṇŭ.) And what does എന്ത് do instead? (Nothing slides in — എന്താണ്.)"
             }
           ]
         }

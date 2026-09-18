@@ -490,18 +490,26 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // 204 -> 205: ML-A1-LEX-37, free time, sport, games and shows. THE POINT'S OWN
   // NOTE WAS OVERSTATED and the chapter says so: it claimed not one leisure word
   // is taught, while vaayikkuka, kaaNuka and pusthakam are all owned, and its
-  // "292 lessons" had rotted to 416 files. The real gap was sport, games and shows.
-  // FREE TIME IS LEFT OPEN ON PURPOSE -- ozhivusamayam needs samayam, which nothing
-  // teaches, and a compound of an unowned part is a headword smuggled in.
+  // "292 lessons" had rotted by well over a hundred files. The real gap was sport,
+  // games and shows. FREE TIME IS LEFT OPEN ON PURPOSE -- ozhivusamayam needs
+  // samayam, which nothing teaches, and a compound of an unowned part is a
+  // headword smuggled in.
   // THE ONE GENERALISING SENTENCE WAS AGAIN WHERE THE ERROR LIVED, three chapters
-  // running. sinima is the first vowel-final word in the book to weld to aaNu
-  // without ending in -i, and the draft said the ya "comes anyway". pashu, taught
-  // since chapter 60, gives pashuvaaNu with va. Nothing in the corpus attests a va
-  // glide, so no gate and no earlier lesson could contradict it -- latent-false, and
-  // caught only by asking what a taught word would do. The lesson now teaches that
-  // the last vowel CHOOSES the letter and exhibits the cow as the row that differs.
-  // ML-C97-bhangi, ML-R97-beauty-recall and ML-C70-um-more all stated the broad
-  // version and were narrowed to name -i as the environment in the same commit.
+  // running, AND IT WAS WRONG TWICE. Round one: the draft said the ya "comes
+  // anyway", and pashu -- taught since chapter 60 -- gives pashuvaaNu with va.
+  // ROUND TWO FOUND THE REPLACEMENT LATENT-FALSE IN ITS TURN. "The last vowel
+  // chooses, and -u takes va" is refuted by enthu + aaNu = enthaaNu at sequence
+  // 130, and by ithu standing un-glided inside the sinima lesson's OWN example
+  // sentence -- because ML-C69-words (2360) teaches word-final chandrakkala as a
+  // FAINT HALF-U and the track romanizes it (itu, entu), so by the book's own
+  // account those words are vowel-final and take nothing at all. A learner holding
+  // the round-one fix predicts *enthuvaaNu. The rule is now stated of FULL vowels,
+  // with the half-u given its own paragraph and its own recall question.
+  // Both rounds were latent-false in the same way: consistent with every token in
+  // the repository and wrong about the language, so no gate could see either.
+  // FIVE merged lessons carried the broad ya-rule, not the three first counted:
+  // ML-C97-bhangi (body AND Wrap-up), ML-R97-beauty-recall, ML-C70-um-more, and
+  // the neighbours missed on the first pass, ML-C70-um (2390) and ML-C70-o (2410).
   expect(coverage.covered).toBe(205);
   expect(coverage.unmapped).toBe(38);
   expect(coverage.partial).toBe(0);

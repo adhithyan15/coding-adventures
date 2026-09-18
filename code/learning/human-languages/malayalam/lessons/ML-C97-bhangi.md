@@ -81,6 +81,7 @@ child* — has the same **യ**, for the same reason.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTY-01, ML-LEX-C97-BEAUTIFUL-01, ML-CONCEPT-C02-COPULA-01] -->
 
-[PAUSE 3s] What is *beauty*? (**ഭംഗി**.) Why does a **യ** come in before
-**ആണ്**? (**Two vowels will not sit together**.) Is anything added in
+[PAUSE 3s] What is *beauty*? (**ഭംഗി**.) Why does a letter come in before
+**ആണ്**? (**Two vowels will not sit together**.) And after **ഇ**, which letter
+is it? (**യ**.) Is anything added in
 **സുന്ദരമാണ്**? (**No** — that **m** was already there.)

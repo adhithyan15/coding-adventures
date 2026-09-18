@@ -9,17 +9,17 @@ headword: "കളി"
 gloss: a game, play — the thing done for its own sake, which this book has had no word for
 romanization: "kaḷi"
 concept_tag: ML-GAME
-prerequisites: [ML-R97-beauty-recall, ML-C41-this]
+prerequisites: [ML-R97-beauty-recall, ML-C41-this, ML-C36-kutti]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ML-LEX-C41-DEIXIS-01, ML-LEX-AANU-01, ML-LEX-C97-BEAUTY-01]
+  knowledge: [ML-LEX-C41-DEIXIS-01, ML-LEX-AANU-01, ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C36-KUTTI-01]
 introduces:
   knowledge: [ML-LEX-C98-GAME-01]
 practises:
-  knowledge: [ML-LEX-C98-GAME-01, ML-LEX-C41-DEIXIS-01, ML-LEX-AANU-01, ML-LEX-C97-BEAUTY-01]
+  knowledge: [ML-LEX-C98-GAME-01, ML-LEX-C41-DEIXIS-01, ML-LEX-AANU-01, ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C36-KUTTI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -33,7 +33,7 @@ reviews_of: [ML-C97-bhangi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-01, ML-LEX-C97-BEAUTY-01] -->
 
-[PAUSE 2s] Say *this is beauty* — the word and the ending together.
+[PAUSE 2s] Say *this is beautiful* — the word and the ending together.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-LEX-C98-GAME-01]; assesses=[] -->
@@ -43,18 +43,20 @@ reviews_of: [ML-C97-bhangi]
 > **ഇത് കളിയാണ്.** — *itŭ kaḷiyāṇŭ* — "This is a game."
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-GAME-01, ML-LEX-C97-BEAUTY-01, ML-LEX-AANU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-GAME-01, ML-LEX-C97-BEAUTY-01, ML-LEX-AANU-01, ML-CONCEPT-C36-KUTTI-01] -->
 
 **You built that ending without being told.** **കളി** ends in the same vowel
 **ഭംഗി** does, so the same **യ** slides in before **ആണ്**:
 
-| | |
+| word | joined to **ആണ്** |
 |---|---|
-| **ഭംഗി** → **ഭംഗിയാണ്** | |
-| **കളി** → **കളിയാണ്** | |
+| **ഭംഗി** | **ഭംഗിയാണ്** (*bhaṁgiyāṇŭ*) |
+| **കളി** | **കളിയാണ്** (*kaḷiyāṇŭ*) |
 
-**Two words now do this**, and they do it for the same reason: the word ends in
-a vowel, **ആണ്** begins with one, and something has to stand between them.
+**You have seen this done before, and not only last chapter.** **കുട്ടി** has
+been taking the same **യ** since **ഇത് എന്റെ കുട്ടിയാണ്**, and for the same
+reason: the word ends in a vowel, **ആണ്** begins with one, and something has to
+stand between them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-GAME-01] -->
@@ -75,7 +77,7 @@ for it.
 - [YOU SAY: *bhaṁgiyāṇŭ*, then *kaḷiyāṇŭ*, and hear the part they share]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-GAME-01, ML-LEX-C97-BEAUTY-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-GAME-01, ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C36-KUTTI-01] -->
 
-[PAUSE 3s] What is *a game*? (**കളി**.) Which letter slides in before **ആണ്**?
-(**യ** — the same one **ഭംഗി** takes.)
+[PAUSE 3s] What is *a game*? (**കളി**.) **കളി** ends in **ഇ** — which letter
+slides in before **ആണ്**? (**യ** — the same one **ഭംഗി** and **കുട്ടി** take.)

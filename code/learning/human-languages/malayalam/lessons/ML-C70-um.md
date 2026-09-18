@@ -65,8 +65,9 @@ The ending changes the word slightly as it lands, and the two changes here are
 the two you will meet most:
 
 - **വെള്ളം** ends in **-ം**. That **-ം** becomes **-വും**: **വെള്ളവും**.
-- **അരി** ends in a vowel. A **യ്** slides in to keep the two vowels apart:
-  **അരിയും**.
+- **അരി** ends in **ഇ**. A **യ്** slides in to keep the two vowels apart:
+  **അരിയും**. Which letter slides in depends on the vowel; after **ഇ** it is
+  **യ്**.
 
 Neither is a special case to memorise. Both are the same instinct a mouth has
 when one sound runs into another, and Malayalam writes down what the mouth

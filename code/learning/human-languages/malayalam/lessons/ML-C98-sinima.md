@@ -9,17 +9,17 @@ headword: "സിനിമ"
 gloss: a film, the cinema — a borrowing that arrived whole, and the case that shows which letter slides in
 romanization: "sinima"
 concept_tag: ML-CINEMA
-prerequisites: [ML-C98-kalikkuka, ML-C92-hottal, ML-C60-cow]
+prerequisites: [ML-C98-kalikkuka, ML-C92-hottal, ML-C60-cow, ML-C69-words]
 sounds: []
 roots: []
 duration:
   max_seconds: 250
 requires:
-  knowledge: [ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C92-EATERY-01, ML-LEX-C60-ANIMAL-01]
+  knowledge: [ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C92-EATERY-01, ML-LEX-C60-ANIMAL-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS]
 introduces:
   knowledge: [ML-LEX-C98-CINEMA-01]
 practises:
-  knowledge: [ML-LEX-C98-CINEMA-01, ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C92-EATERY-01, ML-LEX-C41-DEIXIS-01, ML-LEX-C60-ANIMAL-01]
+  knowledge: [ML-LEX-C98-CINEMA-01, ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C92-EATERY-01, ML-LEX-C41-DEIXIS-01, ML-LEX-C60-ANIMAL-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -43,14 +43,14 @@ reviews_of: [ML-C98-kali, ML-C92-hottal]
 > **ഇത് നല്ല സിനിമയാണ്.** — *itŭ nalla sinimayāṇŭ* — "This is a good film."
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-CINEMA-01, ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C60-ANIMAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-CINEMA-01, ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C60-ANIMAL-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS] -->
 
-**A borrowed word again**, like the eating-place word — and this one came across
-without changing its meaning at all.
+**A borrowed word again**, like the eating-place word — and this one kept far
+more of what it came with than that one did.
 
 Its last letter is **മ**, and a consonant in this script carries an *a* of its
-own: **മ** is *ma*. So **സിനിമ** ends in a vowel, **ആണ്** opens with one, and —
-as with **കളി** — something has to stand between the two.
+own: **മ** is *ma*. So **സിനിമ** ends in a full vowel, **ആണ്** opens with one,
+and — as with **കളി** — something has to stand between the two.
 
 Here that something is **യ** once more: **സിനിമയാണ്**.
 
@@ -60,13 +60,21 @@ way:
 
 | ends in | word | joined to **ആണ്** |
 |---|---|---|
-| **ഇ** | **ഭംഗി** | **ഭംഗിയാണ്** |
-| **ഇ** | **കളി** | **കളിയാണ്** |
-| **അ** | **സിനിമ** | **സിനിമയാണ്** |
-| **ഉ** | **പശു** | **പശുവാണ്** |
+| **ഇ** | **ഭംഗി** | **ഭംഗിയാണ്** (*bhaṁgiyāṇŭ*) |
+| **ഇ** | **കളി** | **കളിയാണ്** (*kaḷiyāṇŭ*) |
+| **അ** | **സിനിമ** | **സിനിമയാണ്** (*sinimayāṇŭ*) |
+| **ഉ** | **പശു** | **പശുവാണ്** (*paśuvāṇŭ*) |
 
-**The cow is the row to look at.** **ഇ** and **അ** both take **യ**; **ഉ** takes
-**വ**. The gap gets filled either way — the vowel at the end says with what.
+**The cow is the row to look at.** **ഇ** and **അ** both take **യ**; a full **ഉ**
+takes **വ**. The gap gets filled either way — the vowel at the end says with
+what.
+
+**The faint half-u is not one of these vowels.** Look back at the sentence
+above: **ഇത്** stands right beside **സിനിമയാണ്**, and nothing slides into
+**ഇത്** at all. That breathed **-ŭ** at the end of a word is not a full vowel —
+it simply steps out of the way. **എന്ത്** has been doing it since your very
+first question: **എന്ത്** + **ആണ്** is **എന്താണ്**, *entāṇŭ*, with nothing
+added and one sound quietly given up.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-CINEMA-01, ML-LEX-C98-GAME-01, ML-LEX-C41-DEIXIS-01] -->
@@ -79,5 +87,6 @@ way:
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-CINEMA-01, ML-LEX-C60-ANIMAL-01] -->
 
-[PAUSE 3s] What is *a film*? (**സിനിമ**.) What slides in before **ആണ്**?
-(**യ**.) And what does **പശു** take instead? (**വ** — **പശുവാണ്**.)
+[PAUSE 3s] What is *a film*? (**സിനിമ**.) **സിനിമ** ends in **അ** — what
+slides in before **ആണ്**? (**യ** — **സിനിമയാണ്**.) And **പശു**, which ends in
+**ഉ**? (**വ** — **പശുവാണ്**, *paśuvāṇŭ*.)

@@ -22,7 +22,7 @@ Count the joins, not the gaps. Two items means two -ഉം, and a list with only
 The word, taken apart.
 The ending changes the word slightly as it lands, and the two changes here are the two you will meet most:
 വെള്ളം ends in -ം. That -ം becomes -വും: വെള്ളവും.
-അരി ends in a vowel. A യ് slides in to keep the two vowels apart: അരിയും.
+അരി ends in ഇ. A യ് slides in to keep the two vowels apart: അരിയും. Which letter slides in depends on the vowel; after ഇ it is യ്.
 Neither is a special case to memorise. Both are the same instinct a mouth has when one sound runs into another, and Malayalam writes down what the mouth already does.
 
 Guided Practice.
@@ -97,7 +97,7 @@ You'll want to know.
 ending: -ഉം... -ഉം. what a list of two means: both of them.
 ending: -ഓ... -ഓ. what a list of two means: one of them.
 The construction is identical and only the vowel changes. Having learned where Malayalam puts a joining ending, you already know where it puts a choosing one — which is the reason these two belong in one chapter rather than fifty pages apart.
-The യ് glide appears again on both words here, for the same reason it appeared on അരി: both end in a vowel, and two vowels meeting want something between them.
+The യ് glide appears again on both words here, for the same reason it appeared on അരി: both end in a vowel, and two vowels meeting want something between them. ചായ ends in ആ and കാപ്പി in ഇ, and both of those vowels call for യ് — which is not to say every vowel does.
 
 The word, taken apart.
 There is also a separate word, അല്ലെങ്കിൽ (alleṅkil), which stands between two options the way English or does:
