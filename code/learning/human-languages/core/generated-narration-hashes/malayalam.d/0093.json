@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 93,
-  "sourceHash": "fnv1a64:9f4106bcb4e9b9fc",
+  "sourceHash": "fnv1a64:3a2e9a27bc55f7b7",
   "lessonIds": [
     "ML-C93-kal",
     "ML-C93-angal",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch93.txt",
   "json": "malayalam/narration/ch93.json",
-  "textHash": "fnv1a64:6c9e0a40dfba5f61",
-  "jsonHash": "fnv1a64:2208ee57885fc3da",
+  "textHash": "fnv1a64:a13ff83a3d5f2156",
+  "jsonHash": "fnv1a64:98a99be52a6a77d2",
   "findings": []
 }

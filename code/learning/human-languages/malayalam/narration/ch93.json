@@ -4,7 +4,7 @@
   "chapter": 93,
   "title": "More Than One",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9f4106bcb4e9b9fc",
+  "sourceHash": "fnv1a64:3a2e9a27bc55f7b7",
   "lessons": [
     {
       "id": "ML-C93-kal",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:aad5f4c00864292a",
+      "sourceHash": "fnv1a64:f197450569e1561a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -316,7 +316,7 @@
             },
             {
               "kind": "speech",
-              "text": "What happens to the ം when the plural arrives? (It is traded for ങ്ങൾ.) Which noun tells you to expect that? (One whose last letter is ം.) Where else have you been saying that ending? (On the end of you and we.)"
+              "text": "What happens to the ം when the plural arrives? (It is traded for ങ്ങൾ.) Which noun tells you to expect that? (One whose last letter is ം.) Where else have you been saying that ending? (On the end of the respectful you.)"
             }
           ]
         }

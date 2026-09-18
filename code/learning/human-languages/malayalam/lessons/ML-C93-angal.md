@@ -82,5 +82,5 @@ name and a job**, and you can now put it on nouns of your own.
 
 [PAUSE 3s] What happens to the **ം** when the plural arrives? (**It is traded
 for ങ്ങൾ**.) Which noun tells you to expect that? (**One whose last letter is
-ം**.) Where else have you been saying that ending? (**On the end of *you* and
-*we***.)
+ം**.) Where else have you been saying that ending? (**On the end of the
+respectful *you***.)
