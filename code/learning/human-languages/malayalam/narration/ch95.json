@@ -1,0 +1,610 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 95,
+  "title": "Open, Closed, In, Out",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:168540cee9479b92",
+  "lessons": [
+    {
+      "id": "ML-C95-thurakkuka",
+      "sequence": 3370,
+      "title": "തുറക്കുക (tuṟakkuka) — to open",
+      "headword": "തുറക്കുക",
+      "romanization": "tuṟakkuka",
+      "gloss": "to open — the verb the door has been waiting on since it was named",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:368f05e1b26d2e1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say door. You have been able to name it for a long time and have never been able to do anything to it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തുറക്കുക — tuṟakkuka — to open."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ വാതിൽ തുറക്കുന്നു. — ñān vātil tuṟakkunnu — \"I open the door.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what the sentence asked of you. Nothing new but the verb. The doer in front, the thing in the middle, the verb at the end — and വാതിൽ takes no ending, because it is a thing and not a person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "തുറക്കുന്നു tuṟakkunnu, opens.",
+                "തുറന്നു tuṟannu, opened.",
+                "തുറക്കും tuṟakkuṁ, will open."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two of those three you already knew how to build. Present and future are the stem plus -unnu or -uṁ, exactly as they were on the first verbs you learned."
+            },
+            {
+              "kind": "speech",
+              "text": "The past is the one you have to be told, and you were warned about this a long way back: the coming-verb's lesson said the past \"is not\" built that way, that its stem collapses, and that no rule would have told you so. Here it happens again — തുറക്ക- shortens to തുറ- before the ending."
+            },
+            {
+              "kind": "speech",
+              "text": "Guessing from the present would give you the wrong word. That is not a new difficulty; it is the same single difficulty Malayalam has, arriving on schedule. Learn a verb's past and nothing else about it can catch you out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṟakkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṟakkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān vātil tuṟakkunnu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān vātil tuṟakkunnu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence about yesterday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence about yesterday]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is to open? (തുറക്കുക (tuṟakkuka).) Does the door take an ending after it? (No — it is a thing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C95-adaykkuka",
+      "sequence": 3380,
+      "title": "അടയ്ക്കുക (aṭaykkuka) — to close",
+      "headword": "അടയ്ക്കുക",
+      "romanization": "aṭaykkuka",
+      "gloss": "to close — the other half of the pair, and the form you would put on a sign",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63046938a171620f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say to open. Then say listen — the command form from your first commands."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അടയ്ക്കുക — aṭaykkuka — to close."
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ വാതിൽ അടയ്ക്കുന്നു. — ñān vātil aṭaykkunnu — \"I close the door.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Same shape as the opening verb, and വാതിൽ is the thing being closed, not the thing doing the closing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now ask both of them as a request, using the ending you have had since the command chapter:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "തുറക്കൂ tuṟakkū, open it.",
+                "അടയ്ക്കൂ aṭaykkū, close it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same ending as കേൾക്കൂ. One long ൂ on the end turns a verb into something you can ask for, and it did not care which verb you handed it."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the form that goes on a sign, and it is the form you say at a door with your hands full."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭaykkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭaykkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṟakkū, then aṭaykkū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṟakkū*, then *aṭaykkū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vātil aṭaykkū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vātil aṭaykkū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the end of കേൾക്കൂ and അടയ്ക്കൂ, and find what they share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the end of **കേൾക്കൂ** and **അടയ്ക്കൂ**, and find what they share]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is to close? (അടയ്ക്കുക (aṭaykkuka).) How do you ask somebody to do it? (അടയ്ക്കൂ — the long ending.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C95-akathu-purathu",
+      "sequence": 3390,
+      "title": "അകത്ത് (akattŭ) — inside",
+      "headword": "അകത്ത്",
+      "romanization": "akattŭ",
+      "gloss": "inside — and its opposite, the pair a doorway divides",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce6f96c241e14e15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say open it and close it. A door is worth opening because of what is on the other side of it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two words, and they are the two halves of the same line:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "അകത്ത് akattŭ, inside.",
+                "പുറത്ത് puṟattŭ, outside."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ഞാൻ അകത്ത് ആണ്. — ñān akattŭ āṇŭ — \"I am inside.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the ends and not the fronts. The two words end the same way as each other, and what differs is only the front — where the whole meaning sits. One opens onto a room, the other onto a street."
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter before this had a pair the other way round: ഇന്ന് and ഇന്നലെ shared their opening and parted at the tail. Here the tail matches and the fronts part. Both pairs are easy for the same reason — one end holds still while you listen to the other."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akattŭ, then puṟattŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akattŭ*, then *puṟattŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān akattŭ āṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān akattŭ āṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence about being outside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence about being outside]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at the two words and say which part carries the difference",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at the two words and say which part carries the difference]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Inside and outside? (അകത്ത് (akattŭ), പുറത്ത്.) Which part of the two words is doing the work? (The front — the ends match.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R95-open-closed-recall",
+      "sequence": 3400,
+      "title": "(open, closed, in, out) (tuṟakkukayuṁ aṭaykkukayuṁ enna ōrmma) — from cold",
+      "headword": "(open, closed, in, out)",
+      "romanization": "tuṟakkukayuṁ aṭaykkukayuṁ enna ōrmma",
+      "gloss": "cold retrieval of the two verbs, the asking form they share with the old commands, and the pair a doorway divides",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1d54153f275de6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say to open and to close, then ask somebody to do each."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: four words, and none of them needed a new rule",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "തുറക്കുക (tuṟakkuka), to open.",
+                "അടയ്ക്കുക (aṭaykkuka), to close.",
+                "തുറക്കൂ, open it.",
+                "അടയ്ക്കൂ, close it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The asking form is the ending you have had since കേൾക്കൂ, put on two verbs that had never seen it. The three tense endings came the same way, from a verb you learned long before these."
+            },
+            {
+              "kind": "speech",
+              "text": "Two words bought four forms, because the endings were already yours."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഞാൻ അകത്ത് (akattŭ) ആണ്. — I am inside. വാതിൽ അടയ്ക്കൂ. — close the door."
+            },
+            {
+              "kind": "speech",
+              "text": "The door was named a long way back and nothing could be done to it or about it. Now it opens, it closes, and there are two sides of it you can name."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the ordinary shape of this stage: the sentence was ready before the words were. The arrangement, the tense endings, the asking ending and the bare object all came from chapters that had nothing to do with doors."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṟakkuka becomes tuṟakkū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṟakkuka* → *tuṟakkū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭaykkuka becomes aṭaykkū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭaykkuka* → *aṭaykkū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vātil aṭaykkū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vātil aṭaykkū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān akattŭ āṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān akattŭ āṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which ending the asking form shares with a word from your first commands",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which ending the asking form shares with a word from your first commands]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Open and close? (തുറക്കുക (tuṟakkuka), അടയ്ക്കുക (aṭaykkuka).) How do you ask for either? (The long ൂ on the end.) Inside and outside? (അകത്ത് (akattŭ), പുറത്ത്.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

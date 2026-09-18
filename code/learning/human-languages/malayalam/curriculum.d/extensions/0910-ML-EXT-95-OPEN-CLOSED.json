@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-95-OPEN-CLOSED",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can open and close things, and say which side of a door I am on.",
+  "prerequisites": [
+    "ML-EXT-94-DAYS"
+  ],
+  "lessons": [
+    "ML-C95-thurakkuka",
+    "ML-C95-adaykkuka",
+    "ML-C95-akathu-purathu",
+    "ML-R95-open-closed-recall"
+  ]
+}

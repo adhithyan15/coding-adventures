@@ -7,7 +7,7 @@ chapter: 92
 type: review
 headword: (eating out)
 gloss: cold retrieval of the food word, the eating place, the bill, and the rule about trusting a borrowed word
-romanization: puṟatthu kaḻikkal enna ōrmma
+romanization: puṟattŭ kaḻikkal enna ōrmma
 concept_tag: ML-EATING-OUT-RECALL
 prerequisites: [ML-C92-bill]
 sounds: []

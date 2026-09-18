@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Eating Out",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5c5aff2e2fa65a2e",
+  "sourceHash": "fnv1a64:4204c0e37d8841c8",
   "lessons": [
     {
       "id": "ML-C92-bhakshanam",
@@ -417,9 +417,9 @@
     {
       "id": "ML-R92-eating-out-recall",
       "sequence": 3280,
-      "title": "(eating out) (puṟatthu kaḻikkal enna ōrmma) — from cold",
+      "title": "(eating out) (puṟattŭ kaḻikkal enna ōrmma) — from cold",
       "headword": "(eating out)",
-      "romanization": "puṟatthu kaḻikkal enna ōrmma",
+      "romanization": "puṟattŭ kaḻikkal enna ōrmma",
       "gloss": "cold retrieval of the food word, the eating place, the bill, and the rule about trusting a borrowed word",
       "script": "malayalam",
       "modality": "voice",
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40ed0b58b90321c3",
+      "sourceHash": "fnv1a64:45619b3feb51357c",
       "notice": null,
       "blocks": [
         {

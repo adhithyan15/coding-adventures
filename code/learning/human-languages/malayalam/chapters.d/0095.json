@@ -1,0 +1,18 @@
+{
+  "chapter": 95,
+  "title": "Open, Closed, In, Out",
+  "label": "ch:ml-open-closed",
+  "canDo": "I can open and close a door, ask somebody else to, and say which side of it I am on.",
+  "payoff": {
+    "lesson": "ML-R95-open-closed-recall",
+    "kind": "production",
+    "summary": "From cold: the two verbs, the asking ending they share with the first commands, and the pair a doorway divides.",
+    "assesses": [
+      "ML-LEX-C95-OPEN-01",
+      "ML-LEX-C95-CLOSE-01",
+      "ML-LEX-C95-INSIDE-01",
+      "ML-LEX-C95-OUTSIDE-01"
+    ],
+    "note": "Four atoms, four lessons. The chapter buys FOUR verb forms for TWO words: the asking ending is the long uu already owned from keLkkoo in the first commands, and the three tense endings come from a verb learned long before. vaathil was named in chapter 52 and nothing could be done to it or about it until now."
+  }
+}

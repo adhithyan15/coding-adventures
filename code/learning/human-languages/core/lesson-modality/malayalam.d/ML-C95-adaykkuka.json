@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "ML-R92-eating-out-recall",
+    "id": "ML-C95-adaykkuka",
     "language": "malayalam",
-    "chapter": 92,
-    "sequence": 3280,
+    "chapter": 95,
+    "sequence": 3380,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:45619b3feb51357c"
+    "sourceHash": "fnv1a64:63046938a171620f"
   },
   "findings": []
 }
