@@ -9,23 +9,23 @@ headword: (easy, difficult)
 gloss: cold retrieval of the pair, and of a welding that was already in the mouth before it was ever a rule
 romanization: eḷuppavuṁ prayāsavuṁ enna ōrmma
 concept_tag: ML-EASE-RECALL
-prerequisites: [ML-C96-prayaasam]
+prerequisites: [ML-C96-prayaasam, ML-C83-keralathil, ML-C70-um, ML-C03-saaramilla]
 sounds: []
 roots: []
 duration:
   max_seconds: 260
 requires:
-  knowledge: [ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01]
+  knowledge: [ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-GRAMMAR-C83-OBLIQUE-AM-01, ML-CONCEPT-C70-UM-01, ML-LEX-SAARAMILLA-01]
 introduces:
   knowledge: []
 practises:
-  knowledge: [ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-LEX-C41-DEIXIS-01, ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-SUKHAM-01, ML-LEX-C89-EVAL-01]
+  knowledge: [ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-LEX-C41-DEIXIS-01, ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-SUKHAM-01, ML-LEX-C89-EVAL-01, ML-GRAMMAR-C83-OBLIQUE-AM-01, ML-CONCEPT-C70-UM-01, ML-LEX-SAARAMILLA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-C96-eluppam, ML-C96-prayaasam]
+reviews_of: [ML-C96-eluppam, ML-C96-prayaasam, ML-C83-keralathil, ML-C70-um]
 ---
 
 # (easy, difficult) — from cold
@@ -37,7 +37,7 @@ reviews_of: [ML-C96-eluppam, ML-C96-prayaasam]
 opposite.
 
 ## Grammar Lens: the welding was already yours
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-SUKHAM-01, ML-LEX-C89-EVAL-01, ML-LEX-AANU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-SUKHAM-01, ML-LEX-C89-EVAL-01, ML-LEX-AANU-01, ML-GRAMMAR-C83-OBLIQUE-AM-01, ML-CONCEPT-C70-UM-01, ML-LEX-SAARAMILLA-01] -->
 
 | | |
 |---|---|
@@ -49,8 +49,10 @@ ending in **ം** welds onto **ആണ്**: the **m** sound stays exactly where 
 and only its spelling moves — it is written **മ**, because the bare sign cannot
 carry the vowel that now sits after it.
 
-**ആണ് is the gentle one.** The *in* ending replaces that **ം** with **ത്ത**, the
-*and* ending replaces it with **വും**; this one leaves the **m** where it is.
+**ആണ് is a gentle one, and not the only one.** The endings that mark a case take
+that **ം** to **ത്ത** — **കേരളത്തിൽ**, **പുസ്തകത്തിന്റെ** — and the *and* ending
+takes it to **വും**. **ആണ്** leaves the **m** where it is, and so does **ഇല്ല**:
+**സാരമില്ല** has carried that **മ** since your first pages.
 
 You were doing it long before this chapter:
 

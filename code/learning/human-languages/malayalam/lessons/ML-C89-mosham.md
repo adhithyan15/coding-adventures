@@ -51,8 +51,8 @@ Put it with the *is* word you have had since the second chapter:
 
 Notice the join. **മോശം** ends in the **ം**, and when **ആണ്** follows it that
 **ം** is written **മ**. You have seen this book change a word's
-*written* shape before something else attaches; this is the same habit in a
-smaller place, and here it is only the writing that moves.
+shape before something else attaches; this is the same habit in a smaller place,
+and here it is only the writing that moves.
 
 The partner sentence is built the same way, from the word you learned a moment
 ago: **നല്ലതാണ്** — *nallathāṇŭ* — it is good.

@@ -4,7 +4,7 @@
   "chapter": 89,
   "title": "What You Think Of It",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a2fd51e123802804",
+  "sourceHash": "fnv1a64:57bbb5835ded7f71",
   "lessons": [
     {
       "id": "ML-C89-nallathu",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a4377ff718dc219",
+      "sourceHash": "fnv1a64:d94922dda656aa51",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Notice the join. മോശം (mōśaṁ) ends in the ം, and when ആണ് follows it that ം is written മ. You have seen this book change a word's written shape before something else attaches; this is the same habit in a smaller place, and here it is only the writing that moves."
+              "text": "Notice the join. മോശം (mōśaṁ) ends in the ം, and when ആണ് follows it that ം is written മ. You have seen this book change a word's shape before something else attaches; this is the same habit in a smaller place, and here it is only the writing that moves."
             },
             {
               "kind": "speech",

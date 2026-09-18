@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Easy and Difficult",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:c6fff5bc39e596e6",
+  "sourceHash": "fnv1a64:60967907297e9dba",
   "lessons": [
     {
       "id": "ML-C96-eluppam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c5b2b052ea62a5e",
+      "sourceHash": "fnv1a64:3e2436c8de7fbadb",
       "notice": null,
       "blocks": [
         {
@@ -77,11 +77,15 @@
             },
             {
               "kind": "speech",
-              "text": "This is not what every ending does to it. You have watched the ം give way twice already — it goes to ത്ത when the in ending arrives, and to വും when the and ending does. ആണ് is the one that leaves it standing."
+              "text": "Not every ending treats it this gently. The case endings take it away — കേരളത്തിൽ, പുസ്തകത്തിന്റെ — and the and ending replaces it, as in വെള്ളവും."
             },
             {
               "kind": "speech",
-              "text": "So the thing to carry away is not a rule about vowels. It is that each ending does its own thing to a word ending in ം, and this one does the least."
+              "text": "ആണ് is not alone in leaving it standing, though: ഇല്ല does the same, which is why സാരമില്ല has carried a മ since your first pages."
+            },
+            {
+              "kind": "speech",
+              "text": "So what a word ending in ം does depends on what attaches to it."
             },
             {
               "kind": "speech",
@@ -173,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It gets written as മ, and the sound does not change.) Do other endings treat it the same way? (No — they replace it.)"
+              "text": "What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It gets written as മ, and the sound does not change.) Does every ending leave it standing? (No — the case endings take it to ത്ത.)"
             }
           ]
         }
@@ -331,7 +335,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c7cc3b2fea8eb86",
+      "sourceHash": "fnv1a64:8dbda04955be122a",
       "notice": null,
       "blocks": [
         {
@@ -375,7 +379,7 @@
             },
             {
               "kind": "speech",
-              "text": "ആണ് is the gentle one. The in ending replaces that ം with ത്ത, the and ending replaces it with വും; this one leaves the m where it is."
+              "text": "ആണ് is a gentle one, and not the only one. The endings that mark a case take that ം to ത്ത — കേരളത്തിൽ, പുസ്തകത്തിന്റെ — and the and ending takes it to വും. ആണ് leaves the m where it is, and so does ഇല്ല: സാരമില്ല has carried that മ since your first pages."
             },
             {
               "kind": "speech",
