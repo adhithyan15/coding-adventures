@@ -13,7 +13,7 @@ cousin layer: 216 lessons show another script (max 26 glyphs) — context, never
 script closure: 252 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 46 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1410 glyphs and makes 390 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
-reinforcement: 489 of 8813 atoms never revisited (6%); missed windows R1 1747, R2 4044, R3 5689, R4 4248
+reinforcement: 489 of 8813 atoms never revisited (6%); missed windows R1 1747, R2 4044, R3 5688, R4 4248
 forward references: 798 uses of material a later lesson teaches
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 773 evidence blocks, 0 invalid; 243 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 114 named track/debt items
@@ -103,7 +103,7 @@ info dump (report-only): 120 of 7151 lessons -- 32 rule statements, 91 paradigm 
 lesson content budgets (report-only): 3806 of 7151 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
   annotation coverage: idioms 3806, senses 3807, culture claims 3806
 
-metalanguage: 54 of 54 grammar terms appear in 6701 lessons; 22331 uses come before introduction, of which 5541 are technical terms across 3100 lessons
+metalanguage: 54 of 54 grammar terms appear in 6701 lessons; 22336 uses come before introduction, of which 5545 are technical terms across 3101 lessons
   most-used-before-introduction: verb (1737 lessons), noun (1044 lessons), adjective (323 lessons), pronoun (244 lessons), tense (238 lessons), article (225 lessons)
 literal markup: none in 7151 lessons or any generated book
 glyph coverage: every character renders -- 133 main-font and 799 script characters across 1664 generated files

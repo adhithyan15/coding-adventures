@@ -33750,18 +33750,6 @@
         "revisits": 2
       },
       {
-        "atom": "ML-CONCEPT-C70-UM-02",
-        "language": "malayalam",
-        "introducedBy": "ML-C70-um-more",
-        "introducedAt": 310,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ML-CONCEPT-C80-GENTILIC-01",
         "language": "malayalam",
         "introducedBy": "ML-C80-malayali",
@@ -55566,6 +55554,17 @@
           "R3"
         ],
         "revisits": 6
+      },
+      {
+        "atom": "ML-CONCEPT-C70-UM-02",
+        "language": "malayalam",
+        "introducedBy": "ML-C70-um-more",
+        "introducedAt": 310,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
       },
       {
         "atom": "ML-CONCEPT-C77-NEGATION-SPLIT-01",
@@ -77838,7 +77837,7 @@
         "missed": [
           "R1"
         ],
-        "revisits": 13
+        "revisits": 14
       },
       {
         "atom": "ML-CONCEPT-C15-VELLAM-ARI-02",
@@ -77998,7 +77997,7 @@
         "missed": [
           "R2"
         ],
-        "revisits": 5
+        "revisits": 6
       },
       {
         "atom": "ML-GRAMMAR-C84-POSTPOSITION-01",
@@ -93430,7 +93429,7 @@
       "missedByWindow": {
         "R1": 1747,
         "R2": 4044,
-        "R3": 5689,
+        "R3": 5688,
         "R4": 4248
       },
       "forwardReferences": 798
@@ -114104,11 +114103,11 @@
         "forwardReferences": 12,
         "atomsTaught": 485,
         "atomsNeverRevisited": 19,
-        "reinforcementWindowMisses": 1045,
+        "reinforcementWindowMisses": 1044,
         "reinforcementMissesByWindow": {
           "R1": 121,
           "R2": 158,
-          "R3": 424,
+          "R3": 423,
           "R4": 342
         },
         "payoffSurprises": 8,
@@ -114140,7 +114139,7 @@
           {
             "language": "malayalam",
             "kind": "reinforcement",
-            "count": 1045,
+            "count": 1044,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -115491,7 +115490,7 @@
       {
         "language": "malayalam",
         "kind": "reinforcement",
-        "count": 1045,
+        "count": 1044,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -140500,9 +140499,9 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 6701,
-    "usesBeforeIntroduction": 22331,
-    "technicalUsesBeforeIntroduction": 5541,
-    "technicalLessons": 3100,
+    "usesBeforeIntroduction": 22336,
+    "technicalUsesBeforeIntroduction": 5545,
+    "technicalLessons": 3101,
     "worstTerms": [
       {
         "term": "verb",
