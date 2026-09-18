@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C89-opinion",
+    "language": "malayalam",
+    "chapter": 89,
+    "sequence": 3140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3dd8a939f7eb8f9a"
+  },
+  "findings": []
+}

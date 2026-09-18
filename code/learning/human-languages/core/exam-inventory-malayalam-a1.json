@@ -712,7 +712,13 @@
       "id": "ML-A1-NUM-04",
       "category": "Sankhya (numerals and quantity)",
       "label": "counting past twenty, and the hundreds",
-      "probe": null,
+      "probe": [
+        "ML-CONCEPT-C88-TENS-01",
+        "ML-CONCEPT-C88-TENS-02",
+        "ML-CONCEPT-C88-NINETY-01",
+        "ML-CONCEPT-C88-HUNDRED-01",
+        "ML-GRAMMAR-C88-COMPOUND-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -723,7 +729,7 @@
         "A1-NG2-01"
       ],
       "malayalamSpecific": false,
-      "note": "The count stops at twenty. Prices, ages over twenty and years are all out of reach."
+      "note": "Chapter 88. The old note was right that the count stopped at twenty and that prices, ages over twenty and years were all out of reach. The chapter extends the pattern chapter 20 already made visible: irupathu is iru plus pathu, and every ten from thirty up is that same word with a different digit on the front. The digits appear in OLDER SHORT FORMS that survive only in compounds -- aaru shows as aru-, eezhu as ezhu- -- so the lesson says plainly that this is a pattern to READ WITH, NOT TO BUILD WITH, and that ampathu has worn furthest of all. NINETY BREAKS THE RUN and the chapter teaches a hundred FIRST so that it does not have to be memorised as noise: thonnooru carries nooru, not pathu, so ninety is named from ABOVE where the other tens are named from below. The compound rule then reuses a stem change the learner has already met -- a ten takes -tthi- before a digit, the same kind of change Keralam makes before its ending. EIGHTY IS TAUGHT BY EAR ONLY, in romanization, without its written form: enpathu needs the chillu NN, and that glyph is missing from data/scripts/malayalam.json even though ML-S131-chillu-nn teaches it, so any lesson writing it trips the uncovered-glyphs gate. Giving a number by ear before its written form is this track's own precedent -- ML-C07-numbers-6-10 does exactly that. See the backlog item for the inventory gap; when it is filled, enpathu should get its script form here."
     },
     {
       "id": "ML-A1-NUM-05",
@@ -815,7 +821,7 @@
         "A1-NG2-04"
       ],
       "malayalamSpecific": false,
-      "note": "valiya and cheriya give size as a quality. No unit of measure, no word for distance or weight, is taught. UPDATE, chapter 81: the DISTANCE half is now partly paid -- dooram (distance) and the question ethra dooram? are taught, so distance is nameable and askable. This point stays OPEN because it asks for UNITS: no measure of length, no measure of weight, and no number past twenty to put in front of one (see ML-A1-NUM-04, which blocks this). Closing it needs the numbers first, then a unit lesson; it is not a vocabulary add on its own."
+      "note": "valiya and cheriya give size as a quality. No unit of measure, no word for distance or weight, is taught. UPDATE, chapter 81: the DISTANCE half is now partly paid -- dooram (distance) and the question ethra dooram? are taught, so distance is nameable and askable. This point stays OPEN because it asks for UNITS: no measure of length, no measure of weight, and no number past twenty to put in front of one (see ML-A1-NUM-04, which blocks this). Closing it needs the numbers first, then a unit lesson; it is not a vocabulary add on its own. UPDATE, chapter 88: ML-A1-NUM-04 is now closed, so the numbers half of this point's blocker is gone -- a learner can count to a hundred and can say any number between twenty and a hundred. What remains is genuinely the UNITS: no measure of length, no measure of weight. That is now a vocabulary chapter on its own rather than something waiting on the numerals."
     },
     {
       "id": "ML-A1-NUM-09",
@@ -2937,7 +2943,11 @@
       "id": "ML-A1-F-28",
       "category": "Vyavahaaram (communicative functions)",
       "label": "give an opinion or an evaluation",
-      "probe": null,
+      "probe": [
+        "ML-GRAMMAR-C89-NOMINAL-01",
+        "ML-LEX-C89-EVAL-01",
+        "ML-CONCEPT-C89-OPINION-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -2951,7 +2961,7 @@
         "A1-NG6-01"
       ],
       "malayalamSpecific": false,
-      "note": "OPEN, AND IT IS THE QUOTATIVE AGAIN. 'I think that ...' needs ennu plus cintikkuka; both halves of the evaluation vocabulary -- nallathu, moshamaanu -- are also absent. Five Spanish functional points sit on this one gap, which makes it the single highest-value fix in the file after the coordinator."
+      "note": "Chapter 89, AND THE OLD NOTE WAS SUBSTANTIALLY WRONG, which is worth recording because it made this look like the most expensive point in the file. It said 'I think that ... needs ennu plus cintikkuka' as though neither existed. BOTH ARE TAUGHT. ennu is chapter 72's quoting marker and cintikkuka is chapter 33's verb, and ML-C72-ennu-more already pairs them explicitly -- its worked example is literally 'enikku malayaalam ariyaam' ennu njaan cintikkunnu, 'I think I know Malayalam'. So the assembly the point asks for was on the page before this chapter was written. What was genuinely missing was only the EVALUATION VOCABULARY, and that half of the note was right: nallathu and mosham both returned ZERO files. The chapter therefore teaches TWO WORDS AND NO GRAMMAR. It spends its first lesson on -athu, which lets a quality stand without a noun to lean on (nalla needs one, nallathu does not) and which is visibly the word athu, 'that', so nallathu is 'the that-which-is-good'; it works on all five taught qualities with no exceptions. The second teaches mosham, filling a real hole -- five qualities and not one of them negative meant half of every opinion was unsayable. The third only assembles: atu nallathaanu ennu njaan cintikkunnu. The lesson says so plainly, because it is the interesting part: the machinery was in place before there was anything worth carrying with it."
     },
     {
       "id": "ML-A1-F-29",

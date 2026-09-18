@@ -6,7 +6,8 @@
     "ML-PATH-58-ANSWER",
     "ML-PATH-64-SMALL",
     "ML-PATH-76-WANT",
-    "ML-PATH-77-NOT-SO"
+    "ML-PATH-77-NOT-SO",
+    "ML-PATH-89-OPINION"
   ],
   "omits": [
     "RESPONSE-YESNO"

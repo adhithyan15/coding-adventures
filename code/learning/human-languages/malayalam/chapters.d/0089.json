@@ -1,0 +1,17 @@
+{
+  "chapter": 89,
+  "title": "What You Think Of It",
+  "label": "ch:ml-opinion",
+  "canDo": "I can say that something is good or bad, and say that I think so.",
+  "payoff": {
+    "lesson": "ML-R89-opinion-recall",
+    "kind": "production",
+    "summary": "From cold: the ending that lets a quality stand alone, the negative the book had been missing, and the opinion frame that needed no new grammar.",
+    "assesses": [
+      "ML-GRAMMAR-C89-NOMINAL-01",
+      "ML-LEX-C89-EVAL-01",
+      "ML-CONCEPT-C89-OPINION-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. Only two vocabulary items are new; the quoting marker and the thinking verb were paired in chapter 72, so the opinion frame is assembly rather than instruction."
+  }
+}

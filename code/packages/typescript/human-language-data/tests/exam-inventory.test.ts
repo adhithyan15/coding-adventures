@@ -2184,8 +2184,30 @@ describe("the committed Malayalam A1 inventory", () => {
     // shrinks the object onto the verb, while Malayalam keeps the ordinary pronoun
     // and adds the ordinary ending, so avane costs nothing. No new vocabulary at
     // all, and the joining rule is the genitive's.
-    expect(coverage.covered).toBe(192);
-    expect(coverage.unmapped).toBe(51);
+    // 192 -> 193: ML-A1-NUM-04, counting past twenty. The chapter extends the
+    // pattern chapter 20 made visible -- irupathu is iru plus pathu, and every ten
+    // from thirty up is that word with a different digit in front. The digits appear
+    // in OLDER SHORT FORMS that survive only in compounds (aaru as aru-, eezhu as
+    // ezhu-), so the lesson says this is a pattern to READ WITH, NOT BUILD WITH.
+    // Ninety breaks the run, and the chapter teaches a hundred FIRST so it is not
+    // noise: thonnooru carries nooru, not pathu, and is named from ABOVE. EIGHTY IS
+    // TAUGHT BY EAR ONLY: enpathu needs the chillu NN, which ML-S131 teaches but
+    // data/scripts/malayalam.json omits, so writing it trips uncovered-glyphs. Giving
+    // a number by ear before its written form is this track's own precedent -- see
+    // ML-C07-numbers-6-10. Recorded as backlog item HL-C398.
+    // 193 -> 194: ML-A1-F-28, giving an opinion, AND THE POINT'S NOTE WAS
+    // SUBSTANTIALLY WRONG, which is why it had looked like the most expensive item
+    // in the file. It said "I think that ... needs ennu plus cintikkuka" as though
+    // neither existed. BOTH ARE TAUGHT -- ennu in chapter 72, cintikkuka in 33 --
+    // and ML-C72-ennu-more already pairs them, with the worked example "I think I
+    // know Malayalam". So the assembly was on the page before this chapter existed.
+    // Only the EVALUATION VOCABULARY was missing, and there the note was right:
+    // nallathu and mosham both returned ZERO files. The chapter teaches TWO WORDS
+    // AND NO GRAMMAR -- -athu lets a quality stand without a noun to lean on and is
+    // visibly the word athu, "that"; mosham fills the hole left by five qualities of
+    // which none was negative; the third lesson only assembles.
+    expect(coverage.covered).toBe(194);
+    expect(coverage.unmapped).toBe(49);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2194,7 +2216,7 @@ describe("the committed Malayalam A1 inventory", () => {
     // twenty) and ML-A1-NUM-08 (measures); neither is ordinal work.
     expect(coverage.byCategory["Sankhya (numerals and quantity)"]!).toEqual({
       enumerated: 9,
-      covered: 7,
+      covered: 8,
     });
     // THE HEADLINE. Malayalam joins clauses with a clitic -um for "and", a
     // quotative ennu for "that", and participles for everything else, and the
@@ -2228,7 +2250,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 192/243 points covered (79%)",
+      "malayalam A1 (partial inventory): 194/243 points covered (80%)",
     );
   }, 60_000);
 });

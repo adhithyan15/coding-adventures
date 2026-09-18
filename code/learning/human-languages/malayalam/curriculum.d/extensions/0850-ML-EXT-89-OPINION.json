@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-89-OPINION",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can offer an opinion rather than only describe.",
+  "prerequisites": [
+    "ML-EXT-88-TENS"
+  ],
+  "lessons": [
+    "ML-C89-nallathu",
+    "ML-C89-mosham",
+    "ML-C89-opinion",
+    "ML-R89-opinion-recall"
+  ]
+}
