@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-CONCEPT-C12-KUDUMBAM-01, ML-LEX-C46-ASK-05]
+  knowledge: [ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-CONCEPT-C12-KUDUMBAM-01, ML-LEX-C46-ASK-05, ML-LEX-NII-NINGAL-01]
 introduces:
   knowledge: [ML-GRAMMAR-C78-GENITIVE-UDE-01]
 practises:
-  knowledge: [ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-CONCEPT-C12-KUDUMBAM-01, ML-LEX-C46-ASK-05]
+  knowledge: [ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-CONCEPT-C12-KUDUMBAM-01, ML-LEX-C46-ASK-05, ML-LEX-NII-NINGAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -37,7 +37,7 @@ reviews_of: [ML-C78-nre, ML-C12-kudumbam]
 teacher again on their own.
 
 ## Grammar Lens: the same job, a different ending
-<!-- hl-knowledge: introduces=[ML-GRAMMAR-C78-GENITIVE-UDE-01]; assesses=[ML-CONCEPT-C12-KUDUMBAM-01, ML-LEX-C46-ASK-05] -->
+<!-- hl-knowledge: introduces=[ML-GRAMMAR-C78-GENITIVE-UDE-01]; assesses=[ML-CONCEPT-C12-KUDUMBAM-01, ML-LEX-C46-ASK-05, ML-LEX-NII-NINGAL-01] -->
 
 > **അമ്മയുടെ പുസ്തകം**
 >
@@ -45,17 +45,21 @@ teacher again on their own.
 
 Not **-ന്റെ**. **-ഉടെ**, and a **യ** appears in front of it.
 
-**A noun that ends in a vowel takes -യുടെ.** അമ്മ ends in a vowel, so that is
-the ending it gets. അധ്യാപകൻ ends in a consonant, so it took the other one.
+**അധ്യാപകൻ takes -ന്റെ. അമ്മ takes -യുടെ.** Two nouns, two landings.
 
-| noun ends in | ending |
+| this noun | ending |
 |---|---|
-| a consonant | **-ന്റെ** |
-| a vowel | **-യുടെ** |
+| **അധ്യാപകൻ** | **-ന്റെ** |
+| **അമ്മ** | **-യുടെ** |
 
-**You do not choose between them.** The noun in front does, and it decides by
-its last sound rather than by anything you mean. So the question to ask is never
-*which ending do I want* — it is *what does this word end in*.
+**Which of the two a noun takes is learned with the noun**, not worked out from
+its last sound — and you have had the proof since your first chapter.
+**നിന്റെ** is the owner-form of **നീ**. **നീ** ends in a vowel, exactly as
+**അമ്മ** does, and it does not take **-യുടെ** at all.
+
+**What is reliable is the shape of the phrase.** Owner first with its ending,
+then the thing owned — that never varies, and it is what lets any noun in this
+book own something.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-CONCEPT-C12-KUDUMBAM-01] -->
@@ -69,6 +73,7 @@ its last sound rather than by anything you mean. So the question to ask is never
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-GRAMMAR-C78-GENITIVE-NRE-01] -->
 
-[PAUSE 3s] Which ending does a vowel-final noun take? (**-യുടെ**.) How do you
-say *mother's book*? (***അമ്മയുടെ പുസ്തകം***.) And who picks the ending — you,
+[PAUSE 3s] Which ending does **അമ്മ** take, and why? (**-യുടെ** — it ends in a
+vowel.) How do you say *mother's book*? (***അമ്മയുടെ പുസ്തകം***.) And who picks
+the ending — you,
 or the noun? (**The noun**.)

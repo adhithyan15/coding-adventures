@@ -4,7 +4,7 @@
   "chapter": 84,
   "title": "Where A Thing Is",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ab4716e0ebbf70af",
+  "sourceHash": "fnv1a64:16da305ab3b8f3c6",
   "lessons": [
     {
       "id": "ML-C84-mukalil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73290a3f2cc537d8",
+      "sourceHash": "fnv1a64:c50f58459b452f36",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the word for a chair. Then put the owner-ending on it — the one a word ending in a vowel takes."
+              "text": "Say the word for a chair. Then put the owner-ending on it — the one അമ്മ took."
             }
           ]
         },

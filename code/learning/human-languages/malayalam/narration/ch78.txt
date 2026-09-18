@@ -52,11 +52,12 @@ Say the teacher's book. Then take the ending off and say the teacher again on th
 Grammar Lens: the same job, a different ending.
 അമ്മയുടെ പുസ്തകം ammayuṭe pustakaṁ — "mother's book".
 Not -ന്റെ. -ഉടെ, and a യ appears in front of it.
-A noun that ends in a vowel takes -യുടെ. അമ്മ ends in a vowel, so that is the ending it gets. അധ്യാപകൻ ends in a consonant, so it took the other one.
+അധ്യാപകൻ takes -ന്റെ. അമ്മ takes -യുടെ. Two nouns, two landings.
 [a table of 2 rows, read aloud]
-noun ends in: a consonant. ending: -ന്റെ.
-noun ends in: a vowel. ending: -യുടെ.
-You do not choose between them. The noun in front does, and it decides by its last sound rather than by anything you mean. So the question to ask is never which ending do I want — it is what does this word end in.
+this noun: അധ്യാപകൻ. ending: -ന്റെ.
+this noun: അമ്മ. ending: -യുടെ.
+Which of the two a noun takes is learned with the noun, not worked out from its last sound — and you have had the proof since your first chapter. നിന്റെ is the owner-form of നീ. നീ ends in a vowel, exactly as അമ്മ does, and it does not take -യുടെ at all.
+What is reliable is the shape of the phrase. Owner first with its ending, then the thing owned — that never varies, and it is what lets any noun in this book own something.
 
 Guided Practice.
 [pause 1 second]
@@ -71,7 +72,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which ending does a vowel-final noun take? (-യുടെ.) How do you say mother's book? (അമ്മയുടെ (ammayuṭe) പുസ്തകം.) And who picks the ending — you, or the noun? (The noun.)
+Which ending does അമ്മ take, and why? (-യുടെ — it ends in a vowel.) How do you say mother's book? (അമ്മയുടെ (ammayuṭe) പുസ്തകം.) And who picks the ending — you, or the noun? (The noun.)
 
 
 Lesson 3 of 3.
@@ -83,9 +84,9 @@ Close the lessons before this one. Say my, and then say what its last piece does
 
 Grammar Lens: two endings, one job, and the noun decides.
 [a table of 2 rows, read aloud]
-owner: അധ്യാപകന്റെ (adhyāpakanṟe). ending: -ന്റെ. because it ends in: a consonant.
-owner: അമ്മയുടെ (ammayuṭe). ending: -യുടെ. because it ends in: a vowel.
-One job — whose it is — and the choice is made by the last sound of the noun, not by you.
+owner: അധ്യാപകന്റെ (adhyāpakanṟe). ending: -ന്റെ.
+owner: അമ്മയുടെ (ammayuṭe). ending: -യുടെ.
+One job — whose it is — and which of the two endings a noun takes comes with the noun. നിന്റെ already showed you that: നീ ends in a vowel, as അമ്മ does, and takes -ന്റെ all the same.
 Then the phrase is built the same way every time: owner first with the ending, thing second and bare. adhyāpakanṟe pustakaṁ, ammayuṭe pustakaṁ.
 
 What you've built.
@@ -108,4 +109,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which ending follows a consonant? (-ന്റെ.) Which follows a vowel? (-യുടെ.) And what does either one do to the noun it lands on? (Makes it the owner.)
+Which ending does അധ്യാപകൻ take? (-ന്റെ.) And അമ്മ? (-യുടെ.) Can you tell which one a new noun will take by listening to its end? (No — നീ ends like അമ്മ and takes നിന്റെ.) And what does either one do to the noun it lands on? (Makes it the owner.)
