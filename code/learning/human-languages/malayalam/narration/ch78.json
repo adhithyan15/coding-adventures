@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Whose It Is",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:07bf08ab6a0a09f6",
+  "sourceHash": "fnv1a64:fd4d870369b0582a",
   "lessons": [
     {
       "id": "ML-C78-nre",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a001d6fee366afe",
+      "sourceHash": "fnv1a64:5a1994c58a54ca32",
       "notice": null,
       "blocks": [
         {
@@ -223,24 +223,24 @@
             },
             {
               "kind": "speech",
-              "text": "A noun that ends in a vowel takes -യുടെ. അമ്മ ends in a vowel, so that is the ending it gets. അധ്യാപകൻ ends in a consonant, so it took the other one."
+              "text": "അമ്മ ends in a vowel, and that is why it takes -യുടെ. അധ്യാപകൻ ends in a consonant, so it took the other one."
             },
             {
               "kind": "table",
               "headers": [
-                "noun ends in",
+                "this noun",
                 "ending"
               ],
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "noun ends in: a consonant. ending: -ന്റെ.",
-                "noun ends in: a vowel. ending: -യുടെ."
+                "this noun: അധ്യാപകൻ, ending in a consonant. ending: -ന്റെ.",
+                "this noun: അമ്മ, ending in a vowel. ending: -യുടെ."
               ]
             },
             {
               "kind": "speech",
-              "text": "You do not choose between them. The noun in front does, and it decides by its last sound rather than by anything you mean. So the question to ask is never which ending do I want — it is what does this word end in."
+              "text": "Two nouns, two landings — and not the whole story. Malayalam has more than these two, and this book will show you another before long. What holds already is the shape of the question: you do not choose between them. The noun in front does, and it decides by its last sound rather than by anything you mean. So the question to ask is never which ending do I want — it is what does this word end in."
             }
           ]
         },
@@ -306,7 +306,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which ending does a vowel-final noun take? (-യുടെ.) How do you say mother's book? (അമ്മയുടെ (ammayuṭe) പുസ്തകം.) And who picks the ending — you, or the noun? (The noun.)"
+              "text": "Which ending does അമ്മ take, and why? (-യുടെ — it ends in a vowel.) How do you say mother's book? (അമ്മയുടെ (ammayuṭe) പുസ്തകം.) And who picks the ending — you, or the noun? (The noun.)"
             }
           ]
         }
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a13d52adede3d15",
+      "sourceHash": "fnv1a64:47a208105ea52e43",
       "notice": null,
       "blocks": [
         {
@@ -464,7 +464,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which ending follows a consonant? (-ന്റെ.) Which follows a vowel? (-യുടെ.) And what does either one do to the noun it lands on? (Makes it the owner.)"
+              "text": "Which ending does അധ്യാപകൻ take? (-ന്റെ.) And അമ്മ? (-യുടെ.) What decides it? (The noun's last sound — never you.) And what does either one do to the noun it lands on? (Makes it the owner.)"
             }
           ]
         }

@@ -76,6 +76,7 @@ ending is usually doing the work.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-GRAMMAR-C78-GENITIVE-UDE-01] -->
 
-[PAUSE 3s] Which ending follows a consonant? (**-ന്റെ**.) Which follows a
-vowel? (**-യുടെ**.) And what does either one do to the noun it lands on?
+[PAUSE 3s] Which ending does **അധ്യാപകൻ** take? (**-ന്റെ**.) And **അമ്മ**?
+(**-യുടെ**.) What decides it? (**The noun's last sound** — never you.) And what
+does either one do to the noun it lands on?
 (**Makes it the owner**.)

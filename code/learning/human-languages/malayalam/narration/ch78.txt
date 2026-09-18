@@ -52,11 +52,11 @@ Say the teacher's book. Then take the ending off and say the teacher again on th
 Grammar Lens: the same job, a different ending.
 അമ്മയുടെ പുസ്തകം ammayuṭe pustakaṁ — "mother's book".
 Not -ന്റെ. -ഉടെ, and a യ appears in front of it.
-A noun that ends in a vowel takes -യുടെ. അമ്മ ends in a vowel, so that is the ending it gets. അധ്യാപകൻ ends in a consonant, so it took the other one.
+അമ്മ ends in a vowel, and that is why it takes -യുടെ. അധ്യാപകൻ ends in a consonant, so it took the other one.
 [a table of 2 rows, read aloud]
-noun ends in: a consonant. ending: -ന്റെ.
-noun ends in: a vowel. ending: -യുടെ.
-You do not choose between them. The noun in front does, and it decides by its last sound rather than by anything you mean. So the question to ask is never which ending do I want — it is what does this word end in.
+this noun: അധ്യാപകൻ, ending in a consonant. ending: -ന്റെ.
+this noun: അമ്മ, ending in a vowel. ending: -യുടെ.
+Two nouns, two landings — and not the whole story. Malayalam has more than these two, and this book will show you another before long. What holds already is the shape of the question: you do not choose between them. The noun in front does, and it decides by its last sound rather than by anything you mean. So the question to ask is never which ending do I want — it is what does this word end in.
 
 Guided Practice.
 [pause 1 second]
@@ -71,7 +71,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which ending does a vowel-final noun take? (-യുടെ.) How do you say mother's book? (അമ്മയുടെ (ammayuṭe) പുസ്തകം.) And who picks the ending — you, or the noun? (The noun.)
+Which ending does അമ്മ take, and why? (-യുടെ — it ends in a vowel.) How do you say mother's book? (അമ്മയുടെ (ammayuṭe) പുസ്തകം.) And who picks the ending — you, or the noun? (The noun.)
 
 
 Lesson 3 of 3.
@@ -108,4 +108,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which ending follows a consonant? (-ന്റെ.) Which follows a vowel? (-യുടെ.) And what does either one do to the noun it lands on? (Makes it the owner.)
+Which ending does അധ്യാപകൻ take? (-ന്റെ.) And അമ്മ? (-യുടെ.) What decides it? (The noun's last sound — never you.) And what does either one do to the noun it lands on? (Makes it the owner.)

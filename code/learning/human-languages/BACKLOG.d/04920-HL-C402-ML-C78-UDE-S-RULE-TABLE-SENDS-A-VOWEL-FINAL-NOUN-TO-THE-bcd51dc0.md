@@ -36,7 +36,46 @@ That refutes the table **twice over**:
 
 A learner reading the table predicts ✗**പശുയുടെ**.
 
-### The candidate treatment — and the claim in it that needs checking first
+### RESOLVED — and the fix needed none of the morphology below
+
+**Closed on the chapter-101 branch.** The blocker recorded here was that the
+third-row treatment rests on a claim about Malayalam rather than on a grep.
+**It turned out the third row was not needed at all.**
+
+Enumerating every genitive the corpus actually attests settles it:
+
+| stem ends in | genitive | witness | first at |
+|---|---|---|---|
+| **അ** | **-യുടെ** | **അമ്മയുടെ**, **കസേരയുടെ** | 2700 |
+| chillu **ൻ** | **-ന്റെ** | **അധ്യാപകന്റെ** | 2690 |
+| half-u | **-ിന്റെ** | **സുഹൃത്തിന്റെ** | **3000** |
+| **ം** | **-ത്തിന്റെ** | **പുസ്തകത്തിന്റെ** | **3210** |
+
+**At sequence 2700 the two-row table is accurate for everything the learner has
+seen** — only **അധ്യാപകന്റെ** (2690) and **അമ്മയുടെ** exist at that point. The
+falsification arrives *later*, at 3000 and 3210, on stems that fit neither
+column.
+
+So the defect was never a missing row. It was that the table presented itself as
+**exhaustive**. The fix is the same one-clause narrowing the ya-glide sites got,
+and it asserts no unattested form:
+
+- `ML-C78-ude` — the rule now names **അമ്മ** rather than all vowel-final nouns,
+  the table rows name their nouns, and a sentence says outright: *"Two nouns,
+  two landings — and not the whole story… this book will show you another
+  before long."* That forward promise is honest: `ML-C86-oppam` (3000) and
+  `ML-C91-vila-panam` (3210) both **explain** their third landing, not merely
+  use it.
+- `ML-R78-genitive-recall` — the Wrap-up drilled the universal (*"Which ending
+  follows a vowel?"*). It now asks about **അധ്യാപകൻ** and **അമ്മ** by name and
+  adds *"What decides it? The noun's last sound — never you."*
+- `ML-C84-mukalil` — its Warm-up said *"the one a word ending in a vowel takes"*;
+  it now says *"the one **അമ്മ** took."*
+
+**പശുവിന്റെ is not asserted anywhere**, which is what kept this item open for
+three chapters. The corpus refuted the table using words already in the book.
+
+### The original candidate treatment, kept for the record — and the claim in it that needed checking first
 
 **A third row appears to be enough**, and it needs no forward reference and no
 new vocabulary beyond the **full vowel** term chapter 98 established:

@@ -45,17 +45,20 @@ teacher again on their own.
 
 Not **-ന്റെ**. **-ഉടെ**, and a **യ** appears in front of it.
 
-**A noun that ends in a vowel takes -യുടെ.** അമ്മ ends in a vowel, so that is
-the ending it gets. അധ്യാപകൻ ends in a consonant, so it took the other one.
+**അമ്മ ends in a vowel, and that is why it takes -യുടെ.** അധ്യാപകൻ ends in a
+consonant, so it took the other one.
 
-| noun ends in | ending |
+| this noun | ending |
 |---|---|
-| a consonant | **-ന്റെ** |
-| a vowel | **-യുടെ** |
+| **അധ്യാപകൻ**, ending in a consonant | **-ന്റെ** |
+| **അമ്മ**, ending in a vowel | **-യുടെ** |
 
-**You do not choose between them.** The noun in front does, and it decides by
-its last sound rather than by anything you mean. So the question to ask is never
-*which ending do I want* — it is *what does this word end in*.
+**Two nouns, two landings — and not the whole story.** Malayalam has more than
+these two, and this book will show you another before long. What holds already
+is the shape of the question: **you do not choose between them.** The noun in
+front does, and it decides by its last sound rather than by anything you mean.
+So the question to ask is never *which ending do I want* — it is *what does this
+word end in*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-GRAMMAR-C78-GENITIVE-NRE-01, ML-CONCEPT-C12-KUDUMBAM-01] -->
@@ -69,6 +72,7 @@ its last sound rather than by anything you mean. So the question to ask is never
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-GRAMMAR-C78-GENITIVE-NRE-01] -->
 
-[PAUSE 3s] Which ending does a vowel-final noun take? (**-യുടെ**.) How do you
-say *mother's book*? (***അമ്മയുടെ പുസ്തകം***.) And who picks the ending — you,
+[PAUSE 3s] Which ending does **അമ്മ** take, and why? (**-യുടെ** — it ends in a
+vowel.) How do you say *mother's book*? (***അമ്മയുടെ പുസ്തകം***.) And who picks
+the ending — you,
 or the noun? (**The noun**.)

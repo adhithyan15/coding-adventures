@@ -34,7 +34,7 @@ reviews_of: [ML-C78-ude, ML-C52-chair]
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-LEX-C52-WELCOME-02] -->
 
 [PAUSE 2s] Say the word for a chair. Then put the owner-ending on it — the one
-a word ending in a vowel takes.
+**അമ്മ** took.
 
 ## Grammar Lens: the owner-ending comes first
 <!-- hl-knowledge: introduces=[ML-LEX-C84-PLACE-01, ML-GRAMMAR-C84-POSTPOSITION-01]; assesses=[] -->
