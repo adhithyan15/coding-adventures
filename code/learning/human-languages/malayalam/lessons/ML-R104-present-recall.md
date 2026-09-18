@@ -58,8 +58,9 @@ not have was permission to use one form for two English tenses, and the warning
 that goes with it.
 
 **That warning is worth keeping.** English's *am* has no home in
-**ഇപ്പോൾ ഞാൻ വരുന്നു**. **ആണ്** exists, and it joins a thing to what it *is* —
-it is not a helper for another verb, because Malayalam has none.
+**ഇപ്പോൾ ഞാൻ വരുന്നു**. **ആണ്** exists, and it joins a thing to what it *is*.
+Propping up another verb is not its job — and the *am going* is already inside
+**വരുന്നു**, so there is nothing left for a second word to carry.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C104-ONE-PRESENT-01, ML-GRAMMAR-C104-NOW-01, ML-GRAMMAR-C104-NO-COPULA-01] -->

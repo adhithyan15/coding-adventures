@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "One Present, Two Englishes",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:15379ff10eb16904",
+  "sourceHash": "fnv1a64:a3e1d510de68a7d9",
   "lessons": [
     {
       "id": "ML-C104-one-present",
@@ -298,7 +298,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f436519557f17632",
+      "sourceHash": "fnv1a64:fcd6148699ebaad2",
       "notice": null,
       "blocks": [
         {
@@ -365,7 +365,11 @@
             },
             {
               "kind": "speech",
-              "text": "ആണ് joins a thing to what it is — a name, a description. It is not a helper that props up another verb, because Malayalam has no such helpers. The whole of am going lives inside വരുന്നു."
+              "text": "ആണ് joins a thing to what it is — a name, a description. That is its whole job, and propping up another verb is not part of it. The whole of am going already lives inside വരുന്നു; there is no second word for it to be."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam does put verbs together in other places — you have met ഉണ്ട് and കഴിയും doing exactly that. This is not one of those places, and ആണ് is not one of those verbs."
             }
           ]
         },
@@ -590,7 +594,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:0a55fc645b9a544d",
+      "sourceHash": "fnv1a64:5fd22578cb3cf611",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -653,7 +657,7 @@
             },
             {
               "kind": "speech",
-              "text": "That warning is worth keeping. English's am has no home in ഇപ്പോൾ ഞാൻ വരുന്നു (ippōḷ ñān varunnu). ആണ് exists, and it joins a thing to what it is — it is not a helper for another verb, because Malayalam has none."
+              "text": "That warning is worth keeping. English's am has no home in ഇപ്പോൾ ഞാൻ വരുന്നു (ippōḷ ñān varunnu). ആണ് exists, and it joins a thing to what it is. Propping up another verb is not its job — and the am going is already inside വരുന്നു, so there is nothing left for a second word to carry."
             }
           ]
         },

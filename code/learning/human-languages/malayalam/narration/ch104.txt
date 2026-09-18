@@ -86,7 +86,8 @@ Do not put it here.
 [a table of 2 rows, read aloud]
 ഇപ്പോൾ ഞാൻ വരുന്നു (ippōḷ ñān varunnu), right — one verb, nothing added.
 ഇപ്പോൾ ഞാൻ ആണ് വരുന്നു, not a Malayalam sentence.
-ആണ് joins a thing to what it is — a name, a description. It is not a helper that props up another verb, because Malayalam has no such helpers. The whole of am going lives inside വരുന്നു.
+ആണ് joins a thing to what it is — a name, a description. That is its whole job, and propping up another verb is not part of it. The whole of am going already lives inside വരുന്നു; there is no second word for it to be.
+Malayalam does put verbs together in other places — you have met ഉണ്ട് and കഴിയും doing exactly that. This is not one of those places, and ആണ് is not one of those verbs.
 
 Guided Practice.
 [pause 1 second]
@@ -154,7 +155,7 @@ The verb is the same in both rows. That is the whole chapter in one column. Wher
 
 What you've built.
 Not one word in this chapter was new. The verb ending was named for you long ago; ഇപ്പോൾ and എപ്പോൾ have both been yours for chapters. What you did not have was permission to use one form for two English tenses, and the warning that goes with it.
-That warning is worth keeping. English's am has no home in ഇപ്പോൾ ഞാൻ വരുന്നു (ippōḷ ñān varunnu). ആണ് exists, and it joins a thing to what it is — it is not a helper for another verb, because Malayalam has none.
+That warning is worth keeping. English's am has no home in ഇപ്പോൾ ഞാൻ വരുന്നു (ippōḷ ñān varunnu). ആണ് exists, and it joins a thing to what it is. Propping up another verb is not its job — and the am going is already inside വരുന്നു, so there is nothing left for a second word to carry.
 
 Guided Practice.
 [pause 1 second]

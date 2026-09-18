@@ -82,6 +82,26 @@ That is three separate gates in two chapters — `chapter-references`,
 `script-closure`, `info-dump` — that `npm run validate` and all twelve
 `check:` scripts pass and only the full suite catches.
 
+#### A seventh false universal, caught before the reviewer reported
+
+`ML-C104-no-am` asserted *"Malayalam has no such helpers"* — that the language
+has no auxiliary verbs at all. **Three taught lessons contradict it**, and the
+sharpest is `ML-C32-undu`'s **own gloss** at sequence 650, which calls **ഉണ്ട്**
+and **ഇരിക്കുക** *"the two-piece machine **every** Malayalam verb is built on"*.
+**കഴിയും** (2570) and **വേണം** (1815) are taught too.
+
+The narrower claim is true and does all the work the lesson needs: **ആണ്** joins
+a thing to what it *is*, propping up another verb is not its job, and the *am
+going* already lives inside **വരുന്നു** so there is nothing for a second word to
+carry. The lesson now says outright that Malayalam **does** put verbs together
+elsewhere — naming **ഉണ്ട്** and **കഴിയും**, both of which the learner owns — and
+that this is not one of those places. Both atoms are declared, because citing
+another lesson's content without declaring it is the defect `ML-C92` produced two
+tranches ago.
+
+**Seven of this run's defects have now been the same sentence shape**: a claim
+that something is unique, universal, or already-seen. None was caught by a gate.
+
 #### What the chapter refuses to claim
 
 Malayalam's dedicated progressive in **-കൊണ്ടിരിക്കുന്നു** is **not** taught and
