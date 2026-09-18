@@ -4183,7 +4183,11 @@
       "id": "ML-A1-LEX-52",
       "category": "Padakosham (lexicon by domain)",
       "label": "attractiveness: beautiful, ugly",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C97-BEAUTIFUL-01",
+        "ML-LEX-C97-BEAUTY-01",
+        "ML-CONCEPT-C97-NOT-BEAUTIFUL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -4193,7 +4197,7 @@
         "A1-NG6-03"
       ],
       "malayalamSpecific": false,
-      "note": "Not taught."
+      "note": "Chapter 97. THE FIRST DRAFT UNIFIED TWO DIFFERENT PROCESSES AND THE REVIEWER CAUGHT IT -- the same failure mode as chapter 96, one chapter later, in a chapter whose own note claimed to have avoided it. It said a letter ARRIVES to carry aaNu's vowel, ma after an anusvara and ya after -i, and that nothing is lost either way. FALSE for the anusvara: that sign already IS the m, so nothing arrives and only the writing moves, which is exactly what ML-C89 and ML-C96 say. TRUE only for bhangi/kutti, where a ya is genuinely added because the word ends in a vowel and two vowels will not sit together. The unification was tidy and wrong; the lesson now splits the two and says which is which. SECOND ERROR: the draft taught that alla does NOT weld, reading that doctrine out of ML-C77's single example njaan adhyaapakan alla -- whose host ends in a CHILLU, a consonant with no vowel to pass on, so it is the one example that cannot show the rule either way. alla welds exactly as aaNu does: sundaramalla, bhangiyalla, kuttiyalla. The headword is now ithu sundaramalla and the lesson explains why the chapter-77 example looked separate. THIRD: the recall said which letter appears depends on how the word ended 'and nothing else' -- falsified by the file's own title romanization, sundaravum, where the same ending gives va because what attached was -um. ML-C96 already says it depends on WHAT ATTACHES; the recall now says both. FOURTH: ithu bhangiyaaNu was glossed 'this is beauty'. It means THIS IS BEAUTIFUL, and is the commoner way to say it than ithu sundaramaaNu. FIFTH: the romanization was bhangi with the letter used for nga. The track reserves that for nga (cinngam, ninngaL) and writes a medial anusvara as m-with-dot even before a consonant -- kumbham is the exact parallel. Now bhamgi, which also stops the romanization erasing the anusvara in the one chapter about which words have one. sundaram, bhangi, sundari and vrtthiketta were all grepped as tokens first (zero occurrences) and glyph-checked with the control validated. No dedicated word for 'ugly' is taught: vrtthiketta would need an attributive form and a register judgement that could not be defended, the same call made about buddhimuttu in chapter 96."
     },
     {
       "id": "ML-A1-LEX-53",

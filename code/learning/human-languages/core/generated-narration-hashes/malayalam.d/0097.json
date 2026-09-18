@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:e17f7aec12324d3c",
+  "lessonIds": [
+    "ML-C97-sundaram",
+    "ML-C97-bhangi",
+    "ML-C97-alla-sundaram",
+    "ML-R97-beauty-recall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch97.txt",
+  "json": "malayalam/narration/ch97.json",
+  "textHash": "fnv1a64:cb0dee8ae8ead90f",
+  "jsonHash": "fnv1a64:0d1cc262e81b4914",
+  "findings": []
+}

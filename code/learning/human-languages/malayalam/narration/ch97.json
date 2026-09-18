@@ -1,0 +1,618 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 97,
+  "title": "Beautiful, and Not",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:e17f7aec12324d3c",
+  "lessons": [
+    {
+      "id": "ML-C97-sundaram",
+      "sequence": 3440,
+      "title": "സുന്ദരം (sundaraṁ) — beautiful",
+      "headword": "സുന്ദരം",
+      "romanization": "sundaraṁ",
+      "gloss": "beautiful — a new word dropped straight into the frame the last chapter built",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:202aba0364beaaa9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this is easy. You built that sentence one chapter ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സുന്ദരം — sundaraṁ — beautiful."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് സുന്ദരമാണ്. — itŭ sundaramāṇŭ — \"This is beautiful.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read what you did there. The word ends in ം, so it welds onto ആണ് the way the last chapter's two words did, and you did it without being told."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "ഇത് എളുപ്പമാണ്, this is easy.",
+                "ഇത് പ്രയാസമാണ്, this is difficult.",
+                "ഇത് സുന്ദരമാണ്, this is beautiful."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is what a frame is for. The chapter before this one cost you a rule; this one cost you a word, and the weld came free."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sundaraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sundaraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ sundaramāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ sundaramāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence about something being easy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence about something being easy]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is beautiful? (സുന്ദരം (sundaraṁ).) Did you need a new rule to say this is beautiful? (No — it ends in ം, like എളുപ്പം and പ്രയാസം.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C97-bhangi",
+      "sequence": 3450,
+      "title": "ഭംഗി (bhaṁgi) — beauty",
+      "headword": "ഭംഗി",
+      "romanization": "bhaṁgi",
+      "gloss": "beauty — and the sentence that uses it, which says beautiful",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:119d6f100d44c9fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this is beautiful. Then say child — you have had that word a long time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഭംഗി — bhaṁgi — beauty."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് ഭംഗിയാണ്. — itŭ bhaṁgiyāṇŭ — \"This is beautiful.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Read the gloss again. The word means beauty, but the sentence does not say this is beauty — it says this is beautiful, and it is the way you are most likely to hear it said."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two different things are happening here, and only one of them is new."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "സുന്ദരം (sundaraṁ) becomes സുന്ദരമാണ്, the m was already there.",
+                "ഭംഗി (bhaṁgi) becomes ഭംഗിയാണ്, a യ is genuinely added."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "In സുന്ദരമാണ് nothing is added at all. The ം is the sound m, and it stays; only its writing moves, because the bare sign cannot carry a vowel. You were told that last chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "ഭംഗി (bhaṁgi) is the other case, and you have met the reason before. It ends in a vowel, ആണ് begins with one, and Malayalam will not let two vowels sit together — so a യ slides in between them. The joining chapter said exactly that about അരിയും."
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is only where it happens. ഇത് എന്റെ കുട്ടിയാണ് — this is my child — has the same യ, for the same reason."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaṁgi, then bhaṁgiyāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaṁgi*, then *bhaṁgiyāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sundaraṁ, then sundaramāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sundaraṁ*, then *sundaramāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two actually gained a sound, and which only changed its spelling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two actually gained a sound, and which only changed its spelling]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is beauty? (ഭംഗി (bhaṁgi).) Why does a യ come in before ആണ്? (Two vowels will not sit together.) Is anything added in സുന്ദരമാണ്? (No — that m was already there.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C97-alla-sundaram",
+      "sequence": 3460,
+      "title": "ഇത് സുന്ദരമല്ല (itŭ sundaramalla) — this is not beautiful",
+      "headword": "ഇത് സുന്ദരമല്ല",
+      "romanization": "itŭ sundaramalla",
+      "gloss": "this is not beautiful — the denial welds exactly as the is-word does, which is why you already know how to build it",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66c6877a38a7915e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this is beautiful. Then say the word that denies being what you were called."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the denial welds too",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇത് സുന്ദരമല്ല. — itŭ sundaramalla — \"This is not beautiful.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You already know how that was built. അല്ല is the negative of ആണ്, and it welds on the same way:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "സുന്ദരം (sundaraṁ) + ആണ്, സുന്ദരമാണ് — this is beautiful.",
+                "സുന്ദരം (sundaraṁ) + അല്ല, സുന്ദരമല്ല — this is not beautiful."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same മ, same reason: the m was always there and now has a vowel after it, so it is written with the full letter."
+            },
+            {
+              "kind": "speech",
+              "text": "When you first met അല്ല it was written apart — ഞാൻ അധ്യാപകൻ അല്ല, I am not a teacher. That was a choice about writing, not a different grammar. Weld them and you get ഞാൻ അധ്യാപകനല്ല — ñān adhyāpakanalla — which is as ordinary as the other."
+            },
+            {
+              "kind": "speech",
+              "text": "And look at what the ൻ does there. You were shown this at അധ്യാപകനെ: a chillu cannot carry a vowel, so when a vowel arrives behind it the full letter comes back — ൻ becomes ന. It happens here too: ഇത് എന്റെ മകനാണ്, this is my son."
+            },
+            {
+              "kind": "speech",
+              "text": "A consonant does not. നിങ്ങൾക്ക് keeps its ൾ; the vowel is what forces the change."
+            },
+            {
+              "kind": "speech",
+              "text": "And do not carry any of it across to the ം, which does different things for different endings, as you saw last chapter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both ends of the same line, from one new word and one you already had."
+            },
+            {
+              "kind": "speech",
+              "text": "This is how the far end of most qualities will arrive for a while: not by a second word, but by denying the first one. It is what a learner can build today, and it is what a speaker often says anyway."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ sundaramāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ sundaramāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ sundaramalla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ sundaramalla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two one after the other, and hear where they part",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two one after the other, and hear where they part]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which letter സുന്ദരമാണ് and സുന്ദരമല്ല share in the middle, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which letter **സുന്ദരമാണ്** and **സുന്ദരമല്ല** share in the middle, and why]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ñān adhyāpakanalla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān adhyāpakanalla*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say this is not beautiful? (ഇത് സുന്ദരമല്ല (itŭ sundaramalla).) Does അല്ല weld on the way ആണ് does? (Yes — same മ, same reason.) What does the ൻ do when a vowel follows? (It goes back to ന.) And before a consonant? (It stays a chillu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R97-beauty-recall",
+      "sequence": 3470,
+      "title": "(beautiful, and not) (sundaravuṁ allāthatuṁ enna ōrmma) — from cold",
+      "headword": "(beautiful, and not)",
+      "romanization": "sundaravuṁ allāthatuṁ enna ōrmma",
+      "gloss": "cold retrieval of both ends of the line, and of the difference between a letter re-spelled and a sound added",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1ed09ed326558be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say this is beautiful, then deny it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two different events",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "joined to ആണ്",
+                "what happened"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "word: എളുപ്പം. joined to ആണ്: എളുപ്പമാണ്. what happened: the m was already there.",
+                "word: സുന്ദരം (sundaraṁ). joined to ആണ്: സുന്ദരമാണ്. what happened: the m was already there.",
+                "word: കുട്ടി. joined to ആണ്: കുട്ടിയാണ്. what happened: a യ was added.",
+                "word: ഭംഗി (bhaṁgi). joined to ആണ്: ഭംഗിയാണ്. what happened: a യ was added."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The two halves are not the same event. In the top pair nothing is added — the m was always in the word, and only its writing moves once a vowel sits behind it. In the bottom pair a യ genuinely appears, because the word ends in a vowel and two vowels will not sit together."
+            },
+            {
+              "kind": "speech",
+              "text": "And what attaches matters too, not only how the word ended: the same സുന്ദരം (sundaraṁ) gives സുന്ദരവും when the and ending arrives."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇത് സുന്ദരമാണ്. — this is beautiful. ഇത് സുന്ദരമല്ല (itŭ sundaramalla). — this is not beautiful."
+            },
+            {
+              "kind": "speech",
+              "text": "The second is not a second word. അല്ല is the negative of ആണ് and welds the same way — same മ, same reason."
+            },
+            {
+              "kind": "speech",
+              "text": "So one new quality gave you both ends of a line. That is how the far end of most qualities will arrive for a while — by denying the near one, which is both what you can build today and what a speaker often says anyway."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sundaraṁ becomes sundaramāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sundaraṁ* → *sundaramāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhaṁgi becomes bhaṁgiyāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhaṁgi* → *bhaṁgiyāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ sundaramalla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ sundaramalla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the four joined forms actually gained a sound, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the four joined forms actually gained a sound, and why]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Beautiful, and beauty? (സുന്ദരം (sundaraṁ), ഭംഗി (bhaṁgi).) Which of the two gains a sound before ആണ്? (ഭംഗി (bhaṁgi) — a യ.) And how do you deny it? (ഇത് സുന്ദരമല്ല (itŭ sundaramalla).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

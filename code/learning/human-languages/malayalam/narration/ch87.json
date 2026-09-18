@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Who It Happens To",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:47336a3673d2e708",
+  "sourceHash": "fnv1a64:e3d27a52575efbfb",
   "lessons": [
     {
       "id": "ML-C87-accusative",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:984d194a27f772d7",
+      "sourceHash": "fnv1a64:e0d58004f9494fef",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -86,7 +86,7 @@
             },
             {
               "kind": "speech",
-              "text": "Note what happened to the last letter: അധ്യാപകൻ ends in the standalone ൻ, and before the ending it becomes a plain ന. The chillu is the shape a consonant takes at the end of a word, and here it is no longer at the end."
+              "text": "Note what happened to the last letter: അധ്യാപകൻ ends in the standalone ൻ, and before the ending it becomes a plain ന. A chillu is a consonant with its vowel stripped away, so it cannot carry one — and -എ brings a vowel, so the full letter has to come back."
             }
           ]
         },

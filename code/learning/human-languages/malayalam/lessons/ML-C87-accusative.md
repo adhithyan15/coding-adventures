@@ -62,8 +62,9 @@ stands**, so the ending is doing work that English has to spend its word order
 on.
 
 Note what happened to the last letter: **അധ്യാപകൻ** ends in the standalone **ൻ**,
-and before the ending it becomes a plain **ന**. The chillu is the shape a
-consonant takes **at the end of a word**, and here it is no longer at the end.
+and before the ending it becomes a plain **ന**. A chillu is a consonant with its
+vowel stripped away, so **it cannot carry one** — and **-എ** brings a vowel, so
+the full letter has to come back.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C87-ACCUSATIVE-01, ML-LEX-C48-ROLE-01, ML-CONCEPT-C32-KAANUKA-01, ML-LEX-NJAAN-01] -->
