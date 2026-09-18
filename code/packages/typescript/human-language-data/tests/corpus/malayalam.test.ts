@@ -705,7 +705,11 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // sibilant. Reading the note instead of the data would have refused a word
   // that costs no script debt at all. Filed as HL-C407, with the finding that
   // SCR-12's "14" is one of three numbers: 12 distinct tokens in headword
-  // position carry U+0D36, across 15 headword fields. Separately paaThaM needs
+  // position carry U+0D36, across 15 headword fields. THE FIRST DRAFT
+  // EXPLAINED THAT GAP BACKWARDS -- it blamed tokens sitting inside
+  // multi-word headwords, and such a token contributes one token AND one
+  // field, so it cannot cause a discrepancy. The whole gap is shubha, in
+  // FOUR headword fields; every other token sits in exactly one. Separately paaThaM needs
   // U+0D20, which NO headword in this corpus has ever used, so the
   // NotoSansMalayalam cmap was read directly before committing to the word.
   // THE TWO SANSKRIT WORDS DELIBERATELY DISAGREE: paaThaM ends in the anusvara

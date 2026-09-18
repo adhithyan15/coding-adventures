@@ -52,8 +52,8 @@ English word along with it, and this is the word people reach for.
 The word is English, and the **spelling is not**. Two things happened to it on
 the way in, and you can see both:
 
-- the **ർ** before a doubled **ക്ക** — the shape you already write in
-  **ശർക്കര** and **ചേർക്കുക**;
+- the **ർ** before a doubled **ക്ക** — the shape you have read in **ശർക്കര**
+  and **ചേർക്കുക**;
 - the **half-u** at the end, the faint vowel that closes so many Malayalam
   words and that English *mark* does not have at all.
 

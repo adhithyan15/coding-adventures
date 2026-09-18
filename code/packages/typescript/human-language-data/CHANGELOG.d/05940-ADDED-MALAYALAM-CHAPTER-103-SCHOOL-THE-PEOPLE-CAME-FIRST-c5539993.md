@@ -19,7 +19,7 @@ Two tranches running, the note was accurate about the words it named and wrong
 about the scope it implied. `ML-A1-TIME-10` named the wrong *case*; this one
 named three absent words and let them stand for a whole domain.
 
-#### Four words, three origins
+#### Four words, three arrivals
 
 | | | |
 |---|---|---|
@@ -31,9 +31,15 @@ named three absent words and let them stand for a whole domain.
 etymology is given in **romanization only**: neither part is a taught headword,
 and naming them in script would introduce two unowned tokens, which is the trap
 `lessons.d` records as *"the parts a lesson names to explain a word are forward
-references too"*. The historical claim is hedged to what is checkable about
-**modern** Malayalam, with the *why* offered as the traditional account rather
-than asserted.
+references too"*. **The first draft claimed that hedge and did not contain it.** The chapter note
+and this entry both said the *why* was "offered as the traditional account rather
+than asserted", while the lesson opened with *"That is not a coincidence, and it
+is not a metaphor either."* — ruling out the alternatives rather than hedging.
+The lesson now actually hedges: it names the account as an account, and names the
+Buddhist and Jain teaching-houses that **paḷḷi** also denoted in early Kerala as
+at least as likely a route to the school sense. The gloss of **kūṭaṁ** is scoped
+too — a hall *in the older sense this compound keeps*, since the bare word today
+usually means something else.
 
 #### The two Sanskrit words deliberately disagree
 
@@ -60,8 +66,27 @@ It is the wrong letter. Malayalam has two:
 **ക്ഷ** is **ക** + virama + **ഷ** — the *taught* one. The word costs no script
 debt at all. Filed as `HL-C407`, along with the finding that SCR-12's **14** is
 one of **three** numbers: **12** distinct tokens in headword position carry
-**ശ**, across **15** headword fields, and the two differ because **ശനി** and
-**വൃശ്ചികം** sit inside multi-word headwords.
+**ശ**, across **15** headword fields.
+
+**The first draft explained that gap backwards.** It blamed **ശനി** and
+**വൃശ്ചികം** sitting inside multi-word headwords. They do — and a token inside a
+multi-word headword contributes **one token and one field**, so multi-word
+headwords cannot produce a token/field discrepancy at all. The whole three-field
+gap is **ശുഭ**, which occupies **four** headword fields (`ML-C25-shubha-rathri`,
+`ML-C30-shubha-sayaahnam`, `ML-C31-shubha-madhyaahnam`,
+`ML-C31-afternoon-convergence`); every other token sits in exactly one. The
+variable is **a token repeated across sibling headwords**, and the wrong
+explanation had aimed `HL-C407`'s proposed remedy at the wrong one.
+
+**The same audit missed two open characters in its own new headwords.** **ർ**
+(U+0D7C) and **ള** (U+0D33) each have **no script lesson at all** — they are
+`ML-A1-SCR-12`'s *"chillu-rr (8)"* and *"lla (10)"* — and **മാർക്ക്** and
+**പള്ളിക്കൂടം** each add one more headword to an already-open character. They
+pass `neverTaughtGlyphs` because both appear inside other letter lessons' example
+words, which is the understatement again. Nothing here closes them; what changed
+is that `ML-C103-maarkku` no longer tells the reader they *write* the chillu —
+it says they have **read** it, in **ശർക്കര** and **ചേർക്കുക**, which is what the
+corpus supports.
 
 Separately, **പാഠം needs U+0D20**, a character **no headword in this corpus has
 ever used**. The `NotoSansMalayalam` cmap was read directly before the word was
@@ -98,7 +123,10 @@ in the book that arrives with no history"*, which **ten** merged script lessons
 contradict in identical words — `ML-S07`, `ML-S110`, `ML-S111`, `ML-S116`,
 `ML-S125`, `ML-S127`, `ML-S131`, `ML-S141`, `ML-S143` and `ML-S144` each say of
 their own character *"it has not been on a page yet: it arrives with the word on
-the next one."* Arriving with the word that needs it is this corpus's **normal**
+the next one."* An **eleventh**, `ML-S132-letter-ga`, says it in different words —
+*"no word you have met so far is written with it"* — so "ten" is a count of one
+**wording**, not of the contradicting set. Naming the wording and not the set is
+the same undercount in miniature; the set is at least eleven. Arriving with the word that needs it is this corpus's **normal**
 way of introducing a letter, not an exception. The lesson now uses that same
 sentence, which is true and is the house voice for exactly this situation. What
 is distinctive about ഠ is a fact about the **metric**, not about the reader, and

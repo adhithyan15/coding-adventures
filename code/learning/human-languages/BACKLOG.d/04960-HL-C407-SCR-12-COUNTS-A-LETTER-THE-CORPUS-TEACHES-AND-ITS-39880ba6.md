@@ -27,16 +27,29 @@ did.
 - **12** distinct tokens in headword position contain **ശ**
 - those sit across **15** headword fields
 
-Tokens and fields differ because two of them (**ശനി**, **വൃശ്ചികം**) sit inside
-multi-word headwords — `ML-C10-azhcha`'s seven day-names and
-`ML-C16-kollavarsham-maasangal`'s twelve months. Which number the note *meant* is
-not recoverable from the note.
+**The first draft of this shard explained that gap wrongly, and the wrong
+explanation aimed the remedy at the wrong variable.** It said the two numbers
+differ because **ശനി** and **വൃശ്ചികം** sit inside multi-word headwords. They do
+sit inside multi-word headwords — and that is not what causes it. A token inside
+a multi-word headword contributes **one token and one field**, so multi-word
+headwords cannot produce a token/field discrepancy at all.
+
+**The entire three-field gap is ശുഭ**, which occupies **four** headword fields:
+`ML-C25-shubha-rathri`, `ML-C30-shubha-sayaahnam`, `ML-C31-shubha-madhyaahnam`
+and `ML-C31-afternoon-convergence`. Every other token, **ശനി** and **വൃശ്ചികം**
+included, sits in exactly one. The variable is **a token repeated across sibling
+headwords**, not a token sharing a headword with other tokens.
+
+Which number the note *meant* is not recoverable from the note.
 
 **What closing this needs.** Re-derive the whole nine-character list against the
-data, saying explicitly which counting rule is used (distinct tokens, or headword
-fields, and whether a token inside a multi-word headword counts once or not at
-all — `continuity.ts` keeps multi-word headwords whole, which argues it should
-not count as a taught token at all). Check each of the other eight the way **ഷ**
+data, saying explicitly which counting rule is used: distinct tokens, or headword
+fields, and — the rule that actually moves this number — whether a token
+appearing in several sibling headwords counts once or once per headword. The
+multi-word-headword question is a separate one worth settling too (`continuity.ts`
+keeps such headwords whole, which argues a token inside one is not a taught token
+at all), but it does not explain the 12-against-15 gap and must not be mistaken
+for it. Check each of the other eight the way **ഷ**
 was checked here: by looking for a script lesson whose headword *is* that
 character, not by trusting the list. The note's *"58 of 67 are taught"* headline
 moves with whatever the recount finds.

@@ -46,8 +46,11 @@ next page.
 
 It is **ട** with a breath after it. The tongue does exactly what it did for
 **ട** — curled back, touching the roof of the mouth — and then the release
-carries a puff of air out with it. Malayalam pairs its consonants this way all
-through: a plain one, and a breathed one beside it.
+carries a puff of air out with it.
+
+Malayalam pairs its **stops** this way — **ക**/**ഖ**, **ത**/**ഥ**, **ട**/**ഠ** —
+a plain one and a breathed one beside it. The nasals and the liquids have no such
+partner: there is no breathed **ണ** and no breathed **ള**.
 
 It has not been on a page yet: it arrives with the word on the next one.
 

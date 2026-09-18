@@ -11,10 +11,12 @@ Say a teacher. Say a student. You have had both of them for a long while, and ne
 
 You'll want to know.
 പള്ളിക്കൂടം (paḷḷikkūṭaṁ) — a school.
-It is a long word, and it is long because it is two words. The first, paḷḷi, is what Malayalam calls a mosque or a church. The second, kūṭaṁ, is a hall. The ordinary everyday word for a school is a compound of two buildings.
+It is a long word, and it is long because it is two words. The first, paḷḷi, is what Malayalam now calls a mosque or a church. The second, kūṭaṁ, is a hall — in the older sense this compound keeps; standing on its own today the word will more often mean something else entirely.
+Neither part is a word this book has taught you, and they are given here in sound only, for the shape of the thing.
 
 Why it's said this way.
-That is not a coincidence, and it is not a metaphor either. Teaching happened where the community already gathered — the hall beside the place of worship was where children were taught, long before anybody built a separate building for it. The word kept the arrangement after the arrangement changed.
+The traditional account is that teaching happened where the community already gathered: the hall stood beside the place of worship, and that is where children were taught long before anybody built a separate building for it.
+It is worth knowing that this is an account and not a settled fact. paḷḷi also named the Buddhist and Jain teaching-houses of early Kerala, older than either of the meanings the word carries today, and that is at least as likely a route to the school sense. What is not in doubt is the shape: a school is named with two older words joined.
 Kerala has a second word too, borrowed straight from English and heard constantly. This one is the native compound, and it is the one that tells you something.
 
 Guided Practice.
@@ -44,7 +46,8 @@ One character this time. One only. It arrives with the word on the next page.
 
 Script you'll notice: ഠ.
 ഠ — ṭha.
-It is ട with a breath after it. The tongue does exactly what it did for ട — curled back, touching the roof of the mouth — and then the release carries a puff of air out with it. Malayalam pairs its consonants this way all through: a plain one, and a breathed one beside it.
+It is ട with a breath after it. The tongue does exactly what it did for ട — curled back, touching the roof of the mouth — and then the release carries a puff of air out with it.
+Malayalam pairs its stops this way — ക/ഖ, ത/ഥ, ട/ഠ (ṭha) — a plain one and a breathed one beside it. The nasals and the liquids have no such partner: there is no breathed ണ and no breathed ള.
 It has not been on a page yet: it arrives with the word on the next one.
 
 Writing: ഠ — copy what you see.
@@ -100,11 +103,12 @@ Lesson 4 of 6.
 
 Warm-up.
 [pause 2 seconds]
-Say a lesson. Then say the apology you have had since early on — and listen for the ക്ഷ in the middle of it.
+Say a lesson. Then say the apology you have had since early on — and listen for the ക്ഷ that opens it.
 
 You'll want to know.
 പരീക്ഷ (parīkṣa) — an exam.
-You can already write the hard part. The ക്ഷ in the middle is the one that opens that apology. It is not a new shape; it is a shape you have been saying since the beginning, sitting in a new word.
+You can already write the hard part. The ക്ഷ is not a new shape — but look at where it sits. It opens that apology, and here it closes the word.
+You have seen it close a word before: അപേക്ഷ, the request, ends in exactly this.
 The Sanskrit behind it is pari- (around) plus a root meaning to look. An examination is a looking all around something.
 
 Grammar Lens: this one does not end in -ം.
@@ -118,14 +122,14 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: parīkṣa]
 [pause 8 seconds for the answer]
-[your turn — say: the apology, then the exam — and name the shape they share]
+[your turn — say: the apology, then the exam — the same shape, at opposite ends]
 [pause 8 seconds for the answer]
 [your turn — say: pāṭhaṁ, then parīkṣa, and how each one ends]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-An exam? (പരീക്ഷ (parīkṣa).) Which earlier word shares its middle shape? (That apology, ക്ഷമിക്കണം.) Which of this chapter's two words ends in -ം? (പാഠം (pāṭhaṁ) — not പരീക്ഷ (parīkṣa).)
+An exam? (പരീക്ഷ (parīkṣa).) Which earlier word ends the same way? (അപേക്ഷ.) Which one opens with that shape? (ക്ഷമിക്കണം.) Which of this chapter's two words ends in -ം? (പാഠം (pāṭhaṁ) — not പരീക്ഷ (parīkṣa).)
 
 
 Lesson 5 of 6.
@@ -141,7 +145,7 @@ Say it out loud and you will hear English. It is the English word mark, borrowed
 
 Grammar Lens: what the borrowing had to change.
 The word is English, and the spelling is not. Two things happened to it on the way in, and you can see both:
-the ർ before a doubled ക്ക — the shape you already write in ശർക്കര and ചേർക്കുക;
+the ർ before a doubled ക്ക — the shape you have read in ശർക്കര and ചേർക്കുക;
 the half-u at the end, the faint vowel that closes so many Malayalam words and that English mark does not have at all.
 A borrowed word does not stay foreign. It is made to end the way Malayalam words end, and then it behaves like one.
 
@@ -166,17 +170,21 @@ Warm-up.
 [pause 3 seconds]
 Close the lessons before this one. Say school, lesson, exam and marks.
 
-Grammar Lens: four words, three different origins.
-One small corner of one subject, and the words in it came from three places:
+Grammar Lens: four words, three different arrivals.
+One small corner of one subject, and the words in it arrived three different ways:
 [a table of 3 rows, read aloud]
-പള്ളിക്കൂടം, paḷḷikkūṭaṁ, a compound of two buildings.
-പാഠം, പരീക്ഷ, pāṭhaṁ, parīkṣa, Sanskrit.
-മാർക്ക്, mārkkŭ, English.
-That is what a school vocabulary looks like in Malayalam, and it is not untidy — it is a record. The building is named the old way, the scholarly words came with the scholarly tradition, and the examination system arrived with its own word attached.
+പള്ളിക്കൂടം, paḷḷikkūṭaṁ, assembled here, from two older words.
+പാഠം, പരീക്ഷ, pāṭhaṁ, parīkṣa, Sanskrit, taken whole.
+മാർക്ക്, mārkkŭ, English, taken whole.
+That is what a school vocabulary looks like in Malayalam, and it is not untidy — it is a record. The building's name was built here out of older parts; the scholarly words came in whole with the scholarly tradition; and the examination system arrived with its own word attached.
 
 What you've built.
 You had the people before you had the place. The teacher and the student have been yours for a long while with nothing around them; now there is a building, a thing taught in it, a test of the thing, and a number at the end.
-And the two Sanskrit words do not behave alike: പാഠം (pāṭhaṁ) ends in -ം and gives way to -ത്ത- when a case ending arrives; പരീക്ഷ (parīkṣa) ends in അ and does no such thing. Same subject, same origin, different endings — and the ending is what decides.
+And the two Sanskrit words do not behave alike:
+[a table of 2 rows, read aloud]
+പാഠം (pāṭhaṁ), പാഠത്തിൽ, the -ം gives way to -ത്ത-.
+പരീക്ഷ (parīkṣa), പരീക്ഷയിൽ, അ takes the -യ- join.
+Both change. They change differently, and each one the way its ending says — the -യ- join is the one ഇന്ത്യ already showed you. Same subject, same source language; the ending decides, not the meaning.
 
 Guided Practice.
 [pause 1 second]
@@ -184,11 +192,11 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: which of the four is English, and which two are Sanskrit]
 [pause 8 seconds for the answer]
-[your turn — say: pāṭhaṁ, then pāṭhattil]
+[your turn — say: pāṭhaṁ, then pāṭhattil; parīkṣa, then parīkṣayil]
 [pause 8 seconds for the answer]
 [your turn — say: the teacher and the student, now inside the building]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-School, exam, marks? (പള്ളിക്കൂടം (paḷḷikkūṭaṁ), പരീക്ഷ (parīkṣa), മാർക്ക് (mārkkŭ).) Which one is English? (മാർക്ക് (mārkkŭ).) Which word in the chapter changes when a case ending arrives, and to what? (പാഠം (pāṭhaṁ) becomes പാഠത്തിൽ.)
+School, exam, marks? (പള്ളിക്കൂടം (paḷḷikkūṭaṁ), പരീക്ഷ (parīkṣa), മാർക്ക് (mārkkŭ).) Which one is English? (മാർക്ക് (mārkkŭ).) Which word loses its ending to -ത്ത-? (പാഠം (pāṭhaṁ) becomes പാഠത്തിൽ.) And what does പരീക്ഷ (parīkṣa) do instead? (പരീക്ഷയിൽ — the -യ- join.)

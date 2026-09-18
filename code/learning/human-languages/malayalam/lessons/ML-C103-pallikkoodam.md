@@ -11,8 +11,8 @@ romanization: "paḷḷikkūṭaṁ"
 concept_tag: ML-NOUN-SCHOOL
 prerequisites: [ML-C48-teacher, ML-C48-student]
 sounds: [malayalam-geminate-lla, malayalam-geminate-kka]
-roots: [dravidian-palli-settlement, sanskrit-kuta-hall]
-etymology_hook: "paLLikkooTaM is palli plus kooTaM — palli is what Malayalam calls a mosque or a church, kooTaM is a hall; the ordinary word for school is a compound of two buildings"
+roots: [prakrit-palli-monastic-settlement, sanskrit-kuta-hall]
+etymology_hook: "paLLikkooTaM is palli plus kooTaM — palli is what Malayalam NOW calls a mosque or a church, and kooTaM is a hall in the older sense the compound preserves; the ordinary word for school was assembled inside Malayalam out of two older words"
 duration:
   max_seconds: 240
 requires:
@@ -43,17 +43,25 @@ long while, and never once had the building they are standing in.
 **പള്ളിക്കൂടം** (*paḷḷikkūṭaṁ*) — **a school**.
 
 It is a long word, and it is long because it is **two words**. The first,
-*paḷḷi*, is what Malayalam calls a **mosque or a church**. The second, *kūṭaṁ*,
-is a **hall**. The ordinary everyday word for a school is a compound of two
-buildings.
+*paḷḷi*, is what Malayalam **now** calls a **mosque or a church**. The second,
+*kūṭaṁ*, is a **hall** — in the older sense this compound keeps; standing on its
+own today the word will more often mean something else entirely.
+
+**Neither part is a word this book has taught you**, and they are given here in
+sound only, for the shape of the thing.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C103-SCHOOL-01] -->
 
-That is not a coincidence, and it is not a metaphor either. **Teaching happened
-where the community already gathered** — the hall beside the place of worship
-was where children were taught, long before anybody built a separate building
-for it. The word kept the arrangement after the arrangement changed.
+**The traditional account** is that teaching happened where the community
+already gathered: the hall stood beside the place of worship, and that is where
+children were taught long before anybody built a separate building for it.
+
+**It is worth knowing that this is an account and not a settled fact.** *paḷḷi*
+also named the Buddhist and Jain teaching-houses of early Kerala, older than
+either of the meanings the word carries today, and that is at least as likely a
+route to the school sense. What is not in doubt is the shape: a school is named
+with two older words joined.
 
 **Kerala has a second word too**, borrowed straight from English and heard
 constantly. This one is the native compound, and it is the one that tells you

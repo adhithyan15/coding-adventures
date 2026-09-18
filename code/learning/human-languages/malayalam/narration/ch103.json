@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "School",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e7ee4bc806bb2e9c",
+  "sourceHash": "fnv1a64:66006f23959895a0",
   "lessons": [
     {
       "id": "ML-C103-pallikkoodam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df1e1b933f7e4016",
+      "sourceHash": "fnv1a64:83ada4cf26a47176",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,11 @@
             },
             {
               "kind": "speech",
-              "text": "It is a long word, and it is long because it is two words. The first, paḷḷi, is what Malayalam calls a mosque or a church. The second, kūṭaṁ, is a hall. The ordinary everyday word for a school is a compound of two buildings."
+              "text": "It is a long word, and it is long because it is two words. The first, paḷḷi, is what Malayalam now calls a mosque or a church. The second, kūṭaṁ, is a hall — in the older sense this compound keeps; standing on its own today the word will more often mean something else entirely."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither part is a word this book has taught you, and they are given here in sound only, for the shape of the thing."
             }
           ]
         },
@@ -61,7 +65,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "That is not a coincidence, and it is not a metaphor either. Teaching happened where the community already gathered — the hall beside the place of worship was where children were taught, long before anybody built a separate building for it. The word kept the arrangement after the arrangement changed."
+              "text": "The traditional account is that teaching happened where the community already gathered: the hall stood beside the place of worship, and that is where children were taught long before anybody built a separate building for it."
+            },
+            {
+              "kind": "speech",
+              "text": "It is worth knowing that this is an account and not a settled fact. paḷḷi also named the Buddhist and Jain teaching-houses of early Kerala, older than either of the meanings the word carries today, and that is at least as likely a route to the school sense. What is not in doubt is the shape: a school is named with two older words joined."
             },
             {
               "kind": "speech",
@@ -143,7 +151,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:459689791cd808c6",
+      "sourceHash": "fnv1a64:4c953b1b9bcfa4e2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -195,7 +203,11 @@
             },
             {
               "kind": "speech",
-              "text": "It is ട with a breath after it. The tongue does exactly what it did for ട — curled back, touching the roof of the mouth — and then the release carries a puff of air out with it. Malayalam pairs its consonants this way all through: a plain one, and a breathed one beside it."
+              "text": "It is ട with a breath after it. The tongue does exactly what it did for ട — curled back, touching the roof of the mouth — and then the release carries a puff of air out with it."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam pairs its stops this way — ക/ഖ, ത/ഥ, ട/ഠ (ṭha) — a plain one and a breathed one beside it. The nasals and the liquids have no such partner: there is no breathed ണ and no breathed ള."
             },
             {
               "kind": "speech",
@@ -420,7 +432,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9bfb5334365ad3c",
+      "sourceHash": "fnv1a64:3d9b793abd03671e",
       "notice": null,
       "blocks": [
         {
@@ -436,7 +448,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say a lesson. Then say the apology you have had since early on — and listen for the ക്ഷ in the middle of it."
+              "text": "Say a lesson. Then say the apology you have had since early on — and listen for the ക്ഷ that opens it."
             }
           ]
         },
@@ -451,7 +463,11 @@
             },
             {
               "kind": "speech",
-              "text": "You can already write the hard part. The ക്ഷ in the middle is the one that opens that apology. It is not a new shape; it is a shape you have been saying since the beginning, sitting in a new word."
+              "text": "You can already write the hard part. The ക്ഷ is not a new shape — but look at where it sits. It opens that apology, and here it closes the word."
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen it close a word before: അപേക്ഷ, the request, ends in exactly this."
             },
             {
               "kind": "speech",
@@ -511,11 +527,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the apology, then the exam — and name the shape they share",
+              "instruction": "the apology, then the exam — the same shape, at opposite ends",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the apology, then the exam — and name the shape they share]"
+              "source": "[YOU SAY: the apology, then the exam — the same shape, at opposite ends]"
             },
             {
               "kind": "prompt",
@@ -541,7 +557,7 @@
             },
             {
               "kind": "speech",
-              "text": "An exam? (പരീക്ഷ (parīkṣa).) Which earlier word shares its middle shape? (That apology, ക്ഷമിക്കണം.) Which of this chapter's two words ends in -ം? (പാഠം (pāṭhaṁ) — not പരീക്ഷ (parīkṣa).)"
+              "text": "An exam? (പരീക്ഷ (parīkṣa).) Which earlier word ends the same way? (അപേക്ഷ.) Which one opens with that shape? (ക്ഷമിക്കണം.) Which of this chapter's two words ends in -ം? (പാഠം (pāṭhaṁ) — not പരീക്ഷ (parīkṣa).)"
             }
           ]
         }
@@ -560,7 +576,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0dc753b6d86be0f2",
+      "sourceHash": "fnv1a64:ee80930b1dd4e3e2",
       "notice": null,
       "blocks": [
         {
@@ -606,7 +622,7 @@
             },
             {
               "kind": "speech",
-              "text": "the ർ before a doubled ക്ക — the shape you already write in ശർക്കര and ചേർക്കുക;"
+              "text": "the ർ before a doubled ക്ക — the shape you have read in ശർക്കര and ചേർക്കുക;"
             },
             {
               "kind": "speech",
@@ -683,14 +699,14 @@
       "title": "(school, lesson, exam, marks) (paḷḷikkūṭaṁ enna ōrmma) — from cold",
       "headword": "(school, lesson, exam, marks)",
       "romanization": "paḷḷikkūṭaṁ enna ōrmma",
-      "gloss": "cold retrieval of the four school words, and of the three different places they came from",
+      "gloss": "cold retrieval of the four school words, of how each one arrived, and of which one takes -tth-",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba1e5372b6538008",
+      "sourceHash": "fnv1a64:a5b60ce1c47890b6",
       "notice": null,
       "blocks": [
         {
@@ -713,11 +729,11 @@
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: four words, three different origins",
+          "title": "Grammar Lens: four words, three different arrivals",
           "segments": [
             {
               "kind": "speech",
-              "text": "One small corner of one subject, and the words in it came from three places:"
+              "text": "One small corner of one subject, and the words in it arrived three different ways:"
             },
             {
               "kind": "table",
@@ -729,14 +745,14 @@
               "columns": 3,
               "rowCount": 3,
               "utterances": [
-                "പള്ളിക്കൂടം, paḷḷikkūṭaṁ, a compound of two buildings.",
-                "പാഠം, പരീക്ഷ, pāṭhaṁ, parīkṣa, Sanskrit.",
-                "മാർക്ക്, mārkkŭ, English."
+                "പള്ളിക്കൂടം, paḷḷikkūṭaṁ, assembled here, from two older words.",
+                "പാഠം, പരീക്ഷ, pāṭhaṁ, parīkṣa, Sanskrit, taken whole.",
+                "മാർക്ക്, mārkkŭ, English, taken whole."
               ]
             },
             {
               "kind": "speech",
-              "text": "That is what a school vocabulary looks like in Malayalam, and it is not untidy — it is a record. The building is named the old way, the scholarly words came with the scholarly tradition, and the examination system arrived with its own word attached."
+              "text": "That is what a school vocabulary looks like in Malayalam, and it is not untidy — it is a record. The building's name was built here out of older parts; the scholarly words came in whole with the scholarly tradition; and the examination system arrived with its own word attached."
             }
           ]
         },
@@ -751,7 +767,25 @@
             },
             {
               "kind": "speech",
-              "text": "And the two Sanskrit words do not behave alike: പാഠം (pāṭhaṁ) ends in -ം and gives way to -ത്ത- when a case ending arrives; പരീക്ഷ (parīkṣa) ends in അ and does no such thing. Same subject, same origin, different endings — and the ending is what decides."
+              "text": "And the two Sanskrit words do not behave alike:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "പാഠം (pāṭhaṁ), പാഠത്തിൽ, the -ം gives way to -ത്ത-.",
+                "പരീക്ഷ (parīkṣa), പരീക്ഷയിൽ, അ takes the -യ- join."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both change. They change differently, and each one the way its ending says — the -യ- join is the one ഇന്ത്യ already showed you. Same subject, same source language; the ending decides, not the meaning."
             }
           ]
         },
@@ -787,11 +821,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pāṭhaṁ, then pāṭhattil",
+              "instruction": "pāṭhaṁ, then pāṭhattil; parīkṣa, then parīkṣayil",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *pāṭhaṁ*, then *pāṭhattil*]"
+              "source": "[YOU SAY: *pāṭhaṁ*, then *pāṭhattil*; *parīkṣa*, then *parīkṣayil*]"
             },
             {
               "kind": "prompt",
@@ -817,7 +851,7 @@
             },
             {
               "kind": "speech",
-              "text": "School, exam, marks? (പള്ളിക്കൂടം (paḷḷikkūṭaṁ), പരീക്ഷ (parīkṣa), മാർക്ക് (mārkkŭ).) Which one is English? (മാർക്ക് (mārkkŭ).) Which word in the chapter changes when a case ending arrives, and to what? (പാഠം (pāṭhaṁ) becomes പാഠത്തിൽ.)"
+              "text": "School, exam, marks? (പള്ളിക്കൂടം (paḷḷikkūṭaṁ), പരീക്ഷ (parīkṣa), മാർക്ക് (mārkkŭ).) Which one is English? (മാർക്ക് (mārkkŭ).) Which word loses its ending to -ത്ത-? (പാഠം (pāṭhaṁ) becomes പാഠത്തിൽ.) And what does പരീക്ഷ (parīkṣa) do instead? (പരീക്ഷയിൽ — the -യ- join.)"
             }
           ]
         }
