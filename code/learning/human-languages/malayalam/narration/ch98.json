@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Games and Films",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1995ec17b7d43b53",
+  "sourceHash": "fnv1a64:867331392943ba88",
   "lessons": [
     {
       "id": "ML-C98-kali",
@@ -469,22 +469,13 @@
       "romanization": "kaḷiyuṁ sinimayuṁ enna ōrmma",
       "gloss": "cold retrieval of the three leisure words, and of the thing that decides which letter slides in before ആണ്",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc672210eec62230",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "Grammar Lens: the vowel at the end chooses"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Grammar Lens: the vowel at the end chooses until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:87c7d08804e9faea",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -513,17 +504,20 @@
               "text": "ആണ് opens with a vowel. A word that also ends in one cannot sit straight against it, so a letter comes in between. Which letter is not free — the word's own last vowel settles it:"
             },
             {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 4,
-              "rowCount": 4,
+              "kind": "table",
               "headers": [
                 "ends in",
                 "word",
-                "joined to ആണ്",
-                "letter"
+                "joined to ആണ്"
               ],
-              "text": "There is a table here I cannot read to you — 4 columns and 4 rows, and it has more columns than can be held in the ear at once. Its columns are: ends in, word, joined to ആണ്, letter. Come back and look at it when you have stopped."
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "ends in: ഇ. word: ഭംഗി. joined to ആണ്: ഭംഗിയാണ്.",
+                "ends in: ഇ. word: കളി (kaḷi). joined to ആണ്: കളിയാണ്.",
+                "ends in: അ. word: സിനിമ (sinima). joined to ആണ്: സിനിമയാണ്.",
+                "ends in: ഉ. word: പശു. joined to ആണ്: പശുവാണ്."
+              ]
             },
             {
               "kind": "speech",

@@ -43,12 +43,12 @@ reviews_of: [ML-C98-kali, ML-C98-kalikkuka, ML-C98-sinima]
 against it, so a letter comes in between. **Which letter is not free** — the
 word's own last vowel settles it:
 
-| ends in | word | joined to **ആണ്** | letter |
-|---|---|---|---|
-| **ഇ** | **ഭംഗി** | **ഭംഗിയാണ്** | **യ** |
-| **ഇ** | **കളി** | **കളിയാണ്** | **യ** |
-| **അ** | **സിനിമ** | **സിനിമയാണ്** | **യ** |
-| **ഉ** | **പശു** | **പശുവാണ്** | **വ** |
+| ends in | word | joined to **ആണ്** |
+|---|---|---|
+| **ഇ** | **ഭംഗി** | **ഭംഗിയാണ്** |
+| **ഇ** | **കളി** | **കളിയാണ്** |
+| **അ** | **സിനിമ** | **സിനിമയാണ്** |
+| **ഉ** | **പശു** | **പശുവാണ്** |
 
 **Three rows out of four take യ, and that is exactly why the fourth is worth
 holding on to.** If you carry away *vowels take യ*, the cow will catch you out.
