@@ -1,0 +1,17 @@
+{
+  "id": "ML-EXT-101-BUILD",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a person as short, thin or stout, and say that someone is tall.",
+  "prerequisites": [
+    "ML-EXT-100-CLOTHING"
+  ],
+  "lessons": [
+    "ML-C101-kuriya",
+    "ML-C101-melinja",
+    "ML-C101-thadicha",
+    "ML-C101-uyaram",
+    "ML-R101-build-recall"
+  ]
+}

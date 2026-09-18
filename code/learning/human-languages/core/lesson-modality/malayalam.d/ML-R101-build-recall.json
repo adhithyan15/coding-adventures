@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R101-build-recall",
+    "language": "malayalam",
+    "chapter": 101,
+    "sequence": 3660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33e6a128f0e4397f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:3b80034d82b65bc7",
+  "lessonIds": [
+    "ML-C101-kuriya",
+    "ML-C101-melinja",
+    "ML-C101-thadicha",
+    "ML-C101-uyaram",
+    "ML-R101-build-recall"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch101.txt",
+  "json": "malayalam/narration/ch101.json",
+  "textHash": "fnv1a64:af7c60c67fd01581",
+  "jsonHash": "fnv1a64:82a7c22348c15673",
+  "findings": []
+}

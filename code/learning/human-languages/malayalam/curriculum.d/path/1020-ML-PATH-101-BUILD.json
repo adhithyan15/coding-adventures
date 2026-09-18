@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-101-BUILD",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ML-C101-kuriya",
+    "ML-C101-melinja",
+    "ML-C101-thadicha",
+    "ML-C101-uyaram",
+    "ML-R101-build-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-101-BUILD"
+  ],
+  "after": []
+}
