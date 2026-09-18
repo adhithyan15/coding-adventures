@@ -472,8 +472,23 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // ML-C89-mosham's formulation was narrowed in the same pass: it said the anusvara
   // becomes ma "before a word starting with a vowel", which veLLam + um -> veLLavum
   // contradicts (ML-C70-um); the plural takes it to -ngngaL instead (ML-C93-angal).
-  expect(coverage.covered).toBe(203);
-  expect(coverage.unmapped).toBe(40);
+  // 203 -> 204: ML-A1-LEX-52, beautiful and not. WRITTEN FROM AN ENUMERATION RATHER
+  // THAN A GUESS -- the correction taken from chapter 96, whose explanatory paragraph
+  // was wrong four times across five review rounds because the tidy version got
+  // written first and checked afterwards.
+  // The sweep ran BEFORE drafting. Every attested quality-plus-aaNu form in the
+  // corpus gives three welds: -am -> maaNu (sukhamaaNu, moshamaaNu, eLuppamaaNu),
+  // -i -> yaaNu (kuttiyaaNu), -athu -> thaaNu (nallathaaNu). The chapter teaches the
+  // first two and claims ONLY what the sweep supports -- a letter ARRIVES to carry
+  // aaNu's vowel, and which one depends on how the word ended. It says nothing about
+  // the third case, which no lesson here shows.
+  // NO DEDICATED WORD FOR "UGLY", deliberately: vrtthiketta would need an attributive
+  // form and a register judgement that could not be defended under review, the same
+  // call made about buddhimuttu in chapter 96. The far end is built with alla, which
+  // ML-C77 teaches STANDING APART and never welded -- and the lesson makes the
+  // not-welding its point, since sundaram keeps its anusvara because nothing attached.
+  expect(coverage.covered).toBe(204);
+  expect(coverage.unmapped).toBe(39);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -485,6 +500,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 203/243 points covered (84%)",
+    "malayalam A1 (partial inventory): 204/243 points covered (84%)",
   );
 }, 60_000);

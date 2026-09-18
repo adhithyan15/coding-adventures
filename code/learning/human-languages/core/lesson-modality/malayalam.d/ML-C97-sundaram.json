@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C97-sundaram",
+    "language": "malayalam",
+    "chapter": 97,
+    "sequence": 3440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a2bcb1fcd5e8abd"
+  },
+  "findings": []
+}

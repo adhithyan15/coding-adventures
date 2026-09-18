@@ -1,0 +1,8 @@
+{
+  "id": "ML-PATH-97-BEAUTY",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": ["ML-C97-sundaram", "ML-C97-bhangi", "ML-C97-alla-sundaram", "ML-R97-beauty-recall"],
+  "before": [],
+  "inline": ["ML-EXT-97-BEAUTY"],
+  "after": []
+}

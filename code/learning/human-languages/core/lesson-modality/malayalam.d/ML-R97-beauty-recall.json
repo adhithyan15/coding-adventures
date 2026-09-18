@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R97-beauty-recall",
+    "language": "malayalam",
+    "chapter": 97,
+    "sequence": 3470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e58eae5a7369ed4"
+  },
+  "findings": []
+}

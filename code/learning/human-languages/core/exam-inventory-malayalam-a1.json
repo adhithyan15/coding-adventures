@@ -4183,7 +4183,11 @@
       "id": "ML-A1-LEX-52",
       "category": "Padakosham (lexicon by domain)",
       "label": "attractiveness: beautiful, ugly",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C97-BEAUTIFUL-01",
+        "ML-LEX-C97-BEAUTY-01",
+        "ML-CONCEPT-C97-NOT-BEAUTIFUL-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -4193,7 +4197,7 @@
         "A1-NG6-03"
       ],
       "malayalamSpecific": false,
-      "note": "Not taught."
+      "note": "Chapter 97, and WRITTEN FROM AN ENUMERATION RATHER THAN A GUESS -- the correction taken from chapter 96, whose explanatory paragraph was wrong four times across five review rounds because the tidy version was written first and checked afterwards. Here the corpus was swept BEFORE drafting: every attested quality-plus-aaNu form gives three welds, -am -> maaNu (sukhamaaNu, moshamaaNu, eLuppamaaNu), -i -> yaaNu (kuttiyaaNu) and -athu -> thaaNu (nallathaaNu, from ML-C89-nallathu's -athu nominal). The chapter teaches the first two and claims only what that sweep supports: a letter ARRIVES to carry aaNu's vowel and which one depends on how the word ended. Nothing is said about the third case, which no lesson here shows. sundaram, bhangi, sundari and vrtthiketta were all grepped as tokens first -- zero occurrences each, so no forward-reference debt -- and the glyph pre-check was run with its control validated. NO DEDICATED WORD FOR 'UGLY' IS TAUGHT, and that is deliberate: vrtthiketta would need an attributive form and a register judgement that could not be defended under review, the same call made about buddhimuttu in chapter 96. The far end of the axis is built with alla, which ML-C77 teaches STANDING APART (njaan adhyaapakan alla), never welded -- and ML-C97-alla-sundaram makes the not-welding the lesson, since sundaram keeps its anusvara precisely because nothing attached to it. That is the honest A1 shape: one new quality gives both ends of the line."
     },
     {
       "id": "ML-A1-LEX-53",

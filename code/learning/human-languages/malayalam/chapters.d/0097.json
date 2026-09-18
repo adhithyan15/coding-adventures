@@ -1,0 +1,17 @@
+{
+  "chapter": 97,
+  "title": "Beautiful, and Not",
+  "label": "ch:ml-beauty",
+  "canDo": "I can say that something is beautiful, name beauty itself, and deny it.",
+  "payoff": {
+    "lesson": "ML-R97-beauty-recall",
+    "kind": "production",
+    "summary": "From cold: both ends of one quality, and which letter arrives when aaNu follows a word.",
+    "assesses": [
+      "ML-LEX-C97-BEAUTIFUL-01",
+      "ML-LEX-C97-BEAUTY-01",
+      "ML-CONCEPT-C97-NOT-BEAUTIFUL-01"
+    ],
+    "note": "WRITTEN FROM AN ENUMERATION RATHER THAN A GUESS, which is the correction taken from chapter 96's five review rounds. Before drafting, every attested quality-plus-aaNu form in the corpus was grepped: the welds are -am -> maaNu (sukhamaaNu, moshamaaNu, eLuppamaaNu), -i -> yaaNu (kuttiyaaNu) and -athu -> thaaNu (nallathaaNu). The chapter teaches the first two and says only what that enumeration supports -- a letter ARRIVES to carry aaNu's vowel, and which one depends on how the word ended. Nothing is claimed about a third case the lessons do not show. NO DEDICATED WORD FOR 'UGLY' IS TAUGHT: vrtthiketta would need an attributive form and a register judgement that could not be defended under review, so the far end of the axis is built with alla, which ML-C77 teaches STANDING APART (njaan adhyaapakan alla) -- and the lesson makes the not-welding the point, since sundaram keeps its anusvara precisely because nothing attached."
+  }
+}

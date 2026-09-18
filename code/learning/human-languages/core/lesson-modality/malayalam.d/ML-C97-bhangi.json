@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C97-bhangi",
+    "language": "malayalam",
+    "chapter": 97,
+    "sequence": 3450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:407543d53bba55c1"
+  },
+  "findings": []
+}
