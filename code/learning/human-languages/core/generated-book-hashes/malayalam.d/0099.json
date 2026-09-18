@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:a2edb547099c77e5",
+  "lessonIds": [
+    "ML-C99-paattu",
+    "ML-C99-paaduka",
+    "ML-C99-nrttham",
+    "ML-C99-katha",
+    "ML-R99-arts-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch99-songs-and-stories.tex"
+}
