@@ -3,7 +3,7 @@
 - `ML-A1-TIME-05` closes. Malayalam A1 coverage 200/243 -> **201/243**, with 42
   points unmapped. **Only two words are new.**
 - **innu** (today) and **innale** (yesterday) have **zero** occurrences across
-  all 393 lesson files, so both are clean introductions.
+  every Malayalam lesson file, so both are clean introductions.
 - **naale is not, and the difference decided the chapter's shape.** It appears in
   FIVE lessons -- `ML-C04-naale-kaanaam`'s phrase headword, `ML-C23-naal` (which
   even glosses it as "tomorrow" in passing), `ML-C32-kaanuka`,

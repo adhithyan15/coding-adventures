@@ -404,7 +404,7 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // checked before it was spent. The note called this "the cheapest grammar lesson
   // available", on the claim that -kal already sat inside four taught headwords:
   // nirangal, maasangal, shareera-bhaagangal, kaalangal. Those are FILE SLUGS. A
-  // token sweep of all 393 lesson files found the chillu-LL sequence -kal in exactly
+  // token sweep of every Malayalam lesson file found the chillu-LL sequence -kal in exactly
   // two words, thinkal (Monday) and makal (daughter), and NEITHER IS A PLURAL. The
   // learner had met the suffix zero times, not four.
   // What the same sweep DID find is better: NINGAL, the respectful you from chapter
@@ -420,7 +420,7 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // SPINE-DEFINITE-REFERENCE, so its atom is not available here. Chapter number is
   // not walk order.
   // 200 -> 201: ML-A1-TIME-05, today/yesterday/tomorrow. innu and innale have ZERO
-  // occurrences across all 393 lesson files, so both are clean introductions.
+  // occurrences across every Malayalam lesson file, so both are clean introductions.
   // NAALE IS NOT, AND THE DIFFERENCE DECIDED THE CHAPTER'S SHAPE. It appears in
   // FIVE lessons -- ML-C04-naale-kaanaam's phrase headword, ML-C23-naal (which
   // even glosses it as "tomorrow" in passing), ML-C32-kaanuka, ML-S01-letter-ka
@@ -449,6 +449,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 201/243 points covered (82%)",
+    "malayalam A1 (partial inventory): 201/243 points covered (83%)",
   );
 }, 60_000);

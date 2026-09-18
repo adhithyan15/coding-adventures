@@ -13,7 +13,7 @@ inside four taught headwords — *nirangal*, *maasangal*, *shareera-bhaagangal*,
 headword is the four colour words; `ML-C16-kollavarsham-maasangal.md` is named
 for the months and its headword is the twelve month names. The suffix is in the
 ASCII filename, which is written for the repository and never shown to a learner.
-A token sweep of all 393 lesson files found `-kal` in exactly **two** Malayalam
+A token sweep of every Malayalam lesson file found `-kal` in exactly **two** Malayalam
 words — *thinkal* (Monday) and *makal* (daughter) — and neither is a plural.
 Met zero times, not four.
 
