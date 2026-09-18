@@ -419,8 +419,25 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // SPINE-READ-SIGNS-AND-NOTICES, which the walk reaches AFTER
   // SPINE-DEFINITE-REFERENCE, so its atom is not available here. Chapter number is
   // not walk order.
-  expect(coverage.covered).toBe(200);
-  expect(coverage.unmapped).toBe(43);
+  // 200 -> 201: ML-A1-TIME-05, today/yesterday/tomorrow. innu and innale have ZERO
+  // occurrences across all 393 lesson files, so both are clean introductions.
+  // NAALE IS NOT, AND THE DIFFERENCE DECIDED THE CHAPTER'S SHAPE. It appears in
+  // FIVE lessons -- ML-C04-naale-kaanaam's phrase headword, ML-C23-naal (which
+  // even glosses it as "tomorrow" in passing), ML-C32-kaanuka, ML-S01-letter-ka
+  // and ML-S04-vowel-sign-aa -- and is owned by NONE of them, because ML-C04's
+  // headword is the multi-word "naale kaanaam" and continuity.ts keeps a
+  // multi-word headword WHOLE. Claiming naale as a headword would have converted
+  // that invisible debt into five forward references reaching back to sequence
+  // 240. So ML-C94-three-days is a GRAMMAR lesson about the word leaving the
+  // farewell, not a vocabulary lesson about the word -- which is also the honest
+  // description: the learner has had it since the first week and could not use it
+  // anywhere except to end a conversation. Only TWO words are new.
+  // The chapter then sets the three day words against the three verb endings
+  // already taught, and says plainly that the VERB carries the tense while the day
+  // word only says WHICH DAY. The tenses were built chapters ago and had nowhere
+  // to land.
+  expect(coverage.covered).toBe(201);
+  expect(coverage.unmapped).toBe(42);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -432,6 +449,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 200/243 points covered (82%)",
+    "malayalam A1 (partial inventory): 201/243 points covered (82%)",
   );
 }, 60_000);
