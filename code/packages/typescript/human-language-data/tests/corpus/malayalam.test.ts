@@ -453,8 +453,27 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // validate reads frontmatter and atom comments; the gates read structure; this
   // suite reads banned words, glyphs and pins. None of them reads an assertion
   // about how words are built. Same family as HL-C399.
-  expect(coverage.covered).toBe(202);
-  expect(coverage.unmapped).toBe(41);
+  // 202 -> 203: ML-A1-LEX-54, ease and difficulty. NOTE THE PERCENTAGE ROLLS OVER
+  // AGAIN, 83% -> 84%; it was computed, not assumed, after a stale 82% shipped past
+  // every check but this one in chapter 94.
+  // TWO WORDS AND NO NEW GRAMMAR: eLuppam + aaNu -> eLuppamaaNu is the same welding
+  // as sukhamaaNu (chapter 3), ishtamaaNu (34), kudumbamaaNu (35), moshamaaNu (89).
+  // TWO THINGS WERE WRONG IN THE FIRST DRAFT, BOTH CAUGHT BY THE REVIEWER AND NOT BY
+  // ANY GATE HERE.
+  // (1) The chapter claimed the join had never been pointed out. FALSE: ML-C89-mosham
+  // states it outright AND tests it in its own Wrap-up Recall, seven chapters earlier,
+  // in the lesson that gives the learner moshaM -- one of the three examples cited as
+  // silent precedent. Reframed: named once, at moshaM; here it stops being a fact
+  // about a given word and becomes something the learner does to words of their own.
+  // (2) "the anusvara turns into ma" described a SPELLING change as a SOUND change.
+  // The sign already IS the sound m; aaNu puts a vowel behind it and the same m needs
+  // the full letter to carry it. Nothing is heard to change -- which is the chapter's
+  // own best evidence, and the false version undercut it.
+  // ML-C89-mosham's formulation was narrowed in the same pass: it said the anusvara
+  // becomes ma "before a word starting with a vowel", which veLLam + um -> veLLavum
+  // contradicts (ML-C70-um); the plural takes it to -ngngaL instead (ML-C93-angal).
+  expect(coverage.covered).toBe(203);
+  expect(coverage.unmapped).toBe(40);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -466,6 +485,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 202/243 points covered (83%)",
+    "malayalam A1 (partial inventory): 203/243 points covered (84%)",
   );
 }, 60_000);

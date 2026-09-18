@@ -1,0 +1,502 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 96,
+  "title": "Easy and Difficult",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:8f79628858fd8ea5",
+  "lessons": [
+    {
+      "id": "ML-C96-eluppam",
+      "sequence": 3410,
+      "title": "എളുപ്പം (eḷuppaṁ) — easy",
+      "headword": "എളുപ്പം",
+      "romanization": "eḷuppaṁ",
+      "gloss": "easy — said of a thing, in a frame you have been using for most of the book",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9edd45baf0039fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this. Then say the little word that finishes a sentence by saying something is so."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എളുപ്പം — eḷuppaṁ — easy."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് എളുപ്പമാണ്. — itŭ eḷuppamāṇŭ — \"This is easy.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The word ends in ം, and you have been told before that a word ending that way says in advance how it will behave. Here is another thing it says."
+            },
+            {
+              "kind": "speech",
+              "text": "Put ആണ് after it and the two run together:"
+            },
+            {
+              "kind": "speech",
+              "text": "എളുപ്പം (eḷuppaṁ) + ആണ് becomes എളുപ്പമാണ്."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing happens to the sound. That ം is already the sound m, and here it stays exactly that. Only the writing moves: the m now has a vowel sitting after it, and the bare ം cannot carry one, so it is written with the full letter മ instead."
+            },
+            {
+              "kind": "speech",
+              "text": "Not every ending is this quiet. A case ending takes the ം away and puts ത്ത in its place — കേരളത്തിൽ, പുസ്തകത്തിന്റെ. The and ending puts വും there. The plural puts ങ്ങൾ, as you saw at പുസ്തകങ്ങൾ."
+            },
+            {
+              "kind": "speech",
+              "text": "ആണ് takes nothing away at all, and it is not alone in that: ഇല്ല does the same, which is why സാരമില്ല has carried a മ since your first pages."
+            },
+            {
+              "kind": "speech",
+              "text": "So what a word ending in ം does depends on what attaches to it."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the two words one after the other, quickly. You will not hear anything change — which is why you have been doing this for most of the book without noticing:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "സുഖമാണ്, (I am) well.",
+                "ഇഷ്ടമാണ്, (I) like it.",
+                "മോശമാണ്, (it) is bad."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of those is a word ending in ം with ആണ് welded on."
+            },
+            {
+              "kind": "speech",
+              "text": "You were shown this once, at മോശം. Here it is again — and this time it is not a fact about one word you were given. It is something you do, to a word you met a minute ago."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eḷuppaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eḷuppaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eḷuppamāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eḷuppamāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ eḷuppamāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ eḷuppamāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at സുഖമാണ് and എളുപ്പമാണ്, and find the part that is the same",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **സുഖമാണ്** and **എളുപ്പമാണ്**, and find the part that is the same]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It gets written as മ, and the sound does not change.) Does every ending leave the m alone? (No — a case ending puts ത്ത there instead, and the plural puts ങ്ങൾ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C96-prayaasam",
+      "sequence": 3420,
+      "title": "പ്രയാസം (prayāsaṁ) — difficult",
+      "headword": "പ്രയാസം",
+      "romanization": "prayāsaṁ",
+      "gloss": "difficult — the other half of the pair, built in exactly the same frame",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5000578f4e80b5f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say this is easy. All of it, in one breath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രയാസം — prayāsaṁ — difficult."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് പ്രയാസമാണ്. — itŭ prayāsamāṇŭ — \"This is difficult.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It ends in ം as well, so it behaves the way the last one did, and you did not have to be told a second time."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "ഇത് എളുപ്പമാണ്, this is easy.",
+                "ഇത് പ്രയാസമാണ്, this is difficult."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One word apart, and the sentence is the opposite. Everything around it holds still."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is a pair you can say about anything you can point at — a word, a letter, a road, a lesson. It is also the first thing most learners want to say about the language itself, and you can now say it in the language, which is a better place to complain from."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayāsaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayāsaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ prayāsamāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ prayāsamāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two sentences one after the other, and hear where they part",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two sentences one after the other, and hear where they part]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Easy and difficult? (എളുപ്പം (eḷuppaṁ), പ്രയാസം (prayāsaṁ).) Did the second one need a new rule? (No — it ends the same way, so it behaves the same way.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R96-ease-recall",
+      "sequence": 3430,
+      "title": "(easy, difficult) (eḷuppavuṁ prayāsavuṁ enna ōrmma) — from cold",
+      "headword": "(easy, difficult)",
+      "romanization": "eḷuppavuṁ prayāsavuṁ enna ōrmma",
+      "gloss": "cold retrieval of the pair, and of a welding that was already in the mouth before it was ever a rule",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89cd9d24011e50a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say this is easy, then say the opposite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the welding was already yours",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "ഇത് എളുപ്പമാണ്, this is easy.",
+                "ഇത് പ്രയാസമാണ്, this is difficult."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two new words, and no new grammar at all. Both end in ം, and a word ending in ം welds onto ആണ്: the m sound stays exactly where it was, and only its spelling moves — it is written മ, because the bare sign cannot carry the vowel that now sits after it."
+            },
+            {
+              "kind": "speech",
+              "text": "ആണ് takes nothing away, and it is not the only one that does not. A case ending puts ത്ത where the ം was — കേരളത്തിൽ, പുസ്തകത്തിന്റെ — the and ending puts വും, and the plural puts ങ്ങൾ. ആണ് leaves the m where it is, and so does ഇല്ല: സാരമില്ല has carried that മ since your first pages."
+            },
+            {
+              "kind": "speech",
+              "text": "You were doing it long before this chapter:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "സുഖമാണ്, well.",
+                "ഇഷ്ടമാണ്, liked.",
+                "മോശമാണ്, bad."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "It was named once, at മോശം, and it never had to become a rule you carried, because you had no word of your own to put through it. Now you have two, and the pattern stops being a fact about somebody else's word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A judgement you can make about anything you can point at."
+            },
+            {
+              "kind": "speech",
+              "text": "It is worth noticing what the chapter did not need. No new arrangement, no new ending, no exception. Two words, dropped into a frame that was already running. That is what most of this stage looks like now: the language was built first and the vocabulary arrives into it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eḷuppaṁ becomes eḷuppamāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eḷuppaṁ* → *eḷuppamāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayāsaṁ becomes prayāsamāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayāsaṁ* → *prayāsamāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ eḷuppamāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ eḷuppamāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ prayāsamāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ prayāsamāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one older word that welds the same way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one older word that welds the same way]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Easy and difficult? (എളുപ്പം (eḷuppaṁ), പ്രയാസം (prayāsaṁ).) How is the ം written when ആണ് follows? (As മ — the sound stays the same.) Was that new in this chapter? (No — you had been saying it for most of the book.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

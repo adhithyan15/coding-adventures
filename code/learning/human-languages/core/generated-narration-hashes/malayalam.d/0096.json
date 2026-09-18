@@ -1,0 +1,17 @@
+{
+  "language": "malayalam",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:8f79628858fd8ea5",
+  "lessonIds": [
+    "ML-C96-eluppam",
+    "ML-C96-prayaasam",
+    "ML-R96-ease-recall"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "malayalam/narration/ch96.txt",
+  "json": "malayalam/narration/ch96.json",
+  "textHash": "fnv1a64:901603407045fc02",
+  "jsonHash": "fnv1a64:321c78dd03e6a1c8",
+  "findings": []
+}

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 89,
-  "sourceHash": "fnv1a64:2ad1aab1f292a8cb",
+  "sourceHash": "fnv1a64:57bbb5835ded7f71",
   "lessonIds": [
     "ML-C89-nallathu",
     "ML-C89-mosham",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch89.txt",
   "json": "malayalam/narration/ch89.json",
-  "textHash": "fnv1a64:299d47d75ca66ab5",
-  "jsonHash": "fnv1a64:50fbfb2c338bc8ca",
+  "textHash": "fnv1a64:71b65d232e343922",
+  "jsonHash": "fnv1a64:a21720da86182b76",
   "findings": []
 }

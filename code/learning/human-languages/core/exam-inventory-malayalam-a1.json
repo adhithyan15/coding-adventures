@@ -4219,7 +4219,10 @@
       "id": "ML-A1-LEX-54",
       "category": "Padakosham (lexicon by domain)",
       "label": "ease and difficulty",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C96-EASY-01",
+        "ML-LEX-C96-DIFFICULT-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -4229,7 +4232,7 @@
         "A1-NG6-10"
       ],
       "malayalamSpecific": false,
-      "note": "Not taught."
+      "note": "Chapter 96. All four candidates were grepped as tokens (zero occurrences) and glyph-checked with the control validated first; romanization was DERIVED from the track (final anusvara 'm-with-dot' in 61 of 71 headwords and uniformly so since chapter 24, LLA 'l-with-dot' 18 of 18, doubled pa 'pp' 13 of 13, aaNu 'a-with-macron n-with-dot u-with-breve' per ML-C02-aanu's own field) rather than invented, which is how chapter 95's th/tth drift happened. TWO WORDS AND NO NEW GRAMMAR. TWO THINGS WERE WRONG IN THE FIRST DRAFT AND WERE CAUGHT BY THE REVIEWER, NOT BY ANY GATE. First, the chapter claimed the anusvara-plus-aaNu join had never been pointed out: FALSE. ML-C89-mosham states it in as many words and TESTS it in its Wrap-up Recall, seven chapters earlier, in the lesson that gives the learner moshaM -- one of the three examples this chapter cites as silent precedent. Reframed: it was named once, at moshaM, and here it stops being a fact about a given word and becomes something the learner does to words of their own. Second, 'the anusvara turns into ma' described a SPELLING change as a SOUND change. The sign already IS the sound m; when aaNu puts a vowel behind it the same m simply needs the full letter to carry that vowel. Nothing is heard to change -- which is the chapter's own best evidence that the learner has been doing this all along, and the false version quietly undercut it. ML-C89-mosham's own formulation was narrowed in the same pass: it said the anusvara becomes ma 'before a word starting with a vowel', which veLLam + um -> veLLavum contradicts (ML-C70-um), and the plural takes it to -ngngaL instead (ML-C93-angal). Three fates for one sign, so the rule is stated for the aaNu join only."
     },
     {
       "id": "ML-A1-LEX-55",

@@ -49,8 +49,8 @@ given you** — *valiyathŭ*, *ceṟiyathŭ*, *puthiyathŭ*, *paḻayathŭ* — 
 exceptions among them.
 
 **മോശം** filled the other hole. Five qualities and not one of them negative
-meant half of every opinion was unsayable. Before the *is* word, its **ം**
-becomes **മ**: **മോശമാണ്**.
+meant half of every opinion was unsayable. Before the *is* word, that **ം** is
+written **മ**: **മോശമാണ്**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C89-OPINION-01, ML-GRAMMAR-C72-ENNU-VERBS-01, ML-LEX-AANU-01] -->

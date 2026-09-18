@@ -1,0 +1,16 @@
+{
+  "chapter": 96,
+  "title": "Easy and Difficult",
+  "label": "ch:ml-ease",
+  "canDo": "I can say that something is easy or difficult.",
+  "payoff": {
+    "lesson": "ML-R96-ease-recall",
+    "kind": "production",
+    "summary": "From cold: the pair, and the welding of a word ending in anusvara onto aaNu, which the learner has been performing since near the beginning without being shown it.",
+    "assesses": [
+      "ML-LEX-C96-EASY-01",
+      "ML-LEX-C96-DIFFICULT-01"
+    ],
+    "note": "TWO atoms and NO NEW GRAMMAR. eLuppam + aaNu -> eLuppamaaNu is the same welding as sukhamaaNu (chapter 3), ishtamaaNu (34), kudumbamaaNu (35) and moshamaaNu (89). FIVE ROUNDS OF REVIEW ON ONE PARAGRAPH, and the history is worth keeping because each wrong version was NEATER THAN THE LANGUAGE. (a) The first draft said the join had never been pointed out: false, ML-C89-mosham states it, drills it and tests it. (b) 'the anusvara turns into ma' described a SPELLING change as a SOUND change; the sign already IS the m, and only the writing moves because the bare sign cannot carry a vowel. (c) The fix gave 'because a vowel now follows it' as the reason, which predicts *eLuppamum -- but veLLam + um gives veLLavum. (d) That fix's replacement claimed aaNu was the ONE ending that leaves the m standing: false, illa does the same, which is why saaramilla has carried its ma since chapter 3; and it attributed -tth- to the in-ending when pustakatthinRe shows it is the oblique stem before case endings generally. (e) The corrected list gave three outcomes and read as complete when there are FOUR -- the plural puts -ngngaL, taught three chapters earlier. The lesson now states the true four-way picture: a case ending puts -tth-, the and-ending puts -vum, the plural puts -ngngaL, and aaNu takes nothing away at all -- nor does illa. 'Gently' was dropped because aaNu is not a milder deletion but zero deletion. NOT resolved here and filed as HL-C400: ML-C83, ML-R83, ML-C91 and ML-C92 still tell the learner unqualified that the anusvara goes whenever anything attaches, which chapters 3, 89, 93 and 96 all break."
+  }
+}

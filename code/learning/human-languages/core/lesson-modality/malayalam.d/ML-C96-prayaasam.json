@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "ML-C89-mosham",
+    "id": "ML-C96-prayaasam",
     "language": "malayalam",
-    "chapter": 89,
-    "sequence": 3130,
+    "chapter": 96,
+    "sequence": 3420,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d94922dda656aa51"
+    "sourceHash": "fnv1a64:5000578f4e80b5f9"
   },
   "findings": []
 }
