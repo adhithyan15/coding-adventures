@@ -34287,7 +34287,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 4
+        "revisits": 6
       },
       {
         "atom": "ML-LEX-NJAAN-01",
@@ -140500,7 +140500,7 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 6701,
-    "usesBeforeIntroduction": 22332,
+    "usesBeforeIntroduction": 22331,
     "technicalUsesBeforeIntroduction": 5541,
     "technicalLessons": 3100,
     "worstTerms": [
