@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Joining Things Together",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9529b8a32456f9f2",
+  "sourceHash": "fnv1a64:16e24ed32f312d37",
   "lessons": [
     {
       "id": "ML-C70-um",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab1d2103ca7e9c65",
+      "sourceHash": "fnv1a64:6c7e70eae84d7de3",
       "notice": null,
       "blocks": [
         {
@@ -272,7 +272,11 @@
             },
             {
               "kind": "speech",
-              "text": "That last one looks like a change and is not. ൽ is the compressed, end-of-word form of ല; putting anything after it gives the full letter back, because it is no longer at the end."
+              "text": "That last one looks like a change and is not. ൽ is ല with its vowel stripped away, and a letter in that state has no vowel to give. -ഉം brings one, so the full ല comes back to carry it."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the vowel that decides, not the position. You have had നിങ്ങൾക്ക് since the age question, and its ൾ sits in the middle of the word and stays a ൾ — because ക്ക് brings no vowel onto it."
             }
           ]
         },
@@ -317,11 +321,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "why പാൽ ends up as പാലും rather than പാൽും",
+              "instruction": "why പാൽ ends up as പാലും rather than പാൽും, and why നിങ്ങൾക്ക് does not do the same thing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: why പാൽ ends up as പാലും rather than പാൽും]"
+              "source": "[YOU SAY: why പാൽ ends up as പാലും rather than പാൽും, and why **നിങ്ങൾക്ക്** does not do the same thing]"
             }
           ]
         },
@@ -338,7 +342,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does the ending go on every item or only the last? (Every one.) What happens to ൽ when something follows it? (It unfurls back to ല.) How many endings in a four-item list? (Four.)"
+              "text": "Does the ending go on every item or only the last? (Every one.) What happens to ൽ when a vowel follows it? (It unfurls back to ല.) And when a consonant does, as in നിങ്ങൾക്ക്? (It stays a chillu.) How many endings in a four-item list? (Four.)"
             }
           ]
         }
