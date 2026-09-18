@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C95-akathu-purathu",
+    "language": "malayalam",
+    "chapter": 95,
+    "sequence": 3390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0c8823f2d1dba15"
+  },
+  "findings": []
+}

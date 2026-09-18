@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:83cf4b2d1be9eabc",
+  "lessonIds": [
+    "ML-C95-thurakkuka",
+    "ML-C95-adaykkuka",
+    "ML-C95-akathu-purathu",
+    "ML-R95-open-closed-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch95-open-closed-in-out.tex"
+}

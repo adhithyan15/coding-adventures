@@ -4162,7 +4162,12 @@
       "id": "ML-A1-LEX-51",
       "category": "Padakosham (lexicon by domain)",
       "label": "open and closed, way in and way out",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C95-OPEN-01",
+        "ML-LEX-C95-CLOSE-01",
+        "ML-LEX-C95-INSIDE-01",
+        "ML-LEX-C95-OUTSIDE-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -4172,7 +4177,7 @@
         "A1-NG5-05"
       ],
       "malayalamSpecific": false,
-      "note": "The door is taught and neither opening nor closing it is."
+      "note": "Chapter 95. The old note was right and understated: 'the door is taught and neither opening nor closing it is.' vaathil has been named since chapter 52 and nothing could be done to it or about it. All six candidates -- thurakkuka, adaykkuka, thurakkoo, adaykkoo, akatthu, purathu -- were grepped as tokens first and every one had ZERO occurrences, so the chapter carries no forward-reference debt. TWO WORDS BUY FOUR FORMS: the asking ending is the long uu already owned from keLkkoo among the first commands, and the three tense endings come from a verb learned long before, so thurakkunnu/thurannu/thurakkum arrive already known. The label's second half is akatthu and purathu. A DRAFT CLAIM WAS CUT HERE: it said those two end like the place words for above and below, making one family. They do not -- mukalil and munnil end in -il, thaazhe in -e, akatthu and purathu in -tthu, three different endings. The honest observation replaced it and is better teaching: akatthu/purathu share a TAIL and part at the front, while innu/innale in the chapter before shared an OPENING and parted at the tail, so one end holds still while you listen to the other. No gate would have caught the false version; it is ordinary English prose making a claim about Malayalam morphology."
     },
     {
       "id": "ML-A1-LEX-52",

@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:630cff4ce6e6b2d4",
+  "lessonIds": [
+    "ML-C95-thurakkuka",
+    "ML-C95-adaykkuka",
+    "ML-C95-akathu-purathu",
+    "ML-R95-open-closed-recall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch95.txt",
+  "json": "malayalam/narration/ch95.json",
+  "textHash": "fnv1a64:8bcd6790e8c1da09",
+  "jsonHash": "fnv1a64:9c87a8bbe4e9d575",
+  "findings": []
+}
