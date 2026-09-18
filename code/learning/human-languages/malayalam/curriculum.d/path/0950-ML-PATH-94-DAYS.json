@@ -1,0 +1,15 @@
+{
+  "id": "ML-PATH-94-DAYS",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ML-C94-innu",
+    "ML-C94-innale",
+    "ML-C94-three-days",
+    "ML-R94-day-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-94-DAYS"
+  ],
+  "after": []
+}

@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:195fc744122e1c2b",
+  "lessonIds": [
+    "ML-C94-innu",
+    "ML-C94-innale",
+    "ML-C94-three-days",
+    "ML-R94-day-recall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch94.txt",
+  "json": "malayalam/narration/ch94.json",
+  "textHash": "fnv1a64:6632ad99645d17aa",
+  "jsonHash": "fnv1a64:02855b5a6d43919c",
+  "findings": []
+}

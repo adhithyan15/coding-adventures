@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:1fda66f55910778b",
+  "lessonIds": [
+    "ML-C94-innu",
+    "ML-C94-innale",
+    "ML-C94-three-days",
+    "ML-R94-day-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch94-yesterday-today-tomorrow.tex"
+}
