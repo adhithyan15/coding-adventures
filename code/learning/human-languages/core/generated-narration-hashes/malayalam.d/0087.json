@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 87,
-  "sourceHash": "fnv1a64:d29adbf9ad91acc6",
+  "sourceHash": "fnv1a64:3521ac2412b02b27",
   "lessonIds": [
     "ML-C87-accusative",
     "ML-C87-animacy",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch87.txt",
   "json": "malayalam/narration/ch87.json",
-  "textHash": "fnv1a64:3220782fa3b2472c",
-  "jsonHash": "fnv1a64:9819bc9ed4330dac",
+  "textHash": "fnv1a64:05e5cfe96bc556cd",
+  "jsonHash": "fnv1a64:cbc2725e76cd0bd0",
   "findings": []
 }

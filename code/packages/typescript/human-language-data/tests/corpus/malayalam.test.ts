@@ -507,16 +507,24 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // with the half-u given its own paragraph and its own recall question.
   // Both rounds were latent-false in the same way: consistent with every token in
   // the repository and wrong about the language, so no gate could see either.
-  // EIGHT merged lessons carried the broad ya-rule, and the count is not the
-  // point -- it went three -> five -> eight across two review rounds, each time
-  // because the sweep's grep was narrower than the defect, so the record NAMES
-  // them: ML-C70-um (2390), ML-C70-um-more (2400), ML-C70-o (2410),
-  // ML-C83-keralathil (2900), ML-C87-animacy (3050), ML-C91-kada (3200),
-  // ML-C97-bhangi (body AND Wrap-up, 3450), ML-R97-beauty-recall (3460).
-  // A NINTH, ML-C78-ude (2700), is filed as HL-C402 rather than patched: its
-  // claim is a two-row ending-selection TABLE, and pashu lands in the wrong
-  // column of it (pashuvinte, not *pashuyute) as well as taking the wrong glide.
-  // All nine are latent-false the same way -- pashu is the only u-final noun
+  // TEN merged lessons carried the broad ya-rule, and the count is not the
+  // point -- it went three -> five -> eight -> ten across three review rounds,
+  // each time because the sweep's grep was narrower than the defect, so the
+  // record NAMES them: ML-C70-um (2390), ML-C70-um-more (2400), ML-C70-o (2410),
+  // ML-R70-cherkkuka (2420), ML-C83-keralathil (2900), ML-C87-animacy (3050),
+  // ML-R87-object-recall (3070), ML-C91-kada (3200), ML-C97-bhangi (body AND
+  // Wrap-up, 3450), ML-R97-beauty-recall (3470).
+  // THE SWEEP RULE THIS PRODUCED: whenever ML-Cnn-x is narrowed, ML-Rnn-* is a
+  // site until checked. Chapter 98 learned that on ML-C97-bhangi, whose body was
+  // narrowed while its Wrap-up still carried the claim, and then failed to
+  // generalise it -- so three more recall partners went another round untouched.
+  // THREE FURTHER SITES are filed as HL-C402 rather than patched: ML-C78-ude
+  // (2700), ML-R78-genitive-recall (2710) and ML-C84-mukalil (2920) state it of
+  // the GENITIVE, where it selects an ENDING rather than a glide, and pashu lands
+  // in the wrong column (pashuvinte, not *pashuyute) as well as taking the wrong
+  // glide -- so naming the vowel is not sufficient there. ML-R78 repeats the
+  // table AND supplies the false answer as a Wrap-up drill.
+  // All thirteen are latent-false the same way -- pashu is the only u-final noun
   // taught and none of its oblique forms appears in the corpus, so no token
   // contradicts any of them. ML-C70-o's fix was itself wrong on the first try:
   // it called chaaya AA-final, and ML-C39-chaaya's own romanization (chaaya,

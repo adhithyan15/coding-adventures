@@ -51,8 +51,8 @@ the object is.** A living thing being acted on takes the ending; a lifeless one
 ordinarily does not — a question no European language the reader is likely to
 know asks in quite that way.
 
-How it attaches is nothing new: **a vowel-final word takes a -യ- to join, and a
-word ending in the standalone ൻ opens it back into a plain ന.** The same last
+How it attaches is nothing new: **a word ending in ഇ or അ takes a -യ- to join,
+and a word ending in the standalone ൻ opens it back into a plain ന.** The same last
 sound that decided the owner-ending decides this one.
 
 ## What you've built
