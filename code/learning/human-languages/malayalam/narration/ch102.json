@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 102,
   "title": "Saying When",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a1c705f0825dcac3",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:c118a8e705de7a3f",
   "lessons": [
     {
       "id": "ML-C102-manikku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5a7cc4ebf954a75",
+      "sourceHash": "fnv1a64:cce03bc9406b7eb7",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say two o'clock. Then say the ending chapter 6 gave you for to and for."
+              "text": "Say two o'clock. Then say the ending you met as to and for — the one inside എനിക്ക്."
             }
           ]
         },
@@ -64,7 +64,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing about the ending is new. You built this exact landing in chapter 6: ജോലി ends in ി, so it took ക്ക് and gave ജോലിക്ക്. മണി ends in that same letter and takes that same ending, with the same visible seam — മണി plus ക്ക്."
+              "text": "Nothing about the ending is new. You built this exact landing when you met your first case ending: ജോലി ends in the vowel sign ി, so it took ക്ക് and gave ജോലിക്ക്. മണി ends in that same vowel and takes that same ending, with the same visible seam — മണി plus ക്ക്."
             }
           ]
         },
@@ -75,7 +75,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Chapter 6 glossed this ending to and for, and English will not accept either one here: to two o'clock is not a thing anybody says. English reaches for a third word, at."
+              "text": "That first case ending was glossed to and for, and English will not accept either one here: to two o'clock is not a thing anybody says. English reaches for a third word, at."
             },
             {
               "kind": "speech",
@@ -94,7 +94,7 @@
             },
             {
               "kind": "speech",
-              "text": "You know that sentence already. Chapter 94 stood ഇന്ന് at the front of it, and നാളെ, and told you the verb at the back is what carries the tense. The front is a slot for saying when."
+              "text": "You know that slot already. നാളെ has stood in it in front of this very sentence. ഇന്ന് has stood in it too — in front of the same sentence with a present ending on the verb, because the day word and the verb ending have to agree. The front is a slot for saying when, and the verb at the back is what carries the tense."
             },
             {
               "kind": "speech",
@@ -164,7 +164,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is the difference between രണ്ട് മണി and രണ്ട് മണിക്ക് (raṇṭŭ maṇikkŭ)? (The first names the hour; the second puts something at it.) Which ending did you add? (ക്ക് — the dative from chapter 6.) Why does English need a different word here than it did for to me? (English splits the job across to, for and at; Malayalam does not.)"
+              "text": "What is the difference between രണ്ട് മണി and രണ്ട് മണിക്ക് (raṇṭŭ maṇikkŭ)? (The first names the hour; the second puts something at it.) Which ending did you add? (ക്ക് — your first case ending.) Why does English need a different word here than it did for to me? (English splits the job across to, for and at; Malayalam does not.)"
             }
           ]
         }
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfc25003e36c484c",
+      "sourceHash": "fnv1a64:72b9211a8594d235",
       "notice": null,
       "blocks": [
         {
@@ -210,7 +210,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Chapter 10 laid the seven day-names out in a table and left them there. You have read തിങ്കളാഴ്ച and never once used it. Use it now:"
+              "text": "The day-name lesson laid all seven of them out in a table and left them there. You have read തിങ്കളാഴ്ച and never once used it. Use it now:"
             },
             {
               "kind": "speech",
@@ -218,7 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that sentence twice and look for the ending. There is none. The day-name went into the when-slot exactly as it stands in chapter 10's table, with nothing added to the front of it and nothing added to the back."
+              "text": "Read that sentence twice and look for the ending. There is none. The day-name went into the when-slot exactly as it stands in that table, with nothing added to the front of it and nothing added to the back."
             }
           ]
         },
@@ -258,7 +258,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The day-name is in good company. ഇന്ന് and നാളെ stand in that same slot bare, and they have since chapter 94. A named day behaves like today and tomorrow, not like a clock time."
+              "text": "The day-name is in good company. ഇന്ന് and നാളെ stand in that same slot bare, and have since the lesson that first stood a day word in front of a whole sentence. A named day behaves like today and tomorrow, not like a clock time."
             },
             {
               "kind": "speech",
@@ -328,7 +328,7 @@
             },
             {
               "kind": "speech",
-              "text": "What do you add to തിങ്കളാഴ്ച to say on Monday? (Nothing.) What do you add to രണ്ട് മണി to say at two? (ക്ക്.) Which two words from chapter 94 stand in that slot bare, the way the day-name does? (ഇന്ന് and നാളെ.)"
+              "text": "What do you add to തിങ്കളാഴ്ച to say on Monday? (Nothing.) What do you add to രണ്ട് മണി to say at two? (ക്ക്.) Which two day words stand in that slot bare, the way the day-name does? (ഇന്ന് and നാളെ.)"
             }
           ]
         }
@@ -337,17 +337,17 @@
     {
       "id": "ML-C102-ethra-manikku",
       "sequence": 3690,
-      "title": "എത്ര മണിക്ക് (ethra maṇikkŭ) — at what time?",
+      "title": "എത്ര മണിക്ക് (ethra maṇikkŭ) — asking at which hour",
       "headword": "എത്ര മണിക്ക്",
       "romanization": "ethra maṇikkŭ",
-      "gloss": "at what time? — the question word that has asked age, distance and price, now asking the hour",
+      "gloss": "at what time? — one ending away from a question you have been able to ask since you learned the verb for asking",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0785ff69d8fcaf9a",
+      "sourceHash": "fnv1a64:64eb42bcb3027501",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +363,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say how far. Say how much. Then say at two o'clock."
+              "text": "Ask what hour it is — you have been able to since you learned the verb for asking. Then say at two o'clock."
             }
           ]
         },
@@ -374,7 +374,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എത്ര is not new. It asked how old in chapter 19, how far in chapter 81 and how much in chapter 91. Two of those three are built the way you need here — എത്ര, then the thing you want measured:"
+              "text": "എത്ര മണി is already yours. The lesson that gave you the verb for asking put ethra maṇi — what hour — in your mouth and drilled it. This lesson is one ending away from it."
             },
             {
               "kind": "table",
@@ -384,16 +384,15 @@
                 ""
               ],
               "columns": 3,
-              "rowCount": 3,
+              "rowCount": 2,
               "utterances": [
-                "എത്ര ദൂരം, ethra dūraṁ, how far?",
-                "എത്ര രൂപ, ethra rūpa, how much?",
-                "എത്ര മണിക്ക്, ethra maṇikkŭ, at what time?"
+                "എത്ര മണി, ethra maṇi, what time is it.",
+                "എത്ര മണിക്ക്, ethra maṇikkŭ, at what time."
               ]
             },
             {
               "kind": "speech",
-              "text": "Put a hand over the question word and what is left is a distance, a price, and an hour."
+              "text": "The first asks somebody to name the hour. The second asks at which hour a thing will happen. That is the whole distance between them, and it is the same ക്ക് you put on the hour at the start of this chapter."
             }
           ]
         },
@@ -404,15 +403,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "In how far and how much the noun stands bare. In എത്ര മണിക്ക് (ethra maṇikkŭ) it carries ക്ക്. എത്ര itself is identical in all three — the ending belongs to the hour, not to the question."
+              "text": "എത്ര never changes. Every time you have used it, it has stood in front of a bare noun — എത്ര ദൂരം (ethra dūraṁ, how far), എത്ര രൂപ (ethra rūpa, how many rupees)."
             },
             {
               "kind": "speech",
-              "text": "And the answer gives it back:"
-            },
-            {
-              "kind": "speech",
-              "text": "— എത്ര മണിക്ക്? — ethra maṇikkŭ? — രണ്ട് മണിക്ക്. — raṇṭŭ maṇikkŭ."
+              "text": "Put a hand over the question word in those two and what is left is a distance and a rupee, standing bare. Do it to എത്ര മണിക്ക് (ethra maṇikkŭ) and what is left is an hour with an ending on it. The ending is the one thing here the question word did not bring."
             }
           ]
         },
@@ -423,11 +418,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The ending is doing some of the asking. Drop it and the question changes: എത്ര മണി asks somebody to name the hour, and എത്ര മണിക്ക് (ethra maṇikkŭ) asks at which hour a thing will happen."
+              "text": "The answer comes back wearing the same ending:"
             },
             {
               "kind": "speech",
-              "text": "The day-name has no such pair, because it never took the ending at all."
+              "text": "— എത്ര മണിക്ക്? — ethra maṇikkŭ? — രണ്ട് മണിക്ക്. — raṇṭŭ maṇikkŭ."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth listening for. A day-name would not do this, because for saying when it does not take the ending in the first place — so there is nothing for it to give back."
             }
           ]
         },
@@ -445,11 +444,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ethra dūraṁ, ethra rūpa, ethra maṇikkŭ",
+              "instruction": "ethra maṇi?, then ethra maṇikkŭ? — and name the difference",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ethra dūraṁ*, *ethra rūpa*, *ethra maṇikkŭ*]"
+              "source": "[YOU SAY: *ethra maṇi?*, then *ethra maṇikkŭ?* — and name the difference]"
             },
             {
               "kind": "prompt",
@@ -463,11 +462,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ethra maṇi?, then ethra maṇikkŭ? — and name the difference",
+              "instruction": "ethra dūraṁ, ethra rūpa, ethra maṇikkŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ethra maṇi?*, then *ethra maṇikkŭ?* — and name the difference]"
+              "source": "[YOU SAY: *ethra dūraṁ*, *ethra rūpa*, *ethra maṇikkŭ*]"
             },
             {
               "kind": "prompt",
@@ -493,7 +492,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you ask at what time? (എത്ര മണിക്ക് (ethra maṇikkŭ).) Which of the two words carries the ending? (മണി — the question word never changes.) What does the answer wear? (The same ending — രണ്ട് മണിക്ക് (raṇṭŭ maṇikkŭ).)"
+              "text": "How do you ask at what time? (എത്ര മണിക്ക് (ethra maṇikkŭ).) What does the same question without the ending ask? (What time is it — and you have had that one for a long while.) What does the answer wear? (The same ending — രണ്ട് മണിക്ക് (raṇṭŭ maṇikkŭ).)"
             }
           ]
         }
@@ -507,13 +506,20 @@
       "romanization": "thiṅkaḷāzhcha raṇṭŭ maṇikkŭ",
       "gloss": "on Monday at two o'clock — both answers in the same slot, the wider one first",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:562654c9dff9a388",
-      "notice": null,
+      "sourceHash": "fnv1a64:ce88d15c118ee960",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -547,7 +553,7 @@
             },
             {
               "kind": "speech",
-              "text": "Neither piece changed to make room for the other. The day-name is the bare word from chapter 10. The hour is the dative you built two lessons ago. They stand side by side in the one slot at the front, and the sentence behind them is untouched."
+              "text": "Neither piece changed to make room for the other. The day-name is the bare word from the table where you met all seven. The hour is the dative you built at the start of this chapter. They stand side by side in the one slot at the front, and the sentence behind them is untouched."
             }
           ]
         },
@@ -590,7 +596,7 @@
             },
             {
               "kind": "speech",
-              "text": "Everything else was already yours — the hour from chapter 18, the day-names from chapter 10, the question word since chapter 19, the slot at the front from chapter 94. What was missing was never vocabulary. It was the joint, and the joint is ക്ക് on the hour and nothing at all on the day."
+              "text": "Everything else was already yours — the word that names an hour, the table of day-names, the question word you have asked ages and distances and prices with, and the slot at the front that today and tomorrow stand in. What was missing was never vocabulary. It was the joint, and the joint is ക്ക് on the hour and nothing at all on the day."
             }
           ]
         },
@@ -675,7 +681,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d17086899dc9243",
+      "sourceHash": "fnv1a64:234fb01a248613f9",
       "notice": null,
       "blocks": [
         {
@@ -720,7 +726,7 @@
             },
             {
               "kind": "speech",
-              "text": "If you can remember which one is which, you have the chapter. The day-name stands in the when-slot the way ഇന്ന് and നാളെ have stood there since chapter 94. The hour does not; it takes the dative first."
+              "text": "If you can remember which one is which, you have the chapter. The day-name stands in the when-slot the way ഇന്ന് and നാളെ have stood there since a day word first went in front of a whole sentence. The hour does not; it takes the dative first."
             }
           ]
         },
@@ -731,7 +737,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "No word in this chapter was new. That is unusual enough to say out loud. The hour came from chapter 18, the day-names from chapter 10, the question word you have used since chapter 19, and the ending itself from chapter 6, where it meant to and for and landed on ജോലി exactly as it now lands on മണി."
+              "text": "No word in this chapter was new. That is unusual enough to say out loud. The hour came from the lesson that named it, the day-names from their table, the question word from the day you asked somebody their age, and the ending itself from your first case ending — where it meant to and for and landed on ജോലി exactly as it now lands on മണി."
             },
             {
               "kind": "speech",
@@ -780,11 +786,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two words from chapter 94 that behave like the day-name",
+              "instruction": "the two day words that behave like the day-name",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two words from chapter 94 that behave like the day-name]"
+              "source": "[YOU SAY: the two day words that behave like the day-name]"
             }
           ]
         },

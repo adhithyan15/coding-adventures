@@ -21,15 +21,23 @@ week*. Calling them "a different word for the same idea" where the idea has been
 named as "day" is loose in a lesson that is otherwise careful about exactly this
 kind of cousin-language comparison.
 
-**Why this is filed and not fixed here.** The obvious repair — write **ആഴ്ച** in
-Malayalam letters — introduces a Malayalam token into chapter 10 that **no
-lesson owns**: **ആഴ്ച** is a headword nowhere in the corpus and appears only in
-this lesson's romanized etymology hook. Under this repo's own rules that creates
-script debt at sequence 380, which is not a thing to do as a side effect of a
-chapter about telling the time. The alternatives are to drop the script spelling
-and leave the romanization (symmetrical with nothing else in the sentence, but
-free of debt), or to give **ആഴ്ച** an owner — and that is a decision about
-chapter 10, made by somebody looking at chapter 10.
+**Why this is filed and not fixed here — and the first version of this
+paragraph was wrong.** It argued that writing **ആഴ്ച** in Malayalam letters would
+introduce a token into chapter 10 that no lesson owns, because the word
+"appears only in this lesson's romanized etymology hook". **That is false, and
+this lesson's own frontmatter refutes it.** `ML-C10-azhcha.md:15` already carries
+**ആഴ്ച** in Malayalam script — U+0D06 U+0D34 U+0D4D U+0D1A — inside the
+`etymology_hook`. The script token is already in the file. Writing it in the body
+adds nothing the lesson does not already carry, so **the script half of this is
+a one-character-class fix with no debt attached**, and the deferral rationale was
+an invention.
+
+What is genuinely a chapter-10 decision is the **gloss**: whether to keep calling
+**ആഴ്ച** "a different word for the same idea" where the idea has been named as
+*day*, and whether the word wants a headword owner at all now that a later
+chapter uses **തിങ്കളാഴ്ച** in a sentence. That is the part worth somebody's
+attention, and it is why this stays filed rather than patched mid-chapter — not
+the debt story the first draft told.
 
 **What closing this needs.** Decide the ownership question first, then fix the
 script and the gloss together. Check the same sentence's claim that the two

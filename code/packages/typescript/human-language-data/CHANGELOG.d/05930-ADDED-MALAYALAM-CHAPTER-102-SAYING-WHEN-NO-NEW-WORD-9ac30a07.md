@@ -14,8 +14,8 @@
 **The parts half is right. The case is wrong.** Malayalam fixes a clock time
 with the **dative**, not the locative — **രണ്ട് മണിക്ക്**, with no form in
 **-ഇൽ** anywhere near it — and the dative is `ML-C06-dative-ikku`, taught at
-sequence **320**, eleven lessons into the book. The point was never waiting on a
-suffix. It was waiting on a joint.
+sequence **320**, in the same chapter that gives the reader **എനിക്ക്**. The point
+was never waiting on a suffix. It was waiting on a joint.
 
 That is the third stale note in seven tranches, and it was caught by the
 standing rule to verify a note before scoping from it rather than by any gate.
@@ -45,13 +45,25 @@ prepositions; the lesson says so rather than presenting *at* as a new case.
 | **എത്ര രൂപ** | *ethra rūpa* | ch. 91 — noun bare |
 | **എത്ര മണിക്ക്** | *ethra maṇikkŭ* | here — noun carries **ക്ക്** |
 
-**The draft counted these and got it wrong.** It said *"the third question you
-have asked with this word"*, and **എത്ര** first appears in `ML-C19-vayassu` at
-sequence **480**, inside the larger frame **നിങ്ങൾക്ക് എത്ര വയസ്സുണ്ട്?** — which
-makes this the fourth, not the third. The lesson now **names** the three
-witnesses (chapters 19, 81 and 91) and says that two of them have the shape
-this one needs. That is the *name lessons, never count them* rule, caught on
-its own file this time rather than in review.
+#### The witness list was wrong twice, and the second time was the correction
+
+The draft said *"the third question you have asked with this word"*. A sweep
+found `ML-C19-vayassu` at sequence 480 and the count became three named
+witnesses. **Review then found `ML-C34-codikkuka` at sequence 760**, which
+drills ***ethra maṇi?*, "what hour?"** in its own Guided Practice — so the
+learner has been able to **ask the hour** for 2,930 sequence points.
+
+That is not a missing row in a list. It is the lesson's thesis. The question
+half of this point was **one ending short, not one phrase short**, and the
+lesson is rewritten around that: **എത്ര മണി** is presented as already owned, and
+the ending is the whole distance between *what time is it* and *at what time*.
+
+**Two passes over the same sentence, and the count was wrong in both.** Naming
+witnesses does not help when the sweep that finds them is keyed on script:
+`ML-C34` gives the phrase in **romanization only**, so a script-keyed grep for
+**എത്ര** returns `ML-C19`, `ML-C81` and `ML-C91` and misses it. That is the
+`HL-C402` failure — a census keyed on one of a construct's two spellings —
+arriving again in a different file.
 
 The question word never changes. The ending belongs to the hour, and the answer
 gives it back: **എത്ര മണിക്ക്? — രണ്ട് മണിക്ക്.**
@@ -82,18 +94,49 @@ one that has cost this track four of its last six review rounds.
 
 #### Romanizations are copied, not re-derived
 
-From the lesson that owns each word: **raṇṭŭ** from `ML-C93-counted`, **ethra**
-from `ML-C81-dooram` *and* `ML-C91-ethra-rupa` (both spell it *ethra*, not
-*etra*), **ñān pōkuṁ** from `ML-C94-three-days`, and **thiṅkaḷāzhcha** from
-`ML-C10-azhcha`'s own *thiṅkaḷ* plus *āzhcha* — which keeps chapter 10's older
-**zh** and **th** rather than the corpus's more recent **ḻ** and **t**, because
-the learner meets the word in that table first and should meet the same spelling
-twice.
+From the **headword** romanization of the lesson that owns each word: **raṇṭŭ**
+from `ML-C93-counted`, **ethra** from `ML-C81-dooram` *and* `ML-C91-ethra-rupa`
+(both spell it *ethra*, not *etra*), **ñān pōkuṁ** from `ML-C94-three-days`, and
+**thiṅkaḷāzhcha** from `ML-C10-azhcha`'s own *thiṅkaḷ* plus *āzhcha* — which
+keeps chapter 10's older **zh** and **th** rather than the corpus's more recent
+**ḻ** and **t**, because the learner meets the word in that table first and
+should meet the same spelling twice.
+
+**"From the owning lesson" is doing less work than it sounds like, and review
+established the limit.** `ML-C18-mani`'s *headword* reads *maṇi* and its *body*
+reads *mani*, in the very phrase this chapter builds on: `ML-C18-mani.md:73`
+prints `**രണ്ട് മണി.** — "Two o'clock." (*raṇṭŭ mani*)`. And `ML-W07` prints
+രണ്ട് as *randu* where `ML-C93-counted` gives *raṇṭŭ*. So the same word is
+spelled two ways **inside one lesson** and two ways **across two lessons**, in
+**ṇ/n** and **ṭ/d** — not only in the final vowel. `HL-C405` is widened
+accordingly: a census keyed on *u* against *ŭ* would not have seen either of
+these, which would have reproduced one level up exactly the failure that shard
+was filed to avoid. (`ML-C34-codikkuka` writes *ethra maṇi*, with the **ṇ**,
+which is why this chapter's spelling is not an invention.)
 
 **The corpus romanizes word-final chandrakkala two ways** — *jōlikku* in chapter
 6 against *raṇṭŭ* in chapter 93 — and this chapter does not resolve it. **ജോലിക്ക്**
 is quoted in **script only** so the two spellings never stand side by side on one
 page, and the inconsistency is filed rather than papered over.
+
+#### One metric moves, and it is the recommended shape's price
+
+`atomMeasurementBlindLessons` goes **9 → 10**. `ML-C102-day-and-hour` is a
+synthesis lesson with an **empty `introduces` list**, and `ramp.ts:573` counts a
+lesson that introduces no atom as unmeasurable. That shape is the one `lessons.d`
+prescribes — a chapter's last lessons must not introduce atoms, or the atom can
+never be revisited — so the blind count is what the prescription costs. Recorded
+rather than engineered away.
+
+#### One limit on the close
+
+The point's label is **copular**: *"it is on Monday, it is at three"*. This
+chapter produces no copular sentence. It locates an event with a **fronted
+adjunct** — തിങ്കളാഴ്ച രണ്ട് മണിക്ക് ഞാൻ പോകും — which is the ordinary Malayalam
+way of doing it; *"it is at two"* would need **-ആണ്** on the time phrase and is
+not taught here. Both halves of the **function** are delivered, on a named day
+and at a named hour. The copular framing is not, and the inventory note now says
+so rather than claiming the label whole.
 
 #### Verification
 

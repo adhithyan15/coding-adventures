@@ -18,7 +18,8 @@ were never assembled; that half survived verification unchanged.
 
 **The grammar half named the wrong case.** Malayalam fixes a clock time with the
 **dative** — *raṇṭŭ maṇikku* — and there is no form in **-il** anywhere near it.
-The dative had been taught since sequence **320**, eleven lessons into the book.
+The dative had been taught since sequence **320**, in the same chapter that gave
+the reader **എനിക്ക്**.
 A headword sweep for the words the note names finds nothing wrong: the words are
 all there or all absent exactly as it says. The defect is in the sentence
 explaining *why* the point is open, and the only thing that finds it is knowing

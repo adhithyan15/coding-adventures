@@ -47,16 +47,18 @@ Two answers to the same question, and only one of them is dressed:
 | **രണ്ട് മണിക്ക്** | *raṇṭŭ maṇikkŭ* | at two o'clock — **ക്ക്** |
 
 If you can remember which one is which, you have the chapter. The day-name
-stands in the when-slot the way **ഇന്ന്** and **നാളെ** have stood there since
-chapter 94. The hour does not; it takes the dative first.
+stands in the when-slot the way **ഇന്ന്** and **നാളെ** have stood there since a
+day word first went in front of a whole sentence. The hour does not; it takes
+the dative first.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-PHRASE-C102-WHAT-TIME-01, ML-LEX-C81-HOW-MUCH-01] -->
 
 **No word in this chapter was new.** That is unusual enough to say out loud.
-The hour came from chapter 18, the day-names from chapter 10, the question word
-you have used since chapter 19, and the ending itself from chapter 6, where it
-meant *to* and *for* and landed on **ജോലി** exactly as it now lands on **മണി**.
+The hour came from the lesson that named it, the day-names from their table, the
+question word from the day you asked somebody their age, and the ending itself
+from your first case ending — where it meant *to* and *for* and landed on
+**ജോലി** exactly as it now lands on **മണി**.
 
 What you could not do before was **fix an arrangement in time** — and what was
 missing was one joint, not a vocabulary list.
@@ -68,7 +70,7 @@ missing was one joint, not a vocabulary list.
 - [YOU SAY: *thiṅkaḷāzhcha*, then *raṇṭŭ maṇikkŭ*]
 - [YOU SAY: *ethra maṇikkŭ?* and answer it]
 - [YOU SAY: *thiṅkaḷāzhcha raṇṭŭ maṇikkŭ ñān pōkuṁ*]
-- [YOU SAY: the two words from chapter 94 that behave like the day-name]
+- [YOU SAY: the two day words that behave like the day-name]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C102-BARE-DAY-01, ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-PHRASE-C102-WHAT-TIME-01] -->

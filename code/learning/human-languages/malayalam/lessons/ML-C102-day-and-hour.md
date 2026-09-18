@@ -46,7 +46,8 @@ You have two answers to **when**, and real arrangements usually need both:
 > "On Monday at two o'clock I will go."
 
 **Neither piece changed to make room for the other.** The day-name is the bare
-word from chapter 10. The hour is the dative you built two lessons ago. They
+word from the table where you met all seven. The hour is the dative you built at
+the start of this chapter. They
 stand side by side in the one slot at the front, and the sentence behind them is
 untouched.
 
@@ -70,9 +71,10 @@ than a trap — you can carry your instinct straight across.
 
 Count what this chapter actually added: **one ending, on one kind of word.**
 
-Everything else was already yours — the hour from chapter 18, the day-names from
-chapter 10, the question word since chapter 19, the slot at the front from
-chapter 94. What was missing was never vocabulary. It was the joint, and the
+Everything else was already yours — the word that names an hour, the table of
+day-names, the question word you have asked ages and distances and prices with,
+and the slot at the front that *today* and *tomorrow* stand in. What was missing
+was never vocabulary. It was the joint, and the
 joint is **ക്ക്** on the hour and nothing at all on the day.
 
 ## Guided Practice

@@ -29,12 +29,28 @@ the two spellings never appear side by side on one page, and writes *maṇikkŭ*
 for the new form. That is a dodge, deliberately, and it is recorded here so the
 dodge does not read as a decision.
 
-**What closing this needs.** An enumeration of every Malayalam headword and body
-romanization ending in a consonant plus chandrakkala, in **both** spellings —
-the census must be keyed on *u* and on *ŭ*, because keying it on one is the
-`HL-C402` failure exactly. Then one convention, applied everywhere, with the
-early lessons' text updated rather than left as an exception. Expect this to be
-a large mechanical diff and a small number of decisions.
+**The scope is wider than the final vowel, and the first draft of this shard got
+that wrong too.** It scoped the census to *u* against *ŭ*. Review found two
+divergences it would not have seen, both in the two-word phrase chapter 102 is
+built on:
+
+| word | one spelling | the other |
+|---|---|---|
+| **മണി** | *maṇi* — `ML-C18-mani` **headword** | *mani* — `ML-C18-mani.md:73`, **its own body** |
+| **രണ്ട്** | *raṇṭŭ* — `ML-C93-counted` | *randu* — `ML-W07-number-words-1-5.md:49` |
+
+The differences are in **ṇ/n** and **ṭ/d**, invisible to a census keyed on the
+final vowel — and the first is *inside one lesson*, between its headword and its
+own prose. Scoping the census to the chandrakkala would have reproduced, one
+level up, the exact failure this shard was filed to avoid.
+
+**What closing this needs.** An enumeration of every Malayalam romanization in
+the corpus — headwords **and** bodies — grouped by the Malayalam token they
+render, listing every distinct spelling of each. Not a grep for one spelling;
+a grouping that makes disagreement visible without knowing in advance which
+letters disagree. Then one convention, applied everywhere, with the early
+lessons' text updated rather than left as an exception. Expect a large
+mechanical diff and a small number of decisions.
 
 **Note on the neighbouring divergence.** The same early chapters also use **zh**
 where later ones use **ḻ** and **th** where later ones use **t** — chapter 10's

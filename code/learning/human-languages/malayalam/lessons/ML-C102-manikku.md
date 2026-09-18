@@ -12,7 +12,7 @@ concept_tag: ML-TIME-AT-HOUR
 prerequisites: [ML-C18-mani, ML-C06-dative-ikku, ML-C93-counted, ML-C94-three-days]
 sounds: [gemination-kk]
 roots: [dravidian-dative-ku]
-etymology_hook: "The same -kku that chapter 6 gave you for 'to' and 'for' is what Malayalam uses to fix a clock time — one ending, three English prepositions"
+etymology_hook: "The same -kku that gave you enikku for 'to me' is what Malayalam uses to fix a clock time — one ending, three English prepositions"
 duration:
   max_seconds: 275
 requires:
@@ -34,8 +34,8 @@ reviews_of: [ML-C18-mani, ML-C06-dative-ikku]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C18-MANI-01, ML-CONCEPT-C06-DATIVE-IKKU-01] -->
 
-[PAUSE 2s] Say *two o'clock*. Then say the ending chapter 6 gave you for **to**
-and **for**.
+[PAUSE 2s] Say *two o'clock*. Then say the ending you met as **to** and **for**
+— the one inside **എനിക്ക്**.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C102-HOUR-DATIVE-01]; assesses=[ML-CONCEPT-C18-MANI-01] -->
@@ -48,16 +48,16 @@ you are putting something **at** it.
 | **രണ്ട് മണി** | *raṇṭŭ maṇi* | two o'clock |
 | **രണ്ട് മണിക്ക്** | *raṇṭŭ maṇikkŭ* | at two o'clock |
 
-**Nothing about the ending is new.** You built this exact landing in chapter 6:
-**ജോലി** ends in **ി**, so it took **ക്ക്** and gave **ജോലിക്ക്**. **മണി** ends
-in that same letter and takes that same ending, with the same visible seam —
-**മണി** plus **ക്ക്**.
+**Nothing about the ending is new.** You built this exact landing when you met
+your first case ending: **ജോലി** ends in the vowel sign **ി**, so it took
+**ക്ക്** and gave **ജോലിക്ക്**. **മണി** ends in that same vowel and takes that
+same ending, with the same visible seam — **മണി** plus **ക്ക്**.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-CONCEPT-C06-DATIVE-IKKU-01] -->
 
-Chapter 6 glossed this ending **to** and **for**, and English will not accept
-either one here: *to two o'clock* is not a thing anybody says. English reaches
+That first case ending was glossed **to** and **for**, and English will not
+accept either one here: *to two o'clock* is not a thing anybody says. English reaches
 for a third word, **at**.
 
 **That is a fact about English, not about the ending.** Malayalam has not
@@ -72,9 +72,11 @@ this ending on an hour, read it **at**.
 > **രണ്ട് മണിക്ക് ഞാൻ പോകും.** — *raṇṭŭ maṇikkŭ ñān pōkuṁ* — "At two o'clock I
 > will go."
 
-You know that sentence already. Chapter 94 stood **ഇന്ന്** at the front of it,
-and **നാളെ**, and told you the verb at the back is what carries the tense. The
-front is a slot for saying **when**.
+You know that slot already. **നാളെ** has stood in it in front of this very
+sentence. **ഇന്ന്** has stood in it too — in front of the same sentence with a
+*present* ending on the verb, because the day word and the verb ending have to
+agree. The front is a slot for saying **when**, and the verb at the back is what
+carries the tense.
 
 What is new is the toll. **ഇന്ന്** walked into that slot wearing nothing.
 An hour has to put an ending on before it is allowed in.
@@ -93,6 +95,6 @@ An hour has to put an ending on before it is allowed in.
 
 [PAUSE 3s] What is the difference between **രണ്ട് മണി** and **രണ്ട് മണിക്ക്**?
 (**The first names the hour; the second puts something at it**.) Which ending
-did you add? (**ക്ക്** — the dative from chapter 6.) Why does English need a
+did you add? (**ക്ക്** — your first case ending.) Why does English need a
 different word here than it did for *to me*? (**English splits the job across
 to, for and at; Malayalam does not**.)
