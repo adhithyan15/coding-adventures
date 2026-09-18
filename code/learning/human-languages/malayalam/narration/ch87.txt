@@ -56,7 +56,7 @@ Both are objects. Both come before the verb. One is a person and the other is a 
 A living thing being acted on takes -എ. A lifeless thing ordinarily does not. So the question the language asks before marking an object is not is this the object but what kind of thing is this — and no European language the reader is likely to know asks it in quite that way.
 Look at what the ending does to each noun:
 [a table of 2 rows, read aloud]
-കുട്ടി becomes കുട്ടിയെ, a -യ- joins, because the word ends in a vowel.
+കുട്ടി becomes കുട്ടിയെ, a -യ- joins, because the word ends in ഇ.
 അധ്യാപകൻ becomes അധ്യാപകനെ (adhyāpakane), the final chillu opens back into a plain consonant.
 The joining rule is the one you already know. It is the same choice the owner-ending made, decided by the same thing — the last sound of the noun — so there is nothing new to learn about attaching it.
 Now a verb that only takes people: സഹായിക്കുക, to help. You cannot help a book, so its object is always marked.

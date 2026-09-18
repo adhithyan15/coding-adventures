@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Joining Things Together",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:19a7aa9601707223",
+  "sourceHash": "fnv1a64:051ba806b7a2169d",
   "lessons": [
     {
       "id": "ML-C70-um",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c7e70eae84d7de3",
+      "sourceHash": "fnv1a64:b969429a04c0cfa5",
       "notice": null,
       "blocks": [
         {
@@ -264,7 +264,7 @@
             },
             {
               "kind": "speech",
-              "text": "a noun ending in a vowel becomes a letter slides in, chosen by that vowel; after ഇ it is യ്: അരി, അരിയും."
+              "text": "a noun ending in a full vowel becomes a letter slides in, chosen by that vowel; after ഇ it is യ്: അരി, അരിയും."
             },
             {
               "kind": "speech",
@@ -361,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56abc82ab702c4ce",
+      "sourceHash": "fnv1a64:3f51aea0cfc973dc",
       "notice": null,
       "blocks": [
         {
@@ -423,7 +423,7 @@
             },
             {
               "kind": "speech",
-              "text": "The യ് glide appears again on both words here, for the same reason it appeared on അരി: both end in a vowel, and two vowels meeting want something between them. ചായ ends in ആ and കാപ്പി in ഇ, and both of those vowels call for യ് — which is not to say every vowel does."
+              "text": "The യ് glide appears again on both words here, for the same reason it appeared on അരി: both end in a vowel, and two vowels meeting want something between them. ചായ ends in അ and കാപ്പി in ഇ, and both of those vowels call for യ് — which is not to say every vowel does."
             }
           ]
         },

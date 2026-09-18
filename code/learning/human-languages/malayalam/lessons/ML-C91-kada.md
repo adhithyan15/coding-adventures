@@ -46,7 +46,7 @@ This book has taught you rice, water, tea, coffee, milk, salt and a knife, and
 chapter is here to fill, and it starts with the building.
 
 It takes the in-ending exactly as you would expect, joining with a **-യ-**
-because the word ends in a vowel:
+because the word ends in **അ**:
 
 **കടയിൽ** — *kaṭayil* — in the shop, at the shop.
 

@@ -54,24 +54,47 @@
   Narrowing a false generalisation produced a second one that was, again,
   consistent with every token in the repository.
 
-#### Five merged lessons narrowed with it — not the three first counted
+#### Eight merged lessons narrowed with it, and the count is not the point
 
 Stating the narrow rule in chapter 98 would have contradicted lessons already in
 the book, which is the stale-cross-reference failure chapter 97 hit in its fifth
-review round. Each was narrowed in the same commit, to name the environment
-rather than the resemblance:
+review round.
 
-- `ML-C97-bhangi` — *"It ends in a vowel ... so a **യ** slides in"* → it ends in
-  **ഇ**, a letter slides in, and **after ഇ that letter is യ**. Its **Wrap-up**
-  still credited the **യ** to vowel-hood after the body had been narrowed, and
-  the drill is what a learner actually rehearses, so it was fixed too.
-- `ML-R97-beauty-recall` — the same attribution in its Grammar Lens.
-- `ML-C70-um-more` — *"a noun ending in a **vowel** → a **യ്** slides in"*, said
-  of the **-ഉം** ending, which splits identically.
-- `ML-C70-um` (2390) and `ML-C70-o` (2410) — **missed on the first pass**, and
-  they sit on either side of the lesson that was fixed. `ML-C70-o`'s **ചായ** is
-  an **ആ**-final word taking **യ**, so it was live evidence for the new narrow
-  rule while being written up as evidence for the broad one.
+**The number went three → five → eight across two review rounds**, each time
+because the sweep's grep was narrower than the defect. So the record names the
+lessons rather than counting them — the same argument made two sections down
+about the verb count, applied to itself:
+
+| lesson | seq | what it said |
+|---|---|---|
+| `ML-C70-um` | 2390 | *"a noun ending in a **vowel** → a **യ്** slides in"* |
+| `ML-C70-um-more` | 2400 | the same, of the **-ഉം** ending |
+| `ML-C70-o` | 2410 | *"both end in a vowel"* |
+| `ML-C83-keralathil` | 2900 | *"**ഇന്ത്യ** ends in a vowel and takes a **-യ-**"* |
+| `ML-C87-animacy` | 3050 | *"a **-യ-** joins, because the word ends in a vowel"* |
+| `ML-C91-kada` | 3200 | *"joining with a **-യ-** because the word ends in a vowel"* |
+| `ML-C97-bhangi` | 3450 | body **and** Wrap-up — the drill still credited the **യ** to vowel-hood after the body was narrowed |
+| `ML-R97-beauty-recall` | 3460 | the same attribution in its Grammar Lens |
+
+Each now names the vowel instead of vowel-hood.
+
+**A ninth, `ML-C78-ude` (2700), is deliberately not patched here** and is filed
+as `HL-C402`. Its claim is a two-row **ending-selection table**, not a glide
+clause, and **പശു** lands in the wrong column of it as well as taking the wrong
+glide — **പശുവിന്റെ**, not ✗**പശുയുടെ**. The real determinant involves animacy,
+which `ML-C87` only begins to draw 350 points later, so adding a third row would
+trade one over-simplification for another.
+
+**All nine were latent-false the same way.** **പശു** is the only **ഉ**-final
+noun the book teaches, and none of its oblique forms — **പശുവിന്റെ**,
+**പശുവിൽ**, **പശുവിനെ** — appears anywhere in the corpus. No token contradicts
+any of them, so no gate can see any of them.
+
+**And the fix to `ML-C70-o` was wrong on the first try**, which is the third time
+in this chapter a correction pass introduced a fresh false claim: it called
+**ചായ** an **ആ**-final word. The corpus settles it — `ML-C39-chaaya` carries
+`romanization: chaaya`, short final *a* — so **ചായ** ends in **അ**, the same
+vowel as **സിനിമ**. The long **ā** is spent on the first syllable, *cā*.
 
 #### Caught before review, by counting instead of trusting
 

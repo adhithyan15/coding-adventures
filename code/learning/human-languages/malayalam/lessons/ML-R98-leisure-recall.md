@@ -9,7 +9,7 @@ headword: (a game, playing, a film)
 gloss: cold retrieval of the three leisure words, and of the thing that decides which letter slides in before ആണ്
 romanization: kaḷiyuṁ sinimayuṁ enna ōrmma
 concept_tag: ML-LEISURE-RECALL
-prerequisites: [ML-C98-sinima, ML-C60-cow, ML-C69-words]
+prerequisites: [ML-C98-sinima, ML-C60-cow, ML-C69-words, ML-C89-nallathu]
 sounds: []
 roots: []
 duration:
@@ -57,8 +57,9 @@ the same way, while **ഉ** does not.
 
 **And the breathed half-u at the end of a word is not in this table at all.**
 **എന്ത്** + **ആണ്** is **എന്താണ്** — *entāṇŭ* — with nothing slid in and that
-faint **-ŭ** given up instead. **ഇത്** does the same. Those are not words ending
-in a full vowel, so the question the table answers never arises for them.
+faint **-ŭ** given up instead, and **നല്ലത്** gives **നല്ലതാണ്** the same way.
+Those do not end in a **full** vowel, so the question this table answers never
+arises for them.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-GAME-01, ML-LEX-C98-PLAY-01, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-LEX-NJAAN-01] -->

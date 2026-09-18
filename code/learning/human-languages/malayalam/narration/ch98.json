@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Games and Films",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:06dcc121cc76d19b",
+  "sourceHash": "fnv1a64:1a5eec48481dfc19",
   "lessons": [
     {
       "id": "ML-C98-kali",
@@ -317,7 +317,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:998d4ff7af3bb9d4",
+      "sourceHash": "fnv1a64:42c81508a82c5f3c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -370,7 +370,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its last letter is മ, and a consonant in this script carries an a of its own: മ is ma. So സിനിമ (sinima) ends in a full vowel, ആണ് opens with one, and — as with കളി (kaḷi) — something has to stand between the two."
+              "text": "Its last letter is മ, and a consonant in this script carries an a of its own: മ is ma. So സിനിമ (sinima) ends in the vowel അ, ആണ് opens with a vowel too, and — as with കളി (kaḷi) — something has to stand between the two."
             },
             {
               "kind": "speech",
@@ -402,7 +402,11 @@
             },
             {
               "kind": "speech",
-              "text": "The faint half-u is not one of these vowels. Look back at the sentence above: ഇത് stands right beside സിനിമയാണ്, and nothing slides into ഇത് at all. That breathed -ŭ at the end of a word is not a full vowel — it simply steps out of the way. എന്ത് has been doing it since your very first question: എന്ത് + ആണ് is എന്താണ്, entāṇŭ, with nothing added and one sound quietly given up."
+              "text": "The faint half-u is not one of these vowels. എന്ത് ends in one, and it has been welding to ആണ് since your very first question: എന്ത് + ആണ് is എന്താണ് — entāṇŭ — with nothing slid in and that breathed -ŭ quietly given up instead. നല്ലത് does the same: നല്ലതാണ്."
+            },
+            {
+              "kind": "speech",
+              "text": "That -ŭ is not a full vowel, so when an ending arrives it steps out of the way rather than sending a letter in ahead of it."
             }
           ]
         },
@@ -473,20 +477,13 @@
       "romanization": "kaḷiyuṁ sinimayuṁ enna ōrmma",
       "gloss": "cold retrieval of the three leisure words, and of the thing that decides which letter slides in before ആണ്",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7dae23693ce649e2",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:d7b98e9337822920",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -536,7 +533,7 @@
             },
             {
               "kind": "speech",
-              "text": "And the breathed half-u at the end of a word is not in this table at all. എന്ത് + ആണ് is എന്താണ് — entāṇŭ — with nothing slid in and that faint -ŭ given up instead. ഇത് does the same. Those are not words ending in a full vowel, so the question the table answers never arises for them."
+              "text": "And the breathed half-u at the end of a word is not in this table at all. എന്ത് + ആണ് is എന്താണ് — entāṇŭ — with nothing slid in and that faint -ŭ given up instead, and നല്ലത് gives നല്ലതാണ് the same way. Those do not end in a full vowel, so the question this table answers never arises for them."
             }
           ]
         },

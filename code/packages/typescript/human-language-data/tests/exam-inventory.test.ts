@@ -2343,9 +2343,20 @@ describe("the committed Malayalam A1 inventory", () => {
     // with the half-u given its own paragraph and its own recall question.
     // Both rounds were latent-false in the same way: consistent with every token in
     // the repository and wrong about the language, so no gate could see either.
-    // FIVE merged lessons carried the broad ya-rule, not the three first counted:
-    // ML-C97-bhangi (body AND Wrap-up), ML-R97-beauty-recall, ML-C70-um-more, and
-    // the neighbours missed on the first pass, ML-C70-um (2390) and ML-C70-o (2410).
+    // EIGHT merged lessons carried the broad ya-rule, and the count is not the
+    // point -- it went three -> five -> eight across two review rounds, each time
+    // because the sweep's grep was narrower than the defect, so the record NAMES
+    // them: ML-C70-um (2390), ML-C70-um-more (2400), ML-C70-o (2410),
+    // ML-C83-keralathil (2900), ML-C87-animacy (3050), ML-C91-kada (3200),
+    // ML-C97-bhangi (body AND Wrap-up, 3450), ML-R97-beauty-recall (3460).
+    // A NINTH, ML-C78-ude (2700), is filed as HL-C402 rather than patched: its
+    // claim is a two-row ending-selection TABLE, and pashu lands in the wrong
+    // column of it (pashuvinte, not *pashuyute) as well as taking the wrong glide.
+    // All nine are latent-false the same way -- pashu is the only u-final noun
+    // taught and none of its oblique forms appears in the corpus, so no token
+    // contradicts any of them. ML-C70-o's fix was itself wrong on the first try:
+    // it called chaaya AA-final, and ML-C39-chaaya's own romanization (chaaya,
+    // short final a) makes it A-final, the same vowel as sinima.
     expect(coverage.covered).toBe(205);
     expect(coverage.unmapped).toBe(38);
     expect(coverage.partial).toBe(0);

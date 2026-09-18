@@ -88,7 +88,7 @@ You'll want to know.
 
 The word, taken apart.
 A borrowed word again, like the eating-place word — and this one kept far more of what it came with than that one did.
-Its last letter is മ, and a consonant in this script carries an a of its own: മ is ma. So സിനിമ (sinima) ends in a full vowel, ആണ് opens with one, and — as with കളി (kaḷi) — something has to stand between the two.
+Its last letter is മ, and a consonant in this script carries an a of its own: മ is ma. So സിനിമ (sinima) ends in the vowel അ, ആണ് opens with a vowel too, and — as with കളി (kaḷi) — something has to stand between the two.
 Here that something is യ once more: സിനിമയാണ്.
 Do not read that as a vowel brings യ. Which letter slides in is settled by which vowel the word ends in, and you already have one that goes the other way:
 [a table of 4 rows, read aloud]
@@ -97,7 +97,8 @@ ends in: ഇ. word: കളി. joined to ആണ്: കളിയാണ് (kaḷ
 ends in: അ. word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ).
 ends in: ഉ. word: പശു. joined to ആണ്: പശുവാണ് (paśuvāṇŭ).
 The cow is the row to look at. ഇ and അ both take യ; a full ഉ takes വ. The gap gets filled either way — the vowel at the end says with what.
-The faint half-u is not one of these vowels. Look back at the sentence above: ഇത് stands right beside സിനിമയാണ്, and nothing slides into ഇത് at all. That breathed -ŭ at the end of a word is not a full vowel — it simply steps out of the way. എന്ത് has been doing it since your very first question: എന്ത് + ആണ് is എന്താണ്, entāṇŭ, with nothing added and one sound quietly given up.
+The faint half-u is not one of these vowels. എന്ത് ends in one, and it has been welding to ആണ് since your very first question: എന്ത് + ആണ് is എന്താണ് — entāṇŭ — with nothing slid in and that breathed -ŭ quietly given up instead. നല്ലത് does the same: നല്ലതാണ്.
+That -ŭ is not a full vowel, so when an ending arrives it steps out of the way rather than sending a letter in ahead of it.
 
 Guided Practice.
 [pause 1 second]
@@ -116,8 +117,6 @@ What is a film? (സിനിമ (sinima).) സിനിമ (sinima) ends in അ
 Lesson 4 of 4.
 (a game, playing, a film) (kaḷiyuṁ sinimayuṁ enna ōrmma) — from cold.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
 Warm-up.
 [pause 3 seconds]
 Close the lessons before this one. Say a game, then to play, then a film.
@@ -130,7 +129,7 @@ ends in: ഇ. word: കളി. joined to ആണ്: കളിയാണ് (kaḷ
 ends in: അ. word: സിനിമ. joined to ആണ്: സിനിമയാണ് (sinimayāṇŭ).
 ends in: ഉ. word: പശു. joined to ആണ്: പശുവാണ് (paśuvāṇŭ).
 Three rows out of four take യ, and that is exactly why the fourth is worth holding on to. If you carry away vowels take യ, the cow will catch you out. What you want is the last vowel decides — and ഇ and അ happen to decide the same way, while ഉ does not.
-And the breathed half-u at the end of a word is not in this table at all. എന്ത് + ആണ് is എന്താണ് — entāṇŭ — with nothing slid in and that faint -ŭ given up instead. ഇത് does the same. Those are not words ending in a full vowel, so the question the table answers never arises for them.
+And the breathed half-u at the end of a word is not in this table at all. എന്ത് + ആണ് is എന്താണ് — entāṇŭ — with nothing slid in and that faint -ŭ given up instead, and നല്ലത് gives നല്ലതാണ് the same way. Those do not end in a full vowel, so the question this table answers never arises for them.
 
 What you've built.
 കളി is the game. കളിക്കുക (kaḷikkuka) is doing it — the noun still visible inside the verb, wearing an ending you had long before this chapter:

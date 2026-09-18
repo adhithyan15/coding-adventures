@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Where You Came From",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5f91e0f88ef377e8",
+  "sourceHash": "fnv1a64:bfbbce782b279586",
   "lessons": [
     {
       "id": "ML-C83-ninnu",
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9da6b4fe73ddff31",
+      "sourceHash": "fnv1a64:8cb1d5cc279de7e9",
       "notice": null,
       "blocks": [
         {
@@ -359,7 +359,7 @@
             },
             {
               "kind": "speech",
-              "text": "ഇന്ത്യ ends in a vowel and takes a -യ- to join, the same join kocciyil uses. Nothing surprising."
+              "text": "ഇന്ത്യ ends in അ and takes a -യ- to join, the same join kocciyil uses. Nothing surprising. Which letter joins depends on which vowel the word ends in; അ takes this one."
             },
             {
               "kind": "speech",

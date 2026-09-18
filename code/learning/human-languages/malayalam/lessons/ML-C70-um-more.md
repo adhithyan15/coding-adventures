@@ -60,7 +60,7 @@ English has to absorb.
 **പാൽ** gives the third landing, and it completes the set you need:
 
 - a noun ending in **-ം** → **-വും**: വെള്ളം, വെള്ളവും
-- a noun ending in a **vowel** → a letter slides in, chosen by that vowel;
+- a noun ending in a **full vowel** → a letter slides in, chosen by that vowel;
   after **ഇ** it is **യ്**: അരി, അരിയും
 - a noun ending in **ൽ** → the letter unfurls to **ല** and takes the ending
   plainly: പാൽ, പാലും

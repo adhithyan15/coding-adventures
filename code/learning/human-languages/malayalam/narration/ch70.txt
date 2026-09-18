@@ -60,7 +60,7 @@ That is a rule you can extend without being taught the extension, which is worth
 The word, taken apart.
 പാൽ gives the third landing, and it completes the set you need:
 a noun ending in -ം becomes -വും: വെള്ളം, വെള്ളവും.
-a noun ending in a vowel becomes a letter slides in, chosen by that vowel; after ഇ it is യ്: അരി, അരിയും.
+a noun ending in a full vowel becomes a letter slides in, chosen by that vowel; after ഇ it is യ്: അരി, അരിയും.
 a noun ending in ൽ becomes the letter unfurls to ല and takes the ending plainly: പാൽ, പാലും.
 That last one looks like a change and is not. ൽ is ല with its vowel stripped away, and a letter in that state has no vowel to give. -ഉം brings one, so the full ല comes back to carry it.
 It is the vowel that decides, not the position. You have had നിങ്ങൾക്ക് since the age question, and its ൾ sits in the middle of the word and stays a ൾ — because ക്ക് brings no vowel onto it.
@@ -97,7 +97,7 @@ You'll want to know.
 ending: -ഉം... -ഉം. what a list of two means: both of them.
 ending: -ഓ... -ഓ. what a list of two means: one of them.
 The construction is identical and only the vowel changes. Having learned where Malayalam puts a joining ending, you already know where it puts a choosing one — which is the reason these two belong in one chapter rather than fifty pages apart.
-The യ് glide appears again on both words here, for the same reason it appeared on അരി: both end in a vowel, and two vowels meeting want something between them. ചായ ends in ആ and കാപ്പി in ഇ, and both of those vowels call for യ് — which is not to say every vowel does.
+The യ് glide appears again on both words here, for the same reason it appeared on അരി: both end in a vowel, and two vowels meeting want something between them. ചായ ends in അ and കാപ്പി in ഇ, and both of those vowels call for യ് — which is not to say every vowel does.
 
 The word, taken apart.
 There is also a separate word, അല്ലെങ്കിൽ (alleṅkil), which stands between two options the way English or does:

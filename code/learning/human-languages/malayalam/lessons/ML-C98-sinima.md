@@ -9,7 +9,7 @@ headword: "സിനിമ"
 gloss: a film, the cinema — a borrowing that arrived whole, and the case that shows which letter slides in
 romanization: "sinima"
 concept_tag: ML-CINEMA
-prerequisites: [ML-C98-kalikkuka, ML-C92-hottal, ML-C60-cow, ML-C69-words]
+prerequisites: [ML-C98-kalikkuka, ML-C92-hottal, ML-C60-cow, ML-C69-words, ML-C89-nallathu]
 sounds: []
 roots: []
 duration:
@@ -49,8 +49,8 @@ reviews_of: [ML-C98-kali, ML-C92-hottal]
 more of what it came with than that one did.
 
 Its last letter is **മ**, and a consonant in this script carries an *a* of its
-own: **മ** is *ma*. So **സിനിമ** ends in a full vowel, **ആണ്** opens with one,
-and — as with **കളി** — something has to stand between the two.
+own: **മ** is *ma*. So **സിനിമ** ends in the vowel **അ**, **ആണ്** opens with a
+vowel too, and — as with **കളി** — something has to stand between the two.
 
 Here that something is **യ** once more: **സിനിമയാണ്**.
 
@@ -69,12 +69,13 @@ way:
 takes **വ**. The gap gets filled either way — the vowel at the end says with
 what.
 
-**The faint half-u is not one of these vowels.** Look back at the sentence
-above: **ഇത്** stands right beside **സിനിമയാണ്**, and nothing slides into
-**ഇത്** at all. That breathed **-ŭ** at the end of a word is not a full vowel —
-it simply steps out of the way. **എന്ത്** has been doing it since your very
-first question: **എന്ത്** + **ആണ്** is **എന്താണ്**, *entāṇŭ*, with nothing
-added and one sound quietly given up.
+**The faint half-u is not one of these vowels.** **എന്ത്** ends in one, and it
+has been welding to **ആണ്** since your very first question: **എന്ത്** +
+**ആണ്** is **എന്താണ്** — *entāṇŭ* — with nothing slid in and that breathed
+**-ŭ** quietly given up instead. **നല്ലത്** does the same: **നല്ലതാണ്**.
+
+That **-ŭ** is not a **full** vowel, so when an ending arrives it steps out of
+the way rather than sending a letter in ahead of it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-CINEMA-01, ML-LEX-C98-GAME-01, ML-LEX-C41-DEIXIS-01] -->
