@@ -85,8 +85,9 @@ You already know how that was built. അല്ല is the negative of ആണ്, 
 സുന്ദരം (sundaraṁ) + അല്ല, സുന്ദരമല്ല — this is not beautiful.
 Same മ, same reason: the m was always there and now has a vowel after it, so it is written with the full letter.
 When you first met അല്ല it was written apart — ഞാൻ അധ്യാപകൻ അല്ല, I am not a teacher. That was a choice about writing, not a different grammar. Weld them and you get ഞാൻ അധ്യാപകനല്ല — ñān adhyāpakanalla — which is as ordinary as the other.
-And look at what the ൻ does there. You were shown this at അധ്യാപകനെ: the chillu is the shape a consonant takes at the end of a word, so once anything follows it the full letter comes back — ൻ becomes ന. It happens here too: ഇത് എന്റെ മകനാണ്, this is my son.
-Do not carry that across to the ം. The chillu goes back to its letter whatever follows it; the ം does different things for different endings, as you saw last chapter. What the two share is only this one join.
+And look at what the ൻ does there. You were shown this at അധ്യാപകനെ: a chillu cannot carry a vowel, so when a vowel arrives behind it the full letter comes back — ൻ becomes ന. It happens here too: ഇത് എന്റെ മകനാണ്, this is my son.
+A consonant does not. നിങ്ങൾക്ക് keeps its ൾ; the vowel is what forces the change.
+And do not carry any of it across to the ം, which does different things for different endings, as you saw last chapter.
 
 What you've built.
 Both ends of the same line, from one new word and one you already had.
@@ -107,7 +108,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you say this is not beautiful? (ഇത് സുന്ദരമല്ല (itŭ sundaramalla).) Does അല്ല weld on the way ആണ് does? (Yes — same മ, same reason.) What does the ൻ of അധ്യാപകൻ do when it welds? (It goes back to ന — as in മകനാണ്.)
+How do you say this is not beautiful? (ഇത് സുന്ദരമല്ല (itŭ sundaramalla).) Does അല്ല weld on the way ആണ് does? (Yes — same മ, same reason.) What does the ൻ do when a vowel follows? (It goes back to ന.) And before a consonant? (It stays a chillu.)
 
 
 Lesson 4 of 4.

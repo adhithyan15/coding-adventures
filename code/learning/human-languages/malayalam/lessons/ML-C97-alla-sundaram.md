@@ -58,13 +58,15 @@ Weld them and you get **ഞാൻ അധ്യാപകനല്ല** — *ñān
 ordinary as the other.
 
 And look at what the **ൻ** does there. **You were shown this at
-അധ്യാപകനെ**: the chillu is the shape a consonant takes **at the end of a word**,
-so once anything follows it the full letter comes back — **ൻ → ന**. It happens
-here too: **ഇത് എന്റെ മകനാണ്**, *this is my son*.
+അധ്യാപകനെ**: a chillu cannot carry a vowel, so when a **vowel** arrives behind
+it the full letter comes back — **ൻ → ന**. It happens here too: **ഇത് എന്റെ
+മകനാണ്**, *this is my son*.
 
-**Do not carry that across to the ം.** The chillu goes back to its letter
-whatever follows it; the **ം** does different things for different endings, as
-you saw last chapter. What the two share is only this one join.
+**A consonant does not.** **നിങ്ങൾക്ക്** keeps its **ൾ**; the vowel is what
+forces the change.
+
+**And do not carry any of it across to the ം**, which does different things for
+different endings, as you saw last chapter.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C97-NOT-BEAUTIFUL-01, ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C41-DEIXIS-01, ML-CONCEPT-C77-NEGATION-SPLIT-01] -->
@@ -91,5 +93,5 @@ today, and it is what a speaker often says anyway.
 
 [PAUSE 3s] How do you say *this is not beautiful*? (**ഇത് സുന്ദരമല്ല**.) Does
 **അല്ല** weld on the way **ആണ്** does? (**Yes** — same **മ**, same reason.) What
-does the **ൻ** of **അധ്യാപകൻ** do when it welds? (**It goes back to ന** — as in
-**മകനാണ്**.)
+does the **ൻ** do when a vowel follows? (**It goes back to ന.**) And before a
+consonant? (**It stays a chillu.**)
