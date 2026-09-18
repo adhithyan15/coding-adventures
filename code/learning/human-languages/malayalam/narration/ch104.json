@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "One Present, Two Englishes",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:99756f2c706ac755",
+  "sourceHash": "fnv1a64:15379ff10eb16904",
   "lessons": [
     {
       "id": "ML-C104-one-present",
@@ -298,7 +298,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe09c5bd1e4dd97a",
+      "sourceHash": "fnv1a64:f436519557f17632",
       "notice": null,
       "blocks": [
         {
@@ -325,7 +325,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The rule is general, so take a second verb through it:"
+              "text": "Take a second verb through it and watch nothing bend:"
             },
             {
               "kind": "speech",

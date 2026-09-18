@@ -38,7 +38,7 @@ reviews_of: [ML-C32-varuka, ML-C02-aanu, ML-C104-ippol]
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C104-ONE-PRESENT-01, ML-CONCEPT-C32-VARUKA-01] -->
 
-The rule is general, so take a second verb through it:
+Take a second verb through it and watch nothing bend:
 
 > **ഇപ്പോൾ ഞാൻ വരുന്നു.** — *ippōḷ ñān varunnu* — "Right now I am coming."
 

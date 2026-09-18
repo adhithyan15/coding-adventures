@@ -63,6 +63,25 @@ leaving the learner to make it.
   answering — and claims only what survives that: **the verb is identical in both
   lines**.
 
+#### A third gate the full suite caught, and the fix was to stop asserting
+
+`info-dump.test.ts` holds `ruleStatements` at **32** and says so in its own
+comment: *"CEILING — this is debt; it may fall, never grow"*. The draft took it
+to **33**, on one sentence in `ML-C104-no-am`: *"**The rule is general**, so take
+a second verb through it."*
+
+The precedent in that test's own history is to **rewrite the incidental ones
+rather than absorb them** — Persian, Russian, Sanskrit and Spanish tranches each
+pushed this ceiling and each kept only the statement whose *entire lesson is a
+rule*. This one is not that: the lesson's content is a **demonstration**, a second
+verb going through unchanged. The sentence now reads *"Take a second verb through
+it and watch nothing bend"*, which shows the same thing without asserting it, and
+the count is back to 32.
+
+That is three separate gates in two chapters — `chapter-references`,
+`script-closure`, `info-dump` — that `npm run validate` and all twelve
+`check:` scripts pass and only the full suite catches.
+
 #### What the chapter refuses to claim
 
 Malayalam's dedicated progressive in **-കൊണ്ടിരിക്കുന്നു** is **not** taught and
