@@ -56,8 +56,8 @@ to order lunch and unable to say the word *food*.**
 | **ഊണ്** | a meal |
 | **ഭക്ഷണം** | **food** — all of it |
 
-It ends in **ം**, so you already know how it will behave when anything attaches
-to it.
+It ends in **ം**, so you already know what a **case ending** will do to it —
+the **ം** gives way to **-ത്ത-**, as it did on **കേരളം** and **പുസ്തകം**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C92-FOOD-01, ML-CONCEPT-C40-OON-01, ML-CONCEPT-C32-TINNUKA-01] -->

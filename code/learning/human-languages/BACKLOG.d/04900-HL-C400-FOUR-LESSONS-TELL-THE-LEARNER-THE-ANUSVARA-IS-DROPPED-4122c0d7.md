@@ -43,7 +43,33 @@ recall answer that is a false universal about the language is invisible to all o
 them** — the same gap as `HL-C399`, and the same gap that let three successive
 false accounts of this very join pass every check.
 
-### Shape of a fix
+### RESOLVED
+
+**Closed on the HL-C400 branch.** The fix is the one this shard proposed, and it
+held: all four sites now say **a case ending** where they said *anything*.
+
+| lesson | now reads |
+|---|---|
+| `ML-C83-keralathil` | *"the moment **a case ending** is added"*, plus one added sentence: *"Other kinds of ending do other things to it, and you will meet them in their own chapters."* Its recall asks *"when a case ending is added"*. |
+| `ML-R83-from-recall` | *"dropped the moment **a case ending** is added"* |
+| `ML-C91-vila-panam` | body and recall both say *"when **a case ending** attaches"* |
+| `ML-C92-bhakshanam` | it **demonstrated nothing** — it only asserted *"you already know how it will behave when anything attaches"*. It now names what it knows: *"you already know what a **case ending** will do to it — the **ം** gives way to **-ത്ത-**, as it did on **കേരളം** and **പുസ്തകം**."* |
+
+**"Case ending" is not new metalanguage**: `ML-C06-dative-ikku` uses it at
+sequence **320**, long before any of these sites, and `ML-C96-eluppam` (3410)
+already models the exact phrasing — *"A case ending takes the **ം** away and
+puts **ത്ത** in its place."*
+
+**The sweep was run wide before trusting this shard's list**, script and
+romanization, and it returned exactly these four lessons and nine lines — no
+fifth site. The recall partners `ML-R91-shopping-recall` and
+`ML-R92-eating-out-recall` were checked and are clean; **null result stated**.
+
+The shard's own advice was followed: the four-way picture is **not** taught in
+chapter 83, because the learner has met one of the four at that point. The early
+lessons simply stop claiming more than they show.
+
+### Shape of a fix (as originally proposed)
 
 Narrow the four recall answers to what each lesson actually demonstrates — *"an
 ending that marks a case"* rather than *"an ending"*, *"when a case ending

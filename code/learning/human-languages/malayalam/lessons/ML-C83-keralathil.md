@@ -66,8 +66,11 @@ puts every **-ം** word you own into the in-form, which is a much better return
 than memorising two place names.
 
 **The -ം is a citation dress.** It is what the word wears when it stands alone
-and is named; the moment anything is added, the word changes into its working
-shape first. Look for that habit rather than for a list.
+and is named; the moment **a case ending** is added, the word changes into its
+working shape first. Look for that habit rather than for a list.
+
+**Other kinds of ending do other things to it**, and you will meet them in their
+own chapters. What this one shows you is the case endings.
 
 Now the whole chapter arrives at once:
 
@@ -85,6 +88,6 @@ Now the whole chapter arrives at once:
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C83-OBLIQUE-AM-01, ML-GRAMMAR-C83-ABLATIVE-01] -->
 
-[PAUSE 3s] What happens to **-ം** when an ending is added? (**It is replaced by
+[PAUSE 3s] What happens to **-ം** when a case ending is added? (**It is replaced by
 -ത്ത-**.) Is that one word's quirk or a whole class? (**A whole class**.) And
 how do you say *from Kerala*? (***kēraḷattil ninnŭ***.)

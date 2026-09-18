@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 92,
-  "sourceHash": "fnv1a64:4204c0e37d8841c8",
+  "sourceHash": "fnv1a64:fb5c0a49748739d4",
   "lessonIds": [
     "ML-C92-bhakshanam",
     "ML-C92-hottal",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch92.txt",
   "json": "malayalam/narration/ch92.json",
-  "textHash": "fnv1a64:52c2dd1fde4a2518",
-  "jsonHash": "fnv1a64:07367257b9a635e8",
+  "textHash": "fnv1a64:a39e50992069f3dc",
+  "jsonHash": "fnv1a64:2acde52ec4bd67d8",
   "findings": []
 }
