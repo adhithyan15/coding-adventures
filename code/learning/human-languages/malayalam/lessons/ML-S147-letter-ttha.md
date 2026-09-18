@@ -7,7 +7,7 @@ delivery: script
 chapter: 103
 type: writing
 headword: "ഠ"
-gloss: the single character ഠ — the breathed partner of ട, and the last letter this book had never shown you
+gloss: the single character ഠ — the breathed partner of ട, arriving with the word that needs it
 romanization: "ṭha"
 prerequisites: [ML-S117-letter-tta, ML-C103-pallikkoodam]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-S117-letter-tta]
 ---
 
-# ഠ — one character, and this book has never once shown it to you
+# ഠ — one character, met with the word that needs it
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-117] -->
@@ -49,9 +49,7 @@ It is **ട** with a breath after it. The tongue does exactly what it did for
 carries a puff of air out with it. Malayalam pairs its consonants this way all
 through: a plain one, and a breathed one beside it.
 
-**This is the only letter in the book that arrives with no history.** Every other
-character you have met was already sitting inside a word you had been saying for
-chapters. This one has not appeared anywhere, in any word, until now.
+It has not been on a page yet: it arrives with the word on the next one.
 
 ## Writing: ഠ — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-147] -->

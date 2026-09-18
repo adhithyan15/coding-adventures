@@ -91,10 +91,18 @@ so it was the one genuinely never-taught glyph in the track.
 **The fix is `ML-S147-letter-ttha`, not a different word for *lesson*.** Closure
 is measured in **reading order**, so the letter is taught at sequence **3725**,
 between the school and the lesson that needs it. **ഠ** is **ട** with a breath
-after it, which makes it a natural pairing lesson rather than an errand, and the
-lesson says plainly what is unusual about it: *"this is the only letter in the
-book that arrives with no history"* — every other character the reader has met
-was already sitting inside a word they had been saying for chapters.
+after it, which makes it a natural pairing lesson rather than an errand.
+
+**The draft claimed more than that and was wrong.** It called ഠ *"the only letter
+in the book that arrives with no history"*, which **ten** merged script lessons
+contradict in identical words — `ML-S07`, `ML-S110`, `ML-S111`, `ML-S116`,
+`ML-S125`, `ML-S127`, `ML-S131`, `ML-S141`, `ML-S143` and `ML-S144` each say of
+their own character *"it has not been on a page yet: it arrives with the word on
+the next one."* Arriving with the word that needs it is this corpus's **normal**
+way of introducing a letter, not an exception. The lesson now uses that same
+sentence, which is true and is the house voice for exactly this situation. What
+is distinctive about ഠ is a fact about the **metric**, not about the reader, and
+it belongs in this changelog rather than in a lesson.
 
 Teaching it was the cheaper honest option. Padding an existing letter lesson's
 examples with **ഠ** would have moved the same number without teaching anybody
