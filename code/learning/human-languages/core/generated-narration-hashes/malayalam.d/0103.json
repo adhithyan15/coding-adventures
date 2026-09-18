@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:12468ee87be91098",
+  "lessonIds": [
+    "ML-C103-pallikkoodam",
+    "ML-C103-paadam",
+    "ML-C103-pareeksha",
+    "ML-C103-maarkku",
+    "ML-R103-school-recall"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch103.txt",
+  "json": "malayalam/narration/ch103.json",
+  "textHash": "fnv1a64:b4f6a9af00af1023",
+  "jsonHash": "fnv1a64:33ecf1259df94516",
+  "findings": []
+}

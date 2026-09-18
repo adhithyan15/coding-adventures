@@ -1,0 +1,46 @@
+## HL-C407 — SCR-12 names a letter the corpus teaches, and its count is one of three different numbers
+
+**Status: OPEN.** Found while scoping chapter 103, which needed **പരീക്ഷ** and
+therefore needed to know whether the **ക്ഷ** conjunct was taught.
+
+**`ML-A1-SCR-12`'s note** lists nine characters "the corpus uses in headwords and
+never teaches", opening with *"sha (14)"* and adding that *"sha alone blocks
+fourteen taught words including sari, the first-chapter 'okay'"*.
+
+**Malayalam has two letters that get called *sha*, and the note's identity is
+right while its wording invites the wrong one.**
+
+| letter | codepoint | taught? |
+|---|---|---|
+| **ശ** *śa* | U+0D36 | **no** — no script lesson has it as a headword |
+| **ഷ** *ṣa* | U+0D37 | **yes** — `ML-S121-letter-ssa`, sequence 471 |
+
+**ശരി** (*śari*, the "okay") uses U+0D36, so the note means **ശ** and is correct
+about which letter is open. But a reader scoping a word containing **ക്ഷ** —
+which is **ക** + virama + **ഷ**, the *taught* one — will read "sha is untaught"
+and conclude they are adding script debt when they are not. Chapter 103 nearly
+did.
+
+**The count is three different numbers, and nobody has re-derived it.**
+
+- the note says **14**
+- **12** distinct tokens in headword position contain **ശ**
+- those sit across **15** headword fields
+
+Tokens and fields differ because two of them (**ശനി**, **വൃശ്ചികം**) sit inside
+multi-word headwords — `ML-C10-azhcha`'s seven day-names and
+`ML-C16-kollavarsham-maasangal`'s twelve months. Which number the note *meant* is
+not recoverable from the note.
+
+**What closing this needs.** Re-derive the whole nine-character list against the
+data, saying explicitly which counting rule is used (distinct tokens, or headword
+fields, and whether a token inside a multi-word headword counts once or not at
+all — `continuity.ts` keeps multi-word headwords whole, which argues it should
+not count as a taught token at all). Check each of the other eight the way **ഷ**
+was checked here: by looking for a script lesson whose headword *is* that
+character, not by trusting the list. The note's *"58 of 67 are taught"* headline
+moves with whatever the recount finds.
+
+**Do not close this by fixing the count alone.** The nine-character list is the
+useful part; if even one entry names a letter that has since been taught, the
+list's value is in the re-derivation, not in the number.
