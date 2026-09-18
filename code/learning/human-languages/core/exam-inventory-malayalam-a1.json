@@ -3753,7 +3753,12 @@
       "id": "ML-A1-LEX-29",
       "category": "Padakosham (lexicon by domain)",
       "label": "clothing, footwear and accessories",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C100-MUNDU-01",
+        "ML-LEX-C100-SARI-01",
+        "ML-LEX-C100-SANDAL-01",
+        "ML-LEX-C100-CAP-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -3763,7 +3768,7 @@
         "A1-NE12-02"
       ],
       "malayalamSpecific": false,
-      "note": "thuni ('cloth') is the only textile word taught. Not one garment is named."
+      "note": "Chapter 100. THE OLD NOTE WAS ACCURATE, and that was verified rather than assumed -- the two points worked before this one, LEX-37 and LEX-47, both had notes that overstated their gaps, so this one was token-swept first. thuni is the only textile HEADWORD (ML-C46-cloth) -- though that lesson's body also names vastram, the Sanskrit-register word, so 'only textile word taught' would be too strong -- and shirt, mundu, sari, sandal, shoes, cap, glasses, watch, bag, dress and skirt all return ZERO occurrences on a TOKEN-BOUNDED sweep. The boundary matters: a naive grep for saari returns six hits, every one of them inside samsaarikkuka. The null result is recorded because two stale notes in a row made it worth checking. TWO LIMBS ARE PROPERLY COVERED AND THE THIRD IS THIN, and review was right to press on it: mundu and saari are clothing, cheruppu is footwear, and thoppi is HEADWEAR -- which this note's own candidate list treats as separate from the accessories kaNNata, vaacchu and baagu. So thoppi is closer to a fourth clothing word than to an accessory, and the accessory limb remains thin. The point is closed anyway, on the same basis LEX-37 was closed with its free-time limb open: the exponents that exist are real and the gap is written down rather than papered over. shirt was dropped because it adds no limb at all. NO NEW GRAMMAR AT ALL, deliberately, after chapter 99 spent itself on three contrasting joins: only two endings appear across the four words, the half-u and -i, and the learner owns both. The frame is ML-C42's attributive adjective, puthiya and pazhaya in front and unchanged. THE GLYPH PRE-CHECK FAILED TWICE AND HAS BEEN DEMOTED TO A SIGNAL: its control had to be derived rather than recalled (as in chapter 99), and it then produced FALSE NEGATIVES, refusing two candidates over glyphs that appear in ten and seven taught headwords respectively. A check stricter than the rule it stands in for is not a gate. EVERY ROMANIZATION WAS DERIVED LETTER BY LETTER rather than word by word -- the correction chapter 99 earned by getting nrttham's vowel right and the consonant beside it wrong. ca is c, witnessed by cintikkuka, cevi, cheRiya, chuNTu, cUlu, cEcci and cErkkuka among others, with chaaya, nenchu, uchakazhinju, acchan and muttacchan as legacy ch spellings; zha is zh-with-underdot, witnessed by pazhaya, pazham, vazhi and taazhe, against vyaazham, mazhakkaalam, ezhu and ML-S118's llla; NTu is witnessed exactly by chuNTu; and saari is witnessed inside samsaarikkuka's own romanization. puthiya and pazhaya were read off ML-C42's own fields rather than reconstructed. THE FIRST DRAFT OF THIS NOTE GAVE COUNTS INSTEAD OF NAMES -- 'sixteen headwords', 'the lone chaaya', 'six against two' -- and review found every one of them wrong (30 and 5; 12 and 6). They were offered as EVIDENCE OF the letter-by-letter discipline, in the same commit whose changelog says to name lessons and never count them. The rule existed and the sentence claiming rigour broke it."
     },
     {
       "id": "ML-A1-LEX-30",

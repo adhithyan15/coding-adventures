@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:c3877ba487933236",
+  "lessonIds": [
+    "ML-C100-mundu",
+    "ML-C100-saari",
+    "ML-C100-cheruppu",
+    "ML-C100-thoppi",
+    "ML-R100-clothing-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch100-what-you-wear.tex"
+}

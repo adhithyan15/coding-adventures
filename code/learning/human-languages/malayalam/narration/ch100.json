@@ -1,0 +1,715 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 100,
+  "title": "What You Wear",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:dbe07f323b28b734",
+  "lessons": [
+    {
+      "id": "ML-C100-mundu",
+      "sequence": 3570,
+      "title": "മുണ്ട് (muṇṭŭ) — a mundu",
+      "headword": "മുണ്ട്",
+      "romanization": "muṇṭŭ",
+      "gloss": "a mundu — the first garment the book names, after teaching the cloth it is made of",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b33a50c00235c9e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word for cloth. Then say new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുണ്ട് — muṇṭŭ — a mundu, the length of cloth worn wrapped at the waist."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് പുതിയ മുണ്ടാണ്. — itŭ putiya muṇṭāṇŭ — \"This is a new mundu.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The book gave you the cloth before it gave you the garment. തുണി is the stuff; മുണ്ട് (muṇṭŭ) is the thing made of it and worn."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things in that sentence you already know how to do, and neither is new:"
+            },
+            {
+              "kind": "speech",
+              "text": "പുതിയ sits in front and does not change — that is the whole adjective pattern from the chapter that taught it."
+            },
+            {
+              "kind": "speech",
+              "text": "മുണ്ട് (muṇṭŭ) ends in the breathed half-u, so ആണ് lands straight on it: മുണ്ടാണ്, nothing slid in — the same join പാട്ട് takes."
+            },
+            {
+              "kind": "speech",
+              "text": "So the only new thing here is the word itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṇṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṇṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ putiya muṇṭāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ putiya muṇṭāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭṭāṇŭ, then muṇṭāṇŭ, and hear the same landing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭṭāṇŭ*, then *muṇṭāṇŭ*, and hear the same landing]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a mundu? (മുണ്ട് (muṇṭŭ).) Where does പുതിയ go, and does it change? (In front, and no.) What slides in before ആണ്? (Nothing — മുണ്ടാണ്.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C100-saari",
+      "sequence": 3580,
+      "title": "സാരി (sāri) — a sari",
+      "headword": "സാരി",
+      "romanization": "sāri",
+      "gloss": "a sari — an ഇ-final garment, so the join is the one കളി and ഭംഗി take",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0689a4777fbb97fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a mundu. Then say old."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സാരി — sāri — a sari."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് പഴയ സാരിയാണ്. — itŭ paḻaya sāriyāṇŭ — \"This is an old sari.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two garments, two different landings. മുണ്ട് (muṇṭŭ) ends in the half-u and takes ആണ് straight on. സാരി (sāri) ends in ഇ, and you know what ഇ does:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "joined to ആണ്"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: മുണ്ട് (muṇṭŭ). joined to ആണ്: മുണ്ടാണ് (muṇṭāṇŭ).",
+                "word: സാരി. joined to ആണ്: സാരിയാണ് (sāriyāṇŭ)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The യ in സാരിയാണ് is the one കളി and ഭംഗി take, for the reason you were given then: ഇ calls for it."
+            },
+            {
+              "kind": "speech",
+              "text": "പഴയ behaves as പുതിയ did — in front, unchanged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ paḻaya sāriyāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ paḻaya sāriyāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṇṭāṇŭ, then sāriyāṇŭ, and hear which one gains a letter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṇṭāṇŭ*, then *sāriyāṇŭ*, and hear which one gains a letter]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a sari? (സാരി (sāri).) സാരി (sāri) ends in ഇ — what slides in before ആണ്? (യ — സാരിയാണ്.) And മുണ്ട് (muṇṭŭ)? (Nothing — മുണ്ടാണ്.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C100-cheruppu",
+      "sequence": 3590,
+      "title": "ചെരുപ്പ് (ceruppŭ) — a sandal",
+      "headword": "ചെരുപ്പ്",
+      "romanization": "ceruppŭ",
+      "gloss": "a sandal — the footwear half of the label, next to the two garments",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:954152568feb511e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a sari. Then say a mundu."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചെരുപ്പ് — ceruppŭ — a sandal, the everyday open footwear."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് പഴയ ചെരുപ്പാണ്. — itŭ paḻaya ceruppāṇŭ — \"This is an old sandal.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This word is not a garment, and the book wants both. മുണ്ട് (muṇṭŭ) and സാരി (sāri) go on the body; ചെരുപ്പ് (ceruppŭ) goes on the feet."
+            },
+            {
+              "kind": "speech",
+              "text": "Its ending you have handled before, on എന്ത്, on നല്ലത്, on പാട്ട് and on മുണ്ട് (muṇṭŭ). ചെരുപ്പ് (ceruppŭ) finishes in the same breathed half-u, so ആണ് lands straight on it: ചെരുപ്പാണ്."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "joined to ആണ്"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: മുണ്ട് (muṇṭŭ). joined to ആണ്: മുണ്ടാണ് (muṇṭāṇŭ).",
+                "word: ചെരുപ്പ് (ceruppŭ). joined to ആണ്: ചെരുപ്പാണ് (ceruppāṇŭ)."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceruppŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceruppŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ paḻaya ceruppāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ paḻaya ceruppāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṇṭāṇŭ, then ceruppāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṇṭāṇŭ*, then *ceruppāṇŭ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a sandal? (ചെരുപ്പ് (ceruppŭ).) What slides in before ആണ്? (Nothing — ചെരുപ്പാണ്.) Which other word here does the same? (മുണ്ട് (muṇṭŭ) — മുണ്ടാണ്.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C100-thoppi",
+      "sequence": 3600,
+      "title": "തൊപ്പി (toppi) — a cap",
+      "headword": "തൊപ്പി",
+      "romanization": "toppi",
+      "gloss": "a cap — the fourth thing worn, and the one that completes the pair of endings",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:dc1504636e26b5da",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a sandal. Then say new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തൊപ്പി — toppi — a cap."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇത് പുതിയ തൊപ്പിയാണ്. — itŭ putiya toppiyāṇŭ — \"This is a new cap.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four things worn, and only two endings between them. തൊപ്പി (toppi) ends in ഇ, so it joins the way സാരി (sāri) does:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "ends in",
+                "word",
+                "joined to ആണ്"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "ends in: half-u. word: മുണ്ട് (muṇṭŭ). joined to ആണ്: മുണ്ടാണ് (muṇṭāṇŭ).",
+                "ends in: half-u. word: ചെരുപ്പ് (ceruppŭ). joined to ആണ്: ചെരുപ്പാണ് (ceruppāṇŭ).",
+                "ends in: ഇ. word: സാരി. joined to ആണ്: സാരിയാണ് (sāriyāṇŭ).",
+                "ends in: ഇ. word: തൊപ്പി. joined to ആണ്: തൊപ്പിയാണ് (toppiyāṇŭ)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing in this chapter asked you to learn a join. Both are long-standing: എന്താണ് has taken the half-u since your very first question, and കുട്ടി has taken the യ since ഇത് എന്റെ കുട്ടിയാണ്. പാട്ട്, കളി and ഭംഗി are the most recent words to use them, not the words they began with. What the chapter gave you is four things to wear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toppi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toppi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ putiya toppiyāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ putiya toppiyāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four joined forms in the table, one after another",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four joined forms in the table, one after another]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is a cap? (തൊപ്പി (toppi).) തൊപ്പി (toppi) ends in ഇ — what slides in before ആണ്? (യ — തൊപ്പിയാണ്.) Which other worn thing ends the same way? (സാരി (sāri).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R100-clothing-recall",
+      "sequence": 3610,
+      "title": "(a mundu, a sari, a sandal, a cap) (muṇṭuṁ sāriyuṁ enna ōrmma) — from cold",
+      "headword": "(a mundu, a sari, a sandal, a cap)",
+      "romanization": "muṇṭuṁ sāriyuṁ enna ōrmma",
+      "gloss": "cold retrieval of the four worn things, and of an adjective that has not moved since the chapter that taught it",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:839b0e1b051bf0a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say a mundu, a sari, a sandal, a cap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two endings, and an adjective that never moves",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four things to wear, and between them only two endings:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "ends in",
+                "word",
+                "joined to ആണ്"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "ends in: half-u. word: മുണ്ട് (muṇṭŭ). joined to ആണ്: മുണ്ടാണ് (muṇṭāṇŭ).",
+                "ends in: half-u. word: ചെരുപ്പ് (ceruppŭ). joined to ആണ്: ചെരുപ്പാണ് (ceruppāṇŭ).",
+                "ends in: ഇ. word: സാരി. joined to ആണ്: സാരിയാണ് (sāriyāṇŭ).",
+                "ends in: ഇ. word: തൊപ്പി. joined to ആണ്: തൊപ്പിയാണ് (toppiyāṇŭ)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Neither join was new, and neither is recent. എന്താണ് has taken the half-u since the book's first question, and കുട്ടി has taken the യ since ഇത് എന്റെ കുട്ടിയാണ് — long before പാട്ട്, കളി or ഭംഗി, which are only the latest words to use them. This chapter spent all four of its words on things, and none on grammar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇത് പുതിയ മുണ്ടാണ്. — itŭ putiya muṇṭāṇŭ — this is a new mundu. ഇത് പഴയ സാരിയാണ്. — itŭ paḻaya sāriyāṇŭ — this is an old sari."
+            },
+            {
+              "kind": "speech",
+              "text": "പുതിയ and പഴയ sit in front and do not change — the same shape they had in the chapter that taught them, with no ending added for the noun that follows."
+            },
+            {
+              "kind": "speech",
+              "text": "And the cloth a മുണ്ട് (muṇṭŭ) is made of is തുണി, which the book gave you long before it gave you anything made from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṇṭŭ, sāri, ceruppŭ, toppi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṇṭŭ*, *sāri*, *ceruppŭ*, *toppi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itŭ putiya muṇṭāṇŭ, then itŭ paḻaya ceruppāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itŭ putiya muṇṭāṇŭ*, then *itŭ paḻaya ceruppāṇŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word for the cloth a മുണ്ട് (muṇṭŭ) is made of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word for the cloth a **മുണ്ട്** is made of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which two of the four gain a യ, and what they end in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which two of the four gain a **യ**, and what they end in]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A mundu, a sari, a cap? (മുണ്ട് (muṇṭŭ), സാരി (sāri), തൊപ്പി (toppi).) Which of the three takes nothing before ആണ്? (മുണ്ട് (muṇṭŭ) — it ends in the half-u.) And where does പുതിയ stand? (In front, unchanged.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

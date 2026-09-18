@@ -575,8 +575,51 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // word ends in a vowel" -- untouched by the round-four fix, absent from the
   // ten-name list and from HL-C402, contradicted by ML-C98-sinima two lessons
   // later. Narrowed here to name ee.
-  expect(coverage.covered).toBe(206);
-  expect(coverage.unmapped).toBe(37);
+  // 206 -> 207: ML-A1-LEX-29, clothing, footwear and accessories. The percentage
+  // STAYS at 85 (85.19 rounds to 85); recomputed, not assumed.
+  // THE POINT'S NOTE WAS ACCURATE THIS TIME, and that was VERIFIED rather than
+  // assumed -- the two points before it (LEX-37, LEX-47) both had notes that
+  // overstated their gaps, so this one was token-swept first. thuni is indeed the
+  // only textile word taught, and eleven garment/accessory candidates all return
+  // zero. The null result is recorded because two stale notes in a row made it
+  // worth checking.
+  // NO NEW GRAMMAR AT ALL, deliberately, after ch99 spent itself on three
+  // contrasting joins: only two endings appear across the four words -- the
+  // half-u (mundu, cheruppu) and -i (saari, thoppi) -- and the learner owns both.
+  // The frame is ML-C42's attributive adjective: puthiya and pazhaya in front,
+  // unchanged, which is that chapter's whole pattern on nouns it never had.
+  // THE GLYPH PRE-CHECK FAILED TWICE AND IS NOW ONLY A SIGNAL. Its control had to
+  // be DERIVED rather than recalled (ch99), and it then produced FALSE NEGATIVES:
+  // it refused shirt over the chillu RR and "to wear" over DHA, both of which sit
+  // in taught headwords already (ten and seven respectively). A check stricter
+  // than the rule it stands in for is not a gate. shirt was dropped anyway, but
+  // on SCOPE -- the four chosen words already cover all three limbs of the label.
+  // EVERY ROMANIZATION WAS DERIVED LETTER BY LETTER, not word by word, which is
+  // the correction ch99 earned by getting nrttham's vowel right and the consonant
+  // beside it wrong. ca -> c, witnessed by cintikkuka, cevi, cheRiya, chuNTu,
+  // cUlu, cEcci, cErkkuka and ML-S111's own ca, against the legacy ch spellings
+  // chaaya, nenchu, uchakazhinju, acchan and muttacchan; zha -> zh-with-underdot,
+  // witnessed by pazhaya, pazham, vazhi and taazhe, against vyaazham,
+  // mazhakkaalam, ezhu and ML-S118's llla; NTu witnessed exactly by chuNTu; saari
+  // witnessed inside samsaarikkuka's own romanization; puthiya and pazhaya read
+  // off ML-C42's own fields rather than reconstructed.
+  // THE FIRST DRAFT GAVE COUNTS INSTEAD OF NAMES -- "sixteen headwords", "the
+  // lone chaaya", "six against two" -- and review found every one wrong (30 and
+  // 5; 12 and 6). They were offered as EVIDENCE OF the letter-by-letter
+  // discipline, in the same commit whose changelog says to name lessons and never
+  // count them. The rule existed and the sentence claiming rigour broke it.
+  // REVIEW ALSO CAUGHT THE JOIN PROVENANCE WRONG: the draft said the half-u
+  // arrived with paattu and the ya with kali and bhangi. enthaaNu takes the
+  // half-u at sequence 130 and kuttiyaaNu takes the ya at 810; those three are
+  // the most recent words to USE the joins, not the words they began with. Same
+  // defect ch98 recorded fixing ("kali said 'two words now do this'"), returned
+  // one chapter later in the same shape.
+  // AND THE ACCESSORY LIMB IS THIN: thoppi is headwear, which this chapter's own
+  // candidate list treats as separate from kaNNata/vaacchu/baagu. Two limbs are
+  // properly covered; the point closes on the basis LEX-37 closed with its
+  // free-time limb open, with the gap written down rather than papered over.
+  expect(coverage.covered).toBe(207);
+  expect(coverage.unmapped).toBe(36);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -588,6 +631,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 206/243 points covered (85%)",
+    "malayalam A1 (partial inventory): 207/243 points covered (85%)",
   );
 }, 60_000);

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R100-clothing-recall",
+    "language": "malayalam",
+    "chapter": 100,
+    "sequence": 3610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:839b0e1b051bf0a4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C100-mundu",
+    "language": "malayalam",
+    "chapter": 100,
+    "sequence": 3570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b33a50c00235c9e4"
+  },
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": "ML-EXT-100-CLOTHING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name what someone is wearing, and call it new or old.",
+  "prerequisites": [
+    "ML-EXT-99-ARTS"
+  ],
+  "lessons": [
+    "ML-C100-mundu",
+    "ML-C100-saari",
+    "ML-C100-cheruppu",
+    "ML-C100-thoppi",
+    "ML-R100-clothing-recall"
+  ]
+}
