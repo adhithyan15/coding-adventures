@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C99-paattu",
+    "language": "malayalam",
+    "chapter": 99,
+    "sequence": 3520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4eb005c67ba04c3b"
+  },
+  "findings": []
+}

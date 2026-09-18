@@ -2365,8 +2365,29 @@ describe("the committed Malayalam A1 inventory", () => {
     // contradicts any of them. ML-C70-o's fix was itself wrong on the first try:
     // it called chaaya AA-final, and ML-C39-chaaya's own romanization (chaaya,
     // short final a) makes it A-final, the same vowel as sinima.
-    expect(coverage.covered).toBe(205);
-    expect(coverage.unmapped).toBe(38);
+    // 205 -> 206: ML-A1-LEX-47, the arts. THE PERCENTAGE MOVES, 84 -> 85, and it was
+    // RECOMPUTED rather than carried over -- a stale rounded percent shipped once
+    // before (ch94, 82 -> 83) and no gate reads this string.
+    // THE POINT'S NOTE WAS ALREADY STALE BEFORE THE CHAPTER BEGAN, the second in a
+    // row after LEX-37's: it said "nothing taught" while ML-C98-sinima (3500) had
+    // closed the CINEMA limb one chapter earlier, so the probe wires that atom
+    // alongside the four new ones.
+    // NO NEW GRAMMAR, BY DESIGN. The three nouns each exercise a DIFFERENT one of
+    // the three aaNu outcomes already taught: paattu ends in the half-u and gives a
+    // sound up, nrttham ends in the anusvara and re-spells its m, katha ends in A
+    // and takes the ya glide as sinima does. Given up, re-spelled, added.
+    // THE GLYPH CONTROL HAD ROTTED: the remembered control (U+0D7A chillu-NN must
+    // report NOT covered) now reports covered, because ML-S131-chillu-nn exists.
+    // Re-run with a control DERIVED from the data instead of recalled.
+    // Two inventions were caught before the first commit, both by checking the
+    // corpus rather than the draft: sundaramaaya, an attributive form attested
+    // NOWHERE, and the vocalic r romanized with a ring below where the track uses a
+    // dot below in four witnesses (suhRttu, hRdayam, vRScikam, kRtajnjata).
+    // The recall's Grammar Lens was drafted FOUR columns wide and narrowed to three
+    // before any test ran -- ch98 shipped that and only the narration refusal count
+    // caught it, which leaves an audio learner a placeholder where evidence belongs.
+    expect(coverage.covered).toBe(206);
+    expect(coverage.unmapped).toBe(37);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2413,7 +2434,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 205/243 points covered (84%)",
+      "malayalam A1 (partial inventory): 206/243 points covered (85%)",
     );
   }, 60_000);
 });
