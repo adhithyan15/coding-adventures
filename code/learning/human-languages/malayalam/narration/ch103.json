@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 103,
   "title": "School",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:12468ee87be91098",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:b9d8a843e1d08a4d",
   "lessons": [
     {
       "id": "ML-C103-pallikkoodam",
@@ -123,6 +123,159 @@
             {
               "kind": "speech",
               "text": "A school? (പള്ളിക്കൂടം (paḷḷikkūṭaṁ).) What are the two words inside it? (paḷḷi, a place of worship, and kūṭaṁ, a hall.) Who is in it that you could already name? (അധ്യാപകൻ and വിദ്യാർത്ഥി.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S147-letter-ttha",
+      "sequence": 3725,
+      "title": "ഠ (ṭha) — one character, and this book has never once shown it to you",
+      "headword": "ഠ",
+      "romanization": "ṭha",
+      "gloss": "the single character ഠ — the breathed partner of ട, and the last letter this book had never shown you",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6f06a19878423b1e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ഠ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഠ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ട — say its sound, with the tongue curled back."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It arrives with the word on the next page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഠ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഠ — ṭha."
+            },
+            {
+              "kind": "speech",
+              "text": "It is ട with a breath after it. The tongue does exactly what it did for ട — curled back, touching the roof of the mouth — and then the release carries a puff of air out with it. Malayalam pairs its consonants this way all through: a plain one, and a breathed one beside it."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the only letter in the book that arrives with no history. Every other character you have met was already sitting inside a word you had been saying for chapters. This one has not appeared anywhere, in any word, until now."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഠ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ഠ (ṭha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these two, and say which one carries the breath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these two, and say which one carries the breath]"
+            },
+            {
+              "kind": "speech",
+              "text": "ട, ഠ (ṭha)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഠ three times, saying ṭha as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഠ three times, saying *ṭha* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭa, then ṭha — the same tongue, one with a puff of air",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭa*, then *ṭha* — the same tongue, one with a puff of air]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ഠ? What sound does it carry? (ṭha.) Which letter is it the breathed partner of? (ട.)"
             }
           ]
         }

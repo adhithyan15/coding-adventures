@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-S147-letter-ttha",
+    "language": "malayalam",
+    "chapter": 103,
+    "sequence": 3725,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6f06a19878423b1e",
+    "detachableSegments": [
+      "Script you'll notice: ഠ",
+      "Writing: ഠ — copy what you see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -79,6 +79,28 @@ has rendered before is invisible to every local gate"*.
   character has no witness anywhere: **ട** is *ṭ*, and every aspirate in this
   corpus carries an *h* (**ഭ** → *bh*, **ധ** → *dh*), so **ഠ** → *ṭh*
 
+#### The full suite caught a second gate, and the fix was to teach the letter
+
+`script-closure.test.ts` pins Malayalam at **`neverTaughtGlyphs === 0`**, and
+**പാഠം** broke it. That pin is a stronger claim than `ML-A1-SCR-12`'s note
+suggests: **ശ** counts as taught by this metric because it appears inside another
+letter lesson's example words, which is the understatement `lessons.d` already
+records. **ഠ** appears nowhere at all — not in a headword, not as an example —
+so it was the one genuinely never-taught glyph in the track.
+
+**The fix is `ML-S147-letter-ttha`, not a different word for *lesson*.** Closure
+is measured in **reading order**, so the letter is taught at sequence **3725**,
+between the school and the lesson that needs it. **ഠ** is **ട** with a breath
+after it, which makes it a natural pairing lesson rather than an errand, and the
+lesson says plainly what is unusual about it: *"this is the only letter in the
+book that arrives with no history"* — every other character the reader has met
+was already sitting inside a word they had been saying for chapters.
+
+Teaching it was the cheaper honest option. Padding an existing letter lesson's
+examples with **ഠ** would have moved the same number without teaching anybody
+anything, which is exactly the failure mode `lessons.d` names when it says the
+metric "understates real script debt by a factor of three."
+
 #### A check that was circular, and caught by the gate
 
 The first draft tagged `sounds: [malayalam-retroflex-lla]` and

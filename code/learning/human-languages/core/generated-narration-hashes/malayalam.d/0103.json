@@ -1,19 +1,20 @@
 {
   "language": "malayalam",
   "chapter": 103,
-  "sourceHash": "fnv1a64:12468ee87be91098",
+  "sourceHash": "fnv1a64:b9d8a843e1d08a4d",
   "lessonIds": [
     "ML-C103-pallikkoodam",
+    "ML-S147-letter-ttha",
     "ML-C103-paadam",
     "ML-C103-pareeksha",
     "ML-C103-maarkku",
     "ML-R103-school-recall"
   ],
   "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "drivablePrefix": 1,
   "text": "malayalam/narration/ch103.txt",
   "json": "malayalam/narration/ch103.json",
-  "textHash": "fnv1a64:b4f6a9af00af1023",
-  "jsonHash": "fnv1a64:33ecf1259df94516",
+  "textHash": "fnv1a64:7567ee9de844d554",
+  "jsonHash": "fnv1a64:9bfb866910343f79",
   "findings": []
 }
