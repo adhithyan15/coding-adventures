@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-90-PARTICIPLE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can join a clause to a noun the way this language actually does it.",
+  "prerequisites": [
+    "ML-EXT-89-OPINION"
+  ],
+  "lessons": [
+    "ML-C90-participle",
+    "ML-C90-clause-in-front",
+    "ML-C90-past-participle",
+    "ML-R90-participle-recall"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:88ea00bd6bf80f0f",
+  "lessonIds": [
+    "ML-C90-participle",
+    "ML-C90-clause-in-front",
+    "ML-C90-past-participle",
+    "ML-R90-participle-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch90-a-clause-in-front.tex"
+}

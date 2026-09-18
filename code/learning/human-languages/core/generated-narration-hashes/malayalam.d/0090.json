@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:03beb2754c4bfcb9",
+  "lessonIds": [
+    "ML-C90-participle",
+    "ML-C90-clause-in-front",
+    "ML-C90-past-participle",
+    "ML-R90-participle-recall"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "malayalam/narration/ch90.txt",
+  "json": "malayalam/narration/ch90.json",
+  "textHash": "fnv1a64:122bc5de91c484b1",
+  "jsonHash": "fnv1a64:8c7d474350506341",
+  "findings": []
+}
