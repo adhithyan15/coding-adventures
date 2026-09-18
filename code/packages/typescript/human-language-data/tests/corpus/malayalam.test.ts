@@ -436,8 +436,25 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // already taught, and says plainly that the VERB carries the tense while the day
   // word only says WHICH DAY. The tenses were built chapters ago and had nowhere
   // to land.
-  expect(coverage.covered).toBe(201);
-  expect(coverage.unmapped).toBe(42);
+  // 201 -> 202: ML-A1-LEX-51, open/closed and way in/way out. vaathil was named in
+  // chapter 52 and nothing could be done to it or about it until now. All six
+  // candidates were grepped as tokens first and every one had ZERO occurrences, so
+  // the chapter carries no forward-reference debt.
+  // TWO WORDS BUY FOUR FORMS: the asking ending is the long uu already owned from
+  // keLkkoo among the first commands, and the three tense endings come from a verb
+  // learned long before, so thurakkunnu/thurannu/thurakkum arrive already known.
+  // A DRAFT CLAIM WAS CUT HERE and it is the kind nothing in this repo reads. The
+  // akatthu/purathu lesson said those two end like the place words for above and
+  // below, "a family". THEY DO NOT: mukalil and munnil end in -il, thaazhe in -e,
+  // akatthu and purathu in -tthu. Three endings, not one. Checked against the
+  // owning lessons rather than from memory. The replacement is true and teaches
+  // better -- akatthu/purathu share a TAIL and part at the front, while
+  // innu/innale one chapter earlier shared an OPENING and parted at the tail.
+  // validate reads frontmatter and atom comments; the gates read structure; this
+  // suite reads banned words, glyphs and pins. None of them reads an assertion
+  // about how words are built. Same family as HL-C399.
+  expect(coverage.covered).toBe(202);
+  expect(coverage.unmapped).toBe(41);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -449,6 +466,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 201/243 points covered (83%)",
+    "malayalam A1 (partial inventory): 202/243 points covered (83%)",
   );
 }, 60_000);
