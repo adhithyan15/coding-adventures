@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Where You Came From",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:bfbbce782b279586",
+  "sourceHash": "fnv1a64:0337a7b0c20682d9",
   "lessons": [
     {
       "id": "ML-C83-ninnu",
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cb1d5cc279de7e9",
+      "sourceHash": "fnv1a64:e21b32e49739fbeb",
       "notice": null,
       "blocks": [
         {
@@ -388,7 +388,11 @@
             },
             {
               "kind": "speech",
-              "text": "The -ം is a citation dress. It is what the word wears when it stands alone and is named; the moment anything is added, the word changes into its working shape first. Look for that habit rather than for a list."
+              "text": "The -ം is a citation dress. It is what the word wears when it stands alone and is named; the moment a case ending is added, the word changes into its working shape first. Look for that habit rather than for a list."
+            },
+            {
+              "kind": "speech",
+              "text": "Other kinds of ending do other things to it. You have met one already: the and ending puts വും there instead — വെള്ളം, വെള്ളവും — which is not this at all. What this chapter shows you is the case ending."
             },
             {
               "kind": "speech",
@@ -462,7 +466,7 @@
             },
             {
               "kind": "speech",
-              "text": "What happens to -ം when an ending is added? (It is replaced by -ത്ത-.) Is that one word's quirk or a whole class? (A whole class.) And how do you say from Kerala? (kēraḷattil ninnŭ.)"
+              "text": "What happens to -ം when a case ending is added? (It is replaced by -ത്ത-.) Is that one word's quirk or a whole class? (A whole class.) And how do you say from Kerala? (kēraḷattil ninnŭ.)"
             }
           ]
         }
@@ -481,7 +485,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:7ef914244ae86e95",
+      "sourceHash": "fnv1a64:505326ce170b5873",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -534,7 +538,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the first column against the middle and the third row is the odd one. കേരളം loses its -ം and puts -ത്ത- there instead, and so does every other -ം word this book has given you. The -ം is a citation dress: what the word wears standing alone, dropped the moment anything is added."
+              "text": "Read the first column against the middle and the third row is the odd one. കേരളം loses its -ം and puts -ത്ത- there instead, and so does every other -ം word this book has given you. The -ം is a citation dress: what the word wears standing alone, dropped the moment a case ending is added."
             }
           ]
         },

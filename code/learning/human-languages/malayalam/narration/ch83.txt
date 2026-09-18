@@ -91,7 +91,8 @@ That is not this word being difficult. Every noun ending in -ം does it, and th
 പുസ്തകം pustakaṁ. in it: പുസ്തകത്തിൽ pustakattil.
 കേരളം kēraḷaṁ. in it: കേരളത്തിൽ kēraḷattil.
 So this is a class, not an exception, and it is a large one. Learning it once puts every -ം word you own into the in-form, which is a much better return than memorising two place names.
-The -ം is a citation dress. It is what the word wears when it stands alone and is named; the moment anything is added, the word changes into its working shape first. Look for that habit rather than for a list.
+The -ം is a citation dress. It is what the word wears when it stands alone and is named; the moment a case ending is added, the word changes into its working shape first. Look for that habit rather than for a list.
+Other kinds of ending do other things to it. You have met one already: the and ending puts വും there instead — വെള്ളം, വെള്ളവും — which is not this at all. What this chapter shows you is the case ending.
 Now the whole chapter arrives at once:
 കേരളത്തിൽ നിന്ന് — kēraḷattil ninnŭ — from Kerala.
 
@@ -108,7 +109,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What happens to -ം when an ending is added? (It is replaced by -ത്ത-.) Is that one word's quirk or a whole class? (A whole class.) And how do you say from Kerala? (kēraḷattil ninnŭ.)
+What happens to -ം when a case ending is added? (It is replaced by -ത്ത-.) Is that one word's quirk or a whole class? (A whole class.) And how do you say from Kerala? (kēraḷattil ninnŭ.)
 
 
 Lesson 4 of 4.
@@ -126,7 +127,7 @@ Grammar Lens: one position, one direction, one change of shape.
 ഇന്ത്യ. in it: ഇന്ത്യയിൽ. from it: ഇന്ത്യയിൽ നിന്ന് (ninnŭ).
 കേരളം. in it: കേരളത്തിൽ (kēraḷattil). from it: കേരളത്തിൽ (kēraḷattil) നിന്ന് (ninnŭ).
 Read the middle column and then the last. നിന്ന് (ninnŭ) never changes and never glues on — it follows a word that already carries the in-ending, and it does the same thing to all three.
-Read the first column against the middle and the third row is the odd one. കേരളം loses its -ം and puts -ത്ത- there instead, and so does every other -ം word this book has given you. The -ം is a citation dress: what the word wears standing alone, dropped the moment anything is added.
+Read the first column against the middle and the third row is the odd one. കേരളം loses its -ം and puts -ത്ത- there instead, and so does every other -ം word this book has given you. The -ം is a citation dress: what the word wears standing alone, dropped the moment a case ending is added.
 
 What you've built.
 An answer to the first question anybody asks you.

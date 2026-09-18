@@ -43,7 +43,53 @@ recall answer that is a false universal about the language is invisible to all o
 them** — the same gap as `HL-C399`, and the same gap that let three successive
 false accounts of this very join pass every check.
 
-### Shape of a fix
+### RESOLVED
+
+**Closed on the HL-C400 branch.** The fix is the one this shard proposed, and it
+held: all four sites now say **a case ending** where they said *anything*.
+
+| lesson | now reads |
+|---|---|
+| `ML-C83-keralathil` | *"the moment **a case ending** is added"*, plus one added sentence: *"Other kinds of ending do other things to it, and you will meet them in their own chapters."* Its recall asks *"when a case ending is added"*. |
+| `ML-R83-from-recall` | *"dropped the moment **a case ending** is added"* |
+| `ML-C91-vila-panam` | body and recall both say *"when **a case ending** attaches"* |
+| `ML-C92-bhakshanam` | it **demonstrated nothing** — it only asserted *"you already know how it will behave when anything attaches"*. It now names what it knows: *"you already know what a **case ending** will do to it — the **ം** gives way to **-ത്ത-**, as it did on **കേരളം** and **പുസ്തകം**."* |
+
+**"Case ending" is not new metalanguage**: `ML-C06-dative-ikku` uses it at
+sequence **320**, long before any of these sites, and `ML-C96-eluppam` (3410)
+already models the exact phrasing — *"A case ending takes the **ം** away and
+puts **ത്ത** in its place."*
+
+**The sweep returned exactly these four canonical lessons and nine lines**, and
+the recall partners `ML-R91-shopping-recall` and `ML-R92-eating-out-recall` were
+checked and are clean — **null result stated**.
+
+**But the first version of this section claimed "no fifth site" after a sweep
+"script and romanization", and that was false.** Review found the identical
+sentence still asserted in romanization in `core/exam-inventory-malayalam-a1.json`
+(twice) and a now-stale *"still tell the learner"* record in
+`malayalam/chapters.d/0096.json`. All three are corrected in the same commit.
+The claim now says what it can support: four canonical lessons.
+
+**The four-way picture is deliberately not taught in chapter 83** — but not for
+the reason first given. The first version said *"the learner has met one of the
+four at that point"*, and that is wrong: they have met **two**. `ML-C70-um`
+(2390) teaches the **-ം → -വും** rule outright, 510 points earlier. So
+`ML-C83` now **names** that one — *"You have met one already: the and ending
+puts **വും** there instead"* — rather than promising it as something still to
+come. The other two (**ങ്ങൾ** at `ML-C93-angal`, **ആണ്**/**ഇല്ല** at
+`ML-C89`/`ML-C96`) genuinely do come later.
+
+**And the narrowing introduced a false claim of its own**, caught in review:
+`ML-C91-vila-panam` said the **ം** gives way *"exactly as it did on the state
+name and on the tens"*. Loose but harmless while the sentence said *"when
+something attaches"*; once narrowed to *"a case ending"* it asserted that a case
+ending removed a **ം** from the tens — which have **no ം** (they end in **ത്**)
+and take **no case ending** (their trigger is a following digit). Now *"on the
+state name and on the book"*. Three merged lessons that generalise stem
+alternation more broadly are filed separately as `HL-C404`, with a dissent.
+
+### Shape of a fix (as originally proposed)
 
 Narrow the four recall answers to what each lesson actually demonstrates — *"an
 ending that marks a case"* rather than *"an ending"*, *"when a case ending

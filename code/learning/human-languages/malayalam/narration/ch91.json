@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "What It Costs",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:24f6c8ffc29f02c8",
+  "sourceHash": "fnv1a64:0ea918b61a0cfbee",
   "lessons": [
     {
       "id": "ML-C91-kada",
@@ -138,7 +138,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c11259f6583f52a2",
+      "sourceHash": "fnv1a64:ead36560d80ca984",
       "notice": null,
       "blocks": [
         {
@@ -194,7 +194,7 @@
             },
             {
               "kind": "speech",
-              "text": "പണം ends in the ം, which means you already know what it will do when something attaches to it: the ം gives way, exactly as it did on the state name and on the tens. A word that ends this way tells you in advance how it will behave."
+              "text": "പണം ends in the ം, which means you already know what it will do when a case ending attaches to it: the ം gives way, exactly as it did on the state name and on the book. A word that ends this way tells you in advance how it will behave."
             },
             {
               "kind": "speech",
@@ -268,7 +268,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is vila? (Price.) What is paṇaṁ? (Money.) And what does the ം on the second one warn you about? (It will give way when something attaches.)"
+              "text": "What is vila? (Price.) What is paṇaṁ? (Money.) And what does the ം on the second one warn you about? (It will give way when a case ending attaches.)"
             }
           ]
         }

@@ -52,7 +52,7 @@ the same thing to all three.
 Read the first column against the middle and the third row is the odd one.
 **കേരളം loses its -ം and puts -ത്ത- there instead**, and so does every other
 **-ം** word this book has given you. **The -ം is a citation dress**: what the
-word wears standing alone, dropped the moment anything is added.
+word wears standing alone, dropped the moment **a case ending** is added.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C83-WHERE-FROM-01, ML-CONCEPT-C05-POSTPOSITION-IL-01] -->

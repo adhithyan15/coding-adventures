@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Eating Out",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4204c0e37d8841c8",
+  "sourceHash": "fnv1a64:d65bbe9e778ac7cf",
   "lessons": [
     {
       "id": "ML-C92-bhakshanam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f83b4a4081e3dafc",
+      "sourceHash": "fnv1a64:5db1570a864c2750",
       "notice": null,
       "blocks": [
         {
@@ -73,7 +73,7 @@
             },
             {
               "kind": "speech",
-              "text": "It ends in ം, so you already know how it will behave when anything attaches to it."
+              "text": "It ends in ം, so you already know what a case ending will do to it — the ം gives way to -ത്ത-, as it did on കേരളം and പുസ്തകം."
             }
           ]
         },
