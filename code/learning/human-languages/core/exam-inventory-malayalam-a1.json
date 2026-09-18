@@ -4222,7 +4222,12 @@
       "id": "ML-A1-LEX-55",
       "category": "Padakosham (lexicon by domain)",
       "label": "eating out: the restaurant, ordering, the bill",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C92-FOOD-01",
+        "ML-LEX-C92-EATERY-01",
+        "ML-LEX-C92-BILL-01",
+        "ML-CONCEPT-C92-FALSE-FRIEND-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -4232,7 +4237,7 @@
         "A1-NE05-05"
       ],
       "malayalamSpecific": false,
-      "note": "Nothing taught. The track teaches the meal at home -- oon, rice, curd, jaggery -- and no word for a place that serves one. With the missing money vocabulary at ML-A1-LEX-30 the whole restaurant scenario is closed."
+      "note": "Chapter 92, and its blocker is gone: the note said 'with the missing money vocabulary' this was out of reach, and chapter 91 supplied that. The note was also right that the track taught the meal at home -- oon, rice, curd, jaggery -- and no word for a place that serves one. THREE WORDS CLOSE IT, and the question at the end of the scene is chapter 91's, unchanged. bhakshanam is the general word for FOOD, which the book had never had: it owned ari (raw rice), choru (cooked rice) and oon (a meal) and no name for the category they belong to, which is what a vocabulary grown from the particular outward tends to leave out -- a course can leave a learner able to order lunch and unable to say the word food. THE TWO BORROWINGS ARE THE CHAPTER'S REAL LESSON and they sit together on purpose: hottal came from English 'hotel' and in Kerala ordinarily means A PLACE TO EAT, while bil kept its meaning intact. One changed and one did not, so the habit taught is to CHECK EACH BORROWING rather than trust the family -- recognising the English inside a word tells you how to say it and nothing reliable about what it means. Verified before writing: bhakshanam, hottal and bil all returned ZERO files, and every Malayalam character in them was checked against data/scripts/malayalam.json first, after HL-C398."
     },
     {
       "id": "ML-A1-SCR-01",

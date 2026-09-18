@@ -1,0 +1,18 @@
+{
+  "chapter": 92,
+  "title": "Eating Out",
+  "label": "ch:ml-eating-out",
+  "canDo": "I can name food, find a place that serves it, and ask for the bill.",
+  "payoff": {
+    "lesson": "ML-R92-eating-out-recall",
+    "kind": "production",
+    "summary": "From cold: the general word for food, the eating place, the bill, and the rule that a borrowed word keeps only the meaning its borrowers needed.",
+    "assesses": [
+      "ML-LEX-C92-FOOD-01",
+      "ML-LEX-C92-EATERY-01",
+      "ML-LEX-C92-BILL-01",
+      "ML-CONCEPT-C92-FALSE-FRIEND-01"
+    ],
+    "note": "The chapter introduces exactly these four atoms and the payoff assesses all four. The price question at the end of the scene is chapter 91's, unchanged, and the two borrowings sit together because one changed meaning on the way in and the other did not."
+  }
+}

@@ -391,8 +391,17 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // object stays BARE -- pustakam takes no object ending because it is a thing,
   // which is chapter 87's rule holding while the verb changed. A vocabulary
   // chapter is cheap when the grammar under it is already built.
-  expect(coverage.covered).toBe(198);
-  expect(coverage.unmapped).toBe(45);
+  // 198 -> 199: ML-A1-LEX-55, eating out, whose blocker chapter 91 removed. Three
+  // words close it and the question ending the scene is chapter 91's, unchanged.
+  // bhakshanam is the general word for FOOD, which the book had never had -- it
+  // owned ari, choru and oon and no name for the category, which is what a
+  // vocabulary grown from the particular outward tends to leave out. THE TWO
+  // BORROWINGS ARE THE REAL LESSON and sit together on purpose: hottal came from
+  // English "hotel" and in Kerala ordinarily means A PLACE TO EAT, while bil kept
+  // its meaning intact. One changed and one did not, so the habit taught is to
+  // check each borrowing rather than trust the family.
+  expect(coverage.covered).toBe(199);
+  expect(coverage.unmapped).toBe(44);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -404,6 +413,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 198/243 points covered (81%)",
+    "malayalam A1 (partial inventory): 199/243 points covered (82%)",
   );
 }, 60_000);
