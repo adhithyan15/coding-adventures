@@ -12,7 +12,7 @@
 **It is named three times over, from sequence 660.** `ML-C32-pokuka` states
 *"Malayalam's present tense is one word long"*; `ML-C33-cintikkuka` repeats it;
 `ML-C50-parayuka` (1405) says outright *"**പറയുന്നു** is the whole present
-tense"*. The note was wrong by 2,390 sequence points.
+tense"*.
 
 **What is genuinely missing is the mapping.** No lesson tells the learner that
 this **one** form answers **both** English presents — *I go* and *I am going*.
@@ -27,12 +27,20 @@ point. Parts present, never assembled — exactly the shape `ML-A1-TIME-10` had.
 | **ഞാൻ പോകുന്നു** | *ñān pōkunnu* | I go **and** I am going |
 | **ഇപ്പോൾ ഞാൻ പോകുന്നു** | *ippōḷ ñān pōkunnu* | right now I am going |
 
-**ഇപ്പോൾ** is owned since 1390, **എപ്പോൾ** since 2590, **നീ** since 60,
-**ആണ്** since 90. **വരുന്നു** appears **nowhere** in the corpus — and it is
-*buildable*, from **വരുക** plus a rule the book states, so it is used in prose
-and inside a multi-word headword and **never headworded alone**. That is the
-`lessons.d` rule that a word the corpus can already build must not be introduced
-later as a word.
+**ഇപ്പോൾ** is owned since 1390, **എപ്പോൾ** since 2590, **നീ** since 110,
+**ആണ്** since 90. **വരുന്നു** is never headworded alone, which is the `lessons.d`
+rule that a word the corpus can already build must not be introduced later as a
+word.
+
+**The draft justified that with a false claim, and it is the script-keyed census
+failing a third time.** It said *varunnu* "appears nowhere in the corpus" — true
+only of the **Malayalam-script** spelling. `ML-C32-varuka:78` gives it in the
+tense table as *varunnu*, `:97` drills it (*"the three times: varunnu … vannu …
+varuṁ"*), and `ML-C32-ariyuka:89` and `ML-C33-ezhutuka:86` recite it in a
+six-verb set. It was **given and drilled**, in romanization, at sequence 670.
+`ML-C104-no-am` no longer says *"Nobody had to give you varunnu as a word"*.
+`HL-C402`, `ML-C34`'s *ethra maṇi*, and now this: **three times in one run**, a
+census keyed on script has missed what the corpus teaches in sound.
 
 #### The warning is the part a learner most needs
 
@@ -45,18 +53,24 @@ English says *I **am** going*. **ആണ്** has been taught since sequence **90
 | *ഇപ്പോൾ ഞാൻ ആണ് വരുന്നു* | **not a Malayalam sentence** |
 
 **ആണ്** joins a thing to what it *is*; it is not a helper propping up another
-verb, because Malayalam has no helpers. The ungrammatical form is shown and
+verb; propping one up is not its job. The ungrammatical form is shown and
 marked as such, because the mistake is predictable and naming it is cheaper than
 leaving the learner to make it.
 
 #### Two of my own claims were false and caught before commit
 
 - **"you have seen the same shape before in *this* and *which*"** — **ഏത്**
-  (*which*) is taught **nowhere**. The taught pair is **ഇത്**/**അത്**, *this*
-  against *that*, which is a different alternation entirely: proximal against
-  distal, not proximal against interrogative. The claim is **dropped**, not
-  repaired, because there is no taught precedent to point at. The lesson now says
-  only what is true of these two words: **ഇ-** points, **എ-** asks.
+  (*which*) is taught **nowhere**, so that pair was wrong. **The conclusion I drew
+  from it was worse than the error.** I wrote that the claim was *"dropped, not
+  repaired, because there is no taught precedent to point at"* — and
+  `ML-C41-deixis-system` (sequence 1000) teaches exactly this alternation, under
+  the headword **"i- / a- / e-"**. `ML-C50-now` names it when introducing
+  **ഇപ്പോൾ**, and `ML-C75-eppol` lays out **ഇപ്പോൾ**/**അപ്പോൾ**/**എപ്പോൾ** in a
+  three-row table cross-referenced to **ഇവിടെ**/**അവിടെ**/**എവിടെ**.
+  **I checked one instance of a pattern, found it absent, and concluded the
+  pattern was untaught.** The repair is the opposite of what I did: the lesson now
+  **names** the system, keeps the three-way row rather than reducing it to two,
+  and requires and reviews `ML-GRAMMAR-C41-DEIXIS-SYSTEM`.
 - **The exchange asked a question nobody asks.** It used one subject in both
   lines to support *"only the first word moves"*, which made the question *"when
   am I coming?"*. It now runs between two speakers — **നീ** asking, **ഞാൻ**

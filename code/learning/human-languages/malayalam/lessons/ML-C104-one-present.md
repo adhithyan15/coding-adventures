@@ -56,14 +56,14 @@ exist here. There is nothing to get right.
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C104-ONE-PRESENT-01] -->
 
-**English is the unusual one.** Most languages do not split the present into a
-habitual and an ongoing form, and Malayalam does not. **-ുന്നു** covers what you
-do every day and what you are doing at this moment, and a listener takes whichever
-the situation offers.
+**English is the one doing something extra here.** It splits its present into a
+habitual and an ongoing form; Malayalam does not. The ending **-ഉന്നു** covers
+what you do every day and what you are doing at this moment, and a listener takes
+whichever the situation offers.
 
-**This is not a gap in Malayalam.** When it matters which you mean, the language
-says so with another word rather than another verb form — which is the next
-lesson.
+**This is not a gap in Malayalam.** When it matters which you mean, there is a
+way to say so — and the one this book gives you is a word in front, not a change
+to the verb. That is the next lesson.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C104-ONE-PRESENT-01, ML-CONCEPT-C32-POKUKA-02] -->

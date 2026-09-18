@@ -42,23 +42,23 @@ Take a second verb through it and watch nothing bend:
 
 > **ഇപ്പോൾ ഞാൻ വരുന്നു.** — *ippōḷ ñān varunnu* — "Right now I am coming."
 
-**You built that yourself.** *varuka* has been yours for a long time, and the
-**-ുന്നു** ending is the one you were told makes the whole present tense. Nobody
-had to give you *varunnu* as a word.
+**You have said that verb before.** *varunnu* was in the tense table you were
+given for *varuka*, and you drilled it there beside *vannu* and *varuṁ*. What is
+new is not the word — it is that it does the same double duty **പോകുന്നു** does.
 
 ## Grammar Lens: the word you must not reach for
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C104-NO-COPULA-01]; assesses=[ML-LEX-AANU-01, ML-CONCEPT-C32-UNDU-01, ML-LEX-C74-KAZHIYUM-01] -->
 
 English says *I **am** going*, in two words. When you go looking for the
-Malayalam word to put where *am* is, you will find **ആണ്** — because **ആണ്** is
-the word you were given for *is* and *am*, in your very first week.
+Malayalam word to put where *am* is, you will find **ആണ്** — the copula you were
+given early on for *is*, and which you have since heard carrying *am* as well.
 
 **Do not put it here.**
 
-| | |
-|---|---|
-| **ഇപ്പോൾ ഞാൻ വരുന്നു** | right — one verb, nothing added |
-| *ഇപ്പോൾ ഞാൻ ആണ് വരുന്നു* | **not a Malayalam sentence** |
+**ഇപ്പോൾ ഞാൻ വരുന്നു** is right: one verb, nothing added. Putting a copula in the
+middle of it — *ippōḷ ñān āṇŭ varunnu* — **is ungrammatical**, and it is written
+here in sound only, so that the shape never sits on the page looking like
+Malayalam you could copy.
 
 **ആണ്** joins a thing to what it *is* — a name, a description. That is its
 whole job, and propping up another verb is not part of it. The whole of *am

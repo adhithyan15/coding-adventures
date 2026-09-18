@@ -728,7 +728,7 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // ML-C74-purpose (2560) already translates nyaan pOkunnu as "I am going"
   // without ever making the point. Parts present, never assembled, exactly as
   // ML-A1-TIME-10 was. NO NEW WORD: ippOL is owned since 1390, eppOL since
-  // 2590, nii since 60, aaNu since 90, and varunnu is BUILDABLE from varuka
+  // 2590, nii since 110, aaNu since 90, and varunnu is BUILDABLE from varuka
   // plus a rule the book states, so it is never headworded alone.
   // THE CHAPTER REFUSES ONE CLAIM: Malayalam's dedicated progressive in
   // -koNTirikkunnu is not taught and is not claimed. At A1 the simple present

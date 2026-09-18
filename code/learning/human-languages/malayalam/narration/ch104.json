@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "One Present, Two Englishes",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a3e1d510de68a7d9",
+  "sourceHash": "fnv1a64:de5be6d3425da624",
   "lessons": [
     {
       "id": "ML-C104-one-present",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0151702478f5b7f",
+      "sourceHash": "fnv1a64:06a8bb6e7023ad77",
       "notice": null,
       "blocks": [
         {
@@ -79,11 +79,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "English is the unusual one. Most languages do not split the present into a habitual and an ongoing form, and Malayalam does not. -ുന്നു covers what you do every day and what you are doing at this moment, and a listener takes whichever the situation offers."
+              "text": "English is the one doing something extra here. It splits its present into a habitual and an ongoing form; Malayalam does not. The ending -ഉന്നു covers what you do every day and what you are doing at this moment, and a listener takes whichever the situation offers."
             },
             {
               "kind": "speech",
-              "text": "This is not a gap in Malayalam. When it matters which you mean, the language says so with another word rather than another verb form — which is the next lesson."
+              "text": "This is not a gap in Malayalam. When it matters which you mean, there is a way to say so — and the one this book gives you is a word in front, not a change to the verb. That is the next lesson."
             }
           ]
         },
@@ -298,7 +298,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcd6148699ebaad2",
+      "sourceHash": "fnv1a64:5509e6451811d752",
       "notice": null,
       "blocks": [
         {
@@ -333,7 +333,7 @@
             },
             {
               "kind": "speech",
-              "text": "You built that yourself. varuka has been yours for a long time, and the -ുന്നു ending is the one you were told makes the whole present tense. Nobody had to give you varunnu as a word."
+              "text": "You have said that verb before. varunnu was in the tense table you were given for varuka, and you drilled it there beside vannu and varuṁ. What is new is not the word — it is that it does the same double duty പോകുന്നു does."
             }
           ]
         },
@@ -344,24 +344,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "English says I am going, in two words. When you go looking for the Malayalam word to put where am is, you will find ആണ് — because ആണ് is the word you were given for is and am, in your very first week."
+              "text": "English says I am going, in two words. When you go looking for the Malayalam word to put where am is, you will find ആണ് — the copula you were given early on for is, and which you have since heard carrying am as well."
             },
             {
               "kind": "speech",
               "text": "Do not put it here."
             },
             {
-              "kind": "table",
-              "headers": [
-                "",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 2,
-              "utterances": [
-                "ഇപ്പോൾ ഞാൻ വരുന്നു (ippōḷ ñān varunnu), right — one verb, nothing added.",
-                "ഇപ്പോൾ ഞാൻ ആണ് വരുന്നു, not a Malayalam sentence."
-              ]
+              "kind": "speech",
+              "text": "ഇപ്പോൾ ഞാൻ വരുന്നു (ippōḷ ñān varunnu) is right: one verb, nothing added. Putting a copula in the middle of it — ippōḷ ñān āṇŭ varunnu — is ungrammatical, and it is written here in sound only, so that the shape never sits on the page looking like Malayalam you could copy."
             },
             {
               "kind": "speech",
@@ -435,17 +426,17 @@
     {
       "id": "ML-C104-eppol-answer",
       "sequence": 3800,
-      "title": "എപ്പോൾ — ഇപ്പോൾ (eppōḷ — ippōḷ) — asked and answered",
-      "headword": "എപ്പോൾ — ഇപ്പോൾ",
-      "romanization": "eppōḷ — ippōḷ",
-      "gloss": "when? — right now; a question you own and an answer you own, one letter apart",
+      "title": "നിങ്ങൾ എപ്പോൾ പോകും? (niṅṅaḷ eppōḷ pōkuṁ?) — asked long ago, answered now",
+      "headword": "നിങ്ങൾ എപ്പോൾ പോകും?",
+      "romanization": "niṅṅaḷ eppōḷ pōkuṁ?",
+      "gloss": "when will you go? — a question you were already taught, answered with the present you have just been given",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a810b90e27d3db1",
+      "sourceHash": "fnv1a64:661c7cacf101d254",
       "notice": null,
       "blocks": [
         {
@@ -461,7 +452,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say when? Then say now. Say them one after the other and listen to how little separates them."
+              "text": "Say now, then, and when? — the three you were given as a set."
             }
           ]
         },
@@ -472,7 +463,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You own both halves of an exchange and have never put them together:"
+              "text": "Nothing about this pair is new to you. You were taught the three beginnings as a system — ഇ- near, അ- far, എ- a question — and then handed this row of it whole:"
             },
             {
               "kind": "table",
@@ -482,42 +473,32 @@
                 ""
               ],
               "columns": 3,
-              "rowCount": 2,
+              "rowCount": 3,
               "utterances": [
-                "എപ്പോൾ?, eppōḷ, when?",
-                "ഇപ്പോൾ., ippōḷ, now."
+                "ഇപ്പോൾ, ippōḷ, now.",
+                "അപ്പോൾ, appōḷ, then.",
+                "എപ്പോൾ, eppōḷ, when?"
               ]
             },
             {
               "kind": "speech",
-              "text": "One vowel apart, and they are question and answer. The ഇ- points at something; the എ- asks about it. That single vowel is carrying the whole difference between pointing and asking."
+              "text": "What is new is the answer. You were given the question നിങ്ങൾ എപ്പോൾ പോകും? (niṅṅaḷ eppōḷ pōkuṁ?) with a future on the end of it, and no way to reply except with another future."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the whole exchange",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "— നീ എപ്പോൾ വരുന്നു? — nī eppōḷ varunnu? — \"When are you coming?\" — ഞാൻ ഇപ്പോൾ വരുന്നു. — ñān ippōḷ varunnu. — \"I am coming right now.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Look at what did not change. Two different people are speaking about two different subjects, and വരുന്നു is identical in both lines. The verb carried the asking and the answering without moving a letter."
-            },
-            {
-              "kind": "speech",
-              "text": "That is what this chapter has been about: Malayalam puts the work in a word at the front, and leaves the verb alone. English puts the work in the verb."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Now you can answer it with this moment instead:"
+            },
+            {
+              "kind": "speech",
+              "text": "— നിങ്ങൾ എപ്പോൾ പോകും? — niṅṅaḷ eppōḷ pōkuṁ? — \"When will you go?\" — ഇപ്പോൾ ഞാൻ പോകുന്നു. — ippōḷ ñān pōkunnu. — \"I'm going right now.\""
+            },
             {
               "kind": "pause",
               "seconds": 1,
@@ -527,38 +508,53 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "eppōḷ, then ippōḷ",
+              "instruction": "the question — niṅṅaḷ eppōḷ pōkuṁ?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *eppōḷ*, then *ippōḷ*]"
+              "source": "[YOU SAY: the question — *niṅṅaḷ eppōḷ pōkuṁ?*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "nī eppōḷ varunnu?, then ñān ippōḷ varunnu",
+              "instruction": "the answer — ippōḷ ñān pōkunnu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *nī eppōḷ varunnu?*, then *ñān ippōḷ varunnu*]"
+              "source": "[YOU SAY: the answer — *ippōḷ ñān pōkunnu*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the same pair with pōkunnu",
+              "instruction": "the same exchange with to come — answer ippōḷ ñān varunnu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the same pair with *pōkunnu*]"
+              "source": "[YOU SAY: the same exchange with *to come* — answer *ippōḷ ñān varunnu*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which single vowel carries the difference between asking and pointing",
+              "instruction": "which word in your answer says this moment",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: which single vowel carries the difference between asking and pointing]"
+              "source": "[YOU SAY: which word in your answer says *this moment*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The question was asked in the future and answered in the present, and that is not a mismatch — it is the ordinary way to say you are on your way. The question asks about a plan; the answer says the plan is happening now."
+            },
+            {
+              "kind": "speech",
+              "text": "And the answer needs one verb to do it. No word went in where English puts am."
             }
           ]
         },
@@ -575,7 +571,7 @@
             },
             {
               "kind": "speech",
-              "text": "When? (എപ്പോൾ.) Now? (ഇപ്പോൾ.) Which vowel asks and which one points? (എ- asks, ഇ- points.) How much of the verb changed between question and answer? (None of it.)"
+              "text": "When? (എപ്പോൾ.) Its two partners? (ഇപ്പോൾ now, അപ്പോൾ then.) Answer നിങ്ങൾ എപ്പോൾ പോകും? (niṅṅaḷ eppōḷ pōkuṁ?) with this moment. (ഇപ്പോൾ ഞാൻ പോകുന്നു (ippōḷ ñān pōkunnu).)"
             }
           ]
         }

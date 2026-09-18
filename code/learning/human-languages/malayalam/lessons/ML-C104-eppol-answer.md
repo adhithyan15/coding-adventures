@@ -4,77 +4,81 @@ id: ML-C104-eppol-answer
 spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 3800
 chapter: 104
-type: grammar
-headword: "എപ്പോൾ — ഇപ്പോൾ"
-gloss: when? — right now; a question you own and an answer you own, one letter apart
-romanization: "eppōḷ — ippōḷ"
-concept_tag: ML-WHEN-NOW-PAIR
-prerequisites: [ML-C104-no-am, ML-C75-eppol, ML-C02-nii-ningal]
+type: practice
+headword: "നിങ്ങൾ എപ്പോൾ പോകും?"
+gloss: when will you go? — a question you were already taught, answered with the present you have just been given
+romanization: "niṅṅaḷ eppōḷ pōkuṁ?"
+concept_tag: ML-WHEN-ANSWERED-NOW
+prerequisites: [ML-C104-no-am, ML-C75-eppol, ML-C41-deixis-system, ML-C02-nii-ningal]
 sounds: []
 roots: []
 duration:
   max_seconds: 245
 requires:
-  knowledge: [ML-GRAMMAR-C104-NO-COPULA-01, ML-GRAMMAR-C104-NOW-01, ML-LEX-C75-EPPOL-01, ML-LEX-NII-NINGAL-01]
+  knowledge: [ML-GRAMMAR-C104-NO-COPULA-01, ML-GRAMMAR-C104-NOW-01, ML-LEX-C75-EPPOL-01, ML-GRAMMAR-C41-DEIXIS-SYSTEM, ML-LEX-NII-NINGAL-01]
 introduces:
   knowledge: []
 practises:
-  knowledge: [ML-GRAMMAR-C104-ONE-PRESENT-01, ML-GRAMMAR-C104-NOW-01, ML-GRAMMAR-C104-NO-COPULA-01, ML-LEX-C75-EPPOL-01, ML-LEX-C50-LEAVE-01, ML-LEX-NII-NINGAL-01]
+  knowledge: [ML-GRAMMAR-C104-ONE-PRESENT-01, ML-GRAMMAR-C104-NOW-01, ML-GRAMMAR-C104-NO-COPULA-01, ML-LEX-C75-EPPOL-01, ML-GRAMMAR-C41-DEIXIS-SYSTEM, ML-LEX-NII-NINGAL-01, ML-LEX-C50-LEAVE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-C75-eppol, ML-C50-now, ML-C02-nii-ningal, ML-C104-ippol]
+reviews_of: [ML-C75-eppol, ML-C41-deixis-system, ML-C50-now, ML-C104-ippol]
 ---
 
-# എപ്പോൾ — ഇപ്പോൾ — asked and answered
+# നിങ്ങൾ എപ്പോൾ പോകും? — asked long ago, answered now
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C75-EPPOL-01, ML-GRAMMAR-C104-NOW-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C75-EPPOL-01, ML-GRAMMAR-C41-DEIXIS-SYSTEM] -->
 
-[PAUSE 2s] Say *when?* Then say *now*. Say them one after the other and listen
-to how little separates them.
+[PAUSE 2s] Say *now*, *then*, and *when?* — the three you were given as a set.
 
 ## You'll want to know
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C75-EPPOL-01, ML-GRAMMAR-C104-NOW-01, ML-LEX-C50-LEAVE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C75-EPPOL-01, ML-GRAMMAR-C41-DEIXIS-SYSTEM, ML-LEX-C50-LEAVE-01] -->
 
-You own both halves of an exchange and have never put them together:
+**Nothing about this pair is new to you.** You were taught the three beginnings
+as a system — **ഇ-** near, **അ-** far, **എ-** a question — and then handed this
+row of it whole:
 
 | | | |
 |---|---|---|
-| **എപ്പോൾ?** | *eppōḷ* | when? |
-| **ഇപ്പോൾ.** | *ippōḷ* | now. |
+| **ഇപ്പോൾ** | *ippōḷ* | now |
+| **അപ്പോൾ** | *appōḷ* | then |
+| **എപ്പോൾ** | *eppōḷ* | when? |
 
-**One vowel apart**, and they are question and answer. The **ഇ-** points at
-something; the **എ-** asks about it. That single vowel is carrying the whole
-difference between pointing and asking.
-
-## Grammar Lens: the whole exchange
-<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C104-ONE-PRESENT-01, ML-GRAMMAR-C104-NOW-01, ML-GRAMMAR-C104-NO-COPULA-01, ML-LEX-NII-NINGAL-01] -->
-
-> — **നീ എപ്പോൾ വരുന്നു?** — *nī eppōḷ varunnu?* — "When are you coming?"
-> — **ഞാൻ ഇപ്പോൾ വരുന്നു.** — *ñān ippōḷ varunnu.* — "I am coming right now."
-
-**Look at what did not change.** Two different people are speaking about two
-different subjects, and **വരുന്നു** is identical in both lines. The verb carried
-the asking and the answering without moving a letter.
-
-That is what this chapter has been about: **Malayalam puts the work in a word at
-the front, and leaves the verb alone.** English puts the work in the verb.
+**What is new is the answer.** You were given the question
+**നിങ്ങൾ എപ്പോൾ പോകും?** with a **future** on the end of it, and no way to reply
+except with another future.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C104-NOW-01, ML-LEX-C75-EPPOL-01, ML-GRAMMAR-C104-NO-COPULA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C104-NOW-01, ML-GRAMMAR-C104-ONE-PRESENT-01, ML-LEX-NII-NINGAL-01] -->
+
+Now you can answer it with **this moment** instead:
+
+> — **നിങ്ങൾ എപ്പോൾ പോകും?** — *niṅṅaḷ eppōḷ pōkuṁ?* — "When will you go?"
+> — **ഇപ്പോൾ ഞാൻ പോകുന്നു.** — *ippōḷ ñān pōkunnu.* — "I'm going right now."
 
 [PAUSE 1s]
-- [YOU SAY: *eppōḷ*, then *ippōḷ*]
-- [YOU SAY: *nī eppōḷ varunnu?*, then *ñān ippōḷ varunnu*]
-- [YOU SAY: the same pair with *pōkunnu*]
-- [YOU SAY: which single vowel carries the difference between asking and pointing]
+- [YOU SAY: the question — *niṅṅaḷ eppōḷ pōkuṁ?*]
+- [YOU SAY: the answer — *ippōḷ ñān pōkunnu*]
+- [YOU SAY: the same exchange with *to come* — answer *ippōḷ ñān varunnu*]
+- [YOU SAY: which word in your answer says *this moment*]
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C104-NO-COPULA-01, ML-GRAMMAR-C104-ONE-PRESENT-01] -->
+
+**The question was asked in the future and answered in the present, and that is
+not a mismatch** — it is the ordinary way to say you are on your way. The
+question asks about a plan; the answer says the plan is happening now.
+
+And the answer needs **one** verb to do it. No word went in where English puts
+*am*.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C75-EPPOL-01, ML-GRAMMAR-C104-NOW-01, ML-GRAMMAR-C104-ONE-PRESENT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C75-EPPOL-01, ML-GRAMMAR-C104-NOW-01, ML-GRAMMAR-C41-DEIXIS-SYSTEM] -->
 
-[PAUSE 3s] *When?* (**എപ്പോൾ**.) *Now*? (**ഇപ്പോൾ**.) Which vowel asks and which
-one points? (**എ-** asks, **ഇ-** points.) How much of the verb changed between
-question and answer? (**None of it**.)
+[PAUSE 3s] *When?* (**എപ്പോൾ**.) Its two partners? (**ഇപ്പോൾ** *now*, **അപ്പോൾ**
+*then*.) Answer *നിങ്ങൾ എപ്പോൾ പോകും?* with this moment.
+(**ഇപ്പോൾ ഞാൻ പോകുന്നു**.)

@@ -18,8 +18,8 @@ It is also one word for two English tenses.
 Those are the same Malayalam sentence, written twice. English asks you to choose — I go to work against I am going to work — and the choice does not exist here. There is nothing to get right.
 
 Why it's said this way.
-English is the unusual one. Most languages do not split the present into a habitual and an ongoing form, and Malayalam does not. -ുന്നു covers what you do every day and what you are doing at this moment, and a listener takes whichever the situation offers.
-This is not a gap in Malayalam. When it matters which you mean, the language says so with another word rather than another verb form — which is the next lesson.
+English is the one doing something extra here. It splits its present into a habitual and an ongoing form; Malayalam does not. The ending -ഉന്നു covers what you do every day and what you are doing at this moment, and a listener takes whichever the situation offers.
+This is not a gap in Malayalam. When it matters which you mean, there is a way to say so — and the one this book gives you is a word in front, not a change to the verb. That is the next lesson.
 
 Guided Practice.
 [pause 1 second]
@@ -78,14 +78,12 @@ Say to come. Then say right now I am going.
 You'll want to know.
 Take a second verb through it and watch nothing bend:
 ഇപ്പോൾ ഞാൻ വരുന്നു. — ippōḷ ñān varunnu — "Right now I am coming."
-You built that yourself. varuka has been yours for a long time, and the -ുന്നു ending is the one you were told makes the whole present tense. Nobody had to give you varunnu as a word.
+You have said that verb before. varunnu was in the tense table you were given for varuka, and you drilled it there beside vannu and varuṁ. What is new is not the word — it is that it does the same double duty പോകുന്നു does.
 
 Grammar Lens: the word you must not reach for.
-English says I am going, in two words. When you go looking for the Malayalam word to put where am is, you will find ആണ് — because ആണ് is the word you were given for is and am, in your very first week.
+English says I am going, in two words. When you go looking for the Malayalam word to put where am is, you will find ആണ് — the copula you were given early on for is, and which you have since heard carrying am as well.
 Do not put it here.
-[a table of 2 rows, read aloud]
-ഇപ്പോൾ ഞാൻ വരുന്നു (ippōḷ ñān varunnu), right — one verb, nothing added.
-ഇപ്പോൾ ഞാൻ ആണ് വരുന്നു, not a Malayalam sentence.
+ഇപ്പോൾ ഞാൻ വരുന്നു (ippōḷ ñān varunnu) is right: one verb, nothing added. Putting a copula in the middle of it — ippōḷ ñān āṇŭ varunnu — is ungrammatical, and it is written here in sound only, so that the shape never sits on the page looking like Malayalam you could copy.
 ആണ് joins a thing to what it is — a name, a description. That is its whole job, and propping up another verb is not part of it. The whole of am going already lives inside വരുന്നു; there is no second word for it to be.
 Malayalam does put verbs together in other places — you have met ഉണ്ട് and കഴിയും doing exactly that. This is not one of those places, and ആണ് is not one of those verbs.
 
@@ -104,38 +102,40 @@ Right now I am coming? (ഇപ്പോൾ ഞാൻ വരുന്നു (ipp�
 
 
 Lesson 4 of 5.
-എപ്പോൾ — ഇപ്പോൾ (eppōḷ — ippōḷ) — asked and answered.
+നിങ്ങൾ എപ്പോൾ പോകും? (niṅṅaḷ eppōḷ pōkuṁ?) — asked long ago, answered now.
 
 Warm-up.
 [pause 2 seconds]
-Say when? Then say now. Say them one after the other and listen to how little separates them.
+Say now, then, and when? — the three you were given as a set.
 
 You'll want to know.
-You own both halves of an exchange and have never put them together:
-[a table of 2 rows, read aloud]
-എപ്പോൾ?, eppōḷ, when?
-ഇപ്പോൾ., ippōḷ, now.
-One vowel apart, and they are question and answer. The ഇ- points at something; the എ- asks about it. That single vowel is carrying the whole difference between pointing and asking.
-
-Grammar Lens: the whole exchange.
-— നീ എപ്പോൾ വരുന്നു? — nī eppōḷ varunnu? — "When are you coming?" — ഞാൻ ഇപ്പോൾ വരുന്നു. — ñān ippōḷ varunnu. — "I am coming right now."
-Look at what did not change. Two different people are speaking about two different subjects, and വരുന്നു is identical in both lines. The verb carried the asking and the answering without moving a letter.
-That is what this chapter has been about: Malayalam puts the work in a word at the front, and leaves the verb alone. English puts the work in the verb.
+Nothing about this pair is new to you. You were taught the three beginnings as a system — ഇ- near, അ- far, എ- a question — and then handed this row of it whole:
+[a table of 3 rows, read aloud]
+ഇപ്പോൾ, ippōḷ, now.
+അപ്പോൾ, appōḷ, then.
+എപ്പോൾ, eppōḷ, when?
+What is new is the answer. You were given the question നിങ്ങൾ എപ്പോൾ പോകും? (niṅṅaḷ eppōḷ pōkuṁ?) with a future on the end of it, and no way to reply except with another future.
 
 Guided Practice.
+Now you can answer it with this moment instead:
+— നിങ്ങൾ എപ്പോൾ പോകും? — niṅṅaḷ eppōḷ pōkuṁ? — "When will you go?" — ഇപ്പോൾ ഞാൻ പോകുന്നു. — ippōḷ ñān pōkunnu. — "I'm going right now."
 [pause 1 second]
-[your turn — say: eppōḷ, then ippōḷ]
+[your turn — say: the question — niṅṅaḷ eppōḷ pōkuṁ?]
 [pause 8 seconds for the answer]
-[your turn — say: nī eppōḷ varunnu?, then ñān ippōḷ varunnu]
+[your turn — say: the answer — ippōḷ ñān pōkunnu]
 [pause 8 seconds for the answer]
-[your turn — say: the same pair with pōkunnu]
+[your turn — say: the same exchange with to come — answer ippōḷ ñān varunnu]
 [pause 8 seconds for the answer]
-[your turn — say: which single vowel carries the difference between asking and pointing]
+[your turn — say: which word in your answer says this moment]
 [pause 8 seconds for the answer]
+
+What you've built.
+The question was asked in the future and answered in the present, and that is not a mismatch — it is the ordinary way to say you are on your way. The question asks about a plan; the answer says the plan is happening now.
+And the answer needs one verb to do it. No word went in where English puts am.
 
 Wrap-up Recall.
 [pause 3 seconds]
-When? (എപ്പോൾ.) Now? (ഇപ്പോൾ.) Which vowel asks and which one points? (എ- asks, ഇ- points.) How much of the verb changed between question and answer? (None of it.)
+When? (എപ്പോൾ.) Its two partners? (ഇപ്പോൾ now, അപ്പോൾ then.) Answer നിങ്ങൾ എപ്പോൾ പോകും? (niṅṅaḷ eppōḷ pōkuṁ?) with this moment. (ഇപ്പോൾ ഞാൻ പോകുന്നു (ippōḷ ñān pōkunnu).)
 
 
 Lesson 5 of 5.
