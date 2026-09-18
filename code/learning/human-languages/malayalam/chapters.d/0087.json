@@ -1,0 +1,17 @@
+{
+  "chapter": 87,
+  "title": "Who It Happens To",
+  "label": "ch:ml-accusative",
+  "canDo": "I can say who a verb happens to, and I know which objects take the ending and which do not.",
+  "payoff": {
+    "lesson": "ML-R87-object-recall",
+    "kind": "production",
+    "summary": "From cold: the object ending, the rule that it is about what kind of thing the object is rather than about being the object, and why there is no separate object pronoun to learn.",
+    "assesses": [
+      "ML-GRAMMAR-C87-ACCUSATIVE-01",
+      "ML-GRAMMAR-C87-ANIMACY-01",
+      "ML-LEX-C87-OBJECT-PRONOUN-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. No new noun or verb is added: adhyaapakan, kutti, pustakam, avan, kaanuka and vaayikkuka are all taught, and the joining rule is the one the genitive already established."
+  }
+}

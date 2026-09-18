@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R87-object-recall",
+    "language": "malayalam",
+    "chapter": 87,
+    "sequence": 3070,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:99a373f1baebc826"
+  },
+  "findings": []
+}

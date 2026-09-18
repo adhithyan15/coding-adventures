@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-87-ACCUSATIVE",
+  "stage": "A1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can mark who a verb happens to instead of relying on word order.",
+  "prerequisites": [
+    "ML-EXT-86-WITH"
+  ],
+  "lessons": [
+    "ML-C87-accusative",
+    "ML-C87-animacy",
+    "ML-C87-avane",
+    "ML-R87-object-recall"
+  ]
+}
