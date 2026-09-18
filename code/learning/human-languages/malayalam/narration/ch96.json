@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Easy and Difficult",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ddb94a22fdd2e1c9",
+  "sourceHash": "fnv1a64:c6fff5bc39e596e6",
   "lessons": [
     {
       "id": "ML-C96-eluppam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70a1b3ea9806cc4a",
+      "sourceHash": "fnv1a64:9c5b2b052ea62a5e",
       "notice": null,
       "blocks": [
         {
@@ -73,7 +73,15 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing happens to the sound. That ം is already the sound m, and it stays exactly that. What changes is the writing: once ആണ് puts a vowel behind it, the m needs the full letter മ to carry that vowel, and ം cannot."
+              "text": "Nothing happens to the sound. That ം is already the sound m, and here it stays exactly that. Only the writing moves: the m now has a vowel sitting after it, and the bare ം cannot carry one, so it is written with the full letter മ instead."
+            },
+            {
+              "kind": "speech",
+              "text": "This is not what every ending does to it. You have watched the ം give way twice already — it goes to ത്ത when the in ending arrives, and to വും when the and ending does. ആണ് is the one that leaves it standing."
+            },
+            {
+              "kind": "speech",
+              "text": "So the thing to carry away is not a rule about vowels. It is that each ending does its own thing to a word ending in ം, and this one does the least."
             },
             {
               "kind": "speech",
@@ -165,7 +173,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It gets written as മ — because a vowel now follows it. The sound does not change.)"
+              "text": "What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It gets written as മ, and the sound does not change.) Do other endings treat it the same way? (No — they replace it.)"
             }
           ]
         }
@@ -323,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:289f0580d84aa0fc",
+      "sourceHash": "fnv1a64:9c7cc3b2fea8eb86",
       "notice": null,
       "blocks": [
         {
@@ -363,7 +371,11 @@
             },
             {
               "kind": "speech",
-              "text": "Two new words, and no new grammar at all. Both end in ം, and a word ending in ം welds onto ആണ്: the m sound stays exactly where it was, and only its spelling changes, because a vowel now follows it."
+              "text": "Two new words, and no new grammar at all. Both end in ം, and a word ending in ം welds onto ആണ്: the m sound stays exactly where it was, and only its spelling moves — it is written മ, because the bare sign cannot carry the vowel that now sits after it."
+            },
+            {
+              "kind": "speech",
+              "text": "ആണ് is the gentle one. The in ending replaces that ം with ത്ത, the and ending replaces it with വും; this one leaves the m where it is."
             },
             {
               "kind": "speech",

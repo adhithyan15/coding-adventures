@@ -53,10 +53,17 @@ Put **ആണ്** after it and the two run together:
 
 **എളുപ്പം + ആണ് → എളുപ്പമാണ്**
 
-**Nothing happens to the sound.** That **ം** is already the sound **m**, and it
-stays exactly that. What changes is the *writing*: once **ആണ്** puts a vowel
-behind it, the **m** needs the full letter **മ** to carry that vowel, and **ം**
-cannot.
+**Nothing happens to the sound.** That **ം** is already the sound **m**, and
+here it stays exactly that. Only the *writing* moves: the **m** now has a vowel
+sitting after it, and the bare **ം** cannot carry one, so it is written with the
+full letter **മ** instead.
+
+**This is not what every ending does to it.** You have watched the **ം** give
+way twice already — it goes to **ത്ത** when the *in* ending arrives, and to
+**വും** when the *and* ending does. **ആണ് is the one that leaves it standing.**
+
+So the thing to carry away is not a rule about vowels. It is that **each ending
+does its own thing to a word ending in ം, and this one does the least.**
 
 Say the two words one after the other, quickly. **You will not hear anything
 change** — which is why you have been doing this for most of the book without
@@ -88,5 +95,5 @@ you met a minute ago.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C96-EASY-01, ML-CONCEPT-C02-COPULA-01] -->
 
 [PAUSE 3s] What is *easy*? (**എളുപ്പം**.) What happens to its **ം** when
-**ആണ്** arrives? (**It gets written as മ** — because a vowel now follows it. The
-sound does not change.)
+**ആണ്** arrives? (**It gets written as മ**, and the sound does not change.) Do
+other endings treat it the same way? (**No** — they replace it.)

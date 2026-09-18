@@ -4,7 +4,7 @@
   "chapter": 89,
   "title": "What You Think Of It",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3ddf5d79750de537",
+  "sourceHash": "fnv1a64:a2fd51e123802804",
   "lessons": [
     {
       "id": "ML-C89-nallathu",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2aeb9f11c1e1f241",
+      "sourceHash": "fnv1a64:6a4377ff718dc219",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Notice the join. മോശം (mōśaṁ) ends in the ം, and when ആണ് follows it that ം is written മ. You have seen this book change a word's shape before something else attaches; this is the same habit in a smaller place."
+              "text": "Notice the join. മോശം (mōśaṁ) ends in the ം, and when ആണ് follows it that ം is written മ. You have seen this book change a word's written shape before something else attaches; this is the same habit in a smaller place, and here it is only the writing that moves."
             },
             {
               "kind": "speech",
@@ -457,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:550dccf4f4a16e29",
+      "sourceHash": "fnv1a64:e834bcc60c7aa749",
       "notice": null,
       "blocks": [
         {
@@ -501,7 +501,7 @@
             },
             {
               "kind": "speech",
-              "text": "മോശം (mōśaṁ) filled the other hole. Five qualities and not one of them negative meant half of every opinion was unsayable. Before the is word, its ം becomes മ: മോശമാണ്."
+              "text": "മോശം (mōśaṁ) filled the other hole. Five qualities and not one of them negative meant half of every opinion was unsayable. Before the is word, that ം is written മ: മോശമാണ്."
             }
           ]
         },

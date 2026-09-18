@@ -46,7 +46,11 @@ opposite.
 
 Two new words, and **no new grammar at all.** Both end in **ം**, and a word
 ending in **ം** welds onto **ആണ്**: the **m** sound stays exactly where it was,
-and only its spelling changes, because a vowel now follows it.
+and only its spelling moves — it is written **മ**, because the bare sign cannot
+carry the vowel that now sits after it.
+
+**ആണ് is the gentle one.** The *in* ending replaces that **ം** with **ത്ത**, the
+*and* ending replaces it with **വും**; this one leaves the **m** where it is.
 
 You were doing it long before this chapter:
 
