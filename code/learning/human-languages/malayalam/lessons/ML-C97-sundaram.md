@@ -45,7 +45,7 @@ reviews_of: [ML-C96-eluppam]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-C96-EASY-01, ML-LEX-AANU-01] -->
 
-**Read what you just did.** The word ends in **ം**, so it welds onto **ആണ്** the
+**Read what you did there.** The word ends in **ം**, so it welds onto **ആണ്** the
 way the last chapter's two words did, and you did it without being told.
 
 | | |
@@ -54,7 +54,7 @@ way the last chapter's two words did, and you did it without being told.
 | **ഇത് സുന്ദരമാണ്** | this is beautiful |
 
 That is what a frame is for. **The chapter before this one cost you a rule; this
-one costs you a word**, and the rule is still doing the work.
+one cost you a word**, and the weld came free.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C41-DEIXIS-01] -->

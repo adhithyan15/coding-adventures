@@ -4,6 +4,13 @@
   "kind": "required",
   "category": "vocabulary",
   "canDo": "I can say something is beautiful, or that it is not.",
-  "prerequisites": ["ML-EXT-96-EASE"],
-  "lessons": ["ML-C97-sundaram", "ML-C97-bhangi", "ML-C97-alla-sundaram", "ML-R97-beauty-recall"]
+  "prerequisites": [
+    "ML-EXT-96-EASE"
+  ],
+  "lessons": [
+    "ML-C97-sundaram",
+    "ML-C97-bhangi",
+    "ML-C97-alla-sundaram",
+    "ML-R97-beauty-recall"
+  ]
 }

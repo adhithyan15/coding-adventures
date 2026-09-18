@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Beautiful, and Not",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b2944c486cd92c67",
+  "sourceHash": "fnv1a64:b7c4f146c28913b0",
   "lessons": [
     {
       "id": "ML-C97-sundaram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a2bcb1fcd5e8abd",
+      "sourceHash": "fnv1a64:b2997464b9a2a221",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read what you just did. The word ends in ം, so it welds onto ആണ് the way the last chapter's two words did, and you did it without being told."
+              "text": "Read what you did there. The word ends in ം, so it welds onto ആണ് the way the last chapter's two words did, and you did it without being told."
             },
             {
               "kind": "table",
@@ -78,7 +78,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is what a frame is for. The chapter before this one cost you a rule; this one costs you a word, and the rule is still doing the work."
+              "text": "That is what a frame is for. The chapter before this one cost you a rule; this one cost you a word, and the weld came free."
             }
           ]
         },
