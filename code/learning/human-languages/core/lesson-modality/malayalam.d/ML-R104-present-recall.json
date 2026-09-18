@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R104-present-recall",
+    "language": "malayalam",
+    "chapter": 104,
+    "sequence": 3810,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0a55fc645b9a544d"
+  },
+  "findings": []
+}

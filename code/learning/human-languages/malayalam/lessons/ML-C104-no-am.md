@@ -1,0 +1,80 @@
+---
+schema_version: 2
+id: ML-C104-no-am
+spine_node: SPINE-DEFINITE-REFERENCE
+sequence: 3790
+chapter: 104
+type: grammar
+headword: "ഇപ്പോൾ ഞാൻ വരുന്നു"
+gloss: right now I am coming — and there is no word here for "am", which is the mistake this lesson exists to stop
+romanization: "ippōḷ ñān varunnu"
+concept_tag: ML-PRESENT-NO-COPULA
+prerequisites: [ML-C104-ippol, ML-C32-varuka, ML-C02-aanu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 255
+requires:
+  knowledge: [ML-GRAMMAR-C104-NOW-01, ML-CONCEPT-C32-VARUKA-01, ML-LEX-AANU-01]
+introduces:
+  knowledge: [ML-GRAMMAR-C104-NO-COPULA-01]
+practises:
+  knowledge: [ML-GRAMMAR-C104-NO-COPULA-01, ML-GRAMMAR-C104-NOW-01, ML-GRAMMAR-C104-ONE-PRESENT-01, ML-CONCEPT-C32-VARUKA-01, ML-LEX-AANU-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C32-varuka, ML-C02-aanu, ML-C104-ippol]
+---
+
+# ഇപ്പോൾ ഞാൻ വരുന്നു — and there is no word for *am*
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C104-NOW-01, ML-CONCEPT-C32-VARUKA-01] -->
+
+[PAUSE 2s] Say *to come*. Then say *right now I am going*.
+
+## You'll want to know
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C104-ONE-PRESENT-01, ML-CONCEPT-C32-VARUKA-01] -->
+
+The rule is general, so take a second verb through it:
+
+> **ഇപ്പോൾ ഞാൻ വരുന്നു.** — *ippōḷ ñān varunnu* — "Right now I am coming."
+
+**You built that yourself.** *varuka* has been yours for a long time, and the
+**-ുന്നു** ending is the one you were told makes the whole present tense. Nobody
+had to give you *varunnu* as a word.
+
+## Grammar Lens: the word you must not reach for
+<!-- hl-knowledge: introduces=[ML-GRAMMAR-C104-NO-COPULA-01]; assesses=[ML-LEX-AANU-01] -->
+
+English says *I **am** going*, in two words. When you go looking for the
+Malayalam word to put where *am* is, you will find **ആണ്** — because **ആണ്** is
+the word you were given for *is* and *am*, in your very first week.
+
+**Do not put it here.**
+
+| | |
+|---|---|
+| **ഇപ്പോൾ ഞാൻ വരുന്നു** | right — one verb, nothing added |
+| *ഇപ്പോൾ ഞാൻ ആണ് വരുന്നു* | **not a Malayalam sentence** |
+
+**ആണ്** joins a thing to what it *is* — a name, a description. It is not a
+helper that props up another verb, because Malayalam has no such helpers. The
+whole of *am going* lives inside **വരുന്നു**.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C104-NO-COPULA-01, ML-GRAMMAR-C104-NOW-01, ML-LEX-AANU-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *ippōḷ ñān varunnu*]
+- [YOU SAY: *ippōḷ ñān pōkunnu*, then the coming one again]
+- [YOU SAY: where English puts *am*, and what Malayalam puts there instead]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C104-NO-COPULA-01, ML-LEX-AANU-01, ML-GRAMMAR-C104-ONE-PRESENT-01] -->
+
+[PAUSE 3s] *Right now I am coming*? (**ഇപ്പോൾ ഞാൻ വരുന്നു**.) How many words carry
+*am coming*? (**One** — വരുന്നു.) Does **ആണ്** belong in that sentence? (**No** —
+it joins a thing to what it is; it does not help another verb.)

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:99756f2c706ac755",
+  "lessonIds": [
+    "ML-C104-one-present",
+    "ML-C104-ippol",
+    "ML-C104-no-am",
+    "ML-C104-eppol-answer",
+    "ML-R104-present-recall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch104.txt",
+  "json": "malayalam/narration/ch104.json",
+  "textHash": "fnv1a64:11293bfaca3a31bc",
+  "jsonHash": "fnv1a64:9deedc6c26bc5ca8",
+  "findings": []
+}

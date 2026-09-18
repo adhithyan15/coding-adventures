@@ -2552,8 +2552,25 @@ describe("the committed Malayalam A1 inventory", () => {
     // and gives way to -tth- under a case ending, exactly as HL-C400 narrowed that
     // rule; pareeksha ends in a and does not. Same chapter, same subject, same
     // source language -- and the chapter says the ENDING decides, not the meaning.
-    expect(coverage.covered).toBe(210);
-    expect(coverage.unmapped).toBe(33);
+    // 210 -> 211: ML-A1-V-20, the progressive. THE PERCENTAGE MOVES, 86 -> 87
+    // (211/243 is 86.8, which rounds up); recomputed, not carried.
+    // THE NOTE WAS STALE IN THE SAME FIRST FAILURE MODE AS TIME-10, and half of
+    // it was simply false. It said the -unnu form is "used inside ML-C05's
+    // sentence but NEVER NAMED AS A FORM". It is named three times over, from
+    // sequence 660: ML-C32-pokuka states "Malayalam's present tense is one word
+    // long", ML-C33-cintikkuka repeats it, and ML-C50-parayuka says "paRayunnu is
+    // the whole present tense". What is genuinely missing is the MAPPING -- that
+    // this ONE form answers BOTH English presents, "I go" and "I am going" -- and
+    // ML-C74-purpose (2560) already translates nyaan pOkunnu as "I am going"
+    // without ever making the point. Parts present, never assembled, exactly as
+    // ML-A1-TIME-10 was. NO NEW WORD: ippOL is owned since 1390, eppOL since
+    // 2590, nii since 60, aaNu since 90, and varunnu is BUILDABLE from varuka
+    // plus a rule the book states, so it is never headworded alone.
+    // THE CHAPTER REFUSES ONE CLAIM: Malayalam's dedicated progressive in
+    // -koNTirikkunnu is not taught and is not claimed. At A1 the simple present
+    // IS how ongoing action is said, which is what this point asks for.
+    expect(coverage.covered).toBe(211);
+    expect(coverage.unmapped).toBe(32);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2600,7 +2617,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 210/243 points covered (86%)",
+      "malayalam A1 (partial inventory): 211/243 points covered (87%)",
     );
   }, 60_000);
 });

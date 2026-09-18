@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:78f09e245595033c",
+  "lessonIds": [
+    "ML-C104-one-present",
+    "ML-C104-ippol",
+    "ML-C104-no-am",
+    "ML-C104-eppol-answer",
+    "ML-R104-present-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch104-one-present.tex"
+}

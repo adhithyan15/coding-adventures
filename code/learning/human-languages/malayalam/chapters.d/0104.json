@@ -1,0 +1,17 @@
+{
+  "chapter": 104,
+  "title": "One Present, Two Englishes",
+  "label": "ch:ml-present",
+  "canDo": "I can say what I am doing right now, and ask somebody when they are coming.",
+  "payoff": {
+    "lesson": "ML-R104-present-recall",
+    "kind": "production",
+    "summary": "From cold: the one present form, the word that pins it to this moment, and the helper Malayalam does not have.",
+    "assesses": [
+      "ML-GRAMMAR-C104-ONE-PRESENT-01",
+      "ML-GRAMMAR-C104-NOW-01",
+      "ML-GRAMMAR-C104-NO-COPULA-01"
+    ],
+    "note": "NO NEW WORD, AND THE NOTE WAS STALE IN THE FIRST FAILURE MODE AGAIN. ML-A1-V-20 read 'Not taught. The -kkunnu form is used inside ML-C05's sentence but NEVER NAMED AS A FORM, and there is no gerund lesson.' The second half is right and the first is false by 2,390 sequence points: ML-C32-pokuka (660) says outright 'Malayalam's present tense is one word long', ML-C33-cintikkuka (710) repeats it, and ML-C50-parayuka (1405) says 'paRayunnu is the whole present tense'. The form is named three times over. WHAT IS GENUINELY MISSING IS THE MAPPING: no lesson tells the learner that this ONE form answers BOTH English presents, 'I go' and 'I am going'. ML-C74-purpose (2560) already TRANSLATES nyaan pOkunnu with an English progressive -- 'I am going in order to read' -- without ever making the point, which is the ML-A1-TIME-10 shape exactly: the parts are present and are never assembled. EVERY PIECE VERIFIED OWNED BEFORE DRAFTING: ippOL (ML-C50-now, 1390), eppOL (ML-C75-eppol, 2590), nii (ML-C02-nii-ningal, 60), aaNu (ML-C02-aanu, 90), varuka (ML-C32-varuka) and the -unnu rule (660). varunnu itself appears NOWHERE in the corpus but is productively buildable from varuka plus a rule the book states, so it is used in prose and inside a multi-word headword and never headworded alone -- the lessons.d rule that a word the corpus can already build must not be introduced later as a word. TWO OF MY OWN CLAIMS WERE FALSE AND CAUGHT BEFORE COMMIT. The draft said the ippOL/eppOL pair repeats a shape 'you have seen before in THIS and WHICH' -- EEtu (which) is taught NOWHERE; the taught pair is itu/atu, this against that, which is a different alternation (proximal/distal, not proximal/interrogative). The claim is dropped rather than repaired, because there IS no taught precedent. And the draft's question-and-answer exchange used the same subject in both lines to support 'only the first word moves' -- which made the question 'when am I coming?', which nobody asks. It now runs between two speakers, nii asking and nyaan answering, and claims only what survives that: the VERB is identical in both lines. THE CHAPTER ALSO CARRIES A WARNING, WHICH IS THE PART A LEARNER MOST NEEDS: English's 'am' has no home here. aaNu is taught at sequence 90 as is/am, so a learner WILL reach for it, and *ippOL nyaan aaNu varunnu is not a sentence. aaNu joins a thing to what it IS and is not a helper for another verb, because Malayalam has no helpers. The ungrammatical form is shown explicitly and marked as not a Malayalam sentence, because the mistake is predictable and naming it is cheaper than leaving it."
+  }
+}
