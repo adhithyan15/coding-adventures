@@ -2292,18 +2292,22 @@ describe("the committed Malayalam A1 inventory", () => {
     // 202 -> 203: ML-A1-LEX-54, ease and difficulty. NOTE THE PERCENTAGE ROLLS OVER
     // AGAIN, 83% -> 84%; it was computed, not assumed, after a stale 82% shipped past
     // every check but this one in chapter 94.
-    // TWO WORDS AND NO NEW GRAMMAR, and the corpus proves it rather than the lesson
-    // claiming it: eLuppam + aaNu -> eLuppamaaNu is the same welding as sukhamaaNu
-    // (chapter 3), ishtamaaNu (34), kudumbamaaNu (35) and moshamaaNu (89). The
-    // pattern sat in the learner's mouth for most of the book because until now they
-    // had no word of their own to put through it.
-    // The claims were settled BEFORE the prose this time -- romanization derived from
-    // the track (final anusvara 'ṁ', LLA 'ḷ', doubled pa 'pp') rather than invented,
-    // which is how chapter 95's th/tth drift happened. A draft line claiming the
-    // learner had been doing this "since your third week" was cut: chapters are not
-    // weeks and nothing here knows how long a learner takes.
-    // buddhimuttu was considered for a third lesson and DROPPED rather than assert
-    // register nuances that could not be defended under review.
+    // TWO WORDS AND NO NEW GRAMMAR: eLuppam + aaNu -> eLuppamaaNu is the same welding
+    // as sukhamaaNu (chapter 3), ishtamaaNu (34), kudumbamaaNu (35), moshamaaNu (89).
+    // TWO THINGS WERE WRONG IN THE FIRST DRAFT, BOTH CAUGHT BY THE REVIEWER AND NOT BY
+    // ANY GATE HERE.
+    // (1) The chapter claimed the join had never been pointed out. FALSE: ML-C89-mosham
+    // states it outright AND tests it in its own Wrap-up Recall, seven chapters earlier,
+    // in the lesson that gives the learner moshaM -- one of the three examples cited as
+    // silent precedent. Reframed: named once, at moshaM; here it stops being a fact
+    // about a given word and becomes something the learner does to words of their own.
+    // (2) "the anusvara turns into ma" described a SPELLING change as a SOUND change.
+    // The sign already IS the sound m; aaNu puts a vowel behind it and the same m needs
+    // the full letter to carry it. Nothing is heard to change -- which is the chapter's
+    // own best evidence, and the false version undercut it.
+    // ML-C89-mosham's formulation was narrowed in the same pass: it said the anusvara
+    // becomes ma "before a word starting with a vowel", which veLLam + um -> veLLavum
+    // contradicts (ML-C70-um); the plural takes it to -ngngaL instead (ML-C93-angal).
     expect(coverage.covered).toBe(203);
     expect(coverage.unmapped).toBe(40);
     expect(coverage.partial).toBe(0);

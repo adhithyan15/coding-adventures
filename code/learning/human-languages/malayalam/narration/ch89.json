@@ -4,7 +4,7 @@
   "chapter": 89,
   "title": "What You Think Of It",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2ad1aab1f292a8cb",
+  "sourceHash": "fnv1a64:3ddf5d79750de537",
   "lessons": [
     {
       "id": "ML-C89-nallathu",
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b82c850e0c9e5ec7",
+      "sourceHash": "fnv1a64:2aeb9f11c1e1f241",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Notice the join. മോശം (mōśaṁ) ends in the ം, and before a word starting with a vowel that ം becomes മ. You have seen this book change a word's shape before something else attaches; this is the same habit in a smaller place."
+              "text": "Notice the join. മോശം (mōśaṁ) ends in the ം, and when ആണ് follows it that ം is written മ. You have seen this book change a word's shape before something else attaches; this is the same habit in a smaller place."
             },
             {
               "kind": "speech",
@@ -288,7 +288,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does mōśaṁ mean? (Bad.) How do you say it is bad? (mōśamāṇŭ.) And what did the ം turn into? (മ.)"
+              "text": "What does mōśaṁ mean? (Bad.) How do you say it is bad? (mōśamāṇŭ.) And how was the ം written once ആണ് followed? (മ.)"
             }
           ]
         }

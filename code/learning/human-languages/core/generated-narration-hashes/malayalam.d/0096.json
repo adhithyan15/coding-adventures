@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 96,
-  "sourceHash": "fnv1a64:764a4f457e9b462f",
+  "sourceHash": "fnv1a64:ddb94a22fdd2e1c9",
   "lessonIds": [
     "ML-C96-eluppam",
     "ML-C96-prayaasam",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "malayalam/narration/ch96.txt",
   "json": "malayalam/narration/ch96.json",
-  "textHash": "fnv1a64:20f2a855926af1c8",
-  "jsonHash": "fnv1a64:07fecbcfcc12f9a3",
+  "textHash": "fnv1a64:6f5ac794e4d39d14",
+  "jsonHash": "fnv1a64:7eb3f5f73ed5e8d4",
   "findings": []
 }

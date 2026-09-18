@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Easy and Difficult",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:764a4f457e9b462f",
+  "sourceHash": "fnv1a64:ddb94a22fdd2e1c9",
   "lessons": [
     {
       "id": "ML-C96-eluppam",
@@ -12,14 +12,14 @@
       "title": "എളുപ്പം (eḷuppaṁ) — easy",
       "headword": "എളുപ്പം",
       "romanization": "eḷuppaṁ",
-      "gloss": "easy — said of a thing, in a frame you have used since you first answered that you were well",
+      "gloss": "easy — said of a thing, in a frame you have been using for most of the book",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0231ffd83681a20b",
+      "sourceHash": "fnv1a64:70a1b3ea9806cc4a",
       "notice": null,
       "blocks": [
         {
@@ -61,11 +61,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The word ends in ം, and you have been told once already that a word ending that way says in advance how it will behave. Here is another thing it says."
+              "text": "The word ends in ം, and you have been told before that a word ending that way says in advance how it will behave. Here is another thing it says."
             },
             {
               "kind": "speech",
-              "text": "Put ആണ് after it and the two do not stay apart. The ം turns into മ and the pair runs together:"
+              "text": "Put ആണ് after it and the two run together:"
             },
             {
               "kind": "speech",
@@ -73,7 +73,11 @@
             },
             {
               "kind": "speech",
-              "text": "You have been doing this since you first answered that you were well. Look at what you already say:"
+              "text": "Nothing happens to the sound. That ം is already the sound m, and it stays exactly that. What changes is the writing: once ആണ് puts a vowel behind it, the m needs the full letter മ to carry that vowel, and ം cannot."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the two words one after the other, quickly. You will not hear anything change — which is why you have been doing this for most of the book without noticing:"
             },
             {
               "kind": "table",
@@ -91,7 +95,11 @@
             },
             {
               "kind": "speech",
-              "text": "Every one of those is a word ending in ം with ആണ് welded on. Nobody pointed it out at the time because there was nothing you needed to do about it. Now there is: you can do it yourself, to a word you met a minute ago."
+              "text": "Every one of those is a word ending in ം with ആണ് welded on."
+            },
+            {
+              "kind": "speech",
+              "text": "You were shown this once, at മോശം. Here it is again — and this time it is not a fact about one word you were given. It is something you do, to a word you met a minute ago."
             }
           ]
         },
@@ -157,7 +165,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It becomes മ and the two run together.)"
+              "text": "What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It gets written as മ — because a vowel now follows it. The sound does not change.)"
             }
           ]
         }
@@ -308,14 +316,14 @@
       "title": "(easy, difficult) (eḷuppavuṁ prayāsavuṁ enna ōrmma) — from cold",
       "headword": "(easy, difficult)",
       "romanization": "eḷuppavuṁ prayāsavuṁ enna ōrmma",
-      "gloss": "cold retrieval of the pair, and of the welding rule that was already in your mouth",
+      "gloss": "cold retrieval of the pair, and of a welding that was already in the mouth before it was ever a rule",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:151da7f3f4b0dc56",
+      "sourceHash": "fnv1a64:289f0580d84aa0fc",
       "notice": null,
       "blocks": [
         {
@@ -355,7 +363,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two new words, and no new grammar at all. Both end in ം, and a word ending in ം welds onto ആണ് by turning that ം into മ."
+              "text": "Two new words, and no new grammar at all. Both end in ം, and a word ending in ം welds onto ആണ്: the m sound stays exactly where it was, and only its spelling changes, because a vowel now follows it."
             },
             {
               "kind": "speech",
@@ -377,7 +385,7 @@
             },
             {
               "kind": "speech",
-              "text": "None of those was ever presented as a rule, because until now you had no word of your own to put through it. The pattern sat in your mouth for most of the book, doing its work silently."
+              "text": "It was named once, at മോശം, and it never had to become a rule you carried, because you had no word of your own to put through it. Now you have two, and the pattern stops being a fact about somebody else's word."
             }
           ]
         },
@@ -467,7 +475,7 @@
             },
             {
               "kind": "speech",
-              "text": "Easy and difficult? (എളുപ്പം (eḷuppaṁ), പ്രയാസം (prayāsaṁ).) What does the ം become when ആണ് follows? (മ.) Was that rule new in this chapter? (No — you had been using it since near the beginning.)"
+              "text": "Easy and difficult? (എളുപ്പം (eḷuppaṁ), പ്രയാസം (prayāsaṁ).) How is the ം written when ആണ് follows? (As മ — the sound stays the same.) Was that new in this chapter? (No — you had been saying it for most of the book.)"
             }
           ]
         }

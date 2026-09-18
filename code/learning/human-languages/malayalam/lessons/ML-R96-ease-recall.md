@@ -6,7 +6,7 @@ sequence: 3430
 chapter: 96
 type: review
 headword: (easy, difficult)
-gloss: cold retrieval of the pair, and of the welding rule that was already in your mouth
+gloss: cold retrieval of the pair, and of a welding that was already in the mouth before it was ever a rule
 romanization: eḷuppavuṁ prayāsavuṁ enna ōrmma
 concept_tag: ML-EASE-RECALL
 prerequisites: [ML-C96-prayaasam]
@@ -45,7 +45,8 @@ opposite.
 | **ഇത് പ്രയാസമാണ്** | this is difficult |
 
 Two new words, and **no new grammar at all.** Both end in **ം**, and a word
-ending in **ം** welds onto **ആണ്** by turning that **ം** into **മ**.
+ending in **ം** welds onto **ആണ്**: the **m** sound stays exactly where it was,
+and only its spelling changes, because a vowel now follows it.
 
 You were doing it long before this chapter:
 
@@ -55,9 +56,9 @@ You were doing it long before this chapter:
 | **ഇഷ്ടമാണ്** | liked |
 | **മോശമാണ്** | bad |
 
-**None of those was ever presented as a rule**, because until now you had no
-word of your own to put through it. The pattern sat in your mouth for most of
-the book, doing its work silently.
+**It was named once, at മോശം**, and it never had to become a rule you carried,
+because you had no word of your own to put through it. **Now you have two**, and
+the pattern stops being a fact about somebody else's word.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-LEX-C41-DEIXIS-01] -->
@@ -82,6 +83,6 @@ built first and the vocabulary arrives into it.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-CONCEPT-C02-COPULA-01] -->
 
-[PAUSE 3s] Easy and difficult? (**എളുപ്പം, പ്രയാസം**.) What does the **ം** become
-when **ആണ്** follows? (**മ**.) Was that rule new in this chapter? (**No** — you
-had been using it since near the beginning.)
+[PAUSE 3s] Easy and difficult? (**എളുപ്പം, പ്രയാസം**.) How is the **ം** written
+when **ആണ്** follows? (**As മ** — the sound stays the same.) Was that new in this
+chapter? (**No** — you had been saying it for most of the book.)

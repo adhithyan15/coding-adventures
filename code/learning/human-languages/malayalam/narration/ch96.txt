@@ -14,15 +14,17 @@ You'll want to know.
 ഇത് എളുപ്പമാണ്. — itŭ eḷuppamāṇŭ — "This is easy."
 
 The word, taken apart.
-The word ends in ം, and you have been told once already that a word ending that way says in advance how it will behave. Here is another thing it says.
-Put ആണ് after it and the two do not stay apart. The ം turns into മ and the pair runs together:
+The word ends in ം, and you have been told before that a word ending that way says in advance how it will behave. Here is another thing it says.
+Put ആണ് after it and the two run together:
 എളുപ്പം (eḷuppaṁ) + ആണ് becomes എളുപ്പമാണ്.
-You have been doing this since you first answered that you were well. Look at what you already say:
+Nothing happens to the sound. That ം is already the sound m, and it stays exactly that. What changes is the writing: once ആണ് puts a vowel behind it, the m needs the full letter മ to carry that vowel, and ം cannot.
+Say the two words one after the other, quickly. You will not hear anything change — which is why you have been doing this for most of the book without noticing:
 [a table of 3 rows, read aloud]
 സുഖമാണ്, (I am) well.
 ഇഷ്ടമാണ്, (I) like it.
 മോശമാണ്, (it) is bad.
-Every one of those is a word ending in ം with ആണ് welded on. Nobody pointed it out at the time because there was nothing you needed to do about it. Now there is: you can do it yourself, to a word you met a minute ago.
+Every one of those is a word ending in ം with ആണ് welded on.
+You were shown this once, at മോശം. Here it is again — and this time it is not a fact about one word you were given. It is something you do, to a word you met a minute ago.
 
 Guided Practice.
 [pause 1 second]
@@ -37,7 +39,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It becomes മ and the two run together.)
+What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It gets written as മ — because a vowel now follows it. The sound does not change.)
 
 
 Lesson 2 of 3.
@@ -84,13 +86,13 @@ Grammar Lens: the welding was already yours.
 [a table of 2 rows, read aloud]
 ഇത് എളുപ്പമാണ്, this is easy.
 ഇത് പ്രയാസമാണ്, this is difficult.
-Two new words, and no new grammar at all. Both end in ം, and a word ending in ം welds onto ആണ് by turning that ം into മ.
+Two new words, and no new grammar at all. Both end in ം, and a word ending in ം welds onto ആണ്: the m sound stays exactly where it was, and only its spelling changes, because a vowel now follows it.
 You were doing it long before this chapter:
 [a table of 3 rows, read aloud]
 സുഖമാണ്, well.
 ഇഷ്ടമാണ്, liked.
 മോശമാണ്, bad.
-None of those was ever presented as a rule, because until now you had no word of your own to put through it. The pattern sat in your mouth for most of the book, doing its work silently.
+It was named once, at മോശം, and it never had to become a rule you carried, because you had no word of your own to put through it. Now you have two, and the pattern stops being a fact about somebody else's word.
 
 What you've built.
 A judgement you can make about anything you can point at.
@@ -111,4 +113,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Easy and difficult? (എളുപ്പം (eḷuppaṁ), പ്രയാസം (prayāsaṁ).) What does the ം become when ആണ് follows? (മ.) Was that rule new in this chapter? (No — you had been using it since near the beginning.)
+Easy and difficult? (എളുപ്പം (eḷuppaṁ), പ്രയാസം (prayāsaṁ).) How is the ം written when ആണ് follows? (As മ — the sound stays the same.) Was that new in this chapter? (No — you had been saying it for most of the book.)

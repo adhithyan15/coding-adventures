@@ -49,8 +49,8 @@ Put it with the *is* word you have had since the second chapter:
 
 **മോശമാണ്** — *mōśamāṇŭ* — it is bad.
 
-Notice the join. **മോശം** ends in the **ം**, and before a word starting with a
-vowel that **ം** becomes **മ**. You have seen this book change a word's shape
+Notice the join. **മോശം** ends in the **ം**, and when **ആണ്** follows it that
+**ം** is written **മ**. You have seen this book change a word's shape
 before something else attaches; this is the same habit in a smaller place.
 
 The partner sentence is built the same way, from the word you learned a moment
@@ -69,4 +69,4 @@ ago: **നല്ലതാണ്** — *nallathāṇŭ* — it is good.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C89-EVAL-01, ML-LEX-AANU-01] -->
 
 [PAUSE 3s] What does *mōśaṁ* mean? (**Bad**.) How do you say *it is bad*?
-(***mōśamāṇŭ***.) And what did the **ം** turn into? (**മ**.)
+(***mōśamāṇŭ***.) And how was the **ം** written once **ആണ്** followed? (**മ**.)
