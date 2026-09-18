@@ -48,9 +48,9 @@ reviews_of: [ML-C100-mundu, ML-C100-saari]
 **This word is not a garment, and the book wants both.** **മുണ്ട്** and
 **സാരി** go on the body; **ചെരുപ്പ്** goes on the feet.
 
-Its ending you have already handled twice. **ചെരുപ്പ്** finishes in the
-breathed half-u, like **മുണ്ട്**, so **ആണ്** lands straight on it:
-**ചെരുപ്പാണ്**.
+Its ending you have handled before, on **എന്ത്**, on **നല്ലത്**, on
+**പാട്ട്** and on **മുണ്ട്**. **ചെരുപ്പ്** finishes in the same breathed
+half-u, so **ആണ്** lands straight on it: **ചെരുപ്പാണ്**.
 
 | word | joined to **ആണ്** |
 |---|---|

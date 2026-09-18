@@ -15,7 +15,7 @@ roots: []
 duration:
   max_seconds: 270
 requires:
-  knowledge: [ML-LEX-C100-MUNDU-01, ML-LEX-C100-SARI-01, ML-LEX-C100-SANDAL-01, ML-LEX-C100-CAP-01, ML-LEX-AANU-01]
+  knowledge: [ML-LEX-C100-MUNDU-01, ML-LEX-C100-SARI-01, ML-LEX-C100-SANDAL-01, ML-LEX-C100-CAP-01, ML-LEX-AANU-01, ML-LEX-C46-ASK-02]
 introduces:
   knowledge: []
 practises:
@@ -48,12 +48,14 @@ Four things to wear, and **between them only two endings**:
 | **ഇ** | **സാരി** | **സാരിയാണ്** (*sāriyāṇŭ*) |
 | **ഇ** | **തൊപ്പി** | **തൊപ്പിയാണ്** (*toppiyāṇŭ*) |
 
-**Neither join was new.** The half-u one arrived with the song word; the **യ**
-arrived with the game and the beauty words. This chapter spent all four of its
-words on things, and none on grammar.
+**Neither join was new, and neither is recent.** **എന്താണ്** has taken the
+half-u since the book's first question, and **കുട്ടി** has taken the **യ** since
+**ഇത് എന്റെ കുട്ടിയാണ്** — long before **പാട്ട്**, **കളി** or **ഭംഗി**, which
+are only the latest words to use them. This chapter spent all four of its words
+on things, and none on grammar.
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-04, ML-LEX-C42-ADJ-05, ML-LEX-C100-MUNDU-01, ML-LEX-C100-SARI-01, ML-LEX-C41-DEIXIS-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-04, ML-LEX-C42-ADJ-05, ML-LEX-C100-MUNDU-01, ML-LEX-C100-SARI-01, ML-LEX-C41-DEIXIS-01, ML-LEX-C46-ASK-02] -->
 
 > **ഇത് പുതിയ മുണ്ടാണ്.** — *itŭ putiya muṇṭāṇŭ* — this is a new mundu.
 >
@@ -61,6 +63,9 @@ words on things, and none on grammar.
 
 **പുതിയ** and **പഴയ** sit in front and do not change — the same shape they had
 in the chapter that taught them, with no ending added for the noun that follows.
+
+And the cloth a **മുണ്ട്** is made of is **തുണി**, which the book gave you long
+before it gave you anything made from it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C100-MUNDU-01, ML-LEX-C100-SARI-01, ML-LEX-C100-SANDAL-01, ML-LEX-C100-CAP-01, ML-LEX-C46-ASK-02] -->

@@ -55,8 +55,10 @@ reviews_of: [ML-C100-saari, ML-C100-cheruppu]
 | **ഇ** | **സാരി** | **സാരിയാണ്** (*sāriyāṇŭ*) |
 | **ഇ** | **തൊപ്പി** | **തൊപ്പിയാണ്** (*toppiyāṇŭ*) |
 
-**Nothing in this chapter asked you to learn a join.** Both were already yours —
-the half-u from the song word, the **യ** from the game and the beauty words.
+**Nothing in this chapter asked you to learn a join.** Both are long-standing:
+**എന്താണ്** has taken the half-u since your very first question, and **കുട്ടി**
+has taken the **യ** since **ഇത് എന്റെ കുട്ടിയാണ്**. **പാട്ട്**, **കളി** and
+**ഭംഗി** are the most recent words to use them, not the words they began with.
 What the chapter gave you is four things to wear.
 
 ## Guided Practice

@@ -596,11 +596,28 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // on SCOPE -- the four chosen words already cover all three limbs of the label.
   // EVERY ROMANIZATION WAS DERIVED LETTER BY LETTER, not word by word, which is
   // the correction ch99 earned by getting nrttham's vowel right and the consonant
-  // beside it wrong. ca -> c on sixteen headwords (the lone chaaya also lacks its
-  // macrons: unmigrated drift, not a convention); zha -> zh-with-underdot on six
-  // against two legacy spellings; NTu is witnessed exactly by chuNTu; and saari
-  // is witnessed inside samsaarikkuka's own romanization. puthiya and pazhaya
-  // were read off ML-C42's own fields rather than reconstructed.
+  // beside it wrong. ca -> c, witnessed by cintikkuka, cevi, cheRiya, chuNTu,
+  // cUlu, cEcci, cErkkuka and ML-S111's own ca, against the legacy ch spellings
+  // chaaya, nenchu, uchakazhinju, acchan and muttacchan; zha -> zh-with-underdot,
+  // witnessed by pazhaya, pazham, vazhi and taazhe, against vyaazham,
+  // mazhakkaalam, ezhu and ML-S118's llla; NTu witnessed exactly by chuNTu; saari
+  // witnessed inside samsaarikkuka's own romanization; puthiya and pazhaya read
+  // off ML-C42's own fields rather than reconstructed.
+  // THE FIRST DRAFT GAVE COUNTS INSTEAD OF NAMES -- "sixteen headwords", "the
+  // lone chaaya", "six against two" -- and review found every one wrong (30 and
+  // 5; 12 and 6). They were offered as EVIDENCE OF the letter-by-letter
+  // discipline, in the same commit whose changelog says to name lessons and never
+  // count them. The rule existed and the sentence claiming rigour broke it.
+  // REVIEW ALSO CAUGHT THE JOIN PROVENANCE WRONG: the draft said the half-u
+  // arrived with paattu and the ya with kali and bhangi. enthaaNu takes the
+  // half-u at sequence 130 and kuttiyaaNu takes the ya at 810; those three are
+  // the most recent words to USE the joins, not the words they began with. Same
+  // defect ch98 recorded fixing ("kali said 'two words now do this'"), returned
+  // one chapter later in the same shape.
+  // AND THE ACCESSORY LIMB IS THIN: thoppi is headwear, which this chapter's own
+  // candidate list treats as separate from kaNNata/vaacchu/baagu. Two limbs are
+  // properly covered; the point closes on the basis LEX-37 closed with its
+  // free-time limb open, with the gap written down rather than papered over.
   expect(coverage.covered).toBe(207);
   expect(coverage.unmapped).toBe(36);
   expect(coverage.partial).toBe(0);

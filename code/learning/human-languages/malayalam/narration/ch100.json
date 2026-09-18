@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "What You Wear",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5cf1635c1e675890",
+  "sourceHash": "fnv1a64:dbe07f323b28b734",
   "lessons": [
     {
       "id": "ML-C100-mundu",
@@ -292,7 +292,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:650cc07f176b6aa2",
+      "sourceHash": "fnv1a64:954152568feb511e",
       "notice": null,
       "blocks": [
         {
@@ -338,7 +338,7 @@
             },
             {
               "kind": "speech",
-              "text": "Its ending you have already handled twice. ചെരുപ്പ് (ceruppŭ) finishes in the breathed half-u, like മുണ്ട് (muṇṭŭ), so ആണ് lands straight on it: ചെരുപ്പാണ്."
+              "text": "Its ending you have handled before, on എന്ത്, on നല്ലത്, on പാട്ട് and on മുണ്ട് (muṇṭŭ). ചെരുപ്പ് (ceruppŭ) finishes in the same breathed half-u, so ആണ് lands straight on it: ചെരുപ്പാണ്."
             },
             {
               "kind": "table",
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b0a37ace32af3568",
+      "sourceHash": "fnv1a64:dc1504636e26b5da",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -496,7 +496,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing in this chapter asked you to learn a join. Both were already yours — the half-u from the song word, the യ from the game and the beauty words. What the chapter gave you is four things to wear."
+              "text": "Nothing in this chapter asked you to learn a join. Both are long-standing: എന്താണ് has taken the half-u since your very first question, and കുട്ടി has taken the യ since ഇത് എന്റെ കുട്ടിയാണ്. പാട്ട്, കളി and ഭംഗി are the most recent words to use them, not the words they began with. What the chapter gave you is four things to wear."
             }
           ]
         },
@@ -572,7 +572,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:826709bec22895d8",
+      "sourceHash": "fnv1a64:839b0e1b051bf0a4",
       "notice": null,
       "blocks": [
         {
@@ -619,7 +619,7 @@
             },
             {
               "kind": "speech",
-              "text": "Neither join was new. The half-u one arrived with the song word; the യ arrived with the game and the beauty words. This chapter spent all four of its words on things, and none on grammar."
+              "text": "Neither join was new, and neither is recent. എന്താണ് has taken the half-u since the book's first question, and കുട്ടി has taken the യ since ഇത് എന്റെ കുട്ടിയാണ് — long before പാട്ട്, കളി or ഭംഗി, which are only the latest words to use them. This chapter spent all four of its words on things, and none on grammar."
             }
           ]
         },
@@ -635,6 +635,10 @@
             {
               "kind": "speech",
               "text": "പുതിയ and പഴയ sit in front and do not change — the same shape they had in the chapter that taught them, with no ending added for the noun that follows."
+            },
+            {
+              "kind": "speech",
+              "text": "And the cloth a മുണ്ട് (muṇṭŭ) is made of is തുണി, which the book gave you long before it gave you anything made from it."
             }
           ]
         },
