@@ -5,9 +5,9 @@ spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 3460
 chapter: 97
 type: grammar
-headword: "ഇത് സുന്ദരം അല്ല"
-gloss: this is not beautiful — the far end of the same line, built with the denial word you already have
-romanization: "itŭ sundaraṁ alla"
+headword: "ഇത് സുന്ദരമല്ല"
+gloss: this is not beautiful — the denial welds exactly as the is-word does, which is why you already know how to build it
+romanization: "itŭ sundaramalla"
 concept_tag: ML-NOT-BEAUTIFUL
 prerequisites: [ML-C97-bhangi, ML-C77-alla]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C97-sundaram, ML-C77-alla]
 ---
 
-# ഇത് സുന്ദരം അല്ല (itŭ sundaraṁ alla) — this is not beautiful
+# ഇത് സുന്ദരമല്ല (itŭ sundaramalla) — this is not beautiful
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C77-ALLA-01] -->
@@ -39,20 +39,23 @@ were called.
 ## Grammar Lens: the denial stands apart
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C97-NOT-BEAUTIFUL-01]; assesses=[] -->
 
-> **ഇത് സുന്ദരം അല്ല.** — *itŭ sundaraṁ alla* — "**This is not beautiful.**"
+> **ഇത് സുന്ദരമല്ല.** — *itŭ sundaramalla* — "**This is not beautiful.**"
 
-Look at what did **not** happen. **അല്ല** did not weld onto the word in front of
-it, the way **ആണ്** did. It stands on its own, after the thing being denied —
-exactly as you first met it:
+**You already know how that was built.** **അല്ല** is the negative of **ആണ്**,
+and it welds on the same way:
 
 | | |
 |---|---|
-| **ഞാൻ അധ്യാപകൻ അല്ല** | I am not a teacher |
-| **ഇത് സുന്ദരം അല്ല** | this is not beautiful |
+| **സുന്ദരം + ആണ്** | **സുന്ദരമാണ്** — this is beautiful |
+| **സുന്ദരം + അല്ല** | **സുന്ദരമല്ല** — this is not beautiful |
 
-**Same shape, different subject.** The word being denied sits in the middle,
-unchanged and unwelded, and **സുന്ദരം** keeps its **ം** because nothing attached
-to it.
+Same **മ**, same reason: the **m** was always there and now has a vowel after
+it, so it is written with the full letter.
+
+**When you first met അല്ല it was standing apart** — **ഞാൻ അധ്യാപകൻ അല്ല**, *I
+am not a teacher.* Nothing welded there because **അധ്യാപകൻ** ends in a chillu,
+a consonant with no vowel to pass on. **The word it followed decided how it
+looked, not അല്ല itself.**
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C97-NOT-BEAUTIFUL-01, ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C41-DEIXIS-01, ML-CONCEPT-C77-NEGATION-SPLIT-01] -->
@@ -60,22 +63,22 @@ to it.
 Both ends of the same line, from one new word and one you already had.
 
 This is how the far end of most qualities will arrive for a while: **not by a
-second word, but by denying the first one.** It is what a learner can actually
-use early, and it is what a Malayalam speaker often says anyway.
+second word, but by denying the first one.** It is what a learner can build
+today, and it is what a speaker often says anyway.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C97-NOT-BEAUTIFUL-01, ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C77-ALLA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *itŭ sundaramāṇŭ*]
-- [YOU SAY: *itŭ sundaraṁ alla*]
+- [YOU SAY: *itŭ sundaramalla*]
 - [YOU SAY: the two one after the other, and hear where they part]
-- [YOU LOOK: at **സുന്ദരം** in the second sentence, and say what happened to its
-  **ം**]
+- [YOU SAY: which letter both sentences share in the middle, and why]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C97-NOT-BEAUTIFUL-01, ML-LEX-C77-ALLA-01] -->
 
-[PAUSE 3s] How do you say *this is not beautiful*? (**ഇത് സുന്ദരം അല്ല**.) Does
-**അല്ല** weld onto the word before it? (**No** — it stands apart.) So what
-happens to the **ം**? (**Nothing**.)
+[PAUSE 3s] How do you say *this is not beautiful*? (**ഇത് സുന്ദരമല്ല**.) Does
+**അല്ല** weld on the way **ആണ്** does? (**Yes** — same **മ**, same reason.) Why
+did it look separate at **അധ്യാപകൻ അല്ല**? (**That word ends in a chillu** —
+there was no vowel to pass on.)

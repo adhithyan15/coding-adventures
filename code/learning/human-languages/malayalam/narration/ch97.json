@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Beautiful, and Not",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b7c4f146c28913b0",
+  "sourceHash": "fnv1a64:abe80d3e0792be0e",
   "lessons": [
     {
       "id": "ML-C97-sundaram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2997464b9a2a221",
+      "sourceHash": "fnv1a64:7e6bdc044f3ec911",
       "notice": null,
       "blocks": [
         {
@@ -135,7 +135,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is beautiful? (സുന്ദരം (sundaraṁ).) Did you need a new rule to say this is beautiful? (No — it ends in ം, like the last two.)"
+              "text": "What is beautiful? (സുന്ദരം (sundaraṁ).) Did you need a new rule to say this is beautiful? (No — it ends in ം, like എളുപ്പം and പ്രയാസം.)"
             }
           ]
         }
@@ -144,17 +144,17 @@
     {
       "id": "ML-C97-bhangi",
       "sequence": 3450,
-      "title": "ഭംഗി (bhaṅgi) — beauty",
+      "title": "ഭംഗി (bhaṁgi) — beautiful",
       "headword": "ഭംഗി",
-      "romanization": "bhaṅgi",
-      "gloss": "beauty — the thing itself, and a word that welds onto ആണ് a different way",
+      "romanization": "bhaṁgi",
+      "gloss": "beautiful — the everyday way to say it, and the one place where a letter is genuinely added",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:407543d53bba55c1",
+      "sourceHash": "fnv1a64:f97c812e28a6fbfd",
       "notice": null,
       "blocks": [
         {
@@ -181,11 +181,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഭംഗി — bhaṅgi — beauty, the thing itself rather than the quality."
+              "text": "ഭംഗി — bhaṁgi — beauty."
             },
             {
               "kind": "speech",
-              "text": "ഇത് ഭംഗിയാണ്. — itŭ bhaṅgiyāṇŭ — \"This is beauty.\""
+              "text": "ഇത് ഭംഗിയാണ്. — itŭ bhaṁgiyāṇŭ — \"This is beautiful.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Read the gloss again. The word means beauty, but the sentence does not say this is beauty — it says this is beautiful, and it is the way you are most likely to hear it said."
             }
           ]
         },
@@ -196,7 +200,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This one does not end in ം, and it shows. Read the two welds side by side:"
+              "text": "Two different things are happening here, and only one of them is new."
             },
             {
               "kind": "table",
@@ -207,17 +211,21 @@
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "സുന്ദരം (sundaraṁ) becomes സുന്ദരമാണ്, a മ appears.",
-                "ഭംഗി (bhaṅgi) becomes ഭംഗിയാണ്, a യ appears."
+                "സുന്ദരം (sundaraṁ) becomes സുന്ദരമാണ്, the m was already there.",
+                "ഭംഗി (bhaṁgi) becomes ഭംഗിയാണ്, a യ is genuinely added."
               ]
             },
             {
               "kind": "speech",
-              "text": "You have seen the second one before, on a word you learned long ago: ഇത് എന്റെ കുട്ടിയാണ് — this is my child."
+              "text": "In സുന്ദരമാണ് nothing is added at all. The ം is the sound m, and it stays; only its writing moves, because the bare sign cannot carry a vowel. You were told that last chapter."
             },
             {
               "kind": "speech",
-              "text": "Neither word loses anything. A letter arrives to carry the vowel of ആണ്, and which letter arrives depends on how the word ended. That is the whole difference."
+              "text": "ഭംഗി (bhaṁgi) is the new case. It ends in a vowel, and ആണ് begins with one — and Malayalam will not let two vowels sit together. So a യ comes in between them, and it was in neither word before."
+            },
+            {
+              "kind": "speech",
+              "text": "You have heard it before without being told: ഇത് എന്റെ കുട്ടിയാണ് — this is my child. കുട്ടി ends in the same vowel, and the same യ appeared."
             }
           ]
         },
@@ -235,11 +243,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "bhaṅgi, then bhaṅgiyāṇŭ",
+              "instruction": "bhaṁgi, then bhaṁgiyāṇŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *bhaṅgi*, then *bhaṅgiyāṇŭ*]"
+              "source": "[YOU SAY: *bhaṁgi*, then *bhaṁgiyāṇŭ*]"
             },
             {
               "kind": "prompt",
@@ -252,12 +260,12 @@
             },
             {
               "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "at the two joined forms, and name the letter that differs",
+              "action": "SAY",
+              "instruction": "which of the two actually gained a sound, and which only changed its spelling",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at the two joined forms, and name the letter that differs]"
+              "source": "[YOU SAY: which of the two actually gained a sound, and which only changed its spelling]"
             }
           ]
         },
@@ -274,7 +282,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is beauty? (ഭംഗി (bhaṅgi).) Which letter appears when ആണ് follows it? (യ.) And after a word ending in ം? (മ.)"
+              "text": "What is beauty? (ഭംഗി (bhaṁgi).) Why does a യ come in before ആണ്? (Two vowels will not sit together.) Is anything added in സുന്ദരമാണ്? (No — that m was already there.)"
             }
           ]
         }
@@ -283,17 +291,17 @@
     {
       "id": "ML-C97-alla-sundaram",
       "sequence": 3460,
-      "title": "ഇത് സുന്ദരം അല്ല (itŭ sundaraṁ alla) — this is not beautiful",
-      "headword": "ഇത് സുന്ദരം അല്ല",
-      "romanization": "itŭ sundaraṁ alla",
-      "gloss": "this is not beautiful — the far end of the same line, built with the denial word you already have",
+      "title": "ഇത് സുന്ദരമല്ല (itŭ sundaramalla) — this is not beautiful",
+      "headword": "ഇത് സുന്ദരമല്ല",
+      "romanization": "itŭ sundaramalla",
+      "gloss": "this is not beautiful — the denial welds exactly as the is-word does, which is why you already know how to build it",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a316206014b28b7f",
+      "sourceHash": "fnv1a64:5778d9ba8efddc5b",
       "notice": null,
       "blocks": [
         {
@@ -320,11 +328,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഇത് സുന്ദരം അല്ല. — itŭ sundaraṁ alla — \"This is not beautiful.\""
+              "text": "ഇത് സുന്ദരമല്ല. — itŭ sundaramalla — \"This is not beautiful.\""
             },
             {
               "kind": "speech",
-              "text": "Look at what did not happen. അല്ല did not weld onto the word in front of it, the way ആണ് did. It stands on its own, after the thing being denied — exactly as you first met it:"
+              "text": "You already know how that was built. അല്ല is the negative of ആണ്, and it welds on the same way:"
             },
             {
               "kind": "table",
@@ -335,13 +343,17 @@
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "ഞാൻ അധ്യാപകൻ അല്ല, I am not a teacher.",
-                "ഇത് സുന്ദരം അല്ല (itŭ sundaraṁ alla), this is not beautiful."
+                "സുന്ദരം (sundaraṁ) + ആണ്, സുന്ദരമാണ് — this is beautiful.",
+                "സുന്ദരം (sundaraṁ) + അല്ല, സുന്ദരമല്ല — this is not beautiful."
               ]
             },
             {
               "kind": "speech",
-              "text": "Same shape, different subject. The word being denied sits in the middle, unchanged and unwelded, and സുന്ദരം (sundaraṁ) keeps its ം because nothing attached to it."
+              "text": "Same മ, same reason: the m was always there and now has a vowel after it, so it is written with the full letter."
+            },
+            {
+              "kind": "speech",
+              "text": "When you first met അല്ല it was standing apart — ഞാൻ അധ്യാപകൻ അല്ല, I am not a teacher. Nothing welded there because അധ്യാപകൻ ends in a chillu, a consonant with no vowel to pass on. The word it followed decided how it looked, not അല്ല itself."
             }
           ]
         },
@@ -356,7 +368,7 @@
             },
             {
               "kind": "speech",
-              "text": "This is how the far end of most qualities will arrive for a while: not by a second word, but by denying the first one. It is what a learner can actually use early, and it is what a Malayalam speaker often says anyway."
+              "text": "This is how the far end of most qualities will arrive for a while: not by a second word, but by denying the first one. It is what a learner can build today, and it is what a speaker often says anyway."
             }
           ]
         },
@@ -383,11 +395,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "itŭ sundaraṁ alla",
+              "instruction": "itŭ sundaramalla",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *itŭ sundaraṁ alla*]"
+              "source": "[YOU SAY: *itŭ sundaramalla*]"
             },
             {
               "kind": "prompt",
@@ -400,12 +412,12 @@
             },
             {
               "kind": "prompt",
-              "action": "LOOK",
-              "instruction": "at സുന്ദരം (sundaraṁ) in the second sentence, and say what happened to its ം",
+              "action": "SAY",
+              "instruction": "which letter both sentences share in the middle, and why",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU LOOK: at **സുന്ദരം** in the second sentence, and say what happened to its **ം**]"
+              "source": "[YOU SAY: which letter both sentences share in the middle, and why]"
             }
           ]
         },
@@ -422,7 +434,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say this is not beautiful? (ഇത് സുന്ദരം അല്ല (itŭ sundaraṁ alla).) Does അല്ല weld onto the word before it? (No — it stands apart.) So what happens to the ം? (Nothing.)"
+              "text": "How do you say this is not beautiful? (ഇത് സുന്ദരമല്ല (itŭ sundaramalla).) Does അല്ല weld on the way ആണ് does? (Yes — same മ, same reason.) Why did it look separate at അധ്യാപകൻ അല്ല? (That word ends in a chillu — there was no vowel to pass on.)"
             }
           ]
         }
@@ -434,14 +446,14 @@
       "title": "(beautiful, and not) (sundaravuṁ allāthatuṁ enna ōrmma) — from cold",
       "headword": "(beautiful, and not)",
       "romanization": "sundaravuṁ allāthatuṁ enna ōrmma",
-      "gloss": "cold retrieval of both ends of the line, and of which letter arrives when ആണ് follows",
+      "gloss": "cold retrieval of both ends of the line, and of the difference between a letter re-spelled and a sound added",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e58eae5a7369ed4",
+      "sourceHash": "fnv1a64:dc36fc1d1f81b2af",
       "notice": null,
       "blocks": [
         {
@@ -471,20 +483,24 @@
               "headers": [
                 "word",
                 "joined to ആണ്",
-                ""
+                "what happened"
               ],
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "word: എളുപ്പം. joined to ആണ്: എളുപ്പമാണ്, മ arrives.",
-                "word: സുന്ദരം (sundaraṁ). joined to ആണ്: സുന്ദരമാണ്, മ arrives.",
-                "word: കുട്ടി. joined to ആണ്: കുട്ടിയാണ്, യ arrives.",
-                "word: ഭംഗി (bhaṅgi). joined to ആണ്: ഭംഗിയാണ്, യ arrives."
+                "word: എളുപ്പം. joined to ആണ്: എളുപ്പമാണ്. what happened: the m was already there.",
+                "word: സുന്ദരം (sundaraṁ). joined to ആണ്: സുന്ദരമാണ്. what happened: the m was already there.",
+                "word: കുട്ടി. joined to ആണ്: കുട്ടിയാണ്. what happened: a യ was added.",
+                "word: ഭംഗി (bhaṁgi). joined to ആണ്: ഭംഗിയാണ്. what happened: a യ was added."
               ]
             },
             {
               "kind": "speech",
-              "text": "Nothing is lost in any of the four. A letter arrives to carry the vowel of ആണ്, and which one depends on how the word ended — nothing else."
+              "text": "The two halves are not the same event. In the top pair nothing is added — the m was always in the word, and only its writing moves once a vowel sits behind it. In the bottom pair a യ genuinely appears, because the word ends in a vowel and two vowels will not sit together."
+            },
+            {
+              "kind": "speech",
+              "text": "And what attaches matters too, not only how the word ended: the same സുന്ദരം (sundaraṁ) gives സുന്ദരവും when the and ending arrives."
             }
           ]
         },
@@ -495,11 +511,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഇത് സുന്ദരമാണ്. — this is beautiful. ഇത് സുന്ദരം അല്ല (itŭ sundaraṁ alla). — this is not beautiful."
+              "text": "ഇത് സുന്ദരമാണ്. — this is beautiful. ഇത് സുന്ദരമല്ല (itŭ sundaramalla). — this is not beautiful."
             },
             {
               "kind": "speech",
-              "text": "The second is not a second word. അല്ല stands apart, the way it has since you first met it, and സുന്ദരം (sundaraṁ) keeps its ം because nothing attached."
+              "text": "The second is not a second word. അല്ല is the negative of ആണ് and welds the same way — same മ, same reason."
             },
             {
               "kind": "speech",
@@ -530,29 +546,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "bhaṅgi becomes bhaṅgiyāṇŭ",
+              "instruction": "bhaṁgi becomes bhaṁgiyāṇŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *bhaṅgi* → *bhaṅgiyāṇŭ*]"
+              "source": "[YOU SAY: *bhaṁgi* → *bhaṁgiyāṇŭ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "itŭ sundaraṁ alla",
+              "instruction": "itŭ sundaramalla",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *itŭ sundaraṁ alla*]"
+              "source": "[YOU SAY: *itŭ sundaramalla*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which of the two joined forms takes a യ, and why",
+              "instruction": "which of the four joined forms actually gained a sound, and why",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: which of the two joined forms takes a **യ**, and why]"
+              "source": "[YOU SAY: which of the four joined forms actually gained a sound, and why]"
             }
           ]
         },
@@ -569,7 +585,7 @@
             },
             {
               "kind": "speech",
-              "text": "Beautiful, and beauty? (സുന്ദരം, ഭംഗി (bhaṅgi).) Which letter arrives on each before ആണ്? (മ and യ.) And how do you deny it? (ഇത് സുന്ദരം അല്ല (itŭ sundaraṁ alla) — അല്ല standing apart.)"
+              "text": "Beautiful, and beauty? (സുന്ദരം (sundaraṁ), ഭംഗി (bhaṁgi).) Which of the two gains a sound before ആണ്? (ഭംഗി (bhaṁgi) — a യ.) And how do you deny it? (ഇത് സുന്ദരമല്ല (itŭ sundaramalla).)"
             }
           ]
         }

@@ -68,4 +68,4 @@ one cost you a word**, and the weld came free.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-CONCEPT-C02-COPULA-01] -->
 
 [PAUSE 3s] What is *beautiful*? (**സുന്ദരം**.) Did you need a new rule to say
-*this is beautiful*? (**No** — it ends in **ം**, like the last two.)
+*this is beautiful*? (**No** — it ends in **ം**, like **എളുപ്പം** and **പ്രയാസം**.)

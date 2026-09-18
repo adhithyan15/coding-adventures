@@ -6,8 +6,8 @@ sequence: 3450
 chapter: 97
 type: word
 headword: "ഭംഗി"
-gloss: beauty — the thing itself, and a word that welds onto ആണ് a different way
-romanization: "bhaṅgi"
+gloss: beautiful — the everyday way to say it, and the one place where a letter is genuinely added
+romanization: "bhaṁgi"
 concept_tag: ML-BEAUTY
 prerequisites: [ML-C97-sundaram, ML-C36-kutti]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C97-sundaram, ML-C36-kutti]
 ---
 
-# ഭംഗി (bhaṅgi) — beauty
+# ഭംഗി (bhaṁgi) — beautiful
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-CONCEPT-C36-KUTTI-01] -->
@@ -39,37 +39,46 @@ long time.
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-LEX-C97-BEAUTY-01]; assesses=[] -->
 
-**ഭംഗി** — *bhaṅgi* — **beauty**, the thing itself rather than the quality.
+**ഭംഗി** — *bhaṁgi* — **beauty.**
 
-> **ഇത് ഭംഗിയാണ്.** — *itŭ bhaṅgiyāṇŭ* — "This is beauty."
+> **ഇത് ഭംഗിയാണ്.** — *itŭ bhaṁgiyāṇŭ* — "**This is beautiful.**"
+
+Read the gloss again. The word means *beauty*, but the sentence does **not** say
+*this is beauty* — it says **this is beautiful**, and it is the way you are most
+likely to hear it said.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-AANU-01] -->
 
-**This one does not end in ം, and it shows.** Read the two welds side by side:
+**Two different things are happening here, and only one of them is new.**
 
 | | |
 |---|---|
-| **സുന്ദരം** → **സുന്ദരമാണ്** | a **മ** appears |
-| **ഭംഗി** → **ഭംഗിയാണ്** | a **യ** appears |
+| **സുന്ദരം** → **സുന്ദരമാണ്** | the **m** was already there |
+| **ഭംഗി** → **ഭംഗിയാണ്** | a **യ** is genuinely added |
 
-You have seen the second one before, on a word you learned long ago: **ഇത്
-എന്റെ കുട്ടിയാണ്** — *this is my child.*
+In **സുന്ദരമാണ്** nothing is added at all. The **ം** is the sound **m**, and it
+stays; only its *writing* moves, because the bare sign cannot carry a vowel.
+**You were told that last chapter.**
 
-**Neither word loses anything.** A letter arrives to carry the vowel of
-**ആണ്**, and which letter arrives depends on how the word ended. That is the
-whole difference.
+**ഭംഗി is the new case.** It ends in a vowel, and **ആണ്** begins with one —
+and Malayalam will not let two vowels sit together. So a **യ** comes in between
+them, and it was in neither word before.
+
+You have heard it before without being told: **ഇത് എന്റെ കുട്ടിയാണ്** — *this
+is my child.* **കുട്ടി** ends in the same vowel, and the same **യ** appeared.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTY-01, ML-LEX-C97-BEAUTIFUL-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *bhaṅgi*, then *bhaṅgiyāṇŭ*]
+- [YOU SAY: *bhaṁgi*, then *bhaṁgiyāṇŭ*]
 - [YOU SAY: *sundaraṁ*, then *sundaramāṇŭ*]
-- [YOU LOOK: at the two joined forms, and name the letter that differs]
+- [YOU SAY: which of the two actually gained a sound, and which only changed its spelling]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTY-01, ML-LEX-C97-BEAUTIFUL-01, ML-CONCEPT-C02-COPULA-01] -->
 
-[PAUSE 3s] What is *beauty*? (**ഭംഗി**.) Which letter appears when **ആണ്**
-follows it? (**യ**.) And after a word ending in **ം**? (**മ**.)
+[PAUSE 3s] What is *beauty*? (**ഭംഗി**.) Why does a **യ** come in before
+**ആണ്**? (**Two vowels will not sit together**.) Is anything added in
+**സുന്ദരമാണ്**? (**No** — that **m** was already there.)
