@@ -1,0 +1,18 @@
+{
+  "chapter": 101,
+  "title": "Build and Height",
+  "label": "ch:ml-build",
+  "canDo": "I can describe a person as short, thin or stout, and say that someone is tall.",
+  "payoff": {
+    "lesson": "ML-R101-build-recall",
+    "kind": "production",
+    "summary": "From cold: three adjectives that go in front of the noun, and one noun that cannot.",
+    "assesses": [
+      "ML-LEX-C101-SHORT-01",
+      "ML-LEX-C101-THIN-01",
+      "ML-LEX-C101-STOUT-01",
+      "ML-LEX-C101-HEIGHT-01"
+    ],
+    "note": "Four atoms. THE POINT'S NOTE WAS ACCURATE, verified before drafting for the second chapter running: valiya and cheriya are indeed the only size adjectives taught and they describe THINGS, and kuriya, melinja, thadicha, uyaram, pokkam, uyaramulla and neelamulla all return zero on a token-bounded sweep. TALL IS REACHED BY A DIFFERENT ROUTE, AND THAT IS THE CHAPTER'S POINT. Malayalam's ordinary word for tall is uyaramulla, which needs the relative participle uLLa -- and uLLa is taught NOWHERE in the corpus, zero occurrences. Rather than smuggle it in, the chapter teaches uyaram as a noun and reaches tall through the dative-existential the learner already owns: ML-C32-undu (650) states undu as 'there is / someone has' in as many words, and ML-C06-dative-subject (330) owns enikku. enikku uyaramuNTu is built entirely from taught pieces. The same refusal as ozhivusamayam in chapter 98 and dharikkuka here. NO NEW GRAMMAR: the three adjectives sit in ML-C42's frame (before the noun, unchanged) and uyaram's join is the anusvara taking its full letter, which chapters 89, 96, 97 and 99 all teach. THE CHAPTER'S REAL TEACHING IS THAT ADJACENT WORDS ARE NOT SYNONYMS: cheriya and kuriya differ by one letter and do not describe the same thing -- small, of objects, against short, of people -- and tall is the mirror of neither. TWO INVENTIONS WERE CAUGHT BEFORE THE FIRST COMMIT, both by a token sweep rather than by reading. aaL (person) was written into kuriya's example sentence and is taught NOWHERE; it became kutti, which is owned since 810 and whose weld the last three chapters have drilled. And sahOdaran was about to be quoted in Malayalam script from ML-C32-undu, which gives that example only in ROMANIZATION -- quoting it in script would have introduced an unowned word. The borrowed example was dropped instead. A WHOLE-TOKEN OWNER SWEEP is now run over every new file before commit: it lists every Malayalam token with no headword owner, leaving only joined forms built from owned pieces and metalinguistic ending fragments. Also corrected in draft: melinja's adjective list said 'every adjective so far' while omitting nalla."
+  }
+}

@@ -618,8 +618,34 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // candidate list treats as separate from kaNNata/vaacchu/baagu. Two limbs are
   // properly covered; the point closes on the basis LEX-37 closed with its
   // free-time limb open, with the gap written down rather than papered over.
-  expect(coverage.covered).toBe(207);
-  expect(coverage.unmapped).toBe(36);
+  // 207 -> 208: ML-A1-LEX-06, a person's build and height. THE PERCENTAGE MOVES,
+  // 85 -> 86 (85.6 rounds up); recomputed, not carried.
+  // THE POINT'S NOTE WAS ACCURATE, verified before drafting for the second point
+  // running: valiya and cheriya really are the only size adjectives taught, they
+  // really do describe THINGS, and seven candidates return zero token-bounded.
+  // TALL IS REACHED BY A DIFFERENT ROUTE, AND THAT IS THE CHAPTER'S POINT.
+  // Malayalam's ordinary word for tall is uyaramulla, which needs the relative
+  // participle uLLa -- taught NOWHERE, zero occurrences. Rather than smuggle it
+  // in, the chapter teaches uyaram as a NOUN and reaches tall through the
+  // dative-existential already owned: ML-C32-undu (650) states undu as "there is
+  // / someone has" outright, and ML-C06-dative-subject (330) owns enikku, so
+  // enikku uyaramuNTu is built entirely from taught pieces. Same refusal as
+  // ozhivusamayam (ch98) and dharikkuka (ch100).
+  // THE REAL TEACHING IS THAT ADJACENT WORDS ARE NOT SYNONYMS: cheriya and kuriya
+  // differ by one letter and do not describe the same thing -- small of objects
+  // against short of people -- and tall is the mirror of neither.
+  // TWO INVENTIONS WERE CAUGHT BEFORE COMMIT BY A TOKEN SWEEP RATHER THAN BY
+  // READING. aaL (person) was written into an example sentence and is taught
+  // NOWHERE; it became kutti, owned since 810. And sahOdaran was about to be
+  // quoted in Malayalam SCRIPT from ML-C32-undu, which gives that example only in
+  // ROMANIZATION -- quoting it would have introduced an unowned word, so the
+  // borrowed example was dropped instead. A WHOLE-TOKEN OWNER SWEEP now runs over
+  // every new file before commit: it lists every Malayalam token with no headword
+  // owner, leaving only joined forms built from owned pieces and metalinguistic
+  // ending fragments. Also caught in draft: the adjective list said "every
+  // adjective so far" while omitting nalla.
+  expect(coverage.covered).toBe(208);
+  expect(coverage.unmapped).toBe(35);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -631,6 +657,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 207/243 points covered (85%)",
+    "malayalam A1 (partial inventory): 208/243 points covered (86%)",
   );
 }, 60_000);

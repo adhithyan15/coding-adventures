@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 101,
+  "title": "Build and Height",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9bc95d92b6860602",
+  "lessons": [
+    {
+      "id": "ML-C101-kuriya",
+      "sequence": 3620,
+      "title": "കുറിയ (kuṟiya) — short, of a person",
+      "headword": "കുറിയ",
+      "romanization": "kuṟiya",
+      "gloss": "short, of a person — built exactly like ചെറിയ, and used where ചെറിയ cannot be",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff5ae3941c2dbea8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say small. Then say he."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കുറിയ — kuṟiya — short, said of a person's height."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൻ കുറിയ കുട്ടിയാണ്. — avan kuṟiya kuṭṭiyāṇŭ — \"He is a short child.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put it beside the word you already have and the shape is the same."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "romanized"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: ചെറിയ. romanized: ceṟiya.",
+                "word: കുറിയ. romanized: kuṟiya."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Same റ, same -ിയ ending, same job in the sentence: in front of the noun, unchanged, exactly as the adjective chapter said."
+            },
+            {
+              "kind": "speech",
+              "text": "What differs is what each one may describe. ചെറിയ is small — a small house, a small cup. കുറിയ (kuṟiya) is short in the sense of not tall, and it is a person's height it measures."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceṟiya, then kuṟiya, and hear how little separates them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceṟiya*, then *kuṟiya*, and hear how little separates them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avan kuṟiya kuṭṭiyāṇŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avan kuṟiya kuṭṭiyāṇŭ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is short, of a person? (കുറിയ (kuṟiya).) Which word you already had is built the same way? (ചെറിയ.) And where does it stand? (In front of the noun, unchanged.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C101-melinja",
+      "sequence": 3630,
+      "title": "മെലിഞ്ഞ (meliñña) — thin",
+      "headword": "മെലിഞ്ഞ",
+      "romanization": "meliñña",
+      "gloss": "thin, of a person — an adjective that ends in -a without ending in -iya",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3b59489a715ea4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say short, of a person. Where does it stand?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മെലിഞ്ഞ — meliñña — thin, said of a person's build."
+            },
+            {
+              "kind": "speech",
+              "text": "മെലിഞ്ഞ കുട്ടി — meliñña kuṭṭi — \"a thin child.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ending you have met; the shape before it you have not."
+            },
+            {
+              "kind": "speech",
+              "text": "വലിയ, നല്ല, പുതിയ, പഴയ, ചെറിയ, and now കുറിയ (kuṟiya) — every adjective the book has put in front of a noun ends in -a, and so does this one. That is the whole requirement, and മെലിഞ്ഞ (meliñña) meets it."
+            },
+            {
+              "kind": "speech",
+              "text": "What is different is what comes in front of the -a. The others end -ിയ; this one ends in a doubled ഞ്ഞ. That changes nothing about how it is used — it still stands before the noun and still does not change:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "കുറിയ കുട്ടി, kuṟiya kuṭṭi.",
+                "മെലിഞ്ഞ കുട്ടി, meliñña kuṭṭi."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meliñña",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meliñña*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meliñña kuṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meliñña kuṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟiya kuṭṭi, then meliñña kuṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟiya kuṭṭi*, then *meliñña kuṭṭi*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is thin? (മെലിഞ്ഞ (meliñña).) What do all the adjectives so far end in? (-a.) Does this one behave any differently? (No — in front, unchanged.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C101-thadicha",
+      "sequence": 3640,
+      "title": "തടിച്ച (taṭicca) — stout",
+      "headword": "തടിച്ച",
+      "romanization": "taṭicca",
+      "gloss": "stout, of a person — the far end of മെലിഞ്ഞ, and a third shape ending in -a",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a05b0160e4e7bf5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a thin child."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തടിച്ച — taṭicca — stout, heavily built."
+            },
+            {
+              "kind": "speech",
+              "text": "തടിച്ച കുട്ടി — taṭicca kuṭṭi — \"a stout child.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the far end of the last word, and the book has done that before: one quality, then its opposite, so a single axis costs you two words and not four."
+            },
+            {
+              "kind": "speech",
+              "text": "Three shapes, one ending, one behaviour:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "adjective",
+                "ends"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "adjective: കുറിയ (kuṟiya). ends: -ിയ.",
+                "adjective: മെലിഞ്ഞ (meliñña). ends: -ഞ്ഞ.",
+                "adjective: തടിച്ച (taṭicca). ends: -ച്ച."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of them closes on -a, stands in front of the noun, and does not change. The shape in front of the -a varies and never matters."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭicca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭicca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meliñña kuṭṭi, then taṭicca kuṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meliñña kuṭṭi*, then *taṭicca kuṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all three adjectives from this chapter in a row",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all three adjectives from this chapter in a row]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is stout? (തടിച്ച (taṭicca).) And its opposite? (മെലിഞ്ഞ (meliñña).) What do the three shapes of this chapter have in common? (They all end in -a and none of them changes.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C101-uyaram",
+      "sequence": 3650,
+      "title": "ഉയരം (uyaraṁ) — height",
+      "headword": "ഉയരം",
+      "romanization": "uyaraṁ",
+      "gloss": "height — the noun that lets you say someone is tall without an adjective for it",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f4248794e1b0c91",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say short, of a person. Then say the word for there is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉയരം — uyaraṁ — height."
+            },
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് ഉയരമുണ്ട്. — enikku uyaramuṇṭŭ — \"To me, height exists\" — I am tall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "There is no single word for tall in this book, and this is how you say it anyway."
+            },
+            {
+              "kind": "speech",
+              "text": "കുറിയ (kuṟiya) was an adjective, so it went in front of a noun. ഉയരം (uyaraṁ) is not an adjective — it is a noun, height — so it takes the other machine you already own: the one where a thing exists to someone."
+            },
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് ഉയരമുണ്ട്. — enikku uyaramuṇṭŭ — to-me height there-is — I am tall."
+            },
+            {
+              "kind": "speech",
+              "text": "That frame is not new. The chapter that gave you ഉണ്ട് used it to say that someone has a thing, and the chapter on എനിക്ക് gave you the person the having happens to. All this chapter does is put a new noun into it."
+            },
+            {
+              "kind": "speech",
+              "text": "And the ം does what it always does when something follows it — it takes the full letter so it can carry what comes next: ഉയരം (uyaraṁ) + ഉണ്ട് becomes ഉയരമുണ്ട്."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uyaraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uyaraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enikku uyaramuṇṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enikku uyaramuṇṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why this one needs ഉണ്ട് and കുറിയ (kuṟiya) did not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why this one needs **ഉണ്ട്** and **കുറിയ** did not]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is height? (ഉയരം (uyaraṁ).) How do you say I am tall? (എനിക്ക് ഉയരമുണ്ട്.) And why not an adjective, as with കുറിയ (kuṟiya)? (Because ഉയരം (uyaraṁ) is a noun — it exists to someone.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R101-build-recall",
+      "sequence": 3660,
+      "title": "(short, thin, stout, and height) (uyaravuṁ kuṟiyayuṁ enna ōrmma) — from cold",
+      "headword": "(short, thin, stout, and height)",
+      "romanization": "uyaravuṁ kuṟiyayuṁ enna ōrmma",
+      "gloss": "cold retrieval of three adjectives and one noun, and of why the noun needs a different machine",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0272cd977390f3df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say short, thin, stout, and height."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: three of them go in front, and one cannot",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three of this chapter's four words are adjectives, and all three behave the way every adjective in the book has:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "adjective",
+                "before the noun"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "adjective: കുറിയ. before the noun: കുറിയ കുട്ടി (kuṟiya kuṭṭi).",
+                "adjective: മെലിഞ്ഞ. before the noun: മെലിഞ്ഞ കുട്ടി (meliñña kuṭṭi).",
+                "adjective: തടിച്ച. before the noun: തടിച്ച കുട്ടി (taṭicca kuṭṭi)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "They end -ിയ, -ഞ്ഞ and -ച്ച — three different shapes, all closing on -a, none of them changing for the noun behind it."
+            },
+            {
+              "kind": "speech",
+              "text": "ഉയരം (uyaraṁ) is the odd one, and not because it is irregular. It is a noun, so there is nothing for it to stand in front of. It uses the frame you were given for having:"
+            },
+            {
+              "kind": "speech",
+              "text": "എനിക്ക് ഉയരമുണ്ട്. — enikku uyaramuṇṭŭ — to-me height there-is — I am tall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The book still has no single word for tall. It has a noun for height and a way to say that someone has it, and between them that is the whole meaning."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth noticing rather than papering over: ചെറിയ and കുറിയ (kuṟiya) are almost the same word and do not describe the same thing — one is small, said of objects, the other short, said of people — and tall is not the mirror of either. You reach it by a different route."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟiya, meliñña, taṭicca, uyaraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟiya*, *meliñña*, *taṭicca*, *uyaraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭicca kuṭṭi, then meliñña kuṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭicca kuṭṭi*, then *meliñña kuṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "enikku uyaramuṇṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *enikku uyaramuṇṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the four cannot stand in front of a noun, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the four cannot stand in front of a noun, and why]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Short, stout, height? (കുറിയ (kuṟiya), തടിച്ച (taṭicca), ഉയരം (uyaraṁ).) Which of the three cannot go in front of a noun? (ഉയരം (uyaraṁ) — it is a noun itself.) So how do you say I am tall? (എനിക്ക് ഉയരമുണ്ട്.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:056372c0bf673367",
+  "lessonIds": [
+    "ML-C101-kuriya",
+    "ML-C101-melinja",
+    "ML-C101-thadicha",
+    "ML-C101-uyaram",
+    "ML-R101-build-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch101-build-and-height.tex"
+}
