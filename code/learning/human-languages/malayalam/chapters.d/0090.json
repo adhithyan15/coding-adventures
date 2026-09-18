@@ -1,0 +1,17 @@
+{
+  "chapter": 90,
+  "title": "A Clause In Front",
+  "label": "ch:ml-participle",
+  "canDo": "I can say which one I mean by putting a whole clause in front of the noun, the way Malayalam does it.",
+  "payoff": {
+    "lesson": "ML-R90-participle-recall",
+    "kind": "production",
+    "summary": "From cold: the describing form in both tenses, the position it stands in, and the joining word English needs and Malayalam does not have.",
+    "assesses": [
+      "ML-GRAMMAR-C90-PARTICIPLE-01",
+      "ML-CONCEPT-C90-NO-RELATIVE-01",
+      "ML-GRAMMAR-C90-PAST-PARTICIPLE-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. No new vocabulary: every verb and noun in it is taught, and the describing form is the taught present or past with one vowel sign removed."
+  }
+}

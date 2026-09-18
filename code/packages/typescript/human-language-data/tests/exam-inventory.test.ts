@@ -1973,7 +1973,7 @@ describe("the committed Malayalam A1 inventory", () => {
     }
   });
 
-  it("reports a joining column of 8 out of 11, and a script 9 characters short", () => {
+  it("reports a joining column of 9 out of 11, and a script 9 characters short", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
     const { lessons } = loadEverything();
@@ -2206,8 +2206,29 @@ describe("the committed Malayalam A1 inventory", () => {
     // AND NO GRAMMAR -- -athu lets a quality stand without a noun to lean on and is
     // visibly the word athu, "that"; mosham fills the hole left by five qualities of
     // which none was negative; the third lesson only assembles.
-    expect(coverage.covered).toBe(194);
-    expect(coverage.unmapped).toBe(49);
+    // 194 -> 196: ML-A1-PRON-08 and ML-A1-JOIN-10, the relative participle, which
+    // the file called STRUCTURALLY THE BIGGEST GAP IN IT. The gap was real -- a sweep
+    // for attributive -unna forms returned ZERO while 16 distinct -unnu present forms
+    // were already in use -- but the SIZE was the surprise. The describing form is
+    // the taught present or past with ONE VOWEL SIGN REMOVED: pokunnu -> pokunna,
+    // vannu -> vanna, leaving the final letter with its own inherent a. The rule is
+    // about the LETTER, not the tense. The form then stands IN FRONT of the noun, in
+    // the slot a quality word has held since the adjective chapter, so no new
+    // arrangement was needed. Two things differ from English and the second matters
+    // most: the clause moves to the front, and THE JOINING WORD DISAPPEARS -- there
+    // is nothing to translate "that" into. No new vocabulary at all.
+    // 196 -> 198: ML-A1-LEX-30 (money, price, paying) and ML-A1-LEX-31 (shops),
+    // which are one situation and close together. WHAT MADE THIS CHEAP WAS CHAPTER
+    // 88. The price question is ethra roopa, and ethra was lifted out of the age
+    // question in chapter 81, so the question is two words of which one was owned.
+    // The ANSWER is what had been impossible: before the tens, the count stopped at
+    // twenty and every price above it was unsayable, exactly as ML-A1-NUM-04's note
+    // warned. So the chapter only had to name the unit being counted. vaanguka's
+    // object stays BARE -- pustakam takes no object ending because it is a thing,
+    // which is chapter 87's rule holding while the verb changed. A vocabulary
+    // chapter is cheap when the grammar under it is already built.
+    expect(coverage.covered).toBe(198);
+    expect(coverage.unmapped).toBe(45);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2236,7 +2257,11 @@ describe("the committed Malayalam A1 inventory", () => {
     // chapter 75 as a minimal pair, since one ending is the whole difference
     // between them. Three of the five still open are the distributive, the
     // relative participle and JOIN-01's clause half.
-    expect(joining).toEqual({ enumerated: 11, covered: 8 });
+    // 8 -> 9: ML-A1-JOIN-10, the relative participle, which this file called the
+    // biggest structural gap in it. Chapter 90 closes it together with
+    // ML-A1-PRON-08, since both name the same construction. Two of the three
+    // still open are the distributive and JOIN-01's clause half.
+    expect(joining).toEqual({ enumerated: 11, covered: 9 });
     // DO NOT CARRY ANOTHER TRACK'S SCRIPT SHAPE HERE. Tamil came back 52 of 52,
     // Kannada 50 of 69. Malayalam was measured on its own and is 58 of the 67
     // distinct characters its headwords use -- 87 per cent. The nine open ones,
@@ -2250,7 +2275,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 194/243 points covered (80%)",
+      "malayalam A1 (partial inventory): 198/243 points covered (81%)",
     );
   }, 60_000);
 });

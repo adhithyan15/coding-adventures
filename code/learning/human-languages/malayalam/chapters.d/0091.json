@@ -1,0 +1,20 @@
+{
+  "chapter": 91,
+  "title": "What It Costs",
+  "label": "ch:ml-shopping",
+  "canDo": "I can go into a shop, ask what something costs, understand the answer and say that I am buying it.",
+  "payoff": {
+    "lesson": "ML-R91-shopping-recall",
+    "kind": "production",
+    "summary": "From cold: the shop, the price, the money, the rupee and the buying verb, run as a four-line scene, and an accounting of how much of that scene was already owned.",
+    "assesses": [
+      "ML-LEX-C91-SHOP-01",
+      "ML-LEX-C91-MONEY-01",
+      "ML-LEX-C91-MONEY-02",
+      "ML-LEX-C91-MONEY-03",
+      "ML-LEX-C91-BUY-01",
+      "ML-CONCEPT-C91-PRICE-QUESTION-01"
+    ],
+    "note": "The chapter introduces exactly these six atoms and the payoff assesses all six. The price question reuses ethra, freed in chapter 81, and its answers depend on the tens taught in chapter 88 -- before that chapter every price above twenty was unsayable."
+  }
+}

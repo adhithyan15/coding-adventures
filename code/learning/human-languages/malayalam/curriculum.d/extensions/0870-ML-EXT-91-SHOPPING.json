@@ -1,0 +1,17 @@
+{
+  "id": "ML-EXT-91-SHOPPING",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can buy something and know what it cost.",
+  "prerequisites": [
+    "ML-EXT-90-PARTICIPLE"
+  ],
+  "lessons": [
+    "ML-C91-kada",
+    "ML-C91-vila-panam",
+    "ML-C91-ethra-rupa",
+    "ML-C91-vaanguka",
+    "ML-R91-shopping-recall"
+  ]
+}

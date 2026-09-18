@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:31c803913952cb0a",
+  "lessonIds": [
+    "ML-C91-kada",
+    "ML-C91-vila-panam",
+    "ML-C91-ethra-rupa",
+    "ML-C91-vaanguka",
+    "ML-R91-shopping-recall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "malayalam/narration/ch91.txt",
+  "json": "malayalam/narration/ch91.json",
+  "textHash": "fnv1a64:162be8260e562238",
+  "jsonHash": "fnv1a64:c99a4537bdcf4be5",
+  "findings": []
+}

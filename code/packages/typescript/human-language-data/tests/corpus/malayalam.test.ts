@@ -370,8 +370,29 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // AND NO GRAMMAR -- -athu lets a quality stand without a noun to lean on and is
   // visibly the word athu, "that"; mosham fills the hole left by five qualities of
   // which none was negative; the third lesson only assembles.
-  expect(coverage.covered).toBe(194);
-  expect(coverage.unmapped).toBe(49);
+  // 194 -> 196: ML-A1-PRON-08 and ML-A1-JOIN-10, the relative participle, which
+  // the file called STRUCTURALLY THE BIGGEST GAP IN IT. The gap was real -- a sweep
+  // for attributive -unna forms returned ZERO while 16 distinct -unnu present forms
+  // were already in use -- but the SIZE was the surprise. The describing form is
+  // the taught present or past with ONE VOWEL SIGN REMOVED: pokunnu -> pokunna,
+  // vannu -> vanna, leaving the final letter with its own inherent a. The rule is
+  // about the LETTER, not the tense. The form then stands IN FRONT of the noun, in
+  // the slot a quality word has held since the adjective chapter, so no new
+  // arrangement was needed. Two things differ from English and the second matters
+  // most: the clause moves to the front, and THE JOINING WORD DISAPPEARS -- there
+  // is nothing to translate "that" into. No new vocabulary at all.
+  // 196 -> 198: ML-A1-LEX-30 (money, price, paying) and ML-A1-LEX-31 (shops),
+  // which are one situation and close together. WHAT MADE THIS CHEAP WAS CHAPTER
+  // 88. The price question is ethra roopa, and ethra was lifted out of the age
+  // question in chapter 81, so the question is two words of which one was owned.
+  // The ANSWER is what had been impossible: before the tens, the count stopped at
+  // twenty and every price above it was unsayable, exactly as ML-A1-NUM-04's note
+  // warned. So the chapter only had to name the unit being counted. vaanguka's
+  // object stays BARE -- pustakam takes no object ending because it is a thing,
+  // which is chapter 87's rule holding while the verb changed. A vocabulary
+  // chapter is cheap when the grammar under it is already built.
+  expect(coverage.covered).toBe(198);
+  expect(coverage.unmapped).toBe(45);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -383,6 +404,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 194/243 points covered (80%)",
+    "malayalam A1 (partial inventory): 198/243 points covered (81%)",
   );
 }, 60_000);
