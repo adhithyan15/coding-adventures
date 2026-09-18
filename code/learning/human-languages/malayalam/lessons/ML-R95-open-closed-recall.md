@@ -7,7 +7,7 @@ chapter: 95
 type: review
 headword: (open, closed, in, out)
 gloss: cold retrieval of the two verbs, the asking form they share with the old commands, and the pair a doorway divides
-romanization: thuṟakkukayuṁ aṭaykkukayuṁ enna ōrmma
+romanization: tuṟakkukayuṁ aṭaykkukayuṁ enna ōrmma
 concept_tag: ML-OPEN-CLOSED-RECALL
 prerequisites: [ML-C95-akathu-purathu]
 sounds: []
@@ -70,10 +70,10 @@ object all came from chapters that had nothing to do with doors.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C95-OPEN-01, ML-LEX-C95-CLOSE-01, ML-LEX-C95-INSIDE-01, ML-LEX-C95-OUTSIDE-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *thuṟakkuka* → *thuṟakkū*]
+- [YOU SAY: *tuṟakkuka* → *tuṟakkū*]
 - [YOU SAY: *aṭaykkuka* → *aṭaykkū*]
 - [YOU SAY: *vātil aṭaykkū*]
-- [YOU SAY: *ñān akatthŭ āṇŭ*]
+- [YOU SAY: *ñān akattŭ āṇŭ*]
 - [YOU SAY: which ending the asking form shares with a word from your first
   commands]
 

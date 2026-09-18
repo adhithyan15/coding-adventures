@@ -7,7 +7,7 @@ chapter: 95
 type: word
 headword: "അകത്ത്"
 gloss: inside — and its opposite, the pair a doorway divides
-romanization: "akatthŭ"
+romanization: "akattŭ"
 concept_tag: ML-INSIDE-OUTSIDE
 prerequisites: [ML-C95-adaykkuka, ML-C02-aanu]
 sounds: []
@@ -28,7 +28,7 @@ variety: standard-colloquial
 reviews_of: [ML-C95-thurakkuka, ML-C95-adaykkuka, ML-C02-aanu]
 ---
 
-# അകത്ത് (akatthŭ) — inside
+# അകത്ത് (akattŭ) — inside
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C95-OPEN-01, ML-LEX-C95-CLOSE-01] -->
@@ -43,10 +43,10 @@ Two words, and they are the two halves of the same line:
 
 | | |
 |---|---|
-| **അകത്ത്** *akatthŭ* | inside |
-| **പുറത്ത്** *puṟatthŭ* | outside |
+| **അകത്ത്** *akattŭ* | inside |
+| **പുറത്ത്** *puṟattŭ* | outside |
 
-> **ഞാൻ അകത്ത് ആണ്.** — *ñān akatthŭ āṇŭ* — "I am inside."
+> **ഞാൻ അകത്ത് ആണ്.** — *ñān akattŭ āṇŭ* — "I am inside."
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C95-INSIDE-01, ML-LEX-C95-OUTSIDE-01] -->
@@ -64,8 +64,8 @@ still while you listen to the other.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C95-INSIDE-01, ML-LEX-C95-OUTSIDE-01, ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-C52-WELCOME-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *akatthŭ*, then *puṟatthŭ*]
-- [YOU SAY: *ñān akatthŭ āṇŭ*]
+- [YOU SAY: *akattŭ*, then *puṟattŭ*]
+- [YOU SAY: *ñān akattŭ āṇŭ*]
 - [YOU SAY: the same sentence about being outside]
 - [YOU LOOK: at the two words and say which part carries the difference]
 

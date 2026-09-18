@@ -33,15 +33,18 @@ reviews_of: [ML-C95-thurakkuka, ML-C44-listen]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C95-OPEN-01, ML-LEX-LISTEN] -->
 
-[PAUSE 2s] Say *to open*. Then say *listen* — the command form you learned among
-the first four.
+[PAUSE 2s] Say *to open*. Then say *listen* — the command form from your
+first commands.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-LEX-C95-CLOSE-01]; assesses=[] -->
 
 **അടയ്ക്കുക** — *aṭaykkuka* — **to close.**
 
-> **വാതിൽ അടയ്ക്കുന്നു.** — *vātil aṭaykkunnu* — "the door closes."
+> **ഞാൻ വാതിൽ അടയ്ക്കുന്നു.** — *ñān vātil aṭaykkunnu* — "I close the door."
+
+Same shape as the opening verb, and **വാതിൽ** is the thing being closed, not the
+thing doing the closing.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C95-CLOSE-01, ML-LEX-C95-OPEN-01, ML-LEX-LISTEN] -->
@@ -51,7 +54,7 @@ command chapter:
 
 | | |
 |---|---|
-| **തുറക്കൂ** *thuṟakkū* | open it |
+| **തുറക്കൂ** *tuṟakkū* | open it |
 | **അടയ്ക്കൂ** *aṭaykkū* | close it |
 
 **That is the same ending as കേൾക്കൂ.** One long **ൂ** on the end turns a verb
@@ -65,7 +68,7 @@ your hands full.
 
 [PAUSE 1s]
 - [YOU SAY: *aṭaykkuka*]
-- [YOU SAY: *thuṟakkū*, then *aṭaykkū*]
+- [YOU SAY: *tuṟakkū*, then *aṭaykkū*]
 - [YOU SAY: *vātil aṭaykkū*]
 - [YOU LOOK: at the end of **കേൾക്കൂ** and **അടയ്ക്കൂ**, and find what they share]
 
