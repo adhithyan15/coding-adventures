@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 83,
-  "sourceHash": "fnv1a64:5f91e0f88ef377e8",
+  "sourceHash": "fnv1a64:bfbbce782b279586",
   "lessonIds": [
     "ML-C83-ninnu",
     "ML-C83-evide-ninnu",
@@ -12,7 +12,7 @@
   "drivablePrefix": 3,
   "text": "malayalam/narration/ch83.txt",
   "json": "malayalam/narration/ch83.json",
-  "textHash": "fnv1a64:e8e5d2fa2918b277",
-  "jsonHash": "fnv1a64:006a314a75dc08f4",
+  "textHash": "fnv1a64:0b355f4fb44bad76",
+  "jsonHash": "fnv1a64:ba4b8a7a1a055d64",
   "findings": []
 }

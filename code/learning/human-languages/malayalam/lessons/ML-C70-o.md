@@ -58,7 +58,8 @@ pages apart.
 
 The **യ്** glide appears again on both words here, for the same reason it
 appeared on **അരി**: both end in a vowel, and two vowels meeting want something
-between them.
+between them. **ചായ** ends in **അ** and **കാപ്പി** in **ഇ**, and both of those
+vowels call for **യ്** — which is not to say every vowel does.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C70-O-01, ML-CONCEPT-C70-UM-02] -->

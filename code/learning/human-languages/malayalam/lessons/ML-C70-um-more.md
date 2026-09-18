@@ -60,13 +60,18 @@ English has to absorb.
 **പാൽ** gives the third landing, and it completes the set you need:
 
 - a noun ending in **-ം** → **-വും**: വെള്ളം, വെള്ളവും
-- a noun ending in a **vowel** → a **യ്** slides in: അരി, അരിയും
+- a noun ending in a **full vowel** → a letter slides in, chosen by that vowel;
+  after **ഇ** it is **യ്**: അരി, അരിയും
 - a noun ending in **ൽ** → the letter unfurls to **ല** and takes the ending
   plainly: പാൽ, പാലും
 
-That last one looks like a change and is not. **ൽ** is the compressed,
-end-of-word form of **ല**; putting anything after it gives the full letter back,
-because it is no longer at the end.
+That last one looks like a change and is not. **ൽ** is **ല** with its vowel
+stripped away, and a letter in that state has no vowel to give. **-ഉം** brings
+one, so the full **ല** comes back to carry it.
+
+**It is the vowel that decides, not the position.** You have had
+**നിങ്ങൾക്ക്** since the age question, and its **ൾ** sits in the middle of the
+word and stays a **ൾ** — because **ക്ക്** brings no vowel onto it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C70-UM-02, ML-CONCEPT-C70-UM-01] -->
@@ -75,11 +80,13 @@ because it is no longer at the end.
 - [YOU SAY: വെള്ളവും അരിയും പാലും]
 - [YOU SAY: how many endings a list of five items would carry]
 - [YOU SAY: what English does to a list that Malayalam does not]
-- [YOU SAY: why പാൽ ends up as പാലും rather than പാൽും]
+- [YOU SAY: why പാൽ ends up as പാലും rather than പാൽും, and why
+  **നിങ്ങൾക്ക്** does not do the same thing]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C70-UM-02] -->
 
 [PAUSE 3s] Does the ending go on every item or only the last? (Every one.) What
-happens to **ൽ** when something follows it? (It unfurls back to **ല**.) How many
+happens to **ൽ** when a **vowel** follows it? (It unfurls back to **ല**.) And
+when a consonant does, as in **നിങ്ങൾക്ക്**? (**It stays a chillu**.) How many
 endings in a four-item list? (Four.)

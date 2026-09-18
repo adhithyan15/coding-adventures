@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Joining Things Together",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f900f4dca2aca464",
+  "sourceHash": "fnv1a64:051ba806b7a2169d",
   "lessons": [
     {
       "id": "ML-C70-um",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16097d1e928adc79",
+      "sourceHash": "fnv1a64:33208e0225488103",
       "notice": null,
       "blocks": [
         {
@@ -99,7 +99,7 @@
             },
             {
               "kind": "speech",
-              "text": "അരി ends in a vowel. A യ് slides in to keep the two vowels apart: അരിയും."
+              "text": "അരി ends in ഇ. A യ് slides in to keep the two vowels apart: അരിയും. Which letter slides in depends on the vowel; after ഇ it is യ്."
             },
             {
               "kind": "speech",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6d9caf4023e2fd9",
+      "sourceHash": "fnv1a64:b969429a04c0cfa5",
       "notice": null,
       "blocks": [
         {
@@ -264,7 +264,7 @@
             },
             {
               "kind": "speech",
-              "text": "a noun ending in a vowel becomes a യ് slides in: അരി, അരിയും."
+              "text": "a noun ending in a full vowel becomes a letter slides in, chosen by that vowel; after ഇ it is യ്: അരി, അരിയും."
             },
             {
               "kind": "speech",
@@ -272,7 +272,11 @@
             },
             {
               "kind": "speech",
-              "text": "That last one looks like a change and is not. ൽ is the compressed, end-of-word form of ല; putting anything after it gives the full letter back, because it is no longer at the end."
+              "text": "That last one looks like a change and is not. ൽ is ല with its vowel stripped away, and a letter in that state has no vowel to give. -ഉം brings one, so the full ല comes back to carry it."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the vowel that decides, not the position. You have had നിങ്ങൾക്ക് since the age question, and its ൾ sits in the middle of the word and stays a ൾ — because ക്ക് brings no vowel onto it."
             }
           ]
         },
@@ -317,11 +321,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "why പാൽ ends up as പാലും rather than പാൽും",
+              "instruction": "why പാൽ ends up as പാലും rather than പാൽും, and why നിങ്ങൾക്ക് does not do the same thing",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: why പാൽ ends up as പാലും rather than പാൽും]"
+              "source": "[YOU SAY: why പാൽ ends up as പാലും rather than പാൽും, and why **നിങ്ങൾക്ക്** does not do the same thing]"
             }
           ]
         },
@@ -338,7 +342,7 @@
             },
             {
               "kind": "speech",
-              "text": "Does the ending go on every item or only the last? (Every one.) What happens to ൽ when something follows it? (It unfurls back to ല.) How many endings in a four-item list? (Four.)"
+              "text": "Does the ending go on every item or only the last? (Every one.) What happens to ൽ when a vowel follows it? (It unfurls back to ല.) And when a consonant does, as in നിങ്ങൾക്ക്? (It stays a chillu.) How many endings in a four-item list? (Four.)"
             }
           ]
         }
@@ -357,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:917da95c15c27ba6",
+      "sourceHash": "fnv1a64:3f51aea0cfc973dc",
       "notice": null,
       "blocks": [
         {
@@ -419,7 +423,7 @@
             },
             {
               "kind": "speech",
-              "text": "The യ് glide appears again on both words here, for the same reason it appeared on അരി: both end in a vowel, and two vowels meeting want something between them."
+              "text": "The യ് glide appears again on both words here, for the same reason it appeared on അരി: both end in a vowel, and two vowels meeting want something between them. ചായ ends in അ and കാപ്പി in ഇ, and both of those vowels call for യ് — which is not to say every vowel does."
             }
           ]
         },

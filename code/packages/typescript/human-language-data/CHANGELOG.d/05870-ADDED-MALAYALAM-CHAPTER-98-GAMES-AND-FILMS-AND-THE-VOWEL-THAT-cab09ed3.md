@@ -1,0 +1,122 @@
+### Added — Malayalam chapter 98, games and films, and the vowel that chooses the glide
+
+- `ML-A1-LEX-37` closes. Malayalam A1 coverage 204/243 -> **205/243 (84%)**, 38
+  points unmapped.
+- **The exam point's own note was overstated, and the correction is on the
+  record rather than quietly dropped.** It said *"not one leisure word is taught
+  in 292 lessons."* **വായിക്കുക** (ch33), **കാണുക** (ch32) and **പുസ്തകം**
+  (ch46) are all owned headwords, and the lesson count had rotted by well over a
+  hundred files. The real gap was **sport, games and shows**, and that is what
+  the chapter closes.
+- **Free time is deliberately left open.** **ഒഴിവുസമയം** would be a compound of
+  an unowned part — **സമയം** is not taught — and building it would smuggle in a
+  headword nothing owns. The limb stays open with the reason written down.
+
+#### The chapter
+
+| lesson | what it does |
+|---|---|
+| `ML-C98-kali` | **കളി**, a game. Ends in **-ഇ** exactly as **ഭംഗി** does, so the **ആണ്** weld is one the learner already built. |
+| `ML-C98-kalikkuka` | **കളിക്കുക**, to play — the noun visible inside the verb, on an ending seven owned verbs already carry. |
+| `ML-C98-sinima` | **സിനിമ**, a film, and the first vowel-final word in the book to weld to **ആണ്** without ending in **-ഇ**. |
+| `ML-R98-leisure-recall` | cold retrieval of the three, and of what actually decides the glide. |
+
+#### The generalising sentence was again where the error lived
+
+- Three chapters running, the defect has been in the one sentence that
+  summarises. Here the draft said, of **സിനിമയാണ്**, that the vowel at the end
+  is not the same in all three words *"and the **യ** comes anyway."*
+- Read as a rule that is **a vowel brings യ**, and it is **false of a word the
+  learner has had since chapter 60**: **പശു** gives **പശുവാണ്**, with **വ**.
+- **Nothing in the corpus could have caught it.** No **വ** glide *after a vowel*
+  is attested anywhere — the corpus's vowel-final welds are **ഭംഗിയാണ്**,
+  **കുട്ടിയാണ്**, **കളിയാണ്**, all after **-ഇ**. The claim was *latent-false*:
+  consistent with every line in the repository and wrong about the language. It
+  surfaced only by asking what a **taught word** that the chapter did not
+  mention would do.
+
+#### And the replacement was latent-false in its turn
+
+- *"The last vowel chooses, and **ഉ** takes **വ**"* is refuted by **എന്ത്** +
+  **ആണ്** = **എന്താണ്**, taught at sequence **130** — and by **ഇത്** standing
+  un-glided inside the sinima lesson's **own example sentence**,
+  **ഇത് നല്ല സിനിമയാണ്**.
+- The reason it counts: `ML-C69-words` (sequence 2360) teaches word-final
+  chandrakkala as **a faint half-u**, *"breathed rather than said"*, and the
+  track romanizes accordingly — `itŭ`, `entŭ`. So by the book's own account
+  those words **are** vowel-final, they end in a *u*, and they take neither
+  **യ** nor **വ**: the half-u simply steps out of the way.
+- A learner holding the round-one fix would predict ✗**എന്തുവാണ്** and
+  ✗**ഇതുവാണ്**. The rule is now stated of **full** vowels, and the half-u gets
+  its own paragraph and its own recall question — which turns the chapter's
+  worst claim into one of its better rows.
+- **Same species as the error the chapter was written to fix, one layer down.**
+  Narrowing a false generalisation produced a second one that was, again,
+  consistent with every token in the repository.
+
+#### Eight merged lessons narrowed with it, and the count is not the point
+
+Stating the narrow rule in chapter 98 would have contradicted lessons already in
+the book, which is the stale-cross-reference failure chapter 97 hit in its fifth
+review round.
+
+**The number went three → five → eight across two review rounds**, each time
+because the sweep's grep was narrower than the defect. So the record names the
+lessons rather than counting them — the same argument made two sections down
+about the verb count, applied to itself:
+
+| lesson | seq | what it said |
+|---|---|---|
+| `ML-C70-um` | 2390 | *"a noun ending in a **vowel** → a **യ്** slides in"* |
+| `ML-C70-um-more` | 2400 | the same, of the **-ഉം** ending |
+| `ML-C70-o` | 2410 | *"both end in a vowel"* |
+| `ML-C83-keralathil` | 2900 | *"**ഇന്ത്യ** ends in a vowel and takes a **-യ-**"* |
+| `ML-C87-animacy` | 3050 | *"a **-യ-** joins, because the word ends in a vowel"* |
+| `ML-C91-kada` | 3200 | *"joining with a **-യ-** because the word ends in a vowel"* |
+| `ML-C97-bhangi` | 3450 | body **and** Wrap-up — the drill still credited the **യ** to vowel-hood after the body was narrowed |
+| `ML-R97-beauty-recall` | 3460 | the same attribution in its Grammar Lens |
+
+Each now names the vowel instead of vowel-hood.
+
+**A ninth, `ML-C78-ude` (2700), is deliberately not patched here** and is filed
+as `HL-C402`. Its claim is a two-row **ending-selection table**, not a glide
+clause, and **പശു** lands in the wrong column of it as well as taking the wrong
+glide — **പശുവിന്റെ**, not ✗**പശുയുടെ**. The real determinant involves animacy,
+which `ML-C87` only begins to draw 350 points later, so adding a third row would
+trade one over-simplification for another.
+
+**All nine were latent-false the same way.** **പശു** is the only **ഉ**-final
+noun the book teaches, and none of its oblique forms — **പശുവിന്റെ**,
+**പശുവിൽ**, **പശുവിനെ** — appears anywhere in the corpus. No token contradicts
+any of them, so no gate can see any of them.
+
+**And the fix to `ML-C70-o` was wrong on the first try**, which is the third time
+in this chapter a correction pass introduced a fresh false claim: it called
+**ചായ** an **ആ**-final word. The corpus settles it — `ML-C39-chaaya` carries
+`romanization: chaaya`, short final *a* — so **ചായ** ends in **അ**, the same
+vowel as **സിനിമ**. The long **ā** is spent on the first syllable, *cā*.
+
+#### Caught before review, by counting instead of trusting
+
+- `ML-C98-kalikkuka` claimed *"eight verbs in this book already end that way."* A
+  token sweep of every headword found **seven** **-ിക്കുക** verbs, and the count
+  would rot on the next verb regardless — so the number was replaced by four
+  named ones: **സംസാരിക്കുക**, **വായിക്കുക**, **ചോദിക്കുക**, **കുടിക്കുക**.
+- `ML-C98-kali` claimed **കളി** was *"the first word in the book for something
+  done for its own sake"* — a claim no reading of the corpus could settle — and
+  that *"the language had no way to name one"*, which confuses the book with
+  Malayalam. Both narrowed to **the book's first word for play**.
+- `ML-C98-kali` also said *"**two words** now do this"* of the **യ** weld.
+  **കുട്ടിയാണ്** has done it since sequence **810**, and chapter 97 cites it
+  twice by name — so the count was three, and it was a rotting count of exactly
+  the kind removed from `kalikkuka` two bullets up. It now names **കുട്ടി**
+  instead of counting.
+- `ML-C98-kali`'s Warm-up asked the learner to say *"this is beauty"* — the
+  exact gloss `ML-C97-bhangi` tells them is **wrong** twenty sequence-points
+  earlier (**ഇത് ഭംഗിയാണ്** is *this is beautiful*). Now *"this is beautiful"*.
+- Both new Wrap-ups asked the **unqualified** question — *"what slides in before
+  **ആണ്**?"*, answer *"**യ**"* — which is the broad rule the chapter exists to
+  undo, drilled by the chapter itself. Each now names the vowel in the question.
+- **പശുവാണ്** was never romanized in learner-facing text, so the audio learner
+  met the chapter's one counter-example as bare script. Every joined form in
+  both tables now carries its romanization, `paśuvāṇŭ` included.

@@ -2323,8 +2323,42 @@ describe("the committed Malayalam A1 inventory", () => {
     // call made about buddhimuttu in chapter 96. The far end is built with alla, which
     // ML-C77 teaches STANDING APART and never welded -- and the lesson makes the
     // not-welding its point, since sundaram keeps its anusvara because nothing attached.
-    expect(coverage.covered).toBe(204);
-    expect(coverage.unmapped).toBe(39);
+    // 204 -> 205: ML-A1-LEX-37, free time, sport, games and shows. THE POINT'S OWN
+    // NOTE WAS OVERSTATED and the chapter says so: it claimed not one leisure word
+    // is taught, while vaayikkuka, kaaNuka and pusthakam are all owned, and its
+    // "292 lessons" had rotted by well over a hundred files. The real gap was sport,
+    // games and shows. FREE TIME IS LEFT OPEN ON PURPOSE -- ozhivusamayam needs
+    // samayam, which nothing teaches, and a compound of an unowned part is a
+    // headword smuggled in.
+    // THE ONE GENERALISING SENTENCE WAS AGAIN WHERE THE ERROR LIVED, three chapters
+    // running, AND IT WAS WRONG TWICE. Round one: the draft said the ya "comes
+    // anyway", and pashu -- taught since chapter 60 -- gives pashuvaaNu with va.
+    // ROUND TWO FOUND THE REPLACEMENT LATENT-FALSE IN ITS TURN. "The last vowel
+    // chooses, and -u takes va" is refuted by enthu + aaNu = enthaaNu at sequence
+    // 130, and by ithu standing un-glided inside the sinima lesson's OWN example
+    // sentence -- because ML-C69-words (2360) teaches word-final chandrakkala as a
+    // FAINT HALF-U and the track romanizes it (itu, entu), so by the book's own
+    // account those words are vowel-final and take nothing at all. A learner holding
+    // the round-one fix predicts *enthuvaaNu. The rule is now stated of FULL vowels,
+    // with the half-u given its own paragraph and its own recall question.
+    // Both rounds were latent-false in the same way: consistent with every token in
+    // the repository and wrong about the language, so no gate could see either.
+    // EIGHT merged lessons carried the broad ya-rule, and the count is not the
+    // point -- it went three -> five -> eight across two review rounds, each time
+    // because the sweep's grep was narrower than the defect, so the record NAMES
+    // them: ML-C70-um (2390), ML-C70-um-more (2400), ML-C70-o (2410),
+    // ML-C83-keralathil (2900), ML-C87-animacy (3050), ML-C91-kada (3200),
+    // ML-C97-bhangi (body AND Wrap-up, 3450), ML-R97-beauty-recall (3460).
+    // A NINTH, ML-C78-ude (2700), is filed as HL-C402 rather than patched: its
+    // claim is a two-row ending-selection TABLE, and pashu lands in the wrong
+    // column of it (pashuvinte, not *pashuyute) as well as taking the wrong glide.
+    // All nine are latent-false the same way -- pashu is the only u-final noun
+    // taught and none of its oblique forms appears in the corpus, so no token
+    // contradicts any of them. ML-C70-o's fix was itself wrong on the first try:
+    // it called chaaya AA-final, and ML-C39-chaaya's own romanization (chaaya,
+    // short final a) makes it A-final, the same vowel as sinima.
+    expect(coverage.covered).toBe(205);
+    expect(coverage.unmapped).toBe(38);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2371,7 +2405,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 204/243 points covered (84%)",
+      "malayalam A1 (partial inventory): 205/243 points covered (84%)",
     );
   }, 60_000);
 });

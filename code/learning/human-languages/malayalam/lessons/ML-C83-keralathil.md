@@ -46,8 +46,9 @@ Put the in-ending on both names you learned and only one of them goes quietly.
 | **ഇന്ത്യ** | **ഇന്ത്യയിൽ** *indyayil* |
 | **കേരളം** | **കേരളത്തിൽ** *kēraḷattil* |
 
-**ഇന്ത്യ** ends in a vowel and takes a **-യ-** to join, the same join
-*kocciyil* uses. Nothing surprising.
+**ഇന്ത്യ** ends in **അ** and takes a **-യ-** to join, the same join *kocciyil*
+uses. Nothing surprising. Which letter joins depends on which vowel the word
+ends in; **അ** takes this one.
 
 **കേരളം** does something else. **The -ം is gone and -ത്ത- has arrived in its
 place**, and only then does the ending follow.

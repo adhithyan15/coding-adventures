@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "What It Costs",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:31c803913952cb0a",
+  "sourceHash": "fnv1a64:24f6c8ffc29f02c8",
   "lessons": [
     {
       "id": "ML-C91-kada",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07c53f1b6d06d85f",
+      "sourceHash": "fnv1a64:84975e2ef61ad9a3",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "It takes the in-ending exactly as you would expect, joining with a -യ- because the word ends in a vowel:"
+              "text": "It takes the in-ending exactly as you would expect, joining with a -യ- because the word ends in അ:"
             },
             {
               "kind": "speech",

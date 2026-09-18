@@ -2,7 +2,10 @@
 
 Found in the fourth review round on Malayalam chapter 97, which had inherited the
 same wording. Chapter 97 is fixed, and **`ML-C87-accusative` was fixed with it** because chapter
-97 cites it by name. **`ML-C70-um-more` is not**, and a learner still meets it.
+97 cites it by name. **`ML-C70-um-more` was not**, and was fixed on the chapter-98 branch — that
+chapter narrowed the same lesson's *ya*-glide over-generalisation, so the chillu
+one was closed in the same place rather than left to rot. **All three sites are
+now fixed and this item is closed.**
 
 ### The claim
 
@@ -25,7 +28,7 @@ vocabulary keep theirs:
 |---|---|---|
 | `ML-C97-alla-sundaram` | inherited it | **fixed** |
 | `ML-C87-accusative` | *"the chillu is the shape a consonant takes at the end of a word, and here it is no longer at the end"* — predicts ✗*നിങ്ങളിക്ക് | **fixed**, because chapter 97 points the learner at it by name |
-| `ML-C70-um-more` | *"putting anything after it gives the full letter back"*, and its Wrap-up drills it | **open** |
+| `ML-C70-um-more` | *"putting anything after it gives the full letter back"*, and its Wrap-up drills it | **fixed** on the chapter-98 branch: body, Guided Practice and Wrap-up all now turn on the vowel, with നിങ്ങൾക്ക് (owned since `ML-C19-vayassu`, well before this lesson) as the counter-example |
 
 ### The words that refute it
 

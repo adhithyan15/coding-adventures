@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "ML-C87-animacy",
+    "id": "ML-C98-sinima",
     "language": "malayalam",
-    "chapter": 87,
-    "sequence": 3050,
+    "chapter": 98,
+    "sequence": 3500,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:4b1c38c9235a3aeb"
+    "sourceHash": "fnv1a64:42c81508a82c5f3c"
   },
   "findings": []
 }

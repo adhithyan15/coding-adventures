@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Who It Happens To",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e3d27a52575efbfb",
+  "sourceHash": "fnv1a64:d29adbf9ad91acc6",
   "lessons": [
     {
       "id": "ML-C87-accusative",
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:6975416342334dcb",
+      "sourceHash": "fnv1a64:4b1c38c9235a3aeb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -241,7 +241,7 @@
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "കുട്ടി becomes കുട്ടിയെ, a -യ- joins, because the word ends in a vowel.",
+                "കുട്ടി becomes കുട്ടിയെ, a -യ- joins, because the word ends in ഇ.",
                 "അധ്യാപകൻ becomes അധ്യാപകനെ (adhyāpakane), the final chillu opens back into a plain consonant."
               ]
             },

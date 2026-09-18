@@ -22,7 +22,7 @@ Count the joins, not the gaps. Two items means two -ഉം, and a list with only
 The word, taken apart.
 The ending changes the word slightly as it lands, and the two changes here are the two you will meet most:
 വെള്ളം ends in -ം. That -ം becomes -വും: വെള്ളവും.
-അരി ends in a vowel. A യ് slides in to keep the two vowels apart: അരിയും.
+അരി ends in ഇ. A യ് slides in to keep the two vowels apart: അരിയും. Which letter slides in depends on the vowel; after ഇ it is യ്.
 Neither is a special case to memorise. Both are the same instinct a mouth has when one sound runs into another, and Malayalam writes down what the mouth already does.
 
 Guided Practice.
@@ -60,9 +60,10 @@ That is a rule you can extend without being taught the extension, which is worth
 The word, taken apart.
 പാൽ gives the third landing, and it completes the set you need:
 a noun ending in -ം becomes -വും: വെള്ളം, വെള്ളവും.
-a noun ending in a vowel becomes a യ് slides in: അരി, അരിയും.
+a noun ending in a full vowel becomes a letter slides in, chosen by that vowel; after ഇ it is യ്: അരി, അരിയും.
 a noun ending in ൽ becomes the letter unfurls to ല and takes the ending plainly: പാൽ, പാലും.
-That last one looks like a change and is not. ൽ is the compressed, end-of-word form of ല; putting anything after it gives the full letter back, because it is no longer at the end.
+That last one looks like a change and is not. ൽ is ല with its vowel stripped away, and a letter in that state has no vowel to give. -ഉം brings one, so the full ല comes back to carry it.
+It is the vowel that decides, not the position. You have had നിങ്ങൾക്ക് since the age question, and its ൾ sits in the middle of the word and stays a ൾ — because ക്ക് brings no vowel onto it.
 
 Guided Practice.
 [pause 1 second]
@@ -72,12 +73,12 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: what English does to a list that Malayalam does not]
 [pause 8 seconds for the answer]
-[your turn — say: why പാൽ ends up as പാലും rather than പാൽും]
+[your turn — say: why പാൽ ends up as പാലും rather than പാൽും, and why നിങ്ങൾക്ക് does not do the same thing]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Does the ending go on every item or only the last? (Every one.) What happens to ൽ when something follows it? (It unfurls back to ല.) How many endings in a four-item list? (Four.)
+Does the ending go on every item or only the last? (Every one.) What happens to ൽ when a vowel follows it? (It unfurls back to ല.) And when a consonant does, as in നിങ്ങൾക്ക്? (It stays a chillu.) How many endings in a four-item list? (Four.)
 
 
 Lesson 3 of 4.
@@ -96,7 +97,7 @@ You'll want to know.
 ending: -ഉം... -ഉം. what a list of two means: both of them.
 ending: -ഓ... -ഓ. what a list of two means: one of them.
 The construction is identical and only the vowel changes. Having learned where Malayalam puts a joining ending, you already know where it puts a choosing one — which is the reason these two belong in one chapter rather than fifty pages apart.
-The യ് glide appears again on both words here, for the same reason it appeared on അരി: both end in a vowel, and two vowels meeting want something between them.
+The യ് glide appears again on both words here, for the same reason it appeared on അരി: both end in a vowel, and two vowels meeting want something between them. ചായ ends in അ and കാപ്പി in ഇ, and both of those vowels call for യ് — which is not to say every vowel does.
 
 The word, taken apart.
 There is also a separate word, അല്ലെങ്കിൽ (alleṅkil), which stands between two options the way English or does:

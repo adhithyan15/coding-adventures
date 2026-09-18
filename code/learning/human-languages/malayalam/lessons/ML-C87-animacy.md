@@ -58,7 +58,7 @@ Look at what the ending does to each noun:
 
 | | |
 |---|---|
-| **കുട്ടി** → **കുട്ടിയെ** | a **-യ-** joins, because the word ends in a vowel |
+| **കുട്ടി** → **കുട്ടിയെ** | a **-യ-** joins, because the word ends in **ഇ** |
 | **അധ്യാപകൻ** → **അധ്യാപകനെ** | the final chillu opens back into a plain consonant |
 
 **The joining rule is the one you already know.** It is the same choice the
