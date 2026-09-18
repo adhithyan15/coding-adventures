@@ -9,7 +9,7 @@ headword: (beautiful, and not)
 gloss: cold retrieval of both ends of the line, and of the difference between a letter re-spelled and a sound added
 romanization: sundaravuṁ allāthatuṁ enna ōrmma
 concept_tag: ML-BEAUTY-RECALL
-prerequisites: [ML-C97-alla-sundaram]
+prerequisites: [ML-C97-alla-sundaram, ML-C70-um]
 sounds: []
 roots: []
 duration:
@@ -19,7 +19,7 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C97-NOT-BEAUTIFUL-01, ML-LEX-AANU-01, ML-LEX-C77-ALLA-01, ML-CONCEPT-C02-COPULA-01, ML-CONCEPT-C36-KUTTI-01, ML-LEX-C96-EASY-01, ML-LEX-C41-DEIXIS-01]
+  knowledge: [ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C97-NOT-BEAUTIFUL-01, ML-LEX-AANU-01, ML-LEX-C77-ALLA-01, ML-CONCEPT-C02-COPULA-01, ML-CONCEPT-C36-KUTTI-01, ML-LEX-C96-EASY-01, ML-LEX-C41-DEIXIS-01, ML-CONCEPT-C70-UM-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -36,8 +36,8 @@ reviews_of: [ML-C97-sundaram, ML-C97-bhangi, ML-C97-alla-sundaram]
 [PAUSE 3s] Close the lessons before this one. Say *this is beautiful*, then deny
 it.
 
-## Grammar Lens: which letter arrives
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C36-KUTTI-01, ML-LEX-C96-EASY-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-AANU-01] -->
+## Grammar Lens: two different events
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C36-KUTTI-01, ML-LEX-C96-EASY-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-AANU-01, ML-CONCEPT-C70-UM-01] -->
 
 | word | joined to **ആണ്** | what happened |
 |---|---|---|

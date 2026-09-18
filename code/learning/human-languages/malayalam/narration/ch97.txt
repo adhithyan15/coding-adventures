@@ -15,8 +15,9 @@ You'll want to know.
 
 What you've built.
 Read what you did there. The word ends in ം, so it welds onto ആണ് the way the last chapter's two words did, and you did it without being told.
-[a table of 2 rows, read aloud]
+[a table of 3 rows, read aloud]
 ഇത് എളുപ്പമാണ്, this is easy.
+ഇത് പ്രയാസമാണ്, this is difficult.
 ഇത് സുന്ദരമാണ്, this is beautiful.
 That is what a frame is for. The chapter before this one cost you a rule; this one cost you a word, and the weld came free.
 
@@ -35,7 +36,7 @@ What is beautiful? (സുന്ദരം (sundaraṁ).) Did you need a new rule
 
 
 Lesson 2 of 4.
-ഭംഗി (bhaṁgi) — beautiful.
+ഭംഗി (bhaṁgi) — beauty.
 
 Warm-up.
 [pause 2 seconds]
@@ -52,8 +53,8 @@ Two different things are happening here, and only one of them is new.
 സുന്ദരം (sundaraṁ) becomes സുന്ദരമാണ്, the m was already there.
 ഭംഗി (bhaṁgi) becomes ഭംഗിയാണ്, a യ is genuinely added.
 In സുന്ദരമാണ് nothing is added at all. The ം is the sound m, and it stays; only its writing moves, because the bare sign cannot carry a vowel. You were told that last chapter.
-ഭംഗി (bhaṁgi) is the new case. It ends in a vowel, and ആണ് begins with one — and Malayalam will not let two vowels sit together. So a യ comes in between them, and it was in neither word before.
-You have heard it before without being told: ഇത് എന്റെ കുട്ടിയാണ് — this is my child. കുട്ടി ends in the same vowel, and the same യ appeared.
+ഭംഗി (bhaṁgi) is the other case, and you have met the reason before. It ends in a vowel, ആണ് begins with one, and Malayalam will not let two vowels sit together — so a യ slides in between them. The joining chapter said exactly that about അരിയും.
+What is new is only where it happens. ഇത് എന്റെ കുട്ടിയാണ് — this is my child — has the same യ, for the same reason.
 
 Guided Practice.
 [pause 1 second]
@@ -76,14 +77,15 @@ Warm-up.
 [pause 2 seconds]
 Say this is beautiful. Then say the word that denies being what you were called.
 
-Grammar Lens: the denial stands apart.
+Grammar Lens: the denial welds too.
 ഇത് സുന്ദരമല്ല. — itŭ sundaramalla — "This is not beautiful."
 You already know how that was built. അല്ല is the negative of ആണ്, and it welds on the same way:
 [a table of 2 rows, read aloud]
 സുന്ദരം (sundaraṁ) + ആണ്, സുന്ദരമാണ് — this is beautiful.
 സുന്ദരം (sundaraṁ) + അല്ല, സുന്ദരമല്ല — this is not beautiful.
 Same മ, same reason: the m was always there and now has a vowel after it, so it is written with the full letter.
-When you first met അല്ല it was standing apart — ഞാൻ അധ്യാപകൻ അല്ല, I am not a teacher. Nothing welded there because അധ്യാപകൻ ends in a chillu, a consonant with no vowel to pass on. The word it followed decided how it looked, not അല്ല itself.
+When you first met അല്ല it was written apart — ഞാൻ അധ്യാപകൻ അല്ല, I am not a teacher. That was a choice about writing, not a different grammar. Weld them and you get ഞാൻ അധ്യാപകനല്ല, which is just as ordinary.
+And look at what the ൻ does there. It is the same trick as the ം: a consonant written without a vowel, which goes back to its full letter — ൻ becomes ന — the moment a vowel arrives behind it. You have already seen it: ഇത് എന്റെ മകനാണ്, this is my son.
 
 What you've built.
 Both ends of the same line, from one new word and one you already had.
@@ -97,12 +99,14 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the two one after the other, and hear where they part]
 [pause 8 seconds for the answer]
+[your turn — say: ñān adhyāpakanalla]
+[pause 8 seconds for the answer]
 [your turn — say: which letter both sentences share in the middle, and why]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How do you say this is not beautiful? (ഇത് സുന്ദരമല്ല (itŭ sundaramalla).) Does അല്ല weld on the way ആണ് does? (Yes — same മ, same reason.) Why did it look separate at അധ്യാപകൻ അല്ല? (That word ends in a chillu — there was no vowel to pass on.)
+How do you say this is not beautiful? (ഇത് സുന്ദരമല്ല (itŭ sundaramalla).) Does അല്ല weld on the way ആണ് does? (Yes — same മ, same reason.) What does the ൻ of അധ്യാപകൻ do when it welds? (It goes back to ന — as in മകനാണ്.)
 
 
 Lesson 4 of 4.
@@ -112,7 +116,7 @@ Warm-up.
 [pause 3 seconds]
 Close the lessons before this one. Say this is beautiful, then deny it.
 
-Grammar Lens: which letter arrives.
+Grammar Lens: two different events.
 [a table of 4 rows, read aloud]
 word: എളുപ്പം. joined to ആണ്: എളുപ്പമാണ്. what happened: the m was already there.
 word: സുന്ദരം (sundaraṁ). joined to ആണ്: സുന്ദരമാണ്. what happened: the m was already there.

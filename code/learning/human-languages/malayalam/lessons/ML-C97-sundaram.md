@@ -9,17 +9,17 @@ headword: "സുന്ദരം"
 gloss: beautiful — a new word dropped straight into the frame the last chapter built
 romanization: "sundaraṁ"
 concept_tag: ML-BEAUTIFUL
-prerequisites: [ML-R96-ease-recall, ML-C41-this]
+prerequisites: [ML-R96-ease-recall, ML-C41-this, ML-C96-prayaasam]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ML-LEX-C96-EASY-01, ML-LEX-C41-DEIXIS-01, ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01]
+  knowledge: [ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-LEX-C41-DEIXIS-01, ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01]
 introduces:
   knowledge: [ML-LEX-C97-BEAUTIFUL-01]
 practises:
-  knowledge: [ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C96-EASY-01, ML-LEX-C41-DEIXIS-01, ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01]
+  knowledge: [ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-LEX-C41-DEIXIS-01, ML-LEX-AANU-01, ML-CONCEPT-C02-COPULA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -43,7 +43,7 @@ reviews_of: [ML-C96-eluppam]
 > **ഇത് സുന്ദരമാണ്.** — *itŭ sundaramāṇŭ* — "**This is beautiful.**"
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-C96-EASY-01, ML-LEX-AANU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C97-BEAUTIFUL-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-LEX-AANU-01] -->
 
 **Read what you did there.** The word ends in **ം**, so it welds onto **ആണ്** the
 way the last chapter's two words did, and you did it without being told.
@@ -51,6 +51,7 @@ way the last chapter's two words did, and you did it without being told.
 | | |
 |---|---|
 | **ഇത് എളുപ്പമാണ്** | this is easy |
+| **ഇത് പ്രയാസമാണ്** | this is difficult |
 | **ഇത് സുന്ദരമാണ്** | this is beautiful |
 
 That is what a frame is for. **The chapter before this one cost you a rule; this

@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Beautiful, and Not",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:abe80d3e0792be0e",
+  "sourceHash": "fnv1a64:149b2dbdee149319",
   "lessons": [
     {
       "id": "ML-C97-sundaram",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e6bdc044f3ec911",
+      "sourceHash": "fnv1a64:202aba0364beaaa9",
       "notice": null,
       "blocks": [
         {
@@ -70,9 +70,10 @@
                 ""
               ],
               "columns": 2,
-              "rowCount": 2,
+              "rowCount": 3,
               "utterances": [
                 "ഇത് എളുപ്പമാണ്, this is easy.",
+                "ഇത് പ്രയാസമാണ്, this is difficult.",
                 "ഇത് സുന്ദരമാണ്, this is beautiful."
               ]
             },
@@ -144,17 +145,17 @@
     {
       "id": "ML-C97-bhangi",
       "sequence": 3450,
-      "title": "ഭംഗി (bhaṁgi) — beautiful",
+      "title": "ഭംഗി (bhaṁgi) — beauty",
       "headword": "ഭംഗി",
       "romanization": "bhaṁgi",
-      "gloss": "beautiful — the everyday way to say it, and the one place where a letter is genuinely added",
+      "gloss": "beauty — and the sentence that uses it, which says beautiful",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f97c812e28a6fbfd",
+      "sourceHash": "fnv1a64:119d6f100d44c9fb",
       "notice": null,
       "blocks": [
         {
@@ -221,11 +222,11 @@
             },
             {
               "kind": "speech",
-              "text": "ഭംഗി (bhaṁgi) is the new case. It ends in a vowel, and ആണ് begins with one — and Malayalam will not let two vowels sit together. So a യ comes in between them, and it was in neither word before."
+              "text": "ഭംഗി (bhaṁgi) is the other case, and you have met the reason before. It ends in a vowel, ആണ് begins with one, and Malayalam will not let two vowels sit together — so a യ slides in between them. The joining chapter said exactly that about അരിയും."
             },
             {
               "kind": "speech",
-              "text": "You have heard it before without being told: ഇത് എന്റെ കുട്ടിയാണ് — this is my child. കുട്ടി ends in the same vowel, and the same യ appeared."
+              "text": "What is new is only where it happens. ഇത് എന്റെ കുട്ടിയാണ് — this is my child — has the same യ, for the same reason."
             }
           ]
         },
@@ -301,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5778d9ba8efddc5b",
+      "sourceHash": "fnv1a64:5325c1c782e3bd62",
       "notice": null,
       "blocks": [
         {
@@ -324,7 +325,7 @@
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: the denial stands apart",
+          "title": "Grammar Lens: the denial welds too",
           "segments": [
             {
               "kind": "speech",
@@ -353,7 +354,11 @@
             },
             {
               "kind": "speech",
-              "text": "When you first met അല്ല it was standing apart — ഞാൻ അധ്യാപകൻ അല്ല, I am not a teacher. Nothing welded there because അധ്യാപകൻ ends in a chillu, a consonant with no vowel to pass on. The word it followed decided how it looked, not അല്ല itself."
+              "text": "When you first met അല്ല it was written apart — ഞാൻ അധ്യാപകൻ അല്ല, I am not a teacher. That was a choice about writing, not a different grammar. Weld them and you get ഞാൻ അധ്യാപകനല്ല, which is just as ordinary."
+            },
+            {
+              "kind": "speech",
+              "text": "And look at what the ൻ does there. It is the same trick as the ം: a consonant written without a vowel, which goes back to its full letter — ൻ becomes ന — the moment a vowel arrives behind it. You have already seen it: ഇത് എന്റെ മകനാണ്, this is my son."
             }
           ]
         },
@@ -413,6 +418,15 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "ñān adhyāpakanalla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ñān adhyāpakanalla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "which letter both sentences share in the middle, and why",
               "spoken": true,
               "scored": false,
@@ -434,7 +448,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say this is not beautiful? (ഇത് സുന്ദരമല്ല (itŭ sundaramalla).) Does അല്ല weld on the way ആണ് does? (Yes — same മ, same reason.) Why did it look separate at അധ്യാപകൻ അല്ല? (That word ends in a chillu — there was no vowel to pass on.)"
+              "text": "How do you say this is not beautiful? (ഇത് സുന്ദരമല്ല (itŭ sundaramalla).) Does അല്ല weld on the way ആണ് does? (Yes — same മ, same reason.) What does the ൻ of അധ്യാപകൻ do when it welds? (It goes back to ന — as in മകനാണ്.)"
             }
           ]
         }
@@ -453,7 +467,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc36fc1d1f81b2af",
+      "sourceHash": "fnv1a64:8c52bf90bdc330d6",
       "notice": null,
       "blocks": [
         {
@@ -476,7 +490,7 @@
         {
           "index": 1,
           "type": "grammar",
-          "title": "Grammar Lens: which letter arrives",
+          "title": "Grammar Lens: two different events",
           "segments": [
             {
               "kind": "table",

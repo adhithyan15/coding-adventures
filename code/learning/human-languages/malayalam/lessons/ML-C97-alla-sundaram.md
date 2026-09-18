@@ -9,7 +9,7 @@ headword: "ഇത് സുന്ദരമല്ല"
 gloss: this is not beautiful — the denial welds exactly as the is-word does, which is why you already know how to build it
 romanization: "itŭ sundaramalla"
 concept_tag: ML-NOT-BEAUTIFUL
-prerequisites: [ML-C97-bhangi, ML-C77-alla]
+prerequisites: [ML-C97-bhangi, ML-C77-alla, ML-C36-makan]
 sounds: []
 roots: []
 duration:
@@ -36,7 +36,7 @@ reviews_of: [ML-C97-sundaram, ML-C77-alla]
 [PAUSE 2s] Say *this is beautiful*. Then say the word that denies being what you
 were called.
 
-## Grammar Lens: the denial stands apart
+## Grammar Lens: the denial welds too
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C97-NOT-BEAUTIFUL-01]; assesses=[] -->
 
 > **ഇത് സുന്ദരമല്ല.** — *itŭ sundaramalla* — "**This is not beautiful.**"
@@ -52,10 +52,14 @@ and it welds on the same way:
 Same **മ**, same reason: the **m** was always there and now has a vowel after
 it, so it is written with the full letter.
 
-**When you first met അല്ല it was standing apart** — **ഞാൻ അധ്യാപകൻ അല്ല**, *I
-am not a teacher.* Nothing welded there because **അധ്യാപകൻ** ends in a chillu,
-a consonant with no vowel to pass on. **The word it followed decided how it
-looked, not അല്ല itself.**
+**When you first met അല്ല it was written apart** — **ഞാൻ അധ്യാപകൻ അല്ല**, *I am
+not a teacher.* **That was a choice about writing, not a different grammar.**
+Weld them and you get **ഞാൻ അധ്യാപകനല്ല**, which is just as ordinary.
+
+And look at what the **ൻ** does there. It is the same trick as the **ം**: a
+consonant written without a vowel, which goes back to its full letter —
+**ൻ → ന** — the moment a vowel arrives behind it. **You have already seen it:
+ഇത് എന്റെ മകനാണ്**, *this is my son*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C97-NOT-BEAUTIFUL-01, ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C41-DEIXIS-01, ML-CONCEPT-C77-NEGATION-SPLIT-01] -->
@@ -73,12 +77,13 @@ today, and it is what a speaker often says anyway.
 - [YOU SAY: *itŭ sundaramāṇŭ*]
 - [YOU SAY: *itŭ sundaramalla*]
 - [YOU SAY: the two one after the other, and hear where they part]
+- [YOU SAY: *ñān adhyāpakanalla*]
 - [YOU SAY: which letter both sentences share in the middle, and why]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C97-NOT-BEAUTIFUL-01, ML-LEX-C77-ALLA-01] -->
 
 [PAUSE 3s] How do you say *this is not beautiful*? (**ഇത് സുന്ദരമല്ല**.) Does
-**അല്ല** weld on the way **ആണ്** does? (**Yes** — same **മ**, same reason.) Why
-did it look separate at **അധ്യാപകൻ അല്ല**? (**That word ends in a chillu** —
-there was no vowel to pass on.)
+**അല്ല** weld on the way **ആണ്** does? (**Yes** — same **മ**, same reason.) What
+does the **ൻ** of **അധ്യാപകൻ** do when it welds? (**It goes back to ന** — as in
+**മകനാണ്**.)
