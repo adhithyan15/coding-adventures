@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 250
 requires:
-  knowledge: [ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C92-EATERY-01, ML-LEX-C60-ANIMAL-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS]
+  knowledge: [ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C92-EATERY-01, ML-LEX-C60-ANIMAL-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS, ML-GRAMMAR-C89-NOMINAL-01]
 introduces:
   knowledge: [ML-LEX-C98-CINEMA-01]
 practises:
-  knowledge: [ML-LEX-C98-CINEMA-01, ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C92-EATERY-01, ML-LEX-C41-DEIXIS-01, ML-LEX-C60-ANIMAL-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS]
+  knowledge: [ML-LEX-C98-CINEMA-01, ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C92-EATERY-01, ML-LEX-C41-DEIXIS-01, ML-LEX-C60-ANIMAL-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS, ML-GRAMMAR-C89-NOMINAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -43,7 +43,7 @@ reviews_of: [ML-C98-kali, ML-C92-hottal]
 > **ഇത് നല്ല സിനിമയാണ്.** — *itŭ nalla sinimayāṇŭ* — "This is a good film."
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-CINEMA-01, ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C60-ANIMAL-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-CINEMA-01, ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-LEX-C60-ANIMAL-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS, ML-GRAMMAR-C89-NOMINAL-01] -->
 
 **A borrowed word again**, like the eating-place word — and this one kept far
 more of what it came with than that one did.

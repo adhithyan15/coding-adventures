@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Who It Happens To",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d29adbf9ad91acc6",
+  "sourceHash": "fnv1a64:3521ac2412b02b27",
   "lessons": [
     {
       "id": "ML-C87-accusative",
@@ -496,7 +496,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:99a373f1baebc826",
+      "sourceHash": "fnv1a64:7ad612a110503210",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -549,7 +549,7 @@
             },
             {
               "kind": "speech",
-              "text": "How it attaches is nothing new: a vowel-final word takes a -യ- to join, and a word ending in the standalone ൻ opens it back into a plain ന. The same last sound that decided the owner-ending decides this one."
+              "text": "How it attaches is nothing new: a word ending in ഇ or അ takes a -യ- to join, and a word ending in the standalone ൻ opens it back into a plain ന. The same last sound that decided the owner-ending decides this one."
             }
           ]
         },

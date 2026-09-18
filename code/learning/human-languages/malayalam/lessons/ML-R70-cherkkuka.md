@@ -58,7 +58,7 @@ now no way to ask for two of them at once.
 The ending lands three ways, and all three are the mouth rather than a rule:
 
 - **-ം** becomes **-വും** — വെള്ളം, വെള്ളവും
-- a **vowel** takes a **യ്** first — അരി, അരിയും · ചായ, ചായയോ
+- **ഇ** and **അ** take a **യ്** first — അരി, അരിയും · ചായ, ചായയോ
 - **ൽ** unfurls to **ല** — പാൽ, പാലും
 
 ## Guided Practice

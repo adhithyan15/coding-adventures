@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 270
 requires:
-  knowledge: [ML-LEX-C98-GAME-01, ML-LEX-C98-PLAY-01, ML-LEX-C98-CINEMA-01, ML-LEX-C60-ANIMAL-01, ML-LEX-AANU-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS]
+  knowledge: [ML-LEX-C98-GAME-01, ML-LEX-C98-PLAY-01, ML-LEX-C98-CINEMA-01, ML-LEX-C60-ANIMAL-01, ML-LEX-AANU-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS, ML-GRAMMAR-C89-NOMINAL-01]
 introduces:
   knowledge: []
 practises:
-  knowledge: [ML-LEX-C98-GAME-01, ML-LEX-C98-PLAY-01, ML-LEX-C98-CINEMA-01, ML-LEX-C60-ANIMAL-01, ML-LEX-AANU-01, ML-LEX-C41-DEIXIS-01, ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-LEX-NJAAN-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS]
+  knowledge: [ML-LEX-C98-GAME-01, ML-LEX-C98-PLAY-01, ML-LEX-C98-CINEMA-01, ML-LEX-C60-ANIMAL-01, ML-LEX-AANU-01, ML-LEX-C41-DEIXIS-01, ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-LEX-NJAAN-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS, ML-GRAMMAR-C89-NOMINAL-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -37,7 +37,7 @@ reviews_of: [ML-C98-kali, ML-C98-kalikkuka, ML-C98-sinima]
 *a film*.
 
 ## Grammar Lens: the vowel at the end chooses
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-GAME-01, ML-LEX-C98-CINEMA-01, ML-LEX-C60-ANIMAL-01, ML-LEX-C97-BEAUTY-01, ML-LEX-AANU-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-GAME-01, ML-LEX-C98-CINEMA-01, ML-LEX-C60-ANIMAL-01, ML-LEX-C97-BEAUTY-01, ML-LEX-AANU-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS, ML-GRAMMAR-C89-NOMINAL-01] -->
 
 **ആണ്** opens with a vowel. A word that ends in a **full** vowel cannot sit
 straight against it, so a letter comes in between. **Which letter is not free**

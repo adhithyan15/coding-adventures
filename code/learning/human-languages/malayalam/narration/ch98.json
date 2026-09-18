@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Games and Films",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1a5eec48481dfc19",
+  "sourceHash": "fnv1a64:3dca0d83a438453e",
   "lessons": [
     {
       "id": "ML-C98-kali",
@@ -317,7 +317,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:42c81508a82c5f3c",
+      "sourceHash": "fnv1a64:6a1c7552f7c10762",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -482,7 +482,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7b98e9337822920",
+      "sourceHash": "fnv1a64:45a353a365b4a750",
       "notice": null,
       "blocks": [
         {

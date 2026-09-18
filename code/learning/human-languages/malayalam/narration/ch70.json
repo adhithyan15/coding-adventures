@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Joining Things Together",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:051ba806b7a2169d",
+  "sourceHash": "fnv1a64:1071e41911beb0df",
   "lessons": [
     {
       "id": "ML-C70-um",
@@ -531,7 +531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66367b7408941025",
+      "sourceHash": "fnv1a64:401d01ccd05a5193",
       "notice": null,
       "blocks": [
         {
@@ -594,7 +594,7 @@
             },
             {
               "kind": "speech",
-              "text": "a vowel takes a യ് first — അരി, അരിയും, ചായ, ചായയോ."
+              "text": "ഇ and അ take a യ് first — അരി, അരിയും, ചായ, ചായയോ."
             },
             {
               "kind": "speech",

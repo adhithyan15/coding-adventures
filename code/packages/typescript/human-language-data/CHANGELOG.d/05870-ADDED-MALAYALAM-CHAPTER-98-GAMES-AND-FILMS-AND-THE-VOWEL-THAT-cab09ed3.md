@@ -54,38 +54,48 @@
   Narrowing a false generalisation produced a second one that was, again,
   consistent with every token in the repository.
 
-#### Eight merged lessons narrowed with it, and the count is not the point
+#### Ten merged lessons narrowed with it, and the count is not the point
 
 Stating the narrow rule in chapter 98 would have contradicted lessons already in
 the book, which is the stale-cross-reference failure chapter 97 hit in its fifth
 review round.
 
-**The number went three → five → eight across two review rounds**, each time
-because the sweep's grep was narrower than the defect. So the record names the
-lessons rather than counting them — the same argument made two sections down
+**The number went three → five → eight → ten across three review rounds**, each
+time because the sweep's grep was narrower than the defect. So the record names
+the lessons rather than counting them — the same argument made two sections down
 about the verb count, applied to itself:
 
 | lesson | seq | what it said |
 |---|---|---|
-| `ML-C70-um` | 2390 | *"a noun ending in a **vowel** → a **യ്** slides in"* |
-| `ML-C70-um-more` | 2400 | the same, of the **-ഉം** ending |
+| `ML-C70-um` | 2390 | *"**അരി** ends in a vowel. A **യ്** slides in to keep the two vowels apart."* |
+| `ML-C70-um-more` | 2400 | *"a noun ending in a **vowel** → a **യ്** slides in"*, in its three-way landing list |
 | `ML-C70-o` | 2410 | *"both end in a vowel"* |
+| `ML-R70-cherkkuka` | 2420 | *"a **vowel** takes a **യ്** first"* — the recall partner of all three above |
 | `ML-C83-keralathil` | 2900 | *"**ഇന്ത്യ** ends in a vowel and takes a **-യ-**"* |
 | `ML-C87-animacy` | 3050 | *"a **-യ-** joins, because the word ends in a vowel"* |
+| `ML-R87-object-recall` | 3070 | *"a **vowel-final word** takes a **-യ-** to join"* — its recall partner |
 | `ML-C91-kada` | 3200 | *"joining with a **-യ-** because the word ends in a vowel"* |
 | `ML-C97-bhangi` | 3450 | body **and** Wrap-up — the drill still credited the **യ** to vowel-hood after the body was narrowed |
-| `ML-R97-beauty-recall` | 3460 | the same attribution in its Grammar Lens |
+| `ML-R97-beauty-recall` | 3470 | the same attribution in its Grammar Lens |
 
 Each now names the vowel instead of vowel-hood.
 
-**A ninth, `ML-C78-ude` (2700), is deliberately not patched here** and is filed
-as `HL-C402`. Its claim is a two-row **ending-selection table**, not a glide
-clause, and **പശു** lands in the wrong column of it as well as taking the wrong
-glide — **പശുവിന്റെ**, not ✗**പശുയുടെ**. The real determinant involves animacy,
-which `ML-C87` only begins to draw 350 points later, so adding a third row would
-trade one over-simplification for another.
+**The sweep rule this produced: whenever `ML-Cnn-x` is narrowed, `ML-Rnn-*` is a
+site until checked.** Chapter 98 learned that on `ML-C97-bhangi`, whose body was
+narrowed while its Wrap-up still carried the claim — and then failed to
+generalise it, so the recall partners of three more narrowed lessons went
+another round untouched. Applying it mechanically would have found all three
+with no new grep.
 
-**All nine were latent-false the same way.** **പശു** is the only **ഉ**-final
+**Three further sites are filed as `HL-C402` rather than patched**:
+`ML-C78-ude` (2700), `ML-R78-genitive-recall` (2710) and `ML-C84-mukalil`
+(2920). They state the claim of the **genitive**, where it selects an **ending**
+rather than a glide: **പശു** lands in the `-ന്റെ` column the table reserves for
+consonant-final nouns — **പശുവിന്റെ**, not ✗**പശുയുടെ** — so naming the vowel
+is not sufficient on its own. `ML-R78` repeats the table *and* supplies the
+false answer as a Wrap-up drill, so it belongs inside the item, not outside it.
+
+**All thirteen were latent-false the same way.** **പശു** is the only **ഉ**-final
 noun the book teaches, and none of its oblique forms — **പശുവിന്റെ**,
 **പശുവിൽ**, **പശുവിനെ** — appears anywhere in the corpus. No token contradicts
 any of them, so no gate can see any of them.

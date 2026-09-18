@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 98,
-  "sourceHash": "fnv1a64:1a5eec48481dfc19",
+  "sourceHash": "fnv1a64:3dca0d83a438453e",
   "lessonIds": [
     "ML-C98-kali",
     "ML-C98-kalikkuka",
@@ -13,6 +13,6 @@
   "text": "malayalam/narration/ch98.txt",
   "json": "malayalam/narration/ch98.json",
   "textHash": "fnv1a64:7d9138b439b1ef21",
-  "jsonHash": "fnv1a64:f90df22f3a5e5225",
+  "jsonHash": "fnv1a64:7f544ada027aad5b",
   "findings": []
 }
