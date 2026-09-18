@@ -2334,7 +2334,11 @@
       "id": "ML-A1-TIME-05",
       "category": "Kaalavum theeyathiyum (time and date)",
       "label": "today, yesterday, tomorrow",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C94-TODAY-01",
+        "ML-LEX-C94-YESTERDAY-01",
+        "ML-CONCEPT-C94-THREE-DAYS-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -2345,7 +2349,7 @@
         "A1-NG4-02"
       ],
       "malayalamSpecific": false,
-      "note": "innu and innale are NOT taught. naale ('tomorrow') appears only inside the fixed farewell naale kaanaam and is never taught as a word, so the learner has one third of the set and cannot use it apart from that phrase."
+      "note": "Chapter 94, and the note's account of naale was RIGHT -- checked, after three notes in this track were found materially wrong. innu and innale have ZERO occurrences across every Malayalam lesson file, so both are clean introductions. naale is different and the difference decided the chapter's shape: it appears in FIVE lessons (ML-C04-naale-kaanaam's phrase headword, ML-C23-naal, which even glosses it as 'tomorrow' in passing, ML-C32-kaanuka, ML-S01-letter-ka and ML-S04-vowel-sign-aa) and is owned by NONE of them, because ML-C04's headword is the multi-word 'naale kaanaam' and continuity.ts keeps a multi-word headword WHOLE. Claiming naale as a headword here would therefore convert invisible debt into five forward references reaching back to sequence 240. So ML-C94-three-days is a GRAMMAR lesson about the word leaving the farewell, not a vocabulary lesson about the word -- the learner already had it and could not use it anywhere else. Only TWO words are new. The chapter also pairs the three day words with the three verb endings already taught, so the tenses built chapters ago finally have a day to land on; the lesson is explicit that the VERB carries the tense and the day word only says which day."
     },
     {
       "id": "ML-A1-TIME-06",

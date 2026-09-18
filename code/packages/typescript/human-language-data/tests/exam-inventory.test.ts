@@ -2240,7 +2240,7 @@ describe("the committed Malayalam A1 inventory", () => {
     // checked before it was spent. The note called this "the cheapest grammar lesson
     // available", on the claim that -kal already sat inside four taught headwords:
     // nirangal, maasangal, shareera-bhaagangal, kaalangal. Those are FILE SLUGS. A
-    // token sweep of all 393 lesson files found the chillu-LL sequence -kal in exactly
+    // token sweep of every Malayalam lesson file found the chillu-LL sequence -kal in exactly
     // two words, thinkal (Monday) and makal (daughter), and NEITHER IS A PLURAL. The
     // learner had met the suffix zero times, not four.
     // What the same sweep DID find is better: NINGAL, the respectful you from chapter
@@ -2255,8 +2255,25 @@ describe("the committed Malayalam A1 inventory", () => {
     // SPINE-READ-SIGNS-AND-NOTICES, which the walk reaches AFTER
     // SPINE-DEFINITE-REFERENCE, so its atom is not available here. Chapter number is
     // not walk order.
-    expect(coverage.covered).toBe(200);
-    expect(coverage.unmapped).toBe(43);
+    // 200 -> 201: ML-A1-TIME-05, today/yesterday/tomorrow. innu and innale have ZERO
+    // occurrences across every Malayalam lesson file, so both are clean introductions.
+    // NAALE IS NOT, AND THE DIFFERENCE DECIDED THE CHAPTER'S SHAPE. It appears in
+    // FIVE lessons -- ML-C04-naale-kaanaam's phrase headword, ML-C23-naal (which
+    // even glosses it as "tomorrow" in passing), ML-C32-kaanuka, ML-S01-letter-ka
+    // and ML-S04-vowel-sign-aa -- and is owned by NONE of them, because ML-C04's
+    // headword is the multi-word "naale kaanaam" and continuity.ts keeps a
+    // multi-word headword WHOLE. Claiming naale as a headword would have converted
+    // that invisible debt into five forward references reaching back to sequence
+    // 240. So ML-C94-three-days is a GRAMMAR lesson about the word leaving the
+    // farewell, not a vocabulary lesson about the word -- which is also the honest
+    // description: the learner has had it since the first week and could not use it
+    // anywhere except to end a conversation. Only TWO words are new.
+    // The chapter then sets the three day words against the three verb endings
+    // already taught, and says plainly that the VERB carries the tense while the day
+    // word only says WHICH DAY. The tenses were built chapters ago and had nowhere
+    // to land.
+    expect(coverage.covered).toBe(201);
+    expect(coverage.unmapped).toBe(42);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2303,7 +2320,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 200/243 points covered (82%)",
+      "malayalam A1 (partial inventory): 201/243 points covered (83%)",
     );
   }, 60_000);
 });

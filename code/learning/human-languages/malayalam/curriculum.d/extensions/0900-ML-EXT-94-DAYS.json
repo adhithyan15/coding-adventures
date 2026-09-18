@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-94-DAYS",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can date what I say.",
+  "prerequisites": [
+    "ML-EXT-93-PLURAL"
+  ],
+  "lessons": [
+    "ML-C94-innu",
+    "ML-C94-innale",
+    "ML-C94-three-days",
+    "ML-R94-day-recall"
+  ]
+}

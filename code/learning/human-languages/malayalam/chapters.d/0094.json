@@ -1,0 +1,17 @@
+{
+  "chapter": 94,
+  "title": "Yesterday, Today, Tomorrow",
+  "label": "ch:ml-days",
+  "canDo": "I can say which day something happened on or will happen on.",
+  "payoff": {
+    "lesson": "ML-R94-day-recall",
+    "kind": "production",
+    "summary": "From cold: the three day words, the three verb endings they travel with, and the observation that one of the three was already owned but locked inside a farewell.",
+    "assesses": [
+      "ML-LEX-C94-TODAY-01",
+      "ML-LEX-C94-YESTERDAY-01",
+      "ML-CONCEPT-C94-THREE-DAYS-01"
+    ],
+    "note": "The chapter introduces exactly these three atoms and the payoff assesses all three. Only TWO words are new: naale is taught as a RELEASE rather than an introduction, because it is used in five earlier lessons and owned by none of them -- claiming it as a headword would convert that invisible debt into five forward references, so the third lesson is a grammar lesson about the word leaving the farewell, not a vocabulary lesson about the word."
+  }
+}

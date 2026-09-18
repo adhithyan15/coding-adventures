@@ -10,7 +10,8 @@
     "ML-PATH-87-ACCUSATIVE",
     "ML-PATH-88-TENS",
     "ML-PATH-90-PARTICIPLE",
-    "ML-PATH-93-PLURAL"
+    "ML-PATH-93-PLURAL",
+    "ML-PATH-94-DAYS"
   ],
   "omits": [
     "GRAMMAR-THE"

@@ -10,7 +10,7 @@
   `ML-C11-nirangal` carries the four colour words as its headword;
   `ML-C16-kollavarsham-maasangal` carries the twelve month names. A learner never
   reads a filename.
-- A token sweep of all 393 Malayalam lesson files found the sequence `-kal` in
+- A token sweep of every Malayalam lesson file found the sequence `-kal` in
   exactly two words -- **thinkal** (Monday) and **makal** (daughter) -- and
   neither is a plural. The suffix had been met **zero** times, not four.
 - The same sweep found the better hook. **ningal**, the respectful *you* from the
