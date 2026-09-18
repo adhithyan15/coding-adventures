@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Beautiful, and Not",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8e979fe89555fddd",
+  "sourceHash": "fnv1a64:1e08eb4cbddf08da",
   "lessons": [
     {
       "id": "ML-C97-sundaram",
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1424cacb3e3df00",
+      "sourceHash": "fnv1a64:e70bcbb001753c0c",
       "notice": null,
       "blocks": [
         {
@@ -354,11 +354,15 @@
             },
             {
               "kind": "speech",
-              "text": "When you first met അല്ല it was written apart — ഞാൻ അധ്യാപകൻ അല്ല, I am not a teacher. That was a choice about writing, not a different grammar. Weld them and you get ഞാൻ അധ്യാപകനല്ല, which is as ordinary as the other."
+              "text": "When you first met അല്ല it was written apart — ഞാൻ അധ്യാപകൻ അല്ല, I am not a teacher. That was a choice about writing, not a different grammar. Weld them and you get ഞാൻ അധ്യാപകനല്ല — ñān adhyāpakanalla — which is as ordinary as the other."
             },
             {
               "kind": "speech",
-              "text": "And look at what the ൻ does there. It is the same trick as the ം: a consonant written without a vowel, which goes back to its full letter — ൻ becomes ന — the moment a vowel arrives behind it. You have already seen it: ഇത് എന്റെ മകനാണ്, this is my son."
+              "text": "And look at what the ൻ does there. You were shown this at അധ്യാപകനെ: the chillu is the shape a consonant takes at the end of a word, so once anything follows it the full letter comes back — ൻ becomes ന. It happens here too: ഇത് എന്റെ മകനാണ്, this is my son."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not carry that across to the ം. The chillu goes back to its letter whatever follows it; the ം does different things for different endings, as you saw last chapter. What the two share is only this one join."
             }
           ]
         },
@@ -418,20 +422,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
+              "instruction": "which letter സുന്ദരമാണ് and സുന്ദരമല്ല share in the middle, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which letter **സുന്ദരമാണ്** and **സുന്ദരമല്ല** share in the middle, and why]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
               "instruction": "ñān adhyāpakanalla",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: *ñān adhyāpakanalla*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "which letter both sentences share in the middle, and why",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: which letter both sentences share in the middle, and why]"
             }
           ]
         },
@@ -467,7 +471,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c52bf90bdc330d6",
+      "sourceHash": "fnv1a64:a1ed09ed326558be",
       "notice": null,
       "blocks": [
         {

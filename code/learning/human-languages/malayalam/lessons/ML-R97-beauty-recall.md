@@ -15,7 +15,7 @@ roots: []
 duration:
   max_seconds: 270
 requires:
-  knowledge: [ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C97-NOT-BEAUTIFUL-01]
+  knowledge: [ML-LEX-C97-BEAUTIFUL-01, ML-LEX-C97-BEAUTY-01, ML-CONCEPT-C97-NOT-BEAUTIFUL-01, ML-CONCEPT-C70-UM-01]
 introduces:
   knowledge: []
 practises:
