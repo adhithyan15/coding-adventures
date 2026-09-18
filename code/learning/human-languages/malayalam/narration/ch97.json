@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Beautiful, and Not",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:149b2dbdee149319",
+  "sourceHash": "fnv1a64:8e979fe89555fddd",
   "lessons": [
     {
       "id": "ML-C97-sundaram",
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5325c1c782e3bd62",
+      "sourceHash": "fnv1a64:b1424cacb3e3df00",
       "notice": null,
       "blocks": [
         {
@@ -354,7 +354,7 @@
             },
             {
               "kind": "speech",
-              "text": "When you first met അല്ല it was written apart — ഞാൻ അധ്യാപകൻ അല്ല, I am not a teacher. That was a choice about writing, not a different grammar. Weld them and you get ഞാൻ അധ്യാപകനല്ല, which is just as ordinary."
+              "text": "When you first met അല്ല it was written apart — ഞാൻ അധ്യാപകൻ അല്ല, I am not a teacher. That was a choice about writing, not a different grammar. Weld them and you get ഞാൻ അധ്യാപകനല്ല, which is as ordinary as the other."
             },
             {
               "kind": "speech",

@@ -54,7 +54,7 @@ it, so it is written with the full letter.
 
 **When you first met അല്ല it was written apart** — **ഞാൻ അധ്യാപകൻ അല്ല**, *I am
 not a teacher.* **That was a choice about writing, not a different grammar.**
-Weld them and you get **ഞാൻ അധ്യാപകനല്ല**, which is just as ordinary.
+Weld them and you get **ഞാൻ അധ്യാപകനല്ല**, which is as ordinary as the other.
 
 And look at what the **ൻ** does there. It is the same trick as the **ം**: a
 consonant written without a vowel, which goes back to its full letter —
