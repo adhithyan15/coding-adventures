@@ -1,0 +1,14 @@
+{
+  "language": "malayalam",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:e58fff30eba6c8af",
+  "lessonIds": [
+    "ML-C103-pallikkoodam",
+    "ML-S147-letter-ttha",
+    "ML-C103-paadam",
+    "ML-C103-pareeksha",
+    "ML-C103-maarkku",
+    "ML-R103-school-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch103-school.tex"
+}

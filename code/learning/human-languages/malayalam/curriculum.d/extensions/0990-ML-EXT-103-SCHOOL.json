@@ -1,0 +1,18 @@
+{
+  "id": "ML-EXT-103-SCHOOL",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a school and what happens in it — the lesson, the exam, and the marks.",
+  "prerequisites": [
+    "ML-EXT-102-WHEN"
+  ],
+  "lessons": [
+    "ML-C103-pallikkoodam",
+    "ML-S147-letter-ttha",
+    "ML-C103-paadam",
+    "ML-C103-pareeksha",
+    "ML-C103-maarkku",
+    "ML-R103-school-recall"
+  ]
+}

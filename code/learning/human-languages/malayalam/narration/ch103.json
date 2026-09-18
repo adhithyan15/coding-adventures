@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 103,
+  "title": "School",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:66006f23959895a0",
+  "lessons": [
+    {
+      "id": "ML-C103-pallikkoodam",
+      "sequence": 3720,
+      "title": "പള്ളിക്കൂടം (paḷḷikkūṭaṁ) — a school",
+      "headword": "പള്ളിക്കൂടം",
+      "romanization": "paḷḷikkūṭaṁ",
+      "gloss": "a school — the building named for two older buildings, and the place the teacher and the student you already know are standing in",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83ada4cf26a47176",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a teacher. Say a student. You have had both of them for a long while, and never once had the building they are standing in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പള്ളിക്കൂടം (paḷḷikkūṭaṁ) — a school."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a long word, and it is long because it is two words. The first, paḷḷi, is what Malayalam now calls a mosque or a church. The second, kūṭaṁ, is a hall — in the older sense this compound keeps; standing on its own today the word will more often mean something else entirely."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither part is a word this book has taught you, and they are given here in sound only, for the shape of the thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The traditional account is that teaching happened where the community already gathered: the hall stood beside the place of worship, and that is where children were taught long before anybody built a separate building for it."
+            },
+            {
+              "kind": "speech",
+              "text": "It is worth knowing that this is an account and not a settled fact. paḷḷi also named the Buddhist and Jain teaching-houses of early Kerala, older than either of the meanings the word carries today, and that is at least as likely a route to the school sense. What is not in doubt is the shape: a school is named with two older words joined."
+            },
+            {
+              "kind": "speech",
+              "text": "Kerala has a second word too, borrowed straight from English and heard constantly. This one is the native compound, and it is the one that tells you something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḷḷikkūṭaṁ, slowly — paḷḷi … kūṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḷḷikkūṭaṁ*, slowly — *paḷḷi … kūṭaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two words it is made of, and what each one means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two words it is made of, and what each one means]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the teacher, the student, and the building",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the teacher, the student, and the building]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A school? (പള്ളിക്കൂടം (paḷḷikkūṭaṁ).) What are the two words inside it? (paḷḷi, a place of worship, and kūṭaṁ, a hall.) Who is in it that you could already name? (അധ്യാപകൻ and വിദ്യാർത്ഥി.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S147-letter-ttha",
+      "sequence": 3725,
+      "title": "ഠ (ṭha) — one character, met with the word that needs it",
+      "headword": "ഠ",
+      "romanization": "ṭha",
+      "gloss": "the single character ഠ — the breathed partner of ട, arriving with the word that needs it",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4c953b1b9bcfa4e2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ഠ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഠ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: ട — say its sound, with the tongue curled back."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It arrives with the word on the next page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഠ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഠ — ṭha."
+            },
+            {
+              "kind": "speech",
+              "text": "It is ട with a breath after it. The tongue does exactly what it did for ട — curled back, touching the roof of the mouth — and then the release carries a puff of air out with it."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam pairs its stops this way — ക/ഖ, ത/ഥ, ട/ഠ (ṭha) — a plain one and a breathed one beside it. The nasals and the liquids have no such partner: there is no breathed ണ and no breathed ള."
+            },
+            {
+              "kind": "speech",
+              "text": "It has not been on a page yet: it arrives with the word on the next one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഠ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ഠ (ṭha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these two, and say which one carries the breath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these two, and say which one carries the breath]"
+            },
+            {
+              "kind": "speech",
+              "text": "ട, ഠ (ṭha)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഠ three times, saying ṭha as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഠ three times, saying *ṭha* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭa, then ṭha — the same tongue, one with a puff of air",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭa*, then *ṭha* — the same tongue, one with a puff of air]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ഠ? What sound does it carry? (ṭha.) Which letter is it the breathed partner of? (ട.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C103-paadam",
+      "sequence": 3730,
+      "title": "പാഠം (pāṭhaṁ) — a lesson",
+      "headword": "പാഠം",
+      "romanization": "pāṭhaṁ",
+      "gloss": "a lesson — and a word that tells you in advance what it will do when a case ending arrives",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09781d48bb71705e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a school. Then say what happens to -ം when a case ending is added to the word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാഠം (pāṭhaṁ) — a lesson, the kind a school gives you: a chapter of a book, a thing to be learned."
+            },
+            {
+              "kind": "speech",
+              "text": "The Sanskrit it comes from means a recitation — a saying-aloud. The lesson was named for the saying, not for the page it is written on, which is worth knowing about a word you are about to say aloud."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: you already know what it will do",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പാഠം (pāṭhaṁ) ends in -ം, and that tells you something before you are taught it. When a case ending is added, the -ം gives way to -ത്ത-:"
+            },
+            {
+              "kind": "speech",
+              "text": "പാഠം (pāṭhaṁ) becomes പാഠത്തിൽ (pāṭhattil) — in the lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same rule, unchanged, that the state name and the book followed. You are not learning a new behaviour; you are meeting a new word that already belongs to a family you know."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhaṁ, then pāṭhattil — and name what changed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhaṁ*, then *pāṭhattil* — and name what changed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the Sanskrit behind it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the Sanskrit behind it means]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A lesson? (പാഠം (pāṭhaṁ).) What does its -ം become when a case ending is added? (-ത്ത- — പാഠത്തിൽ.) What did the Sanskrit word behind it mean? (A recitation.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C103-pareeksha",
+      "sequence": 3740,
+      "title": "പരീക്ഷ (parīkṣa) — an exam",
+      "headword": "പരീക്ഷ",
+      "romanization": "parīkṣa",
+      "gloss": "an exam — a Sanskrit word for looking closely at something, and one that does NOT end in the anusvara",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d9b793abd03671e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a lesson. Then say the apology you have had since early on — and listen for the ക്ഷ that opens it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരീക്ഷ (parīkṣa) — an exam."
+            },
+            {
+              "kind": "speech",
+              "text": "You can already write the hard part. The ക്ഷ is not a new shape — but look at where it sits. It opens that apology, and here it closes the word."
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen it close a word before: അപേക്ഷ, the request, ends in exactly this."
+            },
+            {
+              "kind": "speech",
+              "text": "The Sanskrit behind it is pari- (around) plus a root meaning to look. An examination is a looking all around something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: this one does not end in -ം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The word before this one ended in -ം and told you what it would do. This one ends in അ, and it does not join the same family:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "പാഠം, pāṭhaṁ, ends in -ം.",
+                "പരീക്ഷ, parīkṣa, ends in അ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two words from the same chapter, in the same subject, behaving differently. That is worth noticing rather than smoothing over: what a Malayalam word does when something attaches to it is decided by how it ends, not by what it means."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parīkṣa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parīkṣa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the apology, then the exam — the same shape, at opposite ends",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the apology, then the exam — the same shape, at opposite ends]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhaṁ, then parīkṣa, and how each one ends",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhaṁ*, then *parīkṣa*, and how each one ends]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An exam? (പരീക്ഷ (parīkṣa).) Which earlier word ends the same way? (അപേക്ഷ.) Which one opens with that shape? (ക്ഷമിക്കണം.) Which of this chapter's two words ends in -ം? (പാഠം (pāṭhaṁ) — not പരീക്ഷ (parīkṣa).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C103-maarkku",
+      "sequence": 3750,
+      "title": "മാർക്ക് (mārkkŭ) — marks",
+      "headword": "മാർക്ക്",
+      "romanization": "mārkkŭ",
+      "gloss": "marks — an English word that put on Malayalam clothes, and whose ending you have written many times",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee80930b1dd4e3e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say an exam. Then count in tens — you will want the numbers in a moment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മാർക്ക് (mārkkŭ) — marks, what an exam gives back to you."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it out loud and you will hear English. It is the English word mark, borrowed whole. Kerala's schools took the English examination system and the English word along with it, and this is the word people reach for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what the borrowing had to change",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The word is English, and the spelling is not. Two things happened to it on the way in, and you can see both:"
+            },
+            {
+              "kind": "speech",
+              "text": "the ർ before a doubled ക്ക — the shape you have read in ശർക്കര and ചേർക്കുക;"
+            },
+            {
+              "kind": "speech",
+              "text": "the half-u at the end, the faint vowel that closes so many Malayalam words and that English mark does not have at all."
+            },
+            {
+              "kind": "speech",
+              "text": "A borrowed word does not stay foreign. It is made to end the way Malayalam words end, and then it behaves like one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārkkŭ, and hear the English inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārkkŭ*, and hear the English inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parīkṣa, then mārkkŭ — the exam, then what it gives back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parīkṣa*, then *mārkkŭ* — the exam, then what it gives back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a number in tens, then mārkkŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a number in tens, then *mārkkŭ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Marks? (മാർക്ക് (mārkkŭ).) Where does the word come from? (English — mark.) What two things did Malayalam do to its spelling? (The chillu ർ before the doubled ക്ക, and the half-u at the end.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R103-school-recall",
+      "sequence": 3760,
+      "title": "(school, lesson, exam, marks) (paḷḷikkūṭaṁ enna ōrmma) — from cold",
+      "headword": "(school, lesson, exam, marks)",
+      "romanization": "paḷḷikkūṭaṁ enna ōrmma",
+      "gloss": "cold retrieval of the four school words, of how each one arrived, and of which one takes -tth-",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a5b60ce1c47890b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say school, lesson, exam and marks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: four words, three different arrivals",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One small corner of one subject, and the words in it arrived three different ways:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "പള്ളിക്കൂടം, paḷḷikkūṭaṁ, assembled here, from two older words.",
+                "പാഠം, പരീക്ഷ, pāṭhaṁ, parīkṣa, Sanskrit, taken whole.",
+                "മാർക്ക്, mārkkŭ, English, taken whole."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That is what a school vocabulary looks like in Malayalam, and it is not untidy — it is a record. The building's name was built here out of older parts; the scholarly words came in whole with the scholarly tradition; and the examination system arrived with its own word attached."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You had the people before you had the place. The teacher and the student have been yours for a long while with nothing around them; now there is a building, a thing taught in it, a test of the thing, and a number at the end."
+            },
+            {
+              "kind": "speech",
+              "text": "And the two Sanskrit words do not behave alike:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "പാഠം (pāṭhaṁ), പാഠത്തിൽ, the -ം gives way to -ത്ത-.",
+                "പരീക്ഷ (parīkṣa), പരീക്ഷയിൽ, അ takes the -യ- join."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both change. They change differently, and each one the way its ending says — the -യ- join is the one ഇന്ത്യ already showed you. Same subject, same source language; the ending decides, not the meaning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paḷḷikkūṭaṁ, pāṭhaṁ, parīkṣa, mārkkŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paḷḷikkūṭaṁ*, *pāṭhaṁ*, *parīkṣa*, *mārkkŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the four is English, and which two are Sanskrit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the four is English, and which two are Sanskrit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭhaṁ, then pāṭhattil; parīkṣa, then parīkṣayil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭhaṁ*, then *pāṭhattil*; *parīkṣa*, then *parīkṣayil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the teacher and the student, now inside the building",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the teacher and the student, now inside the building]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "School, exam, marks? (പള്ളിക്കൂടം (paḷḷikkūṭaṁ), പരീക്ഷ (parīkṣa), മാർക്ക് (mārkkŭ).) Which one is English? (മാർക്ക് (mārkkŭ).) Which word loses its ending to -ത്ത-? (പാഠം (pāṭhaṁ) becomes പാഠത്തിൽ.) And what does പരീക്ഷ (parīkṣa) do instead? (പരീക്ഷയിൽ — the -യ- join.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

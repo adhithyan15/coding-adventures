@@ -3853,7 +3853,12 @@
       "id": "ML-A1-LEX-33",
       "category": "Padakosham (lexicon by domain)",
       "label": "the education system: school, lesson, exam, marks",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C103-SCHOOL-01",
+        "ML-LEX-C103-LESSON-01",
+        "ML-LEX-C103-EXAM-01",
+        "ML-LEX-C103-MARKS-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -3866,7 +3871,7 @@
         "A1-NE06-06"
       ],
       "malayalamSpecific": false,
-      "note": "None of paLLikkoodam, paadam or pareeksha is taught."
+      "note": "CLOSED BY CHAPTER 103, AND THE OLD NOTE WAS PARTLY STALE. It read 'none of paLLikkoodam, paadam or pareeksha is taught'. True of those three words, and it left out that the DOMAIN was not empty: ML-C48-teacher (1290) owns adhyaapakan and ML-C48-student (1300) owns vidyaarthi. The learner has had the PEOPLE of a school since 1290 with nothing around them. Chapter 103 supplies all four things this point's label asks for -- school (paLLikkooTaM), lesson (paaThaM), exam (pareeksha) and marks (maarkku) -- and is framed around that gap: the place, the thing taught in it, the test of it, and the number at the end. Verifying the note rather than scoping from it is what produced the framing, and it is the second tranche running where the note was accurate about its words and wrong about its scope."
     },
     {
       "id": "ML-A1-LEX-34",

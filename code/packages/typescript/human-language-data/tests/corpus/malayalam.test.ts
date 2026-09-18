@@ -689,8 +689,35 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // THE CHAPTER REFUSES ONE CLAIM IT COULD HAVE MADE: that a day-name CANNOT
   // take an ending. It can, for other jobs; it does not NEED one for saying
   // when, and that is what the lesson says.
-  expect(coverage.covered).toBe(209);
-  expect(coverage.unmapped).toBe(34);
+  // 209 -> 210: ML-A1-LEX-33, the education system. THE PERCENTAGE HOLDS at 86
+  // (210/243 is 86.4); recomputed, not carried. THE POINT'S NOTE WAS PARTLY
+  // STALE FOR THE SECOND TRANCHE RUNNING, and in the same shape: accurate about
+  // the words it named, wrong about the scope it implied. It said "none of
+  // paLLikkoodam, paadam or pareeksha is taught", which is true of those three
+  // and leaves out that ML-C48-teacher (1290) and ML-C48-student (1300) own
+  // adhyaapakan and vidyaarthi. The learner has had the PEOPLE of a school
+  // since 1290 with nothing around them, and that gap is what the chapter is
+  // built on: the place, the thing taught in it, the test of it, the number at
+  // the end. A GLYPH CLAIM WAS CHECKED AGAINST DATA AND THE FONT RATHER THAN
+  // AGAINST A NOTE, and it mattered twice. pareeksha needs the ksha conjunct,
+  // and SCR-12's note lists "sha" among nine never-taught characters -- but
+  // ML-S121-letter-ssa (471) TEACHES U+0D37, and SCR-12 means U+0D36, the other
+  // sibilant. Reading the note instead of the data would have refused a word
+  // that costs no script debt at all. Filed as HL-C407, with the finding that
+  // SCR-12's "14" is one of three numbers: 12 distinct tokens in headword
+  // position carry U+0D36, across 15 headword fields. THE FIRST DRAFT
+  // EXPLAINED THAT GAP BACKWARDS -- it blamed tokens sitting inside
+  // multi-word headwords, and such a token contributes one token AND one
+  // field, so it cannot cause a discrepancy. The whole gap is shubha, in
+  // FOUR headword fields; every other token sits in exactly one. Separately paaThaM needs
+  // U+0D20, which NO headword in this corpus has ever used, so the
+  // NotoSansMalayalam cmap was read directly before committing to the word.
+  // THE TWO SANSKRIT WORDS DELIBERATELY DISAGREE: paaThaM ends in the anusvara
+  // and gives way to -tth- under a case ending, exactly as HL-C400 narrowed that
+  // rule; pareeksha ends in a and does not. Same chapter, same subject, same
+  // source language -- and the chapter says the ENDING decides, not the meaning.
+  expect(coverage.covered).toBe(210);
+  expect(coverage.unmapped).toBe(33);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -702,6 +729,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 209/243 points covered (86%)",
+    "malayalam A1 (partial inventory): 210/243 points covered (86%)",
   );
 }, 60_000);
