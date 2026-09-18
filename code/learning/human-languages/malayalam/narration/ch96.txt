@@ -18,8 +18,8 @@ The word ends in ം, and you have been told before that a word ending that way 
 Put ആണ് after it and the two run together:
 എളുപ്പം (eḷuppaṁ) + ആണ് becomes എളുപ്പമാണ്.
 Nothing happens to the sound. That ം is already the sound m, and here it stays exactly that. Only the writing moves: the m now has a vowel sitting after it, and the bare ം cannot carry one, so it is written with the full letter മ instead.
-Not every ending treats it this gently. The case endings take it away — കേരളത്തിൽ, പുസ്തകത്തിന്റെ — and the and ending replaces it, as in വെള്ളവും.
-ആണ് is not alone in leaving it standing, though: ഇല്ല does the same, which is why സാരമില്ല has carried a മ since your first pages.
+Not every ending is this quiet. A case ending takes the ം away and puts ത്ത in its place — കേരളത്തിൽ, പുസ്തകത്തിന്റെ. The and ending puts വും there. The plural puts ങ്ങൾ, as you saw at പുസ്തകങ്ങൾ.
+ആണ് takes nothing away at all, and it is not alone in that: ഇല്ല does the same, which is why സാരമില്ല has carried a മ since your first pages.
 So what a word ending in ം does depends on what attaches to it.
 Say the two words one after the other, quickly. You will not hear anything change — which is why you have been doing this for most of the book without noticing:
 [a table of 3 rows, read aloud]
@@ -42,7 +42,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It gets written as മ, and the sound does not change.) Does every ending leave it standing? (No — the case endings take it to ത്ത.)
+What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It gets written as മ, and the sound does not change.) Does every ending leave the m alone? (No — a case ending puts ത്ത there instead, and the plural puts ങ്ങൾ.)
 
 
 Lesson 2 of 3.
@@ -90,7 +90,7 @@ Grammar Lens: the welding was already yours.
 ഇത് എളുപ്പമാണ്, this is easy.
 ഇത് പ്രയാസമാണ്, this is difficult.
 Two new words, and no new grammar at all. Both end in ം, and a word ending in ം welds onto ആണ്: the m sound stays exactly where it was, and only its spelling moves — it is written മ, because the bare sign cannot carry the vowel that now sits after it.
-ആണ് is a gentle one, and not the only one. The endings that mark a case take that ം to ത്ത — കേരളത്തിൽ, പുസ്തകത്തിന്റെ — and the and ending takes it to വും. ആണ് leaves the m where it is, and so does ഇല്ല: സാരമില്ല has carried that മ since your first pages.
+ആണ് takes nothing away, and it is not the only one that does not. A case ending puts ത്ത where the ം was — കേരളത്തിൽ, പുസ്തകത്തിന്റെ — the and ending puts വും, and the plural puts ങ്ങൾ. ആണ് leaves the m where it is, and so does ഇല്ല: സാരമില്ല has carried that മ since your first pages.
 You were doing it long before this chapter:
 [a table of 3 rows, read aloud]
 സുഖമാണ്, well.

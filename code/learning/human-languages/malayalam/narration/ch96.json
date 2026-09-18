@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Easy and Difficult",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:60967907297e9dba",
+  "sourceHash": "fnv1a64:8f79628858fd8ea5",
   "lessons": [
     {
       "id": "ML-C96-eluppam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e2436c8de7fbadb",
+      "sourceHash": "fnv1a64:e9edd45baf0039fb",
       "notice": null,
       "blocks": [
         {
@@ -77,11 +77,11 @@
             },
             {
               "kind": "speech",
-              "text": "Not every ending treats it this gently. The case endings take it away — കേരളത്തിൽ, പുസ്തകത്തിന്റെ — and the and ending replaces it, as in വെള്ളവും."
+              "text": "Not every ending is this quiet. A case ending takes the ം away and puts ത്ത in its place — കേരളത്തിൽ, പുസ്തകത്തിന്റെ. The and ending puts വും there. The plural puts ങ്ങൾ, as you saw at പുസ്തകങ്ങൾ."
             },
             {
               "kind": "speech",
-              "text": "ആണ് is not alone in leaving it standing, though: ഇല്ല does the same, which is why സാരമില്ല has carried a മ since your first pages."
+              "text": "ആണ് takes nothing away at all, and it is not alone in that: ഇല്ല does the same, which is why സാരമില്ല has carried a മ since your first pages."
             },
             {
               "kind": "speech",
@@ -177,7 +177,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It gets written as മ, and the sound does not change.) Does every ending leave it standing? (No — the case endings take it to ത്ത.)"
+              "text": "What is easy? (എളുപ്പം (eḷuppaṁ).) What happens to its ം when ആണ് arrives? (It gets written as മ, and the sound does not change.) Does every ending leave the m alone? (No — a case ending puts ത്ത there instead, and the plural puts ങ്ങൾ.)"
             }
           ]
         }
@@ -335,7 +335,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dbda04955be122a",
+      "sourceHash": "fnv1a64:89cd9d24011e50a8",
       "notice": null,
       "blocks": [
         {
@@ -379,7 +379,7 @@
             },
             {
               "kind": "speech",
-              "text": "ആണ് is a gentle one, and not the only one. The endings that mark a case take that ം to ത്ത — കേരളത്തിൽ, പുസ്തകത്തിന്റെ — and the and ending takes it to വും. ആണ് leaves the m where it is, and so does ഇല്ല: സാരമില്ല has carried that മ since your first pages."
+              "text": "ആണ് takes nothing away, and it is not the only one that does not. A case ending puts ത്ത where the ം was — കേരളത്തിൽ, പുസ്തകത്തിന്റെ — the and ending puts വും, and the plural puts ങ്ങൾ. ആണ് leaves the m where it is, and so does ഇല്ല: സാരമില്ല has carried that മ since your first pages."
             },
             {
               "kind": "speech",
