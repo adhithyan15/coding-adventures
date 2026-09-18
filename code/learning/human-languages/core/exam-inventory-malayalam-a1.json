@@ -3753,7 +3753,12 @@
       "id": "ML-A1-LEX-29",
       "category": "Padakosham (lexicon by domain)",
       "label": "clothing, footwear and accessories",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C100-MUNDU-01",
+        "ML-LEX-C100-SARI-01",
+        "ML-LEX-C100-SANDAL-01",
+        "ML-LEX-C100-CAP-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -3763,7 +3768,7 @@
         "A1-NE12-02"
       ],
       "malayalamSpecific": false,
-      "note": "thuni ('cloth') is the only textile word taught. Not one garment is named."
+      "note": "Chapter 100. THE OLD NOTE WAS ACCURATE, and that was verified rather than assumed -- the two points worked before this one, LEX-37 and LEX-47, both had notes that overstated their gaps, so this one was token-swept first. thuni IS the only textile word taught (ML-C46-cloth), and shirt, mundu, sari, sandal, shoes, cap, glasses, watch, bag, dress and skirt all return ZERO occurrences. The null result is recorded because two stale notes in a row made it worth checking. ALL THREE LIMBS OF THE LABEL GET AN EXPONENT: mundu and saari for clothing, cheruppu for footwear, thoppi for accessories. shirt was dropped on scope, not on merit -- a fifth clothing word adds no limb. NO NEW GRAMMAR AT ALL, deliberately, after chapter 99 spent itself on three contrasting joins: only two endings appear across the four words, the half-u and -i, and the learner owns both. The frame is ML-C42's attributive adjective, puthiya and pazhaya in front and unchanged. THE GLYPH PRE-CHECK FAILED TWICE AND HAS BEEN DEMOTED TO A SIGNAL: its control had to be derived rather than recalled (as in chapter 99), and it then produced FALSE NEGATIVES, refusing two candidates over glyphs that appear in ten and seven taught headwords respectively. A check stricter than the rule it stands in for is not a gate. EVERY ROMANIZATION WAS DERIVED LETTER BY LETTER rather than word by word -- the correction chapter 99 earned by getting nrttham's vowel right and the consonant beside it wrong."
     },
     {
       "id": "ML-A1-LEX-30",

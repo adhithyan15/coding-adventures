@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C100-thoppi",
+    "language": "malayalam",
+    "chapter": 100,
+    "sequence": 3600,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b0a37ace32af3568"
+  },
+  "findings": []
+}

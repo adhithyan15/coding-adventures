@@ -1,0 +1,16 @@
+{
+  "id": "ML-PATH-100-CLOTHING",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ML-C100-mundu",
+    "ML-C100-saari",
+    "ML-C100-cheruppu",
+    "ML-C100-thoppi",
+    "ML-R100-clothing-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-100-CLOTHING"
+  ],
+  "after": []
+}

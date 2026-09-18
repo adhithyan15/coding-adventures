@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:5cf1635c1e675890",
+  "lessonIds": [
+    "ML-C100-mundu",
+    "ML-C100-saari",
+    "ML-C100-cheruppu",
+    "ML-C100-thoppi",
+    "ML-R100-clothing-recall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "malayalam/narration/ch100.txt",
+  "json": "malayalam/narration/ch100.json",
+  "textHash": "fnv1a64:d66ec4484d0ce81e",
+  "jsonHash": "fnv1a64:646c8d773792e1b4",
+  "findings": []
+}
