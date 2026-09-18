@@ -65,9 +65,8 @@ for *having*:
 way to say that someone has it, and between them that is the whole meaning.
 
 That is worth noticing rather than papering over: **ചെറിയ** and **കുറിയ** are
-almost the same word and do not describe the same thing — one is *small*, said
-of objects, the other *short*, said of people — and *tall* is not the mirror of
-either. You reach it by a different route.
+almost the same word and do not mean the same thing — one is *small*, the other
+*short* — and *tall* is the mirror of neither. You reach it by another route.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-SHORT-01, ML-LEX-C101-THIN-01, ML-LEX-C101-STOUT-01, ML-LEX-C101-HEIGHT-01] -->

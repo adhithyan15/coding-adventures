@@ -6,7 +6,7 @@ sequence: 3620
 chapter: 101
 type: word
 headword: "കുറിയ"
-gloss: short, of a person — built exactly like ചെറിയ, and used where ചെറിയ cannot be
+gloss: short — built exactly like ചെറിയ, and not a second word for it
 romanization: "kuṟiya"
 concept_tag: ML-SHORT-PERSON
 prerequisites: [ML-R100-clothing-recall, ML-C42-small, ML-C71-avan-aval, ML-C36-kutti]
@@ -55,9 +55,10 @@ reviews_of: [ML-C42-small, ML-C71-avan-aval]
 Same **റ**, same **-ിയ** ending, same job in the sentence: in front of the noun,
 unchanged, exactly as the adjective chapter said.
 
-**What differs is what each one may describe.** **ചെറിയ** is *small* — a small
-house, a small cup. **കുറിയ** is *short* in the sense of **not tall**, and it is
-a person's height it measures.
+**What differs is the meaning, not the shape.** **ചെറിയ** is *small* — little,
+not much of it. **കുറിയ** is *short* — not long, and of a person, not tall.
+A child can be **ചെറിയ** and a child can be **കുറിയ**, and those say two
+different things about the child.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-SHORT-01, ML-LEX-C42-ADJ-02, ML-LEX-C71-AVAN-AVAL-01, ML-CONCEPT-C36-KUTTI-01, ML-LEX-AANU-01] -->

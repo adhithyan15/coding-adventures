@@ -28,9 +28,38 @@ refusal as **ഒഴിവുസമയം** in ch98 and **ധരിക്കു�
 | **തടിച്ച** | **തടിച്ച കുട്ടി** | **-ച്ച** |
 
 Three shapes, all closing on **-a**, all sitting in `ML-C42`'s frame unchanged.
-**ചെറിയ** and **കുറിയ** differ by one letter and do **not** describe the same
-thing — *small*, of objects, against *short*, of people — and *tall* is the
-mirror of neither.
+**ചെറിയ** and **കുറിയ** differ only in their **first syllable** — **ചെ**
+against **കു**, which is *two* characters, not one — and do **not** mean the
+same thing: *small* against *short*. *Tall* is the mirror of neither.
+
+#### Review corrected four claims, and three were in this chapter's generalising prose
+
+- **The anusvara sentence said "always".** `ML-C101-uyaram` had *"the **ം** does
+  what it always does when something follows it"*. `ML-C96-eluppam` says the
+  opposite in as many words — *"what a word ending in **ം** does **depends on
+  what attaches to it**"* — and `ML-C97-alla-sundaram` warns *"do not carry any
+  of it across to the **ം**"*. **It is refuted by this chapter's own recall**,
+  whose romanization field is `uyaravuṁ`: **ഉയരം** + **ഉം** → **ഉയരവും**, with a
+  **വ**. Now scoped to **ആണ്** and **ഉണ്ട്**, with the counter-example named.
+- ***"ചെറിയ is for objects, കുറിയ for people"* was false of both words, and
+  contradicted a merged lesson.** `ML-C42-small` (1020) tells the learner to put
+  **ചെറിയ** *"in front of a word you already know"* — and by 1020 they own
+  **കുട്ടി** (810). The book had already invited **ചെറിയ കുട്ടി**, which this
+  chapter was about to declare impossible.
+- ***"The others end -ിയ"* was false for two of the five.** **നല്ല** ends
+  **-ല്ല** and **പഴയ** ends in a plain **-യ** — neither has a **ി** at all.
+  This one is doubly instructive: the draft fix that *added* **നല്ല** to the
+  list is what made the next sentence false. A correction pass is as dangerous
+  as a draft.
+- ***"a shape you have not met"* / *"a third shape"*.** **-ഞ്ഞ** and **-ച്ച**
+  have been in the book since **പച്ച** and **മഞ്ഞ** at chapter 22, sequence
+  **520**. The lesson now cites them instead of claiming novelty.
+
+Also softened: *"I am tall"* overstated a bare dative-existential, which reads
+nearer *I have height*; **പൊക്കം** is the commoner noun for a person's stature.
+The chapter now claims what it can **build**, not that it has built the idiom.
+And `ML-C101-uyaram` declared `ML-LEX-AANU-01` in `requires`, `practises` and a
+block's `assesses` while containing **zero** occurrences of **ആണ്** — removed.
 
 #### Two inventions caught before the first commit — by a sweep, not by reading
 

@@ -19,7 +19,7 @@ Put it beside the word you already have and the shape is the same.
 word: ചെറിയ. romanized: ceṟiya.
 word: കുറിയ. romanized: kuṟiya.
 Same റ, same -ിയ ending, same job in the sentence: in front of the noun, unchanged, exactly as the adjective chapter said.
-What differs is what each one may describe. ചെറിയ is small — a small house, a small cup. കുറിയ (kuṟiya) is short in the sense of not tall, and it is a person's height it measures.
+What differs is the meaning, not the shape. ചെറിയ is small — little, not much of it. കുറിയ (kuṟiya) is short — not long, and of a person, not tall. A child can be ചെറിയ and a child can be കുറിയ (kuṟiya), and those say two different things about the child.
 
 Guided Practice.
 [pause 1 second]
@@ -47,9 +47,10 @@ You'll want to know.
 മെലിഞ്ഞ കുട്ടി — meliñña kuṭṭi — "a thin child."
 
 The word, taken apart.
-The ending you have met; the shape before it you have not.
+The ending is the constant; the shape in front of it never was.
 വലിയ, നല്ല, പുതിയ, പഴയ, ചെറിയ, and now കുറിയ (kuṟiya) — every adjective the book has put in front of a noun ends in -a, and so does this one. That is the whole requirement, and മെലിഞ്ഞ (meliñña) meets it.
-What is different is what comes in front of the -a. The others end -ിയ; this one ends in a doubled ഞ്ഞ. That changes nothing about how it is used — it still stands before the noun and still does not change:
+What comes in front of the -a has never been fixed. വലിയ, പുതിയ, ചെറിയ and കുറിയ (kuṟiya) end -ിയ, but നല്ല ends -ല്ല and പഴയ ends in a plain -യ. മെലിഞ്ഞ (meliñña) adds a doubled ഞ്ഞ to that list — a shape you have had since പച്ച and മഞ്ഞ, back among the colours.
+That changes nothing about how it is used — it still stands before the noun and still does not change:
 [a table of 2 rows, read aloud]
 കുറിയ കുട്ടി, kuṟiya kuṭṭi.
 മെലിഞ്ഞ കുട്ടി, meliñña kuṭṭi.
@@ -86,7 +87,7 @@ Three shapes, one ending, one behaviour:
 adjective: കുറിയ (kuṟiya). ends: -ിയ.
 adjective: മെലിഞ്ഞ (meliñña). ends: -ഞ്ഞ.
 adjective: തടിച്ച (taṭicca). ends: -ച്ച.
-Every one of them closes on -a, stands in front of the noun, and does not change. The shape in front of the -a varies and never matters.
+Every one of them closes on -a, stands in front of the noun, and does not change. The shape in front of the -a varies and never matters — as നല്ല and പഴയ were already showing you before this chapter began.
 
 Guided Practice.
 [pause 1 second]
@@ -118,7 +119,8 @@ There is no single word for tall in this book, and this is how you say it anyway
 കുറിയ (kuṟiya) was an adjective, so it went in front of a noun. ഉയരം (uyaraṁ) is not an adjective — it is a noun, height — so it takes the other machine you already own: the one where a thing exists to someone.
 എനിക്ക് ഉയരമുണ്ട്. — enikku uyaramuṇṭŭ — to-me height there-is — I am tall.
 That frame is not new. The chapter that gave you ഉണ്ട് used it to say that someone has a thing, and the chapter on എനിക്ക് gave you the person the having happens to. All this chapter does is put a new noun into it.
-And the ം does what it always does when something follows it — it takes the full letter so it can carry what comes next: ഉയരം (uyaraṁ) + ഉണ്ട് becomes ഉയരമുണ്ട്.
+And the ം does here what it does before ആണ് — it takes the full letter മ so it can carry what follows: ഉയരം (uyaraṁ) + ഉണ്ട് becomes ഉയരമുണ്ട്.
+Do not read that as a rule about every ending. The chapter on easy and hard told you the ം does different things for different endings, and this chapter's own title proves it: ഉയരം (uyaraṁ) + ഉം is ഉയരവും, with a വ.
 
 Guided Practice.
 [pause 1 second]
@@ -153,7 +155,7 @@ They end -ിയ, -ഞ്ഞ and -ച്ച — three different shapes, all clos
 
 What you've built.
 The book still has no single word for tall. It has a noun for height and a way to say that someone has it, and between them that is the whole meaning.
-That is worth noticing rather than papering over: ചെറിയ and കുറിയ (kuṟiya) are almost the same word and do not describe the same thing — one is small, said of objects, the other short, said of people — and tall is not the mirror of either. You reach it by a different route.
+That is worth noticing rather than papering over: ചെറിയ and കുറിയ (kuṟiya) are almost the same word and do not mean the same thing — one is small, the other short — and tall is the mirror of neither. You reach it by another route.
 
 Guided Practice.
 [pause 1 second]

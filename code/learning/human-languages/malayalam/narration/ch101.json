@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Build and Height",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9bc95d92b6860602",
+  "sourceHash": "fnv1a64:3b80034d82b65bc7",
   "lessons": [
     {
       "id": "ML-C101-kuriya",
@@ -12,14 +12,14 @@
       "title": "കുറിയ (kuṟiya) — short, of a person",
       "headword": "കുറിയ",
       "romanization": "kuṟiya",
-      "gloss": "short, of a person — built exactly like ചെറിയ, and used where ചെറിയ cannot be",
+      "gloss": "short — built exactly like ചെറിയ, and not a second word for it",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff5ae3941c2dbea8",
+      "sourceHash": "fnv1a64:b3bb57a09e1505c1",
       "notice": null,
       "blocks": [
         {
@@ -82,7 +82,7 @@
             },
             {
               "kind": "speech",
-              "text": "What differs is what each one may describe. ചെറിയ is small — a small house, a small cup. കുറിയ (kuṟiya) is short in the sense of not tall, and it is a person's height it measures."
+              "text": "What differs is the meaning, not the shape. ചെറിയ is small — little, not much of it. കുറിയ (kuṟiya) is short — not long, and of a person, not tall. A child can be ചെറിയ and a child can be കുറിയ (kuṟiya), and those say two different things about the child."
             }
           ]
         },
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3b59489a715ea4a",
+      "sourceHash": "fnv1a64:3a85d16f1f95b48c",
       "notice": null,
       "blocks": [
         {
@@ -200,7 +200,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The ending you have met; the shape before it you have not."
+              "text": "The ending is the constant; the shape in front of it never was."
             },
             {
               "kind": "speech",
@@ -208,7 +208,11 @@
             },
             {
               "kind": "speech",
-              "text": "What is different is what comes in front of the -a. The others end -ിയ; this one ends in a doubled ഞ്ഞ. That changes nothing about how it is used — it still stands before the noun and still does not change:"
+              "text": "What comes in front of the -a has never been fixed. വലിയ, പുതിയ, ചെറിയ and കുറിയ (kuṟiya) end -ിയ, but നല്ല ends -ല്ല and പഴയ ends in a plain -യ. മെലിഞ്ഞ (meliñña) adds a doubled ഞ്ഞ to that list — a shape you have had since പച്ച and മഞ്ഞ, back among the colours."
+            },
+            {
+              "kind": "speech",
+              "text": "That changes nothing about how it is used — it still stands before the noun and still does not change:"
             },
             {
               "kind": "table",
@@ -290,14 +294,14 @@
       "title": "തടിച്ച (taṭicca) — stout",
       "headword": "തടിച്ച",
       "romanization": "taṭicca",
-      "gloss": "stout, of a person — the far end of മെലിഞ്ഞ, and a third shape ending in -a",
+      "gloss": "stout — the far end of മെലിഞ്ഞ, on another shape that still closes on -a",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a05b0160e4e7bf5",
+      "sourceHash": "fnv1a64:ffac7cb748afcbe6",
       "notice": null,
       "blocks": [
         {
@@ -361,7 +365,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every one of them closes on -a, stands in front of the noun, and does not change. The shape in front of the -a varies and never matters."
+              "text": "Every one of them closes on -a, stands in front of the noun, and does not change. The shape in front of the -a varies and never matters — as നല്ല and പഴയ were already showing you before this chapter began."
             }
           ]
         },
@@ -437,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f4248794e1b0c91",
+      "sourceHash": "fnv1a64:7235ac829791334f",
       "notice": null,
       "blocks": [
         {
@@ -495,7 +499,11 @@
             },
             {
               "kind": "speech",
-              "text": "And the ം does what it always does when something follows it — it takes the full letter so it can carry what comes next: ഉയരം (uyaraṁ) + ഉണ്ട് becomes ഉയരമുണ്ട്."
+              "text": "And the ം does here what it does before ആണ് — it takes the full letter മ so it can carry what follows: ഉയരം (uyaraṁ) + ഉണ്ട് becomes ഉയരമുണ്ട്."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not read that as a rule about every ending. The chapter on easy and hard told you the ം does different things for different endings, and this chapter's own title proves it: ഉയരം (uyaraṁ) + ഉം is ഉയരവും, with a വ."
             }
           ]
         },
@@ -571,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0272cd977390f3df",
+      "sourceHash": "fnv1a64:33e6a128f0e4397f",
       "notice": null,
       "blocks": [
         {
@@ -639,7 +647,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is worth noticing rather than papering over: ചെറിയ and കുറിയ (kuṟiya) are almost the same word and do not describe the same thing — one is small, said of objects, the other short, said of people — and tall is not the mirror of either. You reach it by a different route."
+              "text": "That is worth noticing rather than papering over: ചെറിയ and കുറിയ (kuṟiya) are almost the same word and do not mean the same thing — one is small, the other short — and tall is the mirror of neither. You reach it by another route."
             }
           ]
         },

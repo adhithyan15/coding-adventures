@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 260
 requires:
-  knowledge: [ML-LEX-C101-SHORT-01, ML-CONCEPT-C32-UNDU-01, ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-LEX-AANU-01]
+  knowledge: [ML-LEX-C101-SHORT-01, ML-CONCEPT-C32-UNDU-01, ML-CONCEPT-C06-DATIVE-SUBJECT-01]
 introduces:
   knowledge: [ML-LEX-C101-HEIGHT-01]
 practises:
-  knowledge: [ML-LEX-C101-HEIGHT-01, ML-LEX-C101-SHORT-01, ML-CONCEPT-C32-UNDU-01, ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-LEX-AANU-01]
+  knowledge: [ML-LEX-C101-HEIGHT-01, ML-LEX-C101-SHORT-01, ML-CONCEPT-C32-UNDU-01, ML-CONCEPT-C06-DATIVE-SUBJECT-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -44,7 +44,7 @@ reviews_of: [ML-C32-undu, ML-C06-dative-subject]
 > tall.
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-HEIGHT-01, ML-CONCEPT-C32-UNDU-01, ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-LEX-AANU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-HEIGHT-01, ML-CONCEPT-C32-UNDU-01, ML-CONCEPT-C06-DATIVE-SUBJECT-01] -->
 
 **There is no single word for *tall* in this book, and this is how you say it
 anyway.**
@@ -60,9 +60,12 @@ already own: the one where a thing **exists to someone**.
 that someone *has* a thing, and the chapter on **എനിക്ക്** gave you the person
 the having happens to. All this chapter does is put a new noun into it.
 
-And the **ം** does what it always does when something follows it — it takes the
-full letter so it can carry what comes next: **ഉയരം** + **ഉണ്ട്** →
-**ഉയരമുണ്ട്**.
+And the **ം** does here what it does **before ആണ്** — it takes the full letter
+**മ** so it can carry what follows: **ഉയരം** + **ഉണ്ട്** → **ഉയരമുണ്ട്**.
+
+**Do not read that as a rule about every ending.** The chapter on easy and hard
+told you the **ം** does different things for different endings, and this
+chapter's own title proves it: **ഉയരം** + **ഉം** is **ഉയരവും**, with a **വ**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-HEIGHT-01, ML-CONCEPT-C32-UNDU-01, ML-LEX-C101-SHORT-01] -->

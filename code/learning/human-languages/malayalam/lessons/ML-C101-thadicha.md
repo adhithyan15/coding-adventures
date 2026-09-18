@@ -6,7 +6,7 @@ sequence: 3640
 chapter: 101
 type: word
 headword: "തടിച്ച"
-gloss: stout, of a person — the far end of മെലിഞ്ഞ, and a third shape ending in -a
+gloss: stout — the far end of മെലിഞ്ഞ, on another shape that still closes on -a
 romanization: "taṭicca"
 concept_tag: ML-STOUT
 prerequisites: [ML-C101-melinja, ML-C42-adjective-system]
@@ -57,7 +57,8 @@ Three shapes, one ending, one behaviour:
 | **തടിച്ച** | **-ച്ച** |
 
 Every one of them closes on **-a**, stands in front of the noun, and does not
-change. **The shape in front of the -a varies and never matters.**
+change. **The shape in front of the -a varies and never matters** — as **നല്ല**
+and **പഴയ** were already showing you before this chapter began.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-STOUT-01, ML-LEX-C101-THIN-01, ML-CONCEPT-C36-KUTTI-01] -->

@@ -9,17 +9,17 @@ headword: "മെലിഞ്ഞ"
 gloss: thin, of a person — an adjective that ends in -a without ending in -iya
 romanization: "meliñña"
 concept_tag: ML-THIN
-prerequisites: [ML-C101-kuriya, ML-C42-adjective-system]
+prerequisites: [ML-C101-kuriya, ML-C42-adjective-system, ML-C22-paccha-manja]
 sounds: []
 roots: []
 duration:
   max_seconds: 250
 requires:
-  knowledge: [ML-LEX-C101-SHORT-01, ML-GRAMMAR-C42-ADJ-SYSTEM, ML-CONCEPT-C36-KUTTI-01]
+  knowledge: [ML-LEX-C101-SHORT-01, ML-GRAMMAR-C42-ADJ-SYSTEM, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C22-PACCHA-MANJA-01]
 introduces:
   knowledge: [ML-LEX-C101-THIN-01]
 practises:
-  knowledge: [ML-LEX-C101-THIN-01, ML-LEX-C101-SHORT-01, ML-GRAMMAR-C42-ADJ-SYSTEM, ML-CONCEPT-C36-KUTTI-01]
+  knowledge: [ML-LEX-C101-THIN-01, ML-LEX-C101-SHORT-01, ML-GRAMMAR-C42-ADJ-SYSTEM, ML-CONCEPT-C36-KUTTI-01, ML-CONCEPT-C22-PACCHA-MANJA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -43,17 +43,21 @@ reviews_of: [ML-C101-kuriya, ML-C42-adjective-system]
 > **മെലിഞ്ഞ കുട്ടി** — *meliñña kuṭṭi* — "a thin child."
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-THIN-01, ML-LEX-C101-SHORT-01, ML-GRAMMAR-C42-ADJ-SYSTEM] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C101-THIN-01, ML-LEX-C101-SHORT-01, ML-GRAMMAR-C42-ADJ-SYSTEM, ML-CONCEPT-C22-PACCHA-MANJA-01] -->
 
-**The ending you have met; the shape before it you have not.**
+**The ending is the constant; the shape in front of it never was.**
 
 **വലിയ**, **നല്ല**, **പുതിയ**, **പഴയ**, **ചെറിയ**, and now **കുറിയ** — every
 adjective the book has put in front of a noun ends in **-a**, and so does this
 one. That is the whole requirement, and **മെലിഞ്ഞ** meets it.
 
-What is different is what comes in front of the **-a**. The others end **-ിയ**;
-this one ends in a doubled **ഞ്ഞ**. **That changes nothing about how it is
-used** — it still stands before the noun and still does not change:
+What comes in front of the **-a** has never been fixed. **വലിയ**, **പുതിയ**,
+**ചെറിയ** and **കുറിയ** end **-ിയ**, but **നല്ല** ends **-ല്ല** and **പഴയ**
+ends in a plain **-യ**. **മെലിഞ്ഞ** adds a doubled **ഞ്ഞ** to that list — a
+shape you have had since **പച്ച** and **മഞ്ഞ**, back among the colours.
+
+**That changes nothing about how it is used** — it still stands before the noun
+and still does not change:
 
 | | |
 |---|---|
