@@ -1,8 +1,8 @@
 ## HL-C401 — two lessons say a chillu unfurls when anything follows it, and the corpus keeps eight words where it does not
 
 Found in the fourth review round on Malayalam chapter 97, which had inherited the
-same wording. Chapter 97 is fixed; **`ML-C70-um-more` is not**, and a learner
-meets both.
+same wording. Chapter 97 is fixed, and **`ML-C87-accusative` was fixed with it** because chapter
+97 cites it by name. **`ML-C70-um-more` is not**, and a learner still meets it.
 
 ### The claim
 
@@ -18,6 +18,16 @@ meets both.
 A chillu reverts **only before a vowel**, because a chillu cannot carry a vowel
 sign. Before a consonant it stays. Eight words already in the learner's
 vocabulary keep theirs:
+
+### The sites
+
+| lesson | wording | status |
+|---|---|---|
+| `ML-C97-alla-sundaram` | inherited it | **fixed** |
+| `ML-C87-accusative` | *"the chillu is the shape a consonant takes at the end of a word, and here it is no longer at the end"* — predicts ✗*നിങ്ങളിക്ക് | **fixed**, because chapter 97 points the learner at it by name |
+| `ML-C70-um-more` | *"putting anything after it gives the full letter back"*, and its Wrap-up drills it | **open** |
+
+### The words that refute it
 
 | word | where |
 |---|---|
@@ -41,8 +51,8 @@ the words that refute it are ones they already say.
 
 Narrow both sentences to the vowel condition, and give the reason, which is the
 part that makes it memorable: **a chillu has no way to carry a vowel, so a vowel
-forces the full letter back; a consonant does not.** Chapter 97 now words it that
-way and cites നിങ്ങൾക്ക് and കേൾക്കൂ as the counter-examples.
+forces the full letter back; a consonant does not.** Chapter 97 and ML-C87 now word it that way; chapter 97 cites നിങ്ങൾക്ക് as the
+counter-example.
 
 Same family as `HL-C400`: an early lesson stating a universal that later lessons
 break, with no gate able to see it.
