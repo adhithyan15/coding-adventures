@@ -1120,7 +1120,7 @@ mod mosaic_ffi {
             .map(|message| format!(",\"error\":{}", json_string(message)))
             .unwrap_or_default();
         let value = format!(
-            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
+            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
             json_string(&props.address),
             json_string(&props.page_title),
             json_string(&props.status_text),
@@ -1130,6 +1130,7 @@ mod mosaic_ffi {
             props.bookmark_disabled,
             props.copy_address_disabled,
             props.open_page_disabled,
+            props.save_page_disabled,
             props.view_source_disabled,
             props.find_open,
             json_string(&props.find_query),
@@ -1194,6 +1195,7 @@ mod mosaic_ffi {
             "onToggleBookmark" => Some(BrowserChromeEvent::ToggleBookmark),
             "onCopyAddress" => Some(BrowserChromeEvent::CopyAddress),
             "onOpenPageInNewWindow" => Some(BrowserChromeEvent::OpenPageInNewWindow),
+            "onSavePage" => Some(BrowserChromeEvent::SavePage),
             "onViewSource" => Some(BrowserChromeEvent::ViewSource),
             "onFindOpen" => Some(BrowserChromeEvent::FindOpen),
             "onFindChange" => string_arg(value).map(BrowserChromeEvent::FindChange),

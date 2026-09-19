@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Map the shared Save Page event and disabled state through the existing typed
+  download effect for Qt, Flutter, and Compose.
+
 - Map the shared Open in New Window event and disabled state through the
   existing typed browsing-context effect for Qt, Flutter, and Compose.
 

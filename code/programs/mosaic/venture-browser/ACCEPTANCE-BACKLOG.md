@@ -5,6 +5,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - shared current-page download transaction.**
+  Add one Mosaic-authored Save Page control that resolves the committed page
+  URL in core and reuses the typed download effect. Preserve the editable
+  address draft and current history while locking event, disabled-state,
+  serialization, presenter, and live native-control acceptance across every
+  generated host.
+
 - [x] **P1 browser convergence - shared open-page browsing context transaction.**
   Add one Mosaic-authored Open in New Window control that resolves the
   committed history URL in core and reuses the typed browsing-context effect.
