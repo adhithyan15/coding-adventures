@@ -740,6 +740,7 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
   for (const lesson of schema2Lessons) {
     const id = lesson.realization.lessonId;
     const known = prerequisiteKnowledge(lesson);
+    const languageAtoms = atomOwner.get(lesson.language) ?? new Map<string, string>();
     for (const atom of stringList(lesson.frontmatter["requires.knowledge"])) {
       if (!known.has(atom)) {
         error(
@@ -752,7 +753,16 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
       ...known,
       ...stringList(lesson.frontmatter["introduces.knowledge"]),
     ]);
+    const unknownPractisedAtoms = new Set<string>();
     for (const atom of stringList(lesson.frontmatter["practises.knowledge"])) {
+      if (!languageAtoms.has(atom)) {
+        unknownPractisedAtoms.add(atom);
+        error(
+          "schema-v2-unknown-practised-knowledge",
+          `${id}: practised atom '${atom}' is not introduced anywhere in ${lesson.language}`,
+        );
+        continue;
+      }
       if (!available.has(atom)) {
         error(
           "schema-v2-practice-before-introduction",
@@ -856,6 +866,7 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
       }
     }
     for (const atom of lessonPractises) {
+      if (unknownPractisedAtoms.has(atom)) continue;
       if (!assessedInBlocks.has(atom)) {
         error(
           "schema-v2-block-assessment-missing",

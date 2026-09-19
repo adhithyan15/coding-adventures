@@ -253,13 +253,31 @@ Recall it.`,
           ["TEST-LEX-FUTURE"],
           ["TEST-LEX-HELLO"],
           ["TEST-GRAMMAR-FUTURE"],
-        ),
+        ).replaceAll("assesses=[TEST-GRAMMAR-FUTURE]", "assesses=[]"),
         "test",
       ),
     ];
     const codes = validateCurriculum({ registry, taxonomy, spine, lessons }).map((issue) => issue.code);
     expect(codes).toContain("schema-v2-knowledge-not-closed");
+    expect(codes).toContain("schema-v2-unknown-practised-knowledge");
+    expect(codes).not.toContain("schema-v2-practice-before-introduction");
+    expect(codes).not.toContain("schema-v2-block-assessment-missing");
+  });
+
+  it("distinguishes an existing but unavailable atom from an unknown practised atom", () => {
+    const lessons = [
+      parseLesson(
+        sourceV2("A", 20, [], [], ["TEST-GRAMMAR-FUTURE"], ["TEST-GRAMMAR-FUTURE"]),
+        "test",
+      ),
+      parseLesson(
+        sourceV2("B", 10, [], [], ["TEST-LEX-HELLO"], ["TEST-GRAMMAR-FUTURE"]),
+        "test",
+      ),
+    ];
+    const codes = validateCurriculum({ registry, taxonomy, spine, lessons }).map((issue) => issue.code);
     expect(codes).toContain("schema-v2-practice-before-introduction");
+    expect(codes).not.toContain("schema-v2-unknown-practised-knowledge");
   });
 
   it("rejects block assessments before their atoms reach the block frontier", () => {
