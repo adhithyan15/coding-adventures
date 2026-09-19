@@ -13770,6 +13770,37 @@ unique owners and 1,436 dependency edges: 215 merged, 608 pending, and exactly
 this owner in progress. The graph is dependency-complete, acyclic, and has no
 merged owner depending on unfinished work.
 
+### Post-PR #15559 refresh and graph/diff contract-coverage selection
+
+PR #15559 completed all 47 reported final-head checks acceptably: 40
+successes, six expected skips, and one neutral result. GitHub reported the
+reviewed head conflict-free, guarded squash auto-merge was enabled, and GitHub
+merged the CI-gate ceiling as
+`7376434a621119f9b2ea4ef88f7408e45d0fdfa9` without a manual merge command.
+
+The exact merged-main collision-checked schema-3 inventory remains unchanged:
+15 established lanes, 1,441 implementation identities, 4,666 implementation
+slots, and 1,481 all-reported identities. Its completion bands remain 175/265,
+123/934, 181/2,282, and 962/13,468; Rust has 782 singleton identities,
+emerging OCaml has five packages, and canonical collisions and unknown language
+buckets remain zero. Parallel lane review found no new package root, manifest,
+BUILD marker, eligible unowned package gap, or missing OCaml promotion owner.
+
+JVM preparation did expose one neutral contract-coverage prerequisite before
+the larger Java/Kotlin core. The graph contract names a canonical edge set but
+does not define edge order, and every existing graph fixture happens to provide
+already sorted input. All six diff fixtures use `strict_globs`, while every
+`forced_packages` list is empty, so an engine can omit `package_prefix` and
+forced seed/closure behavior without failing the shared corpus. The new
+`build-tool-neutral-graph-diff-contract-coverage-completion` owner defines
+ordinal prerequisite-then-dependent edge ordering, adds unsorted-edge,
+positive package-prefix, and forced-package closure cases, and updates the
+independent Python oracle plus canonical Go consumer. JVM, Dart, OCaml,
+Haskell, Swift, and the all-language adapter closure depend on this evidence.
+It is the smallest ready process-free prerequisite and the highest-priority
+candidate for the fresh serial delivery slot before the paired Java/Kotlin
+graph/diff implementation.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

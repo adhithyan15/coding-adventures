@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 15559,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/15559",
-    "branch": "codex/build-tool-ci-gate-match-ceiling-20260919",
-    "implementation_revision": "9f921dedf37b3aeb981598306040c0b469f72ec5",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-19T11:26:51Z",
+    "observed_at": "2026-09-19T12:16:13Z",
     "pr_number": 15559,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #15559 is open at exact implementation revision 9f921dedf37b3aeb981598306040c0b469f72ec5. GitHub reports the branch mergeable with no conflict, while the initial CI, CodeQL detection, and human-language detection checks are queued or in progress. Auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "All 47 reported final-head checks completed acceptably: 40 successes, six expected skips, and one neutral result. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #15559 as 7376434a621119f9b2ea4ef88f7408e45d0fdfa9 without a manual merge command."
   },
   "last_inventory": {
-    "revision": "9f9e0876af87bece37a4792a9d5d0d00d240ed66",
+    "revision": "7376434a621119f9b2ea4ef88f7408e45d0fdfa9",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1441,
@@ -1034,7 +1028,7 @@
     {
       "id": "build-tool-ci-gate-selection-match-work-ceiling",
       "title": "Bound language-neutral CI-gate selection match work",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-diff-selection-match-work-ceiling"],
       "branch": "codex/build-tool-ci-gate-match-ceiling-20260919",
       "pr_number": 15559,
@@ -1048,6 +1042,10 @@
       "validation_notes": "Specification-first and red-test execution proved that the prior language-neutral CI-gate oracle and canonical Go engine admitted the schema's multiplicative gate-pattern/file workload without an operation-wide ceiling, while the Go globstar matcher could revisit equivalent states. The final 154-case, 285-file neutral corpus validates across 16 implementations and 15 established lanes. All 109 Python schema and semantic runner tests pass, including exact 50,000,000-unit admission, first-unit overflow failure, Unicode-scalar accounting, full-product charging, validation and run-all precedence, and no partial outputs. The complete Go suite passes under the race detector with coverage; internal/cigates reaches 88.8% and internal/globmatch 97.7%. Go vet, gofmt, trimpath build, the real front-door no-plan/no-GITHUB_OUTPUT mutation regression, neutral character-class differentials, package-parity inventory, strict state graph, repository documentation build and shard checks, JSON, npm high-severity audit, and diff hygiene pass. The exact-main schema-3 inventory remains collision-clean with zero unknown buckets at 15 established lanes, 1,441 implementation identities, 4,666 slots, and five emerging OCaml packages.",
       "security_notes": "Independent security review issued SHIP after four findings were corrected: native registry validation now precedes every bypass and ceiling decision, enforces neutral cardinality and scalar bounds plus the complete Windows reserved-name set, and rejects ambiguous or descending character classes; the Go engine uses checked remaining-budget arithmetic and returns no partial selection; the memoized globstar and segment matcher has no shared mutable state; and isolated neutral fixtures distinguish Python fnmatchcase character-class semantics from host filepath.Match behavior. The implementation adds no Git, filesystem, process, environment, network, credential, native-link, or execution authority and no dependency.",
       "publication_notes": "Opened ready-for-review PR #15559 after a normal first push from exact origin/main 9f9e0876af87bece37a4792a9d5d0d00d240ed66. Immediately before publication, the worktree was clean, no other active parity PR or prior same-branch PR existed, and all 23 changed paths had zero exact overlap across the 12 other open PRs. GitHub reports the branch mergeable with initial CI, CodeQL detection, and human-language detection checks queued or in progress, so auto-merge remains disabled until every required check is terminal and acceptable.",
+      "merged_head_revision": "226b7d8a97aa0b1108805488ac83547715486e1f",
+      "merged_at": "2026-09-19T12:16:13Z",
+      "merge_revision": "7376434a621119f9b2ea4ef88f7408e45d0fdfa9",
+      "merge_notes": "All 47 reported final-head checks completed acceptably: 40 successes, six expected skips, and one neutral result. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #15559 without a plain manual merge command.",
       "notes": "The validated CI-gate schema admits 128 gates times 4,096 path globs times 8,192 changed files, while the Python oracle and Go evaluator have no operation-wide preflight ceiling and Go globstar recursion is not memoized. Define a fixed 50,000,000 Unicode-scalar work-unit budget over the full gate-path and changed-file Cartesian product, preserve validated run-all bypasses and structural precedence, fail with exact CI_GATE_MATCH_LIMIT_EXCEEDED before any matcher call, memoize Go globstar states, add exact-at-limit and over-limit neutral fixtures, and update every current and future CI-gate consumer dependency without adding host or workflow authority."
     },
     {
@@ -1938,6 +1936,15 @@
       "rebase_notes": "The five-commit branch rebased without conflict through exact origin/main 5778c35c3c83c65f2a4f0eebc99e778cd15b70b4. Intervening x86-64 gate-level, Algol result-composition, ARMv7 functional-simulator, Hindi, Mosaic conformance/root-resolution, VisiCalc file-effect, FLOW-MATIC VM/JIT, and ARMv7 gate-level changes have zero exact path overlap with the tranche. The refreshed collision-clean inventory has 15 established lanes, 1,422 implementation identities, 4,642 slots, 1,461 all-reported identities, bands 175/265, 123/934, 176/2,217, and 948/13,272, 763 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Parallel audits registered the x86-64 and ARMv7 gate-level, six-lane ARM simulator, and OCaml three-platform native-build-tool CI owners before publication.",
       "validation_notes": "Specification-first changes close process-free graph edge direction, deterministic Kahn levels, stable GRAPH_CYCLE and DIFF_UNKNOWN_PATH failures, and explicit 4,096-node/16,384-edge bounds. Test-first execution failed on the deliberately absent graph schema and cases before implementation. The final shared conformance family passes 237 tests with 23 expected platform skips; its focused post-rebase graph/diff suite passes, the 146-case corpus validates 285 retained files, and the separate execution contract remains valid. The canonical Go directed-graph package passes tests, vet, its literal BUILD front, and 95.4% statement coverage. The complete Go build tool passes all packages, vet, trimpath build, and its literal BUILD front; a fresh real diff dry run evaluates 45 Starlark files, discovers 5,159 packages, keeps the five reviewed orphan entries clean, reports no package files changed, and selects the shared build-tool conformance and adjacent-stdlib contract gates. Branch-aware Python coverage measured 85% for the shared conformance runner before the conflict-free rebases. The exact-main package report is schema 3 and collision-clean at 1,422 identities and 4,642 slots; the 753-owner state is strict-JSON-valid, unique, dependency-complete, acyclic, and free of merged-to-unfinished edges at 211 merged, 541 pending, and exactly this owner in progress. Ruff reproduces nine existing findings and three existing formatting fronts in the touched Python files; no new changed-line finding remains. Bandit reports zero medium/high issue and only seven existing low-severity test-only fixed-argv subprocess notices. An independent exact-final-diff security review passed after exercising the maximum 4,096-node/16,384-edge shape and confirming closed schemas, iterative O(V+E) traversal, fail-closed errors, and no authority expansion. No dependency, Git, filesystem, process, environment, network, credential, native-link, or execution authority was added.",
       "notes": "Discovered by the parallel all-language build-tool audit after PR #14352. The normative neutral contract requires isolated nodes, chains, diamonds, multiple components, cycles, affected and prerequisite closures, deterministic levels, failure propagation, and both unknown-path policies, but build-tool-v1 currently has only graph-diamond plus three successful diff cases and no DIFF_UNKNOWN_PATH error fixture. Add the missing process-free fixtures, schemas, reference-runner assertions, README/changelog correction, and exact case-count validation. Failure-propagation fixtures that require trusted execution remain under build-tool-execution-semantics-corpus rather than expanding this process-free owner."
+    },
+    {
+      "id": "build-tool-neutral-graph-diff-contract-coverage-completion",
+      "title": "Close neutral graph and diff mode coverage",
+      "status": "pending",
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by parallel JVM preparation while PR #15559 was active. The neutral graph contract calls for canonical edges but neither defines their order nor supplies unsorted input; all six diff cases use strict_globs and an empty forced_packages list, so package_prefix and forced seed/closure semantics can be omitted without failing the shared corpus. Define ordinal prerequisite-then-dependent edge order, add an unsorted-edge case, specify forced packages as changed-set seeds before dependent and prerequisite closure, add positive package_prefix and forced-package cases, and update the Python oracle plus canonical Go consumer without adding filesystem, Git, process, environment, network, credential, native-link, or execution authority."
     },
     {
       "id": "build-tool-cli-parser-corpus",
@@ -2848,7 +2855,7 @@
       "title": "Close Haskell native build-tool adapter conformance",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-extra-ci-toolchain-declaration-conformance", "build-tool-haskell-dune-build-discovery-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-haskell-orphan-crate-validation-conformance", "build-tool-haskell-tracked-artifact-validation-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-cli-parser-adoption", "build-tool-haskell-starlark-metering-adoption", "build-tool-haskell-validation-oracle-adoption"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-extra-ci-toolchain-declaration-conformance", "build-tool-haskell-dune-build-discovery-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-haskell-orphan-crate-validation-conformance", "build-tool-haskell-tracked-artifact-validation-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-cli-parser-adoption", "build-tool-haskell-starlark-metering-adoption", "build-tool-haskell-validation-oracle-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Haskell build-tool lane gate materialized by the post-#14615 audit. After every native correctness child lands, add a real adapter and run the entire versioned neutral corpus, including the completed graph/diff cases, through the Haskell front door with no undeclared expected failures. Keep this owner selection-blocked until the native retained-handle snapshot design and all listed children are complete."
@@ -2858,7 +2865,7 @@
       "title": "Close Swift native build-tool adapter conformance",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-swift-diff-selection-match-work-ceiling-adoption", "build-tool-swift-extra-ci-toolchain-declaration-conformance", "build-tool-swift-dune-build-discovery-exclusion", "build-tool-swift-windows-test-front-failure-propagation", "build-tool-swift-language-source-input-registry-adoption", "build-tool-swift-repository-source-input-boundary-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-swift-portable-source-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-swift-dist-newstyle-discovery-exclusion", "build-tool-swift-rockspec-utf8-conformance", "build-tool-swift-windows-absolute-file-options", "build-tool-swift-language-identity-registry", "build-tool-swift-orphan-crate-validation-conformance", "build-tool-swift-tracked-artifact-validation-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-swift-cli-parser-adoption", "build-tool-swift-starlark-metering-adoption", "build-tool-swift-validation-oracle-adoption"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-swift-diff-selection-match-work-ceiling-adoption", "build-tool-swift-extra-ci-toolchain-declaration-conformance", "build-tool-swift-dune-build-discovery-exclusion", "build-tool-swift-windows-test-front-failure-propagation", "build-tool-swift-language-source-input-registry-adoption", "build-tool-swift-repository-source-input-boundary-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-swift-portable-source-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-swift-dist-newstyle-discovery-exclusion", "build-tool-swift-rockspec-utf8-conformance", "build-tool-swift-windows-absolute-file-options", "build-tool-swift-language-identity-registry", "build-tool-swift-orphan-crate-validation-conformance", "build-tool-swift-tracked-artifact-validation-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-swift-cli-parser-adoption", "build-tool-swift-starlark-metering-adoption", "build-tool-swift-validation-oracle-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Swift build-tool lane gate materialized by the post-#14615 audit. After every native correctness child lands, add a real adapter and run the entire versioned neutral corpus, including the completed graph/diff cases, through the Swift front door with no undeclared expected failures. Keep this owner selection-blocked until all listed snapshot, path, hashing, registry, fixture, and validator children are complete."
@@ -2876,6 +2883,7 @@
         "ocaml-build-tool-current-contract-conformance",
         "ocaml-build-tool-three-platform-ci-execution",
         "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
         "build-tool-diff-selection-match-work-ceiling-remaining-engines",
         "build-tool-execution-semantics-corpus",
         "build-tool-ci-gate-registry-established-lane-parity",
@@ -3094,6 +3102,7 @@
         "build-tool-pure-domain-corpus",
         "build-tool-execution-semantics-corpus",
         "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-neutral-graph-diff-contract-coverage-completion",
         "build-tool-diff-selection-match-work-ceiling"
       ],
       "branch": null,
@@ -9230,7 +9239,7 @@
       "id": "build-tool-jvm-process-free-graph-diff-core",
       "title": "Implement Java and Kotlin build-tool graph and diff-selection cores",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#14615 all-language build-tool audit. Implement separate idiomatic Java and Kotlin process-free cores over the same closed graph/diff fixtures, with deterministic bounded topology and closure behavior, stable GRAPH_CYCLE and DIFF_UNKNOWN_PATH errors, strict portable globs, and no filesystem, Git, process, environment, network, credential, or execution authority. This bounded owner prevents both JVM lanes from waiting on the larger sandbox/execution chain and becomes a prerequisite of the full JVM build tools."
@@ -9239,7 +9248,7 @@
       "id": "build-tool-dart-process-free-graph-diff-core",
       "title": "Implement Dart build-tool graph and diff-selection cores",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#14519 all-language build-tool audit. Implement only the process-free graph and diff-selection domains against the closed neutral corpus, with deterministic topology, cycle errors, closures, unknown-path policies, bounded inputs, and no filesystem, Git, process, environment, network, or credential authority. This bounded core becomes a prerequisite of the full Dart build tool rather than claiming a complete adapter."
