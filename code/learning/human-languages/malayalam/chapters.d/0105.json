@@ -1,0 +1,17 @@
+{
+  "chapter": 105,
+  "title": "Places",
+  "label": "ch:ml-places",
+  "canDo": "I can name a country, a town, a city and a capital, and say what kind of place Kerala and India are.",
+  "payoff": {
+    "lesson": "ML-R105-places-recall",
+    "kind": "production",
+    "summary": "From cold: the scale of places, and the one word on it that does not sort by size.",
+    "assesses": [
+      "ML-LEX-C105-COUNTRY-01",
+      "ML-LEX-C105-CITY-01",
+      "ML-LEX-C105-CAPITAL-01"
+    ],
+    "note": "THE NOTE WAS STALE IN THE DOMAIN MODE AGAIN, AND A GATE CAUGHT WHAT MY NOTE-CHECK MISSED. LEX-50 said \"naadu ('home country') only\". naaTu is ML-C55-homeland -- and ML-C80-uuru (2760) ALSO teaches uuru, 'a town, a village, the settled place somebody is from', and already builds a scale out of the two: uuru is one settlement, naaTu floats from a district to a country. I verified the five words the note implies are missing -- raajyaM, nagaraM, thalasthaanaM, graamaM, paTTaNaM, all correctly absent -- and did not check what else the DOMAIN already held. The duplicate-concept gate did: the draft's paTTaNaM collided with ML-NOUN-TOWN, which is ML-C80-uuru's tag. Fourth stale-note mode in four tranches, and the first a GATE caught rather than a reader. THE COLLISION IMPROVED THE CHAPTER. paTTaNaM is DROPPED rather than renamed, because 'a town' is a concept this corpus already teaches and a second word for it is not a gap. What was genuinely missing is the TOP of the scale -- a word that does NOT float, where naaTu does -- the LARGE settlement, and the functional word. Three new words instead of four, and the point closes on those plus ML-LEX-C80-ORIGIN-01, which is uuru: the label's four halves are all delivered, one of them in chapter 80. ML-C105-nagaram now draws its contrast against a word the learner OWNS rather than one introduced three lessons earlier, which is better teaching as well as a smaller chapter. WHAT THE CITY LESSON REFUSES TO CLAIM: that nagaraM and uuru divide by SIZE. They overlap; nagaraM is Sanskrit and formal, uuru is Dravidian and everyday, and the same place can take either. The lesson says the reliable difference is REGISTER, not population, rather than teaching a tidy rule Malayalam does not keep. EVERY GLYPH WAS ALREADY SCRIPT-TAUGHT AND ALREADY IN USE IN HEADWORDS, checked against data before drafting -- no repeat of chapter 103's U+0D20. ROMANIZATIONS COPIED FROM NAMED WITNESSES: sth from kaalaavastha (ML-C20-kalavastha), th from ML-S130-letter-tha plus atithi, katha and mithunaM. talasthaanaM opens with thala, the head from ML-C13's body-part bundle, and its second half sthaanaM is given in ROMANIZATION ONLY because no lesson teaches it -- the treatment palli and kooTaM got in chapter 103. ONE INVENTED EXAMPLE CAUGHT BEFORE THE FIRST VALIDATE: the draft wrote 'indya oru raajyaM', and oru is taught NOWHERE. It is the open point ML-A1-ART-02, which records that this corpus already uses oru untaught in six lessons; writing a seventh would have deepened a debt the inventory is tracking. THE THREE CORPUS-WIDE CEILINGS WERE CHECKED IN DRAFT RATHER THAN AFTER -- zero chapter-number references, zero RULE_PATTERNS hits, zero banned words, greps run before the suite. The full suite passed on the FIRST run for this chapter, the first time in four that it has."
+  }
+}

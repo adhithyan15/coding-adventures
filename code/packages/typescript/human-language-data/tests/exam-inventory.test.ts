@@ -2569,8 +2569,35 @@ describe("the committed Malayalam A1 inventory", () => {
     // THE CHAPTER REFUSES ONE CLAIM: Malayalam's dedicated progressive in
     // -koNTirikkunnu is not taught and is not claimed. At A1 the simple present
     // IS how ongoing action is said, which is what this point asks for.
-    expect(coverage.covered).toBe(211);
-    expect(coverage.unmapped).toBe(32);
+    // 211 -> 212: ML-A1-LEX-50, geography. THE PERCENTAGE HOLDS at 87 (212/243 is
+    // 87.2); recomputed, not carried. THE NOTE WAS STALE IN THE DOMAIN MODE AGAIN,
+    // AND A GATE CAUGHT WHAT MY NOTE-CHECK MISSED. It said "naadu ('home country')
+    // only". naaTu is ML-C55-homeland, and ML-C80-uuru (2760) ALSO teaches uuru --
+    // "a town, a village, the settled place somebody is from" -- and already builds
+    // a scale out of the two: uuru is one settlement, naaTu floats from a district
+    // to a country. I verified the five words the note implies are missing (all
+    // absent, correctly) and did not check what else the DOMAIN held. The
+    // duplicate-concept gate did: my draft's paTTaNaM collided with ML-NOUN-TOWN,
+    // already ML-C80-uuru's tag.
+    // THE COLLISION IMPROVED THE CHAPTER. paTTaNaM is dropped rather than renamed,
+    // because "a town" is a concept this corpus already teaches and a second word
+    // for it is not a gap. What was genuinely missing is the TOP of the scale (a
+    // word that does not float, where naaTu does), the LARGE settlement, and the
+    // functional word. So three new words -- raajyaM, nagaraM, talasthaanaM -- and
+    // the point closes on those plus ML-LEX-C80-ORIGIN-01, which is uuru. The
+    // label's four halves are all delivered; one of them was delivered in
+    // chapter 80.
+    // EVERY GLYPH WAS ALREADY SCRIPT-TAUGHT AND ALREADY IN USE IN HEADWORDS -- no
+    // repeat of chapter 103's U+0D20. Romanizations copied from named witnesses:
+    // sth from kaalaavastha (ML-C20), th from ML-S130-letter-tha and atithi and
+    // katha. talasthaanaM opens with thala, the head from ML-C13's body-part
+    // bundle, and the second half sthaanaM is given in ROMANIZATION ONLY because
+    // no lesson teaches it -- the ch103 treatment of palli and kooTaM.
+    // ONE INVENTED EXAMPLE WAS CAUGHT BEFORE THE FIRST VALIDATE: the draft wrote
+    // "indya oru raajyaM", and oru is taught NOWHERE -- it is the open point
+    // ML-A1-ART-02, which this corpus has been using untaught in six lessons.
+    expect(coverage.covered).toBe(212);
+    expect(coverage.unmapped).toBe(31);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2617,7 +2644,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 211/243 points covered (87%)",
+      "malayalam A1 (partial inventory): 212/243 points covered (87%)",
     );
   }, 60_000);
 });

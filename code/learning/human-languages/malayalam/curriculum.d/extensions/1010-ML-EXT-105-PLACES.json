@@ -1,0 +1,16 @@
+{
+  "id": "ML-EXT-105-PLACES",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a country, a town, a city and a capital, and say what kind of place Kerala and India are.",
+  "prerequisites": [
+    "ML-EXT-104-PRESENT"
+  ],
+  "lessons": [
+    "ML-C105-raajyam",
+    "ML-C105-nagaram",
+    "ML-C105-thalasthaanam",
+    "ML-R105-places-recall"
+  ]
+}

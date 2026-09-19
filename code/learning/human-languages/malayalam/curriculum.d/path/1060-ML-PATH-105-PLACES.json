@@ -1,0 +1,15 @@
+{
+  "id": "ML-PATH-105-PLACES",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ML-C105-raajyam",
+    "ML-C105-nagaram",
+    "ML-C105-thalasthaanam",
+    "ML-R105-places-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-105-PLACES"
+  ],
+  "after": []
+}
