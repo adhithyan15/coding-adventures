@@ -38,8 +38,9 @@ describe("bounded stream fan-out", () => {
     });
 
     const [left, right] = fanOut.branches;
-    expect(await collect(left!)).toEqual([0, 1, 2, 3]);
-    expect(await collect(right!)).toEqual([0, 1, 2, 3]);
+    const [leftValues, rightValues] = await Promise.all([collect(left!), collect(right!)]);
+    expect(leftValues).toEqual([0, 1, 2, 3]);
+    expect(rightValues).toEqual([0, 1, 2, 3]);
     expect(opened).toBe(1);
     expect(pulls).toBe(5);
     expect(fanOut.stats().upstreamPulls).toBe(5);
