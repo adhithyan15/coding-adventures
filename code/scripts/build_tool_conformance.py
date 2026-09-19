@@ -3916,10 +3916,7 @@ def _validate_pure_result_semantics(
                 )
             return
         canonical_levels = [sorted(level) for level in payload["levels"]]
-        if (
-            outcome != "ok"
-            or (payload["edges"], canonical_levels) != expected_graph
-        ):
+        if outcome != "ok" or (payload["edges"], canonical_levels) != expected_graph:
             raise ConformanceError(
                 f"{prefix}_GRAPH_RESULT_INVALID",
                 "graph result does not match the independent topology oracle",
