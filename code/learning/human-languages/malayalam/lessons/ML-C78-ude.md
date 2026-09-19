@@ -73,7 +73,6 @@ book own something.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C78-GENITIVE-UDE-01, ML-GRAMMAR-C78-GENITIVE-NRE-01] -->
 
-[PAUSE 3s] Which ending does **അമ്മ** take, and why? (**-യുടെ** — it ends in a
-vowel.) How do you say *mother's book*? (***അമ്മയുടെ പുസ്തകം***.) And who picks
-the ending — you,
-or the noun? (**The noun**.)
+[PAUSE 3s] Which ending does **അമ്മ** take? (**-യുടെ**.) How do you say
+*mother's book*? (***അമ്മയുടെ പുസ്തകം***.) And who picks the ending — you, or
+the noun? (**The noun**.)

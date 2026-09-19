@@ -1,5 +1,14 @@
 ## HL-C402 — the genitive's rule table sends a vowel-final noun to the wrong column, and its recall drills the wrong answer
 
+**Status: CLOSED (2026-09-19), after a third enumeration.** The recorded second
+attempt fixed the main explanations but missed two surviving claims outside the
+three passages it named: `ML-C78-ude` still answered *why* **അമ്മ** takes
+**-യുടെ** with *"it ends in a vowel"*, and `ML-C84-mukalil` still said the
+ending *"picks its shape by the last sound"*. Both now ask or state only the
+noun-specific facts the corrected lesson actually teaches. A fresh sweep of
+`ML-C78-ude`, `ML-R78-genitive-recall`, and `ML-C84-mukalil` finds no remaining
+last-sound rule.
+
 Found in the re-review of Malayalam chapter 98, which narrowed eight lessons
 that attributed a **യ** glide to vowel-hood rather than to a particular vowel.
 Three lessons carry the same defect **in the genitive**, where it is not a glide

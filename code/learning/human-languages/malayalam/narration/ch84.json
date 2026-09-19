@@ -4,7 +4,7 @@
   "chapter": 84,
   "title": "Where A Thing Is",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:16da305ab3b8f3c6",
+  "sourceHash": "fnv1a64:14dfdc5fd919eba8",
   "lessons": [
     {
       "id": "ML-C84-mukalil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c50f58459b452f36",
+      "sourceHash": "fnv1a64:5dee4c32333248c0",
       "notice": null,
       "blocks": [
         {
@@ -79,7 +79,7 @@
             },
             {
               "kind": "speech",
-              "text": "So this costs you no new grammar either. The owner-ending is the one from the genitive chapter, unchanged, and it picks its shape by the last sound of the noun exactly as it did there."
+              "text": "So this costs you no new grammar either. The owner-ending is the one from the genitive chapter, unchanged: കസേര takes -യുടെ, just as അമ്മ did there."
             },
             {
               "kind": "speech",
