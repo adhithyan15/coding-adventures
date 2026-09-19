@@ -4,7 +4,7 @@
 
 **Scope:** functional and gate-level Rust simulators for every CPU target in the
 07-series, followed by a complete cross-language port wave
-**Last reprioritized:** 2026-08-31
+**Last reprioritized:** 2026-09-19
 
 ## Definition of the matrix
 
@@ -90,10 +90,13 @@ according to the current prioritization run.
 | RCPU-045 / RCPU-046 | 2010 | RISC-V RV64I + M | Complete: `riscv-rv64i-simulator` | Complete: `riscv-rv64i-gatelevel` |
 | RCPU-047 / RCPU-048 | 2011 | AArch64 (ARMv8-A) | Complete: `aarch64-simulator` | Complete: `aarch64-gatelevel` |
 | RCPU-049 / RCPU-050 | 2020 | Apple M1 (AArch64 + NEON) | Complete: `apple-m1-simulator` | Complete: `apple-m1-gatelevel` |
+| RCPU-051 / RCPU-052 | 1965 / 1970 | DEC PDP-8 ISA / PDP-8/E implementation | Complete locally: `pdp8-simulator` | Next: `pdp8-gatelevel` |
 
-Current selection: **PORT-001**, language-neutral conformance vectors for the
-completed Rust pairs. RCPU-050 closes the chronological Rust architecture
-matrix locally while earlier completed cells continue publishing one at a time.
+Current selection: **RCPU-051 / RCPU-052**, the first source-backed historical
+expansion pair after the original 07a–07z matrix. The functional PDP-8/E base
+processor is complete locally; its gate-level partner follows against that
+behavioral oracle. PORT-001 remains a separate unpublished branch and must not
+be assumed present on `main`.
 
 RCPU-047 is complete locally. The new `aarch64-simulator` owns exact 64 KiB
 big-endian state, 32x64-bit GPR storage with XZR enforced, separate 64-bit SP

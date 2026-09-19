@@ -1228,4 +1228,5 @@ members = [
   "cdc6600-gatelevel",
   "pdp11-simulator",
   "pdp11-gatelevel",
+  "pdp8-simulator",
 ]
