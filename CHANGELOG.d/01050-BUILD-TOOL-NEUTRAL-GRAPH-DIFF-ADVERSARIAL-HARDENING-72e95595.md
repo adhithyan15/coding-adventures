@@ -1,4 +1,4 @@
-# Build-tool neutral graph/diff adversarial hardening
+### Build-tool neutral graph/diff adversarial hardening
 
 - Expand the language-neutral graph and diff-selection corpus from 14 to 19
   cases with empty and partial-cycle graphs, portable character-class globs,
