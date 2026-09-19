@@ -107,6 +107,20 @@ Each set has one disposition:
    whose expected bytes were not captured upstream; requires a reason and
    local harness.
 
+Disposition states what a fixture is intended to prove; it does not rewrite
+history. Every set separately records its **current expected-output
+provenance** as `documented_release`, `unverified`, or `local`. A documented
+release requires a release tag and an evidence path. An unverified fixture is
+still assigned the normalized `v20260915` refresh command, but the manifest
+must not claim that its present bytes came from that command. CCR-004 changes
+the current provenance only after executing the pinned artifact and reviewing
+the resulting bytes.
+
+Each set also declares where its assertions live: `expected_stdout` requires a
+checked-in `expected.stdout` for every fixture, while `inline_harness` records
+diagnostic/status or structural assertions embedded in the named Rust harness.
+This distinction covers failure fixtures without inventing empty golden files.
+
 The 462 `minify_*` fixtures form one explicit `upstream_golden` cohort and are
 the only automatic input to CCR-004. The remaining 164 directories are still
 classified by v0.3, but classification does not manufacture an upstream
