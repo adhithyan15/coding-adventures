@@ -116,6 +116,13 @@ same provider and trace. Only exact HTTP 200 permits deletion of the original
 revision, so confidential-profile mismatch, missing or ineligible token data,
 transport or provider failure, and a concurrent revision change retain local
 credentials. These slices add no concrete network implementation.
+The generic usable-access and forced-refresh entry points are explicitly bound
+to registered public-client profiles. The opaque account key must select a
+provider retaining `none` before credential metadata, refresh-token custody,
+clock, transport, or token-use closure access. Fresh public credentials cross
+only the audited custody disclosure; due or explicitly refreshed credentials
+cross the existing audited refresh and revision-bound rotation path.
+Confidential bindings fail before custody and retain their credential record.
 The usable-access composition applies that same retained client-secret policy
 before even reading credential metadata. A still-fresh access token reaches
 only the existing audited custody closure and invokes neither secret custody nor
