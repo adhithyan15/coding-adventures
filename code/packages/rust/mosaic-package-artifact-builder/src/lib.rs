@@ -182,8 +182,8 @@ pub struct DegradationReport {
     /// elsewhere (the "C1 elevation tokens" backlog item), and hard-
     /// failing on them today would redden the currently-green
     /// `native-complete` gate for packages that already ship with them.
-    /// Currently populated for the XAML backend only — see
-    /// `mosaic_emit_xaml::pipeline::dropped_style_properties`.
+    /// Populated by each audited native emitter: XAML, SwiftUI, Compose, Qt,
+    /// and Flutter. Each backend owns its own occurrence-aware lowering facts.
     pub style_degradations: Vec<Degradation>,
     /// Generated files this package's `[host_assets]` overwrote.
     ///
@@ -864,7 +864,11 @@ fn literal_length(value: &str) -> Option<f64> {
     // parse as f64 here but are DROPPED by that emitter, which would leave
     // a box sized by its content carrying a radius resolved against a
     // width it never applied.
-    if v.is_empty() || !v.bytes().all(|b| b.is_ascii_digit() || b == b'.' || b == b'-') {
+    if v.is_empty()
+        || !v
+            .bytes()
+            .all(|b| b.is_ascii_digit() || b == b'.' || b == b'-')
+    {
         return None;
     }
     v.parse::<f64>()
@@ -983,9 +987,11 @@ fn declared_colours(style: &mosstyle_compiler::StyleDef) -> HashMap<String, Inhe
 
     let mut out = HashMap::new();
     for (name, instances) in grouped {
-        let state_dependent = instances
-            .iter()
-            .any(|p| p.states.iter().any(|s| s.props.iter().any(|q| q.name == "color")));
+        let state_dependent = instances.iter().any(|p| {
+            p.states
+                .iter()
+                .any(|s| s.props.iter().any(|q| q.name == "color"))
+        });
         let mut bases: Vec<&str> = instances
             .iter()
             // LAST wins, matching every emitter: `PartStyle::base` is a Vec
@@ -1843,10 +1849,9 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                 None,
                 &mut degradations,
             );
-            // issue #12022: style-property drops, XAML only for now (see
-            // `DegradationReport::style_degradations` doc comment for why
-            // this is a separate, non-gating list rather than folded into
-            // `degradations` — and why other backends aren't wired yet).
+            // Issue #12022: audited native style-property drops. See
+            // `DegradationReport::style_degradations` for why this remains a
+            // separate non-gating list until the pinned losses are retired.
             let backend_name = opts.backend.dir_name();
             let mut push_drop = |part: String, name: String, value: String, reason: String| {
                 style_degradations.push(Degradation {
@@ -1903,10 +1908,19 @@ fn analyze_package_degradations_with_runtime_and_tokens(
                         push_drop(d.part, d.name, d.value, d.reason);
                     }
                 }
-                // Flutter is the last backend without drop reporting, so an
-                // empty `styleDegradations` there means "nobody looked" rather
-                // than "nothing was lost" (#12022). Its lowering is being given
-                // a callable seam first; see `flutter_box_style`.
+                Backend::Flutter => {
+                    // Flutter's lowering is scattered across container and
+                    // native-control writers. The reporter runs the real emit
+                    // with per-node read recording so repeated mounts cannot
+                    // hide one occurrence that drops a property (#12022).
+                    for d in mosaic_emit_flutter::pipeline::dropped_style_properties(
+                        &composed.model.component,
+                        &composed.layout.def,
+                        &composed.style,
+                    ) {
+                        push_drop(d.part, d.name, d.value, d.reason);
+                    }
+                }
                 _ => {}
             }
         }
@@ -7646,7 +7660,11 @@ layout Shell {
             .expect("navigation-split capability analysis");
 
             assert!(!report.native_complete, "{backend:?} must remain honest");
-            assert_eq!(report.degradations.len(), 1, "unexpected {backend:?} report");
+            assert_eq!(
+                report.degradations.len(),
+                1,
+                "unexpected {backend:?} report"
+            );
             assert_eq!(
                 report.degradations[0].code,
                 "primitive.navigation-split-unimplemented"
@@ -8345,7 +8363,10 @@ layout Picker {
                 .iter()
                 .filter(|d| d.code == "accessibility.button-selected-unsupported")
                 .collect();
-            assert!(selected.is_empty(), "{backend:?} reported selected buttons: {selected:?}");
+            assert!(
+                selected.is_empty(),
+                "{backend:?} reported selected buttons: {selected:?}"
+            );
             assert!(
                 report.native_complete && report.degradations.is_empty(),
                 "unexpected {backend:?} degradation inventory: {:?}",
@@ -8689,7 +8710,14 @@ layout AccessibleText {
                     .iter()
                     .filter(|entry| entry.code == "typography.font-size-binding-unimplemented")
                     .count(),
-                if matches!(backend, Backend::React | Backend::Electron | Backend::Compose | Backend::Qt | Backend::SwiftUI) {
+                if matches!(
+                    backend,
+                    Backend::React
+                        | Backend::Electron
+                        | Backend::Compose
+                        | Backend::Qt
+                        | Backend::SwiftUI
+                ) {
                     0
                 } else {
                     4
@@ -10012,19 +10040,15 @@ layout NativeEvents {
         assert!(report.native_complete, "got: {report:?}");
     }
 
-    /// A backend with no drop reporting yet must stay empty rather than
-    /// inheriting another backend's list -- an empty `styleDegradations`
-    /// there means "nobody looked", and conflating the two would hide real
-    /// losses behind a green field (#12022).
-    ///
-    /// Flutter is the exemplar because it is now the LAST backend without
-    /// reporting; this test named Qt until Qt gained it.
+    /// Flutter reports what its own lowering drops, and not what it renders.
+    /// This pins both directions: recording nothing and recording everything
+    /// both fail this test.
     #[test]
-    fn a_backend_without_drop_reporting_stays_empty() {
+    fn flutter_reports_its_own_style_drops_and_not_what_it_renders() {
         let pkg = make_package("mosaic-pkg-card", &["Card"]);
         fs::write(
             pkg.path().join("src/Card.msl"),
-            "style Card { part root { box-shadow: \"0 1px 2px #000\" ; } }\n",
+            "style Card { part root { box-shadow: \"0 1px 2px #000\" ; color: \"#ff0000\" ; } }\n",
         )
         .unwrap();
         let out = TempDir::new().unwrap();
@@ -10039,7 +10063,13 @@ layout NativeEvents {
             BuildProfile::NativeComplete,
         )
         .expect("analysis");
-        assert!(report.style_degradations.is_empty(), "got: {report:?}");
+        let drops = &report.style_degradations;
+        assert_eq!(drops.len(), 1, "got: {report:?}");
+        assert_eq!(drops[0].code, "style.property-dropped");
+        assert_eq!(drops[0].primitive.as_deref(), Some("box-shadow"));
+        assert_eq!(drops[0].backend, "flutter");
+        assert_eq!(drops[0].layout_path, "$style.root");
+        assert!(report.native_complete, "got: {report:?}");
     }
 
     // -----------------------------------------------------------------------

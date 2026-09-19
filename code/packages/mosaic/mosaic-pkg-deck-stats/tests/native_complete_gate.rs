@@ -35,11 +35,9 @@
 //! is a fact about the composed application; this is a fact about this package,
 //! and it holds whoever composes it.
 //!
-//! **Covers three backends, not five.** Only XAML, SwiftUI and Compose populate
-//! `style_degradations`; Qt and Flutter fall through the analyzer's `_ => {}`,
-//! whose own comment says an empty list there means "nobody looked" rather than
-//! "nothing was lost" (#12022). The capability assertion above covers all five,
-//! because `collect_native_degradations` is backend-generic.
+//! The style-drop half covers all five native backends: XAML, SwiftUI, Compose,
+//! Qt and Flutter each populate `style_degradations`. The capability assertion
+//! above is independently backend-generic.
 
 use mosaic_package_artifact_builder::{
     analyze_package_degradations, Backend, BuildOptions, BuildProfile,
@@ -106,6 +104,17 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // a percentage width has no direct QML analogue; the emitter declines
     // rather than collapsing it.
     (Backend::Qt, "width"),
+    // ---- Flutter (#12022) ----
+    // These pre-existing losses became measurable when Flutter gained drop
+    // reporting. Each pin is checked below and must disappear with its gap.
+    (Backend::Flutter, "align"),
+    (Backend::Flutter, "border-bottom-style"),
+    (Backend::Flutter, "color"),
+    (Backend::Flutter, "font-size"),
+    (Backend::Flutter, "font-weight"),
+    (Backend::Flutter, "padding-bottom"),
+    (Backend::Flutter, "text-align"),
+    (Backend::Flutter, "width"),
 ];
 
 fn package_root() -> PathBuf {

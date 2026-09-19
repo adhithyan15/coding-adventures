@@ -205,6 +205,41 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // a percentage width has no direct QML analogue; the emitter declines
     // rather than collapsing it.
     (Backend::Qt, "width"),
+    // ---- Flutter (#12022 / UI84) ----
+    //
+    // Flutter was the final backend whose empty style-degradation list meant
+    // "nobody looked". These are the distinct PRE-EXISTING losses found when
+    // the real emitter gained per-node read recording; the 1,226 individual
+    // occurrences stay visible in the report while this list pins the smaller
+    // property vocabulary so a new kind of loss still fails the gate.
+    //
+    // Layout is selected by parent-owned Row/Column/Stack wrappers. These
+    // values have no applicable writer on at least one authored occurrence.
+    (Backend::Flutter, "align"),
+    (Backend::Flutter, "align-items"),
+    (Backend::Flutter, "flex-wrap"),
+    (Backend::Flutter, "justify-content"),
+    (Backend::Flutter, "min-height"),
+    (Backend::Flutter, "text-align"),
+    (Backend::Flutter, "width"),
+    // Native controls and bare text do not share Container's paint/spacing
+    // surface, so these properties remain absent on at least one occurrence.
+    (Backend::Flutter, "background"),
+    (Backend::Flutter, "border-color"),
+    (Backend::Flutter, "border-radius"),
+    (Backend::Flutter, "border-width"),
+    (Backend::Flutter, "padding"),
+    (Backend::Flutter, "padding-bottom"),
+    (Backend::Flutter, "padding-top"),
+    // Flutter draws solid borders only; the CSS style keyword adds no native
+    // information but remains an authored property and is therefore pinned.
+    (Backend::Flutter, "border-bottom-style"),
+    // Typography reaches HostInput and decorated-box paths, but not every
+    // primitive carrying these shared parts.
+    (Backend::Flutter, "color"),
+    (Backend::Flutter, "font-family"),
+    (Backend::Flutter, "font-size"),
+    (Backend::Flutter, "font-weight"),
 ];
 
 #[test]
@@ -231,7 +266,6 @@ fn engram_emits_with_no_degradations_on_every_native_backend() {
                 entry.code, entry.layout_path
             ));
         }
-
     }
 
     assert!(
@@ -274,9 +308,9 @@ fn no_style_property_is_dropped_beyond_the_pinned_set() {
 
         for entry in &report.style_degradations {
             seen_any = true;
-            let allowed = ALLOWED_STYLE_DROPS
-                .iter()
-                .any(|(b, property)| *b == backend && Some(*property) == entry.primitive.as_deref());
+            let allowed = ALLOWED_STYLE_DROPS.iter().any(|(b, property)| {
+                *b == backend && Some(*property) == entry.primitive.as_deref()
+            });
             if !allowed {
                 unexpected.push(format!(
                     "  {backend:?}: {} at {} -- {}",

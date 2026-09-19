@@ -14,10 +14,10 @@ This package now runs the real degradation analyzer itself, across all five
 native backends. A failure names one package, one backend, one property,
 instead of reporting one signal for eleven packages at once.
 
-It emits **clean** — zero capability degradations on all five backends, and zero
-style drops on the three that report them — so the allowlist is empty, and that
-emptiness is the assertion rather than an omission: an empty allowlist tolerates
-nothing, rather than checking nothing.
+It remains **capability-clean** on all five backends. Style-drop reporting now
+also covers all five: measured pre-existing Qt and Flutter losses are pinned by
+backend/property, while every unlisted loss still fails and every stale pin is
+rejected.
 
 **Both themes are analysed, which the sibling gates do not do.** `theme: None`
 selects the historical dark-wins default, so a property dropped only by the
@@ -30,12 +30,10 @@ Mutation-tested, not assumed green: a `flex-wrap` added to a light stylesheet
 now fails with `SwiftUI (light)` and `Xaml (light)` naming the property and the
 reason.
 
-**What the style half does not cover.** Only XAML, SwiftUI and Compose populate
-`style_degradations`; Qt and Flutter fall through the analyzer's catch-all arm,
-whose own comment says an empty list there means "nobody looked" rather than
-"nothing was lost" (#12022). The capability assertion covers all five, because
-`collect_native_degradations` is backend-generic. An earlier draft of this entry
-said "every backend" of both halves; security review caught it.
+The style half now covers all five native backends. Qt gained real lowering-read
+recording in #15245 and Flutter in #12022; their measured pre-existing losses
+are pinned by backend/property, and the inverse-ratchet test rejects stale pins
+as those gaps close.
 
 
 - Added a light-theme stylesheet (`RatingControls.light.msl`) mirroring the dark theme's structure with a light palette. Selected at build time via `mosaic-compile pkg --theme light` (the style analogue of the layout `--variant`).
