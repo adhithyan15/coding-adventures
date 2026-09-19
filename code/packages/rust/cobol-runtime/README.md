@@ -356,3 +356,7 @@ are now supported), tables,
 files,
 and every other verb) returns a descriptive `RuntimeError` — never wrong output.
 See PL08 for the roadmap toward full COBOL and later standards.
+
+## [0.84.0] - 2026-09-19 - VM-058 INSPECT region intersection
+
+Preserve both BEFORE and AFTER boundaries on each INSPECT item, reject duplicate kinds, and intersect original-field windows with crossed bounds clamped empty. Tests pin oracle and compiled output independently, including multi-item and combined statements.

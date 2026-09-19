@@ -1967,3 +1967,7 @@
 - Honest scoping: signed numerics, editing pictures, `USAGE COMP`/`COMP-3`,
   group `MOVE`, name qualification, and every verb beyond `MOVE`/`DISPLAY`/`STOP
   RUN` return a descriptive `RuntimeError`. Roadmap in PL08.
+
+## [0.84.0] - 2026-09-19 - VM-058 INSPECT region intersection
+
+Preserve both BEFORE and AFTER boundaries on each INSPECT item, reject duplicate kinds, and intersect original-field windows with crossed bounds clamped empty. Tests pin oracle and compiled output independently, including multi-item and combined statements.

@@ -5,7 +5,7 @@ use crate::error::RuntimeError;
 use crate::picture::Picture;
 use crate::program::{
     ArithOp, Cond, ConvertOperand, Expr, Fig, Lit, Operand, Paragraph, PerformMode, Program,
-    RefIndex, Region, RegionKind, RelOp, ReplaceMultiKind, ReplaceMultiLeadingItem, Stmt,
+    RefIndex, Region, RelOp, ReplaceMultiKind, ReplaceMultiLeadingItem, Stmt,
     TallyCounterGroup, TallyMultiKind, TallyMultiLeadingItem, ValueSpec, WhenValue,
 };
 use crate::value::{add, div, move_into_char, move_into_numeric, mul, pow, round, sub, Decimal};
@@ -1246,24 +1246,24 @@ impl Machine {
         region: Option<&Region>,
     ) -> Result<(usize, usize), RuntimeError> {
         let len = chars.len();
-        match region {
-            None => Ok((0, len)),
-            Some(r) => {
-                let region_ch = self.single_delim_char(&r.delim, "INSPECT")?;
-                let first = chars.iter().position(|&c| c == region_ch);
-                Ok(match r.kind {
-                    // BEFORE: everything left of the first `x`; if `x` is absent the
-                    // region is the whole source (`end = len`).
-                    RegionKind::Before => (0, first.unwrap_or(len)),
-                    // AFTER: everything right of the first `x`; if `x` is absent the
-                    // region is EMPTY (`start = end = len`).
-                    RegionKind::After => match first {
-                        Some(i) => (i + 1, len),
-                        None => (len, len),
-                    },
-                })
+        let Some(region) = region else { return Ok((0, len)); };
+        // Search both delimiters in the ORIGINAL field, independently of order.
+        let end = match &region.before {
+            Some(delim) => {
+                let ch = self.single_delim_char(delim, "INSPECT")?;
+                chars.iter().position(|&c| c == ch).unwrap_or(len)
             }
-        }
+            None => len,
+        };
+        let start = match &region.after {
+            Some(delim) => {
+                let ch = self.single_delim_char(delim, "INSPECT")?;
+                chars.iter().position(|&c| c == ch).map_or(len, |i| i + 1)
+            }
+            None => 0,
+        };
+        // Crossed boundaries mean an empty slice, never an invalid Rust range.
+        Ok((start.min(end), end))
     }
 
     /// The TALLYING half: count occurrences of the single-character `delim` in the

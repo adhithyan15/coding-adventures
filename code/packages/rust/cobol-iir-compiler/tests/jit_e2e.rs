@@ -11015,7 +11015,7 @@ fn vm047c_combined_before_and_after_together_matches_matrix_row() {
     // ISO tally-then-replace order. This is the standard's real "BEFORE and AFTER
     // together" combination -- two independently-regioned phrases in one statement --
     // not two region keywords stacked on a single delimiter phrase (see
-    // `vm047c_single_phrase_before_and_after_uses_only_the_first_region` below for
+    // `vm058_both_region_boundaries` below for
     // that unimplemented, separately tracked case).
     let src = "000000 IDENTIFICATION DIVISION.\n\
                000000 PROGRAM-ID. COMBINED-REGIONS.\n\
@@ -11033,45 +11033,64 @@ fn vm047c_combined_before_and_after_together_matches_matrix_row() {
     assert_eq!(assert_matches_oracle(src), "002\n0A0B*\n");
 }
 
-/// VM-D027 (discovered while validating VM-047c): a SINGLE delimiter phrase
-/// carrying BOTH a `BEFORE` and an `AFTER` region keyword (e.g. `FOR ALL "0" BEFORE
-/// "X" AFTER "X"`) is grammar-legal -- `cobol.grammar`'s `inspect_region` sits under
-/// a `{ }` repetition, so the reader sees TWO sibling `inspect_region` nodes -- but
-/// BOTH the oracle (`program.rs::read_inspect_region` callers) and the compiler
-/// (`lib.rs`'s seven `child_node(_, "inspect_region")` call sites) read only the
-/// FIRST such node via `child_node`, silently discarding a second one instead of
-/// computing the ISO-intended intersected window or rejecting the phrase as a later
-/// rung. Real COBOL (ISO/IEC 1989:2014, IBM Enterprise COBOL, GnuCOBOL, Micro Focus)
-/// allows exactly this: a tally/replace item may specify both phrases together to
-/// restrict scanning to characters that are simultaneously after one delimiter and
-/// before another. This test PINS the current shared (oracle == compiler, so not a
-/// cross-engine divergence) first-region-only behavior so it cannot silently change;
-/// it is NOT a claim that this is correct ISO semantics. Over "00X00" (a single "X"
-/// at index 2), `BEFORE "X" AFTER "X"` currently behaves as bare `BEFORE "X"`
-/// (region `[0, 2)` = "00" -> count 2) because the trailing `AFTER "X"` node is
-/// dropped; the correct ISO intersection of "before the (only) X" and "after the
-/// (same) X" would in fact be the empty set for this single-delimiter case, so a
-/// real fix must NOT simply be observable here without a second, distinct
-/// delimiter. Implementing genuine two-clause intersection touches every TALLYING/
-/// REPLACING/CONVERTING single- and multi-item region call site (nine call sites
-/// across `lib.rs`, plus the oracle's mirrored `program.rs`/`interp.rs`), which is
-/// its own bounded slice -- out of VM-047c's scope, which promotes the
-/// ALREADY-implemented single-region BEFORE/AFTER behavior to the seven-backend
-/// matrix. See the backlog's VM-D027 discovery entry and the follow-up item it ranks.
+/// VM-058: a second region must constrain the same item, not disappear.
+fn vm058_source(value: &str, statement: &str) -> String {
+    program(&[
+        "IDENTIFICATION DIVISION.", "PROGRAM-ID. REGIONS.",
+        "DATA DIVISION.", "WORKING-STORAGE SECTION.",
+        &format!("01 S PIC X({}) VALUE \"{}\".", value.len(), value),
+        "01 C PIC 9(3) VALUE 0.", "01 D PIC 9(3) VALUE 0.",
+        "01 A PIC X VALUE \"A\".", "01 B PIC X VALUE \"B\".",
+        "PROCEDURE DIVISION.", "MAIN.", statement,
+        "DISPLAY C.", "DISPLAY D.", "DISPLAY S.", "STOP RUN.",
+    ])
+}
+
 #[test]
-fn vm047c_single_phrase_before_and_after_uses_only_the_first_region() {
-    let src = "000000 IDENTIFICATION DIVISION.\n\
-               000000 PROGRAM-ID. PROBE.\n\
-               000000 DATA DIVISION.\n\
-               000000 WORKING-STORAGE SECTION.\n\
-               000000 01 S PIC X(5) VALUE \"00X00\".\n\
-               000000 01 C PIC 9(3) VALUE 0.\n\
-               000000 PROCEDURE DIVISION.\n\
-               000000 MAIN.\n\
-               000000 INSPECT S TALLYING C FOR ALL \"0\" BEFORE \"X\" AFTER \"X\".\n\
-               000000 DISPLAY C.\n\
-               000000 STOP RUN.";
-    // Both engines currently agree (co-total, not a divergence): the trailing
-    // `AFTER "X"` is silently ignored and the result is bare `BEFORE "X"` (count 2).
-    assert_eq!(assert_matches_oracle(src), "002\n");
+fn vm058_both_region_boundaries() {
+    for (value, region, count) in [
+        ("0A00B0", "BEFORE \"B\" AFTER \"A\"", "002"),
+        ("0A00B0", "AFTER \"A\" BEFORE \"B\"", "002"),
+        ("0A00B0", "BEFORE \"Z\" AFTER \"A\"", "003"),
+        ("0A00B0", "BEFORE \"B\" AFTER \"Z\"", "000"),
+        ("0A00B0", "BEFORE \"A\" AFTER \"B\"", "000"),
+        ("00X00", "BEFORE \"X\" AFTER \"X\"", "000"),
+        ("B0A00B", "BEFORE \"B\" AFTER \"A\"", "000"),
+        ("0A00B0", "BEFORE B AFTER A", "002"),
+    ] {
+        let src = vm058_source(value, &format!("INSPECT S TALLYING C FOR ALL \"0\" {region}."));
+        let expected = format!("{count}\n000\n{value}\n");
+        assert_eq!(run_cobol(&src).unwrap(), expected, "oracle: {region}");
+        assert_eq!(run_on_jit(&src), expected, "compiled: {region}");
+    }
+}
+
+#[test]
+fn vm058_region_reader_families() {
+    for (statement, expected) in [
+        ("INSPECT S TALLYING C FOR CHARACTERS BEFORE B AFTER A.", "002\n000\n0A00B0\n"),
+        ("INSPECT S TALLYING C FOR LEADING \"0\" BEFORE B AFTER A.", "002\n000\n0A00B0\n"),
+        ("INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE B AFTER A.", "000\n000\n0A**B0\n"),
+        ("INSPECT S REPLACING LEADING \"0\" BY \"*\" BEFORE B AFTER A.", "000\n000\n0A**B0\n"),
+        ("INSPECT S REPLACING CHARACTERS BY \"*\" BEFORE B AFTER A.", "000\n000\n0A**B0\n"),
+        ("INSPECT S TALLYING C FOR ALL \"0\" BEFORE B AFTER A\n000000 ALL \"A\" BEFORE B AFTER A.", "002\n000\n0A00B0\n"),
+        ("INSPECT S TALLYING C FOR ALL \"0\" BEFORE B AFTER A\n000000 D FOR ALL \"0\" BEFORE A AFTER B.", "002\n000\n0A00B0\n"),
+        ("INSPECT S REPLACING ALL \"0\" BY \"*\" BEFORE B AFTER A\n000000 ALL \"A\" BY \"!\" BEFORE B AFTER A.", "000\n000\n0A**B0\n"),
+        ("INSPECT S TALLYING C FOR CHARACTERS BEFORE B AFTER A\n000000 REPLACING CHARACTERS BY \"*\" BEFORE B AFTER A.", "002\n000\n0A**B0\n"),
+        ("INSPECT S TALLYING C FOR CHARACTERS BEFORE A AFTER B.", "000\n000\n0A00B0\n"),
+        ("INSPECT S CONVERTING \"0\" TO \"*\" BEFORE B AFTER A.", "000\n000\n0A**B0\n"),
+    ] {
+        let src = vm058_source("0A00B0", statement);
+        assert_eq!(run_cobol(&src).unwrap(), expected, "oracle: {statement}");
+        assert_eq!(run_on_jit(&src), expected, "compiled: {statement}");
+    }
+}
+
+#[test]
+fn vm058_duplicate_boundaries_reject() {
+    for region in ["BEFORE A BEFORE B", "AFTER A AFTER B"] {
+        let src = vm058_source("0A00B0", &format!("INSPECT S TALLYING C FOR ALL \"0\" {region}."));
+        assert!(format!("{:?}", run_cobol(&src).unwrap_err()).contains("duplicate"));
+        assert!(format!("{:?}", compile_source(&src, "duplicate").unwrap_err()).contains("duplicate"));
+    }
 }

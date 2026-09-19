@@ -3152,6 +3152,35 @@ impl<'a> Compiler<'a> {
     /// `single_delim_code`, exactly like the tally delimiter.
     fn emit_inspect_region_window(
         &mut self,
+        region: Option<InspectRegion<'_>>,
+        s_reg: &str,
+        len: &str,
+    ) -> Result<Option<(String, String)>, CompileError> {
+        let Some(region) = region else { return Ok(None); };
+        let before = self.emit_inspect_single_region_window(
+            region.before.map(|d| (RegionKind::Before, d)), s_reg, len)?;
+        let after = self.emit_inspect_single_region_window(
+            region.after.map(|d| (RegionKind::After, d)), s_reg, len)?;
+        match (before, after) {
+            (Some((_, end)), Some((start, _))) => {
+                // Intersect independent original-field bounds. Clamp before any
+                // consumer subtracts start from end (CHARACTERS) or slices.
+                let crossed = self.fresh("_insp_crossed");
+                let done = self.fresh("insp_bounds_done");
+                self.emit("cmp_gt", Some(&crossed),
+                    vec![Operand::Var(start.clone()), Operand::Var(end.clone())], "i64");
+                self.emit("jmp_if_false", None,
+                    vec![Operand::Var(crossed), Operand::Var(done.clone())], "void");
+                self.emit("mov", Some(&start), vec![Operand::Var(end.clone())], "i64");
+                self.emit("label", None, vec![Operand::Var(done)], "void");
+                Ok(Some((start, end)))
+            }
+            (before, after) => Ok(before.or(after)),
+        }
+    }
+
+    fn emit_inspect_single_region_window(
+        &mut self,
         region: Option<(RegionKind, &GrammarASTNode)>,
         s_reg: &str,
         len: &str,
@@ -3599,28 +3628,8 @@ impl<'a> Compiler<'a> {
         // The optional `{BEFORE|AFTER} z` region → `Option<(RegionKind, delim_node)>`,
         // extracted with the SAME keyword/operand logic `inspect_replacing_all` uses.
         // (The former Guard-3 reject is lifted; the oracle lifts the mirror guard.)
-        let region: Option<(RegionKind, &GrammarASTNode)> =
-            match child_node(ri, "inspect_region") {
-                None => None,
-                Some(region_node) => {
-                    let rtoks = child_tokens(region_node);
-                    let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
-                        RegionKind::Before
-                    } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
-                        RegionKind::After
-                    } else {
-                        return Err(CompileError::Unsupported(
-                            "INSPECT region without a BEFORE or AFTER keyword".into(),
-                        ));
-                    };
-                    let rdelim = child_node(region_node, "operand").ok_or_else(|| {
-                        CompileError::Malformed(
-                            "INSPECT BEFORE/AFTER region without a delimiter".into(),
-                        )
-                    })?;
-                    Some((kind, rdelim))
-                }
-            };
+        let region: Option<InspectRegion<'_>> =
+            read_inspect_regions(ri)?;
         // Derive the window `[start, end)` over the ORIGINAL source (before the unroll
         // overwrites `s_reg`). With no region nothing is emitted and the per-position
         // guard folds away — the fast path below is byte-identical to the pre-region
@@ -7317,6 +7326,34 @@ enum RegionKind {
     After,
 }
 
+/// Both optional boundaries of one item. Copying borrows preserves per-item
+/// windows without making source keyword order choose which boundary survives.
+#[derive(Clone, Copy)]
+struct InspectRegion<'a> {
+    before: Option<&'a GrammarASTNode>,
+    after: Option<&'a GrammarASTNode>,
+}
+
+fn read_inspect_regions(item: &GrammarASTNode) -> Result<Option<InspectRegion<'_>>, CompileError> {
+    let mut region = InspectRegion { before: None, after: None };
+    for node in child_nodes(item, "inspect_region") {
+        let toks = child_tokens(node);
+        let slot = if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+            &mut region.before
+        } else if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+            &mut region.after
+        } else {
+            return Err(CompileError::Unsupported("INSPECT region without BEFORE/AFTER".into()));
+        };
+        if slot.is_some() {
+            return Err(CompileError::Unsupported("duplicate INSPECT BEFORE/AFTER boundary".into()));
+        }
+        *slot = Some(child_node(node, "operand").ok_or_else(||
+            CompileError::Malformed("INSPECT region without a delimiter".into()))?);
+    }
+    Ok(if region.before.is_none() && region.after.is_none() { None } else { Some(region) })
+}
+
 /// The parsed pieces of a `TALLYING counter FOR ALL|LEADING delim [{BEFORE|AFTER}
 /// x]` (or `FOR CHARACTERS [{BEFORE|AFTER} x]`) phrase: `(counter_name, delim_node,
 /// leading, characters, region)`, where `region` is the optional `{BEFORE|AFTER} x`
@@ -7325,7 +7362,7 @@ enum RegionKind {
 /// otherwise. The node references borrow from the `inspect_stmt` CST the reader was
 /// handed.
 type TallyPhrase<'a> =
-    (String, Option<&'a GrammarASTNode>, bool, bool, Option<(RegionKind, &'a GrammarASTNode)>);
+    (String, Option<&'a GrammarASTNode>, bool, bool, Option<InspectRegion<'a>>);
 
 /// Extract the supported `TALLYING counter FOR ALL delim [{BEFORE|AFTER} x]` /
 /// `FOR LEADING delim` / `FOR CHARACTERS [{BEFORE|AFTER} x]` phrase from an
@@ -7393,25 +7430,7 @@ fn inspect_tally_all(verb: &GrammarASTNode) -> Result<TallyPhrase<'_>, CompileEr
     // defers a LEADING half with a region; `emit_inspect_tallying` re-imposes that via
     // its `allow_leading_region` flag, so relaxing this shared reader does not leak the
     // combination into the combined form.
-    let region = match child_node(ti, "inspect_region") {
-        None => None,
-        Some(region_node) => {
-            let rtoks = child_tokens(region_node);
-            let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
-                RegionKind::Before
-            } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
-                RegionKind::After
-            } else {
-                return Err(CompileError::Unsupported(
-                    "INSPECT region without a BEFORE or AFTER keyword".into(),
-                ));
-            };
-            let rdelim = child_node(region_node, "operand").ok_or_else(|| {
-                CompileError::Malformed("INSPECT BEFORE/AFTER region without a delimiter".into())
-            })?;
-            Some((kind, rdelim))
-        }
-    };
+    let region = read_inspect_regions(ti)?;
     // The CHARACTERS path has no delimiter operand to read (`delim_node = None`); the
     // ALL/LEADING path reads its single-char delimiter as before.
     let delim = if characters {
@@ -7431,7 +7450,7 @@ fn inspect_tally_all(verb: &GrammarASTNode) -> Result<TallyPhrase<'_>, CompileEr
 /// multi-item scope bound), so — unlike [`TallyPhrase`] — it carries no
 /// `leading`/`characters` flags, but each item now carries its OWN optional region
 /// window (this rung lifts the region reject).
-type TallyItem<'a> = (&'a GrammarASTNode, Option<(RegionKind, &'a GrammarASTNode)>);
+type TallyItem<'a> = (&'a GrammarASTNode, Option<InspectRegion<'a>>);
 
 /// Which flavour of tally item a SINGLE-counter multi-item TALLYING clause holds — the
 /// compiler-side mirror of the oracle's `TallyMultiKind`. Picking an explicit enum (over a
@@ -7460,7 +7479,7 @@ enum TallyKind {
 /// type-complexity threshold) — the compiler-side analogue of the oracle's
 /// `TallyMultiLeadingItem`.
 type TallyLeadingItem<'a> =
-    (Option<&'a GrammarASTNode>, TallyKind, Option<(RegionKind, &'a GrammarASTNode)>);
+    (Option<&'a GrammarASTNode>, TallyKind, Option<InspectRegion<'a>>);
 
 /// One `counter FOR ALL a [{BEFORE|AFTER} p] ALL b … ` group of a MULTI-counter
 /// `TALLYING` list: the counter name plus its written-order [`TallyItem`]s (each a
@@ -7564,27 +7583,7 @@ fn inspect_tally_multi(
         // delimiter operand under the `inspect_region` child, not a direct child of
         // `tally_item`, so an `ALL`/`LEADING` item's DIRECT `operand` child below is still
         // exactly the tally delimiter.
-        let region = match child_node(ti, "inspect_region") {
-            None => None,
-            Some(region_node) => {
-                let rtoks = child_tokens(region_node);
-                let rkind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
-                    RegionKind::Before
-                } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
-                    RegionKind::After
-                } else {
-                    return Err(CompileError::Unsupported(
-                        "INSPECT region without a BEFORE or AFTER keyword".into(),
-                    ));
-                };
-                let rdelim = child_node(region_node, "operand").ok_or_else(|| {
-                    CompileError::Malformed(
-                        "INSPECT BEFORE/AFTER region without a delimiter".into(),
-                    )
-                })?;
-                Some((rkind, rdelim))
-            }
-        };
+        let region = read_inspect_regions(ti)?;
         // A `CHARACTERS` item carries NO delimiter operand (grammar branch
         // `CHARACTERS { inspect_region }`), so we must NOT read an `operand` child there —
         // the delimiter node is `None`. `ALL`/`LEADING` read their single delimiter node.
@@ -7647,27 +7646,7 @@ fn inspect_tally_counters(verb: &GrammarASTNode) -> Result<Vec<TallyCounterGroup
             // own delimiter operand under the `inspect_region` child, not a direct child of
             // `tally_item`, so the DIRECT `operand` child below is still exactly the tally
             // delimiter.
-            let region = match child_node(ti, "inspect_region") {
-                None => None,
-                Some(region_node) => {
-                    let rtoks = child_tokens(region_node);
-                    let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
-                        RegionKind::Before
-                    } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
-                        RegionKind::After
-                    } else {
-                        return Err(CompileError::Unsupported(
-                            "INSPECT region without a BEFORE or AFTER keyword".into(),
-                        ));
-                    };
-                    let rdelim = child_node(region_node, "operand").ok_or_else(|| {
-                        CompileError::Malformed(
-                            "INSPECT BEFORE/AFTER region without a delimiter".into(),
-                        )
-                    })?;
-                    Some((kind, rdelim))
-                }
-            };
+            let region = read_inspect_regions(ti)?;
             let delim = child_node(ti, "operand").ok_or_else(|| {
                 CompileError::Malformed("INSPECT TALLYING FOR ALL without a delimiter".into())
             })?;
@@ -7683,7 +7662,7 @@ fn inspect_tally_counters(verb: &GrammarASTNode) -> Result<Vec<TallyCounterGroup
 /// optional `{BEFORE|AFTER} x` window as `(kind, region_delim_node)` — the exact
 /// analogue of [`TallyPhrase`]'s region on the count side.
 type ReplacePhrase<'a> =
-    (&'a GrammarASTNode, &'a GrammarASTNode, bool, Option<(RegionKind, &'a GrammarASTNode)>);
+    (&'a GrammarASTNode, &'a GrammarASTNode, bool, Option<InspectRegion<'a>>);
 
 /// Which flavour of replace item a MULTI-item REPLACING clause holds — the compiler-side
 /// mirror of the oracle's `ReplaceMultiKind` and the replace-side twin of [`TallyKind`].
@@ -7716,7 +7695,7 @@ type ReplaceItem<'a> = (
     Option<&'a GrammarASTNode>,
     &'a GrammarASTNode,
     ReplaceKind,
-    Option<(RegionKind, &'a GrammarASTNode)>,
+    Option<InspectRegion<'a>>,
 );
 
 /// Extract the supported `REPLACING ALL search BY replace [{BEFORE|AFTER} x]` /
@@ -7774,25 +7753,7 @@ fn inspect_replacing_all(verb: &GrammarASTNode) -> Result<ReplacePhrase<'_>, Com
     // `emit_inspect_replacing`). The COMBINED form still defers a LEADING half with a
     // region; `emit_inspect_replacing` re-imposes that via its `allow_leading_region`
     // flag, so relaxing this shared reader does not leak the combination.
-    let region = match child_node(ri, "inspect_region") {
-        None => None,
-        Some(region_node) => {
-            let rtoks = child_tokens(region_node);
-            let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
-                RegionKind::Before
-            } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
-                RegionKind::After
-            } else {
-                return Err(CompileError::Unsupported(
-                    "INSPECT region without a BEFORE or AFTER keyword".into(),
-                ));
-            };
-            let rdelim = child_node(region_node, "operand").ok_or_else(|| {
-                CompileError::Malformed("INSPECT BEFORE/AFTER region without a delimiter".into())
-            })?;
-            Some((kind, rdelim))
-        }
-    };
+    let region = read_inspect_regions(ri)?;
     // `ALL`/`LEADING search BY replace` — the two `operand` children are the
     // search (first) and the replacement (second), in order. (A `{BEFORE|AFTER}`
     // region contributes its own operand nested under `inspect_region`, not a direct
@@ -7860,27 +7821,7 @@ fn inspect_replacing_multi(verb: &GrammarASTNode) -> Result<Vec<ReplaceItem<'_>>
         // own delimiter operand under the `inspect_region` child, not a direct child of
         // `replace_item`, so an `ALL`/`LEADING` item's two DIRECT `operand` children (and a
         // `CHARACTERS` item's one) below are still exactly the search/replacement.
-        let region = match child_node(ri, "inspect_region") {
-            None => None,
-            Some(region_node) => {
-                let rtoks = child_tokens(region_node);
-                let rkind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
-                    RegionKind::Before
-                } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
-                    RegionKind::After
-                } else {
-                    return Err(CompileError::Unsupported(
-                        "INSPECT region without a BEFORE or AFTER keyword".into(),
-                    ));
-                };
-                let rdelim = child_node(region_node, "operand").ok_or_else(|| {
-                    CompileError::Malformed(
-                        "INSPECT BEFORE/AFTER region without a delimiter".into(),
-                    )
-                })?;
-                Some((rkind, rdelim))
-            }
-        };
+        let region = read_inspect_regions(ri)?;
         // A `CHARACTERS` item carries NO search operand (grammar branch
         // `CHARACTERS "BY" operand { inspect_region }`), so its SOLE direct `operand` child
         // is the replacement — the search node is `None`. `ALL`/`LEADING` read their two
@@ -7915,7 +7856,7 @@ fn inspect_replacing_multi(verb: &GrammarASTNode) -> Result<Vec<ReplaceItem<'_>>
 /// window as `(kind, region_delim_node)` — the exact analogue of the region on the
 /// TALLYING ([`TallyPhrase`]) and REPLACING ([`ReplacePhrase`]) sides.
 type ConvertPhrase<'a> =
-    (&'a GrammarASTNode, &'a GrammarASTNode, Option<(RegionKind, &'a GrammarASTNode)>);
+    (&'a GrammarASTNode, &'a GrammarASTNode, Option<InspectRegion<'a>>);
 
 /// Extract the `CONVERTING from TO to [{BEFORE|AFTER} x]` phrase from an
 /// `inspect_stmt`, returning `(from_node, to_node, region)`. A `{BEFORE|AFTER} x`
@@ -7928,25 +7869,7 @@ fn inspect_converting_pair(verb: &GrammarASTNode) -> Result<ConvertPhrase<'_>, C
     let converting = child_node(verb, "inspect_converting").ok_or_else(|| {
         CompileError::Unsupported("INSPECT without a CONVERTING clause is a later rung".into())
     })?;
-    let region = match child_node(converting, "inspect_region") {
-        None => None,
-        Some(region_node) => {
-            let rtoks = child_tokens(region_node);
-            let kind = if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
-                RegionKind::Before
-            } else if rtoks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
-                RegionKind::After
-            } else {
-                return Err(CompileError::Unsupported(
-                    "INSPECT region without a BEFORE or AFTER keyword".into(),
-                ));
-            };
-            let rdelim = child_node(region_node, "operand").ok_or_else(|| {
-                CompileError::Malformed("INSPECT BEFORE/AFTER region without a delimiter".into())
-            })?;
-            Some((kind, rdelim))
-        }
-    };
+    let region = read_inspect_regions(converting)?;
     // `from TO to` — the two `operand` children are the FROM (first) and the TO
     // (second), in order. (A `{BEFORE|AFTER}` region contributes its own operand
     // nested under `inspect_region`, not a direct child of `inspect_converting`, so

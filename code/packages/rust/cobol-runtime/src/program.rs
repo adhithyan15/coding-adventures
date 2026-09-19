@@ -715,27 +715,13 @@ pub enum Operand {
     RefMod { base: String, start: RefIndex, len: Option<RefIndex> },
 }
 
-/// Which side of a delimiter an `INSPECT … BEFORE`/`AFTER` region selects.
-/// `BEFORE x` restricts work to the source text to the LEFT of the first `x`;
-/// `AFTER x` restricts it to the text to the RIGHT of the first `x`.
-#[derive(Debug, Clone)]
-pub enum RegionKind {
-    Before,
-    After,
-}
-
-/// An `INSPECT … {BEFORE|AFTER} x` region: the phrase that narrows a TALLYING /
-/// REPLACING / CONVERTING operation to a sub-slice of the source, bounded by the
-/// FIRST occurrence of the single-character delimiter `delim`. This rung wires it
-/// up for the lone `TALLYING FOR ALL` form only (see [`Stmt::Inspect`]); the
-/// window it implies is computed at exec time over the ORIGINAL source (leftmost
-/// occurrence of `delim`), with the ISO not-found asymmetry:
-///   * `BEFORE x`, `x` absent → the region is the ENTIRE source; and
-///   * `AFTER x`, `x` absent → the region is EMPTY (nothing counted).
+/// Independent optional INSPECT boundaries, evaluated against the original field.
+/// BEFORE absent means no upper restriction; an absent AFTER delimiter means an
+/// empty window. Both may coexist, and crossed bounds select no characters.
 #[derive(Debug, Clone)]
 pub struct Region {
-    pub kind: RegionKind,
-    pub delim: Operand,
+    pub before: Option<Operand>,
+    pub after: Option<Operand>,
 }
 
 /// One `ALL delim [{BEFORE|AFTER} x]` item of a multi-COUNTER `TALLYING` list: the
@@ -1589,7 +1575,7 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                             if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
                                 // A lone `REPLACING CHARACTERS BY x [{BEFORE|AFTER} z]`
                                 // half. Read its optional region with the SAME
-                                // `read_inspect_region` helper the standalone form uses,
+                                // `read_inspect_regions` helper the standalone form uses,
                                 // and its lone `operand` child as the replacement `x`.
                                 // `search` is the never-read placeholder (mirroring the
                                 // tally-CHARACTERS placeholder `delim`) and
@@ -1597,10 +1583,7 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                                 // through `inspect_replace_characters`, filling every
                                 // in-window position over the original bytes AFTER the
                                 // tally.
-                                let region = match child_node(ri, "inspect_region") {
-                                    None => None,
-                                    Some(region_node) => Some(read_inspect_region(region_node)?),
-                                };
+                                let region = read_inspect_regions(ri)?;
                                 let replace_node = child_node(ri, "operand").ok_or_else(|| {
                                     RuntimeError::Unsupported(
                                         "INSPECT REPLACING CHARACTERS without a BY replacement"
@@ -1682,15 +1665,12 @@ fn read_statement(stmt: &GrammarASTNode) -> Result<Stmt, RuntimeError> {
                         let toks = child_tokens(ri);
                         if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "CHARACTERS") {
                             // A `{BEFORE|AFTER}` region on the CHARACTERS item is now
-                            // ACCEPTED (THIS rung), read with the SAME `read_inspect_region`
+                            // ACCEPTED (THIS rung), read with the SAME `read_inspect_regions`
                             // helper the ALL/tally readers use. The window narrows the
                             // overwrite; positions outside it keep their original char.
                             // (The former Guard-3 reject is lifted — the compiler lifts
                             // the mirror guard, staying co-total.)
-                            let region = match child_node(ri, "inspect_region") {
-                                None => None,
-                                Some(region_node) => Some(read_inspect_region(region_node)?),
-                            };
+                            let region = read_inspect_regions(ri)?;
                             // The lone `operand` child is the replacement `x`
                             // (guards 1/2/4 are applied at exec time / by the caller's
                             // source-category check, identically to the compiler).
@@ -1826,10 +1806,7 @@ fn read_inspect_tally_all(
     // LEADING half carrying a region (and any CHARACTERS half); those gates live in
     // the combined caller (`read_statement`), not here, so relaxing this shared reader
     // does not leak the combination into the combined form.
-    let region = match child_node(ti, "inspect_region") {
-        None => None,
-        Some(region_node) => Some(read_inspect_region(region_node)?),
-    };
+    let region = read_inspect_regions(ti)?;
     if characters {
         // No delimiter to read on the CHARACTERS path. Stash a placeholder in `delim`
         // that is NEVER consumed (guaranteed by `characters == true` at every use).
@@ -1865,7 +1842,7 @@ fn read_inspect_tally_all(
 /// per-item region were lifted earlier, in #65 / #63). Each item carries a
 /// [`TallyMultiKind`] tag, an OPTIONAL delimiter operand (`Some` for `ALL`/`LEADING`,
 /// `None` for `CHARACTERS`), AND its OWN optional `{BEFORE|AFTER} x` region (the third
-/// tuple slot), read with the SAME `read_inspect_region` the single-item reader uses.
+/// tuple slot), read with the SAME `read_inspect_regions` the single-item reader uses.
 /// A `CHARACTERS` item is the always-eligible catch-all (no delimiter, no run). Any item
 /// violating the remaining scope is a clean later-rung `Unsupported`, with the SAME
 /// messages the compiler-side reader raises, so both engines accept exactly the same
@@ -1912,15 +1889,12 @@ fn read_inspect_tally_multi(
             TallyMultiKind::All
         };
         // A `{BEFORE|AFTER}` region on an item is ACCEPTED for EVERY kind: read it into
-        // an `Option<Region>` with the SAME `read_inspect_region` the single-item reader
+        // an `Option<Region>` with the SAME `read_inspect_regions` the single-item reader
         // uses. The region contributes its OWN nested `operand` (the region delimiter)
         // under the `inspect_region` child, so an `ALL`/`LEADING` item's DIRECT `operand`
         // child below is still exactly the tally delimiter — the region delimiter is not
         // among the item's direct operands.
-        let region = match child_node(ti, "inspect_region") {
-            None => None,
-            Some(region_node) => Some(read_inspect_region(region_node)?),
-        };
+        let region = read_inspect_regions(ti)?;
         // A `CHARACTERS` item carries NO delimiter operand (the grammar's CHARACTERS
         // branch is `CHARACTERS { inspect_region }`), so we must NOT read an `operand`
         // child on that path — the delimiter is `None`. `ALL`/`LEADING` read their
@@ -1951,7 +1925,7 @@ fn read_inspect_tally_multi(
 /// Scope bound for the multi-counter path (this rung): EVERY item of EVERY group must
 /// be a plain `FOR ALL` item with NO `LEADING`/`CHARACTERS`; each item MAY now carry its
 /// OWN optional `{BEFORE|AFTER}` region (the region reject is LIFTED this rung), read
-/// with the SAME `read_inspect_region` the single-item reader uses. Any item violating
+/// with the SAME `read_inspect_regions` the single-item reader uses. Any item violating
 /// the remaining scope is a clean later-rung `Unsupported`, with the SAME messages the
 /// compiler-side `inspect_tally_counters` reader raises, so both engines accept exactly
 /// the same multi-counter statements and reject the same ones identically. (A
@@ -1989,14 +1963,11 @@ fn read_inspect_tally_counters(
                 ));
             }
             // A `{BEFORE|AFTER}` region on an item is now ACCEPTED (this rung): read it
-            // into an `Option<Region>` with the SAME `read_inspect_region` the single-item
+            // into an `Option<Region>` with the SAME `read_inspect_regions` the single-item
             // reader uses. The region contributes its OWN nested `operand` (the region
             // delimiter) under the `inspect_region` child, so the item's DIRECT `operand`
             // child below is still exactly the tally delimiter.
-            let region = match child_node(ti, "inspect_region") {
-                None => None,
-                Some(region_node) => Some(read_inspect_region(region_node)?),
-            };
+            let region = read_inspect_regions(ti)?;
             let delim_node = child_node(ti, "operand").ok_or_else(|| {
                 RuntimeError::Unsupported("INSPECT TALLYING FOR ALL without a delimiter".into())
             })?;
@@ -2014,21 +1985,25 @@ fn read_inspect_tally_counters(
 /// width-checked here: exactly like the tally delimiter, a multi-character region
 /// delimiter is a clean later-rung error raised by `single_delim_char` at exec
 /// time, keeping both engines' rejection identical.
-fn read_inspect_region(region_node: &GrammarASTNode) -> Result<Region, RuntimeError> {
-    let toks = child_tokens(region_node);
-    let kind = if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
-        RegionKind::Before
-    } else if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
-        RegionKind::After
-    } else {
-        return Err(RuntimeError::Unsupported(
-            "INSPECT region without a BEFORE or AFTER keyword".into(),
-        ));
-    };
-    let delim_node = child_node(region_node, "operand").ok_or_else(|| {
-        RuntimeError::Unsupported("INSPECT BEFORE/AFTER region without a delimiter".into())
-    })?;
-    Ok(Region { kind, delim: read_operand(delim_node)? })
+fn read_inspect_regions(item: &GrammarASTNode) -> Result<Option<Region>, RuntimeError> {
+    let mut region = Region { before: None, after: None };
+    for node in child_nodes(item, "inspect_region") {
+        let toks = child_tokens(node);
+        let slot = if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "BEFORE") {
+            &mut region.before
+        } else if toks.iter().any(|(k, v)| k == "KEYWORD" && v == "AFTER") {
+            &mut region.after
+        } else {
+            return Err(RuntimeError::Unsupported("INSPECT region without BEFORE/AFTER".into()));
+        };
+        if slot.is_some() {
+            return Err(RuntimeError::Unsupported("duplicate INSPECT BEFORE/AFTER boundary".into()));
+        }
+        let delim = child_node(node, "operand").ok_or_else(||
+            RuntimeError::Unsupported("INSPECT region without a delimiter".into()))?;
+        *slot = Some(read_operand(delim)?);
+    }
+    Ok(if region.before.is_none() && region.after.is_none() { None } else { Some(region) })
 }
 
 /// Extract the supported `REPLACING ALL search BY replace [{BEFORE|AFTER} x]` /
@@ -2079,17 +2054,14 @@ fn read_inspect_replacing_all(
     let leading = toks.iter().any(|(k, v)| k == "KEYWORD" && v == "LEADING");
     // A `{BEFORE|AFTER} x` region now PARSES into an `Option<Region>` (it used to be
     // rejected wholesale here) REGARDLESS of `leading`, reusing the SAME
-    // `read_inspect_region` the TALLYING reader uses: the STANDALONE
+    // `read_inspect_regions` the TALLYING reader uses: the STANDALONE
     // `REPLACING LEADING … BEFORE/AFTER` form is supported this rung (the substitution
     // anchors the leading run at the window start — see `inspect_replace`), the exact
     // analogue of the count side. The COMBINED `TALLYING … REPLACING` form still
     // rejects a LEADING half carrying a region; that gate lives in the combined caller
     // (`read_statement`), so relaxing this shared reader does not leak the combination
     // into the combined form.
-    let region = match child_node(ri, "inspect_region") {
-        None => None,
-        Some(region_node) => Some(read_inspect_region(region_node)?),
-    };
+    let region = read_inspect_regions(ri)?;
     // `ALL`/`LEADING search BY replace` — the two `operand` children are the
     // search (first) and the replacement (second), in order. (A `BEFORE`/`AFTER`
     // region contributes its OWN nested `operand`, so we select the two operands
@@ -2120,7 +2092,7 @@ fn read_inspect_replacing_all(
 /// `read_inspect_tally_multi` gained a `CHARACTERS` item. Each item carries a
 /// [`ReplaceMultiKind`] tag, an OPTIONAL search operand (`Some` for `ALL`/`LEADING`,
 /// `None` for `CHARACTERS`), the ALWAYS-present `BY` replacement operand, AND its OWN
-/// optional `{BEFORE|AFTER} x` region, read with the SAME `read_inspect_region` the
+/// optional `{BEFORE|AFTER} x` region, read with the SAME `read_inspect_regions` the
 /// single-item reader uses. A `CHARACTERS` item is the always-eligible catch-all (no
 /// search, no run). `FIRST` is still deferred. Any item violating the remaining scope is
 /// a clean later-rung `Unsupported`, with the SAME messages the compiler-side reader
@@ -2164,16 +2136,13 @@ fn read_inspect_replacing_multi(
             ReplaceMultiKind::All
         };
         // A `{BEFORE|AFTER}` region on an item is ACCEPTED for EVERY kind: read it into an
-        // `Option<Region>` with the SAME `read_inspect_region` the single-item reader
+        // `Option<Region>` with the SAME `read_inspect_regions` the single-item reader
         // uses. The region contributes its OWN nested `operand` (the delimiter) under the
         // `inspect_region` child, so an `ALL`/`LEADING` item's two DIRECT `operand`
         // children are still exactly the search/replacement (see below), and a
         // `CHARACTERS` item's one DIRECT `operand` child is still exactly the replacement —
         // the region delimiter is not among them.
-        let region = match child_node(ri, "inspect_region") {
-            None => None,
-            Some(region_node) => Some(read_inspect_region(region_node)?),
-        };
+        let region = read_inspect_regions(ri)?;
         let ops: Vec<&GrammarASTNode> = child_nodes(ri, "operand");
         // A `CHARACTERS` item carries NO search operand (the grammar's CHARACTERS branch is
         // `CHARACTERS "BY" operand { inspect_region }`), so its SOLE direct `operand` child
@@ -2212,7 +2181,7 @@ fn read_inspect_replacing_multi(
 /// tables and rejects the later-rung forms the grammar also accepts: a data-name /
 /// figurative / numeric-literal / reference-modified `from`/`to`. A `{BEFORE|AFTER}
 /// x` region now PARSES into an `Option<Region>` (it used to be rejected wholesale
-/// here), reusing the SAME `read_inspect_region` the TALLYING/REPLACING readers use;
+/// here), reusing the SAME `read_inspect_regions` the TALLYING/REPLACING readers use;
 /// a multi-character region delimiter stays a later rung, rejected at exec time by
 /// `single_delim_char`. (The equal-length requirement is checked at exec time so it
 /// can share the same diagnostic as any other CONVERTING error.)
@@ -2222,10 +2191,7 @@ fn read_inspect_converting(
     let converting = child_node(verb, "inspect_converting").ok_or_else(|| {
         RuntimeError::Unsupported("INSPECT without a CONVERTING clause is a later rung".into())
     })?;
-    let region = match child_node(converting, "inspect_region") {
-        None => None,
-        Some(region_node) => Some(read_inspect_region(region_node)?),
-    };
+    let region = read_inspect_regions(converting)?;
     // `from TO to` — the two `operand` children are the FROM (first) and the TO
     // (second), in order. (A `{BEFORE|AFTER}` region contributes its OWN nested
     // `operand` under the `inspect_region` child, not a direct `operand` here, so
