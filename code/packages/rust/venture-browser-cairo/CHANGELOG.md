@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Map the shared Open in New Window event and disabled state through the
+  existing typed browsing-context effect for Qt, Flutter, and Compose.
+
 - Serialize shared Copy Address clipboard effects for Qt, Flutter, and Compose
   presenters.
 

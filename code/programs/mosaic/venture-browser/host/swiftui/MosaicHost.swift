@@ -685,6 +685,46 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let copyAddressEvents = chromeEventCounts["onCopyAddress", default: 0]
     let clipboardText = NSPasteboard.general.string(forType: .string) ?? ""
     if copyAddressEvents == eventCount + 1, clipboardText == targetURL {
+      let openPageEvents = chromeEventCounts["onOpenPageInNewWindow", default: 0]
+      guard performNativeButtonClick(identifier: "open-page-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "open-page-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyOpenPage(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: openPageEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "clipboardText": clipboardText,
+          "copyAddressEvents": String(copyAddressEvents),
+          "error": "native Copy Address effect did not write the committed URL",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyCopyAddress(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyOpenPage(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let openPageEvents = chromeEventCounts["onOpenPageInNewWindow", default: 0]
+    let target = lastBrowsingContextRequest?["target"] as? String ?? ""
+    let noopener = lastBrowsingContextRequest?["noopener"] as? Bool ?? false
+    let request = lastBrowsingContextRequest?["request"] as? NSDictionary
+    let address = request?["url"] as? String ?? ""
+    if openPageEvents == eventCount + 1, target == "_blank", noopener, address == targetURL {
       let viewSourceEvents = chromeEventCounts["onViewSource", default: 0]
       guard performNativeButtonClick(identifier: "view-source-button") else {
         writeInteractionResult(
@@ -702,15 +742,15 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard remaining > 0 else {
       writeInteractionResult(
         [
-          "backend": "swiftui", "status": "error", "clipboardText": clipboardText,
-          "copyAddressEvents": String(copyAddressEvents),
-          "error": "native Copy Address effect did not write the committed URL",
+          "backend": "swiftui", "status": "error", "openPageTarget": target,
+          "openPageAddress": address, "openPageEvents": String(openPageEvents),
+          "error": "native Open in New Window effect did not preserve the committed URL",
         ],
         to: markerPath)
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-      self?.verifyCopyAddress(
+      self?.verifyOpenPage(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
     }
@@ -1254,37 +1294,101 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     return nil
   }
 
-  private func nativeToolbarPoint(identifier: String) -> (NSPoint, NSWindow)? {
-    let position: CGFloat
-    switch identifier {
-    case "back-button": position = 0.05
-    case "forward-button": position = 0.16
-    case "home-button": position = 0.28
-    case "reload-button": position = 0.40
-    case "bookmark-button": position = 0.54
-    case "copy-address-button": position = 0.70
-    case "view-source-button": position = 0.91
-    default: return nil
+  private func findAccessibleControl(
+    identifier: String, labels: Set<String>, in element: NSAccessibilityProtocol,
+    visited: inout Set<ObjectIdentifier>
+  ) -> NSAccessibilityProtocol? {
+    let objectIdentifier = ObjectIdentifier(element as AnyObject)
+    guard visited.insert(objectIdentifier).inserted else { return nil }
+    if element.accessibilityIdentifier() == identifier
+      || element.accessibilityLabel().map(labels.contains) == true
+    {
+      return element
     }
+    for child in element.accessibilityChildren() ?? [] {
+      guard let child = child as? NSAccessibilityProtocol else { continue }
+      if let found = findAccessibleControl(
+        identifier: identifier, labels: labels, in: child, visited: &visited)
+      {
+        return found
+      }
+    }
+    if let view = element as? NSView {
+      for subview in view.subviews {
+        if let found = findAccessibleControl(
+          identifier: identifier, labels: labels, in: subview, visited: &visited)
+        {
+          return found
+        }
+      }
+    }
+    return nil
+  }
+
+  private func nativeToolbarControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
+    let identifiers = [
+      "back-button", "forward-button", "home-button", "reload-button",
+      "bookmark-button", "copy-address-button", "open-page-button", "view-source-button",
+    ]
+    guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
     var visited = Set<ObjectIdentifier>()
     guard let address = findEditableTextField(in: NSApp, visited: &visited),
-      let window = address.window, let contentView = window.contentView
+      let window = address.window
     else { return nil }
-    let addressFrame = address.convert(address.bounds, to: contentView)
-    let leadingChromeWidth = addressFrame.minX - contentView.bounds.minX
-    let point = contentView.convert(
-      NSPoint(
-        x: contentView.bounds.minX + leadingChromeWidth * position,
-        y: addressFrame.midY),
-      to: nil)
-    return (point, window)
+
+    var addressBranch: NSView = address
+    while let ancestor = addressBranch.superview {
+      let siblings = ancestor.subviews
+      if let addressIndex = siblings.firstIndex(where: { $0 === addressBranch }),
+        addressIndex >= identifiers.count
+      {
+        let toolbarStart = addressIndex - identifiers.count
+        let control = siblings[toolbarStart + controlIndex]
+        guard !control.frame.isEmpty else { return nil }
+        return (
+          control.convert(NSPoint(x: control.bounds.midX, y: control.bounds.midY), to: nil), window
+        )
+      }
+      addressBranch = ancestor
+    }
+    return nil
+  }
+
+  private func accessibleControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
+    let labels: Set<String>
+    switch identifier {
+    case "back-button": labels = ["Back"]
+    case "forward-button": labels = ["Forward"]
+    case "home-button": labels = ["Home"]
+    case "reload-button": labels = ["Reload"]
+    case "bookmark-button": labels = ["Bookmark", "Remove Bookmark"]
+    case "copy-address-button": labels = ["Copy Address"]
+    case "open-page-button": labels = ["Open in New Window"]
+    case "view-source-button": labels = ["View Source"]
+    default: return nil
+    }
+    for window in NSApp.windows {
+      var visited = Set<ObjectIdentifier>()
+      let roots = [window as NSAccessibilityProtocol]
+        + (window.contentView.map { [$0 as NSAccessibilityProtocol] } ?? [])
+      for root in roots {
+        guard let control = findAccessibleControl(
+          identifier: identifier, labels: labels, in: root, visited: &visited)
+        else { continue }
+        let frame = control.accessibilityFrame()
+        guard !frame.isEmpty else { continue }
+        return (window.convertPoint(fromScreen: NSPoint(x: frame.midX, y: frame.midY)), window)
+      }
+    }
+    return nil
   }
 
   private func performNativeButtonClick(identifier: String) -> Bool {
     NSApp.activate(ignoringOtherApps: true)
-    guard let (point, window) = nativeToolbarPoint(identifier: identifier) else { return false }
-    // SwiftUI owns these buttons inside its hosting view. Target their stable Mosaic toolbar
-    // positions relative to the real native address field, then send ordinary AppKit events.
+    guard
+      let (point, window) = accessibleControlPoint(identifier: identifier)
+        ?? nativeToolbarControlPoint(identifier: identifier)
+    else { return false }
     sendPrimaryClick(at: point, to: window)
     return true
   }
@@ -1338,14 +1442,10 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         isARepeat: false,
         keyCode: keyCode)
     else { return false }
-    if modifiers.isEmpty {
-      NSApp.sendEvent(event)
-    } else {
-      // Command-key events are consumed by AppKit's key-equivalent pass before the
-      // first responder sees them. Deliver the real NSEvent to the production
-      // content-surface override so this gate exercises its shortcut reducer.
-      contentView.keyDown(with: event)
-    }
+    // Deliver the real NSEvent to the production content-surface override. Command
+    // keys are consumed by AppKit's key-equivalent pass, while ordinary navigation
+    // keys can be dropped as activation settles after an accessibility button press.
+    contentView.keyDown(with: event)
     return true
   }
 

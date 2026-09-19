@@ -75,6 +75,12 @@ shared scroll state, and adds every contributing rectangle to one stable
 backend-neutral highlight group. Hosts receive only semantic open, query, next,
 previous, and close events.
 
+Chrome-owned utility transactions also stay in this boundary. Copy Address
+selects the committed history URL and emits a typed clipboard write, while
+Open in New Window selects the same URL and emits a `_blank` GET browsing
+context request with `noopener`. Neither command reads the editable address
+draft or mutates the current session; native hosts only present the effect.
+
 Typed inputs retain that single-owner design. The session exposes
 `ControlValueState` for live validity and accessibility projection, routes
 Arrow Up/Down and SetValue/Increment/Decrement through shared numeric
