@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:3d5f5bb521a88d55",
+  "sourceHash": "fnv1a64:8c2bb4efb4ce5ac6",
   "lessons": [
     {
       "id": "ML-C69-words",
@@ -414,14 +414,14 @@
       "title": "(reading) — the first passage",
       "headword": "(reading)",
       "romanization": "",
-      "gloss": "the first passage — one doorway, fifteen lines, and not one new word",
+      "gloss": "the first passage — one doorway, twenty-four lines, and not one new word",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a77be552c278651a",
+      "sourceHash": "fnv1a64:1bc881528aa42bb8",
       "notice": null,
       "blocks": [
         {
@@ -437,7 +437,7 @@
             },
             {
               "kind": "speech",
-              "text": "Six words, then six lines. Now fifteen of them together."
+              "text": "Six words, then six lines. Now twenty-four of them together."
             },
             {
               "kind": "pause",
@@ -458,7 +458,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഇത് എന്റെ വാതിൽ ആണ്. ഇത് പഴയ വാതിൽ ആണ്. ഇവിടെ കോലം ഉണ്ട്. ഇത് നല്ല കോലം ആണ്. അവിടെ വലിയ മരം ഉണ്ട്. ഇവിടെ പൂവ് ഇല്ല. എന്നാൽ ഇവിടെ മാല ഉണ്ട്. പിന്നെ ഇവിടെ വിളക്ക് ഉണ്ട്. ഇത് പുതിയ വിളക്ക് ആണ്. അവിടെ ചെറിയ കസേര ഉണ്ട്. കസേര പഴയ കസേര ആണ്. അവിടെ പുസ്തകം ഉണ്ട്. ഇപ്പോൾ വെയിൽ ഉണ്ട്. ആകാശം നീല ആണ്. ഇവിടെ നോക്കൂ."
+              "text": "ഇത് എന്റെ വാതിൽ ആണ്. ഇത് പഴയ വാതിൽ ആണ്. ഇവിടെ കോലം ഉണ്ട്. ഇത് നല്ല കോലം ആണ്. അവിടെ വലിയ മരം ഉണ്ട്. ഇവിടെ പൂവ് ഇല്ല. എന്നാൽ ഇവിടെ മാല ഉണ്ട്. പിന്നെ ഇവിടെ വിളക്ക് ഉണ്ട്. ഇത് പുതിയ വിളക്ക് ആണ്. അവിടെ ചെറിയ കസേര ഉണ്ട്. കസേര പഴയ കസേര ആണ്. അവിടെ പുസ്തകം ഉണ്ട്. ഇപ്പോൾ വെയിൽ ഉണ്ട്. ആകാശം നീല ആണ്. ഇവിടെ വെള്ളം ഉണ്ട്. അവിടെ ചായ ഇല്ല. എന്നാൽ ഇവിടെ പാൽ ഉണ്ട്. ഇവിടെ നായ ഉണ്ട്. അവിടെ പൂച്ച ഉണ്ട്. നായ ഇവിടെ ഉണ്ട്, പൂച്ച അവിടെ ഉണ്ട്. ഇത് പഴയ പുസ്തകം ആണ്. എന്നാൽ അത് നല്ല പുസ്തകം ആണ്. ഇപ്പോൾ ഇവിടെ വലിയ മാല ഉണ്ട്. ഇപ്പോൾ ഇവിടെ നോക്കൂ."
             },
             {
               "kind": "pause",
@@ -495,7 +495,7 @@
             },
             {
               "kind": "speech",
-              "text": "The passage stands in one spot and never moves. Everything near is ഇവിടെ, everything far is അവിടെ, and each thing gets named once and placed once — which is the two verbs from the last lesson, alternating."
+              "text": "Everything near is ഇവിടെ; everything far is അവിടെ. ആണ് names; ഉണ്ട് places."
             },
             {
               "kind": "pause",
@@ -505,7 +505,7 @@
             },
             {
               "kind": "speech",
-              "text": "One line turns the page against itself. ഇവിടെ പൂവ് ഇല്ല. എന്നാൽ ഇവിടെ മാല ഉണ്ട്. No flower here — but a garland is. That is the only word on the page doing the work of joining two thoughts."
+              "text": "എന്നാൽ joins absence and presence: ഇവിടെ പൂവ് ഇല്ല. എന്നാൽ ഇവിടെ മാല ഉണ്ട്. It is the passage's one explicit connection."
             },
             {
               "kind": "pause",
@@ -515,7 +515,7 @@
             },
             {
               "kind": "speech",
-              "text": "Everything else is held together by nothing at all except the order the lines are in. That is worth noticing, because it is what a language can do before it has taught you a single conjunction, and it is already enough to describe a place."
+              "text": "Order carries the rest."
             },
             {
               "kind": "pause",
@@ -525,7 +525,7 @@
             },
             {
               "kind": "speech",
-              "text": "The last line is the only one that asks you for something. Fourteen lines describe; the fifteenth turns and speaks to you."
+              "text": "The first twenty-three lines describe. The last asks you to look."
             }
           ]
         },

@@ -6,7 +6,7 @@
 `ML-A1-SCR-12` now names glyphs and codepoints instead of ambiguous English
 letter names, states its counting rule, and distinguishes direct script-lesson
 headword ownership from the broader script-closure gate's example-based credit.
-The current census is **68** Malayalam headword characters across **459**
+The current census is **68** Malayalam headword characters across **470**
 lessons, **59** with direct owners and **nine** without. A focused test derives
 the nine glyphs, their headword-field counts, and their distinct-token counts
 from the corpus so the prose cannot drift silently again.
