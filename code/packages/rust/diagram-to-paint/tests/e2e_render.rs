@@ -189,7 +189,7 @@ mod apple {
     #[test]
     fn render_mermaid_mindmap_to_png() {
         let graph = parse_mindmap(
-            "mindmap\n  root((Native Mermaid))\n    Parser[Grammar first]\n      IR(Semantic tree)\n    Paint((Backend neutral))\n      Metal\n      PNG\n    output{{Hexagon path}}\n    cloud)Portable cloud(\n    alert))Backend bang((",
+            "mindmap\n  root((Native Mermaid))\n    Parser[\"Grammar [] first\"]\n      IR(\"Semantic<br/>tree\")\n    Paint((Backend neutral))\n      Metal\n      PNG\n    output{{Hexagon path}}\n    cloud)Portable cloud(\n    alert))Backend bang((",
         )
         .expect("mindmap parse failed");
         assert!(graph
@@ -200,6 +200,8 @@ mod apple {
             .nodes
             .iter()
             .any(|node| node.shape == Some(diagram_ir::DiagramShape::Bang)));
+        assert!(graph.nodes.iter().any(|node| node.label.text == "Grammar [] first"));
+        assert!(graph.nodes.iter().any(|node| node.label.text == "Semantic\ntree"));
         let layout = layout_graph_diagram(&graph, None, None);
         let shaper = CoreTextShaper;
         let metrics = CoreTextMetrics;

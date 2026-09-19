@@ -2399,10 +2399,12 @@ fn parse_mindmap_node(source: &str) -> (Option<String>, String, DiagramShape) {
         if let Some(open_index) = source.find(open) {
             if source.ends_with(close) && open_index + open.len() <= source.len() - close.len() {
                 let id = source[..open_index].trim();
-                let label = source[open_index + open.len()..source.len() - close.len()].trim();
+                let label = unquote_mermaid_string(
+                    source[open_index + open.len()..source.len() - close.len()].trim(),
+                );
                 return (
                     (!id.is_empty()).then(|| id.to_string()),
-                    normalize_mermaid_line_breaks(label),
+                    normalize_mermaid_line_breaks(&label),
                     shape,
                 );
             }
@@ -10168,6 +10170,18 @@ mod tests_dg04 {
         assert_eq!(diagram.nodes[5].shape, Some(DiagramShape::Bang));
         assert_eq!(diagram.nodes[5].label.text, "Backend bang");
         assert_eq!(diagram.nodes[6].id, "parser");
+    }
+
+    #[test]
+    fn mindmap_unquotes_delimiter_rich_labels_and_normalizes_line_breaks() {
+        let diagram = parse_mindmap(
+            "mindmap\n  root[\"String containing [] and ()\"]\n    child[\"Line one<br/>Line two\"]\n    escaped[\"First\\nSecond\"]",
+        )
+        .unwrap();
+
+        assert_eq!(diagram.nodes[0].label.text, "String containing [] and ()");
+        assert_eq!(diagram.nodes[1].label.text, "Line one\nLine two");
+        assert_eq!(diagram.nodes[2].label.text, "First\nSecond");
     }
 
     #[test]
