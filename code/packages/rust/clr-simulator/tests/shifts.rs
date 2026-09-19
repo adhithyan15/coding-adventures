@@ -94,3 +94,27 @@ fn refusal_preserves_operands_and_pc() {
         }
     }
 }
+
+#[test]
+fn literals_flow_through_shifts_to_return() {
+    for (bytes, want) in [
+        (vec![0x17, 0x1f, 31, 0x62, 0x2a], Value::Int(i32::MIN)),
+        (vec![0x1f, 253, 0x17, 0x63, 0x2a], Value::Int(-2)),
+        (
+            vec![0x21, 0, 0, 0, 0, 1, 0, 0, 0, 0x17, 0x62, 0x2a],
+            Value::Int64(8589934592),
+        ),
+        (
+            vec![
+                0x21, 253, 255, 255, 255, 255, 255, 255, 255, 0x17, 0x63, 0x2a,
+            ],
+            Value::Int64(-2),
+        ),
+    ] {
+        let mut s = CLRSimulator::new();
+        s.load(&bytes, 0);
+        s.run(10);
+        assert!(s.halted);
+        assert_eq!(s.stack, vec![Some(want)]);
+    }
+}
