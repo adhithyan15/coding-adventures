@@ -51,6 +51,16 @@ it("keeps recurring Malayalam forms on one letter-by-letter romanization", () =>
   expect(byId.get("ML-C18-mani")?.body).toContain("**മണി** (*maṇi*)");
   expect(byId.get("ML-C102-azhcha")?.body).toContain("*tiṅkaḷāḻca ñān pōkuṁ*");
 });
+it("keeps the weekday comparison in the right scripts with exact glosses", () => {
+  const lesson = loadTrackLessons("malayalam").find(
+    (candidate) => candidate.realization.lessonId === "ML-C10-azhcha",
+  );
+
+  expect(lesson?.body).toContain('**கிழமை** (*kizhamai*, "day of the week")');
+  expect(lesson?.body).toContain('**ആഴ്ച** (*āḻca*, "week")');
+  expect(lesson?.body).not.toContain("ஆழ்ச");
+  expect(lesson?.body).not.toContain('(*āḻca*) — a different word for the same idea');
+});
 it("keeps Malayalam's opening free of genuine future farewells and pronouns", () => {
   const references = measureContinuity(
     loadTrackLessons("malayalam", defaultCurriculumRoot()),

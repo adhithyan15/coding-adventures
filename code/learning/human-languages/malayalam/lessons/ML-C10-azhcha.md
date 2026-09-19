@@ -12,7 +12,7 @@ concept_tag: ML-DAYS-WEEK
 prerequisites: [ML-C09-kshamikkanam]
 sounds: [malayalam-zha, malayalam-nya]
 roots: [dravidian-native-planet-words, sanskrit-planet-words]
-etymology_hook: "Malayalam's week-word ആഴ്ച āḻca and several planet-names (tiṅkaḷ, veḷḷi, ñāyar) are near-identical to Tamil's — the two split apart only centuries ago"
+etymology_hook: "Malayalam's weekday names pair the week-word ആഴ്ച āḻca with several planet-names (tiṅkaḷ, veḷḷi, ñāyar) that are near-identical to Tamil's — the two languages split apart only centuries ago"
 duration:
   max_seconds: 240
 requires:
@@ -57,11 +57,11 @@ words for the days of the week.
 This is the closest family match anywhere in Dravidian:
 **tiṅkaḷ/thiṅgaḷ**, **veḷḷi/veḷḷi**, and **ñāyar/ñāyiṟu** are essentially
 **the same words**, because Malayalam only became a distinct language from
-Tamil within roughly the last thousand years or so. Where Tamil says
-**கிழமை** (*kizhamai*) for "day," Malayalam says **ஆழ்ச** (*āḻca*) — a
-different word for the same idea (the two aren't confirmed cognates; treat
-this as two languages solving the same naming problem separately, not
-necessarily one shared root). Like Tamil,
+Tamil within roughly the last thousand years or so. Tamil builds its weekday
+names with **கிழமை** (*kizhamai*, "day of the week"), while Malayalam builds
+them with **ആഴ്ച** (*āḻca*, "week"). The two words are not confirmed cognates;
+treat them as two languages solving the same naming problem separately, not
+necessarily as one shared root. Like Tamil,
 Malayalam mixes **native** planet-words (Moon, Mars, Venus, Sun) with
 **Sanskrit** ones (Mercury, Jupiter, Saturn) — the same split, inherited from
 the same shared ancestor language.
@@ -70,7 +70,7 @@ the same shared ancestor language.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C10-AZHCHA-01, ML-CONCEPT-C10-AZHCHA-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "tiṅkaḷ" — moon — then "āḻca," day/week]
+- [YOU SAY: "tiṅkaḷ" — moon — then "āḻca," week]
 - [YOU SAY: the shared words — "veḷḷi" (Venus), same in both Malayalam and
   Tamil]
 - [YOU SAY: the Sanskrit ones — "budhan, vyāzham, śani" — Mercury, Jupiter,
