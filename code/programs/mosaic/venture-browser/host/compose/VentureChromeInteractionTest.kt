@@ -79,6 +79,11 @@ class VentureChromeInteractionTest {
             val surface = rule.onNodeWithTag("venture-content-surface").assertExists()
             println("compose-live-stage=shell-mounted")
 
+            rule.onNodeWithTag("copy-address-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) { host.lastClipboardText != null }
+            assertEquals("${server.origin}/start", host.lastClipboardText)
+            println("compose-live-stage=copy-address")
+
             rule.onNodeWithTag("view-source-button").assertIsEnabled().performClick()
             rule.waitUntil(10_000) { host.lastAuxiliaryDocument != null }
             val sourceDocument = assertNotNull(host.lastAuxiliaryDocument)

@@ -103,6 +103,11 @@ void main() {
       await _pumpLiveVentureShell(tester, host);
       debugPrint('flutter-live-stage=shell-pumped');
 
+      await tester.tap(find.text('Copy Address'));
+      await tester.pumpAndSettle();
+      expect(host.lastClipboardText, 'http://127.0.0.1:$port/start');
+      debugPrint('flutter-live-stage=copy-address');
+
       await tester.tap(find.text('View Source'));
       await tester.pumpAndSettle();
       expect(host.lastAuxiliaryDocument?['kind'], 'view-source');

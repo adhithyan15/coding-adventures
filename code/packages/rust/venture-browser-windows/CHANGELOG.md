@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Serialize the shared Copy Address clipboard effect for generated WinUI.
+
 - Expose shared live output and normalized meter/progress accessibility state
   to WinUI hosts.
 

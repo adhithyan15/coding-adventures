@@ -291,6 +291,7 @@ class MosaicHost {
   Map<String, Object?>? lastAuxiliaryDocument;
   Map<String, Object?>? lastBrowsingContextRequest;
   Map<String, Object?>? lastDownloadRequest;
+  String? lastClipboardText;
   Stream<Map<String, Object?>> get filePickerRequests => _filePickerRequests.stream;
 
   FutureOr<Map<String, Object?>?> props() {
@@ -524,6 +525,9 @@ class MosaicHost {
       lastBrowsingContextRequest = Map<String, Object?>.from(effect);
     } else if (effect['type'] == 'download') {
       lastDownloadRequest = Map<String, Object?>.from(effect);
+    } else if (effect['type'] == 'write-clipboard' && effect['text'] is String) {
+      lastClipboardText = effect['text'] as String;
+      unawaited(Clipboard.setData(ClipboardData(text: lastClipboardText!)));
     }
   }
 
