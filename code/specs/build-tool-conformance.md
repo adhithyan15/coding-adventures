@@ -1216,6 +1216,20 @@ structured command fields use the shared definitions in the corpus schema.
 | `toolchain_detection` | target platform, package-language records with closed inline BUILD-front snapshots, `null`/empty/explicit package selection, explicit forced-full mode, and forced toolchains | the complete canonical toolchain registry as a sorted boolean map |
 | `cli` | a portable action, decision condition, and whether the action would require later execution | exit code only |
 
+`ci_gate_selection` applies one fixed operation-wide ceiling of 50,000,000
+match-work units whenever `force` is false, both snapshots are non-null, and no
+changed path is a fixed gating-machinery sentinel. After structural registry
+and glob validation, but before package intersection or any matcher call, the
+implementation MUST charge the complete Cartesian product of every gate path
+pattern and changed file. Each pair costs `(pattern Unicode-scalar count + 1)
+* (changed-file Unicode-scalar count + 1)`. Exactly 50,000,000 units proceeds;
+checked-arithmetic overflow or a larger total returns an empty result and
+exactly one `CI_GATE_MATCH_LIMIT_EXCEEDED` error diagnostic without calling the
+matcher. Preflight includes work hidden by package intersection and early
+matches. Force, either null snapshot, and fixed machinery sentinels return all
+gates as true without enforcing the ceiling. Successful expectations MUST
+reject arbitrary adapter errors.
+
 These records intentionally model decisions, not host operations:
 
 - CI gate selection receives a validated registry and inert change snapshots;

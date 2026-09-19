@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 15533,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/15533",
-    "branch": "codex/build-tool-diff-match-ceiling-20260919",
-    "implementation_revision": "84182f72b0cf319bcd85fb112cff73ca8efeda9c",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-19T09:23:37Z",
+    "observed_at": "2026-09-19T10:18:36Z",
     "pr_number": 15533,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #15533 is open at exact implementation revision 84182f72b0cf319bcd85fb112cff73ca8efeda9c. GitHub reports the branch mergeable with no conflict, while the initial CI and CodeQL detection checks remain queued. Auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "All 44 reported final-head checks completed acceptably: 11 successes and 33 expected skips, with zero failures or nonterminal checks. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #15533 as a53ee1a98f62c58b09acb166d898eb5fbebf3ce0 without a manual merge command."
   },
   "last_inventory": {
-    "revision": "06c4814c64f5773f0a12902b5cf1dae943c53851",
+    "revision": "9710bf606086e7e01ae6f4577644e7f26e7ed4cf",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1441,
@@ -1012,7 +1006,7 @@
     {
       "id": "build-tool-diff-selection-match-work-ceiling",
       "title": "Bound language-neutral diff-selection match work",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-site-authored-resource-source-input-extension"],
       "branch": "codex/build-tool-diff-match-ceiling-20260919",
       "pr_number": 15533,
@@ -1025,7 +1019,132 @@
       "rebase_notes": "Rebased conflict-free twice before publication onto exact origin/main 06c4814c64f5773f0a12902b5cf1dae943c53851. The four intervening merged changes extend existing SPICE Mosaic, OAuth broker, Venture browser, and ALGOL IIR/lang-aot behavior without adding or removing a package identity, BUILD marker, build-tool contract, selected path, or newly unowned parity gap. The regenerated schema-3 inventory remains 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five OCaml packages, zero collisions, and zero unknown buckets.",
       "validation_notes": "Specification-first and red-test execution proved the prior oracle lacked the ceiling and accepted arbitrary errors. The final 151-case corpus validates with 285 staged files; 24 schema tests and 82 runner tests pass, including exact 50,000,000-unit admission, 50,000,004-unit failure, Unicode-scalar accounting, strict-root charging, near-BUILD charging, all five recursive exact BUILD-front exemptions, structural and boundary precedence, match-limit precedence over unknown paths, zero matcher calls on overflow, and expected/result fail-open rejection. Branch-aware coverage reports 90% for the 2,191-statement runner. Ten package-parity, seven capability-taxonomy, ten OCaml capability-gate, and 51 OCaml toolchain-lock tests pass with two expected Windows skips. The canonical Go build tool passes all packages, vet, and a trimpath build. The exact-main reporter remains collision-clean with zero unknown buckets; the 811-owner/1,386-edge state graph is strict-JSON-valid, unique, dependency-complete, acyclic, and free of merged-to-unfinished edges at 214 merged, 596 pending, and exactly this owner at pr-open. Ruff changed-line checks, Bandit medium/high, PyCompile, JSON, and diff-hygiene checks pass; the repository's two touched Python files retain their pre-existing whole-file Ruff-format debt rather than introducing broad unrelated reformatting.",
       "security_notes": "Independent review issued SHIP with no critical, high, medium, or low finding requiring change. The ceiling uses checked remaining-budget arithmetic, rejects over-limit inputs before the matcher, treats fixture strings as inert data, preserves earlier structural and boundary failures, returns one redacted stable diagnostic, and adds no Git, filesystem, process, environment, network, credential, native-link, or execution authority.",
+      "merged_head_revision": "b4efab71f0b0f82982f5a2ed0c4367e453331020",
+      "merged_at": "2026-09-19T10:18:36Z",
+      "merge_revision": "a53ee1a98f62c58b09acb166d898eb5fbebf3ce0",
+      "merge_notes": "All 44 reported final-head checks completed acceptably: 11 successes and 33 expected skips. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #15533 without a plain manual merge command.",
       "notes": "Adversarial review found that diff-selection strict-glob matching has no operation-wide work ceiling and that the independent oracle accepts arbitrary error outcomes after a successful expectation. Define a fixed 50,000,000-unit full preflight over every applicable strict-glob package, changed path, and declared pattern; exempt recursive exact BUILD fronts; count Unicode scalars; fail with one stable DIFF_MATCH_LIMIT_EXCEEDED diagnostic before any matcher call; preserve structural and repository-boundary validation precedence; and make successful expectations reject arbitrary adapter errors. Add exact-at-limit and over-limit neutral fixtures without granting Git, filesystem, process, environment, network, credential, or native-link authority."
+    },
+    {
+      "id": "build-tool-ci-gate-selection-match-work-ceiling",
+      "title": "Bound language-neutral CI-gate selection match work",
+      "status": "in-progress",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-diff-selection-match-work-ceiling"],
+      "branch": "codex/build-tool-ci-gate-match-ceiling-20260919",
+      "pr_number": null,
+      "selected_at": "2026-09-19T10:25:26Z",
+      "selection_revision": "9710bf606086e7e01ae6f4577644e7f26e7ed4cf",
+      "selection_notes": "Selected only after PR #15533 completed all 44 final-head checks acceptably and merged through guarded squash auto-merge. The collision-checked exact-main inventory remains 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, bands 175/265, 123/934, 181/2,282, and 962/13,468, 782 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Parallel audits registered every newly discovered diff-ceiling adoption leaf and the CI-gate ceiling before selection. This smallest ready security prerequisite closes the same multiplicative matcher-work class in the neutral CI-gate oracle and canonical Go engine before ten current lane implementations and future JVM, Dart, and OCaml engines adopt the domain.",
+      "notes": "The validated CI-gate schema admits 128 gates times 4,096 path globs times 8,192 changed files, while the Python oracle and Go evaluator have no operation-wide preflight ceiling and Go globstar recursion is not memoized. Define a fixed 50,000,000 Unicode-scalar work-unit budget over the full gate-path and changed-file Cartesian product, preserve validated run-all bypasses and structural precedence, fail with exact CI_GATE_MATCH_LIMIT_EXCEEDED before any matcher call, memoize Go globstar states, add exact-at-limit and over-limit neutral fixtures, and update every current and future CI-gate consumer dependency without adding host or workflow authority."
+    },
+    {
+      "id": "build-tool-go-diff-selection-match-work-ceiling-adoption",
+      "title": "Adopt bounded diff-selection match work in the Go build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the exact-at-limit and over-limit neutral diff fixtures in the canonical Go engine, count Unicode scalars with checked arithmetic, preserve validation and unknown-path precedence, and return the stable limit diagnostic before any matcher call without widening authority."
+    },
+    {
+      "id": "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption",
+      "title": "Adopt bounded diff-selection match work in the shared C# and F# build-tool engine",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Implement the reviewed ceiling once in the shared C# engine and prove dynamic fixture consumption through both native C# and F# test fronts without adding host authority."
+    },
+    {
+      "id": "build-tool-elixir-diff-selection-match-work-ceiling-adoption",
+      "title": "Adopt bounded diff-selection match work in the Elixir build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the reviewed neutral ceiling fixtures in the pure Elixir diff engine with checked Unicode-scalar accounting and zero matcher calls on overflow."
+    },
+    {
+      "id": "build-tool-haskell-diff-selection-match-work-ceiling-adoption",
+      "title": "Adopt bounded diff-selection match work in the Haskell build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the reviewed neutral ceiling fixtures in the Haskell diff engine and preserve exact scalar accounting, precedence, and stable diagnostics before terminal lane closure."
+    },
+    {
+      "id": "build-tool-lua-diff-selection-match-work-ceiling-adoption",
+      "title": "Adopt bounded diff-selection match work in the Lua build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the reviewed neutral ceiling fixtures in the pure Lua diff engine with checked Unicode-scalar accounting and no matcher work after overflow."
+    },
+    {
+      "id": "build-tool-perl-diff-selection-match-work-ceiling-adoption",
+      "title": "Adopt bounded diff-selection match work in the Perl build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the reviewed neutral ceiling fixtures in the pure Perl diff engine with exact stable failure behavior and no new authority."
+    },
+    {
+      "id": "build-tool-python-diff-selection-match-work-ceiling-adoption",
+      "title": "Adopt bounded diff-selection match work in the Python build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Carry the reviewed reference-oracle ceiling into the production Python diff engine and dynamically consume both neutral boundary fixtures."
+    },
+    {
+      "id": "build-tool-ruby-diff-selection-match-work-ceiling-adoption",
+      "title": "Adopt bounded diff-selection match work in the Ruby build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the reviewed neutral ceiling fixtures in the pure Ruby diff engine with checked scalar accounting and stable overflow diagnostics."
+    },
+    {
+      "id": "build-tool-rust-diff-selection-match-work-ceiling-adoption",
+      "title": "Adopt bounded diff-selection match work in the Rust build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the reviewed neutral ceiling fixtures in the dependency-minimal Rust diff engine with checked arithmetic and zero partial results."
+    },
+    {
+      "id": "build-tool-swift-diff-selection-match-work-ceiling-adoption",
+      "title": "Adopt bounded diff-selection match work in the Swift build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the reviewed neutral ceiling fixtures in the Foundation-free Swift diff engine before terminal lane closure."
+    },
+    {
+      "id": "build-tool-typescript-diff-selection-match-work-ceiling-adoption",
+      "title": "Adopt bounded diff-selection match work in the TypeScript build tool",
+      "status": "pending",
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Consume the reviewed neutral ceiling fixtures in the process-free TypeScript diff engine without Node host authority or package-metadata churn."
+    },
+    {
+      "id": "build-tool-diff-selection-match-work-ceiling-remaining-engines",
+      "title": "Complete bounded diff-selection match work across every build-tool engine",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-go-diff-selection-match-work-ceiling-adoption", "build-tool-csharp-fsharp-diff-selection-match-work-ceiling-adoption", "build-tool-elixir-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-lua-diff-selection-match-work-ceiling-adoption", "build-tool-perl-diff-selection-match-work-ceiling-adoption", "build-tool-python-diff-selection-match-work-ceiling-adoption", "build-tool-ruby-diff-selection-match-work-ceiling-adoption", "build-tool-rust-diff-selection-match-work-ceiling-adoption", "build-tool-swift-diff-selection-match-work-ceiling-adoption", "build-tool-typescript-diff-selection-match-work-ceiling-adoption", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Selection-blocked aggregate requiring every current engine and the future JVM, Dart, and OCaml build tools to consume the bounded diff-selection contract before all-language closure."
     },
     {
       "id": "build-tool-go-native-source-snapshot-stability-hardening",
@@ -2716,7 +2835,7 @@
       "title": "Close Haskell native build-tool adapter conformance",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-haskell-extra-ci-toolchain-declaration-conformance", "build-tool-haskell-dune-build-discovery-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-haskell-orphan-crate-validation-conformance", "build-tool-haskell-tracked-artifact-validation-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-cli-parser-adoption", "build-tool-haskell-starlark-metering-adoption", "build-tool-haskell-validation-oracle-adoption"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-extra-ci-toolchain-declaration-conformance", "build-tool-haskell-dune-build-discovery-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-haskell-orphan-crate-validation-conformance", "build-tool-haskell-tracked-artifact-validation-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-cli-parser-adoption", "build-tool-haskell-starlark-metering-adoption", "build-tool-haskell-validation-oracle-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Haskell build-tool lane gate materialized by the post-#14615 audit. After every native correctness child lands, add a real adapter and run the entire versioned neutral corpus, including the completed graph/diff cases, through the Haskell front door with no undeclared expected failures. Keep this owner selection-blocked until the native retained-handle snapshot design and all listed children are complete."
@@ -2726,7 +2845,7 @@
       "title": "Close Swift native build-tool adapter conformance",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-swift-extra-ci-toolchain-declaration-conformance", "build-tool-swift-dune-build-discovery-exclusion", "build-tool-swift-windows-test-front-failure-propagation", "build-tool-swift-language-source-input-registry-adoption", "build-tool-swift-repository-source-input-boundary-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-swift-portable-source-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-swift-dist-newstyle-discovery-exclusion", "build-tool-swift-rockspec-utf8-conformance", "build-tool-swift-windows-absolute-file-options", "build-tool-swift-language-identity-registry", "build-tool-swift-orphan-crate-validation-conformance", "build-tool-swift-tracked-artifact-validation-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-swift-cli-parser-adoption", "build-tool-swift-starlark-metering-adoption", "build-tool-swift-validation-oracle-adoption"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-swift-diff-selection-match-work-ceiling-adoption", "build-tool-swift-extra-ci-toolchain-declaration-conformance", "build-tool-swift-dune-build-discovery-exclusion", "build-tool-swift-windows-test-front-failure-propagation", "build-tool-swift-language-source-input-registry-adoption", "build-tool-swift-repository-source-input-boundary-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-swift-portable-source-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-swift-dist-newstyle-discovery-exclusion", "build-tool-swift-rockspec-utf8-conformance", "build-tool-swift-windows-absolute-file-options", "build-tool-swift-language-identity-registry", "build-tool-swift-orphan-crate-validation-conformance", "build-tool-swift-tracked-artifact-validation-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-swift-cli-parser-adoption", "build-tool-swift-starlark-metering-adoption", "build-tool-swift-validation-oracle-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Swift build-tool lane gate materialized by the post-#14615 audit. After every native correctness child lands, add a real adapter and run the entire versioned neutral corpus, including the completed graph/diff cases, through the Swift front door with no undeclared expected failures. Keep this owner selection-blocked until all listed snapshot, path, hashing, registry, fixture, and validator children are complete."
@@ -2744,6 +2863,7 @@
         "ocaml-build-tool-current-contract-conformance",
         "ocaml-build-tool-three-platform-ci-execution",
         "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-diff-selection-match-work-ceiling-remaining-engines",
         "build-tool-execution-semantics-corpus",
         "build-tool-ci-gate-registry-established-lane-parity",
         "build-tool-cli-parser-remaining-engines",
@@ -2960,7 +3080,8 @@
         "ocaml-capability-analyzer",
         "build-tool-pure-domain-corpus",
         "build-tool-execution-semantics-corpus",
-        "build-tool-neutral-graph-diff-corpus-completion"
+        "build-tool-neutral-graph-diff-corpus-completion",
+        "build-tool-diff-selection-match-work-ceiling"
       ],
       "branch": null,
       "pr_number": null,
@@ -8746,7 +8867,7 @@
       "id": "build-tool-csharp-fsharp-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the shared C# and F# build-tool lanes",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no CI gate registry or evaluator in either .NET front door. Add one bounded C# pure engine consumed independently by both language-native front doors, preserve the reviewed shared-engine boundary, and execute every neutral ci_gate_selection case in both lane suites."
@@ -8755,7 +8876,7 @@
       "id": "build-tool-elixir-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Elixir CI gate evaluator. Add a process-free native implementation and consume every neutral ci_gate_selection case without filesystem, Git, process, environment, network, credential, or workflow authority."
@@ -8764,7 +8885,7 @@
       "id": "build-tool-haskell-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Haskell build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Haskell CI gate evaluator. Add a total bounded native implementation and dynamic fixture consumer for every neutral ci_gate_selection case while retaining the process-free authority boundary."
@@ -8773,7 +8894,7 @@
       "id": "build-tool-lua-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Lua build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Lua CI gate evaluator. Add a bounded pure module and Busted consumption of every neutral case without gaining host or workflow authority."
@@ -8782,7 +8903,7 @@
       "id": "build-tool-perl-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Perl build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Perl CI gate evaluator. Add a bounded pure module and complete Test2 fixture consumption with exact null-versus-empty and portable glob semantics and no host authority."
@@ -8791,7 +8912,7 @@
       "id": "build-tool-python-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Python build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Python CI gate evaluator. Add a typed process-free module and pytest consumption of every neutral case without reading the repository, invoking Git, or writing workflow outputs."
@@ -8800,7 +8921,7 @@
       "id": "build-tool-ruby-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Ruby build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Ruby CI gate evaluator. Add a frozen bounded pure registry projection and Minitest consumption of every neutral case without host or workflow authority."
@@ -8809,7 +8930,7 @@
       "id": "build-tool-rust-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Rust CI gate evaluator. Add a bounded dependency-minimal pure implementation and native consumption of every neutral case with no filesystem, Git, process, environment, network, credential, or workflow authority."
@@ -8818,7 +8939,7 @@
       "id": "build-tool-swift-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Swift build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Swift CI gate evaluator. Add a Foundation-free bounded pure implementation and Swift Testing consumption of every neutral case without host or workflow authority."
@@ -8827,7 +8948,7 @@
       "id": "build-tool-typescript-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the TypeScript build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no TypeScript CI gate evaluator. Add a bounded process-free module and Vitest consumption of every neutral case without Node filesystem, process, environment, network, credential, or workflow authority."
@@ -8959,7 +9080,7 @@
       "id": "build-tool-jvm-current-contract-conformance",
       "title": "Bring Java and Kotlin build tools to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension"],
+      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for both JVM front doors. Require the current language registry, repository-boundary reverse-diff and digest corpus, CI-gate corpus, and every other established process-free build-tool contract before either lane counts as complete."
@@ -8968,7 +9089,7 @@
       "id": "build-tool-dart-current-contract-conformance",
       "title": "Bring the Dart build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-dart", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension"],
+      "depends_on": ["build-tool-dart", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for the Dart build-tool front door. Require all current process-free contracts and language-neutral fixtures before the lane is counted complete."
@@ -8977,7 +9098,7 @@
       "id": "ocaml-build-tool-current-contract-conformance",
       "title": "Bring the OCaml build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension"],
+      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The existing OCaml native-build-tool owner predates later shared contracts. Before promotion, require native consumption of every current process-free corpus, including source registry, repository-boundary reverse diff and digest, CI-gate selection, and the remaining universal contract families."
@@ -9096,7 +9217,7 @@
       "id": "build-tool-jvm-process-free-graph-diff-core",
       "title": "Implement Java and Kotlin build-tool graph and diff-selection cores",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#14615 all-language build-tool audit. Implement separate idiomatic Java and Kotlin process-free cores over the same closed graph/diff fixtures, with deterministic bounded topology and closure behavior, stable GRAPH_CYCLE and DIFF_UNKNOWN_PATH errors, strict portable globs, and no filesystem, Git, process, environment, network, credential, or execution authority. This bounded owner prevents both JVM lanes from waiting on the larger sandbox/execution chain and becomes a prerequisite of the full JVM build tools."
@@ -9105,7 +9226,7 @@
       "id": "build-tool-dart-process-free-graph-diff-core",
       "title": "Implement Dart build-tool graph and diff-selection cores",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#14519 all-language build-tool audit. Implement only the process-free graph and diff-selection domains against the closed neutral corpus, with deterministic topology, cycle errors, closures, unknown-path policies, bounded inputs, and no filesystem, Git, process, environment, network, or credential authority. This bounded core becomes a prerequisite of the full Dart build tool rather than claiming a complete adapter."
@@ -9632,7 +9753,7 @@
       "title": "Complete CI gate selection in every supported build-tool lane",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-csharp-fsharp-ci-gate-selection-conformance", "build-tool-elixir-ci-gate-selection-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-lua-ci-gate-selection-conformance", "build-tool-perl-ci-gate-selection-conformance", "build-tool-python-ci-gate-selection-conformance", "build-tool-ruby-ci-gate-selection-conformance", "build-tool-rust-ci-gate-selection-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-typescript-ci-gate-selection-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-csharp-fsharp-ci-gate-selection-conformance", "build-tool-elixir-ci-gate-selection-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-lua-ci-gate-selection-conformance", "build-tool-perl-ci-gate-selection-conformance", "build-tool-python-ci-gate-selection-conformance", "build-tool-ruby-ci-gate-selection-conformance", "build-tool-rust-ci-gate-selection-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-typescript-ci-gate-selection-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the engine audit to decompose into collision-safe native or reviewed shared-engine leaves. Final closure requires every established build-tool lane plus the OCaml promotion path to consume the same language-neutral ci_gate_selection fixtures or record a narrow reviewed exception."
