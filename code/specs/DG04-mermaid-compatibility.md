@@ -346,10 +346,10 @@ The initial Mermaid 11.16.1 mindmap slice is grammar-backed and preserves
 indentation as parent-child semantic relationships. It supports plain, square,
 rounded, circular, hexagonal, cloud, and bang nodes, deterministic generated
 IDs, quoted delimiter-rich descriptions, semantic HTML and escaped line breaks,
-depth styles, shared graph layout, and backend-neutral PaintScene lowering. A
-native Metal-to-PNG fixture validates this documented subset; icons, classes,
-and formatted Markdown strings remain explicitly outside the partial
-compatibility level.
+whole-line and trailing comments, depth styles, shared graph layout, and
+backend-neutral PaintScene lowering. A native Metal-to-PNG fixture validates
+this documented subset; icons, classes, and formatted Markdown strings remain
+explicitly outside the partial compatibility level.
 
 ### Block Native Slice
 

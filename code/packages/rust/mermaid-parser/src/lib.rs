@@ -2380,11 +2380,24 @@ fn prepare_mindmap_source(source: &str) -> Result<String, ParseError> {
             {
                 ""
             } else {
-                line
+                strip_mindmap_trailing_comment(line)
             }
         })
         .collect::<Vec<_>>()
         .join("\n"))
+}
+
+fn strip_mindmap_trailing_comment(line: &str) -> &str {
+    for (index, _) in line.match_indices("%%") {
+        let node = line[..index].trim_end();
+        if ["]", ")", "}}", "(", "(("]
+            .iter()
+            .any(|closing| node.ends_with(closing))
+        {
+            return &line[..index];
+        }
+    }
+    line
 }
 
 fn parse_mindmap_node(source: &str) -> (Option<String>, String, DiagramShape) {
@@ -10182,6 +10195,19 @@ mod tests_dg04 {
         assert_eq!(diagram.nodes[0].label.text, "String containing [] and ()");
         assert_eq!(diagram.nodes[1].label.text, "Line one\nLine two");
         assert_eq!(diagram.nodes[2].label.text, "First\nSecond");
+    }
+
+    #[test]
+    fn mindmap_ignores_trailing_comments_without_truncating_label_content() {
+        let diagram = parse_mindmap(
+            "mindmap\n  root(Root) %% root comment\n    child[\"100%% complete\"] %% child comment\n    leaf((Leaf))%% compact comment",
+        )
+        .unwrap();
+
+        assert_eq!(diagram.nodes.len(), 3);
+        assert_eq!(diagram.nodes[0].label.text, "Root");
+        assert_eq!(diagram.nodes[1].label.text, "100%% complete");
+        assert_eq!(diagram.nodes[2].label.text, "Leaf");
     }
 
     #[test]

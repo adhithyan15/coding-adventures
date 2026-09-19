@@ -5,6 +5,11 @@ this file.
 
 ## [Unreleased]
 
+- Project numeric layout `font-size` on Text, HostButton and Input/HostInput
+  into live Flutter text styles, retaining static/native fallback for invalid
+  live sizes. Reject unsupported value forms and nonnumeric slots (#15598).
+  Generated Dart widget acceptance runs in the VisiCalc CI workflow.
+
 ### Added — Flutter reports dropped style properties (#12022)
 
 The emitter now records the style keys consumed by each real widget-lowering

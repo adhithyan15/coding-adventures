@@ -104,6 +104,7 @@ pub enum PipelineEmitError {
         mosmodel: String,
         moslayout: String,
     },
+    InvalidFontSize(String),
     UnsafeSlotName(String),
     UnsafeEmitName(String),
     UnknownPrimitive(String),
@@ -126,6 +127,7 @@ impl std::fmt::Display for PipelineEmitError {
                 f,
                 "component name mismatch: mosmodel says '{mosmodel}', moslayout says '{moslayout}'"
             ),
+            PipelineEmitError::InvalidFontSize(reason) => write!(f, "invalid font-size: {reason}"),
             PipelineEmitError::UnsafeSlotName(n) => {
                 write!(f, "unsafe slot name '{n}' (post camelCase conversion)")
             }
@@ -1322,6 +1324,7 @@ pub fn from_pipeline(
         });
     }
 
+    validate_font_sizes(&layout.root, &interface.slots)?;
     let name = &interface.component;
     let mut out = String::new();
 
@@ -2063,6 +2066,15 @@ fn emit_widget_class(
         writeln!(out, "  }}").unwrap();
     }
 
+    if tree.contains("_mosaicFontSize(") {
+        writeln!(out, "  static double? _mosaicFontSize(Object? value) =>").unwrap();
+        writeln!(
+            out,
+            "      value is num && value.isFinite && value > 0 ? value.toDouble() : null;"
+        )
+        .unwrap();
+    }
+
     // 3. build method.
     writeln!(out).unwrap();
     writeln!(out, "  @override").unwrap();
@@ -2741,7 +2753,7 @@ fn emit_widget_tree_inner(
         return emit_host_number_input(node, indent, component);
     }
     if node.tag == "Text" {
-        return Ok(emit_text(node, indent));
+        return emit_text(node, indent, part_styles);
     }
     if node.tag == "Image" {
         return Ok(emit_image(node, indent));
@@ -4731,12 +4743,68 @@ fn emit_styled_box(
 // Text + Image leaves
 // =====================================================================
 
+/// UI36 numeric typography. Unsupported placements remain visible in the
+/// artifact report; supported text controls reject invalid authored values.
+fn font_size_expression(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    let Some(value) = find_prop_value(node, "font-size") else {
+        return Ok(None);
+    };
+    match value {
+        LayoutPropValue::Number(n) if n.is_finite() && *n > 0.0 => {
+            Ok(Some(dart_double_literal(*n)))
+        }
+        LayoutPropValue::SlotRef(name) => {
+            let field = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&field)?;
+            Ok(Some(format!("_mosaicFontSize(this.{field})")))
+        }
+        _ => Err(PipelineEmitError::InvalidFontSize(
+            "expected a positive finite number or numeric component slot".into(),
+        )),
+    }
+}
+
+/// Whether a font-size binding has an implemented Flutter projection.
+pub fn has_native_font_size(node: &LayoutNode) -> bool {
+    matches!(
+        node.tag.as_str(),
+        "Text" | "HostButton" | "HostInput" | "Input"
+    ) && matches!(font_size_expression(node), Ok(Some(_)))
+}
+
+fn validate_font_sizes(node: &LayoutNode, slots: &[SlotDecl]) -> Result<(), PipelineEmitError> {
+    if matches!(
+        node.tag.as_str(),
+        "Text" | "HostButton" | "HostInput" | "Input"
+    ) {
+        font_size_expression(node)?;
+        if let Some(LayoutPropValue::SlotRef(name)) = find_prop_value(node, "font-size") {
+            if !slots
+                .iter()
+                .any(|slot| slot.name == *name && slot.r#type == SlotType::Number)
+            {
+                return Err(PipelineEmitError::InvalidFontSize(format!(
+                    "{name} is not a numeric component slot"
+                )));
+            }
+        }
+    }
+    for child in &node.children {
+        validate_font_sizes(child, slots)?;
+    }
+    Ok(())
+}
+
 /// Lower a `Text` node to a `Text("...")` widget. Accepts the
 /// `content` prop as a string literal, slot ref, or (UI28-1 / U29-D1)
 /// an Expr that evaluates in the surrounding closure scope. Expr
 /// passes verbatim into `Text(...)` so For-loop bindings like
 /// `Text ( content: ( v ) )` reach the Flutter widget unchanged.
-fn emit_text(node: &LayoutNode, indent: usize) -> String {
+fn emit_text(
+    node: &LayoutNode,
+    indent: usize,
+    part_styles: &HashMap<String, String>,
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let text = if let Some(s) = find_string_prop(node, "content") {
         format!("Text(\"{}\")", escape_dart_string(s))
@@ -4759,10 +4827,22 @@ fn emit_text(node: &LayoutNode, indent: usize) -> String {
         "const Text(\"\")".to_string()
     };
 
+    let text = if let Some(size) = font_size_expression(node)? {
+        let base = host_input_text_style_arg(node, part_styles)
+            .unwrap_or_else(|| "const TextStyle()".into());
+        // Text merges a partial style with its actual enclosing DefaultTextStyle.
+        // copyWith(null) keeps the authored fallback when a live value is invalid.
+        format!(
+            "{}, style: ({base}).copyWith(fontSize: {size}))",
+            text.trim_start_matches("const ").strip_suffix(')').unwrap()
+        )
+    } else {
+        text
+    };
     let hidden = matches!(find_prop_value(node, "a11y-role"), Some(LayoutPropValue::Keyword(value)) if value == "none")
         || matches!(find_prop_value(node, "a11y-hidden"), Some(LayoutPropValue::Keyword(value)) if value == "true");
     if hidden {
-        return format!("{pad}ExcludeSemantics(child: {text})\n");
+        return Ok(format!("{pad}ExcludeSemantics(child: {text})\n"));
     }
 
     let label = match find_prop_value(node, "a11y-label") {
@@ -4772,7 +4852,7 @@ fn emit_text(node: &LayoutNode, indent: usize) -> String {
     };
     let heading = matches!(find_prop_value(node, "a11y-role"), Some(LayoutPropValue::Keyword(value)) if value == "heading");
     if label.is_none() && !heading {
-        return format!("{pad}{text}\n");
+        return Ok(format!("{pad}{text}\n"));
     }
     let mut args = Vec::new();
     if let Some(label) = label {
@@ -4783,7 +4863,7 @@ fn emit_text(node: &LayoutNode, indent: usize) -> String {
         args.push("header: true".to_string());
     }
     args.push(format!("child: {text}"));
-    format!("{pad}Semantics({})\n", args.join(", "))
+    Ok(format!("{pad}Semantics({})\n", args.join(", ")))
 }
 
 /// Lower an `Image` node to `Image.network(...)` for URL sources or
@@ -4900,19 +4980,23 @@ fn emit_host_input(
         )
         .unwrap();
     }
-    if let Some(text_style) = host_input_text_style_arg(node, part_styles) {
+    // TextField does not read DefaultTextStyle; preserve the existing explicit
+    // inheritance path before overriding only the numeric size.
+    let text_style = host_input_text_style_arg(node, part_styles).or_else(|| {
+        inherits_enclosing_font(node, part_styles)
+            .then_some(ctx.inherited_text_style)
+            .flatten()
+            .map(|inherited| format!("TextStyle({inherited})"))
+    });
+    if let Some(size) = font_size_expression(node)? {
+        let base = text_style.unwrap_or_else(|| "const TextStyle()".into());
+        writeln!(
+            out,
+            "{input_pad}  style: ({base}).copyWith(fontSize: {size}),"
+        )
+        .unwrap();
+    } else if let Some(text_style) = text_style {
         writeln!(out, "{input_pad}  style: {text_style},").unwrap();
-    } else if let Some(inherited) = inherits_enclosing_font(node, part_styles)
-        .then_some(ctx.inherited_text_style)
-        .flatten()
-    {
-        // #15166 -- the author wrote `font: inherit`, and a `TextField` has
-        // no way to honour that: it does NOT read the enclosing
-        // `DefaultTextStyle` the way a `Text` does, so it silently renders
-        // at the Material theme's font instead of the text beside it. The
-        // enclosing styled box computed the style it merged; this is that
-        // same expression, handed to the input directly.
-        writeln!(out, "{input_pad}  style: TextStyle({inherited}),").unwrap();
     }
 
     if let Some(read_only) = bool_prop_expression(node, "read-only")? {
@@ -5390,6 +5474,17 @@ fn emit_host_button(
         Some("true") => "null".to_string(),
         Some("false") | None => callback,
         Some(disabled) => format!("{disabled} ? null : {callback}"),
+    };
+
+    let label_expr = if let Some(size) = font_size_expression(node)? {
+        let base = host_input_text_style_arg(node, part_styles)
+            .unwrap_or_else(|| "const TextStyle()".into());
+        format!(
+            "{}, style: ({base}).copyWith(fontSize: {size}))",
+            label_expr.strip_suffix(')').unwrap()
+        )
+    } else {
+        label_expr
     };
 
     let style_arg = host_button_style_arg(node, part_styles);

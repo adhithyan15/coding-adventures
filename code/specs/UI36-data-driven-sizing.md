@@ -53,7 +53,14 @@ Expressions and nonnumeric slots are rejected. Windows CI compiles two generated
 components together and exercises table/header/editor scaling, fallback, focus,
 content retention, new rows and scope boundaries.
 
-Other backends report `typography.font-size-binding-unimplemented` in package
+Flutter supports positive literals and numeric component slots on `Text`,
+`Input`/`HostInput` and `HostButton` (#15598). A partial text style overrides
+only the size, preserving static color/family and the native inherited fallback.
+Invalid live values retain the original style; invalid authored forms and
+nonnumeric slots are errors. Generated widget tests exercise updates and fallback,
+input events and button dispatch. Flutter `HostTable` inheritance remains pending.
+
+Unsupported backends and placements report `typography.font-size-binding-unimplemented` in package
 degradation analysis. This foundation does not claim cross-backend typography acceptance,
 startup context propagation, or application layout acceptance; those are tracked
 in #14661. The initial compiler slice is #14677.
