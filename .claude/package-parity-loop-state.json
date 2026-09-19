@@ -11,35 +11,29 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 15080,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/15080",
-    "branch": "codex/build-tool-site-authored-resources-20260912",
-    "implementation_revision": "c9e752986c06df056dabc8a6e42e28fd7b6f1735",
-    "status": "ci-repair-validated"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-13T09:24:07Z",
+    "observed_at": "2026-09-13T18:45:42Z",
     "pr_number": 15080,
-    "status": "repair-validated",
-    "notes": "After the npm and Windows fixture repairs passed their focused lanes, Swift CodeQL autobuild exposed a stale checked-in Xcode project: NotificationSchedule.swift referenced WaterFacts, but WaterFacts.swift was absent from the WaterNotify target even though project.yml already includes the whole source directory. Revision 267c1719b64ac4fb007f2c01d1a8a48059d5fdc6 adds only the missing file reference and source build-phase entry. The standalone WaterFacts source type-checks under Swift 6.3.3, the project now contains exactly one file reference and one build entry for it, and diff checks pass. Full iOS/Xcode validation remains delegated to hosted macOS because UserNotifications is unavailable in the local Windows Swift SDK. Auto-merge remains disabled until the repaired head completes every required check without failure or conflict."
+    "status": "merged",
+    "notes": "All 52 reported final-head checks completed acceptably: 31 successes, 20 expected skips, and one neutral result, with zero failures or nonterminal checks. GitHub reported no merge conflict, guarded squash auto-merge had been enabled, and GitHub merged PR #15080 as 03b643fc33459a9595ee8bfbeae7318aa6848f5a without a manual merge command."
   },
   "last_inventory": {
-    "revision": "5e48b5f83db4b1112aea3dfa5e63d42480be808c",
+    "revision": "06fc0524051a397ccc53c628b08c019b2bbf75ba",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1440,
-    "implementation_package_slots": 4665,
-    "all_reported_identities": 1480,
+    "implementation_identities": 1441,
+    "implementation_package_slots": 4666,
+    "all_reported_identities": 1481,
     "high_consensus_packages": 175,
     "high_consensus_missing_slots": 265,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 961,
-    "singleton_missing_slots": 13454,
-    "rust_singletons": 781,
+    "singleton_packages": 962,
+    "singleton_missing_slots": 13468,
+    "rust_singletons": 782,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -991,7 +985,7 @@
     {
       "id": "build-tool-site-authored-resource-source-input-extension",
       "title": "Extend the neutral source-input registry for authored site resources",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-go-language-source-input-registry-adoption"],
       "branch": "codex/build-tool-site-authored-resources-20260912",
       "pr_number": 15080,
@@ -1003,7 +997,25 @@
       "selection_revision": "5e48b5f83db4b1112aea3dfa5e63d42480be808c",
       "selection_notes": "Selected after PR #14659 completed all final-head checks and merged through guarded squash auto-merge. The exact-main collision-checked schema-3 inventory reports 15 established lanes, 1,440 implementation identities, 4,665 slots, 1,480 all-reported identities, bands 175/265, 123/934, 181/2,282, and 961/13,454, 781 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Eighteen newly discovered owners are registered before selection. A parallel build-tool audit ranks this extension first because it closes 13 known omitted site inputs before Python, Ruby, TypeScript, JVM, Dart, and OCaml adopt the registry, avoiding repeated generated-projection churn. The fresh clean branch and worktree start from exact live main with no active parity PR.",
       "security_notes": "Independent parallel review found and closed suffix-based site authority in both Go and Haskell. Each engine now derives the exact registered code/sites root relative to the nearest real Git repository root and rejects nested, wrong-case, unregistered, and outside roots before traversal.",
+      "merged_head_revision": "3fcf6b2d29b802805130eb52c3af6c34f7b8ae66",
+      "merged_at": "2026-09-13T18:45:42Z",
+      "merge_revision": "03b643fc33459a9595ee8bfbeae7318aa6848f5a",
+      "merge_notes": "All 52 reported final-head checks completed acceptably: 31 successes, 20 expected skips, and one neutral result. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #15080 without a manual merge command.",
       "notes": "Discovered from PR #14659's failed full-repository CI run and expanded by a parallel exact-input audit. The repository's two code/sites packages retain legacy unknown/* graph identities but are TypeScript build surfaces. The focused PR repair safely maps those canonical roots to the already-reviewed TypeScript hashing profile. The merged neutral registry still omits 13 tracked build inputs: three blog Markdown posts, their three persisted-identity JSON sidecars, one SVG and its sidecar, landing-page index.landing and its sidecar, og.jpg and its sidecar, and root landing.css. Both site configs enable persisted identities, and the landing renderer reads landing.css directly. This implementation registers only the exact blog and landing-page roots and exact tracked paths, advances the language registry digest to 190d7e79d88d8ab4478d29f1e41d355271b466e8c21ffdaca97ffb443130a530 and the repository-boundary digest to cb396d048211f3ec20f1e4d5a438746e5b19642b6d2b039e33c93876a841cd6d, and expands the neutral corpus from 146 to 149 cases. The Python oracle plus Go, Haskell, Swift, C#, and F# consumers and generated projections now agree on exact-root admission while rejecting arbitrary code/sites roots, nested roots, wrong-case paths, foreign-package resources, language-wide Markdown, .landing, image, sidecar, data-directory, and root-CSS widening. Haskell additionally derives its site identity relative to the discovered Git repository root, so an arbitrary filesystem suffix cannot acquire selector authority. Real blog and landing BUILD fronts pass, as do all five native build-tool BUILD fronts, focused and full conformance tests, coverage gates, lint, vet, module verification, generator idempotence, collision, state-graph, JSON, diff, and security checks. This remains a separate dependent contract change because mutating the registry inside the Go adoption PR would have invalidated Haskell, Swift, and .NET digest pins and mixed cross-engine work into the CI repair."
+    },
+    {
+      "id": "build-tool-diff-selection-match-work-ceiling",
+      "title": "Bound language-neutral diff-selection match work",
+      "status": "in-progress",
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-site-authored-resource-source-input-extension"],
+      "branch": "codex/build-tool-diff-match-ceiling-20260919",
+      "pr_number": null,
+      "selected_at": "2026-09-19T08:31:53Z",
+      "selection_revision": "06fc0524051a397ccc53c628b08c019b2bbf75ba",
+      "selection_notes": "Selected only after PR #15080 completed all 52 reported final-head checks acceptably and merged through guarded squash auto-merge. The exact-main collision-checked schema-3 inventory reports 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, bands 175/265, 123/934, 181/2,282, and 962/13,468, 782 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Parallel audits registered the newly discovered photo-picker Mosaic portable and native-host work before selection. This process-free ceiling is the smallest ready dependency-shaped owner that closes algorithmic denial-of-service risk in the shared diff oracle before additional JVM, Dart, OCaml, and established engines adopt the corpus.",
+      "validation_notes": "Specification-first and red-test execution proved the prior oracle lacked the ceiling and accepted arbitrary errors. The final 151-case corpus validates with 285 staged files; 24 schema tests and 82 runner tests pass, including exact 50,000,000-unit admission, 50,000,004-unit failure, Unicode-scalar accounting, all five recursive BUILD-front exemptions, structural and boundary precedence, match-limit precedence over unknown paths, zero matcher calls on overflow, and expected/result fail-open rejection. Branch-aware coverage reports 90% for the 2,191-statement runner. Ten package-parity, seven capability-taxonomy, ten OCaml capability-gate, and 51 OCaml toolchain-lock tests pass with two expected Windows skips. The canonical Go build tool passes all packages, vet, and a trimpath build. The exact-main reporter remains collision-clean with zero unknown buckets; the 811-owner/1,386-edge state graph is strict-JSON-valid, unique, dependency-complete, acyclic, and free of merged-to-unfinished edges at 214 merged, 596 pending, and exactly this owner in progress. Ruff changed-line checks, Bandit medium/high, PyCompile, JSON, and diff-hygiene checks pass; the repository's two touched Python files retain their pre-existing whole-file Ruff-format debt rather than introducing broad unrelated reformatting.",
+      "security_notes": "Independent review issued SHIP with no critical, high, medium, or low finding requiring change. The ceiling uses checked remaining-budget arithmetic, rejects over-limit inputs before the matcher, treats fixture strings as inert data, preserves earlier structural and boundary failures, returns one redacted stable diagnostic, and adds no Git, filesystem, process, environment, network, credential, native-link, or execution authority.",
+      "notes": "Adversarial review found that diff-selection strict-glob matching has no operation-wide work ceiling and that the independent oracle accepts arbitrary error outcomes after a successful expectation. Define a fixed 50,000,000-unit full preflight over every applicable strict-glob package, changed path, and declared pattern; exempt recursive exact BUILD fronts; count Unicode scalars; fail with one stable DIFF_MATCH_LIMIT_EXCEEDED diagnostic before any matcher call; preserve structural and repository-boundary validation precedence; and make successful expectations reject arbitrary adapter errors. Add exact-at-limit and over-limit neutral fixtures without granting Git, filesystem, process, environment, network, credential, or native-link authority."
     },
     {
       "id": "build-tool-go-native-source-snapshot-stability-hardening",
@@ -5194,6 +5206,25 @@
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Discovered in the collision-clean 399a87fff3 inventory after merged PR #10859 added Rust-only task-mosaic-app. The crate is a TaskApp-specific cdylib/rlib adapter: it maps the authored TaskApp MIL slot/event vocabulary and presentation cursor to the separately owned pure task-core engine, provides transactional no-mutation dispatch failures and versioned snapshots through mosaic-app-runtime, and exports the reviewed fixed mosaic-app-capi ABI for generated Qt, Flutter, Compose, and SwiftUI hosts. Review exact complete slot/event coverage, deterministic startup/dispatch/snapshot/restore behavior, stable payload-free errors, dynamic-library symbols and buffer/lifetime/panic containment through the existing Mosaic ABI owners, platform packaging/launch evidence, and add explicit empty capability metadata. Do not manufacture fifteen implementations of this application-specific native ABI adapter; reusable runtime semantics remain in mosaic-app-runtime, domain behavior in task-core, and host bindings in mosaic-app-bindings. This wrapper-applicability item is excluded from autonomous parity selection."
+    },
+    {
+      "id": "photo-picker-mosaic-app-portable-conformance",
+      "title": "Define portable Photo Picker Mosaic application behavior",
+      "status": "pending",
+      "depends_on": ["mosaic-app-runtime-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the exact-main collision-checked 06fc052405 inventory after Rust-only photo-picker-mosaic-app added one identity and slot. Separate and fixture the authority-free deterministic application behavior: exact onPickPhoto event recognition, one protocol-v2 Await files.open envelope, accept-list payload, monotonic effect identity, unknown-event no-op behavior, ok/cancelled/failed completion, bounded base64 size reporting, status reduction, malformed payload handling, and stable transactional failures. Require truthful capability classification instead of assuming the absent manifest means an empty profile. Native picker, filesystem, C ABI, generated hosts, dynamic loading, user consent, and platform packaging remain outside this portable core."
+    },
+    {
+      "id": "photo-picker-mosaic-app-native-host-applicability-review",
+      "title": "Review Photo Picker Mosaic native picker and ABI applicability",
+      "status": "pending",
+      "depends_on": ["photo-picker-mosaic-app-portable-conformance", "mosaic-app-capi-wrapper-native-abi-review", "mosaic-app-bindings-generated-wrapper-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Review the Rust cdylib/rlib shell and generated XAML, Compose, Flutter, Qt, and SwiftUI files.open hosts without manufacturing fifteen copies of a native picker. Require explicit user-consent and file-read capability metadata, bounded selected-file envelopes, symlink/reparse and replacement-race policy where pathname access exists, MIME and name trust boundaries, returned-buffer ownership, panic containment, target builds, dynamic-library discovery, cancellation, cleanup, and real platform launch evidence. This native runtime and filesystem authority is excluded from autonomous parity selection."
     },
     {
       "id": "engram-mosaic-app-native-abi-review",

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-19
+
+- Added exact-at-limit and over-limit process-free diff-selection cases for the
+  fixed 50,000,000-unit operation-wide declared match-work ceiling. The cases
+  pin Unicode-scalar accounting, full conservative preflight before the first
+  matcher call, recursive exact BUILD-front exemptions, and stable empty-result
+  `DIFF_MATCH_LIMIT_EXCEEDED` failure. The corpus now has 151 cases while the
+  empty fixture workspaces leave the validated staged-file count at 285.
+
 ## 2026-09-12
 
 - Added exact-root source-collection cases for the eight authored blog inputs,

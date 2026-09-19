@@ -54,6 +54,7 @@ CLI_MAX_ARGUMENTS = 64
 CLI_MAX_ARGUMENT_CHARACTERS = 256
 CLI_MAX_ARGUMENT_BYTES = 4096
 MAX_DECLARED_SOURCE_MATCH_WORK = 50_000_000
+MAX_DIFF_SELECTION_MATCH_WORK = 50_000_000
 CI_GATE_MACHINERY_EXACT = (
     ".github/workflows/ci.yml",
     "code/specs/data/ci-gates.json",
@@ -2865,7 +2866,7 @@ def _expected_diff_selection(
     options: dict[str, Any],
     changed_paths: list[str],
     repository_source_input_boundary: dict[str, Any] | None = None,
-) -> tuple[set[str], set[str], set[str]] | None:
+) -> tuple[set[str], set[str], set[str]] | str:
     packages = options["packages"]
     changed: set[str] = set(options["forced_packages"])
     unknown = False
@@ -2889,13 +2890,29 @@ def _expected_diff_selection(
                     boundary_reverse_index.setdefault(
                         boundary_input["path"], set()
                     ).add(package["name"])
-    build_names = {
-        "BUILD",
-        "BUILD_windows",
-        "BUILD_mac",
-        "BUILD_linux",
-        "BUILD_mac_and_linux",
-    }
+
+    # Diff inputs and globs are inert fixture data, but their cross product can
+    # still consume unbounded CPU.  Charge the complete applicable cross
+    # product before the first matcher call.  This is deliberately more
+    # conservative than attempted-match accounting: an early successful glob
+    # cannot hide expensive patterns later in the declaration.
+    remaining_match_work = MAX_DIFF_SELECTION_MATCH_WORK
+    for package in packages:
+        if package["source_mode"] != "strict_globs":
+            continue
+        pattern_factor = sum(len(pattern) + 1 for pattern in package["source_globs"])
+        for path in changed_paths:
+            root = package["rel_path"]
+            if path != root and not path.startswith(f"{root}/"):
+                continue
+            relative = path[len(root) :].lstrip("/")
+            if posixpath.basename(relative) in ORPHAN_BUILD_NAMES:
+                continue
+            path_factor = len(relative) + 1
+            if pattern_factor > remaining_match_work // path_factor:
+                return "DIFF_MATCH_LIMIT_EXCEEDED"
+            remaining_match_work -= pattern_factor * path_factor
+
     for path in changed_paths:
         boundary_consumers = boundary_reverse_index.get(path, set())
         path_known = bool(boundary_consumers)
@@ -2906,9 +2923,13 @@ def _expected_diff_selection(
                 continue
             path_known = True
             relative = path[len(root) :].lstrip("/")
-            if package["source_mode"] == "package_prefix" or relative in build_names or any(
-                _portable_glob_matches(pattern, relative)
-                for pattern in package["source_globs"]
+            if (
+                package["source_mode"] == "package_prefix"
+                or posixpath.basename(relative) in ORPHAN_BUILD_NAMES
+                or any(
+                    _portable_glob_matches(pattern, relative)
+                    for pattern in package["source_globs"]
+                )
             ):
                 changed.add(package["name"])
         if not path_known:
@@ -2917,7 +2938,7 @@ def _expected_diff_selection(
     package_names = {package["name"] for package in packages}
     if unknown:
         if options["unknown_path_policy"] == "error":
-            return None
+            return "DIFF_UNKNOWN_PATH"
         changed = set(package_names)
 
     dependents: dict[str, set[str]] = {name: set() for name in package_names}
@@ -3874,15 +3895,28 @@ def _validate_pure_result_semantics(
             case["input"]["changed_paths"],
             repository_source_input_boundary,
         )
-        if expected_sets is None:
-            if outcome != "error" or "DIFF_UNKNOWN_PATH" not in diagnostic_codes:
+        if isinstance(expected_sets, str):
+            invalid_suffix = (
+                "DIFF_MATCH_LIMIT_INVALID"
+                if expected_sets == "DIFF_MATCH_LIMIT_EXCEEDED"
+                else "DIFF_UNKNOWN_PATH_INVALID"
+            )
+            if (
+                outcome != "error"
+                or payload
+                or result["diagnostics"]
+                != [{"code": expected_sets, "severity": "error"}]
+            ):
                 raise ConformanceError(
-                    f"{prefix}_DIFF_UNKNOWN_PATH_INVALID",
-                    "unknown changed paths require a stable error",
+                    f"{prefix}_{invalid_suffix}",
+                    "diff selection requires an empty result and exactly its stable oracle error",
                 )
             return
         if outcome != "ok":
-            return
+            raise ConformanceError(
+                f"{prefix}_DIFF_OUTCOME_INVALID",
+                "successful diff selection oracle requires an ok result",
+            )
         actual_sets = (
             set(payload["changed_packages"]),
             set(payload["affected_packages"]),

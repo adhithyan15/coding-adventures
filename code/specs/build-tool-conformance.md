@@ -611,6 +611,26 @@ With `unknown_path_policy: "error"`, the operation returns an empty result
 object and stable error diagnostic `DIFF_UNKNOWN_PATH`; it must not return a
 partial selection.
 
+Diff selection applies one fixed operation-wide ceiling of 50,000,000 declared
+match-work units. After structural, schema, path, package-root, glob, edge,
+reference, and optional repository-boundary digest validation, but before any
+glob matcher call or unknown-path policy, implementations MUST complete one
+conservative preflight. For every `strict_globs` package, cache the sum of
+`pattern Unicode-scalar count + 1` across every declared source glob. For every
+changed path equal to or below that package root, multiply that cached factor
+by `package-relative path Unicode-scalar count + 1` and add it with checked
+arithmetic. Recursively located exact BUILD-front basenames `BUILD`,
+`BUILD_windows`, `BUILD_mac`, `BUILD_linux`, and `BUILD_mac_and_linux` are
+known package inputs but contribute zero match work. The preflight charges all
+applicable patterns even when an early pattern would match. Exactly
+50,000,000 units proceeds; overflow or a total above the ceiling returns an
+empty result and exactly one stable error diagnostic
+`DIFF_MATCH_LIMIT_EXCEEDED`, without calling the matcher. Consequently,
+structural and repository-boundary errors precede the match ceiling, while the
+match ceiling precedes unknown-path handling. A successful oracle expectation
+MUST reject an adapter error rather than accepting it as an alternative
+outcome.
+
 ### 5. Hashing and cache
 
 Required behavior:
@@ -1229,6 +1249,10 @@ There is no case folding, prefix, ancestor, basename, glob, or near-path match.
 A boundary path with no applicable declared consumer remains unknown and follows
 `unknown_path_policy`. The boundary object is inert validated input; this pure
 operation does not inspect Git modes, object ids, stages, links, or host files.
+The complete match-work preflight described by section 4 runs only after that
+optional boundary and digest have validated and before package-local matching
+or unknown-path policy. Python `len`-style Unicode scalar accounting is the
+fixture oracle; UTF-16 code-unit counts are not conforming.
 
 Hashing v1 uses SHA-256 over an unambiguous byte stream. The caller supplies the
 deduplicated union of package-local and applicable repository-boundary paths in

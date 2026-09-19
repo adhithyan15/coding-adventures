@@ -13678,6 +13678,44 @@ it must be consolidated or decomposed before selection. Native-authority and
 host-security owners that appear mechanically ready remain excluded by the
 parity selection policy rather than inflating the eligible queue.
 
+### Post-PR #15080 refresh and diff match-work selection
+
+PR #15080 completed all 52 reported final-head checks acceptably: 31
+successes, 20 expected skips, and one neutral result. GitHub reported no merge
+conflict, guarded squash auto-merge was enabled, and GitHub merged the site
+input extension as `03b643fc33459a9595ee8bfbeae7318aa6848f5a` without a
+manual merge command.
+
+The exact-main collision-checked schema-3 inventory at
+`06fc0524051a397ccc53c628b08c019b2bbf75ba` contains 15 established lanes,
+1,441 implementation identities, 4,666 implementation slots, and 1,481
+all-reported identities. Its completion bands are 175 packages with 265
+missing slots, 123/934, 181/2,282, and 962/13,468. Rust has 782 singletons,
+emerging OCaml remains at five packages, and canonical collisions and unknown
+language buckets remain zero. The only topology delta since the prior recorded
+inventory is Rust-only `photo-picker-mosaic-app`. Its deterministic
+`onPickPhoto`/`files.open` envelope and status reducer are now owned separately
+from the selection-blocked native picker, C ABI, generated-host, filesystem,
+user-consent, and platform applicability review; neither an absent capability
+manifest nor native host authority is treated as evidence of a portable empty
+profile.
+
+Parallel review also found a process-free build-tool contract gap. The neutral
+diff oracle applies attacker-shaped package glob patterns to attacker-shaped
+changed paths without an operation-wide work ceiling, and its result validator
+currently accepts an arbitrary adapter error when the independent oracle
+expects success. The newly selected
+`build-tool-diff-selection-match-work-ceiling` owner closes both defects before
+JVM, Dart, OCaml, or more established engines adopt this behavior. Its three
+prerequisites are merged, its paths do not overlap an active parity PR, and it
+adds no host authority. The fixed full-preflight ceiling is 50,000,000 units;
+exact BUILD fronts are known recursive inputs with zero glob cost, Unicode
+scalar counts are normative, and an over-limit operation returns only
+`DIFF_MATCH_LIMIT_EXCEEDED` before the matcher or unknown-path policy runs.
+The fresh branch is `codex/build-tool-diff-match-ceiling-20260919` from exact
+live main. After reconciliation the state has 811 owners: 214 merged, 596
+pending, and exactly this owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
