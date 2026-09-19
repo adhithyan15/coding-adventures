@@ -3,6 +3,39 @@ import { loadLanguageRegistry, loadTaskShapeInventory, listTaskShapeInventories 
 import { buildTaskShapeBacklog, parseTaskShapeInventory } from "../src/task-shapes.js";
 
 describe("four-skill task-shape inventories (HL18)", () => {
+  it("does not leak another registered track into copied target-language phrases", () => {
+    const registry = loadLanguageRegistry();
+    const trackNames = new Map(registry.languages.map((track) => [track.id, track.name]));
+    const leaks: string[] = [];
+
+    for (const { language, level } of listTaskShapeInventories()) {
+      const inventory = loadTaskShapeInventory(language, level);
+      const taskText = inventory.sections.flatMap((section) => section.parts.flatMap((part) => [
+        ...part.promptModes,
+        ...part.promptGenres,
+        ...part.responseModes,
+        ...part.scoring.criteria,
+        ...part.aids.allowed,
+        ...part.aids.forbidden,
+        ...part.aids.notPublished,
+        ...part.notPublished,
+      ])).join("\n");
+      const inventoryLeaks = registry.languages
+        .filter((track) => track.id !== language)
+        .filter((track) => [
+          `recorded ${track.name} `,
+          `${track.name} control`,
+          `${track.name} vocabulary and grammar`,
+        ].some((phrase) => taskText.includes(phrase)))
+        .map((track) => track.name);
+      leaks.push(...inventoryLeaks.map(
+        (track) => `${language}/${level} names ${track}; expected ${trackNames.get(language)}`,
+      ));
+    }
+
+    expect(leaks).toEqual([]);
+  });
+
   it("keeps the corpus-wide research debt visible and round-robin", () => {
     const registry = loadLanguageRegistry();
     const present = listTaskShapeInventories();
