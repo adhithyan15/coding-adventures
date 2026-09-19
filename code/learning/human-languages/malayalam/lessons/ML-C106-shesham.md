@@ -49,8 +49,10 @@ It stands where **മുൻപ്** stands, on the same kind of ending:
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C106-AFTER-01, ML-GRAMMAR-C102-HOUR-DATIVE-01] -->
 
 **ഊണിന്** is the dative again — and it is the **other** of the two shapes you
-were given. The hour took **-ക്ക്**; **ഊണ്** takes **-ിന്**, because the ending is
-chosen by the sound the word finishes on.
+were given. You were told the choice is made by the sound the word finishes on,
+and here is the part of that you can use: a word ending in a **consonant** takes
+**-ിന്**. **ഊണ്** ends in **ണ്**, so **-ിന്** it is. The hour ended in a vowel and
+took **-ക്ക്**.
 
 | | | |
 |---|---|---|

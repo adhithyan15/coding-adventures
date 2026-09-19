@@ -2598,25 +2598,33 @@ describe("the committed Malayalam A1 inventory", () => {
     // ML-A1-ART-02, which this corpus has been using untaught in six lessons.
     // 212 -> 213: ML-A1-TIME-09, before and after. THE PERCENTAGE MOVES, 87 -> 88
     // (213/243 is 87.7); recomputed, not carried.
-    // THE NOTE SURVIVED ALL FOUR STALENESS MODES -- the first one this run that
-    // has. "munpu and shesham are not taught" is exactly true; "pinne ('then') is
-    // the nearest and it sequences TURNS rather than EVENTS" anticipates the
-    // domain check and is right. aadyaM (ML-C68-at-first, 2350) and pinne
-    // (ML-C64-then, 2090) are the two the domain holds, both named by the note's
-    // own sentence, and no BEFORE/AFTER concept_tag existed to collide with. A
-    // note CAN be trustworthy; this is what one looks like.
-    // NO NEW GRAMMAR, AND THE EXAMPLES CHAIN OFF CHAPTER 102. Both words are
-    // postpositions leaning on the dative, so raNTu maNikku munpu reuses the very
-    // form ML-C102-manikku built, and uuNinu shEshaM shows the dative's OTHER
-    // shape on a word owned since 930. One ending, four jobs: "to/for" from
-    // chapter 6, "at" from 102, and now a seat for each of these two.
-    // shEshaM LANDS ON KNOWN SCRIPT DEBT AND NOTHING CAN BE DONE ABOUT IT HERE.
-    // It needs U+0D36, which has no script lesson -- SCR-12's "sha", 12 distinct
-    // tokens across 15 headword fields. It does NOT trip neverTaughtGlyphs,
-    // because U+0D36 appears inside other letter lessons' examples. A script
-    // lesson placed HERE would not help: closure is read in ORDER and shari needs
-    // that letter in chapter 1, so the fix belongs at the start of the book, not
-    // at 3870. Recorded against HL-C407 rather than half-fixed.
+    // THE NOTE'S FIRST HALF IS TRUE AND ITS SECOND HALF IS NOT, AND THE DRAFT OF
+    // THIS COMMENT CELEBRATED IT AS THE FIRST TRUSTWORTHY NOTE OF THE RUN. It read
+    // "munpu and shesham are not taught" -- verifiably true, neither appears
+    // anywhere -- and then "pinne (then) is the nearest and it SEQUENCES TURNS
+    // RATHER THAN EVENTS". ML-C68-at-first (2350) teaches the opposite in as many
+    // words: "aadyaM puts an ACTION first in TIME, and it pairs with pinne", its
+    // summary table is headed "an action in time", and its example is aadyaM uuNu,
+    // pinne chaaya -- lunch first, then tea, which orders the world.
+    // I TOOK THE NOTE'S OWN ANTICIPATION OF THE DOMAIN CHECK AS EVIDENCE THAT THE
+    // CHECK HAD BEEN DONE. That is the domain mode again, one level up: not
+    // trusting a note's list of words, but trusting a note's self-assessment. So
+    // this is the FIFTH stale note in five tranches, not the first sound one.
+    // THE CHAPTER'S ORGANISING CONTRAST WAS REBUILT ON WHAT THE CORPUS ACTUALLY
+    // TEACHES. Both pairs order real events. What aadyaM and pinne cannot do is
+    // NAME what they measure against: they lay a run out, this then that. munpu
+    // and shEshaM fix an event against a NAMED point. That is what "anteriority
+    // and posteriority" asks for, so the point still closes -- on a true framing.
+    // NO NEW GRAMMAR: both are postpositions on the dative, so raNTu maNikku munpu
+    // reuses ML-C102-manikku's form and uuNinu shEshaM shows the dative's other
+    // shape on uuNu, owned since 930. The draft called that ending derivable and
+    // it was not -- ML-C06 says the choice is "by the sound the noun ends in" and
+    // never says WHICH sounds, so the lesson now supplies the one rule it needs.
+    // shEshaM LANDS ON KNOWN SCRIPT DEBT AND NOTHING CAN BE DONE HERE: U+0D36 has
+    // no script lesson (SCR-12's "sha", 12 tokens across 15 headword fields), it
+    // does not trip neverTaughtGlyphs because it sits inside other lessons'
+    // examples, and closure is read in ORDER -- shari needs it in CHAPTER 1, so a
+    // lesson at 3870 retires nothing. Filed against HL-C407.
     expect(coverage.covered).toBe(213);
     expect(coverage.unmapped).toBe(30);
     expect(coverage.partial).toBe(0);

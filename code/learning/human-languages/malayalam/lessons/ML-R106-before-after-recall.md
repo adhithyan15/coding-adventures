@@ -9,7 +9,7 @@ headword: (before, after)
 gloss: cold retrieval of the two words that order events, and of the ending they both lean on
 romanization: "munpuṁ śēṣavuṁ enna ōrmma"
 concept_tag: ML-BEFORE-AFTER-RECALL
-prerequisites: [ML-C106-ordering, ML-C106-shesham, ML-C106-munpu]
+prerequisites: [ML-C106-ordering, ML-C106-shesham, ML-C106-munpu, ML-C06-dative-subject]
 sounds: []
 roots: []
 duration:
@@ -19,13 +19,13 @@ requires:
 introduces:
   knowledge: []
 practises:
-  knowledge: [ML-LEX-C106-BEFORE-01, ML-LEX-C106-AFTER-01, ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-LEX-C68-ORDINAL-08, ML-LEX-C64-SMALL-01, ML-CONCEPT-C40-OON-01]
+  knowledge: [ML-LEX-C106-BEFORE-01, ML-LEX-C106-AFTER-01, ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-LEX-C68-ORDINAL-08, ML-LEX-C64-SMALL-01, ML-CONCEPT-C40-OON-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-C106-munpu, ML-C106-shesham, ML-C106-ordering, ML-C06-dative-ikku]
+reviews_of: [ML-C106-munpu, ML-C106-shesham, ML-C106-ordering, ML-C06-dative-ikku, ML-C06-dative-subject]
 ---
 
 # (before, after) — from cold
@@ -43,20 +43,24 @@ reviews_of: [ML-C106-munpu, ML-C106-shesham, ML-C106-ordering, ML-C06-dative-ikk
 | **രണ്ട് മണിക്ക് മുൻപ്** | *raṇṭŭ maṇikkŭ munpŭ* | before two o'clock |
 | **ഊണിന് ശേഷം** | *ūṇinŭ śēṣaṁ* | after the meal |
 
-**Neither word changed the word in front of it.** The hour is the hour you
-already built; the meal is the meal with the dative's other shape on it. Both new
-words are separate, and both stand **behind** what they are about — which is the
-opposite of where English puts them.
+**Neither word joined onto the word in front of it.** They stay separate words —
+but they are not passengers: it is **ശേഷം** that puts **ഊണ്** into the dative in
+the first place. The hour was already going to wear that ending; the meal wears
+it because the postposition asks for it.
+
+Both stand **behind** what they are about, which is the opposite of where English
+puts them.
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C06-DATIVE-IKKU-01, ML-LEX-C68-ORDINAL-08, ML-LEX-C64-SMALL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-SUBJECT-01, ML-LEX-C68-ORDINAL-08, ML-LEX-C64-SMALL-01] -->
 
-**The ending underneath both of them is your first case ending.** It was glossed
-*to* and *for*; you put it on an hour to mean *at*; and now two more words lean
-on it. One ending, four jobs, and no new machinery in this chapter at all.
+**The ending underneath both of them is your first case ending**, and it has
+been busy. It was glossed *to* and *for*. It carries the person who knows, wants
+or has something — **എനിക്ക്**. You put it on an hour to mean *at*. And now these
+two postpositions lean on it as well. No new machinery in this chapter at all.
 
-And you can now order two different things: **ആദ്യം** and **പിന്നെ** order the
-telling, **മുൻപ്** and **ശേഷം** order the events.
+And you can now order in two ways: **ആദ്യം** and **പിന്നെ** lay a run out, while
+**മുൻപ്** and **ശേഷം** measure against a point you name.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C106-BEFORE-01, ML-LEX-C106-AFTER-01, ML-GRAMMAR-C102-HOUR-DATIVE-01] -->

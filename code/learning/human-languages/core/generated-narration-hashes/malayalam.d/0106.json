@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 106,
-  "sourceHash": "fnv1a64:f2a9024c786104eb",
+  "sourceHash": "fnv1a64:457f9e6604e3dfe0",
   "lessonIds": [
     "ML-C106-munpu",
     "ML-C106-shesham",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch106.txt",
   "json": "malayalam/narration/ch106.json",
-  "textHash": "fnv1a64:9d38f480d8692c77",
-  "jsonHash": "fnv1a64:5114d57604585fb1",
+  "textHash": "fnv1a64:91cb80f4de896bcf",
+  "jsonHash": "fnv1a64:d3f9ba4a8794888c",
   "findings": []
 }

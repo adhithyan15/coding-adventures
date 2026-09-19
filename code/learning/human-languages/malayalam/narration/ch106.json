@@ -4,7 +4,7 @@
   "chapter": 106,
   "title": "Before and After",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f2a9024c786104eb",
+  "sourceHash": "fnv1a64:457f9e6604e3dfe0",
   "lessons": [
     {
       "id": "ML-C106-munpu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f80725cb3ae4848e",
+      "sourceHash": "fnv1a64:b4c6922dcb4cf8bc",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that right to left and it comes out as English: before — two o'clock."
+              "text": "Read the two phrases right to left and they come out as English: before — two o'clock. Keep രണ്ട് മണി together as one piece."
             }
           ]
         },
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8662e7dab40881fe",
+      "sourceHash": "fnv1a64:96fc1478b8cd739a",
       "notice": null,
       "blocks": [
         {
@@ -195,7 +195,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഊണിന് is the dative again — and it is the other of the two shapes you were given. The hour took -ക്ക്; ഊണ് takes -ിന്, because the ending is chosen by the sound the word finishes on."
+              "text": "ഊണിന് is the dative again — and it is the other of the two shapes you were given. You were told the choice is made by the sound the word finishes on, and here is the part of that you can use: a word ending in a consonant takes -ിന്. ഊണ് ends in ണ്, so -ിന് it is. The hour ended in a vowel and took -ക്ക്."
             },
             {
               "kind": "table",
@@ -290,17 +290,17 @@
     {
       "id": "ML-C106-ordering",
       "sequence": 3880,
-      "title": "ആദ്യം, പിന്നെ, മുൻപ് (munpŭ), ശേഷം (śēṣaṁ) — two kinds of ordering",
+      "title": "ആദ്യം, പിന്നെ, മുൻപ് (munpŭ), ശേഷം (śēṣaṁ) — ordering a run, and ordering against a point",
       "headword": "ആദ്യം — പിന്നെ — മുൻപ് — ശേഷം",
       "romanization": "ādyaṁ — pinne — munpŭ — śēṣaṁ",
-      "gloss": "first, then, before, after — two words that order turns and two that order events, and the difference between them",
+      "gloss": "first, then, before, after — two words that order a run of events and two that order an event against a named point",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3efb2776df9d96e2",
+      "sourceHash": "fnv1a64:f1d6b7239b921b2c",
       "notice": null,
       "blocks": [
         {
@@ -327,7 +327,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You now have four words about order, and they split into two pairs that do different jobs."
+              "text": "You now have four words about order, and they split into two pairs that do different jobs — though not the job you might expect."
             },
             {
               "kind": "table",
@@ -339,17 +339,17 @@
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "ആദ്യം, പിന്നെ, ādyaṁ, pinne, stand alone and order the telling.",
-                "മുൻപ്, ശേഷം, munpŭ, śēṣaṁ, lean on a word and order events."
+                "ആദ്യം, പിന്നെ, ādyaṁ, pinne, order a run of things.",
+                "മുൻപ്, ശേഷം, munpŭ, śēṣaṁ, order one thing against a named point."
               ]
             },
             {
               "kind": "speech",
-              "text": "ആദ്യം and പിന്നെ need nothing in front of them. They say first this, then that about the order you are saying things in."
+              "text": "Both pairs order real events. You were shown ആദ്യം ഊണ്, പിന്നെ ചായ — lunch first, then tea — and that is the world being ordered, not a story about it."
             },
             {
               "kind": "speech",
-              "text": "മുൻപ് (munpŭ) and ശേഷം (śēṣaṁ) cannot stand alone. Each one needs a thing to be before or after, and that thing arrives wearing the dative."
+              "text": "What the first pair cannot do is name what it is measuring against. It lays things out in a run: this, then that. മുൻപ് (munpŭ) and ശേഷം (śēṣaṁ) do something the other pair has no way to do — they take a named time or event and place something relative to it."
             }
           ]
         },
@@ -367,11 +367,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ādyaṁ, then pinne — ordering the telling",
+              "instruction": "ādyaṁ, then pinne — laying a run out in order",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ādyaṁ*, then *pinne* — ordering the telling]"
+              "source": "[YOU SAY: *ādyaṁ*, then *pinne* — laying a run out in order]"
             },
             {
               "kind": "prompt",
@@ -394,11 +394,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which two of the four could be said with nothing else beside them",
+              "instruction": "which two of the four need a named thing to measure against",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: which two of the four could be said with nothing else beside them]"
+              "source": "[YOU SAY: which two of the four need a named thing to measure against]"
             }
           ]
         },
@@ -409,7 +409,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Until this chapter you could order your own sentences and not the world. First … then … arranges what you say. Before two o'clock and after the meal arrange what happens, against something you name."
+              "text": "Until this chapter you could put events in a run and not anchor them. First lunch, then tea says which came first and says nothing about when either happened. Before two o'clock and after the meal fix an event against a point you have named."
             },
             {
               "kind": "speech",
@@ -430,7 +430,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which two of the four stand alone? (ആദ്യം and പിന്നെ.) Which two need something to lean on? (മുൻപ് (munpŭ) and ശേഷം (śēṣaṁ).) What does the thing they lean on wear? (The dative.)"
+              "text": "Which two lay a run out in order? (ആദ്യം and പിന്നെ.) Which two measure against a named point? (മുൻപ് (munpŭ) and ശേഷം (śēṣaṁ).) In this chapter, what did that named thing wear? (The dative.)"
             }
           ]
         }
@@ -449,7 +449,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dca5a1eab642066e",
+      "sourceHash": "fnv1a64:a9205b3a3ca2cd2b",
       "notice": null,
       "blocks": [
         {
@@ -490,7 +490,11 @@
             },
             {
               "kind": "speech",
-              "text": "Neither word changed the word in front of it. The hour is the hour you already built; the meal is the meal with the dative's other shape on it. Both new words are separate, and both stand behind what they are about — which is the opposite of where English puts them."
+              "text": "Neither word joined onto the word in front of it. They stay separate words — but they are not passengers: it is ശേഷം (śēṣaṁ) that puts ഊണ് into the dative in the first place. The hour was already going to wear that ending; the meal wears it because the postposition asks for it."
+            },
+            {
+              "kind": "speech",
+              "text": "Both stand behind what they are about, which is the opposite of where English puts them."
             }
           ]
         },
@@ -501,11 +505,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The ending underneath both of them is your first case ending. It was glossed to and for; you put it on an hour to mean at; and now two more words lean on it. One ending, four jobs, and no new machinery in this chapter at all."
+              "text": "The ending underneath both of them is your first case ending, and it has been busy. It was glossed to and for. It carries the person who knows, wants or has something — എനിക്ക്. You put it on an hour to mean at. And now these two postpositions lean on it as well. No new machinery in this chapter at all."
             },
             {
               "kind": "speech",
-              "text": "And you can now order two different things: ആദ്യം and പിന്നെ order the telling, മുൻപ് (munpŭ) and ശേഷം (śēṣaṁ) order the events."
+              "text": "And you can now order in two ways: ആദ്യം and പിന്നെ lay a run out, while മുൻപ് (munpŭ) and ശേഷം (śēṣaṁ) measure against a point you name."
             }
           ]
         },

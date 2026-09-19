@@ -47,7 +47,8 @@ Malayalam puts it behind:
 
 > **രണ്ട് മണിക്ക് മുൻപ്** — *raṇṭŭ maṇikkŭ munpŭ* — "**before** two o'clock."
 
-Read that right to left and it comes out as English: *before* — *two o'clock*.
+Read the two **phrases** right to left and they come out as English:
+*before* — *two o'clock*. Keep **രണ്ട് മണി** together as one piece.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C106-BEFORE-01, ML-GRAMMAR-C102-HOUR-DATIVE-01] -->

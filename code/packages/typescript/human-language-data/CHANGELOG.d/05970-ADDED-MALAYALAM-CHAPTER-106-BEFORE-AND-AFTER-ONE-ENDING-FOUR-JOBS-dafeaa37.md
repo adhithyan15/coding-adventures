@@ -4,20 +4,43 @@
   points unmapped. **The percentage moves, 87 → 88** (213/243 is 87.7) —
   recomputed, not carried.
 
-#### The note survived all four staleness modes — the first one that has
+#### The note's first half is true, its second half is not, and this entry's draft celebrated it
 
 > **munpu** and **shesham** are not taught. **pinne** ('then') is the nearest and
 > it sequences **turns** rather than **events**.
 
-Both halves check out. Neither word appears anywhere in the corpus, and the
-domain holds exactly the two the note implies — **ആദ്യം** (`ML-C68-at-first`,
-2350) and **പിന്നെ** (`ML-C64-then`, 2090). The note's own sentence *anticipates
-the domain check* and gets it right, and no `BEFORE`/`AFTER` concept tag existed
-to collide with.
+The first half is verifiably true — neither word appears anywhere in the corpus.
 
-Worth recording plainly: the four tranches before this one found a note wrong
-about the **case**, two wrong about the **domain**, and one simply **false**. A
-note can be trustworthy. This is what one looks like.
+**The second half is false.** `ML-C68-at-first.md:48` says the opposite in as many
+words: *"**ആദ്യം** puts an **action** first in **time**, and it pairs with
+**പിന്നെ**"*. Its summary table at `:74` is headed **"an action in time"**, and
+its worked example is **ആദ്യം ഊണ്, പിന്നെ ചായ** — *lunch first, then tea*, which
+orders the world and not the telling of it.
+
+**I took the note's own anticipation of the domain check as evidence the check
+had been done.** That is the domain mode one level up: not trusting a note's list
+of words, but trusting a note's *self-assessment*. The draft of this entry said
+*"A note CAN be trustworthy, and this is what one looks like"* and propagated it
+into five artifacts including both test files. **This is the fifth stale note in
+five tranches, not the first sound one.**
+
+#### The organising contrast was rebuilt on what the corpus actually teaches
+
+**Both pairs order real events.** What ആദ്യം and പിന്നെ cannot do is **name what
+they measure against** — they lay a run out, *this, then that*. മുൻപ് and ശേഷം
+fix an event against a **named** point, which is exactly what "anteriority and
+posteriority" asks for. `ML-A1-TIME-09` still closes, on a true framing.
+
+#### Three more claims were wrong
+
+- **"മുൻപ് and ശേഷം cannot stand alone"** is false Malayalam — and this chapter's
+  own lesson refutes it three lessons earlier by glossing ശേഷം *"the remainder"*,
+  a standalone noun.
+- **"Neither word changed the word in front of it"** contradicted the ordering
+  lesson: it is ശേഷം that puts ഊണ് into the dative.
+- **"One ending, four jobs"** counted to **five** by its own enumeration, and
+  omitted the **dative subject** that `ML-C06-dative-subject` owns. The jobs are
+  now **named**, not counted — the rule I keep breaking.
 
 #### No new grammar, and the examples chain off chapter 102
 
@@ -31,8 +54,14 @@ Both words are **postpositions leaning on the dative**:
 The first reuses the **exact form** `ML-C102-manikku` built. The second shows the
 dative's **other shape** — the `-ിന്` of `ML-C06` — on **ഊണ്**, owned since 930.
 
-That gives the chapter a real spine: **one ending, four jobs.** *To* and *for*
-from chapter 6, *at* from 102, and now a seat for each of these two.
+**The draft called that ending derivable and it was not.** `ML-C06` says the
+choice is made *"by the sound the noun ends in"* and never says **which** sounds
+take which shape, so a learner could not in fact derive ഊണിന്. The lesson now
+supplies the one rule it needs: a word ending in a **consonant** takes `-ിന്`.
+
+That gives the chapter a real spine: **one ending, named jobs.** *To* and *for*
+from chapter 6; the person who knows, wants or has something — **എനിക്ക്**; *at*
+from chapter 102; and now a seat for each of these two postpositions.
 
 The ordering lesson then separates the two **pairs**: ആദ്യം and പിന്നെ stand alone
 and order **the telling**; മുൻപ് and ശേഷം cannot stand alone and order **the
@@ -55,7 +84,8 @@ half-fixed — and the word is not avoided for it, because ശേഷം *is* the
 #### Verification
 
 The three ceilings and the whole-token sweep were run **in draft**, and the full
-suite passed on the **first run for the second chapter running**. The sweep's
+suite passed on the **first run for the second chapter running** — which caught
+nothing here, because every defect above is a claim about meaning. The sweep's
 only unowned residue is **ഊണിന്**, a joined form from an owned word plus a taught
 ending, and two metalinguistic ending fragments.
 
