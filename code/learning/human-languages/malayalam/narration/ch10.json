@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:45bcc7d35c0be389",
+  "sourceHash": "fnv1a64:4fbde1dbe546134c",
   "lessons": [
     {
       "id": "ML-C10-azhcha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:ad159b265baed12b",
+      "sourceHash": "fnv1a64:65858357f72d9127",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -75,7 +75,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This is the closest family match anywhere in Dravidian: tiṅkaḷ/thiṅgaḷ, veḷḷi/veḷḷi, and ñāyar/ñāyiṟu are essentially the same words, because Malayalam only became a distinct language from Tamil within roughly the last thousand years or so. Where Tamil says கிழமை (kizhamai) for \"day,\" Malayalam says ஆழ்ச (āḻca) — a different word for the same idea (the two aren't confirmed cognates; treat this as two languages solving the same naming problem separately, not necessarily one shared root). Like Tamil, Malayalam mixes native planet-words (Moon, Mars, Venus, Sun) with Sanskrit ones (Mercury, Jupiter, Saturn) — the same split, inherited from the same shared ancestor language."
+              "text": "This is the closest family match anywhere in Dravidian: tiṅkaḷ/thiṅgaḷ, veḷḷi/veḷḷi, and ñāyar/ñāyiṟu are essentially the same words, because Malayalam only became a distinct language from Tamil within roughly the last thousand years or so. Tamil builds its weekday names with கிழமை (kizhamai, \"day of the week\"), while Malayalam builds them with ആഴ്ച (āḻca, \"week\"). The two words are not confirmed cognates; treat them as two languages solving the same naming problem separately, not necessarily as one shared root. Like Tamil, Malayalam mixes native planet-words (Moon, Mars, Venus, Sun) with Sanskrit ones (Mercury, Jupiter, Saturn) — the same split, inherited from the same shared ancestor language."
             }
           ]
         },
@@ -93,11 +93,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"tiṅkaḷ\" — moon — then \"āḻca,\" day/week",
+              "instruction": "\"tiṅkaḷ\" — moon — then \"āḻca,\" week",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"tiṅkaḷ\" — moon — then \"āḻca,\" day/week]"
+              "source": "[YOU SAY: \"tiṅkaḷ\" — moon — then \"āḻca,\" week]"
             },
             {
               "kind": "prompt",

@@ -1,7 +1,15 @@
 ## HL-C406 — ML-C10-azhcha prints a Malayalam word in Tamil letters, and glosses *week* as *day*
 
-**Status: OPEN, filed rather than patched.** Found while writing chapter 102,
-which uses **തിങ്കളാഴ്ച** from this lesson's table.
+**Status: CLOSED (2026-09-19).** Found while writing chapter 102, which uses
+**തിങ്കളാഴ്ച** from this lesson's table.
+
+The lesson now prints Malayalam **ആഴ്ച** in Malayalam script and contrasts the
+meanings precisely: Tamil **கிழமை** is "day of the week," while Malayalam
+**ആഴ്ച** is "week." The existing non-cognate hedge remains. No standalone
+headword was added: this lesson uses **ആഴ്ച** to explain how its seven owned
+weekday forms are built, while chapter 102 continues to teach **തിങ്കളാഴ്ച** as
+a use assembled from those forms rather than pretending the corpus has gained a
+separate word owner.
 
 **The sentence**, at `ML-C10-azhcha.md:61`:
 
