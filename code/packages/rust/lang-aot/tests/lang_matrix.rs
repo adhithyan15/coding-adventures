@@ -3507,6 +3507,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("610610"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a recurrence-updated boolean may statically select a
+    // different pure local scalar assignment on each bounded iteration.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real x, y; boolean take; x := 0.0; y := 0.0; take := false; for i := 1 step 1 until 4 do begin take := not take; if take then x := x + i else y := y + i end; print(x); print(y); i := 0; x := 0.0; y := 0.0; take := false; for i := i + 1 while i <= 4 do begin take := not take; if take then x := x + i else y := y + i end; print(x); print(y) end",
+        expect: Expect::Stdout("4646"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -13310,6 +13319,31 @@ fn algol_multi_scalar_recurrences_run_on_every_available_standard_backend() {
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the multi-scalar recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_conditional_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if take then x := x + i else y := y + i")
+        })
+        .expect("the static conditional recurrences must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the static conditional recurrences did not run"
             );
             continue;
         };

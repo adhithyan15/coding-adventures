@@ -987,7 +987,10 @@ backend immediately) come before the enabler-dependent items.
   integer, real, or boolean scalar assignment. In that bounded case, abstract
   execution evaluates all assignments in source order on every pass and
   retains each exact final snapshot, including dependencies on an earlier
-  assignment in the same body.
+  assignment in the same body. A statement conditional may select one
+  recursively supported branch when its boolean selector is statically known
+  from the current abstract snapshot; the selected branch may therefore vary
+  between iterations.
   Finite static real loops whose bodies avoid the control also retain their
   first post-limit value by simulating at most 4,096 emitted binary64 additions;
   non-finite and rounded-away progress fails closed. Finite static loops also
@@ -1000,10 +1003,10 @@ backend immediately) come before the enabler-dependent items.
   simulation is capped at 4,096 passes. The recurrence assignments may be
   grouped in an unlabeled compound body alongside proven integer, real, or
   boolean scalar identities and unlabeled dummy statements. Larger loops,
-  labels, conditionals, declarations, unsupported changing siblings, integer
-  overflow, non-finite results, zero steps, arrays, globals, by-name targets,
-  tracking barriers, dynamic writes, and other control-dependent
-  multi-iteration bodies remain conservative.
+  labels, declarations, unsupported changing siblings, dynamic statement
+  selectors, integer overflow, non-finite results, zero steps, arrays, globals,
+  by-name targets, tracking barriers, dynamic writes, and other
+  control-dependent multi-iteration bodies remain conservative.
   A `while` element also retains body initialization when a bounded static
   numeric comparison, evaluated after abstractly assigning its initial
   controlled value, proves the first condition true. Such an element also
@@ -1021,13 +1024,15 @@ backend immediately) come before the enabler-dependent items.
   ordinary local scalars or unlabeled dummy statements, including through
   unlabeled nested compound grouping. They may also abstractly execute several
   pure local integer, real, or boolean recurrence assignments in source order
-  on every bounded pass, retaining all exact terminating snapshots. Labels,
-  conditionals, declarations, dynamic or effectful siblings, dependency
-  writes, string targets, overflow, non-finite values, and loops exceeding
-  4,096 evaluations remain conservative. Capped abstract execution also
-  retains the first integer or finite binary64 control value whose predicate
-  is false when its value and predicate reference only the control and
-  statically known ordinary local scalars that
+  on every bounded pass, retaining all exact terminating snapshots. A
+  statically decidable statement conditional may select one recursively
+  supported branch on each pass, including when earlier recurrence writes make
+  successive selections differ. Labels, declarations, dynamic selectors or
+  effectful siblings, dependency writes, string targets, overflow, non-finite
+  values, and loops exceeding 4,096 evaluations remain conservative. Capped
+  abstract execution also retains the first integer or finite binary64 control
+  value whose predicate is false when its value and predicate reference only
+  the control and statically known ordinary local scalars that
   the body does not change. Read-only body uses, exact scalar
   self-assignments, checked numeric or boolean expressions that equal the
   tracked scalar and otherwise reference only known ordinary locals that are
