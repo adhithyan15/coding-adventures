@@ -291,8 +291,13 @@ The delivery order is:
    audited with the same provider and trace. Local deletion is conditional on
    exact HTTP 200 and the original revision, so confidential-profile mismatch,
    missing data, transport or provider failure, and stale revision all retain
-   the credential. This boundary adds no access-token fallback, concrete
-   transport, provider-specific data, or external dependency. A client-secret
+   the credential. An access-token-only fallback now uses the same retained
+   public profile and audited transport path, but custody releases the access
+   token and exact revision only after proving that no refresh token exists.
+   Refreshable credentials fail before transport, while exact HTTP 200 alone
+   permits revision-bound local deletion; retryable provider failures and stale
+   revisions retain local state. These boundaries add no concrete transport,
+   provider-specific data, or external dependency. A client-secret
    usable-access composition
    now validates the exact retained Basic/Post method and provider-bound secret
    key before credential or clock access. Still-fresh credentials invoke no
