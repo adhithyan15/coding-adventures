@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Recognize Flutter numeric typography on text, buttons and inputs; continue
+  reporting unsupported HostTable font-size bindings (#15598).
+
 - Recognize XAML HostTable numeric font-size projection now that native
   header/cell/editor propagation is implemented and exercised (#15564).
 

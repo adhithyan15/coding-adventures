@@ -2228,7 +2228,8 @@ fn ignored_native_property(
             && !(backend == Backend::Compose && mosaic_emit_compose::pipeline::has_native_font_size(node))
             && !(backend == Backend::Qt && mosaic_emit_qt::pipeline::has_native_font_size(node))
             && !(backend == Backend::SwiftUI && mosaic_emit_swiftui::pipeline::has_native_font_size(node))
-            && !(backend == Backend::Xaml && mosaic_emit_xaml::pipeline::has_native_font_size(node)) => Some((
+            && !(backend == Backend::Xaml && mosaic_emit_xaml::pipeline::has_native_font_size(node))
+            && !(backend == Backend::Flutter && mosaic_emit_flutter::pipeline::has_native_font_size(node)) => Some((
             "typography.font-size-binding-unimplemented",
             "layout font-size binding has no projection for this backend or primitive; static mosstyle typography is unaffected",
         )),
@@ -8899,6 +8900,8 @@ layout AccessibleText {
                         | Backend::Xaml
                 ) {
                     0
+                } else if backend == Backend::Flutter {
+                    1 // HostTable remains explicitly degraded.
                 } else {
                     4
                 },
