@@ -1,5 +1,12 @@
 ## HL-C400 — four lessons tell the learner the anusvara is dropped whenever anything attaches, and three other lessons show otherwise
 
+**Status: CLOSED (2026-09-19).** A fresh source sweep confirms that all four
+canonical lessons now limit the **ം → ത്ത** alternation to case endings, their
+generated book and narration forms agree, and the exam inventory carries the
+same narrowing. The remaining *anything attaches* wording is confined to
+historical notes that explicitly describe the rejected claim; it is not learner
+instruction.
+
 Found while writing Malayalam chapter 96, in the fourth round of review on a
 single paragraph. **Not introduced by that chapter** — chapter 96 states the
 facts correctly. The fault is that four earlier lessons state a universal the
