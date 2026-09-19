@@ -807,6 +807,17 @@ export interface Stage<
     ctx: StageContext
   ): StageOutput<Out>;
 
+  /**
+   * Reapply the externally visible effects represented by one previously
+   * validated materialized output. Only effectful stages whose output fully
+   * describes those effects implement this hook.
+   */
+  replay?(
+    output: KindPayload<Out>,
+    config: unknown,
+    ctx: StageContext
+  ): void | Promise<void>;
+
   // ─── Optional lifecycle hooks ───────────────────────────────────
   /**
    * Called once before the first `run`. Stages may use this to
@@ -856,6 +867,15 @@ export default defineStage({
 inference; it just returns the object literal narrowed to the
 type-parameterised `Stage<In, Out>`. This keeps stages debuggable as
 plain objects with no hidden state.
+
+An effectful stage may opt into whole-instance checkpoint reuse with
+`replay(output, config, ctx)`. The hook is a declaration that the materialized
+`output` completely describes the externally visible effects of the matching
+successful `run`. Replay MUST be idempotent, MUST apply the same validation and
+containment rules as `run`, and MUST use only the stage's declared capabilities.
+The orchestrator calls it only after validating the checkpoint against the
+prior successful output revision. A stage without this hook is never skipped
+across an effect boundary.
 
 ### 3.3 Purity and hidden state
 

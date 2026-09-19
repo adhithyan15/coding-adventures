@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/forme-emit-site-fs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Join Forme rendered pages with Asset IR and emit a fingerprinted static site.",
   "type": "module",
   "main": "src/index.ts",
@@ -17,6 +17,7 @@
     "@coding-adventures/forme-stage": "file:../forme-stage"
   },
   "devDependencies": {
+    "@coding-adventures/forme-cache": "file:../forme-cache",
     "@coding-adventures/forme-orchestrator": "file:../forme-orchestrator",
     "@types/node": "^22.20.1",
     "typescript": "^5.0.0",

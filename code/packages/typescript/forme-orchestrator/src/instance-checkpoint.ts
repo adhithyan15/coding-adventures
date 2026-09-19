@@ -27,7 +27,13 @@ export function canCheckpointInstance(instance: ResolvedInstance): boolean {
     // manifest makes replaying its materialized value safe.
     return typeof instance.stage.externalState === "function";
   }
-  return instance.capabilities.length === 0;
+  if (instance.capabilities.length === 0) return true;
+  // A replay hook receives the one materialized output of a whole-instance
+  // invocation. Stream collectors and named-input joins are invoked once.
+  // Per-item stages may aggregate many outputs behind the scheduler and stay
+  // conservative until the contract can describe that multiplicity.
+  return typeof instance.stage.replay === "function"
+    && (instance.stage.consumes.name === "Stream" || instance.stage.inputPorts !== undefined);
 }
 
 export async function loadInstanceCheckpoint(

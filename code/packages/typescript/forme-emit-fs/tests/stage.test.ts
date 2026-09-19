@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
+import { mkdtemp, readFile, rm, stat, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { createHash } from "node:crypto";
@@ -135,6 +135,72 @@ describe("emitFs — running", () => {
     expect(a).toBe("<p>a</p>");
     expect(b).toBe("<p>b</p>");
   });
+
+  it("replays every artifact file after the output tree is deleted", async () => {
+    const artifact = await runEmit([
+      makePage({ route: "/index.html", html: "<p>home</p>" }),
+      makePage({ route: "/blog/post.html", html: "<p>post</p>" }),
+    ]);
+    await rm(outDir, { recursive: true, force: true });
+
+    await emitFs.replay!(artifact as never, { outDir }, makeCtx());
+
+    expect(await readFile(resolve(outDir, "index.html"), "utf8")).toBe("<p>home</p>");
+    expect(await readFile(resolve(outDir, "blog/post.html"), "utf8")).toBe("<p>post</p>");
+  });
+
+  it("rejects unsafe or malformed replay artifacts before escaping outDir", async () => {
+    const artifact = await runEmit([makePage({ route: "/index.html" })]);
+    await rm(outDir, { recursive: true, force: true });
+    const unsafe = {
+      ...artifact,
+      files: { "a.html": new Uint8Array([1]), "z/../escape.html": new Uint8Array([2]) },
+    };
+    await expect(emitFs.replay!(unsafe as never, { outDir }, makeCtx()))
+      .rejects.toThrow(/normalized portable relative path/);
+    await expect(readFile(resolve(outDir, "a.html"))).rejects.toThrow();
+    await expect(emitFs.replay!({
+      ...artifact,
+      files: { "foo/D:outside/pwn.html": new Uint8Array([1]) },
+    } as never, { outDir }, makeCtx())).rejects.toThrow(/normalized portable relative path/);
+    await expect(emitFs.replay!({ ...artifact, variant: { kind: "pdf", pageCount: 1 } } as never, { outDir }, makeCtx()))
+      .rejects.toThrow(/dist-tree DeployArtifact/);
+  });
+
+  it("rejects directory symlinks beneath outDir during replay", async () => {
+    const artifact = await runEmit([makePage({ route: "/index.html" })]);
+    const outside = await mkdtemp(join(tmpdir(), "forme-emit-fs-outside-"));
+    try {
+      await symlink(outside, resolve(outDir, "linked"), process.platform === "win32" ? "junction" : "dir");
+      await expect(emitFs.replay!({
+        ...artifact,
+        files: { "linked/pwn.html": new TextEncoder().encode("outside") },
+      } as never, { outDir }, makeCtx())).rejects.toThrow(/real directory/);
+      await expect(readFile(resolve(outside, "pwn.html"))).rejects.toThrow();
+    } finally {
+      await rm(outside, { recursive: true, force: true });
+    }
+  });
+
+  it.skipIf(process.platform === "win32")(
+    "rejects final-file symlinks without modifying their targets",
+    async () => {
+      const artifact = await runEmit([makePage({ route: "/index.html" })]);
+      const outside = await mkdtemp(join(tmpdir(), "forme-emit-fs-file-link-"));
+      const target = resolve(outside, "target.html");
+      try {
+        await writeFile(target, "original");
+        await symlink(target, resolve(outDir, "linked.html"), "file");
+        await expect(emitFs.replay!({
+          ...artifact,
+          files: { "linked.html": new TextEncoder().encode("replacement") },
+        } as never, { outDir }, makeCtx())).rejects.toThrow(/symbolic link/);
+        expect(await readFile(target, "utf8")).toBe("original");
+      } finally {
+        await rm(outside, { recursive: true, force: true });
+      }
+    },
+  );
 
   it("creates nested directories for nested routes", async () => {
     const pages = [

@@ -1,5 +1,13 @@
 # Changelog — @coding-adventures/forme-stage
 
+## 0.3.0 — 2026-09-19
+
+### Added
+
+- Effectful stages may implement `replay(output, config, ctx)` to declare that
+  a validated materialized output fully describes their externally visible
+  effects and can be applied idempotently during checkpoint restoration.
+
 ## 0.2.0 — 2026-09-01
 
 ### Added
