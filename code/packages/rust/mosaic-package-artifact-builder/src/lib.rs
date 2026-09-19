@@ -2120,11 +2120,15 @@ fn collect_native_degradations(
         // its own backend from this arm in the same change that adds the
         // lowering, so the report cannot outlive the gap or precede the fix.
         // Narrowed one backend at a time, exactly as HostProgressRing was:
-        // XAML lowers it to `NavigationView` and SwiftUI lowers it to
-        // `NavigationSplitView`, so each came off this list with its lowering.
+        // XAML lowers it to `NavigationView`, SwiftUI to
+        // `NavigationSplitView`, and Compose to `NavigationSuiteScaffoldLayout`,
+        // so each came off this list with its lowering.
         "HostNavigationSplit"
             if backend.is_native()
-                && !matches!(backend, Backend::Xaml | Backend::SwiftUI) =>
+                && !matches!(
+                    backend,
+                    Backend::Xaml | Backend::SwiftUI | Backend::Compose
+                ) =>
         {
             Some((
                 "primitive.navigation-split-unimplemented",
@@ -4730,6 +4734,7 @@ fn build_compose_build_gradle_kts(
             "}}\n\n",
             "dependencies {{\n",
             "    implementation(compose.desktop.currentOs)\n",
+            "    implementation(compose.material3AdaptiveNavigationSuite)\n",
             "    implementation(\"net.java.dev.jna:jna:{jna_version}\")\n",
             "    implementation(\"org.jetbrains.kotlinx:kotlinx-serialization-json:{serialization_json_version}\")\n",
             "{host_asset_deps}",
@@ -7738,6 +7743,47 @@ layout Shell {
         assert!(report.behavior_degradations.is_empty());
     }
 
+    /// UI29-6 slice K-compose: Material 3's navigation-suite layout owns the
+    /// adaptive size-class decision, so Compose clears the capability gap.
+    #[test]
+    fn host_navigation_split_compose_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-shell-compose", &["Shell"]);
+        fs::write(
+            pkg.path().join("src/Shell.mll"),
+            r#"
+layout Shell {
+  HostNavigationSplit [ root ] (
+    pane-title: "Projects",
+    pane-width: 236
+  ) {
+    Column [ pane ] { }
+    Column [ detail ] { }
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Compose,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Compose navigation-split capability analysis");
+        assert!(
+            report.native_complete,
+            "Compose now has a native HostNavigationSplit lowering: {:?}",
+            report.degradations
+        );
+        assert!(report.behavior_degradations.is_empty());
+    }
+
     /// UI29-6 (#15481): registered before any backend lowers it, so every
     /// native backend must say so rather than emit two silent containers.
     #[test]
@@ -7759,9 +7805,9 @@ layout Shell {
         )
         .unwrap();
 
-        // XAML and SwiftUI are absent on purpose: each lowers this now, and
+        // XAML, SwiftUI and Compose are absent on purpose: each lowers this now, and
         // the dedicated native-lowering tests above pin that other half.
-        for backend in [Backend::Compose, Backend::Flutter, Backend::Qt] {
+        for backend in [Backend::Flutter, Backend::Qt] {
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(
                 &BuildOptions {
@@ -12975,6 +13021,7 @@ version = "1"
         assert!(gradle.contains("id(\"org.jetbrains.compose\") version \"1.11.1\""));
         assert!(gradle.contains("id(\"org.jetbrains.kotlin.plugin.compose\") version \"2.3.21\""));
         assert!(gradle.contains("kotlin(\"jvm\") version \"2.3.21\""));
+        assert!(gradle.contains("implementation(compose.material3AdaptiveNavigationSuite)"));
         assert!(gradle.contains(
             "testImplementation(\"org.jetbrains.compose.ui:ui-test-junit4-desktop:1.11.1\")"
         ));

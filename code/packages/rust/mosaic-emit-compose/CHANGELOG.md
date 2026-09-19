@@ -9,6 +9,14 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — `HostNavigationSplit` lowers to Material 3 adaptive navigation (UI29-6, #15481)
+
+Compose now emits `NavigationSuiteScaffoldLayout` for the pane/detail primitive.
+Material 3 owns the adaptive navigation mode for `collapse: auto`, while
+`collapse: never` pins a leading navigation drawer. The pane keeps its authored
+preferred width and accessible title. A native-complete fixture compiles the
+generated project with the real Compose toolchain.
+
 ### Security -- `$` in an expression string literal is no longer Kotlin interpolation (#15464)
 
 `moslayout-compiler` re-quotes the string tokens inside an `Expr` but does not
