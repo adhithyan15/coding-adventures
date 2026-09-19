@@ -137,6 +137,13 @@ The spec is a JSON file. Full reference in `code/specs/cli-builder-spec.md`.
 }
 ```
 
+Flag objects may declare alternate double-dash spellings with
+`"long_aliases": ["old-name", "vendor-name"]`. Both `--old-name value` and
+`--old-name=value` resolve to the flag's canonical `id`; generated help lists
+the canonical long name first and aliases in declaration order. Alias
+spellings must be unique across every flag active in the same command scope
+and cannot collide with enabled built-ins.
+
 ## Parsing Modes
 
 | Mode | Behavior |

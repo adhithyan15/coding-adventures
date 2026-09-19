@@ -39,8 +39,91 @@ fn parse_err_types(spec_json: &str, args: &[&str]) -> Vec<String> {
     }
 }
 
+fn parse_error(spec_json: &str, args: &[&str]) -> cli_builder::errors::ParseErrors {
+    let spec = load_spec_from_str(spec_json).expect("spec load failed");
+    let parser = Parser::new(spec);
+    let argv: Vec<String> = args.iter().map(|s| s.to_string()).collect();
+    match parser.parse(&argv) {
+        Err(CliBuilderError::ParseErrors(errors)) => errors,
+        Ok(_) => panic!("expected error"),
+        Err(other) => panic!("unexpected error: {}", other),
+    }
+}
+
 fn has_error(types: &[String], t: &str) -> bool {
     types.iter().any(|e| e == t)
+}
+
+// ---------------------------------------------------------------------------
+// Canonical long flags and long-form aliases
+// ---------------------------------------------------------------------------
+
+const LONG_ALIAS_SPEC: &str = r#"{
+    "cli_builder_spec_version": "1.0",
+    "name": "alias-tool",
+    "description": "Exercise long aliases",
+    "flags": [
+        {"id":"checks","long":"checks_only","long_aliases":["checks-only"],"description":"Checks only","type":"boolean","conflicts_with":["emit"]},
+        {"id":"define","long":"define","long_aliases":["D"],"description":"Define","type":"string","value_name":"NAME=VALUE"},
+        {"id":"emit","long":"emit","description":"Emit output","type":"boolean"},
+        {"id":"mode","long":"mode","long_aliases":["legacy-mode"],"description":"Mode","type":"string","requires":["checks"]}
+    ]
+}"#;
+
+#[test]
+fn test_boolean_long_alias_uses_canonical_id() {
+    let result = parse_ok(LONG_ALIAS_SPEC, &["alias-tool", "--checks-only"]);
+    assert_eq!(result.flags["checks"], json!(true));
+    assert_eq!(result.explicit_flags, vec!["checks"]);
+}
+
+#[test]
+fn test_value_long_alias_accepts_separate_and_inline_values() {
+    let separate = parse_ok(LONG_ALIAS_SPEC, &["alias-tool", "--D", "DEBUG=false"]);
+    assert_eq!(separate.flags["define"], json!("DEBUG=false"));
+    assert_eq!(separate.explicit_flags, vec!["define"]);
+
+    let inline = parse_ok(LONG_ALIAS_SPEC, &["alias-tool", "--D=DEBUG=true"]);
+    assert_eq!(inline.flags["define"], json!("DEBUG=true"));
+    assert_eq!(inline.explicit_flags, vec!["define"]);
+}
+
+#[test]
+fn test_canonical_and_alias_are_duplicate_nonrepeatable_flag() {
+    let errors = parse_err_types(
+        LONG_ALIAS_SPEC,
+        &["alias-tool", "--define", "A=1", "--D", "B=2"],
+    );
+    assert!(has_error(&errors, "duplicate_flag"), "errors: {errors:?}");
+}
+
+#[test]
+fn test_long_alias_participates_in_canonical_conflicts_and_requires() {
+    let conflict = parse_err_types(
+        LONG_ALIAS_SPEC,
+        &["alias-tool", "--checks-only", "--emit"],
+    );
+    assert!(has_error(&conflict, "conflicting_flags"), "errors: {conflict:?}");
+
+    let requirement = parse_err_types(
+        LONG_ALIAS_SPEC,
+        &["alias-tool", "--legacy-mode", "fast"],
+    );
+    assert!(
+        has_error(&requirement, "missing_dependency_flag"),
+        "errors: {requirement:?}"
+    );
+}
+
+#[test]
+fn test_unknown_long_flag_can_suggest_alias() {
+    let errors = parse_error(LONG_ALIAS_SPEC, &["alias-tool", "--check-only"]);
+    let unknown = errors
+        .errors
+        .iter()
+        .find(|error| error.error_type == "unknown_flag")
+        .expect("unknown flag error");
+    assert_eq!(unknown.suggestion.as_deref(), Some("--checks-only"));
 }
 
 // ---------------------------------------------------------------------------

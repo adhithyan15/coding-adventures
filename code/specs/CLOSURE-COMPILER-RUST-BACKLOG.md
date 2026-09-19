@@ -2,10 +2,10 @@
 
 **Status:** active  
 **Last reprioritized:** 2026-09-19  
-**Current selection:** CCR-005, generate and enforce the CLI surface audit
-([#15590](https://github.com/adhithyan15/coding-adventures/issues/15590))<br>
+**Current selection:** CCR-043, support upstream long-form flag aliases
+([#15592](https://github.com/adhithyan15/coding-adventures/issues/15592))<br>
 **Current local loop base:** `coding-adventures` at
-`fa120baa76a56919dd02722de6598a4d69897c61`<br>
+`fa661a52751dbd6007cfb5eb0ca31f092b5babbc`<br>
 **Local audit base:** `coding-adventures` at `06fc0524051a397ccc53c628b08c019b2bbf75ba`  
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
@@ -43,10 +43,12 @@ scaffold, and collapse-properties does not mutate the program.
 
 ### Local implementation
 
-- `closurec` is version `0.242.0` and declares 111 flags in `cli.spec.json`.
-- All 462 curated differential fixtures match their checked-in expected bytes.
-  Most WHITESPACE_ONLY fixtures cite Closure `v20240317`; newer SIMPLE fixtures
-  cite `v20260712`, so the corpus does not yet share one current oracle pin.
+- `closurec` is version `0.246.0` and declares 112 flags in `cli.spec.json`.
+  Its generated audit classifies all 102 pinned upstream canonical options,
+  all seven exact aliases as supported, eleven local extensions, and one
+  deprecated local alias. No upstream alias remains unsupported.
+- All 462 curated differential fixtures match both their checked-in expected
+  bytes and the pinned Closure `v20260915` oracle refresh recorded by CCR-004.
 - The conformance suite has 24 declared cases: 19 compare values and five are
   explicit unsupported-syntax declines. All three harness tests pass.
 - Both correlation-vector provenance tests pass.
@@ -162,6 +164,11 @@ order may change. A row marked `Blocked` names its prerequisite. `Survey` means
 the implementation must begin with a measured inventory rather than assumed
 scope.
 
+Adjacent shared-library defects that do not affect `closurec` are tracked in
+their owning queue rather than assigned misleading CCR IDs. The current such
+finding is cli-builder local/global same-ID shadowing
+[#15605](https://github.com/adhithyan15/coding-adventures/issues/15605).
+
 ## Ordered queue
 
 ### P0 — restore a trustworthy baseline
@@ -172,9 +179,9 @@ scope.
 | 2 | CCR-002 | Replace silent SIMPLE/ADVANCED typed-pipeline fallback with an explicit compatibility policy. Unsupported syntax must either be a hard error or an opt-in, diagnostic-bearing fallback. | Differential tests prove exit code, stderr, and output for parse, bridge, pass, and emit failures. | Complete — [#15544](https://github.com/adhithyan15/coding-adventures/pull/15544) |
 | 3 | CCR-003 | Establish one reproducible oracle manifest pinned to upstream `v20260915` and commit `10ca677a`. Record Java version, commands, flags, hashes, licensing, and fixture provenance. | Offline manifest verifier classifies all 626 differential fixture directories exactly once; every upstream-derived golden resolves to one immutable artifact pin and normalized command. | Complete — [#15558](https://github.com/adhithyan15/coding-adventures/pull/15558) |
 | 4 | CCR-004 | Re-run all 462 golden fixtures against the new oracle, classify drift, and update only reviewed deltas. | Machine-readable report records equal/changed/declined counts and every changed byte has a linked reason. | Complete — [#15583](https://github.com/adhithyan15/coding-adventures/pull/15583) |
-| 5 | CCR-005 | Generate a CLI surface audit from current `CommandLineRunner.java` and `cli.spec.json`, separating upstream, generated, extension, deprecated-alias, and unsupported flags. | CI fails on unclassified flag drift; canonical `--typed_ast_output_file` is accepted with tested compatibility for the legacy typo. | Implemented and validated locally; publication pending — [#15590](https://github.com/adhithyan15/coding-adventures/issues/15590) |
-| 5.1 | CCR-043 | Add first-class long-form flag aliases to `cli-builder` and accept upstream `--D`, `--checks-only`, `--dev_mode`, and `--warnings_whitelist_file` as their canonical flags. | Alias collisions fail spec validation; parse results and explicit-flag tracking use canonical IDs; the CLI audit reports zero unsupported upstream aliases. | Ready — [#15592](https://github.com/adhithyan15/coding-adventures/issues/15592) |
-| 6 | CCR-006 | Add an explicit capability/status command or document generated matrix so users can tell parse-only flags from implemented semantics. | Matrix is generated from the same registry used by dispatch and cannot drift manually. | Blocked by CCR-005 |
+| 5 | CCR-005 | Generate a CLI surface audit from current `CommandLineRunner.java` and `cli.spec.json`, separating upstream, generated, extension, deprecated-alias, and unsupported flags. | CI fails on unclassified flag drift; canonical `--typed_ast_output_file` is accepted with tested compatibility for the legacy typo. | Complete — [#15595](https://github.com/adhithyan15/coding-adventures/pull/15595) |
+| 5.1 | CCR-043 | Add first-class long-form flag aliases to `cli-builder` and accept upstream `--D`, `--checks-only`, `--dev_mode`, and `--warnings_whitelist_file` as their canonical flags. | Alias collisions fail spec validation; parse results and explicit-flag tracking use canonical IDs; the CLI audit reports zero unsupported upstream aliases. | Implemented and validated locally; publication pending — [#15592](https://github.com/adhithyan15/coding-adventures/issues/15592) |
+| 6 | CCR-006 | Add an explicit capability/status command or document generated matrix so users can tell parse-only flags from implemented semantics. | Matrix is generated from the same registry used by dispatch and cannot drift manually. | Blocked by CCR-043 |
 
 ### P1 — make the front end and output contract honest
 
@@ -251,3 +258,6 @@ the loop moved.
 | 2026-09-19 | CCR-004 merged as [#15583](https://github.com/adhithyan15/coding-adventures/pull/15583) at `fa120baa` after every attached check passed on macOS, Ubuntu, and Windows. The merge is reachable from `origin/main`; no competing Closure PR exists; upstream `master` remains `10ca677a` and the newest dated release tag remains `v20260915`. No new security, data-loss, cross-platform, or false-success defect outranks the next dependency-ordered audit. | Selected CCR-005 ([#15590](https://github.com/adhithyan15/coding-adventures/issues/15590)). It is the smallest ready slice that turns the claimed Closure CLI surface into machine-checked evidence and unblocks the generated capability matrix in CCR-006. |
 | 2026-09-19 | CCR-005's generated surface inventory found seven exact upstream alias spellings. The local CLI supports `-D`, `-O`, and `-W`, but `cli-builder` cannot model the four upstream long aliases `--D`, `--checks-only`, `--dev_mode`, and `--warnings_whitelist_file`; logged as CCR-043 ([#15592](https://github.com/adhithyan15/coding-adventures/issues/15592)). | Keep CCR-005 selected because the audit must land before its findings can be removed from the unsupported ledger. Rank CCR-043 immediately after CCR-005: it closes measured surface-parity gaps and gives CCR-006 a complete alias-aware registry. |
 | 2026-09-19 | CCR-005 implementation validated locally. The deterministic artifact pins upstream `v20260915` / `10ca677a`, classifies all 102 canonical options and seven exact aliases, records 100 direct upstream flags, two generated flags, 11 extensions, one deprecated alias, zero unsupported canonical flags, and four unsupported upstream aliases. Regeneration matched SHA-256 `be9a6c53c184d955b0e69edd530655075879130d238f7b810f5045a0d503a615`; ten audit tests, typed-AST compatibility tests, all-target Clippy, and the full 691-unit-test package suite plus every integration target pass. | Keep CCR-005 selected through publication and merge. CCR-043 remains the leading follow-up because it removes every measured alias gap and unlocks an alias-aware CCR-006 capability registry, subject to a fresh priority audit after merge. |
+| 2026-09-19 | CCR-005 merged as [#15595](https://github.com/adhithyan15/coding-adventures/pull/15595) at `3cf21897` after every attached check passed or was intentionally skipped; Ubuntu, Windows, macOS, metadata, CodeQL detection, and aggregate gates were green. The merge is reachable from `origin/main`; no competing Closure/CLOC or `cli-builder` PR exists. Fresh upstream verification found `master` still at `10ca677a` and the newest dated release tag still `v20260915`. | Selected CCR-043 ([#15592](https://github.com/adhithyan15/coding-adventures/issues/15592)). It is the smallest measured surface-parity slice, removes every unsupported upstream alias from the audit, and gives CCR-006 one canonical alias-aware registry. No newly discovered security, data-loss, cross-platform, or false-success defect outranks it. |
+| 2026-09-19 | CCR-043 implementation validated locally. `cli-builder` 1.2.0 now resolves declared long aliases to canonical IDs, rejects effective-scope and built-in collisions, exposes aliases in deterministic help, and passes 246 unit tests, 178 integration tests, nine doctests, and warnings-denied Clippy. `closurec` 0.246.0 accepts all four missing upstream spellings; its full 692-unit-test suite and every integration target pass, as does all-target Clippy apart from the repository's pre-existing obsolete-lint warning. Regenerating the pinned CLI audit twice produced SHA-256 `51cbafca461c5dcb7362b94fcc42c9a8a36b44a60635406d72218123ba20cd37` and zero unsupported upstream aliases. Review also exposed unrelated cli-builder same-ID shadowing drift, logged as [#15605](https://github.com/adhithyan15/coding-adventures/issues/15605). | Keep CCR-043 selected through publication and merge. The new shared-library defect is lower priority and does not affect closurec because it has no subcommands; CCR-006 remains the next dependency-ordered candidate, subject to a fresh audit after merge. |
+| 2026-09-19 | The 350-package CI fan-out for CCR-043 exposed a deterministic Windows-only failure in an unrelated `mosaic-package-artifact-builder` stamp test: two immediate same-length writes can retain the same reported mtime. The exact failure reproduced locally and is logged as [#15621](https://github.com/adhithyan15/coding-adventures/issues/15621); the production write-record fallback already covers same-stamp rewrites. | Keep CCR-043 selected. Repair only the test's uncontrolled timestamp fixture as a CI prerequisite; this does not change Closure priority or production semantics. CCR-006 remains next after CCR-043 merges. |
