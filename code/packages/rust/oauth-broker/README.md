@@ -102,17 +102,20 @@ credential release, and revision-bound custody rotation without leaving the
 broker. Authentication mismatch is rejected before credential access, and
 transport, provider, clock, release, or compare-and-swap failures retain the
 prior record.
-Public-client profiles now have the corresponding refresh-token detach
-boundary without acquiring an authentication secret or signer. The exact
-opaque account key selects the registered public `none` profile and credential
-record; that retained profile and its explicit revocation endpoint are checked
-before custody releases the stored refresh token and revision into the
-zeroizing RFC 7009 request. Injected transport, response classification, and
-conditional deletion remain separately audited with the same provider and
-trace. Only exact HTTP 200 permits deletion of the original revision, so
-confidential-profile mismatch, absent refresh data, transport or provider
-failure, and a concurrent revision change retain local credentials. This slice
-adds no access-token fallback or concrete network implementation.
+Public-client profiles now have corresponding refresh-token and
+access-token-only detach boundaries without acquiring an authentication secret
+or signer. The exact opaque account key selects the registered public `none`
+profile and credential record; that retained profile and its explicit
+revocation endpoint are checked
+before custody releases the selected token and revision into the zeroizing RFC
+7009 request. The access-token fallback additionally requires custody to prove
+refresh-token absence before release, so a refreshable credential cannot be
+deleted after revoking only its access token. Injected transport, response
+classification, and conditional deletion remain separately audited with the
+same provider and trace. Only exact HTTP 200 permits deletion of the original
+revision, so confidential-profile mismatch, missing or ineligible token data,
+transport or provider failure, and a concurrent revision change retain local
+credentials. These slices add no concrete network implementation.
 The usable-access composition applies that same retained client-secret policy
 before even reading credential metadata. A still-fresh access token reaches
 only the existing audited custody closure and invokes neither secret custody nor

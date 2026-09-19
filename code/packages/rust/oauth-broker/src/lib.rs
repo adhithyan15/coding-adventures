@@ -981,7 +981,7 @@ pub enum BrokerAuditAction {
     PublicRevocation,
     /// Revoke one stored token, then delete its exact credential revision.
     ClientSecretRevocationCredentialDelete,
-    /// Revoke one public-client refresh token, then delete its exact revision.
+    /// Revoke one public-client token, then delete its exact credential revision.
     PublicRevocationCredentialDelete,
     /// Revoke through private-key JWT, then delete the exact credential revision.
     PrivateKeyJwtRevocationCredentialDelete,
@@ -2739,6 +2739,72 @@ impl<S: CredentialStore> OAuthBroker<S> {
                 provider.config(),
                 token,
                 RevocationTokenHint::RefreshToken,
+                trace,
+            )
+            .publish_then_release(audit)
+            .map_err(map_oauth_error)?;
+            let response = self.send_public_revocation(request, transport, audit)?;
+            if response.provider() != &provider_id || response.trace() != trace {
+                return Err(BrokerError::BindingMismatch);
+            }
+            self.custody
+                .delete(key, revision, trace, audit)
+                .map_err(map_custody_error)
+        })();
+        finish_broker(
+            audit,
+            &provider_id,
+            trace,
+            BrokerAuditAction::PublicRevocationCredentialDelete,
+            result,
+        )
+    }
+
+    /// Revoke one public access-token-only credential, then delete its revision.
+    ///
+    /// The opaque account key selects both the registered provider and the
+    /// credential record. Retained public-client policy and the explicit
+    /// revocation endpoint are checked before credential access. Custody
+    /// releases the access token and exact revision only when the record has no
+    /// refresh token, preventing deletion of a still-refreshable credential
+    /// after revoking only its access token. Exact HTTP 200 and every transport,
+    /// protocol, custody, and broker audit gate must pass before local deletion.
+    pub fn revoke_public_access_token_and_delete_credentials<T, A>(
+        &self,
+        key: &CredentialKey,
+        trace: OAuthTraceId,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<(), BrokerError>
+    where
+        T: OAuthTokenRevocationTransport,
+        A: OAuthBrokerAuditSink,
+    {
+        let provider_id = key.provider().clone();
+        publish_broker(
+            audit,
+            &provider_id,
+            trace,
+            BrokerAuditAction::PublicRevocationCredentialDelete,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            let provider = self.registered_provider(&provider_id)?.clone();
+            if provider.confidential_authentication_method().is_some()
+                || provider.config().revocation_endpoint().is_none()
+            {
+                return Err(BrokerError::BindingMismatch);
+            }
+            let (token, revision) = self
+                .custody
+                .with_access_token_for_revocation(key, trace, audit, |token, revision| {
+                    (Zeroizing::new(token.to_owned()), revision)
+                })
+                .map_err(map_custody_error)?;
+            let request = prepare_token_revocation(
+                provider.config(),
+                token,
+                RevocationTokenHint::AccessToken,
                 trace,
             )
             .publish_then_release(audit)
@@ -5534,6 +5600,7 @@ mod tests {
     struct StaleDeleteStore {
         key: CredentialKey,
         loads: AtomicUsize,
+        with_refresh_token: bool,
     }
 
     impl StaleDeleteStore {
@@ -5541,13 +5608,23 @@ mod tests {
             Self {
                 key,
                 loads: AtomicUsize::new(0),
+                with_refresh_token: true,
             }
         }
 
-        fn record(access_token: &str, refresh_token: &str) -> CredentialRecord {
+        fn access_only(key: CredentialKey) -> Self {
+            Self {
+                key,
+                loads: AtomicUsize::new(0),
+                with_refresh_token: false,
+            }
+        }
+
+        fn record(&self, access_token: &str, refresh_token: &str) -> CredentialRecord {
             CredentialRecord::restore(
                 Zeroizing::new(access_token.to_owned()),
-                Some(Zeroizing::new(refresh_token.to_owned())),
+                self.with_refresh_token
+                    .then(|| Zeroizing::new(refresh_token.to_owned())),
                 None,
                 CredentialMetadata::new("Bearer", None, Vec::new()).unwrap(),
             )
@@ -5575,12 +5652,12 @@ mod tests {
             let (revision, record) = if load == 0 {
                 (
                     CredentialRevision::new([0x01; 32]),
-                    Self::record("access-original", "refresh-original"),
+                    self.record("access-original", "refresh-original"),
                 )
             } else {
                 (
                     CredentialRevision::new([0x02; 32]),
-                    Self::record("access-newer", "refresh-newer"),
+                    self.record("access-newer", "refresh-newer"),
                 )
             };
             Ok(Some(StoredCredential::new(revision, record)))
@@ -5610,6 +5687,7 @@ mod tests {
         response: Option<Result<TokenRevocationEndpointResponse, TokenTransportError>>,
         expected_provider: &'static str,
         expected_token: &'static str,
+        expected_hint: RevocationTokenHint,
         calls: usize,
         order: Rc<RefCell<Vec<&'static str>>>,
     }
@@ -5633,9 +5711,11 @@ mod tests {
             assert!(request
                 .form_body()
                 .contains(&format!("token={}", self.expected_token)));
-            assert!(request
-                .form_body()
-                .contains("token_type_hint=refresh_token"));
+            let expected_hint = match self.expected_hint {
+                RevocationTokenHint::RefreshToken => "token_type_hint=refresh_token",
+                RevocationTokenHint::AccessToken => "token_type_hint=access_token",
+            };
+            assert!(request.form_body().contains(expected_hint));
             assert!(request.form_body().contains(&format!(
                 "client_id={}-public-client",
                 self.expected_provider
@@ -8371,6 +8451,7 @@ mod tests {
             .unwrap())),
             expected_provider: "fixture",
             expected_token: "refresh-public",
+            expected_hint: RevocationTokenHint::RefreshToken,
             calls: 0,
             order: order.clone(),
         };
@@ -8407,6 +8488,7 @@ mod tests {
             response: None,
             expected_provider: "fixture",
             expected_token: "refresh-public",
+            expected_hint: RevocationTokenHint::RefreshToken,
             calls: 0,
             order: order.clone(),
         };
@@ -8466,6 +8548,7 @@ mod tests {
             .unwrap())),
             expected_provider: "fixture",
             expected_token: "refresh-public",
+            expected_hint: RevocationTokenHint::RefreshToken,
             calls: 0,
             order: order.clone(),
         };
@@ -8502,6 +8585,7 @@ mod tests {
             .unwrap())),
             expected_provider: "fixture",
             expected_token: "refresh-public",
+            expected_hint: RevocationTokenHint::RefreshToken,
             calls: 0,
             order: order.clone(),
         };
@@ -8589,6 +8673,7 @@ mod tests {
             .unwrap())),
             expected_provider: "fixture-stale",
             expected_token: "refresh-original",
+            expected_hint: RevocationTokenHint::RefreshToken,
             calls: 0,
             order: order.clone(),
         };
@@ -8679,6 +8764,7 @@ mod tests {
             response: None,
             expected_provider: "fixture-confidential",
             expected_token: "refresh-secret",
+            expected_hint: RevocationTokenHint::RefreshToken,
             calls: 0,
             order: order.clone(),
         };
@@ -8728,6 +8814,7 @@ mod tests {
             response: None,
             expected_provider: "fixture-access-only",
             expected_token: "access-only",
+            expected_hint: RevocationTokenHint::RefreshToken,
             calls: 0,
             order,
         };
@@ -8747,6 +8834,345 @@ mod tests {
                 .with_access_token(&public_key, trace(82), &mut audit, str::to_owned)
                 .unwrap(),
             "access-only"
+        );
+    }
+
+    #[test]
+    fn public_access_token_only_detach_requires_exact_remote_success() {
+        let provider_config = config("fixture-public-access")
+            .with_revocation_endpoint("https://token.fixture-public-access.example/revoke")
+            .unwrap();
+        let provider =
+            BrokerProvider::new(provider_config.clone(), TokenResponseFormat::Json, 300).unwrap();
+        let credential_key = key("fixture-public-access");
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        let response = decoded_exchange_response(
+            &provider_config,
+            trace(85),
+            r#"{"access_token":"access-public-only","token_type":"Bearer"}"#,
+            &mut audit,
+        );
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut audit)
+            .unwrap();
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        custody
+            .create(
+                &credential_key,
+                credentials,
+                CredentialMetadata::new("Bearer", None, Vec::new()).unwrap(),
+                trace(85),
+                &mut audit,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(provider, trace(85), &mut audit)
+            .unwrap();
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let mut retryable_transport = MockPublicRevocationTransport {
+            response: Some(Ok(TokenRevocationEndpointResponse::new(
+                503,
+                Zeroizing::new(Vec::new()),
+            )
+            .unwrap())),
+            expected_provider: "fixture-public-access",
+            expected_token: "access-public-only",
+            expected_hint: RevocationTokenHint::AccessToken,
+            calls: 0,
+            order: order.clone(),
+        };
+        assert!(matches!(
+            broker.revoke_public_access_token_and_delete_credentials(
+                &credential_key,
+                trace(86),
+                &mut retryable_transport,
+                &mut audit,
+            ),
+            Err(BrokerError::Protocol(OAuthError::TokenRevocationEndpoint(
+                ProviderTokenRevocationError::TemporarilyUnavailable
+            )))
+        ));
+        assert!(audit.custody[custody_events_before..]
+            .iter()
+            .all(|event| event.action() != CredentialAuditAction::Delete));
+        assert_eq!(retryable_transport.calls, 1);
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&credential_key, trace(86), &mut audit, str::to_owned)
+                .unwrap(),
+            "access-public-only"
+        );
+
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let mut successful_transport = MockPublicRevocationTransport {
+            response: Some(Ok(TokenRevocationEndpointResponse::new(
+                200,
+                Zeroizing::new(Vec::new()),
+            )
+            .unwrap())),
+            expected_provider: "fixture-public-access",
+            expected_token: "access-public-only",
+            expected_hint: RevocationTokenHint::AccessToken,
+            calls: 0,
+            order: order.clone(),
+        };
+        broker
+            .revoke_public_access_token_and_delete_credentials(
+                &credential_key,
+                trace(87),
+                &mut successful_transport,
+                &mut audit,
+            )
+            .unwrap();
+        assert_eq!(successful_transport.calls, 1);
+        assert_eq!(
+            audit.custody[custody_events_before..]
+                .iter()
+                .map(|event| (event.action(), event.outcome()))
+                .collect::<Vec<_>>(),
+            vec![
+                (
+                    CredentialAuditAction::AccessToken,
+                    CredentialAuditOutcome::Attempted,
+                ),
+                (
+                    CredentialAuditAction::AccessToken,
+                    CredentialAuditOutcome::Succeeded,
+                ),
+                (
+                    CredentialAuditAction::Delete,
+                    CredentialAuditOutcome::Attempted,
+                ),
+                (
+                    CredentialAuditAction::Delete,
+                    CredentialAuditOutcome::Succeeded,
+                ),
+            ]
+        );
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "public-revoke-delete-attempted",
+                "access-token-access-attempted",
+                "access-token-access-succeeded",
+                "public-revocation-attempted",
+                "revocation-transport-attempted",
+                "revocation-transport-effect",
+                "revocation-transport-succeeded",
+                "public-revocation-succeeded",
+                "credential-delete-attempted",
+                "credential-delete-succeeded",
+                "public-revoke-delete-succeeded",
+            ]
+        );
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&credential_key, trace(87), &mut audit, |_| ()),
+            Err(CustodyError::NotFound)
+        );
+    }
+
+    #[test]
+    fn public_access_token_detach_rejects_nonpublic_and_refreshable_before_transport() {
+        let confidential_config = config("fixture-confidential-access")
+            .with_revocation_endpoint("https://token.fixture-confidential-access.example/revoke")
+            .unwrap();
+        let confidential_provider = BrokerProvider::new_confidential(
+            confidential_config.clone(),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::ClientSecretPost,
+            Vec::new(),
+        )
+        .unwrap();
+        let confidential_key = key("fixture-confidential-access");
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        let response = decoded_exchange_response(
+            &confidential_config,
+            trace(88),
+            r#"{"access_token":"access-confidential-only","token_type":"Bearer"}"#,
+            &mut audit,
+        );
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut audit)
+            .unwrap();
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        custody
+            .create(
+                &confidential_key,
+                credentials,
+                CredentialMetadata::new("Bearer", None, Vec::new()).unwrap(),
+                trace(88),
+                &mut audit,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(confidential_provider, trace(88), &mut audit)
+            .unwrap();
+        order.borrow_mut().clear();
+        let custody_events_before = audit.custody.len();
+        let mut rejected_transport = MockPublicRevocationTransport {
+            response: None,
+            expected_provider: "fixture-confidential-access",
+            expected_token: "access-confidential-only",
+            expected_hint: RevocationTokenHint::AccessToken,
+            calls: 0,
+            order: order.clone(),
+        };
+        assert_eq!(
+            broker.revoke_public_access_token_and_delete_credentials(
+                &confidential_key,
+                trace(89),
+                &mut rejected_transport,
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        );
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(rejected_transport.calls, 0);
+
+        let public_config = config("fixture-public-refreshable")
+            .with_revocation_endpoint("https://token.fixture-public-refreshable.example/revoke")
+            .unwrap();
+        let public_provider =
+            BrokerProvider::new(public_config.clone(), TokenResponseFormat::Json, 300).unwrap();
+        let public_key = key("fixture-public-refreshable");
+        let response = decoded_refresh_response(
+            &public_config,
+            trace(90),
+            r#"{"access_token":"access-refreshable","refresh_token":"refresh-present","token_type":"Bearer"}"#,
+            &mut audit,
+        );
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut audit)
+            .unwrap();
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        custody
+            .create(
+                &public_key,
+                credentials,
+                CredentialMetadata::new("Bearer", None, Vec::new()).unwrap(),
+                trace(90),
+                &mut audit,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(public_provider, trace(90), &mut audit)
+            .unwrap();
+        let mut refreshable_transport = MockPublicRevocationTransport {
+            response: None,
+            expected_provider: "fixture-public-refreshable",
+            expected_token: "access-refreshable",
+            expected_hint: RevocationTokenHint::AccessToken,
+            calls: 0,
+            order,
+        };
+        assert_eq!(
+            broker.revoke_public_access_token_and_delete_credentials(
+                &public_key,
+                trace(91),
+                &mut refreshable_transport,
+                &mut audit,
+            ),
+            Err(BrokerError::Custody(CustodyError::InvalidInput))
+        );
+        assert_eq!(refreshable_transport.calls, 0);
+        assert_eq!(
+            broker
+                .custody
+                .with_refresh_token(&public_key, trace(91), &mut audit, |token, _| {
+                    token.to_owned()
+                })
+                .unwrap(),
+            "refresh-present"
+        );
+    }
+
+    #[test]
+    fn public_access_token_detach_retains_newer_revision_after_stale_delete() {
+        let provider_config = config("fixture-public-access-stale")
+            .with_revocation_endpoint("https://token.fixture-public-access-stale.example/revoke")
+            .unwrap();
+        let provider =
+            BrokerProvider::new(provider_config, TokenResponseFormat::Json, 300).unwrap();
+        let credential_key = key("fixture-public-access-stale");
+        let custody = CredentialCustody::new(StaleDeleteStore::access_only(credential_key.clone()));
+        let mut broker = OAuthBroker::new(custody);
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(provider, trace(92), &mut audit)
+            .unwrap();
+        order.borrow_mut().clear();
+        let mut transport = MockPublicRevocationTransport {
+            response: Some(Ok(TokenRevocationEndpointResponse::new(
+                200,
+                Zeroizing::new(Vec::new()),
+            )
+            .unwrap())),
+            expected_provider: "fixture-public-access-stale",
+            expected_token: "access-original",
+            expected_hint: RevocationTokenHint::AccessToken,
+            calls: 0,
+            order: order.clone(),
+        };
+
+        assert_eq!(
+            broker.revoke_public_access_token_and_delete_credentials(
+                &credential_key,
+                trace(93),
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::Custody(CustodyError::Conflict))
+        );
+        assert_eq!(transport.calls, 1);
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&credential_key, trace(93), &mut audit, str::to_owned)
+                .unwrap(),
+            "access-newer"
+        );
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "public-revoke-delete-attempted",
+                "access-token-access-attempted",
+                "access-token-access-succeeded",
+                "public-revocation-attempted",
+                "revocation-transport-attempted",
+                "revocation-transport-effect",
+                "revocation-transport-succeeded",
+                "public-revocation-succeeded",
+                "credential-delete-attempted",
+                "credential-delete-failed",
+                "public-revoke-delete-failed",
+                "access-token-access-attempted",
+                "access-token-access-succeeded",
+            ]
         );
     }
 
