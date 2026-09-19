@@ -175,23 +175,48 @@ directories. It pins Google Closure Compiler `v20260915`, its annotated tag and
 release commit, the exact Maven JAR URL, byte length and SHA-256, Java 21.0.12,
 licensing, deterministic capture settings, and normalized command templates.
 
-The registry deliberately distinguishes current checked-in provenance from the
-next capture target. The 462 `minify_*` goldens mostly still document
-`v20240317`; eight remain explicitly unverified. Local correlation-vector,
-help/version, and transitional print-tree contracts do not pretend to be
-upstream bytes. See [`tests/oracle/README.md`](./tests/oracle/README.md) for the
-artifact-verification and fixture-update procedure.
+The 462 `minify_*` goldens have now been re-executed against that exact artifact
+and Java 21.0.12. All 462 stdout captures are byte-identical to the checked-in
+goldens, with zero changed and zero declined. The strict
+[`minify-v20260915-report.json`](./tests/oracle/minify-v20260915-report.json)
+preserves hashes, exit status, and complete stdout/stderr bytes for every case.
+It also records the three successful legacy-octal compilations where upstream
+emits warnings even though stdout matches. Local correlation-vector,
+help/version, and transitional print-tree contracts still do not pretend to be
+upstream bytes.
+
+Oracle execution is an explicit maintainer action. After independently
+obtaining and verifying the pinned artifact, run:
+
+```sh
+cargo run --example oracle_refresh -- \
+  --oracle-jar /absolute/path/to/closure-compiler-v20260915.jar \
+  --java /absolute/path/to/java-21.0.12
+```
+
+The tool never downloads Java or the JAR. It requires an absolute Java path,
+enforces independent hard-coded trust pins and exact JVM argv, fully preflights
+the cohort, and executes private snapshots of the verified JAR/input bytes with
+JVM injection variables removed. Streamed size and aggregate budgets,
+per-process timeout/output caps, child cleanup, before/after Java identity
+checks, and atomic non-symlink report replacement keep regeneration fail-closed.
+It fails before execution on artifact hash/size, Java version, cohort,
+flag-shape, or path-containment drift. See
+[`tests/oracle/README.md`](./tests/oracle/README.md) for the complete review
+procedure.
 
 The verifier is offline and does not execute Java:
 
 ```sh
 cargo test --test oracle_manifest
+cargo test --test oracle_refresh_report
 ```
 
 It rejects unclassified or multiply classified fixtures, unknown schema data,
-bad pins, unsafe/stale paths, incomplete harness mappings, and false upstream
-claims. A new fixture therefore cannot inherit provenance merely because its
-directory happens to match a glob.
+bad pins, unsafe/stale paths, incomplete harness mappings, false upstream
+claims, malformed hashes/review links, altered capture bytes, and unreviewed oracle drift. A new fixture
+therefore cannot inherit provenance merely because its directory happens to
+match a glob. Normal tests and CI never download or execute the JAR.
 
 ## What's coming
 
@@ -216,4 +241,5 @@ directory happens to match a glob.
   `remove-unused-vars`).
 - Back end: `closure-emitter`, `closure-source-map`.
 - Shared: `correlation-vector`, `type-sidecar`, `serde`,
-  `serde_json`.
+  `serde_json`; the explicit oracle maintainer target uses the repository's
+  `sha256` crate as a development-only dependency.

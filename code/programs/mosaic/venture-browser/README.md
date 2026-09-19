@@ -2,8 +2,9 @@
 
 This package is the shared Mosaic source of truth for Venture's native browser
 chrome. It authors the title, Back, Forward, Home, Reload, address input, Go
-action, bookmark, Copy Address, View Source, and find-in-page controls, status line, disabled
-states, and dispatch contract once in MIL, MLL, and MSL.
+action, bookmark, Copy Address, Open in New Window, View Source, and
+find-in-page controls, status line, disabled states, and dispatch contract once
+in MIL, MLL, and MSL.
 
 The package intentionally does not draw a web page. `venture-browser-core`
 owns navigation and the URL-to-paint pipeline. The `content-surface` node slot
@@ -19,8 +20,8 @@ recreating the surrounding chrome in backend-specific UI code.
   host-derived disabled flags; the host supplies the native page renderer as a
   node slot.
 - Emits carry Back, Forward, Home, Reload, address edits, Navigate, the
-  storage-neutral bookmark toggle command, and a host-neutral View Source
-  request.
+  storage-neutral bookmark toggle command, host-neutral Copy Address and Open
+  in New Window transactions, and a host-neutral View Source request.
 - `venture-browser-core::BrowserChromeController` is the shared reducer and
   slot projection for that exact contract.
 - `venture-browser-core::BrowserHostController` owns the native-host state
@@ -49,6 +50,10 @@ recreating the surrounding chrome in backend-specific UI code.
   address draft and emits one typed clipboard-write effect. Generated hosts
   only present that text through their native clipboard API; URL selection,
   disabledness, status projection, and effect encoding stay shared.
+- Open in New Window resolves that same committed URL and emits the existing
+  typed browsing-context effect as a `_blank` GET request with `noopener`.
+  Generated hosts only invoke their presenter seam; target, request, security,
+  disabledness, and status policy remain shared.
 - Both themes expose the same parts and interaction states.
 - `tests/package_compiles.rs` guards the package contract; the package artifact
   builder compiles these exact sources, emits project shells, and verifies a

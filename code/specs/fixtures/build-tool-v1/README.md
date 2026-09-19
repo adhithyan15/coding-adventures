@@ -39,7 +39,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 154-case bootstrap corpus covers every process-free v1 domain:
+The 157-case bootstrap corpus covers every process-free v1 domain:
 
 - validated CI gate selection with exact package intersection, path and
   globstar matching, explicit false verdicts, deterministic output names,
@@ -66,16 +66,18 @@ The 154-case bootstrap corpus covers every process-free v1 domain:
   fixed-root Dune `libraries` fields, OCaml aliases, self-edge rejection,
   ambiguous-opam rejection, and comment or unrelated-field decoys,
   duplicate collapse, and nested-comment or XML-markup examples;
-- deterministic isolated, chain, diamond, and disconnected graph levels plus
-  stable cycle rejection without a partial order;
+- deterministic isolated, chain, diamond, and disconnected graph levels,
+  canonical prerequisite-then-dependent edge ordering independent of input
+  order, plus stable cycle rejection without a partial order;
 - the build-plan distinction between `affected_packages: null` and `[]`, plus
   atomic replacement of an existing destination by a second complete plan; and
 - fail-closed rejection of a future plan version;
-- conservative diff selection and prerequisite closure, including both
-  unknown-path policies, exact reverse selection from a digest-pinned
-  repository source-input boundary, and exact-at-limit plus fail-closed
-  operation-wide declared match-work accounting with Unicode-scalar lengths
-  and recursive BUILD-front exemptions;
+- conservative diff selection and prerequisite closure, including positive
+  package-prefix matching, forced changed-set seed closure, both unknown-path
+  policies, exact reverse selection from a digest-pinned repository
+  source-input boundary, and exact-at-limit plus fail-closed operation-wide
+  declared match-work accounting with Unicode-scalar lengths and recursive
+  BUILD-front exemptions;
 - framed SHA-256 hashing over the caller-supplied, deduplicated union of local
   and repository-boundary inputs, plus hit, miss, and corrupt-cache recovery;
 - case-sensitive source collection across the complete generated-artifact

@@ -3471,6 +3471,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("11.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — existing exact scalar identity proofs may establish inert
+    // siblings around a recurrence that writes the controlled scalar.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer pad; real x, hold; boolean ready; pad := 7; hold := 9.0; ready := true; for x := 1.0 step 0.5 until 10.0 do begin x := x * 2.0; pad := 0 + pad; hold := hold * 1.0; ready := ready and true end; print(x) end",
+        expect: Expect::Stdout("11.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a list containing only single-value elements is straight-line
     // repetition with no zero-trip path or backedge. Its final static real
     // assignment therefore remains available to the portable output path.
@@ -13180,6 +13189,29 @@ fn algol_inert_sibling_control_recurrence_runs_on_every_available_standard_backe
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the inert-sibling recurrence did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_computed_inert_sibling_control_recurrence_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains("x := x * 2.0; pad := 0 + pad")
+        })
+        .expect("the computed inert-sibling control recurrence must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the computed inert-sibling control recurrence did not run"
             );
             continue;
         };

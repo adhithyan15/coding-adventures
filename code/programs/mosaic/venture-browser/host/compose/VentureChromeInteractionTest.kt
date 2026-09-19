@@ -84,6 +84,16 @@ class VentureChromeInteractionTest {
             assertEquals("${server.origin}/start", host.lastClipboardText)
             println("compose-live-stage=copy-address")
 
+            rule.onNodeWithTag("open-page-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) { host.lastBrowsingContextRequest != null }
+            val browsingContext = assertNotNull(host.lastBrowsingContextRequest)
+            assertEquals("_blank", browsingContext["target"])
+            @Suppress("UNCHECKED_CAST")
+            val openRequest = browsingContext["request"] as Map<String, Any?>
+            assertEquals("${server.origin}/start", openRequest["url"])
+            assertEquals(true, browsingContext["noopener"])
+            println("compose-live-stage=open-page")
+
             rule.onNodeWithTag("view-source-button").assertIsEnabled().performClick()
             rule.waitUntil(10_000) { host.lastAuxiliaryDocument != null }
             val sourceDocument = assertNotNull(host.lastAuxiliaryDocument)

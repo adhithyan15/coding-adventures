@@ -1,10 +1,10 @@
 # CLOC14 — End-to-end byte-identity test harness
 
-**Status:** v0.3 oracle manifest implemented and locally validated (CCR-003).
-The strict offline verifier classifies all **626 differential fixture
-directories** exactly once, including **462 `minify_*` fixtures**, and preserves
-their current provenance across multiple Closure releases. CCR-004 will use the
-pinned oracle to refresh those 462 goldens and review every changed byte.
+**Status:** v0.4 pinned-oracle refresh implemented and locally validated
+(CCR-004). The v0.3 strict offline verifier classifies all **626 differential
+fixture directories** exactly once, including **462 `minify_*` fixtures**. The
+verified `v20260915` run found all 462 stdout goldens byte-identical, with zero
+changed and zero declined, and records every result byte-for-byte.
 **Layer:** Above CLOC11 (CLI compat) and CLOC12 (upstream test ports), below CLOC15+ (whatever comes next).
 **Depends on:** closurec CLI being runnable end-to-end.
 **Unblocks:** Every future gap-fix can be *measured* against upstream Closure's output instead of unit-tested in isolation.
@@ -109,12 +109,14 @@ Each set has one disposition:
 
 Disposition states what a fixture is intended to prove; it does not rewrite
 history. Every set separately records its **current expected-output
-provenance** as `documented_release`, `unverified`, or `local`. A documented
-release requires a release tag and an evidence path. An unverified fixture is
-still assigned the normalized `v20260915` refresh command, but the manifest
-must not claim that its present bytes came from that command. CCR-004 changes
-the current provenance only after executing the pinned artifact and reviewing
-the resulting bytes.
+provenance** as `verified_release`, `documented_release`, `unverified`, or
+`local`. A verified release requires the manifest's release tag and the strict
+CCR-004 report as evidence. A documented release requires a release tag and an
+evidence path but does not claim the bytes were independently re-executed in
+the current workflow. An unverified fixture is still assigned the normalized
+`v20260915` refresh command, but the manifest must not claim that its present
+bytes came from that command. CCR-004 changes current provenance only after
+executing the pinned artifact and reviewing the resulting bytes.
 
 Each set also declares where its assertions live: `expected_stdout` requires a
 checked-in `expected.stdout` for every fixture, while `inline_harness` records
@@ -149,6 +151,49 @@ ambiguous commands, and disposition violations. CI never downloads or
 executes the upstream artifact; acquisition and hash verification are an
 explicit maintainer regeneration step.
 
+### 4.4 Pinned refresh report
+
+`tests/oracle/minify-v20260915-report.json` is the immutable v0.4 capture
+record. The explicit maintainer tool receives the oracle JAR and an absolute
+Java executable path; it does not download either one. Before any execution it
+matches the manifest to independent hard-coded release/artifact/Java/argv pins,
+stream-checks the artifact byte length and SHA-256, preflights the complete
+cohort, and proves that every fixture flag file contains only one
+`WHITESPACE_ONLY` compilation level and one `--js` input contained by that
+fixture's `input/` directory.
+
+Execution uses private immutable snapshots of the verified JAR and input bytes,
+not the paths that were checked. JVM option/classpath injection variables are
+removed. Worker count, individual and aggregate bytes, elapsed process time,
+and stdout/stderr are bounded; every error kills and reaps a live child. The
+canonical Java launcher's bytes and exact version are rechecked after capture.
+Only then may a create-new same-directory temporary file atomically replace a
+regular, non-symlink report destination.
+
+The report is sorted by fixture and records:
+
+- the release, source commit, artifact hash, Java version, command-template
+  identity, and capture environment;
+- exactly one `equal`, `changed`, or `declined` result for every member of the
+  462-fixture manifest cohort;
+- process exit status, baseline/current expected-output hashes, oracle stdout
+  and stderr hashes, byte lengths, and complete raw stdout/stderr encoded as
+  lowercase hexadecimal; and
+- a non-empty reviewed disposition and reason for every changed or declined
+  result.
+
+The checked-in verifier remains wholly offline. It recomputes every hash from
+the report's bytes and the current `expected.stdout`, proves the summary and
+fixture census, requires equal results to match byte-for-byte, requires an
+accepted changed result's current golden to equal the captured oracle bytes,
+and rejects unexplained changes or declines. A maintainer capture may emit an
+unreviewed working report, but such a report cannot pass CI or advance the
+manifest to `verified_release`.
+
+Normal tests and CI never obtain or execute the JAR. Only the explicit capture
+command may run external Java code, and it fails before execution on artifact,
+runtime, flag-shape, path-containment, or cohort drift.
+
 ## 5. The seed fixture set (v0.1)
 
 | Fixture | Status | What it pins |
@@ -162,9 +207,9 @@ explicit maintainer regeneration step.
 
 1. **A gap-fix PR that thinks it improved upstream parity should also add (or un-ignore) a minify fixture.** That makes the parity gain measurable.
 2. **A failing fixture should be removed from IGNORE_FIXTURES the moment the corresponding gap closes.** The IGNORE list is intentionally an embarrassment that should shrink over time.
-3. **Capturing real upstream goldens** is CCR-004. It must use the verified
-   v0.3 manifest and publish equal/changed/declined counts; no README-only or
-   hand-traced provenance is sufficient.
+3. **Refreshing real upstream goldens** is CCR-004. It uses the verified v0.3
+   manifest and publishes equal/changed/declined counts plus raw byte evidence;
+   no README-only or hand-traced provenance is sufficient.
 
 ## 7. What this harness does NOT cover (yet)
 
@@ -180,4 +225,5 @@ explicit maintainer regeneration step.
 - Related: CLOC11 (CLI compat), CLOC12 (upstream test ports + gap tracker)
 - Oracle manifest: `code/programs/rust/closurec/tests/oracle/manifest.json`
 - Manifest verifier: `code/programs/rust/closurec/tests/oracle_manifest.rs`
-- Tracking: CCR-003 / <https://github.com/adhithyan15/coding-adventures/issues/15549>
+- Oracle-manifest tracking: CCR-003 / <https://github.com/adhithyan15/coding-adventures/issues/15549>
+- Pinned-refresh tracking: CCR-004 / <https://github.com/adhithyan15/coding-adventures/issues/15569>

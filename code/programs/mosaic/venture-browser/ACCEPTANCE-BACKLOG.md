@@ -5,6 +5,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - shared open-page browsing context transaction.**
+  Add one Mosaic-authored Open in New Window control that resolves the
+  committed history URL in core and reuses the typed browsing-context effect.
+  Require a `_blank` GET request with `noopener`, preserve the current history
+  and editable address draft, and lock event, disabled-state, serialization,
+  and presenter seams across every generated host.
+
 - [x] **P1 browser convergence - shared page-address clipboard transaction.**
   Add one Mosaic-authored Copy Address control that resolves the committed
   history URL in core and emits a typed clipboard-write effect. Serialize the

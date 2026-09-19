@@ -3915,12 +3915,8 @@ def _validate_pure_result_semantics(
                     "cyclic graph requires an empty result and stable error",
                 )
             return
-        canonical_payload = canonicalize_result(result)["result"]
-        if (
-            outcome != "ok"
-            or (canonical_payload["edges"], canonical_payload["levels"])
-            != expected_graph
-        ):
+        canonical_levels = [sorted(level) for level in payload["levels"]]
+        if outcome != "ok" or (payload["edges"], canonical_levels) != expected_graph:
             raise ConformanceError(
                 f"{prefix}_GRAPH_RESULT_INVALID",
                 "graph result does not match the independent topology oracle",

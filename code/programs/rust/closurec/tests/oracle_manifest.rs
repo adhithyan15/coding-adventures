@@ -11,6 +11,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Component, Path, PathBuf};
 
 const MANIFEST_PATH: &str = "tests/oracle/manifest.json";
+const MINIFY_REPORT_PATH: &str = "tests/oracle/minify-v20260915-report.json";
+const MINIFY_VERIFIED_SET_ID: &str = "minify-verified-v20260915";
 const SCHEMA_VERSION: u32 = 1;
 const RELEASE: &str = "v20260915";
 const RELEASE_TAG_OBJECT: &str = "72421c28d352e5dda9a111bec39c3d41af46f3a3";
@@ -145,6 +147,7 @@ struct CurrentProvenance {
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq)]
 #[serde(rename_all = "snake_case")]
 enum ProvenanceStatus {
+    VerifiedRelease,
     DocumentedRelease,
     Unverified,
     Local,
@@ -628,6 +631,31 @@ fn validate_commands(
 fn validate_provenance(set: &FixtureSet, errors: &mut Vec<String>) {
     let provenance = &set.current_provenance;
     match provenance.status {
+        ProvenanceStatus::VerifiedRelease => {
+            if set.id != MINIFY_VERIFIED_SET_ID
+                || !set
+                    .fixtures
+                    .iter()
+                    .all(|fixture| fixture.starts_with("minify_"))
+            {
+                errors.push(format!(
+                    "fixture set {} makes an unsupported verified-release claim",
+                    set.id
+                ));
+            }
+            if provenance.release.as_deref() != Some(RELEASE) {
+                errors.push(format!(
+                    "fixture set {} does not use the pinned verified release",
+                    set.id
+                ));
+            }
+            if provenance.evidence.as_deref() != Some(MINIFY_REPORT_PATH) {
+                errors.push(format!(
+                    "fixture set {} does not use the strict minify refresh report",
+                    set.id
+                ));
+            }
+        }
         ProvenanceStatus::DocumentedRelease => {
             if !provenance.release.as_deref().is_some_and(is_release) {
                 errors.push(format!(
@@ -975,6 +1003,11 @@ fn validator_rejects_unknown_commands_and_false_upstream_claims() {
         .find(|set| set.disposition == Disposition::LocalExtension)
         .unwrap();
     local.command = Some("closure-flags-file-v1".to_string());
+    local.current_provenance = CurrentProvenance {
+        status: ProvenanceStatus::VerifiedRelease,
+        release: Some(RELEASE.to_string()),
+        evidence: Some(MINIFY_REPORT_PATH.to_string()),
+    };
 
     let errors = validate_manifest(&package_root(), &manifest);
     assert_error(&errors, "references unknown command unknown-command");
@@ -982,6 +1015,7 @@ fn validator_rejects_unknown_commands_and_false_upstream_claims() {
         &errors,
         "local fixture set correlation-vector-local-extensions",
     );
+    assert_error(&errors, "unsupported verified-release claim");
     assert_error(
         &errors,
         "command is not used by any fixture set: typed-pipeline-failure-matrix-v1",

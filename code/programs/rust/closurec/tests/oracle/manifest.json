@@ -116,13 +116,13 @@
   ],
   "fixture_sets": [
     {
-      "id": "minify-documented-v20240317",
+      "id": "minify-verified-v20260915",
       "disposition": "upstream_golden",
       "command": "closure-flags-file-v1",
       "current_provenance": {
-        "status": "documented_release",
-        "release": "v20240317",
-        "evidence": "tests/diff/{fixture}/README.md"
+        "status": "verified_release",
+        "release": "v20260915",
+        "evidence": "tests/oracle/minify-v20260915-report.json"
       },
       "expectation": "expected_stdout",
       "local_boundary": null,
@@ -151,6 +151,7 @@
         "minify_arrow_async_inline",
         "minify_arrow_curried",
         "minify_arrow_curry",
+        "minify_arrow_paren_body",
         "minify_arrow_rest_param",
         "minify_arrow_returns_obj",
         "minify_arrow_with_body",
@@ -251,6 +252,7 @@
         "minify_do_while",
         "minify_do_while_body",
         "minify_do_while_flat",
+        "minify_double_break_continue",
         "minify_double_neg",
         "minify_double_paren_arith",
         "minify_double_paren_varinit",
@@ -324,6 +326,7 @@
         "minify_label_block_multi",
         "minify_label_simple",
         "minify_label_while_break",
+        "minify_labeled_block",
         "minify_labeled_break",
         "minify_labeled_continue",
         "minify_labeled_for_break",
@@ -464,6 +467,7 @@
         "minify_paren_member_callee",
         "minify_paren_seq_callee",
         "minify_paren_tagged_callee",
+        "minify_paren_then_member",
         "minify_parenthesized_negative",
         "minify_plain_label_stmt",
         "minify_post_inc_member",
@@ -485,6 +489,7 @@
         "minify_rest_param",
         "minify_rest_param_fn",
         "minify_rest_param_simple",
+        "minify_return_paren_expr",
         "minify_seq_paren",
         "minify_sequence_expr",
         "minify_set_minus_eq",
@@ -535,11 +540,13 @@
         "minify_template_tagged_plain",
         "minify_ternary",
         "minify_ternary_arms_stripped",
+        "minify_ternary_assign",
         "minify_ternary_cond_paren",
         "minify_ternary_in_return",
         "minify_ternary_nested",
         "minify_throw",
         "minify_throw_new",
+        "minify_throw_paren_expr",
         "minify_trailing_array_comma",
         "minify_trailing_obj_comma",
         "minify_try_catch",
@@ -570,6 +577,7 @@
         "minify_unary_void_ident",
         "minify_unary_void_obj",
         "minify_void_op",
+        "minify_void_zero_call",
         "minify_while_simple_count",
         "minify_with_body_flatten",
         "minify_yield_comma_kept",
@@ -583,30 +591,6 @@
         "minify_yield_return",
         "minify_yield_star",
         "minify_yield_star_pass"
-      ]
-    },
-    {
-      "id": "minify-unverified",
-      "disposition": "upstream_golden",
-      "command": "closure-flags-file-v1",
-      "current_provenance": {
-        "status": "unverified",
-        "release": null,
-        "evidence": null
-      },
-      "expectation": "expected_stdout",
-      "local_boundary": null,
-      "default_harness": "tests/diff_minify.rs",
-      "harnesses": {},
-      "fixtures": [
-        "minify_arrow_paren_body",
-        "minify_double_break_continue",
-        "minify_labeled_block",
-        "minify_paren_then_member",
-        "minify_return_paren_expr",
-        "minify_ternary_assign",
-        "minify_throw_paren_expr",
-        "minify_void_zero_call"
       ]
     },
     {

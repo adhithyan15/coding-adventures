@@ -127,13 +127,16 @@ describe("a passage is the quoted text, not the lesson around it", () => {
 // measured 3/3 or 2/2 at pre-A1 -- which is exactly the kind of green that
 // hides a bigger number one rung up.
 //
-// At A1 all eight measure 0/3. The shared A1 envelope asks for a shortest input
-// of 70 words, and the longest comprehension passage any of them holds is 53:
+// At A1 all eight originally measured 0/3. The shared A1 envelope asks for a
+// shortest input of 70 words, and the longest comprehension passage any of
+// them held was 53:
 //
 //     malayalam 53   sanskrit 51   italian 47   portuguese 42
 //     bengali   36   kannada  31   tamil    30   telugu     25
 //
-// That is not a defect introduced here. It is the first time the distance was
+// Malayalam now closes that measured gap with a 90-word retrieval passage;
+// the other seven remain below their first A1 floor. That is not a defect
+// introduced here. It is the first time the distance was
 // stated as a number rather than left as an absence, and the distance is the
 // point: a track is not "nearly at A1 reading" -- it is between seventeen and
 // forty-five words short, per track, and now says so.
@@ -162,5 +165,14 @@ describe("the A1 rung the eight new inventories opened", () => {
       const row = report.rows.find((r) => r.language === language && r.level === "pre-A1");
       expect(row?.partsWithinReach, `${language} pre-A1 parts in reach`).toBeGreaterThan(0);
     }
+  });
+
+  it("puts Malayalam's retrieval passage within reach of all three A1 parts", () => {
+    const row = report.rows.find((candidate) =>
+      candidate.language === "malayalam" && candidate.level === "A1"
+    );
+    expect(row?.longestPassageWords).toBe(90);
+    expect(row?.partsWithinReach).toBe(3);
+    expect(row?.partsMeasurable).toBe(3);
   });
 });

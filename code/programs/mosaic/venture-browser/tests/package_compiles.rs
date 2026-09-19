@@ -629,12 +629,27 @@ fn find_in_page_uses_one_shared_transaction_across_generated_hosts() {
     }
 
     for (name, path) in [
-        ("Cairo", "../../../packages/rust/venture-browser-cairo/src/lib.rs"),
-        ("macOS", "../../../packages/rust/venture-browser-macos/src/lib.rs"),
-        ("Windows", "../../../packages/rust/venture-browser-windows/src/lib.rs"),
+        (
+            "Cairo",
+            "../../../packages/rust/venture-browser-cairo/src/lib.rs",
+        ),
+        (
+            "macOS",
+            "../../../packages/rust/venture-browser-macos/src/lib.rs",
+        ),
+        (
+            "Windows",
+            "../../../packages/rust/venture-browser-windows/src/lib.rs",
+        ),
     ] {
         let host = read_package_file(path);
-        for symbol in ["onFindOpen", "onFindChange", "onFindNext", "onFindPrevious", "onFindClose"] {
+        for symbol in [
+            "onFindOpen",
+            "onFindChange",
+            "onFindNext",
+            "onFindPrevious",
+            "onFindClose",
+        ] {
             assert!(host.contains(symbol), "{name} bridge omits {symbol}");
         }
     }
@@ -663,7 +678,10 @@ fn copy_address_uses_one_typed_clipboard_effect_across_generated_hosts() {
         "WriteClipboard(String)",
         "Page address copied",
     ] {
-        assert!(core.contains(symbol), "shared copy-address core omits {symbol}");
+        assert!(
+            core.contains(symbol),
+            "shared copy-address core omits {symbol}"
+        );
     }
 
     for (name, path, presenter) in [
@@ -672,11 +690,7 @@ fn copy_address_uses_one_typed_clipboard_effect_across_generated_hosts() {
             "host/swiftui/MosaicHost.swift",
             "NSPasteboard.general.setString",
         ),
-        (
-            "XAML",
-            "host/xaml/MosaicHost.cs",
-            "Clipboard.SetContent",
-        ),
+        ("XAML", "host/xaml/MosaicHost.cs", "Clipboard.SetContent"),
         (
             "Qt",
             "host/qt/MosaicHost.cpp",
@@ -694,18 +708,116 @@ fn copy_address_uses_one_typed_clipboard_effect_across_generated_hosts() {
         ),
     ] {
         let host = read_package_file(path);
-        assert!(host.contains("write-clipboard"), "{name} omits the clipboard effect");
-        assert!(host.contains(presenter), "{name} omits its clipboard presenter");
+        assert!(
+            host.contains("write-clipboard"),
+            "{name} omits the clipboard effect"
+        );
+        assert!(
+            host.contains(presenter),
+            "{name} omits its clipboard presenter"
+        );
     }
 
     for (name, path) in [
-        ("Cairo", "../../../packages/rust/venture-browser-cairo/src/lib.rs"),
-        ("macOS", "../../../packages/rust/venture-browser-macos/src/lib.rs"),
-        ("Windows", "../../../packages/rust/venture-browser-windows/src/lib.rs"),
+        (
+            "Cairo",
+            "../../../packages/rust/venture-browser-cairo/src/lib.rs",
+        ),
+        (
+            "macOS",
+            "../../../packages/rust/venture-browser-macos/src/lib.rs",
+        ),
+        (
+            "Windows",
+            "../../../packages/rust/venture-browser-windows/src/lib.rs",
+        ),
     ] {
         let bridge = read_package_file(path);
-        assert!(bridge.contains("onCopyAddress"), "{name} omits the copy event");
-        assert!(bridge.contains("write-clipboard"), "{name} omits effect serialization");
+        assert!(
+            bridge.contains("onCopyAddress"),
+            "{name} omits the copy event"
+        );
+        assert!(
+            bridge.contains("write-clipboard"),
+            "{name} omits effect serialization"
+        );
+    }
+}
+
+#[test]
+fn open_page_reuses_one_typed_browsing_context_effect_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    assert!(interface.contains("slot open-page-disabled"));
+    assert!(interface.contains("emit onOpenPageInNewWindow"));
+    assert!(layout.contains("HostButton [ open-page-button ]"));
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "OpenPageInNewWindow",
+        "BrowserBrowsingContextTarget::Blank",
+        "New window requested",
+    ] {
+        assert!(
+            core.contains(symbol),
+            "shared open-page core omits {symbol}"
+        );
+    }
+
+    for (name, path, presenter) in [
+        (
+            "SwiftUI",
+            "host/swiftui/MosaicHost.swift",
+            "VentureOpenBrowsingContext",
+        ),
+        (
+            "XAML",
+            "host/xaml/MosaicHost.cs",
+            "BrowsingContextRequested",
+        ),
+        ("Qt", "host/qt/MosaicHost.cpp", "browsingContextRequested"),
+        (
+            "Flutter",
+            "host/flutter/mosaic_host.dart",
+            "lastBrowsingContextRequest",
+        ),
+        (
+            "Compose",
+            "host/compose/MosaicHost.kt",
+            "lastBrowsingContextRequest",
+        ),
+    ] {
+        let host = read_package_file(path);
+        assert!(
+            host.contains("open-browsing-context"),
+            "{name} omits the shared effect"
+        );
+        assert!(host.contains(presenter), "{name} omits its presenter seam");
+    }
+
+    for (name, path) in [
+        (
+            "Cairo",
+            "../../../packages/rust/venture-browser-cairo/src/lib.rs",
+        ),
+        (
+            "macOS",
+            "../../../packages/rust/venture-browser-macos/src/lib.rs",
+        ),
+        (
+            "Windows",
+            "../../../packages/rust/venture-browser-windows/src/lib.rs",
+        ),
+    ] {
+        let bridge = read_package_file(path);
+        assert!(
+            bridge.contains("onOpenPageInNewWindow"),
+            "{name} omits the event"
+        );
+        assert!(
+            bridge.contains("open-browsing-context"),
+            "{name} omits effect serialization"
+        );
     }
 }
 

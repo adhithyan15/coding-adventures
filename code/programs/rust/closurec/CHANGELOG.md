@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.244.0] - 2026-09-19
+
+### Added - pinned `v20260915` refresh evidence for all 462 minify goldens
+
+The explicit `oracle_refresh` maintainer tool verified the 14,976,538-byte
+Closure Compiler `v20260915` Maven JAR and its SHA-256, required Java 21.0.12,
+validated the manifest cohort and every fixture's WHITESPACE_ONLY flag/path
+boundary, and executed all 462 `minify_*` cases. All 462 upstream stdout values
+are byte-identical to the checked-in goldens: zero changed and zero declined.
+
+`tests/oracle/minify-v20260915-report.json` records the immutable release and
+artifact pins, command and environment identity, fixture/input/flag hashes,
+exit status, baseline/current/oracle hashes, and complete stdout/stderr bytes
+for every fixture. The raw stderr also exposed successful
+`JSC_INVALID_OCTAL_LITERAL` warnings for three legacy-octal fixtures; local
+closurec currently omits those warnings, now tracked separately as CCR-042.
+
+`tests/oracle_refresh_report.rs` verifies the report entirely offline. It
+rejects schema, pin, census, summary, path-containment, input, hash, raw-byte,
+classification, and review drift. Changed or declined results cannot advance
+provenance without a linked review. The oracle manifest now records the whole
+minify cohort as `verified_release` at `v20260915`; normal tests and CI still
+never download or execute the upstream JAR.
+
+Regeneration is fail-closed: executable trust pins and argv are independent of
+the editable manifest; all fixtures are preflighted before Java starts; and
+Java consumes private snapshots with injection variables removed. Streaming
+and aggregate byte budgets, process timeout/output caps, child cleanup,
+before/after Java identity checks, and atomic non-symlink report replacement
+prevent partial or ambiguous evidence from being published.
+
 ## [0.243.0] - 2026-09-19
 
 ### Added - one strict offline oracle manifest for every differential fixture
