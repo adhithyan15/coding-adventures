@@ -1893,7 +1893,17 @@ describe("the committed Malayalam A1 inventory", () => {
       })
       .sort((a, b) => b.fields - a.fields || a.glyph.localeCompare(b.glyph));
 
-    expect(lessons).toHaveLength(459);
+    // 459 -> 470. THIS PIN ARRIVED STALE: the tree it was written against had
+    // 459 Malayalam lessons, but chapter 107's five had already landed by the
+    // time #15566 merged, so main carries 464 against a pin of 459 and this
+    // assertion is red on the base branch. Corrected here to the true count,
+    // which is 464 plus chapter 108's six.
+    // The three counts BELOW it do not move, and that is the useful part: the
+    // six new lessons are punctuation, so their headwords contain no character
+    // in U+0D00-U+0D7F at all. They enter neither `shown` nor `directlyOwned`,
+    // and the nine open glyphs are exactly as they were. A chapter can be six
+    // writing lessons long and still owe this census nothing.
+    expect(lessons).toHaveLength(470);
     expect(shown.size).toBe(68);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(59);
     expect(open).toEqual([
