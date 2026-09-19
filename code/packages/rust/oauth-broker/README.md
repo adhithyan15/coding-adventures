@@ -182,6 +182,14 @@ identity proof, custody creation, and both composite broker results retain
 separate audit gates. The caller supplies no decoded identity policy, and this
 adds no concrete source, verifier, algorithm, clock, storage, or transport.
 
+One caller-timed step can now carry the nonce-bound polling sequence into that
+same static-policy custody path. The verification context is provider-bound
+before polling. Early waits, pending, slow-down, and transient transport
+failure return only the opaque sequence and reach no policy source, wall clock,
+identity authority, or credential store. Authorization continues through the
+separate policy-load, proof, credential-release, and custody audit gates and
+returns only the stored opaque revision.
+
 That `private_key_jwt` path can also load the exact static ID-token policy
 inside the composition. The retained provider/client/endpoint/algorithm/key
 profile, opaque verification context, and nonce are validated before the
