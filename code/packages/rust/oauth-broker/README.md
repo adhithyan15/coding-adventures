@@ -111,6 +111,15 @@ transport closure; bounded response decoding, credential release, and custody
 creation remain separately audited with one provider and trace, and only the
 opaque revision returns. Account identity proof and key selection remain
 caller-owned, and no concrete network authority is added.
+For OpenID Connect, a separate public exchange composition instead consumes
+the exact non-cloneable authorization nonce and routes the bounded response
+through the existing audited account-identity authority. Identity profile,
+provider, client, and trace bindings fail before transport; the zeroizing ID
+token is detached and consumed by proof rather than stored, and only the
+authority-derived opaque account key selects custody. Missing or rejected
+evidence reaches no credential store, while concrete policy loading,
+verification algorithms, clock, transport, and storage remain injected or
+separate.
 Public-client profiles now have corresponding refresh-token and
 access-token-only detach boundaries without acquiring an authentication secret
 or signer. The exact opaque account key selects the registered public `none`

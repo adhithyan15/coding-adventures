@@ -1000,6 +1000,8 @@ pub enum BrokerAuditAction {
     ClientSecretExchangeCredentialCreate,
     /// Exchange and persist one public-client credential response.
     PublicExchangeCredentialCreate,
+    /// Verify public exchange identity and persist under its derived opaque key.
+    PublicExchangeVerifiedCredentialCreate,
     /// Verify exchange identity and persist under its derived opaque account key.
     ClientSecretExchangeVerifiedCredentialCreate,
     /// Load static identity policy, verify exchange identity, and persist by opaque key.
@@ -1113,6 +1115,17 @@ pub trait BrokerAuditSink {
 pub trait OAuthBrokerAuditSink: BrokerAuditSink + OAuthAuditSink + CredentialAuditSink {}
 
 impl<T> OAuthBrokerAuditSink for T where T: BrokerAuditSink + OAuthAuditSink + CredentialAuditSink {}
+
+/// Audit sink capable of recording public exchange, identity proof, and custody.
+pub trait OAuthPublicVerifiedIdentityCredentialBrokerAuditSink:
+    OAuthBrokerAuditSink + AccountIdentityAuditSink
+{
+}
+
+impl<T> OAuthPublicVerifiedIdentityCredentialBrokerAuditSink for T where
+    T: OAuthBrokerAuditSink + AccountIdentityAuditSink
+{
+}
 
 /// Audit sink capable of recording OIDC device identity proof and custody.
 pub trait OAuthOpenIdDeviceVerifiedCredentialBrokerAuditSink:
@@ -1230,6 +1243,18 @@ pub struct ClientSecretExchangeCredentialExecution<'a, C, T> {
     transport: &'a mut T,
 }
 
+/// Injected authorities and one-use identity input for public exchange custody.
+pub struct PublicVerifiedExchangeCredentialExecution<'a, V, C, T>
+where
+    V: AccountIdentityAuthority,
+{
+    identity_profile: &'a IdTokenIdentityProfile,
+    identity_authority: &'a AuditedAccountIdentityAuthority<V>,
+    nonce: OpenIdAuthorizationNonce,
+    clock: &'a mut C,
+    transport: &'a mut T,
+}
+
 /// Injected authorities and one-use identity input for verified exchange custody.
 pub struct ClientSecretVerifiedExchangeCredentialExecution<'a, V, C, T>
 where
@@ -1312,6 +1337,28 @@ impl<'a, C, T> ClientSecretExchangeCredentialExecution<'a, C, T> {
     /// Bind caller-owned time and transport authorities to one execution.
     pub fn new(clock: &'a mut C, transport: &'a mut T) -> Self {
         Self { clock, transport }
+    }
+}
+
+impl<'a, V, C, T> PublicVerifiedExchangeCredentialExecution<'a, V, C, T>
+where
+    V: AccountIdentityAuthority,
+{
+    /// Bind exact identity policy/evidence and caller-owned effect authorities.
+    pub fn new(
+        identity_profile: &'a IdTokenIdentityProfile,
+        identity_authority: &'a AuditedAccountIdentityAuthority<V>,
+        nonce: OpenIdAuthorizationNonce,
+        clock: &'a mut C,
+        transport: &'a mut T,
+    ) -> Self {
+        Self {
+            identity_profile,
+            identity_authority,
+            nonce,
+            clock,
+            transport,
+        }
     }
 }
 
@@ -3214,6 +3261,95 @@ impl<S: CredentialStore> OAuthBroker<S> {
             &provider,
             trace,
             BrokerAuditAction::PublicExchangeCredentialCreate,
+            result,
+        )
+    }
+
+    /// Exchange, verify public-client account identity, and persist by verified key.
+    ///
+    /// The validated identity profile and one-use authorization nonce must
+    /// exactly match the request provider, client, and trace before transport.
+    /// The decoded response remains broker-owned, its zeroizing ID token is
+    /// detached without cloning and consumed by the audited identity authority,
+    /// and custody is selected only by the resulting provider-scoped opaque
+    /// account key. Missing or rejected evidence reaches no credential storage;
+    /// the ID token is not retained, and only the opaque revision is released.
+    pub fn exchange_public_and_store_verified_credentials<V, C, T, A>(
+        &self,
+        request: TokenExchangeRequest,
+        execution: PublicVerifiedExchangeCredentialExecution<'_, V, C, T>,
+        audit: &mut A,
+    ) -> Result<CredentialRevision, BrokerError>
+    where
+        V: AccountIdentityAuthority,
+        C: BrokerClock,
+        T: OAuthTokenExchangeTransport,
+        A: OAuthPublicVerifiedIdentityCredentialBrokerAuditSink,
+    {
+        let PublicVerifiedExchangeCredentialExecution {
+            identity_profile,
+            identity_authority,
+            nonce,
+            clock,
+            transport,
+        } = execution;
+        let provider = request.provider().clone();
+        let client_id = request.client_id().to_owned();
+        let trace = request.trace();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::PublicExchangeVerifiedCredentialCreate,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            if identity_profile.provider() != &provider
+                || identity_profile.client_id() != client_id
+                || nonce.provider() != &provider
+                || nonce.client_id() != client_id
+                || nonce.trace() != trace
+            {
+                return Err(BrokerError::BindingMismatch);
+            }
+            let response = self.send_public_exchange(request, transport, audit)?;
+            if response.provider() != &provider || response.trace() != trace {
+                return Err(BrokerError::BindingMismatch);
+            }
+            let now = clock.now_unix_seconds().map_err(|_| BrokerError::Clock)?;
+            let metadata = response_metadata(&response, now, &[])?;
+            let credentials = response
+                .release_credentials()
+                .publish_then_release(audit)
+                .map_err(map_oauth_error)?;
+            let (credentials, id_token) = credentials.detach_id_token();
+            let id_token = id_token.ok_or(BrokerError::AccountIdentity(
+                AccountIdentityError::InvalidInput,
+            ))?;
+            let verified = identity_authority
+                .verify_authorization_id_token(identity_profile, id_token, nonce, now, audit)
+                .map_err(map_account_identity_error)?;
+            if verified.credential_key().provider() != &provider
+                || verified.client_id() != client_id
+                || verified.trace() != trace
+            {
+                return Err(BrokerError::BindingMismatch);
+            }
+            self.custody
+                .create(
+                    &verified.into_credential_key(),
+                    credentials,
+                    metadata,
+                    trace,
+                    audit,
+                )
+                .map_err(map_custody_error)
+        })();
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::PublicExchangeVerifiedCredentialCreate,
             result,
         )
     }
@@ -5394,6 +5530,18 @@ mod tests {
                         BrokerAuditOutcome::Failed(_),
                     ) => "public-exchange-store-failed",
                     (
+                        BrokerAuditAction::PublicExchangeVerifiedCredentialCreate,
+                        BrokerAuditOutcome::Attempted,
+                    ) => "public-verified-exchange-store-attempted",
+                    (
+                        BrokerAuditAction::PublicExchangeVerifiedCredentialCreate,
+                        BrokerAuditOutcome::Succeeded,
+                    ) => "public-verified-exchange-store-succeeded",
+                    (
+                        BrokerAuditAction::PublicExchangeVerifiedCredentialCreate,
+                        BrokerAuditOutcome::Failed(_),
+                    ) => "public-verified-exchange-store-failed",
+                    (
                         BrokerAuditAction::ClientSecretExchangeVerifiedCredentialCreate,
                         BrokerAuditOutcome::Attempted,
                     ) => "verified-exchange-store-attempted",
@@ -5944,20 +6092,31 @@ mod tests {
     #[derive(Clone)]
     struct RecordingIdentityAuthority {
         calls: Arc<AtomicUsize>,
+        expected_provider: &'static str,
         result: Result<AccountId, IdentityAuthorityError>,
     }
 
     impl RecordingIdentityAuthority {
         fn succeeds(account: AccountId) -> Self {
+            Self::succeeds_for("fixture-confidential", account)
+        }
+
+        fn succeeds_for(expected_provider: &'static str, account: AccountId) -> Self {
             Self {
                 calls: Arc::new(AtomicUsize::new(0)),
+                expected_provider,
                 result: Ok(account),
             }
         }
 
         fn fails(error: IdentityAuthorityError) -> Self {
+            Self::fails_for("fixture-confidential", error)
+        }
+
+        fn fails_for(expected_provider: &'static str, error: IdentityAuthorityError) -> Self {
             Self {
                 calls: Arc::new(AtomicUsize::new(0)),
+                expected_provider,
                 result: Err(error),
             }
         }
@@ -5969,8 +6128,11 @@ mod tests {
             request: &IdTokenVerificationRequest<'_>,
         ) -> Result<AccountId, IdentityAuthorityError> {
             self.calls.fetch_add(1, Ordering::SeqCst);
-            assert_eq!(request.provider().as_str(), "fixture-confidential");
-            assert_eq!(request.client_id(), "fixture-confidential-public-client");
+            assert_eq!(request.provider().as_str(), self.expected_provider);
+            assert_eq!(
+                request.client_id(),
+                format!("{}-public-client", self.expected_provider)
+            );
             assert_eq!(request.id_token(), "header.payload.signature");
             assert!(!request.expected_nonce().is_empty());
             assert_eq!(request.observed_at_unix_seconds(), 1_000);
@@ -7260,6 +7422,7 @@ mod tests {
         let verifier = |result| {
             let authority = RecordingIdentityAuthority {
                 calls: Arc::new(AtomicUsize::new(0)),
+                expected_provider: "fixture-confidential",
                 result,
             };
             let calls = Arc::clone(&authority.calls);
@@ -10196,6 +10359,276 @@ mod tests {
             )
             .unwrap();
         assert_eq!(access, "public-access");
+    }
+
+    #[test]
+    fn public_exchange_verifies_identity_and_stores_by_opaque_key() {
+        let provider_config = config("fixture");
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(Rc::clone(&order)),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(policy("fixture", 300), trace(112), &mut audit)
+            .unwrap();
+        let (request, nonce) = prepared_openid_exchange(&provider_config, trace(113), &mut audit);
+        let account = AccountId::new([0xb1; 32]);
+        let authority = RecordingIdentityAuthority::succeeds_for("fixture", account);
+        let authority_inspection = authority.clone();
+        let verifier = AuditedAccountIdentityAuthority::from_audited_authority(authority);
+        let credential_key = CredentialKey::new(provider_config.provider().clone(), account);
+        let custody_events_before = audit.custody.len();
+        order.borrow_mut().clear();
+        let mut transport = MockPublicExchangeTransport {
+            response: Some(Ok(TokenEndpointResponse::new(
+                200,
+                Zeroizing::new(
+                    br#"{"access_token":"public-verified-access","refresh_token":"public-verified-refresh","id_token":"header.payload.signature","token_type":"Bearer","expires_in":3600}"#.to_vec(),
+                ),
+            )
+            .unwrap())),
+            expected_provider: "fixture",
+            calls: 0,
+            order: Rc::clone(&order),
+        };
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let profile = identity_profile(&provider_config);
+
+        let revision = broker
+            .exchange_public_and_store_verified_credentials(
+                request,
+                PublicVerifiedExchangeCredentialExecution::new(
+                    &profile,
+                    &verifier,
+                    nonce,
+                    &mut clock,
+                    &mut transport,
+                ),
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_eq!(transport.calls, 1);
+        assert_eq!(clock.calls, 1);
+        assert_eq!(authority_inspection.calls.load(Ordering::SeqCst), 1);
+        assert!(!format!("{revision:?}").contains("public-verified-access"));
+        assert_eq!(audit.identity.len(), 2);
+        assert_eq!(audit.identity[0].trace(), trace(113));
+        assert_eq!(
+            audit.identity[0].outcome(),
+            AccountIdentityAuditOutcome::Attempted
+        );
+        assert_eq!(
+            audit.identity[1].outcome(),
+            AccountIdentityAuditOutcome::Succeeded
+        );
+        assert_eq!(
+            audit.custody[custody_events_before..]
+                .iter()
+                .map(CredentialAuditEvent::action)
+                .collect::<Vec<_>>(),
+            vec![CredentialAuditAction::Create, CredentialAuditAction::Create]
+        );
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "public-verified-exchange-store-attempted",
+                "public-exchange-attempted",
+                "transport-attempted",
+                "transport-effect",
+                "transport-succeeded",
+                "public-exchange-succeeded",
+                "identity-attempted",
+                "identity-succeeded",
+                "credential-store-attempted",
+                "credential-store-succeeded",
+                "public-verified-exchange-store-succeeded",
+            ]
+        );
+        let access = broker
+            .custody
+            .with_access_token(
+                &credential_key,
+                trace(113),
+                &mut RecordingAudit::default(),
+                str::to_owned,
+            )
+            .unwrap();
+        assert_eq!(access, "public-verified-access");
+
+        let (request, nonce) = prepared_openid_exchange(&provider_config, trace(118), &mut audit);
+        let rejecting_authority = RecordingIdentityAuthority::fails_for(
+            "fixture",
+            IdentityAuthorityError::SignatureInvalid,
+        );
+        let rejecting_inspection = rejecting_authority.clone();
+        let rejecting_verifier =
+            AuditedAccountIdentityAuthority::from_audited_authority(rejecting_authority);
+        let custody_events_before = audit.custody.len();
+        let mut rejecting_transport = MockPublicExchangeTransport {
+            response: Some(Ok(TokenEndpointResponse::new(
+                200,
+                Zeroizing::new(
+                    br#"{"access_token":"public-rejected-access","id_token":"header.payload.signature","token_type":"Bearer"}"#.to_vec(),
+                ),
+            )
+            .unwrap())),
+            expected_provider: "fixture",
+            calls: 0,
+            order: Rc::new(RefCell::new(Vec::new())),
+        };
+        let mut rejecting_clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+
+        assert!(matches!(
+            broker.exchange_public_and_store_verified_credentials(
+                request,
+                PublicVerifiedExchangeCredentialExecution::new(
+                    &profile,
+                    &rejecting_verifier,
+                    nonce,
+                    &mut rejecting_clock,
+                    &mut rejecting_transport,
+                ),
+                &mut audit,
+            ),
+            Err(BrokerError::AccountIdentity(
+                AccountIdentityError::SignatureInvalid
+            ))
+        ));
+        assert_eq!(rejecting_inspection.calls.load(Ordering::SeqCst), 1);
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(
+            audit.identity.last().unwrap().outcome(),
+            AccountIdentityAuditOutcome::Failed(AccountIdentityFailureClass::SignatureInvalid)
+        );
+        assert_eq!(
+            audit.broker.last().unwrap().outcome(),
+            BrokerAuditOutcome::Failed(BrokerFailureClass::AccountIdentity)
+        );
+    }
+
+    #[test]
+    fn public_verified_exchange_rejects_identity_binding_before_all_effects() {
+        let provider_config = config("fixture");
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(Rc::clone(&order)),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(policy("fixture", 300), trace(114), &mut audit)
+            .unwrap();
+        let (request, nonce) = prepared_openid_exchange(&provider_config, trace(115), &mut audit);
+        let authority =
+            RecordingIdentityAuthority::succeeds_for("fixture", AccountId::new([0xb2; 32]));
+        let authority_inspection = authority.clone();
+        let verifier = AuditedAccountIdentityAuthority::from_audited_authority(authority);
+        let custody_events_before = audit.custody.len();
+        order.borrow_mut().clear();
+        let mut transport = MockPublicExchangeTransport {
+            response: None,
+            expected_provider: "fixture",
+            calls: 0,
+            order: Rc::clone(&order),
+        };
+        let mut clock = CountingClock { now: 0, calls: 0 };
+        let wrong_profile = identity_profile(&config("other-provider"));
+
+        assert!(matches!(
+            broker.exchange_public_and_store_verified_credentials(
+                request,
+                PublicVerifiedExchangeCredentialExecution::new(
+                    &wrong_profile,
+                    &verifier,
+                    nonce,
+                    &mut clock,
+                    &mut transport,
+                ),
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(transport.calls, 0);
+        assert_eq!(clock.calls, 0);
+        assert_eq!(authority_inspection.calls.load(Ordering::SeqCst), 0);
+        assert!(audit.identity.is_empty());
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "public-verified-exchange-store-attempted",
+                "public-verified-exchange-store-failed",
+            ]
+        );
+    }
+
+    #[test]
+    fn public_verified_exchange_requires_id_token_before_identity_or_storage() {
+        let provider_config = config("fixture");
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let mut audit = RecordingAudit::default();
+        broker
+            .register_provider(policy("fixture", 300), trace(116), &mut audit)
+            .unwrap();
+        let (request, nonce) = prepared_openid_exchange(&provider_config, trace(117), &mut audit);
+        let authority =
+            RecordingIdentityAuthority::succeeds_for("fixture", AccountId::new([0xb3; 32]));
+        let authority_inspection = authority.clone();
+        let verifier = AuditedAccountIdentityAuthority::from_audited_authority(authority);
+        let custody_events_before = audit.custody.len();
+        let mut transport = MockPublicExchangeTransport {
+            response: Some(Ok(TokenEndpointResponse::new(
+                200,
+                Zeroizing::new(
+                    br#"{"access_token":"public-unverified-access","token_type":"Bearer"}"#
+                        .to_vec(),
+                ),
+            )
+            .unwrap())),
+            expected_provider: "fixture",
+            calls: 0,
+            order: Rc::new(RefCell::new(Vec::new())),
+        };
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let profile = identity_profile(&provider_config);
+
+        assert!(matches!(
+            broker.exchange_public_and_store_verified_credentials(
+                request,
+                PublicVerifiedExchangeCredentialExecution::new(
+                    &profile,
+                    &verifier,
+                    nonce,
+                    &mut clock,
+                    &mut transport,
+                ),
+                &mut audit,
+            ),
+            Err(BrokerError::AccountIdentity(
+                AccountIdentityError::InvalidInput
+            ))
+        ));
+        assert_eq!(transport.calls, 1);
+        assert_eq!(clock.calls, 1);
+        assert_eq!(authority_inspection.calls.load(Ordering::SeqCst), 0);
+        assert!(audit.identity.is_empty());
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(
+            audit.broker.last().unwrap().outcome(),
+            BrokerAuditOutcome::Failed(BrokerFailureClass::AccountIdentity)
+        );
     }
 
     #[test]
