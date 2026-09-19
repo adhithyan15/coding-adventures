@@ -680,6 +680,11 @@ jobs:
 
       - name: Set up reviewed OCaml compiler and repository
         uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
+        # Avoid opam/opam#7031 while opam inspects its Git-backed repository.
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: maintenance.auto
+          GIT_CONFIG_VALUE_0: 'false'
         with:
           ocaml-compiler: ocaml-base-compiler.5.2.1
           opam-repositories: |
@@ -1796,6 +1801,11 @@ jobs:
         id: setup-ocaml
         if: needs.detect.outputs.needs_ocaml == 'true' && (matrix.sharded != true || contains(matrix.languages, 'ocaml'))
         uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
+        # Avoid opam/opam#7031 while opam inspects its Git-backed repository.
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: maintenance.auto
+          GIT_CONFIG_VALUE_0: 'false'
         with:
           ocaml-compiler: ocaml-base-compiler.5.2.1
           opam-repositories: |
