@@ -1,5 +1,32 @@
 # Changelog — @coding-adventures/forme-orchestrator
 
+## 0.8.0 — 2026-09-19
+
+### Added — bounded stream checkpoint foundation
+
+- Stream values can be written incrementally into a content-addressed,
+  left-complete ordered tree. The writer persists completed nodes immediately
+  and retains only an `O(log n)` binary-counter frontier.
+- A small manifest is published separately and last, so interrupted writes
+  cannot expose a partial stream checkpoint. The stream revision commits to
+  the ordered root and item count without re-encoding a materialized array.
+- Loading performs a complete integrity, content-key, count, shape, and
+  revision validation pass before exposing a second lazy replay traversal.
+  Invalid state fails open by invalidating the manifest; cancellation
+  propagates without destroying valid cache state.
+- This release establishes FM-B038's storage boundary. The existing scheduler
+  continues to materialize streams until FM-B039 and FM-B040 connect bounded
+  multicast transport and pipeline-wide scheduling to it.
+
+### Tests
+
+- Thirty focused cases cover empty, duplicate, power-of-two boundary, and
+  257-value streams; logarithmic retained state; content deduplication; lazy
+  iteration; malformed manifests and nodes; non-canonical trees; missing and
+  wrong-key entries; invalidation failure; and cancellation during validation
+  and replay.
+- The new checkpoint module exceeds 96% line coverage.
+
 ## 0.7.0 — 2026-09-19
 
 ### Added — side-effect replay

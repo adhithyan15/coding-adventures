@@ -40,7 +40,10 @@ await o.dispose();
 These are deferred to follow-up packages:
 
 - **No parallelism.** Stages execute sequentially in topological order. `settings.maxConcurrency` is honoured at `1`.
-- **No streaming pipelining.** A `Stream<X>` producer is fully drained into memory before downstream consumers see values. Lazy streaming lands in v1 alongside parallelism.
+- **No streaming pipelining yet.** A `Stream<X>` producer is still fully drained
+  before downstream consumers see values. The bounded, content-addressed
+  checkpoint tree is implemented, while FM-B039/FM-B040 own live multicast
+  transport and scheduler integration.
 - **Replay is explicit.** Exact affected scheduling restores untouched pure
   stages directly and invokes `Stage.replay` before skipping an effectful
   collector. Capability-bearing stages without that hook still execute
@@ -66,6 +69,9 @@ These are deferred to follow-up packages:
 - Exact changed-and-downstream scheduling with validated whole-instance
   checkpoints, explicit `skipped` summaries, restored sink outputs, and
   fail-open replay for opt-in capability-bearing collectors
+- Bounded stream-checkpoint storage with an `O(log n)` writer frontier,
+  manifest-last publication, full pre-replay validation, lazy ordered reads,
+  content deduplication, and cancellation-safe fail-open behavior
 - Deterministic tagged cache encoding for plain Forme values and bytes;
   per-invocation cache hits/misses for safe pure stages, with `useCache: false`
   bypass and fail-open behavior for unsupported/corrupt entries
