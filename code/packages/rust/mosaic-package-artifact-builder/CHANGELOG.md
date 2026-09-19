@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added — non-gating platform behaviour degradations (UI29-6, #15491)
+
+`mosaic-degradations.json` now separates permanent platform limitations into
+`behaviorDegradations`. Qt and Flutter record
+`interaction.navigation-split-collapse-static` for
+`HostNavigationSplit(collapse: auto)` while their still-missing primitive
+lowerings continue to fail the ordinary capability gate. Once those lowerings
+land, removing `primitive.navigation-split-unimplemented` will make strict
+consumer builds possible without hiding the collapse limitation in an
+allowlist. `collapse: never` records no behaviour degradation.
+
 ### Added — Flutter style-drop degradations (#12022)
 
 `analyze_package_degradations` now includes Flutter
