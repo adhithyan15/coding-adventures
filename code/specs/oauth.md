@@ -173,6 +173,13 @@ The delivery order is:
    secret, transport, verifier, and storage effects retain separate
    provider/trace audit gates; and only the final opaque credential revision is
    released. The caller no longer supplies a decoded identity profile.
+   The symmetric `private_key_jwt` exchange can now load that exact static
+   identity policy internally after the retained provider/client/endpoint/
+   algorithm/key profile, opaque verification context, and nonce are bound to
+   the registration. Policy loading precedes signing, transport, clock,
+   verification, and credential storage, while each authority keeps its own
+   provider/trace audit gates and only the opaque credential revision is
+   released. This enables no concrete signing or verification algorithm.
 6. **Confidential-client authentication:** web-service profiles for
    `client_secret_basic`, `client_secret_post`, and `private_key_jwt`, using
    opaque custody references and audit-before-release rather than secrets in
