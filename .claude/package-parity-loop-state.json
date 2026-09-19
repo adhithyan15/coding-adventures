@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 15596,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/15596",
-    "branch": "codex/build-tool-jvm-core-20260919",
-    "implementation_revision": "692385766b61a3790d7025cd8e205ce5396fb068",
+    "number": 15615,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/15615",
+    "branch": "codex/parity-neutral-graph-diff-hardening-20260919",
+    "implementation_revision": "f4ef396e166572ad831fc273af3a861115c4c5d2",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-09-19T15:06:02Z",
-    "pr_number": 15596,
+    "observed_at": "2026-09-19T17:49:39Z",
+    "pr_number": 15615,
     "status": "checks-pending",
-    "notes": "Ready-for-review PR #15596 is open at exact implementation revision 692385766b61a3790d7025cd8e205ce5396fb068. GitHub reports the branch mergeable with no conflict, while the initial CI, Kotlin application, CodeQL detection, human-language detection, and OCaml toolchain checks are queued. Auto-merge remains disabled until every required check is terminal and acceptable."
+    "notes": "Ready-for-review PR #15615 remains mergeable with no conflict. Actual Repo-wide metadata contracts job 105937790704 failed because the new changelog shard omitted the required lowercase eight-hex heading digest and used an invalid level-one heading. Revisions 3038fd7ae0a9af2caf501949ec937949b771164c and 686aa80ad9c7f3722b47e47922329116495a3233 apply the smallest repair: rename the shard with the SHA-256-derived 72e95595 suffix and use the required level-three heading. The exact npm build plus check:doc-shards command now passes locally. The repair is pushed to the same branch; replacement checks are pending, so auto-merge remains disabled."
   },
   "last_inventory": {
-    "revision": "a95b08b373d4005420a35c5e27031426ea268bc2",
+    "revision": "252899ba632f52a1e6a81de282fdf6bd6745b8a4",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1441,
@@ -1058,7 +1058,7 @@
       "id": "build-tool-go-diff-selection-match-work-ceiling-adoption",
       "title": "Adopt bounded diff-selection match work in the Go build tool",
       "status": "pending",
-      "depends_on": ["build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Consume the exact-at-limit and over-limit neutral diff fixtures in the canonical Go engine, count Unicode scalars with checked arithmetic, preserve validation and unknown-path precedence, and return the stable limit diagnostic before any matcher call without widening authority."
@@ -2856,7 +2856,8 @@
     "build-tool-execution-semantics-corpus",
     "build-tool-go-repository-boundary-reverse-diff-digest-adoption",
     "build-tool-go-portable-dependency-hashing-conformance",
-    "build-tool-site-authored-resource-source-input-extension"
+    "build-tool-site-authored-resource-source-input-extension",
+    "build-tool-neutral-graph-diff-adversarial-corpus-hardening"
       ],
       "branch": null,
       "pr_number": null,
@@ -2876,7 +2877,7 @@
       "title": "Close Haskell native build-tool adapter conformance",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-extra-ci-toolchain-declaration-conformance", "build-tool-haskell-dune-build-discovery-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-haskell-orphan-crate-validation-conformance", "build-tool-haskell-tracked-artifact-validation-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-cli-parser-adoption", "build-tool-haskell-starlark-metering-adoption", "build-tool-haskell-validation-oracle-adoption"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-haskell-diff-selection-match-work-ceiling-adoption", "build-tool-haskell-extra-ci-toolchain-declaration-conformance", "build-tool-haskell-dune-build-discovery-conformance", "build-tool-haskell-portable-source-hashing-conformance", "build-tool-haskell-native-source-snapshot-stability-hardening", "build-tool-haskell-portable-dependency-hashing-conformance", "build-tool-haskell-orphan-crate-validation-conformance", "build-tool-haskell-tracked-artifact-validation-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-haskell-repository-boundary-reverse-diff-digest-adoption", "build-tool-haskell-cli-parser-adoption", "build-tool-haskell-starlark-metering-adoption", "build-tool-haskell-validation-oracle-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Haskell build-tool lane gate materialized by the post-#14615 audit. After every native correctness child lands, add a real adapter and run the entire versioned neutral corpus, including the completed graph/diff cases, through the Haskell front door with no undeclared expected failures. Keep this owner selection-blocked until the native retained-handle snapshot design and all listed children are complete."
@@ -2886,7 +2887,7 @@
       "title": "Close Swift native build-tool adapter conformance",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-swift-diff-selection-match-work-ceiling-adoption", "build-tool-swift-extra-ci-toolchain-declaration-conformance", "build-tool-swift-dune-build-discovery-exclusion", "build-tool-swift-windows-test-front-failure-propagation", "build-tool-swift-language-source-input-registry-adoption", "build-tool-swift-repository-source-input-boundary-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-swift-portable-source-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-swift-dist-newstyle-discovery-exclusion", "build-tool-swift-rockspec-utf8-conformance", "build-tool-swift-windows-absolute-file-options", "build-tool-swift-language-identity-registry", "build-tool-swift-orphan-crate-validation-conformance", "build-tool-swift-tracked-artifact-validation-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-swift-cli-parser-adoption", "build-tool-swift-starlark-metering-adoption", "build-tool-swift-validation-oracle-adoption"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-swift-diff-selection-match-work-ceiling-adoption", "build-tool-swift-extra-ci-toolchain-declaration-conformance", "build-tool-swift-dune-build-discovery-exclusion", "build-tool-swift-windows-test-front-failure-propagation", "build-tool-swift-language-source-input-registry-adoption", "build-tool-swift-repository-source-input-boundary-adoption", "build-tool-swift-git-index-snapshot-stability-repair", "build-tool-swift-portable-source-hashing-conformance", "build-tool-swift-portable-dependency-hashing-conformance", "build-tool-swift-dist-newstyle-discovery-exclusion", "build-tool-swift-rockspec-utf8-conformance", "build-tool-swift-windows-absolute-file-options", "build-tool-swift-language-identity-registry", "build-tool-swift-orphan-crate-validation-conformance", "build-tool-swift-tracked-artifact-validation-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-swift-repository-boundary-diff-digest-fixture-adoption", "build-tool-swift-cli-parser-adoption", "build-tool-swift-starlark-metering-adoption", "build-tool-swift-validation-oracle-adoption"],
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Swift build-tool lane gate materialized by the post-#14615 audit. After every native correctness child lands, add a real adapter and run the entire versioned neutral corpus, including the completed graph/diff cases, through the Swift front door with no undeclared expected failures. Keep this owner selection-blocked until all listed snapshot, path, hashing, registry, fixture, and validator children are complete."
@@ -2933,6 +2934,7 @@
       "depends_on": [
         "build-tool-pure-domain-corpus",
         "build-tool-jvm-process-free-graph-diff-core",
+        "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
         "build-tool-tracked-artifact-unicode-cross-runtime-corpus-hardening",
         "build-tool-tracked-artifact-trailing-empty-segment-cross-runtime-hardening",
         "build-tool-tracked-artifact-unicode-version-contract",
@@ -3481,7 +3483,7 @@
       "branch": null,
       "classification_notes": "Merged PR #12943 adds the fifth Spanish A1 vocabulary tranche as curriculum and generated human-language-data evidence without changing the package source or exposing a new portable contract.",
       "pr_number": null,
-      "notes": "Current singleton leaders are Rust 631, Python 86, and TypeScript 85 at the collision-checked 6e0a40b7a6 inventory; do not port blindly. Merged PR #12757 extends the existing Rust-only algol-iir-compiler/lang-aot family with deterministic even-not selector preservation, conservative odd-not behavior, and seven-backend matrix evidence; classify it here until this umbrella decomposes a narrower portable compiler-semantics child. Merged PR #12917 extends the existing TypeScript-only human-language-data identity with deterministic, bounded sight-cue anchoring and modality derivation; retain that pure package behavior here while its writer CLIs remain in the separate filesystem-authority review. Merged PR #12945 adds Chinese identity curriculum and generated modality data without changing package source or exposing a new portable contract."
+      "notes": "Current singleton leaders are Rust 782, TypeScript 89, and Python 66 at the collision-checked 6174c8c1ff inventory; do not port blindly. The post-#15596 audit decomposes newly unreferenced diagram-layout-hierarchy, layout-backgrounds, layout-effects, and oauth-broker identities into exact portable owners plus an OAuth device/OpenID prerequisite. Merged PR #12757 extends the existing Rust-only algol-iir-compiler/lang-aot family with deterministic even-not selector preservation, conservative odd-not behavior, and seven-backend matrix evidence; classify it here until this umbrella decomposes a narrower portable compiler-semantics child. Merged PR #12917 extends the existing TypeScript-only human-language-data identity with deterministic, bounded sight-cue anchoring and modality derivation; retain that pure package behavior here while its writer CLIs remain in the separate filesystem-authority review. Merged PR #12945 adds Chinese identity curriculum and generated modality data without changing package source or exposing a new portable contract."
     },
     {
       "id": "forme-portable-core-family-classification",
@@ -8743,7 +8745,7 @@
       "id": "oauth-credential-broker-vault-custody-and-scope",
       "title": "Review OAuth credential-broker, vault custody, and authorized scope",
       "status": "pending",
-      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-installed-app-host-authority-review", "oauth-wire-codecs-refresh-revocation-conformance", "oauth-credential-custody-portable-conformance", "oauth-client-secret-custody-portable-conformance", "oauth-credential-sealed-store-native-authority-review", "oauth-private-key-signer-portable-conformance", "oauth-private-key-jwt-portable-conformance", "oauth-account-identity-portable-conformance"],
+      "depends_on": ["oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-installed-app-host-authority-review", "oauth-wire-codecs-refresh-revocation-conformance", "oauth-credential-custody-portable-conformance", "oauth-client-secret-custody-portable-conformance", "oauth-credential-sealed-store-native-authority-review", "oauth-private-key-signer-portable-conformance", "oauth-private-key-jwt-portable-conformance", "oauth-account-identity-portable-conformance", "oauth-broker-portable-orchestration-conformance"],
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
@@ -9238,7 +9240,7 @@
       "depends_on": ["singleton-classification"],
       "branch": null,
       "pr_number": null,
-      "notes": "A strict exact-owner audit at 4b1d1249 found 207 of 753 Rust singleton identities owned and 546 without exact ownership. The later rust/mosaic-app-wasm identity has its own explicit target-wrapper applicability owner, so the unowned count remains 546 across 754 Rust singletons. Conservative manifest evidence partitions the original unowned set into 170 portable-core claims, 58 native-host signals, 89 generated/applicability signals, and 229 unresolved identities. Decompose them into explicit portable, native, wrapper, or reviewed-exception owners without crediting incidental build-tool references."
+      "notes": "The collision-checked 6174c8c1ff inventory contains 782 Rust singletons. The historical strict audit at 4b1d1249 found 207 of 753 owned and 546 without exact ownership, but subsequent additions and decompositions make those ownership counts stale. The post-#15596 refresh adds exact owners for diagram-layout-hierarchy, layout-backgrounds, layout-effects, and oauth-broker; rerun the strict exact-owner partition before publishing a new owned/unowned total. Conservative manifest evidence must still decompose every remaining identity into explicit portable, native, wrapper, generated, or reviewed-exception work without crediting incidental references."
     },
     {
       "id": "constraint-core-language-neutral-conformance",
@@ -9289,13 +9291,15 @@
     {
       "id": "build-tool-jvm-process-free-graph-diff-core",
       "title": "Implement Java and Kotlin build-tool graph and diff-selection cores",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling"],
       "branch": "codex/build-tool-jvm-core-20260919",
       "pr_number": 15596,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/15596",
       "opened_at": "2026-09-19T15:05:58Z",
       "opened_revision": "692385766b61a3790d7025cd8e205ce5396fb068",
+      "merged_at": "2026-09-19T16:23:41Z",
+      "merge_commit": "303b42df197296adbff58c4c93e4dff7cb8e89c6",
       "selected_at": "2026-09-19T14:11:37Z",
       "selection_revision": "a95b08b373d4005420a35c5e27031426ea268bc2",
       "selection_notes": "Selected only after PR #15580 completed every final-head check acceptably and merged through guarded squash auto-merge. The exact merged-main schema-3 inventory remains collision-clean at 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five emerging OCaml packages, and zero unknown buckets. Parallel preparation produced exact JVM and Dart implementation/validation packets and found three separate selection-blocked capability-policy owners. The JVM core is the highest-leverage ready bounded owner because one coherent fixture-driven tranche advances both missing established JVM build-tool lanes without claiming a front door, adapter, Git, filesystem, process, environment, network, credential, or execution authority. The fresh clean worktree starts from exact merge revision a95b08b373d4005420a35c5e27031426ea268bc2.",
@@ -9303,16 +9307,118 @@
       "implementation_revision": "692385766b61a3790d7025cd8e205ce5396fb068",
       "validation_revision": "692385766b61a3790d7025cd8e205ce5396fb068",
       "validation_notes": "Specification-first changes close the bounded JVM graph and diff-selection tranche without claiming a build-tool CLI, adapter, resolver, sandbox, or host authority. Tests-first compilation failed on the deliberately absent Java and Kotlin cores before implementation. Both independent native engines directly discover and consume the exact six graph and eight diff-selection neutral fixtures, including repository-boundary reverse selection, Unicode-scalar match-work accounting, deterministic topology and closures, portable glob character classes, unknown-path policy, and stable cycle behavior. Java and Kotlin clean checks and literal BUILD fronts pass with compiler warnings-as-errors and JaCoCo line coverage of 98.17% and 98.98%, above the required 95% gates. Defensive validation rejects oversized recursive-match inputs, unsafe or nested package roots, Unicode casefold collisions, cyclic diff graphs, unsafe paths and globs, and ambiguous or descending character classes. The neutral corpus validates all 157 cases and 285 retained files; the complete semantic runner passes 85 tests, and its 25 schema tests pass. The 15-test CI-gate registry, seven-test capability taxonomy, strict JSON, 828-owner/1,446-edge acyclic state graph, changelog shard, collision-clean schema-3 package-parity report, diff hygiene, and Go build-tool test/vet/trimpath build all pass. The real commit-based dry plan against 492a8e9a25969d48ca6998c8aacbd237226da48d evaluates 45 Starlark BUILD files, discovers 5,187 packages, keeps the five reviewed orphan exemptions clean, and selects exactly the two new Java and Kotlin build-tool programs; the final conflict-free rebase onto 94b47a167ffbda1727f53fc047edc7e14eab6f7a changes no touched path. Independent correctness and security reviews pass with no remaining authority, dependency, capability, CI-pinning, metadata, input-bounding, Unicode, graph, glob, digest, or fixture-coverage finding. Production Java resolves only java.base; Kotlin adds only its standard runtime; all Jackson and JUnit dependencies remain test-only and versioned; the capability manifests are empty and accurate.",
-      "publication_notes": "Opened ready-for-review PR #15596 after a normal first push from exact rebased origin/main 94b47a167ffbda1727f53fc047edc7e14eab6f7a. Immediately before publication, the worktree was clean, no other parity PR or prior same-branch PR existed, the 26-path slice overlapped only the shared CI workflow with unrelated open PRs #15574 and #15548, and native JVM, neutral corpus, semantic runner, Go, real dry-plan, package-parity, state-DAG, capability, security, and diff gates were acceptable. GitHub reports the PR non-draft and mergeable with initial checks queued; auto-merge remains disabled until every required check is terminal and acceptable."
+      "publication_notes": "Opened ready-for-review PR #15596 after a normal first push from exact rebased origin/main 94b47a167ffbda1727f53fc047edc7e14eab6f7a. Immediately before publication, the worktree was clean, no other parity PR or prior same-branch PR existed, the 26-path slice overlapped only the shared CI workflow with unrelated open PRs #15574 and #15548, and native JVM, neutral corpus, semantic runner, Go, real dry-plan, package-parity, state-DAG, capability, security, and diff gates were acceptable. Every required final-head check completed acceptably; guarded squash auto-merge produced merge commit 303b42df197296adbff58c4c93e4dff7cb8e89c6."
+    },
+    {
+      "id": "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
+      "title": "Harden neutral graph and diff-selection adversarial coverage",
+      "status": "pr-open",
+      "depends_on": ["build-tool-jvm-process-free-graph-diff-core"],
+      "branch": "codex/parity-neutral-graph-diff-hardening-20260919",
+      "pr_number": 15615,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/15615",
+      "opened_at": "2026-09-19T17:02:42Z",
+      "opened_revision": "b97cd49a6c0ba6c742e67d1b4fc54ff069c85034",
+      "selected_at": "2026-09-19T16:24:00Z",
+      "selection_revision": "6174c8c1ffeb2a82a15b635c0142098ba03ce146",
+      "selection_notes": "Selected after guarded auto-merge of PR #15596 and a collision-checked exact-main refresh. Read-only fixture audits found that the 14-case neutral roster omits an empty graph, partial-cycle no-output behavior, strict character-class glob evidence, known-but-unselected near-BUILD paths, and exact BUILD-front matching. The last gap exposes a concrete Go overmatch of arbitrary BUILD_* names. This five-case process-free tranche is the smallest dependency-shaped prerequisite for Dart and later neutral consumers, while adding no filesystem, process, network, credential, environment, or execution authority.",
+      "notes": "Raise the neutral corpus from 157 to 162 cases and the graph/diff roster from 14 to 19 with graph/empty, graph/partial-cycle-no-output, diff-selection/strict-glob-character-classes, diff-selection/known-unmatched-near-build, and diff-selection/exact-build-fronts. Tighten the independent oracle and repair Go's BUILD_* overmatch to the exact five BUILD basenames. Update Go, Java, and Kotlin consumers and make the strengthened corpus a prerequisite of subsequent Dart, JVM, Haskell, and Swift closures.",
+      "implementation_revision": "f4ef396e166572ad831fc273af3a861115c4c5d2",
+      "validation_revision": "686aa80ad9c7f3722b47e47922329116495a3233",
+      "validation_notes": "Specification-first hardening adds five language-neutral adversarial cases, raising the corpus from 157 to 162 cases while retaining 285 validated files, and expands the graph/diff roster from 14 to 19. Tests-first evidence reproduced Go's arbitrary BUILD_* overmatch before the production repair narrowed matching to exactly BUILD, BUILD_windows, BUILD_mac, BUILD_linux, and BUILD_mac_and_linux. The independent Python oracle now requires exactly one GRAPH_CYCLE diagnostic for every cyclic graph, including a partial cycle with no output; strict portable-glob evidence covers negation, caret literal handling, ascending ranges, leading right bracket, leading and trailing hyphen, and unmatched left bracket. Full Go test, vet, and trimpath build pass; Java and Kotlin clean checks, tests, and JaCoCo coverage gates pass; the neutral corpus validates; all 25 schema tests and all 85 semantic runner tests pass after the conflict-free rebase onto 252899ba632f52a1e6a81de282fdf6bd6745b8a4. CI-gate, capability-taxonomy, package-parity collision, Ruff, medium/high Bandit, JSON/state-DAG, and diff-hygiene checks pass. Independent correctness, state/roadmap, and security reviews report no concrete blocker. A real repository dry plan was attempted after rebase but remains blocked by unrelated existing BUILD metadata validation failures and stale absolute grammar lookup warnings outside this 24-file slice; the focused and full native validation paths for every touched implementation are green. The exact-main schema-3 inventory remains collision-clean and numerically unchanged at 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five OCaml packages, and zero unknown buckets.",
+      "publication_notes": "Opened ready-for-review PR #15615 after a normal first push from exact rebased origin/main 252899ba632f52a1e6a81de282fdf6bd6745b8a4. Immediately before publication, the worktree was clean, no other parity PR or prior same-branch PR existed, the 24-file slice had passed its focused and full native validation, and GitHub reported the branch mergeable with no conflict. Initial required checks are queued, so auto-merge remains disabled.",
+      "ci_repair_revision": "686aa80ad9c7f3722b47e47922329116495a3233",
+      "ci_repair_notes": "Actual job 105937790704 failed only in the document-shard gate because the new changelog filename omitted its lowercase eight-hex heading digest and the shard began with a level-one heading. The shard now uses the required 01050 rank, uppercase slug, SHA-256-derived 72e95595 heading digest, and level-three heading. The exact npm ci, build, and check:doc-shards sequence passes locally; no production, fixture, dependency, authority, or conformance behavior changed."
     },
     {
       "id": "build-tool-dart-process-free-graph-diff-core",
       "title": "Implement Dart build-tool graph and diff-selection cores",
       "status": "pending",
-      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#14519 all-language build-tool audit. Implement only the process-free graph and diff-selection domains against the closed neutral corpus, with deterministic topology, cycle errors, closures, unknown-path policies, bounded inputs, and no filesystem, Git, process, environment, network, or credential authority. This bounded core becomes a prerequisite of the full Dart build tool rather than claiming a complete adapter."
+    },
+    {
+      "id": "alpha-axp-simulator-two-lane-classification",
+      "title": "Classify Alpha AXP simulator parity beyond Python and Rust",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact post-#15596 ownership audit found the portable Alpha AXP simulator identity only in Python and Rust. Reconcile the 624-vector corpus, installed ranges, origin-aware loading, restore, checked typed I/O and faults, atomic step, bounded transactional run, Python BUILD coverage, and empty capabilities before applicable-lane expansion or reviewed exceptions."
+    },
+    {
+      "id": "alpha-axp-gatelevel-two-lane-classification",
+      "title": "Classify Alpha AXP gate-level parity beyond Python and Rust",
+      "status": "pending",
+      "depends_on": ["alpha-axp-simulator-two-lane-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Own the deterministic checked gate topology, functional differential, lifecycle, atomic-failure, resource-ceiling, neutral-corpus, and empty-capability contract for the Python/Rust Alpha AXP gate-level identity. Permit only narrow reviewed resource or toolchain exceptions, not a whole-package native exception."
+    },
+    {
+      "id": "powerpc601-simulator-two-lane-classification",
+      "title": "Classify PowerPC 601 simulator parity beyond Python and Rust",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Exact post-#15596 ownership audit found the portable PowerPC 601 simulator identity only in Python and Rust. Reconcile the 239-vector corpus, big-endian access, structured encoders, checked lifecycle, stable faults, bounded transactional execution, and empty capabilities before applicable-lane expansion or reviewed exceptions."
+    },
+    {
+      "id": "powerpc601-gatelevel-two-lane-classification",
+      "title": "Classify PowerPC 601 gate-level parity beyond Python and Rust",
+      "status": "pending",
+      "depends_on": ["powerpc601-simulator-two-lane-classification"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Own the deterministic checked gate topology, functional differential, lifecycle, atomic-failure, resource-ceiling, neutral-corpus, and empty-capability contract for the Python/Rust PowerPC 601 gate-level identity. Permit only narrow reviewed resource or toolchain exceptions, not a whole-package native exception."
+    },
+    {
+      "id": "diagram-layout-hierarchy-portable-conformance",
+      "title": "Define portable hierarchy diagram layout conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Own deterministic treemap, tree-view, swimlane, and railroad typed-IR layout behavior, geometry and ordering, metadata, numeric validation, recursion ceilings, stable failures, and an empty capability profile. Keep parsing, fonts, themes, paint backends, interaction, and unsupported dialects outside this portable core."
+    },
+    {
+      "id": "layout-backgrounds-portable-core-conformance",
+      "title": "Define portable layout-backgrounds core conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Own UI51 producer-neutral background data, extension encoding, tolerant decoding and diagnostics, layer ordering, positioning, sizing, repeat, origin and clip, painting-box resolution, radius normalization, bounded numeric behavior, and empty capabilities. Keep parsing, fetching, decoding, intrinsic image sizing, and paint authority outside the core."
+    },
+    {
+      "id": "layout-effects-portable-core-conformance",
+      "title": "Define portable layout-effects core conformance",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Own UI50 producer-neutral effect data, extension round trips, clamping diagnostics, affine math and order, transform origins, physical scaling, filter order, blend and isolation data, layer predicates, bounded numeric behavior, and empty capabilities. Keep parsing and paint-backend execution outside the core."
+    },
+    {
+      "id": "oauth-device-authorization-openid-identity-language-neutral-conformance",
+      "title": "Define portable OAuth device authorization and OpenID identity conformance",
+      "status": "pending",
+      "depends_on": ["oauth-authorization-server-metadata-language-neutral-conformance", "oauth-wire-codecs-refresh-revocation-conformance", "oauth-account-identity-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Define RFC 8628 polling, slowdown and expiry transitions, caller-timed sequencing, OpenID nonce retention, bounded policy loading, verified identity handoff, credential-store composition, stable errors, and applicable-lane fixtures without concrete transport, clock, storage, browser, verifier, or credential authority."
+    },
+    {
+      "id": "oauth-broker-portable-orchestration-conformance",
+      "title": "Define portable OAuth broker orchestration conformance",
+      "status": "pending",
+      "depends_on": ["bounded-json-rfc8259-portable-core-classification-and-conformance", "oauth-authorization-code-pkce-language-neutral-conformance", "oauth-authorization-server-metadata-language-neutral-conformance", "oauth-wire-codecs-refresh-revocation-conformance", "oauth-credential-custody-portable-conformance", "oauth-client-secret-custody-portable-conformance", "oauth-private-key-signer-portable-conformance", "oauth-private-key-jwt-portable-conformance", "oauth-account-identity-portable-conformance", "oauth-device-authorization-openid-identity-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Own deterministic provider/profile binding, audit-before-effect/result ordering, injected transport/source/clock/store seams, exchange/refresh/revocation composition, exact-revision credential mutation, device polling, nonce-bound identity composition, closed redacted errors, and explicit bounds. Concrete HTTPS, browsers, listeners, HSM/KMS/Vault, durable storage, clocks, entropy, and provider authorization remain native-host responsibilities."
     },
     {
       "id": "bounded-json-rfc8259-portable-core-classification-and-conformance",
@@ -9665,7 +9771,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "The exact-main audit found 157 of 172 identities in the two-to-four-language band without exact owners. Prioritize foundational symbolic-ir, simulator-protocol, and hdl-ir families and decompose them into explicit dependency-shaped work."
+      "notes": "The collision-checked 6174c8c1ff inventory contains 181 identities in the two-to-four-language band; the historical 157-of-172 unowned count is stale and must be recomputed by exact-owner matching. The post-#15596 refresh decomposes alpha-axp and powerpc601 simulator/gatelevel identities into four exact Python/Rust owners. Continue prioritizing foundational symbolic-ir, simulator-protocol, and hdl-ir families and decompose every remaining gap into explicit dependency-shaped work."
     },
     {
       "id": "oauth-private-key-signer-portable-conformance",

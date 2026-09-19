@@ -18,6 +18,10 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- Strict Starlark diff selection now recognizes only the five canonical BUILD
+  front basenames. Near names such as `BUILD_debug`, `BUILD.bak`, and
+  `BUILD_windows.old` remain known package paths but no longer select a package
+  unless a declared source glob matches.
 - A bare `set -e`/`set -eu` line at the top of a `BUILD` file — POSIX
   strict-mode preamble, present in 20+ Rust crates' `BUILD` scripts —
   crashed the whole package's Windows build. `runPackageBuild` runs each

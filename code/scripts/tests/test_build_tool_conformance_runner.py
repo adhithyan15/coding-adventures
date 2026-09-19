@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 157)
+        self.assertEqual(summary["case_count"], 162)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -3423,6 +3423,14 @@ class PureDomainValidationTests(unittest.TestCase):
         self.assertIsNone(runner._expected_graph(cycle["input"]["options"]))
         runner.validate_case_document(cycle, **self._schema_args())
 
+        extra_diagnostic = copy.deepcopy(cycle)
+        extra_diagnostic["expected"]["diagnostics"].append(
+            {"code": "GRAPH_OTHER_WARNING", "severity": "warning"}
+        )
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(extra_diagnostic, **self._schema_args())
+        self.assertEqual(raised.exception.code, "EXPECTED_GRAPH_CYCLE_INVALID")
+
         wide_names = [f"python/wide-{index}" for index in range(2000)]
         wide_edges = [
             [f"python/wide-{index}", f"python/wide-{index + 1}"]
@@ -4050,7 +4058,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 157)
+        self.assertEqual(summary["case_count"], 162)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

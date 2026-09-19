@@ -19,10 +19,13 @@ final class BuildToolCoreTest {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final Set<String> EXPECTED_CASES = Set.of(
             "diff-selection/forced-package",
+            "diff-selection/exact-build-fronts",
+            "diff-selection/known-unmatched-near-build",
             "diff-selection/match-work-at-limit",
             "diff-selection/match-work-over-limit",
             "diff-selection/package-prefix",
             "diff-selection/repository-boundary-reverse-index",
+            "diff-selection/strict-glob-character-classes",
             "diff-selection/transitive-package-change",
             "diff-selection/unknown-path-all",
             "diff-selection/unknown-path-error",
@@ -30,8 +33,10 @@ final class BuildToolCoreTest {
             "graph/chain",
             "graph/cycle",
             "graph/diamond",
+            "graph/empty",
             "graph/isolated",
-            "graph/multiple-components");
+            "graph/multiple-components",
+            "graph/partial-cycle-no-output");
 
     @Test
     void consumesEverySharedGraphAndDiffFixture() throws IOException {

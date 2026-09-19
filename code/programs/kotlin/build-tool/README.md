@@ -21,7 +21,7 @@ or network authority. JSON and repository fixture discovery are test-only.
   `DIFF_UNKNOWN_PATH` and `DIFF_MATCH_LIMIT_EXCEEDED`.
 - Repository-boundary pins use the shared domain-separated canonical digest.
 
-The native Kotlin/JUnit suite discovers and evaluates all six graph and eight
+The native Kotlin/JUnit suite discovers and evaluates all eight graph and eleven
 diff-selection fixtures directly. This package is not yet a CLI, conformance
 adapter, executor, or complete Kotlin build-tool implementation.
 

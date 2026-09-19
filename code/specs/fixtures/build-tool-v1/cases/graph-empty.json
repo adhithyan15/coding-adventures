@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "id": "graph/empty",
+  "domain": "graph",
+  "summary": "An empty declared graph succeeds with no edges or levels.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["graph"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "graph",
+    "options": {
+      "packages": [],
+      "edges": []
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "graph/empty",
+    "domain": "graph",
+    "outcome": "ok",
+    "result": {
+      "edges": [],
+      "levels": []
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}
