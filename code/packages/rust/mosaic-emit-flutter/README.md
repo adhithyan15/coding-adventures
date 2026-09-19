@@ -183,9 +183,10 @@ An input that authors none of these emits exactly what it always did.
 
 Two limits worth stating. `font: inherit` cannot be honoured -- Flutter has
 no "inherit" for a `TextField`, and the enclosing style is only reachable
-from a context below the generated `DefaultTextStyle.merge`. And anything
-not in the table above is dropped silently, because this emitter has no
-style-drop reporting (#12022).
+from a context below the generated `DefaultTextStyle.merge`. Properties not
+consumed by a widget occurrence are reported by `dropped_style_properties`;
+the package artifact builder exposes those entries as non-gating
+`style.property-dropped` degradations (#12022).
 
 ## What works in v0.2 / what's deferred
 

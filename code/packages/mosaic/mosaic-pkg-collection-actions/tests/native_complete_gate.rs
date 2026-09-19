@@ -35,11 +35,9 @@
 //! is a fact about the composed application; this is a fact about this package,
 //! and it holds whoever composes it.
 //!
-//! **Covers three backends, not five.** Only XAML, SwiftUI and Compose populate
-//! `style_degradations`; Qt and Flutter fall through the analyzer's `_ => {}`,
-//! whose own comment says an empty list there means "nobody looked" rather than
-//! "nothing was lost" (#12022). The capability assertion above covers all five,
-//! because `collect_native_degradations` is backend-generic.
+//! The style-drop half covers all five native backends: XAML, SwiftUI, Compose,
+//! Qt and Flutter each populate `style_degradations`. The capability assertion
+//! above is independently backend-generic.
 
 use mosaic_package_artifact_builder::{
     analyze_package_degradations, Backend, BuildOptions, BuildProfile,
@@ -75,7 +73,8 @@ const NATIVE_BACKENDS: &[Backend] = &[
 /// suite also asserts no UNLISTED drop appears, so an entry is still required
 /// the moment one does -- including a `gap` on a `Box`, `Stack` or
 /// `HostScroll`, which really is discarded and really is still reported.
-const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[    // ---- Qt (#15245) ----
+const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
+    // ---- Qt (#15245) ----
     //
     // These became visible the moment Qt started reporting its drops in
     // #15245. They are PRE-EXISTING gaps, not regressions: this package has
@@ -89,6 +88,14 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[    // ---- Qt (#15245) ----
     // edges, so any longhand beyond the one it picks is lost.
     (Backend::Qt, "padding"),
     (Backend::Qt, "padding-bottom"),
+    // ---- Flutter (#12022) ----
+    // These pre-existing losses became measurable when Flutter gained drop
+    // reporting. Each pin is checked below and must disappear with its gap.
+    (Backend::Flutter, "color"),
+    (Backend::Flutter, "font-size"),
+    (Backend::Flutter, "font-weight"),
+    (Backend::Flutter, "padding"),
+    (Backend::Flutter, "padding-bottom"),
 ];
 
 fn package_root() -> PathBuf {

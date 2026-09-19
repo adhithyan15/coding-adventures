@@ -64,6 +64,7 @@
 //!   placeholder so the output type-checks. The package-resolver
 //!   integration is a follow-up.
 
+use std::cell::{Cell, RefCell};
 use std::collections::{HashMap, HashSet};
 use std::fmt::Write as _;
 
@@ -99,7 +100,10 @@ pub struct PipelineEmitResult {
 /// other backends.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum PipelineEmitError {
-    ComponentNameMismatch { mosmodel: String, moslayout: String },
+    ComponentNameMismatch {
+        mosmodel: String,
+        moslayout: String,
+    },
     UnsafeSlotName(String),
     UnsafeEmitName(String),
     UnknownPrimitive(String),
@@ -1248,7 +1252,10 @@ fn dart_literal_for_fixture(slot_type: &SlotType, fixture: &str) -> String {
                 }
                 Some(mosmodel_compiler::fixtures::ListFixture::TextRows(rows)) => format!(
                     "const <List<String>>[{}]",
-                    rows.iter().map(|row| strings(row)).collect::<Vec<_>>().join(", ")
+                    rows.iter()
+                        .map(|row| strings(row))
+                        .collect::<Vec<_>>()
+                        .join(", ")
                 ),
                 None => "const []".to_string(),
             }
@@ -2291,6 +2298,216 @@ pub fn host_table_has_native_semantics(host_table: &LayoutNode) -> bool {
 // Widget tree walker
 // =====================================================================
 
+thread_local! {
+    /// Property names the real emitter asked for, keyed by the layout-node
+    /// occurrence that was current when it asked. `None` means recording is
+    /// off, which is the normal emit path.
+    static STYLE_READS: RefCell<Option<HashMap<usize, HashSet<String>>>> =
+        const { RefCell::new(None) };
+    /// The node currently being lowered. Recursive emission temporarily
+    /// replaces this and restores its parent through [`StyleNodeScope`].
+    static CURRENT_STYLE_NODE: Cell<Option<usize>> = const { Cell::new(None) };
+    /// Authored base properties for every rendered, styled node occurrence.
+    /// An unused stylesheet part never enters this map and therefore is not
+    /// blamed on the emitter.
+    static STYLED_NODES: RefCell<Option<HashMap<usize, RecordedStyledNode>>> =
+        const { RefCell::new(None) };
+}
+
+/// One rendered node's authored base style, captured during a recorded emit.
+struct RecordedStyledNode {
+    part: String,
+    props: Vec<(String, String)>,
+}
+
+/// Arms style-read recording for one complete Flutter emit (#12022).
+///
+/// `Drop` disarms even if emission panics. Nesting is rejected in debug builds
+/// because it would hand the outer caller an empty recording -- precisely the
+/// silent zero this feature exists to remove.
+struct StyleReadRecorder;
+
+impl StyleReadRecorder {
+    fn arm() -> Self {
+        debug_assert!(
+            STYLE_READS.with(|reads| reads.borrow().is_none()),
+            "style-read recording is already armed; nesting would silently empty the outer recording",
+        );
+        STYLE_READS.with(|reads| *reads.borrow_mut() = Some(HashMap::new()));
+        STYLED_NODES.with(|nodes| *nodes.borrow_mut() = Some(HashMap::new()));
+        CURRENT_STYLE_NODE.with(|current| current.set(None));
+        Self
+    }
+
+    fn take_reads(&self) -> HashMap<usize, HashSet<String>> {
+        STYLE_READS
+            .with(|reads| reads.borrow_mut().take())
+            .unwrap_or_default()
+    }
+
+    fn take_nodes(&self) -> HashMap<usize, RecordedStyledNode> {
+        STYLED_NODES
+            .with(|nodes| nodes.borrow_mut().take())
+            .unwrap_or_default()
+    }
+}
+
+impl Drop for StyleReadRecorder {
+    fn drop(&mut self) {
+        STYLE_READS.with(|reads| *reads.borrow_mut() = None);
+        STYLED_NODES.with(|nodes| *nodes.borrow_mut() = None);
+        CURRENT_STYLE_NODE.with(|current| current.set(None));
+    }
+}
+
+/// Associates every style read made during one recursive lowering call with
+/// the exact layout-node occurrence being emitted.
+struct StyleNodeScope {
+    previous: Option<usize>,
+    armed: bool,
+}
+
+impl StyleNodeScope {
+    fn enter(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Self {
+        let armed = STYLE_READS.with(|reads| reads.borrow().is_some());
+        if !armed {
+            return Self {
+                previous: None,
+                armed: false,
+            };
+        }
+
+        let id = node as *const LayoutNode as usize;
+        let previous = CURRENT_STYLE_NODE.with(|current| current.replace(Some(id)));
+        if let Some(part) = node.part_name.as_deref() {
+            if let Some(raw) = part_styles.get(part) {
+                let mut props: Vec<(String, String)> = parse_style_props(raw).into_iter().collect();
+                props.sort();
+                STYLED_NODES.with(|nodes| {
+                    if let Some(nodes) = nodes.borrow_mut().as_mut() {
+                        nodes.insert(
+                            id,
+                            RecordedStyledNode {
+                                part: part.to_string(),
+                                props,
+                            },
+                        );
+                    }
+                });
+            }
+        }
+        Self {
+            previous,
+            armed: true,
+        }
+    }
+}
+
+impl Drop for StyleNodeScope {
+    fn drop(&mut self) {
+        if self.armed {
+            CURRENT_STYLE_NODE.with(|current| current.set(self.previous));
+        }
+    }
+}
+
+/// Record that the lowering asked the current node about `name`.
+///
+/// The question is recorded even when the property is absent: asking proves
+/// that this code path knows how to consume that property when authored.
+fn record_style_read(name: &str) {
+    let Some(node) = CURRENT_STYLE_NODE.with(Cell::get) else {
+        return;
+    };
+    STYLE_READS.with(|reads| {
+        if let Some(reads) = reads.borrow_mut().as_mut() {
+            reads.entry(node).or_default().insert(name.to_string());
+        }
+    });
+}
+
+/// Read one style property through the recording seam.
+fn style_prop<'a>(props: &'a HashMap<String, String>, name: &str) -> Option<&'a String> {
+    record_style_read(name);
+    props.get(name)
+}
+
+/// Test one style property through the same recording seam.
+fn has_style_prop(props: &HashMap<String, String>, name: &str) -> bool {
+    record_style_read(name);
+    props.contains_key(name)
+}
+
+/// One authored style property the Flutter emitter never consumed.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DroppedStyleProperty {
+    pub part: String,
+    pub name: String,
+    pub value: String,
+    pub reason: String,
+}
+
+/// Every authored base property that Flutter's real lowering drops (#12022).
+///
+/// This runs the emitter with read recording armed. It does not compare the
+/// stylesheet against a parallel list of supported names: a newly added
+/// lowering stops its property being reported the moment it reads through
+/// [`style_prop`] or [`has_style_prop`].
+///
+/// A part reused by multiple nodes is reported when any occurrence fails to
+/// consume the property. A stylesheet part unused by the layout is omitted.
+pub fn dropped_style_properties(
+    interface: &MosmodelComponent,
+    layout: &LayoutDef,
+    style: &StyleDef,
+) -> Vec<DroppedStyleProperty> {
+    let recorder = StyleReadRecorder::arm();
+    let emitted = from_pipeline(interface, layout, style);
+    let reads = recorder.take_reads();
+    let nodes = recorder.take_nodes();
+    drop(recorder);
+    if emitted.is_err() {
+        return Vec::new();
+    }
+
+    let mut out = Vec::new();
+    let mut seen = HashSet::new();
+    for (id, node) in nodes {
+        let asked = reads.get(&id);
+        for (name, value) in node.props {
+            if asked.is_some_and(|names| names.contains(&name)) {
+                continue;
+            }
+            if !seen.insert((node.part.clone(), name.clone())) {
+                continue;
+            }
+            out.push(DroppedStyleProperty {
+                reason: flutter_drop_reason(&name).to_string(),
+                part: node.part.clone(),
+                name,
+                value,
+            });
+        }
+    }
+    out.sort_by(|a, b| (&a.part, &a.name).cmp(&(&b.part, &b.name)));
+    out
+}
+
+fn flutter_drop_reason(name: &str) -> &'static str {
+    match name {
+        "box-shadow" => {
+            "Flutter does not lower CSS box-shadow directly; authored depth must use the Mosaic elevation token"
+        }
+        "flex-grow" | "flex-shrink" | "flex" => {
+            "Flutter expresses flex on the parent-owned child wrapper, and this widget occurrence did not consume it"
+        }
+        "position" | "top" | "right" | "bottom" | "left" => {
+            "Flutter positioning requires a Stack parent and a Positioned child wrapper, which this occurrence does not build"
+        }
+        _ => "the Flutter emitter has no lowering for this property on this widget occurrence",
+    }
+}
+
 /// Lower a moslayout node + its children to a Dart widget expression.
 /// Returns the source already indented to `indent` columns; the
 /// caller decides whether to wrap the expression in a return or pass
@@ -2314,6 +2531,7 @@ fn emit_widget_tree(
     emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
+    let _style_scope = StyleNodeScope::enter(node, part_styles);
     let mut out = emit_widget_tree_inner(node, indent, part_styles, component, emits, ctx)?;
     let pad = " ".repeat(indent);
 
@@ -2365,7 +2583,8 @@ fn emit_widget_tree(
 fn part_max_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<String> {
     let part = node.part_name.as_deref()?;
     let props = part_styles.get(part)?;
-    let raw = parse_style_props(props).get("max-width")?.clone();
+    let parsed = parse_style_props(props);
+    let raw = style_prop(&parsed, "max-width")?.clone();
     let trimmed = raw.trim().trim_end_matches("px").trim();
     // Emit the PARSED value, not the authored text. This validated one
     // thing and emitted another -- the classic shape where a guard proves
@@ -2392,14 +2611,12 @@ fn part_max_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> O
 /// opacity : $opacity-disabled ; }` is what UI57's disabled treatment is built
 /// on -- so the layers are folded into a conditional expression, base value
 /// last as the fallback.
-fn part_opacity_expr(
-    node: &LayoutNode,
-    part_styles: &HashMap<String, String>,
-) -> Option<String> {
+fn part_opacity_expr(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<String> {
     let part = node.part_name.as_deref()?;
-    let base = part_styles
-        .get(part)
-        .and_then(|props| parse_style_props(props).get("opacity").cloned());
+    let base = part_styles.get(part).and_then(|props| {
+        let parsed = parse_style_props(props);
+        style_prop(&parsed, "opacity").cloned()
+    });
     let layers: Vec<(String, String)> = collect_cell_state_layers(node, part, part_styles)
         .into_iter()
         .filter_map(|layer| layer.opacity.clone().map(|value| (layer.cond, value)))
@@ -2702,8 +2919,8 @@ fn emit_container(
         .as_deref()
         .map(|part| collect_cell_state_layers(node, part, part_styles))
         .unwrap_or_default();
-    let width = props.get("width").and_then(|v| fixed_pixel_length(v));
-    let height = props.get("height").and_then(|v| fixed_pixel_length(v));
+    let width = style_prop(&props, "width").and_then(|v| fixed_pixel_length(v));
+    let height = style_prop(&props, "height").and_then(|v| fixed_pixel_length(v));
     let elevation = elevation_tier(&props);
     // Is THIS container's own width bounded? A non-flex child of a `Row` is
     // measured with an unbounded max width, and that unboundedness passes
@@ -2842,7 +3059,7 @@ fn emit_container(
     )?;
 
     let gap = if matches!(widget, "Row" | "Column") {
-        props.get("gap").map(|value| parse_pixel_value(value))
+        style_prop(&props, "gap").map(|value| parse_pixel_value(value))
     } else {
         None
     };
@@ -2880,14 +3097,11 @@ fn emit_container(
     // part's own `width`/`height` via this wrapper gives the subtree a
     // real, bounded size again, matching what `Box`'s decoration path
     // already does for the same properties.
-    let base_background = props
-        .get("background")
-        .or_else(|| props.get("background-color"))
+    let base_background = style_prop(&props, "background")
+        .or_else(|| style_prop(&props, "background-color"))
         .and_then(|value| css_color_to_dart(value));
-    let base_foreground = props
-        .get("color")
-        .and_then(|value| css_color_to_dart(value));
-    let base_padding = props.get("padding").map(|value| parse_pixel_value(value));
+    let base_foreground = style_prop(&props, "color").and_then(|value| css_color_to_dart(value));
+    let base_padding = style_prop(&props, "padding").map(|value| parse_pixel_value(value));
     let has_background =
         base_background.is_some() || state_layers.iter().any(|layer| layer.background.is_some());
     let has_foreground =
@@ -2958,8 +3172,7 @@ fn emit_container(
                     base_background.as_deref().unwrap_or("Colors.transparent"),
                 )
             });
-            let decoration =
-                flutter_decoration_parts(&props, &state_layers, background, elevation);
+            let decoration = flutter_decoration_parts(&props, &state_layers, background, elevation);
             wrapper_args.push(format!(
                 "decoration: BoxDecoration({})",
                 decoration.join(", ")
@@ -3098,10 +3311,7 @@ fn emit_paired_children(
                 expanded = format!("Expanded(flex: {flex}, child: {sub})");
                 &expanded
             }
-            None if ctx.direct_row_child
-                && ctx.direct_row_accepts_flex
-                && child.tag == "Text" =>
-            {
+            None if ctx.direct_row_child && ctx.direct_row_accepts_flex && child.tag == "Text" => {
                 flexible = format!("Flexible(child: {sub})");
                 &flexible
             }
@@ -3601,7 +3811,7 @@ fn style_to_container_args(style_props: &str) -> String {
 /// reviewer flagged the substitution as unproven, and proving the two matched
 /// today would not stop them drifting tomorrow.
 fn flutter_has_border(props: &HashMap<String, String>, layers: &[StateLayer]) -> bool {
-    props.get("border-width").is_some()
+    style_prop(props, "border-width").is_some()
         || layers.iter().any(|layer| layer.border_width.is_some())
         // UI79 -- a part whose ONLY border is per-edge must still take the
         // decoration path, or the edge reaches nothing.
@@ -3619,8 +3829,8 @@ fn flutter_decoration_parts(
         parts.push(format!("color: {background}"));
     }
 
-    let base_border_color = props.get("border-color").and_then(|v| css_color_to_dart(v));
-    let base_border_width = props.get("border-width").map(|v| parse_pixel_value(v));
+    let base_border_color = style_prop(props, "border-color").and_then(|v| css_color_to_dart(v));
+    let base_border_width = style_prop(props, "border-width").map(|v| parse_pixel_value(v));
     if flutter_has_border(props, layers) {
         let border_color = state_color_expr(
             layers,
@@ -3647,9 +3857,8 @@ fn flutter_decoration_parts(
     // and everything above it in any debug or profile build -- and
     // `per_edge_border_expr` emits exactly that non-uniform form.
     if per_edge_border_expr(props).is_none() {
-        if let Some(radius) = props
-            .get("border-radius")
-            .and_then(|value| strict_pixel_length(value))
+        if let Some(radius) =
+            style_prop(props, "border-radius").and_then(|value| strict_pixel_length(value))
         {
             parts.push(format!("borderRadius: BorderRadius.circular({radius})"));
         }
@@ -3684,13 +3893,12 @@ fn flutter_padding_edges(props: &HashMap<String, String>) -> Option<[String; 4]>
         "padding-right",
         "padding-bottom",
     ];
-    let short = props.get("padding");
-    if short.is_none() && !EDGES.iter().any(|name| props.contains_key(*name)) {
+    let short = style_prop(props, "padding");
+    if short.is_none() && !EDGES.iter().any(|name| has_style_prop(props, name)) {
         return None;
     }
     let resolve = |name: &str| {
-        props
-            .get(name)
+        style_prop(props, name)
             .or(short)
             .map(|value| parse_pixel_value(value))
             .unwrap_or_else(|| "0".to_string())
@@ -3726,6 +3934,12 @@ fn style_prop_to_container_arg(prop: &str) -> Option<String> {
     let (key, value) = prop.split_once(':')?;
     let key = key.trim();
     let value = value.trim().trim_matches('"');
+    if matches!(
+        key,
+        "padding" | "width" | "height" | "min-height" | "background-color" | "color"
+    ) {
+        record_style_read(key);
+    }
     match key {
         "padding" => Some(format!(
             "padding: const EdgeInsets.all({})",
@@ -3788,7 +4002,13 @@ fn parse_pixel_value(s: &str) -> String {
         // source from a legal input, which is precisely what the tests
         // here assert can never happen. Normalise the sign rather than
         // leave the invariant weaker than it reads.
-        .map(|f| if f == 0.0 { "0".to_string() } else { format!("{f}") })
+        .map(|f| {
+            if f == 0.0 {
+                "0".to_string()
+            } else {
+                format!("{f}")
+            }
+        })
         .unwrap_or_else(|| "0".to_string())
 }
 
@@ -3909,15 +4129,14 @@ fn css_color_to_dart(s: &str) -> Option<String> {
 /// `border-width`/`border-color` shorthand -- the CSS cascade answer, and
 /// UI79 §3 rule 3.
 ///
-/// `border-<edge>-style` is not consulted: only `solid` is drawn, and
-/// Flutter has no style-drop reporting at all (#12022), so a `dashed`
-/// here is lost silently. That is a gap in the REPORT, not in this
-/// lowering, and it is recorded rather than worked around.
+/// `border-<edge>-style` is not consulted: only `solid` is drawn. The
+/// occurrence-aware style recorder therefore reports a `dashed` style as a
+/// drop instead of allowing this lowering gap to stay silent (#12022).
 fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
     let edges = ["top", "right", "bottom", "left"];
     if !edges
         .iter()
-        .any(|e| m.contains_key(&format!("border-{e}-width")))
+        .any(|e| has_style_prop(m, &format!("border-{e}-width")))
     {
         return None;
     }
@@ -3933,15 +4152,14 @@ fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
     // this comment said skipping "lets the shorthand cascade in" -- it does
     // not. The `continue` happens BEFORE the `fallback_w` lookup, so the
     // shorthand cascades only to edges that authored no width at all.)
-    let authored_negative =
-        |v: Option<&String>| v.is_some_and(|v| v.trim_start().starts_with('-'));
-    let fallback_w = (!authored_negative(m.get("border-width")))
-        .then(|| m.get("border-width").map(|v| parse_pixel_value(v)))
+    let authored_negative = |v: Option<&String>| v.is_some_and(|v| v.trim_start().starts_with('-'));
+    let fallback_w = (!authored_negative(style_prop(m, "border-width")))
+        .then(|| style_prop(m, "border-width").map(|v| parse_pixel_value(v)))
         .flatten();
-    let fallback_c = m.get("border-color").and_then(|v| css_color_to_dart(v));
+    let fallback_c = style_prop(m, "border-color").and_then(|v| css_color_to_dart(v));
     let mut sides = Vec::new();
     for e in edges {
-        let raw = m.get(&format!("border-{e}-width"));
+        let raw = style_prop(m, &format!("border-{e}-width"));
         // `BorderSide` asserts `width >= 0` at RUNTIME, so a negative
         // authored width type-checks and then throws in the app, taking
         // out the widget and everything above it. Skip the edge instead.
@@ -3952,8 +4170,7 @@ fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
             .map(|v| parse_pixel_value(v))
             .or_else(|| fallback_w.clone());
         let Some(w) = w else { continue };
-        let c = m
-            .get(&format!("border-{e}-color"))
+        let c = style_prop(m, &format!("border-{e}-color"))
             .and_then(|v| css_color_to_dart(v))
             .or_else(|| fallback_c.clone())
             .unwrap_or_else(|| "Colors.transparent".to_string());
@@ -3989,18 +4206,18 @@ fn parse_style_props(style_props: &str) -> HashMap<String, String> {
 /// inline form in [`emit_container`].
 fn part_has_decoration(style_props: &str) -> bool {
     let m = parse_style_props(style_props);
-    m.contains_key("border-width")
-        || m.contains_key("border-color")
+    has_style_prop(&m, "border-width")
+        || has_style_prop(&m, "border-color")
         // UI79 -- without this a part whose ONLY border is per-edge takes
         // the lightweight inline path, which cannot express a decoration
         // at all, and the edge reaches nothing.
         || per_edge_border_expr(&m).is_some()
-        || m.contains_key("background")
-        || m.contains_key("background-color")
-        || m.contains_key("height")
-        || m.contains_key("width")
-        || m.contains_key("text-align")
-        || m.contains_key("elevation")
+        || has_style_prop(&m, "background")
+        || has_style_prop(&m, "background-color")
+        || has_style_prop(&m, "height")
+        || has_style_prop(&m, "width")
+        || has_style_prop(&m, "text-align")
+        || has_style_prop(&m, "elevation")
 }
 
 /// The two `elevation` tiers (UI41, issue #12028 item 1), mapped to a
@@ -4067,7 +4284,7 @@ impl ElevationTier {
 /// — matches every other backend's `part_elevation_tier`; no real part
 /// conditions elevation on a state today.
 fn elevation_tier(props: &HashMap<String, String>) -> Option<ElevationTier> {
-    match props.get("elevation").map(String::as_str) {
+    match style_prop(props, "elevation").map(String::as_str) {
         Some("raised") => Some(ElevationTier::Raised),
         Some("overlay") => Some(ElevationTier::Overlay),
         _ => None,
@@ -4086,9 +4303,17 @@ fn elevation_tier(props: &HashMap<String, String>) -> Option<ElevationTier> {
 /// `ctx.direct_row_child` before using this (mirrors how `emit_host_input`
 /// already threads that same flag for its own row-specific behaviour).
 fn part_flex_grow(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<u32> {
+    // This helper is also called by the PARENT while deciding whether to wrap
+    // a child in `Expanded`. Attribute that read to the child occurrence, not
+    // whichever parent scope happened to be active.
+    let _style_scope = StyleNodeScope::enter(node, part_styles);
     let part = node.part_name.as_deref()?;
     let style_props = part_styles.get(part)?;
-    let value = parse_style_props(style_props).get("flex-grow")?.trim().parse::<f64>().ok()?;
+    let parsed = parse_style_props(style_props);
+    let value = style_prop(&parsed, "flex-grow")?
+        .trim()
+        .parse::<f64>()
+        .ok()?;
     Some(value.round().max(0.0) as u32)
 }
 
@@ -4129,15 +4354,14 @@ fn state_layer(cond: String, style_props: &str) -> StateLayer {
     let m = parse_style_props(style_props);
     StateLayer {
         cond,
-        opacity: m.get("opacity").cloned(),
-        background: m
-            .get("background")
-            .or_else(|| m.get("background-color"))
+        opacity: style_prop(&m, "opacity").cloned(),
+        background: style_prop(&m, "background")
+            .or_else(|| style_prop(&m, "background-color"))
             .and_then(|v| css_color_to_dart(v)),
-        text_color: m.get("color").and_then(|v| css_color_to_dart(v)),
-        border_color: m.get("border-color").and_then(|v| css_color_to_dart(v)),
-        border_width: m.get("border-width").map(|v| parse_pixel_value(v)),
-        padding: m.get("padding").map(|v| parse_pixel_value(v)),
+        text_color: style_prop(&m, "color").and_then(|v| css_color_to_dart(v)),
+        border_color: style_prop(&m, "border-color").and_then(|v| css_color_to_dart(v)),
+        border_width: style_prop(&m, "border-width").map(|v| parse_pixel_value(v)),
+        padding: style_prop(&m, "padding").map(|v| parse_pixel_value(v)),
     }
 }
 
@@ -4258,26 +4482,26 @@ fn flutter_box_style(
     // explicit base `width`.
     if let (Some(slot), Some(idx)) = (ctx.column_widths_slot, ctx.cell_index) {
         args.push(format!("width: {slot}[{idx}]"));
-    } else if let Some(w) = base.get("width").and_then(|w| fixed_pixel_length(w)) {
+    } else if let Some(w) = style_prop(base, "width").and_then(|w| fixed_pixel_length(w)) {
         // #15213 -- `fixed_pixel_length`, not `parse_pixel_value`. A
         // relative length here became `width: 0` and collapsed the subtree;
         // declining leaves the child to size itself, which is what every
         // one of these parts wants from `width: 100%` anyway.
         args.push(format!("width: {w}"));
     }
-    if let Some(h) = base.get("height").and_then(|h| fixed_pixel_length(h)) {
+    if let Some(h) = style_prop(base, "height").and_then(|h| fixed_pixel_length(h)) {
         args.push(format!("height: {h}"));
     }
-    if let Some(min_height) = base.get("min-height") {
+    if let Some(min_height) = style_prop(base, "min-height") {
         args.push(format!(
             "constraints: const BoxConstraints(minHeight: {})",
             parse_pixel_value(min_height)
         ));
     }
-    if let Some(ta) = base.get("text-align") {
+    if let Some(ta) = style_prop(base, "text-align") {
         args.push(format!("alignment: {}", text_align_to_alignment(ta)));
     }
-    let base_padding = base.get("padding").map(|v| parse_pixel_value(v));
+    let base_padding = style_prop(base, "padding").map(|v| parse_pixel_value(v));
     let padding_edges = flutter_padding_edges(base);
     let layered_padding = layers.iter().any(|layer| layer.padding.is_some());
     if padding_edges.is_some() || layered_padding {
@@ -4306,17 +4530,15 @@ fn flutter_box_style(
     }
 
     // --- BoxDecoration: background (state-conditional) + border -------
-    let base_bg = base
-        .get("background")
-        .or_else(|| base.get("background-color"))
+    let base_bg = style_prop(base, "background")
+        .or_else(|| style_prop(base, "background-color"))
         .and_then(|v| css_color_to_dart(v));
     let bg_expr = state_color_expr(
         layers,
         |l| l.background.as_ref(),
         base_bg.as_deref().unwrap_or("null"),
     );
-    let deco_parts =
-        flutter_decoration_parts(base, layers, Some(bg_expr), elevation_tier(base));
+    let deco_parts = flutter_decoration_parts(base, layers, Some(bg_expr), elevation_tier(base));
     args.push(format!(
         "decoration: BoxDecoration({})",
         deco_parts.join(", ")
@@ -4328,8 +4550,7 @@ fn flutter_box_style(
     // inherited `color` (threaded via [`TableCtx`]), with the
     // per-state overrides folded on top. A `TextStyle` whose `color:`
     // is a runtime ternary can't be `const`.
-    let base_text = base
-        .get("color")
+    let base_text = style_prop(base, "color")
         .and_then(|v| css_color_to_dart(v))
         .or_else(|| ctx.sheet_text_color.map(str::to_string))
         .unwrap_or_else(|| "null".to_string());
@@ -4337,12 +4558,10 @@ fn flutter_box_style(
 
     // Font family / size: the part's own, else the sheet's (the
     // VisiCalc monospace 12px lives on the `sheet` part, not the cell).
-    let font_family = base
-        .get("font-family")
+    let font_family = style_prop(base, "font-family")
         .map(String::as_str)
         .or(ctx.sheet_font_family);
-    let font_size = base
-        .get("font-size")
+    let font_size = style_prop(base, "font-size")
         .map(|v| parse_pixel_value(v))
         .or_else(|| ctx.sheet_font_size.map(str::to_string));
 
@@ -4378,8 +4597,7 @@ fn flutter_box_style(
     }) {
         inherited_parts.push(format!("fontFamily: {family}"));
     }
-    if let Some(size) = base
-        .get("font-size")
+    if let Some(size) = style_prop(base, "font-size")
         .and_then(|v| strict_pixel_length(v))
         .or_else(|| ctx.sheet_font_size.and_then(strict_pixel_length))
     {
@@ -4676,7 +4894,11 @@ fn emit_host_input(
     // argument and a second one is a Dart compile error.
     let hint = find_string_prop(node, "placeholder");
     if let Some(decoration) = host_input_decoration_arg(node, part_styles, hint) {
-        writeln!(out, "{input_pad}  decoration: InputDecoration({decoration}),").unwrap();
+        writeln!(
+            out,
+            "{input_pad}  decoration: InputDecoration({decoration}),"
+        )
+        .unwrap();
     }
     if let Some(text_style) = host_input_text_style_arg(node, part_styles) {
         writeln!(out, "{input_pad}  style: {text_style},").unwrap();
@@ -4807,9 +5029,13 @@ fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, Stri
     let Some(style) = part_styles.get(part) else {
         return false;
     };
-    parse_style_props(style).iter().any(|(name, value)| {
-        (name == "font" || name.starts_with("font-"))
-            && value.trim().eq_ignore_ascii_case("inherit")
+    let parsed = parse_style_props(style);
+    parsed.iter().any(|(name, value)| {
+        let is_font = name == "font" || name.starts_with("font-");
+        if is_font {
+            record_style_read(name);
+        }
+        is_font && value.trim().eq_ignore_ascii_case("inherit")
     })
 }
 
@@ -4870,7 +5096,7 @@ fn host_input_decoration_arg(
     // `isDense` matters as much as the padding itself: without it Material
     // enforces a 48dp minimum touch target that no `contentPadding` can
     // undercut, so a `padding: 0px` alone still leaves the row taller.
-    if let Some(padding) = props.get("padding") {
+    if let Some(padding) = style_prop(&props, "padding") {
         args.push("isDense: true".to_string());
         args.push(format!(
             "contentPadding: EdgeInsets.all({})",
@@ -4882,9 +5108,8 @@ fn host_input_decoration_arg(
         args.push(format!("border: {border}"));
     }
 
-    if let Some(fill) = props
-        .get("background")
-        .or_else(|| props.get("background-color"))
+    if let Some(fill) = style_prop(&props, "background")
+        .or_else(|| style_prop(&props, "background-color"))
         .and_then(|v| css_color_to_dart(v))
     {
         args.push("filled: true".to_string());
@@ -4916,9 +5141,9 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
         t == "none" || strict_pixel_length(t) == Some(0.0)
     }
 
-    let shorthand = props.get("border").map(|s| s.trim().to_string());
-    let width = props.get("border-width").map(|s| s.trim().to_string());
-    let style = props.get("border-style").map(|s| s.trim().to_string());
+    let shorthand = style_prop(props, "border").map(|s| s.trim().to_string());
+    let width = style_prop(props, "border-width").map(|s| s.trim().to_string());
+    let style = style_prop(props, "border-style").map(|s| s.trim().to_string());
 
     if style.as_deref() == Some("none")
         || width.as_deref().is_some_and(is_zero)
@@ -4930,8 +5155,7 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
     // `<width> solid <colour>`, the only multi-token form authored in this
     // repo. A shorthand naming a style this emitter cannot draw is left to
     // Material's default rather than approximated -- `dashed` silently
-    // becoming `solid` would be a worse lie than not lowering it, and
-    // Flutter has no style-drop reporting to record either choice (#12022).
+    // becoming `solid` would be a worse lie than deliberately declining it.
     let (side_width, side_color) = match shorthand.as_deref() {
         Some(text) => {
             if !text.split_whitespace().any(|t| t == "solid") {
@@ -4943,7 +5167,7 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
         }
         None => (
             width.as_deref().and_then(strict_pixel_length),
-            props.get("border-color").and_then(|v| css_color_to_dart(v)),
+            style_prop(props, "border-color").and_then(|v| css_color_to_dart(v)),
         ),
     };
     let side_width = side_width?;
@@ -4994,7 +5218,7 @@ fn host_input_text_style_arg(
         .unwrap_or_default();
 
     let mut fields: Vec<String> = Vec::new();
-    if let Some(color) = props.get("color").and_then(|v| css_color_to_dart(v)) {
+    if let Some(color) = style_prop(&props, "color").and_then(|v| css_color_to_dart(v)) {
         fields.push(format!("color: {color}"));
     }
     // `and_then`, NOT `map`. Routing this through `parse_pixel_value`'s
@@ -5004,13 +5228,13 @@ fn host_input_text_style_arg(
     // loud-to-silent trade as #15141's transparent brush, and the wrong
     // direction: dropping leaves the theme's size, which is visible and
     // merely unstyled.
-    if let Some(size) = props.get("font-size").and_then(|v| strict_pixel_length(v)) {
+    if let Some(size) = style_prop(&props, "font-size").and_then(|v| strict_pixel_length(v)) {
         fields.push(format!("fontSize: {size}"));
     }
     // Only the generic families Flutter resolves without a bundled asset.
     // A named family that is not registered silently falls back, so it is
     // dropped here rather than emitted as a string that means nothing.
-    if let Some(family) = props.get("font-family").and_then(|v| match v.trim() {
+    if let Some(family) = style_prop(&props, "font-family").and_then(|v| match v.trim() {
         "monospace" => Some("\"monospace\""),
         "serif" => Some("\"serif\""),
         "sans-serif" => Some("\"sans-serif\""),
@@ -5018,7 +5242,7 @@ fn host_input_text_style_arg(
     }) {
         fields.push(format!("fontFamily: {family}"));
     }
-    if let Some(weight) = props.get("font-weight").and_then(|v| match v.trim() {
+    if let Some(weight) = style_prop(&props, "font-weight").and_then(|v| match v.trim() {
         "bold" | "700" => Some("FontWeight.w700"),
         "600" => Some("FontWeight.w600"),
         "500" => Some("FontWeight.w500"),
@@ -5090,7 +5314,8 @@ fn emit_host_button(
     // an empty `label:` here leaves a button with no name at all (#15427).
     // A dynamic name therefore falls back to the visible label when it is
     // empty, and a literal "" counts as no name.
-    let dynamic_name = |name: String, visible: &str| format!("(({name}).isEmpty ? ({visible}) : ({name}))");
+    let dynamic_name =
+        |name: String, visible: &str| format!("(({name}).isEmpty ? ({visible}) : ({name}))");
     let visible_text: String = match find_prop_value(node, "label") {
         Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_dart_string(s)),
         Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
@@ -5109,7 +5334,9 @@ fn emit_host_button(
             validate_slot_or_field_name(&field)?;
             Some(dynamic_name(field, &visible_text))
         }
-        Some(LayoutPropValue::Expr(expr)) => Some(dynamic_name(expr.trim().to_string(), &visible_text)),
+        Some(LayoutPropValue::Expr(expr)) => {
+            Some(dynamic_name(expr.trim().to_string(), &visible_text))
+        }
         _ => None,
     };
     let label_expr: String = match find_prop_value(node, "label") {
@@ -5267,9 +5494,8 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
     let layers = collect_cell_state_layers(node, part, part_styles);
     let mut style_parts: Vec<String> = Vec::new();
 
-    let base_background = props
-        .get("background")
-        .or_else(|| props.get("background-color"))
+    let base_background = style_prop(&props, "background")
+        .or_else(|| style_prop(&props, "background-color"))
         .and_then(|v| css_color_to_dart(v));
     if base_background.is_some() || layers.iter().any(|layer| layer.background.is_some()) {
         let color = state_color_expr(
@@ -5279,7 +5505,7 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
         );
         style_parts.push(format!("backgroundColor: WidgetStatePropertyAll({color})"));
     }
-    let base_foreground = props.get("color").and_then(|v| css_color_to_dart(v));
+    let base_foreground = style_prop(&props, "color").and_then(|v| css_color_to_dart(v));
     if base_foreground.is_some() || layers.iter().any(|layer| layer.text_color.is_some()) {
         let color = state_color_expr(
             &layers,
@@ -5300,7 +5526,7 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
             tier.button_elevation()
         ));
     }
-    let base_padding = props.get("padding").map(|v| parse_pixel_value(v));
+    let base_padding = style_prop(&props, "padding").map(|v| parse_pixel_value(v));
     if base_padding.is_some() || layers.iter().any(|layer| layer.padding.is_some()) {
         if layers.iter().all(|layer| layer.padding.is_none()) {
             style_parts.push(format!(
@@ -5319,7 +5545,7 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
         }
     }
 
-    let base_border_color = props.get("border-color").and_then(|v| css_color_to_dart(v));
+    let base_border_color = style_prop(&props, "border-color").and_then(|v| css_color_to_dart(v));
     let border_color = (base_border_color.is_some()
         || layers.iter().any(|layer| layer.border_color.is_some()))
     .then(|| {
@@ -5329,7 +5555,7 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
             base_border_color.as_deref().unwrap_or("Colors.transparent"),
         )
     });
-    let base_border_width = props.get("border-width").map(|v| parse_pixel_value(v));
+    let base_border_width = style_prop(&props, "border-width").map(|v| parse_pixel_value(v));
     let border_width = (base_border_width.is_some()
         || layers.iter().any(|layer| layer.border_width.is_some()))
     .then(|| {
@@ -5339,7 +5565,7 @@ fn host_button_style_arg(node: &LayoutNode, part_styles: &HashMap<String, String
             base_border_width.as_deref().unwrap_or("0"),
         )
     });
-    let border_radius = props.get("border-radius").map(|v| parse_pixel_value(v));
+    let border_radius = style_prop(&props, "border-radius").map(|v| parse_pixel_value(v));
     let mut shape_args: Vec<String> = Vec::new();
     if let Some(radius) = border_radius {
         shape_args.push(format!("borderRadius: BorderRadius.circular({radius})"));
@@ -5442,7 +5668,10 @@ fn emit_host_checkbox(
         "/* no onToggle bound */".to_string()
     };
     let (value_expr, tristate_attr) = match checkbox_indeterminate_expr(node)? {
-        Some(cond) => (format!("{cond} ? null : {checked_expr}"), "tristate: true, "),
+        Some(cond) => (
+            format!("{cond} ? null : {checked_expr}"),
+            "tristate: true, ",
+        ),
         None => (checked_expr, ""),
     };
     let body = format!(
@@ -5777,10 +6006,10 @@ fn emit_host_progress_ring(
         .unwrap_or("");
     let m = parse_style_props(style_props);
     let mut sized_args = Vec::new();
-    if let Some(w) = m.get("width") {
+    if let Some(w) = style_prop(&m, "width") {
         sized_args.push(format!("width: {}", parse_pixel_value(w)));
     }
-    if let Some(h) = m.get("height") {
+    if let Some(h) = style_prop(&m, "height") {
         sized_args.push(format!("height: {}", parse_pixel_value(h)));
     }
     sized_args.push(format!(
@@ -5879,14 +6108,8 @@ fn emit_host_scroll(
         // Multi-child path. Use the paired walker so an `If`/`Else`
         // sibling pair (Cell-style conditionals inside a scroll viewport)
         // is consumed correctly.
-        let children = emit_paired_children(
-            &node.children,
-            base + 6,
-            part_styles,
-            component,
-            emits,
-            ctx,
-        )?;
+        let children =
+            emit_paired_children(&node.children, base + 6, part_styles, component, emits, ctx)?;
         format!(
             "{bpad}SingleChildScrollView(\n{dir}{bpad}  child: Column(\n{bpad}    children: [\n{children}{bpad}    ],\n{bpad}  ),\n{bpad})\n"
         )
@@ -5983,12 +6206,14 @@ fn emit_host_dialog(
     // `dismiss-on-backdrop: false` -> `barrierDismissible: false`.
     // Anything else (including unset) keeps Flutter's own default of
     // `true`, so no attribute is emitted at all.
-    let barrier_dismissible_attr =
-        if matches!(find_keyword_prop(node, "dismiss-on-backdrop"), Some("false")) {
-            format!("{inner_pad}barrierDismissible: false,\n")
-        } else {
-            String::new()
-        };
+    let barrier_dismissible_attr = if matches!(
+        find_keyword_prop(node, "dismiss-on-backdrop"),
+        Some("false")
+    ) {
+        format!("{inner_pad}barrierDismissible: false,\n")
+    } else {
+        String::new()
+    };
 
     // `onClose: emit: onX` -> dispatch closure. Optional: a dialog
     // with no onClose still opens and closes (backdrop-dismissible by
@@ -6562,9 +6787,9 @@ fn emit_host_table(
         .and_then(|p| part_styles.get(p).map(String::as_str))
         .map(parse_style_props)
         .unwrap_or_default();
-    let sheet_text_color = sheet_style.get("color").and_then(|v| css_color_to_dart(v));
-    let sheet_font_family = sheet_style.get("font-family").cloned();
-    let sheet_font_size = sheet_style.get("font-size").map(|v| parse_pixel_value(v));
+    let sheet_text_color = style_prop(&sheet_style, "color").and_then(|v| css_color_to_dart(v));
+    let sheet_font_family = style_prop(&sheet_style, "font-family").cloned();
+    let sheet_font_size = style_prop(&sheet_style, "font-size").map(|v| parse_pixel_value(v));
 
     let ctx = TableCtx {
         column_widths_slot: column_widths_slot.as_deref(),
@@ -7173,7 +7398,9 @@ fn format_props(props: &[StyleProp]) -> String {
 /// list<T>→List<dart-type-of-T>, etc.
 fn slot_type_to_dart(t: &SlotType) -> String {
     match t {
-        SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => "String".to_string(),
+        SlotType::Text | SlotType::Image | SlotType::Color | SlotType::OneOf(_) => {
+            "String".to_string()
+        }
         SlotType::Number => "double".to_string(),
         SlotType::Bool => "bool".to_string(),
         SlotType::Node => "Widget".to_string(),
@@ -7667,10 +7894,9 @@ fn path_paint(node: &LayoutNode, part_styles: &HashMap<String, String>) -> PathP
         .and_then(|p| part_styles.get(p).map(String::as_str))
         .unwrap_or("");
     let m = parse_style_props(style_props);
-    let fill = m.get("background").and_then(|v| css_color_to_dart(v));
-    let stroke = m.get("border-color").and_then(|v| css_color_to_dart(v));
-    let stroke_width = m
-        .get("border-width")
+    let fill = style_prop(&m, "background").and_then(|v| css_color_to_dart(v));
+    let stroke = style_prop(&m, "border-color").and_then(|v| css_color_to_dart(v));
+    let stroke_width = style_prop(&m, "border-width")
         .and_then(|v| parse_pixel_value(v).parse::<f64>().ok())
         .unwrap_or(0.0);
     PathPaint {
@@ -8426,7 +8652,9 @@ mod tests {
         );
         assert!(
             // An empty name falls back to the visible label (#15427).
-            out.contains("Semantics(label: ((item).isEmpty ? (item) : (item)), button: true, enabled:"),
+            out.contains(
+                "Semantics(label: ((item).isEmpty ? (item) : (item)), button: true, enabled:"
+            ),
             "expected HostButton accessible name to use the For expression, got:\n{out}"
         );
     }
@@ -8456,7 +8684,10 @@ mod tests {
                 LayoutPropValue::SlotRef("is-current".into()),
                 "selected: _mosaicTruthy(isCurrent)",
             ),
-            (LayoutPropValue::Keyword("flag".into()), "selected: _mosaicTruthy(flag)"),
+            (
+                LayoutPropValue::Keyword("flag".into()),
+                "selected: _mosaicTruthy(flag)",
+            ),
             (
                 LayoutPropValue::Expr("( i == selectedIndex )".into()),
                 "selected: _mosaicTruthy((( i == selectedIndex )))",
@@ -8479,7 +8710,10 @@ mod tests {
         let out = from_pipeline(&m, &layout("X", plain), &empty_style("X"))
             .unwrap()
             .output;
-        assert!(!out.contains("Semantics("), "absent selected must add nothing:\n{out}");
+        assert!(
+            !out.contains("Semantics("),
+            "absent selected must add nothing:\n{out}"
+        );
         assert!(!host_button_selected_is_native(&button(vec![selected(
             LayoutPropValue::Number(1.0)
         )])));
@@ -8808,8 +9042,7 @@ mod tests {
                 base: vec![
                     StyleProp {
                         name: "box-shadow".into(),
-                        value: "0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05)"
-                            .into(),
+                        value: "0 1px 2px rgba(60,45,25,.05), 0 4px 14px rgba(60,45,25,.05)".into(),
                     },
                     StyleProp {
                         name: "elevation".into(),
@@ -9741,7 +9974,10 @@ mod tests {
             out.contains("Checkbox(value: agreed, onChanged:"),
             "expected the plain two-state Checkbox to survive `indeterminate: false`, got:\n{out}"
         );
-        assert!(!out.contains("tristate"), "expected no tristate attribute, got:\n{out}");
+        assert!(
+            !out.contains("tristate"),
+            "expected no tristate attribute, got:\n{out}"
+        );
     }
 
     #[test]
@@ -9807,7 +10043,8 @@ mod tests {
         let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
         let expected_chain = "_mosaicTruthy(suspendSelected) ? \"suspend\" : (_mosaicTruthy(tagOnlySelected) ? \"tag-only\" : (null))";
         assert_eq!(
-            out.matches(&format!("groupValue: {expected_chain}")).count(),
+            out.matches(&format!("groupValue: {expected_chain}"))
+                .count(),
             2,
             "expected both radios to share the same groupValue chain, got:\n{out}"
         );
@@ -10410,7 +10647,10 @@ mod tests {
         ]))
         .expect("four edges");
         assert_eq!(all.matches("BorderSide(").count(), 4, "got: {all}");
-        assert!(all.contains("width: 2") && all.contains("width: 5"), "got: {all}");
+        assert!(
+            all.contains("width: 2") && all.contains("width: 5"),
+            "got: {all}"
+        );
 
         // An unauthored half falls back to the shorthand — the CSS
         // cascade answer (UI79 §3 rule 3).
@@ -10465,9 +10705,13 @@ mod tests {
                     vec![],
                 )],
             );
-            from_pipeline(&component("X", vec![], vec![]), &layout("X", root), &empty_style("X"))
-                .expect("emit scroll")
-                .output
+            from_pipeline(
+                &component("X", vec![], vec![]),
+                &layout("X", root),
+                &empty_style("X"),
+            )
+            .expect("emit scroll")
+            .output
         };
 
         // The default names no axis at all — Flutter's own default is
@@ -10635,7 +10879,9 @@ mod tests {
                 vec![],
             ),
         );
-        let out = from_pipeline(&m, &l, &empty_style("Host")).expect("ok").output;
+        let out = from_pipeline(&m, &l, &empty_style("Host"))
+            .expect("ok")
+            .output;
         assert!(
             !out.contains("not yet resolved"),
             "Input must not take the unresolved-component path, got:\n{out}"
@@ -10680,7 +10926,9 @@ mod tests {
                 vec![text_node("hello"), node_with("Row", vec![], vec![])],
             ),
         );
-        let out = from_pipeline(&m, &l, &empty_style("Host")).expect("ok").output;
+        let out = from_pipeline(&m, &l, &empty_style("Host"))
+            .expect("ok")
+            .output;
         assert!(
             !out.contains("not yet resolved"),
             "a placeholder leaked into a successful emit:\n{out}"
@@ -12676,11 +12924,7 @@ mod tests {
     /// what made it overflow.
     #[test]
     fn single_text_if_as_direct_row_child_emits_flexible() {
-        let m = component(
-            "Row1",
-            vec![slot("shown", SlotType::Bool, true)],
-            vec![],
-        );
+        let m = component("Row1", vec![slot("shown", SlotType::Bool, true)], vec![]);
         let style = StyleDef {
             component_name: "Row1".into(),
             parts: vec![],
@@ -12712,11 +12956,7 @@ mod tests {
     /// it never asked for.
     #[test]
     fn single_icon_if_as_direct_row_child_does_not_emit_flexible() {
-        let m = component(
-            "Row2",
-            vec![slot("shown", SlotType::Bool, true)],
-            vec![],
-        );
+        let m = component("Row2", vec![slot("shown", SlotType::Bool, true)], vec![]);
         let style = StyleDef {
             component_name: "Row2".into(),
             parts: vec![],
@@ -12788,7 +13028,10 @@ mod tests {
 
     /// `If ( when: <expr> ) { Text("yes") }`, for #15464.
     fn dollar_if_tree(when: &str) -> LayoutNode {
-        if_node(LayoutPropValue::Expr(when.to_string()), vec![text_node("yes")])
+        if_node(
+            LayoutPropValue::Expr(when.to_string()),
+            vec![text_node("yes")],
+        )
     }
 
     // ----- #15464: `$` in an Expr string literal is not interpolation -----
@@ -13550,7 +13793,10 @@ mod tests {
             "expected multiple children wrapped in a Column, got:\n{out}"
         );
         assert!(out.contains("\"One\""), "expected first child, got:\n{out}");
-        assert!(out.contains("\"Two\""), "expected second child, got:\n{out}");
+        assert!(
+            out.contains("\"Two\""),
+            "expected second child, got:\n{out}"
+        );
     }
 
     /// #13010's documented scope decision: `modal: false` is NOT
@@ -13619,7 +13865,9 @@ mod tests {
             ),
         );
         let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
-        let helper_count = out.matches("class _MosaicDialogHost extends StatefulWidget").count();
+        let helper_count = out
+            .matches("class _MosaicDialogHost extends StatefulWidget")
+            .count();
         assert_eq!(
             helper_count, 1,
             "expected the shared helper class exactly once, got {helper_count}:\n{out}"
@@ -13676,6 +13924,35 @@ mod tests {
             props: Vec::new(),
             children,
         }
+    }
+
+    #[test]
+    fn a_shared_part_is_dropped_when_any_node_occurrence_does_not_consume_it() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            node_with(
+                "Column",
+                vec![],
+                vec![
+                    flex_node_with_part("Box", "shared", vec![]),
+                    flex_node_with_part("Text", "shared", vec![]),
+                ],
+            ),
+        );
+        let s = style_with_part(
+            "X",
+            "shared",
+            vec![StyleProp {
+                name: "background-color".into(),
+                value: "#ff0000".into(),
+            }],
+        );
+
+        let drops = dropped_style_properties(&m, &l, &s);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].part, "shared");
+        assert_eq!(drops[0].name, "background-color");
     }
 
     // ====================================================================
@@ -13735,10 +14012,22 @@ mod tests {
             "X",
             "detail",
             vec![
-                StyleProp { name: "padding-top".into(), value: "15".into() },
-                StyleProp { name: "padding-right".into(), value: "16".into() },
-                StyleProp { name: "padding-bottom".into(), value: "17".into() },
-                StyleProp { name: "padding-left".into(), value: "47".into() },
+                StyleProp {
+                    name: "padding-top".into(),
+                    value: "15".into(),
+                },
+                StyleProp {
+                    name: "padding-right".into(),
+                    value: "16".into(),
+                },
+                StyleProp {
+                    name: "padding-bottom".into(),
+                    value: "17".into(),
+                },
+                StyleProp {
+                    name: "padding-left".into(),
+                    value: "47".into(),
+                },
             ],
         );
         let out = from_pipeline(&m, &l, &s).expect("ok").output;
@@ -13761,8 +14050,14 @@ mod tests {
             "X",
             "detail",
             vec![
-                StyleProp { name: "padding".into(), value: "8".into() },
-                StyleProp { name: "padding-left".into(), value: "32".into() },
+                StyleProp {
+                    name: "padding".into(),
+                    value: "8".into(),
+                },
+                StyleProp {
+                    name: "padding-left".into(),
+                    value: "32".into(),
+                },
             ],
         );
         let out = from_pipeline(&m, &l, &s).expect("ok").output;
@@ -13787,7 +14082,10 @@ mod tests {
         let s = style_with_part(
             "X",
             "detail",
-            vec![StyleProp { name: "padding".into(), value: "8".into() }],
+            vec![StyleProp {
+                name: "padding".into(),
+                value: "8".into(),
+            }],
         );
         let out = from_pipeline(&m, &l, &s).expect("ok").output;
         assert!(out.contains("EdgeInsets.all(8)"), "got:\n{out}");
@@ -14089,7 +14387,11 @@ mod tests {
             node_with(
                 "Box",
                 vec![],
-                vec![path_node("dot", "circle", &[("cx", 4.0), ("cy", 4.0), ("r", 4.0)])],
+                vec![path_node(
+                    "dot",
+                    "circle",
+                    &[("cx", 4.0), ("cy", 4.0), ("r", 4.0)],
+                )],
             ),
         );
         let r = from_pipeline(&m, &l, &empty_style("X")).expect("ok");
@@ -14142,7 +14444,9 @@ mod tests {
             "got:\n{}",
             r.output
         );
-        assert!(r.output.contains("class _MosaicLinePainter extends CustomPainter"));
+        assert!(r
+            .output
+            .contains("class _MosaicLinePainter extends CustomPainter"));
     }
 
     #[test]
@@ -14175,7 +14479,9 @@ mod tests {
             "got:\n{}",
             r.output
         );
-        assert!(r.output.contains("class _MosaicCurvePainter extends CustomPainter"));
+        assert!(r
+            .output
+            .contains("class _MosaicCurvePainter extends CustomPainter"));
     }
 
     #[test]
@@ -14187,8 +14493,16 @@ mod tests {
                 "Stack",
                 vec![],
                 vec![
-                    path_node("a", "line", &[("x1", 0.0), ("y1", 0.0), ("x2", 1.0), ("y2", 1.0)]),
-                    path_node("b", "line", &[("x1", 2.0), ("y1", 2.0), ("x2", 3.0), ("y2", 3.0)]),
+                    path_node(
+                        "a",
+                        "line",
+                        &[("x1", 0.0), ("y1", 0.0), ("x2", 1.0), ("y2", 1.0)],
+                    ),
+                    path_node(
+                        "b",
+                        "line",
+                        &[("x1", 2.0), ("y1", 2.0), ("x2", 3.0), ("y2", 3.0)],
+                    ),
                 ],
             ),
         );
@@ -14533,13 +14847,20 @@ mod tests {
     /// escaped so it cannot interpolate.
     #[test]
     fn list_fixtures_render_as_const_dart_lists() {
-        let rows = mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(Box::new(mosmodel_compiler::ListInnerType::Text))));
-        let text = mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::Text));
+        let rows =
+            mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(
+                Box::new(mosmodel_compiler::ListInnerType::Text),
+            )));
+        let text =
+            mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::Text));
         assert_eq!(
             dart_literal_for_fixture(&rows, r#"[["Board","$x"]]"#),
             r#"const <List<String>>[<String>["Board", "\$x"]]"#
         );
-        assert_eq!(dart_literal_for_fixture(&text, r#"["a"]"#), r#"const <String>["a"]"#);
+        assert_eq!(
+            dart_literal_for_fixture(&text, r#"["a"]"#),
+            r#"const <String>["a"]"#
+        );
         assert_eq!(dart_literal_for_fixture(&rows, r#"["flat"]"#), "const []");
     }
 
@@ -14623,7 +14944,6 @@ mod tests {
             "got:\n{main_dart}"
         );
     }
-
 
     // ====================================================================
     // max-width -- #14851. Flutter was the LAST of the eight backends to
@@ -14747,11 +15067,7 @@ mod tests {
             "authored opacity must reach the tree, got:\n{}",
             r.output
         );
-        assert!(
-            r.output.contains("opacity: 0.5,"),
-            "got:\n{}",
-            r.output
-        );
+        assert!(r.output.contains("opacity: 0.5,"), "got:\n{}", r.output);
     }
 
     #[test]
@@ -14779,14 +15095,14 @@ mod tests {
         // `state disabled { opacity : ... }` is the shape UI57's disabled
         // treatment is actually built from -- the toolkit authors it on eight
         // controls, and before #14708 every one of them dropped silently.
-        let m = component(
-            "Ctl",
-            vec![slot("disabled", SlotType::Bool, false)],
-            vec![],
-        );
+        let m = component("Ctl", vec![slot("disabled", SlotType::Bool, false)], vec![]);
         let l = layout(
             "Ctl",
-            box_part("control", vec![state_when("disabled", "( disabled )")], vec![]),
+            box_part(
+                "control",
+                vec![state_when("disabled", "( disabled )")],
+                vec![],
+            ),
         );
         let mut s = style_with_part("Ctl", "control", vec![]);
         s.parts[0].states = vec![mosstyle_compiler::StateStyle {
@@ -14807,11 +15123,7 @@ mod tests {
              doubles so the conditional cannot infer `num`, got:\n{}",
             r.output
         );
-        assert!(
-            r.output.contains("Opacity("),
-            "got:\n{}",
-            r.output
-        );
+        assert!(r.output.contains("Opacity("), "got:\n{}", r.output);
     }
 
     #[test]
@@ -14871,11 +15183,12 @@ mod tests {
                 vec![],
             ),
         );
-        let out = from_pipeline(&m, &l, &empty_style("F")).expect("emit ok").output;
+        let out = from_pipeline(&m, &l, &empty_style("F"))
+            .expect("emit ok")
+            .output;
         assert!(out.contains("enabled: !("), "got:\n{out}");
         assert!(!out.contains("readOnly:"), "got:\n{out}");
     }
-
 }
 
 // =====================================================================
@@ -14989,7 +15302,10 @@ mod host_input_style_tests {
         )
         .expect("a styled part yields a decoration");
         assert!(got.contains("isDense: true"), "got: {got}");
-        assert!(got.contains("contentPadding: EdgeInsets.all(0)"), "got: {got}");
+        assert!(
+            got.contains("contentPadding: EdgeInsets.all(0)"),
+            "got: {got}"
+        );
         assert!(got.contains("border: InputBorder.none"), "got: {got}");
     }
 
@@ -15006,8 +15322,14 @@ mod host_input_style_tests {
         )
         .expect("decoration");
         assert!(got.contains("hintText: \"Enter a value\""), "got: {got}");
-        assert!(got.contains("contentPadding: EdgeInsets.all(10)"), "got: {got}");
-        assert!(got.contains("fillColor: const Color(0xFF14221E)"), "got: {got}");
+        assert!(
+            got.contains("contentPadding: EdgeInsets.all(10)"),
+            "got: {got}"
+        );
+        assert!(
+            got.contains("fillColor: const Color(0xFF14221E)"),
+            "got: {got}"
+        );
         assert!(got.contains("filled: true"), "got: {got}");
         assert!(
             !got.contains("InputDecoration"),
@@ -15026,7 +15348,10 @@ mod host_input_style_tests {
             props: Vec::new(),
             children: Vec::new(),
         };
-        assert_eq!(host_input_decoration_arg(&node, &HashMap::new(), None), None);
+        assert_eq!(
+            host_input_decoration_arg(&node, &HashMap::new(), None),
+            None
+        );
         assert_eq!(
             host_input_decoration_arg(&node, &HashMap::new(), Some("Due")).as_deref(),
             Some("hintText: \"Due\"")
@@ -15041,7 +15366,10 @@ mod host_input_style_tests {
     fn font_and_colour_lower_onto_the_text_style() {
         let got = host_input_text_style_arg(
             &input_with_part("f"),
-            &styles("f", "color: #e3eee4; font-size: 13px; font-family: monospace"),
+            &styles(
+                "f",
+                "color: #e3eee4; font-size: 13px; font-family: monospace",
+            ),
         )
         .expect("text style");
         assert_eq!(
@@ -15079,7 +15407,11 @@ mod host_input_style_tests {
             "`font: inherit` must be recognised as asking to inherit"
         );
         // and the shorthand's long forms
-        for authored in ["font-family: inherit", "font-size: inherit", "font: INHERIT"] {
+        for authored in [
+            "font-family: inherit",
+            "font-size: inherit",
+            "font: INHERIT",
+        ] {
             let mut s2 = HashMap::new();
             s2.insert("cell-editor".to_string(), authored.to_string());
             assert!(inherits_enclosing_font(&node, &s2), "`{authored}`");
@@ -15683,7 +16015,10 @@ mod negative_length_tests {
         m2.insert("border-color".to_string(), "#ABCDEF".to_string());
         let got = per_edge_border_expr(&m2).expect("the top edge survives");
         assert!(got.contains("top: BorderSide"), "got: {got}");
-        assert!(!got.contains("bottom:"), "the negative edge must be skipped: {got}");
+        assert!(
+            !got.contains("bottom:"),
+            "the negative edge must be skipped: {got}"
+        );
         assert!(!got.contains("width: -"), "got: {got}");
 
         // a negative SHORTHAND must not cascade a negative into an edge
@@ -15724,8 +16059,18 @@ mod relative_length_tests {
     #[test]
     fn a_relative_length_is_declined_not_zeroed() {
         for relative in [
-            "100vh", "100vw", "60vh", "max-content", "min-content", "auto",
-            "fit-content", "12rem", "1.5em", "calc(100% - 10px)", "100%", "-5px",
+            "100vh",
+            "100vw",
+            "60vh",
+            "max-content",
+            "min-content",
+            "auto",
+            "fit-content",
+            "12rem",
+            "1.5em",
+            "calc(100% - 10px)",
+            "100%",
+            "-5px",
         ] {
             assert_eq!(
                 fixed_pixel_length(relative),
@@ -15903,6 +16248,9 @@ mod relative_length_tests {
             !out.contains("width: 0"),
             "a percentage width must not collapse the box: {out}"
         );
-        assert!(out.contains("0xFF123456"), "the background still applies: {out}");
+        assert!(
+            out.contains("0xFF123456"),
+            "the background still applies: {out}"
+        );
     }
 }

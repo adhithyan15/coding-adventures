@@ -46,12 +46,10 @@ Mutation-tested, not assumed green: a `flex-wrap` added to a light stylesheet
 now fails with `SwiftUI (light)` and `Xaml (light)` naming the property and the
 reason.
 
-**What the style half does not cover.** Only XAML, SwiftUI and Compose populate
-`style_degradations`; Qt and Flutter fall through the analyzer's catch-all arm,
-whose own comment says an empty list there means "nobody looked" rather than
-"nothing was lost" (#12022). The capability assertion covers all five, because
-`collect_native_degradations` is backend-generic. An earlier draft of this entry
-said "every backend" of both halves; security review caught it.
+The style half now covers all five native backends. Qt gained real lowering-read
+recording in #15245 and Flutter in #12022; their measured pre-existing losses
+are pinned by backend/property, and the inverse-ratchet test rejects stale pins
+as those gaps close.
 
 
 - Turned the deck list into a table. `deck-names : list<text>` became

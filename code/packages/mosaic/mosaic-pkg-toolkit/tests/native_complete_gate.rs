@@ -103,6 +103,17 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::Qt, "font-size"),
     (Backend::Qt, "height"),
     (Backend::Qt, "width"),
+    // Flutter gained reporting in #12022 and exposed these pre-existing
+    // control-decoration and typography losses. The inverse-ratchet test
+    // below requires every pin to be removed when the emitter learns it.
+    (Backend::Flutter, "background"),
+    (Backend::Flutter, "border-color"),
+    (Backend::Flutter, "border-radius"),
+    (Backend::Flutter, "border-width"),
+    (Backend::Flutter, "color"),
+    (Backend::Flutter, "font-size"),
+    (Backend::Flutter, "font-weight"),
+    (Backend::Flutter, "padding"),
 ];
 
 fn is_allowed_style_drop(backend: Backend, property: &str) -> bool {
@@ -265,11 +276,9 @@ fn no_allowed_style_drop_has_silently_been_fixed() {
     let stale: Vec<String> = ALLOWED_STYLE_DROPS
         .iter()
         .filter(|(backend, property)| {
-            !observed
-                .iter()
-                .any(|(seen_backend, seen_property)| {
-                    seen_backend == backend && seen_property == property
-                })
+            !observed.iter().any(|(seen_backend, seen_property)| {
+                seen_backend == backend && seen_property == property
+            })
         })
         .map(|(backend, property)| format!("  {backend:?}: {property}"))
         .collect();
