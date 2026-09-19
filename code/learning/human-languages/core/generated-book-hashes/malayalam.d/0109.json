@@ -1,0 +1,11 @@
+{
+  "language": "malayalam",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:87972ea7c5aa4c10",
+  "lessonIds": [
+    "ML-C109-neither-here",
+    "ML-C109-neither-so",
+    "ML-R109-neither-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch109-neither.tex"
+}
