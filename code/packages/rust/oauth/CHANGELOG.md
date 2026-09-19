@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added an explicit OpenID Connect RFC 8628 initiation boundary that requires
+  the exact `openid` scope, includes an independent 256-bit nonce from injected
+  entropy in the audited request, and retains that nonce as non-cloneable
+  zeroizing provider/client/trace-bound state beside the validated device
+  authorization response.
 - Added a consuming no-clone ID-token evidence split that leaves the remaining
   access/refresh credential bundle intact for custody after a separate audited
   identity proof.

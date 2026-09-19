@@ -1,11 +1,12 @@
 //! RFC 8628 device authorization and caller-driven polling primitives.
 
 use super::{
-    audited, audited_with_outcome, json_nesting_within_limit, render_secret_form, valid_uri_text,
-    validate_client_id, validate_scopes, Audited, AuthorizationServerMetadata,
-    ConfigurationViolation, OAuthAuditAction, OAuthAuditOutcome, OAuthError, OAuthTraceId,
-    ProviderConfig, ProviderId, ProviderTokenError, TokenResponse, TokenResponseContext,
-    TokenResponseFormat, TokenResponseViolation, MAX_ENDPOINT_BYTES, MAX_JSON_NESTING,
+    audited, audited_with_outcome, base64_url_no_pad, json_nesting_within_limit,
+    render_secret_form, valid_uri_text, validate_client_id, validate_scopes, Audited,
+    AuthorizationServerMetadata, ConfigurationViolation, EntropySource, OAuthAuditAction,
+    OAuthAuditOutcome, OAuthError, OAuthTraceId, OpenIdAuthorizationNonce, ProviderConfig,
+    ProviderId, ProviderTokenError, TokenResponse, TokenResponseContext, TokenResponseFormat,
+    TokenResponseViolation, ENTROPY_BYTES, MAX_ENDPOINT_BYTES, MAX_JSON_NESTING,
 };
 use crate::token::{decode_token_response_inner, zeroize_json};
 use coding_adventures_bounded_json::{JsonNumber, JsonValue};
@@ -163,6 +164,72 @@ impl Debug for DeviceAuthorizationRequest {
             .field("endpoint", &"<redacted>")
             .field("token_endpoint", &"<redacted>")
             .field("form_body", &"<redacted>")
+            .finish()
+    }
+}
+
+/// Audited OIDC device request plus its opaque, transaction-specific nonce.
+///
+/// The request may be sent through an authorized transport while the nonce
+/// remains owned by this value. Binding the decoded response consumes both and
+/// yields the only state accepted by a later ID-token identity proof.
+#[must_use = "publish the audit event and retain the device request plus nonce"]
+pub struct OpenIdDeviceAuthorizationRequest {
+    request: DeviceAuthorizationRequest,
+    nonce: OpenIdAuthorizationNonce,
+}
+
+impl OpenIdDeviceAuthorizationRequest {
+    /// Return the provider identity bound to the request and nonce.
+    pub fn provider(&self) -> &ProviderId {
+        self.request.provider()
+    }
+
+    /// Return the trace shared by request, polling state, and nonce proof.
+    pub const fn trace(&self) -> OAuthTraceId {
+        self.request.trace()
+    }
+
+    /// Borrow the exact device request for an authorized transport.
+    pub const fn request(&self) -> &DeviceAuthorizationRequest {
+        &self.request
+    }
+
+    /// Bind a response decoder to this exact device request.
+    pub fn response_context(&self) -> DeviceAuthorizationResponseContext {
+        self.request.response_context()
+    }
+
+    /// Consume the request and bind one decoded response to its retained nonce.
+    pub fn bind_response(
+        self,
+        authorization: DeviceAuthorization,
+    ) -> Result<OpenIdDeviceAuthorization, OAuthError> {
+        let polling = authorization.polling();
+        if polling.provider != self.request.provider
+            || polling.trace != self.request.trace
+            || polling.client_id != self.request.client_id
+            || self.nonce.provider() != &self.request.provider
+            || self.nonce.trace() != self.request.trace
+            || self.nonce.client_id() != self.request.client_id
+        {
+            return Err(OAuthError::InvalidDeviceAuthorizationResponse(
+                DeviceAuthorizationResponseViolation::Binding,
+            ));
+        }
+        Ok(OpenIdDeviceAuthorization {
+            authorization,
+            nonce: self.nonce,
+        })
+    }
+}
+
+impl Debug for OpenIdDeviceAuthorizationRequest {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("OpenIdDeviceAuthorizationRequest")
+            .field("request", &self.request)
+            .field("nonce", &self.nonce)
             .finish()
     }
 }
@@ -444,6 +511,47 @@ pub struct DeviceAuthorization {
     polling: DevicePollingSession,
 }
 
+/// Validated OIDC device authorization plus its one-use verification nonce.
+#[must_use = "retain the polling state and nonce for the later ID-token proof"]
+pub struct OpenIdDeviceAuthorization {
+    authorization: DeviceAuthorization,
+    nonce: OpenIdAuthorizationNonce,
+}
+
+impl OpenIdDeviceAuthorization {
+    /// Borrow the user-facing device verification data.
+    pub fn verification(&self) -> &DeviceVerification {
+        self.authorization.verification()
+    }
+
+    /// Borrow the opaque polling state without exposing its device code.
+    pub fn polling(&self) -> &DevicePollingSession {
+        self.authorization.polling()
+    }
+
+    /// Transfer display data, polling state, and nonce without cloning secrets.
+    pub fn into_parts(
+        self,
+    ) -> (
+        DeviceVerification,
+        DevicePollingSession,
+        OpenIdAuthorizationNonce,
+    ) {
+        let (verification, polling) = self.authorization.into_parts();
+        (verification, polling, self.nonce)
+    }
+}
+
+impl Debug for OpenIdDeviceAuthorization {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("OpenIdDeviceAuthorization")
+            .field("authorization", &self.authorization)
+            .field("nonce", &self.nonce)
+            .finish()
+    }
+}
+
 impl DeviceAuthorization {
     /// Borrow the data the host may present to the user.
     pub fn verification(&self) -> &DeviceVerification {
@@ -474,6 +582,8 @@ impl Debug for DeviceAuthorization {
 /// Closed structural reason a device authorization response was rejected.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DeviceAuthorizationResponseViolation {
+    /// The decoded response did not match the retained OIDC request and nonce.
+    Binding,
     /// The HTTP response was not exactly a successful `200` response.
     Status,
     /// The response did not declare the JSON media type.
@@ -496,20 +606,50 @@ pub fn prepare_device_authorization(
     requested_scopes: &[&str],
     trace: OAuthTraceId,
 ) -> Audited<DeviceAuthorizationRequest> {
+    let result = prepare_device_authorization_inner(profile, requested_scopes, trace, None);
+    audited(
+        profile.provider.clone(),
+        trace,
+        OAuthAuditAction::DeviceAuthorizationPrepare,
+        result,
+    )
+}
+
+/// Prepare an RFC 8628 OpenID Connect device request with a fresh nonce.
+///
+/// The requested scopes must contain the exact case-sensitive `openid` value.
+/// Caller-injected entropy supplies an independent 256-bit nonce that is added
+/// to the zeroizing request body and returned separately with exact provider,
+/// client, and trace binding for a later ID-token proof.
+pub fn prepare_openid_device_authorization<E: EntropySource>(
+    profile: &DeviceAuthorizationProfile,
+    requested_scopes: &[&str],
+    trace: OAuthTraceId,
+    entropy: &mut E,
+) -> Audited<OpenIdDeviceAuthorizationRequest> {
     let result = (|| {
         validate_scopes(requested_scopes)?;
-        let scope = requested_scopes.join(" ");
-        Ok(DeviceAuthorizationRequest {
+        if !requested_scopes.contains(&"openid") {
+            return Err(OAuthError::InvalidConfiguration(
+                ConfigurationViolation::Scope,
+            ));
+        }
+        let mut random = Zeroizing::new([0_u8; ENTROPY_BYTES]);
+        entropy.fill(random.as_mut_slice())?;
+        let nonce_value = Zeroizing::new(base64_url_no_pad(random.as_slice()));
+        let request = prepare_device_authorization_inner(
+            profile,
+            requested_scopes,
+            trace,
+            Some(nonce_value.as_str()),
+        )?;
+        let nonce = OpenIdAuthorizationNonce {
             provider: profile.provider.clone(),
             trace,
             client_id: profile.client_id.clone(),
-            endpoint: profile.device_authorization_endpoint.clone(),
-            token_endpoint: profile.token_endpoint.clone(),
-            form_body: render_secret_form([
-                ("client_id", profile.client_id.as_str()),
-                ("scope", scope.as_str()),
-            ]),
-        })
+            value: nonce_value,
+        };
+        Ok(OpenIdDeviceAuthorizationRequest { request, nonce })
     })();
     audited(
         profile.provider.clone(),
@@ -517,6 +657,31 @@ pub fn prepare_device_authorization(
         OAuthAuditAction::DeviceAuthorizationPrepare,
         result,
     )
+}
+
+fn prepare_device_authorization_inner(
+    profile: &DeviceAuthorizationProfile,
+    requested_scopes: &[&str],
+    trace: OAuthTraceId,
+    openid_nonce: Option<&str>,
+) -> Result<DeviceAuthorizationRequest, OAuthError> {
+    validate_scopes(requested_scopes)?;
+    let scope = requested_scopes.join(" ");
+    let mut fields = vec![
+        ("client_id", profile.client_id.as_str()),
+        ("scope", scope.as_str()),
+    ];
+    if let Some(nonce) = openid_nonce {
+        fields.push(("nonce", nonce));
+    }
+    Ok(DeviceAuthorizationRequest {
+        provider: profile.provider.clone(),
+        trace,
+        client_id: profile.client_id.clone(),
+        endpoint: profile.device_authorization_endpoint.clone(),
+        token_endpoint: profile.token_endpoint.clone(),
+        form_body: render_secret_form(fields),
+    })
 }
 
 /// Decode a bounded RFC 8628 device authorization response.
@@ -844,6 +1009,29 @@ mod tests {
         }
     }
 
+    struct CountingEntropy {
+        bytes: [u8; ENTROPY_BYTES],
+        calls: usize,
+    }
+
+    impl CountingEntropy {
+        fn ascending() -> Self {
+            let mut bytes = [0_u8; ENTROPY_BYTES];
+            for (index, byte) in bytes.iter_mut().enumerate() {
+                *byte = index as u8;
+            }
+            Self { bytes, calls: 0 }
+        }
+    }
+
+    impl EntropySource for CountingEntropy {
+        fn fill(&mut self, destination: &mut [u8]) -> Result<(), OAuthError> {
+            self.calls += 1;
+            destination.copy_from_slice(&self.bytes[..destination.len()]);
+            Ok(())
+        }
+    }
+
     fn trace() -> OAuthTraceId {
         OAuthTraceId::new([9; 16])
     }
@@ -956,6 +1144,109 @@ mod tests {
         let context = request.response_context();
         assert_eq!(context.provider().as_str(), "fixture");
         assert_eq!(context.trace(), trace());
+    }
+
+    #[test]
+    fn openid_device_authorization_retains_one_exact_nonce_binding() {
+        let mut entropy = CountingEntropy::ascending();
+        let audited = prepare_openid_device_authorization(
+            &profile(),
+            &["openid", "files.read"],
+            trace(),
+            &mut entropy,
+        );
+        assert_eq!(
+            audited.audit().action(),
+            OAuthAuditAction::DeviceAuthorizationPrepare
+        );
+        assert_eq!(audited.audit().outcome(), OAuthAuditOutcome::Succeeded);
+        assert_eq!(entropy.calls, 1);
+        let request = audited.publish_then_release(&mut Sink::default()).unwrap();
+        let expected_nonce = base64_url_no_pad(&(0_u8..32).collect::<Vec<_>>());
+        assert_eq!(request.provider().as_str(), "fixture");
+        assert_eq!(request.trace(), trace());
+        assert_eq!(
+            request.request().form_body(),
+            format!("client_id=public%2Fclient&scope=openid%20files.read&nonce={expected_nonce}")
+        );
+        let authorization = decode_device_authorization_response(
+            request.response_context(),
+            200,
+            "application/json",
+            Zeroizing::new(
+                br#"{"device_code":"device-secret","user_code":"ABCD","verification_uri":"https://login.example/activate","expires_in":900}"#.to_vec(),
+            ),
+        )
+        .publish_then_release(&mut Sink::default())
+        .unwrap();
+        let authorization = request.bind_response(authorization).unwrap();
+        assert_eq!(authorization.polling().provider().as_str(), "fixture");
+        assert_eq!(authorization.polling().trace(), trace());
+        assert_eq!(authorization.verification().user_code(), "ABCD");
+        let debug = format!("{authorization:?}");
+        assert!(!debug.contains(&expected_nonce));
+        assert!(!debug.contains("public/client"));
+        let (_, _, nonce) = authorization.into_parts();
+        assert_eq!(nonce.provider().as_str(), "fixture");
+        assert_eq!(nonce.client_id(), "public/client");
+        assert_eq!(nonce.trace(), trace());
+        assert_eq!(nonce.into_value().as_str(), expected_nonce);
+    }
+
+    #[test]
+    fn openid_device_authorization_rejects_scope_and_cross_request_binding() {
+        let mut entropy = CountingEntropy::ascending();
+        let audited = prepare_openid_device_authorization(
+            &profile(),
+            &["OpenID", "files.read"],
+            trace(),
+            &mut entropy,
+        );
+        assert_eq!(
+            audited.audit().outcome(),
+            OAuthAuditOutcome::Failed(crate::OAuthFailureClass::InvalidInput)
+        );
+        assert_eq!(
+            audited
+                .publish_then_release(&mut Sink::default())
+                .unwrap_err(),
+            OAuthError::InvalidConfiguration(ConfigurationViolation::Scope)
+        );
+        assert_eq!(entropy.calls, 0);
+
+        let request = prepare_openid_device_authorization(
+            &profile(),
+            &["openid"],
+            trace(),
+            &mut CountingEntropy::ascending(),
+        )
+        .publish_then_release(&mut Sink::default())
+        .unwrap();
+        let foreign_profile = DeviceAuthorizationProfile {
+            provider: ProviderId::new("fixture").unwrap(),
+            device_authorization_endpoint: "https://login.example/device".to_owned(),
+            token_endpoint: "https://login.example/token".to_owned(),
+            client_id: "other-client".to_owned(),
+        };
+        let foreign_request = prepare_device_authorization(&foreign_profile, &["openid"], trace())
+            .publish_then_release(&mut Sink::default())
+            .unwrap();
+        let foreign_authorization = decode_device_authorization_response(
+            foreign_request.response_context(),
+            200,
+            "application/json",
+            Zeroizing::new(
+                br#"{"device_code":"other-secret","user_code":"WXYZ","verification_uri":"https://login.example/activate","expires_in":900}"#.to_vec(),
+            ),
+        )
+        .publish_then_release(&mut Sink::default())
+        .unwrap();
+        assert_eq!(
+            request.bind_response(foreign_authorization).unwrap_err(),
+            OAuthError::InvalidDeviceAuthorizationResponse(
+                DeviceAuthorizationResponseViolation::Binding
+            )
+        );
     }
 
     #[test]

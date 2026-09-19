@@ -324,7 +324,16 @@ The delivery order is:
    boundary; only the opaque storage revision is released, while continuation
    outcomes access neither the injected wall clock nor credential storage.
    Account identity and key selection remain caller-owned. These boundaries
-   add no sleep or concrete network authority.
+   add no sleep or concrete network authority. An explicit OpenID Connect
+   device-initiation prerequisite now requires the exact case-sensitive
+   `openid` scope, obtains an independent 256-bit nonce from caller-injected
+   entropy, includes that nonce in the audited device-authorization request,
+   and returns it as non-cloneable zeroizing provider/client/trace-bound state
+   beside the validated verification and polling state. Registered profile
+   binding is checked before entropy or transport access. This adds no identity
+   verifier or account-key selection yet; it prepares a later authorized poll
+   to cross the existing audited ID-token proof boundary without accepting a
+   caller-invented or replay-ambiguous nonce.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
    before any socket is opened.
