@@ -120,6 +120,15 @@ authority-derived opaque account key selects custody. Missing or rejected
 evidence reaches no credential store, while concrete policy loading,
 verification algorithms, clock, transport, and storage remain injected or
 separate.
+The public exchange can also load that exact identity policy through an opaque
+provider-bound verification context. The retained public profile, client,
+token endpoint, context, nonce, and trace are checked before policy-source,
+transport, clock, verifier, or custody access. Static policy loading then feeds
+the existing separately audited public exchange, identity proof, credential
+release, and opaque-key custody gates. Only the credential revision is
+released; no decoded policy, identity evidence, account identifier, or storage
+key is caller-selected, and no concrete provider data, verifier, network,
+clock, storage, or signing algorithm is enabled.
 Public-client profiles now have corresponding refresh-token and
 access-token-only detach boundaries without acquiring an authentication secret
 or signer. The exact opaque account key selects the registered public `none`
