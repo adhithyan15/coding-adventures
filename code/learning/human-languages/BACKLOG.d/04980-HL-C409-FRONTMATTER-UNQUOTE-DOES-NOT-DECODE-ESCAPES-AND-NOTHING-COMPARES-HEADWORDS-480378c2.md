@@ -1,8 +1,20 @@
-## HL-C409 — `unquote()` does not decode escapes, and no check compares a headword against anything
+## HL-C410 — `unquote()` does not decode escapes, and no check compares a headword against anything
 
-**Status: OPEN.** Found by security review of the Malayalam punctuation chapter,
-after the defect had already passed validate, all twelve gates, the full suite,
-a strict book compile and the LaTeX warning scanner.
+**Status: CLOSED (2026-09-19).** Renumbered from HL-C409 after the Malayalam A1
+reading repair merged with that id. Found by security review of the Malayalam
+punctuation chapter, after the defect had already passed validate, all twelve
+gates, the full suite, a strict book compile and the LaTeX warning scanner.
+
+`frontmatter.ts` now rejects a double-quoted `headword`, `romanization`, `gloss`
+or `concept_tag` containing a backslash and names single quotes as the repair.
+Those are the literal identity fields measured by the zero-debt sweep and the
+ones that can reach generated learner-facing artifacts. Prose-only fields stay
+compatible with the repository's deliberately tiny YAML dialect: several
+etymology hooks intentionally use Markdown's `\*` escape. Focused tests pin the
+rejection, the single-quoted alternative and that compatibility boundary, while
+the integration suite loads all **7,186** lessons through the guarded parser.
+The 245 real-YAML incompatibilities remain the separately described migration
+below; they were not smuggled into this zero-debt guard.
 
 **The defect.** `ML-W108-quotation` was written with the YAML-documented escape:
 

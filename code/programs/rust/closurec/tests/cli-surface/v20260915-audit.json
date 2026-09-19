@@ -1,0 +1,600 @@
+{
+  "schema_version": 1,
+  "upstream_source": {
+    "project": "google/closure-compiler",
+    "release": "v20260915",
+    "commit_sha": "10ca677aff381d2c2e6e1b254ba32861e503173d",
+    "path": "src/com/google/javascript/jscomp/CommandLineRunner.java",
+    "git_blob_sha1": "8f3967499d8793d4f7a79b414428366a4796df67",
+    "size_bytes": 87726,
+    "sha256": "153d1bf4d285f3a40ef032acb36b77b9798b87e53da26de212014f68641203c7",
+    "extracted_surface_sha256": "a7d2346f5ad4bbe77acfe8bc176065d08ea3a8fa9ceb4ee4d05ade68644c8947"
+  },
+  "local_spec_path": "cli.spec.json",
+  "local_spec_sha256": "b1b17cee8e5838190e44338394a0e9743dc33b1e8100c786043a51297d5539c9",
+  "counts": {
+    "upstream_options": 102,
+    "upstream_aliases": 7,
+    "local_spec_flags": 112,
+    "direct_upstream_flags": 100,
+    "generated_flags": 2,
+    "local_extensions": 11,
+    "deprecated_aliases": 1,
+    "unsupported_upstream_flags": 0,
+    "unsupported_upstream_aliases": 4
+  },
+  "upstream_options": [
+    {
+      "name": "allow_dynamic_import",
+      "aliases": []
+    },
+    {
+      "name": "angular_pass",
+      "aliases": []
+    },
+    {
+      "name": "apply_input_source_maps",
+      "aliases": []
+    },
+    {
+      "name": "assume_function_wrapper",
+      "aliases": []
+    },
+    {
+      "name": "assume_no_prototype_method_enumeration",
+      "aliases": []
+    },
+    {
+      "name": "assume_static_inheritance_is_not_used",
+      "aliases": []
+    },
+    {
+      "name": "browser_featureset_year",
+      "aliases": []
+    },
+    {
+      "name": "browser_resolver_prefix_replacements",
+      "aliases": []
+    },
+    {
+      "name": "charset",
+      "aliases": []
+    },
+    {
+      "name": "checks_only",
+      "aliases": [
+        "--checks-only"
+      ]
+    },
+    {
+      "name": "chrome_pass",
+      "aliases": []
+    },
+    {
+      "name": "chunk",
+      "aliases": []
+    },
+    {
+      "name": "chunk_output_path_prefix",
+      "aliases": []
+    },
+    {
+      "name": "chunk_output_type",
+      "aliases": []
+    },
+    {
+      "name": "chunk_wrapper",
+      "aliases": []
+    },
+    {
+      "name": "compilation_level",
+      "aliases": [
+        "-O"
+      ]
+    },
+    {
+      "name": "conformance_configs",
+      "aliases": []
+    },
+    {
+      "name": "continue_after_errors",
+      "aliases": []
+    },
+    {
+      "name": "create_renaming_reports",
+      "aliases": []
+    },
+    {
+      "name": "create_source_map",
+      "aliases": []
+    },
+    {
+      "name": "debug",
+      "aliases": []
+    },
+    {
+      "name": "define",
+      "aliases": [
+        "--D",
+        "-D"
+      ]
+    },
+    {
+      "name": "dependency_mode",
+      "aliases": []
+    },
+    {
+      "name": "dynamic_import_alias",
+      "aliases": []
+    },
+    {
+      "name": "emit_use_strict",
+      "aliases": []
+    },
+    {
+      "name": "entry_point",
+      "aliases": []
+    },
+    {
+      "name": "env",
+      "aliases": []
+    },
+    {
+      "name": "error_format",
+      "aliases": []
+    },
+    {
+      "name": "expected_diagnostics",
+      "aliases": []
+    },
+    {
+      "name": "export_local_property_definitions",
+      "aliases": []
+    },
+    {
+      "name": "externs",
+      "aliases": []
+    },
+    {
+      "name": "extra_annotation_name",
+      "aliases": []
+    },
+    {
+      "name": "filename_to_restore_from",
+      "aliases": []
+    },
+    {
+      "name": "filename_to_save_to",
+      "aliases": []
+    },
+    {
+      "name": "flagfile",
+      "aliases": []
+    },
+    {
+      "name": "force_inject_library",
+      "aliases": []
+    },
+    {
+      "name": "formatting",
+      "aliases": []
+    },
+    {
+      "name": "generate_exports",
+      "aliases": []
+    },
+    {
+      "name": "help",
+      "aliases": []
+    },
+    {
+      "name": "help_markdown",
+      "aliases": []
+    },
+    {
+      "name": "hide_warnings_for",
+      "aliases": []
+    },
+    {
+      "name": "incremental_check_mode",
+      "aliases": []
+    },
+    {
+      "name": "inject_libraries",
+      "aliases": []
+    },
+    {
+      "name": "instrument_for_coverage_option",
+      "aliases": []
+    },
+    {
+      "name": "instrument_mapping_report",
+      "aliases": []
+    },
+    {
+      "name": "isolate_polyfills",
+      "aliases": []
+    },
+    {
+      "name": "isolation_mode",
+      "aliases": []
+    },
+    {
+      "name": "j2cl_pass",
+      "aliases": []
+    },
+    {
+      "name": "js",
+      "aliases": []
+    },
+    {
+      "name": "js_module_root",
+      "aliases": []
+    },
+    {
+      "name": "js_output_file",
+      "aliases": []
+    },
+    {
+      "name": "jscomp_dev_mode",
+      "aliases": [
+        "--dev_mode"
+      ]
+    },
+    {
+      "name": "jscomp_error",
+      "aliases": []
+    },
+    {
+      "name": "jscomp_off",
+      "aliases": []
+    },
+    {
+      "name": "jscomp_warning",
+      "aliases": []
+    },
+    {
+      "name": "json_streams",
+      "aliases": []
+    },
+    {
+      "name": "jszip",
+      "aliases": []
+    },
+    {
+      "name": "language_in",
+      "aliases": []
+    },
+    {
+      "name": "language_out",
+      "aliases": []
+    },
+    {
+      "name": "logging_level",
+      "aliases": []
+    },
+    {
+      "name": "module_resolution",
+      "aliases": []
+    },
+    {
+      "name": "num_parallel_threads",
+      "aliases": []
+    },
+    {
+      "name": "output_chunk_dependencies",
+      "aliases": []
+    },
+    {
+      "name": "output_manifest",
+      "aliases": []
+    },
+    {
+      "name": "output_wrapper",
+      "aliases": []
+    },
+    {
+      "name": "output_wrapper_file",
+      "aliases": []
+    },
+    {
+      "name": "package_json_entry_names",
+      "aliases": []
+    },
+    {
+      "name": "parse_inline_source_maps",
+      "aliases": []
+    },
+    {
+      "name": "polymer_version",
+      "aliases": []
+    },
+    {
+      "name": "preserve_type_annotations",
+      "aliases": []
+    },
+    {
+      "name": "print_ast",
+      "aliases": []
+    },
+    {
+      "name": "print_source_after_each_pass",
+      "aliases": []
+    },
+    {
+      "name": "print_tree",
+      "aliases": []
+    },
+    {
+      "name": "print_tree_json",
+      "aliases": []
+    },
+    {
+      "name": "process_closure_primitives",
+      "aliases": []
+    },
+    {
+      "name": "process_common_js_modules",
+      "aliases": []
+    },
+    {
+      "name": "production_instrumentation_array_name",
+      "aliases": []
+    },
+    {
+      "name": "property_map_input_file",
+      "aliases": []
+    },
+    {
+      "name": "property_renaming_report",
+      "aliases": []
+    },
+    {
+      "name": "remove_j2cl_asserts",
+      "aliases": []
+    },
+    {
+      "name": "rename_prefix_namespace",
+      "aliases": []
+    },
+    {
+      "name": "rename_variable_prefix",
+      "aliases": []
+    },
+    {
+      "name": "renaming",
+      "aliases": []
+    },
+    {
+      "name": "rewrite_polyfills",
+      "aliases": []
+    },
+    {
+      "name": "segment_of_compilation_to_run",
+      "aliases": []
+    },
+    {
+      "name": "source_map_format",
+      "aliases": []
+    },
+    {
+      "name": "source_map_include_content",
+      "aliases": []
+    },
+    {
+      "name": "source_map_input",
+      "aliases": []
+    },
+    {
+      "name": "source_map_location_mapping",
+      "aliases": []
+    },
+    {
+      "name": "strict_mode_input",
+      "aliases": []
+    },
+    {
+      "name": "summary_detail_level",
+      "aliases": []
+    },
+    {
+      "name": "third_party",
+      "aliases": []
+    },
+    {
+      "name": "tracer_mode",
+      "aliases": []
+    },
+    {
+      "name": "translations_file",
+      "aliases": []
+    },
+    {
+      "name": "translations_project",
+      "aliases": []
+    },
+    {
+      "name": "typed_ast_output_file",
+      "aliases": []
+    },
+    {
+      "name": "use_types_for_optimization",
+      "aliases": []
+    },
+    {
+      "name": "variable_map_input_file",
+      "aliases": []
+    },
+    {
+      "name": "variable_renaming_report",
+      "aliases": []
+    },
+    {
+      "name": "version",
+      "aliases": []
+    },
+    {
+      "name": "warning_level",
+      "aliases": [
+        "-W"
+      ]
+    },
+    {
+      "name": "warnings_allowlist_file",
+      "aliases": [
+        "--warnings_whitelist_file"
+      ]
+    }
+  ],
+  "classification": {
+    "direct_upstream_flags": [
+      "allow_dynamic_import",
+      "angular_pass",
+      "apply_input_source_maps",
+      "assume_function_wrapper",
+      "assume_no_prototype_method_enumeration",
+      "assume_static_inheritance_is_not_used",
+      "browser_featureset_year",
+      "browser_resolver_prefix_replacements",
+      "charset",
+      "checks_only",
+      "chrome_pass",
+      "chunk",
+      "chunk_output_path_prefix",
+      "chunk_output_type",
+      "chunk_wrapper",
+      "compilation_level",
+      "conformance_configs",
+      "continue_after_errors",
+      "create_renaming_reports",
+      "create_source_map",
+      "debug",
+      "define",
+      "dependency_mode",
+      "dynamic_import_alias",
+      "emit_use_strict",
+      "entry_point",
+      "env",
+      "error_format",
+      "expected_diagnostics",
+      "export_local_property_definitions",
+      "externs",
+      "extra_annotation_name",
+      "filename_to_restore_from",
+      "filename_to_save_to",
+      "flagfile",
+      "force_inject_library",
+      "formatting",
+      "generate_exports",
+      "help_markdown",
+      "hide_warnings_for",
+      "incremental_check_mode",
+      "inject_libraries",
+      "instrument_for_coverage_option",
+      "instrument_mapping_report",
+      "isolate_polyfills",
+      "isolation_mode",
+      "j2cl_pass",
+      "js",
+      "js_module_root",
+      "js_output_file",
+      "jscomp_dev_mode",
+      "jscomp_error",
+      "jscomp_off",
+      "jscomp_warning",
+      "json_streams",
+      "jszip",
+      "language_in",
+      "language_out",
+      "logging_level",
+      "module_resolution",
+      "num_parallel_threads",
+      "output_chunk_dependencies",
+      "output_manifest",
+      "output_wrapper",
+      "output_wrapper_file",
+      "package_json_entry_names",
+      "parse_inline_source_maps",
+      "polymer_version",
+      "preserve_type_annotations",
+      "print_ast",
+      "print_source_after_each_pass",
+      "print_tree",
+      "print_tree_json",
+      "process_closure_primitives",
+      "process_common_js_modules",
+      "production_instrumentation_array_name",
+      "property_map_input_file",
+      "property_renaming_report",
+      "remove_j2cl_asserts",
+      "rename_prefix_namespace",
+      "rename_variable_prefix",
+      "renaming",
+      "rewrite_polyfills",
+      "segment_of_compilation_to_run",
+      "source_map_format",
+      "source_map_include_content",
+      "source_map_input",
+      "source_map_location_mapping",
+      "strict_mode_input",
+      "summary_detail_level",
+      "third_party",
+      "tracer_mode",
+      "translations_file",
+      "translations_project",
+      "typed_ast_output_file",
+      "use_types_for_optimization",
+      "variable_map_input_file",
+      "variable_renaming_report",
+      "warning_level",
+      "warnings_allowlist_file"
+    ],
+    "generated_flags": [
+      "help",
+      "version"
+    ],
+    "local_extensions": [
+      "correlation_vector",
+      "correlation_vector_filter",
+      "correlation_vector_filter_includes_origin",
+      "correlation_vector_filter_invert",
+      "correlation_vector_format",
+      "correlation_vector_output",
+      "correlation_vector_pretty",
+      "correlation_vector_summary",
+      "correlation_vector_summary_format",
+      "correlation_vector_summary_only",
+      "correlation_vector_summary_stderr"
+    ],
+    "deprecated_aliases": [
+      {
+        "name": "typed_ast_output_file__INTENRNAL_USE_ONLY",
+        "canonical": "typed_ast_output_file",
+        "reason": "pre-CCR-005 closurec misspelling retained for compatibility"
+      }
+    ],
+    "unsupported_upstream_flags": [],
+    "unsupported_upstream_aliases": [
+      {
+        "name": "--D",
+        "canonical": "define",
+        "reason": "cli-builder does not yet model long-form flag aliases"
+      },
+      {
+        "name": "--checks-only",
+        "canonical": "checks_only",
+        "reason": "cli-builder does not yet model long-form flag aliases"
+      },
+      {
+        "name": "--dev_mode",
+        "canonical": "jscomp_dev_mode",
+        "reason": "cli-builder does not yet model long-form flag aliases"
+      },
+      {
+        "name": "--warnings_whitelist_file",
+        "canonical": "warnings_allowlist_file",
+        "reason": "cli-builder does not yet model long-form flag aliases"
+      }
+    ]
+  }
+}
