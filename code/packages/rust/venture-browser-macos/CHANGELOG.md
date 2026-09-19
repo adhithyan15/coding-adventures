@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Map the shared Open in New Window event and disabled state through the
+  existing typed browsing-context effect for generated SwiftUI.
+
 - Serialize the shared Copy Address clipboard effect for generated SwiftUI.
 
 - Expose shared live output and normalized meter/progress accessibility state

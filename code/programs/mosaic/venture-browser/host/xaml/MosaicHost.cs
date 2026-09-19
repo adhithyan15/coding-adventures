@@ -184,6 +184,8 @@ public static class MosaicHost
                     component, "reload-button");
                 var copyAddressButton = await FindAutomationElementAsync<Button>(
                     component, "copy-address-button");
+                var openPageButton = await FindAutomationElementAsync<Button>(
+                    component, "open-page-button");
                 var viewSourceButton = await FindAutomationElementAsync<Button>(
                     component, "view-source-button");
                 var goButton = await FindAutomationElementAsync<Button>(component, "go-button");
@@ -193,6 +195,7 @@ public static class MosaicHost
                     || homeButton is null
                     || reloadButton is null
                     || copyAddressButton is null
+                    || openPageButton is null
                     || viewSourceButton is null
                     || goButton is null)
                 {
@@ -306,6 +309,25 @@ public static class MosaicHost
                         status = "error",
                         copiedAddress,
                         error = "native Copy Address effect did not write the committed URL",
+                    });
+                    return;
+                }
+                var openPageProvider = new ButtonAutomationPeer(openPageButton)
+                    as IInvokeProvider;
+                openPageProvider?.Invoke();
+                if (openPageProvider is null
+                    || !await WaitForControlStateAsync(
+                        () => LastBrowsingContextRequest is { } request
+                            && request.GetProperty("target").GetString() == "_blank"
+                            && request.GetProperty("noopener").GetBoolean()
+                            && request.GetProperty("request").GetProperty("url").GetString()
+                                == targetUrl))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Open in New Window effect did not preserve the committed URL",
                     });
                     return;
                 }
@@ -890,6 +912,7 @@ public static class MosaicHost
                 value => component.BookmarkLabel = value);
             component.BookmarkDisabled = props.GetProperty("bookmark-disabled").GetBoolean();
             component.CopyAddressDisabled = props.GetProperty("copy-address-disabled").GetBoolean();
+            component.OpenPageDisabled = props.GetProperty("open-page-disabled").GetBoolean();
             component.ViewSourceDisabled = props.GetProperty("view-source-disabled").GetBoolean();
             component.FindOpen = props.GetProperty("find-open").GetBoolean();
             SetIfChanged(component.FindQuery, props.GetProperty("find-query").GetString(),

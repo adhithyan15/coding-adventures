@@ -108,6 +108,16 @@ void main() {
       expect(host.lastClipboardText, 'http://127.0.0.1:$port/start');
       debugPrint('flutter-live-stage=copy-address');
 
+      await tester.tap(find.text('Open in New Window'));
+      await tester.pumpAndSettle();
+      expect(host.lastBrowsingContextRequest?['target'], '_blank');
+      expect(
+        (host.lastBrowsingContextRequest?['request'] as Map?)?['url'],
+        'http://127.0.0.1:$port/start',
+      );
+      expect(host.lastBrowsingContextRequest?['noopener'], isTrue);
+      debugPrint('flutter-live-stage=open-page');
+
       await tester.tap(find.text('View Source'));
       await tester.pumpAndSettle();
       expect(host.lastAuxiliaryDocument?['kind'], 'view-source');

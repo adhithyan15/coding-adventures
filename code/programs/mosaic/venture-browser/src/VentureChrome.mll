@@ -42,6 +42,12 @@ layout VentureChrome {
         state-when-disabled : slot: copy-address-disabled ,
         onClick : emit: onCopyAddress
       )
+      HostButton [ open-page-button ] (
+        label : "Open in New Window" ,
+        disabled : slot: open-page-disabled ,
+        state-when-disabled : slot: open-page-disabled ,
+        onClick : emit: onOpenPageInNewWindow
+      )
       HostButton [ view-source-button ] (
         label : "View Source" ,
         disabled : slot: view-source-disabled ,

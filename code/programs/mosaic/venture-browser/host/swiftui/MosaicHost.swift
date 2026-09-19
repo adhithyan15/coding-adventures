@@ -685,6 +685,46 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     let copyAddressEvents = chromeEventCounts["onCopyAddress", default: 0]
     let clipboardText = NSPasteboard.general.string(forType: .string) ?? ""
     if copyAddressEvents == eventCount + 1, clipboardText == targetURL {
+      let openPageEvents = chromeEventCounts["onOpenPageInNewWindow", default: 0]
+      guard performNativeButtonClick(identifier: "open-page-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "open-page-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifyOpenPage(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: openPageEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "clipboardText": clipboardText,
+          "copyAddressEvents": String(copyAddressEvents),
+          "error": "native Copy Address effect did not write the committed URL",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyCopyAddress(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifyOpenPage(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let openPageEvents = chromeEventCounts["onOpenPageInNewWindow", default: 0]
+    let target = lastBrowsingContextRequest?["target"] as? String ?? ""
+    let noopener = lastBrowsingContextRequest?["noopener"] as? Bool ?? false
+    let request = lastBrowsingContextRequest?["request"] as? NSDictionary
+    let address = request?["url"] as? String ?? ""
+    if openPageEvents == eventCount + 1, target == "_blank", noopener, address == targetURL {
       let viewSourceEvents = chromeEventCounts["onViewSource", default: 0]
       guard performNativeButtonClick(identifier: "view-source-button") else {
         writeInteractionResult(
@@ -702,15 +742,15 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard remaining > 0 else {
       writeInteractionResult(
         [
-          "backend": "swiftui", "status": "error", "clipboardText": clipboardText,
-          "copyAddressEvents": String(copyAddressEvents),
-          "error": "native Copy Address effect did not write the committed URL",
+          "backend": "swiftui", "status": "error", "openPageTarget": target,
+          "openPageAddress": address, "openPageEvents": String(openPageEvents),
+          "error": "native Open in New Window effect did not preserve the committed URL",
         ],
         to: markerPath)
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-      self?.verifyCopyAddress(
+      self?.verifyOpenPage(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
     }
@@ -1257,12 +1297,13 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func nativeToolbarPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let position: CGFloat
     switch identifier {
-    case "back-button": position = 0.05
-    case "forward-button": position = 0.16
-    case "home-button": position = 0.28
-    case "reload-button": position = 0.40
-    case "bookmark-button": position = 0.54
-    case "copy-address-button": position = 0.70
+    case "back-button": position = 0.04
+    case "forward-button": position = 0.13
+    case "home-button": position = 0.22
+    case "reload-button": position = 0.31
+    case "bookmark-button": position = 0.42
+    case "copy-address-button": position = 0.54
+    case "open-page-button": position = 0.72
     case "view-source-button": position = 0.91
     default: return nil
     }
