@@ -299,9 +299,17 @@ The delivery order is:
    profile, request provider/client/trace, and one-use nonce binding is checked
    before transport, clock, verification, or credential storage; missing or
    rejected identity evidence reaches no custody, and the consumed ID token is
-   never stored. The decoded identity profile remains caller-supplied at this
-   boundary, while concrete verification algorithms, policy sources, network,
-   clock, and storage implementations remain separate authorities. Public-client
+   never stored. A static-policy variant can now instead select the registered
+   provider's exact decoded identity profile through an opaque verification
+   context before exchange. The registered public profile, client, token
+   endpoint, verification context, and nonce binding are validated before the
+   policy source, transport, clock, verifier, or custody is reached. Policy
+   loading, public transport, identity proof, credential release, and custody
+   creation retain separate provider/trace audit gates; only the opaque
+   credential revision leaves the composition, and the consumed ID token is
+   never retained. The policy source remains injected and no concrete identity
+   verifier, network, clock, storage, provider data, or signing algorithm is
+   enabled. Public-client
    refresh-token detach is now shipped for the retained `none` profile: the
    exact opaque account key binds
    the registered provider and credential record, and the retained public
