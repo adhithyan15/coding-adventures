@@ -3099,7 +3099,8 @@ fn emit_table_row(
                 Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
                 _ => String::new(),
             };
-            writeln!(out, "{cell_pad}<{cell_tag}>{body}</{cell_tag}>").unwrap();
+            let style = build_style_attr(cell, "", part_styles);
+            writeln!(out, "{cell_pad}<{cell_tag}{style}>{body}</{cell_tag}>").unwrap();
         } else if cell.tag == "For" {
             // UI31-L10 seam — `For` inside a Row. Emit the canonical
             // template marker bracket so the downstream template
@@ -3260,7 +3261,8 @@ fn try_emit_table_for_cell_html(
             Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
             _ => String::new(),
         };
-        writeln!(out, "{inner_pad}<{cell_tag}>{body}</{cell_tag}>").unwrap();
+        let style = build_style_attr(leaf, "", part_styles);
+        writeln!(out, "{inner_pad}<{cell_tag}{style}>{body}</{cell_tag}>").unwrap();
     } else {
         writeln!(out, "{inner_pad}<{cell_tag}>").unwrap();
         out.push_str(&emit_html_tree(leaf, indent + 4, part_styles)?);

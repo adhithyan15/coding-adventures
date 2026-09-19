@@ -15,6 +15,16 @@ fn fixture(
         Input [ legacy ] (value: "Notes", multiline: true, font-size: {value})
         HostButton [ action ] (label: "Action", font-size: {value}, onClick: emit: onAction)
         For (each: slot: rows, as: textSize) {{ Text (content: (textSize), font-size: {value}) }}
+        HostTable {{
+            HostTableHead {{ Row {{ Text [ header ] (content: "Header", font-size: {value}) }} }}
+            HostTableBody {{
+                Row {{ Text [ body ] (content: "Body", font-size: {value}) }}
+                For (each: slot: rows, as: textSize) {{ Row {{ Text [ rowlabel ] (content: textSize, font-size: {value}) }} }}
+                Row {{ For (each: slot: rows, as: textSize) {{ Text [ celllabel ] (content: textSize, font-size: {value}) }} }}
+                Row {{ Text [ staticlabel ] (content: "Static") }}
+            }}
+            HostTableFoot {{ Row {{ Text [ footer ] (content: "Footer", font-size: {value}) }} }}
+        }}
     }} }}"#
         ),
         Some(&model.descriptor_json),
@@ -23,6 +33,12 @@ fn fixture(
     let style = mosstyle_compiler::compile(
         r##"style Typography {
         part title { font-size: 18; color: "#123456"; font-family: monospace; }
+        part header { font-size: 18; color: "#123456"; font-family: monospace; }
+        part body { font-size: 18; color: "#123456"; font-family: monospace; }
+        part rowlabel { font-size: 18; color: "#123456"; font-family: monospace; }
+        part celllabel { font-size: 18; color: "#123456"; font-family: monospace; }
+        part staticlabel { font-size: 18; color: "#123456"; font-family: monospace; }
+        part footer { font-size: 18; color: "#123456"; font-family: monospace; }
         part editor { font-size: 16; }
         part legacy { font-size: 15; }
         part action { font-size: 14; }
@@ -49,7 +65,7 @@ fn generate_numeric_typography_fixture() {
             .output
             .matches("data-mosaic-font-size-slot=\"textSize\"")
             .count(),
-        5
+        10
     );
     if let Some(path) = std::env::var_os("MOSAIC_HTML_TYPOGRAPHY_OUTPUT") {
         let path = std::path::PathBuf::from(path);
