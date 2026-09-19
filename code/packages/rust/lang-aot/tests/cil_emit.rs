@@ -8,6 +8,20 @@
 use clr_simulator::{CLRSimulator, Value};
 use lang_aot::{compile_source_to_cil_artifact, Language};
 
+#[test]
+fn clr01_wide_literal_is_refused_before_artifact_creation() {
+    let error = compile_source_to_cil_artifact(Language::McCarthyLisp, "4294967296", "Main")
+        .err().expect("wide literals must not silently become zero").to_string();
+    assert!(error.contains("4294967296") && error.contains("encoded CIL range"), "{error}");
+}
+
+#[test]
+fn clr01_i32_boundaries_execute_without_loss() {
+    for value in [i32::MIN, i32::MAX] {
+        assert_eq!(compile_and_run(Language::McCarthyLisp, &value.to_string()), value);
+    }
+}
+
 /// Compile a scalar program to CIL, run its `main` method on the in-repo
 /// simulator, and return the `int` result left on the stack by `ret`.
 fn compile_and_run(language: Language, source: &str) -> i32 {

@@ -8,6 +8,38 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
+
+VM-058 merged as #15550 (`0704444b28f6704cc175c4e57cd95853fbf28647`)
+after 46 checks completed (15 success, 31 skipped). Main is refreshed and no
+open PR overlaps the encoded CLR runtime/backend path; ALGOL remains separate.
+
+The next ranked work is encoded CLR host input. Initial inspection confirms
+encoded validation explicitly refuses input_i64/input_str/input_more, while
+textual CoreCLR emission already implements them. The simulator currently
+accepts only MethodDef calls and its Value is Int(i32) or Ref: adding a host
+input token alone would not implement the full input_i64 contract.
+
+Discovery CLR-D001: encoded const and direct call immediates use unchecked
+`as i32`; an out-of-range i64 can silently become a different integer. Select
+CLR01 (`CLR01-encoded-wide-immediate-refusal.md`) to reject lossy immediates
+before expanding the full-width ABI. Runtime arithmetic width remains separate.
+
+Prioritize a bounded full-width scalar audit/prerequisite before enabling input:
+1. Inspect existing int64 lowering and simulator opcode support; establish a
+   real encoded-artifact probe with values outside i32 range. Specify and repair
+   missing full-width representation/operations needed for scalar input first.
+2. Define simulator-owned input lifetime, EOF/non-consuming peek, exact integer
+   parsing and explicit MemberRef host dispatch. Keep unknown tokens refusing;
+   never treat a MemberRef row as a MethodDef ordinal.
+3. Implement strings only after specifying their simulator representation and
+   ABI; preserve current input refusal until its actual host contract works.
+4. Reprioritize historical Oct/Nib fidelity and BEAM register limits afterwards.
+
+Each production slice needs a detailed committed specification, independently
+expected execution observations, relevant tests and a ready PR. Do not report
+textual CoreCLR input coverage as evidence for encoded simulator input.
+
 ## VM-058 — COBOL INSPECT region intersection (selected 2026-09-19)
 
 BEAM09 merged as #15523 (`9710bf606086e7e01ae6f4577644e7f26e7ed4cf`)

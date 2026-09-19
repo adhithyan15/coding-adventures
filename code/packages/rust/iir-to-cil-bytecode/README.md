@@ -4,6 +4,11 @@ Lowers an `IIRModule` (from `interpreter-ir`) directly to a `CILProgramArtifact`
 (from `ir-to-cil-bytecode`) **without going through the deprecated `compiler-ir`
 layer**.
 
+Encoded integer immediates currently must fit signed 32-bit values. Validation
+refuses wider values before artifact creation; it never silently truncates them.
+The separate textual `emit_il` path supports `int64` literals on CoreCLR.
+Full-width encoded arithmetic and host input remain future work.
+
 ## What is CIL?
 
 Common Intermediate Language (CIL) is the stack-based bytecode format of the
