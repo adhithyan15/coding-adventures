@@ -13823,6 +13823,49 @@ have zero exact path overlap with this tranche and add no package root,
 manifest, BUILD marker, build-tool contract, or parity owner. The refreshed
 collision-checked inventory is structurally unchanged.
 
+### Post-PR #15580 refresh and JVM graph/diff core selection
+
+PR #15580 completed every reported final-head check acceptably at exact head
+`f8253a4b55c483a9e0a2ceab38c13f61e6bbee1a`. Its first metadata run exposed
+a changelog shard whose filename omitted the exact heading digest. The focused
+rename-only repair added the canonical heading slug and `f059a493` digest, and
+the literal document-shard build and check passed locally. Both duplicate
+Ubuntu builds and repository-metadata jobs then passed, as did both final CI
+gates, CodeQL, and the human-language gate. GitHub reported no merge conflict;
+guarded squash auto-merge merged the PR as
+`a95b08b373d4005420a35c5e27031426ea268bc2` without a plain manual merge
+command.
+
+The collision-checked schema-3 inventory at that exact merged main remains
+structurally unchanged: 15 established lanes, 1,441 implementation identities,
+4,666 implementation slots, and 1,481 all-reported identities. Its completion
+bands remain 175 packages with 265 missing slots, 123/934, 181/2,282, and
+962/13,468. Rust has 782 singleton identities, emerging OCaml remains at five
+packages, and canonical collisions and unknown language buckets remain zero.
+
+Parallel lane audits register three separate selection-blocked capability
+governance owners rather than hiding them inside one aggregate. The Java audit
+covers 134 packages and two programs, with 62 package manifests absent. The
+Kotlin audit covers 133 packages and eight programs, with 62 package and seven
+program manifests absent. The Dart audit covers 86 packages and five programs,
+with 30 package manifests plus `hello-world` and BUILD-less
+`visicalc-flutter` absent. Each owner must classify pure and host-native roots
+and obtain Layer 5 approval for nonempty profiles before autonomous delivery;
+none is eligible implementation work for this loop yet.
+
+The same audits produced complete bounded implementation packets for the JVM
+and Dart graph/diff cores. Java and Kotlin remain separate idiomatic engines
+that consume the same 14 neutral graph and diff-selection cases directly; they
+must not claim complete front doors or adapters. Their paired core is selected
+first because one dependency-shaped tranche advances two missing established
+build-tool lanes. Dart follows as the next audited alternative and has no false
+formal dependency on JVM completion. The JVM core is selected alone on fresh
+branch `codex/build-tool-jvm-core-20260919` from exact merged main. The
+reconciled state contains 828 unique owners and 1,446 dependency edges: 217
+merged, 610 pending, and exactly this JVM owner in progress. The graph remains
+dependency-complete and acyclic with no merged owner depending on unfinished
+work.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

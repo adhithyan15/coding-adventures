@@ -510,6 +510,17 @@ jobs:
           go-version: '1.26.1'
           cache-dependency-path: 'code/**/go.sum'
 
+      - name: Set up JDK 21 for native build-tool contract consumers
+        if: needs.detect.outputs.run_contracts_build_tool_conformance == 'true'
+        uses: actions/setup-java@v6
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Set up Gradle for native build-tool contract consumers
+        if: needs.detect.outputs.run_contracts_build_tool_conformance == 'true'
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+
       # Rust is needed only by the two gated cargo clusters below. Installing it
       # unconditionally would re-add a chunk of what this split removed.
       - name: Set up Rust for ADJ and capability-cage contracts
@@ -652,6 +663,8 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_build_tool_conformance_linux_oci.py'
           python3 code/scripts/build_tool_conformance.py validate-corpus
           python3 code/scripts/build_tool_conformance_execution.py validate-contract
+          gradle --no-daemon --no-build-cache --max-workers=1 -p code/programs/java/build-tool clean check
+          gradle --no-daemon --no-build-cache --max-workers=1 -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false -p code/programs/kotlin/build-tool clean check
 
       - name: Verify capability cage contracts
         if: needs.detect.outputs.run_contracts_capability_cage == 'true'

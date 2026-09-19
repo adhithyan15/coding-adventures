@@ -146,6 +146,54 @@ over the canonical sorted 16-key registry, and enforce the shared per-file and
 aggregate ceilings without reading host state or gaining filesystem, process,
 environment, Git, clock, randomness, credential, or network authority.
 
+### Java and Kotlin graph/diff core tranche
+
+Java and Kotlin begin build-tool parity with independent, process-free native
+cores rooted at `code/programs/java/build-tool` and
+`code/programs/kotlin/build-tool`. This tranche is deliberately narrower than
+a complete build-tool implementation: it establishes the graph and
+`diff_selection` contracts through native module surfaces, but it does not add
+a CLI, conformance adapter, package discovery, build-file evaluation, planning,
+or execution authority. Until those later tranches are complete, the
+implementation manifest MUST continue to report the Java and Kotlin front doors
+and adapters as missing.
+
+Each core MUST expose native operations equivalent to:
+
+```text
+evaluateGraph(GraphInput) -> GraphResult
+evaluateDiffSelection(DiffSelectionInput) -> DiffSelectionResult
+```
+
+The inputs are already-materialized immutable values. Production code in this
+tranche MUST NOT read files, environment variables, system properties, Git
+state, clocks, randomness, credentials, processes, or the network. JSON and
+fixture-path handling belong only to package-local tests.
+
+Both native suites MUST discover and independently evaluate the complete shared
+`graph` and `diff_selection` fixture set. They MUST assert the exact case-ID
+roster so a newly added case cannot be skipped silently. The initial required
+roster contains six graph cases and eight diff-selection cases, including
+canonical edge ordering, deterministic levels, cycle rejection, transitive
+affected and prerequisite closure, package-prefix and forced-package selection,
+repository-boundary reverse selection, both unknown-path policies, and the
+exact/over-limit match-work cases.
+
+The graph operations MUST enforce the shared structural limits before graph
+evaluation, interpret every edge as `[prerequisite, dependent]`, emit canonical
+sorted edges and deterministic prerequisite-first levels, and return an empty
+result with `GRAPH_CYCLE` for a cycle. The diff operation MUST validate its
+repository-boundary digest before selection, complete the 50,000,000
+Unicode-scalar match-work preflight before invoking a glob matcher, count exact
+BUILD fronts at zero cost, and return empty selections with
+`DIFF_UNKNOWN_PATH` or `DIFF_MATCH_LIMIT_EXCEEDED` as prescribed by the shared
+contract. Portable glob behavior and diagnostic precedence MUST not depend on
+host path or locale semantics.
+
+Direct fixture consumption by these native suites is conformance evidence for
+this bounded core only. It MUST NOT be represented as a ready front door,
+adapter, or complete Java/Kotlin build-tool implementation.
+
 C and C++ remain emerging implementation lanes. OCaml also begins as emerging
 and must implement this contract before promotion. WASM is an execution target,
 Mosaic and Twig are domain languages, and Starlark is a build language; none is

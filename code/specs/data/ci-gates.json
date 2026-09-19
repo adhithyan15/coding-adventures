@@ -314,7 +314,9 @@
       "scope": "step",
       "description": "Build-tool conformance corpus and execution contract validation.",
       "packages": [
-        "go/programs/build-tool"
+        "go/programs/build-tool",
+        "java/programs/build-tool",
+        "kotlin/programs/build-tool"
       ],
       "paths": [
         "code/specs/fixtures/build-tool-v1/**",
@@ -323,7 +325,9 @@
         "code/scripts/build_tool_conformance.py",
         "code/scripts/build_tool_conformance_execution.py",
         "code/scripts/tests/test_build_tool_conformance_*.py",
-        "code/programs/go/build-tool/**"
+        "code/programs/go/build-tool/**",
+        "code/programs/java/build-tool/**",
+        "code/programs/kotlin/build-tool/**"
       ]
     },
     "contracts-capability-cage": {

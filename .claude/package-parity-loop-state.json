@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 15580,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/15580",
-    "branch": "codex/build-tool-neutral-graph-diff-coverage-20260919",
-    "implementation_revision": "7484b32e14d280237525a30428a6488c7b9c85ab",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-09-19T12:48:18Z",
+    "observed_at": "2026-09-19T14:10:44Z",
     "pr_number": 15580,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #15580 is open from independently reviewed implementation revision 7484b32e14d280237525a30428a6488c7b9c85ab. GitHub reports the branch mergeable with no conflict, while the initial CI, CodeQL detection, and human-language detection checks are queued. Auto-merge remains disabled until every required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "PR #15580 completed both duplicate Ubuntu build and repository-metadata runs, both final CI gates, CodeQL, and the human-language gate acceptably at exact final head f8253a4b55c483a9e0a2ceab38c13f61e6bbee1a. GitHub reported no merge conflict; guarded squash auto-merge merged it as a95b08b373d4005420a35c5e27031426ea268bc2 without a plain manual merge command."
   },
   "last_inventory": {
-    "revision": "f1e1ae4205a26fd171fab3b357ef820dd149b70f",
+    "revision": "a95b08b373d4005420a35c5e27031426ea268bc2",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1441,
@@ -1946,7 +1940,7 @@
     {
       "id": "build-tool-neutral-graph-diff-contract-coverage-completion",
       "title": "Close neutral graph and diff mode coverage",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion"],
       "branch": "codex/build-tool-neutral-graph-diff-coverage-20260919",
       "pr_number": 15580,
@@ -1961,6 +1955,10 @@
       "validation_notes": "The specification now defines ordinal prerequisite-then-dependent graph edge order, package-prefix exact-root and descendant selection, and forced packages as changed-set seeds before dependent and prerequisite closure. Three new neutral cases raise the valid corpus to 157 cases while retaining 285 staged files. A red focused test first proved the Python runner accepted reversed native edges; the minimal runner fix rejects that noncanonical result while preserving level-member normalization. The full Python schema and runner family passes 110 tests in 109.959 seconds. The canonical Go consumer is bound directly to all three fixtures; its full race suite, vet, trimpath build, package coverage run, and the directed-graph package test/vet suite pass. The build tool reports 40.1% root-package statement coverage and 71.6% to 97.7% across internal packages. The exact-main package report remains schema 3 with 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Ruff check passes; repository-wide Ruff format still reports only pre-existing formatting fronts in the two touched Python files, with the changed semantic comparison formatted canonically. JSON, compile, diff, and corpus gates pass.",
       "security_notes": "The tranche adds no filesystem, Git, process, environment, network, credential, native-link, execution, or host authority. Bandit reports no medium/high finding in the production runner; Go vet passes and govulncheck is unavailable on this host. The new fixtures are bounded by the existing closed schemas and fixed graph/diff limits. Forced packages are data-only validated names, package-prefix matching remains repository-relative string classification, and raw graph edge order is compared before canonical presentation so native adapters cannot hide noncanonical output.",
       "publication_notes": "Opened ready-for-review PR #15580 after a normal first push from exact origin/main f1e1ae4205a26fd171fab3b357ef820dd149b70f. Immediately before publication the worktree was clean, no other parity PR was active, and independent security and correctness reviews both issued SHIP at exact implementation head 7484b32e14d280237525a30428a6488c7b9c85ab. GitHub reports the PR mergeable with initial CI, CodeQL detection, and human-language detection checks queued, so auto-merge remains disabled until every required check is terminal and acceptable.",
+      "merged_head_revision": "f8253a4b55c483a9e0a2ceab38c13f61e6bbee1a",
+      "merged_at": "2026-09-19T14:10:44Z",
+      "merge_revision": "a95b08b373d4005420a35c5e27031426ea268bc2",
+      "merge_notes": "The first repository-metadata run exposed one malformed changelog-shard filename. A rename-only repair added the exact heading slug and f059a493 digest, the literal metadata build/check passed locally, and both duplicate final-head metadata and Ubuntu build jobs then passed. Both final CI gates, CodeQL, and the human-language gate were terminal and acceptable. GitHub reported the final head conflict-free; guarded squash auto-merge merged PR #15580 as a95b08b373d4005420a35c5e27031426ea268bc2 without a plain manual merge command.",
       "notes": "Discovered by parallel JVM preparation while PR #15559 was active. The neutral graph contract calls for canonical edges but neither defines their order nor supplies unsorted input; all six diff cases use strict_globs and an empty forced_packages list, so package_prefix and forced seed/closure semantics can be omitted without failing the shared corpus. Define ordinal prerequisite-then-dependent edge order, add an unsorted-edge case, specify forced packages as changed-set seeds before dependent and prerequisite closure, add positive package_prefix and forced-package cases, and update the Python oracle plus canonical Go consumer without adding filesystem, Git, process, environment, network, credential, native-link, or execution authority."
     },
     {
@@ -3268,6 +3266,36 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#14615 Swift lane audit. Inventory all 162 packages and 12 programs: 114 package and three program manifests exist, while 48 packages and nine programs lack explicit profiles. Classify pure versus host-native authority, add truthful manifests, and require the repository's approval evidence for every nonempty capability declaration. Keep this audit selection-blocked until the native/platform-specific roots and approval plan are reviewed."
+    },
+    {
+      "id": "java-capability-policy-audit",
+      "title": "Audit effective capability profiles across every Java package and program",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#15580 established-lane audit. Inventory all 134 Java packages and two programs; 62 package roots currently lack explicit capability manifests. Classify pure versus host-native authority, add truthful profiles, and require Layer 5 approval evidence for every nonempty declaration. Keep this lane-wide audit selection-blocked until its native/platform roots and approval plan are reviewed."
+    },
+    {
+      "id": "kotlin-capability-policy-audit",
+      "title": "Audit effective capability profiles across every Kotlin package and program",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["capability-schema-category-action-constraints"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#15580 established-lane audit. Inventory all 133 Kotlin packages and eight programs; 62 packages and seven programs currently lack explicit capability manifests. Classify pure versus host-native authority, add truthful profiles, and require Layer 5 approval evidence for every nonempty declaration. Keep this lane-wide audit selection-blocked until its native/platform roots and approval plan are reviewed."
+    },
+    {
+      "id": "dart-capability-policy-audit",
+      "title": "Audit effective capability profiles across every Dart package and program",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["dart-scaffold-capability-schema"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered by the post-#15580 established-lane audit. Inventory all 86 Dart packages and five programs; 30 packages, hello-world, and the BUILD-less visicalc-flutter program currently lack explicit capability manifests. Classify pure versus host-native authority, add truthful profiles, and require Layer 5 approval evidence for every nonempty declaration. Keep this lane-wide audit selection-blocked until its native/platform roots and approval plan are reviewed."
     },
     {
       "id": "mosaic-flux-swiftui-platform-runtime-classification",
@@ -9255,11 +9283,15 @@
     {
       "id": "build-tool-jvm-process-free-graph-diff-core",
       "title": "Implement Java and Kotlin build-tool graph and diff-selection cores",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling"],
-      "branch": null,
+      "branch": "codex/build-tool-jvm-core-20260919",
       "pr_number": null,
-      "notes": "Discovered by the post-#14615 all-language build-tool audit. Implement separate idiomatic Java and Kotlin process-free cores over the same closed graph/diff fixtures, with deterministic bounded topology and closure behavior, stable GRAPH_CYCLE and DIFF_UNKNOWN_PATH errors, strict portable globs, and no filesystem, Git, process, environment, network, credential, or execution authority. This bounded owner prevents both JVM lanes from waiting on the larger sandbox/execution chain and becomes a prerequisite of the full JVM build tools."
+      "selected_at": "2026-09-19T14:11:37Z",
+      "selection_revision": "a95b08b373d4005420a35c5e27031426ea268bc2",
+      "selection_notes": "Selected only after PR #15580 completed every final-head check acceptably and merged through guarded squash auto-merge. The exact merged-main schema-3 inventory remains collision-clean at 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five emerging OCaml packages, and zero unknown buckets. Parallel preparation produced exact JVM and Dart implementation/validation packets and found three separate selection-blocked capability-policy owners. The JVM core is the highest-leverage ready bounded owner because one coherent fixture-driven tranche advances both missing established JVM build-tool lanes without claiming a front door, adapter, Git, filesystem, process, environment, network, credential, or execution authority. The fresh clean worktree starts from exact merge revision a95b08b373d4005420a35c5e27031426ea268bc2.",
+      "notes": "Discovered by the post-#14615 all-language build-tool audit. Implement separate idiomatic Java and Kotlin process-free cores over the same closed graph/diff fixtures, with deterministic bounded topology and closure behavior, stable GRAPH_CYCLE and DIFF_UNKNOWN_PATH errors, strict portable globs, and no filesystem, Git, process, environment, network, credential, or execution authority. This bounded owner prevents both JVM lanes from waiting on the larger sandbox/execution chain and becomes a prerequisite of the full JVM build tools.",
+      "validation_notes": "Specification-first changes close the bounded JVM graph and diff-selection tranche without claiming a build-tool CLI, adapter, resolver, sandbox, or host authority. Tests-first compilation failed on the deliberately absent Java and Kotlin cores before implementation. Both independent native engines directly discover and consume the exact six graph and eight diff-selection neutral fixtures, including repository-boundary reverse selection, Unicode-scalar match-work accounting, deterministic topology and closures, portable glob character classes, unknown-path policy, and stable cycle behavior. Java and Kotlin clean checks and literal BUILD fronts pass with compiler warnings-as-errors and JaCoCo line coverage of 98.17% and 98.98%, above the required 95% gates. Defensive validation rejects oversized recursive-match inputs, unsafe or nested package roots, Unicode casefold collisions, cyclic diff graphs, unsafe paths and globs, and ambiguous or descending character classes. The neutral corpus validates all 157 cases and 285 retained files; the complete semantic runner passes 85 tests, and its 25 schema tests pass. The 15-test CI-gate registry, seven-test capability taxonomy, strict JSON, 828-owner/1,446-edge acyclic state graph, changelog shard, collision-clean schema-3 package-parity report, diff hygiene, and Go build-tool test/vet/trimpath build all pass. The real commit-based dry plan against 492a8e9a25969d48ca6998c8aacbd237226da48d evaluates 45 Starlark BUILD files, discovers 5,187 packages, keeps the five reviewed orphan exemptions clean, and selects exactly the two new Java and Kotlin build-tool programs; the final conflict-free rebase onto 94b47a167ffbda1727f53fc047edc7e14eab6f7a changes no touched path. Independent correctness and security reviews pass with no remaining authority, dependency, capability, CI-pinning, metadata, input-bounding, Unicode, graph, glob, digest, or fixture-coverage finding. Production Java resolves only java.base; Kotlin adds only its standard runtime; all Jackson and JUnit dependencies remain test-only and versioned; the capability manifests are empty and accurate."
     },
     {
       "id": "build-tool-dart-process-free-graph-diff-core",
