@@ -1862,6 +1862,59 @@ describe("the committed Malayalam A1 inventory", () => {
   const inventory = loadExamInventory("malayalam", "A1");
   const spanish = loadExamInventory("spanish", "A1");
 
+  it("re-derives Malayalam's direct script-owner gaps and both useful counts", () => {
+    const lessons = loadEverything().lessons.filter((lesson) => lesson.language === "malayalam");
+    const glyphs = (text: string) =>
+      [...text].filter((character) => {
+        const codepoint = character.codePointAt(0)!;
+        return codepoint >= 0x0d00 && codepoint <= 0x0d7f;
+      });
+    const shown = new Set(lessons.flatMap((lesson) => glyphs(lesson.realization.headword ?? "")));
+    const directlyOwned = new Set(
+      lessons
+        .filter(
+          (lesson) =>
+            lesson.realization.type === "writing" || lesson.frontmatter.delivery === "script",
+        )
+        .flatMap((lesson) => glyphs(lesson.realization.headword ?? "")),
+    );
+    const open = [...shown]
+      .filter((glyph) => !directlyOwned.has(glyph))
+      .map((glyph) => {
+        const headwords = lessons
+          .map((lesson) => lesson.realization.headword ?? "")
+          .filter((headword) => headword.includes(glyph));
+        const tokens = new Set(
+          headwords.flatMap((headword) =>
+            headword.split(/\s+/).filter((token) => token.includes(glyph)),
+          ),
+        );
+        return { glyph, fields: headwords.length, tokens: tokens.size };
+      })
+      .sort((a, b) => b.fields - a.fields || a.glyph.localeCompare(b.glyph));
+
+    expect(lessons).toHaveLength(459);
+    expect(shown.size).toBe(68);
+    expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(59);
+    expect(open).toEqual([
+      { glyph: "ള", fields: 24, tokens: 19 },
+      { glyph: "ശ", fields: 17, tokens: 13 },
+      { glyph: "ങ", fields: 14, tokens: 12 },
+      { glyph: "ർ", fields: 11, tokens: 11 },
+      { glyph: "ധ", fields: 7, tokens: 6 },
+      { glyph: "ൈ", fields: 5, tokens: 5 },
+      { glyph: "ബ", fields: 4, tokens: 4 },
+      { glyph: "ഖ", fields: 3, tokens: 3 },
+      { glyph: "ഛ", fields: 2, tokens: 2 },
+    ]);
+
+    const point = inventory.points.find((candidate) => candidate.id === "ML-A1-SCR-12");
+    expect(point?.label).toBe("the nine headword characters without a direct script-lesson owner");
+    expect(point?.note).toContain("68 distinct Malayalam characters");
+    expect(point?.note).toContain("59 occur in the headword of a writing/script lesson");
+    expect(point?.note).toContain("U+0D36 is open, while U+0D37 ഷ is directly owned");
+  }, 60_000);
+
   it("keeps every point's probe key, and never an empty probe", () => {
     for (const point of inventory.points) {
       expect(point, `${point.id} has no probe key`).toHaveProperty("probe");
@@ -2682,11 +2735,9 @@ describe("the committed Malayalam A1 inventory", () => {
     // ML-A1-PRON-08, since both name the same construction. Two of the three
     // still open are the distributive and JOIN-01's clause half.
     expect(joining).toEqual({ enumerated: 11, covered: 9 });
-    // DO NOT CARRY ANOTHER TRACK'S SCRIPT SHAPE HERE. Tamil came back 52 of 52,
-    // Kannada 50 of 69. Malayalam was measured on its own and is 58 of the 67
-    // distinct characters its headwords use -- 87 per cent. The nine open ones,
-    // by the number of headwords needing them: sha (14), lla (10), chillu-rr
-    // (8), nga (8), the ai sign (5), dha (5), ba (3), kha (3), cha (2).
+    // Direct-owner closure is measured independently above: 59 of 68 headword
+    // characters have a writing/script-lesson headword owner. This category
+    // remains 11/16 because correcting the census does not teach a glyph.
     expect(coverage.byCategory["Lipi (script and orthography)"]!).toEqual({
       enumerated: 16,
       covered: 11,
