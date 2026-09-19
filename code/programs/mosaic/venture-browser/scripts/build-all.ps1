@@ -58,6 +58,20 @@ function Defer-Backend {
     $deferred.Add("$Backend ($Reason)")
 }
 
+function Invoke-NpmAudit {
+    for ($attempt = 1; $attempt -le 4; $attempt++) {
+        & npx --yes npm@11.19.1 audit --audit-level=high
+        if ($LASTEXITCODE -eq 0) {
+            return
+        }
+        if ($attempt -eq 4) {
+            throw "npm audit failed after 4 attempts"
+        }
+        Write-Warning "npm advisory service unavailable or audit failed; retrying ($attempt/4)"
+        Start-Sleep -Seconds 15
+    }
+}
+
 foreach ($backend in $backends) {
     Write-Host "==> Emitting $backend"
     $cargoArgs = @("run", "-q", "-p", "mosaic-compile")
@@ -134,7 +148,7 @@ if (Test-Command "node") {
         try {
             Invoke-Checked -Command "npm" -Arguments @("install", "--ignore-scripts")
             Invoke-Checked -Command "npm" -Arguments @("test")
-            Invoke-Checked -Command "npm" -Arguments @("audit", "--audit-level=high")
+            Invoke-NpmAudit
         } finally {
             Pop-Location
         }

@@ -189,6 +189,9 @@ backend on the current machine:
 
 Repository package CI reaches those same scripts through `BUILD` on POSIX and
 `BUILD_windows` on Windows, after the Rust package-contract tests pass.
+Generated web acceptance projects pin their audit command to npm 11.19.1,
+preserving the high-severity gate through npm's supported bulk advisory API;
+bounded retries absorb maintenance windows without suppressing persistent errors.
 The POSIX wrapper stays `/bin/sh` compatible because the repository build tool
 interprets `BUILD` contents itself; Bash-specific logic remains in
 `scripts/build-all.sh`.
