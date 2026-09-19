@@ -576,7 +576,9 @@ fn validated_input_from_flags(fixture: &str, bytes: &[u8]) -> Result<String, Str
         return Err("flags do not contain exactly two pairs".to_string());
     }
     let pairs: BTreeMap<_, _> = flags
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| (pair[0], pair[1]))
         .collect();
     if pairs.len() != 2
@@ -662,7 +664,9 @@ fn decode_lower_hex(value: &str) -> Result<Vec<u8>, String> {
     }
     value
         .as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| {
             let text = std::str::from_utf8(pair).expect("ASCII hex pair");
             u8::from_str_radix(text, 16).map_err(|error| error.to_string())

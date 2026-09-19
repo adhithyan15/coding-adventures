@@ -1073,7 +1073,7 @@ fn validate_flags(
         return Err(format!("{fixture}: expected exactly two flag/value pairs"));
     }
     let mut pairs = BTreeMap::new();
-    for pair in flags.chunks_exact(2) {
+    for pair in flags.as_chunks::<2>().0 {
         if !matches!(pair[0].as_str(), "--compilation_level" | "--js") {
             return Err(format!("{fixture}: forbidden oracle flag {}", pair[0]));
         }
