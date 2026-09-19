@@ -2,7 +2,7 @@
 
 This package is the shared Mosaic source of truth for Venture's native browser
 chrome. It authors the title, Back, Forward, Home, Reload, address input, Go
-action, bookmark, View Source, and find-in-page controls, status line, disabled
+action, bookmark, Copy Address, View Source, and find-in-page controls, status line, disabled
 states, and dispatch contract once in MIL, MLL, and MSL.
 
 The package intentionally does not draw a web page. `venture-browser-core`
@@ -45,6 +45,10 @@ recreating the surrounding chrome in backend-specific UI code.
   `open-auxiliary-document` effect. SwiftUI, WinUI, Qt, Flutter, and Compose
   adapters forward or retain that effect for their platform window presenter;
   toolkit code does not parse, escape, or reconstruct source.
+- Copy Address resolves the committed history URL rather than the editable
+  address draft and emits one typed clipboard-write effect. Generated hosts
+  only present that text through their native clipboard API; URL selection,
+  disabledness, status projection, and effect encoding stay shared.
 - Both themes expose the same parts and interaction states.
 - `tests/package_compiles.rs` guards the package contract; the package artifact
   builder compiles these exact sources, emits project shells, and verifies a

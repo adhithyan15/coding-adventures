@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Serialize the shared Copy Address clipboard effect for generated SwiftUI.
+
 - Expose shared live output and normalized meter/progress accessibility state
   to AppKit and generated SwiftUI hosts.
 

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Serialize shared Copy Address clipboard effects for Qt, Flutter, and Compose
+  presenters.
+
 - Expose shared live output and normalized meter/progress accessibility state
   to Qt, Flutter, and Compose hosts.
 

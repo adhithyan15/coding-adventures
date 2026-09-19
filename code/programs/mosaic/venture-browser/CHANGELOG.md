@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- Add a shared Copy Address transaction using the committed history URL, one
+  typed clipboard-write effect, and native clipboard presenters across every
+  generated desktop host.
+
 - Match visible phrases across inline formatting boundaries as one shared find
   result, while preserving text-node edge spaces and painting every contributing
   fragment without crossing block or fixed-position scopes.

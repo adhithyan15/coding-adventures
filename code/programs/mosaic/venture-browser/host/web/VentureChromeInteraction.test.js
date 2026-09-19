@@ -28,6 +28,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       forwardDisabled: false,
       bookmarkLabel: "Bookmark",
       bookmarkDisabled: true,
+      copyAddressDisabled: true,
       viewSourceDisabled: true,
       findOpen: false,
       findQuery: "",
@@ -81,6 +82,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(controls.forward.disabled, false);
     assert.equal(controls.reload.disabled, true);
     assert.equal(controls.bookmark.disabled, true);
+    assert.equal(controls.copyAddress.disabled, true);
     assert.equal(controls.viewSource.disabled, true);
     assert.equal(controls.go.disabled, true);
     assert.equal(controls.address.readOnly, true);
@@ -90,6 +92,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
 
     controls.back.click();
     controls.bookmark.click();
+    controls.copyAddress.click();
     controls.viewSource.click();
     controls.findOpen.click();
     controls.go.click();
@@ -100,6 +103,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       ...props,
       backDisabled: false,
       bookmarkDisabled: false,
+      copyAddressDisabled: false,
       viewSourceDisabled: false,
       findDisabled: false,
       navigationDisabled: false,
@@ -112,6 +116,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(controls.back.disabled, false);
     assert.equal(controls.reload.disabled, false);
     assert.equal(controls.bookmark.disabled, false);
+    assert.equal(controls.copyAddress.disabled, false);
     assert.equal(controls.viewSource.disabled, false);
     assert.equal(controls.go.disabled, false);
     assert.equal(controls.address.readOnly, false);
@@ -124,6 +129,11 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     controls = readControls(root);
     assert.equal(controls.bookmark.textContent.trim(), "Remove Bookmark");
 
+    controls.copyAddress.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "copyAddress");
+
+    controls = readControls(root);
     controls.viewSource.click();
     await settle();
     assert.equal(calls.at(-1)?.type, "viewSource");
@@ -174,7 +184,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(calls.at(-1)?.type, "navigate");
     assert.deepEqual(
       calls.map(event => event.type),
-      ["toggleBookmark", "viewSource", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
+      ["toggleBookmark", "copyAddress", "viewSource", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
     );
     assert.match(renderScope(root).textContent, /Handled navigate through MosaicHost/);
   } finally {
@@ -220,7 +230,7 @@ function readControls(root) {
   );
   const [address, find] = scope.querySelectorAll("input");
   assert.ok(address, "address input must exist");
-  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Remove Bookmark", "View Source", "Find", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Remove Bookmark", "Copy Address", "View Source", "Find", "Go"]) {
     if (label === "Bookmark" || label === "Remove Bookmark") continue;
     assert.ok(buttons.has(label), `${label} button must exist`);
   }
@@ -231,6 +241,7 @@ function readControls(root) {
     forward: buttons.get("Forward"),
     reload: buttons.get("Reload"),
     bookmark,
+    copyAddress: buttons.get("Copy Address"),
     viewSource: buttons.get("View Source"),
     findOpen: buttons.get("Find"),
     go: buttons.get("Go"),
