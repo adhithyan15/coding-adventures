@@ -73,7 +73,9 @@ The only representative packages, in leaf-first execution order, are:
 
 Each package is copied to a clean runner-temporary sibling.  `_build`, coverage
 files, generated documentation, and archives from the checkout must not become
-inputs.  For every package the workflow must:
+inputs.  Every step that changes into a runner-temporary directory must capture
+the reviewed repository-local switch identity before leaving the checkout and
+export that exact switch explicitly.  For every package the workflow must:
 
 1. validate its opam file strictly without an upstream network probe;
 2. install only the declared local predecessors needed for resolution;

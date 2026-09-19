@@ -23,7 +23,7 @@ MANIFEST_RELATIVE_PATH = Path(
 )
 WORKFLOW_RELATIVE_PATH = Path(".github/workflows/build-ocaml-representative.yml")
 EXPECTED_WORKFLOW_SHA256 = (
-    "3468a402b594856ac91063ef170f6ab506a1a5a3d1fd7e4bfdc8129177d83b8a"
+    "280b6673bc4a009a3a11208c9324e54e3c188bd4057ace86040bb92f16a651f2"
 )
 
 VERSIONS = {
@@ -385,6 +385,10 @@ def validate_workflow_policy_text(workflow_text: str) -> None:
     ):
         if required not in workflow_text:
             raise ContractError(f"workflow omits required OCAML07 command: {required}")
+    if workflow_text.count('switch="$(opam switch show --safe)"') != 3:
+        raise ContractError("workflow must capture the local switch in all temporary steps")
+    if workflow_text.count('export OPAMSWITCH="$switch"') != 3:
+        raise ContractError("workflow must bind the local switch in all temporary steps")
     try:
         parsed = ocaml_toolchain_lock.parse_restricted_workflow_yaml(workflow_text)
     except Exception as exc:

@@ -151,6 +151,9 @@ jobs:
           TARGET: ${{ matrix.target }}
         run: |
           set -euo pipefail
+          switch="$(opam switch show --safe)"
+          test -n "$switch"
+          export OPAMSWITCH="$switch"
           analyzer="$RUNNER_TEMP/ocaml07-analyzer"
           rm -rf "$analyzer"
           mkdir -p "$analyzer"
@@ -174,6 +177,9 @@ jobs:
           BUILD_FILE: ${{ matrix.build-file }}
         run: |
           set -euo pipefail
+          switch="$(opam switch show --safe)"
+          test -n "$switch"
+          export OPAMSWITCH="$switch"
           root="$GITHUB_WORKSPACE"
           work="$RUNNER_TEMP/ocaml07-packages"
           archives="$RUNNER_TEMP/ocaml07-archives"
@@ -270,6 +276,9 @@ jobs:
           TARGET: ${{ matrix.target }}
         run: |
           set -euo pipefail
+          switch="$(opam switch show --safe)"
+          test -n "$switch"
+          export OPAMSWITCH="$switch"
           root="$GITHUB_WORKSPACE"
           work="$RUNNER_TEMP/ocaml07-downstream"
           evidence="$RUNNER_TEMP/ocaml07-evidence/$TARGET/downstream"
