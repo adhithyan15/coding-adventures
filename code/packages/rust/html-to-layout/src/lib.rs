@@ -5321,7 +5321,12 @@ mod tests {
         assert!(positioned.height > 0.0);
         assert_eq!(
             positioned_text(&positioned),
-            vec!["Mosaic lives", "The browser pipeline is", "connected", "."]
+            vec![
+                "Mosaic lives",
+                "The browser pipeline is",
+                " connected",
+                ".",
+            ]
         );
         let link = find_positioned_by_html_role(&positioned, "link").unwrap();
         let leading_text = find_positioned_text(&positioned, "The browser pipeline is").unwrap();
