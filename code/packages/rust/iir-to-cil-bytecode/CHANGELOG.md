@@ -1,5 +1,15 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — strict typed scalar artifacts (CLR06)
+
+Add opt-in lower_typed_scalars_to_cil with full-width i64 scalar execution and
+int32/int64 locals, parameters and return metadata. Validate the entire module:
+exact operand shapes, single assignments, prior definitions, direct call
+signatures, supported operations and executable slot limits. Preserve i32
+wrapping and the CLR01 literal range gate. Default lowering and source routing
+are unchanged. Regression tests execute actual artifacts including wide results,
+method calls, high-bit arithmetic and maximum short argument/local indices.
+
 ## Unreleased — refuse lossy encoded integer immediates (CLR01)
 
 Reject every out-of-i32 integer operand before encoded artifact creation,

@@ -7,7 +7,20 @@ layer**.
 Encoded integer immediates currently must fit signed 32-bit values. Validation
 refuses wider values before artifact creation; it never silently truncates them.
 The separate textual `emit_il` path supports `int64` literals on CoreCLR.
-Full-width encoded arithmetic and host input remain future work.
+The opt-in `lower_typed_scalars_to_cil(&module, &config)` API preserves i32/i64
+scalar widths in encoded literals, locals, parameters, returns and direct calls.
+It accepts single-assignment straight-line functions using const, mov, arithmetic,
+bitwise operations, negation and a final return. All hints and call signatures
+must agree; unsupported operations and mixed widths return errors. Parameters
+and locals are each limited to 256, matching executable short-slot opcodes.
+For example, typed i64 `2147483647 + 1` returns `Int64(2147483648)` in the
+simulator; the i32 version still wraps. Resolve the artifact's `entry_label`
+when selecting the entry method, since `entry_method()` returns the first method.
+
+This API is separate from default `lower_iir_to_cil` and source compilation.
+Default source routing still narrows scalar hints; its full-width migration,
+branches, comparisons, heap/closure ABI and host input remain future work.
+The CLR01 immediate range restriction also remains in the strict API.
 
 ## What is CIL?
 

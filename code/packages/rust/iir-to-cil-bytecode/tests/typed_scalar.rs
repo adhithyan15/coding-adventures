@@ -217,3 +217,25 @@ fn indices_refuse_overflow_without_wrapping() {
         .push(IIRInstr::new("ret", None, vec![v("v256")], "i64"));
     refuses(m, "too many locals");
 }
+
+#[test]
+fn all_callee_bodies_and_argument_widths_are_validated() {
+    let mut m = base();
+    m.functions.push(IIRFunction::new(
+        "callee",
+        vec![("p".into(), "i32".into())],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("r".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("ret", None, vec![v("r")], "i64"),
+        ],
+    ));
+    m.functions[0].instructions.insert(
+        1,
+        IIRInstr::new("call", Some("out".into()), vec![v("callee"), v("x")], "i64"),
+    );
+    refuses(m.clone(), "width mismatch");
+    m.functions[0].instructions.remove(1);
+    m.functions[1].instructions[0].op = "input_i64".into();
+    refuses(m, "UnsupportedOp");
+}
