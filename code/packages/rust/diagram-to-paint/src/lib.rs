@@ -46,10 +46,12 @@ use diagram_ir::{
 use layout_ir::{Color, Content, FontSpec, PositionedNode, TextAlign, TextContent};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::{
-    PaintBase, PaintEllipse, PaintGroup, PaintInstruction, PaintPath, PaintRect, PaintScene,
-    PathCommand, StrokeCap, StrokeJoin,
+    GlyphPosition, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintInstruction, PaintPath,
+    PaintRect, PaintScene, PathCommand, StrokeCap, StrokeJoin,
 };
-use text_interfaces::{FontMetrics, FontResolver, TextShaper};
+use text_interfaces::{
+    FontMetrics, FontQuery, FontResolver, FontStyle, FontWeight, ShapeOptions, TextShaper,
+};
 
 // ============================================================================
 // Options
@@ -1438,6 +1440,101 @@ fn text_node_no_wrap(
     node
 }
 
+fn markdown_label_instructions<S, M, R>(
+    node: &LayoutedGraphNode,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+) -> Vec<PaintInstruction>
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
+    let mut lines = vec![Vec::<(String, bool, bool)>::new()];
+    for span in &node.label.spans {
+        for (index, part) in span.text.split('\n').enumerate() {
+            if index > 0 {
+                lines.push(Vec::new());
+            }
+            if !part.is_empty() {
+                lines
+                    .last_mut()
+                    .expect("rich label always has a line")
+                    .push((part.to_string(), span.bold, span.italic));
+            }
+        }
+    }
+
+    let size = node.style.font_size as f32;
+    let line_height = node.style.font_size * 1.2;
+    let text_height = lines.len().max(1) as f64 * line_height;
+    let top = node.y + (node.height - text_height) / 2.0;
+    let mut output = Vec::new();
+
+    for (line_index, line) in lines.into_iter().enumerate() {
+        let mut shaped_chunks = Vec::new();
+        let mut line_advance = 0.0;
+        let mut ascent = node.style.font_size * 0.8;
+        for (text, bold, italic) in line {
+            let query = FontQuery::named(node.style.font_family.clone())
+                .with_weight(FontWeight(if bold {
+                    node.style.font_weight.max(700)
+                } else {
+                    node.style.font_weight
+                }))
+                .with_style(if italic || node.style.font_italic {
+                    FontStyle::Italic
+                } else {
+                    FontStyle::Normal
+                });
+            let Ok(handle) = options.resolver.resolve(&query) else {
+                continue;
+            };
+            let units_per_em = options.metrics.units_per_em(&handle).max(1) as f64;
+            ascent = ascent.max(
+                options.metrics.ascent(&handle) as f64 * node.style.font_size / units_per_em,
+            );
+            let Ok(shaped) = options
+                .shaper
+                .shape(&text, &handle, size, &ShapeOptions::default())
+            else {
+                continue;
+            };
+            line_advance += shaped.total_advance() as f64;
+            shaped_chunks.push(shaped);
+        }
+
+        let baseline_y = top + line_index as f64 * line_height + ascent;
+        let mut pen_x = node.x + (node.width - line_advance) / 2.0;
+        for shaped in shaped_chunks {
+            for run in shaped.runs {
+                let mut segment_pen = 0.0;
+                let glyphs = run
+                    .glyphs
+                    .iter()
+                    .map(|glyph| {
+                        let position = GlyphPosition {
+                            glyph_id: glyph.glyph_id,
+                            x: pen_x + segment_pen + glyph.x_offset as f64,
+                            y: baseline_y + glyph.y_offset as f64,
+                        };
+                        segment_pen += glyph.x_advance as f64;
+                        position
+                    })
+                    .collect();
+                output.push(PaintInstruction::GlyphRun(PaintGlyphRun {
+                    base: PaintBase::default(),
+                    glyphs,
+                    font_ref: run.font_ref,
+                    font_size: node.style.font_size,
+                    fill: Some(node.style.text_color.clone()),
+                }));
+                pen_x += run.x_advance_total as f64;
+            }
+        }
+    }
+    output
+}
+
 // ============================================================================
 // Public API
 // ============================================================================
@@ -1586,6 +1683,10 @@ where
     // Node labels — vertically centred inside each node bounding box.
     for node in &diagram.nodes {
         if diagram.hide_empty_descriptions && node.label.text.is_empty() {
+            continue;
+        }
+        if !node.label.spans.is_empty() {
+            instructions.extend(markdown_label_instructions(node, options));
             continue;
         }
         let line_count = node.label.text.lines().count().max(1) as f64;

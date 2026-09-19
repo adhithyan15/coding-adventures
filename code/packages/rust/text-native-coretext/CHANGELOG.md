@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- Resolve backend-neutral weight and style queries to conventional CoreText PostScript faces.
+
 ## [0.2.0]
 
 ### Added
