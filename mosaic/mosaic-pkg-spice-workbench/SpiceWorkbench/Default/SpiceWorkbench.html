@@ -92,6 +92,29 @@
         <!-- emit "onSchematicAnalysisParameterThreeChange" dropped: HTML is static -->
         <input type="text" value="{{schematicAnalysisParameterThreeValue}}" data-disabled="{{schematicAnalysisParameterThreeDisabled}}" data-on-change="onSchematicAnalysisParameterThreeChange" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px; font-family: monospace">
       </div>
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicSavedOutputLabel}}</span>
+        <span style="font-size: 12px; color: #475569">{{schematicSavedOutputVoltageLabel}}</span>
+        <div style="display: flex; flex-direction: row; gap: 6px">
+          <!-- mosaic-for each="schematicSavedOutputVoltageOptions" as="output" index="output-index" -->
+            <!-- emit "onAddSchematicSavedOutputVoltage" dropped: HTML is static -->
+            <button data-on-click="onAddSchematicSavedOutputVoltage" style="background: #ecfeff; color: #155e75; border-width: 1px; border-color: #67e8f9; border-radius: 3px; padding: 6px">{{output}}</button>
+          <!-- /mosaic-for -->
+        </div>
+        <span style="font-size: 12px; color: #475569">{{schematicSavedOutputCurrentLabel}}</span>
+        <div style="display: flex; flex-direction: row; gap: 6px">
+          <!-- mosaic-for each="schematicSavedOutputCurrentOptions" as="source" index="source-index" -->
+            <!-- emit "onAddSchematicSavedOutputCurrent" dropped: HTML is static -->
+            <button data-on-click="onAddSchematicSavedOutputCurrent" style="background: #f5f3ff; color: #5b21b6; border-width: 1px; border-color: #c4b5fd; border-radius: 3px; padding: 6px">{{source}}</button>
+          <!-- /mosaic-for -->
+        </div>
+        <div style="display: flex; flex-direction: row; gap: 6px">
+          <!-- mosaic-for each="schematicSavedOutputRows" as="probe" index="probe-index" -->
+            <!-- emit "onRemoveSchematicSavedOutput" dropped: HTML is static -->
+            <button data-on-click="onRemoveSchematicSavedOutput" style="background: #fff1f2; color: #9f1239; border-width: 1px; border-color: #fda4af; border-radius: 3px; padding: 6px; font-family: monospace">{{probe}}</button>
+          <!-- /mosaic-for -->
+        </div>
+      </div>
       <span style="font-size: 12px; font-weight: bold; color: #475569">{{schematicGridLabel}}</span>
       <div style="position: relative; width: 360px; min-height: 240px; background: #ffffff; border-width: 1px; border-color: #cbd5e1">
         <!-- mosaic-for each="schematicGridLines" as="line" index="line-index" -->

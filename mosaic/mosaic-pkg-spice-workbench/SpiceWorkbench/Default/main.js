@@ -66,6 +66,12 @@ const fallbackProps = {
   "schematicRouteTerminalControls": [],
   "schematicRouteTerminalDisabled": false,
   "schematicRows": [],
+  "schematicSavedOutputCurrentLabel": "Sample SchematicSavedOutputCurrentLabel",
+  "schematicSavedOutputCurrentOptions": [],
+  "schematicSavedOutputLabel": "Sample SchematicSavedOutputLabel",
+  "schematicSavedOutputRows": [],
+  "schematicSavedOutputVoltageLabel": "Sample SchematicSavedOutputVoltageLabel",
+  "schematicSavedOutputVoltageOptions": [],
   "schematicTerminalControls": [],
   "schematicTerminalDisabled": false,
   "schematicTerminalLabel": "Sample SchematicTerminalLabel",
@@ -104,6 +110,18 @@ const emitPayloads = {
       "type": "text"
     }
   ],
+  "onAddSchematicSavedOutputCurrent": [
+    {
+      "name": "source",
+      "type": "text"
+    }
+  ],
+  "onAddSchematicSavedOutputVoltage": [
+    {
+      "name": "output",
+      "type": "text"
+    }
+  ],
   "onInspect": [],
   "onMoveSchematicAnalysisCardEarlier": [],
   "onMoveSchematicAnalysisCardLater": [],
@@ -123,6 +141,12 @@ const emitPayloads = {
   "onRedoSchematic": [],
   "onRemoveSchematicAnalysisCard": [],
   "onRemoveSchematicComponent": [],
+  "onRemoveSchematicSavedOutput": [
+    {
+      "name": "index",
+      "type": "number"
+    }
+  ],
   "onRemoveSchematicWire": [
     {
       "name": "index",
