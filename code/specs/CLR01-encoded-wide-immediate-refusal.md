@@ -25,3 +25,10 @@ Next audit ldc.i8, locals/arguments, arithmetic/comparisons, boxing and call/ret
 before choosing a safe full-width representation slice. Runtime arithmetic can
 still exceed i32 even when inputs fit; do not claim this gate solves that separate
 representation gap. No change to textual CoreCLR or the eight-column corpus.
+
+CI follow-up: COBOL nested division emits scale-12 constants (1000000000000)
+and a scale-10 constant (10000000000). Its backend acceptance test previously
+mistook encoded validator acceptance for representability. Preserve WASM/JVM
+acceptance, assert explicit encoded CLR refusal and retained textual int64
+emission for this program. Audit downstream frontend compatibility suites when
+tightening a shared validator; the original backend-only checks missed this.
