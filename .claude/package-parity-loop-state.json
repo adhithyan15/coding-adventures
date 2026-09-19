@@ -1940,10 +1940,13 @@
     {
       "id": "build-tool-neutral-graph-diff-contract-coverage-completion",
       "title": "Close neutral graph and diff mode coverage",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion"],
-      "branch": null,
+      "branch": "codex/build-tool-neutral-graph-diff-coverage-20260919",
       "pr_number": null,
+      "selected_at": "2026-09-19T12:19:01Z",
+      "selection_revision": "7376434a621119f9b2ea4ef88f7408e45d0fdfa9",
+      "selection_notes": "Selected only after PR #15559 completed all 47 final-head checks acceptably and merged through guarded squash auto-merge. The exact merged-main inventory remains collision-clean at 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five emerging OCaml packages, and zero unknown buckets. Parallel audits found no newly unowned eligible package or OCaml promotion gap, ranked the paired JVM core highest on broad leverage, and then exposed this smaller neutral prerequisite that the JVM, Dart, OCaml, Haskell, Swift, and all-language closure must consume first. The fresh clean worktree starts from exact merge revision 7376434a621119f9b2ea4ef88f7408e45d0fdfa9, and the item adds no host authority.",
       "notes": "Discovered by parallel JVM preparation while PR #15559 was active. The neutral graph contract calls for canonical edges but neither defines their order nor supplies unsorted input; all six diff cases use strict_globs and an empty forced_packages list, so package_prefix and forced seed/closure semantics can be omitted without failing the shared corpus. Define ordinal prerequisite-then-dependent edge order, add an unsorted-edge case, specify forced packages as changed-set seeds before dependent and prerequisite closure, add positive package_prefix and forced-package cases, and update the Python oracle plus canonical Go consumer without adding filesystem, Git, process, environment, network, credential, native-link, or execution authority."
     },
     {

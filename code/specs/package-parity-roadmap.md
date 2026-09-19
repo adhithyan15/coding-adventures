@@ -13797,9 +13797,9 @@ ordinal prerequisite-then-dependent edge ordering, adds unsorted-edge,
 positive package-prefix, and forced-package closure cases, and updates the
 independent Python oracle plus canonical Go consumer. JVM, Dart, OCaml,
 Haskell, Swift, and the all-language adapter closure depend on this evidence.
-It is the smallest ready process-free prerequisite and the highest-priority
-candidate for the fresh serial delivery slot before the paired Java/Kotlin
-graph/diff implementation.
+It is the smallest ready process-free prerequisite and is selected alone on
+fresh branch `codex/build-tool-neutral-graph-diff-coverage-20260919` before the
+paired Java/Kotlin graph/diff implementation.
 
 ## Autonomous Loop Protocol
 
