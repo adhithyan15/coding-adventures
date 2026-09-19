@@ -5,6 +5,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P1 browser convergence - shared current-page share transaction.** Add
+  one Mosaic-authored Share Page control that snapshots the retained page's
+  final address and normalized title in core, then emits one typed host share
+  request without navigation or refetch. Keep disabled state, status, bridge
+  serialization, presenter seams, and deterministic acceptance aligned across
+  every generated host.
+
 - [x] **P1 browser convergence - shared current-page print transaction.** Add
   one Mosaic-authored Print Page control that snapshots the retained page's
   final address and normalized title in core, then emits one typed host print

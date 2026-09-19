@@ -111,6 +111,14 @@ class VentureChromeInteractionTest {
             rule.waitForIdle()
             println("compose-live-stage=print-page")
 
+            rule.onNodeWithTag("share-page-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) { host.lastShareRequest != null }
+            val shareRequest = assertNotNull(host.lastShareRequest)
+            assertEquals("${server.origin}/start", shareRequest["address"])
+            assertEquals("Compose Start", shareRequest["title"])
+            rule.waitForIdle()
+            println("compose-live-stage=share-page")
+
             rule.onNodeWithTag("view-source-button").assertIsEnabled().performClick()
             rule.waitUntil(10_000) { host.lastAuxiliaryDocument != null }
             val sourceDocument = assertNotNull(host.lastAuxiliaryDocument)
