@@ -2,6 +2,7 @@ package cigates
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 	"sort"
@@ -58,6 +59,21 @@ func assertAll(t *testing.T, got map[string]bool, want bool, context string) {
 	}
 }
 
+func mustEvaluate(
+	t *testing.T,
+	reg *Registry,
+	affected map[string]bool,
+	changedFiles []string,
+	force bool,
+) map[string]bool {
+	t.Helper()
+	got, err := Evaluate(reg, affected, changedFiles, force)
+	if err != nil {
+		t.Fatalf("Evaluate: %v", err)
+	}
+	return got
+}
+
 type neutralGateCase struct {
 	ID    string `json:"id"`
 	Input struct {
@@ -77,13 +93,18 @@ type neutralGateCase struct {
 		} `json:"options"`
 	} `json:"input"`
 	Expected struct {
-		Result struct {
+		Outcome string `json:"outcome"`
+		Result  struct {
 			Gates []struct {
 				ID         string `json:"id"`
 				Required   bool   `json:"required"`
 				OutputName string `json:"output_name"`
 			} `json:"gates"`
 		} `json:"result"`
+		Diagnostics []struct {
+			Code     string `json:"code"`
+			Severity string `json:"severity"`
+		} `json:"diagnostics"`
 	} `json:"expected"`
 }
 
@@ -131,7 +152,24 @@ func TestLanguageNeutralFixtures(t *testing.T) {
 					changed = []string{}
 				}
 			}
-			got := Evaluate(registry, affected, changed, fixture.Input.Options.Force)
+			got, evalErr := Evaluate(registry, affected, changed, fixture.Input.Options.Force)
+			if fixture.Expected.Outcome == "error" {
+				if !errors.Is(evalErr, ErrMatchWorkLimitExceeded) {
+					t.Fatalf("Evaluate error = %v, want %v", evalErr, ErrMatchWorkLimitExceeded)
+				}
+				if len(got) != 0 {
+					t.Fatalf("error verdict count = %d, want 0", len(got))
+				}
+				if len(fixture.Expected.Diagnostics) != 1 ||
+					fixture.Expected.Diagnostics[0].Code != ErrMatchWorkLimitExceeded.Error() ||
+					fixture.Expected.Diagnostics[0].Severity != "error" {
+					t.Fatalf("unexpected error diagnostics: %+v", fixture.Expected.Diagnostics)
+				}
+				return
+			}
+			if evalErr != nil {
+				t.Fatalf("Evaluate: %v", evalErr)
+			}
 			if len(got) != len(fixture.Expected.Result.Gates) {
 				t.Fatalf("verdict count = %d, want %d", len(got), len(fixture.Expected.Result.Gates))
 			}
@@ -147,25 +185,70 @@ func TestLanguageNeutralFixtures(t *testing.T) {
 	}
 }
 
+func TestMatchWorkPreflightUsesUnicodeScalarsAndRunsBeforeMatching(t *testing.T) {
+	patterns := make([]string, 20)
+	files := make([]string, 10)
+	for index := range patterns {
+		patterns[index] = strings.Repeat(string(rune('a'+index)), 499)
+	}
+	patterns[0] = "😀" + strings.Repeat("a", 498)
+	for index := range files {
+		files[index] = strings.Repeat(string(rune('0'+index)), 499)
+	}
+	files[0] = "🚀" + strings.Repeat("0", 498)
+	reg := &Registry{SchemaVersion: 1, Gates: map[string]Gate{
+		"bounded-job": {Description: "Boundary.", Paths: patterns},
+	}}
+
+	calls := 0
+	got, err := evaluateWithMatcher(reg, map[string]bool{}, files, false, func(_, _ string) bool {
+		calls++
+		return false
+	})
+	if err != nil {
+		t.Fatalf("at-limit Evaluate: %v", err)
+	}
+	if calls != 200 {
+		t.Fatalf("matcher calls = %d, want 200", calls)
+	}
+	if got["bounded-job"] {
+		t.Fatal("bounded-job unexpectedly required")
+	}
+
+	over := append([]string(nil), files...)
+	over[len(over)-1] += "9"
+	calls = 0
+	got, err = evaluateWithMatcher(reg, map[string]bool{"rust/affected": true}, over, false, func(_, _ string) bool {
+		calls++
+		return false
+	})
+	if !errors.Is(err, ErrMatchWorkLimitExceeded) {
+		t.Fatalf("over-limit error = %v, want %v", err, ErrMatchWorkLimitExceeded)
+	}
+	if len(got) != 0 || calls != 0 {
+		t.Fatalf("over-limit returned %v after %d matcher calls", got, calls)
+	}
+}
+
 // ---------------------------------------------------------------------------
 // The five "run everything" escapes
 // ---------------------------------------------------------------------------
 
 func TestForceRunsEverything(t *testing.T) {
-	got := Evaluate(testRegistry(), map[string]bool{}, []string{"README.md"}, true)
+	got := mustEvaluate(t, testRegistry(), map[string]bool{}, []string{"README.md"}, true)
 	assertAll(t, got, true, "force")
 }
 
 func TestNilAffectedRunsEverything(t *testing.T) {
 	// nil affected means "rebuild all" — distinct from an empty map, which
 	// means "nothing changed".
-	got := Evaluate(testRegistry(), nil, []string{"README.md"}, false)
+	got := mustEvaluate(t, testRegistry(), nil, []string{"README.md"}, false)
 	assertAll(t, got, true, "nil affected set")
 }
 
 func TestNilChangedFilesRunsEverything(t *testing.T) {
 	// Change detection could not produce a file list, so we know nothing.
-	got := Evaluate(testRegistry(), map[string]bool{}, nil, false)
+	got := mustEvaluate(t, testRegistry(), map[string]bool{}, nil, false)
 	assertAll(t, got, true, "nil changed files")
 }
 
@@ -175,17 +258,17 @@ func TestMainPushRunsEverythingViaForce(t *testing.T) {
 	// on main, so a main push reaches Evaluate as force=true — there is no
 	// separate is-main parameter, which keeps the safety net on the one code
 	// path that production actually exercises.
-	got := Evaluate(testRegistry(), map[string]bool{}, []string{"code/learning/x.md"}, true)
+	got := mustEvaluate(t, testRegistry(), map[string]bool{}, []string{"code/learning/x.md"}, true)
 	assertAll(t, got, true, "main push (force)")
 }
 
 func TestWorkflowChangeSelfTestsEveryGate(t *testing.T) {
-	got := Evaluate(testRegistry(), map[string]bool{}, []string{CIWorkflowPath}, false)
+	got := mustEvaluate(t, testRegistry(), map[string]bool{}, []string{CIWorkflowPath}, false)
 	assertAll(t, got, true, "ci.yml changed")
 }
 
 func TestRegistryChangeSelfTestsEveryGate(t *testing.T) {
-	got := Evaluate(testRegistry(), map[string]bool{}, []string{RegistryPath}, false)
+	got := mustEvaluate(t, testRegistry(), map[string]bool{}, []string{RegistryPath}, false)
 	assertAll(t, got, true, "registry changed")
 }
 
@@ -206,7 +289,7 @@ func TestGatingImplementationChangeSelfTestsEveryGate(t *testing.T) {
 		"code/programs/go/build-tool/main.go",
 	} {
 		t.Run(file, func(t *testing.T) {
-			got := Evaluate(testRegistry(), map[string]bool{}, []string{file}, false)
+			got := mustEvaluate(t, testRegistry(), map[string]bool{}, []string{file}, false)
 			assertAll(t, got, true, "gating implementation changed")
 		})
 	}
@@ -224,7 +307,7 @@ func TestUnrelatedBuildToolChangeIsNotASentinel(t *testing.T) {
 		"code/programs/go/build-tool/internal/resolver/resolver.go",
 	} {
 		t.Run(file, func(t *testing.T) {
-			got := Evaluate(testRegistry(), map[string]bool{}, []string{file}, false)
+			got := mustEvaluate(t, testRegistry(), map[string]bool{}, []string{file}, false)
 			assertAll(t, got, false, "unrelated build-tool change")
 		})
 	}
@@ -236,7 +319,7 @@ func TestUnrelatedBuildToolChangeIsNotASentinel(t *testing.T) {
 
 func TestPackageIntersectionFiresOnlyThatGate(t *testing.T) {
 	affected := map[string]bool{"rust/alpha": true}
-	got := Evaluate(testRegistry(), affected, []string{"code/packages/rust/alpha/src/lib.rs"}, false)
+	got := mustEvaluate(t, testRegistry(), affected, []string{"code/packages/rust/alpha/src/lib.rs"}, false)
 
 	if !got["alpha-job"] {
 		t.Error("alpha-job should fire: rust/alpha is in the affected closure")
@@ -250,7 +333,7 @@ func TestPathGlobFiresWithoutAnyAffectedPackage(t *testing.T) {
 	// This is the case a package-only registry gets wrong. Files under
 	// code/grammars map to ZERO packages, so the affected closure is empty and
 	// only the path clause can save the gate.
-	got := Evaluate(testRegistry(), map[string]bool{}, []string{"code/grammars/beta/beta.tokens"}, false)
+	got := mustEvaluate(t, testRegistry(), map[string]bool{}, []string{"code/grammars/beta/beta.tokens"}, false)
 
 	if !got["beta-job"] {
 		t.Error("beta-job should fire from its path glob even with an empty affected closure")
@@ -261,7 +344,7 @@ func TestPathGlobFiresWithoutAnyAffectedPackage(t *testing.T) {
 }
 
 func TestExactPathMatchFires(t *testing.T) {
-	got := Evaluate(testRegistry(), map[string]bool{}, []string{"code/scripts/beta.py"}, false)
+	got := mustEvaluate(t, testRegistry(), map[string]bool{}, []string{"code/scripts/beta.py"}, false)
 	if !got["beta-job"] {
 		t.Error("beta-job should fire on its exact declared path")
 	}
@@ -276,14 +359,14 @@ func TestUnrelatedChangeSkipsEveryGate(t *testing.T) {
 		"code/packages/typescript/human-language-data/src/index.ts",
 	}
 
-	got := Evaluate(testRegistry(), affected, changed, false)
+	got := mustEvaluate(t, testRegistry(), affected, changed, false)
 	assertAll(t, got, false, "unrelated change")
 }
 
 func TestNearMissPackageNameDoesNotFire(t *testing.T) {
 	// "rust/alpha-core" is not "rust/alpha". Matching must be exact, not prefix.
 	affected := map[string]bool{"rust/alpha-core": true}
-	got := Evaluate(testRegistry(), affected, []string{"code/packages/rust/alpha-core/src/lib.rs"}, false)
+	got := mustEvaluate(t, testRegistry(), affected, []string{"code/packages/rust/alpha-core/src/lib.rs"}, false)
 	if got["alpha-job"] {
 		t.Error("alpha-job fired on rust/alpha-core; package matching must be exact")
 	}
@@ -431,7 +514,7 @@ func TestHumanLanguagesChangeSkipsEveryJobGate(t *testing.T) {
 		"code/packages/typescript/human-language-data/CHANGELOG.d/0042.md",
 	}
 
-	got := Evaluate(reg, affected, changed, false)
+	got := mustEvaluate(t, reg, affected, changed, false)
 	for _, id := range jobGates(reg) {
 		if got[id] {
 			t.Errorf("gate %q fired on a human-languages change; it should skip", id)
@@ -443,7 +526,7 @@ func TestGrammarSourceChangeFiresRubyGrammarGate(t *testing.T) {
 	reg := loadRealRegistry(t)
 	// A .grammar edit maps to no package at all, so only the path clause can
 	// fire this gate. That is the whole point of having one.
-	got := Evaluate(reg, map[string]bool{}, []string{"code/grammars/lattice/lattice.grammar"}, false)
+	got := mustEvaluate(t, reg, map[string]bool{}, []string{"code/grammars/lattice/lattice.grammar"}, false)
 
 	if !got["ruby-grammar-regen-check"] {
 		t.Error("ruby-grammar-regen-check must fire on a code/grammars change")
@@ -455,7 +538,7 @@ func TestGrammarSourceChangeFiresRubyGrammarGate(t *testing.T) {
 
 func TestD18FManifestChangeFiresOnlyD18F(t *testing.T) {
 	reg := loadRealRegistry(t)
-	got := Evaluate(reg, map[string]bool{}, []string{"code/fixtures/chief-of-staff-message/v1/manifest.json"}, false)
+	got := mustEvaluate(t, reg, map[string]bool{}, []string{"code/fixtures/chief-of-staff-message/v1/manifest.json"}, false)
 
 	if !got["d18f-message-conformance"] {
 		t.Error("d18f-message-conformance must fire on its own manifest")
@@ -479,7 +562,7 @@ func TestCryptoPackageChangeFiresBothCryptoManifestGates(t *testing.T) {
 	affected := map[string]bool{"rust/chief-of-staff-channel-crypto": true}
 	changed := []string{"code/packages/rust/chief-of-staff-channel-crypto/src/message.rs"}
 
-	got := Evaluate(reg, affected, changed, false)
+	got := mustEvaluate(t, reg, affected, changed, false)
 	for _, id := range []string{"d18f-message-conformance", "d18q-channel-key-grant-conformance"} {
 		if !got[id] {
 			t.Errorf("gate %q must fire on a chief-of-staff-channel-crypto change", id)
@@ -495,7 +578,7 @@ func TestUnicodeGeneratorChangeFiresAllFiveUnicodeGates(t *testing.T) {
 	// generate_tracked_artifact_unicode17.py renders and --checks EVERY language
 	// target regardless of --self-check-runtime, so all five jobs share one
 	// condition. Gating them differently would be wrong.
-	got := Evaluate(reg, map[string]bool{}, []string{"code/scripts/generate_tracked_artifact_unicode17.py"}, false)
+	got := mustEvaluate(t, reg, map[string]bool{}, []string{"code/scripts/generate_tracked_artifact_unicode17.py"}, false)
 
 	for _, lang := range []string{"elixir", "lua", "perl", "haskell", "swift"} {
 		id := "unicode17-" + lang + "-conformance"
@@ -512,7 +595,7 @@ func TestUnicodeGeneratorChangeFiresAllFiveUnicodeGates(t *testing.T) {
 // the code they cover.
 func TestContainmentChangeKeepsBothOSLegs(t *testing.T) {
 	reg := loadRealRegistry(t)
-	got := Evaluate(reg, map[string]bool{}, []string{"code/scripts/adj_stdlib_provenance.py"}, false)
+	got := mustEvaluate(t, reg, map[string]bool{}, []string{"code/scripts/adj_stdlib_provenance.py"}, false)
 
 	for _, id := range []string{"build-macos-os-suites", "build-windows-os-suites"} {
 		if !got[id] {
@@ -523,7 +606,7 @@ func TestContainmentChangeKeepsBothOSLegs(t *testing.T) {
 
 func TestMSVCBootstrapChangeKeepsWindowsLeg(t *testing.T) {
 	reg := loadRealRegistry(t)
-	got := Evaluate(reg, map[string]bool{}, []string{"code/scripts/setup_msvc_dev_cmd.py"}, false)
+	got := mustEvaluate(t, reg, map[string]bool{}, []string{"code/scripts/setup_msvc_dev_cmd.py"}, false)
 
 	if !got["build-windows-os-suites"] {
 		t.Error("build-windows-os-suites must fire when the MSVC bootstrap changes")
@@ -544,7 +627,7 @@ func TestCapabilitySchemaChangeFiresCapabilityCageGate(t *testing.T) {
 		"code/specs/schemas/agent_manifest.schema.json",
 	} {
 		t.Run(schema, func(t *testing.T) {
-			got := Evaluate(reg, map[string]bool{}, []string{schema}, false)
+			got := mustEvaluate(t, reg, map[string]bool{}, []string{schema}, false)
 			if !got["contracts-capability-cage"] {
 				t.Errorf("contracts-capability-cage must fire when %s changes", schema)
 			}
@@ -557,7 +640,7 @@ func TestCapabilitySchemaChangeFiresCapabilityCageGate(t *testing.T) {
 // A directory glob is filesystem truth and cannot be defeated that way.
 func TestCryptoSourceChangeFiresWithoutAnyGraphEdge(t *testing.T) {
 	reg := loadRealRegistry(t)
-	got := Evaluate(
+	got := mustEvaluate(t,
 		reg,
 		map[string]bool{}, // empty closure: pretend every graph edge is missing
 		[]string{"code/packages/elixir/chief-of-staff-channel-crypto/lib/crypto.ex"},
