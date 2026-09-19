@@ -49,7 +49,7 @@ You copied its other half in the last chapter. Inside **സന്തോഷം** 
 vowel *ō* is a **sign** wrapped around its consonant: **◌ോ**. Where the vowel
 has no consonant to wrap around, it stands up as a letter of its own: **ഓ**.
 
-- **സന്തോഷം** *santōṣam* — the sign form, already in your hand
+- **സന്തോഷം** *santōṣaṁ* — the sign form, already in your hand
 - **ഓ** — the letter form, which arrives on the next page as the ending that
   turns a Malayalam statement into a question
 

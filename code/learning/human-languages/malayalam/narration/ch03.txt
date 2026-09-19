@@ -45,8 +45,8 @@ One character this time. One only. It has been sitting in front of you on pages 
 Script you'll notice: ഓ.
 ഓ — ō.
 It is an independent vowel — the shape this vowel takes when a word begins with it, rather than the sign it becomes inside a word.
-You copied its other half in the last chapter. Inside സന്തോഷം (santōṣam) the vowel ō is a sign wrapped around its consonant: ◌ോ. Where the vowel has no consonant to wrap around, it stands up as a letter of its own: ഓ.
-സന്തോഷം santōṣam — the sign form, already in your hand.
+You copied its other half in the last chapter. Inside സന്തോഷം (santōṣaṁ) the vowel ō is a sign wrapped around its consonant: ◌ോ. Where the vowel has no consonant to wrap around, it stands up as a letter of its own: ഓ.
+സന്തോഷം santōṣaṁ — the sign form, already in your hand.
 ഓ (ō) — the letter form, which arrives on the next page as the ending that turns a Malayalam statement into a question.
 
 Writing: ഓ — copy what you see.
@@ -57,7 +57,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — look: at these words, and find ഓ (ō) in the ones that have it]
 [pause 8 seconds for the answer]
-സന്തോഷം (santōṣam), ഓ, ◌ോ.
+സന്തോഷം (santōṣaṁ), ഓ, ◌ോ.
 [once you have stopped driving — trace: ഓ three times, saying ō as you finish each one]
 [your turn — look: back at any page of this chapter and find ഓ (ō) once more]
 [pause 8 seconds for the answer]
@@ -83,7 +83,7 @@ The phrase, taken apart.
 സുഖമാണോ? (sukhamāṇō?) literally means "is [it] well?" — where English says "how are you?", Malayalam more often says "are you well?" The word സുഖം (sukhaṁ, "well-being, comfort, ease") is a Sanskrit loan — sukha itself, borrowed whole (the su- "good" that is Greek eu-). Onto it, Malayalam adds its own native copula āṇŭ ("is," from Chapter 2) and the question particle -ō — a whole yes/no question made by one small sound at the end. This mix — a Sanskrit noun, a Dravidian verb — is Malayalam in miniature.
 
 Grammar Lens: turning a statement into a question.
-Malayalam makes a yes/no question by adding -ō to the end: sukham āṇŭ ("it is well") becomes sukham āṇō? ("is it well?"). No change of word order, no helper — just the little -ō. You will use it to question any statement.
+Malayalam makes a yes/no question by adding -ō to the end: sukhaṁ āṇŭ ("it is well") becomes sukhaṁ āṇō? ("is it well?"). No change of word order, no helper — just the little -ō. You will use it to question any statement.
 
 Guided Practice.
 [pause 1 second]
@@ -183,12 +183,12 @@ The letters in this word.
 സു (su) + ഖം (khaṁ, an aspirated kh + the anusvāra) becomes സുഖം (sukhaṁ).
 
 The word, taken apart.
-സുഖം (sukhaṁ, "well-being, comfort, ease, happiness") is a Sanskrit loan — sukha = su- ("good, well") + kha ("space, feeling") — the same su- that is Greek eu- (as in euphoria). Malayalam, Tamil's closest sister, took far more Sanskrit into everyday speech than Tamil did — and sukham is a perfect case: for "well," where Tamil answers with native nalam, Malayalam reaches for Sanskrit sukham.
+സുഖം (sukhaṁ, "well-being, comfort, ease, happiness") is a Sanskrit loan — sukha = su- ("good, well") + kha ("space, feeling") — the same su- that is Greek eu- (as in euphoria). Malayalam, Tamil's closest sister, took far more Sanskrit into everyday speech than Tamil did — and sukhaṁ is a perfect case: for "well," where Tamil answers with native nalam, Malayalam reaches for Sanskrit sukhaṁ.
 
 The exchange — the reply.
 With the copula from Chapter 2: സുഖമാണ് (sukhamāṇŭ) — "[I am] well" (literally "[it] is well"). The whole exchange:
 — sukhamāṇō? ("Are you well? / How are you?") — sukhamāṇŭ, nandi. ("I'm well, thank you.")
-Notice the reply reuses the greeting's own words — sukham + āṇŭ — just without the question -ō.
+Notice the reply reuses the greeting's own words — sukhaṁ + āṇŭ — just without the question -ō.
 
 Guided Practice.
 [pause 1 second]
@@ -201,7 +201,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Give the reply to sukhamāṇō?, and say where sukham comes from. (Sukhamāṇŭ; Sanskrit sukha, "well-being" — the su- that is Greek eu-.)
+Give the reply to sukhamāṇō?, and say where sukhaṁ comes from. (Sukhamāṇŭ; Sanskrit sukha, "well-being" — the su- that is Greek eu-.)
 
 
 Lesson 7 of 10.
@@ -303,7 +303,7 @@ The roots, taken apart.
 [pause 2 seconds]
 eṅṅane from the interrogative e- (native Dravidian, like Tamil eppaḍi).
 ñān from Proto-Dravidian (unrelated to English me); possessive enṟe.
-sukham from Sanskrit sukha "well-being" (the su- that is Greek eu-).
+sukhaṁ from Sanskrit sukha "well-being" (the su- that is Greek eu-).
 āṇŭ / illa — "is" and "is-not"; illa shared with Tamil & Kannada.
 the question-marker -ō — turns any statement into a yes/no question.
 
@@ -322,15 +322,15 @@ A friend asks sukhamāṇō? — give a full, polite reply, and answer their tha
 
 
 Lesson 10 of 10.
-സന്തോഷം (santōṣam) — one delayed copy.
+സന്തോഷം (santōṣaṁ) — one delayed copy.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
 
 Warm-up.
-Look at സന്തോഷം for five seconds and say santōṣam. Find ഷ and the long ō sign ോ once more. Then cover the model with your hand or a small piece of paper.
+Look at സന്തോഷം for five seconds and say santōṣaṁ. Find ഷ and the long ō sign ോ once more. Then cover the model with your hand or a small piece of paper.
 
 Writing — one try after a delay.
-Write സന്തോഷം (santōṣam) once while the model is covered. This is a gentle retrieval, not a speed test. If one shape will not come, uncover the model, look, cover it again, and finish.
+Write സന്തോഷം (santōṣaṁ) once while the model is covered. This is a gentle retrieval, not a speed test. If one shape will not come, uncover the model, look, cover it again, and finish.
 
 Wrap-up recall.
-Uncover സന്തോഷം and compare it with your copy. Repair only one shape if needed. Say santōṣam once, then stop: one known word, one spaced writing revisit.
+Uncover സന്തോഷം and compare it with your copy. Repair only one shape if needed. Say santōṣaṁ once, then stop: one known word, one spaced writing revisit.

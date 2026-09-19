@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Made by Hand",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d9755fdc0d0b6696",
+  "sourceHash": "fnv1a64:24d7f08d3776686f",
   "lessons": [
     {
       "id": "ML-C62-rope",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:355f22005d5744a2",
+      "sourceHash": "fnv1a64:3b6f7a6416c7f1e4",
       "notice": null,
       "blocks": [
         {
@@ -193,7 +193,7 @@
             },
             {
               "kind": "speech",
-              "text": "It closes on the bare l of cōṟu and vērŭ: the consonant with its vowel shaved off."
+              "text": "It closes on the bare l of cōṟŭ and vērŭ: the consonant with its vowel shaved off."
             }
           ]
         },

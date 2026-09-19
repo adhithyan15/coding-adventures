@@ -33,7 +33,7 @@ reviews_of: [ML-C50-parayuka, ML-C32-ariyuka]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-ARIYUKA-01, ML-CONCEPT-C50-PARAYUKA-01] -->
 
-[PAUSE 2s] Say *enikku malayāḷaṁ aṟiyāṁ* — "I know Malayalam." A whole sentence,
+[PAUSE 2s] Say *enikkŭ malayāḷaṁ aṟiyāṁ* — "I know Malayalam." A whole sentence,
 and yours since the knowing chapter.
 
 [PAUSE 2s] Now say *ñān paṟayunnu*. Today one word joins those two.
@@ -45,7 +45,7 @@ and yours since the knowing chapter.
 
 > **"എനിക്ക് മലയാളം അറിയാം" എന്ന് ഞാൻ പറയുന്നു.**
 >
-> *"enikku malayāḷaṁ aṟiyāṁ" ennŭ ñān paṟayunnu* — 'I say, "I know Malayalam."'
+> *"enikkŭ malayāḷaṁ aṟiyāṁ" ennŭ ñān paṟayunnu* — 'I say, "I know Malayalam."'
 
 **Nothing in the quoted sentence changed.** It is the same five syllables you
 have been saying since chapter nine, sitting in front of *ennŭ* exactly as they
@@ -77,7 +77,7 @@ one helps you notice the other on a page.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C72-ENNU-01, ML-CONCEPT-C50-PARAYUKA-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *enikku malayāḷaṁ aṟiyāṁ*]
+- [YOU SAY: *enikkŭ malayāḷaṁ aṟiyāṁ*]
 - [YOU SAY: the same thing again with *ennŭ ñān paṟayunnu* after it]
 - [YOU SAY: which of the two parts came out unchanged]
 - [YOU SAY: where the saying-verb sits, and where English would put it]

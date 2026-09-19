@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e06cc365aeed0d51",
+  "sourceHash": "fnv1a64:14f7801b963b3754",
   "lessons": [
     {
       "id": "ML-C09-kshamikkanam",
@@ -179,7 +179,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ca7bd872d637f851",
+      "sourceHash": "fnv1a64:a81fcaf596638a49",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -239,7 +239,7 @@
             },
             {
               "kind": "speech",
-              "text": "നമസ്കാരം namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+              "text": "നമസ്കാരം namaskāraṁ — hello / greetings (namaskāraṁ — \"a making of a bow\")."
             },
             {
               "kind": "speech",

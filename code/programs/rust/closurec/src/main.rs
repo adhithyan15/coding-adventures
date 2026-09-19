@@ -105,12 +105,11 @@ const CLI_SPEC_JSON: &str = include_str!("../cli.spec.json");
 /// Exit codes follow standard CLI convention:
 /// - `0` for success (Parse, Help, Version).
 /// - `1` for parse errors (unknown flag, invalid value, missing
-///   required flag, conflicting flags, etc.).
-///
-/// We don't use the Closure Java tool's exit code 2 / 3 / 4
-/// distinctions in v1 — `2` is reserved for usage error,
-/// `3` for compilation error, `4` for IO error once those paths
-/// actually exist. Stick with 0/1 for now.
+///   required flag, conflicting flags, etc.) and for a failed SIMPLE or
+///   ADVANCED compilation, matching the upstream compiler's parse-failure
+///   status.
+/// - `2` for closurec execution failures outside the typed pipeline, such as
+///   input/output and glob errors.
 pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
     let (stdout, stderr, code) = parse_and_run_with_streams(args);
     // Back-compat shim: combine stdout + stderr into a single
@@ -209,7 +208,10 @@ pub fn parse_and_run_with_streams(args: &[String]) -> (String, String, ExitCode)
                     // whether output went to stdout or to a file.
                     (out.stdout_text, out.stderr_text, ExitCode::SUCCESS)
                 }
-                Err(e) => (format!("{e}\n"), String::new(), ExitCode::from(2)),
+                Err(e) => {
+                    let code = e.exit_code();
+                    (String::new(), format!("{e}\n"), ExitCode::from(code))
+                }
             }
         }
         Ok(ParserOutput::Help(h)) => (h.text, String::new(), ExitCode::SUCCESS),

@@ -4,14 +4,14 @@
   "chapter": 89,
   "title": "What You Think Of It",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:57bbb5835ded7f71",
+  "sourceHash": "fnv1a64:9354b22b6c025f51",
   "lessons": [
     {
       "id": "ML-C89-nallathu",
       "sequence": 3120,
-      "title": "നല്ലത് (nallathŭ) — a good one",
+      "title": "നല്ലത് (nallatŭ) — a good one",
       "headword": "നല്ലത്",
-      "romanization": "nallathŭ",
+      "romanization": "nallatŭ",
       "gloss": "a good one — the ending that turns any quality you own into a thing you can talk about",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:572bb8046b00817d",
+      "sourceHash": "fnv1a64:ea46e4e53e60251d",
       "notice": null,
       "blocks": [
         {
@@ -62,12 +62,12 @@
               "rowCount": 2,
               "utterances": [
                 "നല്ല, good — needs a noun after it.",
-                "നല്ലത് (nallathŭ), a good one, a good thing — stands alone."
+                "നല്ലത് (nallatŭ), a good one, a good thing — stands alone."
               ]
             },
             {
               "kind": "speech",
-              "text": "And look at what that ending is. അത് is the word for that, which you have had since the pointing chapter. നല്ലത് (nallathŭ) is the that-which-is-good — the sense fits the shape exactly."
+              "text": "And look at what that ending is. അത് is the word for that, which you have had since the pointing chapter. നല്ലത് (nallatŭ) is the that-which-is-good — the sense fits the shape exactly."
             },
             {
               "kind": "speech",
@@ -108,11 +108,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "nalla, then nallathŭ",
+              "instruction": "nalla, then nallatŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *nalla*, then *nallathŭ*]"
+              "source": "[YOU SAY: *nalla*, then *nallatŭ*]"
             },
             {
               "kind": "prompt",
@@ -126,20 +126,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the word for that, and where you can see it in nallathŭ",
+              "instruction": "the word for that, and where you can see it in nallatŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the word for *that*, and where you can see it in *nallathŭ*]"
+              "source": "[YOU SAY: the word for *that*, and where you can see it in *nallatŭ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "valiyathŭ",
+              "instruction": "valiyatŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *valiyathŭ*]"
+              "source": "[YOU SAY: *valiyatŭ*]"
             }
           ]
         },
@@ -175,7 +175,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d94922dda656aa51",
+      "sourceHash": "fnv1a64:872d162e6887e021",
       "notice": null,
       "blocks": [
         {
@@ -222,7 +222,7 @@
             },
             {
               "kind": "speech",
-              "text": "The partner sentence is built the same way, from the word you learned a moment ago: നല്ലതാണ് — nallathāṇŭ — it is good."
+              "text": "The partner sentence is built the same way, from the word you learned a moment ago: നല്ലതാണ് — nallatāṇŭ — it is good."
             }
           ]
         },
@@ -267,11 +267,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "nallathāṇŭ, then mōśamāṇŭ",
+              "instruction": "nallatāṇŭ, then mōśamāṇŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *nallathāṇŭ*, then *mōśamāṇŭ*]"
+              "source": "[YOU SAY: *nallatāṇŭ*, then *mōśamāṇŭ*]"
             }
           ]
         },
@@ -297,9 +297,9 @@
     {
       "id": "ML-C89-opinion",
       "sequence": 3140,
-      "title": "നല്ലതാണ് എന്ന് ഞാൻ ചിന്തിക്കുന്നു (nallathāṇŭ ennŭ ñān cintikkunnu) — I think it is good",
+      "title": "നല്ലതാണ് എന്ന് ഞാൻ ചിന്തിക്കുന്നു (nallatāṇŭ ennŭ ñān cintikkunnu) — I think it is good",
       "headword": "നല്ലതാണ് എന്ന് ഞാൻ ചിന്തിക്കുന്നു",
-      "romanization": "nallathāṇŭ ennŭ ñān cintikkunnu",
+      "romanization": "nallatāṇŭ ennŭ ñān cintikkunnu",
       "gloss": "I think it is good — an opinion assembled entirely out of machinery you already own",
       "script": "malayalam",
       "modality": "voice",
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3dd8a939f7eb8f9a",
+      "sourceHash": "fnv1a64:8373ecdc01421bcc",
       "notice": null,
       "blocks": [
         {
@@ -338,7 +338,7 @@
             },
             {
               "kind": "speech",
-              "text": "അത് നല്ലതാണ് എന്ന് ഞാൻ ചിന്തിക്കുന്നു. atŭ nallathāṇŭ ennŭ ñān cintikkunnu — I think it is good."
+              "text": "അത് നല്ലതാണ് എന്ന് ഞാൻ ചിന്തിക്കുന്നു. atŭ nallatāṇŭ ennŭ ñān cintikkunnu — I think it is good."
             },
             {
               "kind": "speech",
@@ -390,20 +390,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "atŭ nallathāṇŭ",
+              "instruction": "atŭ nallatāṇŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *atŭ nallathāṇŭ*]"
+              "source": "[YOU SAY: *atŭ nallatāṇŭ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the whole opinion — atŭ nallathāṇŭ ennŭ ñān cintikkunnu",
+              "instruction": "the whole opinion — atŭ nallatāṇŭ ennŭ ñān cintikkunnu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the whole opinion — *atŭ nallathāṇŭ ennŭ ñān cintikkunnu*]"
+              "source": "[YOU SAY: the whole opinion — *atŭ nallatāṇŭ ennŭ ñān cintikkunnu*]"
             },
             {
               "kind": "prompt",
@@ -457,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e834bcc60c7aa749",
+      "sourceHash": "fnv1a64:ede3c332b9d76121",
       "notice": null,
       "blocks": [
         {
@@ -492,12 +492,12 @@
               "rowCount": 2,
               "utterances": [
                 "നല്ല, good — needs a noun after it.",
-                "നല്ലത് (nallathŭ), a good one — stands alone."
+                "നല്ലത് (nallatŭ), a good one — stands alone."
               ]
             },
             {
               "kind": "speech",
-              "text": "-അത് is the word for that, and നല്ലത് (nallathŭ) is the that-which-is-good. The sense fits the shape, and the ending works on every quality the book has given you — valiyathŭ, ceṟiyathŭ, puthiyathŭ, paḻayathŭ — with no exceptions among them."
+              "text": "-അത് is the word for that, and നല്ലത് (nallatŭ) is the that-which-is-good. The sense fits the shape, and the ending works on every quality the book has given you — valiyatŭ, ceṟiyatŭ, putiyatŭ, paḻayatŭ — with no exceptions among them."
             },
             {
               "kind": "speech",
@@ -516,7 +516,7 @@
             },
             {
               "kind": "speech",
-              "text": "അത് നല്ലതാണ് എന്ന് ഞാൻ ചിന്തിക്കുന്നു (nallathāṇŭ ennŭ ñān cintikkunnu). — I think it is good."
+              "text": "അത് നല്ലതാണ് എന്ന് ഞാൻ ചിന്തിക്കുന്നു (nallatāṇŭ ennŭ ñān cintikkunnu). — I think it is good."
             },
             {
               "kind": "table",
@@ -556,11 +556,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "nallathŭ, then valiyathŭ",
+              "instruction": "nallatŭ, then valiyatŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *nallathŭ*, then *valiyathŭ*]"
+              "source": "[YOU SAY: *nallatŭ*, then *valiyatŭ*]"
             },
             {
               "kind": "prompt",

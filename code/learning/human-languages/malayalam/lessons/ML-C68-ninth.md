@@ -49,7 +49,7 @@ plus *pathŭ*, **ten** — one short of ten, with the *n* turning to *m* before 
 *p*. The ordinal ending goes on top of that, and none of the machinery
 underneath reacts to it.
 
-**ഒമ്പതാം ദിവസം** (*ompathāṁ divasam*), the ninth day.
+**ഒമ്പതാം ദിവസം** (*ompathāṁ divasaṁ*), the ninth day.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-04, ML-LEX-C68-ORDINAL-03] -->

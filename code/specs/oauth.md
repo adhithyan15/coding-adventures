@@ -333,7 +333,13 @@ The delivery order is:
    binding is checked before entropy or transport access. This adds no identity
    verifier or account-key selection yet; it prepares a later authorized poll
    to cross the existing audited ID-token proof boundary without accepting a
-   caller-invented or replay-ambiguous nonce.
+   caller-invented or replay-ambiguous nonce. The nonce-bound polling
+   prerequisite is also explicit: one opaque OIDC sequence carries the exact
+   device session and nonce through early waits, `authorization_pending`,
+   `slow_down`, and retryable transport failure. Only an authorized token
+   response is paired with that nonce for a later identity proof; denial and
+   expiry discard it. This adds no verifier, account-key selection, storage,
+   clock, sleep, or concrete transport authority.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
    before any socket is opened.

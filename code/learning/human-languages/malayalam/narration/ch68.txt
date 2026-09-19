@@ -19,7 +19,7 @@ The line goes on past five, so the chapter opens by retrieving where it stopped.
 
 You'll want to know: ആറാം.
 ആറാം (āṟāṁ) — "sixth". ആറ് drops its ŭ and takes ആം, with nothing else to notice.
-ആറാം ദിവസം (āṟāṁ divasam), the sixth day.
+ആറാം ദിവസം (āṟāṁ divasaṁ), the sixth day.
 That "nothing else to notice" is the point of the whole chapter. Six to ten were a separate lesson from one to five when you learned to count, because the words themselves had to be learned. For ordering they are not a separate anything.
 
 Guided Practice.
@@ -28,7 +28,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: añcāṁ, āṟāṁ]
 [pause 8 seconds for the answer]
-[your turn — say: āṟāṁ divasam — the sixth day]
+[your turn — say: āṟāṁ divasaṁ — the sixth day]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -53,7 +53,7 @@ Warm-up.
 You'll want to know: ഏഴാം.
 ഏഴാം (ēḻāṁ) — "seventh".
 ഏഴ് carries the curled ḻ, the sound in the name Malayāḷam itself and the one this language shares with Tamil while Kannada and Telugu hardened it away. Adding the ending does not soften it: ഏഴാം, with the tongue still curled back.
-ഏഴാം ദിവസം (ēḻāṁ divasam), the seventh day.
+ഏഴാം ദിവസം (ēḻāṁ divasaṁ), the seventh day.
 One honest warning about the page. This word begins with ഏ, the independent long ē, and that is a letter this book has taught you to recognise but not yet to write — no stroke order for it has been sourced, so none is offered. Read it; do not copy it yet. That is why this lesson is headed by its romanization rather than by the Malayalam word, the way the counting lessons were.
 
 Guided Practice.
@@ -87,7 +87,7 @@ Warm-up.
 You'll want to know: എട്ടാം.
 എട്ടാം (eṭṭāṁ) — "eighth".
 എട്ട് has a doubled retroflex ṭṭ, written as ട stacked under ട with the virama between them. The ending lands after all of that, so the stack is untouched: എട്ടാം (eṭṭāṁ).
-എട്ടാം ദിവസം (eṭṭāṁ divasam), the eighth day.
+എട്ടാം ദിവസം (eṭṭāṁ divasaṁ), the eighth day.
 
 Guided Practice.
 [pause 1 second]
@@ -120,7 +120,7 @@ Warm-up.
 You'll want to know: ഒമ്പതാം.
 ഒമ്പതാം (ompathāṁ) — "ninth".
 ഒമ്പത് was already a built word when you learned it: an old word for one plus pathŭ, ten — one short of ten, with the n turning to m before the p. The ordinal ending goes on top of that, and none of the machinery underneath reacts to it.
-ഒമ്പതാം ദിവസം (ompathāṁ divasam), the ninth day.
+ഒമ്പതാം ദിവസം (ompathāṁ divasaṁ), the ninth day.
 
 Guided Practice.
 [pause 1 second]
@@ -152,7 +152,7 @@ Warm-up.
 
 You'll want to know: പത്താം.
 പത്താം (pathāṁ) — "tenth". പത്ത് loses its ŭ and takes ആം, and the ten are done.
-പത്താം ദിവസം (pathāṁ divasam), the tenth day.
+പത്താം ദിവസം (pathāṁ divasaṁ), the tenth day.
 
 Guided Practice.
 [pause 1 second]
@@ -169,7 +169,7 @@ Say "the tenth day". (പത്താം (pathāṁ) ദിവസം.) Count the
 
 
 Lesson 6 of 7.
-പതിനൊന്നാം (pathinonnāṁ) — eleventh, and the edge that is not there.
+പതിനൊന്നാം (patinonnāṁ) — eleventh, and the edge that is not there.
 
 Warm-up.
 [pause 2 seconds]
@@ -183,9 +183,9 @@ Warm-up.
 [pause 8 seconds for the answer]
 
 You'll want to know: പതിനൊന്നാം.
-പതിനൊന്നാം (pathinonnāṁ) — "eleventh".
+പതിനൊന്നാം (patinonnāṁ) — "eleventh".
 പതിനൊന്ന് was itself a built word: pathin-, the joining shape of ten, with onnŭ welded on. Now the ordinal ending goes on top of that, and the result is a word of three parts, not one of which had to be learned as a whole.
-പതിനൊന്നാം ദിവസം (pathinonnāṁ divasam), the eleventh day.
+പതിനൊന്നാം ദിവസം (patinonnāṁ divasaṁ), the eleventh day.
 
 Grammar Lens: the ending is a fact about numbers, not about ten.
 Most books stop an ordinal chapter at tenth, and a learner reasonably concludes that those ten words were the set. In Malayalam there is no set. ആം attaches to a number, so every number you learn from here on arrives with its ordinal already made: ഇരുപത് gives ഇരുപതാം (irupathāṁ), twentieth, without a lesson.
@@ -193,16 +193,16 @@ That is why this book taught the ending in the very first lesson of the previous
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: pathinonnŭ, then pathinonnāṁ]
+[your turn — say: patinonnŭ, then patinonnāṁ]
 [pause 8 seconds for the answer]
-[your turn — say: pathāṁ, pathinonnāṁ]
+[your turn — say: pathāṁ, patinonnāṁ]
 [pause 8 seconds for the answer]
-[your turn — say: take irupathŭ and make its ordinal yourself]
+[your turn — say: take irupatŭ and make its ordinal yourself]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "the eleventh day". (പതിനൊന്നാം (pathinonnāṁ) ദിവസം.) Do you need a lesson for twentieth? (No — the ending goes on any number.)
+Say "the eleventh day". (പതിനൊന്നാം (patinonnāṁ) ദിവസം.) Do you need a lesson for twentieth? (No — the ending goes on any number.)
 
 
 Lesson 7 of 7.
@@ -210,7 +210,7 @@ Lesson 7 of 7.
 
 Warm-up.
 [pause 2 seconds]
-[your turn — recall: say pathinonnāṁ, and say why irupathāṁ needs no lesson — R1]
+[your turn — recall: say patinonnāṁ, and say why irupathāṁ needs no lesson — R1]
 [pause 8 seconds for the answer]
 [your turn — recall: say ēḻāṁ — R2]
 [pause 8 seconds for the answer]
@@ -222,7 +222,7 @@ Warm-up.
 You'll want to know: ആദ്യം.
 ആദ്യം (ādyaṁ) — "at first", "first of all".
 This is not another ordinal. ഒന്നാം picks an item out of a line: the first door, the first way. ആദ്യം (ādyaṁ) puts an action first in time, and it pairs with പിന്നെ, which you already have:
-ആദ്യം (ādyaṁ) ഊണ്, പിന്നെ ചായ. — Ādyaṁ ūṇŭ, pinne chāya. "Lunch first, then tea."
+ആദ്യം (ādyaṁ) ഊണ്, പിന്നെ ചായ. — Ādyaṁ ūṇŭ, pinne cāya. "Lunch first, then tea."
 
 Why it's said this way — the one word Malayalam borrowed here.
 Notice what did and did not get borrowed. Malayalam's ordinals are native, and their ending is so regular that it never needed a special word for first — the one place its sisters all reached for മുതൽ. But for first as an adverb, the language reached into Sanskrit and took ആദ്യം (ādyaṁ), from ādya, "primary".
@@ -236,7 +236,7 @@ what you are ordering: an action in time. word: ആദ്യം ādyaṁ, with �
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: ādyaṁ, then ādyaṁ ūṇŭ, pinne chāya]
+[your turn — say: ādyaṁ, then ādyaṁ ūṇŭ, pinne cāya]
 [pause 8 seconds for the answer]
 [your turn — say: onnāṁ vaḻi — the first way]
 [pause 8 seconds for the answer]

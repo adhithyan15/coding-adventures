@@ -7,7 +7,7 @@ delivery: script
 chapter: 7
 type: writing
 headword: ഏഴ് ൭
-romanization: "ezhu, seven"
+romanization: "ēḻŭ, seven"
 gloss: retrieve one familiar word-numeral pair after hiding its model
 prerequisites: [ML-W07-numbers-6-10-guided-copy]
 sounds: [zha-llla]
@@ -33,7 +33,7 @@ reviews_of: [ML-W07-numbers-6-10-guided-copy]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-SCRIPT-DIGITS-6-8-07] -->
 
-Study **ഏഴ് — ൭** for five seconds. Say *ezhu*, then cover both forms.
+Study **ഏഴ് — ൭** for five seconds. Say *ēḻŭ*, then cover both forms.
 
 ## Writing — delayed copy
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-02, ML-SCRIPT-DIGITS-6-8-07] -->

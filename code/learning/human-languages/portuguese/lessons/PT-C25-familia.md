@@ -11,7 +11,7 @@ concept_tag: PT-PEOPLE-FAMILY
 prerequisites: [PT-C25-amigo, PT-C10-pais, PT-C10-irmaos]
 sounds: []
 roots: [latin-familia-famulus]
-etymology_hook: "família ← Latin familia, which in Classical Latin meant the whole household under one head -- including the servants (famuli) -- not specifically blood relatives; the word's centre of gravity moved from 'household' to 'kin' only over centuries, so a esse país's o pai and a mãe were originally just the two people in charge of a familia, not its definition"
+etymology_hook: "família ← Latin familia, which in Classical Latin meant the whole household under one head -- including the servants (famuli) -- not specifically blood relatives; the word's centre of gravity moved from 'household' to 'kin' only over centuries, so o pai and a mãe were originally just the two people in charge of a familia, not its definition"
 duration:
   max_seconds: 224
 requires:

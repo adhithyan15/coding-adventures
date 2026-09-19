@@ -34,7 +34,7 @@ reviews_of: [ML-C32-ariyuka, ML-C32-kaanuka, ML-C32-tinnuka, ML-C09-kshamikkanam
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-ARIYUKA-01, ML-CONCEPT-C32-ARIYUKA-02] -->
 
-[PAUSE 2s] Say *enikku malayāḷaṁ aṟiyāṁ*. Knowing **arrived** at you, so the "I"
+[PAUSE 2s] Say *enikkŭ malayāḷaṁ aṟiyāṁ*. Knowing **arrived** at you, so the "I"
 left the subject slot. Thinking you do — and you keep it.
 
 ## You'll want to know
@@ -89,7 +89,7 @@ borrowed — and the word it demoted, *ninekka*, is *niṉai* exactly.
 - [YOU SAY: noun, verb, and its cousin — "cinta … cintikkuka … kṣamikkuka"]
 - [YOU SAY: the mood ladder — "cintikkāṁ … cintikkaṇaṁ … cintikkarutŭ"]
 - [YOU SAY: three strategies — "niṉai" kept, "anukō" built, "cintikkuka" borrowed]
-- [YOU SAY: knowing, then thinking — "enikku malayāḷaṁ aṟiyāṁ," "ñān cintikkunnu"]
+- [YOU SAY: knowing, then thinking — "enikkŭ malayāḷaṁ aṟiyāṁ," "ñān cintikkunnu"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C33-CINTIKKUKA-01, ML-CONCEPT-C33-CINTIKKUKA-02, ML-CONCEPT-C32-ARIYUKA-01, ML-CONCEPT-C32-ARIYUKA-02, ML-CONCEPT-C32-KAANUKA-02, ML-CONCEPT-C32-TINNUKA-02, ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02] -->

@@ -78,14 +78,14 @@ other job: **to draw**. Two roots, two tasks, as with *uṇṭŭ* and *irikkuka*
 
 [PAUSE 1s]
 - [YOU SAY: "ñān malayāḷaṁ eḻutunnu," then "eḻuti"]
-- [YOU SAY: when — "ñān rāthri eḻutunnu," I write at night]
+- [YOU SAY: when — "ñān rātri eḻutunnu," I write at night]
 - [YOU SAY: the two sisters' one word — "eḻutuka … eḻutu"]
 - [YOU SAY: the sound hardening east — "ēḻu … ēḷu … ēḍu"]
 - [YOU SAY: write, then draw — "eḻutuka … varaykkuka"]
 - [YOU SAY: the chapter's **നാല്** — "cintikkunnu, manassilākkunnu, vāyikkunnu, eḻutunnu"]
 - [YOU SAY: with Chapter 32's six that makes **പത്ത്** — "uṇṭŭ, pōkunnu, varunnu, tinnunnu, kāṇunnu, aṟiyunnu"]
 - [YOU SAY: the two that carry the stamp — "cintikkuka, vāyikkuka"]
-- [YOU SAY: and the sentence with no subject — "enikku manassilāyi"]
+- [YOU SAY: and the sentence with no subject — "enikkŭ manassilāyi"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C33-EZHUTUKA-01, ML-CONCEPT-C33-EZHUTUKA-02, ML-CONCEPT-C33-CINTIKKUKA-01, ML-CONCEPT-C33-CINTIKKUKA-02, ML-CONCEPT-C33-MANASSILAAKKUKA-01, ML-CONCEPT-C33-MANASSILAAKKUKA-02, ML-CONCEPT-C33-MANASSILAAKKUKA-03, ML-CONCEPT-C33-VAAYIKKUKA-01, ML-CONCEPT-C33-VAAYIKKUKA-02, ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-6-10-01, ML-CONCEPT-C07-NUMBERS-6-10-02, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-CONCEPT-C24-RATHRI-01, ML-CONCEPT-C32-TINNUKA-01, ML-CONCEPT-C32-KAANUKA-01] -->

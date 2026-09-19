@@ -62,7 +62,7 @@ The far end of a meal.
 
 [PAUSE 1s]
 - [YOU SAY: *bil*]
-- [YOU SAY: *ethra rūpa?*]
+- [YOU SAY: *etra rūpa?*]
 - [YOU SAY: which of this chapter's two borrowings changed meaning on the way in]
 
 ## Wrap-up Recall

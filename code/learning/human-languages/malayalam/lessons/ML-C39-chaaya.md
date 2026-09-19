@@ -7,7 +7,7 @@ chapter: 39
 type: word
 headword: ചായ
 gloss: tea — Chinese, carried overland through Persian and Hindi before it ever reached Kerala
-romanization: chaaya
+romanization: cāya
 concept_tag: ML-TEA
 prerequisites: [ML-C38-nenchu, ML-C08-dayavayi, ML-C06-dative-ikku, ML-C06-dative-subject, ML-C09-kshamikkanam]
 sounds: [malayalam-cha, malayalam-vowel-sign-aa]
@@ -29,7 +29,7 @@ variety: standard-colloquial
 reviews_of: [ML-C38-nenchu, ML-C08-dayavayi, ML-C38-hrudayam, ML-C06-dative-ikku, ML-C06-dative-subject, ML-C09-kshamikkanam]
 ---
 
-# ചായ (chāya) — "tea," which walked to Kerala rather than sailed
+# ചായ (cāya) — "tea," which walked to Kerala rather than sailed
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C08-DAYAVAYI-01] -->
@@ -41,9 +41,9 @@ work.
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C39-CHAAYA-01]; assesses=[] -->
 
-> **ചായ** — *chāya* — **tea**
+> **ചായ** — *cāya* — **tea**
 
-> **ദയവായി ഒരു ചായ.** — *dayavāyi oru chāya.* — "A tea, please."
+> **ദയവായി ഒരു ചായ.** — *dayavāyi oru cāya.* — "A tea, please."
 
 *Dayavāyi* has been yours since early in this book; *oru*, "a/one," you
 have already met attached to *nāḷ* and *maṇi*.
@@ -53,7 +53,7 @@ have already met attached to *nāḷ* and *maṇi*.
 
 **ചായ** traces to Northern Chinese **chá**, carried overland along
 Central Asian trade routes into Persian **چای** (*chāy*), and from there
-into Hindi-Urdu *chāy* and Malayalam *chāya* alike — the same land route
+into Hindi-Urdu *chāy* and Malayalam *cāya* alike — the same land route
 most of North and South India took for their word for tea. Tea that instead
 reached Europe by **sea** kept a different, southern Chinese form, which is
 why English says **tea** and French says *thé* — one leaf, two roads: chai
@@ -72,20 +72,20 @@ if you ask for the wrong thing — repairing with **ക്ഷമിക്കണ�
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04, ML-CONCEPT-C38-HRUDAYAM-01, ML-CONCEPT-C38-HRUDAYAM-02, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "dayavāyi oru chāya" — a tea, please]
-- [YOU SAY: the road — "chá … chāy … chāya"]
+- [YOU SAY: "dayavāyi oru cāya" — a tea, please]
+- [YOU SAY: the road — "chá … chāy … cāya"]
 - [YOU SAY: land against sea — "chai … tea"]
 - [YOU SAY: please, once more, and its plainer everyday form — "dayavāyi …
   irikkū"]
-- [YOU SAY: two hearts, once more — "hṛdayaṁ … nenchŭ"]
+- [YOU SAY: two hearts, once more — "hṛdayaṁ … neñcŭ"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03, ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03] -->
 
-[PAUSE 3s] Ask for tea, politely. (*Dayavāyi oru chāya*.) Name the three
-languages *chāya* passed through, in order. (**Chinese**, then **Persian**,
+[PAUSE 3s] Ask for tea, politely. (*Dayavāyi oru cāya*.) Name the three
+languages *cāya* passed through, in order. (**Chinese**, then **Persian**,
 then **Hindi-Urdu**, into Malayalam.) Why does English say "tea" instead of
 "chai"? (**It arrived by sea**, carrying a different Chinese form.) Which
-dative suffix does *dayavāyi ... enikku* share with Tamil, Telugu and
+dative suffix does *dayavāyi ... enikkŭ* share with Tamil, Telugu and
 Kannada? (**The dative** — *‑ikku/‑ukku/‑ku/‑ge*.) What is the repair half
 of this spine node's word pair? (**ക്ഷമിക്കണം**, sorry.)

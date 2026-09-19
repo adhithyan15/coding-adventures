@@ -793,6 +793,23 @@ mod tests {
     }
 
     #[test]
+    fn formula_edit_updates_totals_before_and_after_snapshot_restore() {
+        let mut app = VisiCalcMosaicApp::default();
+        dispatch(&mut app, "formulaChange", json!({"value":"=20+22"}));
+        dispatch(&mut app, "commit", json!({}));
+        let assert_totals = |app: &VisiCalcMosaicApp| {
+            for (row, col, expected) in [(1, 1, "42"), (1, 5, "65"), (5, 1, "66"), (5, 5, "196")] {
+                assert_eq!(app.workbook.get_display(SheetId(0), CellAddress::new(row, col)), expected);
+            }
+        };
+        assert_totals(&app);
+        let mut restored = VisiCalcMosaicApp::default();
+        restored.restore(app.snapshot().unwrap().unwrap()).unwrap();
+        assert_eq!(restored.source(0, 0), "=20+22");
+        assert_totals(&restored);
+    }
+
+    #[test]
     fn snapshot_restores_committed_work_and_discards_pending_edit() {
         let mut app = VisiCalcMosaicApp::default();
         dispatch(&mut app, "formulaChange", json!({"value":"20"}));

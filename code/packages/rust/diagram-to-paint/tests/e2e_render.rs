@@ -335,11 +335,12 @@ mod apple {
     #[test]
     fn render_mermaid_block_entity_labels_to_png() {
         let grid = parse_block(
-            "block\ntitle <b>Grammar</b> &amp; Paint\nA[<em>Parse</em>&nbsp;input] -- \"<strong>lower</strong>&amp;shape\" --> B[Paint]",
+            "block; title <b>Grammar</b> &amp; Paint; A[<em>Parse</em>&nbsp;input]; B[Paint]; classDef constructor fill:#dcfce7,stroke:#166534; class B constructor; A -- \"<strong>lower</strong>&amp;shape\" --> B",
         )
         .expect("block sanitized label parse failed");
         assert_eq!(grid.title.as_deref(), Some("Grammar & Paint"));
         assert_eq!(grid.cells[0].label.text, "Parse\u{a0}input");
+        assert_eq!(grid.cells[1].style.as_ref().unwrap().fill.as_deref(), Some("#dcfce7"));
         assert_eq!(grid.connections[0].label.as_ref().unwrap().text, "lower&shape");
         let layout = layout_grid_diagram(&grid);
         let shaper = CoreTextShaper;

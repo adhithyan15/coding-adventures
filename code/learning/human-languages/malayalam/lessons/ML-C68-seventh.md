@@ -49,7 +49,7 @@ the one this language shares with Tamil while Kannada and Telugu hardened it
 away. Adding the ending does not soften it: **ഏഴാം**, with the tongue still
 curled back.
 
-**ഏഴാം ദിവസം** (*ēḻāṁ divasam*), the seventh day.
+**ഏഴാം ദിവസം** (*ēḻāṁ divasaṁ*), the seventh day.
 
 One honest warning about the page. This word begins with **ഏ**, the independent
 long **ē**, and that is a letter this book has taught you to *recognise* but not

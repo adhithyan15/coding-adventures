@@ -80,7 +80,7 @@ like.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C85-STRESS-01, ML-CONCEPT-C85-GEMINATION-01, ML-CONCEPT-C36-KUTTI-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *namaskāram* with the weight on its first syllable]
+- [YOU SAY: *namaskāraṁ* with the weight on its first syllable]
 - [YOU SAY: which syllable of any Malayalam word takes the weight]
 - [YOU SAY: what happens if you put it somewhere else — understood, or not?]
 - [YOU SAY: *kuṭi* and *kuṭṭi*, and say what separates them instead]

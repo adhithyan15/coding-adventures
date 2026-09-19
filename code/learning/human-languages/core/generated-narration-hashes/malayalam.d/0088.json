@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 88,
-  "sourceHash": "fnv1a64:2d6d9c27f466562b",
+  "sourceHash": "fnv1a64:44b2f6347e51d9df",
   "lessonIds": [
     "ML-C88-tens",
     "ML-C88-ninety-hundred",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch88.txt",
   "json": "malayalam/narration/ch88.json",
-  "textHash": "fnv1a64:825727aa7402982a",
-  "jsonHash": "fnv1a64:f7e017b8de2212d8",
+  "textHash": "fnv1a64:c132f740485893fc",
+  "jsonHash": "fnv1a64:fb34eaf7f0a40ba0",
   "findings": []
 }

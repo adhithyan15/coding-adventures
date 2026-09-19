@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2ffa363d52b068a9",
+  "sourceHash": "fnv1a64:ec365931c9ae4896",
   "lessons": [
     {
       "id": "ML-C31-shubha-madhyaahnam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cce686d227069e7",
+      "sourceHash": "fnv1a64:3b5aa444c68d059b",
       "notice": null,
       "blocks": [
         {

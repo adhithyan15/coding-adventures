@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 25,
-  "sourceHash": "fnv1a64:a4a02667106cd4cf",
+  "sourceHash": "fnv1a64:f359aaa1f51e9959",
   "lessonIds": [
     "ML-C25-shubha-rathri",
     "ML-S129-letter-bha"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch25.txt",
   "json": "malayalam/narration/ch25.json",
-  "textHash": "fnv1a64:5da34e769aaf07c1",
-  "jsonHash": "fnv1a64:6ed7dc41834a034a",
+  "textHash": "fnv1a64:9254deae984783b1",
+  "jsonHash": "fnv1a64:4322da0cb0614f68",
   "findings": []
 }

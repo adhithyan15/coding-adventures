@@ -48,7 +48,7 @@ It is a **vowel sign**. It is not a letter and never stands alone: it attaches t
 You already say these, and every one of them has ◌ി somewhere inside it:
 
 - **നന്ദി** *nandi* — thank you
-- **ശരി** *sari* — okay / alright / correct (śari)
+- **ശരി** *śari* — okay / alright / correct
 - **സാരമില്ല** *sāramilla* — it doesn't matter / no problem / you're welcome
 - **പോയി വരാം** *pōyi varāṁ* — goodbye (lit. "I'll go and come back")
 

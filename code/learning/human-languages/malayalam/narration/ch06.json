@@ -4,22 +4,22 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:77e68d966d4f4336",
+  "sourceHash": "fnv1a64:293169514bb9cd3c",
   "lessons": [
     {
       "id": "ML-C06-dative-ikku",
       "sequence": 320,
-      "title": "-ിക്ക് (-ikku) — \"to, for\"",
+      "title": "-ിക്ക് (-ikkŭ) — \"to, for\"",
       "headword": "-ിക്ക്",
-      "romanization": "-ikku",
-      "gloss": "the dative suffix -ikku, 'to / for' — and the idea of stacking",
+      "romanization": "-ikkŭ",
+      "gloss": "the dative suffix -ikkŭ, 'to / for' — and the idea of stacking",
       "script": "malayalam",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:494e395d488a3813",
+      "sourceHash": "fnv1a64:65c0fd6a1530371d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -61,13 +61,13 @@
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "word: പേര് pēru — name. + dative: പേരിന് pērinu. meaning: to/for the name.",
-                "word: ജോലി jōli — work. + dative: ജോലിക്ക് jōlikku. meaning: for work."
+                "word: പേര് pēr — name. + dative: പേരിന് pērinŭ. meaning: to/for the name.",
+                "word: ജോലി jōli — work. + dative: ജോലിക്ക് jōlikkŭ. meaning: for work."
               ]
             },
             {
               "kind": "speech",
-              "text": "Malayalam's dative has two shapes — -ിക്ക് -ikku and -ിന് -inu — chosen by the sound the noun ends in. Same case, same job; the seam is still visible."
+              "text": "Malayalam's dative has two shapes — -ിക്ക് -ikkŭ and -ിന് -inŭ — chosen by the sound the noun ends in. Same case, same job; the seam is still visible."
             },
             {
               "kind": "speech",
@@ -75,11 +75,11 @@
             },
             {
               "kind": "speech",
-              "text": "ഞാൻ ñān (\"I\") becomes എനിക്ക് enikku (\"to me\")."
+              "text": "ഞാൻ ñān (\"I\") becomes എനിക്ക് enikkŭ (\"to me\")."
             },
             {
               "kind": "speech",
-              "text": "Learn enikku cold — it opens a great many everyday Malayalam sentences, as the next lesson shows."
+              "text": "Learn enikkŭ cold — it opens a great many everyday Malayalam sentences, as the next lesson shows."
             }
           ]
         },
@@ -92,16 +92,16 @@
               "kind": "table",
               "headers": [
                 "",
-                "Malayalam -ikku",
+                "Malayalam -ikkŭ",
                 "a Latin ending like -īs"
               ],
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "pins down the case? Malayalam -ikku: yes — dative, always. a Latin ending like -īs: no — -īs is dative or ablative.",
-                "carries number? Malayalam -ikku: no — a separate suffix does. a Latin ending like -īs: yes — plural, baked in.",
-                "carries declension class? Malayalam -ikku: no. a Latin ending like -īs: yes — 1st/2nd only.",
-                "can you see the seam? Malayalam -ikku: yes: jōli + kku. a Latin ending like -īs: no — one fused lump."
+                "pins down the case? Malayalam -ikkŭ: yes — dative, always. a Latin ending like -īs: no — -īs is dative or ablative.",
+                "carries number? Malayalam -ikkŭ: no — a separate suffix does. a Latin ending like -īs: yes — plural, baked in.",
+                "carries declension class? Malayalam -ikkŭ: no. a Latin ending like -īs: yes — 1st/2nd only.",
+                "can you see the seam? Malayalam -ikkŭ: yes: jōli + kkŭ. a Latin ending like -īs: no — one fused lump."
               ]
             },
             {
@@ -128,29 +128,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pēru … pērinu\"",
+              "instruction": "\"pēr … pērinŭ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"*pēru* … *pērinu*\"]"
+              "source": "[YOU SAY: \"*pēr* … *pērinŭ*\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ñān … enikku\" — \"I\" … \"to me\"",
+              "instruction": "\"ñān … enikkŭ\" — \"I\" … \"to me\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"*ñān* … *enikku*\" — \"I\" … \"to me\"]"
+              "source": "[YOU SAY: \"*ñān* … *enikkŭ*\" — \"I\" … \"to me\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"jōlikku\" — \"for work,\" from Ch. 5's ജോലി",
+              "instruction": "\"jōlikkŭ\" — \"for work,\" from Ch. 5's ജോലി",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"*jōlikku*\" — \"for work,\" from Ch. 5's ജോലി]"
+              "source": "[YOU SAY: \"*jōlikkŭ*\" — \"for work,\" from Ch. 5's ജോലി]"
             },
             {
               "kind": "prompt",
@@ -176,7 +176,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does -ിക്ക് mean? (\"To\" or \"for.\") Where does it go? (On the end of the noun.) What is \"to me\"? (എനിക്ക് enikku.) Why does the suffix have two shapes? (-ikku and -inu are chosen by the noun's ending — one case, two forms.) How is that unlike a Latin ending? (Latin fuses case+number+declension — and -īs doesn't even fix which case; Malayalam's carries one meaning, unambiguously, seam visible.) Next: the sentence where the person isn't the subject."
+              "text": "What does -ിക്ക് mean? (\"To\" or \"for.\") Where does it go? (On the end of the noun.) What is \"to me\"? (എനിക്ക് enikkŭ.) Why does the suffix have two shapes? (-ikkŭ and -inŭ are chosen by the noun's ending — one case, two forms.) How is that unlike a Latin ending? (Latin fuses case+number+declension — and -īs doesn't even fix which case; Malayalam's carries one meaning, unambiguously, seam visible.) Next: the sentence where the person isn't the subject."
             }
           ]
         }
@@ -197,7 +197,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5347868dcd7babfe",
+      "sourceHash": "fnv1a64:8c94cd516061c1fe",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -257,7 +257,7 @@
             },
             {
               "kind": "speech",
-              "text": "നമസ്കാരം namaskāram — hello / greetings."
+              "text": "നമസ്കാരം namaskāraṁ — hello / greetings."
             },
             {
               "kind": "speech",
@@ -366,7 +366,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6affbf08f992eb86",
+      "sourceHash": "fnv1a64:8a5fcea748eacd3a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -426,7 +426,7 @@
             },
             {
               "kind": "speech",
-              "text": "നമസ്കാരം namaskāram — hello / greetings."
+              "text": "നമസ്കാരം namaskāraṁ — hello / greetings."
             },
             {
               "kind": "speech",
@@ -523,9 +523,9 @@
     {
       "id": "ML-C06-dative-subject",
       "sequence": 330,
-      "title": "എനിക്ക് മലയാളം അറിയാം (enikku malayāḷam aṟiyām) — \"I know Malayalam\"",
+      "title": "എനിക്ക് മലയാളം അറിയാം (enikkŭ malayāḷaṁ aṟiyāṁ) — \"I know Malayalam\"",
       "headword": "എനിക്ക് മലയാളം അറിയാം",
-      "romanization": "enikku malayāḷam aṟiyām",
+      "romanization": "enikkŭ malayāḷaṁ aṟiyāṁ",
       "gloss": "'I know Malayalam' — built with no subject, because knowing happens TO you",
       "script": "malayalam",
       "modality": "sight",
@@ -533,7 +533,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:776992a51835cb14",
+      "sourceHash": "fnv1a64:d43046baffc3493f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -567,7 +567,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എനിക്ക് മലയാളം അറിയാം. enikku malayāḷam aṟiyām. literally: \"to-me Malayalam is-knowable.\""
+              "text": "എനിക്ക് മലയാളം അറിയാം. enikkŭ malayāḷaṁ aṟiyāṁ. literally: \"to-me Malayalam is-knowable.\""
             },
             {
               "kind": "table",
@@ -578,9 +578,9 @@
               "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "piece: എനിക്ക് enikku, \"to me\" — the dative from the last lesson.",
-                "piece: മലയാളം malayāḷam, Malayalam (Ch. 5).",
-                "piece: അറിയാം aṟiyām, \"can be known\" — aṟiy- \"know\" + -ām, the able-to ending."
+                "piece: എനിക്ക് enikkŭ, \"to me\" — the dative from the last lesson.",
+                "piece: മലയാളം malayāḷaṁ, Malayalam (Ch. 5).",
+                "piece: അറിയാം aṟiyāṁ, \"can be known\" — aṟiy- \"know\" + -ām, the able-to ending."
               ]
             },
             {
@@ -633,7 +633,7 @@
               "columns": 3,
               "rowCount": 4,
               "utterances": [
-                "language: Malayalam. \"I know [the language]\": enikku malayāḷam aṟiyām. the dative: -ikku.",
+                "language: Malayalam. \"I know [the language]\": enikkŭ malayāḷaṁ aṟiyāṁ. the dative: -ikkŭ.",
                 "language: Tamil. \"I know [the language]\": enakku tamiḻ teriyum. the dative: -ukku.",
                 "language: Telugu. \"I know [the language]\": nāku telugu vaccu. the dative: -ku.",
                 "language: Kannada. \"I know [the language]\": nanage kannaḍa gottu. the dative: -ge."
@@ -641,7 +641,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look at the first column: Malayalam's enikku and Tamil's enakku are nearly the same word — the two languages separated most recently of the four, and it shows. One construction, four languages, four visibly related suffixes: the Dravidian family showing its bones, as blanc/bianco/branco did for Romance."
+              "text": "Look at the first column: Malayalam's enikkŭ and Tamil's enakku are nearly the same word — the two languages separated most recently of the four, and it shows. One construction, four languages, four visibly related suffixes: the Dravidian family showing its bones, as blanc/bianco/branco did for Romance."
             }
           ]
         },
@@ -659,38 +659,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"enikku malayāḷam aṟiyām\"",
+              "instruction": "\"enikkŭ malayāḷaṁ aṟiyāṁ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"*enikku malayāḷam aṟiyām*\"]"
+              "source": "[YOU SAY: \"*enikkŭ malayāḷaṁ aṟiyāṁ*\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the contrast — \"ñān malayāḷam saṁsārikkunnu\" (I speak) … \"enikku malayāḷam aṟiyām\" (known to me)",
+              "instruction": "the contrast — \"ñān malayāḷaṁ saṁsārikkunnu\" (I speak) … \"enikkŭ malayāḷaṁ aṟiyāṁ\" (known to me)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the contrast — \"*ñān malayāḷam saṁsārikkunnu*\" (I speak) … \"*enikku malayāḷam aṟiyām*\" (known to me)]"
+              "source": "[YOU SAY: the contrast — \"*ñān malayāḷaṁ saṁsārikkunnu*\" (I speak) … \"*enikkŭ malayāḷaṁ aṟiyāṁ*\" (known to me)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the near-twins — \"enikku … enakku\"",
+              "instruction": "the near-twins — \"enikkŭ … enakku\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the near-twins — \"*enikku* … *enakku*\"]"
+              "source": "[YOU SAY: the near-twins — \"*enikkŭ* … *enakku*\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the four cousins — \"-ikku, -ukku, -ku, -ge\"",
+              "instruction": "the four cousins — \"-ikkŭ, -ukku, -ku, -ge\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the four cousins — \"*-ikku · -ukku · -ku · -ge*\"]"
+              "source": "[YOU SAY: the four cousins — \"*-ikkŭ · -ukku · -ku · -ge*\"]"
             }
           ]
         },
@@ -707,7 +707,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does എനിക്ക് മലയാളം അറിയാം (enikku malayāḷam aṟiyām) literally say? (\"To-me Malayalam is-knowable.\") What has English got that Malayalam hasn't? (A nominative \"I\" — ñān is replaced by the dative enikku.) Why the dative? (Knowing happens to you.) Which Tamil word is enikku almost identical to, and why? (Enakku — Tamil and Malayalam split most recently of the four.) Which English word keeps the same idea? (Methinks.)"
+              "text": "What does എനിക്ക് മലയാളം അറിയാം (enikkŭ malayāḷaṁ aṟiyāṁ) literally say? (\"To-me Malayalam is-knowable.\") What has English got that Malayalam hasn't? (A nominative \"I\" — ñān is replaced by the dative enikkŭ.) Why the dative? (Knowing happens to you.) Which Tamil word is enikkŭ almost identical to, and why? (Enakku — Tamil and Malayalam split most recently of the four.) Which English word keeps the same idea? (Methinks.)"
             }
           ]
         }

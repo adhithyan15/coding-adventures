@@ -477,7 +477,6 @@ impl Workbook {
         self.graph.set_dependencies((sheet, addr), refs);
         // Evaluate the new formula and recalc downstream.
         self.recalc_dependents_of(sheet, addr);
-        self.evaluate_cell(sheet, addr);
         Ok(())
     }
 
@@ -1885,10 +1884,12 @@ impl Workbook {
     // ----------------------------------------------------------------
 
     fn recalc_dependents_of(&mut self, sheet: SheetId, addr: CellAddress) {
-        let dirty = self.graph.transitive_dependents((sheet, addr));
-        if dirty.is_empty() {
-            return;
-        }
+        let mut dirty = self.graph.transitive_dependents((sheet, addr));
+        // A newly authored formula has no cached value yet. Include it in the
+        // same ordered pass so downstream cells never read that empty cache.
+        // Evaluating a literal/cleared root is a no-op; cycle members remain
+        // owned by cycle handling rather than a second, out-of-order evaluate.
+        dirty.insert((sheet, addr));
         let (order, cycles) = self.graph.topological_order(&dirty);
         for (sheet, addr) in order {
             self.evaluate_cell(sheet, addr);
@@ -2588,6 +2589,24 @@ mod tests {
         wb.set_value(s, cell(1, 1), CellValue::Number(1.0));
         wb.insert_rows(SheetId(99), 1, 1); // no such sheet
         assert_eq!(wb.get_value(s, cell(1, 1)), Some(CellValue::Number(1.0)));
+    }
+
+    #[test]
+    fn formula_replacement_recalculates_ranges_and_cross_sheet_chains() {
+        let mut wb = Workbook::new();
+        let s = wb.add_sheet("S");
+        let totals = wb.add_sheet("Totals");
+        wb.set_value(s, cell(1, 1), CellValue::Number(15.0));
+        wb.set_value(s, cell(1, 2), CellValue::Number(3.0));
+        wb.set_formula(s, cell(1, 3), "=SUM(A1:B1)").unwrap();
+        wb.set_formula(totals, cell(1, 1), "=S!C1*2").unwrap();
+        // Both literal-to-formula and formula-to-formula edits must publish
+        // their new value before any dependent reads it, without recalc_all.
+        for (formula, sum) in [("=20+22", 45.0), ("=10+2", 15.0)] {
+            wb.set_formula(s, cell(1, 1), formula).unwrap();
+            assert_eq!(wb.cell_value(s, cell(1, 3)), CellValue::Number(sum));
+            assert_eq!(wb.cell_value(totals, cell(1, 1)), CellValue::Number(sum * 2.0));
+        }
     }
 
     #[test]

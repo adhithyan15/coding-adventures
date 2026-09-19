@@ -56,7 +56,7 @@ sisters holding one Proto-Dravidian root letter for letter, four thousand
 years and a script apart.
 
 Now that you have a son and a daughter, the age question comes back with
-someone new to ask it about: **ninṟe makanŭ ethra vayassuṇṭŭ?** — "how old
+someone new to ask it about: **ninṟe makanŭ etra vayassuṇṭŭ?** — "how old
 is your son?" — the same dative-subject-plus-*uṇṭŭ* shape, unchanged.
 
 ## Guided Practice
@@ -67,7 +67,7 @@ is your son?" — the same dative-subject-plus-*uṇṭŭ* shape, unchanged.
 - [YOU SAY: the identical pair — "makaḷ, makaḷ" — Malayalam, Tamil]
 - [YOU SAY: son, daughter, both cousins — "makan … maga; makaḷ …
   magaḷu"]
-- [YOU SAY: the age question, asked again — "ninṟe makanŭ ethra
+- [YOU SAY: the age question, asked again — "ninṟe makanŭ etra
   vayassuṇṭŭ?"]
 - [YOU SAY: general, then specific, twice over — "kuṭṭi … makan …
   makaḷ"]
@@ -80,6 +80,6 @@ is your son?" — the same dative-subject-plus-*uṇṭŭ* shape, unchanged.
 does Tamil match this word, compared with *makan*? (**Even closer** —
 *makaḷ* is **identical** sound for sound, where *makan* only nearly
 matched.) Ask "how old is your son?" using the age question's shape.
-(*Ninṟe makanŭ ethra vayassuṇṭŭ?* — "to your son, how much age exists?")
+(*Ninṟe makanŭ etra vayassuṇṭŭ?* — "to your son, how much age exists?")
 What is the general word for a child, before *makan* or *makaḷ*?
 (**കുട്ടി**, *kuṭṭi*.)

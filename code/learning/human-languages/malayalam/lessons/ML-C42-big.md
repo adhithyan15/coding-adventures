@@ -52,7 +52,7 @@ adjective you will ever meet here.
 [PAUSE 1s]
 - [YOU SAY: "വലിയ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *paal*]
+- [YOU RECALL: say *pāl*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-01] -->

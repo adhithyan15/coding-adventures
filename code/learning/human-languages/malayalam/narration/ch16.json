@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Traditional Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:96d0bb95f2aa6c65",
+  "sourceHash": "fnv1a64:0dc87c037c4b89a1",
   "lessons": [
     {
       "id": "ML-C16-kollavarsham-maasangal",
@@ -152,7 +152,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cc412a6811409c91",
+      "sourceHash": "fnv1a64:2063c157766251c1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -212,11 +212,11 @@
             },
             {
               "kind": "speech",
-              "text": "നമസ്കാരം namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+              "text": "നമസ്കാരം namaskāraṁ — hello / greetings (namaskāraṁ — \"a making of a bow\")."
             },
             {
               "kind": "speech",
-              "text": "സന്തോഷം santōṣam — joy / pleased to meet you."
+              "text": "സന്തോഷം santōṣaṁ — joy / pleased to meet you."
             },
             {
               "kind": "speech",

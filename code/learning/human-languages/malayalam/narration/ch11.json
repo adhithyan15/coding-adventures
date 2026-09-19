@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:15a2eeb50f0b7ba3",
+  "sourceHash": "fnv1a64:a75d0996687cf23d",
   "lessons": [
     {
       "id": "ML-C11-nirangal",
@@ -143,7 +143,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:03141df7225bf089",
+      "sourceHash": "fnv1a64:0fbfe526054293b3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -203,7 +203,7 @@
             },
             {
               "kind": "speech",
-              "text": "നമസ്കാരം namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+              "text": "നമസ്കാരം namaskāraṁ — hello / greetings (namaskāraṁ — \"a making of a bow\")."
             },
             {
               "kind": "speech",
@@ -215,7 +215,7 @@
             },
             {
               "kind": "speech",
-              "text": "എനിക്ക് മലയാളം അറിയാം enikku malayāḷam aṟiyām — 'I know Malayalam'."
+              "text": "എനിക്ക് മലയാളം അറിയാം enikkŭ malayāḷaṁ aṟiyāṁ — 'I know Malayalam'."
             }
           ]
         },

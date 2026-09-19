@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5c2e3b9af0c67ac5",
+  "sourceHash": "fnv1a64:dfca8f35972e05f8",
   "lessons": [
     {
       "id": "ML-C34-edukkuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0046b0dba1edb3a2",
+      "sourceHash": "fnv1a64:4af91d6d1e569adc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -85,7 +85,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Gundert glosses it \"to raise, lift, take up,\" and the lifting came first. Tamil எடு (eṭu) is the same word again — and the etymological dictionary gives this root no entry of its own, filing eṭu inside the family of എഴു (eḻu), \"to rise.\" Rise, then raise, then take. Kannada and Telugu say ಎತ್ತು / ఎత్తు (ettu) for lifting; whether that is the same word the dictionaries argue over, so take the resemblance and leave the verdict."
+              "text": "Gundert glosses it \"to raise, lift, take up,\" and the lifting came first. Tamil எடு (eṭu) is the same word again — and the etymological dictionary gives this root no entry of its own, filing eṭu inside the family of എഴു (eḻu), \"to rise.\" Rise, then raise, then take. Kannada and Telugu say ಎತ್ತು / ఎత్తు (eṭṭŭ) for lifting; whether that is the same word the dictionaries argue over, so take the resemblance and leave the verdict."
             },
             {
               "kind": "speech",
@@ -219,7 +219,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b138ee6aeac87846",
+      "sourceHash": "fnv1a64:3cb582046d1cc19a",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -293,7 +293,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two questions from Chapter 18 and Chapter 19 you can now say you are asking: ethra maṇi?, \"what hour?\", and niṅṅaḷkku ethra vayassuṇṭŭ?, \"how old are you?\" Chapter 8's ദയവായി in front softens either."
+              "text": "Two questions from Chapter 18 and Chapter 19 you can now say you are asking: etra maṇi?, \"what hour?\", and niṅṅaḷkku etra vayassuṇṭŭ?, \"how old are you?\" Chapter 8's ദയവായി in front softens either."
             }
           ]
         },
@@ -338,20 +338,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ask the hour — \"dayavāyi, ethra maṇi?\"",
+              "instruction": "ask the hour — \"dayavāyi, etra maṇi?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: ask the hour — \"dayavāyi, ethra maṇi?\"]"
+              "source": "[YOU SAY: ask the hour — \"dayavāyi, etra maṇi?\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ask the age — \"niṅṅaḷkku ethra vayassuṇṭŭ?\"",
+              "instruction": "ask the age — \"niṅṅaḷkku etra vayassuṇṭŭ?\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: ask the age — \"niṅṅaḷkku ethra vayassuṇṭŭ?\"]"
+              "source": "[YOU SAY: ask the age — \"niṅṅaḷkku etra vayassuṇṭŭ?\"]"
             },
             {
               "kind": "prompt",
@@ -386,7 +386,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I ask,\" then the past, and say what the past tells you. (Ñān cōdikkunnu; cōdiccu; ‑ഇച്ചു means borrowed.) What did the root mean first, and why did Malayalam need it? (To incite, to urge — and its own kēḷkkuka had narrowed to hearing, where Tamil's kēḷ still asks.) Now ask someone's age, politely. (Dayavāyi, niṅṅaḷkku ethra vayassuṇṭŭ?)"
+              "text": "Say \"I ask,\" then the past, and say what the past tells you. (Ñān cōdikkunnu; cōdiccu; ‑ഇച്ചു means borrowed.) What did the root mean first, and why did Malayalam need it? (To incite, to urge — and its own kēḷkkuka had narrowed to hearing, where Tamil's kēḷ still asks.) Now ask someone's age, politely. (Dayavāyi, niṅṅaḷkku etra vayassuṇṭŭ?)"
             }
           ]
         }
@@ -585,9 +585,9 @@
     {
       "id": "ML-C34-ishtam",
       "sequence": 780,
-      "title": "എനിക്ക് മലയാളം ഇഷ്ടമാണ് (enikku malayāḷaṁ iṣṭamāṇŭ) — \"I like Malayalam,\" and you are not its subject",
+      "title": "എനിക്ക് മലയാളം ഇഷ്ടമാണ് (enikkŭ malayāḷaṁ iṣṭamāṇŭ) — \"I like Malayalam,\" and you are not its subject",
       "headword": "എനിക്ക് മലയാളം ഇഷ്ടമാണ്",
-      "romanization": "enikku malayāḷaṁ iṣṭamāṇŭ",
+      "romanization": "enikkŭ malayāḷaṁ iṣṭamāṇŭ",
       "gloss": "'I like Malayalam' — a noun, a copula, and a dative; the one sentence in this book where putting yourself in the subject slot is not merely odd but impossible",
       "script": "malayalam",
       "modality": "sight",
@@ -595,7 +595,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b9c8722fb448c1e1",
+      "sourceHash": "fnv1a64:fa8b0974acb696ea",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -631,11 +631,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എനിക്ക് മലയാളം ഇഷ്ടമാണ്. enikku malayāḷaṁ iṣṭamāṇŭ — \"to me — Malayalam — is a liking.\""
+              "text": "എനിക്ക് മലയാളം ഇഷ്ടമാണ്. enikkŭ malayāḷaṁ iṣṭamāṇŭ — \"to me — Malayalam — is a liking.\""
             },
             {
               "kind": "speech",
-              "text": "ഇഷ്ടം is a noun; ‑ആണ് is Chapter 2's copula. Only the front moves: enikku, ninakku, avanŭ."
+              "text": "ഇഷ്ടം is a noun; ‑ആണ് is Chapter 2's copula. Only the front moves: enikkŭ, ninakku, avanŭ."
             }
           ]
         },
@@ -657,7 +657,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Enikku malayāḷaṁ aṟiyāṁ — I know it. Enikku manassilāyi — I understood. Enikku malayāḷaṁ iṣṭamāṇŭ — I like it. One frame, three meanings; Chapter 6 promised the third before you had words for it. Swap the thing and it holds: enikku maḻa iṣṭamāṇŭ, \"I like rain.\""
+              "text": "Enikku malayāḷaṁ aṟiyāṁ — I know it. Enikku manassilāyi — I understood. Enikku malayāḷaṁ iṣṭamāṇŭ — I like it. One frame, three meanings; Chapter 6 promised the third before you had words for it. Swap the thing and it holds: enikkŭ maḻa iṣṭamāṇŭ, \"I like rain.\""
             },
             {
               "kind": "speech",
@@ -698,20 +698,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"enikku malayāḷaṁ iṣṭamāṇŭ\" — to me, Malayalam, is a liking",
+              "instruction": "\"enikkŭ malayāḷaṁ iṣṭamāṇŭ\" — to me, Malayalam, is a liking",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"enikku malayāḷaṁ iṣṭamāṇŭ\" — to me, Malayalam, is a liking]"
+              "source": "[YOU SAY: \"enikkŭ malayāḷaṁ iṣṭamāṇŭ\" — to me, Malayalam, is a liking]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "three likers, then a new thing — \"enikku … ninakku … avanŭ,\" then \"enikku maḻa iṣṭamāṇŭ\"",
+              "instruction": "three likers, then a new thing — \"enikkŭ … ninakku … avanŭ,\" then \"enikkŭ maḻa iṣṭamāṇŭ\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: three likers, then a new thing — \"enikku … ninakku … avanŭ,\" then \"enikku maḻa iṣṭamāṇŭ\"]"
+              "source": "[YOU SAY: three likers, then a new thing — \"enikkŭ … ninakku … avanŭ,\" then \"enikkŭ maḻa iṣṭamāṇŭ\"]"
             },
             {
               "kind": "prompt",
@@ -725,11 +725,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two ways round — \"ñān iṣṭappeṭunnu,\" \"enikku piṭiccu\"",
+              "instruction": "the two ways round — \"ñān iṣṭappeṭunnu,\" \"enikkŭ piṭiccu\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two ways round — \"ñān iṣṭappeṭunnu,\" \"enikku piṭiccu\"]"
+              "source": "[YOU SAY: the two ways round — \"ñān iṣṭappeṭunnu,\" \"enikkŭ piṭiccu\"]"
             },
             {
               "kind": "prompt",

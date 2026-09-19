@@ -12,7 +12,7 @@ Thirty-one chapters of words. Now the engine room. English makes one verb, "to b
 You'll want to know.
 ഉണ്ട് — uṇṭŭ — there is, there are; [someone] has.
 ഇരിക്കുക — irikkuka — to be somewhere, to stay, to sit.
-Chapter 2 gave you ആണ് (āṇŭ), the "is" that links two nouns: enṟe pēru Arun āṇŭ, "my name is Arun." ഉണ്ട് does a different job — existing and having: enikku oru sahōdaran uṇṭŭ, "to-me one brother there-is," which is how Malayalam says "I have a brother." ഇരിക്കുക is being in a place: ñān vīṭṭil irikkunnu, "I am at home."
+Chapter 2 gave you ആണ് (āṇŭ), the "is" that links two nouns: enṟe pēr Arun āṇŭ, "my name is Arun." ഉണ്ട് does a different job — existing and having: enikkŭ oru sahōdaran uṇṭŭ, "to-me one brother there-is," which is how Malayalam says "I have a brother." ഇരിക്കുക is being in a place: ñān vīṭṭil irikkunnu, "I am at home."
 Identity, existence, location — and none stands in for another.
 
 Sounds you'll need: the letters in this word.
@@ -33,7 +33,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: the three jobs — "āṇŭ" is, "uṇṭŭ" there-is, "irikkuka" be somewhere]
 [pause 8 seconds for the answer]
-[your turn — say: "enikku oru sahōdaran uṇṭŭ" — I have a brother]
+[your turn — say: "enikkŭ oru sahōdaran uṇṭŭ" — I have a brother]
 [pause 8 seconds for the answer]
 [your turn — say: the two pieces — "irikk … unnu"]
 [pause 8 seconds for the answer]
@@ -131,7 +131,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the goodbye you now understand — "pōyi varāṁ"]
 [pause 8 seconds for the answer]
-[your turn — recall: say rāthri]
+[your turn — recall: say rātri]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -243,9 +243,9 @@ Sounds you'll need: the letters in this word.
 അ (the standing vowel a) + റി (ṟi) + യു (yu) + ക (ka) becomes അറിയുക (aṟiyuka). The റ is Malayalam's hard, tapped ṟ, a different letter and a different sound from the soft ര (r) of varuka.
 
 Grammar Lens: the knower leaves the subject slot.
-എനിക്ക് മലയാളം അറിയാം. — enikku malayāḷaṁ aṟiyāṁ — "I know Malayalam."
+എനിക്ക് മലയാളം അറിയാം. — enikkŭ malayāḷaṁ aṟiyāṁ — "I know Malayalam."
 Chapter 6 gave you that sentence whole. Here is the verb inside it. You cannot say ñān malayāḷaṁ aṟiyāṁ: the one who knows is not the subject. That person moves into the dative, the "to me" case.
-enikku aṟiyāṁ — it is known to me.
+enikkŭ aṟiyāṁ — it is known to me.
 ninakku aṟiyāṁ — it is known to you.
 avanŭ aṟiyāṁ — it is known to him.
 Malayalam treats knowing as something that arrives at you rather than something you do, and marks it with the pronoun's case.
@@ -255,9 +255,9 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "aṟiyuka" — to know — and the past, "aṟiññu"]
 [pause 8 seconds for the answer]
-[your turn — say: "enikku malayāḷaṁ aṟiyāṁ" — I know Malayalam]
+[your turn — say: "enikkŭ malayāḷaṁ aṟiyāṁ" — I know Malayalam]
 [pause 8 seconds for the answer]
-[your turn — say: three knowers, one verb — "enikku … ninakku … avanŭ aṟiyāṁ"]
+[your turn — say: three knowers, one verb — "enikkŭ … ninakku … avanŭ aṟiyāṁ"]
 [pause 8 seconds for the answer]
 [your turn — say: the chapter's six — "uṇṭŭ, pōkunnu, varunnu, tinnunnu, kāṇunnu, aṟiyunnu"]
 [pause 8 seconds for the answer]

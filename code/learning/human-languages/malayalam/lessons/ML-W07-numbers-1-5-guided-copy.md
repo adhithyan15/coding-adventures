@@ -40,10 +40,10 @@ Point through **൧ ൨ ൩ ൪ ൫** and say the five words. Keep the model vis
 <!-- hl-writing-stage: guided-copy -->
 
 Copy the row once directly beneath its model. Look back after every shape if you
-need to. Say *onnu* through *anchu* as you check your copy. Repair only one shape.
+need to. Say *onnŭ* through *añcŭ* as you check your copy. Repair only one shape.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01] -->
 
 [PAUSE 3s] Read **൪**. (***Naalu.***) Which written word begins with the new
-letter **ഒ**? (**ഒന്ന്**, *onnu*.) No new shape was added here.
+letter **ഒ**? (**ഒന്ന്**, *onnŭ*.) No new shape was added here.

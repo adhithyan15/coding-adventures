@@ -7,7 +7,7 @@ chapter: 17
 type: word
 headword: പാതിരാ
 gloss: midnight, built on Malayalam paathi "half" rather than Sanskrit ardha
-romanization: "pāthirā"
+romanization: "pātirā"
 concept_tag: ML-TIME-MIDNIGHT
 prerequisites: [ML-C17-ucha-paathira, ML-C13-shareera-bhaagangal]
 sounds: [malayalam-vowel-sign-aa]
@@ -40,7 +40,7 @@ with a different spatial idea: cut the night in half.
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C17-PAATHIRA-01]; assesses=[] -->
 
-**പാതിരാ** (*paathira*) means “**midnight**.” It is built on **പാതി**
+**പാതിരാ** (*pātirā*) means “**midnight**.” It is built on **പാതി**
 (*paathi*), the everyday Malayalam word for “**half**”—as in *paathi vila*,
 “half price”—fused with a shortened form of “night.”
 
@@ -57,7 +57,7 @@ vocabulary does not.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-PAATHIRA-01, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *paathira* — midnight]
+- [YOU SAY: *pātirā* — midnight]
 - [YOU SAY: *paathi* — half]
 - [YOU SAY: Malayalam *paathi* versus Sanskrit *ardha* — same job, different roots]
 - [YOU RECALL: read **തല കൈ**]

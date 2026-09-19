@@ -4,13 +4,13 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0b90104d3900e6ca",
+  "sourceHash": "fnv1a64:667c6cf4005f620d",
   "lessons": [
     {
       "id": "ML-C07-numbers-1-5",
       "sequence": 340,
       "title": "One to five — voice first",
-      "headword": "onnu randu moonnu naalu anchu",
+      "headword": "onnŭ raṇṭŭ mūnnŭ nālŭ añcŭ",
       "romanization": "",
       "gloss": "hear and say one to five before meeting their written forms",
       "script": "malayalam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aaa8304f25ab2842",
+      "sourceHash": "fnv1a64:751fd28f4b098604",
       "notice": null,
       "blocks": [
         {
@@ -53,16 +53,16 @@
               "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "quantity: 1. said: onnu.",
-                "quantity: 2. said: randu.",
-                "quantity: 3. said: moonnu.",
-                "quantity: 4. said: naalu.",
-                "quantity: 5. said: anchu."
+                "quantity: 1. said: onnŭ.",
+                "quantity: 2. said: raṇṭŭ.",
+                "quantity: 3. said: mūnnŭ.",
+                "quantity: 4. said: nālŭ.",
+                "quantity: 5. said: añcŭ."
               ]
             },
             {
               "kind": "speech",
-              "text": "Point to one finger and say onnu. Add one finger at a time: randu, moonnu, naalu, anchu."
+              "text": "Point to one finger and say onnŭ. Add one finger at a time: raṇṭŭ, mūnnŭ, nālŭ, añcŭ."
             },
             {
               "kind": "repeat",
@@ -78,7 +78,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Malayalam and Tamil were once one language, and the family resemblance is still audible. Malayalam onnu sits beside Tamil onru; randu beside irandu; moonnu beside moonru; and naalu beside naanku. You do not need to learn the Tamil forms. Listen only for the shared bones."
+              "text": "Malayalam and Tamil were once one language, and the family resemblance is still audible. Malayalam onnŭ sits beside Tamil onru; raṇṭŭ beside irandu; mūnnŭ beside moonru; and nālŭ beside naanku. You do not need to learn the Tamil forms. Listen only for the shared bones."
             }
           ]
         },
@@ -89,7 +89,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Five moved furthest: an older aintu softened toward Malayalam anchu. Say an-chu slowly, then normally. The sound comes before its spelling."
+              "text": "Five moved furthest: an older aintu softened toward Malayalam añcŭ. Say an-chu slowly, then normally. The sound comes before its spelling."
             }
           ]
         },
@@ -101,29 +101,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "onnu, randu, moonnu, naalu, anchu while raising one more finger",
+              "instruction": "onnŭ, raṇṭŭ, mūnnŭ, nālŭ, añcŭ while raising one more finger",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *onnu, randu, moonnu, naalu, anchu* while raising one more finger]"
+              "source": "[YOU SAY: *onnŭ, raṇṭŭ, mūnnŭ, nālŭ, añcŭ* while raising one more finger]"
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "moonnu; YOU SHOW: 3",
+              "instruction": "mūnnŭ; YOU SHOW: 3",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *moonnu*; YOU SHOW: 3]"
+              "source": "[YOU HEAR: *mūnnŭ*; YOU SHOW: 3]"
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "anchu; YOU SHOW: 5",
+              "instruction": "añcŭ; YOU SHOW: 5",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *anchu*; YOU SHOW: 5]"
+              "source": "[YOU HEAR: *añcŭ*; YOU SHOW: 5]"
             },
             {
               "kind": "prompt",
@@ -170,7 +170,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:619eb5ec44ae5e38",
+      "sourceHash": "fnv1a64:25c22817ea98842c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -196,7 +196,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say onnu, randu, moonnu. You already own the meanings and sounds; this lesson adds only their three numeral shapes."
+              "text": "Say onnŭ, raṇṭŭ, mūnnŭ. You already own the meanings and sounds; this lesson adds only their three numeral shapes."
             }
           ]
         },
@@ -207,15 +207,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "൧ means 1: onnu."
+              "text": "൧ means 1: onnŭ."
             },
             {
               "kind": "speech",
-              "text": "൨ means 2: randu."
+              "text": "൨ means 2: raṇṭŭ."
             },
             {
               "kind": "speech",
-              "text": "൩ means 3: moonnu."
+              "text": "൩ means 3: mūnnŭ."
             },
             {
               "kind": "speech",
@@ -268,7 +268,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6df9385f5a934c0f",
+      "sourceHash": "fnv1a64:e3b8cbc6d4ad9929",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -305,11 +305,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "൪ means 4: naalu."
+              "text": "൪ means 4: nālŭ."
             },
             {
               "kind": "speech",
-              "text": "൫ means 5: anchu."
+              "text": "൫ means 5: añcŭ."
             },
             {
               "kind": "speech",
@@ -329,11 +329,11 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "anchu",
+              "instruction": "añcŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *anchu*]"
+              "source": "[YOU HEAR: *añcŭ*]"
             },
             {
               "kind": "speech",
@@ -375,7 +375,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7862a1dc2649d648",
+      "sourceHash": "fnv1a64:0ce277a2055e8446",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -412,7 +412,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഒ (independent o) is independent short o. It begins ഒന്ന്, onnu, one."
+              "text": "ഒ (independent o) is independent short o. It begins ഒന്ന്, onnŭ, one."
             },
             {
               "kind": "speech",
@@ -428,11 +428,11 @@
               "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "numeral: ൧. word: ഒന്ന്. said: onnu.",
-                "numeral: ൨. word: രണ്ട്. said: randu.",
-                "numeral: ൩. word: മൂന്ന്. said: moonnu.",
-                "numeral: ൪. word: നാല്. said: naalu.",
-                "numeral: ൫. word: അഞ്ച്. said: anchu."
+                "numeral: ൧. word: ഒന്ന്. said: onnŭ.",
+                "numeral: ൨. word: രണ്ട്. said: raṇṭŭ.",
+                "numeral: ൩. word: മൂന്ന്. said: mūnnŭ.",
+                "numeral: ൪. word: നാല്. said: nālŭ.",
+                "numeral: ൫. word: അഞ്ച്. said: añcŭ."
               ]
             }
           ]
@@ -444,7 +444,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace ഒ (independent o) once with its model visible. Then point from ൧ to ഒന്ന് and say onnu. Read the remaining four rows; do not copy the whole row yet."
+              "text": "Trace ഒ (independent o) once with its model visible. Then point from ൧ to ഒന്ന് and say onnŭ. Read the remaining four rows; do not copy the whole row yet."
             }
           ]
         },
@@ -461,7 +461,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which new letter begins onnu? (ഒ (independent o).) Read ൩ and മൂന്ന്. (Moonnu, three.) How many new letters appeared? (One.)"
+              "text": "Which new letter begins onnŭ? (ഒ (independent o).) Read ൩ and മൂന്ന്. (Moonnu, three.) How many new letters appeared? (One.)"
             }
           ]
         }
@@ -481,7 +481,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:05ebe4c4e5ec7e2d",
+      "sourceHash": "fnv1a64:cf8ece58bad2676b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -509,7 +509,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy the row once directly beneath its model. Look back after every shape if you need to. Say onnu through anchu as you check your copy. Repair only one shape."
+              "text": "Copy the row once directly beneath its model. Look back after every shape if you need to. Say onnŭ through añcŭ as you check your copy. Repair only one shape."
             }
           ]
         },
@@ -526,7 +526,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ൪. (Naalu.) Which written word begins with the new letter ഒ (independent o)? (ഒന്ന്, onnu.) No new shape was added here."
+              "text": "Read ൪. (Naalu.) Which written word begins with the new letter ഒ (independent o)? (ഒന്ന്, onnŭ.) No new shape was added here."
             }
           ]
         }
@@ -611,7 +611,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:2af87fe59195bc72",
+      "sourceHash": "fnv1a64:373fa59a4b9f6286",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -640,11 +640,11 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "randu — anchu — moonnu",
+              "instruction": "raṇṭŭ — añcŭ — mūnnŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *randu — anchu — moonnu*]"
+              "source": "[YOU HEAR: *raṇṭŭ — añcŭ — mūnnŭ*]"
             },
             {
               "kind": "speech",
@@ -665,7 +665,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write the numeral for naalu from sound alone. (൪.) You are now ready to hear six through ten before meeting any of their shapes."
+              "text": "Write the numeral for nālŭ from sound alone. (൪.) You are now ready to hear six through ten before meeting any of their shapes."
             }
           ]
         }
@@ -675,7 +675,7 @@
       "id": "ML-C07-numbers-6-10",
       "sequence": 347,
       "title": "Six to ten — voice first",
-      "headword": "aaru ezhu ettu ompathu pathu",
+      "headword": "āṟŭ ēḻŭ eṭṭŭ ombatŭ pattŭ",
       "romanization": "",
       "gloss": "hear and say six to ten before meeting their written forms",
       "script": "malayalam",
@@ -684,7 +684,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d658b56d55ab0e04",
+      "sourceHash": "fnv1a64:de9adcb3202fa577",
       "notice": null,
       "blocks": [
         {
@@ -700,7 +700,7 @@
             },
             {
               "kind": "speech",
-              "text": "Count onnu through anchu. Keep your pencil down: the next five meanings and sounds come before their shapes."
+              "text": "Count onnŭ through añcŭ. Keep your pencil down: the next five meanings and sounds come before their shapes."
             }
           ]
         },
@@ -718,11 +718,11 @@
               "columns": 2,
               "rowCount": 5,
               "utterances": [
-                "quantity: 6. said: aaru.",
-                "quantity: 7. said: ezhu.",
-                "quantity: 8. said: ettu.",
-                "quantity: 9. said: ompathu.",
-                "quantity: 10. said: pathu."
+                "quantity: 6. said: āṟŭ.",
+                "quantity: 7. said: ēḻŭ.",
+                "quantity: 8. said: eṭṭŭ.",
+                "quantity: 9. said: ombatŭ.",
+                "quantity: 10. said: pattŭ."
               ]
             },
             {
@@ -743,7 +743,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The middle sound of ezhu is the curled zh heard in the name Tamil in its native form. Malayalam and Tamil kept it; Kannada and Telugu hardened it. Practise only the sound now: e-zhu. The written letter waits for a later micro-lesson."
+              "text": "The middle sound of ēḻŭ is the curled zh heard in the name Tamil in its native form. Malayalam and Tamil kept it; Kannada and Telugu hardened it. Practise only the sound now: e-zhu. The written letter waits for a later micro-lesson."
             }
           ]
         },
@@ -754,7 +754,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Ompathu grew from an old word for one plus pathu, ten: one short of ten. Before p, the older n becomes m. Say on-pathu slowly, then let it settle into ompathu."
+              "text": "Ompathu grew from an old word for one plus pattŭ, ten: one short of ten. Before p, the older n becomes m. Say on-pattŭ slowly, then let it settle into ombatŭ."
             }
           ]
         },
@@ -766,38 +766,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "aaru, ezhu, ettu, ompathu, pathu",
+              "instruction": "āṟŭ, ēḻŭ, eṭṭŭ, ombatŭ, pattŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *aaru, ezhu, ettu, ompathu, pathu*]"
+              "source": "[YOU SAY: *āṟŭ, ēḻŭ, eṭṭŭ, ombatŭ, pattŭ*]"
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "ezhu; YOU SHOW: 7",
+              "instruction": "ēḻŭ; YOU SHOW: 7",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *ezhu*; YOU SHOW: 7]"
+              "source": "[YOU HEAR: *ēḻŭ*; YOU SHOW: 7]"
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "ompathu; YOU SHOW: 9",
+              "instruction": "ombatŭ; YOU SHOW: 9",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *ompathu*; YOU SHOW: 9]"
+              "source": "[YOU HEAR: *ombatŭ*; YOU SHOW: 9]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say -ikku, then say",
+              "instruction": "say -ikkŭ, then say",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *-ikku*, then say **]"
+              "source": "[YOU RECALL: say *-ikkŭ*, then say **]"
             }
           ]
         },
@@ -814,7 +814,7 @@
             },
             {
               "kind": "speech",
-              "text": "Count six to ten. Which word preserves the rare zh? (Ezhu.) How is ompathu built? (One plus ten: one short of ten.) Next, the numeral shapes arrive in groups of three or fewer."
+              "text": "Count six to ten. Which word preserves the rare zh? (Ezhu.) How is ombatŭ built? (One plus ten: one short of ten.) Next, the numeral shapes arrive in groups of three or fewer."
             }
           ]
         }
@@ -835,7 +835,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c1c09b9a71989c82",
+      "sourceHash": "fnv1a64:7150083b0c598a76",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -861,7 +861,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say aaru, ezhu, ettu. Their sounds and quantities are familiar; only the shapes are new."
+              "text": "Say āṟŭ, ēḻŭ, eṭṭŭ. Their sounds and quantities are familiar; only the shapes are new."
             }
           ]
         },
@@ -872,15 +872,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "൬ means 6: aaru."
+              "text": "൬ means 6: āṟŭ."
             },
             {
               "kind": "speech",
-              "text": "൭ means 7: ezhu."
+              "text": "൭ means 7: ēḻŭ."
             },
             {
               "kind": "speech",
-              "text": "൮ means 8: ettu."
+              "text": "൮ means 8: eṭṭŭ."
             },
             {
               "kind": "speech",
@@ -933,7 +933,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ee8f643eadb49c7f",
+      "sourceHash": "fnv1a64:9f55f7e673ebc8ff",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -970,11 +970,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "൯ means 9: ompathu."
+              "text": "൯ means 9: ombatŭ."
             },
             {
               "kind": "speech",
-              "text": "൰ means 10: pathu."
+              "text": "൰ means 10: pattŭ."
             },
             {
               "kind": "speech",
@@ -994,11 +994,11 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "ompathu",
+              "instruction": "ombatŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *ompathu*]"
+              "source": "[YOU HEAR: *ombatŭ*]"
             },
             {
               "kind": "speech",
@@ -1040,7 +1040,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:807ecf1ae84ab1a8",
+      "sourceHash": "fnv1a64:dc57331b70d23fb0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1081,11 +1081,11 @@
             },
             {
               "kind": "speech",
-              "text": "ഴ is the curled zh you already heard in ezhu."
+              "text": "ഴ is the curled zh you already heard in ēḻŭ."
             },
             {
               "kind": "speech",
-              "text": "Together with the familiar chandrakkala, they begin and finish ഏഴ്, ezhu."
+              "text": "Together with the familiar chandrakkala, they begin and finish ഏഴ്, ēḻŭ."
             },
             {
               "kind": "table",
@@ -1097,11 +1097,11 @@
               "columns": 3,
               "rowCount": 5,
               "utterances": [
-                "numeral: ൬. word: ആറ്. said: aaru.",
-                "numeral: ൭. word: ഏഴ്. said: ezhu.",
-                "numeral: ൮. word: എട്ട്. said: ettu.",
-                "numeral: ൯. word: ഒമ്പത്. said: ompathu.",
-                "numeral: ൰. word: പത്ത്. said: pathu."
+                "numeral: ൬. word: ആറ്. said: āṟŭ.",
+                "numeral: ൭. word: ഏഴ്. said: ēḻŭ.",
+                "numeral: ൮. word: എട്ട്. said: eṭṭŭ.",
+                "numeral: ൯. word: ഒമ്പത്. said: ombatŭ.",
+                "numeral: ൰. word: പത്ത്. said: pattŭ."
               ]
             }
           ]
@@ -1113,7 +1113,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Trace ഏ once and ഴ once with the models visible. Then point through ഏഴ് and say ezhu. Whole-word memory writing waits."
+              "text": "Trace ഏ once and ഴ once with the models visible. Then point through ഏഴ് and say ēḻŭ. Whole-word memory writing waits."
             }
           ]
         },
@@ -1206,7 +1206,7 @@
       "sequence": 352,
       "title": "ഏഴ് — hide, then write",
       "headword": "ഏഴ് ൭",
-      "romanization": "ezhu, seven",
+      "romanization": "ēḻŭ, seven",
       "gloss": "retrieve one familiar word-numeral pair after hiding its model",
       "script": "malayalam",
       "modality": "pen",
@@ -1215,7 +1215,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:84ae84b6990b8105",
+      "sourceHash": "fnv1a64:d91ff6e6d77482b4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1232,7 +1232,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Study ഏഴ് — ൭ for five seconds. Say ezhu, then cover both forms."
+              "text": "Study ഏഴ് — ൭ for five seconds. Say ēḻŭ, then cover both forms."
             }
           ]
         },
@@ -1271,7 +1271,7 @@
       "sequence": 353,
       "title": "Heard numbers — write without a model",
       "headword": "ഏഴ് ൭",
-      "romanization": "ezhu, seven",
+      "romanization": "ēḻŭ, seven",
       "gloss": "write familiar number forms from sound alone",
       "script": "malayalam",
       "modality": "pen",
@@ -1280,7 +1280,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:69e69f73426dd37f",
+      "sourceHash": "fnv1a64:07afccdbfbe98ca2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1309,15 +1309,15 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "aaru — ezhu — ompathu",
+              "instruction": "āṟŭ — ēḻŭ — ombatŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *aaru — ezhu — ompathu*]"
+              "source": "[YOU HEAR: *āṟŭ — ēḻŭ — ombatŭ*]"
             },
             {
               "kind": "speech",
-              "text": "Write the three numerals from sound alone. For ezhu, also write the word. Then uncover: ൬ — ൭ ഏഴ് — ൯. Compare and repair one place."
+              "text": "Write the three numerals from sound alone. For ēḻŭ, also write the word. Then uncover: ൬ — ൭ ഏഴ് — ൯. Compare and repair one place."
             }
           ]
         },
@@ -1334,7 +1334,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write the numeral for pathu. (൰.) Write the word you practised for seven. (ഏഴ്.) Next comes a cumulative, no-new-shape payoff."
+              "text": "Write the numeral for pattŭ. (൰.) Write the word you practised for seven. (ഏഴ്.) Next comes a cumulative, no-new-shape payoff."
             }
           ]
         }
@@ -1345,7 +1345,7 @@
       "sequence": 354,
       "title": "One to ten — the cumulative payoff",
       "headword": "൧ ൨ ൩ ൪ ൫ ൬ ൭ ൮ ൯ ൰",
-      "romanization": "onnu through pathu",
+      "romanization": "onnŭ through pattŭ",
       "gloss": "count, read shuffled numerals, and write one familiar form independently",
       "script": "malayalam",
       "modality": "pen",
@@ -1353,7 +1353,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:0cdf2ec4b46b9b48",
+      "sourceHash": "fnv1a64:518728d01b5615da",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -1374,7 +1374,7 @@
             },
             {
               "kind": "speech",
-              "text": "Count from onnu to pathu once without looking. No new word or shape appears in this lesson."
+              "text": "Count from onnŭ to pattŭ once without looking. No new word or shape appears in this lesson."
             }
           ]
         },
@@ -1393,7 +1393,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now check against ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to five) ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten) (onnu through pathu)."
+              "text": "Now check against ൧ ൨ ൩ (one, two, three) ൪ ൫ (four, five) (one to five) ൬ ൭ ൮ (six, seven, eight) ൯ ൰ (nine, ten) (six to ten) (onnŭ through pattŭ)."
             }
           ]
         },
@@ -1404,15 +1404,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Which word preserves the rare zh? (ഏഴ്, ezhu, seven.)"
+              "text": "Which word preserves the rare zh? (ഏഴ്, ēḻŭ, seven.)"
             },
             {
               "kind": "speech",
-              "text": "Which word means one short of ten? (ഒമ്പത്, ompathu, nine.)"
+              "text": "Which word means one short of ten? (ഒമ്പത്, ombatŭ, nine.)"
             },
             {
               "kind": "speech",
-              "text": "Which first-five word shifted furthest from older aintu? (അഞ്ച്, anchu.)"
+              "text": "Which first-five word shifted furthest from older aintu? (അഞ്ച്, añcŭ.)"
             }
           ]
         },
@@ -1428,11 +1428,11 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "ezhu",
+              "instruction": "ēḻŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *ezhu*]"
+              "source": "[YOU HEAR: *ēḻŭ*]"
             },
             {
               "kind": "speech",
@@ -1474,7 +1474,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aa3ad3a254a85b9c",
+      "sourceHash": "fnv1a64:8dad1ebc431140bc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1534,7 +1534,7 @@
             },
             {
               "kind": "speech",
-              "text": "നമസ്കാരം namaskāram — hello / greetings (namaskāram — \"a making of a bow\")."
+              "text": "നമസ്കാരം namaskāraṁ — hello / greetings (namaskāraṁ — \"a making of a bow\")."
             },
             {
               "kind": "speech",

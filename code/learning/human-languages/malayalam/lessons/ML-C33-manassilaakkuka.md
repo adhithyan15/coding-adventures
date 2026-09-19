@@ -34,7 +34,7 @@ reviews_of: [ML-C33-cintikkuka, ML-C32-ariyuka, ML-C06-dative-subject, ML-C06-da
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C33-CINTIKKUKA-01, ML-CONCEPT-C06-DATIVE-IKKU-01] -->
 
-[PAUSE 2s] Say *ñān cintikkunnu*, then *enikku*. One is what you do; the other is
+[PAUSE 2s] Say *ñān cintikkunnu*, then *enikkŭ*. One is what you do; the other is
 the "to me" of Chapter 6. This word needs both.
 
 ## You'll want to know
@@ -76,10 +76,10 @@ it, so relatives rather than the same word. (*Mind*'s exact Sanskrit match is
 **ആക്കുക** *makes* something so; its twin **ആകുക** (*ākuka*) means it *becomes*
 so. Swap them and the sentence changes hands:
 
-> **എനിക്ക് മനസ്സിലായി.** — *enikku manassilāyi* — "I understood."
+> **എനിക്ക് മനസ്സിലായി.** — *enikkŭ manassilāyi* — "I understood."
 
 Literally: "**to me** — it became in the mind." No *ñān*. The understander wears
-the dative **‑ഇക്ക്**, as the knower does in *enikku malayāḷaṁ aṟiyāṁ*. Chapter 6
+the dative **‑ഇക്ക്**, as the knower does in *enikkŭ malayāḷaṁ aṟiyāṁ*. Chapter 6
 separated what you **do** from what **happens to** you; here one root does both,
 and the ending decides which. *Manassilāyi* is much the commoner in speech.
 
@@ -91,9 +91,9 @@ Neither form takes **‑ഇക്കുക**: both sit on native *ākuka*, so no
 [PAUSE 1s]
 - [YOU SAY: the three pieces — "manassŭ … ‑il … ākkuka"]
 - [YOU SAY: "ñān manassilākkunnu," then the past, "manassilākki"]
-- [YOU SAY: the everyday one — "enikku manassilāyi"]
-- [YOU SAY: three understanders — "enikku … ninakku … avanŭ manassilāyi"]
-- [YOU SAY: the two datives together — "enikku malayāḷaṁ aṟiyāṁ," "enikku manassilāyi"]
+- [YOU SAY: the everyday one — "enikkŭ manassilāyi"]
+- [YOU SAY: three understanders — "enikkŭ … ninakku … avanŭ manassilāyi"]
+- [YOU SAY: the two datives together — "enikkŭ malayāḷaṁ aṟiyāṁ," "enikkŭ manassilāyi"]
 - [YOU SAY: with and without a stamp — "cintikkuka … manassilākkuka"]
 
 ## Wrap-up Recall
@@ -102,5 +102,5 @@ Neither form takes **‑ഇക്കുക**: both sit on native *ākuka*, so no
 [PAUSE 3s] Name the three pieces of *manassilākkuka*. (**Mind**, **in**, **put**.)
 Which English words share its root? (**Mind**, **mental**.) Say "I
 understood" the way it is usually said, and name the case you wear. (*Enikku
-manassilāyi*; the **dative**, as in *enikku malayāḷaṁ aṟiyāṁ*.) Which of today's
+manassilāyi*; the **dative**, as in *enikkŭ malayāḷaṁ aṟiyāṁ*.) Which of today's
 two verbs carries **‑ഇക്കുക**, and why? (*Cintikkuka* — its noun was borrowed.)

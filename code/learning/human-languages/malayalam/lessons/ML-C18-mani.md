@@ -6,13 +6,13 @@ sequence: 470
 chapter: 18
 type: word
 headword: മണി
-gloss: hour — Malayalam's OWN dictionary tradition treats bell/hour/gem as ONE Sanskrit word, unlike Tamil's closely related mani, which its own dictionaries split into two unrelated homophones
+gloss: hour — Malayalam's OWN dictionary tradition treats bell/hour/gem as ONE Sanskrit word, unlike Tamil's closely related maṇi, which its own dictionaries split into two unrelated homophones
 romanization: "maṇi"
 concept_tag: ML-TIME-HOUR
 prerequisites: [ML-C17-paathira]
 sounds: [malayalam-retroflex-nna, malayalam-vowel-sign-i]
 roots: [sanskrit-mani-gem-bell]
-etymology_hook: "മണി (mani, 'hour, bell, gem') — Malayalam's Wiktionary entry treats ALL these senses as ONE word borrowed from Sanskrit मणि (maṇi, 'gem'); this is genuinely different from how Tamil's OWN dictionaries treat its cognate மணி, which splits into two separate, unrelated words (a native 'bell/hour' word and a separate Sanskrit 'gem' loan) — two closest-cousin languages, two different scholarly pictures of the very same word"
+etymology_hook: "മണി (maṇi, 'hour, bell, gem') — Malayalam's Wiktionary entry treats ALL these senses as ONE word borrowed from Sanskrit मणि (maṇi, 'gem'); this is genuinely different from how Tamil's OWN dictionaries treat its cognate மணி, which splits into two separate, unrelated words (a native 'bell/hour' word and a separate Sanskrit 'gem' loan) — two closest-cousin languages, two different scholarly pictures of the very same word"
 duration:
   max_seconds: 285
 requires:
@@ -41,11 +41,11 @@ closest cousin, Tamil, on how this exact word is even structured.
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ML-CONCEPT-C18-MANI-01]; assesses=[] -->
 
-**മണി** (*mani*) = "**hour, o'clock**" — and it also means "**bell, gong**" and
+**മണി** (*maṇi*) = "**hour, o'clock**" — and it also means "**bell, gong**" and
 "**gem, jewel, pearl**." Here's the honest, slightly untidy part: Malayalam's own
 dictionary tradition treats **all three of these senses as ONE word**, borrowed
 from Sanskrit **मणि** (*maṇi*, "gem, jewel, pearl") — the same Sanskrit word
-behind names like *Manipravalam* and the mantra syllable in "*om mani padme
+behind names like *Manipravalam* and the mantra syllable in "*om maṇi padme
 hum*." Under this account, "bell/hour" isn't a separate native word at all — it's
 just another meaning that grew out of the same borrowed "gem" word (a
 bell-shaped gem or ornament, perhaps, extending to the bell itself, and then to
@@ -69,16 +69,16 @@ just happen to sound alike.
 ## Grammar Lens: telling the time
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-> **ഒരു മണി.** — "One o'clock." (*oru mani*, "one hour/bell")
-> **രണ്ട് മണി.** — "Two o'clock." (*raṇṭŭ mani*, "two hour/bell")
+> **ഒരു മണി.** — "One o'clock." (*oru maṇi*, "one hour/bell")
+> **രണ്ട് മണി.** — "Two o'clock." (*raṇṭŭ maṇi*, "two hour/bell")
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C18-MANI-01, ML-CONCEPT-C18-MANI-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "mani" — hour, also "bell," also "gem" — genuinely debated whether
+- [YOU SAY: "maṇi" — hour, also "bell," also "gem" — genuinely debated whether
   that's one word or two]
-- [YOU SAY: "oru mani" — one o'clock]
+- [YOU SAY: "oru maṇi" — one o'clock]
 - [YOU SAY: the honest point — Malayalam's own dictionaries call it one Sanskrit
   word; Tamil's call the bell/hour sense a separate, native word]
 

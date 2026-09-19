@@ -64,7 +64,7 @@ near-total four-way match.
 - [YOU SAY: "ente kaṇṇŭ" — my eye]
 - [YOU SAY: the four sisters, nearly one word — "kaṇṇŭ … kaṇ … kannu …
   kaṇṇu"]
-- [YOU SAY: three body words now — "thala, kai, kaṇṇŭ"]
+- [YOU SAY: three body words now — "tala, kai, kaṇṇŭ"]
 - [YOU SAY: family, then body — "makan, makaḷ … kaṇṇŭ"]
 - [YOU RECALL: say *eṭukkuka*]
 

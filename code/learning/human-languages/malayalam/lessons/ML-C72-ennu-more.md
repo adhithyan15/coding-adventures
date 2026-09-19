@@ -53,7 +53,7 @@ at the end, and you already have four of them:
 
 > **"എനിക്ക് മലയാളം അറിയാം" എന്ന് ഞാൻ ചിന്തിക്കുന്നു.**
 >
-> *"enikku malayāḷaṁ aṟiyāṁ" ennŭ ñān cintikkunnu* — 'I think I know Malayalam.'
+> *"enikkŭ malayāḷaṁ aṟiyāṁ" ennŭ ñān cintikkunnu* — 'I think I know Malayalam.'
 
 **This is why the marker is worth a chapter.** It is one word, and it turns every
 sentence you can already build into something you can report, wonder about, claim

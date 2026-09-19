@@ -20,7 +20,7 @@ The letters in this word.
 എ (the standing vowel e, as in eḻutuka) + ടു (retroflex ട ṭa with u) + ക്കു + ക. Curl the tongue back for the ട.
 
 The word, taken apart.
-Gundert glosses it "to raise, lift, take up," and the lifting came first. Tamil எடு (eṭu) is the same word again — and the etymological dictionary gives this root no entry of its own, filing eṭu inside the family of എഴു (eḻu), "to rise." Rise, then raise, then take. Kannada and Telugu say ಎತ್ತು / ఎత్తు (ettu) for lifting; whether that is the same word the dictionaries argue over, so take the resemblance and leave the verdict.
+Gundert glosses it "to raise, lift, take up," and the lifting came first. Tamil எடு (eṭu) is the same word again — and the etymological dictionary gives this root no entry of its own, filing eṭu inside the family of എഴു (eḻu), "to rise." Rise, then raise, then take. Kannada and Telugu say ಎತ್ತು / ఎత్తు (eṭṭŭ) for lifting; whether that is the same word the dictionaries argue over, so take the resemblance and leave the verdict.
 It wants an object: veḷḷaṁ eṭukkunnu, water; ari eṭukkunnu, raw rice; cōṟŭ eṭukkunnu, the cooked kind.
 
 Grammar Lens: the stamp is the ഇ, not the ക്ക.
@@ -70,7 +70,7 @@ The letters in this word.
 The word, taken apart.
 Gundert files it under the Sanskrit root ചുദ് (cud), "to incite, to urge" — and his entry still lists the senses in the order they arrived: first to incite, then to demand, then to question. In Sanskrit philosophy चोद्य (codya) was an objection pressed at an opponent. Asking began as pushing.
 Malayalam needed the word because of something it had done to its own. The family's inherited kēḷ‑ covered hearing and asking together, and Tamil's கேள் (kēḷ) still does both. Malayalam kept കേൾക്കുക (kēḷkkuka) for hearing only — and the empty half is exactly where the loan settled.
-Two questions from Chapter 18 and Chapter 19 you can now say you are asking: ethra maṇi?, "what hour?", and niṅṅaḷkku ethra vayassuṇṭŭ?, "how old are you?" Chapter 8's ദയവായി in front softens either.
+Two questions from Chapter 18 and Chapter 19 you can now say you are asking: etra maṇi?, "what hour?", and niṅṅaḷkku etra vayassuṇṭŭ?, "how old are you?" Chapter 8's ദയവായി in front softens either.
 
 Guided Practice.
 [pause 1 second]
@@ -80,9 +80,9 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the three senses in order — "incite … demand … ask"]
 [pause 8 seconds for the answer]
-[your turn — say: ask the hour — "dayavāyi, ethra maṇi?"]
+[your turn — say: ask the hour — "dayavāyi, etra maṇi?"]
 [pause 8 seconds for the answer]
-[your turn — say: ask the age — "niṅṅaḷkku ethra vayassuṇṭŭ?"]
+[your turn — say: ask the age — "niṅṅaḷkku etra vayassuṇṭŭ?"]
 [pause 8 seconds for the answer]
 [your turn — say: hear, then ask — "kēḷkkuka … cōdikkuka"]
 [pause 8 seconds for the answer]
@@ -91,7 +91,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I ask," then the past, and say what the past tells you. (Ñān cōdikkunnu; cōdiccu; ‑ഇച്ചു means borrowed.) What did the root mean first, and why did Malayalam need it? (To incite, to urge — and its own kēḷkkuka had narrowed to hearing, where Tamil's kēḷ still asks.) Now ask someone's age, politely. (Dayavāyi, niṅṅaḷkku ethra vayassuṇṭŭ?)
+Say "I ask," then the past, and say what the past tells you. (Ñān cōdikkunnu; cōdiccu; ‑ഇച്ചു means borrowed.) What did the root mean first, and why did Malayalam need it? (To incite, to urge — and its own kēḷkkuka had narrowed to hearing, where Tamil's kēḷ still asks.) Now ask someone's age, politely. (Dayavāyi, niṅṅaḷkku etra vayassuṇṭŭ?)
 
 
 Lesson 3 of 4.
@@ -140,7 +140,7 @@ Say "I help," and say what sahāya meant first. (Ñān sahāyikkunnu; a companio
 
 
 Lesson 4 of 4.
-എനിക്ക് മലയാളം ഇഷ്ടമാണ് (enikku malayāḷaṁ iṣṭamāṇŭ) — "I like Malayalam," and you are not its subject.
+എനിക്ക് മലയാളം ഇഷ്ടമാണ് (enikkŭ malayāḷaṁ iṣṭamāṇŭ) — "I like Malayalam," and you are not its subject.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
@@ -149,14 +149,14 @@ Warm-up.
 Ñān sahāyikkunnu, ñān eṭukkunnu — you have stood in front of every verb so far. Not this one.
 
 You'll want to know.
-എനിക്ക് മലയാളം ഇഷ്ടമാണ്. enikku malayāḷaṁ iṣṭamāṇŭ — "to me — Malayalam — is a liking."
-ഇഷ്ടം is a noun; ‑ആണ് is Chapter 2's copula. Only the front moves: enikku, ninakku, avanŭ.
+എനിക്ക് മലയാളം ഇഷ്ടമാണ്. enikkŭ malayāḷaṁ iṣṭamāṇŭ — "to me — Malayalam — is a liking."
+ഇഷ്ടം is a noun; ‑ആണ് is Chapter 2's copula. Only the front moves: enikkŭ, ninakku, avanŭ.
 
 The letters in this word.
 ഇ (the standing vowel i) + ഷ്ട (ഷ ṣa over ട ṭa, both retroflex) + ം, the anusvāram of malayāḷaṁ.
 
 Grammar Lens: three sentences on one frame.
-Enikku malayāḷaṁ aṟiyāṁ — I know it. Enikku manassilāyi — I understood. Enikku malayāḷaṁ iṣṭamāṇŭ — I like it. One frame, three meanings; Chapter 6 promised the third before you had words for it. Swap the thing and it holds: enikku maḻa iṣṭamāṇŭ, "I like rain."
+Enikku malayāḷaṁ aṟiyāṁ — I know it. Enikku manassilāyi — I understood. Enikku malayāḷaṁ iṣṭamāṇŭ — I like it. One frame, three meanings; Chapter 6 promised the third before you had words for it. Swap the thing and it holds: enikkŭ maḻa iṣṭamāṇŭ, "I like rain."
 Here the dative is not a preference. Ñān malayāḷaṁ iṣṭamāṇŭ is ungrammatical.
 Two ways round it, one native. ഇഷ്ടപ്പെടുക (iṣṭappeṭuka) is this noun made a verb, and takes either shape. പിടിക്കുക (piṭikkuka), "to catch," is Malayalam's own: Gundert records എനിക്കു പിടിച്ചില്ല, "it did not please me." Malayalam never needed iṣṭaṁ; it took it.
 
@@ -166,13 +166,13 @@ The shape turns up far from Kerala. Spanish says me gusta, "to me it pleases"; I
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "enikku malayāḷaṁ iṣṭamāṇŭ" — to me, Malayalam, is a liking]
+[your turn — say: "enikkŭ malayāḷaṁ iṣṭamāṇŭ" — to me, Malayalam, is a liking]
 [pause 8 seconds for the answer]
-[your turn — say: three likers, then a new thing — "enikku … ninakku … avanŭ," then "enikku maḻa iṣṭamāṇŭ"]
+[your turn — say: three likers, then a new thing — "enikkŭ … ninakku … avanŭ," then "enikkŭ maḻa iṣṭamāṇŭ"]
 [pause 8 seconds for the answer]
 [your turn — say: the three datives — "aṟiyāṁ, manassilāyi, iṣṭamāṇŭ"]
 [pause 8 seconds for the answer]
-[your turn — say: the two ways round — "ñān iṣṭappeṭunnu," "enikku piṭiccu"]
+[your turn — say: the two ways round — "ñān iṣṭappeṭunnu," "enikkŭ piṭiccu"]
 [pause 8 seconds for the answer]
 [your turn — say: the chapter's നാല് — "eṭukkunnu, cōdikkunnu, sahāyikkunnu, iṣṭamāṇŭ"]
 [pause 8 seconds for the answer]

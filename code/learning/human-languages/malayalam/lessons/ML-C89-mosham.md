@@ -55,7 +55,7 @@ shape before something else attaches; this is the same habit in a smaller place,
 and here it is only the writing that moves.
 
 The partner sentence is built the same way, from the word you learned a moment
-ago: **നല്ലതാണ്** — *nallathāṇŭ* — it is good.
+ago: **നല്ലതാണ്** — *nallatāṇŭ* — it is good.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C89-EVAL-01, ML-GRAMMAR-C89-NOMINAL-01, ML-LEX-AANU-01] -->
@@ -64,7 +64,7 @@ ago: **നല്ലതാണ്** — *nallathāṇŭ* — it is good.
 - [YOU SAY: *mōśaṁ*]
 - [YOU SAY: *mōśamāṇŭ*]
 - [YOU SAY: what happened to the **ം** when the *is* word arrived]
-- [YOU SAY: *nallathāṇŭ*, then *mōśamāṇŭ*]
+- [YOU SAY: *nallatāṇŭ*, then *mōśamāṇŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C89-EVAL-01, ML-LEX-AANU-01] -->

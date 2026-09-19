@@ -47,10 +47,10 @@ It is a **consonant**, and in this script a consonant is never bare: it comes wi
 
 You already say these, and every one of them has ന somewhere inside it:
 
-- **നമസ്കാരം** *namaskāram* — hello / greetings (namaskāram — "a making of a bow")
+- **നമസ്കാരം** *namaskāraṁ* — hello / greetings (namaskāraṁ — "a making of a bow")
 - **നന്ദി** *nandi* — thank you
 - **എന്റെ** *enṟe* — my
-- **സന്തോഷം** *santōṣam* — joy / pleased to meet you
+- **സന്തോഷം** *santōṣaṁ* — joy / pleased to meet you
 
 ## Writing: ന — copy what you see
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-05] -->

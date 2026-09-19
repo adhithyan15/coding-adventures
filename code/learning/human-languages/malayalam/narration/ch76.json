@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Asking For It",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a0498aa473990ab6",
+  "sourceHash": "fnv1a64:f25f0d658e5d0f6e",
   "lessons": [
     {
       "id": "ML-C76-veno",
@@ -174,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8356a37a32bca3c1",
+      "sourceHash": "fnv1a64:df49352e4fb8a087",
       "notice": null,
       "blocks": [
         {
@@ -261,11 +261,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "enikku veḷḷaṁ vēṇaṁ",
+              "instruction": "enikkŭ veḷḷaṁ vēṇaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *enikku veḷḷaṁ vēṇaṁ*]"
+              "source": "[YOU SAY: *enikkŭ veḷḷaṁ vēṇaṁ*]"
             },
             {
               "kind": "prompt",
@@ -300,7 +300,7 @@
             },
             {
               "kind": "speech",
-              "text": "Offer somebody water. (വെള്ളം വേണോ (vēṇō)?) Accept it. (വേണം.) And in enikku veḷḷaṁ vēṇaṁ, who is the subject? (The water.)"
+              "text": "Offer somebody water. (വെള്ളം വേണോ (vēṇō)?) Accept it. (വേണം.) And in enikkŭ veḷḷaṁ vēṇaṁ, who is the subject? (The water.)"
             }
           ]
         }

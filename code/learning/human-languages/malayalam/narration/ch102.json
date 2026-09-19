@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "Saying When",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:c118a8e705de7a3f",
+  "sourceHash": "fnv1a64:1978ad039912c8d1",
   "lessons": [
     {
       "id": "ML-C102-manikku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cce03bc9406b7eb7",
+      "sourceHash": "fnv1a64:577a38948033e756",
       "notice": null,
       "blocks": [
         {
@@ -173,9 +173,9 @@
     {
       "id": "ML-C102-azhcha",
       "sequence": 3680,
-      "title": "തിങ്കളാഴ്ച ഞാൻ പോകും (thiṅkaḷāzhcha ñān pōkuṁ) — on Monday I will go",
+      "title": "തിങ്കളാഴ്ച ഞാൻ പോകും (tiṅkaḷāḻca ñān pōkuṁ) — on Monday I will go",
       "headword": "തിങ്കളാഴ്ച ഞാൻ പോകും",
-      "romanization": "thiṅkaḷāzhcha ñān pōkuṁ",
+      "romanization": "tiṅkaḷāḻca ñān pōkuṁ",
       "gloss": "on Monday I will go — the day-name walks into the when-slot with nothing added to it",
       "script": "malayalam",
       "modality": "voice",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72b9211a8594d235",
+      "sourceHash": "fnv1a64:ef9314c180180bb9",
       "notice": null,
       "blocks": [
         {
@@ -214,7 +214,7 @@
             },
             {
               "kind": "speech",
-              "text": "തിങ്കളാഴ്ച ഞാൻ പോകും. — thiṅkaḷāzhcha ñān pōkuṁ — \"On Monday I will go.\""
+              "text": "തിങ്കളാഴ്ച ഞാൻ പോകും. — tiṅkaḷāḻca ñān pōkuṁ — \"On Monday I will go.\""
             },
             {
               "kind": "speech",
@@ -242,7 +242,7 @@
               "rowCount": 2,
               "utterances": [
                 "രണ്ട് മണിക്ക് ഞാൻ പോകും, raṇṭŭ maṇikkŭ…, the hour took ക്ക്.",
-                "തിങ്കളാഴ്ച ഞാൻ പോകും (thiṅkaḷāzhcha ñān pōkuṁ), thiṅkaḷāzhcha…, the day took nothing."
+                "തിങ്കളാഴ്ച ഞാൻ പോകും (tiṅkaḷāḻca ñān pōkuṁ), tiṅkaḷāḻca…, the day took nothing."
               ]
             },
             {
@@ -280,20 +280,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "thiṅkaḷāzhcha",
+              "instruction": "tiṅkaḷāḻca",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *thiṅkaḷāzhcha*]"
+              "source": "[YOU SAY: *tiṅkaḷāḻca*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "thiṅkaḷāzhcha ñān pōkuṁ",
+              "instruction": "tiṅkaḷāḻca ñān pōkuṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *thiṅkaḷāzhcha ñān pōkuṁ*]"
+              "source": "[YOU SAY: *tiṅkaḷāḻca ñān pōkuṁ*]"
             },
             {
               "kind": "prompt",
@@ -337,9 +337,9 @@
     {
       "id": "ML-C102-ethra-manikku",
       "sequence": 3690,
-      "title": "എത്ര മണിക്ക് (ethra maṇikkŭ) — asking at which hour",
+      "title": "എത്ര മണിക്ക് (etra maṇikkŭ) — asking at which hour",
       "headword": "എത്ര മണിക്ക്",
-      "romanization": "ethra maṇikkŭ",
+      "romanization": "etra maṇikkŭ",
       "gloss": "at what time? — one ending away from a question you have been able to ask since you learned the verb for asking",
       "script": "malayalam",
       "modality": "voice",
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64eb42bcb3027501",
+      "sourceHash": "fnv1a64:3018183d94279377",
       "notice": null,
       "blocks": [
         {
@@ -374,7 +374,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എത്ര മണി is already yours. The lesson that gave you the verb for asking put ethra maṇi — what hour — in your mouth and drilled it. This lesson is one ending away from it."
+              "text": "എത്ര മണി is already yours. The lesson that gave you the verb for asking put etra maṇi — what hour — in your mouth and drilled it. This lesson is one ending away from it."
             },
             {
               "kind": "table",
@@ -386,8 +386,8 @@
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "എത്ര മണി, ethra maṇi, what time is it.",
-                "എത്ര മണിക്ക്, ethra maṇikkŭ, at what time."
+                "എത്ര മണി, etra maṇi, what time is it.",
+                "എത്ര മണിക്ക്, etra maṇikkŭ, at what time."
               ]
             },
             {
@@ -403,11 +403,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എത്ര never changes. Every time you have used it, it has stood in front of a bare noun — എത്ര ദൂരം (ethra dūraṁ, how far), എത്ര രൂപ (ethra rūpa, how many rupees)."
+              "text": "എത്ര never changes. Every time you have used it, it has stood in front of a bare noun — എത്ര ദൂരം (etra dūraṁ, how far), എത്ര രൂപ (etra rūpa, how many rupees)."
             },
             {
               "kind": "speech",
-              "text": "Put a hand over the question word in those two and what is left is a distance and a rupee, standing bare. Do it to എത്ര മണിക്ക് (ethra maṇikkŭ) and what is left is an hour with an ending on it. The ending is the one thing here the question word did not bring."
+              "text": "Put a hand over the question word in those two and what is left is a distance and a rupee, standing bare. Do it to എത്ര മണിക്ക് (etra maṇikkŭ) and what is left is an hour with an ending on it. The ending is the one thing here the question word did not bring."
             }
           ]
         },
@@ -422,7 +422,7 @@
             },
             {
               "kind": "speech",
-              "text": "— എത്ര മണിക്ക്? — ethra maṇikkŭ? — രണ്ട് മണിക്ക്. — raṇṭŭ maṇikkŭ."
+              "text": "— എത്ര മണിക്ക്? — etra maṇikkŭ? — രണ്ട് മണിക്ക്. — raṇṭŭ maṇikkŭ."
             },
             {
               "kind": "speech",
@@ -444,29 +444,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ethra maṇi?, then ethra maṇikkŭ? — and name the difference",
+              "instruction": "etra maṇi?, then etra maṇikkŭ? — and name the difference",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ethra maṇi?*, then *ethra maṇikkŭ?* — and name the difference]"
+              "source": "[YOU SAY: *etra maṇi?*, then *etra maṇikkŭ?* — and name the difference]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the question, then answer it — ethra maṇikkŭ? raṇṭŭ maṇikkŭ.",
+              "instruction": "the question, then answer it — etra maṇikkŭ? raṇṭŭ maṇikkŭ.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the question, then answer it — *ethra maṇikkŭ? raṇṭŭ maṇikkŭ.*]"
+              "source": "[YOU SAY: the question, then answer it — *etra maṇikkŭ? raṇṭŭ maṇikkŭ.*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ethra dūraṁ, ethra rūpa, ethra maṇikkŭ",
+              "instruction": "etra dūraṁ, etra rūpa, etra maṇikkŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ethra dūraṁ*, *ethra rūpa*, *ethra maṇikkŭ*]"
+              "source": "[YOU SAY: *etra dūraṁ*, *etra rūpa*, *etra maṇikkŭ*]"
             },
             {
               "kind": "prompt",
@@ -492,7 +492,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you ask at what time? (എത്ര മണിക്ക് (ethra maṇikkŭ).) What does the same question without the ending ask? (What time is it — and you have had that one for a long while.) What does the answer wear? (The same ending — രണ്ട് മണിക്ക് (raṇṭŭ maṇikkŭ).)"
+              "text": "How do you ask at what time? (എത്ര മണിക്ക് (etra maṇikkŭ).) What does the same question without the ending ask? (What time is it — and you have had that one for a long while.) What does the answer wear? (The same ending — രണ്ട് മണിക്ക് (raṇṭŭ maṇikkŭ).)"
             }
           ]
         }
@@ -501,9 +501,9 @@
     {
       "id": "ML-C102-day-and-hour",
       "sequence": 3700,
-      "title": "തിങ്കളാഴ്ച രണ്ട് മണിക്ക് (thiṅkaḷāzhcha raṇṭŭ maṇikkŭ) — on Monday at two o'clock",
+      "title": "തിങ്കളാഴ്ച രണ്ട് മണിക്ക് (tiṅkaḷāḻca raṇṭŭ maṇikkŭ) — on Monday at two o'clock",
       "headword": "തിങ്കളാഴ്ച രണ്ട് മണിക്ക്",
-      "romanization": "thiṅkaḷāzhcha raṇṭŭ maṇikkŭ",
+      "romanization": "tiṅkaḷāḻca raṇṭŭ maṇikkŭ",
       "gloss": "on Monday at two o'clock — both answers in the same slot, the wider one first",
       "script": "malayalam",
       "modality": "sight",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ce88d15c118ee960",
+      "sourceHash": "fnv1a64:89ca08fc9938abee",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -549,7 +549,7 @@
             },
             {
               "kind": "speech",
-              "text": "തിങ്കളാഴ്ച രണ്ട് മണിക്ക് ഞാൻ പോകും. thiṅkaḷāzhcha raṇṭŭ maṇikkŭ ñān pōkuṁ \"On Monday at two o'clock I will go.\""
+              "text": "തിങ്കളാഴ്ച രണ്ട് മണിക്ക് ഞാൻ പോകും. tiṅkaḷāḻca raṇṭŭ maṇikkŭ ñān pōkuṁ \"On Monday at two o'clock I will go.\""
             },
             {
               "kind": "speech",
@@ -575,7 +575,7 @@
               "columns": 2,
               "rowCount": 2,
               "utterances": [
-                "day, then hour, തിങ്കളാഴ്ച രണ്ട് മണിക്ക് (thiṅkaḷāzhcha raṇṭŭ maṇikkŭ).",
+                "day, then hour, തിങ്കളാഴ്ച രണ്ട് മണിക്ക് (tiṅkaḷāḻca raṇṭŭ maṇikkŭ).",
                 "what English does, on Monday at two."
               ]
             },
@@ -614,11 +614,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "thiṅkaḷāzhcha raṇṭŭ maṇikkŭ",
+              "instruction": "tiṅkaḷāḻca raṇṭŭ maṇikkŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *thiṅkaḷāzhcha raṇṭŭ maṇikkŭ*]"
+              "source": "[YOU SAY: *tiṅkaḷāḻca raṇṭŭ maṇikkŭ*]"
             },
             {
               "kind": "prompt",
@@ -632,11 +632,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ethra maṇikkŭ? and answer it with the hour from that sentence",
+              "instruction": "etra maṇikkŭ? and answer it with the hour from that sentence",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ethra maṇikkŭ?* and answer it with the hour from that sentence]"
+              "source": "[YOU SAY: *etra maṇikkŭ?* and answer it with the hour from that sentence]"
             },
             {
               "kind": "prompt",
@@ -671,9 +671,9 @@
     {
       "id": "ML-R102-when-recall",
       "sequence": 3710,
-      "title": "(on Monday, at two o'clock, at what time?) (ethra maṇikkŭ enna ōrmma) — from cold",
+      "title": "(on Monday, at two o'clock, at what time?) (etra maṇikkŭ enna ōrmma) — from cold",
       "headword": "(on Monday, at two o'clock, at what time?)",
-      "romanization": "ethra maṇikkŭ enna ōrmma",
+      "romanization": "etra maṇikkŭ enna ōrmma",
       "gloss": "cold retrieval of the two ways of answering \"when\", and of which one takes an ending",
       "script": "malayalam",
       "modality": "voice",
@@ -681,7 +681,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:234fb01a248613f9",
+      "sourceHash": "fnv1a64:0ff4d2445cc45a75",
       "notice": null,
       "blocks": [
         {
@@ -720,7 +720,7 @@
               "columns": 3,
               "rowCount": 2,
               "utterances": [
-                "തിങ്കളാഴ്ച, thiṅkaḷāzhcha, on Monday — bare.",
+                "തിങ്കളാഴ്ച, tiṅkaḷāḻca, on Monday — bare.",
                 "രണ്ട് മണിക്ക്, raṇṭŭ maṇikkŭ, at two o'clock — ക്ക്."
               ]
             },
@@ -759,29 +759,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "thiṅkaḷāzhcha, then raṇṭŭ maṇikkŭ",
+              "instruction": "tiṅkaḷāḻca, then raṇṭŭ maṇikkŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *thiṅkaḷāzhcha*, then *raṇṭŭ maṇikkŭ*]"
+              "source": "[YOU SAY: *tiṅkaḷāḻca*, then *raṇṭŭ maṇikkŭ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ethra maṇikkŭ? and answer it",
+              "instruction": "etra maṇikkŭ? and answer it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ethra maṇikkŭ?* and answer it]"
+              "source": "[YOU SAY: *etra maṇikkŭ?* and answer it]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "thiṅkaḷāzhcha raṇṭŭ maṇikkŭ ñān pōkuṁ",
+              "instruction": "tiṅkaḷāḻca raṇṭŭ maṇikkŭ ñān pōkuṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *thiṅkaḷāzhcha raṇṭŭ maṇikkŭ ñān pōkuṁ*]"
+              "source": "[YOU SAY: *tiṅkaḷāḻca raṇṭŭ maṇikkŭ ñān pōkuṁ*]"
             },
             {
               "kind": "prompt",
@@ -807,7 +807,7 @@
             },
             {
               "kind": "speech",
-              "text": "On Monday? (തിങ്കളാഴ്ച — nothing added.) At two o'clock? (രണ്ട് മണിക്ക് (raṇṭŭ maṇikkŭ).) At what time? (എത്ര മണിക്ക് (ethra maṇikkŭ).) Which comes first when you say both? (The day.)"
+              "text": "On Monday? (തിങ്കളാഴ്ച — nothing added.) At two o'clock? (രണ്ട് മണിക്ക് (raṇṭŭ maṇikkŭ).) At what time? (എത്ര മണിക്ക് (etra maṇikkŭ).) Which comes first when you say both? (The day.)"
             }
           ]
         }

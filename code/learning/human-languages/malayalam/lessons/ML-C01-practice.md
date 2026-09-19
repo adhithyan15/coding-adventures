@@ -43,7 +43,7 @@ Sound each out, left to right, before checking:
 
 | Read | | Meaning | Origin |
 |---|---|---|---|
-| **നമസ്കാരം** | *namaskāram* | hello / greetings | Sanskrit |
+| **നമസ്കാരം** | *namaskāraṁ* | hello / greetings | Sanskrit |
 | **നന്ദി** | *nandi* | thank you | native (= Tamil *naṉṟi*) |
 | **അതെ** | *athe* | yes | native ("that [is so]") |
 | **ഇല്ല** | *illa* | no / there isn't | native (= Tamil *illai*) |
@@ -70,14 +70,14 @@ now, repeating the greeting is enough when you part.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01, ML-SCRIPT-NAMASKARAM-READ-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: all five — namaskāram · nandi · athe · illa · śari]
-- [YOU SAY: greet and thank — "namaskāram!" … "nandi."]
+- [YOU SAY: all five — namaskāraṁ · nandi · athe · illa · śari]
+- [YOU SAY: greet and thank — "namaskāraṁ!" … "nandi."]
 
 ## Writing checkpoint
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-NA-01, ML-SCRIPT-MA-01, ML-SCRIPT-SA-01, ML-SCRIPT-CHANDRAKKALA-01, ML-SCRIPT-KA-01, ML-SCRIPT-AA-MATRA-01, ML-SCRIPT-RA-01, ML-SCRIPT-ANUSVARAM-01, ML-SCRIPT-NAMASKARAM-READ-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hide the model. Hear *namaskāram* once, write **നമസ്കാരം**, then uncover the
+Hide the model. Hear *namaskāraṁ* once, write **നമസ്കാരം**, then uncover the
 word in the table and check one group at a time: **നമ · സ്ക · ാരം**. A mismatch
 is a signal to repeat the earlier two-minute shape lesson, not to push faster.
 
@@ -95,7 +95,7 @@ above, then say the word it sits in.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NAMASKARAM-01, ML-ETYMON-NAMASKARAM-BOW-01, ML-SCRIPT-NAMASKARAM-READ-01] -->
 
 [PAUSE 3s] Read all five aloud. Which one is Sanskrit, and which four are native
-Dravidian shared with Tamil? (Sanskrit: *namaskāram*. Native: *nandi, athe,
+Dravidian shared with Tamil? (Sanskrit: *namaskāraṁ*. Native: *nandi, athe,
 illa, śari*.) Which word can mean both "okay" and a casual sign-off? (*śari*.)
 
 That completes the four Dravidian first chapters — Tamil, Kannada, Telugu,

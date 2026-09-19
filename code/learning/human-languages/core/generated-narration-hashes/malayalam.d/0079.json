@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 79,
-  "sourceHash": "fnv1a64:8904248fcfa93e55",
+  "sourceHash": "fnv1a64:f0cd65a83704dd23",
   "lessonIds": [
     "ML-C79-valare",
     "ML-C79-orupadu",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch79.txt",
   "json": "malayalam/narration/ch79.json",
-  "textHash": "fnv1a64:3f2dd1ea083e9c46",
-  "jsonHash": "fnv1a64:9feb11fd7ad60b77",
+  "textHash": "fnv1a64:f59c1e065c11a5c8",
+  "jsonHash": "fnv1a64:d71c4136561e99cd",
   "findings": []
 }

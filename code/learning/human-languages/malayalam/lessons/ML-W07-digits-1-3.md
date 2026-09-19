@@ -33,15 +33,15 @@ reviews_of: [ML-C07-numbers-1-5]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01] -->
 
-[PAUSE 2s] Say *onnu, randu, moonnu*. You already own the meanings and sounds;
+[PAUSE 2s] Say *onnŭ, raṇṭŭ, mūnnŭ*. You already own the meanings and sounds;
 this lesson adds only their three numeral shapes.
 
 ## Script
 <!-- hl-knowledge: introduces=[ML-SCRIPT-DIGITS-1-3-07]; assesses=[] -->
 
-- **൧** means 1: *onnu*.
-- **൨** means 2: *randu*.
-- **൩** means 3: *moonnu*.
+- **൧** means 1: *onnŭ*.
+- **൨** means 2: *raṇṭŭ*.
+- **൩** means 3: *mūnnŭ*.
 
 Point in order, then out of order: **൩ ൧ ൨**.
 

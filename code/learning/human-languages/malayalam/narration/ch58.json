@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Six More Short Answers",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:4e83fc8b0186a2bd",
+  "sourceHash": "fnv1a64:48fbbae8b38e885c",
   "lessons": [
     {
       "id": "ML-C58-more",
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da175e8c3ffa37c9",
+      "sourceHash": "fnv1a64:486e8150d8b5d74d",
       "notice": null,
       "blocks": [
         {
@@ -476,7 +476,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എനിക്ക് വെള്ളം വേണം. enikku veḷḷaṁ vēṇaṁ — \"I want water.\""
+              "text": "എനിക്ക് വെള്ളം വേണം. enikkŭ veḷḷaṁ vēṇaṁ — \"I want water.\""
             },
             {
               "kind": "speech",
@@ -511,11 +511,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "enikku veḷḷaṁ vēṇaṁ",
+              "instruction": "enikkŭ veḷḷaṁ vēṇaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *enikku veḷḷaṁ vēṇaṁ*]"
+              "source": "[YOU SAY: *enikkŭ veḷḷaṁ vēṇaṁ*]"
             },
             {
               "kind": "prompt",
@@ -541,7 +541,7 @@
             },
             {
               "kind": "speech",
-              "text": "How do you say I want water? (എനിക്ക് വെള്ളം വേണം (vēṇaṁ).) Who is the subject of that sentence? (The water — not you.) And which case is the person in? (The dative — enikku.)"
+              "text": "How do you say I want water? (എനിക്ക് വെള്ളം വേണം (vēṇaṁ).) Who is the subject of that sentence? (The water — not you.) And which case is the person in? (The dative — enikkŭ.)"
             }
           ]
         }

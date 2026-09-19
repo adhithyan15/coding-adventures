@@ -7,7 +7,7 @@ chapter: 102
 type: grammar
 headword: "തിങ്കളാഴ്ച രണ്ട് മണിക്ക്"
 gloss: on Monday at two o'clock — both answers in the same slot, the wider one first
-romanization: "thiṅkaḷāzhcha raṇṭŭ maṇikkŭ"
+romanization: "tiṅkaḷāḻca raṇṭŭ maṇikkŭ"
 concept_tag: ML-TIME-DAY-AND-HOUR
 prerequisites: [ML-C102-ethra-manikku, ML-C102-azhcha, ML-C102-manikku]
 sounds: []
@@ -42,7 +42,7 @@ other, without stopping.
 You have two answers to **when**, and real arrangements usually need both:
 
 > **തിങ്കളാഴ്ച രണ്ട് മണിക്ക് ഞാൻ പോകും.**
-> *thiṅkaḷāzhcha raṇṭŭ maṇikkŭ ñān pōkuṁ*
+> *tiṅkaḷāḻca raṇṭŭ maṇikkŭ ñān pōkuṁ*
 > "On Monday at two o'clock I will go."
 
 **Neither piece changed to make room for the other.** The day-name is the bare
@@ -81,9 +81,9 @@ joint is **ക്ക്** on the hour and nothing at all on the day.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C102-BARE-DAY-01, ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-PHRASE-C102-WHAT-TIME-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *thiṅkaḷāzhcha raṇṭŭ maṇikkŭ*]
+- [YOU SAY: *tiṅkaḷāḻca raṇṭŭ maṇikkŭ*]
 - [YOU SAY: the whole sentence — *…ñān pōkuṁ*]
-- [YOU SAY: *ethra maṇikkŭ?* and answer it with the hour from that sentence]
+- [YOU SAY: *etra maṇikkŭ?* and answer it with the hour from that sentence]
 - [YOU SAY: which of the two front words carries an ending, and why the other
   does not]
 

@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.242.0] - 2026-09-19
+
+### Fixed - SIMPLE and ADVANCED fail closed instead of silently weakening output
+
+SIMPLE and ADVANCED now return a structured compilation error when parsing,
+typed-AST bridging, an optimization pass, or emission cannot complete. The
+diagnostic names the requested level and failed stage, is written to stderr,
+and exits 1. Failed compilations do not emit JavaScript or create the requested
+output or correlation-vector sidecar.
+
+Previously every non-internal typed-pipeline failure silently ran the
+WHITESPACE_ONLY minifier and exited 0. That made malformed `var = ;` appear to
+compile successfully as `var=;`, and made valid but locally unrepresentable
+syntax look as though SIMPLE/ADVANCED optimization had completed.
+
+The behavior is pinned against Google Closure Compiler `v20260915` (jar
+SHA-256 `9C8AF06056AA06F968B5A457540A85869C7BA2861C211C56D8D4EF6C35DDF36D`):
+the upstream compiler exits 1 with `JSC_PARSE_ERROR` and no output for the
+malformed probe, while it successfully compiles the destructuring probe that
+currently stops at closurec's `binding_pattern` bridge boundary. New
+end-to-end tests cover both probes at SIMPLE and ADVANCED; unit tests pin the
+otherwise hard-to-induce pass and emitter failure policy.
+
 ## [0.241.0] - 2026-09-19
 
 ### Fixed - Windows-native absolute `--js` and `--externs` globs

@@ -154,6 +154,15 @@ checked before entropy or transport access. Identity verification, opaque
 account-key selection, polling time, storage, and concrete network authority
 remain separate.
 
+That state can now enter an opaque caller-timed OIDC polling sequence without
+separating its nonce from the device session. Early waits, pending responses,
+provider slow-down, and transient transport failure retain the same
+provider/client/trace-bound nonce. Authorization returns the audited token
+response only as a nonce-paired value for a later ID-token proof; denial and
+expiry discard the nonce. The composition reuses the existing registry,
+protocol, transport, and broker audit gates and adds no verifier, account-key
+selection, storage, clock, sleep, or concrete transport.
+
 That `private_key_jwt` path can also load the exact static ID-token policy
 inside the composition. The retained provider/client/endpoint/algorithm/key
 profile, opaque verification context, and nonce are validated before the
@@ -197,8 +206,9 @@ dependency are sibling packages in this repository.
 - concrete filesystem, vault, or embedded-resource provider-data sources;
 - concrete encrypted-vault credential storage;
 - concrete account-identity verification/JWKS, identity composition for other
-  grant paths including device polling, account listing, device authorization
-  UI, timing/sleep authority, and full device-flow loops;
+  grant paths including device-poll result verification and custody, account
+  listing, device authorization UI, timing/sleep authority, and full
+  device-flow loops;
 - concrete private-key algorithms, OIDC validation, and DPoP.
 
 Those are independently reviewable follow-up slices in `code/specs/oauth.md`.

@@ -7,12 +7,12 @@ chapter: 14
 type: word
 headword: വസന്തകാലം വേനൽക്കാലം മഴക്കാലം ശൈത്യകാലം
 gloss: spring, summer, monsoon, winter — matching Tamil's pattern of native heat/rain/cold words plus a Sanskrit "spring"
-romanization: "vasanthakālaṁ venalkkālaṁ mazhakkālaṁ śaithyakālaṁ"
+romanization: "vasantakālaṁ venalkkālaṁ maḻakkālaṁ śaityakālaṁ"
 concept_tag: ML-SEASONS
 prerequisites: [ML-C13-shareera-bhaagangal, ML-C09-kshamikkanam]
 sounds: [malayalam-chillu-l, malayalam-anusvara]
 roots: [dravidian-venal-mazha, sanskrit-vasantha]
-etymology_hook: "വേനൽ venal (summer heat) and മഴ mazha (rain) are native Dravidian, matching Tamil's kodai/mazhai closely — വസന്തം vasantham (spring) is the same Sanskrit loan Tamil uses too"
+etymology_hook: "വേനൽ venal (summer heat) and മഴ maḻa (rain) are native Dravidian, matching Tamil's kodai/mazhai closely — വസന്തം vasantham (spring) is the same Sanskrit loan Tamil uses too"
 duration:
   max_seconds: 240
 requires:
@@ -45,8 +45,8 @@ loan for spring.
 |---|---|---|
 | **വസന്തകാലം** (*vasanthakaalam*) | "spring" | *vasantham* — the same **Sanskrit** loan as Tamil |
 | **വേനൽക്കാലം** (*venalkkaalam*) | "summer" | **വേനൽ** *venal*, native Dravidian, matching Tamil *kodai*'s role |
-| **മഴക്കാലം** (*mazhakkaalam*) | "rainy season" | **മഴ** *mazha*, native Dravidian, matching Tamil *mazhai* closely |
-| **ശൈത്യകാലം** (*śaithyakaalam*) | "winter/cold season" | *śaithya* — this one leans more **Sanskrit-flavored** than Tamil's native *kulir* |
+| **മഴക്കാലം** (*mazhakkaalam*) | "rainy season" | **മഴ** *maḻa*, native Dravidian, matching Tamil *mazhai* closely |
+| **ശൈത്യകാലം** (*śaithyakaalam*) | "winter/cold season" | *śaitya* — this one leans more **Sanskrit-flavored** than Tamil's native *kulir* |
 
 Every one shares the ending **‑കാലം** (*‑kaalam*, "time/season") — itself
 ultimately from Sanskrit **काल** (*kāla*), but assimilated so long ago that
@@ -76,7 +76,7 @@ central to daily and agricultural life.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C14-KAALANGAL-01, ML-CONCEPT-C14-KAALANGAL-02] -->
 
 [PAUSE 3s] Which Malayalam season-words match Tamil's closely, and which is
-shared with Tamil as a Sanskrit loan? (**Venal/mazha** match Tamil's
+shared with Tamil as a Sanskrit loan? (**Venal/maḻa** match Tamil's
 *kodai/mazhai*; **vasanthakaalam** is the same Sanskrit loan as Tamil's
-*vasantha kaalam*.) What's the real central season in Kerala's climate?
+*vasanta kaalam*.) What's the real central season in Kerala's climate?
 (**Mazhakkaalam**, the rains/monsoon.)

@@ -40,7 +40,7 @@ reviews_of: [ML-C65-trust]
 
 **നെല്ല്** (*nellŭ*) — "unhusked rice, rice still in the husk".
 
-Native Dravidian, matching Tamil *nel*, and it completes a set you have been collecting a piece at a time. നെല്ല് is the grain in the husk and in the field; *ari* is the same grain husked; *cōṟu* is it cooked.
+Native Dravidian, matching Tamil *nel*, and it completes a set you have been collecting a piece at a time. നെല്ല് is the grain in the husk and in the field; *ari* is the same grain husked; *cōṟŭ* is it cooked.
 
 Three words for one plant is what a language does when the plant is the year's whole work. The flooded field you already know by name, *vayal*, is where the first of the three lives.
 

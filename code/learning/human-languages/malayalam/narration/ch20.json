@@ -4,22 +4,22 @@
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:67e26342be4c884b",
+  "sourceHash": "fnv1a64:ad7227ad8d799d84",
   "lessons": [
     {
       "id": "ML-C20-pathinonnu-irupathu",
       "sequence": 490,
       "title": "പതിനൊന്ന്, ഇരുപത് — transparent \"two-tens,\" matching Tamil closely",
       "headword": "പതിനൊന്ന് — ഇരുപത്",
-      "romanization": "pathinonnŭ — irupathŭ",
-      "gloss": "11-20 — additive \"ten-echo\" compounds for the teens, then irupathu (20), transparently \"two-tens\" — iru (\"two\") + pathu (\"ten\"), matching Tamil closely",
+      "romanization": "patinonnŭ — irupatŭ",
+      "gloss": "11-20 — additive \"ten-echo\" compounds for the teens, then irupatŭ (20), transparently \"two-tens\" — iru (\"two\") + pattŭ (\"ten\"), matching Tamil closely",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7efc779113160b5b",
+      "sourceHash": "fnv1a64:5df576c84b99202e",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Malayalam's teens echo പത്ത് (pathu, \"ten\") plus each digit. പതിനൊന്ന് (pathinonnu) is 11, പന്ത്രണ്ട് (panthraṇṭŭ) is 12, and the pattern continues through പത്തൊമ്പത് (pathompathu, 19) — the same digit-plus-ten-echo compounding as its Dravidian cousins."
+              "text": "Malayalam's teens echo പത്ത് (pattŭ, \"ten\") plus each digit. പതിനൊന്ന് (patinonnŭ) is 11, പന്ത്രണ്ട് (pantraṇṭŭ) is 12, and the pattern continues through പത്തൊമ്പത് (pattombatŭ, 19) — the same digit-plus-ten-echo compounding as its Dravidian cousins."
             }
           ]
         },
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഇരുപത് (irupathu, \"twenty\") = ഇരു (iru, an older word for \"two\") + പത്ത് (pathu, \"ten\") — still fully visible as \"two-tens\" today. This matches Tamil's own irupathu almost letter-for-letter, both languages having kept this compound transparent — unlike Telugu's iravai, which most likely continues the same underlying pattern but has worn down past the point of visibly splitting apart."
+              "text": "ഇരുപത് (irupatŭ, \"twenty\") = ഇരു (iru, an older word for \"two\") + പത്ത് (pattŭ, \"ten\") — still fully visible as \"two-tens\" today. This matches Tamil's own irupatu almost letter-for-letter, both languages having kept this compound transparent — unlike Telugu's iravai, which most likely continues the same underlying pattern but has worn down past the point of visibly splitting apart."
             }
           ]
         },
@@ -75,38 +75,38 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pathinonnu, panthraṇṭŭ\" — 11, 12",
+              "instruction": "\"patinonnŭ, pantraṇṭŭ\" — 11, 12",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pathinonnu, panthraṇṭŭ\" — 11, 12]"
+              "source": "[YOU SAY: \"patinonnŭ, pantraṇṭŭ\" — 11, 12]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"iru\" — an older word for two, \"pathu\" — ten",
+              "instruction": "\"iru\" — an older word for two, \"pattŭ\" — ten",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"iru\" — an older word for two, \"pathu\" — ten]"
+              "source": "[YOU SAY: \"iru\" — an older word for two, \"pattŭ\" — ten]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"irupathu\" — twenty, \"two-tens,\" transparent",
+              "instruction": "\"irupatŭ\" — twenty, \"two-tens,\" transparent",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"irupathu\" — twenty, \"two-tens,\" transparent]"
+              "source": "[YOU SAY: \"irupatŭ\" — twenty, \"two-tens,\" transparent]"
             },
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vasanthakālaṁ venalkkālaṁ mazhakkālaṁ śaithyakālaṁ, then read വെള്ളം അരി ചോറ്",
+              "instruction": "say vasantakālaṁ venalkkālaṁ maḻakkālaṁ śaityakālaṁ, then read വെള്ളം അരി ചോറ്",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vasanthakālaṁ venalkkālaṁ mazhakkālaṁ śaithyakālaṁ*, then read **വെള്ളം അരി ചോറ്**]"
+              "source": "[YOU RECALL: say *vasantakālaṁ venalkkālaṁ maḻakkālaṁ śaityakālaṁ*, then read **വെള്ളം അരി ചോറ്**]"
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:173012b20e03f833",
+      "sourceHash": "fnv1a64:3b61f07ae9351095",
       "notice": null,
       "blocks": [
         {
@@ -192,7 +192,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "മഴ പെയ്യുന്നു. — \"It's raining.\" — literally \"rain is falling.\" (mazha peyyunnu.)"
+              "text": "മഴ പെയ്യുന്നു. — \"It's raining.\" — literally \"rain is falling.\" (maḻa peyyunnu.)"
             }
           ]
         },
@@ -228,11 +228,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"mazha peyyunnu\" — it's raining, \"rain is falling\"",
+              "instruction": "\"maḻa peyyunnu\" — it's raining, \"rain is falling\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"mazha peyyunnu\" — it's raining, \"rain is falling\"]"
+              "source": "[YOU SAY: \"maḻa peyyunnu\" — it's raining, \"rain is falling\"]"
             }
           ]
         },
@@ -249,7 +249,7 @@
             },
             {
               "kind": "speech",
-              "text": "What are the two Sanskrit pieces of കാലാവസ്ഥ (kālāvastha), and what does the whole word literally mean? (കാലം, \"time,\" + അവസ്ഥ, \"state\" — \"the state of time.\") What earlier lesson does this echo, and how is the construction different? (Spanish's tiempo — Spanish reuses ONE word for both senses; Malayalam compounds two separate words instead.) What word does Malayalam use for \"rain\"? (മഴ, mazha.)"
+              "text": "What are the two Sanskrit pieces of കാലാവസ്ഥ (kālāvastha), and what does the whole word literally mean? (കാലം, \"time,\" + അവസ്ഥ, \"state\" — \"the state of time.\") What earlier lesson does this echo, and how is the construction different? (Spanish's tiempo — Spanish reuses ONE word for both senses; Malayalam compounds two separate words instead.) What word does Malayalam use for \"rain\"? (മഴ, maḻa.)"
             }
           ]
         }

@@ -57,6 +57,32 @@ pub struct CompilerOutput {
 // Errors
 // ---------------------------------------------------------------------------
 
+/// The typed compilation stage that prevented SIMPLE or ADVANCED from
+/// completing.
+///
+/// This is deliberately a small, stable vocabulary. Build systems need to
+/// distinguish an input parse error from a local bridge capability gap and
+/// from an internal optimizer/emitter failure without scraping the free-form
+/// detail text supplied by those components.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TypedPipelineStage {
+    Parse,
+    Bridge,
+    Pass,
+    Emit,
+}
+
+impl std::fmt::Display for TypedPipelineStage {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Parse => f.write_str("parse"),
+            Self::Bridge => f.write_str("typed AST bridge"),
+            Self::Pass => f.write_str("optimization pass"),
+            Self::Emit => f.write_str("emit"),
+        }
+    }
+}
+
 /// Reasons compilation can fail.
 ///
 /// I/O errors keep the underlying [`io::ErrorKind`] so the caller
@@ -100,16 +126,26 @@ pub enum CompilerError {
     /// the source). Inner [`print_tree::PrintTreeError`] carries
     /// the message.
     PrintTree(crate::print_tree::PrintTreeError),
-    /// `--compilation_level SIMPLE` bridge parse produced an
-    /// `InternalError` (a bug in the bridge, not unsupported
-    /// syntax). Graceful degrade to whitespace_only is NOT applied
-    /// for internal errors — they indicate a bridge invariant
-    /// violation and must surface to the caller.
+    /// SIMPLE or ADVANCED could not complete the requested typed pipeline.
     ///
-    /// `BridgeError::UnsupportedSyntax` (Phase 2+ constructs) is
-    /// NOT mapped here; it causes a silent degrade to
-    /// `whitespace_only` output instead.
-    Bridge(String),
+    /// CCR-002 makes every stage fail closed. Returning WHITESPACE_ONLY bytes
+    /// with exit 0 would claim an optimization level that never ran, which is
+    /// more dangerous than an explicit capability error.
+    TypedPipeline {
+        level: CompilationLevel,
+        stage: TypedPipelineStage,
+        message: String,
+    },
+}
+
+fn compilation_level_name(level: CompilationLevel) -> &'static str {
+    match level {
+        CompilationLevel::Bundle => "BUNDLE",
+        CompilationLevel::WhitespaceOnly => "WHITESPACE_ONLY",
+        CompilationLevel::Simple => "SIMPLE",
+        CompilationLevel::TranspileOnly => "TRANSPILE_ONLY",
+        CompilationLevel::Advanced => "ADVANCED",
+    }
 }
 
 impl std::fmt::Display for CompilerError {
@@ -132,12 +168,33 @@ impl std::fmt::Display for CompilerError {
             CompilerError::Define(e) => write!(f, "{e}"),
             CompilerError::Wrapper(e) => write!(f, "{e}"),
             CompilerError::PrintTree(e) => write!(f, "{e}"),
-            CompilerError::Bridge(msg) => write!(f, "bridge internal error: {msg}"),
+            CompilerError::TypedPipeline {
+                level,
+                stage,
+                message,
+            } => write!(
+                f,
+                "{} compilation failed at {stage} stage: {message}",
+                compilation_level_name(*level),
+            ),
         }
     }
 }
 
 impl std::error::Error for CompilerError {}
+
+impl CompilerError {
+    /// Process exit status for compiler execution errors.
+    ///
+    /// Upstream Closure uses exit 1 for a failed compilation (including parse
+    /// errors). Existing closurec I/O/configuration failures retain exit 2.
+    pub(crate) fn exit_code(&self) -> u8 {
+        match self {
+            Self::TypedPipeline { .. } => 1,
+            _ => 2,
+        }
+    }
+}
 
 // ---------------------------------------------------------------------------
 // Public entry point
@@ -195,12 +252,11 @@ pub fn transform_source(
 /// | Bundle / Transpile | `compilation_level`| `identity`       | `{level: "BUNDLE" \| "TRANSPILE_ONLY"}` |
 /// | Defines            | `defines`          | `applied`        | `{input_byte_len, output_byte_len, defines_count}` |
 ///
-/// **`bridge_status`** (Simple only): `"ok"` if the full
-/// parse→bridge→passes→emit chain succeeded, otherwise the degrade
-/// reason — `"parse_error:<e>"`, `"unsupported_syntax:<rule>@<loc>"`
-/// (Phase 2+ constructs), `"pass_error:<e>"`, or `"emit_error:<e>"` —
-/// in all of which cases the output falls back to whitespace_only.
-/// `"n/a"` when the level is not Simple.
+/// **`bridge_status`** (Simple and Advanced): `"ok"` when the full
+/// parse→bridge→passes→emit chain succeeded. A failed stage returns a
+/// [`CompilerError::TypedPipeline`] before any output or CV sidecar is written,
+/// so a successful trace can never describe a weaker fallback. `"n/a"` for
+/// compilation levels without the typed pipeline.
 ///
 /// The `defines.applied` contribution lands for every input even
 /// when `--define` is empty (`defines_count: 0`), because the
@@ -300,20 +356,58 @@ struct AdvancedConfig {
     rename_properties_externs: Option<std::collections::HashSet<String>>,
 }
 
+/// Internal failure value for the typed pipeline.
+///
+/// Keeping stage and detail separate prevents the old `Option<String>` trap:
+/// `None` used to mean "silently run a weaker compiler." A `Result` makes the
+/// only two outcomes explicit — requested output or a compilation error.
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum TypedPipelineFailure {
+    Parse(String),
+    Bridge(String),
+    Pass(String),
+    Emit(String),
+}
+
+impl TypedPipelineFailure {
+    fn stage(&self) -> TypedPipelineStage {
+        match self {
+            Self::Parse(_) => TypedPipelineStage::Parse,
+            Self::Bridge(_) => TypedPipelineStage::Bridge,
+            Self::Pass(_) => TypedPipelineStage::Pass,
+            Self::Emit(_) => TypedPipelineStage::Emit,
+        }
+    }
+
+    fn message(self) -> String {
+        match self {
+            Self::Parse(message)
+            | Self::Bridge(message)
+            | Self::Pass(message)
+            | Self::Emit(message) => message,
+        }
+    }
+
+    fn into_compiler_error(self, level: CompilationLevel) -> CompilerError {
+        let stage = self.stage();
+        CompilerError::TypedPipeline {
+            level,
+            stage,
+            message: self.message(),
+        }
+    }
+}
+
 /// Run the typed-AST optimization pipeline over a bridged `Program` and
 /// emit the result as JavaScript text.
 ///
 /// The caller has already turned source text into a typed [`Program`] via
 /// the grammar parser and the bridge; this runs the pass pipeline over it
 /// and serialises the optimized tree back to JS with
-/// [`closure_emitter::emit`]. Returns `Some(code)` on success and `None`
-/// if a pass or the emitter fails — the caller then degrades to
-/// `whitespace_only`. Either way it records the outcome in `*status`
-/// (`"ok"`, `"pass_error:<e>"`, or `"emit_error:<e>"`) so the
-/// correlation-vector trace can distinguish a true optimized emit from a
-/// degrade. SIMPLE v2 has no type-inference stage yet, so an empty
-/// [`Sidecar`] is passed; the pass-internal [`CVLog`] is disabled because
-/// the per-byte trace is emitted by the caller's stage block.
+/// [`closure_emitter::emit`]. A pass or emitter failure is returned with its
+/// stage; CCR-002 deliberately provides no weaker-output branch. SIMPLE v2 has
+/// no type-inference stage yet, so an empty [`Sidecar`] is passed; the
+/// pass-internal [`CVLog`] is disabled when correlation-vector tracing is off.
 ///
 /// `advanced` distinguishes the two levels: `None` is SIMPLE; `Some(cfg)`
 /// is ADVANCED, which appends `rename-globals` (always) and
@@ -322,7 +416,6 @@ struct AdvancedConfig {
 /// [`ADVANCED_PASS_NAMES`] / [`AdvancedConfig`].
 fn run_typed_pipeline(
     program: coding_adventures_javascript_ast::Program,
-    status: &mut Option<String>,
     advanced: Option<AdvancedConfig>,
     // CLOC27 P4 (D5): the run's real (enabled) CV log when
     // `--correlation_vector` is on. The constant-fold pass `derive`s each
@@ -332,7 +425,7 @@ fn run_typed_pipeline(
     // behaviour, and output bytes are identical either way since CV ids
     // never influence folding or emission.
     cv: Option<&mut coding_adventures_correlation_vector::CVLog>,
-) -> Option<String> {
+) -> Result<String, TypedPipelineFailure> {
     use coding_adventures_closure_emitter::{emit, EmitOptions};
     use coding_adventures_closure_pass_constant_fold::ConstantFoldPass;
     use coding_adventures_closure_pass_dce::DcePass;
@@ -415,13 +508,10 @@ fn run_typed_pipeline(
         }
     }
 
-    let optimized = match pipeline.run(program, &sidecar, &mut *pass_cv) {
-        Ok(out) => out.program,
-        Err(e) => {
-            *status = Some(format!("pass_error:{e}"));
-            return None;
-        }
-    };
+    let optimized = pipeline
+        .run(program, &sidecar, &mut *pass_cv)
+        .map_err(|error| TypedPipelineFailure::Pass(error.to_string()))?
+        .program;
 
     // Emit minified JS (pretty=false). No source map at this layer —
     // SIMPLE source maps land with the dedicated source-map work.
@@ -429,16 +519,9 @@ fn run_typed_pipeline(
         source_map: false,
         ..Default::default()
     };
-    match emit(&optimized, &sidecar, &mut *pass_cv, &opts) {
-        Ok(out) => {
-            *status = Some("ok".to_string());
-            Some(out.code)
-        }
-        Err(e) => {
-            *status = Some(format!("emit_error:{e}"));
-            None
-        }
-    }
+    emit(&optimized, &sidecar, &mut *pass_cv, &opts)
+        .map(|output| output.code)
+        .map_err(|error| TypedPipelineFailure::Emit(error.to_string()))
 }
 
 pub fn transform_source_with_cv(
@@ -457,8 +540,8 @@ pub fn transform_source_with_cv(
         // SIMPLE/ADVANCED typed path with CV on, this is passed to
         // `parse_javascript_typed_with_cv` as the per-token `Origin.source`,
         // so a constant-folded literal can be traced back through the CV log
-        // to the source bytes it derived from. Unused on the WHITESPACE_ONLY
-        // / degrade paths.
+        // to the source bytes it derived from. Unused by WHITESPACE_ONLY,
+        // BUNDLE, and TRANSPILE_ONLY.
         &str,
     )>,
 ) -> Result<String, CompilerError> {
@@ -521,19 +604,12 @@ pub fn transform_source_with_cv(
         // SIMPLE-appropriate passes (fold-control-flow, dce,
         // remove-unused-vars, local inline/rename), one pass per PR.
         //
-        // Degrade policy — the typed path is best-effort. If ANY stage
-        // fails (the grammar parser rejects the source, the bridge hits
-        // a Phase-2+ construct, a pass errors, or the emitter cannot
-        // serialise a node), we fall back to `whitespace_only` so the
-        // compiler never errors on valid-but-not-yet-supported input.
-        // The one exception is `BridgeError::InternalError`, which
-        // signals a broken bridge invariant rather than an unsupported
-        // construct — that propagates as `CompilerError::Bridge`.
-        //
-        // `simple_bridge_status` records which branch we took so the
-        // correlation-vector trace can show whether the run was a true
-        // optimized emit (`"ok"`) or a degrade (`"parse_error:…"`,
-        // `"unsupported_syntax:…"`, `"pass_error:…"`, `"emit_error:…"`).
+        // Failure policy — the typed path is fail-closed. If ANY stage fails
+        // (the grammar parser rejects the source, the bridge hits an
+        // unrepresentable construct, a pass errors, or the emitter cannot
+        // serialise a node), the requested compilation fails. Returning
+        // WHITESPACE_ONLY bytes with exit 0 would falsely claim SIMPLE or
+        // ADVANCED semantics and can hide malformed input.
         // ADVANCED currently runs the *same* typed optimization pipeline
         // as SIMPLE. It is specified to be at least as aggressive as
         // SIMPLE, so reusing the SIMPLE pipeline is a correct lower bound
@@ -557,75 +633,44 @@ pub fn transform_source_with_cv(
                 }
                 None => parse_javascript_typed(source, es_version),
             };
-            // Attempt the typed optimization path. `Some(code)` means
-            // the full parse→bridge→passes→emit chain succeeded;
-            // `None` means we should degrade to whitespace_only.
-            let optimized: Option<String> = match parse_result {
-                Err(parse_err) => {
-                    // Malformed JS — grammar parser rejected it.
-                    // Degrade; whitespace_only surfaces the real error.
-                    simple_bridge_status = Some(format!("parse_error:{parse_err}"));
-                    None
-                }
-                Ok(node) => match bridge::grammar_to_program(&node, es_version) {
-                    Ok(program) => {
-                        // ADVANCED adds aggressive renaming on top of the
-                        // SIMPLE pipeline. `rename-globals` runs always
-                        // (gated by the externs value boundary), and
-                        // `rename-properties` runs only with the (fail-closed)
-                        // property boundary decided above — SIMPLE runs the
-                        // typed pipeline unchanged.
-                        let advanced = match config.compilation.level {
-                            CompilationLevel::Advanced => Some(AdvancedConfig {
-                                do_not_rename_globals: externs_do_not_rename(config),
-                                rename_properties_externs,
-                            }),
-                            _ => None,
-                        };
-                        // CLOC27 P4 (D5): run the pass pipeline against the
-                        // run's REAL (enabled) CV log when CV is on, so the
-                        // constant-fold pass `derive`s each folded literal from
-                        // its leaf's source CvId — landing real per-token
-                        // provenance in the sidecar. With CV off this is `None`
-                        // and the pipeline uses an internal disabled log
-                        // (unchanged; output bytes are identical either way,
-                        // since CV ids never affect folding or emission).
-                        let pipe_cv = cv_pair.as_mut().map(|(log, _id, _ids, _file)| {
-                            *log as &mut coding_adventures_correlation_vector::CVLog
-                        });
-                        run_typed_pipeline(
-                            program,
-                            &mut simple_bridge_status,
-                            advanced,
-                            pipe_cv,
-                        )
+            let level = config.compilation.level;
+            let node = parse_result.map_err(|message| {
+                TypedPipelineFailure::Parse(message).into_compiler_error(level)
+            })?;
+            let program = bridge::grammar_to_program(&node, es_version)
+                .map_err(|error| match error {
+                    BridgeError::UnsupportedSyntax { rule, location } => {
+                        TypedPipelineFailure::Bridge(format!(
+                            "unsupported syntax {rule} at {location}"
+                        ))
                     }
-                    Err(BridgeError::UnsupportedSyntax { rule, location }) => {
-                        simple_bridge_status =
-                            Some(format!("unsupported_syntax:{rule}@{location}"));
-                        None
+                    BridgeError::InternalError { msg, rule } => {
+                        TypedPipelineFailure::Bridge(format!("internal error in {rule}: {msg}"))
                     }
-                    Err(BridgeError::InternalError { msg, rule }) => {
-                        return Err(CompilerError::Bridge(format!("{rule}: {msg}")));
-                    }
-                },
-            };
+                })
+                .map_err(|failure| failure.into_compiler_error(level))?;
 
-            match optimized {
-                Some(code) => code,
-                None => {
-                    // Degrade path: emit via whitespace_only.
-                    let wo_cv = cv_pair.as_mut().map(|(log, id, ids, _file)| {
-                        (
-                            *log as &mut coding_adventures_correlation_vector::CVLog,
-                            *id,
-                            *ids,
-                        )
-                    });
-                    whitespace_only::whitespace_only_minify(source, es_version, wo_cv)
-                        .map_err(CompilerError::Minify)?
-                }
-            }
+            // ADVANCED adds aggressive renaming on top of the SIMPLE pipeline.
+            // `rename-globals` runs always (gated by the externs value
+            // boundary), and `rename-properties` runs only with the
+            // fail-closed property boundary decided above.
+            let advanced = match level {
+                CompilationLevel::Advanced => Some(AdvancedConfig {
+                    do_not_rename_globals: externs_do_not_rename(config),
+                    rename_properties_externs,
+                }),
+                _ => None,
+            };
+            // CLOC27 P4 (D5): run the pass pipeline against the run's real
+            // enabled CV log when CV is on. With CV off, the pipeline uses an
+            // internal disabled log; CV ids never affect output bytes.
+            let pipe_cv = cv_pair.as_mut().map(|(log, _id, _ids, _file)| {
+                *log as &mut coding_adventures_correlation_vector::CVLog
+            });
+            let code = run_typed_pipeline(program, advanced, pipe_cv)
+                .map_err(|failure| failure.into_compiler_error(level))?;
+            simple_bridge_status = Some("ok".to_string());
+            code
         }
         // Bundle / TranspileOnly: identity for now (module bundling and
         // language down-levelling are orthogonal to the optimization
@@ -683,10 +728,9 @@ pub fn transform_source_with_cv(
                                 ),
                             ),
                             // The optimization passes that ran (in order).
-                            // A degrade (`bridge_status != "ok"`) still
-                            // lists them — they were the *intended*
-                            // pipeline even when the run fell back to
-                            // whitespace_only.
+                            // Failed typed compilations return before this CV
+                            // contribution is created, so this list always
+                            // describes work that actually completed.
                             (
                                 "passes",
                                 serde_json::Value::Array(
@@ -6804,11 +6848,9 @@ mod tests {
     }
 
     #[test]
-    fn simple_level_unsupported_syntax_degrades_gracefully() {
-        // A class declaration hits BridgeError::UnsupportedSyntax.
-        // The output must still be whitespace-only (degrade, not error)
-        // and the CV must record bridge_status starting with
-        // "unsupported_syntax:".
+    fn simple_level_unsupported_syntax_fails_before_output_or_cv_sidecar() {
+        // A bridge capability gap is a compilation error. Neither a weaker JS
+        // artifact nor a success-looking CV sidecar may be written.
         let dir = temp_path("simple-cv-unsupported-dir");
         fs::create_dir_all(&dir).expect("setup");
         let in_path = dir.join("in.js");
@@ -6839,25 +6881,54 @@ mod tests {
             },
             ..Default::default()
         };
-        // Must not return Err — UnsupportedSyntax is a graceful degrade.
-        let out = run_compiler(&cfg).expect("simple must not error on unsupported syntax");
-        // Output must be non-empty (whitespace_only was applied).
+        let error = run_compiler(&cfg).expect_err("unsupported syntax must fail closed");
         assert!(
-            !out.stdout_text.is_empty() || out.wrote_files.contains(&out_path),
-            "expected output file written"
-        );
-        let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
-        // Even on a degrade the stage is still tagged simple_v2 — the
-        // tag names the level's pipeline version, not the outcome.
-        assert!(
-            body.contains("\"tag\":\"simple_v2\""),
-            "expected simple_v2 tag: {body}"
+            matches!(
+                error,
+                CompilerError::TypedPipeline {
+                    level: CompilationLevel::Simple,
+                    stage: TypedPipelineStage::Bridge,
+                    ..
+                }
+            ),
+            "unexpected error: {error}"
         );
         assert!(
-            body.contains("\"bridge_status\":\"unsupported_syntax:"),
-            "expected unsupported_syntax in bridge_status: {body}"
+            error.to_string().contains("binding_pattern"),
+            "bridge diagnostic must identify the unsupported rule: {error}"
         );
+        assert!(!out_path.exists(), "failed compile wrote JS output");
+        assert!(!sidecar_path.exists(), "failed compile wrote CV sidecar");
         let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn pass_and_emit_failures_map_to_structured_fail_closed_errors() {
+        let cases = [
+            (
+                TypedPipelineFailure::Pass("pass \"dce\" failed: invariant".into()),
+                TypedPipelineStage::Pass,
+                "pass \"dce\" failed: invariant",
+            ),
+            (
+                TypedPipelineFailure::Emit("unknown CV id at literal".into()),
+                TypedPipelineStage::Emit,
+                "unknown CV id at literal",
+            ),
+        ];
+
+        for (failure, expected_stage, expected_message) in cases {
+            let error = failure.into_compiler_error(CompilationLevel::Advanced);
+            assert_eq!(
+                error,
+                CompilerError::TypedPipeline {
+                    level: CompilationLevel::Advanced,
+                    stage: expected_stage,
+                    message: expected_message.to_string(),
+                }
+            );
+            assert_eq!(error.exit_code(), 1);
+        }
     }
 
     #[test]

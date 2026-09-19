@@ -40,24 +40,24 @@ every written word in the row is decodable.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-02] -->
 
 - **ഏ** is independent long *e*.
-- **ഴ** is the curled *zh* you already heard in *ezhu*.
+- **ഴ** is the curled *zh* you already heard in *ēḻŭ*.
 
-Together with the familiar chandrakkala, they begin and finish **ഏഴ്**, *ezhu*.
+Together with the familiar chandrakkala, they begin and finish **ഏഴ്**, *ēḻŭ*.
 
 | numeral | word | said |
 |---|---|---|
-| **൬** | **ആറ്** | *aaru* |
-| **൭** | **ഏഴ്** | *ezhu* |
-| **൮** | **എട്ട്** | *ettu* |
-| **൯** | **ഒമ്പത്** | *ompathu* |
-| **൰** | **പത്ത്** | *pathu* |
+| **൬** | **ആറ്** | *āṟŭ* |
+| **൭** | **ഏഴ്** | *ēḻŭ* |
+| **൮** | **എട്ട്** | *eṭṭŭ* |
+| **൯** | **ഒമ്പത്** | *ombatŭ* |
+| **൰** | **പത്ത്** | *pattŭ* |
 
 ## Writing — observe and trace
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-02] -->
 <!-- hl-writing-stage: observe-trace -->
 
 Trace **ഏ** once and **ഴ** once with the models visible. Then point through
-**ഏഴ്** and say *ezhu*. Whole-word memory writing waits.
+**ഏഴ്** and say *ēḻŭ*. Whole-word memory writing waits.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-6-10-02] -->

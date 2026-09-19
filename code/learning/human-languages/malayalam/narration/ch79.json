@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "How Much Of It",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8904248fcfa93e55",
+  "sourceHash": "fnv1a64:f0cd65a83704dd23",
   "lessons": [
     {
       "id": "ML-C79-valare",
@@ -517,9 +517,9 @@
     {
       "id": "ML-R79-degree-recall",
       "sequence": 2750,
-      "title": "(how much of it) (ethra enna ōrmma) — from cold",
+      "title": "(how much of it) (etra enna ōrmma) — from cold",
       "headword": "(how much of it)",
-      "romanization": "ethra enna ōrmma",
+      "romanization": "etra enna ōrmma",
       "gloss": "cold retrieval of the two new degree words, the slot they stand in, and the third filler you already owned",
       "script": "malayalam",
       "modality": "voice",
@@ -527,7 +527,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad33f0b2184a1c2b",
+      "sourceHash": "fnv1a64:69837f460f8b462b",
       "notice": null,
       "blocks": [
         {

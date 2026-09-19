@@ -53,7 +53,7 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 [PAUSE 1s]
 - [YOU SAY: "ആര്" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *nenchŭ*]
+- [YOU RECALL: say *neñcŭ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-05] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 8,
-  "sourceHash": "fnv1a64:bb447960d213ee52",
+  "sourceHash": "fnv1a64:b0430dfa6506936c",
   "lessonIds": [
     "ML-C08-dayavayi",
     "ML-S03-vowel-sign-i"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch08.txt",
   "json": "malayalam/narration/ch08.json",
-  "textHash": "fnv1a64:bc3ef28dda0eaf14",
-  "jsonHash": "fnv1a64:076a719dfdcf5737",
+  "textHash": "fnv1a64:eff76191a2b16974",
+  "jsonHash": "fnv1a64:e9b7d3e6b12582ce",
   "findings": []
 }

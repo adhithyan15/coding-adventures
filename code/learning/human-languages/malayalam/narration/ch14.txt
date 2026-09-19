@@ -13,8 +13,8 @@ You'll want to know.
 [a table of 4 rows, read aloud]
 Malayalam: വസന്തകാലം (vasanthakaalam). meaning: "spring". source: vasantham — the same Sanskrit loan as Tamil.
 Malayalam: വേനൽക്കാലം (venalkkaalam). meaning: "summer". source: വേനൽ venal, native Dravidian, matching Tamil kodai's role.
-Malayalam: മഴക്കാലം (mazhakkaalam). meaning: "rainy season". source: മഴ mazha, native Dravidian, matching Tamil mazhai closely.
-Malayalam: ശൈത്യകാലം (śaithyakaalam). meaning: "winter/cold season". source: śaithya — this one leans more Sanskrit-flavored than Tamil's native kulir.
+Malayalam: മഴക്കാലം (mazhakkaalam). meaning: "rainy season". source: മഴ maḻa, native Dravidian, matching Tamil mazhai closely.
+Malayalam: ശൈത്യകാലം (śaithyakaalam). meaning: "winter/cold season". source: śaitya — this one leans more Sanskrit-flavored than Tamil's native kulir.
 Every one shares the ending ‑കാലം (‑kaalam, "time/season") — itself ultimately from Sanskrit काल (kāla), but assimilated so long ago that it functions as ordinary vocabulary, quite unlike a fresher loan like vasantham.
 
 Why it's said this way.
@@ -35,7 +35,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which Malayalam season-words match Tamil's closely, and which is shared with Tamil as a Sanskrit loan? (Venal/mazha match Tamil's kodai/mazhai; vasanthakaalam is the same Sanskrit loan as Tamil's vasantha kaalam.) What's the real central season in Kerala's climate? (Mazhakkaalam, the rains/monsoon.)
+Which Malayalam season-words match Tamil's closely, and which is shared with Tamil as a Sanskrit loan? (Venal/maḻa match Tamil's kodai/mazhai; vasanthakaalam is the same Sanskrit loan as Tamil's vasanta kaalam.) What's the real central season in Kerala's climate? (Mazhakkaalam, the rains/monsoon.)
 
 
 Lesson 2 of 2.
@@ -55,7 +55,7 @@ It is a consonant, and in this script a consonant is never bare: it comes with a
 You already say these, and every one of them has ഴ (llla) somewhere inside it:
 ആറ് ഏഴ് എട്ട് ഒമ്പത് പത്ത് — six to ten.
 തിങ്കൾ ചൊവ്വ ബുധൻ വ്യാഴം വെള്ളി ശനി ഞായർ — the seven weekdays.
-വസന്തകാലം വേനൽക്കാലം മഴക്കാലം ശൈത്യകാലം (vasanthakālaṁ venalkkālaṁ mazhakkālaṁ śaithyakālaṁ) — spring, summer, monsoon, winter.
+വസന്തകാലം വേനൽക്കാലം മഴക്കാലം ശൈത്യകാലം (vasantakālaṁ venalkkālaṁ maḻakkālaṁ śaityakālaṁ) — spring, summer, monsoon, winter.
 
 Writing: ഴ — copy what you see.
 Put your pen on ഴ (llla) and follow its line. Copy the shape you can see — slowly, and larger than it is printed.
