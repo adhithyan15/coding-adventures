@@ -1022,6 +1022,19 @@ function render() {
   root.innerHTML = renderTemplate(template, props);
   applyHostNodes(root, props);
   normalizeHostAttributes(root);
+  applyFontSizes(root, props);
+}
+
+function applyFontSizes(scope, context) {
+  for (const element of scope.querySelectorAll("[data-mosaic-font-size-slot]")) {
+    // Read typed component data, not interpolated CSS or a loop's local binding.
+    const value = context[element.getAttribute("data-mosaic-font-size-slot")];
+    if (typeof value === "number" && Number.isFinite(value) && value > 0) {
+      element.style.fontSize = `${value}px`;
+    }
+    // render() reconstructs the authored template first. Skipping an invalid
+    // value therefore restores its original style instead of retaining old data.
+  }
 }
 
 function applyHostNodes(scope, context) {
@@ -1396,6 +1409,7 @@ pub fn from_pipeline_with_slot_values(
     // Reset the per-call HostDialog id counter so two emits of the same
     // input produce byte-identical output.
     reset_dialog_id_counter();
+    validate_font_sizes(&layout.root, &interface.slots)?;
 
     // 1. Sanity check: the mosmodel and moslayout files must agree on the
     //    component name. The mosstyle file's name is allowed to differ
@@ -1782,17 +1796,7 @@ fn emit_html_tree(
 
     // Merge the built-in style with the author-declared part style. The
     // author's declarations come second so they override on collision.
-    let part_style = node
-        .part_name
-        .as_deref()
-        .and_then(|n| part_styles.get(n).map(String::as_str))
-        .unwrap_or("");
-    let merged_style = merge_styles(builtin_style, part_style);
-    let style_attr = if merged_style.is_empty() {
-        String::new()
-    } else {
-        format!(" style=\"{merged_style}\"")
-    };
+    let style_attr = build_style_attr(node, builtin_style, part_styles);
 
     // Image: source becomes the src attribute.
     let src_attr = if node.tag == "Image" {
@@ -3811,6 +3815,43 @@ fn static_col_width_style(col: &LayoutNode) -> String {
     }
 }
 
+/// Numeric typography implemented by the generated HTML host.
+pub fn has_native_font_size(node: &LayoutNode) -> bool {
+    matches!(
+        node.tag.as_str(),
+        "Text" | "HostButton" | "Input" | "HostInput"
+    ) && match find_prop(node, "font-size") {
+        Some(LayoutPropValue::Number(n)) => n.is_finite() && *n > 0.0,
+        Some(LayoutPropValue::SlotRef(_)) => true,
+        _ => false,
+    }
+}
+fn validate_font_sizes(node: &LayoutNode, slots: &[SlotDecl]) -> Result<(), PipelineEmitError> {
+    if matches!(
+        node.tag.as_str(),
+        "Text" | "HostButton" | "Input" | "HostInput"
+    ) {
+        if let Some(value) = find_prop(node, "font-size") {
+            let valid = match value {
+                LayoutPropValue::Number(n) => n.is_finite() && *n > 0.0,
+                LayoutPropValue::SlotRef(name) => slots
+                    .iter()
+                    .any(|slot| slot.name == *name && slot.r#type == SlotType::Number),
+                _ => false,
+            };
+            if !valid {
+                return Err(PipelineEmitError::InvalidPropValue(
+                    "font-size must be a positive finite number or numeric component slot".into(),
+                ));
+            }
+        }
+    }
+    for child in &node.children {
+        validate_font_sizes(child, slots)?;
+    }
+    Ok(())
+}
+
 fn build_style_attr(
     node: &LayoutNode,
     builtin: &str,
@@ -3821,11 +3862,26 @@ fn build_style_attr(
         .as_deref()
         .and_then(|n| part_styles.get(n).map(String::as_str))
         .unwrap_or("");
-    let merged = merge_styles(builtin, part_style);
+    let mut merged = merge_styles(builtin, part_style);
+    let mut binding = String::new();
+    if has_native_font_size(node) {
+        match find_prop(node, "font-size") {
+            Some(LayoutPropValue::Number(value)) => {
+                merged = merge_styles(&merged, &format!("font-size: {value}px"));
+            }
+            Some(LayoutPropValue::SlotRef(name)) => {
+                binding = format!(
+                    " data-mosaic-font-size-slot=\"{}\"",
+                    escape_html_attr(&camel(name))
+                );
+            }
+            _ => {}
+        }
+    }
     if merged.is_empty() {
-        String::new()
+        binding
     } else {
-        format!(" style=\"{merged}\"")
+        format!(" style=\"{merged}\"{binding}")
     }
 }
 

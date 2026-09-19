@@ -60,6 +60,12 @@ jobs:
         run: bash ../../../scripts/ci/apt-install.sh libcairo2-dev
       - name: Install web dependencies
         run: npm ci --no-audit --no-fund
+      - name: Generate and exercise HTML typography
+        env:
+          MOSAIC_HTML_TYPOGRAPHY_OUTPUT: ${{ runner.temp }}/mosaic-html-typography
+        run: |
+          cargo test --manifest-path ../../../packages/rust/Cargo.toml -p mosaic-emit-html --test numeric_typography
+          node --test scripts/html-typography.test.mjs
       - name: Check the root Mosaic package
         run: cargo test --manifest-path ../../mosaic/visicalc/Cargo.toml
       - name: Test the standard Rust application and native ABI
