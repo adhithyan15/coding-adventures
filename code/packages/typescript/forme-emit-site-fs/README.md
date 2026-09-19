@@ -44,6 +44,16 @@ cancellation, which is checked throughout collection and materialization.
 stage declares the capability and directly materializes through
 `node:fs/promises` until FM02 supplies host filesystem adapters.
 
+The emitter implements `Stage.replay` because its `DeployArtifact.files` map
+fully describes the static tree. A validated cross-process checkpoint can
+therefore restore a deleted `outDir` without rerunning page or asset producers.
+Replay sorts paths, checks cancellation, requires byte payloads and a
+`dist-tree` variant, and reapplies the same portable relative-path containment
+rules used during normal emission. Existing directory and file symlinks are
+rejected, canonical parents stay beneath the real output root, and exclusive
+same-directory temporary files are renamed into place so hard links are not
+followed. Any replay failure makes the orchestrator run the stage normally.
+
 ## Verification
 
 ```sh
@@ -53,5 +63,6 @@ npm run test:coverage
 ```
 
 Tests include a real orchestrator pipeline with explicit default and `assets`
-wires, real temporary-directory writes, deterministic fingerprint and manifest
+wires, a fresh-process persistent-cache replay after deleting the output tree,
+real temporary-directory writes, deterministic fingerprint and manifest
 checks, suffix preservation, and failure-path coverage.

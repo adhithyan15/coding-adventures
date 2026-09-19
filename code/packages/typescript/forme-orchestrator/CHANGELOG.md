@@ -1,5 +1,24 @@
 # Changelog — @coding-adventures/forme-orchestrator
 
+## 0.7.0 — 2026-09-19
+
+### Added — side-effect replay
+
+- Capability-bearing stream collectors and named-input joins that implement
+  `Stage.replay` now persist whole-instance checkpoints and reapply their
+  effects before reporting an unchanged instance as skipped.
+- Missing, corrupt, revision-mismatched, or rejected replay state fails open
+  to normal stage execution and refreshes the checkpoint after success.
+- Revision-ledger and checkpoint namespaces include effective per-instance
+  capability grants, so changing authority cannot reuse prior materialization.
+- Per-item capability-bearing stages remain conservative because one stage
+  output does not describe the scheduler's aggregate invocation effects.
+
+### Tests
+
+- Coverage proves successful replay, replay failure fallback, and a real
+  filesystem emitter restoring a deleted tree across fresh orchestrators.
+
 ## 0.6.0 — 2026-09-01
 
 ### Added — exact affected scheduling

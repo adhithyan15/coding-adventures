@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Retain authored Text styles and numeric font-size bindings on semantic table
+  cells, including row and cell loops (#15655). Unstyled cells keep their output.
+
 ### Numeric text and control typography (#15647)
 
 - Project positive literals and numeric component slots to text, buttons, inputs and textareas. Typed runtime values override static font size; invalid values restore authored fallback.

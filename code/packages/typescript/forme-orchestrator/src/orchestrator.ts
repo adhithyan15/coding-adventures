@@ -6,7 +6,7 @@
  * exposes the FM03 §3.1 lifecycle methods, including a host-driven watch
  * session. Pure stage invocations reuse the injected cache; successful runs
  * persist source observations and per-instance revision state. Exact affected-
- * stage scheduling and side-effect replay remain follow-ups.
+ * bounded concurrent streaming remains a follow-up.
  */
 
 import { memoryCache } from "@coding-adventures/forme-cache";

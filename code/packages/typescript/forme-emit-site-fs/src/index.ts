@@ -1,8 +1,8 @@
 /** Emit rendered pages and referenced assets as one deterministic static site. */
 
-import { createHash } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
-import { dirname, posix, relative, resolve, sep } from "node:path";
+import { createHash, randomUUID } from "node:crypto";
+import { lstat, mkdir, realpath, rename, unlink, writeFile } from "node:fs/promises";
+import { isAbsolute, posix, relative, resolve, sep } from "node:path";
 import {
   Kinds,
   streamOf,
@@ -15,7 +15,7 @@ import {
   type RenderedPage,
 } from "@coding-adventures/forme-types";
 import { computeRevisionId } from "@coding-adventures/forme-identity";
-import { defineStage } from "@coding-adventures/forme-stage";
+import { defineStage, type StageContext } from "@coding-adventures/forme-stage";
 
 export interface EmitSiteFsConfig {
   /** Directory under which the complete static site is written. */
@@ -34,6 +34,14 @@ interface PlannedAsset {
 
 const encoder = new TextEncoder();
 const PLACEHOLDER_PREFIX = "forme-asset:";
+
+function validateConfig(rawConfig: unknown): Required<Pick<EmitSiteFsConfig, "outDir">> & EmitSiteFsConfig {
+  const config = rawConfig as EmitSiteFsConfig;
+  if (typeof config?.outDir !== "string" || config.outDir.length === 0) {
+    throw new Error("forme-emit-site-fs: config.outDir must be a non-empty string");
+  }
+  return config;
+}
 
 /** SHA-256 hex used by both filenames and DeployAssetEntry. */
 export function sha256Hex(bytes: Uint8Array): string {
@@ -83,7 +91,7 @@ export function rewriteAssetPlaceholders(
 
 const emitSiteFs = defineStage({
   name: "@coding-adventures/forme-emit-site-fs",
-  version: "0.1.0",
+  version: "0.2.0",
   apiVersion: 1,
   description: "Join rendered pages with Asset IR and emit a fingerprinted static site.",
   consumes: streamOf(Kinds.RenderedPage),
@@ -100,10 +108,7 @@ const emitSiteFs = defineStage({
     },
   },
   async run(input, rawConfig, ctx) {
-    const config = rawConfig as EmitSiteFsConfig;
-    if (typeof config?.outDir !== "string" || config.outDir.length === 0) {
-      throw new Error("forme-emit-site-fs: config.outDir must be a non-empty string");
-    }
+    const config = validateConfig(rawConfig);
     const assetDir = config.assetDir ?? "assets";
     validateAssetDir(assetDir);
     const publicPathPrefix = config.publicPathPrefix ?? "";
@@ -159,9 +164,7 @@ const emitSiteFs = defineStage({
     const orderedFiles = [...files].sort(([left], [right]) => compareCodeUnits(left, right));
     for (const [path, bytes] of orderedFiles) {
       ctx.cancellation.throwIfCancelled();
-      const absolutePath = resolve(config.outDir, ...path.split("/"));
-      await mkdir(dirname(absolutePath), { recursive: true });
-      await writeFile(absolutePath, bytes);
+      await writeContainedFile(config.outDir, validatedArtifactPath(path), bytes);
     }
 
     const fileHashes: Record<string, string> = {};
@@ -193,7 +196,158 @@ const emitSiteFs = defineStage({
     });
     return artifact;
   },
+  async replay(artifact, rawConfig, ctx) {
+    const config = validateConfig(rawConfig);
+    const count = await materializeArtifact(artifact, config.outDir, ctx);
+    ctx.logger.info("forme-emit-site-fs: replayed static site", {
+      files: count,
+      outDir: config.outDir,
+      buildId: artifact.manifest.buildId,
+    });
+  },
 });
+
+async function materializeArtifact(
+  artifact: DeployArtifact,
+  outDir: string,
+  ctx: StageContext,
+): Promise<number> {
+  if (artifact?.variant?.kind !== "dist-tree" || !isPlainObject(artifact.files)) {
+    throw new Error("forme-emit-site-fs: replay requires a dist-tree DeployArtifact");
+  }
+  const files = Object.entries(artifact.files)
+    .sort(([left], [right]) => compareCodeUnits(left, right))
+    .map(([path, bytes]) => {
+      if (!(bytes instanceof Uint8Array)) {
+        throw new Error(`forme-emit-site-fs: replay file ${JSON.stringify(path)} is not bytes`);
+      }
+      return {
+        path: validatedArtifactPath(path),
+        bytes,
+      };
+    });
+  for (const { path, bytes } of files) {
+    ctx.cancellation.throwIfCancelled();
+    await writeContainedFile(outDir, path, bytes);
+  }
+  return files.length;
+}
+
+async function writeContainedFile(
+  outDir: string,
+  portablePath: string,
+  bytes: Uint8Array,
+): Promise<void> {
+  // A portable relative path may still traverse outside outDir through a
+  // pre-existing symlink. Verify each parent both lexically and canonically,
+  // then publish an exclusive sibling temp file by rename. This replaces a
+  // final symlink or hard link rather than following it and keeps partial file
+  // bytes invisible if writing fails.
+  const root = resolve(outDir);
+  await mkdir(root, { recursive: true });
+  await requireRealDirectory(root, "output root");
+  const canonicalRoot = await realpath(root);
+  const segments = portablePath.split("/");
+  let parent = root;
+  for (const segment of segments.slice(0, -1)) {
+    parent = resolve(parent, segment);
+    requireLexicalContainment(root, parent);
+    try {
+      await mkdir(parent);
+    } catch (error) {
+      if (!isAlreadyExists(error)) throw error;
+    }
+    await requireRealDirectory(parent, "output path component");
+    requireCanonicalContainment(canonicalRoot, await realpath(parent));
+  }
+
+  const absolutePath = resolve(parent, segments.at(-1)!);
+  await rejectExistingLinkOrNonFile(absolutePath);
+  requireCanonicalContainment(canonicalRoot, await realpath(parent));
+  const temporaryPath = resolve(parent, `.forme-${randomUUID()}.tmp`);
+  try {
+    await writeFile(temporaryPath, bytes, { flag: "wx" });
+    await rename(temporaryPath, absolutePath);
+  } finally {
+    try {
+      await unlink(temporaryPath);
+    } catch (error) {
+      if (!isNotFound(error)) throw error;
+    }
+  }
+}
+
+async function requireRealDirectory(path: string, label: string): Promise<void> {
+  const stats = await lstat(path);
+  if (stats.isSymbolicLink() || !stats.isDirectory()) {
+    throw new Error(`forme-emit-site-fs: ${label} ${JSON.stringify(path)} must be a real directory`);
+  }
+}
+
+async function rejectExistingLinkOrNonFile(path: string): Promise<void> {
+  try {
+    const stats = await lstat(path);
+    if (stats.isSymbolicLink() || !stats.isFile()) {
+      throw new Error(
+        `forme-emit-site-fs: output file ${JSON.stringify(path)} must not be a symbolic link or directory`,
+      );
+    }
+  } catch (error) {
+    if (!isNotFound(error)) throw error;
+  }
+}
+
+function requireCanonicalContainment(root: string, candidate: string): void {
+  const relativePath = relative(root, candidate);
+  if (
+    relativePath === "" ||
+    (relativePath !== ".." && !relativePath.startsWith(`..${sep}`) && !isAbsolute(relativePath))
+  ) {
+    return;
+  }
+  throw new Error("forme-emit-site-fs: resolved output path would escape outDir");
+}
+
+function isAlreadyExists(error: unknown): boolean {
+  return typeof error === "object" && error !== null && "code" in error
+    && (error as { code?: unknown }).code === "EEXIST";
+}
+
+function isNotFound(error: unknown): boolean {
+  return typeof error === "object" && error !== null && "code" in error
+    && (error as { code?: unknown }).code === "ENOENT";
+}
+
+function validatedArtifactPath(path: string): string {
+  if (
+    path.length === 0 || path.includes("\\") || path.includes("\0") || path.includes(":") ||
+    hasWindowsDrivePrefix(path) || posix.isAbsolute(path) ||
+    posix.normalize(path) !== path ||
+    path.split("/").some(segment => segment.length === 0 || segment === "." || segment === "..")
+  ) {
+    throw new Error(
+      `forme-emit-site-fs: replay path ${JSON.stringify(path)} is not a normalized portable relative path`,
+    );
+  }
+  return path;
+}
+
+function requireLexicalContainment(root: string, candidate: string): void {
+  const relativePath = relative(root, candidate);
+  if (
+    relativePath === "" ||
+    (relativePath !== ".." && !relativePath.startsWith(`..${sep}`) && !isAbsolute(relativePath))
+  ) {
+    return;
+  }
+  throw new Error("forme-emit-site-fs: output path would escape outDir");
+}
+
+function isPlainObject(value: unknown): value is Readonly<Record<string, Uint8Array>> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
 
 function planAsset(asset: Asset, assetDir: string, publicPathPrefix: string): PlannedAsset {
   if (!(asset.bytes instanceof Uint8Array) || asset.byteLength !== asset.bytes.byteLength) {

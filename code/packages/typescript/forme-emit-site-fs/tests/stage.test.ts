@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { mkdtemp, readFile, readdir, rm, symlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import {
@@ -11,6 +11,8 @@ import {
   type LogicalId,
   type RenderedPage,
 } from "@coding-adventures/forme-types";
+import { filesystemCache } from "@coding-adventures/forme-cache";
+import { computeRevisionId } from "@coding-adventures/forme-identity";
 import {
   createCancellationTokenSource,
   frozenClock,
@@ -143,6 +145,17 @@ describe("fingerprinted static-site emission", () => {
     expect(artifact.manifest.buildId).toMatch(/^blake2b:[0-9a-f]{64}$/);
   });
 
+  it("replays every artifact file after the output tree is deleted", async () => {
+    const artifact = await runSite([page()], [asset()]);
+    await rm(outDir, { recursive: true, force: true });
+
+    await emitSiteFs.replay!(artifact, { outDir }, context());
+
+    expect(await readFile(join(outDir, "post/index.html"), "utf8"))
+      .toContain("/assets/cat.");
+    expect((await readdir(join(outDir, "assets"))).length).toBe(1);
+  });
+
   it("uses a portable custom asset directory and URI-encodes public segments", async () => {
     const bytes = new Uint8Array([9]);
     const digest = sha256Hex(bytes);
@@ -226,6 +239,55 @@ describe("validation and safety", () => {
     ], [asset()])).rejects.toThrow(/collides with output/);
   });
 
+  it("rejects unsafe or malformed replay artifacts", async () => {
+    const artifact = await runSite([page()], [asset()]);
+    await rm(outDir, { recursive: true, force: true });
+    await expect(emitSiteFs.replay!({
+      ...artifact,
+      files: { "a.html": new Uint8Array([1]), "z/../escape.html": new Uint8Array([2]) },
+    }, { outDir }, context())).rejects.toThrow(/normalized portable relative path/);
+    await expect(readFile(join(outDir, "a.html"))).rejects.toThrow();
+    await expect(emitSiteFs.replay!({
+      ...artifact,
+      files: { "foo/D:outside/pwn.html": new Uint8Array([1]) },
+    }, { outDir }, context())).rejects.toThrow(/normalized portable relative path/);
+    await expect(emitSiteFs.replay!({
+      ...artifact,
+      variant: { kind: "pdf", pageCount: 1 },
+    }, { outDir }, context())).rejects.toThrow(/dist-tree DeployArtifact/);
+  });
+
+  it("rejects directory symlinks beneath outDir during replay", async () => {
+    const artifact = await runSite([page()], [asset()]);
+    const outside = await mkdtemp(join(tmpdir(), "forme-emit-site-outside-"));
+    roots.push(outside);
+    await symlink(outside, join(outDir, "linked"), process.platform === "win32" ? "junction" : "dir");
+
+    await expect(emitSiteFs.replay!({
+      ...artifact,
+      files: { "linked/pwn.html": new TextEncoder().encode("outside") },
+    }, { outDir }, context())).rejects.toThrow(/real directory/);
+    await expect(readFile(join(outside, "pwn.html"))).rejects.toThrow();
+  });
+
+  it.skipIf(process.platform === "win32")(
+    "rejects final-file symlinks without modifying their targets",
+    async () => {
+      const artifact = await runSite([page()], [asset()]);
+      const outside = await mkdtemp(join(tmpdir(), "forme-emit-site-file-link-"));
+      roots.push(outside);
+      const target = join(outside, "target.html");
+      await writeFile(target, "original");
+      await symlink(target, join(outDir, "linked.html"), "file");
+
+      await expect(emitSiteFs.replay!({
+        ...artifact,
+        files: { "linked.html": new TextEncoder().encode("replacement") },
+      }, { outDir }, context())).rejects.toThrow(/symbolic link/);
+      expect(await readFile(target, "utf8")).toBe("original");
+    },
+  );
+
   it("checks cancellation before materialization and leaves the output empty", async () => {
     await expect(runSite([page()], [asset()], { outDir }, true))
       .rejects.toThrow("test cancellation");
@@ -295,5 +357,93 @@ describe("orchestrator end-to-end", () => {
     expect(artifact.manifest.assets).toHaveLength(1);
     expect(new TextDecoder().decode(artifact.files["post/index.html"]!))
       .toMatch(/src="\/assets\/cat\.[0-9a-f]{64}\.png\?width=400#hero"/);
+  });
+
+  it("restores a deleted site from persistent checkpoints without rerunning producers", async () => {
+    const cacheRoot = await mkdtemp(join(tmpdir(), "forme-emit-site-cache-"));
+    roots.push(cacheRoot);
+    const pageCalls: string[] = [];
+    const assetCalls: string[] = [];
+    const observedStream = <T>(options: {
+      name: string;
+      kind: typeof Kinds.RenderedPage | typeof Kinds.Asset;
+      value: T;
+      identity: LogicalId;
+      revision: string;
+      calls: string[];
+    }) => defineStage({
+      name: options.name,
+      version: "1.0.0",
+      apiVersion: 1,
+      description: "fixed observed fixture source",
+      consumes: Kinds.Void,
+      produces: streamOf(options.kind),
+      capabilities: [],
+      configSchema: null,
+      externalState() {
+        const entries = [{
+          locator: options.name,
+          identity: options.identity,
+          revision: options.revision as never,
+        }];
+        return { version: 1, entries, revision: computeRevisionId({ version: 1, entries }) };
+      },
+      async *run() {
+        options.calls.push("run");
+        yield options.value as never;
+      },
+    });
+    const pages = observedStream({
+      name: "@test/observed-pages",
+      kind: Kinds.RenderedPage,
+      value: page(),
+      identity: ID_A,
+      revision: "blake2b:" + "1".repeat(64),
+      calls: pageCalls,
+    });
+    const assets = observedStream({
+      name: "@test/observed-assets",
+      kind: Kinds.Asset,
+      value: asset(),
+      identity: ID_B,
+      revision: "blake2b:" + "2".repeat(64),
+      calls: assetCalls,
+    });
+    const pipelineConfig = {
+      name: "asset-emission-replay-e2e",
+      settings: {
+        storageRoot: ".", cacheDir: cacheRoot, reproducibleBuild: true,
+        maxConcurrency: null, logLevel: "error", bestEffort: false, deadlineMs: null,
+      },
+      stages: [
+        { id: "pages", stage: pages },
+        { id: "assets", stage: assets },
+        { id: "site", stage: emitSiteFs, config: { outDir } },
+      ],
+      wires: [
+        { from: { id: "pages" }, to: { id: "site" } },
+        { from: { id: "assets" }, to: { id: "site", port: "assets" } },
+      ],
+      outputs: [{ fromInstance: "site", name: "site" }],
+    } as never;
+    const runFresh = async () => {
+      const orchestrator = createOrchestrator({
+        cache: filesystemCache(cacheRoot),
+        logger: silentLogger(),
+      });
+      const result = await orchestrator.runOnce(await orchestrator.buildPipeline(pipelineConfig));
+      await orchestrator.dispose();
+      return result;
+    };
+
+    expect((await runFresh()).stages.map(stage => stage.outcome))
+      .toEqual(["success", "success", "success"]);
+    await rm(outDir, { recursive: true, force: true });
+    expect((await runFresh()).stages.map(stage => stage.outcome))
+      .toEqual(["skipped", "skipped", "skipped"]);
+    expect(pageCalls).toHaveLength(1);
+    expect(assetCalls).toHaveLength(1);
+    expect(await readFile(join(outDir, "post/index.html"), "utf8"))
+      .toContain("/assets/cat.");
   });
 });

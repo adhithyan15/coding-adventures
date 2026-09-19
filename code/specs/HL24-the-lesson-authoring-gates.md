@@ -159,8 +159,8 @@ change that moves them fails a test in a file you did not edit.
 | pin | file |
 |---|---|
 | `summary.totalNodes`, nodes per strand | `tests/strands.test.ts` |
-| exam coverage `covered` / `percent` / `unmapped` | `tests/exam-inventory.test.ts` |
-| the exact set of `probe: null` point ids | `tests/exam-inventory.test.ts` |
+| exam coverage `covered` / `percent` / `unmapped` | `tests/exam-inventories/<language>.test.ts` or the track's independent `tests/exam-inventory-<language>.test.ts` |
+| the exact set of `probe: null` point ids | the same language-owned exam-inventory test |
 | `spanish.extras.length` (namespaced verb count) | `tests/verbs.test.ts` |
 | uncovered-point total in the plan report | `tests/plan-cli.test.ts` |
 | rule statements, lessons with findings | `tests/info-dump.test.ts` |
@@ -169,6 +169,12 @@ change that moves them fails a test in a file you did not edit.
 **Update the pin and say why in the comment beside it.** Every one of these files already carries
 prose explaining its previous movements; a bare number change is not in keeping and hides the
 reason from the next reader.
+
+`tests/exam-inventory.test.ts` is deliberately generic: it owns probe semantics,
+completeness rules, and hostile-loader behavior, not a language's moving coverage
+number. Its ownership regression test rejects a new `describe("the committed …")`
+suite there. Put new source-specific evidence in the language-owned test so two
+inventory tranches never meet in one 4,000-line file again.
 
 Level histograms are intentionally absent from this table. `tests/levels.test.ts` derives them
 directly from canonical lesson, curriculum, and spine owners, proves exact registered-track and

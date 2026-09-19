@@ -40,6 +40,13 @@ After the stream finishes:
    - `manifest.buildTime: ISO timestamp from ctx.time.nowIso()`
    - `manifest.buildId: blake2b over { route → sha256 }`
 
+The stage also implements `replay(artifact, config, ctx)`. On an unchanged
+incremental build, the orchestrator validates the cached artifact revision and
+the emitter rewrites every recorded byte beneath `outDir` without rerunning
+upstream transforms. Replay rejects non-`dist-tree` artifacts, malformed bytes,
+and non-portable or escaping paths before they can write outside the output
+root.
+
 ## Safety
 
 `routeToOutPath` (in `path-utils.ts`) refuses to write outside
@@ -51,6 +58,10 @@ After the stream finishes:
 - Routes whose resolved path falls outside `resolve(outDir) + sep`
   throw (catches `..` traversal, even when interleaved with normal
   segments — `/blog/../../escape.html`).
+- Existing symbolic links in output path components or at the final file are
+  rejected. Canonical parent paths must remain beneath the real output root.
+- Files are written to exclusive same-directory temporary files and renamed
+  into place, so existing hard links are replaced rather than modified.
 
 These checks are pure path math — they run **before** any file open,
 so a malicious route never reaches the kernel.

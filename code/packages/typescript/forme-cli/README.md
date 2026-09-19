@@ -53,9 +53,10 @@ project.
   output available. Generated output, cache, `node_modules`, and `.git` trees
   are excluded from filesystem notifications. Filesystem sources publish
   explicit external-state revisions into the cross-process revision ledger,
-  and exact affected scheduling restores untouched capability-free stages;
-  legacy sources and capability-bearing stages still execute conservatively
-  until FM-B037 adds side-effect replay.
+  exact affected scheduling restores untouched capability-free stages, and
+  replay-capable filesystem emitters reconstruct missing output trees from
+  validated artifacts. Legacy sources and capability-bearing stages without
+  an explicit replay hook still execute conservatively.
 
 `--config` is a global option and can be written before or after a command.
 `build` also accepts the `run` alias. Help and version output are generated

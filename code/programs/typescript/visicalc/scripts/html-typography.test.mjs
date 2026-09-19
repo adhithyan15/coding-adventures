@@ -22,13 +22,20 @@ test('generated HTML hydrates typed font sizes and restores static fallback', as
     window.dispatchEvent(new window.Event('mosaic-host-ready'));
     await flush();
     const nodes = [...window.document.querySelectorAll('[data-mosaic-font-size-slot]')];
-    assert.equal(nodes.length, 5);
+    assert.equal(nodes.length, 10);
     const valid = typeof size === 'number' && Number.isFinite(size) && size > 0;
-    const defaults = ['18px', '16px', '15px', '14px', ''];
+    const defaults = ['18px', '16px', '15px', '14px', '', ...Array(5).fill('18px')];
     nodes.forEach((node, i) => assert.equal(node.style.fontSize, valid ? `${size}px` : defaults[i]));
     assert.equal(nodes[0].style.fontFamily, 'monospace');
     assert.equal(nodes[0].style.color, 'rgb(18, 52, 86)');
     assert.equal(nodes[4].textContent, 'Loop label');
+    const cells = [...window.document.querySelectorAll('th, td')];
+    assert.deepEqual(cells.map(cell => cell.textContent), ['Header', 'Body', 'Loop label', 'Loop label', 'Static', 'Footer']);
+    for (const cell of cells) {
+      assert.equal(cell.style.fontSize, valid && cell.textContent !== 'Static' ? `${size}px` : '18px');
+      assert.equal(cell.style.fontFamily, 'monospace');
+      assert.equal(cell.style.color, 'rgb(18, 52, 86)');
+    }
   }
   window.document.querySelector('button').click();
   await flush();
