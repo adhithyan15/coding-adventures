@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 151)
+        self.assertEqual(summary["case_count"], 153)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -3442,6 +3442,141 @@ class PureDomainValidationTests(unittest.TestCase):
             runner.validate_case_document(dishonest, **self._schema_args())
         self.assertEqual(raised.exception.code, "EXPECTED_DIFF_UNKNOWN_PATH_INVALID")
 
+    def test_ci_gate_selection_match_work_ceiling(self) -> None:
+        at_limit = load_case("ci-gate-selection-match-work-at-limit.json")
+        over_limit = load_case("ci-gate-selection-match-work-over-limit.json")
+        gate = at_limit["input"]["options"]["registry"]["gates"][0]
+        changed_files = at_limit["input"]["options"]["changed_files"]
+
+        pattern_factor = sum(len(pattern) + 1 for pattern in gate["paths"])
+        path_factor = sum(len(path) + 1 for path in changed_files)
+        self.assertEqual(pattern_factor, 10_000)
+        self.assertEqual(path_factor, 5_000)
+        self.assertEqual(len(gate["paths"]), 20)
+        self.assertEqual(len(changed_files), 10)
+        self.assertTrue(any("😀" in pattern for pattern in gate["paths"]))
+        self.assertTrue(any("🚀" in path for path in changed_files))
+        self.assertEqual(
+            pattern_factor * path_factor,
+            runner.MAX_CI_GATE_SELECTION_MATCH_WORK,
+        )
+
+        over_factor = sum(
+            len(path) + 1
+            for path in over_limit["input"]["options"]["changed_files"]
+        )
+        self.assertEqual(pattern_factor * over_factor, 50_010_000)
+
+        with mock.patch(
+            "build_tool_conformance._portable_glob_matches",
+            wraps=runner._portable_glob_matches,
+        ) as matcher:
+            runner.validate_case_document(at_limit, **self._schema_args())
+        self.assertEqual(matcher.call_count, 200)
+
+        with mock.patch(
+            "build_tool_conformance._portable_glob_matches",
+            side_effect=AssertionError("matcher must not run over the ceiling"),
+        ) as matcher:
+            runner.validate_case_document(over_limit, **self._schema_args())
+        matcher.assert_not_called()
+
+        package_shortcut = copy.deepcopy(over_limit)
+        package_shortcut["input"]["options"]["registry"]["gates"][0][
+            "packages"
+        ] = ["rust/affected"]
+        package_shortcut["input"]["options"]["affected_packages"] = [
+            "rust/affected"
+        ]
+        with mock.patch(
+            "build_tool_conformance._portable_glob_matches",
+            side_effect=AssertionError("preflight must precede package matching"),
+        ) as matcher:
+            runner.validate_case_document(package_shortcut, **self._schema_args())
+        matcher.assert_not_called()
+
+        for field, value in (
+            ("force", True),
+            ("affected_packages", None),
+            ("changed_files", None),
+            ("changed_files", [".github/workflows/ci.yml"]),
+        ):
+            with self.subTest(field=field, value=value):
+                bypass = copy.deepcopy(over_limit)
+                bypass["input"]["options"][field] = value
+                bypass["expected"] = copy.deepcopy(at_limit["expected"])
+                bypass["expected"]["case_id"] = bypass["id"]
+                bypass["expected"]["result"]["gates"][0]["required"] = True
+                with mock.patch(
+                    "build_tool_conformance._portable_glob_matches",
+                    side_effect=AssertionError("run-all paths must bypass matching"),
+                ) as matcher:
+                    runner.validate_case_document(bypass, **self._schema_args())
+                matcher.assert_not_called()
+
+        invalid_glob = copy.deepcopy(over_limit)
+        invalid_glob["input"]["options"]["registry"]["gates"][0]["paths"][0] = (
+            "[z-a]"
+        )
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(invalid_glob, **self._schema_args())
+        self.assertEqual(raised.exception.code, "CASE_CI_GATE_GLOB_UNSAFE")
+
+    def test_ci_gate_selection_oracle_rejects_wrong_limit_outcomes(self) -> None:
+        success = load_case("ci-gate-selection-unrelated.json")
+        dishonest_success = copy.deepcopy(success)
+        dishonest_success["expected"] = {
+            "schema_version": 1,
+            "case_id": success["id"],
+            "domain": "ci_gate_selection",
+            "outcome": "error",
+            "result": {},
+            "diagnostics": [
+                {"code": "CI_GATE_MATCH_LIMIT_EXCEEDED", "severity": "error"}
+            ],
+        }
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(dishonest_success, **self._schema_args())
+        self.assertEqual(
+            raised.exception.code,
+            "EXPECTED_CI_GATE_SELECTION_MISMATCH",
+        )
+
+        over_limit = load_case("ci-gate-selection-match-work-over-limit.json")
+        for mutation in ("wrong-code", "warning", "nonempty-result", "ok"):
+            with self.subTest(mutation=mutation):
+                dishonest = copy.deepcopy(over_limit)
+                if mutation == "wrong-code":
+                    dishonest["expected"]["diagnostics"][0]["code"] = "OTHER"
+                elif mutation == "warning":
+                    dishonest["expected"]["diagnostics"][0]["severity"] = "warning"
+                elif mutation == "nonempty-result":
+                    dishonest["expected"]["result"] = {"gates": []}
+                else:
+                    dishonest["expected"] = copy.deepcopy(success["expected"])
+                    dishonest["expected"]["case_id"] = dishonest["id"]
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.validate_case_document(
+                        dishonest,
+                        **self._schema_args(),
+                    )
+                expected_code = (
+                    "EXPECTED_PURE_SCHEMA_INVALID"
+                    if mutation == "nonempty-result"
+                    else "EXPECTED_CI_GATE_MATCH_LIMIT_INVALID"
+                )
+                self.assertEqual(raised.exception.code, expected_code)
+
+        bad_result = copy.deepcopy(over_limit["expected"])
+        bad_result["diagnostics"][0]["code"] = "OTHER"
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.assert_result_matches(
+                over_limit,
+                bad_result,
+                **self._result_schema_args(),
+            )
+        self.assertEqual(raised.exception.code, "RESULT_CI_GATE_MATCH_LIMIT_INVALID")
+
     def test_diff_selection_match_work_ceiling(self) -> None:
         at_limit = load_case("diff-selection-match-work-at-limit.json")
         over_limit = load_case("diff-selection-match-work-over-limit.json")
@@ -3845,7 +3980,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 151)
+        self.assertEqual(summary["case_count"], 153)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"
