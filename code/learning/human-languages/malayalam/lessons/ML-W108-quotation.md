@@ -6,7 +6,7 @@ sequence: 3980
 delivery: script
 chapter: 108
 type: writing
-headword: "\" \""
+headword: '" "'
 romanization: "quotation marks, dialogue dash"
 gloss: the marks around a quoted sentence, the dash that opens a line of dialogue, and the Malayalam word that was doing their job already
 concept_tag: ML-PUNCT-QUOTATION

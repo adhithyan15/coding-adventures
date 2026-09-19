@@ -5,7 +5,7 @@ spine_node: SPINE-DEFINITE-REFERENCE
 sequence: 4000
 chapter: 108
 type: review
-headword: (. , ? ! " " — : ( ) - /)
+headword: '(. , ? ! " " — : ( ) - /)'
 gloss: cold retrieval of the marks, and of the three Malayalam things that were doing their work before they arrived
 romanization: "cihnangal enna ōrmma"
 concept_tag: ML-PUNCT-RECALL

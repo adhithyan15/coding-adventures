@@ -128,7 +128,7 @@ Where does a Malayalam question mark stand? (At the end, and nowhere else.) Does
 
 
 Lesson 4 of 6.
-" " — quoting, when a word is already doing it.
+" " (quotation marks, dialogue dash) — quoting, when a word is already doing it.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: " " and — and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -139,7 +139,7 @@ Say the marker that turns a sentence into the thing somebody said.
 Then say the whole line: "I know Malayalam," I say.
 
 Script you'll notice: " " and —.
-" " — quotation marks, one pair around the words somebody said.
+" " (quotation marks, dialogue dash) — quotation marks, one pair around the words somebody said.
 You have been reading them all along, and nothing stopped to say so. ML-C72-ennu, the lesson that taught you എന്ന്, printed the quoted sentence inside a pair of them:
 "എനിക്ക് മലയാളം അറിയാം" എന്ന് ഞാൻ പറയുന്നു.
 The marks were around the quoted sentence and the lesson went straight past them, because എന്ന് was the thing it had come to teach.
@@ -148,7 +148,7 @@ The marks were around the quoted sentence and the lesson went straight past them
 Grammar Lens: the marker and the marks do the same job twice.
 [a table of 2 rows, read aloud]
 what എന്ന് does, marks the sentence before it as the thing said.
-what " " does, marks the words inside them as the thing said.
+what " " (quotation marks, dialogue dash) does, marks the words inside them as the thing said.
 A Malayalam sentence can carry both, and often does — the marks for the eye, the word for the grammar. Neither one makes the other wrong.
 Your Sanskrit cousin shows the other end of this. Classical Sanskrit has no quotation mark at all, and closes a quotation with इति iti — the same job എന്ന് does, on a page with no marks to help it. Malayalam kept the word and took the marks as well.
 
@@ -215,7 +215,7 @@ How is a Malayalam compound written — joined by a hyphen, or solid? (Solid.) W
 
 
 Lesson 6 of 6.
-(. (full stop), (comma)? (question mark, exclamation mark)! " " —: ( ) - / (colon, parentheses, hyphen, slash)) — from cold.
+(. (full stop), (comma)? (question mark, exclamation mark)! " " (quotation marks, dialogue dash) —: ( ) - / (colon, parentheses, hyphen, slash)) — from cold.
 
 Warm-up.
 [pause 3 seconds]

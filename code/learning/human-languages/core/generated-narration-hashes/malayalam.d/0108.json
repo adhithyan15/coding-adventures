@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 108,
-  "sourceHash": "fnv1a64:dc2d18976dbde2a5",
+  "sourceHash": "fnv1a64:3db09f353829373c",
   "lessonIds": [
     "ML-W108-full-stop",
     "ML-W108-comma",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch108.txt",
   "json": "malayalam/narration/ch108.json",
-  "textHash": "fnv1a64:af3f6bdb801dec28",
-  "jsonHash": "fnv1a64:d3d01733393f4075",
+  "textHash": "fnv1a64:1a04291048948162",
+  "jsonHash": "fnv1a64:6da4e6c2635a7777",
   "findings": []
 }
