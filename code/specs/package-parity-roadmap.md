@@ -13732,7 +13732,7 @@ Its completion bands remain 175/265, 123/934, 181/2,282, and 962/13,468;
 Rust has 782 singleton identities, emerging OCaml has five packages, and both
 canonical collisions and unknown language buckets remain zero.
 
-Before publication, the eight-commit branch rebased conflict-free onto exact
+Before publication, the implementation branch rebased conflict-free onto exact
 `origin/main` `f8a017f5b0b8f1eccdf2c4ace7d13f0abcc09b53`. The intervening OAuth,
 Malayalam, Mermaid, SPICE, ALGOL, Portuguese assessment, Rust closurec, and
 spreadsheet-core commits remain inside existing owners, add no package identity
