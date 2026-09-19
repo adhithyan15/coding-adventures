@@ -381,8 +381,10 @@ cell geometry before the shared backend-neutral PaintScene lowering path. A
 native Metal-to-PNG fixture gates this slice. Named classes and direct styles
 resolve for both cells and composites, including backend-neutral
 `stroke-dasharray` patterns. `classDef default` also styles cells and composites
-without an explicit class, while direct styles retain final precedence; Block
-remains at the partial level while the pinned corpus is not yet complete.
+without an explicit class, while direct styles retain final precedence. The
+complete pinned `mermaid@11.16.1` Block parser corpus now passes through grammar,
+typed grid IR, deterministic layout, PaintScene lowering, and the native Metal
+render fixture, so Block is recorded at the `full` compatibility level.
 
 ### Packet Native Slice
 

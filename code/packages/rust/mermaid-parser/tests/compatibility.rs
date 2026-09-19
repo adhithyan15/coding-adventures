@@ -261,9 +261,24 @@ fn packet_full_status_is_backed_by_the_pinned_corpus() {
 }
 
 #[test]
-fn pinned_block_subset_corpus_parses_to_grid_ir() {
+fn block_full_status_is_backed_by_the_complete_pinned_corpus() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let block = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "block")
+        .expect("block family");
+    assert_eq!(block["status"].as_str(), Some("full"));
+
     let corpus: Value = serde_json::from_str(BLOCK_CORPUS).expect("block corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    assert_eq!(
+        corpus["upstream_commit"].as_str(),
+        Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf")
+    );
+    assert_eq!(corpus["level"].as_str(), Some("full"));
     for fixture in corpus["fixtures"].as_array().expect("fixture array") {
         let id = fixture["id"].as_str().expect("fixture id");
         let source = fixture["source"].as_str().expect("fixture source");
