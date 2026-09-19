@@ -1315,25 +1315,25 @@ fn same_rect(left: &RectFixture, right: &RectFixture) -> bool {
         && approximately(left.height, right.height)
 }
 
-const BASELINE_CONTENT_HEIGHT: f64 = 584.8;
+const BASELINE_CONTENT_HEIGHT: f64 = 620.8;
 const BASELINE_ELEMENTS: [(&str, RectFixture); 8] = [
     ("masthead", rect(16.0, 16.0, 208.0, 57.6)),
-    ("mixed-inline", rect(16.0, 81.6, 208.0, 78.4)),
-    ("image-row", rect(16.0, 166.0, 208.0, 64.8)),
-    ("decoded-image", rect(107.0, 166.0, 32.0, 24.0)),
-    ("fallback-image", rect(16.0, 198.4, 54.0, 24.0)),
-    ("preformatted", rect(16.0, 236.8, 208.0, 62.4)),
-    ("scroll-anchor", rect(16.0, 305.2, 208.0, 78.4)),
-    ("tail", rect(42.0, 482.0, 156.0, 72.8)),
+    ("mixed-inline", rect(16.0, 87.6, 208.0, 78.4)),
+    ("image-row", rect(16.0, 178.0, 208.0, 64.8)),
+    ("decoded-image", rect(107.0, 178.0, 32.0, 24.0)),
+    ("fallback-image", rect(72.0, 210.4, 54.0, 24.0)),
+    ("preformatted", rect(16.0, 254.8, 208.0, 62.4)),
+    ("scroll-anchor", rect(16.0, 329.2, 208.0, 78.4)),
+    ("tail", rect(42.0, 518.0, 156.0, 72.8)),
 ];
 const BASELINE_LINKS: [(&str, RectFixture); 7] = [
-    ("/next.html", rect(142.0, 101.2, 28.0, 19.6)),
-    ("/next.html", rect(16.0, 120.8, 175.0, 19.6)),
-    ("/next.html", rect(16.0, 140.4, 175.0, 19.6)),
-    ("/chapter.html", rect(16.0, 305.2, 154.0, 19.6)),
-    ("/chapter.html", rect(16.0, 324.8, 154.0, 19.6)),
-    ("/chapter.html", rect(16.0, 344.4, 147.0, 19.6)),
-    ("/chapter.html", rect(16.0, 364.0, 56.0, 19.6)),
+    ("/next.html", rect(156.0, 107.2, 35.0, 19.6)),
+    ("/next.html", rect(16.0, 126.8, 175.0, 19.6)),
+    ("/next.html", rect(16.0, 146.4, 175.0, 19.6)),
+    ("/chapter.html", rect(16.0, 329.2, 154.0, 19.6)),
+    ("/chapter.html", rect(16.0, 348.8, 154.0, 19.6)),
+    ("/chapter.html", rect(16.0, 368.4, 147.0, 19.6)),
+    ("/chapter.html", rect(16.0, 388.0, 56.0, 19.6)),
 ];
 
 const fn rect(x: f64, y: f64, width: f64, height: f64) -> RectFixture {

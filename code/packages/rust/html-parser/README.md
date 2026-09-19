@@ -64,7 +64,8 @@ The current parser surface includes:
   resource inventory, anchor targets, body text, headings, richer links, image
   attributes, form controls, and table summaries
 - browser-facing content tree extraction that filters parser-only shell and
-  invisible nodes into a CSS-independent body structure for early rendering
+  invisible nodes into a CSS-independent body structure for early rendering,
+  while preserving collapsed edge spaces between inline text nodes
 - browser-facing render tree input extraction that maps renderable content
   nodes into stable default display categories for early layout
 - browser-facing form control metadata for input values, disabled/checked/

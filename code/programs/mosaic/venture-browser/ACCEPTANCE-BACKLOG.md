@@ -5,6 +5,13 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P0 browser convergence - logical inline text and find spans.** Preserve
+  collapsible spaces at parser text-node boundaries, match one logical visible
+  phrase across inline formatting descendants, stop at block and fixed-position
+  boundaries, and paint every contributing fragment as one shared result.
+  Completed in parser projection and browser core with deterministic acceptance
+  and no generated-host ABI or toolkit-owned matching policy.
+
 - [x] **P0 browser convergence - shared find lifecycle.** The first shared
   find transaction left its toolbar permanently expanded and made “Close Find”
   clear highlights without closing anything. Add retained open/closed state,

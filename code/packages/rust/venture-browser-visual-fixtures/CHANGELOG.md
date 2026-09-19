@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Ratchet the shared real-page geometry oracle to preserve authored spaces at
+  inline element boundaries during wrapping and replaced-content layout.
+
 - Add a deterministic client-side image-map fixture covering scaled circle,
   rectangle, polygon, and default regions plus overlap order, targets, and
   accessible names through the shared pipeline.

@@ -34,7 +34,9 @@ recreating the surrounding chrome in backend-specific UI code.
   focus, and activation; native adapters only translate the platform modifier
   chord and forward one character through their matching `access_key` ABI.
 - Find-in-page retains one bounded query and result sequence in core. Visible
-  text matching, wrap state, automatic reveal, result labels, diagnostics, and
+  text matching spans inline formatting descendants without crossing block or
+  fixed-position boundaries; every contributing paint fragment remains one
+  logical result. Wrap state, automatic reveal, result labels, diagnostics, and
   backend-neutral paint highlights are shared. The same retained state owns
   whether the conditionally rendered Mosaic bar is open; generated hosts only
   forward open, query, next, previous, and close events.

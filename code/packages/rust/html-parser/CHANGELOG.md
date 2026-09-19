@@ -5,6 +5,9 @@ documented in this file.
 
 ## Unreleased
 
+- Preserve collapsible leading and trailing spaces when browser content is
+  projected from separate inline text nodes.
+
 - Carry local `img[usemap]` references into browser content and render nodes so
   shared layout can associate hidden maps without reparsing HTML in a host.
 

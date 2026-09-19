@@ -69,10 +69,11 @@ only recognize their platform modifier chord and forward the character.
 
 Find-in-page is likewise session-owned. `BrowserFindState` retains the bounded
 open state, query, active ordinal, wrap state, and truncation signal; core
-searches visible positioned text, reveals the active result through shared
-scroll state, and adds stable highlight groups to the backend-neutral paint
-scene. Hosts receive only semantic open, query, next, previous, and close
-events.
+searches logical visible text across inline formatting descendants without
+crossing block or fixed-position boundaries, reveals the active result through
+shared scroll state, and adds every contributing rectangle to one stable
+backend-neutral highlight group. Hosts receive only semantic open, query, next,
+previous, and close events.
 
 Typed inputs retain that single-owner design. The session exposes
 `ControlValueState` for live validity and accessibility projection, routes
