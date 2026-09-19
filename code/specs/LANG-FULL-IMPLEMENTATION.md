@@ -983,43 +983,51 @@ backend immediately) come before the enabler-dependent items.
   effectful or dynamic shapes remain conservative.
   A finite `step`/`until` body recurrence may likewise share its compound body
   with those inert siblings while retaining its exact final snapshot; changing
-  siblings remain conservative.
+  siblings remain conservative unless every changing sibling is a pure local
+  integer, real, or boolean scalar assignment. In that bounded case, abstract
+  execution evaluates all assignments in source order on every pass and
+  retains each exact final snapshot, including dependencies on an earlier
+  assignment in the same body.
   Finite static real loops whose bodies avoid the control also retain their
   first post-limit value by simulating at most 4,096 emitted binary64 additions;
   non-finite and rounded-away progress fails closed. Finite static loops also
   retain path-independent integer, real, and boolean constants established by
-  a body that does not reference the control. One simple local scalar body
-  assignment may instead reference the control or its own prior snapshot:
-  bounded analysis evaluates it once per iteration and retains its exact
-  integer, finite real, or boolean result. Integer and real recurrence
-  simulation is capped at 4,096 passes. That recurrence assignment may unwrap
-  one changing assignment from a compound body whose other assignments are
-  proven integer, real, or boolean scalar identities. Larger loops, labels,
-  conditionals, declarations, changing siblings, integer overflow, non-finite
-  results, zero steps, arrays, globals, by-name targets, tracking barriers,
-  dynamic writes, and other control-dependent multi-iteration bodies remain
-  conservative.
+  a body that does not reference the control. Pure local scalar body
+  assignments may instead reference the control, their own prior snapshots, or
+  snapshots written earlier in the same body: bounded analysis evaluates them
+  in source order once per iteration and retains exact integer, finite real, or
+  boolean results. Integer and real recurrence
+  simulation is capped at 4,096 passes. The recurrence assignments may be
+  grouped in an unlabeled compound body alongside proven integer, real, or
+  boolean scalar identities and unlabeled dummy statements. Larger loops,
+  labels, conditionals, declarations, unsupported changing siblings, integer
+  overflow, non-finite results, zero steps, arrays, globals, by-name targets,
+  tracking barriers, dynamic writes, and other control-dependent
+  multi-iteration bodies remain conservative.
   A `while` element also retains body initialization when a bounded static
   numeric comparison, evaluated after abstractly assigning its initial
   controlled value, proves the first condition true. Such an element also
   retains path-independent integer, real, and boolean constants established by
-  a body that avoids the control. One simple local scalar assignment may
-  instead reference the control or its own prior snapshot; capped abstract
-  execution evaluates it after each true predicate and retains its exact
-  integer or finite real result only after proving the terminating false
-  predicate. Boolean recurrence targets use the same capped execution and
-  direct unary `not` updates retain their exact negated snapshots because
+  a body that avoids the control. Pure local scalar assignments may instead
+  reference the control, their own prior snapshots, or snapshots written
+  earlier in the same body; capped abstract execution evaluates them in source
+  order after each true predicate and retains exact integer or finite real
+  results only after proving the terminating false predicate. Boolean
+  recurrence targets use the same capped execution and direct unary `not`
+  updates retain their exact negated snapshots because
   operator wrappers are distinguished from bare-variable reads. Exact snapshot
   updates may unwrap one changing assignment from a compound body whose other
   statements are proven integer, real, or boolean identity assignments of
   ordinary local scalars or unlabeled dummy statements, including through
-  unlabeled nested compound grouping. Labels, conditionals, declarations,
-  changing siblings, dependency writes, string targets, overflow, non-finite
-  values, and loops exceeding 4,096 evaluations remain conservative. Capped
-  abstract execution also retains the
-  first integer or finite binary64 control value whose predicate is false when
-  its value and predicate reference only the control and statically known
-  ordinary local scalars that
+  unlabeled nested compound grouping. They may also abstractly execute several
+  pure local integer, real, or boolean recurrence assignments in source order
+  on every bounded pass, retaining all exact terminating snapshots. Labels,
+  conditionals, declarations, dynamic or effectful siblings, dependency
+  writes, string targets, overflow, non-finite values, and loops exceeding
+  4,096 evaluations remain conservative. Capped abstract execution also
+  retains the first integer or finite binary64 control value whose predicate
+  is false when its value and predicate reference only the control and
+  statically known ordinary local scalars that
   the body does not change. Read-only body uses, exact scalar
   self-assignments, checked numeric or boolean expressions that equal the
   tracked scalar and otherwise reference only known ordinary locals that are
