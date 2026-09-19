@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 15580,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/15580",
+    "branch": "codex/build-tool-neutral-graph-diff-coverage-20260919",
+    "implementation_revision": "7484b32e14d280237525a30428a6488c7b9c85ab",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-19T12:16:13Z",
-    "pr_number": 15559,
-    "status": "merged",
-    "notes": "All 47 reported final-head checks completed acceptably: 40 successes, six expected skips, and one neutral result. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #15559 as 7376434a621119f9b2ea4ef88f7408e45d0fdfa9 without a manual merge command."
+    "observed_at": "2026-09-19T12:48:18Z",
+    "pr_number": 15580,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #15580 is open from independently reviewed implementation revision 7484b32e14d280237525a30428a6488c7b9c85ab. GitHub reports the branch mergeable with no conflict, while the initial CI, CodeQL detection, and human-language detection checks are queued. Auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "f1e1ae4205a26fd171fab3b357ef820dd149b70f",
@@ -1940,10 +1946,13 @@
     {
       "id": "build-tool-neutral-graph-diff-contract-coverage-completion",
       "title": "Close neutral graph and diff mode coverage",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion"],
       "branch": "codex/build-tool-neutral-graph-diff-coverage-20260919",
-      "pr_number": null,
+      "pr_number": 15580,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/15580",
+      "opened_at": "2026-09-19T12:48:14Z",
+      "opened_revision": "7484b32e14d280237525a30428a6488c7b9c85ab",
       "selected_at": "2026-09-19T12:19:01Z",
       "selection_revision": "7376434a621119f9b2ea4ef88f7408e45d0fdfa9",
       "selection_notes": "Selected only after PR #15559 completed all 47 final-head checks acceptably and merged through guarded squash auto-merge. The exact merged-main inventory remains collision-clean at 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five emerging OCaml packages, and zero unknown buckets. Parallel audits found no newly unowned eligible package or OCaml promotion gap, ranked the paired JVM core highest on broad leverage, and then exposed this smaller neutral prerequisite that the JVM, Dart, OCaml, Haskell, Swift, and all-language closure must consume first. The fresh clean worktree starts from exact merge revision 7376434a621119f9b2ea4ef88f7408e45d0fdfa9, and the item adds no host authority.",
@@ -1951,6 +1960,7 @@
       "rebase_notes": "The seven-commit branch rebased without conflict onto exact origin/main f1e1ae4205a26fd171fab3b357ef820dd149b70f. The intervening Mosaic navigation, verified OAuth device-step, and Malayalam census commits have zero exact changed-file overlap with this tranche and add no package root, manifest, BUILD marker, build-tool contract, or parity owner. The regenerated exact-main inventory remains structurally unchanged and collision-clean.",
       "validation_notes": "The specification now defines ordinal prerequisite-then-dependent graph edge order, package-prefix exact-root and descendant selection, and forced packages as changed-set seeds before dependent and prerequisite closure. Three new neutral cases raise the valid corpus to 157 cases while retaining 285 staged files. A red focused test first proved the Python runner accepted reversed native edges; the minimal runner fix rejects that noncanonical result while preserving level-member normalization. The full Python schema and runner family passes 110 tests in 109.959 seconds. The canonical Go consumer is bound directly to all three fixtures; its full race suite, vet, trimpath build, package coverage run, and the directed-graph package test/vet suite pass. The build tool reports 40.1% root-package statement coverage and 71.6% to 97.7% across internal packages. The exact-main package report remains schema 3 with 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five emerging OCaml packages, zero collisions, and zero unknown buckets. Ruff check passes; repository-wide Ruff format still reports only pre-existing formatting fronts in the two touched Python files, with the changed semantic comparison formatted canonically. JSON, compile, diff, and corpus gates pass.",
       "security_notes": "The tranche adds no filesystem, Git, process, environment, network, credential, native-link, execution, or host authority. Bandit reports no medium/high finding in the production runner; Go vet passes and govulncheck is unavailable on this host. The new fixtures are bounded by the existing closed schemas and fixed graph/diff limits. Forced packages are data-only validated names, package-prefix matching remains repository-relative string classification, and raw graph edge order is compared before canonical presentation so native adapters cannot hide noncanonical output.",
+      "publication_notes": "Opened ready-for-review PR #15580 after a normal first push from exact origin/main f1e1ae4205a26fd171fab3b357ef820dd149b70f. Immediately before publication the worktree was clean, no other parity PR was active, and independent security and correctness reviews both issued SHIP at exact implementation head 7484b32e14d280237525a30428a6488c7b9c85ab. GitHub reports the PR mergeable with initial CI, CodeQL detection, and human-language detection checks queued, so auto-merge remains disabled until every required check is terminal and acceptable.",
       "notes": "Discovered by parallel JVM preparation while PR #15559 was active. The neutral graph contract calls for canonical edges but neither defines their order nor supplies unsorted input; all six diff cases use strict_globs and an empty forced_packages list, so package_prefix and forced seed/closure semantics can be omitted without failing the shared corpus. Define ordinal prerequisite-then-dependent edge order, add an unsorted-edge case, specify forced packages as changed-set seeds before dependent and prerequisite closure, add positive package_prefix and forced-package cases, and update the Python oracle plus canonical Go consumer without adding filesystem, Git, process, environment, network, credential, native-link, or execution authority."
     },
     {
