@@ -90,3 +90,9 @@ Frontend (Brainfuck, Nib, Oct, ...)
     ↓ CILProgramArtifact
 [clr-simulator] → run on the .NET CLR simulator
 ```
+
+### Explicit integer conversions (CLR03)
+
+Add ConvI4/ConvI8 and emit_conv_i4/emit_conv_i8 builder APIs. Fixed-byte tests
+verify opcodes 0x69/0x6a and branch offsets. No automatic conversions are inserted
+into existing IR or IIR lowering.

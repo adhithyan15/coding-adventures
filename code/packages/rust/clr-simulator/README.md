@@ -59,3 +59,10 @@ explicit unsupported-table diagnostic before consuming arguments or changing
 call frames. A MemberRef row cannot alias the internal method at the same row.
 This follows the simulator's existing invalid-bytecode panic convention;
 host-call resolution and input readers are not implemented.
+
+### Explicit integer conversions (CLR03)
+
+Explicit conv.i4 truncates Int64 to its signed low 32 bits; conv.i8 sign-extends
+Int to Int64. Same-width conversions preserve values. Missing/uninitialized
+operands and references refuse before stack or pc mutation. Mixed-width
+arithmetic still requires explicit conversion. IIR lowering remains unchanged.

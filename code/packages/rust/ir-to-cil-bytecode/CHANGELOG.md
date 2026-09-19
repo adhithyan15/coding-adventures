@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — explicit integer conversions (CLR03)
+
+Add ConvI4/ConvI8 and emit_conv_i4/emit_conv_i8 builder APIs. Fixed-byte tests
+verify opcodes 0x69/0x6a and branch offsets. No automatic conversions are inserted
+into existing IR or IIR lowering.
+
 ## Unreleased — int64 literal builder (CLR02)
 
 Add LdcI8, encode_ldc_i8 and emit_ldc_i8. Every int64 literal occupies nine bytes,

@@ -10,6 +10,24 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR02 landed; encoded wide-lowering audit selected (2026-09-19)
+
+CLR02 merged in #15607 as `a616cafa5709b03dfd053cba0d9752b324ad79d3`
+after all 46 checks completed (15 success, 31 skipped). The Ubuntu BEAM raw-byte
+host I/O failure passed on one retry without code changes. Main is refreshed;
+open PR ownership shows no encoded CLR overlap. Original dirty checkout and
+separately owned ALGOL work remain preserved.
+
+Next audit `iir-to-cil-bytecode/src/lower.rs`: integer constants/direct-call
+immediates still emit ldc.i4, while object boxing uses INT32_TYPE_TOKEN and
+closure arrays carry dispatch indices alongside captured values. Select a
+bounded scalar lowering prerequisite only after enumerating widths for locals,
+arguments, returns, comparisons, conversions, arrays and boxing. Distinguish
+IIR values from structural i32 array indices and dispatch identifiers. Establish
+an actual encoded artifact regression for arithmetic exceeding i32 even when
+all source immediates fit i32. Commit the detailed semantic spec before changes.
+Keep CLR01 wide-immediate refusal until the complete chosen lowering ABI works.
+Host input, strings, full Oct/Nib fidelity and BEAM variable limits follow.
 ### CLR01 landed; CLR02 scalar representation audit selected (2026-09-19)
 
 CLR01 merged in #15568 as `07e216fbd79e1164dfbab5a5317c7076da2ca560`
