@@ -32,12 +32,6 @@ const LOCAL_EXTENSIONS: &[&str] = &[
 ];
 const DEPRECATED_TYPED_AST_ALIAS: &str = "typed_ast_output_file__INTENRNAL_USE_ONLY";
 const CANONICAL_TYPED_AST_FLAG: &str = "typed_ast_output_file";
-const UNSUPPORTED_UPSTREAM_ALIASES: &[(&str, &str)] = &[
-    ("--D", "define"),
-    ("--checks-only", "checks_only"),
-    ("--dev_mode", "jscomp_dev_mode"),
-    ("--warnings_whitelist_file", "warnings_allowlist_file"),
-];
 const EXPECTED_UPSTREAM_ALIASES: &[(&str, &str)] = &[
     ("--D", "define"),
     ("--checks-only", "checks_only"),
@@ -116,6 +110,7 @@ pub struct AuditReport {
 #[derive(Debug)]
 struct LocalFlagSurface {
     long: BTreeSet<String>,
+    long_aliases: BTreeMap<String, String>,
     short: BTreeSet<String>,
 }
 
@@ -189,15 +184,39 @@ fn parse_local_surface(spec: &[u8]) -> Result<LocalFlagSurface, String> {
         .and_then(Value::as_array)
         .ok_or_else(|| "cli.spec.json has no flags array".to_string())?;
     let mut long = BTreeSet::new();
+    let mut long_aliases = BTreeMap::new();
     let mut short = BTreeSet::new();
     for flag in flags {
         let id = flag
             .get("id")
             .and_then(Value::as_str)
             .ok_or_else(|| "local flag has no string id".to_string())?;
-        if let Some(name) = flag.get("long").and_then(Value::as_str) {
+        let canonical_long = flag.get("long").and_then(Value::as_str);
+        if let Some(name) = canonical_long {
             if !long.insert(name.to_string()) {
                 return Err(format!("duplicate local long flag --{name}"));
+            }
+        }
+        if let Some(value) = flag.get("long_aliases") {
+            let aliases = value
+                .as_array()
+                .ok_or_else(|| format!("local flag {id:?} has non-array long_aliases"))?;
+            let canonical = canonical_long.ok_or_else(|| {
+                format!("local flag {id:?} has long_aliases without a canonical long form")
+            })?;
+            for alias in aliases {
+                let alias = alias.as_str().ok_or_else(|| {
+                    format!("local flag {id:?} has a non-string long alias")
+                })?;
+                if alias.is_empty() || alias.starts_with('-') {
+                    return Err(format!(
+                        "local flag {id:?} has invalid long alias {alias:?}"
+                    ));
+                }
+                if long.contains(alias) || long_aliases.contains_key(alias) {
+                    return Err(format!("duplicate local long spelling --{alias}"));
+                }
+                long_aliases.insert(alias.to_string(), canonical.to_string());
             }
         }
         if let Some(name) = flag.get("short").and_then(Value::as_str) {
@@ -212,7 +231,17 @@ fn parse_local_surface(spec: &[u8]) -> Result<LocalFlagSurface, String> {
             return Err(format!("local flag {id:?} has no command-line form"));
         }
     }
-    Ok(LocalFlagSurface { long, short })
+    if let Some(collision) = long
+        .iter()
+        .find(|canonical| long_aliases.contains_key(canonical.as_str()))
+    {
+        return Err(format!("duplicate local long spelling --{collision}"));
+    }
+    Ok(LocalFlagSurface {
+        long,
+        long_aliases,
+        short,
+    })
 }
 
 fn deprecated_alias() -> AliasDisposition {
@@ -224,14 +253,7 @@ fn deprecated_alias() -> AliasDisposition {
 }
 
 fn unsupported_aliases() -> Vec<AliasDisposition> {
-    UNSUPPORTED_UPSTREAM_ALIASES
-        .iter()
-        .map(|(name, canonical)| AliasDisposition {
-            name: (*name).to_string(),
-            canonical: (*canonical).to_string(),
-            reason: "cli-builder does not yet model long-form flag aliases".to_string(),
-        })
-        .collect()
+    Vec::new()
 }
 
 fn source_pin() -> SourcePin {
@@ -278,6 +300,47 @@ fn expected_alias_map() -> BTreeSet<(String, String)> {
         .iter()
         .map(|(alias, canonical)| ((*alias).to_string(), (*canonical).to_string()))
         .collect()
+}
+
+fn long_alias_map(options: &[OptionSurface]) -> BTreeMap<String, String> {
+    options
+        .iter()
+        .flat_map(|option| {
+            option.aliases.iter().filter_map(|alias| {
+                alias
+                    .strip_prefix("--")
+                    .map(|alias| (alias.to_string(), option.name.clone()))
+            })
+        })
+        .collect()
+}
+
+fn validate_local_long_aliases(
+    actual: &BTreeMap<String, String>,
+    expected: &BTreeMap<String, String>,
+    errors: &mut Vec<String>,
+) {
+    if actual == expected {
+        return;
+    }
+    let missing: Vec<_> = expected
+        .iter()
+        .filter(|(alias, canonical)| actual.get(*alias) != Some(*canonical))
+        .map(|(alias, canonical)| format!("--{alias} -> --{canonical}"))
+        .collect();
+    let unclassified: Vec<_> = actual
+        .iter()
+        .filter(|(alias, canonical)| expected.get(*alias) != Some(*canonical))
+        .map(|(alias, canonical)| format!("--{alias} -> --{canonical}"))
+        .collect();
+    if !missing.is_empty() {
+        errors.push(format!("missing local long aliases: {missing:?}"));
+    }
+    if !unclassified.is_empty() {
+        errors.push(format!(
+            "unclassified local long aliases: {unclassified:?}"
+        ));
+    }
 }
 
 fn require_strict_order(label: &str, values: &[String], errors: &mut Vec<String>) {
@@ -336,6 +399,7 @@ pub fn generate_report(source: &[u8], local_spec: &[u8]) -> Result<AuditReport, 
             errors.push(error);
             LocalFlagSurface {
                 long: BTreeSet::new(),
+                long_aliases: BTreeMap::new(),
                 short: BTreeSet::new(),
             }
         }
@@ -371,11 +435,8 @@ pub fn generate_report(source: &[u8], local_spec: &[u8]) -> Result<AuditReport, 
             ));
         }
     }
+    validate_local_long_aliases(&local.long_aliases, &long_alias_map(&options), &mut errors);
 
-    let unsupported: BTreeMap<_, _> = UNSUPPORTED_UPSTREAM_ALIASES
-        .iter()
-        .map(|(name, canonical)| ((*name).to_string(), (*canonical).to_string()))
-        .collect();
     let mut alias_count = 0;
     for option in &options {
         for alias in &option.aliases {
@@ -390,22 +451,16 @@ pub fn generate_report(source: &[u8], local_spec: &[u8]) -> Result<AuditReport, 
                         option.name
                     ));
                 }
-            } else if unsupported.get(alias) != Some(&option.name) {
-                errors.push(format!(
-                    "upstream alias {alias} for --{} has no reviewed disposition",
-                    option.name
-                ));
+            } else if let Some(long_alias) = alias.strip_prefix("--") {
+                if local.long_aliases.get(long_alias) != Some(&option.name) {
+                    errors.push(format!(
+                        "upstream alias {alias} for --{} is not represented locally",
+                        option.name
+                    ));
+                }
+            } else {
+                errors.push(format!("upstream alias {alias} has an invalid spelling"));
             }
-        }
-    }
-    for (alias, canonical) in &unsupported {
-        let exists = options.iter().any(|option| {
-            option.name == *canonical && option.aliases.iter().any(|value| value == alias)
-        });
-        if !exists {
-            errors.push(format!(
-                "unsupported alias disposition is stale: {alias} -> --{canonical}"
-            ));
         }
     }
     if !errors.is_empty() {
@@ -426,7 +481,7 @@ pub fn generate_report(source: &[u8], local_spec: &[u8]) -> Result<AuditReport, 
             local_extensions: extensions.len(),
             deprecated_aliases: 1,
             unsupported_upstream_flags: 0,
-            unsupported_upstream_aliases: unsupported.len(),
+            unsupported_upstream_aliases: 0,
         },
         upstream_options: options,
         classification: Classification {
@@ -609,17 +664,16 @@ pub fn verify_report(report: &AuditReport, local_spec: &[u8]) -> Vec<String> {
             "local surface mismatch; missing={missing:?}, unclassified={unclassified:?}"
         ));
     }
+    validate_local_long_aliases(
+        &local.long_aliases,
+        &long_alias_map(&report.upstream_options),
+        &mut errors,
+    );
 
     let expected_unsupported_aliases = unsupported_aliases();
     if report.classification.unsupported_upstream_aliases != expected_unsupported_aliases {
         errors.push("unsupported upstream alias classification drifted".to_string());
     }
-    let unsupported_alias_map: BTreeMap<_, _> = report
-        .classification
-        .unsupported_upstream_aliases
-        .iter()
-        .map(|item| (item.name.clone(), item.canonical.clone()))
-        .collect();
     let mut alias_count = 0;
     for option in &report.upstream_options {
         for alias in &option.aliases {
@@ -633,19 +687,16 @@ pub fn verify_report(report: &AuditReport, local_spec: &[u8]) -> Vec<String> {
                         "supported upstream alias {alias} is missing locally"
                     ));
                 }
-            } else if unsupported_alias_map.get(alias) != Some(&option.name) {
-                errors.push(format!(
-                    "upstream alias {alias} for --{} is unclassified",
-                    option.name
-                ));
+            } else if let Some(long_alias) = alias.strip_prefix("--") {
+                if local.long_aliases.get(long_alias) != Some(&option.name) {
+                    errors.push(format!(
+                        "supported upstream alias {alias} for --{} is missing locally",
+                        option.name
+                    ));
+                }
+            } else {
+                errors.push(format!("upstream alias {alias} has an invalid spelling"));
             }
-        }
-    }
-    for (alias, canonical) in &unsupported_alias_map {
-        if !report.upstream_options.iter().any(|option| {
-            option.name == *canonical && option.aliases.iter().any(|value| value == alias)
-        }) {
-            errors.push(format!("stale unsupported alias {alias} -> --{canonical}"));
         }
     }
 

@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.246.0] - 2026-09-19
+
+### Added - upstream long-form aliases
+
+`closurec` now accepts all four alternate long spellings declared by the
+pinned upstream `CommandLineRunner.java`: `--D`, `--checks-only`, `--dev_mode`,
+and `--warnings_whitelist_file`. Each resolves to its canonical flag ID, so
+runtime behavior, duplicate detection, constraints, and explicit-presence
+tracking are identical to the canonical spelling. Generated help exposes the
+aliases deterministically, and the machine-generated surface audit now reports
+zero unsupported upstream aliases.
+
 ## [0.245.0] - 2026-09-19
 
 ### Added - pinned, generated Closure CLI surface audit

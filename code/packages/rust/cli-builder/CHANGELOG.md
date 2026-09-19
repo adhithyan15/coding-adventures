@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] — 2026-09-19
+
+### Added
+
+- **Long-form flag aliases** (`long_aliases` on `FlagDef`) — each declared
+  spelling is accepted with `--alias` and `--alias=value` syntax, resolves to
+  the canonical flag ID in parsed values and `explicit_flags`, participates in
+  duplicate/constraint handling, fuzzy suggestions, and appears in help in
+  declaration order.
+- Load-time validation rejects aliases without a canonical `long` form,
+  invalid or repeated spellings, effective-scope collisions with other flags,
+  and collisions with enabled `--help` / `--version` built-ins.
+
 ## [1.1.0] — 2026-03-22
 
 ### Added
