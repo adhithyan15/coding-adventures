@@ -13732,13 +13732,13 @@ Its completion bands remain 175/265, 123/934, 181/2,282, and 962/13,468;
 Rust has 782 singleton identities, emerging OCaml has five packages, and both
 canonical collisions and unknown language buckets remain zero.
 
-Before publication, the seven-commit branch rebased conflict-free onto exact
-`origin/main` `608963c3aafe26f5fad7d33ac2c7fddeadc089b8`. The intervening OAuth,
-Malayalam, Mermaid, SPICE, ALGOL, Portuguese assessment, and Rust closurec
-commits remain inside existing owners, add no package identity or build-tool
-contract, and have zero exact overlap with this tranche. The regenerated
-collision-checked schema-3 inventory is therefore structurally unchanged from
-the selection snapshot.
+Before publication, the eight-commit branch rebased conflict-free onto exact
+`origin/main` `f8a017f5b0b8f1eccdf2c4ace7d13f0abcc09b53`. The intervening OAuth,
+Malayalam, Mermaid, SPICE, ALGOL, Portuguese assessment, Rust closurec, and
+spreadsheet-core commits remain inside existing owners, add no package identity
+or build-tool contract, and have zero exact overlap with this tranche. The
+regenerated collision-checked schema-3 inventory is therefore structurally
+unchanged from the selection snapshot.
 
 The post-merge adoption audit registers eleven language-specific
 diff-selection ceiling owners for Go, shared C#/F#, Elixir, Haskell, Lua,
