@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:7e85b0aa33d7cb6c",
+  "lessonIds": [
+    "ML-C105-raajyam",
+    "ML-C105-nagaram",
+    "ML-C105-thalasthaanam",
+    "ML-R105-places-recall"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch105.txt",
+  "json": "malayalam/narration/ch105.json",
+  "textHash": "fnv1a64:70567c3af77903cd",
+  "jsonHash": "fnv1a64:8c6af04cc502bccf",
+  "findings": []
+}

@@ -1,0 +1,542 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 105,
+  "title": "Places",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:7e85b0aa33d7cb6c",
+  "lessons": [
+    {
+      "id": "ML-C105-raajyam",
+      "sequence": 3820,
+      "title": "രാജ്യം (rājyaṁ) — a country",
+      "headword": "രാജ്യം",
+      "romanization": "rājyaṁ",
+      "gloss": "a country — the word for what India is, after two chapters of knowing India by name",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30b2a71b2e459102",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ഇന്ത്യ. Say കേരളം. You have had both of those names for a long while — and no word for what kind of thing either one is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രാജ്യം (rājyaṁ) — a country."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇന്ത്യ is one. കേരളം is not — it is a part of one. You have been able to say both names since long before you had a word for the difference between them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The Sanskrit behind it means a realm, and it is built on the word for a king. A country is named, in this word, for who once ruled it — not for its land, its people or its borders."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends in -ം, which by now tells you what it will do when a case ending arrives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indya, then rājyaṁ — the name, then what kind of thing it is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indya*, then *rājyaṁ* — the name, then what kind of thing it is]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the Sanskrit behind it is built on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the Sanskrit behind it is built on]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A country? (രാജ്യം (rājyaṁ).) Which country have you been able to name since long before you had this word? (ഇന്ത്യ.) What is the word built on? (The word for a king.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C105-nagaram",
+      "sequence": 3830,
+      "title": "നഗരം (nagaraṁ) — a city",
+      "headword": "നഗരം",
+      "romanization": "nagaraṁ",
+      "gloss": "a city — the large, formal end of a scale whose small end you were given long ago",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d4b2dd31776364e7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a country. Then say the word you were given for a settled place somebody is from."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നഗരം (nagaraṁ) — a city."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "രാജ്യം, rājyaṁ, a country.",
+                "നഗരം, nagaraṁ, a city.",
+                "ഊര്, ūrŭ, a settled place — yours already."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The line between the bottom two is not as sharp as the table makes it look, and it is worth saying so rather than teaching you a rule that Malayalam does not keep."
+            },
+            {
+              "kind": "speech",
+              "text": "നഗരം (nagaraṁ) is Sanskrit and the more formal of the two. ഊര് is Dravidian, old, and the everyday one — the word you were told is buried in place-names the length of the south. A large place will usually be called നഗരം (nagaraṁ); a smaller one ഊര് — but the same place can take either, and which one a speaker reaches for has as much to do with register as with size."
+            },
+            {
+              "kind": "speech",
+              "text": "What is reliable is the register, not the size. If you want the formal word, you want this one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagaraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagaraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three in order — rājyaṁ, nagaraṁ, ūrŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three in order — *rājyaṁ*, *nagaraṁ*, *ūrŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two smaller words is the formal one, and where it came from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two smaller words is the formal one, and where it came from]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A city? (നഗരം (nagaraṁ).) Which of your two words is Sanskrit, and which Dravidian? (നഗരം (nagaraṁ) Sanskrit, ഊര് Dravidian.) Is the difference between them strictly about size? (No — it is as much about how formal you are being.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C105-thalasthaanam",
+      "sequence": 3840,
+      "title": "തലസ്ഥാനം (talasthānaṁ) — a capital",
+      "headword": "തലസ്ഥാനം",
+      "romanization": "talasthānaṁ",
+      "gloss": "a capital — literally a head-place, and the head in it is the one on your shoulders",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:165d720fe6984b4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say a city. Then say the word for the part of your body that sits on top."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തലസ്ഥാനം (talasthānaṁ) — a capital."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens with a word you already have. tala is the head you learned among the body parts, and sthānaṁ is a place. A capital is a head-place — and the second half is given here in sound only, because this book has not taught it as a word of its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English says exactly the same thing, and hides it. Capital comes from Latin caput — head. Two languages, two roots, one idea: the city at the top of the body."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam keeps the head visible. You can hear tala in the word every time you say it; an English speaker has to be told."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talasthānaṁ, slowly — tala … sthānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talasthānaṁ*, slowly — *tala … sthānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the body part hiding at the front of it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the body part hiding at the front of it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nagaraṁ, then talasthānaṁ — a city, then the head one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nagaraṁ*, then *talasthānaṁ* — a city, then the head one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A capital? (തലസ്ഥാനം (talasthānaṁ).) What are its two halves? (tala, the head, and sthānaṁ, a place.) What does the English word hide that the Malayalam one shows? (The same head — Latin caput.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R105-places-recall",
+      "sequence": 3850,
+      "title": "(country, city, capital) (rājyaṁ enna ōrmma) — from cold",
+      "headword": "(country, city, capital)",
+      "romanization": "rājyaṁ enna ōrmma",
+      "gloss": "cold retrieval of the scale of places, and of the one word on it that does not sort by size",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da4f5888591e95c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say country, city and capital."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a scale, and one word that is not on it",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "",
+                ""
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "രാജ്യം, rājyaṁ, a country.",
+                "നഗരം, nagaraṁ, a city.",
+                "ഊര്, ūrŭ, a settled place — yours since long before this chapter.",
+                "തലസ്ഥാനം, talasthānaṁ, a capital."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The last one is not a size. A capital is a city picked out by what happens in it, and it can be large or small. The first three sort places by how much ground they cover; this one sorts by what a place does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You had the names before you had most of the nouns. കേരളം and ഇന്ത്യ have been yours for a long while, and ഊര് and നാട് gave you the small end of the scale and a word that floats over the rest of it. What was missing was the top — a word that does not float — and the large settlement, and the capital."
+            },
+            {
+              "kind": "speech",
+              "text": "And one of the four was half-built already: തലസ്ഥാനം (talasthānaṁ) opens with tala, the head you learned among the body parts. The word was waiting on a piece you had."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājyaṁ, nagaraṁ, ūrŭ, talasthānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājyaṁ*, *nagaraṁ*, *ūrŭ*, *talasthānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one is not a size",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one is not a size]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of them is the old Dravidian one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of them is the old Dravidian one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indya, then what kind of thing it is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indya*, then what kind of thing it is]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Country, city, capital? (രാജ്യം (rājyaṁ), നഗരം (nagaraṁ), തലസ്ഥാനം (talasthānaṁ).) Which of them does not sort places by size? (തലസ്ഥാനം (talasthānaṁ).) What is hiding at the front of it? (tala, the head.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

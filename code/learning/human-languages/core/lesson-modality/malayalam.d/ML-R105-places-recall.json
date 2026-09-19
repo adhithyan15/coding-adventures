@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R105-places-recall",
+    "language": "malayalam",
+    "chapter": 105,
+    "sequence": 3850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da4f5888591e95c9"
+  },
+  "findings": []
+}

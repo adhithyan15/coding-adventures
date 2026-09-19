@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C105-raajyam",
+    "language": "malayalam",
+    "chapter": 105,
+    "sequence": 3820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30b2a71b2e459102"
+  },
+  "findings": []
+}

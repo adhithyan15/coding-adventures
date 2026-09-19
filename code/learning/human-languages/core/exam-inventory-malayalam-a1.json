@@ -4179,7 +4179,12 @@
       "id": "ML-A1-LEX-50",
       "category": "Padakosham (lexicon by domain)",
       "label": "geography: country, town, city, capital",
-      "probe": null,
+      "probe": [
+        "ML-LEX-C105-COUNTRY-01",
+        "ML-LEX-C105-CITY-01",
+        "ML-LEX-C105-CAPITAL-01",
+        "ML-LEX-C80-ORIGIN-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",

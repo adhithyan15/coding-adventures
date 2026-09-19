@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C105-nagaram",
+    "language": "malayalam",
+    "chapter": 105,
+    "sequence": 3830,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d4b2dd31776364e7"
+  },
+  "findings": []
+}
