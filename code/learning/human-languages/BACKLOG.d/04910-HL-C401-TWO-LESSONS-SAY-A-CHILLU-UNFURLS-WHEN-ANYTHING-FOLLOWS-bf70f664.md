@@ -1,5 +1,13 @@
 ## HL-C401 — two lessons say a chillu unfurls when anything follows it, and the corpus keeps eight words where it does not
 
+**Status: CLOSED (2026-09-19).** A fresh three-lesson sweep confirms the repair
+is complete. `ML-C70-um-more` now contrasts vowel-triggered **ൽ → ല** with
+consonant-initial **നിങ്ങൾക്ക്**, including Guided Practice and Wrap-up;
+`ML-C87-accusative` ties **ൻ → ന** specifically to the vowel in **-എ**; and
+`ML-C97-alla-sundaram` recalls both the vowel case and the consonant
+counterexample. No form of the former *anything follows* rule remains in the
+Malayalam lessons.
+
 Found in the fourth review round on Malayalam chapter 97, which had inherited the
 same wording. Chapter 97 is fixed, and **`ML-C87-accusative` was fixed with it** because chapter
 97 cites it by name. **`ML-C70-um-more` was not**, and was fixed on the chapter-98 branch — that
