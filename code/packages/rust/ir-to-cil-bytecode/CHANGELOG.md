@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — int64 literal builder (CLR02)
+
+Add LdcI8, encode_ldc_i8 and emit_ldc_i8. Every int64 literal occupies nine bytes,
+including values that fit int32, preserving its evaluation-stack type. Exact
+encoding and branch-offset regressions cover the new builder API. Legacy IR
+lowering and the separate IIR backend's wide-immediate refusal are unchanged.
+
 ## [0.4.0] — 2026-06-10 — `isinst` opcode (McCarthy W7 `pair?`)
 
 Added the `IsInst` (0x75) `CILOpcode` + `emit_isinst(token)` builder method — the

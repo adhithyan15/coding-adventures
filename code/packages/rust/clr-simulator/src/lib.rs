@@ -19,8 +19,8 @@
 //!
 //! ## The stack value model ([`Value`])
 //!
-//! A CLR evaluation-stack slot holds either a 32-bit integer or an **object
-//! reference**. We model that with [`Value`]: `Int(i32)` for a number, and
+//! A CLR evaluation-stack slot holds a 32-bit or 64-bit integer or an **object
+//! reference**. We model that with [`Value`]: `Int(i32)`, `Int64(i64)`, and
 //! `Ref(Option<usize>)` for a reference — `Ref(None)` is the CLR `null`, and
 //! `Ref(Some(i))` indexes the simulator's object [`heap`](CLRSimulator::heap).
 //! A stack/local slot is `Option<Value>`, where the outer `None` means an

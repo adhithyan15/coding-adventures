@@ -1,6 +1,18 @@
 use ir_to_cil_bytecode::builder::{encode_ldc_i8, CILBytecodeBuilder};
 
 #[test]
+fn branch_offset_counts_all_nine_literal_bytes() {
+    use ir_to_cil_bytecode::builder::CILBranchKind;
+    let mut builder = CILBytecodeBuilder::new();
+    builder.emit_branch(CILBranchKind::Always, "end", false);
+    builder.emit_ldc_i8(1);
+    builder.mark("end");
+    let bytes = builder.assemble().unwrap();
+    assert_eq!(&bytes[..2], &[0x2b, 9]);
+    assert_eq!(bytes.len(), 11);
+}
+
+#[test]
 fn int64_encoding_uses_nine_bytes_even_for_small_values() {
     for (value, expected) in [
         (1, vec![0x21, 1, 0, 0, 0, 0, 0, 0, 0]),

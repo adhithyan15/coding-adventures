@@ -82,7 +82,8 @@ fn truncated_literal_refuses_without_state_change() {
         let mut sim = CLRSimulator::new();
         sim.load(&[vec![0x21], vec![0; length]].concat(), 0);
         sim.stack.push(Some(Value::Int(7)));
-        assert!(std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| sim.step())).is_err());
+        let error = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| sim.step())).unwrap_err();
+        assert!(panic_text(error).contains("truncated ldc.i8 operand"));
         assert_eq!(sim.pc, 0);
         assert_eq!(sim.stack, vec![Some(Value::Int(7))]);
     }
@@ -90,14 +91,31 @@ fn truncated_literal_refuses_without_state_change() {
 
 #[test]
 fn invalid_arithmetic_and_indices_refuse() {
-    for parts in [
-        vec![wide(1), encode_ldc_i4(1), vec![OP_ADD]],
-        vec![wide(1), encode_ldc_i4(1), vec![0xfe, CEQ_BYTE]],
-        vec![wide(1), wide(0), vec![OP_DIV]],
-        vec![wide(i64::MIN), wide(-1), vec![OP_DIV]],
-        vec![encode_ldc_i4(i32::MIN), encode_ldc_i4(-1), vec![OP_DIV]],
-        vec![wide(1), vec![OP_NEWARR, 1, 0, 0, 1]],
+    for (parts, diagnostic) in [
+        (vec![wide(1), encode_ldc_i4(1), vec![OP_ADD]], "matched integer widths"),
+        (vec![wide(1), encode_ldc_i4(1), vec![0xfe, CEQ_BYTE]], "matched integer widths"),
+        (vec![wide(1), wide(0), vec![OP_DIV]], "DivideByZeroException"),
+        (vec![wide(i64::MIN), wide(-1), vec![OP_DIV]], "division overflow"),
+        (vec![encode_ldc_i4(i32::MIN), encode_ldc_i4(-1), vec![OP_DIV]], "division overflow"),
+        (vec![wide(1), vec![OP_NEWARR, 1, 0, 0, 1]], "expected int32, found int64"),
+        (vec![encode_ldc_i4(1), vec![OP_NEWARR, 1, 0, 0, 1], wide(0), vec![OP_LDELEM_REF]], "expected int32, found int64"),
     ] {
-        assert!(std::panic::catch_unwind(|| run(&parts)).is_err());
+        let error = std::panic::catch_unwind(|| run(&parts)).err().expect("must refuse");
+        let message = panic_text(error);
+        assert!(message.contains(diagnostic), "{message}");
+    }
+}
+
+fn panic_text(error: Box<dyn std::any::Any + Send>) -> String {
+    if let Some(message) = error.downcast_ref::<String>() { message.clone() }
+    else if let Some(message) = error.downcast_ref::<&str>() { message.to_string() }
+    else { panic!("unexpected panic payload") }
+}
+
+#[test]
+fn brtrue_uses_int64_truthiness() {
+    for (value, expected) in [(0, 1), (4294967296, 0)] {
+        assert_eq!(run(&[wide(value), vec![0x2d, 3, 0x17, 0x2b, 1, 0x16, OP_RET]]).stack,
+            vec![Some(Value::Int(expected))]);
     }
 }
