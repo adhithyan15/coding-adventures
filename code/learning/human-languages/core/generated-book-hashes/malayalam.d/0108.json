@@ -1,0 +1,14 @@
+{
+  "language": "malayalam",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:bd1812cad24be16d",
+  "lessonIds": [
+    "ML-W108-full-stop",
+    "ML-W108-comma",
+    "ML-W108-question-mark",
+    "ML-W108-quotation",
+    "ML-W108-the-rest",
+    "ML-R108-marks-recall"
+  ],
+  "tex": "malayalam/book/chapters/ch108-marks.tex"
+}

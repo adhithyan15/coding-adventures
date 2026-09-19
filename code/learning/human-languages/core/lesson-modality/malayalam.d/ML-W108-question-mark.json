@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-W108-question-mark",
+    "language": "malayalam",
+    "chapter": 108,
+    "sequence": 3970,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:89a2472b1c57d4d5",
+    "detachableSegments": [
+      "Script you'll notice: ?",
+      "Writing: ? — where it goes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
