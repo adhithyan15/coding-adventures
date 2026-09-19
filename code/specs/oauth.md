@@ -281,8 +281,20 @@ The delivery order is:
    revision-bound atomic rotation. Profile mismatch fails before credential
    access, while signing, transport, clock, release, and compare-and-swap
    failures preserve the prior record. This enables neither a concrete signing
-   algorithm nor network authority. Public-client refresh-token detach is now
-   shipped for the retained `none` profile: the exact opaque account key binds
+   algorithm nor network authority. Authorization Code exchange for the
+   retained public `none` profile can now cross an injected transport and
+   persist directly under one caller-selected opaque account key. The exact key
+   provider, registered client ID, token endpoint, and public authentication
+   profile are validated before transport, clock, credential release, or
+   storage access. The zeroizing PKCE exchange request stays inside the
+   transport boundary; bounded response decoding, OAuth credential release,
+   and custody creation retain their separate provider/trace audit gates, and
+   only the opaque revision is returned. Wrong binding, transport or provider
+   failure, audit failure, clock failure, and an existing key create no new
+   credential record. Account identity proof and key selection remain
+   caller-owned, and this adds no concrete network authority. Public-client
+   refresh-token detach is now shipped for the retained `none` profile: the
+   exact opaque account key binds
    the registered provider and credential record, and the retained public
    authentication profile plus explicit revocation endpoint are validated
    before credential access. Custody releases that record's refresh token and
