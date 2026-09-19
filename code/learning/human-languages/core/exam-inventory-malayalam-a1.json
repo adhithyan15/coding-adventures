@@ -4194,7 +4194,7 @@
         "A1-NE20-02"
       ],
       "malayalamSpecific": false,
-      "note": "naadu ('home country') only -- see ML-A1-N-02."
+      "note": "CLOSED BY CHAPTER 105, AND THE OLD NOTE WAS STALE IN THE DOMAIN MODE. It read \"naadu ('home country') only -- see ML-A1-N-02.\" naaTu is ML-C55-homeland -- and ML-C80-uuru (2760) ALSO teaches uuru, 'a town, a village, the settled place somebody is from', tagged ML-NOUN-TOWN, and the two already form a scale: uuru is one settlement, naaTu floats from a home region to a country. The five words the note implies are missing really are absent; what it got wrong is the SCOPE. Chapter 105 adds the three that were genuinely missing -- raajyaM (a country, and unlike naaTu it does not float), nagaraM (the ordinary modern word for a city) and thalasthaanaM (a capital, thala + sthaanaM, a head-place) -- and the point closes on those plus ML-LEX-C80-ORIGIN-01 for the TOWN half, which chapter 80 delivered. NOTE THAT ORIGIN-01 IS ALSO the first probe entry of ML-A1-N-02, so this point's +1 is three new atoms and one shared one; that is deliberate and is what the label's four halves actually rest on. A DRAFT WORD WAS DROPPED RATHER THAN RENAMED: paTTaNaM collided with ML-NOUN-TOWN in the duplicate-concept gate, and a second word for a concept the corpus already teaches is not a gap."
     },
     {
       "id": "ML-A1-LEX-51",

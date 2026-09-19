@@ -11,8 +11,8 @@ romanization: "talasthānaṁ"
 concept_tag: ML-NOUN-CAPITAL
 prerequisites: [ML-C105-nagaram, ML-C13-shareera-bhaagangal]
 sounds: [malayalam-anusvara]
-roots: [dravidian-thala-head, sanskrit-sthana-place]
-etymology_hook: "talasthaanaM is thala, the head you already name among your body parts, plus sthaanaM, a place — the capital is the head-place, and English says the same thing in Latin"
+roots: [dravidian-tala-kai, sanskrit-sthana-place]
+etymology_hook: "talasthaanaM is thala, the head you already name among your body parts, plus sthaanaM, a place — the capital is the head-place, and English says the same thing in Latin, where capital is caput"
 duration:
   max_seconds: 240
 requires:
@@ -42,10 +42,13 @@ on top.
 
 **തലസ്ഥാനം** (*talasthānaṁ*) — **a capital**.
 
-**It opens with a word you already have.** *tala* is the **head** you learned
-among the body parts, and *sthānaṁ* is a **place**. A capital is a
-**head-place** — and the second half is given here in sound only, because this
-book has not taught it as a word of its own.
+**It opens with a word you already have.** The head you learned among the body
+parts, **തല** — this book wrote it *thala* there and writes it *ta-* here, which
+is the same word and two spellings of the same first letter. The second half,
+*sthānaṁ*, is a **place**, and it is given in sound only because this book has
+not taught it as a word of its own.
+
+A capital is a **head-place**.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C105-CAPITAL-01, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01] -->
@@ -54,20 +57,20 @@ book has not taught it as a word of its own.
 Latin *caput* — **head**. Two languages, two roots, one idea: the city at the
 top of the body.
 
-Malayalam keeps the head visible. You can hear *tala* in the word every time you
-say it; an English speaker has to be told.
+Malayalam keeps the head visible. **തല** is right there at the front of the word
+every time you say it; an English speaker has to be told.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C105-CAPITAL-01, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01, ML-LEX-C105-CITY-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: *talasthānaṁ*, slowly — *tala … sthānaṁ*]
+- [YOU SAY: *talasthānaṁ*, slowly — the head, then *sthānaṁ*]
 - [YOU SAY: the body part hiding at the front of it]
 - [YOU SAY: *nagaraṁ*, then *talasthānaṁ* — a city, then the head one]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C105-CAPITAL-01, ML-CONCEPT-C13-SHAREERA-BHAAGANGAL-01] -->
 
-[PAUSE 3s] A capital? (**തലസ്ഥാനം**.) What are its two halves? (*tala*, the
+[PAUSE 3s] A capital? (**തലസ്ഥാനം**.) What are its two halves? (**തല**, the
 **head**, and *sthānaṁ*, a **place**.) What does the English word hide that the
 Malayalam one shows? (**The same head** — Latin *caput*.)

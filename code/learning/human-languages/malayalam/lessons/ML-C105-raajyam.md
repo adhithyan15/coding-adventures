@@ -6,7 +6,7 @@ sequence: 3820
 chapter: 105
 type: word
 headword: "രാജ്യം"
-gloss: a country — the word for what India is, after two chapters of knowing India by name
+gloss: a country — a word for the top of the scale that does not float, where naaTu does
 romanization: "rājyaṁ"
 concept_tag: ML-NOUN-COUNTRY
 prerequisites: [ML-C80-keralam, ML-C55-homeland]
@@ -16,42 +16,44 @@ etymology_hook: "raajyaM is Sanskrit for a realm, built on the word for a king �
 duration:
   max_seconds: 230
 requires:
-  knowledge: [ML-LEX-C80-ORIGIN-03, ML-LEX-C80-ORIGIN-02]
+  knowledge: [ML-LEX-C80-ORIGIN-03, ML-LEX-C80-ORIGIN-02, ML-LEX-C55-GROUND-03]
 introduces:
   knowledge: [ML-LEX-C105-COUNTRY-01]
 practises:
-  knowledge: [ML-LEX-C105-COUNTRY-01, ML-LEX-C80-ORIGIN-03, ML-LEX-C80-ORIGIN-02]
+  knowledge: [ML-LEX-C105-COUNTRY-01, ML-LEX-C80-ORIGIN-03, ML-LEX-C80-ORIGIN-02, ML-LEX-C55-GROUND-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [ML-C80-keralam]
+reviews_of: [ML-C80-keralam, ML-C55-homeland]
 ---
 
 # രാജ്യം — a country
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C80-ORIGIN-03, ML-LEX-C80-ORIGIN-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C80-ORIGIN-03, ML-LEX-C80-ORIGIN-02, ML-LEX-C55-GROUND-03] -->
 
-[PAUSE 2s] Say **ഇന്ത്യ**. Say **കേരളം**. You have had both of those names for a
-long while — and no word for **what kind of thing** either one is.
+[PAUSE 2s] Say **ഇന്ത്യ**. Say **കേരളം**. Then say **നാട്** — the word that can
+stretch from a home region all the way up to a country.
 
 ## You'll want to know
-<!-- hl-knowledge: introduces=[ML-LEX-C105-COUNTRY-01]; assesses=[ML-LEX-C80-ORIGIN-03] -->
+<!-- hl-knowledge: introduces=[ML-LEX-C105-COUNTRY-01]; assesses=[ML-LEX-C80-ORIGIN-03, ML-LEX-C55-GROUND-03] -->
 
 **രാജ്യം** (*rājyaṁ*) — **a country**.
 
-**ഇന്ത്യ** is one. **കേരളം** is not — it is a part of one. You have been able to
-say both names since long before you had a word for the difference between
-them.
+**ഇന്ത്യ** is one. **കേരളം** is not — it is a part of one.
+
+**നാട്** could not tell you that. It covers a home region, a district or a
+country, and the situation decides which — so it can name the thing without
+fixing its size. **രാജ്യം** fixes it. That is the whole of what this word adds.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C105-COUNTRY-01] -->
 
 The Sanskrit behind it means **a realm**, and it is built on the word for a
-**king**. A country is named, in this word, for **who once ruled it** — not for
-its land, its people or its borders.
+**king**. What the word names is **kingship** — rule as an institution — not the
+land, the people or the borders.
 
 **It ends in -ം**, which by now tells you what it will do when a case ending
 arrives.
@@ -61,12 +63,12 @@ arrives.
 
 [PAUSE 1s]
 - [YOU SAY: *rājyaṁ*]
-- [YOU SAY: *indya*, then *rājyaṁ* — the name, then what kind of thing it is]
+- [YOU SAY: *nāṭŭ*, then *rājyaṁ* — the word that floats, then the one that does not]
 - [YOU SAY: what the Sanskrit behind it is built on]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C105-COUNTRY-01, ML-LEX-C80-ORIGIN-03] -->
 
-[PAUSE 3s] A country? (**രാജ്യം**.) Which country have you been able to name
-since long before you had this word? (**ഇന്ത്യ**.) What is the word built on?
+[PAUSE 3s] A country? (**രാജ്യം**.) What could **നാട്** not do that this word
+does? (**Fix the size** — നാട് floats.) What is the word built on?
 (**The word for a king**.)

@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 105,
   "title": "Places",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7e85b0aa33d7cb6c",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:59b99a39b06bff79",
   "lessons": [
     {
       "id": "ML-C105-raajyam",
@@ -12,14 +12,14 @@
       "title": "രാജ്യം (rājyaṁ) — a country",
       "headword": "രാജ്യം",
       "romanization": "rājyaṁ",
-      "gloss": "a country — the word for what India is, after two chapters of knowing India by name",
+      "gloss": "a country — a word for the top of the scale that does not float, where naaTu does",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30b2a71b2e459102",
+      "sourceHash": "fnv1a64:d848410e801fadbc",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say ഇന്ത്യ. Say കേരളം. You have had both of those names for a long while — and no word for what kind of thing either one is."
+              "text": "Say ഇന്ത്യ. Say കേരളം. Then say നാട് — the word that can stretch from a home region all the way up to a country."
             }
           ]
         },
@@ -50,7 +50,11 @@
             },
             {
               "kind": "speech",
-              "text": "ഇന്ത്യ is one. കേരളം is not — it is a part of one. You have been able to say both names since long before you had a word for the difference between them."
+              "text": "ഇന്ത്യ is one. കേരളം is not — it is a part of one."
+            },
+            {
+              "kind": "speech",
+              "text": "നാട് could not tell you that. It covers a home region, a district or a country, and the situation decides which — so it can name the thing without fixing its size. രാജ്യം (rājyaṁ) fixes it. That is the whole of what this word adds."
             }
           ]
         },
@@ -61,7 +65,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The Sanskrit behind it means a realm, and it is built on the word for a king. A country is named, in this word, for who once ruled it — not for its land, its people or its borders."
+              "text": "The Sanskrit behind it means a realm, and it is built on the word for a king. What the word names is kingship — rule as an institution — not the land, the people or the borders."
             },
             {
               "kind": "speech",
@@ -92,11 +96,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "indya, then rājyaṁ — the name, then what kind of thing it is",
+              "instruction": "nāṭŭ, then rājyaṁ — the word that floats, then the one that does not",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *indya*, then *rājyaṁ* — the name, then what kind of thing it is]"
+              "source": "[YOU SAY: *nāṭŭ*, then *rājyaṁ* — the word that floats, then the one that does not]"
             },
             {
               "kind": "prompt",
@@ -122,7 +126,7 @@
             },
             {
               "kind": "speech",
-              "text": "A country? (രാജ്യം (rājyaṁ).) Which country have you been able to name since long before you had this word? (ഇന്ത്യ.) What is the word built on? (The word for a king.)"
+              "text": "A country? (രാജ്യം (rājyaṁ).) What could നാട് not do that this word does? (Fix the size — നാട് floats.) What is the word built on? (The word for a king.)"
             }
           ]
         }
@@ -134,22 +138,15 @@
       "title": "നഗരം (nagaraṁ) — a city",
       "headword": "നഗരം",
       "romanization": "nagaraṁ",
-      "gloss": "a city — the large, formal end of a scale whose small end you were given long ago",
+      "gloss": "a city — the ordinary modern word, beside the old one you were given long ago",
       "script": "malayalam",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4b2dd31776364e7",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:e8eefea2d14d3ce4",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -189,7 +186,7 @@
               "utterances": [
                 "രാജ്യം, rājyaṁ, a country.",
                 "നഗരം, nagaraṁ, a city.",
-                "ഊര്, ūrŭ, a settled place — yours already."
+                "ഊര്, ūrŭ, a town, a settled place — yours already."
               ]
             }
           ]
@@ -201,15 +198,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The line between the bottom two is not as sharp as the table makes it look, and it is worth saying so rather than teaching you a rule that Malayalam does not keep."
+              "text": "These two are not a big one and a small one, and it is worth saying so rather than teaching you a rule that Malayalam does not keep."
             },
             {
               "kind": "speech",
-              "text": "നഗരം (nagaraṁ) is Sanskrit and the more formal of the two. ഊര് is Dravidian, old, and the everyday one — the word you were told is buried in place-names the length of the south. A large place will usually be called നഗരം (nagaraṁ); a smaller one ഊര് — but the same place can take either, and which one a speaker reaches for has as much to do with register as with size."
+              "text": "നഗരം (nagaraṁ) is the word in ordinary modern use. It is what a newspaper prints and what a speaker reaches for when naming a city. ഊര് is older, and its own lesson told you where it mostly lives now: buried in place-names the length of the south, and in talk of the settled place somebody is from."
             },
             {
               "kind": "speech",
-              "text": "What is reliable is the register, not the size. If you want the formal word, you want this one."
+              "text": "So the difference is not a line on a map. നഗരം (nagaraṁ) is what you say about a city today; ഊര് is the old word, still alive in names and in speaking of where somebody belongs."
             }
           ]
         },
@@ -245,11 +242,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which of the two smaller words is the formal one, and where it came from",
+              "instruction": "which of the two is the word in ordinary use today, and where the other one mostly survives",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: which of the two smaller words is the formal one, and where it came from]"
+              "source": "[YOU SAY: which of the two is the word in ordinary use today, and where the other one mostly survives]"
             }
           ]
         },
@@ -266,7 +263,7 @@
             },
             {
               "kind": "speech",
-              "text": "A city? (നഗരം (nagaraṁ).) Which of your two words is Sanskrit, and which Dravidian? (നഗരം (nagaraṁ) Sanskrit, ഊര് Dravidian.) Is the difference between them strictly about size? (No — it is as much about how formal you are being.)"
+              "text": "A city? (നഗരം (nagaraṁ).) Which of the two is the word in ordinary use today? (നഗരം (nagaraṁ).) Where does ഊര് mostly survive? (In place-names, and in speaking of where somebody is from.)"
             }
           ]
         }
@@ -285,7 +282,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:165d720fe6984b4e",
+      "sourceHash": "fnv1a64:0235b6e8708e7ec7",
       "notice": null,
       "blocks": [
         {
@@ -316,7 +313,11 @@
             },
             {
               "kind": "speech",
-              "text": "It opens with a word you already have. tala is the head you learned among the body parts, and sthānaṁ is a place. A capital is a head-place — and the second half is given here in sound only, because this book has not taught it as a word of its own."
+              "text": "It opens with a word you already have. The head you learned among the body parts, തല — this book wrote it thala there and writes it ta- here, which is the same word and two spellings of the same first letter. The second half, sthānaṁ, is a place, and it is given in sound only because this book has not taught it as a word of its own."
+            },
+            {
+              "kind": "speech",
+              "text": "A capital is a head-place."
             }
           ]
         },
@@ -331,7 +332,7 @@
             },
             {
               "kind": "speech",
-              "text": "Malayalam keeps the head visible. You can hear tala in the word every time you say it; an English speaker has to be told."
+              "text": "Malayalam keeps the head visible. തല is right there at the front of the word every time you say it; an English speaker has to be told."
             }
           ]
         },
@@ -349,11 +350,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "talasthānaṁ, slowly — tala … sthānaṁ",
+              "instruction": "talasthānaṁ, slowly — the head, then sthānaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *talasthānaṁ*, slowly — *tala … sthānaṁ*]"
+              "source": "[YOU SAY: *talasthānaṁ*, slowly — the head, then *sthānaṁ*]"
             },
             {
               "kind": "prompt",
@@ -388,7 +389,7 @@
             },
             {
               "kind": "speech",
-              "text": "A capital? (തലസ്ഥാനം (talasthānaṁ).) What are its two halves? (tala, the head, and sthānaṁ, a place.) What does the English word hide that the Malayalam one shows? (The same head — Latin caput.)"
+              "text": "A capital? (തലസ്ഥാനം (talasthānaṁ).) What are its two halves? (തല, the head, and sthānaṁ, a place.) What does the English word hide that the Malayalam one shows? (The same head — Latin caput.)"
             }
           ]
         }
@@ -407,7 +408,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da4f5888591e95c9",
+      "sourceHash": "fnv1a64:69ca1cea3257cec2",
       "notice": null,
       "blocks": [
         {
@@ -444,13 +445,17 @@
               "utterances": [
                 "രാജ്യം, rājyaṁ, a country.",
                 "നഗരം, nagaraṁ, a city.",
-                "ഊര്, ūrŭ, a settled place — yours since long before this chapter.",
+                "ഊര്, ūrŭ, a town, a settled place — yours long before this chapter.",
                 "തലസ്ഥാനം, talasthānaṁ, a capital."
               ]
             },
             {
               "kind": "speech",
-              "text": "The last one is not a size. A capital is a city picked out by what happens in it, and it can be large or small. The first three sort places by how much ground they cover; this one sorts by what a place does."
+              "text": "The last one is not a size at all. A capital is a city picked out by what happens in it, and it can be large or small."
+            },
+            {
+              "kind": "speech",
+              "text": "And the middle two are not a clean pair of sizes either — you were told that നഗരം (nagaraṁ) is the word in ordinary use for a city today, while ഊര് is the older one, surviving in place-names and in speaking of where somebody is from. Only രാജ്യം (rājyaṁ) sits unambiguously at the top."
             }
           ]
         },
@@ -461,7 +466,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "You had the names before you had most of the nouns. കേരളം and ഇന്ത്യ have been yours for a long while, and ഊര് and നാട് gave you the small end of the scale and a word that floats over the rest of it. What was missing was the top — a word that does not float — and the large settlement, and the capital."
+              "text": "You could name the places before you could say what kind of thing they were. കേരളം and ഇന്ത്യ have been yours for a long while. ഊര് gave you the settled end of the scale, and നാട് gave you a word that floats over everything from a home region to a country. What was missing was a word that does not float, the ordinary modern word for a city, and the capital."
             },
             {
               "kind": "speech",
@@ -492,20 +497,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which one is not a size",
+              "instruction": "which one is picked out by what happens in it, not by its size",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: which one is not a size]"
+              "source": "[YOU SAY: which one is picked out by what happens in it, not by its size]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "which of them is the old Dravidian one",
+              "instruction": "which one is the old word that survives in place-names",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: which of them is the old Dravidian one]"
+              "source": "[YOU SAY: which one is the old word that survives in place-names]"
             },
             {
               "kind": "prompt",
@@ -531,7 +536,7 @@
             },
             {
               "kind": "speech",
-              "text": "Country, city, capital? (രാജ്യം (rājyaṁ), നഗരം (nagaraṁ), തലസ്ഥാനം (talasthānaṁ).) Which of them does not sort places by size? (തലസ്ഥാനം (talasthānaṁ).) What is hiding at the front of it? (tala, the head.)"
+              "text": "Country, city, capital? (രാജ്യം (rājyaṁ), നഗരം (nagaraṁ), തലസ്ഥാനം (talasthānaṁ).) Which one is picked out by what happens in it? (തലസ്ഥാനം (talasthānaṁ).) What is hiding at the front of it? (തല, the head.)"
             }
           ]
         }
