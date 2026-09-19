@@ -8,6 +8,30 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+## VM-058 — COBOL INSPECT region intersection (selected 2026-09-19)
+
+BEAM09 merged as #15523 (`9710bf606086e7e01ae6f4577644e7f26e7ed4cf`)
+after all 46 exact-head checks completed (15 success, 31 skipped). All existing
+non-ALGOL matrix rows now declare all eight backends. This closes the old
+missing-cell campaign; prioritize known semantic defects next.
+
+Priority order after reviewing current main and open PRs:
+1. VM-058: a grammar-accepted second INSPECT region is silently ignored by both
+   oracle and compiler. Correct this bounded, shared semantic defect first.
+2. Encoded CLR host input: requires a separate host ABI design and proof.
+3. Oct/Nib historical CPU fidelity and BEAM register allocation beyond 255
+   variables: larger independent scopes, not prerequisites for VM-058.
+
+No open PR overlaps COBOL region handling at selection. ALGOL remains separately
+owned. Start with a discriminating present/present and missing-delimiter probe;
+confirm language-defined delimiter search/order rules from authoritative material
+before fixing the oracle. Inventory every region reader in compiler and runtime.
+Then replace the first-region-only regression with explicit expected observations
+for TALLYING, REPLACING and CONVERTING, single/multiple items and combined phases.
+Commit the detailed semantic specification before production edits. Validate
+oracle and compiled behavior independently, promote a bounded matrix proof only
+after execution, and keep discoveries/priorities current before publication.
+
 ## BEAM09 — Brainfuck byte input (selected on restart, 2026-09-19)
 
 The paused BASIC string work was superseded by #15147 and subsequent BEAM03–08.
