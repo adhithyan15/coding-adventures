@@ -2044,7 +2044,11 @@ impl<S: CredentialStore> OAuthBroker<S> {
         )
     }
 
-    /// Release a usable access token to one closure, refreshing first when due.
+    /// Release a public client's usable access token, refreshing first when due.
+    ///
+    /// The opaque account key must select a registered provider retaining the
+    /// public `none` profile before credential, clock, transport, or closure
+    /// access. Confidential registrations fail closed at that boundary.
     pub fn with_access_token<R, C, T, A>(
         &self,
         key: &CredentialKey,
@@ -2060,6 +2064,9 @@ impl<S: CredentialStore> OAuthBroker<S> {
         A: OAuthBrokerAuditSink,
     {
         let provider = self.registered_provider(key.provider())?.clone();
+        if provider.confidential_authentication_method().is_some() {
+            return Err(BrokerError::BindingMismatch);
+        }
         let metadata = self
             .custody
             .with_metadata(key, trace, audit, Clone::clone)
@@ -2201,7 +2208,10 @@ impl<S: CredentialStore> OAuthBroker<S> {
             .map_err(map_custody_error)
     }
 
-    /// Refresh one credential now and atomically retain or rotate its refresh token.
+    /// Refresh one public credential and atomically retain or rotate its refresh token.
+    ///
+    /// The registered provider must retain the public `none` profile before
+    /// refresh-token custody, clock, or transport access.
     pub fn force_refresh<C, T, A>(
         &self,
         key: &CredentialKey,
@@ -4274,6 +4284,9 @@ impl<S: CredentialStore> OAuthBroker<S> {
         A: OAuthBrokerAuditSink,
     {
         let provider = self.registered_provider(key.provider())?.clone();
+        if provider.confidential_authentication_method().is_some() {
+            return Err(BrokerError::BindingMismatch);
+        }
         let material = self
             .custody
             .with_refresh_material(key, trace, audit, |token, revision, metadata| {
@@ -6572,6 +6585,54 @@ mod tests {
             .register_provider(
                 BrokerProvider::new(config, TokenResponseFormat::Json, 300).unwrap(),
                 trace(1),
+                &mut audit,
+            )
+            .unwrap();
+        (broker, audit, key)
+    }
+
+    fn broker_with_confidential_credential(
+        expiry: u64,
+    ) -> (
+        OAuthBroker<InMemoryCredentialStore>,
+        RecordingAudit,
+        CredentialKey,
+    ) {
+        let config = config("fixture-confidential");
+        let key = key("fixture-confidential");
+        let mut audit = RecordingAudit::default();
+        let response = decoded_refresh_response(
+            &config,
+            trace(101),
+            r#"{"access_token":"confidential-access","refresh_token":"confidential-refresh","token_type":"Bearer","expires_in":3600}"#,
+            &mut audit,
+        );
+        let credentials = response
+            .release_credentials()
+            .publish_then_release(&mut audit)
+            .unwrap();
+        let custody = CredentialCustody::new(InMemoryCredentialStore::new());
+        custody
+            .create(
+                &key,
+                credentials,
+                CredentialMetadata::new("Bearer", Some(expiry), Vec::new()).unwrap(),
+                trace(101),
+                &mut audit,
+            )
+            .unwrap();
+        let mut broker = OAuthBroker::new(custody);
+        broker
+            .register_provider(
+                BrokerProvider::new_confidential(
+                    config,
+                    TokenResponseFormat::Json,
+                    300,
+                    ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+                    Vec::new(),
+                )
+                .unwrap(),
+                trace(101),
                 &mut audit,
             )
             .unwrap();
@@ -9995,11 +10056,10 @@ mod tests {
         );
 
         let access = broker
+            .custody
             .with_access_token(
                 &credential_key,
                 trace(50),
-                &mut FixedClock(1_001),
-                &mut MockTransport::new("initial-refresh", &[]),
                 &mut RecordingAudit::default(),
                 str::to_owned,
             )
@@ -10119,11 +10179,10 @@ mod tests {
             ]
         );
         let access = broker
+            .custody
             .with_access_token(
                 &credential_key,
                 trace(85),
-                &mut FixedClock(1_001),
-                &mut MockTransport::new("verified-refresh", &[]),
                 &mut RecordingAudit::default(),
                 str::to_owned,
             )
@@ -10302,11 +10361,10 @@ mod tests {
             ]
         );
         let access = broker
+            .custody
             .with_access_token(
                 &credential_key,
                 trace(92),
-                &mut FixedClock(1_001),
-                &mut MockTransport::new("static-verified-refresh", &[]),
                 &mut RecordingAudit::default(),
                 str::to_owned,
             )
@@ -10812,11 +10870,10 @@ mod tests {
         );
 
         let access = broker
+            .custody
             .with_access_token(
                 &credential_key,
                 trace(76),
-                &mut FixedClock(1_001),
-                &mut MockTransport::new("initial-refresh", &[]),
                 &mut RecordingAudit::default(),
                 str::to_owned,
             )
@@ -10904,11 +10961,10 @@ mod tests {
         assert_eq!(clock.calls, 1);
         let credential_key = CredentialKey::new(provider_config.provider().clone(), account);
         let access = broker
+            .custody
             .with_access_token(
                 &credential_key,
                 trace(91),
-                &mut FixedClock(1_001),
-                &mut MockTransport::new("verified-private-refresh", &[]),
                 &mut RecordingAudit::default(),
                 str::to_owned,
             )
@@ -11067,11 +11123,10 @@ mod tests {
         );
         let credential_key = CredentialKey::new(provider_config.provider().clone(), account);
         let access = broker
+            .custody
             .with_access_token(
                 &credential_key,
                 trace(97),
-                &mut FixedClock(1_001),
-                &mut MockTransport::new("static-private-refresh", &[]),
                 &mut RecordingAudit::default(),
                 str::to_owned,
             )
@@ -12693,6 +12748,67 @@ mod tests {
         assert_eq!(
             audit.custody.last().unwrap().outcome(),
             CredentialAuditOutcome::Succeeded
+        );
+    }
+
+    #[test]
+    fn public_usable_access_rejects_confidential_binding_before_authorities() {
+        let (broker, mut audit, key) = broker_with_confidential_credential(2_000);
+        let custody_events_before = audit.custody.len();
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let mut transport = MockTransport::new("confidential-refresh", &[]);
+        let mut closure_called = false;
+
+        assert_eq!(
+            broker.with_access_token(
+                &key,
+                trace(102),
+                &mut clock,
+                &mut transport,
+                &mut audit,
+                |_| closure_called = true,
+            ),
+            Err(BrokerError::BindingMismatch)
+        );
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(clock.calls, 0);
+        assert_eq!(transport.calls, 0);
+        assert!(!closure_called);
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&key, trace(102), &mut audit, str::to_owned)
+                .unwrap(),
+            "confidential-access"
+        );
+    }
+
+    #[test]
+    fn public_forced_refresh_rejects_confidential_binding_before_authorities() {
+        let (broker, mut audit, key) = broker_with_confidential_credential(1_100);
+        let custody_events_before = audit.custody.len();
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+        let mut transport = MockTransport::new("confidential-refresh", &[]);
+
+        assert_eq!(
+            broker.force_refresh(&key, trace(103), &mut clock, &mut transport, &mut audit,),
+            Err(BrokerError::BindingMismatch)
+        );
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(clock.calls, 0);
+        assert_eq!(transport.calls, 0);
+        assert_eq!(
+            broker
+                .custody
+                .with_access_token(&key, trace(103), &mut audit, str::to_owned)
+                .unwrap(),
+            "confidential-access"
         );
     }
 
