@@ -56,6 +56,7 @@ describe("assessment policy (HL16)", () => {
       "gujarati",
       "chinese",
       "japanese",
+      "portuguese",
     ]));
     expect(new Set(contracts).size).toBe(contracts.length);
     expect(contracts).toEqual([...contracts].sort(
@@ -173,6 +174,44 @@ describe("track assessment contracts", () => {
     ]);
     expect(chinese.levels.at(-1)?.writingStages).toEqual(policy.writingStages.map((stage) => stage.id));
     expect(chinese.levels.every((level) => level.fullMocks.length === 2)).toBe(true);
+  });
+
+  it("contracts Portuguese's CAPLE ladder without relabelling project task shapes as provider evidence", () => {
+    const portuguese = parseAssessmentContract(
+      JSON.parse(readFileSync(join(defaultCurriculumRoot(), "portuguese", "assessment.json"), "utf8")),
+      "portuguese",
+      policy,
+    );
+    expect(portuguese.levels.map((level) => level.level)).toEqual(policy.levels);
+    expect(portuguese.levels.map((level) => level.target.name)).toEqual([
+      "Coding Adventures Portuguese pre-A1 Assessment — project-defined CAPLE ACESSO precursor",
+      "CAPLE ACESSO ao Português (A1)",
+      "CAPLE CIPLE (A2)",
+      "CAPLE DEPLE (B1)",
+      "CAPLE DIPLE (B2)",
+      "CAPLE DAPLE (C1)",
+      "CAPLE DUPLE (C2)",
+    ]);
+    expect(portuguese.levels[0]?.target.basis).toBe("project-defined");
+    expect(portuguese.levels.slice(1).every((level) => level.target.basis === "external")).toBe(true);
+    expect(portuguese.levels.every((level) =>
+      Object.values(level.skills).every((skill) => skill.passThreshold === 0.6)
+    )).toBe(true);
+    expect(portuguese.levels[0]?.writingStages).toEqual([
+      "observe-trace",
+      "guided-copy",
+      "delayed-copy",
+      "dictation-transcription",
+    ]);
+    expect(portuguese.levels.at(-1)?.writingStages).toEqual(policy.writingStages.map((stage) => stage.id));
+    expect(portuguese.levels.slice(0, 4).every((level) =>
+      Object.keys(level.additionalComponents).length === 0
+    )).toBe(true);
+    expect(portuguese.levels.slice(4).every((level) =>
+      level.additionalComponents["structural-competence"]?.name === "Competência Estrutural"
+      && level.additionalComponents["structural-competence"]?.passThreshold === 0.6
+    )).toBe(true);
+    expect(portuguese.levels.every((level) => level.fullMocks.length === 2)).toBe(true);
   });
 
   it("accepts a complete seven-level contract with independent skills and full mocks", () => {
