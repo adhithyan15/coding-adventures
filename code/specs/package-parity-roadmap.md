@@ -13922,6 +13922,25 @@ fixture discovery, generated Unicode notice and tables, strict package-native
 validation, and CI conformance, but no CLI, adapter, resolver, executor, or
 complete build-tool claim.
 
+The completed Dart core consumes all eight graph and eleven diff-selection
+fixtures through one package-native suite, including the fixed operation-wide
+match ceiling, boundary digest, exact BUILD-front policy, deterministic graph
+ordering, Unicode 17 normalization/folding/uppercase tables, and numeric rune
+ordering. Both literal BUILD fronts, strict analysis, branch/function-aware
+coverage, the exact Dart 3.12.2 generator self-check, all five official Unicode
+vector families, the neutral corpus, the complete Go oracle, the real 91-package
+Dart dry plan, documentation shards, and security checks pass. The package adds
+one intentional Dart identity, so the collision-clean schema-3 inventory now
+contains 1,442 implementation identities, 4,667 implementation directories,
+and 1,482 all-reported identities, with zero canonical collisions or unknown
+language buckets.
+
+Before publication, the implementation rebased conflict-free onto exact
+`origin/main` `467b1196ed85cdfae078b2791acb546bb60475cb`. The intervening
+two Malayalam, CLR, TLS, SPICE, and Mermaid commits have no implementation-path
+overlap with this tranche. Focused native, generator, CI-registry, corpus, Go,
+state-graph, parity, and diff checks all pass again after the rebase.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
