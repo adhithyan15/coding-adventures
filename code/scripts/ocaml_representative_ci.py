@@ -23,7 +23,7 @@ MANIFEST_RELATIVE_PATH = Path(
 )
 WORKFLOW_RELATIVE_PATH = Path(".github/workflows/build-ocaml-representative.yml")
 EXPECTED_WORKFLOW_SHA256 = (
-    "43b295c58401d8f399508c210cd77098f9f8d430216f7e6f55e5bab717965e30"
+    "3468a402b594856ac91063ef170f6ab506a1a5a3d1fd7e4bfdc8129177d83b8a"
 )
 
 VERSIONS = {
@@ -373,6 +373,8 @@ def validate_workflow_policy_text(workflow_text: str) -> None:
         "python code/scripts/ocaml_representative_ci.py validate-repository",
         "cmd.exe /D /S /C",
         'sh -c "$command"',
+        "env -u CLICOLOR_FORCE opam exec -- odoc --version",
+        "opam show --color=never --field=installed-version yojson",
         "opam lint --strict",
         "dune build @install @doc --profile release",
         "validate-coverage",

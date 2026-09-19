@@ -133,15 +133,16 @@ jobs:
             "bisect_ppx.$BISECT_PPX_VERSION" "ocamlformat.$OCAMLFORMAT_VERSION" \
             "odoc.$ODOC_VERSION" "yojson.$YOJSON_VERSION"
           python code/scripts/ocaml_toolchain_lock.py validate-runtime
-          test "$(opam exec -- odoc --version)" = "$ODOC_VERSION"
-          test "$(opam show --field=installed-version yojson)" = "$YOJSON_VERSION"
+          odoc_version="$(env -u CLICOLOR_FORCE opam exec -- odoc --version)"
+          yojson_version="$(opam show --color=never --field=installed-version yojson)"
+          test "$odoc_version" = "$ODOC_VERSION"
+          test "$yojson_version" = "$YOJSON_VERSION"
           evidence="$RUNNER_TEMP/ocaml07-evidence/$TARGET"
           mkdir -p "$evidence"
           printf 'target=%s\nrunner_os=%s\nrunner_arch=%s\nopam=%s\nocaml=%s\ndune=%s\nodoc=%s\nyojson=%s\n' \
             "$TARGET" "$RUNNER_OS" "$RUNNER_ARCH" "$(opam --version)" \
             "$(opam exec -- ocamlc -version)" "$(opam exec -- dune --version)" \
-            "$(opam exec -- odoc --version)" \
-            "$(opam show --field=installed-version yojson)" \
+            "$odoc_version" "$yojson_version" \
             > "$evidence/toolchain.txt"
 
       - name: Build the analyzer independently

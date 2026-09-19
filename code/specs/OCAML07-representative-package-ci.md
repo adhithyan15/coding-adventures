@@ -54,6 +54,8 @@ The execution job uses the OCAML03 reviewed identities:
 
 OCAML07 additionally pins odoc 3.0.0.  Later odoc releases require a newer Dune
 than the reviewed OCAML03 toolchain and therefore are not interchangeable.
+Machine-read odoc and yojson version probes must disable runner-forced color
+before exact comparison and before writing retained toolchain evidence.
 
 The matrix is exactly Linux x64 on `ubuntu-24.04`, macOS arm64 on `macos-14`,
 and Windows x64 using mingw on `windows-2022`.  The workflow checks the runtime
