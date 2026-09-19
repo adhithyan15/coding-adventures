@@ -18,7 +18,7 @@ Read it literally and the logic is plain: the chair's top-part. Malayalam is not
 [a table of 2 rows, read aloud]
 കസേരയുടെ, the chair's.
 കസേരയുടെ മുകളിൽ (mukaḷil), on top of the chair.
-So this costs you no new grammar either. The owner-ending is the one from the genitive chapter, unchanged, and it picks its shape by the last sound of the noun exactly as it did there.
+So this costs you no new grammar either. The owner-ending is the one from the genitive chapter, unchanged: കസേര takes -യുടെ, just as അമ്മ did there.
 Put a thing in front and you have a sentence's worth:
 പുസ്തകം കസേരയുടെ മുകളിൽ (mukaḷil) — the book is on top of the chair.
 

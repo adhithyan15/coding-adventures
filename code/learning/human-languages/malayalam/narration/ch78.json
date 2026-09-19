@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Whose It Is",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:08ab20fafa71f03f",
+  "sourceHash": "fnv1a64:7b360bd2a584d78a",
   "lessons": [
     {
       "id": "ML-C78-nre",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79f84f6970328dd0",
+      "sourceHash": "fnv1a64:96952e3516fb90d2",
       "notice": null,
       "blocks": [
         {
@@ -310,7 +310,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which ending does അമ്മ take, and why? (-യുടെ — it ends in a vowel.) How do you say mother's book? (അമ്മയുടെ (ammayuṭe) പുസ്തകം.) And who picks the ending — you, or the noun? (The noun.)"
+              "text": "Which ending does അമ്മ take? (-യുടെ.) How do you say mother's book? (അമ്മയുടെ (ammayuṭe) പുസ്തകം.) And who picks the ending — you, or the noun? (The noun.)"
             }
           ]
         }

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 84,
-  "sourceHash": "fnv1a64:16da305ab3b8f3c6",
+  "sourceHash": "fnv1a64:14dfdc5fd919eba8",
   "lessonIds": [
     "ML-C84-mukalil",
     "ML-C84-thaazhe",
@@ -12,7 +12,7 @@
   "drivablePrefix": 3,
   "text": "malayalam/narration/ch84.txt",
   "json": "malayalam/narration/ch84.json",
-  "textHash": "fnv1a64:af01eedcebe0604f",
-  "jsonHash": "fnv1a64:0378e4dd2c565798",
+  "textHash": "fnv1a64:f5e07ea7ad81dd5e",
+  "jsonHash": "fnv1a64:be3bcee47e521741",
   "findings": []
 }

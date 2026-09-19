@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 78,
-  "sourceHash": "fnv1a64:08ab20fafa71f03f",
+  "sourceHash": "fnv1a64:7b360bd2a584d78a",
   "lessonIds": [
     "ML-C78-nre",
     "ML-C78-ude",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch78.txt",
   "json": "malayalam/narration/ch78.json",
-  "textHash": "fnv1a64:13b23af2cd9374e7",
-  "jsonHash": "fnv1a64:e5289775c6f0fe04",
+  "textHash": "fnv1a64:80b67b3440748ae8",
+  "jsonHash": "fnv1a64:0bcb572d25ad4204",
   "findings": []
 }
