@@ -227,8 +227,16 @@ pub struct SchematicNetLabel {
 /// One schematic-owned result signal retained by a global Berkeley `.save` card.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub enum SchematicOutputProbe {
-    Voltage { node: String },
-    Current { source: String },
+    Voltage {
+        node: String,
+    },
+    DifferentialVoltage {
+        positive_node: String,
+        negative_node: String,
+    },
+    Current {
+        source: String,
+    },
 }
 
 impl SchematicOutputProbe {
@@ -236,6 +244,10 @@ impl SchematicOutputProbe {
     pub fn token(&self) -> String {
         match self {
             Self::Voltage { node } => format!("V({node})"),
+            Self::DifferentialVoltage {
+                positive_node,
+                negative_node,
+            } => format!("V({positive_node},{negative_node})"),
             Self::Current { source } => format!("I({source})"),
         }
     }
@@ -905,6 +917,24 @@ impl SchematicDocument {
         Ok(true)
     }
 
+    /// Append one labelled differential-voltage probe, unless it is already saved.
+    pub fn add_saved_output_differential_voltage_probe(
+        &mut self,
+        positive_node: &str,
+        negative_node: &str,
+    ) -> Result<bool, SchematicError> {
+        self.validate_differential_output_nodes(positive_node, negative_node)?;
+        let probe = SchematicOutputProbe::DifferentialVoltage {
+            positive_node: positive_node.to_owned(),
+            negative_node: negative_node.to_owned(),
+        };
+        if self.output_probes.contains(&probe) {
+            return Ok(false);
+        }
+        self.output_probes.push(probe);
+        Ok(true)
+    }
+
     /// Append one voltage-source branch-current probe, unless it is already saved.
     pub fn add_saved_output_current_probe(&mut self, source: &str) -> Result<bool, SchematicError> {
         if !self.branch_current_source_references().contains(&source) {
@@ -990,6 +1020,26 @@ impl SchematicDocument {
         }
         let probe = SchematicOutputProbe::Voltage {
             node: node.to_owned(),
+        };
+        let probes = self.scoped_probes_mut(card_index)?;
+        if probes.contains(&probe) {
+            return Ok(false);
+        }
+        probes.push(probe);
+        Ok(true)
+    }
+
+    /// Append one labelled differential-voltage probe for one analysis card.
+    pub fn add_scoped_output_differential_voltage_probe(
+        &mut self,
+        card_index: usize,
+        positive_node: &str,
+        negative_node: &str,
+    ) -> Result<bool, SchematicError> {
+        self.validate_differential_output_nodes(positive_node, negative_node)?;
+        let probe = SchematicOutputProbe::DifferentialVoltage {
+            positive_node: positive_node.to_owned(),
+            negative_node: negative_node.to_owned(),
         };
         let probes = self.scoped_probes_mut(card_index)?;
         if probes.contains(&probe) {
@@ -1259,6 +1309,10 @@ impl SchematicDocument {
                         "{node} is not a labelled non-ground schematic net"
                     )));
                 }
+                SchematicOutputProbe::DifferentialVoltage {
+                    positive_node,
+                    negative_node,
+                } => self.validate_differential_output_nodes(positive_node, negative_node)?,
                 SchematicOutputProbe::Current { source }
                     if !self
                         .branch_current_source_references()
@@ -1302,6 +1356,10 @@ impl SchematicDocument {
                         "{node} is not a labelled non-ground schematic net"
                     )));
                 }
+                SchematicOutputProbe::DifferentialVoltage {
+                    positive_node,
+                    negative_node,
+                } => self.validate_differential_output_nodes(positive_node, negative_node)?,
                 SchematicOutputProbe::Current { source }
                     if !self
                         .branch_current_source_references()
@@ -1324,6 +1382,26 @@ impl SchematicDocument {
                 .collect::<Vec<_>>()
                 .join(" ")
         )))
+    }
+
+    fn validate_differential_output_nodes(
+        &self,
+        positive_node: &str,
+        negative_node: &str,
+    ) -> Result<(), SchematicError> {
+        if positive_node == negative_node {
+            return Err(invalid(
+                "differential voltage probes require distinct labelled non-ground schematic nets",
+            ));
+        }
+        for node in [positive_node, negative_node] {
+            if !self.transfer_function_output_nodes().contains(&node) {
+                return Err(invalid(format!(
+                    "{node} is not a labelled non-ground schematic net"
+                )));
+            }
+        }
+        Ok(())
     }
 
     fn validate_wire_endpoints(&self, wire: &SchematicWire) -> Result<(), SchematicError> {
@@ -2226,26 +2304,53 @@ mod tests {
     }
 
     #[test]
-    fn saved_output_probes_lower_voltage_and_current_and_follow_source_renames() {
+    fn saved_output_probes_lower_voltage_differential_and_current_and_follow_source_renames() {
         let mut document = rc_document();
+        document.set_net_label(point(0, 20), "IN").unwrap();
         document.set_net_label(point(40, 20), "OUT").unwrap();
         assert!(document.add_saved_output_voltage_probe("OUT").unwrap());
+        assert!(document
+            .add_saved_output_differential_voltage_probe("OUT", "IN")
+            .unwrap());
         assert!(document.add_saved_output_current_probe("V1").unwrap());
         assert!(!document.add_saved_output_voltage_probe("OUT").unwrap());
-        assert_eq!(document.saved_output_probe_tokens(), ["V(OUT)", "I(V1)"]);
+        assert!(!document
+            .add_saved_output_differential_voltage_probe("OUT", "IN")
+            .unwrap());
+        assert_eq!(
+            document.saved_output_probe_tokens(),
+            ["V(OUT)", "V(OUT,IN)", "I(V1)"]
+        );
         assert!(document
             .to_berkeley_netlist()
             .unwrap()
-            .contains(".save V(OUT) I(V1)"));
+            .contains(".save V(OUT) V(OUT,IN) I(V1)"));
         document.rename_component("V1", "VBIAS").unwrap();
-        assert_eq!(document.saved_output_probe_tokens(), ["V(OUT)", "I(VBIAS)"]);
+        assert_eq!(
+            document.saved_output_probe_tokens(),
+            ["V(OUT)", "V(OUT,IN)", "I(VBIAS)"]
+        );
         let deck = document.to_berkeley_netlist().unwrap();
         parse_netlist(&deck).unwrap();
         assert_eq!(run_netlist(&deck).unwrap().len(), 1);
-        assert!(deck.contains(".save V(OUT) I(VBIAS)"));
+        assert!(deck.contains(".save V(OUT) V(OUT,IN) I(VBIAS)"));
         assert_eq!(
             document
                 .add_saved_output_voltage_probe("MISSING")
+                .unwrap_err()
+                .to_string(),
+            "MISSING is not a labelled non-ground schematic net"
+        );
+        assert_eq!(
+            document
+                .add_saved_output_differential_voltage_probe("OUT", "OUT")
+                .unwrap_err()
+                .to_string(),
+            "differential voltage probes require distinct labelled non-ground schematic nets"
+        );
+        assert_eq!(
+            document
+                .add_saved_output_differential_voltage_probe("OUT", "MISSING")
                 .unwrap_err()
                 .to_string(),
             "MISSING is not a labelled non-ground schematic net"
@@ -2259,7 +2364,7 @@ mod tests {
         );
         assert_eq!(
             document
-                .remove_saved_output_probe(2)
+                .remove_saved_output_probe(3)
                 .unwrap_err()
                 .to_string(),
             "schematic saved output probe is unavailable"
@@ -2269,32 +2374,36 @@ mod tests {
     #[test]
     fn scoped_output_probes_follow_card_identity_and_drop_with_the_card() {
         let mut document = rc_document();
+        document.set_net_label(point(0, 20), "IN").unwrap();
         document.set_net_label(point(40, 20), "OUT").unwrap();
         let ac = document.add_analysis_card(SchematicAnalysis::AcSweep);
         assert!(document.add_scoped_output_voltage_probe(ac, "OUT").unwrap());
+        assert!(document
+            .add_scoped_output_differential_voltage_probe(ac, "OUT", "IN")
+            .unwrap());
         assert!(document.add_scoped_output_current_probe(ac, "V1").unwrap());
         assert_eq!(
             document.scoped_output_probe_tokens(ac).unwrap(),
-            ["V(OUT)", "I(V1)"]
+            ["V(OUT)", "V(OUT,IN)", "I(V1)"]
         );
 
         let deck = document.to_berkeley_netlist().unwrap();
-        assert!(deck.contains(".op\n.ac dec 10 10 10k\n.probe ac V(OUT) I(V1)\n.end"));
+        assert!(deck.contains(".op\n.ac dec 10 10 10k\n.probe ac V(OUT) V(OUT,IN) I(V1)\n.end"));
         parse_netlist(&deck).unwrap();
 
         document.move_analysis_card(ac, 0).unwrap();
         assert_eq!(
             document.scoped_output_probe_tokens(0).unwrap(),
-            ["V(OUT)", "I(V1)"]
+            ["V(OUT)", "V(OUT,IN)", "I(V1)"]
         );
         assert!(document
             .to_berkeley_netlist()
             .unwrap()
-            .contains(".ac dec 10 10 10k\n.probe ac V(OUT) I(V1)\n.op\n.end"));
+            .contains(".ac dec 10 10 10k\n.probe ac V(OUT) V(OUT,IN) I(V1)\n.op\n.end"));
         document.rename_component("V1", "VBIAS").unwrap();
         assert_eq!(
             document.scoped_output_probe_tokens(0).unwrap(),
-            ["V(OUT)", "I(VBIAS)"]
+            ["V(OUT)", "V(OUT,IN)", "I(VBIAS)"]
         );
         document.remove_analysis_card(0).unwrap();
         assert!(document.scoped_output_probes.is_empty());
