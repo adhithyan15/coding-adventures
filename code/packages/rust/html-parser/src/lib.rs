@@ -28901,9 +28901,11 @@ fn collapse_html_text_node_whitespace(text: &str) -> String {
     let trailing = text.chars().last().is_some_and(is_html_whitespace);
     let mut collapsed = collapse_html_whitespace(text);
     if collapsed.is_empty() {
-        return (leading || trailing)
-            .then(|| " ".to_string())
-            .unwrap_or_default();
+        return if leading || trailing {
+            " ".to_string()
+        } else {
+            String::new()
+        };
     }
     if leading {
         collapsed.insert(0, ' ');
