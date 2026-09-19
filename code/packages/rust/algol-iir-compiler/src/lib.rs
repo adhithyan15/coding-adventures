@@ -170,6 +170,15 @@ struct StaticBodyAssignment<'a> {
     expression: &'a GrammarASTNode,
 }
 
+enum StaticBodyAction<'a> {
+    Assignment(StaticBodyAssignment<'a>),
+    Conditional {
+        condition: &'a GrammarASTNode,
+        then_actions: Vec<StaticBodyAction<'a>>,
+        else_actions: Vec<StaticBodyAction<'a>>,
+    },
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct VarBinding {
     slot: String,
@@ -6143,61 +6152,33 @@ impl Compiler {
             ScalarType::Boolean | ScalarType::String => return None,
         };
 
-        let assignments = self.for_body_recurrence_assignments(body)?;
+        let actions = self.for_body_recurrence_actions(body)?;
 
         let saved_reals = self.static_real_slots.clone();
         let saved_integers = self.static_integer_slots.clone();
         let saved_booleans = self.static_boolean_slots.clone();
-        let mut snapshots = None;
-        'simulation: for (control_real, control_integer) in controls {
+        let mut snapshots = Vec::new();
+        let mut succeeded = true;
+        for (control_real, control_integer) in controls {
             if self
                 .update_for_target_snapshot(target, control_real, control_integer)
                 .is_err()
             {
-                snapshots = None;
+                succeeded = false;
                 break;
             }
-            let mut iteration_snapshots = Vec::with_capacity(assignments.len());
-            for assignment in &assignments {
-                let value = match assignment.ty {
-                    ScalarType::Integer => self
-                        .static_assigned_integer_value(assignment.expression)
-                        .map(StaticScalarSnapshot::Integer),
-                    ScalarType::Real => self
-                        .static_assigned_real_value(assignment.expression)
-                        .filter(|value| value.is_finite())
-                        .map(|value| StaticScalarSnapshot::Real(value.to_string())),
-                    ScalarType::Boolean => self
-                        .static_boolean_value(assignment.expression)
-                        .map(StaticScalarSnapshot::Boolean),
-                    ScalarType::String => None,
-                };
-                let Some(value) = value else {
-                    snapshots = None;
-                    break 'simulation;
-                };
-                match &value {
-                    StaticScalarSnapshot::Integer(value) => {
-                        self.static_integer_slots
-                            .insert(assignment.slot.clone(), *value);
-                    }
-                    StaticScalarSnapshot::Real(value) => {
-                        self.static_real_slots
-                            .insert(assignment.slot.clone(), value.clone());
-                    }
-                    StaticScalarSnapshot::Boolean(value) => {
-                        self.static_boolean_slots
-                            .insert(assignment.slot.clone(), *value);
-                    }
-                }
-                iteration_snapshots.push((assignment.slot.clone(), value));
+            if self
+                .evaluate_static_body_actions(&actions, &mut snapshots)
+                .is_none()
+            {
+                succeeded = false;
+                break;
             }
-            snapshots = Some(iteration_snapshots);
         }
         self.static_real_slots = saved_reals;
         self.static_integer_slots = saved_integers;
         self.static_boolean_slots = saved_booleans;
-        snapshots
+        succeeded.then_some(snapshots)
     }
 
     fn for_body_avoids_target(
@@ -6457,20 +6438,18 @@ impl Compiler {
             }
         }
 
-        let assignments = self.for_body_recurrence_assignments(body)?;
-        if assignments
-            .iter()
-            .any(|assignment| assignment.name == target_name)
-        {
+        let actions = self.for_body_recurrence_actions(body)?;
+        if Self::static_body_actions_write_name(&actions, &target_name) {
             return None;
         }
 
         let saved_reals = self.static_real_slots.clone();
         let saved_integers = self.static_integer_slots.clone();
         let saved_booleans = self.static_boolean_slots.clone();
-        let mut snapshots = None;
+        let mut snapshots = Vec::new();
         let mut exited = false;
-        'simulation: for _ in 0..MAX_STATIC_WHILE_ITERATIONS {
+        let mut succeeded = true;
+        for _ in 0..MAX_STATIC_WHILE_ITERATIONS {
             let static_real = (target_ty == ScalarType::Real)
                 .then(|| self.static_assigned_real_value(value))
                 .flatten()
@@ -6496,74 +6475,76 @@ impl Compiler {
                 Some(true) => {}
                 None => break,
             }
-            let mut iteration_snapshots = Vec::with_capacity(assignments.len());
-            for assignment in &assignments {
-                let value = match assignment.ty {
-                    ScalarType::Integer => self
-                        .static_assigned_integer_value(assignment.expression)
-                        .map(StaticScalarSnapshot::Integer),
-                    ScalarType::Real => self
-                        .static_assigned_real_value(assignment.expression)
-                        .filter(|value| value.is_finite())
-                        .map(|value| StaticScalarSnapshot::Real(value.to_string())),
-                    ScalarType::Boolean => self
-                        .static_boolean_value(assignment.expression)
-                        .map(StaticScalarSnapshot::Boolean),
-                    ScalarType::String => None,
-                };
-                let Some(value) = value else {
-                    snapshots = None;
-                    break 'simulation;
-                };
-                match &value {
-                    StaticScalarSnapshot::Integer(value) => {
-                        self.static_integer_slots
-                            .insert(assignment.slot.clone(), *value);
-                    }
-                    StaticScalarSnapshot::Real(value) => {
-                        self.static_real_slots
-                            .insert(assignment.slot.clone(), value.clone());
-                    }
-                    StaticScalarSnapshot::Boolean(value) => {
-                        self.static_boolean_slots
-                            .insert(assignment.slot.clone(), *value);
-                    }
-                }
-                iteration_snapshots.push((assignment.slot.clone(), value));
+            if self
+                .evaluate_static_body_actions(&actions, &mut snapshots)
+                .is_none()
+            {
+                succeeded = false;
+                break;
             }
-            snapshots = Some(iteration_snapshots);
         }
         self.static_real_slots = saved_reals;
         self.static_integer_slots = saved_integers;
         self.static_boolean_slots = saved_booleans;
-        if exited { snapshots } else { None }
+        (exited && succeeded).then_some(snapshots)
     }
 
-    fn for_body_recurrence_assignments<'a>(
+    fn for_body_recurrence_actions<'a>(
         &self,
         body: &'a GrammarASTNode,
-    ) -> Option<Vec<StaticBodyAssignment<'a>>> {
-        let statements = compound_body_statements(body).unwrap_or_else(|| vec![body]);
-        let mut recurrences = Vec::new();
-        for statement in statements {
-            if single_statement_is_unlabeled_dummy(statement) {
-                continue;
+    ) -> Option<Vec<StaticBodyAction<'a>>> {
+        let mut actions = Vec::new();
+        self.collect_for_body_recurrence_actions(body, &mut actions)?;
+        (!actions.is_empty()).then_some(actions)
+    }
+
+    fn collect_for_body_recurrence_actions<'a>(
+        &self,
+        node: &'a GrammarASTNode,
+        actions: &mut Vec<StaticBodyAction<'a>>,
+    ) -> Option<()> {
+        match node.rule_name.as_str() {
+            "statement" => {
+                let children = direct_nodes(node);
+                if children.iter().any(|child| child.rule_name == "label") {
+                    return None;
+                }
+                let [child] = children.as_slice() else {
+                    return None;
+                };
+                self.collect_for_body_recurrence_actions(child, actions)
             }
-            let assignment = single_statement_assignment(statement)?;
-            let left_parts: Vec<&GrammarASTNode> = direct_nodes(assignment)
+            "unlabeled_stmt" => {
+                let children = direct_nodes(node);
+                let [child] = children.as_slice() else {
+                    return None;
+                };
+                self.collect_for_body_recurrence_actions(child, actions)
+            }
+            "compound_stmt" => {
+                for statement in direct_nodes(node)
+                    .into_iter()
+                    .filter(|child| child.rule_name == "statement")
+                {
+                    self.collect_for_body_recurrence_actions(statement, actions)?;
+                }
+                Some(())
+            }
+            "dummy_stmt" => Some(()),
+            "assign_stmt" => {
+                let left_parts: Vec<&GrammarASTNode> = direct_nodes(node)
                 .into_iter()
                 .filter(|node| node.rule_name == "left_part")
                 .collect();
-            if left_parts.len() != 1 {
-                return None;
-            }
-            let variable = first_direct_node(left_parts[0], "variable")?;
-            if array_subscripts(variable).is_some() {
-                return None;
-            }
-            let name = self.simple_variable_name(variable).ok()?;
-            let expression = first_direct_node(assignment, "expression")?;
-            if self.selector_expression_unconditionally_preserves_name(expression, &name) {
+                if left_parts.len() != 1 {
+                    return None;
+                }
+                let variable = first_direct_node(left_parts[0], "variable")?;
+                if array_subscripts(variable).is_some() {
+                    return None;
+                }
+                let name = self.simple_variable_name(variable).ok()?;
+                let expression = first_direct_node(node, "expression")?;
                 let binding = self.require_var(&name).ok()?;
                 if binding.is_global
                     || binding.array.is_some()
@@ -6571,24 +6552,127 @@ impl Compiler {
                 {
                     return None;
                 }
-                continue;
+                if self.selector_expression_unconditionally_preserves_name(expression, &name) {
+                    return Some(());
+                }
+                if binding.ty == ScalarType::String {
+                    return None;
+                }
+                actions.push(StaticBodyAction::Assignment(StaticBodyAssignment {
+                    name,
+                    slot: binding.slot.clone(),
+                    ty: binding.ty,
+                    expression,
+                }));
+                Some(())
             }
-            let binding = self.require_var(&name).ok()?;
-            if binding.is_global
-                || binding.array.is_some()
-                || self.active_by_name_binding(&name).is_some()
-                || binding.ty == ScalarType::String
-            {
-                return None;
+            "cond_stmt" => {
+                let children = direct_nodes(node);
+                let condition = children
+                    .iter()
+                    .find(|child| child.rule_name == "bool_expr")
+                    .copied()?;
+                let branches: Vec<&GrammarASTNode> = children
+                    .into_iter()
+                    .filter(|child| {
+                        child.rule_name == "unlabeled_stmt" || child.rule_name == "statement"
+                    })
+                    .collect();
+                let then_branch = *branches.first()?;
+                if branches.len() > 2 {
+                    return None;
+                }
+                let mut then_actions = Vec::new();
+                self.collect_for_body_recurrence_actions(then_branch, &mut then_actions)?;
+                let mut else_actions = Vec::new();
+                if let Some(else_branch) = branches.get(1) {
+                    self.collect_for_body_recurrence_actions(else_branch, &mut else_actions)?;
+                }
+                if !then_actions.is_empty() || !else_actions.is_empty() {
+                    actions.push(StaticBodyAction::Conditional {
+                        condition,
+                        then_actions,
+                        else_actions,
+                    });
+                }
+                Some(())
             }
-            recurrences.push(StaticBodyAssignment {
-                name,
-                slot: binding.slot.clone(),
-                ty: binding.ty,
-                expression,
-            });
+            _ => None,
         }
-        (!recurrences.is_empty()).then_some(recurrences)
+    }
+
+    fn evaluate_static_body_actions(
+        &mut self,
+        actions: &[StaticBodyAction<'_>],
+        snapshots: &mut Vec<(String, StaticScalarSnapshot)>,
+    ) -> Option<()> {
+        for action in actions {
+            match action {
+                StaticBodyAction::Assignment(assignment) => {
+                    let value = match assignment.ty {
+                        ScalarType::Integer => self
+                            .static_assigned_integer_value(assignment.expression)
+                            .map(StaticScalarSnapshot::Integer),
+                        ScalarType::Real => self
+                            .static_assigned_real_value(assignment.expression)
+                            .filter(|value| value.is_finite())
+                            .map(|value| StaticScalarSnapshot::Real(value.to_string())),
+                        ScalarType::Boolean => self
+                            .static_boolean_value(assignment.expression)
+                            .map(StaticScalarSnapshot::Boolean),
+                        ScalarType::String => None,
+                    }?;
+                    match &value {
+                        StaticScalarSnapshot::Integer(value) => {
+                            self.static_integer_slots
+                                .insert(assignment.slot.clone(), *value);
+                        }
+                        StaticScalarSnapshot::Real(value) => {
+                            self.static_real_slots
+                                .insert(assignment.slot.clone(), value.clone());
+                        }
+                        StaticScalarSnapshot::Boolean(value) => {
+                            self.static_boolean_slots
+                                .insert(assignment.slot.clone(), *value);
+                        }
+                    }
+                    if let Some((_, snapshot)) = snapshots
+                        .iter_mut()
+                        .find(|(slot, _)| slot == &assignment.slot)
+                    {
+                        *snapshot = value;
+                    } else {
+                        snapshots.push((assignment.slot.clone(), value));
+                    }
+                }
+                StaticBodyAction::Conditional {
+                    condition,
+                    then_actions,
+                    else_actions,
+                } => {
+                    let selected = match self.static_boolean_value(condition)? {
+                        true => then_actions,
+                        false => else_actions,
+                    };
+                    self.evaluate_static_body_actions(selected, snapshots)?;
+                }
+            }
+        }
+        Some(())
+    }
+
+    fn static_body_actions_write_name(actions: &[StaticBodyAction<'_>], name: &str) -> bool {
+        actions.iter().any(|action| match action {
+            StaticBodyAction::Assignment(assignment) => assignment.name == name,
+            StaticBodyAction::Conditional {
+                then_actions,
+                else_actions,
+                ..
+            } => {
+                Self::static_body_actions_write_name(then_actions, name)
+                    || Self::static_body_actions_write_name(else_actions, name)
+            }
+        })
     }
 
     fn for_body_writes_name(
@@ -14774,6 +14858,36 @@ mod tests {
                 .count(),
             4
         );
+    }
+
+    #[test]
+    fn al4_bounded_loops_track_statically_selected_recurrence_branches() {
+        let module = compile_source(
+            "begin integer i; real x, y; boolean take; x := 0.0; y := 0.0; take := false; for i := 1 step 1 until 4 do begin take := not take; if take then x := x + i else y := y + i end; print(x); print(y); i := 0; x := 0.0; y := 0.0; take := false; for i := i + 1 while i <= 4 do begin take := not take; if take then x := x + i else y := y + i end; print(x); print(y) end",
+            "test",
+        )
+        .expect("bounded loops retain statically selected recurrence branches");
+        let main = module.get_function("main").expect("has main");
+        assert_eq!(
+            main.instructions
+                .iter()
+                .filter(|instr| {
+                    instr.op == "str_const"
+                        && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "4" || text == "6")
+                })
+                .count(),
+            4
+        );
+    }
+
+    #[test]
+    fn al4_bounded_recurrence_rejects_dynamic_statement_selector() {
+        let err = compile_source(
+            "begin integer i; real x, y; boolean take; x := 0.0; y := 0.0; for i := 1 step 1 until 4 do if take then x := x + i else y := y + i; print(x) end",
+            "test",
+        )
+        .expect_err("an unknown statement selector keeps recurrence snapshots conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
