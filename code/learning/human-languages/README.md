@@ -73,6 +73,13 @@ registry/source/narration identity checks and `check:gentle-snapshots` reject mi
 extra, unsafe, noncanonical, or flat aggregate state. See
 [`HL33`](../../specs/HL33-sharded-gentle-ramp-ownership.md).
 
+Exam-inventory regression evidence is language-owned too. Generic parser and
+security behavior stays in the data package's `tests/exam-inventory.test.ts`;
+coverage pins, exact unmapped-point queues, and source-specific assertions live
+under `tests/exam-inventories/<language>.test.ts` or a track's older independent
+`tests/exam-inventory-<language>.test.ts`. Adding one track's lesson or probe must
+not edit a corpus-wide exam test.
+
 The two generated-hash families use stable four-digit chapter owners rather
 than per-language arrays: `_meta.json` carries document-wide fields and
 `NNNN.json` carries exactly one chapter. There is no tracked language or corpus
@@ -127,8 +134,9 @@ shared spine and all 23 chapter and curriculum ledgers from independent
 cross-ledger identities, rather than deriving expectations from whichever
 owners survived. Stable-id owners may use an intermediate ordinal such as
 `0015` without renaming neighbours. The four intentionally incomplete script
-inventories remain explicitly structural-only until #13381 adds independent
-per-glyph declarations; their safety and filename/body checks still run.
+inventories have independent per-glyph declarations and per-owner static
+evidence. Exact two-way identity checks catch missing, unexpected, duplicate,
+or mismatched owners without a shared expected list or whole-inventory digest.
 
 The closed lesson `sounds:` vocabulary is also shard-only. `_meta.json` owns
 the stable registry version, while `core/sound-tags.d/<language>.json` owns one
