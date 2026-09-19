@@ -10055,6 +10055,57 @@ mod tests {
     }
 
     #[test]
+    fn public_exchange_transport_audits_gate_effect_and_response() {
+        let provider_config = config("fixture");
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let mut setup_audit = RecordingAudit::default();
+        broker
+            .register_provider(policy("fixture", 300), trace(102), &mut setup_audit)
+            .unwrap();
+        let request = prepared_exchange(&provider_config, trace(103), &mut setup_audit);
+        let mut transport = MockPublicExchangeTransport {
+            response: None,
+            expected_provider: "fixture",
+            calls: 0,
+            order: Rc::new(RefCell::new(Vec::new())),
+        };
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(2),
+            ..RecordingAudit::default()
+        };
+
+        assert!(matches!(
+            broker.send_public_exchange(request, &mut transport, &mut audit),
+            Err(BrokerError::Audit)
+        ));
+        assert_eq!(transport.calls, 0);
+        assert!(audit.oauth.is_empty());
+
+        let request = prepared_exchange(&provider_config, trace(103), &mut setup_audit);
+        let mut transport = MockPublicExchangeTransport {
+            response: Some(Ok(TokenEndpointResponse::new(
+                200,
+                Zeroizing::new(br#"{"access_token":"withheld","token_type":"Bearer"}"#.to_vec()),
+            )
+            .unwrap())),
+            expected_provider: "fixture",
+            calls: 0,
+            order: Rc::new(RefCell::new(Vec::new())),
+        };
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(3),
+            ..RecordingAudit::default()
+        };
+
+        assert!(matches!(
+            broker.send_public_exchange(request, &mut transport, &mut audit),
+            Err(BrokerError::Audit)
+        ));
+        assert_eq!(transport.calls, 1);
+        assert!(audit.oauth.is_empty());
+    }
+
+    #[test]
     fn public_exchange_persists_without_releasing_credentials() {
         let provider_config = config("fixture");
         let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
