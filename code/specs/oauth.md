@@ -292,7 +292,16 @@ The delivery order is:
    only the opaque revision is returned. Wrong binding, transport or provider
    failure, audit failure, clock failure, and an existing key create no new
    credential record. Account identity proof and key selection remain
-   caller-owned, and this adds no concrete network authority. Public-client
+   caller-owned for that entry point, and this adds no concrete network
+   authority. The public exchange can now instead consume a nonce-bound ID
+   token through the existing audited identity authority and create custody
+   only under the resulting provider-scoped opaque account key. Exact identity
+   profile, request provider/client/trace, and one-use nonce binding is checked
+   before transport, clock, verification, or credential storage; missing or
+   rejected identity evidence reaches no custody, and the consumed ID token is
+   never stored. The decoded identity profile remains caller-supplied at this
+   boundary, while concrete verification algorithms, policy sources, network,
+   clock, and storage implementations remain separate authorities. Public-client
    refresh-token detach is now shipped for the retained `none` profile: the
    exact opaque account key binds
    the registered provider and credential record, and the retained public
