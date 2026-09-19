@@ -160,7 +160,7 @@
     },
     "mosaic-grammar-regen-check": {
       "scope": "job",
-      "description": "Regenerates the three Mosaic language compilers' combined _grammar.rs from their .tokens/.grammar sources and rejects a stale committed file. These three were the only _grammar.rs files in the repository that no sweep covered, so their sources drifted unnoticed (#14067).",
+      "description": "Regenerates the three Mosaic language compilers' combined _grammar.rs from their .tokens/.grammar sources and rejects stale committed output that no earlier sweep covered (#14067).",
       "packages": [
         "rust/grammar-tools",
         "rust/programs/grammar-tools",

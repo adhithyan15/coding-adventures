@@ -2,6 +2,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"flag"
 	"io"
@@ -10,8 +11,72 @@ import (
 	"strings"
 	"testing"
 
+	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cigates"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 )
+
+func TestEmitBuildPlanCeilingFailureWritesNoPlanOrGateOutputs(t *testing.T) {
+	patterns := make([]string, 20)
+	files := make([]string, 10)
+	for index := range patterns {
+		patterns[index] = strings.Repeat(string(rune('a'+index)), 499)
+	}
+	for index := range files {
+		files[index] = strings.Repeat(string(rune('0'+index)), 499)
+	}
+	files[len(files)-1] += "9"
+
+	root := t.TempDir()
+	registryPath := filepath.Join(root, "ci-gates.json")
+	registry := cigates.Registry{SchemaVersion: 1, Gates: map[string]cigates.Gate{
+		"bounded-job": {Description: "Boundary.", Paths: patterns},
+	}}
+	data, err := json.Marshal(registry)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(registryPath, data, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	planPath := filepath.Join(root, "plan.json")
+	githubOutput := filepath.Join(root, "github-output.txt")
+	const sentinel = "existing=true\n"
+	if err := os.WriteFile(githubOutput, []byte(sentinel), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("GITHUB_OUTPUT", githubOutput)
+
+	code := emitBuildPlan(
+		nil,
+		directedgraph.New(),
+		map[string]bool{},
+		map[string]bool{},
+		files,
+		false,
+		map[string]bool{},
+		"origin/main",
+		root,
+		planPath,
+		false,
+		0,
+		false,
+		registryPath,
+	)
+	if code != 1 {
+		t.Fatalf("emitBuildPlan code = %d, want 1", code)
+	}
+	if _, err := os.Stat(planPath); !os.IsNotExist(err) {
+		t.Fatalf("plan file exists or stat failed unexpectedly: %v", err)
+	}
+	got, err := os.ReadFile(githubOutput)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(got) != sentinel {
+		t.Fatalf("GITHUB_OUTPUT changed on ceiling failure: %q", got)
+	}
+}
 
 // TestFindRepoRootAcceptsGitDirectory covers the normal checkout case, where
 // .git is a directory.

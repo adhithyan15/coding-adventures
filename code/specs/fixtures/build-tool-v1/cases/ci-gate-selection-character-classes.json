@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "id": "ci-gate-selection/character-classes",
+  "domain": "ci_gate_selection",
+  "summary": "CI-gate paths use neutral fnmatchcase character classes rather than host-native glob grammar.",
+  "platforms": [
+    "darwin",
+    "linux",
+    "windows"
+  ],
+  "capabilities": [
+    "ci_gate_selection"
+  ],
+  "workspace": {
+    "files": []
+  },
+  "input": {
+    "operation": "ci_gate_selection",
+    "options": {
+      "registry": {
+        "schema_version": 1,
+        "gates": [
+          {
+            "id": "bang-negation",
+            "scope": "job",
+            "description": "Leading bang negates a character class.",
+            "packages": [],
+            "paths": ["code/[!a]eta.txt"]
+          },
+          {
+            "id": "caret-literal",
+            "scope": "job",
+            "description": "Caret is a literal class member, not a negation marker.",
+            "packages": [],
+            "paths": ["code/[^a].txt"]
+          },
+          {
+            "id": "leading-bracket-literal",
+            "scope": "job",
+            "description": "An unmatched opening bracket is literal.",
+            "packages": [],
+            "paths": ["code/[.txt"]
+          },
+          {
+            "id": "leading-closing-bracket",
+            "scope": "job",
+            "description": "A leading closing bracket is a literal class member.",
+            "packages": [],
+            "paths": ["code/[]a].txt"]
+          },
+          {
+            "id": "literal-leading-hyphen",
+            "scope": "job",
+            "description": "A leading hyphen remains a literal class member.",
+            "packages": [],
+            "paths": ["code/[-a].txt"]
+          },
+          {
+            "id": "literal-trailing-hyphen",
+            "scope": "job",
+            "description": "A trailing hyphen remains a literal class member.",
+            "packages": [],
+            "paths": ["code/[a-].txt"]
+          },
+          {
+            "id": "ascending-range",
+            "scope": "job",
+            "description": "Ascending ranges include their interior characters.",
+            "packages": [],
+            "paths": ["code/[a-c].txt"]
+          }
+        ]
+      },
+      "affected_packages": [],
+      "changed_files": [
+        "code/beta.txt",
+        "code/^.txt",
+        "code/[.txt",
+        "code/].txt",
+        "code/-.txt",
+        "code/b.txt"
+      ],
+      "force": false
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "ci-gate-selection/character-classes",
+    "domain": "ci_gate_selection",
+    "outcome": "ok",
+    "result": {
+      "gates": [
+        {"id": "ascending-range", "required": true, "output_name": "run_ascending_range"},
+        {"id": "bang-negation", "required": true, "output_name": "run_bang_negation"},
+        {"id": "caret-literal", "required": true, "output_name": "run_caret_literal"},
+        {"id": "leading-bracket-literal", "required": true, "output_name": "run_leading_bracket_literal"},
+        {"id": "leading-closing-bracket", "required": true, "output_name": "run_leading_closing_bracket"},
+        {"id": "literal-leading-hyphen", "required": true, "output_name": "run_literal_leading_hyphen"},
+        {"id": "literal-trailing-hyphen", "required": true, "output_name": "run_literal_trailing_hyphen"}
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

@@ -65,6 +65,16 @@ func TestMatchPath(t *testing.T) {
 		{"*.[ch]", "foo.c", true},
 		{"*.[ch]", "foo.h", true},
 		{"*.[ch]", "foo.py", false},
+		{"[!a]eta.txt", "beta.txt", true},
+		{"[!a]eta.txt", "aeta.txt", false},
+		{"[^a].txt", "^.txt", true},
+		{"[^a].txt", "b.txt", false},
+		{"[]a].txt", "].txt", true},
+		{"[-a].txt", "-.txt", true},
+		{"[a-].txt", "-.txt", true},
+		{"[a-c].txt", "b.txt", true},
+		{"[", "[", true},
+		{"prefix[", "prefix[", true},
 
 		// ── Edge cases ───────────────────────────────────────────
 		{"", "", true},   // empty matches empty

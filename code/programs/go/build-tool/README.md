@@ -69,10 +69,18 @@ exits before writing a build plan or any partial gate outputs. Force, missing
 snapshots, and recognized gating-machinery changes retain their all-gates-true
 bypass.
 
+The native loader applies the neutral registry bounds first: at most 128 gates,
+4,096 unique package names and path globs per gate, 512 Unicode scalars per
+portable NFC glob, and collision-free gate outputs. Invalid registries and
+globs therefore fail before a run-all bypass or ceiling result can hide them.
+
 The shared globstar matcher memoizes each `(pattern index, path index)` state
 for one call, including failed states. Its `**` recurrence consumes either zero
 segments or one segment, which bounds recursive near misses by the dynamic-
 programming state grid without retaining attacker-shaped data across calls.
+Within a segment it implements the neutral Python `fnmatchcase` class grammar,
+including leading-`!` negation, literal `^`, leading `]`, leading/trailing
+hyphens, ascending ranges, and unmatched `[` literals.
 
 ## Building
 

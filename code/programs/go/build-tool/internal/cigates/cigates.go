@@ -61,11 +61,20 @@ import (
 	"unicode/utf8"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/globmatch"
+	"golang.org/x/text/unicode/norm"
 )
 
 // CurrentSchemaVersion is the registry format this implementation understands.
 // A registry stamped higher is rejected rather than half-read.
 const CurrentSchemaVersion = 1
+
+const (
+	maxRegistryGates = 128
+	maxGateEntries   = 4096
+	maxGateIDRunes   = 80
+	maxGateTextRunes = 240
+	maxGlobRunes     = 512
+)
 
 // MaxMatchWork is the operation-wide Unicode-scalar path-match budget.
 const MaxMatchWork uint64 = 50_000_000
@@ -185,38 +194,8 @@ func Load(path string) (*Registry, error) {
 			path, reg.SchemaVersion, CurrentSchemaVersion,
 		)
 	}
-	if len(reg.Gates) == 0 {
-		return nil, fmt.Errorf("%s: registry declares no gates", path)
-	}
-
-	outputOwners := make(map[string]string, len(reg.Gates))
-	for id, gate := range reg.Gates {
-		if err := validateGateID(id); err != nil {
-			return nil, fmt.Errorf("%s: %w", path, err)
-		}
-		outputName := OutputName(id)
-		if owner, exists := outputOwners[outputName]; exists {
-			return nil, fmt.Errorf(
-				"%s: gates %q and %q produce the same output name %q",
-				path, owner, id, outputName,
-			)
-		}
-		outputOwners[outputName] = id
-		switch gate.EffectiveScope() {
-		case ScopeJob, ScopeStep:
-		default:
-			return nil, fmt.Errorf("%s: gate %q has unknown scope %q (want %q or %q)",
-				path, id, gate.Scope, ScopeJob, ScopeStep)
-		}
-		if len(gate.Packages) == 0 && len(gate.Paths) == 0 {
-			return nil, fmt.Errorf(
-				"%s: gate %q declares neither packages nor paths, so it could never fire",
-				path, id,
-			)
-		}
-		if strings.TrimSpace(gate.Description) == "" {
-			return nil, fmt.Errorf("%s: gate %q has no description", path, id)
-		}
+	if err := validateRegistry(&reg); err != nil {
+		return nil, fmt.Errorf("%s: %w", path, err)
 	}
 
 	return &reg, nil
@@ -229,6 +208,9 @@ func validateGateID(id string) error {
 	if id == "" {
 		return fmt.Errorf("gate id must not be empty")
 	}
+	if utf8.RuneCountInString(id) > maxGateIDRunes {
+		return fmt.Errorf("gate id exceeds %d Unicode scalars", maxGateIDRunes)
+	}
 	for _, r := range id {
 		switch {
 		case r >= 'a' && r <= 'z':
@@ -239,6 +221,181 @@ func validateGateID(id string) error {
 		}
 	}
 	return nil
+}
+
+func validateRegistry(reg *Registry) error {
+	if reg == nil {
+		return fmt.Errorf("registry is nil")
+	}
+	if reg.SchemaVersion < 1 || reg.SchemaVersion > CurrentSchemaVersion {
+		return fmt.Errorf("unsupported schema_version %d", reg.SchemaVersion)
+	}
+	if len(reg.Gates) == 0 {
+		return fmt.Errorf("registry declares no gates")
+	}
+	if len(reg.Gates) > maxRegistryGates {
+		return fmt.Errorf("registry declares %d gates; maximum is %d", len(reg.Gates), maxRegistryGates)
+	}
+
+	outputOwners := make(map[string]string, len(reg.Gates))
+	for id, gate := range reg.Gates {
+		if err := validateGateID(id); err != nil {
+			return err
+		}
+		outputName := OutputName(id)
+		if owner, exists := outputOwners[outputName]; exists {
+			return fmt.Errorf("gates %q and %q produce the same output name %q", owner, id, outputName)
+		}
+		outputOwners[outputName] = id
+		switch gate.EffectiveScope() {
+		case ScopeJob, ScopeStep:
+		default:
+			return fmt.Errorf("gate %q has unknown scope %q (want %q or %q)", id, gate.Scope, ScopeJob, ScopeStep)
+		}
+		if len(gate.Packages) == 0 && len(gate.Paths) == 0 {
+			return fmt.Errorf("gate %q declares neither packages nor paths, so it could never fire", id)
+		}
+		if strings.TrimSpace(gate.Description) == "" {
+			return fmt.Errorf("gate %q has no description", id)
+		}
+		if utf8.RuneCountInString(gate.Description) > maxGateTextRunes {
+			return fmt.Errorf("gate %q description exceeds %d Unicode scalars", id, maxGateTextRunes)
+		}
+		if len(gate.Packages) > maxGateEntries || len(gate.Paths) > maxGateEntries {
+			return fmt.Errorf("gate %q exceeds the %d-entry package or path limit", id, maxGateEntries)
+		}
+		seenPackages := make(map[string]bool, len(gate.Packages))
+		for _, pkg := range gate.Packages {
+			if seenPackages[pkg] {
+				return fmt.Errorf("gate %q repeats package %q", id, pkg)
+			}
+			seenPackages[pkg] = true
+			if !validPackageName(pkg) {
+				return fmt.Errorf("gate %q has invalid package name %q", id, pkg)
+			}
+		}
+		seenPaths := make(map[string]bool, len(gate.Paths))
+		for _, pattern := range gate.Paths {
+			if seenPaths[pattern] {
+				return fmt.Errorf("gate %q repeats path glob %q", id, pattern)
+			}
+			seenPaths[pattern] = true
+			if err := validatePortableGlob(pattern); err != nil {
+				return fmt.Errorf("gate %q has invalid path glob: %w", id, err)
+			}
+		}
+	}
+	return nil
+}
+
+func validPackageName(value string) bool {
+	if value == "" || utf8.RuneCountInString(value) > maxGateTextRunes {
+		return false
+	}
+	parts := strings.Split(value, "/")
+	if len(parts) < 2 {
+		return false
+	}
+	for _, part := range parts {
+		if part == "" || !asciiLowerOrDigit(part[0]) {
+			return false
+		}
+		for index := 1; index < len(part); index++ {
+			character := part[index]
+			if !asciiLowerOrDigit(character) && character != '.' && character != '_' && character != '-' {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func asciiLowerOrDigit(character byte) bool {
+	return character >= 'a' && character <= 'z' || character >= '0' && character <= '9'
+}
+
+func validatePortableGlob(pattern string) error {
+	if pattern == "" || !utf8.ValidString(pattern) || utf8.RuneCountInString(pattern) > maxGlobRunes {
+		return fmt.Errorf("glob must contain 1 to %d valid Unicode scalars", maxGlobRunes)
+	}
+	if !norm.NFC.IsNormalString(pattern) {
+		return fmt.Errorf("glob is not NFC-normalized")
+	}
+	if strings.HasPrefix(pattern, "/") || strings.Contains(pattern, "\\") || strings.Contains(pattern, "//") ||
+		(len(pattern) >= 2 && ((pattern[0] >= 'A' && pattern[0] <= 'Z') || (pattern[0] >= 'a' && pattern[0] <= 'z')) && pattern[1] == ':') {
+		return fmt.Errorf("glob is not a portable relative path")
+	}
+	for _, character := range pattern {
+		if character < 0x20 || strings.ContainsRune("<>:\"|?", character) {
+			return fmt.Errorf("glob contains an unsafe character")
+		}
+	}
+	for _, segment := range strings.Split(pattern, "/") {
+		if segment == "" || segment == "." || segment == ".." || strings.HasSuffix(segment, ".") || strings.HasSuffix(segment, " ") {
+			return fmt.Errorf("glob contains an unsafe path segment")
+		}
+		if ambiguousCharacterClass(segment) {
+			return fmt.Errorf("glob character class has an ambiguous or descending range")
+		}
+		if !strings.ContainsAny(segment, "*[]{}") && windowsReservedBasename(segment) {
+			return fmt.Errorf("glob uses a Windows reserved basename")
+		}
+	}
+	return nil
+}
+
+func ambiguousCharacterClass(segment string) bool {
+	characters := []rune(segment)
+	for index := 0; index < len(characters); {
+		if characters[index] != '[' {
+			index++
+			continue
+		}
+		cursor := index + 1
+		if cursor < len(characters) && characters[cursor] == '!' {
+			cursor++
+		}
+		closing := cursor
+		if closing < len(characters) && characters[closing] == ']' {
+			closing++
+		}
+		for closing < len(characters) && characters[closing] != ']' {
+			closing++
+		}
+		if closing == len(characters) {
+			return false
+		}
+		body := string(characters[cursor:closing])
+		if strings.Contains(body, "--") || strings.Contains(body, "&&") || strings.Contains(body, "~~") || strings.Contains(body, "||") {
+			return true
+		}
+		member := cursor
+		for member+2 < closing {
+			if characters[member+1] == '-' && characters[member] > characters[member+2] {
+				return true
+			}
+			if characters[member+1] == '-' {
+				member += 3
+			} else {
+				member++
+			}
+		}
+		index = closing + 1
+	}
+	return false
+}
+
+func windowsReservedBasename(segment string) bool {
+	base := strings.ToUpper(strings.SplitN(segment, ".", 2)[0])
+	if base == "CON" || base == "PRN" || base == "AUX" || base == "NUL" ||
+		base == "CONIN$" || base == "CONOUT$" || base == "CLOCK$" {
+		return true
+	}
+	if len(base) == 4 && (strings.HasPrefix(base, "COM") || strings.HasPrefix(base, "LPT")) && base[3] >= '1' && base[3] <= '9' {
+		return true
+	}
+	return base == "COM¹" || base == "COM²" || base == "COM³" ||
+		base == "LPT¹" || base == "LPT²" || base == "LPT³"
 }
 
 // OutputName converts a gate id into the GitHub Actions step-output name that
@@ -301,6 +458,9 @@ func evaluateWithMatcher(
 	force bool,
 	matcher func(string, string) bool,
 ) (map[string]bool, error) {
+	if err := validateRegistry(reg); err != nil {
+		return nil, err
+	}
 	result := make(map[string]bool, len(reg.Gates))
 
 	// Four reasons to run absolutely everything, checked before any per-gate

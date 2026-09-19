@@ -3,6 +3,7 @@ package cigates
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
@@ -485,6 +486,120 @@ func TestLoadRejectsCollidingOutputNames(t *testing.T) {
 	path := writeRegistry(t, `{"schema_version": 1, "gates": {"alpha-job": {"description": "d", "paths": ["x"]}, "alpha_job": {"description": "d", "paths": ["y"]}}}`)
 	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "same output name") {
 		t.Fatalf("want output-name collision rejection, got %v", err)
+	}
+}
+
+func TestLoadRejectsInvalidPortableGlob(t *testing.T) {
+	path := writeRegistry(t, `{"schema_version": 1, "gates": {"a": {"description": "d", "paths": ["[z-a]"]}}}`)
+	if _, err := Load(path); err == nil || !strings.Contains(err.Error(), "invalid path glob") {
+		t.Fatalf("want invalid-glob rejection, got %v", err)
+	}
+}
+
+func TestRegistryValidationEnforcesNeutralSchemaBounds(t *testing.T) {
+	t.Run("gate count", func(t *testing.T) {
+		reg := &Registry{SchemaVersion: 1, Gates: map[string]Gate{}}
+		for index := 0; index <= maxRegistryGates; index++ {
+			reg.Gates[fmt.Sprintf("gate-%03d", index)] = Gate{Description: "d", Paths: []string{"x"}}
+		}
+		if err := validateRegistry(reg); err == nil || !strings.Contains(err.Error(), "maximum") {
+			t.Fatalf("want gate-count rejection, got %v", err)
+		}
+	})
+
+	t.Run("path count", func(t *testing.T) {
+		paths := make([]string, maxGateEntries+1)
+		for index := range paths {
+			paths[index] = fmt.Sprintf("path-%04d", index)
+		}
+		reg := &Registry{SchemaVersion: 1, Gates: map[string]Gate{
+			"bounded": {Description: "d", Paths: paths},
+		}}
+		if err := validateRegistry(reg); err == nil || !strings.Contains(err.Error(), "entry") {
+			t.Fatalf("want path-count rejection, got %v", err)
+		}
+	})
+
+	t.Run("unique paths", func(t *testing.T) {
+		reg := &Registry{SchemaVersion: 1, Gates: map[string]Gate{
+			"bounded": {Description: "d", Paths: []string{"x", "x"}},
+		}}
+		if err := validateRegistry(reg); err == nil || !strings.Contains(err.Error(), "repeats path glob") {
+			t.Fatalf("want duplicate-path rejection, got %v", err)
+		}
+	})
+
+	t.Run("glob length", func(t *testing.T) {
+		reg := &Registry{SchemaVersion: 1, Gates: map[string]Gate{
+			"bounded": {Description: "d", Paths: []string{strings.Repeat("x", maxGlobRunes+1)}},
+		}}
+		if err := validateRegistry(reg); err == nil || !strings.Contains(err.Error(), "invalid path glob") {
+			t.Fatalf("want glob-length rejection, got %v", err)
+		}
+	})
+}
+
+func TestPortableGlobRejectsEveryNeutralWindowsReservedBasename(t *testing.T) {
+	reserved := []string{
+		"CON", "PRN", "AUX", "NUL", "CONIN$", "CONOUT$", "CLOCK$",
+		"COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+		"LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
+		"COM¹", "COM²", "COM³", "LPT¹", "LPT²", "LPT³",
+	}
+	for _, basename := range reserved {
+		t.Run(basename, func(t *testing.T) {
+			if err := validatePortableGlob("safe/" + strings.ToLower(basename) + ".json"); err == nil ||
+				!strings.Contains(err.Error(), "Windows reserved basename") {
+				t.Fatalf("validatePortableGlob(%q) = %v, want reserved-basename rejection", basename, err)
+			}
+		})
+	}
+}
+
+func TestPortableGlobRejectsEveryNeutralAmbiguousClassForm(t *testing.T) {
+	for _, pattern := range []string{"[z-a]", "[a--b]", "[a&&b]", "[a~~b]", "[a||b]"} {
+		t.Run(pattern, func(t *testing.T) {
+			if err := validatePortableGlob(pattern); err == nil {
+				t.Fatalf("validatePortableGlob(%q) = %v, want class rejection", pattern, err)
+			}
+		})
+	}
+}
+
+func TestInvalidGlobPrecedesRunAllBypassesAndMatchCeiling(t *testing.T) {
+	paths := []string{"[z-a]"}
+	for index := 0; index < 20; index++ {
+		paths = append(paths, strings.Repeat(string(rune('a'+index)), 499))
+	}
+	files := make([]string, 10)
+	for index := range files {
+		files[index] = strings.Repeat(string(rune('0'+index)), 500)
+	}
+	reg := &Registry{SchemaVersion: 1, Gates: map[string]Gate{
+		"bounded": {Description: "d", Paths: paths},
+	}}
+	tests := []struct {
+		name     string
+		affected map[string]bool
+		changed  []string
+		force    bool
+	}{
+		{name: "force", affected: map[string]bool{}, changed: files, force: true},
+		{name: "nil affected", affected: nil, changed: files},
+		{name: "nil changed", affected: map[string]bool{}, changed: nil},
+		{name: "machinery", affected: map[string]bool{}, changed: []string{CIWorkflowPath}},
+		{name: "over limit", affected: map[string]bool{}, changed: files},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got, err := Evaluate(reg, test.affected, test.changed, test.force)
+			if err == nil || errors.Is(err, ErrMatchWorkLimitExceeded) || !strings.Contains(err.Error(), "invalid path glob") {
+				t.Fatalf("Evaluate error = %v, want invalid-glob precedence", err)
+			}
+			if got != nil {
+				t.Fatalf("Evaluate returned partial verdicts: %v", got)
+			}
+		})
 	}
 }
 
