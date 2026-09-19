@@ -13733,10 +13733,11 @@ Rust has 782 singleton identities, emerging OCaml has five packages, and both
 canonical collisions and unknown language buckets remain zero.
 
 Before publication, the implementation branch rebased conflict-free onto exact
-`origin/main` `f8a017f5b0b8f1eccdf2c4ace7d13f0abcc09b53`. The intervening OAuth,
-Malayalam, Mermaid, SPICE, ALGOL, Portuguese assessment, Rust closurec, and
-spreadsheet-core commits remain inside existing owners, add no package identity
-or build-tool contract, and have zero exact overlap with this tranche. The
+`origin/main` `24aeca158410f8d26cf13fccc78e1c90d4d1411f`. The intervening OAuth,
+Malayalam, Mermaid, SPICE, ALGOL, Portuguese assessment, Rust closurec,
+spreadsheet-core, verified OAuth device-credential, and WinUI Board-row commits
+remain inside existing owners, add no package identity or build-tool contract,
+and have zero exact overlap with this tranche. The
 regenerated collision-checked schema-3 inventory is therefore structurally
 unchanged from the selection snapshot.
 
