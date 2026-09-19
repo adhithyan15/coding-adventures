@@ -48,12 +48,11 @@ a person. Neither is what happens between them.
 | **ചികിത്സ** | *cikitsa* | what the person does |
 | **മരുന്ന്** | *marunnŭ* | what the person gives |
 
-**Keep the caveat `ML-C48-doctor` gave you.** That lesson said **വൈദ്യൻ** in Kerala
+**Keep the caveat this book already gave you.** `ML-C48-doctor` said **വൈദ്യൻ**
 today usually points at a practitioner of the traditional medicine, and that the
-everyday word for a hospital doctor is the English one worn down into Malayalam
-sounds. So this row of three is one of the two pictures Kerala keeps side by
-side, not both of them — and it is the one that has Malayalam words for all
-three parts.
+hospital doctor goes by the English word. So this row is one of the two pictures
+Kerala keeps side by side, and it is the one with Malayalam words for all three
+parts.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C107-TREATMENT-01, ML-LEX-C107-MEDICINE-01] -->
@@ -81,16 +80,19 @@ in the reference grammars rather than a folk story.
 letter in **ചികിത്സ** is one you have written. What you have not seen before is
 **ത** and **സ** joined:
 
-| | | |
-|---|---|---|
-| **ത** | *ta* | `ML-S08-letter-ta` |
-| **്** | chandrakkala | `ML-W01-sa-chandrakkala-ka` |
-| **സ** | *sa* | `ML-S124-letter-sa` |
+| | |
+|---|---|
+| **ത** | *ta* |
+| **്** | chandrakkala |
+| **സ** | *sa* |
 
-It is the same machine **നമസ്കാരം** showed you on your first day: put the
-chandrakkala on the first consonant to strip its inherent *a*, then set the next
-consonant behind it. There **സ്** met **ക**; here **ത്** meets **സ**. Read
-**ചി-കി-ത്-സ** slowly, then at speed.
+You met all three long ago — the two letters at `ML-S08-letter-ta` and
+`ML-S124-letter-sa`, and the chandrakkala at `ML-W01-sa-chandrakkala-ka`.
+
+It is the machine **നമസ്കാരം** showed you on day one: the chandrakkala strips
+the first consonant's inherent *a*, and the next consonant sets in behind it.
+There **സ്** met **ക**; here **ത്** meets **സ**. Read **ചി-കി-ത്-സ** slowly,
+then at speed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C107-TREATMENT-01, ML-LEX-C107-MEDICINE-01, ML-LEX-C48-ROLE-03] -->
