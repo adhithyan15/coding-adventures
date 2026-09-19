@@ -12,7 +12,7 @@ collapsed into one another:
 
 The manifest currently pins Google Closure Compiler `v20260915`. Its released
 JAR is not committed to this repository and CI never downloads or executes it.
-The Rust verifier only parses checked-in data and resolves checked-in paths.
+The Rust verifiers only parse checked-in data and resolve checked-in paths.
 
 ## Obtain and verify the oracle
 
@@ -58,6 +58,41 @@ do not use `flags.txt`. Local-only correlation-vector and transitional
 print-tree contracts have no upstream command: inventing one would turn a
 classification ledger into false provenance.
 
+## Refresh the minify cohort
+
+With the independently downloaded JAR and Java 21.0.12, run from this package:
+
+```sh
+cargo run --example oracle_refresh -- \
+  --oracle-jar /absolute/path/to/closure-compiler-v20260915.jar \
+  --java /absolute/path/to/java-21.0.12
+```
+
+`--java` must be an absolute executable path. The tool checks its canonical
+launcher bytes and exact version both before and after capture. Before running
+anything, it checks the manifest against independent hard-coded release,
+artifact, Java, and exact-argv trust pins; stream-verifies the JAR byte length
+and SHA-256; and preflights all 462 `minify_*` fixtures. Each case permits only
+one `WHITESPACE_ONLY` pair and one fixture-contained `--js` path.
+
+Java receives only private snapshots of the verified JAR/input bytes. The tool
+removes JVM option and classpath injection variables, caps workers, input,
+aggregate memory, process time, and process output, and kills/reaps failed
+children. It rejects report symlinks and replaces the report atomically from a
+same-directory, create-new temporary file only after the entire capture and
+post-run Java identity checks succeed. It never downloads an artifact.
+
+The checked-in `v20260915` run reports 462 equal stdout captures, zero changed,
+and zero declined. Three equal legacy-octal cases have non-empty upstream
+warning stderr; the report intentionally preserves those bytes because stdout
+identity does not imply diagnostic parity.
+
+If a later capture reports `changed` or `declined`, review every result before
+commit. A changed golden must be updated to the captured bytes and carry an
+`accepted_expected_update` review with a unique reason and issue link. A
+decline keeps the prior golden and requires a `documented_decline` review.
+Unreviewed non-equal results fail the offline verifier.
+
 ## Change the ledger
 
 When adding or renaming a `tests/diff/` directory:
@@ -70,11 +105,11 @@ When adding or renaming a `tests/diff/` directory:
 
 ```sh
 cargo test --manifest-path code/programs/rust/closurec/Cargo.toml \
-  --test oracle_manifest --no-fail-fast
+  --test oracle_manifest --test oracle_refresh_report --no-fail-fast
 ```
 
-The verifier rejects unknown schema fields, unsafe or stale paths, missing and
+The verifiers reject unknown schema fields, unsafe or stale paths, missing and
 duplicate classifications, incomplete command matrices, false upstream claims,
-and drift between the explicit 462-fixture minify cohort and runtime discovery.
-CCR-004 is responsible for actually rerunning those 462 goldens and reviewing
-every changed byte before their current provenance advances to `v20260915`.
+malformed lowercase SHA-256 text, altered report bytes or hashes, malformed
+review/issue identifiers, unreviewed changes/declines, and drift between the
+explicit 462-fixture minify cohort and runtime discovery.

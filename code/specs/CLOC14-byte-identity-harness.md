@@ -1,10 +1,10 @@
 # CLOC14 — End-to-end byte-identity test harness
 
-**Status:** v0.4 pinned-oracle refresh specified; implementation in progress
+**Status:** v0.4 pinned-oracle refresh implemented and locally validated
 (CCR-004). The v0.3 strict offline verifier classifies all **626 differential
-fixture directories** exactly once, including **462 `minify_*` fixtures**.
-CCR-004 executes only that explicit cohort against the pinned release, records
-the result byte-for-byte, and advances provenance only after review.
+fixture directories** exactly once, including **462 `minify_*` fixtures**. The
+verified `v20260915` run found all 462 stdout goldens byte-identical, with zero
+changed and zero declined, and records every result byte-for-byte.
 **Layer:** Above CLOC11 (CLI compat) and CLOC12 (upstream test ports), below CLOC15+ (whatever comes next).
 **Depends on:** closurec CLI being runnable end-to-end.
 **Unblocks:** Every future gap-fix can be *measured* against upstream Closure's output instead of unit-tested in isolation.
@@ -154,12 +154,21 @@ explicit maintainer regeneration step.
 ### 4.4 Pinned refresh report
 
 `tests/oracle/minify-v20260915-report.json` is the immutable v0.4 capture
-record. The explicit maintainer tool receives the oracle JAR and Java
-executable as paths; it does not download either one. Before any execution it
-checks the artifact byte length and SHA-256 from `manifest.json`, requires the
-manifest's exact Java version, and proves that every fixture flag file contains
-only one `WHITESPACE_ONLY` compilation level and one `--js` input contained by
-that fixture's `input/` directory.
+record. The explicit maintainer tool receives the oracle JAR and an absolute
+Java executable path; it does not download either one. Before any execution it
+matches the manifest to independent hard-coded release/artifact/Java/argv pins,
+stream-checks the artifact byte length and SHA-256, preflights the complete
+cohort, and proves that every fixture flag file contains only one
+`WHITESPACE_ONLY` compilation level and one `--js` input contained by that
+fixture's `input/` directory.
+
+Execution uses private immutable snapshots of the verified JAR and input bytes,
+not the paths that were checked. JVM option/classpath injection variables are
+removed. Worker count, individual and aggregate bytes, elapsed process time,
+and stdout/stderr are bounded; every error kills and reaps a live child. The
+canonical Java launcher's bytes and exact version are rechecked after capture.
+Only then may a create-new same-directory temporary file atomically replace a
+regular, non-symlink report destination.
 
 The report is sorted by fixture and records:
 
