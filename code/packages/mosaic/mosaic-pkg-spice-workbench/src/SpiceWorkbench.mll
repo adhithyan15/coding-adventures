@@ -163,6 +163,35 @@ layout SpiceWorkbench {
           }
         }
       }
+      Column [ schematic-scoped-outputs ] {
+        Text [ schematic-scoped-output-label ] ( content : slot: schematic-scoped-output-label )
+        Text [ schematic-scoped-output-voltage-label ] ( content : slot: schematic-scoped-output-voltage-label )
+        Row [ schematic-scoped-output-voltage-options ] {
+          For ( each: slot: schematic-scoped-output-voltage-options , as: output , index: output-index ) {
+            HostButton [ schematic-scoped-output-voltage-option ] (
+              label : ( output ) ,
+              onClick : emit: onAddSchematicScopedOutputVoltage
+            )
+          }
+        }
+        Text [ schematic-scoped-output-current-label ] ( content : slot: schematic-scoped-output-current-label )
+        Row [ schematic-scoped-output-current-options ] {
+          For ( each: slot: schematic-scoped-output-current-options , as: source , index: source-index ) {
+            HostButton [ schematic-scoped-output-current-option ] (
+              label : ( source ) ,
+              onClick : emit: onAddSchematicScopedOutputCurrent
+            )
+          }
+        }
+        Row [ schematic-scoped-output-actions ] {
+          For ( each: slot: schematic-scoped-output-rows , as: probe , index: probe-index ) {
+            HostButton [ schematic-scoped-output-remove ] (
+              label : ( probe ) ,
+              onClick : emit: onRemoveSchematicScopedOutput
+            )
+          }
+        }
+      }
       Text [ schematic-grid-label ] ( content : slot: schematic-grid-label )
       Stack [ schematic-grid ] {
         For ( each: slot: schematic-grid-lines , as: line , index: line-index ) {

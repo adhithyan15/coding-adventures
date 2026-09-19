@@ -126,6 +126,16 @@ impl SchematicAnalysis {
             Self::TransferFunction => ["Output node", "", ""],
         }
     }
+
+    fn probe_selector(self) -> &'static str {
+        match self {
+            Self::OperatingPoint => "op",
+            Self::DcSweep => "dc",
+            Self::AcSweep => "ac",
+            Self::Transient => "tran",
+            Self::TransferFunction => "tf",
+        }
+    }
 }
 
 /// Persisted Berkeley card values for the selected schematic analysis.
@@ -174,14 +184,17 @@ impl Default for SchematicAnalysisSettings {
 /// One ordered Berkeley analysis card owned by a schematic document.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct SchematicAnalysisCard {
+    #[serde(default)]
+    pub id: u64,
     pub analysis: SchematicAnalysis,
     #[serde(default)]
     pub settings: SchematicAnalysisSettings,
 }
 
 impl SchematicAnalysisCard {
-    fn new(analysis: SchematicAnalysis) -> Self {
+    fn new(id: u64, analysis: SchematicAnalysis) -> Self {
         Self {
+            id,
             analysis,
             settings: SchematicAnalysisSettings::default(),
         }
@@ -228,6 +241,14 @@ impl SchematicOutputProbe {
     }
 }
 
+/// Ordered output probes that apply only to one durable analysis-card identity.
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct SchematicScopedOutputProbes {
+    pub analysis_card_id: u64,
+    #[serde(default)]
+    pub probes: Vec<SchematicOutputProbe>,
+}
+
 /// A compact editor document that can be lowered into a canonical Berkeley deck.
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct SchematicDocument {
@@ -238,6 +259,8 @@ pub struct SchematicDocument {
     pub net_labels: Vec<SchematicNetLabel>,
     #[serde(default)]
     pub output_probes: Vec<SchematicOutputProbe>,
+    #[serde(default)]
+    pub scoped_output_probes: Vec<SchematicScopedOutputProbes>,
     #[serde(default)]
     pub analysis: SchematicAnalysis,
     #[serde(default)]
@@ -317,6 +340,7 @@ impl SchematicDocument {
     pub fn analysis_cards(&self) -> Vec<SchematicAnalysisCard> {
         if self.analysis_cards.is_empty() {
             vec![SchematicAnalysisCard {
+                id: 1,
                 analysis: self.analysis,
                 settings: self.analysis_settings.clone(),
             }]
@@ -347,9 +371,22 @@ impl SchematicDocument {
     fn materialized_analysis_cards(&mut self) -> &mut Vec<SchematicAnalysisCard> {
         if self.analysis_cards.is_empty() {
             self.analysis_cards.push(SchematicAnalysisCard {
+                id: 1,
                 analysis: self.analysis,
                 settings: self.analysis_settings.clone(),
             });
+        }
+        let mut assigned = BTreeSet::new();
+        let mut next = 1_u64;
+        for card in &mut self.analysis_cards {
+            if card.id == 0 || !assigned.insert(card.id) {
+                while assigned.contains(&next) {
+                    next += 1;
+                }
+                card.id = next;
+                assigned.insert(next);
+            }
+            next = next.max(card.id.saturating_add(1));
         }
         &mut self.analysis_cards
     }
@@ -371,7 +408,8 @@ impl SchematicDocument {
     /// Append a card and return its source-order index.
     pub fn add_analysis_card(&mut self, analysis: SchematicAnalysis) -> usize {
         let cards = self.materialized_analysis_cards();
-        cards.push(SchematicAnalysisCard::new(analysis));
+        let id = cards.iter().map(|card| card.id).max().unwrap_or(0) + 1;
+        cards.push(SchematicAnalysisCard::new(id, analysis));
         cards.len() - 1
     }
 
@@ -384,7 +422,9 @@ impl SchematicDocument {
         if index >= cards.len() {
             return Err(invalid("schematic analysis card is unavailable"));
         }
-        cards.remove(index);
+        let removed = cards.remove(index);
+        self.scoped_output_probes
+            .retain(|scope| scope.analysis_card_id != removed.id);
         Ok(())
     }
 
@@ -754,6 +794,15 @@ impl SchematicDocument {
                 }
             }
         }
+        for scope in &mut self.scoped_output_probes {
+            for probe in &mut scope.probes {
+                if let SchematicOutputProbe::Current { source } = probe {
+                    if *source == old_reference {
+                        *source = new_reference.to_owned();
+                    }
+                }
+            }
+        }
         Ok(updated_cards)
     }
 
@@ -882,6 +931,118 @@ impl SchematicDocument {
             return Err(invalid("schematic saved output probe is unavailable"));
         }
         Ok(self.output_probes.remove(index))
+    }
+
+    /// Return scoped probes for one source-order analysis card.
+    pub fn scoped_output_probe_tokens(
+        &self,
+        card_index: usize,
+    ) -> Result<Vec<String>, SchematicError> {
+        let card = self
+            .analysis_card(card_index)
+            .ok_or_else(|| invalid("schematic analysis card is unavailable"))?;
+        Ok(self
+            .scoped_output_probes
+            .iter()
+            .find(|scope| scope.analysis_card_id == card.id)
+            .map(|scope| {
+                scope
+                    .probes
+                    .iter()
+                    .map(SchematicOutputProbe::token)
+                    .collect()
+            })
+            .unwrap_or_default())
+    }
+
+    fn scoped_probes_mut(
+        &mut self,
+        card_index: usize,
+    ) -> Result<&mut Vec<SchematicOutputProbe>, SchematicError> {
+        let card_id = self.analysis_card_mut(card_index)?.id;
+        let scope_index = match self
+            .scoped_output_probes
+            .iter()
+            .position(|scope| scope.analysis_card_id == card_id)
+        {
+            Some(index) => index,
+            None => {
+                self.scoped_output_probes.push(SchematicScopedOutputProbes {
+                    analysis_card_id: card_id,
+                    probes: Vec::new(),
+                });
+                self.scoped_output_probes.len() - 1
+            }
+        };
+        Ok(&mut self.scoped_output_probes[scope_index].probes)
+    }
+
+    /// Append a labelled non-ground voltage probe for one analysis card.
+    pub fn add_scoped_output_voltage_probe(
+        &mut self,
+        card_index: usize,
+        node: &str,
+    ) -> Result<bool, SchematicError> {
+        if !self.transfer_function_output_nodes().contains(&node) {
+            return Err(invalid(format!(
+                "{node} is not a labelled non-ground schematic net"
+            )));
+        }
+        let probe = SchematicOutputProbe::Voltage {
+            node: node.to_owned(),
+        };
+        let probes = self.scoped_probes_mut(card_index)?;
+        if probes.contains(&probe) {
+            return Ok(false);
+        }
+        probes.push(probe);
+        Ok(true)
+    }
+
+    /// Append a voltage-source branch-current probe for one analysis card.
+    pub fn add_scoped_output_current_probe(
+        &mut self,
+        card_index: usize,
+        source: &str,
+    ) -> Result<bool, SchematicError> {
+        if !self.branch_current_source_references().contains(&source) {
+            return Err(invalid(format!(
+                "{source} is not a voltage source with a branch-current result"
+            )));
+        }
+        let probe = SchematicOutputProbe::Current {
+            source: source.to_owned(),
+        };
+        let probes = self.scoped_probes_mut(card_index)?;
+        if probes.contains(&probe) {
+            return Ok(false);
+        }
+        probes.push(probe);
+        Ok(true)
+    }
+
+    /// Remove one scoped probe by its displayed source-order position.
+    pub fn remove_scoped_output_probe(
+        &mut self,
+        card_index: usize,
+        probe_index: usize,
+    ) -> Result<SchematicOutputProbe, SchematicError> {
+        let card_id = self.analysis_card_mut(card_index)?.id;
+        let scope_index = self
+            .scoped_output_probes
+            .iter()
+            .position(|scope| scope.analysis_card_id == card_id)
+            .ok_or_else(|| invalid("schematic scoped output probe is unavailable"))?;
+        if probe_index >= self.scoped_output_probes[scope_index].probes.len() {
+            return Err(invalid("schematic scoped output probe is unavailable"));
+        }
+        let removed = self.scoped_output_probes[scope_index]
+            .probes
+            .remove(probe_index);
+        if self.scoped_output_probes[scope_index].probes.is_empty() {
+            self.scoped_output_probes.remove(scope_index);
+        }
+        Ok(removed)
     }
 
     /// Return selectable independent sources for a canonical DC sweep.
@@ -1116,6 +1277,55 @@ impl SchematicDocument {
         )))
     }
 
+    fn scoped_output_directive(
+        &self,
+        card: &SchematicAnalysisCard,
+    ) -> Result<Option<String>, SchematicError> {
+        let Some(scope) = self
+            .scoped_output_probes
+            .iter()
+            .find(|scope| scope.analysis_card_id == card.id)
+        else {
+            return Ok(None);
+        };
+        if scope.probes.is_empty() {
+            return Ok(None);
+        }
+        for probe in &scope.probes {
+            match probe {
+                SchematicOutputProbe::Voltage { node }
+                    if !self
+                        .transfer_function_output_nodes()
+                        .contains(&node.as_str()) =>
+                {
+                    return Err(invalid(format!(
+                        "{node} is not a labelled non-ground schematic net"
+                    )));
+                }
+                SchematicOutputProbe::Current { source }
+                    if !self
+                        .branch_current_source_references()
+                        .contains(&source.as_str()) =>
+                {
+                    return Err(invalid(format!(
+                        "{source} is not a voltage source with a branch-current result"
+                    )));
+                }
+                _ => {}
+            }
+        }
+        Ok(Some(format!(
+            ".probe {} {}",
+            card.analysis.probe_selector(),
+            scope
+                .probes
+                .iter()
+                .map(SchematicOutputProbe::token)
+                .collect::<Vec<_>>()
+                .join(" ")
+        )))
+    }
+
     fn validate_wire_endpoints(&self, wire: &SchematicWire) -> Result<(), SchematicError> {
         if wire.start == wire.end {
             return Err(invalid("schematic wires must have distinct endpoints"));
@@ -1271,7 +1481,16 @@ impl SchematicDocument {
         if ground_count == 0 {
             return Err(invalid("schematic requires at least one ground symbol"));
         }
-        for card in self.analysis_cards() {
+        let cards = self.analysis_cards();
+        let card_ids = cards.iter().map(|card| card.id).collect::<BTreeSet<_>>();
+        for scope in &self.scoped_output_probes {
+            if scope.analysis_card_id == 0 || !card_ids.contains(&scope.analysis_card_id) {
+                return Err(invalid(
+                    "scoped output probes require an available analysis card",
+                ));
+            }
+        }
+        for card in &cards {
             for (label, value) in card
                 .analysis
                 .parameter_labels()
@@ -1285,7 +1504,8 @@ impl SchematicDocument {
                     )));
                 }
             }
-            self.analysis_directive(&card)?;
+            self.analysis_directive(card)?;
+            self.scoped_output_directive(card)?;
         }
         self.saved_output_directive()?;
         for (index, wire) in self.wires.iter().enumerate() {
@@ -1303,6 +1523,12 @@ impl SchematicDocument {
 
     /// Emit a deterministic Berkeley deck independent of placement order.
     pub fn to_berkeley_netlist(&self) -> Result<String, SchematicError> {
+        let mut document = self.clone();
+        document.migrate_legacy_analysis_cards();
+        document.to_berkeley_netlist_materialized()
+    }
+
+    fn to_berkeley_netlist_materialized(&self) -> Result<String, SchematicError> {
         self.validate()?;
 
         let (point_ids, mut sets, ground_root) = self.net_topology();
@@ -1377,6 +1603,9 @@ impl SchematicDocument {
         }
         for card in self.analysis_cards() {
             lines.push(self.analysis_directive(&card)?);
+            if let Some(probe) = self.scoped_output_directive(&card)? {
+                lines.push(probe);
+            }
         }
         if let Some(card) = self.saved_output_directive()? {
             lines.push(card);
@@ -1444,6 +1673,7 @@ mod tests {
             ],
             net_labels: Vec::new(),
             output_probes: Vec::new(),
+            scoped_output_probes: Vec::new(),
             analysis: SchematicAnalysis::OperatingPoint,
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -1596,6 +1826,7 @@ mod tests {
             wires: Vec::new(),
             net_labels: Vec::new(),
             output_probes: Vec::new(),
+            scoped_output_probes: Vec::new(),
             analysis: SchematicAnalysis::default(),
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -1684,6 +1915,7 @@ mod tests {
             }],
             net_labels: Vec::new(),
             output_probes: Vec::new(),
+            scoped_output_probes: Vec::new(),
             analysis: SchematicAnalysis::AcSweep,
             analysis_settings: SchematicAnalysisSettings::default(),
             analysis_cards: Vec::new(),
@@ -2032,6 +2264,41 @@ mod tests {
                 .to_string(),
             "schematic saved output probe is unavailable"
         );
+    }
+
+    #[test]
+    fn scoped_output_probes_follow_card_identity_and_drop_with_the_card() {
+        let mut document = rc_document();
+        document.set_net_label(point(40, 20), "OUT").unwrap();
+        let ac = document.add_analysis_card(SchematicAnalysis::AcSweep);
+        assert!(document.add_scoped_output_voltage_probe(ac, "OUT").unwrap());
+        assert!(document.add_scoped_output_current_probe(ac, "V1").unwrap());
+        assert_eq!(
+            document.scoped_output_probe_tokens(ac).unwrap(),
+            ["V(OUT)", "I(V1)"]
+        );
+
+        let deck = document.to_berkeley_netlist().unwrap();
+        assert!(deck.contains(".op\n.ac dec 10 10 10k\n.probe ac V(OUT) I(V1)\n.end"));
+        parse_netlist(&deck).unwrap();
+
+        document.move_analysis_card(ac, 0).unwrap();
+        assert_eq!(
+            document.scoped_output_probe_tokens(0).unwrap(),
+            ["V(OUT)", "I(V1)"]
+        );
+        assert!(document
+            .to_berkeley_netlist()
+            .unwrap()
+            .contains(".ac dec 10 10 10k\n.probe ac V(OUT) I(V1)\n.op\n.end"));
+        document.rename_component("V1", "VBIAS").unwrap();
+        assert_eq!(
+            document.scoped_output_probe_tokens(0).unwrap(),
+            ["V(OUT)", "I(VBIAS)"]
+        );
+        document.remove_analysis_card(0).unwrap();
+        assert!(document.scoped_output_probes.is_empty());
+        assert!(!document.to_berkeley_netlist().unwrap().contains(".probe"));
     }
 
     #[test]
