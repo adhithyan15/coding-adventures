@@ -199,17 +199,19 @@ metadata is consumed before loop lowering disables snapshot propagation.
 For a statically bounded multi-iteration `step` loop, one simple local scalar
 assignment may depend on the control or its own prior snapshot: the compiler
 simulates it once per iteration and retains the exact integer, finite real, or
-boolean result. Compound bodies, writes to the control, dynamic bounds, and
+boolean result. Multi-statement compound bodies, writes to the control, dynamic bounds, and
 integer or real loops beyond the 4,096-iteration analysis cap remain
 conservative.
 For a `while` element, a bounded static numeric comparison may likewise prove
 the initial body execution after abstractly assigning the controlled value;
 such known comparisons compose through ALGOL's boolean operators, while bare
 boolean literals, unsupported shapes, and dynamic operands remain conservative.
-A bounded control evolution may also simulate one simple local numeric
-assignment after every true predicate and retain its exact integer or finite
-real result. Predicate-dependency writes, compound bodies, nonnumeric targets,
-and loops that do not reach false within 4,096 evaluations fail closed.
+A bounded control evolution may also simulate one simple local scalar
+assignment after every true predicate and retain its exact integer, finite real,
+or boolean result. That assignment may share a compound body with exact bare
+self-assignments of ordinary local scalars. Predicate-dependency writes,
+changing siblings, string targets, and loops that do not reach false within
+4,096 evaluations fail closed.
 A conditional predicate is also evaluated when its selector is statically
 known; only the selected branch participates in the proof.
 Local string slots carry an empty verifier seed, but this is not a source-level
@@ -251,9 +253,10 @@ targets, overflow, and non-finite numeric results.
 Boolean snapshot evaluation distinguishes exact bare variables from unary
 wrappers, so direct `not` recurrences preserve their negated value rather than
 being treated as identity assignments.
-The recurrence assignment in either loop form may be wrapped in a one-statement
-compound body; labels, conditionals, declarations, and additional statements
-remain outside this bounded analysis.
+The recurrence assignment in either loop form may be wrapped in a compound
+body. A `while` recurrence may additionally have exact bare self-assignments of
+ordinary local scalars as inert siblings; labels, conditionals, declarations,
+changing siblings, and other statements remain outside this bounded analysis.
 An exact controlled-scalar assignment in a single-iteration `step`/`until`
 loop may use the same wrapper while retaining its checked post-body exit value.
 The assignment may also derive that value from the known entry control; unknown
