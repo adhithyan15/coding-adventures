@@ -3462,6 +3462,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("11.5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — a statically decidable statement condition may select a
+    // different controlled-scalar recurrence as the exact control evolves.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i; real x; for i := 1 step 1 until 10 do if i < 4 then i := i * 2 else i := i + 3; print(i + 0.25); for x := 1.0 step 0.5 until 10.0 do if x < 4.0 then x := x * 2.0 else x := x + 3.0; print(x) end",
+        expect: Expect::Stdout("11.2512.5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — an exact control recurrence remains analyzable when every
     // additional compound-body statement is an inert local scalar assignment.
     Prog {
@@ -13344,6 +13353,31 @@ fn algol_static_conditional_recurrences_run_on_every_available_standard_backend(
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the static conditional recurrences did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_static_conditional_control_recurrences_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if i < 4 then i := i * 2 else i := i + 3")
+        })
+        .expect("the static conditional control recurrences must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the static conditional control recurrences did not run"
             );
             continue;
         };

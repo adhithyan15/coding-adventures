@@ -5888,6 +5888,13 @@ impl Compiler {
         if values.len() != 3 {
             return (None, None);
         }
+        let control_actions = self.for_body_recurrence_actions(body).filter(|actions| {
+            let Ok(target_name) = self.simple_variable_name(target) else {
+                return false;
+            };
+            Self::static_body_actions_write_name(actions, &target_name)
+                && Self::static_body_actions_write_only_name(actions, &target_name)
+        });
         match target_ty {
             ScalarType::Integer => {
                 let Some(start) = self.static_assigned_integer_value(values[0]) else {
@@ -5904,6 +5911,34 @@ impl Compiler {
                     || (step < 0 && start < limit)
                 {
                     return (None, None);
+                }
+                if let Some(actions) = control_actions.as_deref() {
+                    let saved_reals = self.static_real_slots.clone();
+                    let saved_integers = self.static_integer_slots.clone();
+                    let saved_booleans = self.static_boolean_slots.clone();
+                    let exit = (|| {
+                        let mut control = start;
+                        let mut snapshots = Vec::new();
+                        for _ in 0..MAX_STATIC_STEP_ITERATIONS {
+                            self.update_for_target_snapshot(target, None, Some(control))
+                                .ok()?;
+                            self.evaluate_static_body_actions(actions, &mut snapshots)?;
+                            let body_value = self.static_assigned_integer_value(target)?;
+                            let next = body_value.checked_add(step)?;
+                            if (step > 0 && next > limit) || (step < 0 && next < limit) {
+                                return Some(next);
+                            }
+                            if next == control {
+                                return None;
+                            }
+                            control = next;
+                        }
+                        None
+                    })();
+                    self.static_real_slots = saved_reals;
+                    self.static_integer_slots = saved_integers;
+                    self.static_boolean_slots = saved_booleans;
+                    return (None, exit);
                 }
                 if let Some(expr) = self.for_body_static_target_expression(target, body) {
                     let saved_reals = self.static_real_slots.clone();
@@ -5968,6 +6003,43 @@ impl Compiler {
                     || (step < 0.0 && start < limit)
                 {
                     return (None, None);
+                }
+                if let Some(actions) = control_actions.as_deref() {
+                    let saved_reals = self.static_real_slots.clone();
+                    let saved_integers = self.static_integer_slots.clone();
+                    let saved_booleans = self.static_boolean_slots.clone();
+                    let exit = (|| {
+                        let mut control = start;
+                        let mut snapshots = Vec::new();
+                        for _ in 0..MAX_STATIC_STEP_ITERATIONS {
+                            self.update_for_target_snapshot(
+                                target,
+                                Some(control.to_string()),
+                                None,
+                            )
+                            .ok()?;
+                            self.evaluate_static_body_actions(actions, &mut snapshots)?;
+                            let body_value = self
+                                .static_assigned_real_value(target)
+                                .filter(|value| value.is_finite())?;
+                            let next = body_value + step;
+                            if !next.is_finite() {
+                                return None;
+                            }
+                            if (step > 0.0 && next > limit) || (step < 0.0 && next < limit) {
+                                return Some(next);
+                            }
+                            if next == control {
+                                return None;
+                            }
+                            control = next;
+                        }
+                        None
+                    })();
+                    self.static_real_slots = saved_reals;
+                    self.static_integer_slots = saved_integers;
+                    self.static_boolean_slots = saved_booleans;
+                    return (exit.map(|value| value.to_string()), None);
                 }
                 if let Some(expr) = self.for_body_static_target_expression(target, body) {
                     let saved_reals = self.static_real_slots.clone();
@@ -6671,6 +6743,20 @@ impl Compiler {
             } => {
                 Self::static_body_actions_write_name(then_actions, name)
                     || Self::static_body_actions_write_name(else_actions, name)
+            }
+        })
+    }
+
+    fn static_body_actions_write_only_name(actions: &[StaticBodyAction<'_>], name: &str) -> bool {
+        actions.iter().all(|action| match action {
+            StaticBodyAction::Assignment(assignment) => assignment.name == name,
+            StaticBodyAction::Conditional {
+                then_actions,
+                else_actions,
+                ..
+            } => {
+                Self::static_body_actions_write_only_name(then_actions, name)
+                    && Self::static_body_actions_write_only_name(else_actions, name)
             }
         })
     }
@@ -15168,6 +15254,34 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.5")
         }));
+    }
+
+    #[test]
+    fn al4_step_loop_tracks_statically_selected_control_recurrences() {
+        let module = compile_source(
+            "begin integer i; real x; for i := 1 step 1 until 10 do if i < 4 then i := i * 2 else i := i + 3; print(i + 0.25); for x := 1.0 step 0.5 until 10.0 do if x < 4.0 then x := x * 2.0 else x := x + 3.0; print(x) end",
+            "test",
+        )
+        .expect("static statement selectors may guide bounded control recurrences");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.25")
+        }));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "12.5")
+        }));
+    }
+
+    #[test]
+    fn al4_control_recurrence_rejects_dynamic_statement_selector() {
+        let err = compile_source(
+            "begin integer i; boolean take; for i := 1 step 1 until 10 do if take then i := i * 2 else i := i + 3; print(i + 0.25) end",
+            "test",
+        )
+        .expect_err("a dynamic selector keeps the control recurrence conservative");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
