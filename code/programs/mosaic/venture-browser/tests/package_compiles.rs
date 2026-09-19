@@ -910,6 +910,90 @@ fn save_page_reuses_one_typed_download_effect_across_generated_hosts() {
 }
 
 #[test]
+fn print_page_uses_one_typed_presenter_request_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    assert!(interface.contains("slot print-page-disabled"));
+    assert!(interface.contains("emit onPrintPage"));
+    assert!(layout.contains("HostButton [ print-page-button ]"));
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "BrowserChromeAction::PrintPage",
+        "BrowserHostEffect::Print",
+        "Print dialog requested",
+    ] {
+        assert!(core.contains(symbol), "shared print-page core omits {symbol}");
+    }
+
+    for (name, path, presenter) in [
+        (
+            "SwiftUI",
+            "host/swiftui/MosaicHost.swift",
+            "VenturePrintRequested",
+        ),
+        ("XAML", "host/xaml/MosaicHost.cs", "PrintRequested"),
+        ("Qt", "host/qt/MosaicHost.cpp", "printRequested"),
+        (
+            "Flutter",
+            "host/flutter/mosaic_host.dart",
+            "lastPrintRequest",
+        ),
+        (
+            "Compose",
+            "host/compose/MosaicHost.kt",
+            "lastPrintRequest",
+        ),
+    ] {
+        let host = read_package_file(path);
+        assert!(host.contains("print"), "{name} omits the shared effect");
+        assert!(host.contains(presenter), "{name} omits its presenter seam");
+    }
+
+    for (name, path) in [
+        (
+            "Cairo",
+            "../../../packages/rust/venture-browser-cairo/src/lib.rs",
+        ),
+        (
+            "macOS",
+            "../../../packages/rust/venture-browser-macos/src/lib.rs",
+        ),
+        (
+            "Windows",
+            "../../../packages/rust/venture-browser-windows/src/lib.rs",
+        ),
+    ] {
+        let bridge = read_package_file(path);
+        assert!(bridge.contains("onPrintPage"), "{name} omits the event");
+        assert!(
+            bridge.contains("\\\"type\\\":\\\"print\\\""),
+            "{name} omits effect serialization"
+        );
+    }
+
+    for path in [
+        "host/compose/VentureChromeInteractionTest.kt",
+        "host/flutter/venture_chrome_interaction_test.dart",
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/swiftui/MosaicHost.swift",
+        "host/web/VentureChromeInteraction.test.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("print-page-button")
+                || acceptance.contains("Print Page")
+                || acceptance.contains("onPrintPage")
+                || acceptance.contains("printPage")
+                || acceptance.contains("lastPrintRequest"),
+            "{path} omits Print Page acceptance"
+        );
+    }
+}
+
+#[test]
 fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
     let capture = venture_browser_visual_fixtures::capture("http://venture.test")
         .expect("capture Venture's deterministic real-page fixture");

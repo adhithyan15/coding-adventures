@@ -22,7 +22,7 @@ recreating the surrounding chrome in backend-specific UI code.
 - Emits carry Back, Forward, Home, Reload, address edits, Navigate, the
   storage-neutral bookmark toggle command, host-neutral Copy Address and Open
   in New Window transactions, a host-neutral Save Page download, and a
-  host-neutral View Source request.
+  host-neutral Print Page request plus View Source request.
 - `venture-browser-core::BrowserChromeController` is the shared reducer and
   slot projection for that exact contract.
 - `venture-browser-core::BrowserHostController` owns the native-host state
@@ -59,6 +59,10 @@ recreating the surrounding chrome in backend-specific UI code.
   draft and emits the existing typed download effect as a GET request. Generated
   hosts only invoke their download presenter seam; request selection,
   disabledness, status projection, and effect encoding stay shared.
+- Print Page resolves the retained page's final address and normalized title,
+  then emits one typed print effect without navigating, refetching, or reading
+  the address draft. Generated hosts only invoke their platform print presenter;
+  page identity, disabledness, status projection, and encoding remain shared.
 - Both themes expose the same parts and interaction states.
 - `tests/package_compiles.rs` guards the package contract; the package artifact
   builder compiles these exact sources, emits project shells, and verifies a

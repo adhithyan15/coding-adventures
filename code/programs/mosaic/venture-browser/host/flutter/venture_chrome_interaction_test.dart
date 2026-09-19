@@ -126,6 +126,12 @@ void main() {
       );
       debugPrint('flutter-live-stage=save-page');
 
+      await tester.tap(find.text('Print'));
+      await tester.pumpAndSettle();
+      expect(host.lastPrintRequest?['address'], 'http://127.0.0.1:$port/start');
+      expect(host.lastPrintRequest?['title'], 'Flutter Start');
+      debugPrint('flutter-live-stage=print-page');
+
       await tester.tap(find.text('Source'));
       await tester.pumpAndSettle();
       expect(host.lastAuxiliaryDocument?['kind'], 'view-source');

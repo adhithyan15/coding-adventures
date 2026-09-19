@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Add a shared Print Page transaction using the retained page identity and one
+  typed print presenter seam across every generated host.
+
 - Add a shared Save Page transaction using the committed page URL and the
   existing typed download presenter seam across every generated host.
 

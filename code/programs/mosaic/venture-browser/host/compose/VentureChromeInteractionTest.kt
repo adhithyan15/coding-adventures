@@ -103,6 +103,14 @@ class VentureChromeInteractionTest {
             rule.waitForIdle()
             println("compose-live-stage=save-page")
 
+            rule.onNodeWithTag("print-page-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) { host.lastPrintRequest != null }
+            val printRequest = assertNotNull(host.lastPrintRequest)
+            assertEquals("${server.origin}/start", printRequest["address"])
+            assertEquals("Compose Start", printRequest["title"])
+            rule.waitForIdle()
+            println("compose-live-stage=print-page")
+
             rule.onNodeWithTag("view-source-button").assertIsEnabled().performClick()
             rule.waitUntil(10_000) { host.lastAuxiliaryDocument != null }
             val sourceDocument = assertNotNull(host.lastAuxiliaryDocument)
