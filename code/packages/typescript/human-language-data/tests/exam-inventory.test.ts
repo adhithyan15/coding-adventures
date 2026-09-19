@@ -1893,7 +1893,9 @@ describe("the committed Malayalam A1 inventory", () => {
       })
       .sort((a, b) => b.fields - a.fields || a.glyph.localeCompare(b.glyph));
 
-    expect(lessons).toHaveLength(459);
+    // Chapter 107 added five medicine lessons in PR #15546 after this census
+    // was derived; those lessons do not change the glyph-owner result below.
+    expect(lessons).toHaveLength(464);
     expect(shown.size).toBe(68);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(59);
     expect(open).toEqual([
