@@ -1,6 +1,6 @@
 # BEAM09: Brainfuck byte input and EOF
 
-Status: selected 2026-09-19, implementation pending.
+Status: implemented and locally validated 2026-09-19; PR checks pending.
 
 ## Reprioritization after restart
 
@@ -42,3 +42,21 @@ Do not conflate the byte stream with BASIC/FLOW-MATIC line lookahead.
 - Run backend tests, all BEAM matrix tests, coverage-count guard and Clippy.
 - Promote only proven cells, update coverage, README and changelogs, security
   review, publish a ready PR, monitor exact-head checks, auto-merge when green.
+
+## Probe discovery
+
+The initial unrolled 256-byte echo hit the existing backend 255-variable limit.
+Use `-[>,.<-]>,.` (255 loop iterations plus one final read) for byte coverage.
+Register allocation beyond that limit is a separate backlog candidate; it does
+not block the byte-input contract and is lower priority than remaining semantic
+gaps. The three original input rows already pass real Erlang before promotion.
+
+## Validation results
+
+All three original input rows passed before promotion. The raw-byte loop,
+repeated EOF and two-live-tape-cell probes passed against real Erlang. All 35
+BEAM matrix tests and the complete iir-to-beam suite passed, as did the coverage
+count guard and Clippy for both changed Rust packages. Declarations are now
+Brainfuck 6 rows / 48 cells and non-ALGOL 210 rows / 1680 cells. The other seven
+backend columns were not rerun in this slice; do not describe declarations as
+1680 freshly executed cells.

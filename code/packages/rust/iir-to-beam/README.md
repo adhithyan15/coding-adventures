@@ -367,3 +367,7 @@ checks `start < 0 || end < start || end > length(source)` explicitly (an
 before `sublist` runs — see "Unsupported (validation rejects)" above and the
 CHANGELOG. 28 of 58 COBOL rows now declare BEAM, for 434 cells. Remaining
 COBOL features still require individual execution proofs.
+
+## 0.18.0 — BEAM09 byte input (2026-09-19)
+
+Lower `getchar` with `io:get_chars/2`, EOF zero and imported-call liveness. Byte-oriented hosts must launch Erlang with `-kernel standard_io_encoding latin1`; text-language hosts retain their encoding.

@@ -362,3 +362,9 @@ is broken.
 - Loop shape (`label start` → `load_mem c ptr` → `jmp_if_false c end` →
   body → `jmp start` → `label end`) matches the canonical form expected by
   `ir-to-wasm-compiler` for structured-loop lowering.
+
+## Unreleased — 2026-09-19
+
+Document BEAM09 byte input and EOF support supplied by iir-to-beam, including
+the required latin1 host encoding and real runtime proof in lang-aot. No frontend
+compiler behavior changed.
