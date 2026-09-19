@@ -11,6 +11,8 @@ export interface Frontmatter {
   [key: string]: FrontmatterValue;
 }
 
+const LITERAL_SCALAR_FIELDS = new Set(["headword", "romanization", "gloss", "concept_tag"]);
+
 /**
  * Split a document into its frontmatter block and body. Returns `null` for
  * frontmatter if the document doesn't open with a `---` fence.
@@ -45,28 +47,38 @@ function parseBlock(block: string): Frontmatter {
       continue;
     }
     const resolvedKey = indented && parent ? `${parent}.${key}` : key;
-    out[resolvedKey] = parseValue(value);
+    out[resolvedKey] = parseValue(value, resolvedKey);
     if (!indented) parent = undefined;
   }
   return out;
 }
 
-function parseValue(value: string): FrontmatterValue {
+function parseValue(value: string, key: string): FrontmatterValue {
   // A `[ ... ]` list — split on commas, trim, drop empties (so `[]` → `[]`).
   if (value.startsWith("[") && value.endsWith("]")) {
     return value
       .slice(1, -1)
       .split(",")
-      .map((v) => unquote(v.trim()))
+      .map((v) => unquote(v.trim(), key))
       .filter((v) => v !== "");
   }
-  return unquote(value);
+  return unquote(value, key);
 }
 
-function unquote(value: string): string {
+function unquote(value: string, key: string): string {
   if (value.length >= 2) {
     const first = value[0];
     const last = value[value.length - 1];
+    if (
+      first === '"' &&
+      last === '"' &&
+      LITERAL_SCALAR_FIELDS.has(key) &&
+      value.slice(1, -1).includes("\\")
+    ) {
+      throw new Error(
+        `${key} cannot use a double-quoted frontmatter scalar containing backslashes; use single quotes around the scalar instead`,
+      );
+    }
     if ((first === '"' && last === '"') || (first === "'" && last === "'")) {
       return value.slice(1, -1);
     }
