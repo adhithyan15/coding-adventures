@@ -1077,6 +1077,93 @@ fn share_page_uses_one_typed_presenter_request_across_generated_hosts() {
 }
 
 #[test]
+fn page_info_uses_one_typed_response_snapshot_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    assert!(interface.contains("slot page-info-disabled"));
+    assert!(interface.contains("emit onPageInfo"));
+    assert!(layout.contains("HostButton [ page-info-button ]"));
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "BrowserChromeAction::PageInfo",
+        "BrowserHostEffect::PageInfo",
+        "BrowserPageInfoRequest",
+        "Page information requested",
+        "image_resource_count",
+        "stylesheet_failure_count",
+    ] {
+        assert!(core.contains(symbol), "shared page-info core omits {symbol}");
+    }
+
+    for (name, path, presenter) in [
+        (
+            "SwiftUI",
+            "host/swiftui/MosaicHost.swift",
+            "VenturePageInfoRequested",
+        ),
+        ("XAML", "host/xaml/MosaicHost.cs", "PageInfoRequested"),
+        ("Qt", "host/qt/MosaicHost.cpp", "pageInfoRequested"),
+        (
+            "Flutter",
+            "host/flutter/mosaic_host.dart",
+            "lastPageInfoRequest",
+        ),
+        ("Compose", "host/compose/MosaicHost.kt", "lastPageInfoRequest"),
+    ] {
+        let host = read_package_file(path);
+        assert!(host.contains("page-info"), "{name} omits the shared effect");
+        assert!(host.contains(presenter), "{name} omits its presenter seam");
+    }
+
+    for (name, path) in [
+        (
+            "Cairo",
+            "../../../packages/rust/venture-browser-cairo/src/lib.rs",
+        ),
+        (
+            "macOS",
+            "../../../packages/rust/venture-browser-macos/src/lib.rs",
+        ),
+        (
+            "Windows",
+            "../../../packages/rust/venture-browser-windows/src/lib.rs",
+        ),
+    ] {
+        let bridge = read_package_file(path);
+        assert!(bridge.contains("onPageInfo"), "{name} omits the event");
+        assert!(
+            bridge.contains("\\\"type\\\":\\\"page-info\\\""),
+            "{name} omits effect serialization"
+        );
+        assert!(
+            bridge.contains("requestedAddress") && bridge.contains("imageFailureCount"),
+            "{name} omits page-info diagnostics"
+        );
+    }
+
+    for path in [
+        "host/compose/VentureChromeInteractionTest.kt",
+        "host/flutter/venture_chrome_interaction_test.dart",
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/swiftui/MosaicHost.swift",
+        "host/web/VentureChromeInteraction.test.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("page-info-button")
+                || acceptance.contains("Page Information")
+                || acceptance.contains("onPageInfo")
+                || acceptance.contains("pageInfo")
+                || acceptance.contains("lastPageInfoRequest"),
+            "{path} omits Page Information acceptance"
+        );
+    }
+}
+
+#[test]
 fn real_page_visual_fixture_remains_a_package_acceptance_dependency() {
     let capture = venture_browser_visual_fixtures::capture("http://venture.test")
         .expect("capture Venture's deterministic real-page fixture");

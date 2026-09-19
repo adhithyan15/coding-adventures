@@ -707,6 +707,9 @@ void MosaicHost::consumeEffect(const QVariantMap &response)
              == QStringLiteral("share")) {
     emit shareRequested(effect);
   } else if (effect.value(QStringLiteral("type")).toString()
+             == QStringLiteral("page-info")) {
+    emit pageInfoRequested(effect);
+  } else if (effect.value(QStringLiteral("type")).toString()
              == QStringLiteral("write-clipboard")) {
     QGuiApplication::clipboard()->setText(effect.value(QStringLiteral("text")).toString());
   }

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Map the shared Page Information event and disabled state through one typed
+  retained-response snapshot for generated SwiftUI.
+
 - Map the shared Share Page event and disabled state through one typed share
   effect for generated SwiftUI.
 

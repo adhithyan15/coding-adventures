@@ -119,6 +119,16 @@ class VentureChromeInteractionTest {
             rule.waitForIdle()
             println("compose-live-stage=share-page")
 
+            rule.onNodeWithTag("page-info-button").assertIsEnabled().performClick()
+            rule.waitUntil(10_000) { host.lastPageInfoRequest != null }
+            val pageInfoRequest = assertNotNull(host.lastPageInfoRequest)
+            assertEquals("${server.origin}/start", pageInfoRequest["requestedAddress"])
+            assertEquals("${server.origin}/start", pageInfoRequest["address"])
+            assertEquals("Compose Start", pageInfoRequest["title"])
+            assertEquals(200L, pageInfoRequest["status"])
+            rule.waitForIdle()
+            println("compose-live-stage=page-info")
+
             rule.onNodeWithTag("view-source-button").assertIsEnabled().performClick()
             rule.waitUntil(10_000) { host.lastAuxiliaryDocument != null }
             val sourceDocument = assertNotNull(host.lastAuxiliaryDocument)

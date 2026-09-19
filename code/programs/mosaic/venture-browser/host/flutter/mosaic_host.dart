@@ -293,6 +293,7 @@ class MosaicHost {
   Map<String, Object?>? lastDownloadRequest;
   Map<String, Object?>? lastPrintRequest;
   Map<String, Object?>? lastShareRequest;
+  Map<String, Object?>? lastPageInfoRequest;
   String? lastClipboardText;
   Stream<Map<String, Object?>> get filePickerRequests => _filePickerRequests.stream;
 
@@ -531,6 +532,8 @@ class MosaicHost {
       lastPrintRequest = Map<String, Object?>.from(effect);
     } else if (effect['type'] == 'share') {
       lastShareRequest = Map<String, Object?>.from(effect);
+    } else if (effect['type'] == 'page-info') {
+      lastPageInfoRequest = Map<String, Object?>.from(effect);
     } else if (effect['type'] == 'write-clipboard' && effect['text'] is String) {
       lastClipboardText = effect['text'] as String;
       unawaited(Clipboard.setData(ClipboardData(text: lastClipboardText!)));
