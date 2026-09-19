@@ -876,8 +876,35 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // the recall lesson drills: -um on every list item does the comma's work,
   // the question words and the -oo ending of ML-C03-sukhamaano do the question
   // mark's, and ennu does the quotation marks'.
-  expect(coverage.covered).toBe(215);
-  expect(coverage.unmapped).toBe(28);
+  // 215 -> 216: ML-A1-ART-02, the indefinite oru. THE PERCENTAGE TICKS, 88
+  // -> 89: 216/243 is 88.9. The first draft of this comment said "still 88"
+  // and the format assertion caught it. Recomputed, not carried.
+  // THIS ONE WAS A RELOCATION, NOT AN ADDITION, and the note said so: oru is
+  // never a headword and has no atom, yet it stands as a STANDALONE TOKEN in
+  // six lessons already, the earliest being ML-C18-mani at sequence 470. So a
+  // lesson appended at the end would have left six forward references intact.
+  // ML-C18-oru lands at 465, immediately before the first use.
+  // THE CENSUS WAS RE-DERIVED RATHER THAN TRUSTED, and it matches the note
+  // exactly: six files by a word-bounded count against the Malayalam block,
+  // ten by a bare substring grep (which also catches orupaadu's family in
+  // chapter 79 and a compound in ML-C51-blessing). Count the token.
+  // THE NOTE'S "NEVER TAUGHT" NEEDED ONE QUALIFICATION. ML-C49-perhaps:43
+  // already GLOSSED oru in prose while taking orupakshee apart -- and glossed
+  // it loosely, as "the same numeral this book counted with". The numeral this
+  // book counted with is onnu; oru is the shape it takes before a noun. That
+  // line is corrected in this tranche, which is the kind of debt a relocation
+  // is supposed to find.
+  // PLACEMENT WAS DECIDED BY WHAT IS TEACHABLE, NOT BY WHAT IS EARLIEST. The
+  // first draft put the lesson in chapter 7 beside the numerals, where almost
+  // no countable noun exists yet -- and its examples (oru maNi, oru caaya)
+  // were themselves drawn from lessons that come LATER, reintroducing the very
+  // forward references being removed. Chapter 18 is the right home: it is the
+  // first user, and everything through chapter 17 is available. Even there the
+  // choice is narrow, because the colour, family, body-part and food words all
+  // sit inside MULTI-WORD headwords and so own no single token; peru is the
+  // worked example because it is one of five single-token nouns available.
+  expect(coverage.covered).toBe(216);
+  expect(coverage.unmapped).toBe(27);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -889,6 +916,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 215/243 points covered (88%)",
+    "malayalam A1 (partial inventory): 216/243 points covered (89%)",
   );
 }, 60_000);

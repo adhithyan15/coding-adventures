@@ -326,7 +326,9 @@
       "id": "ML-A1-ART-02",
       "category": "Nirdeshakam (definiteness, and the article Malayalam does not have)",
       "label": "the indefinite: oru before a noun",
-      "probe": null,
+      "probe": [
+        "ML-LEX-ORU-01"
+      ],
       "anchorIds": [
         "ES-A1-PROXY",
         "ML-CORPUS",
@@ -336,7 +338,7 @@
         "A1-ART-03"
       ],
       "malayalamSpecific": false,
-      "note": "oru ('a, one') is never taught, although onnu ('one') is. The old note called that \"a one-word lesson\" and it is NOT: oru is already used, untaught, in SIX lessons as a standalone word -- ML-C18-mani, ML-C23-naal, ML-C39-chaaya, ML-C39-kaapi, ML-C39-paal and ML-C49-perhaps, the earliest of them long before this point would be picked up. So closing it is a RELOCATION: the lesson has to land before ML-C18-mani or those six become forward references the moment oru acquires an owner. Count the token, not the substring. A first pass reported eight files by grepping for the bare string, which also matched orupaadu (chapter 79) and a compound in ML-C51-blessing; a word-bounded count against the Malayalam block gives six. Both the 'one-word lesson' claim and the eight were wrong in the same way -- measured loosely, then trusted."
+      "note": "CLOSED BY ML-C18-oru, AND IT IS A RELOCATION RATHER THAN AN ADDITION, exactly as the old note said. oru is never a headword and has no atom, yet it stands as a STANDALONE TOKEN in six lessons already -- ML-C18-mani, ML-C23-naal, ML-C39-chaaya, ML-C39-kaapi, ML-C39-paal and ML-C49-perhaps -- so a lesson appended at the end of the track would have left all six as forward references. ML-C18-oru lands at sequence 465, immediately before ML-C18-mani (470), the earliest of them. THE CENSUS WAS RE-DERIVED RATHER THAN TRUSTED and it matches: six files by a word-bounded count against the Malayalam block, ten by a bare substring grep, which also catches the orupaadu family in chapter 79 and a compound in ML-C51-blessing. THE 'NEVER TAUGHT' CLAIM NEEDED ONE QUALIFICATION, and finding it is what a relocation is for: ML-C49-perhaps:43 already glossed oru in prose, and glossed it LOOSELY, as 'the same numeral this book counted with'. The numeral this book counted with is onnu (ML-W07-number-words-1-5); oru is the shape it takes before a noun. That line is corrected in this tranche. PLACEMENT WAS DECIDED BY WHAT IS TEACHABLE. A first draft put the lesson in chapter 7 beside the numerals and drew its examples from oru maNi and oru caaya -- words taught LATER, which would have reintroduced the forward references being removed. Chapter 18 is the first user and everything through chapter 17 is available; even so the choice is narrow, because the colour, family, body-part and food words all sit inside MULTI-WORD headwords and own no single token. peru is the worked example as one of only five single-token nouns available before 465."
     },
     {
       "id": "ML-A1-ART-03",
@@ -4555,7 +4557,7 @@
         "A1-O1-03"
       ],
       "malayalamSpecific": false,
-      "note": "RE-DERIVED FROM DIRECT OWNERS, NOT ESTIMATED. 68 distinct Malayalam characters appear in headwords across 470 lessons; 59 occur in the headword of a writing/script lesson and nine do not -- 87 per cent direct-owner closure. Counts below are headword FIELDS first and distinct TOKENS second, so repeated sibling headwords are visible instead of silently collapsed: ള ḷa U+0D33 (24 fields / 19 tokens), ശ śa U+0D36 (17 / 13), ങ ṅa U+0D19 (14 / 12), ർ chillu-r U+0D7C (11 / 11), ധ dha U+0D27 (7 / 6), ൈ ai sign U+0D48 (5 / 5), ബ ba U+0D2C (4 / 4), ഖ kha U+0D16 (3 / 3), ഛ cha U+0D1B (2 / 2). This is deliberately a DIRECT-OWNER measure: the broader script-closure gate can credit glyphs appearing inside a writing lesson's examples, so calling these nine 'never taught' would conflict with that metric. The old 'sha (14)' mixed an ambiguous English name with an unrecoverable count; U+0D36 is open, while U+0D37 ഷ is directly owned by ML-S121-letter-ssa."
+      "note": "RE-DERIVED FROM DIRECT OWNERS, NOT ESTIMATED. 68 distinct Malayalam characters appear in headwords across 471 lessons; 59 occur in the headword of a writing/script lesson and nine do not -- 87 per cent direct-owner closure. Counts below are headword FIELDS first and distinct TOKENS second, so repeated sibling headwords are visible instead of silently collapsed: ള ḷa U+0D33 (24 fields / 19 tokens), ശ śa U+0D36 (17 / 13), ങ ṅa U+0D19 (14 / 12), ർ chillu-r U+0D7C (11 / 11), ധ dha U+0D27 (7 / 6), ൈ ai sign U+0D48 (5 / 5), ബ ba U+0D2C (4 / 4), ഖ kha U+0D16 (3 / 3), ഛ cha U+0D1B (2 / 2). This is deliberately a DIRECT-OWNER measure: the broader script-closure gate can credit glyphs appearing inside a writing lesson's examples, so calling these nine 'never taught' would conflict with that metric. The old 'sha (14)' mixed an ambiguous English name with an unrecoverable count; U+0D36 is open, while U+0D37 ഷ is directly owned by ML-S121-letter-ssa."
     },
     {
       "id": "ML-A1-SCR-13",

@@ -40,7 +40,7 @@ reviews_of: [ML-C49-certainly]
 
 **ഒരുപക്ഷേ** (*orupakṣē*) — "perhaps".
 
-Take it apart and it says "on one side". ഒരു (*oru*) is 'one', the same numeral this book counted with. പക്ഷം (*pakṣaṁ*) is Sanskrit for a side, a wing, one of the alternatives on offer.
+Take it apart and it says "on one side". ഒരു (*oru*) is the *one* you met leaning on a noun — the shape ഒന്ന് takes when something follows it. പക്ഷം (*pakṣaṁ*) is Sanskrit for a side, a wing, one of the alternatives on offer.
 
 So a Malayalam speaker hedges by naming a side rather than by naming a doubt. The word is half native, half borrowed, and joined so smoothly that the seam is easy to miss.
 
