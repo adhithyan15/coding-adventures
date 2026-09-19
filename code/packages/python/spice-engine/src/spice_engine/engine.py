@@ -5846,7 +5846,7 @@ def _default_output_probes(
 ) -> list[str]:
     return [
         *(f"V({name})" for name in sorted(node_voltages)),
-        *sorted(branch_currents),
+        *(name for name in sorted(branch_currents) if _is_default_branch_current(name)),
     ]
 
 
@@ -5855,7 +5855,9 @@ def _default_transient_output_probes(points: list[TransientPoint]) -> list[str]:
     branch_names: set[str] = set()
     for point in points:
         node_names.update(point.node_voltages)
-        branch_names.update(point.branch_currents)
+        branch_names.update(
+            name for name in point.branch_currents if _is_default_branch_current(name)
+        )
     return [
         *(f"V({name})" for name in sorted(node_names)),
         *sorted(branch_names),
@@ -5867,7 +5869,9 @@ def _default_ac_output_probes(points: list[AcPoint]) -> list[str]:
     branch_names: set[str] = set()
     for point in points:
         node_names.update(point.node_voltages)
-        branch_names.update(point.branch_currents)
+        branch_names.update(
+            name for name in point.branch_currents if _is_default_branch_current(name)
+        )
     return [
         *(f"V({name})" for name in sorted(node_names)),
         *sorted(branch_names),
@@ -5876,6 +5880,11 @@ def _default_ac_output_probes(points: list[AcPoint]) -> list[str]:
 
 def _format_table_number(value: float) -> str:
     return f"{value:.6e}"
+
+
+def _is_default_branch_current(name: str) -> bool:
+    target = name[2:-1] if name.startswith("I(") and name.endswith(")") else name
+    return not target.lower().startswith(("r", "c", "_"))
 
 
 def measure_transient_probe(
@@ -7467,7 +7476,9 @@ def _voltage_sources(circuit: Circuit) -> list[VoltageSource]:
 
 def _branch_sources(
     circuit: Circuit,
-) -> list[VoltageSource | VCVS | CCVS | BSource]:
+    *,
+    include_inductors: bool = True,
+) -> list[VoltageSource | VCVS | CCVS | BSource | Inductor]:
     """Elements that require a branch unknown (current variable) in MNA.
 
     All three element types introduce a KVL constraint row and a corresponding
@@ -7499,7 +7510,17 @@ def _branch_sources(
     bsources: list[VoltageSource | VCVS | CCVS | BSource] = [
         el for el in circuit.elements if isinstance(el, BSource) and el.voltage_expr is not None
     ]
-    return vsrcs + vcvs_list + ccvs_list + bsources
+    branches: list[VoltageSource | VCVS | CCVS | BSource | Inductor] = (
+        vsrcs + vcvs_list + ccvs_list + bsources
+    )
+    if include_inductors:
+        for element in circuit.elements:
+            if not isinstance(element, Inductor):
+                continue
+            if any(candidate.name == element.name for candidate in branches):
+                raise ValueError(f"duplicate branch element name {element.name!r}")
+            branches.append(element)
+    return branches
 
 
 def _is_ground(name: str) -> bool:
@@ -7689,6 +7710,7 @@ def _dc_newton(
 
     node_v = {nd: x[i] for nd, i in node_to_idx.items()}
     branch_i = {f"I({el.name})": x[n + i] for i, el in enumerate(branch_srcs)}
+    _insert_real_passive_branch_currents(circuit, node_v, branch_i)
     return DcResult(
         node_v,
         branch_i,
@@ -8381,7 +8403,7 @@ def _stamp_dc(
     b: list[float],
     x: list[float],
     node_to_idx: dict[str, int],
-    branch_srcs: list[VoltageSource | VCVS | CCVS | BSource],
+    branch_srcs: list[VoltageSource | VCVS | CCVS | BSource | Inductor],
 ) -> None:
     """Stamp one element's MNA contribution at the current operating point."""
     n_nodes = len(node_to_idx)
@@ -8436,8 +8458,18 @@ def _stamp_dc(
         # In DC, capacitors are open circuits — no conductance contribution
         pass
     elif isinstance(el, Inductor):
-        # In DC, inductors are short circuits — model as a 0V source
-        pass
+        # In DC, an ideal inductor is a 0 V MNA branch. Keeping its branch
+        # current makes I(Lname) a first-class result instead of a guess.
+        i = branch_srcs.index(el)
+        branch_idx = n_nodes + i
+        if not _is_ground(el.n_plus):
+            node = node_to_idx[el.n_plus]
+            G[node][branch_idx] = 1.0
+            G[branch_idx][node] = 1.0
+        if not _is_ground(el.n_minus):
+            node = node_to_idx[el.n_minus]
+            G[node][branch_idx] = -1.0
+            G[branch_idx][node] = -1.0
 
 
 def _stamp_g(
@@ -10392,6 +10424,77 @@ def _node_voltage(name: str, node_voltages: dict[str, float]) -> float:
     return 0.0 if _is_ground(name) else node_voltages.get(name, 0.0)
 
 
+def _insert_real_passive_branch_currents(
+    circuit: Circuit,
+    node_voltages: dict[str, float],
+    branch_currents: dict[str, float],
+) -> None:
+    """Add exact linear passive currents to a real-valued result map."""
+    for element in circuit.elements:
+        if isinstance(element, Resistor):
+            voltage = _node_voltage(element.n_plus, node_voltages) - _node_voltage(
+                element.n_minus, node_voltages
+            )
+            branch_currents[f"I({element.name})"] = voltage / element.resistance
+        elif isinstance(element, Capacitor):
+            # Ideal capacitors are open at DC. Transient results replace this
+            # placeholder with the integrated companion-model current.
+            branch_currents.setdefault(f"I({element.name})", 0.0)
+
+
+def _insert_complex_passive_branch_currents(
+    circuit: Circuit,
+    omega: float,
+    node_voltages: dict[str, complex],
+    branch_currents: dict[str, complex],
+) -> None:
+    """Add R/C/L phasor currents, including coupled-inductor branches."""
+    inductors = _inductor_by_name(circuit)
+    coupled_names = _coupled_inductor_names(circuit)
+    for element in circuit.elements:
+        if not isinstance(element, MutualInductor):
+            continue
+        primary, secondary, mutual_inductance = _validate_mutual_inductor(element, inductors)
+        determinant = primary.inductance * secondary.inductance - mutual_inductance**2
+        primary_voltage = _node_voltage(primary.n_plus, node_voltages) - _node_voltage(
+            primary.n_minus, node_voltages
+        )
+        secondary_voltage = _node_voltage(secondary.n_plus, node_voltages) - _node_voltage(
+            secondary.n_minus, node_voltages
+        )
+        if omega == 0.0:
+            branch_currents[f"I({primary.name})"] = primary_voltage * 1.0e12
+            branch_currents[f"I({secondary.name})"] = secondary_voltage * 1.0e12
+        else:
+            branch_currents[f"I({primary.name})"] = (
+                secondary.inductance * primary_voltage - mutual_inductance * secondary_voltage
+            ) / (1j * omega * determinant)
+            branch_currents[f"I({secondary.name})"] = (
+                primary.inductance * secondary_voltage - mutual_inductance * primary_voltage
+            ) / (1j * omega * determinant)
+
+    for element in circuit.elements:
+        if isinstance(element, Resistor):
+            voltage = _node_voltage(element.n_plus, node_voltages) - _node_voltage(
+                element.n_minus, node_voltages
+            )
+            branch_currents[f"I({element.name})"] = voltage / element.resistance
+        elif isinstance(element, Capacitor):
+            voltage = _node_voltage(element.n_plus, node_voltages) - _node_voltage(
+                element.n_minus, node_voltages
+            )
+            branch_currents[f"I({element.name})"] = 1j * omega * element.capacitance * voltage
+        elif isinstance(element, Inductor) and element.name not in coupled_names:
+            voltage = _node_voltage(element.n_plus, node_voltages) - _node_voltage(
+                element.n_minus, node_voltages
+            )
+            branch_currents[f"I({element.name})"] = (
+                voltage * 1.0e12
+                if omega == 0.0
+                else voltage / (1j * omega * element.inductance)
+            )
+
+
 TransmissionLineSample = tuple[float, float, float, float, float]
 
 
@@ -11364,8 +11467,11 @@ def transient(
     initial_branch_currents = dict(op.branch_currents)
     initial_branch_currents.update(line_branch_currents)
     for el in circuit.elements:
+        if isinstance(el, Capacitor):
+            initial_branch_currents[f"I({el.name})"] = 0.0
         if isinstance(el, Inductor):
             initial_branch_currents[el.name] = el.initial_current
+            initial_branch_currents[f"I({el.name})"] = el.initial_current
     points: list[TransientPoint] = [
         TransientPoint(
             time=0.0,
@@ -11534,7 +11640,9 @@ def transient(
             )
             branch_currents = dict(op.branch_currents)
             branch_currents.update(line_branch_currents)
+            branch_currents.update({f"I({name})": current for name, current in cap_currents.items()})
             branch_currents.update(ind_currents)
+            branch_currents.update({f"I({name})": current for name, current in ind_currents.items()})
             cap_voltages_prev = dict(cap_voltages)
             points.append(TransientPoint(
                 time=t_actual,
@@ -11559,7 +11667,9 @@ def transient(
             )
             branch_currents = dict(op.branch_currents)
             branch_currents.update(line_branch_currents)
+            branch_currents.update({f"I({name})": current for name, current in cap_currents.items()})
             branch_currents.update(ind_currents)
+            branch_currents.update({f"I({name})": current for name, current in ind_currents.items()})
             cap_voltages_prev = dict(cap_voltages)
             points.append(TransientPoint(
                 time=t,
@@ -12317,7 +12427,11 @@ def pss_residual(
     }
     start_branches = result.points[0].branch_currents
     end_branches = result.points[-1].branch_currents
-    branches = set(start_branches) | set(end_branches)
+    branches = {
+        branch
+        for branch in set(start_branches) | set(end_branches)
+        if _is_default_branch_current(branch)
+    }
     branch_residuals = {
         branch: end_branches.get(branch, 0.0) - start_branches.get(branch, 0.0)
         for branch in sorted(branches)
@@ -13647,7 +13761,7 @@ def ac_sweep(
     # ---- DC operating point --------------------------------------------------
     dc = dc_op(circuit)
     node_to_idx, _nodes = _node_index(circuit)
-    branch_srcs = _branch_sources(circuit)
+    branch_srcs = _branch_sources(circuit, include_inductors=False)
     n_nodes = len(node_to_idx)
     n_branch = len(branch_srcs)
     size = n_nodes + n_branch
@@ -13710,6 +13824,7 @@ def ac_sweep(
         branch_i = {
             f"I({src.name})": x_c[n_nodes + i] for i, src in enumerate(branch_srcs)
         }
+        _insert_complex_passive_branch_currents(circuit, omega, node_v, branch_i)
         ac_points.append(AcPoint(freq=freq, node_voltages=node_v, branch_currents=branch_i))
 
     return AcResult(points=ac_points)
@@ -14373,7 +14488,7 @@ def tf(
     # ---- Step 1: DC operating point ------------------------------------------
     dc = dc_op(circuit, max_iterations=max_iterations, tol=tol)
     node_to_idx, _nodes = _node_index(circuit)
-    branch_srcs_tf = _branch_sources(circuit)
+    branch_srcs_tf = _branch_sources(circuit, include_inductors=False)
     n_nodes = len(node_to_idx)
     size = n_nodes + len(branch_srcs_tf)
 
@@ -16320,7 +16435,7 @@ def noise_ac(
 
     # ---- Matrix bookkeeping --------------------------------------------------
     node_to_idx, _nodes = _node_index(circuit)
-    branch_srcs_noise = _branch_sources(circuit)
+    branch_srcs_noise = _branch_sources(circuit, include_inductors=False)
     n_nodes = len(node_to_idx)
     n_branch_noise = len(branch_srcs_noise)
     size = n_nodes + n_branch_noise

@@ -17871,7 +17871,12 @@ fn default_output_probes(
     node_voltages
         .keys()
         .map(|name| format!("V({name})"))
-        .chain(branch_currents.keys().cloned())
+        .chain(
+            branch_currents
+                .keys()
+                .filter(|name| is_default_branch_current(name))
+                .cloned(),
+        )
         .collect()
 }
 
@@ -17880,7 +17885,13 @@ fn default_transient_output_probes(points: &[TransientPoint]) -> Vec<String> {
     let mut branch_names = BTreeSet::new();
     for point in points {
         node_names.extend(point.node_voltages.keys().cloned());
-        branch_names.extend(point.branch_currents.keys().cloned());
+        branch_names.extend(
+            point
+                .branch_currents
+                .keys()
+                .filter(|name| is_default_branch_current(name))
+                .cloned(),
+        );
     }
     node_names
         .iter()
@@ -17894,13 +17905,27 @@ fn default_ac_output_probes(points: &[AcPoint]) -> Vec<String> {
     let mut branch_names = BTreeSet::new();
     for point in points {
         node_names.extend(point.node_voltages.keys().cloned());
-        branch_names.extend(point.branch_currents.keys().cloned());
+        branch_names.extend(
+            point
+                .branch_currents
+                .keys()
+                .filter(|name| is_default_branch_current(name))
+                .cloned(),
+        );
     }
     node_names
         .iter()
         .map(|name| format!("V({name})"))
         .chain(branch_names)
         .collect()
+}
+
+fn is_default_branch_current(name: &str) -> bool {
+    let target = name
+        .strip_prefix("I(")
+        .and_then(|name| name.strip_suffix(')'))
+        .unwrap_or(name);
+    !matches!(target.as_bytes().first(), Some(b'R' | b'r' | b'C' | b'c'))
 }
 
 fn format_table_number(value: f64) -> String {
@@ -20556,6 +20581,7 @@ pub fn transient_with_method(
             time,
         )?;
         let mut branch_currents = linear_solution.branch_currents;
+        insert_transient_capacitor_currents(&capacitor_states, &mut branch_currents);
         branch_currents.extend(line_currents);
         points.push(TransientPoint {
             time,
@@ -20857,6 +20883,7 @@ pub fn pss_residual_with_tolerance(
         .branch_currents
         .keys()
         .chain(last.branch_currents.keys())
+        .filter(|name| is_default_branch_current(name))
         .cloned()
         .collect();
     branches.sort();
@@ -22188,6 +22215,7 @@ fn linear_solution_from_vector(
             solution[node_count + *branch_index],
         );
     }
+    insert_real_passive_branch_currents(circuit, &node_voltages, &mut branch_currents);
     insert_transient_inductor_currents(
         circuit,
         inductor_states,
@@ -22207,6 +22235,127 @@ fn linear_solution_from_vector(
         minimum_damping_factor: 1.0,
         solver_profile,
     }
+}
+
+fn insert_real_passive_branch_currents(
+    circuit: &Circuit,
+    node_voltages: &BTreeMap<String, f64>,
+    branch_currents: &mut BTreeMap<String, f64>,
+) {
+    for element in circuit.elements() {
+        match element {
+            Element::Resistor(resistor) => {
+                let voltage = voltage_at(node_voltages, &resistor.n1)
+                    - voltage_at(node_voltages, &resistor.n2);
+                branch_currents.insert(
+                    format!("I({})", resistor.name),
+                    voltage / resistor.resistance_ohms,
+                );
+            }
+            // An ideal capacitor is an open circuit in a DC solve. Transient
+            // samples replace this value with the companion-model current.
+            Element::Capacitor(capacitor) => {
+                branch_currents
+                    .entry(format!("I({})", capacitor.name))
+                    .or_insert(0.0);
+            }
+            _ => {}
+        }
+    }
+}
+
+fn insert_complex_passive_branch_currents(
+    circuit: &Circuit,
+    omega: f64,
+    node_voltages: &BTreeMap<String, Complex>,
+    branch_currents: &mut BTreeMap<String, Complex>,
+) {
+    let inductors = inductor_by_name(circuit);
+    let coupled_names = coupled_inductor_names(circuit);
+
+    for element in circuit.elements() {
+        if let Element::MutualInductor(mutual) = element {
+            let Some(primary) = inductors.get(&mutual.primary) else {
+                continue;
+            };
+            let Some(secondary) = inductors.get(&mutual.secondary) else {
+                continue;
+            };
+            let mutual_inductance =
+                mutual.coupling * (primary.inductance_henrys * secondary.inductance_henrys).sqrt();
+            let determinant = primary.inductance_henrys * secondary.inductance_henrys
+                - mutual_inductance * mutual_inductance;
+            let primary_voltage = complex_voltage_at(node_voltages, &primary.n1)
+                - complex_voltage_at(node_voltages, &primary.n2);
+            let secondary_voltage = complex_voltage_at(node_voltages, &secondary.n1)
+                - complex_voltage_at(node_voltages, &secondary.n2);
+            let primary_numerator = scale_complex(primary_voltage, secondary.inductance_henrys)
+                - scale_complex(secondary_voltage, mutual_inductance);
+            let secondary_numerator = scale_complex(secondary_voltage, primary.inductance_henrys)
+                - scale_complex(primary_voltage, mutual_inductance);
+            branch_currents.insert(
+                format!("I({})", primary.name),
+                divide_by_j_omega(primary_numerator, omega * determinant),
+            );
+            branch_currents.insert(
+                format!("I({})", secondary.name),
+                divide_by_j_omega(secondary_numerator, omega * determinant),
+            );
+        }
+    }
+
+    for element in circuit.elements() {
+        match element {
+            Element::Resistor(resistor) => {
+                let voltage = complex_voltage_at(node_voltages, &resistor.n1)
+                    - complex_voltage_at(node_voltages, &resistor.n2);
+                branch_currents.insert(
+                    format!("I({})", resistor.name),
+                    Complex::new(
+                        voltage.real / resistor.resistance_ohms,
+                        voltage.imag / resistor.resistance_ohms,
+                    ),
+                );
+            }
+            Element::Capacitor(capacitor) => {
+                let voltage = complex_voltage_at(node_voltages, &capacitor.n1)
+                    - complex_voltage_at(node_voltages, &capacitor.n2);
+                let scale = omega * capacitor.capacitance_farads;
+                branch_currents.insert(
+                    format!("I({})", capacitor.name),
+                    Complex::new(-scale * voltage.imag, scale * voltage.real),
+                );
+            }
+            Element::Inductor(inductor) if !coupled_names.contains(&inductor.name) => {
+                let voltage = complex_voltage_at(node_voltages, &inductor.n1)
+                    - complex_voltage_at(node_voltages, &inductor.n2);
+                branch_currents.insert(
+                    format!("I({})", inductor.name),
+                    divide_by_j_omega(voltage, omega * inductor.inductance_henrys),
+                );
+            }
+            _ => {}
+        }
+    }
+}
+
+fn complex_voltage_at(node_voltages: &BTreeMap<String, Complex>, node: &str) -> Complex {
+    if is_ground(node) {
+        Complex::zero()
+    } else {
+        node_voltages
+            .get(node)
+            .copied()
+            .unwrap_or_else(Complex::zero)
+    }
+}
+
+fn divide_by_j_omega(value: Complex, denominator: f64) -> Complex {
+    Complex::new(value.imag / denominator, -value.real / denominator)
+}
+
+fn scale_complex(value: Complex, scale: f64) -> Complex {
+    Complex::new(value.real * scale, value.imag * scale)
 }
 
 fn max_vector_delta(left: &[f64], right: &[f64]) -> f64 {
@@ -22349,6 +22498,7 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
             solution[node_count + branch_index],
         );
     }
+    insert_complex_passive_branch_currents(circuit, omega, &node_voltages, &mut branch_currents);
 
     Ok(AcSolution {
         node_voltages,
@@ -27077,6 +27227,15 @@ fn insert_transient_inductor_currents(
                 .copied()
                 .unwrap_or_else(|| inductor_current(inductor, state, node_voltages)),
         );
+    }
+}
+
+fn insert_transient_capacitor_currents(
+    capacitor_states: &[CapacitorState],
+    branch_currents: &mut BTreeMap<String, f64>,
+) {
+    for state in capacitor_states {
+        branch_currents.insert(format!("I({})", state.name), state.previous_current);
     }
 }
 

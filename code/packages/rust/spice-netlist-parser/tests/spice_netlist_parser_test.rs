@@ -685,22 +685,22 @@ fn rejects_output_cards_with_missing_or_unknown_probes() {
     let probe_error = parse_netlist(".plot tran P(out)").unwrap_err();
     assert!(probe_error
         .to_string()
-        .contains(".plot probe must be V(node[,node]) or I(source)"));
+        .contains(".plot probe must be V(node[,node]) or I(element)"));
 
     let save_error = parse_netlist(".save P(out)").unwrap_err();
     assert!(save_error
         .to_string()
-        .contains(".save probe must be V(node[,node]) or I(source)"));
+        .contains(".save probe must be V(node[,node]) or I(element)"));
 
     let probe_error = parse_netlist(".probe tran").unwrap_err();
     assert!(probe_error
         .to_string()
-        .contains(".probe probe must be V(node[,node]) or I(source)"));
+        .contains(".probe probe must be V(node[,node]) or I(element)"));
 
     let current_error = parse_netlist(".save I(Vin,Vout)").unwrap_err();
     assert!(current_error
         .to_string()
-        .contains(".save probe must be V(node[,node]) or I(source)"));
+        .contains(".save probe must be V(node[,node]) or I(element)"));
 
     let measure_at_error = parse_netlist(".measure tran final FIND V(out)").unwrap_err();
     assert!(measure_at_error
@@ -721,7 +721,9 @@ V1 in 0 DC 1 AC 1
 R1 in out 1k
 R2 out 0 1k
 C1 out 0 1u IC=0
-.save V(out) V(in,out) V(IN,OUT)
+L1 in coil 1m
+R3 coil 0 1k
+.save V(out) V(in,out) V(IN,OUT) I(R1) I(C1) I(L1)
 .print dc V(in)
 .plot ac V(in)
 .probe tran I(V1)
@@ -760,12 +762,36 @@ C1 out 0 1u IC=0
         selected_real(outputs[1].rows.last().unwrap().values.get("V(in)").unwrap()),
         1.0,
     );
+    assert_close(
+        selected_real(outputs[0].rows[0].values.get("I(R1)").unwrap()),
+        0.5e-3,
+    );
+    assert_close(
+        selected_real(outputs[0].rows[0].values.get("I(C1)").unwrap()),
+        0.0,
+    );
+    assert_close(
+        selected_real(outputs[0].rows[0].values.get("I(L1)").unwrap()),
+        1.0e-3,
+    );
     assert!(matches!(
         outputs[2].rows[0].values.get("V(out)").unwrap(),
         SelectedOutputValue::Complex(_)
     ));
     assert!(matches!(
         outputs[2].rows[0].values.get("V(in,out)").unwrap(),
+        SelectedOutputValue::Complex(_)
+    ));
+    assert!(matches!(
+        outputs[2].rows[0].values.get("I(R1)").unwrap(),
+        SelectedOutputValue::Complex(_)
+    ));
+    assert!(matches!(
+        outputs[2].rows[0].values.get("I(C1)").unwrap(),
+        SelectedOutputValue::Complex(_)
+    ));
+    assert!(matches!(
+        outputs[2].rows[0].values.get("I(L1)").unwrap(),
         SelectedOutputValue::Complex(_)
     ));
     let SelectedOutputValue::Complex(differential) =
@@ -784,6 +810,8 @@ C1 out 0 1u IC=0
     assert_close(differential.real, positive.real - negative.real);
     assert_close(differential.imag, positive.imag - negative.imag);
     assert!(outputs[3].rows.last().unwrap().values.contains_key("I(V1)"));
+    assert!(outputs[3].rows.last().unwrap().values.contains_key("I(C1)"));
+    assert!(outputs[3].rows.last().unwrap().values.contains_key("I(L1)"));
 
     let measures = parsed.measure_results(&results).unwrap();
     assert_eq!(
@@ -840,7 +868,7 @@ fn rejects_four_cards_with_missing_or_unknown_probes() {
     let probe_error = parse_netlist(".four 1k P(out)").unwrap_err();
     assert!(probe_error
         .to_string()
-        .contains(".four probe must be V(node[,node]) or I(source)"));
+        .contains(".four probe must be V(node[,node]) or I(element)"));
 }
 
 #[test]
@@ -891,7 +919,7 @@ fn rejects_distortion_and_pole_zero_cards_with_invalid_shapes() {
     let probe_error = parse_netlist(".disto dec 5 1k 1meg P(out)").unwrap_err();
     assert!(probe_error
         .to_string()
-        .contains(".disto probe must be V(node[,node]) or I(source)"));
+        .contains(".disto probe must be V(node[,node]) or I(element)"));
 
     let output_error = parse_netlist(".pz out Vin").unwrap_err();
     assert!(output_error
