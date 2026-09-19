@@ -1906,7 +1906,18 @@ describe("the committed Malayalam A1 inventory", () => {
     // 470 -> 471: ML-C18-oru, inserted at sequence 465. It teaches a WORD, not
     // a glyph, so the three counts below it stay put again -- oru's characters
     // are all long since owned.
-    expect(lessons).toHaveLength(471);
+    // 471 -> 474: chapter 109's three lessons. THE FIRST DRAFT OF THIS COMMENT
+    // CLAIMED THE COUNTS BELOW WOULD HOLD, on the reasoning that a chapter
+    // teaching a CONSTRUCTION out of pieces already owned adds no headword and
+    // therefore no glyph. Half of that is wrong and the test caught it: the
+    // chapter's headwords are whole Malayalam sentences, so they do enter the
+    // census. dha goes 7/6 -> 8/7 and the ai sign 5/5 -> 6/6, because
+    // adhyaapakanum and vaidyanum are INFLECTED forms of taught words and count
+    // as fresh tokens even though no new word is taught.
+    // What does hold is the part that matters: `shown` stays 68 and the
+    // directly-owned overlap stays 59, so no NEW glyph is opened -- two already
+    // open ones merely deepen by one field and one token each.
+    expect(lessons).toHaveLength(474);
     expect(shown.size).toBe(68);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(59);
     expect(open).toEqual([
@@ -1914,8 +1925,8 @@ describe("the committed Malayalam A1 inventory", () => {
       { glyph: "ശ", fields: 17, tokens: 13 },
       { glyph: "ങ", fields: 14, tokens: 12 },
       { glyph: "ർ", fields: 11, tokens: 11 },
-      { glyph: "ധ", fields: 7, tokens: 6 },
-      { glyph: "ൈ", fields: 5, tokens: 5 },
+      { glyph: "ധ", fields: 8, tokens: 7 },
+      { glyph: "ൈ", fields: 6, tokens: 6 },
       { glyph: "ബ", fields: 4, tokens: 4 },
       { glyph: "ഖ", fields: 3, tokens: 3 },
       { glyph: "ഛ", fields: 2, tokens: 2 },
@@ -2764,8 +2775,28 @@ describe("the committed Malayalam A1 inventory", () => {
     // choice is narrow, because the colour, family, body-part and food words all
     // sit inside MULTI-WORD headwords and so own no single token; peru is the
     // worked example because it is one of five single-token nouns available.
-    expect(coverage.covered).toBe(216);
-    expect(coverage.unmapped).toBe(27);
+    // 216 -> 217: ML-A1-NEG-03, negative coordination. 217/243 is 89.3, still 89.
+    // ITS NOTE NAMED A BLOCKER THAT NO LONGER EXISTS -- failure-mode 3, a note
+    // simply false about what is taught. "Untaught, and it depends on the
+    // missing coordinator at ML-A1-JOIN-01" was written before chapter 70, which
+    // teaches -um across four lessons (2390-2420). The coordinator arrived; the
+    // note was never re-read.
+    // THE CONSTRUCTION WAS CENSUSED BY SHAPE, NOT BY THE ENGLISH WORD. A grep
+    // for "neither" finds only ordinary English prose (a sound description in
+    // ML-C33-ezhutuka, a remark in ML-C106-ordering). The real check is a regex
+    // for two -um-marked words followed by a negative on the same line: ZERO
+    // matches across the corpus. Genuinely untaught.
+    // IT COSTS NO NEW VOCABULARY, which is the whole shape of the point:
+    // Malayalam builds it from -um on every item plus a negative at the end, and
+    // both halves are long taught -- illa since sequence 40, alla since chapter
+    // 77. Two atoms, three lessons, no new headword.
+    // THE CHAPTER EXISTS BECAUSE OF THE SECOND NEGATIVE. ML-C77-alla teaches
+    // that Malayalam makes you pick where English spends one word on both, and
+    // English's "neither ... nor" hides that choice completely. So the tranche
+    // is two lessons, not one: caayayum kaappiyum ILLA against adhyaapakanum
+    // vaidyanum ALLA, identical on the left and different only in the last word.
+    expect(coverage.covered).toBe(217);
+    expect(coverage.unmapped).toBe(26);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2821,7 +2852,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 216/243 points covered (89%)",
+      "malayalam A1 (partial inventory): 217/243 points covered (89%)",
     );
   }, 60_000);
 });

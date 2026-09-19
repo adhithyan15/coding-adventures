@@ -903,8 +903,28 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
   // choice is narrow, because the colour, family, body-part and food words all
   // sit inside MULTI-WORD headwords and so own no single token; peru is the
   // worked example because it is one of five single-token nouns available.
-  expect(coverage.covered).toBe(216);
-  expect(coverage.unmapped).toBe(27);
+  // 216 -> 217: ML-A1-NEG-03, negative coordination. 217/243 is 89.3, still 89.
+  // ITS NOTE NAMED A BLOCKER THAT NO LONGER EXISTS -- failure-mode 3, a note
+  // simply false about what is taught. "Untaught, and it depends on the
+  // missing coordinator at ML-A1-JOIN-01" was written before chapter 70, which
+  // teaches -um across four lessons (2390-2420). The coordinator arrived; the
+  // note was never re-read.
+  // THE CONSTRUCTION WAS CENSUSED BY SHAPE, NOT BY THE ENGLISH WORD. A grep
+  // for "neither" finds only ordinary English prose (a sound description in
+  // ML-C33-ezhutuka, a remark in ML-C106-ordering). The real check is a regex
+  // for two -um-marked words followed by a negative on the same line: ZERO
+  // matches across the corpus. Genuinely untaught.
+  // IT COSTS NO NEW VOCABULARY, which is the whole shape of the point:
+  // Malayalam builds it from -um on every item plus a negative at the end, and
+  // both halves are long taught -- illa since sequence 40, alla since chapter
+  // 77. Two atoms, three lessons, no new headword.
+  // THE CHAPTER EXISTS BECAUSE OF THE SECOND NEGATIVE. ML-C77-alla teaches
+  // that Malayalam makes you pick where English spends one word on both, and
+  // English's "neither ... nor" hides that choice completely. So the tranche
+  // is two lessons, not one: caayayum kaappiyum ILLA against adhyaapakanum
+  // vaidyanum ALLA, identical on the left and different only in the last word.
+  expect(coverage.covered).toBe(217);
+  expect(coverage.unmapped).toBe(26);
   expect(coverage.partial).toBe(0);
   // ML-A1-NUM-05 was one of the thirteen ordinal points HL-C354 left open.
   // Malayalam's -aam has no exceptions at all, so all eleven ordinals follow
@@ -916,6 +936,6 @@ it("pins Malayalam A1 coverage, and the ordinal point the tranche closed", () =>
     covered: 8,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "malayalam A1 (partial inventory): 216/243 points covered (89%)",
+    "malayalam A1 (partial inventory): 217/243 points covered (89%)",
   );
 }, 60_000);

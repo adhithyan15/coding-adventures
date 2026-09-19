@@ -1,0 +1,17 @@
+{
+  "language": "malayalam",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:971cf27a8f0a6256",
+  "lessonIds": [
+    "ML-C109-neither-here",
+    "ML-C109-neither-so",
+    "ML-R109-neither-recall"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "malayalam/narration/ch109.txt",
+  "json": "malayalam/narration/ch109.json",
+  "textHash": "fnv1a64:d3977e9ddfb5b1d4",
+  "jsonHash": "fnv1a64:79906ae60d920be3",
+  "findings": []
+}

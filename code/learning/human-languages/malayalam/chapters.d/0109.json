@@ -1,0 +1,16 @@
+{
+  "chapter": 109,
+  "title": "Neither This Nor That",
+  "label": "ch:ml-neither",
+  "canDo": "I can deny a pair of things at once, and pick the right negative for what I am denying.",
+  "payoff": {
+    "lesson": "ML-R109-neither-recall",
+    "kind": "production",
+    "summary": "From cold: both shapes of neither-nor, and the question English never makes you answer.",
+    "assesses": [
+      "ML-GRAMMAR-C109-NEITHER-01",
+      "ML-GRAMMAR-C109-NEITHER-02"
+    ],
+    "note": "THE NOTE NAMED A BLOCKER THAT NO LONGER EXISTS. 'Untaught, and it depends on the missing coordinator at ML-A1-JOIN-01' was written before chapter 70, which teaches -um across four lessons (2390-2420). The coordinator arrived and the note was never re-read -- failure-mode 3, a note simply false about what is taught, and the cheapest kind of point to close once spotted. THE CONSTRUCTION WAS CENSUSED BY SHAPE, NOT BY THE ENGLISH WORD. Grepping 'neither' finds only ordinary English prose: a sound description in ML-C33-ezhutuka, a remark in ML-C106-ordering. The real check is a regex for two -um-marked words followed by a negative on the same line, and it returns ZERO across the corpus. Genuinely untaught. IT COSTS NO NEW VOCABULARY, which is the shape of the whole point. Malayalam builds neither-nor from -um on every item plus a negative at the end, and both halves are long taught: illa since sequence 40, alla since chapter 77. Two atoms, three lessons, no new headword -- and the recall asks the learner outright how many new words the chapter cost. THE SECOND NEGATIVE IS WHY THIS IS TWO LESSONS AND NOT ONE. ML-C77-alla teaches that Malayalam makes you pick where English spends one word on both, and English's 'neither ... nor' hides that choice completely. So the chapter runs caayayum kaappiyum ILLA against adhyaapakanum vaidyanum ALLA: identical on the left, different only in the last word. The chapter is a continuation of C77's line that Malayalam negates twice and English only once. A CLAIM I WROTE WAS WRONG AND THE CENSUS TEST CAUGHT IT. The pin comment said a chapter teaching a CONSTRUCTION out of owned pieces adds no headword and therefore no glyph. The headwords here are whole Malayalam sentences, so they do enter the glyph census: dha goes 7/6 to 8/7 and the ai sign 5/5 to 6/6, because adhyaapakanum and vaidyanum are INFLECTED forms and count as fresh tokens even though no new word is taught. What does hold is that `shown` stays 68 and the directly-owned overlap stays 59 -- no NEW glyph is opened, two already-open ones merely deepen."
+  }
+}
