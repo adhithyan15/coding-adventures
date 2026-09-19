@@ -1294,6 +1294,24 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     return nil
   }
 
+  private func findAccessibleControl(
+    identifier: String, in element: NSAccessibilityProtocol,
+    visited: inout Set<ObjectIdentifier>
+  ) -> NSAccessibilityProtocol? {
+    let objectIdentifier = ObjectIdentifier(element as AnyObject)
+    guard visited.insert(objectIdentifier).inserted else { return nil }
+    if element.accessibilityIdentifier() == identifier { return element }
+    for child in element.accessibilityChildren() ?? [] {
+      guard let child = child as? NSAccessibilityProtocol else { continue }
+      if let found = findAccessibleControl(
+        identifier: identifier, in: child, visited: &visited)
+      {
+        return found
+      }
+    }
+    return nil
+  }
+
   private func nativeToolbarPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let position: CGFloat
     switch identifier {
@@ -1323,9 +1341,15 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
 
   private func performNativeButtonClick(identifier: String) -> Bool {
     NSApp.activate(ignoringOtherApps: true)
+    var visited = Set<ObjectIdentifier>()
+    if let control = findAccessibleControl(
+      identifier: identifier, in: NSApp, visited: &visited),
+      control.accessibilityPerformPress()
+    {
+      return true
+    }
     guard let (point, window) = nativeToolbarPoint(identifier: identifier) else { return false }
-    // SwiftUI owns these buttons inside its hosting view. Target their stable Mosaic toolbar
-    // positions relative to the real native address field, then send ordinary AppKit events.
+    // Retain an event-based fallback for hosts that do not vend SwiftUI accessibility children.
     sendPrimaryClick(at: point, to: window)
     return true
   }
@@ -1379,14 +1403,10 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
         isARepeat: false,
         keyCode: keyCode)
     else { return false }
-    if modifiers.isEmpty {
-      NSApp.sendEvent(event)
-    } else {
-      // Command-key events are consumed by AppKit's key-equivalent pass before the
-      // first responder sees them. Deliver the real NSEvent to the production
-      // content-surface override so this gate exercises its shortcut reducer.
-      contentView.keyDown(with: event)
-    }
+    // Deliver the real NSEvent to the production content-surface override. Command
+    // keys are consumed by AppKit's key-equivalent pass, while ordinary navigation
+    // keys can be dropped as activation settles after an accessibility button press.
+    contentView.keyDown(with: event)
     return true
   }
 
