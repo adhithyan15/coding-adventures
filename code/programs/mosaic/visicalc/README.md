@@ -1,5 +1,26 @@
 # VisiCalc Mosaic application
 
+## Release artifacts
+
+The `VisiCalc release artifacts` workflow builds the shared web consumer and
+packages its production HTML, JavaScript and Rust WASM engine. Pull requests
+validate the pipeline without publishing. A `visicalc-vX.Y.Z` tag (optionally
+with a prerelease suffix) creates a **draft prerelease** with a versioned ZIP,
+SHA-256 checksum file, source commit and per-file checksums. Existing releases
+are never replaced by this workflow.
+
+Extract the ZIP, then run `python -m http.server 8080 --bind 127.0.0.1` from its
+root and open `http://127.0.0.1:8080/`. Python 3 and a modern browser are the only
+launch prerequisites; no source checkout, npm or Rust installation is needed.
+Keep previous versions in separate folders for rollback, and save your workbook
+before switching versions. File pickers require browser support.
+
+The separate CI verification job downloads the artifact without a checkout,
+checks archive and file hashes, serves it over HTTP and validates its WASM.
+These checks do not establish full browser interaction or native acceptance.
+Downloaded GitHub release browser/persistence tests, native bundles, visual and
+accessibility acceptance, and promotion remain tracked in #14282/#14267.
+
 The root VisiCalc component composes the formula field, workbook toolbar and
 mosaic-pkg-grid. The Rust visicalc-mosaic-app adapter supplies all presentation
 slots and owns selection, editing, viewport coordinates and workbook operations.
