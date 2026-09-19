@@ -29,6 +29,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       bookmarkLabel: "Bookmark",
       bookmarkDisabled: true,
       viewSourceDisabled: true,
+      findOpen: false,
       findQuery: "",
       findResultLabel: "",
       findDisabled: true,
@@ -54,6 +55,12 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
         if (request.event.type === "findNext") {
           props = { ...props, findResultLabel: "2 of 2" };
         }
+        if (request.event.type === "findOpen") {
+          props = { ...props, findOpen: true };
+        }
+        if (request.event.type === "findClose") {
+          props = { ...props, findOpen: false, findQuery: "", findResultLabel: "" };
+        }
         props = {
           ...props,
           statusText: `Handled ${request.event.type} through MosaicHost`,
@@ -77,13 +84,14 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(controls.viewSource.disabled, true);
     assert.equal(controls.go.disabled, true);
     assert.equal(controls.address.readOnly, true);
-    assert.equal(controls.find.readOnly, true);
+    assert.equal(controls.find, undefined);
     assert.match(renderScope(root).textContent, /Ready from MosaicHost/);
     assert.ok(root.querySelector(`[data-venture-host-surface="${backend}"]`));
 
     controls.back.click();
     controls.bookmark.click();
     controls.viewSource.click();
+    controls.findOpen.click();
     controls.go.click();
     await settle();
     assert.deepEqual(calls, [], "disabled native buttons must suppress dispatch");
@@ -107,7 +115,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(controls.viewSource.disabled, false);
     assert.equal(controls.go.disabled, false);
     assert.equal(controls.address.readOnly, false);
-    assert.equal(controls.find.readOnly, false);
+    assert.equal(controls.find, undefined);
     assert.match(renderScope(root).textContent, /Enabled by mosaic-host-ready/);
 
     controls.bookmark.click();
@@ -121,6 +129,11 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(calls.at(-1)?.type, "viewSource");
 
     controls = readControls(root);
+    controls.findOpen.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "findOpen");
+    controls = readControls(root);
+    assert.equal(controls.find.readOnly, false);
     controls.find.value = "venture";
     controls.find.dispatchEvent(new Event(backend === "html" ? "input" : "change", { bubbles: true }));
     await settle();
@@ -131,6 +144,12 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     await settle();
     assert.equal(calls.at(-1)?.type, "findNext");
     assert.match(renderScope(root).textContent, /2 of 2/);
+    controls = readControls(root);
+    controls.findClose.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "findClose");
+    controls = readControls(root);
+    assert.equal(controls.find, undefined);
 
     controls = readControls(root);
     const nextAddress = "https://venture.test/next";
@@ -155,7 +174,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(calls.at(-1)?.type, "navigate");
     assert.deepEqual(
       calls.map(event => event.type),
-      ["toggleBookmark", "viewSource", "findChange", "findNext", "addressChange", "navigate", "navigate"],
+      ["toggleBookmark", "viewSource", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
     );
     assert.match(renderScope(root).textContent, /Handled navigate through MosaicHost/);
   } finally {
@@ -201,8 +220,7 @@ function readControls(root) {
   );
   const [address, find] = scope.querySelectorAll("input");
   assert.ok(address, "address input must exist");
-  assert.ok(find, "find input must exist");
-  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Remove Bookmark", "View Source", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Bookmark", "Remove Bookmark", "View Source", "Find", "Go"]) {
     if (label === "Bookmark" || label === "Remove Bookmark") continue;
     assert.ok(buttons.has(label), `${label} button must exist`);
   }
@@ -214,8 +232,10 @@ function readControls(root) {
     reload: buttons.get("Reload"),
     bookmark,
     viewSource: buttons.get("View Source"),
+    findOpen: buttons.get("Find"),
     go: buttons.get("Go"),
     findNext: buttons.get("Next"),
+    findClose: buttons.get("Close Find"),
     address,
     find,
   };

@@ -13,6 +13,7 @@ component VentureChrome {
   slot bookmark-label      : text ;
   slot bookmark-disabled   : bool ;
   slot view-source-disabled : bool ;
+  slot find-open           : bool ;
   slot find-query          : text ;
   slot find-result-label   : text ;
   slot find-disabled       : bool ;
@@ -25,6 +26,7 @@ component VentureChrome {
   emit onReload ;
   emit onToggleBookmark ;
   emit onViewSource ;
+  emit onFindOpen ;
   emit onFindChange ( value : text ) ;
   emit onFindNext ;
   emit onFindPrevious ;

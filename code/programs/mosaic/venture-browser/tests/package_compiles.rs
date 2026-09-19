@@ -595,7 +595,9 @@ fn find_in_page_uses_one_shared_transaction_across_generated_hosts() {
     for symbol in [
         "slot find-query",
         "slot find-result-label",
+        "slot find-open",
         "slot find-disabled",
+        "emit onFindOpen",
         "emit onFindChange",
         "emit onFindNext",
         "emit onFindPrevious",
@@ -605,6 +607,7 @@ fn find_in_page_uses_one_shared_transaction_across_generated_hosts() {
     }
     for symbol in [
         "HostInput [ find-input ]",
+        "HostButton [ find-button ]",
         "HostButton [ find-previous-button ]",
         "HostButton [ find-next-button ]",
         "HostButton [ find-close-button ]",
@@ -631,7 +634,7 @@ fn find_in_page_uses_one_shared_transaction_across_generated_hosts() {
         ("Windows", "../../../packages/rust/venture-browser-windows/src/lib.rs"),
     ] {
         let host = read_package_file(path);
-        for symbol in ["onFindChange", "onFindNext", "onFindPrevious", "onFindClose"] {
+        for symbol in ["onFindOpen", "onFindChange", "onFindNext", "onFindPrevious", "onFindClose"] {
             assert!(host.contains(symbol), "{name} bridge omits {symbol}");
         }
     }

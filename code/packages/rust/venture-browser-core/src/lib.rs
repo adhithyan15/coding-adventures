@@ -325,6 +325,7 @@ fn navigation_target_offset(node: &PositionedNode, target: &str) -> Option<f64> 
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct BrowserFindState {
+    pub open: bool,
     pub query: String,
     pub match_count: usize,
     pub active_match: Option<usize>,
@@ -441,7 +442,7 @@ fn positioned_node_is_fixed(node: &PositionedNode) -> bool {
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 12] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 13] = [
     "address",
     "page-title",
     "status-text",
@@ -450,6 +451,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 12] = [
     "bookmark-label",
     "bookmark-disabled",
     "view-source-disabled",
+    "find-open",
     "find-query",
     "find-result-label",
     "find-disabled",
@@ -460,13 +462,14 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 12] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 12] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 13] = [
     "onBack",
     "onForward",
     "onHome",
     "onReload",
     "onToggleBookmark",
     "onViewSource",
+    "onFindOpen",
     "onFindChange",
     "onFindNext",
     "onFindPrevious",
@@ -1556,6 +1559,7 @@ pub enum BrowserChromeAction {
     Navigate(BrowserNavigation),
     ToggleCurrentBookmark,
     ViewSource,
+    OpenFind,
     FindQuery(String),
     FindNext,
     FindPrevious,
@@ -1571,6 +1575,7 @@ pub enum BrowserChromeEvent {
     Reload,
     ToggleBookmark,
     ViewSource,
+    FindOpen,
     FindChange(String),
     FindNext,
     FindPrevious,
@@ -1588,6 +1593,7 @@ impl BrowserChromeEvent {
             Self::Reload => "onReload",
             Self::ToggleBookmark => "onToggleBookmark",
             Self::ViewSource => "onViewSource",
+            Self::FindOpen => "onFindOpen",
             Self::FindChange(_) => "onFindChange",
             Self::FindNext => "onFindNext",
             Self::FindPrevious => "onFindPrevious",
@@ -1609,6 +1615,7 @@ pub struct BrowserChromeProps {
     pub bookmark_label: String,
     pub bookmark_disabled: bool,
     pub view_source_disabled: bool,
+    pub find_open: bool,
     pub find_query: String,
     pub find_result_label: String,
     pub find_disabled: bool,
@@ -1687,6 +1694,9 @@ impl BrowserChromeController {
             BrowserChromeEvent::ViewSource if session.viewport().is_some() => {
                 Some(BrowserChromeAction::ViewSource)
             }
+            BrowserChromeEvent::FindOpen if session.viewport().is_some() => {
+                Some(BrowserChromeAction::OpenFind)
+            }
             BrowserChromeEvent::FindChange(query) if session.viewport().is_some() => {
                 Some(BrowserChromeAction::FindQuery(query))
             }
@@ -1702,6 +1712,7 @@ impl BrowserChromeController {
             }
             BrowserChromeEvent::ToggleBookmark
             | BrowserChromeEvent::ViewSource
+            | BrowserChromeEvent::FindOpen
             | BrowserChromeEvent::FindChange(_)
             | BrowserChromeEvent::FindNext
             | BrowserChromeEvent::FindPrevious => None,
@@ -1737,6 +1748,7 @@ impl BrowserChromeController {
             .to_string(),
             bookmark_disabled: navigation_disabled || session.history().current_url().is_none(),
             view_source_disabled: navigation_disabled || session.viewport().is_none(),
+            find_open: session.find_state().open,
             find_query: session.find_state().query.clone(),
             find_result_label: session.find_state().result_label(),
             find_disabled: navigation_disabled || session.viewport().is_none(),
@@ -1863,6 +1875,9 @@ impl BrowserHostController {
                         BrowserAuxiliaryDocument::view_source(page),
                     ),
                 ))
+            }
+            BrowserChromeAction::OpenFind => {
+                Ok(BrowserHostEventOutcome::changed(self.session.open_find()))
             }
             BrowserChromeAction::FindQuery(query) => Ok(BrowserHostEventOutcome::changed(
                 self.session.find_in_page(&query),
@@ -2151,6 +2166,12 @@ impl BrowserSession {
         &self.find_diagnostics
     }
 
+    pub fn open_find(&mut self) -> bool {
+        let changed = !self.find_state.open;
+        self.find_state.open = true;
+        changed
+    }
+
     pub fn find_in_page(&mut self, query: &str) -> bool {
         let query = query.trim().to_string();
         let previous = self.find_state.clone();
@@ -2182,6 +2203,7 @@ impl BrowserSession {
             });
         }
         self.find_state = BrowserFindState {
+            open: true,
             query,
             match_count: self.find_matches.len(),
             active_match: (!self.find_matches.is_empty()).then_some(0),
@@ -2202,7 +2224,9 @@ impl BrowserSession {
     }
 
     pub fn close_find(&mut self) -> bool {
-        let changed = !self.find_state.query.is_empty() || !self.find_matches.is_empty();
+        let changed = self.find_state.open
+            || !self.find_state.query.is_empty()
+            || !self.find_matches.is_empty();
         self.find_state = BrowserFindState::default();
         self.find_matches.clear();
         self.find_diagnostics.clear();
@@ -6830,6 +6854,7 @@ mod tests {
                 bookmark_label: "Bookmark".into(),
                 bookmark_disabled: true,
                 view_source_disabled: true,
+                find_open: false,
                 find_query: String::new(),
                 find_result_label: String::new(),
                 find_disabled: true,
@@ -6886,6 +6911,7 @@ mod tests {
                 bookmark_label: "Bookmark".into(),
                 bookmark_disabled: false,
                 view_source_disabled: false,
+                find_open: false,
                 find_query: String::new(),
                 find_result_label: String::new(),
                 find_disabled: false,
@@ -6942,10 +6968,13 @@ mod tests {
             .execute(BrowserNavigation::Home, &pipeline, &fetcher)
             .unwrap();
 
+        assert!(session.open_find());
+        assert!(!session.open_find());
         assert!(session.find_in_page("VENTURE"));
         assert_eq!(
             session.find_state(),
             &BrowserFindState {
+                open: true,
                 query: "VENTURE".into(),
                 match_count: 2,
                 active_match: Some(0),
@@ -6965,6 +6994,7 @@ mod tests {
 
         assert!(session.close_find());
         assert_eq!(session.find_state(), &BrowserFindState::default());
+        assert!(!session.close_find());
         assert_eq!(find_overlay_count(session.viewport().unwrap()), 0);
 
         let many = format!("<p>{}</p>", "match ".repeat(MAX_FIND_MATCHES + 1));
@@ -7013,6 +7043,7 @@ mod tests {
             BrowserChromeEvent::Reload,
             BrowserChromeEvent::ToggleBookmark,
             BrowserChromeEvent::ViewSource,
+            BrowserChromeEvent::FindOpen,
             BrowserChromeEvent::FindChange(String::new()),
             BrowserChromeEvent::FindNext,
             BrowserChromeEvent::FindPrevious,

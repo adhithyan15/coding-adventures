@@ -26,6 +26,12 @@ TestCase {
                     }
                 }
             }
+            if (event.event === "onFindOpen") {
+                return { "props": { "findOpen": true } }
+            }
+            if (event.event === "onFindClose") {
+                return { "props": { "findOpen": false, "findQuery": "", "findResultLabel": "" } }
+            }
             return null
         }
     }
@@ -51,6 +57,7 @@ TestCase {
                 "backDisabled": disabled,
                 "forwardDisabled": disabled,
                 "viewSourceDisabled": disabled,
+                "findOpen": false,
                 "findQuery": "",
                 "findResultLabel": "",
                 "findDisabled": disabled,
@@ -73,6 +80,7 @@ TestCase {
         verify(!nativeControl("forward-button").enabled)
         verify(!nativeControl("reload-button").enabled)
         verify(!nativeControl("view-source-button").enabled)
+        verify(!nativeControl("find-button").enabled)
         verify(nativeControl("address-input").readOnly)
         verify(!nativeControl("go-button").enabled)
         verify(nativeControl("mosaic-host-surface") !== null)
@@ -83,6 +91,7 @@ TestCase {
         mouseClick(nativeControl("forward-button"))
         mouseClick(nativeControl("reload-button"))
         mouseClick(nativeControl("view-source-button"))
+        mouseClick(nativeControl("find-button"))
         mouseClick(nativeControl("go-button"))
         compare(recordingHost.events.length, 0)
     }
@@ -135,28 +144,34 @@ TestCase {
     function test_find_actions_cross_the_mosaic_host_seam() {
         hydrate(false)
         recordingHost.reset()
+        const openButton = nativeControl("find-button")
+        openButton.forceActiveFocus()
+        keyClick(Qt.Key_Space)
+        wait(0)
+        compare(recordingHost.events[0].event, "onFindOpen")
         const input = nativeControl("find-input")
         input.forceActiveFocus()
         input.text = "venture"
         wait(0)
-        compare(recordingHost.events[0].event, "onFindChange")
-        compare(recordingHost.events[0].value, "venture")
+        compare(recordingHost.events[1].event, "onFindChange")
+        compare(recordingHost.events[1].value, "venture")
         const nextButton = nativeControl("find-next-button")
         nextButton.forceActiveFocus()
         keyClick(Qt.Key_Space)
         wait(0)
-        compare(recordingHost.events[1].event, "onFindNext")
+        compare(recordingHost.events[2].event, "onFindNext")
 
         const previousButton = nativeControl("find-previous-button")
         previousButton.forceActiveFocus()
         keyClick(Qt.Key_Space)
         wait(0)
-        compare(recordingHost.events[2].event, "onFindPrevious")
+        compare(recordingHost.events[3].event, "onFindPrevious")
 
         const closeButton = nativeControl("find-close-button")
         closeButton.forceActiveFocus()
         keyClick(Qt.Key_Space)
         wait(0)
-        compare(recordingHost.events[3].event, "onFindClose")
+        compare(recordingHost.events[4].event, "onFindClose")
+        verify(findChild(chrome, "find-input") === null)
     }
 }

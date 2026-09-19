@@ -9,6 +9,7 @@ type HostRequest = {
 const events: HostRequest[] = [];
 let navigationDisabled = true;
 let bookmarked = false;
+let findOpen = false;
 let findQuery = "";
 let findResultLabel = "";
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -23,6 +24,7 @@ const props = (statusText: string) => ({
     bookmarkLabel: bookmarked ? "Remove Bookmark" : "Bookmark",
     bookmarkDisabled: navigationDisabled,
     viewSourceDisabled: navigationDisabled,
+    findOpen,
     findQuery,
     findResultLabel,
     findDisabled: navigationDisabled,
@@ -43,6 +45,16 @@ window.mosaicHost = {
       findQuery = request.event.value ?? "";
       findResultLabel = findQuery ? "1 of 2" : "";
       return props("Find updated through MosaicHost");
+    }
+    if (request.event.type === "findOpen") {
+      findOpen = true;
+      return props("Find opened through MosaicHost");
+    }
+    if (request.event.type === "findClose") {
+      findOpen = false;
+      findQuery = "";
+      findResultLabel = "";
+      return props("Find closed through MosaicHost");
     }
     if (request.event.type === "findNext") {
       findResultLabel = "2 of 2";
@@ -80,7 +92,7 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
 
   expect(document.body.textContent).toContain("Venture React acceptance");
   expect(document.body.textContent).toContain("React host surface");
-  for (const label of ["Back", "Forward", "Reload", "Bookmark", "View Source", "Go"]) {
+  for (const label of ["Back", "Forward", "Reload", "Bookmark", "View Source", "Find", "Go"]) {
     const button = textButton(label);
     expect(button.disabled).toBe(true);
     button.click();
@@ -135,6 +147,12 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("viewSource");
 
+  expect(document.querySelector('input[placeholder="Find in page"]')).toBeNull();
+  await act(async () => {
+    textButton("Find").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("findOpen");
   const find = [...document.querySelectorAll('input[type="text"]')].find(
     candidate =>
       candidate instanceof HTMLInputElement && candidate.placeholder === "Find in page",
@@ -156,6 +174,12 @@ test("React and Electron renderer controls cross the Mosaic host seam", async ()
   await flush();
   expect(events[events.length - 1]?.event.type).toBe("findNext");
   expect(document.body.textContent).toContain("2 of 2");
+  await act(async () => {
+    textButton("Close Find").click();
+  });
+  await flush();
+  expect(events[events.length - 1]?.event.type).toBe("findClose");
+  expect(document.querySelector('input[placeholder="Find in page"]')).toBeNull();
 
   await act(async () => {
     textButton("Go").click();

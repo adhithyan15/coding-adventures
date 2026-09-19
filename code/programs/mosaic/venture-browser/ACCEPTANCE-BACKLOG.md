@@ -5,6 +5,12 @@ cross-platform proving application. Items are ordered by risk and dependency.
 
 ## Prioritized discoveries
 
+- [x] **P0 browser convergence - shared find lifecycle.** The first shared
+  find transaction left its toolbar permanently expanded and made “Close Find”
+  clear highlights without closing anything. Add retained open/closed state,
+  one semantic open event, conditional Mosaic chrome, deterministic lifecycle
+  acceptance, and backend-neutral projection across every generated host.
+
 - [x] **P0 browser convergence - shared find-in-page transactions.** Add one
   retained query, bounded visible-text matching, active-result wrap and reveal,
   backend-neutral highlight overlays, result diagnostics, and semantic
