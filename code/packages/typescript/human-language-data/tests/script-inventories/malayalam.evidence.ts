@@ -223,6 +223,28 @@ export const scriptInventoryEvidence = {
     expect(malayalamOo.strokeOrderSource?.variation).toMatch(
       /word-initial forms.*oo\.mp4.*same two lifted runs as short o.*lifts a second time.*far-right outer arc.*top to bottom.*two-lift.*Noto Sans Malayalam/i,
     );
+    const malayalamChilluNN = scripts.malayalam!.finalConsonants!.find(
+      (entry) => entry.glyph === "ൺ",
+    )!;
+    expect(malayalamChilluNN.sound).toBe("ṇ");
+    expect(malayalamChilluNN.role).toBe("consonant");
+    expect(malayalamChilluNN.penLifts).toBe(0);
+    expect(malayalamChilluNN.strokeOrder).toHaveLength(5);
+    expect(malayalamChilluNN.strokeOrderNote).toMatch(
+      /five visible movements.*one continuous pen-down run/i,
+    );
+    expect(malayalamChilluNN.strokeOrderSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BA_order.gif",
+    );
+    expect(malayalamChilluNN.strokeOrderSource?.citation).toMatch(
+      /Sriveenkat.*Ml ൺ order\.gif.*chillu NN.*00:03\.0.?00:12\.8.*Wikimedia Commons.*2 July 2023/i,
+    );
+    expect(malayalamChilluNN.strokeOrderSource?.variation).toMatch(
+      /97-frame Gayathri-font animation.*one uninterrupted run.*inner loop.*outer-left bowl.*central stem.*middle arch.*second stem.*right loop.*hook above the line.*Noto Sans Malayalam.*zero-lift order/i,
+    );
+    expect(malayalamChilluNN.notes).toMatch(
+      /U\+0D7A.*vowel-free retroflex nasal final consonant.*not the base ണ/i,
+    );
     const malayalamChilluL = scripts.malayalam!.finalConsonants!.find(
       (entry) => entry.glyph === "ൽ",
     )!;

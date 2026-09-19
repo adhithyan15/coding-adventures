@@ -3,24 +3,186 @@
   "language": "malayalam",
   "chapter": 110,
   "title": "Reaching Somebody",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e01fe882f28ce42f",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:975535470eb99fd0",
   "lessons": [
+    {
+      "id": "ML-S148-letter-pha",
+      "sequence": 4045,
+      "title": "ഫ (pha) — one character, met with the word that needs it",
+      "headword": "ഫ",
+      "romanization": "pha",
+      "gloss": "the single character ഫ — the breathed partner of പ, arriving with the word that needs it",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f6c21aea9fd9cad3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ഫ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഫ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: പ — say its sound."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One character this time. One only. It arrives with the word on the next page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഫ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഫ — pha."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the breathed partner of പ. Begin with the same lip closure, then let a puff of air follow the release: പ pa, ഫ pha."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam pairs stops this way — a plain one and a breathed one beside it. This one has not appeared in a headword yet; it arrives for the borrowed word on the next page."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഫ — copy what you see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ഫ (pha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these two, and say which one carries the breath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these two, and say which one carries the breath]"
+            },
+            {
+              "kind": "speech",
+              "text": "പ, ഫ (pha)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഫ three times, saying pha as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഫ three times, saying *pha* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pa, then pha — the same lips, one with a puff of air",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pa*, then *pha* — the same lips, one with a puff of air]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ഫ? What sound does it carry? (pha.) Which letter is it the breathed partner of? (പ.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "ML-C110-phon",
       "sequence": 4050,
-      "title": "phōṇ — a telephone, by ear",
-      "headword": "phōṇ",
+      "title": "ഫോൺ (phōṇ) — a telephone",
+      "headword": "ഫോൺ",
       "romanization": "phōṇ",
-      "gloss": "a telephone — heard and said before its written shape, because one of its letters is not yet verified",
+      "gloss": "a telephone — an English borrowing whose first and last letters are now familiar",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:329381f82ae1a588",
-      "notice": null,
+      "sourceHash": "fnv1a64:e540ecbb2b836980",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script Lens: three pieces"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script Lens: three pieces until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -56,7 +218,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "phōṇ — a telephone."
+              "text": "ഫോൺ (phōṇ) — a telephone."
             },
             {
               "kind": "speech",
@@ -66,20 +228,30 @@
         },
         {
           "index": 2,
-          "type": "input",
-          "title": "You'll want to know: why this one is not printed",
+          "type": "script",
+          "title": "Script Lens: three pieces",
           "segments": [
             {
               "kind": "speech",
-              "text": "This word is given by ear, and the book owes you a reason."
+              "text": "Read it from left to right:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "ഫ, pha, the breathed partner of പ.",
+                "ോ, ō.",
+                "ൺ, final retroflex ṇ, with no following vowel."
+              ]
             },
             {
               "kind": "speech",
-              "text": "Its last sound is written with a letter that this book's script inventory has not yet verified to the standard it holds itself to — the stroke order for it has not been sourced, and an unsourced one is not written down here. The letter is taught elsewhere in the book; what is missing is the evidence the inventory requires before a word can be printed with it."
-            },
-            {
-              "kind": "speech",
-              "text": "So you get the word now and its written shape later, which is how this book has handled a number you learned to say before you could write it. Hearing and saying come first; the spelling follows when it can be given honestly."
+              "text": "The first letter arrived on the page before this one. The last is the chillu you met inside അരുൺ near the beginning of the book. Together they let the borrowed English word settle into Malayalam spelling: ഫ (pha) + ോ + ൺ = ഫോൺ (phōṇ)."
             }
           ]
         },
@@ -97,11 +269,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "phōṇ, with the tongue curled back at the end",
+              "instruction": "ഫോൺ (phōṇ), with the tongue curled back at the end",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *phōṇ*, with the tongue curled back at the end]"
+              "source": "[YOU SAY: **ഫോൺ**, with the tongue curled back at the end]"
             },
             {
               "kind": "prompt",
@@ -114,12 +286,12 @@
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "why this book has not printed it for you",
+              "action": "READ",
+              "instruction": "ഫ (pha), ോ, ൺ, then the whole word",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: why this book has not printed it for you]"
+              "source": "[YOU READ: **ഫ**, **ോ**, **ൺ**, then the whole word]"
             }
           ]
         },
@@ -136,7 +308,7 @@
             },
             {
               "kind": "speech",
-              "text": "A telephone? (phōṇ.) Where does the word come from? (English.) Why is it given by ear? (Its last letter is not yet verified for printing.)"
+              "text": "A telephone? (ഫോൺ, phōṇ.) Where does the word come from? (English.) Which character closes it? (ൺ, final retroflex ṇ.)"
             }
           ]
         }
@@ -155,7 +327,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4819a909d8620aaa",
+      "sourceHash": "fnv1a64:53e0d94cffd7efec",
       "notice": null,
       "blocks": [
         {
@@ -171,7 +343,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the word for a telephone — the one given by ear."
+              "text": "Read and say the word for a telephone: ഫോൺ (phōṇ)."
             },
             {
               "kind": "pause",
@@ -285,7 +457,7 @@
             },
             {
               "kind": "speech",
-              "text": "A letter? (കത്ത് (kattŭ).) Does it have anything to do with അകത്ത്? (No — the shapes overlap and the words do not.) A telephone? (phōṇ.)"
+              "text": "A letter? (കത്ത് (kattŭ).) Does it have anything to do with അകത്ത്? (No — the shapes overlap and the words do not.) A telephone? (ഫോൺ (phōṇ).)"
             }
           ]
         }
@@ -576,14 +748,14 @@
       "title": "(phone, letter, post, e-mail, internet) (sandesham enna oormma) — from cold",
       "headword": "(phone, letter, post, e-mail, internet)",
       "romanization": "sandesham enna oormma",
-      "gloss": "cold retrieval of the five, and of the one the book could not print",
+      "gloss": "cold retrieval of five ways to reach somebody and the new letter that opens the first",
       "script": "malayalam",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:474f5b220c53009c",
+      "sourceHash": "fnv1a64:a3c59367f827e9c2",
       "notice": null,
       "blocks": [
         {
@@ -634,7 +806,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Four of these five you can write, and one you can only say. The telephone waits on a letter whose stroke order this book has not sourced, so it was given by ear rather than printed on a guess — the same bargain you were offered once before, with a number you could say before you could write it."
+              "text": "All five are words you can now read. The telephone added ഫ (pha), the breathed partner of പ, and reused the final ൺ from the opening chapters. The other four were already inside your script range."
             },
             {
               "kind": "speech",
@@ -664,12 +836,12 @@
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "which of the five you cannot yet write, and why",
+              "action": "READ",
+              "instruction": "ഫോൺ (phōṇ), and name its first and last consonants",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: which of the five you cannot yet write, and why]"
+              "source": "[YOU READ: **ഫോൺ**, and name its first and last consonants]"
             },
             {
               "kind": "prompt",
@@ -695,7 +867,7 @@
             },
             {
               "kind": "speech",
-              "text": "Telephone, letter, post? (phōṇ, കത്ത് (kattŭ), തപാൽ (tapāl).) E-mail and the internet? (ഇമെയിൽ, ഇന്റർനെറ്റ്.) Which of the five can you say but not yet write? (phōṇ.)"
+              "text": "Telephone, letter, post? (ഫോൺ (phōṇ), കത്ത് (kattŭ), തപാൽ (tapāl).) E-mail and the internet? (ഇമെയിൽ, ഇന്റർനെറ്റ്.) Which new letter opens ഫോൺ (phōṇ)? (ഫ (pha).)"
             }
           ]
         }

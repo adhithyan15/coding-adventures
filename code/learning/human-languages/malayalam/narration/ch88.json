@@ -4,14 +4,14 @@
   "chapter": 88,
   "title": "Counting Past Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:44b2f6347e51d9df",
+  "sourceHash": "fnv1a64:f479d820b69f840b",
   "lessons": [
     {
       "id": "ML-C88-tens",
       "sequence": 3080,
-      "title": "മുപ്പത് — എഴുപത് (muppatŭ — eḻupatŭ) — the tens",
-      "headword": "മുപ്പത് — എഴുപത്",
-      "romanization": "muppatŭ — eḻupatŭ",
+      "title": "മുപ്പത് — എൺപത് (muppatŭ — eṇpathŭ) — the tens",
+      "headword": "മുപ്പത് — എൺപത്",
+      "romanization": "muppatŭ — eṇpathŭ",
       "gloss": "thirty to eighty — six words that are all the same word, and the one that has worn down",
       "script": "malayalam",
       "modality": "voice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6ee356d3a4f401d",
+      "sourceHash": "fnv1a64:039c8a7db78e1316",
       "notice": null,
       "blocks": [
         {
@@ -67,7 +67,7 @@
                 "അമ്പത് ampatŭ, 50. built on: five.",
                 "അറുപത് aṟupatŭ, 60. built on: six.",
                 "എഴുപത് eḻupatŭ, 70. built on: seven.",
-                "eṇpathŭ, 80. built on: eight."
+                "എൺപത് eṇpathŭ, 80. built on: eight."
               ]
             },
             {
@@ -76,7 +76,7 @@
             },
             {
               "kind": "speech",
-              "text": "Eighty is given here by ear only, without its written form. That is how this book handed you six to ten in the first place — heard and said before they were read — and the written shape comes when its letter does."
+              "text": "Eighty begins with എൺ-. Its final ൺ is the vowel-free retroflex nasal you met near the beginning of the book, so the whole word is now yours to read."
             }
           ]
         },
@@ -193,7 +193,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ede798ec6a2c3529",
+      "sourceHash": "fnv1a64:a65cf50941cb3419",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -254,7 +254,7 @@
               "columns": 2,
               "rowCount": 3,
               "utterances": [
-                "eṇpathŭ 80. built from: eight tens.",
+                "എൺപത് eṇpathŭ 80. built from: eight tens.",
                 "തൊണ്ണൂറ് 90. built from: a hundred, reduced.",
                 "നൂറ് 100. built from: itself."
               ]
@@ -491,7 +491,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:fc070ed0f945bcdf",
+      "sourceHash": "fnv1a64:e46796a7723ad5a9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -538,7 +538,7 @@
                 "അമ്പത്, 50, digit + പത്ത്, worn.",
                 "അറുപത്, 60, digit + പത്ത്.",
                 "എഴുപത്, 70, digit + പത്ത്.",
-                "eṇpathŭ, 80, digit + പത്ത്, by ear only so far.",
+                "എൺപത്, 80, digit + പത്ത്.",
                 "തൊണ്ണൂറ്, 90, നൂറ്, reduced.",
                 "നൂറ്, 100, itself."
               ]

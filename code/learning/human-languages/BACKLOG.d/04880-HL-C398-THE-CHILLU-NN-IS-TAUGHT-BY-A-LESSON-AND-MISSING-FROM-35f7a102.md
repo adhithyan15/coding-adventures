@@ -1,5 +1,12 @@
 ## HL-C398 — the chillu NN is taught by a lesson and missing from the Malayalam script inventory
 
+**Status: CLOSED — 2026-09-19.** The inventory now carries a source-verified
+**ൺ** entry based on Sriveenkat's 97-frame `Ml ൺ order.gif` animation (Wikimedia
+Commons, 2 July 2023), with its 00:03.0–00:12.8 zero-lift sequence pinned by the
+Malayalam evidence test. Chapter 88 now prints **എൺപത്**, chapter 110 prints
+**ഫോൺ**, and `ML-S148-letter-pha` has been restored to teach the word's opening
+letter.
+
 Found while writing Malayalam chapter 88, which needed **എൺപത്** (eighty) and
 could not print it.
 

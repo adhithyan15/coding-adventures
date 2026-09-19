@@ -1,8 +1,9 @@
 {
   "language": "malayalam",
   "chapter": 110,
-  "sourceHash": "fnv1a64:5e51a8177d75af63",
+  "sourceHash": "fnv1a64:79604272a05e517b",
   "lessonIds": [
+    "ML-S148-letter-pha",
     "ML-C110-phon",
     "ML-C110-kattu",
     "ML-C110-thapaal",

@@ -1,19 +1,20 @@
 {
   "language": "malayalam",
   "chapter": 110,
-  "sourceHash": "fnv1a64:e01fe882f28ce42f",
+  "sourceHash": "fnv1a64:975535470eb99fd0",
   "lessonIds": [
+    "ML-S148-letter-pha",
     "ML-C110-phon",
     "ML-C110-kattu",
     "ML-C110-thapaal",
     "ML-C110-imeyil",
     "ML-R110-message-recall"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
   "text": "malayalam/narration/ch110.txt",
   "json": "malayalam/narration/ch110.json",
-  "textHash": "fnv1a64:1199f81fdaf4ad54",
-  "jsonHash": "fnv1a64:f190cba948b7a148",
+  "textHash": "fnv1a64:eda7b72b409937a8",
+  "jsonHash": "fnv1a64:c8cc9d04646d2260",
   "findings": []
 }
