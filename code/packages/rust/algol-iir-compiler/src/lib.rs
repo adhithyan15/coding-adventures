@@ -6223,6 +6223,9 @@ impl Compiler {
         let statements = compound_body_statements(body).unwrap_or_else(|| vec![body]);
         let mut target_expression = None;
         for statement in statements {
+            if single_statement_is_unlabeled_dummy(statement) {
+                continue;
+            }
             let assign = single_statement_assignment(statement)?;
             let left_parts: Vec<&GrammarASTNode> = direct_nodes(assign)
                 .into_iter()
@@ -6555,6 +6558,9 @@ impl Compiler {
         let statements = compound_body_statements(body)?;
         let mut recurrence = None;
         for statement in statements {
+            if single_statement_is_unlabeled_dummy(statement) {
+                continue;
+            }
             let assignment = single_statement_assignment(statement)?;
             let left_parts: Vec<&GrammarASTNode> = direct_nodes(assignment)
                 .into_iter()
@@ -9385,6 +9391,40 @@ fn single_statement_assignment(node: &GrammarASTNode) -> Option<&GrammarASTNode>
             single_statement_assignment(statement)
         }
         _ => None,
+    }
+}
+
+fn single_statement_is_unlabeled_dummy(node: &GrammarASTNode) -> bool {
+    match node.rule_name.as_str() {
+        "dummy_stmt" => true,
+        "statement" => {
+            let children = direct_nodes(node);
+            if children.iter().any(|child| child.rule_name == "label") {
+                return false;
+            }
+            let [child] = children.as_slice() else {
+                return false;
+            };
+            single_statement_is_unlabeled_dummy(child)
+        }
+        "unlabeled_stmt" => {
+            let children = direct_nodes(node);
+            let [child] = children.as_slice() else {
+                return false;
+            };
+            single_statement_is_unlabeled_dummy(child)
+        }
+        "compound_stmt" => {
+            let statements: Vec<&GrammarASTNode> = direct_nodes(node)
+                .into_iter()
+                .filter(|child| child.rule_name == "statement")
+                .collect();
+            let [statement] = statements.as_slice() else {
+                return false;
+            };
+            single_statement_is_unlabeled_dummy(statement)
+        }
+        _ => false,
     }
 }
 
@@ -14624,6 +14664,34 @@ mod tests {
             instr.op == "str_const"
                 && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.5")
         }));
+    }
+
+    #[test]
+    fn al4_recurrences_allow_unlabeled_dummy_siblings() {
+        let module = compile_source(
+            "begin integer i; real x, r; boolean stepflag, whileflag; stepflag := false; for i := 1 step 1 until 3 do begin ; stepflag := not stepflag; ; end; if stepflag then r := 42.0 else r := 0.5; print(r); i := 0; whileflag := false; for i := i + 1 while i <= 3 do begin ; whileflag := not whileflag; ; end; if whileflag then r := 42.0 else r := 0.5; print(r); for x := 1.0 step 0.5 until 10.0 do begin ; x := x * 2.0; ; end; print(x) end",
+            "test",
+        )
+        .expect("bounded body and control recurrences may ignore unlabeled dummy siblings");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "42")
+        }));
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "str_const"
+                && matches!(instr.srcs.first(), Some(Operand::Str(text)) if text == "11.5")
+        }));
+    }
+
+    #[test]
+    fn al4_control_recurrence_rejects_labeled_dummy_sibling() {
+        let err = compile_source(
+            "begin real x; for x := 1.0 step 0.5 until 10.0 do begin x := x * 2.0; marker: ; end; print(x) end",
+            "test",
+        )
+        .expect_err("a labeled dummy remains a control-flow target, not an inert sibling");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
