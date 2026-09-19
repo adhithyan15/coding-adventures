@@ -5,6 +5,12 @@ this file.
 
 ## [Unreleased]
 
+- Keep Input/HostInput controllers alive across prop updates and dispose them
+  when the generated field unmounts (#15601). Presentation changes and echoed
+  edits retain caret, selection and IME composition; external text changes clamp
+  the selection and clear stale composition. Flutter widget tests cover controlled
+  editing, legacy inputs, focus, disposal and independent table-row editors.
+
 - Project numeric layout `font-size` on Text, HostButton and Input/HostInput
   into live Flutter text styles, retaining static/native fallback for invalid
   live sizes. Reject unsupported value forms and nonnumeric slots (#15598).

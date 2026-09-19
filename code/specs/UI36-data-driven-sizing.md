@@ -59,6 +59,10 @@ only the size, preserving static color/family and the native inherited fallback.
 Invalid live values retain the original style; invalid authored forms and
 nonnumeric slots are errors. Generated widget tests exercise updates and fallback,
 input events and button dispatch. Flutter `HostTable` inheritance remains pending.
+Flutter Input/HostInput controllers survive presentation-only rebuilds (#15601),
+including text scale changes. Controlled value echoes retain selection and IME
+composition; external text replacement clamps selection to the new text and clears
+stale composition. Controllers are disposed when their mounted fields disappear.
 
 Unsupported backends and placements report `typography.font-size-binding-unimplemented` in package
 degradation analysis. This foundation does not claim cross-backend typography acceptance,

@@ -53,7 +53,39 @@ fn generate_numeric_typography_fixture() {
             include_str!("fixtures/typography_test.dart"),
         )
         .unwrap();
+        std::fs::write(path.join("lib/editors.dart"), editor_fixture()).unwrap();
+        std::fs::write(
+            path.join("test/input_lifecycle_test.dart"),
+            include_str!("fixtures/input_lifecycle_test.dart"),
+        )
+        .unwrap();
     }
+}
+
+fn editor_fixture() -> String {
+    let model =
+        mosmodel_compiler::compile("component Editors { slot rows : list<text> ; }").unwrap();
+    let layout = moslayout_compiler::compile(
+        r#"layout Editors {
+        HostTable { HostTableBody { For (each: slot: rows, as: row) {
+            Row { HostInput (value: (row), a11y-label: "Cell editor") }
+        } } }
+    }"#,
+        Some(&model.descriptor_json),
+    )
+    .unwrap();
+    let style = mosstyle_compiler::compile("style Editors {}", None).unwrap();
+    from_pipeline(&model.component, &layout.def, &style.def)
+        .unwrap()
+        .output
+}
+
+#[test]
+fn table_editors_share_the_controller_lowering() {
+    let output = editor_fixture();
+    assert!(output.contains("value: ( row ),"));
+    assert!(output.contains("controller: _mosaicController,"));
+    assert!(!output.contains("TextEditingController(text: row)"));
 }
 
 #[test]
