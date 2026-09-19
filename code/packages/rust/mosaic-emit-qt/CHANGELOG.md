@@ -8,6 +8,15 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — `HostNavigationSplit` lowers to Qt `SplitView` (UI29-6, #15481)
+
+The Qt emitter now lowers the ordered pane/detail pair to Qt Quick Controls'
+native `SplitView`, maps numeric `pane-width` to
+`SplitView.preferredWidth`, and exposes the pane through
+`Accessible.Pane` with the authored `pane-title`. A native-complete fixture
+pins the one expected non-gating adaptive-collapse limitation and builds the
+generated project with the real Qt toolchain.
+
 ### Added — `HostButton` `selected` lowers to `Accessible.checked` (UI86, #15420)
 
 `selected : …` sets the state on the `Accessible` attached object only. The

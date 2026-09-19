@@ -2449,6 +2449,18 @@ jobs:
           cmake -S "$slider_output/qt" -B "$slider_output/qt/build" -DCMAKE_BUILD_TYPE=Release
           cmake --build "$slider_output/qt/build" --config Release --parallel
 
+          # UI29-6 (#15481) slice K-qt: HostNavigationSplit lowers to a
+          # real Qt Quick Controls SplitView. Qt's static-collapse limitation
+          # stays visible on the non-gating behavior axis; the nested fixture
+          # also proves collapse: never adds no second entry.
+          navigation_split_output="$RUNNER_TEMP/mosaic-qt-host-navigation-split"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-qt/fixtures/host-navigation-split --backend qt --output "$navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0) and ([.behaviorDegradations[].code] == ["interaction.navigation-split-collapse-static"])' "$navigation_split_output/qt/mosaic-degradations.json"
+          grep -q 'SplitView {' "$navigation_split_output/qt/Shell.qml"
+          grep -q 'Accessible.role: Accessible.Pane' "$navigation_split_output/qt/Shell.qml"
+          cmake -S "$navigation_split_output/qt" -B "$navigation_split_output/qt/build" -DCMAKE_BUILD_TYPE=Release
+          cmake --build "$navigation_split_output/qt/build" --config Release --parallel
+
           strict_log="$RUNNER_TEMP/mosaic-qt-native-complete-missing-runtime.log"
           set +e
           QT_QPA_PLATFORM=offscreen \

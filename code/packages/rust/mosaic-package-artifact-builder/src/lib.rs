@@ -2121,13 +2121,13 @@ fn collect_native_degradations(
         // lowering, so the report cannot outlive the gap or precede the fix.
         // Narrowed one backend at a time, exactly as HostProgressRing was:
         // XAML lowers it to `NavigationView`, SwiftUI to
-        // `NavigationSplitView`, and Compose to `NavigationSuiteScaffoldLayout`,
-        // so each came off this list with its lowering.
+        // `NavigationSplitView`, Compose to `NavigationSuiteScaffoldLayout`,
+        // and Qt to `SplitView`, so each came off this list with its lowering.
         "HostNavigationSplit"
             if backend.is_native()
                 && !matches!(
                     backend,
-                    Backend::Xaml | Backend::SwiftUI | Backend::Compose
+                    Backend::Xaml | Backend::SwiftUI | Backend::Compose | Backend::Qt
                 ) =>
         {
             Some((
@@ -7784,6 +7784,52 @@ layout Shell {
         assert!(report.behavior_degradations.is_empty());
     }
 
+    /// UI29-6 slice K-qt: Qt Quick Controls' `SplitView` supplies the native
+    /// splitter and pane semantics. Qt still lacks adaptive collapse, so that
+    /// permanent limitation stays visible on the non-gating behaviour axis.
+    #[test]
+    fn host_navigation_split_qt_now_has_a_native_lowering() {
+        let pkg = make_package("mosaic-pkg-shell-qt", &["Shell"]);
+        fs::write(
+            pkg.path().join("src/Shell.mll"),
+            r#"
+layout Shell {
+  HostNavigationSplit [ root ] (
+    pane-title: "Projects",
+    pane-width: 236
+  ) {
+    Column [ pane ] { }
+    Column [ detail ] { }
+  }
+}
+"#,
+        )
+        .unwrap();
+
+        let out = TempDir::new().unwrap();
+        let report = analyze_package_degradations(
+            &BuildOptions {
+                package_root: pkg.path().to_path_buf(),
+                output_root: out.path().to_path_buf(),
+                backend: Backend::Qt,
+                emit_project: false,
+                theme: None,
+            },
+            BuildProfile::NativeComplete,
+        )
+        .expect("Qt navigation-split capability analysis");
+        assert!(
+            report.native_complete,
+            "Qt now has a native HostNavigationSplit lowering: {:?}",
+            report.degradations
+        );
+        assert_eq!(report.behavior_degradations.len(), 1);
+        assert_eq!(
+            report.behavior_degradations[0].code,
+            "interaction.navigation-split-collapse-static"
+        );
+    }
+
     /// UI29-6 (#15481): registered before any backend lowers it, so every
     /// native backend must say so rather than emit two silent containers.
     #[test]
@@ -7805,9 +7851,11 @@ layout Shell {
         )
         .unwrap();
 
-        // XAML, SwiftUI and Compose are absent on purpose: each lowers this now, and
-        // the dedicated native-lowering tests above pin that other half.
-        for backend in [Backend::Flutter, Backend::Qt] {
+        // XAML, SwiftUI, Compose, and Qt are absent on purpose: each lowers
+        // this now, and the dedicated native-lowering tests above pin that
+        // other half.
+        {
+            let backend = Backend::Flutter;
             let out = TempDir::new().unwrap();
             let report = analyze_package_degradations(
                 &BuildOptions {
@@ -7837,24 +7885,20 @@ layout Shell {
                 Some("HostNavigationSplit")
             );
 
-            if matches!(backend, Backend::Qt | Backend::Flutter) {
-                assert_eq!(
-                    report.behavior_degradations.len(),
-                    1,
-                    "{backend:?} must keep its permanent collapse limitation visible"
-                );
-                assert_eq!(
-                    report.behavior_degradations[0].code,
-                    "interaction.navigation-split-collapse-static"
-                );
-                assert_eq!(report.behavior_degradations[0].layout_path, "root");
-                assert_eq!(
-                    report.behavior_degradations[0].primitive.as_deref(),
-                    Some("HostNavigationSplit")
-                );
-            } else {
-                assert!(report.behavior_degradations.is_empty());
-            }
+            assert_eq!(
+                report.behavior_degradations.len(),
+                1,
+                "{backend:?} must keep its permanent collapse limitation visible"
+            );
+            assert_eq!(
+                report.behavior_degradations[0].code,
+                "interaction.navigation-split-collapse-static"
+            );
+            assert_eq!(report.behavior_degradations[0].layout_path, "root");
+            assert_eq!(
+                report.behavior_degradations[0].primitive.as_deref(),
+                Some("HostNavigationSplit")
+            );
         }
     }
 
@@ -7892,10 +7936,15 @@ layout Shell {
             )
             .expect("static navigation-split capability analysis");
 
-            assert_eq!(
-                report.degradations[0].code,
-                "primitive.navigation-split-unimplemented"
-            );
+            if backend == Backend::Flutter {
+                assert_eq!(
+                    report.degradations[0].code,
+                    "primitive.navigation-split-unimplemented"
+                );
+            } else {
+                assert!(report.native_complete);
+                assert!(report.degradations.is_empty());
+            }
             assert!(
                 report.behavior_degradations.is_empty(),
                 "{backend:?} satisfies an explicitly static collapse contract"
