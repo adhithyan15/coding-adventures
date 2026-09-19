@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Verify formula edits update example-workbook totals immediately and preserve them across snapshot restoration (#15519).
+
 - Derive the empty-workbook introduction from committed content across all sheets,
   retaining it during pending/cancelled edits and recomputing it after restore.
 
