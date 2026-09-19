@@ -44,22 +44,36 @@ pub enum DiagramShape {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct DiagramTextSpan {
+    pub text: String,
+    pub bold: bool,
+    pub italic: bool,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct DiagramLabel {
     pub text: String,
     pub markdown: Option<String>,
+    pub spans: Vec<DiagramTextSpan>,
 }
 impl DiagramLabel {
     pub fn new(text: impl Into<String>) -> Self {
         DiagramLabel {
             text: text.into(),
             markdown: None,
+            spans: Vec::new(),
         }
     }
 
-    pub fn markdown(text: impl Into<String>, source: impl Into<String>) -> Self {
+    pub fn markdown(
+        text: impl Into<String>,
+        source: impl Into<String>,
+        spans: Vec<DiagramTextSpan>,
+    ) -> Self {
         DiagramLabel {
             text: text.into(),
             markdown: Some(source.into()),
+            spans,
         }
     }
 }

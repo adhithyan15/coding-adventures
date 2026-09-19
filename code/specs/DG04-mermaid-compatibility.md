@@ -348,13 +348,13 @@ rounded, circular, hexagonal, cloud, and bang nodes, deterministic generated
 IDs, quoted delimiter-rich descriptions, semantic HTML and escaped line breaks,
 whole-line and trailing comments, depth styles, shared graph layout, and
 backend-neutral PaintScene lowering. Multiline Markdown strings preserve their
-authored bold and italic source in semantic IR and Paint instruction metadata
-while normalized visible text participates in layout and glyph shaping. Icon
-identifiers and authored class names follow the same metadata path, allowing
-integrators to resolve rich text, external icon fonts, and styles without
+authored source and typed bold/italic spans in semantic IR, participate in
+layout, and lower to independently shaped backend-neutral glyph runs. Icon
+identifiers and authored class names remain available as Paint instruction
+metadata so integrators can resolve external icon fonts and styles without
 coupling the parser to a backend. A native Metal-to-PNG fixture validates this
-documented subset; visual resolution of Markdown spans, integrator-supplied
-icons, and classes remains explicitly outside the partial compatibility level.
+documented subset; visual resolution of integrator-supplied icons and classes
+remains explicitly outside the partial compatibility level.
 
 ### Block Native Slice
 

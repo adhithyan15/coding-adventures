@@ -12,7 +12,8 @@ pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 use std::collections::{HashMap, HashSet};
 
 use diagram_ir::{
-    BlockArrowDirections, BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel, DiagramShape, EdgeMarker,
+    BlockArrowDirections, BoardCard, BoardColumn, BoardDiagram, DiagramDirection, DiagramLabel,
+    DiagramShape, DiagramTextSpan, EdgeMarker,
     DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
@@ -2496,11 +2497,57 @@ fn parse_mindmap_label(source: &str) -> DiagramLabel {
         .and_then(|value| value.strip_suffix("`\""))
     {
         let markdown = normalize_mermaid_line_breaks(markdown).replace("\\n", "\n");
-        let text = markdown.replace("**", "").replace('*', "");
-        return DiagramLabel::markdown(text, markdown);
+        let (text, spans) = parse_mindmap_markdown_spans(&markdown);
+        return DiagramLabel::markdown(text, markdown, spans);
     }
 
     DiagramLabel::new(normalize_mermaid_line_breaks(&unquote_mermaid_string(trimmed)))
+}
+
+fn parse_mindmap_markdown_spans(markdown: &str) -> (String, Vec<DiagramTextSpan>) {
+    let mut rest = markdown;
+    let mut text = String::new();
+    let mut current = String::new();
+    let mut spans = Vec::new();
+    let mut bold = false;
+    let mut italic = false;
+
+    let flush = |current: &mut String,
+                 spans: &mut Vec<DiagramTextSpan>,
+                 bold: bool,
+                 italic: bool| {
+        if !current.is_empty() {
+            spans.push(DiagramTextSpan {
+                text: std::mem::take(current),
+                bold,
+                italic,
+            });
+        }
+    };
+
+    while !rest.is_empty() {
+        if rest.starts_with("***") {
+            flush(&mut current, &mut spans, bold, italic);
+            bold = !bold;
+            italic = !italic;
+            rest = &rest[3..];
+        } else if rest.starts_with("**") {
+            flush(&mut current, &mut spans, bold, italic);
+            bold = !bold;
+            rest = &rest[2..];
+        } else if rest.starts_with('*') {
+            flush(&mut current, &mut spans, bold, italic);
+            italic = !italic;
+            rest = &rest[1..];
+        } else {
+            let character = rest.chars().next().expect("non-empty Markdown remainder");
+            current.push(character);
+            text.push(character);
+            rest = &rest[character.len_utf8()..];
+        }
+    }
+    flush(&mut current, &mut spans, bold, italic);
+    (text, spans)
 }
 
 fn mindmap_slug(label: &str) -> String {
@@ -10287,6 +10334,11 @@ mod tests_dg04 {
             diagram.nodes[0].label.markdown.as_deref(),
             Some("**Root** with\na *second line*\nUnicode works too: 🤓")
         );
+        assert_eq!(diagram.nodes[0].label.spans.len(), 4);
+        assert_eq!(diagram.nodes[0].label.spans[0].text, "Root");
+        assert!(diagram.nodes[0].label.spans[0].bold);
+        assert_eq!(diagram.nodes[0].label.spans[2].text, "second line");
+        assert!(diagram.nodes[0].label.spans[2].italic);
         assert_eq!(diagram.nodes[1].label.markdown, None);
         assert!(parse_mindmap("mindmap\n  root[\"`unterminated").is_err());
     }
