@@ -297,7 +297,17 @@ The delivery order is:
    Refreshable credentials fail before transport, while exact HTTP 200 alone
    permits revision-bound local deletion; retryable provider failures and stale
    revisions retain local state. These boundaries add no concrete transport,
-   provider-specific data, or external dependency. A client-secret
+   provider-specific data, or external dependency. The original usable-access
+   and forced-refresh entry points are now explicitly public-client paths: the
+   exact opaque account key must select a registered provider retaining the
+   public `none` profile before credential metadata, refresh material, clock,
+   transport, or token-use closure access. A still-fresh public credential
+   crosses only the existing audited custody closure; a due or explicitly
+   refreshed credential crosses the existing audited refresh, response,
+   credential-release, and revision-bound atomic-rotation gates. Confidential
+   provider bindings fail before custody and retain their credential record.
+   This binding adds no new transport, storage, clock, provider data, or
+   external dependency. A client-secret
    usable-access composition
    now validates the exact retained Basic/Post method and provider-bound secret
    key before credential or clock access. Still-fresh credentials invoke no
