@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Short Replies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:19a1750ec6a8930f",
+  "sourceHash": "fnv1a64:733b477fa659d110",
   "lessons": [
     {
       "id": "ML-C49-true",
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf637bd1f30302c8",
+      "sourceHash": "fnv1a64:dca930592355e238",
       "notice": null,
       "blocks": [
         {
@@ -455,7 +455,7 @@
             },
             {
               "kind": "speech",
-              "text": "Take it apart and it says \"on one side\". ഒരു (oru) is 'one', the same numeral this book counted with. പക്ഷം (pakṣaṁ) is Sanskrit for a side, a wing, one of the alternatives on offer."
+              "text": "Take it apart and it says \"on one side\". ഒരു (oru) is the one you met leaning on a noun — the shape ഒന്ന് takes when something follows it. പക്ഷം (pakṣaṁ) is Sanskrit for a side, a wing, one of the alternatives on offer."
             },
             {
               "kind": "speech",

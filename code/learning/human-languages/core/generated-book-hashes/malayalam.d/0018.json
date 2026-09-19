@@ -1,8 +1,9 @@
 {
   "language": "malayalam",
   "chapter": 18,
-  "sourceHash": "fnv1a64:69eecca02189a260",
+  "sourceHash": "fnv1a64:152d9f17895ff29c",
   "lessonIds": [
+    "ML-C18-oru",
     "ML-C18-mani",
     "ML-S121-letter-ssa"
   ],

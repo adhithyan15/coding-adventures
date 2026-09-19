@@ -1,8 +1,49 @@
 Malayalam, chapter 18: Telling Time.
-2 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+3 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
+ഒരു (oru) — one, when something follows it.
+
+Warm-up.
+[pause 2 seconds]
+Count one to five out loud.
+[pause 2 seconds]
+Now say the first of them on its own: ഒന്ന്.
+
+You'll want to know.
+ഒരു (oru) — one, with a noun coming after it.
+ഒന്ന് and ഒരു (oru) are one number wearing two shapes, and which shape you reach for depends on nothing more than whether a noun follows it:
+[a table of 2 rows, read aloud]
+ഒന്ന്, standing alone — how many? one.
+ഒരു (oru), leaning on a noun — ഒരു (oru) പേര്, one name.
+You counted with the first. The second is the one you will meet on nearly every page from here, because a number usually has something to count.
+Tamil keeps the same pair, oru against oṉṟu, split the same way — which is a sign the split is old rather than a tidy-up Malayalam did on its own.
+
+Grammar Lens: the same word does the work of "a".
+Malayalam has no word for a. A bare noun covers it: പേര് on its own is name, a name, or the name, and which one it is comes from what is being talked about.
+But when a speaker wants to set one unspecified thing in front of you — the a that means some one or other — ഒരു (oru) is what they say. So the same small word carries two weights:
+[a table of 2 rows, read aloud]
+counting, ഒരു (oru) പേര് — one name.
+introducing, ഒരു (oru) പേര് — a name.
+Nothing in the word changes between those two rows. The difference lives in why it was said, and a listener takes it from the situation — the same bargain Malayalam makes everywhere else it declines to mark something.
+The next lesson puts a noun after it straight away, and when it does, this is the shape you will be reading.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ഒന്ന്, then ഒരു (oru) — and say which of the two wants a noun after it]
+[pause 8 seconds for the answer]
+[your turn — say: ഒരു (oru) പേര്, and both things it could mean]
+[pause 8 seconds for the answer]
+[your turn — say: what a bare പേര് could mean with nothing in front of it]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which shape of one stands alone? (ഒന്ന്.) Which leans on a noun? (ഒരു (oru).) Does Malayalam have a word for a? (No — but ഒരു (oru) does that work when a speaker wants it done.)
+
+
+Lesson 2 of 3.
 മണി (maṇi) — one word in Malayalam's dictionaries, two in Tamil's.
 
 Warm-up.
@@ -32,7 +73,7 @@ Wrap-up Recall.
 According to Malayalam's own dictionary tradition, are "hour," "bell," and "gem" one word or two? (One — all traced to Sanskrit maṇi, "gem.") How does Tamil's own dictionary tradition treat its cognate word differently? (As two separate, unrelated homophones — a native "bell/hour" word and a distinct Sanskrit "gem" loan.) Is this fully settled? (No — even the comparative Dravidian dictionary flags the Sanskrit connection as an open question.)
 
 
-Lesson 2 of 2.
+Lesson 3 of 3.
 ഷ (ṣa) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഷ and Guided Practice until you have stopped, and I will say so again when we reach it.
