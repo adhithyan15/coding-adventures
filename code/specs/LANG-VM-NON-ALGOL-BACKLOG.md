@@ -10,6 +10,22 @@ roadmap is reconciled.
 
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
 
+### CLR05 landed; typed scalar lowering audit selected (2026-09-19)
+
+CLR05 merged in #15654 as `294271884bc4ebad60d49707d8a670bea2713c20`
+after all 46 checks completed (15 success, 31 skipped). Main is refreshed;
+open ownership has no encoded CLR overlap. Simulator conversions, signed shifts
+and bitwise AND/OR prerequisites are now landed.
+
+Return to the encoded IIR width defect: reproduce 2147483647+1 on current main,
+then map type hints and inferred scalar widths through constants, locals,
+parameters, returns, comparisons and direct calls. Select a bounded typed
+scalar contract that explicitly excludes or refuses unsupported closure/array/
+boxing paths, instead of globally widening structural indices. Determine how
+existing untyped IIR callers remain compatible. Commit a detailed specification
+before changing lowering. Keep wide-immediate/input gates until the chosen
+contract works; preserve the original checkout and separately owned ALGOL.
+
 ### CLR04 landed; bitwise execution audit selected (2026-09-19)
 
 CLR04 merged in #15642 as `ee2c260fddc0141e5039f5a5fbbd8b06af81bce0`
