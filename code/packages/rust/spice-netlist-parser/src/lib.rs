@@ -4041,7 +4041,7 @@ fn valid_output_probe_target(target: &str) -> bool {
 
 fn output_probe_error(token: &str, directive: &str) -> NetlistParseError {
     NetlistParseError::new(format!(
-        "{directive} probe must be V(node[,node]) or I(source), got {token:?}"
+        "{directive} probe must be V(node[,node]) or I(element), got {token:?}"
     ))
 }
 

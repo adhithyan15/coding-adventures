@@ -14568,7 +14568,7 @@ function defaultOutputProbes(
 ): string[] {
   return [
     ...Array.from(nodeVoltages.keys()).sort().map((name) => `V(${name})`),
-    ...Array.from(branchCurrents.keys()).sort(),
+    ...Array.from(branchCurrents.keys()).filter(isDefaultBranchCurrent).sort(),
   ];
 }
 
@@ -14580,7 +14580,7 @@ function defaultTransientOutputProbes(points: readonly TransientPoint[]): string
       nodeNames.add(name);
     }
     for (const name of point.branchCurrents.keys()) {
-      branchNames.add(name);
+      if (isDefaultBranchCurrent(name)) branchNames.add(name);
     }
   }
   return [
@@ -14597,13 +14597,18 @@ function defaultAcOutputProbes(points: readonly AcPoint[]): string[] {
       nodeNames.add(name);
     }
     for (const name of point.branchCurrents.keys()) {
-      branchNames.add(name);
+      if (isDefaultBranchCurrent(name)) branchNames.add(name);
     }
   }
   return [
     ...Array.from(nodeNames).sort().map((name) => `V(${name})`),
     ...Array.from(branchNames).sort(),
   ];
+}
+
+function isDefaultBranchCurrent(name: string): boolean {
+  const target = name.startsWith("I(") && name.endsWith(")") ? name.slice(2, -1) : name;
+  return !/^[rc]/i.test(target);
 }
 
 function formatTableNumber(value: number): string {
@@ -15537,6 +15542,7 @@ export function transient(
       time,
     );
     const branchCurrents = new Map(solution.branchCurrents);
+    insertTransientCapacitorCurrents(capacitorStates, branchCurrents);
     for (const [name, current] of lineCurrents) {
       branchCurrents.set(name, current);
     }
@@ -15872,6 +15878,7 @@ export function transientAdaptive(
       proposedTime,
     );
     const branchCurrents = new Map(solution.branchCurrents);
+    insertTransientCapacitorCurrents(capacitorStates, branchCurrents);
     for (const [name, current] of lineCurrents) {
       branchCurrents.set(name, current);
     }
@@ -16453,8 +16460,8 @@ export function pssResidual(
     maxAbsResidual = Math.max(maxAbsResidual, Math.abs(residual));
   }
   const branches = new Set<string>([
-    ...initialSolution.branchCurrents.keys(),
-    ...last.branchCurrents.keys(),
+    ...Array.from(initialSolution.branchCurrents.keys()).filter(isDefaultBranchCurrent),
+    ...Array.from(last.branchCurrents.keys()).filter(isDefaultBranchCurrent),
   ]);
   const branchResiduals = new Map<string, number>();
   let maxAbsBranchResidual = 0.0;
@@ -18267,6 +18274,7 @@ function linearSolutionFromVector(
   for (const [sourceName, branchIndex] of voltageSources.entries()) {
     branchCurrents.set(`I(${sourceName})`, solution[nodeCount + branchIndex]);
   }
+  insertRealPassiveBranchCurrents(circuit, nodeVoltages, branchCurrents);
   insertTransientInductorCurrents(
     circuit,
     inductorStates,
@@ -18285,6 +18293,103 @@ function linearSolutionFromVector(
     minimumDampingFactor: 1.0,
     solverProfile,
   };
+}
+
+function insertRealPassiveBranchCurrents(
+  circuit: Circuit,
+  nodeVoltages: ReadonlyMap<string, number>,
+  branchCurrents: Map<string, number>,
+): void {
+  for (const element of circuit.elements()) {
+    if (element.kind === "resistor") {
+      const voltage = voltageAt(nodeVoltages, element.n1) - voltageAt(nodeVoltages, element.n2);
+      branchCurrents.set(`I(${element.name})`, voltage / element.resistanceOhms);
+    } else if (element.kind === "capacitor" && !branchCurrents.has(`I(${element.name})`)) {
+      // An ideal capacitor is open in DC; transient samples replace this
+      // placeholder with the companion-model current after each solve.
+      branchCurrents.set(`I(${element.name})`, 0.0);
+    }
+  }
+}
+
+function insertComplexPassiveBranchCurrents(
+  circuit: Circuit,
+  omega: number,
+  nodeVoltages: ReadonlyMap<string, Complex>,
+  branchCurrents: Map<string, Complex>,
+): void {
+  const inductors = inductorByName(circuit);
+  const coupledNames = coupledInductorNames(circuit);
+  for (const element of circuit.elements()) {
+    if (element.kind !== "mutual-inductor") continue;
+    const primary = inductors.get(element.primary);
+    const secondary = inductors.get(element.secondary);
+    if (primary === undefined || secondary === undefined) continue;
+    const mutualInductance = element.coupling * Math.sqrt(
+      primary.inductanceHenrys * secondary.inductanceHenrys,
+    );
+    const determinant = primary.inductanceHenrys * secondary.inductanceHenrys -
+      mutualInductance * mutualInductance;
+    const primaryVoltage = complexSub(
+      complexVoltageAt(nodeVoltages, primary.n1),
+      complexVoltageAt(nodeVoltages, primary.n2),
+    );
+    const secondaryVoltage = complexSub(
+      complexVoltageAt(nodeVoltages, secondary.n1),
+      complexVoltageAt(nodeVoltages, secondary.n2),
+    );
+    branchCurrents.set(
+      `I(${primary.name})`,
+      divideByJOmega(
+        complexSub(
+          complexScale(primaryVoltage, secondary.inductanceHenrys),
+          complexScale(secondaryVoltage, mutualInductance),
+        ),
+        omega * determinant,
+      ),
+    );
+    branchCurrents.set(
+      `I(${secondary.name})`,
+      divideByJOmega(
+        complexSub(
+          complexScale(secondaryVoltage, primary.inductanceHenrys),
+          complexScale(primaryVoltage, mutualInductance),
+        ),
+        omega * determinant,
+      ),
+    );
+  }
+
+  for (const element of circuit.elements()) {
+    if (element.kind === "resistor") {
+      const voltage = complexSub(
+        complexVoltageAt(nodeVoltages, element.n1),
+        complexVoltageAt(nodeVoltages, element.n2),
+      );
+      branchCurrents.set(`I(${element.name})`, complexScale(voltage, 1.0 / element.resistanceOhms));
+    } else if (element.kind === "capacitor") {
+      const voltage = complexSub(
+        complexVoltageAt(nodeVoltages, element.n1),
+        complexVoltageAt(nodeVoltages, element.n2),
+      );
+      const scale = omega * element.capacitanceFarads;
+      branchCurrents.set(`I(${element.name})`, complex(-scale * voltage.imag, scale * voltage.real));
+    } else if (element.kind === "inductor" && !coupledNames.has(element.name)) {
+      const voltage = complexSub(
+        complexVoltageAt(nodeVoltages, element.n1),
+        complexVoltageAt(nodeVoltages, element.n2),
+      );
+      branchCurrents.set(`I(${element.name})`, divideByJOmega(voltage, omega * element.inductanceHenrys));
+    }
+  }
+}
+
+function complexVoltageAt(nodeVoltages: ReadonlyMap<string, Complex>, node: string): Complex {
+  return isGround(node) ? complex(0.0, 0.0) : nodeVoltages.get(node) ?? complex(0.0, 0.0);
+}
+
+function divideByJOmega(value: Complex, denominator: number): Complex {
+  return complex(value.imag / denominator, -value.real / denominator);
 }
 
 function maxVectorDelta(left: readonly number[], right: readonly number[]): number {
@@ -18537,6 +18642,7 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
   for (const [sourceName, branchIndex] of voltageSources.entries()) {
     branchCurrents.set(`I(${sourceName})`, solution[nodeCount + branchIndex]);
   }
+  insertComplexPassiveBranchCurrents(circuit, omega, nodeVoltages, branchCurrents);
   return { nodeVoltages, branchCurrents };
 }
 
@@ -22226,6 +22332,15 @@ function insertTransientInductorCurrents(
       `I(${element.name})`,
       coupledCurrents.get(element.name) ?? inductorCurrent(element, state, nodeVoltages),
     );
+  }
+}
+
+function insertTransientCapacitorCurrents(
+  capacitorStates: readonly CapacitorState[],
+  branchCurrents: Map<string, number>,
+): void {
+  for (const state of capacitorStates) {
+    branchCurrents.set(`I(${state.name})`, state.previousCurrent);
   }
 }
 

@@ -3291,12 +3291,12 @@ function parseOutputProbe(token: string, directive: string): OutputProbe {
   const match = /^([vi])\(([^()\s,]+)(?:,([^()\s,]+))?\)$/i.exec(token);
   if (match === null) {
     throw new NetlistParseError(
-      `${directive} probe must be V(node[,node]) or I(source), got ${JSON.stringify(token)}`,
+      `${directive} probe must be V(node[,node]) or I(element), got ${JSON.stringify(token)}`,
     );
   }
   const kind = match[1].toLowerCase() === "v" ? "voltage" : "current";
   if (kind === "current" && match[3] !== undefined) {
-    throw new NetlistParseError(`${directive} probe must be V(node[,node]) or I(source), got ${JSON.stringify(token)}`);
+    throw new NetlistParseError(`${directive} probe must be V(node[,node]) or I(element), got ${JSON.stringify(token)}`);
   }
   return { kind, target: match[2], ...(match[3] === undefined ? {} : { negativeTarget: match[3] }) };
 }

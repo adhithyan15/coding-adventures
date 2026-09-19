@@ -421,16 +421,16 @@ R2 mid 0 1k
   it("rejects output cards with missing or unknown probes", () => {
     expect(() => parseNetlist(".print tran")).toThrow(/\.print expects at least 3 fields/);
     expect(() => parseNetlist(".plot tran P(out)")).toThrow(
-      /\.plot probe must be V\(node\[,node\]\) or I\(source\)/,
+      /\.plot probe must be V\(node\[,node\]\) or I\(element\)/,
     );
     expect(() => parseNetlist(".save P(out)")).toThrow(
-      /\.save probe must be V\(node\[,node\]\) or I\(source\)/,
+      /\.save probe must be V\(node\[,node\]\) or I\(element\)/,
     );
     expect(() => parseNetlist(".probe tran")).toThrow(
-      /\.probe probe must be V\(node\[,node\]\) or I\(source\)/,
+      /\.probe probe must be V\(node\[,node\]\) or I\(element\)/,
     );
     expect(() => parseNetlist(".save I(Vin,Vout)")).toThrow(
-      /\.save probe must be V\(node\[,node\]\) or I\(source\)/,
+      /\.save probe must be V\(node\[,node\]\) or I\(element\)/,
     );
     expect(() => parseNetlist(".measure tran final FIND V(out)")).toThrow(
       /\.measure FIND requires AT=<value>/,
@@ -446,7 +446,9 @@ V1 in 0 DC 1 AC 1
 R1 in out 1k
 R2 out 0 1k
 C1 out 0 1u IC=0
-.save V(out) V(in,out) V(IN,OUT)
+L1 in coil 1m
+R3 coil 0 1k
+.save V(out) V(in,out) V(IN,OUT) I(R1) I(C1) I(L1)
 .print dc V(in)
 .plot ac V(in)
 .probe tran I(V1)
@@ -467,8 +469,13 @@ C1 out 0 1u IC=0
     expect(outputs.map((output) => output.kind)).toEqual(["op", "dc", "ac", "tran"]);
     expect(outputs[0].rows[0].values.get("V(out)") as number).toBeCloseTo(0.5, 9);
     expect(outputs[0].rows[0].values.get("V(in,out)") as number).toBeCloseTo(0.5, 9);
-    expect(Array.from(outputs[1].rows.at(-1)!.values.keys())).toEqual(["V(out)", "V(in,out)", "V(in)"]);
+    expect(Array.from(outputs[1].rows.at(-1)!.values.keys())).toEqual([
+      "V(out)", "V(in,out)", "I(R1)", "I(C1)", "I(L1)", "V(in)",
+    ]);
     expect(outputs[1].rows.at(-1)!.values.get("V(in)") as number).toBeCloseTo(1.0, 9);
+    expect(outputs[0].rows[0].values.get("I(R1)") as number).toBeCloseTo(0.5e-3, 12);
+    expect(outputs[0].rows[0].values.get("I(C1)") as number).toBeCloseTo(0.0, 12);
+    expect(outputs[0].rows[0].values.get("I(L1)") as number).toBeCloseTo(1.0e-3, 12);
     expect(outputs[2].rows[0].values.get("V(out)")).toMatchObject({ real: expect.any(Number) });
     expect(outputs[2].rows[0].values.get("V(in,out)")).toMatchObject({ real: expect.any(Number) });
     const differential = outputs[2].rows[0].values.get("V(in,out)") as { real: number; imag: number };
@@ -476,7 +483,12 @@ C1 out 0 1u IC=0
     const negative = outputs[2].rows[0].values.get("V(out)") as { real: number; imag: number };
     expect(differential.real).toBeCloseTo(positive.real - negative.real, 9);
     expect(differential.imag).toBeCloseTo(positive.imag - negative.imag, 9);
+    expect(outputs[2].rows[0].values.get("I(R1)")).toMatchObject({ real: expect.any(Number) });
+    expect(outputs[2].rows[0].values.get("I(C1)")).toMatchObject({ real: expect.any(Number) });
+    expect(outputs[2].rows[0].values.get("I(L1)")).toMatchObject({ real: expect.any(Number) });
     expect(outputs[3].rows.at(-1)!.values.has("I(V1)")).toBe(true);
+    expect(outputs[3].rows.at(-1)!.values.has("I(C1)")).toBe(true);
+    expect(outputs[3].rows.at(-1)!.values.has("I(L1)")).toBe(true);
 
     const measures = parsed.measureResults(results);
     expect(measures.map((measure) => measure.name)).toEqual(["half", "differential", "final", "average"]);
@@ -505,7 +517,7 @@ C1 out 0 1u IC=0
   it("rejects .four cards with missing or unknown probes", () => {
     expect(() => parseNetlist(".four 1k")).toThrow(/\.four expects at least 3 fields/);
     expect(() => parseNetlist(".four 1k P(out)")).toThrow(
-      /\.four probe must be V\(node\[,node\]\) or I\(source\)/,
+      /\.four probe must be V\(node\[,node\]\) or I\(element\)/,
     );
   });
 
@@ -542,7 +554,7 @@ C1 out 0 1u IC=0
       /\.disto expects at least 6 fields/,
     );
     expect(() => parseNetlist(".disto dec 5 1k 1meg P(out)")).toThrow(
-      /\.disto probe must be V\(node\[,node\]\) or I\(source\)/,
+      /\.disto probe must be V\(node\[,node\]\) or I\(element\)/,
     );
     expect(() => parseNetlist(".pz out Vin")).toThrow(/\.pz output must be a voltage probe/);
     expect(() => parseNetlist(".pz V(out) Vin residue")).toThrow(/\.pz kind must be/);
