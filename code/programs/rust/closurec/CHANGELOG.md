@@ -23,10 +23,11 @@ committed, downloaded, or executed by CI.
 `tests/oracle_manifest.rs` is a strict Serde-based offline verifier. It rejects
 unknown fields, unsupported schema versions, malformed or changed pins,
 duplicate/missing/stale fixtures, unsafe paths and symlink escapes, incomplete
-harness mappings, unresolved evidence, false upstream claims, and command
-matrices that fail to bind their placeholders. Six integration tests cover the
-canonical 626/462 inventory and hostile schema/mapping mutations while
-collecting independent semantic violations into one report.
+harness mappings, unresolved evidence, false upstream claims, and any drift in
+the reviewed command bytes or matrices. Seven integration tests cover the
+canonical 626/462 inventory and hostile schema/mapping mutations, prove rejected
+evidence paths are not read, and collect independent semantic violations into
+one report.
 
 ## [0.242.0] - 2026-09-19
 

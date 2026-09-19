@@ -104,7 +104,7 @@ enum CommandKind {
     Matrix,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
 #[serde(deny_unknown_fields)]
 struct CommandCase {
     id: String,
@@ -216,9 +216,19 @@ fn validate_existing_path(
     label: &str,
     errors: &mut Vec<String>,
 ) {
+    let _ = resolve_existing_path(root, relative, expected_directory, label, errors);
+}
+
+fn resolve_existing_path(
+    root: &Path,
+    relative: &str,
+    expected_directory: bool,
+    label: &str,
+    errors: &mut Vec<String>,
+) -> Option<PathBuf> {
     if !is_safe_relative(relative) {
         errors.push(format!("{label} is not a safe relative path: {relative}"));
-        return;
+        return None;
     }
 
     let joined = root.join(relative);
@@ -231,7 +241,7 @@ fn validate_existing_path(
         errors.push(format!(
             "{label} does not resolve to a {expected_kind}: {relative}"
         ));
-        return;
+        return None;
     }
 
     let Ok(canonical_root) = root.canonicalize() else {
@@ -239,15 +249,17 @@ fn validate_existing_path(
             "cannot canonicalize package root: {}",
             root.display()
         ));
-        return;
+        return None;
     };
     let Ok(canonical_path) = joined.canonicalize() else {
         errors.push(format!("cannot canonicalize {label}: {relative}"));
-        return;
+        return None;
     };
     if !canonical_path.starts_with(&canonical_root) {
         errors.push(format!("{label} escapes the package root: {relative}"));
+        return None;
     }
+    Some(canonical_path)
 }
 
 fn placeholders(parts: &[String]) -> BTreeSet<String> {
@@ -511,6 +523,104 @@ fn validate_commands(
                 ));
             }
         }
+
+        let actual_argv: Vec<_> = command.argv.iter().map(String::as_str).collect();
+        match command.id.as_str() {
+            "closure-flags-file-v1" => {
+                let expected_argv = vec![
+                    "-Duser.language=en",
+                    "-Duser.country=US",
+                    "-Duser.timezone=UTC",
+                    "-Dfile.encoding=UTF-8",
+                    "-jar",
+                    "{oracle_jar}",
+                    "{fixture_flags}",
+                ];
+                if command.kind != CommandKind::FlagsFile
+                    || actual_argv != expected_argv
+                    || command.flags_path.as_deref() != Some("tests/diff/{fixture}/flags.txt")
+                    || command.input_root.as_deref() != Some("tests/diff/{fixture}/input")
+                    || !command.matrix.is_empty()
+                {
+                    errors.push(
+                        "command closure-flags-file-v1 differs from the reviewed template"
+                            .to_string(),
+                    );
+                }
+            }
+            "typed-pipeline-failure-matrix-v1" => {
+                let expected_argv = vec![
+                    "-Duser.language=en",
+                    "-Duser.country=US",
+                    "-Duser.timezone=UTC",
+                    "-Dfile.encoding=UTF-8",
+                    "-jar",
+                    "{oracle_jar}",
+                    "--compilation_level",
+                    "{compilation_level}",
+                    "--language_out",
+                    "NO_TRANSPILE",
+                    "--js",
+                    "{fixture_input}",
+                ];
+                let expected_matrix = vec![
+                    CommandCase {
+                        id: "advanced-destructuring".to_string(),
+                        variables: BTreeMap::from([
+                            ("compilation_level".to_string(), "ADVANCED".to_string()),
+                            (
+                                "fixture_input".to_string(),
+                                "tests/diff/typed-pipeline-failure/input/destructuring.js"
+                                    .to_string(),
+                            ),
+                        ]),
+                    },
+                    CommandCase {
+                        id: "advanced-malformed".to_string(),
+                        variables: BTreeMap::from([
+                            ("compilation_level".to_string(), "ADVANCED".to_string()),
+                            (
+                                "fixture_input".to_string(),
+                                "tests/diff/typed-pipeline-failure/input/malformed.js".to_string(),
+                            ),
+                        ]),
+                    },
+                    CommandCase {
+                        id: "simple-destructuring".to_string(),
+                        variables: BTreeMap::from([
+                            ("compilation_level".to_string(), "SIMPLE".to_string()),
+                            (
+                                "fixture_input".to_string(),
+                                "tests/diff/typed-pipeline-failure/input/destructuring.js"
+                                    .to_string(),
+                            ),
+                        ]),
+                    },
+                    CommandCase {
+                        id: "simple-malformed".to_string(),
+                        variables: BTreeMap::from([
+                            ("compilation_level".to_string(), "SIMPLE".to_string()),
+                            (
+                                "fixture_input".to_string(),
+                                "tests/diff/typed-pipeline-failure/input/malformed.js".to_string(),
+                            ),
+                        ]),
+                    },
+                ];
+                if command.kind != CommandKind::Matrix
+                    || actual_argv != expected_argv
+                    || command.flags_path.is_some()
+                    || command.input_root.is_some()
+                    || command.matrix != expected_matrix
+                {
+                    errors.push(
+                        "command typed-pipeline-failure-matrix-v1 differs from the reviewed template"
+                            .to_string(),
+                    );
+                }
+            }
+            other => errors.push(format!("unreviewed command template id: {other}")),
+        }
     }
     kinds
 }
@@ -673,15 +783,17 @@ fn validate_manifest(root: &Path, manifest: &OracleManifest) -> Vec<String> {
                         "fixture {fixture} has unresolved evidence placeholders"
                     ));
                 } else {
-                    validate_existing_path(
+                    let evidence_path = resolve_existing_path(
                         root,
                         &rendered,
                         false,
                         "provenance evidence",
                         &mut errors,
                     );
-                    if let Some(release) = &set.current_provenance.release {
-                        match std::fs::read_to_string(root.join(&rendered)) {
+                    if let (Some(release), Some(evidence_path)) =
+                        (&set.current_provenance.release, evidence_path)
+                    {
+                        match std::fs::read_to_string(evidence_path) {
                             Ok(contents) if !contents.contains(release) => errors.push(format!(
                                 "provenance evidence for {fixture} does not contain {release}"
                             )),
@@ -887,6 +999,15 @@ fn validator_rejects_escaping_paths_and_incomplete_matrix_bindings() {
     let fixture = set.fixtures[0].clone();
     set.harnesses.insert(fixture, "../outside.rs".to_string());
 
+    let flags_command = manifest
+        .commands
+        .iter_mut()
+        .find(|command| command.kind == CommandKind::FlagsFile)
+        .unwrap();
+    flags_command
+        .argv
+        .insert(0, "-javaagent:unreviewed.jar".to_string());
+
     let matrix = manifest
         .commands
         .iter_mut()
@@ -897,4 +1018,58 @@ fn validator_rejects_escaping_paths_and_incomplete_matrix_bindings() {
     let errors = validate_manifest(&package_root(), &manifest);
     assert_error(&errors, "fixture harness is not a safe relative path");
     assert_error(&errors, "does not bind every placeholder");
+    assert_error(
+        &errors,
+        "command closure-flags-file-v1 differs from the reviewed template",
+    );
+    assert_error(
+        &errors,
+        "command typed-pipeline-failure-matrix-v1 differs from the reviewed template",
+    );
+}
+
+#[test]
+fn rejected_evidence_paths_are_never_read() {
+    let mut manifest = read_manifest();
+    let set_index = manifest
+        .fixture_sets
+        .iter()
+        .position(|set| set.current_provenance.status == ProvenanceStatus::DocumentedRelease)
+        .unwrap();
+    manifest.fixture_sets[set_index].current_provenance.evidence =
+        Some("../Cargo.toml".to_string());
+
+    let errors = validate_manifest(&package_root(), &manifest);
+    assert_error(&errors, "provenance evidence is not a safe relative path");
+    assert!(
+        !errors
+            .iter()
+            .any(|error| error.contains("cannot read provenance evidence")),
+        "rejected traversal path was read: {errors:?}"
+    );
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::symlink;
+
+        let unique = format!("oracle-manifest-evidence-{}", std::process::id());
+        let outside = std::env::temp_dir().join(format!("{unique}.txt"));
+        let link = package_root().join("target").join(&unique);
+        std::fs::write(&outside, RELEASE).unwrap();
+        symlink(&outside, &link).unwrap();
+
+        manifest.fixture_sets[set_index].current_provenance.evidence =
+            Some(format!("target/{unique}"));
+        let errors = validate_manifest(&package_root(), &manifest);
+        assert_error(&errors, "provenance evidence escapes the package root");
+        assert!(
+            !errors
+                .iter()
+                .any(|error| error.contains("does not contain")),
+            "rejected symlink target was read: {errors:?}"
+        );
+
+        std::fs::remove_file(link).unwrap();
+        std::fs::remove_file(outside).unwrap();
+    }
 }
