@@ -1055,7 +1055,7 @@ fn rejected_evidence_paths_are_never_read() {
         let unique = format!("oracle-manifest-evidence-{}", std::process::id());
         let outside = std::env::temp_dir().join(format!("{unique}.txt"));
         let link = package_root().join("target").join(&unique);
-        std::fs::write(&outside, RELEASE).unwrap();
+        std::fs::write(&outside, "outside package evidence must never be read").unwrap();
         symlink(&outside, &link).unwrap();
 
         manifest.fixture_sets[set_index].current_provenance.evidence =
