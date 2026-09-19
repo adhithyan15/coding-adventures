@@ -352,9 +352,15 @@ The delivery order is:
    context, response, nonce, registered deployment client, provider, and trace,
    so the caller supplies no decoded identity policy. Policy-source,
    verification, clock, credential-release, custody, and broker audits remain
-   separate. Concrete sources, verification algorithms, clock/storage
-   implementations, transport, waiting, and UI remain separate injected or
-   caller-owned authorities.
+   separate. One caller-timed step can now preserve that opaque OIDC sequence
+   across early waits, pending, slow-down, and retryable transport failure, then
+   carry an authorized response directly through the same static-policy,
+   identity-proof, and derived-key custody path. The opaque verification context
+   is provider-bound before polling, continuation outcomes reach no policy,
+   clock, verifier, or credential authority, and only a stored revision is
+   released after authorization. Concrete sources, verification algorithms,
+   clock/storage implementations, transport, waiting, and UI remain separate
+   injected or caller-owned authorities.
 8. **HTTPS transport:** provider-neutral request/response types over the
    repository's TLS and HTTP primitives, with endpoint/capability authorization
    before any socket is opened.
