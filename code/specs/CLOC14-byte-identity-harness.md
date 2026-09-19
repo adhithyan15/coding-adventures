@@ -1,6 +1,10 @@
 # CLOC14 — End-to-end byte-identity test harness
 
-**Status:** v0.2 shipped (CLOC14.1). Harness + **4 PASS** seed fixtures, **all goldens captured from upstream Closure v20240317**. IGNORE_FIXTURES is empty. The marathon goal — "drop-in binary-compatible closurec, measured against real upstream" — is now exercised end-to-end on every PR.
+**Status:** v0.3 manifest design selected (CCR-003). The harness now discovers
+**462 `minify_*` fixtures**, while `tests/diff/` contains 626 differential
+fixture directories in total. The checked-in bytes pass, but their provenance
+is fragmented across README prose and multiple Closure releases. v0.3 makes
+that provenance machine-verifiable before CCR-004 refreshes the 462 goldens.
 **Layer:** Above CLOC11 (CLI compat) and CLOC12 (upstream test ports), below CLOC15+ (whatever comes next).
 **Depends on:** closurec CLI being runnable end-to-end.
 **Unblocks:** Every future gap-fix can be *measured* against upstream Closure's output instead of unit-tested in isolation.
@@ -55,6 +59,82 @@ The seed fixtures were initially **hand-traced**. **CLOC14.1 captured real upstr
 
 The `minify_empty` fixture had been **IGNORED** specifically because the empty-input trailing-byte behaviour of upstream Closure was unknown. CLOC14.1's capture run resolved it: upstream emits a single `\n` (0x0a) byte, exactly what closurec emits. `minify_empty` flipped from IGNORED to PASS and the entry was removed from `IGNORE_FIXTURES`.
 
+README prose remains useful explanation, but it is not an enforceable registry.
+The 2026-09-19 inventory found 626 fixture directories, 546 READMEs, 466
+READMEs with a release token, and only 22 with a `java -jar` command. Eight of
+the 462 minify fixtures have no version token. Existing mentions span at least
+`v20240317`, `v20260712`, and `v20260915`.
+
+### 4.1 Canonical oracle identity
+
+`tests/oracle/manifest.json` is the v0.3 source of truth. Schema version 1 pins:
+
+- project and Apache-2.0 source/license URLs;
+- release `v20260915`, annotated tag object
+  `72421c28d352e5dda9a111bec39c3d41af46f3a3`, and dereferenced release commit
+  `56007b2869ef6ce70b659b033459b8d8113101de`;
+- Maven coordinates `com.google.javascript:closure-compiler:v20260915`, the
+  canonical artifact URL, byte length 14,976,538, and SHA-256
+  `9C8AF06056AA06F968B5A457540A85869C7BA2861C211C56D8D4EF6C35DDF36D`;
+- capture runtime Java 21.0.12 and the artifact's embedded JDK 21 marker;
+- the separately audited upstream `master` commit
+  `10ca677aff381d2c2e6e1b254ba32861e503173d`; and
+- locale, timezone, encoding, working-directory, input, output, and command
+  template assumptions needed for deterministic captures.
+
+The release tag, release source commit, binary artifact, and later audited
+`master` commit are distinct fields. The manifest must never imply that the
+post-release audit commit produced the released JAR.
+
+### 4.2 Fixture dispositions
+
+Every immediate directory under `tests/diff/` appears exactly once in a
+manifest fixture set. Sets use explicit fixture-name arrays; filename globs are
+not provenance because a newly added directory must fail verification until a
+reviewer classifies it.
+
+Each set has one disposition:
+
+1. `upstream_golden`: bytes or diagnostics captured from the pinned release;
+   requires exactly one command template and artifact pin.
+2. `mixed_contract`: combines an upstream observation with a deliberately
+   different local fail-closed or unsupported behavior; requires both the
+   upstream command and a written local boundary.
+3. `local_extension`: exercises correlation-vector or other closurec-only
+   behavior with no upstream equivalent; requires a reason and local harness,
+   and must not claim an upstream golden.
+4. `local_contract`: tests local packaging/help/version or another contract
+   whose expected bytes were not captured upstream; requires a reason and
+   local harness.
+
+The 462 `minify_*` fixtures form one explicit `upstream_golden` cohort and are
+the only automatic input to CCR-004. The remaining 164 directories are still
+classified by v0.3, but classification does not manufacture an upstream
+command for a local-only extension.
+
+### 4.3 Offline verifier
+
+`tests/oracle_manifest.rs` parses the manifest with strict Serde structures
+that reject unknown fields. It collects all violations before failing so a
+stale manifest produces one actionable report. Without network access or an
+oracle JAR, it verifies:
+
+- the exact supported schema version and immutable pin/hash shapes;
+- uniqueness of command, fixture-set, and fixture identities;
+- every `tests/diff/` directory is classified exactly once and every declared
+  fixture exists;
+- disposition-specific required and forbidden fields;
+- all referenced `flags.txt`, inputs, expected outputs, harnesses, and command
+  placeholders resolve inside the package tree; and
+- the explicit minify cohort equals runtime discovery by
+  `tests/diff_minify.rs`.
+
+Tests construct malformed manifests for unknown fields, unsupported schema
+versions, invalid hashes, duplicate or missing mappings, stale paths,
+ambiguous commands, and disposition violations. CI never downloads or
+executes the upstream artifact; acquisition and hash verification are an
+explicit maintainer regeneration step.
+
 ## 5. The seed fixture set (v0.1)
 
 | Fixture | Status | What it pins |
@@ -68,7 +148,9 @@ The `minify_empty` fixture had been **IGNORED** specifically because the empty-i
 
 1. **A gap-fix PR that thinks it improved upstream parity should also add (or un-ignore) a minify fixture.** That makes the parity gain measurable.
 2. **A failing fixture should be removed from IGNORE_FIXTURES the moment the corresponding gap closes.** The IGNORE list is intentionally an embarrassment that should shrink over time.
-3. **Capturing real upstream goldens** is its own follow-up workstream: someone with a working Closure Compiler installation should script the capture across the seed set + every new fixture.
+3. **Capturing real upstream goldens** is CCR-004. It must use the verified
+   v0.3 manifest and publish equal/changed/declined counts; no README-only or
+   hand-traced provenance is sufficient.
 
 ## 7. What this harness does NOT cover (yet)
 
@@ -82,3 +164,6 @@ The `minify_empty` fixture had been **IGNORED** specifically because the empty-i
 - Source: `code/programs/rust/closurec/tests/diff_minify.rs`
 - Fixtures: `code/programs/rust/closurec/tests/diff/minify_*/`
 - Related: CLOC11 (CLI compat), CLOC12 (upstream test ports + gap tracker)
+- Oracle manifest: `code/programs/rust/closurec/tests/oracle/manifest.json`
+- Manifest verifier: `code/programs/rust/closurec/tests/oracle_manifest.rs`
+- Tracking: CCR-003 / <https://github.com/adhithyan15/coding-adventures/issues/15549>

@@ -2,10 +2,10 @@
 
 **Status:** active  
 **Last reprioritized:** 2026-09-19  
-**Current selection:** CCR-002, fail closed on incomplete SIMPLE/ADVANCED
-compilation ([#15534](https://github.com/adhithyan15/coding-adventures/issues/15534))<br>
+**Current selection:** CCR-003, establish one reproducible upstream oracle
+manifest ([#15549](https://github.com/adhithyan15/coding-adventures/issues/15549))<br>
 **Current local loop base:** `coding-adventures` at
-`a31b2ccc1a97917bcac70ac4b4b921a4c4dfb095`<br>
+`608963c3aafe26f5fad7d33ac2c7fddeadc089b8`<br>
 **Local audit base:** `coding-adventures` at `06fc0524051a397ccc53c628b08c019b2bbf75ba`  
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
@@ -61,6 +61,18 @@ scaffold, and collapse-properties does not mutate the program.
   silently emits whitespace-only output after the typed bridge declines it.
   The exact oracle hash and reproduction are tracked in
   [#15534](https://github.com/adhithyan15/coding-adventures/issues/15534).
+- CCR-002 fixed that defect in
+  [#15544](https://github.com/adhithyan15/coding-adventures/pull/15544):
+  parse, typed-bridge, pass, and emit failures now surface as structured
+  diagnostics and a failed process without JavaScript, output files, or
+  correlation-vector sidecars.
+- `tests/diff/` contains 626 fixture directories, not one homogeneous corpus:
+  462 are `minify_*` stdout goldens targeted by CCR-004, while 164 exercise
+  CLI, diagnostic, typed-pipeline, source-map, and local extension contracts.
+  Of 546 fixture READMEs, 466 contain a version token and only 22 contain a
+  reproducible `java -jar` command. Eight minify READMEs have no version token.
+  Existing version mentions are dominated by `v20240317`, so README prose
+  cannot serve as the oracle registry.
 - The AST covers the main statement and expression families, including
   classes, modules, optional chains, generators, templates, and async nodes.
   Binding targets remain identifier-only, so destructuring and several
@@ -80,6 +92,13 @@ scaffold, and collapse-properties does not mutate the program.
 
 - The current Maven release is `v20260915`; the audited upstream checkout is
   two days newer at commit `10ca677a`.
+- The release tag is annotated object `72421c28d352e5dda9a111bec39c3d41af46f3a3`
+  and dereferences to commit `56007b2869ef6ce70b659b033459b8d8113101de`.
+  The Maven artifact
+  `com.google.javascript:closure-compiler:v20260915` is 14,976,538 bytes with
+  SHA-256
+  `9C8AF06056AA06F968B5A457540A85869C7BA2861C211C56D8D4EF6C35DDF36D`;
+  its manifest records JDK 21 and it embeds Apache-2.0 license and notice files.
 - Current `CommandLineRunner.java` exposes 102 explicit option declarations.
   After accounting for cli-builder-provided help/version and the eleven local
   correlation-vector extensions, the actionable naming drift is the upstream
@@ -150,8 +169,8 @@ scope.
 | Rank | ID | Work item | Acceptance evidence | Status |
 |---:|---|---|---|---|
 | 1 | CCR-001 | Make absolute and relative `--js` globs use native Windows separators and roots without regressing POSIX behavior. | The six Windows failures pass; focused mixed-separator, exclusion, `*`, and `**` tests pass; full `closurec` suite is green on Windows. | Complete — [#15529](https://github.com/adhithyan15/coding-adventures/pull/15529) |
-| 2 | CCR-002 | Replace silent SIMPLE/ADVANCED typed-pipeline fallback with an explicit compatibility policy. Unsupported syntax must either be a hard error or an opt-in, diagnostic-bearing fallback. | Differential tests prove exit code, stderr, and output for parse, bridge, pass, and emit failures. | Implemented locally; validation complete — [#15534](https://github.com/adhithyan15/coding-adventures/issues/15534) |
-| 3 | CCR-003 | Establish one reproducible oracle manifest pinned to upstream `v20260915` and commit `10ca677a`. Record Java version, commands, flags, hashes, licensing, and fixture provenance. | Offline manifest verifier passes and every checked-in fixture resolves to one pin and command. | Ready |
+| 2 | CCR-002 | Replace silent SIMPLE/ADVANCED typed-pipeline fallback with an explicit compatibility policy. Unsupported syntax must either be a hard error or an opt-in, diagnostic-bearing fallback. | Differential tests prove exit code, stderr, and output for parse, bridge, pass, and emit failures. | Complete — [#15544](https://github.com/adhithyan15/coding-adventures/pull/15544) |
+| 3 | CCR-003 | Establish one reproducible oracle manifest pinned to upstream `v20260915` and commit `10ca677a`. Record Java version, commands, flags, hashes, licensing, and fixture provenance. | Offline manifest verifier classifies all 626 differential fixture directories exactly once; every upstream-derived golden resolves to one immutable artifact pin and normalized command. | Selected — [#15549](https://github.com/adhithyan15/coding-adventures/issues/15549) |
 | 4 | CCR-004 | Re-run all 462 golden fixtures against the new oracle, classify drift, and update only reviewed deltas. | Machine-readable report records equal/changed/declined counts and every changed byte has a linked reason. | Blocked by CCR-003 |
 | 5 | CCR-005 | Generate a CLI surface audit from current `CommandLineRunner.java` and `cli.spec.json`, separating upstream, generated, extension, deprecated-alias, and unsupported flags. | CI fails on unclassified flag drift; canonical `--typed_ast_output_file` is accepted with tested compatibility for the legacy typo. | Ready |
 | 6 | CCR-006 | Add an explicit capability/status command or document generated matrix so users can tell parse-only flags from implemented semantics. | Matrix is generated from the same registry used by dispatch and cannot drift manually. | Blocked by CCR-005 |
@@ -222,3 +241,4 @@ the loop moved.
 | 2026-09-19 | CCR-001 implementation verified locally: all 688 unit tests and every integration target pass under `--no-fail-fast` on Windows. | Keep CCR-001 selected until its PR is green and merged; then re-fetch, record completion, and reprioritize the full queue. |
 | 2026-09-19 | CCR-001 merged as [#15529](https://github.com/adhithyan15/coding-adventures/pull/15529) at `a31b2ccc`; upstream remained at commit `10ca677a` and release `v20260915`. Direct oracle probing then proved malformed input exits 1 upstream but exits 0 with emitted JS locally, and proved typed-bridge declines silently weaken SIMPLE output. | Selected CCR-002 ([#15534](https://github.com/adhithyan15/coding-adventures/issues/15534)). A false-success compiler result outranks oracle infrastructure and all semantic expansion work under priority rule 2. |
 | 2026-09-19 | While implementing CCR-002, inspection found that SIMPLE correlation-vector provenance reports `inline` although the scheduler registers that pass only for ADVANCED; logged as CCR-041 ([#15542](https://github.com/adhithyan15/coding-adventures/issues/15542)). CCR-002's complete package suite passed after implementing explicit typed-pipeline errors. | Kept CCR-002 selected because false-success output remains the highest-priority open defect until merged. Ranked CCR-041 after front-end/output correctness work and before broader optimization expansion because inaccurate provenance impairs later parity measurement but does not change emitted JavaScript. |
+| 2026-09-19 | CCR-002 merged as [#15544](https://github.com/adhithyan15/coding-adventures/pull/15544) at `608963c3`; all required checks passed and no competing Closure PR remained. Fresh upstream verification found no release or `master` drift. Corpus inventory found 626 differential fixture directories, fragmented provenance, and only 22 README capture commands. | Selected CCR-003 ([#15549](https://github.com/adhithyan15/coding-adventures/issues/15549)). With false-success compilation repaired, oracle quality is the highest-priority dependency: it makes the 462-golden refresh reviewable and separates upstream evidence from local-only extension contracts before more semantic work lands. |
