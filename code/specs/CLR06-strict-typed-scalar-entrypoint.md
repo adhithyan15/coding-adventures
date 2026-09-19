@@ -60,8 +60,14 @@ undefined/forward uses, malformed arities, call signatures, returns, entrypoint
 and out-of-range immediates. Preserve legacy refusal and existing consumer tests.
 Run backend/simulator/builder/BrainfuckCLR/NibCLR suites, Clippy and docs checks.
 Spec precedes implementation; no matrix declaration changes.
-Encoding limits: reject more than 256 parameters or 65536 local slots per
+Encoding limits: reject more than 256 parameters or 256 local slots per
 function and more than 0xFFFFFF methods before narrowing indices/tokens.
 Use checked conversions for indices. Preserve method order and entry_label;
 callers must resolve entry_label rather than assume entry_method() selects it
 (the existing artifact convenience method returns the first method).
+
+Execution-bound revision: the builder can encode u16 local slots, but the
+simulator handles only compact/short local loads and stores. Limit this slice
+to 256 locals until long local opcodes have their own execution proof. This
+restriction supersedes the earlier encoding-only 65536-local bound.
+
