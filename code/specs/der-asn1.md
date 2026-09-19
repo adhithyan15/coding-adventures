@@ -163,6 +163,7 @@ categories include:
 
 - lower-level framing failure;
 - unexpected class, primitive/constructed bit, or tag number;
+- a child cursor used with a decoder configured with different limits;
 - depth or total-element budget exhausted;
 - invalid BOOLEAN length or value;
 - empty or non-minimal INTEGER, negative unsigned conversion, or unsigned

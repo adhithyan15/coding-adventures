@@ -1,0 +1,8 @@
+[package]
+name = "der-asn1"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded allocation-free typed ASN.1 DER value decoding"
+
+[dependencies]
+der-tlv = { path = "../der-tlv" }

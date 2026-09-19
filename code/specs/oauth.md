@@ -494,7 +494,13 @@ indefinite lengths, non-minimal encodings, overflow, truncation, universal EOC,
 and trailing data in exact mode. It does not interpret ASN.1 types, recurse
 through constructed values, parse X.509, validate certificate paths, verify
 signatures, or select trust roots, so it does not unblock concrete HTTPS by
-itself.
+itself. The typed `der-asn1` layer is now shipped above that framing primitive:
+it provides allocation-free canonical BOOLEAN, INTEGER, BIT STRING, OCTET
+STRING, NULL, and OBJECT IDENTIFIER decoding plus exact SEQUENCE, SET, and
+explicit context-wrapper traversal under one shared depth and total-element
+budget. It still provides no certificate schema, time or name semantics,
+signature verification, path construction, revocation, or trust-root source,
+so concrete HTTPS remains blocked.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

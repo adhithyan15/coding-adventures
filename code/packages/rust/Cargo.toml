@@ -760,6 +760,7 @@ members = [
     "brainfuck-wasm-compiler",
     "tcp-client",
     "der-tlv",
+    "der-asn1",
     "tls-server-identity",
     "tls-platform",
     "dns-message",
