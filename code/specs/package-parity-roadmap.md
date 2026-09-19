@@ -13801,6 +13801,21 @@ It is the smallest ready process-free prerequisite and is selected alone on
 fresh branch `codex/build-tool-neutral-graph-diff-coverage-20260919` before the
 paired Java/Kotlin graph/diff implementation.
 
+The implementation closes those three omissions without expanding the schema
+or host authority. The corpus now validates 157 cases and 285 staged files;
+the full Python schema/runner family passes 110 tests after a red regression
+test demonstrated that reversed native edge output had been hidden by
+presentation canonicalization. The runner now compares raw native edges to the
+independent sorted oracle while retaining unordered membership within each
+graph level. The canonical Go build tool consumes all three new fixtures
+directly through its production directed-graph, package-prefix, affected-node,
+and prerequisite-closure APIs. Its full race suite, vet, trimpath build, and
+coverage run pass, as do the directed-graph package test and vet fronts. The
+exact-main parity report remains collision-clean with the same inventory
+counts. Bandit reports no medium/high production-runner finding, and the
+change adds no filesystem, Git, process, environment, network, credential,
+native-link, execution, or host authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
