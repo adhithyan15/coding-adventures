@@ -188,6 +188,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private(set) var lastBrowsingContextRequest: NSDictionary?
   private(set) var lastDownloadRequest: NSDictionary?
   private(set) var lastPrintRequest: NSDictionary?
+  private(set) var lastShareRequest: NSDictionary?
 
   required override init() {
     let native = VentureNativeLibrary()
@@ -246,6 +247,11 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
       lastPrintRequest = effect
       NotificationCenter.default.post(
         name: Notification.Name("VenturePrintRequested"), object: self,
+        userInfo: ["request": effect])
+    } else if type == "share" {
+      lastShareRequest = effect
+      NotificationCenter.default.post(
+        name: Notification.Name("VentureShareRequested"), object: self,
         userInfo: ["request": effect])
     } else if type == "write-clipboard", let text = effect["text"] as? String {
       NSPasteboard.general.clearContents()
@@ -809,6 +815,46 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     if printPageEvents == eventCount + 1, address == targetURL,
       title == "Venture interaction acceptance"
     {
+      let sharePageEvents = chromeEventCounts["onSharePage", default: 0]
+      guard performNativeButtonClick(identifier: "share-page-button") else {
+        writeInteractionResult(
+          ["backend": "swiftui", "status": "error", "error": "share-page-button not found"],
+          to: markerPath)
+        return
+      }
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+        self?.verifySharePage(
+          startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+          eventCount: sharePageEvents, remaining: 50)
+      }
+      return
+    }
+    guard remaining > 0 else {
+      writeInteractionResult(
+        [
+          "backend": "swiftui", "status": "error", "printPageAddress": address,
+          "printPageTitle": title, "printPageEvents": String(printPageEvents),
+          "error": "native Print Page effect did not preserve page identity",
+        ],
+        to: markerPath)
+      return
+    }
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+      self?.verifyPrintPage(
+        startURL: startURL, targetURL: targetURL, markerPath: markerPath,
+        eventCount: eventCount, remaining: remaining - 1)
+    }
+  }
+
+  private func verifySharePage(
+    startURL: String, targetURL: String, markerPath: String, eventCount: Int, remaining: Int
+  ) {
+    let sharePageEvents = chromeEventCounts["onSharePage", default: 0]
+    let address = lastShareRequest?["address"] as? String ?? ""
+    let title = lastShareRequest?["title"] as? String ?? ""
+    if sharePageEvents == eventCount + 1, address == targetURL,
+      title == "Venture interaction acceptance"
+    {
       let viewSourceEvents = chromeEventCounts["onViewSource", default: 0]
       guard performNativeButtonClick(identifier: "view-source-button") else {
         writeInteractionResult(
@@ -826,15 +872,15 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     guard remaining > 0 else {
       writeInteractionResult(
         [
-          "backend": "swiftui", "status": "error", "printPageAddress": address,
-          "printPageTitle": title, "printPageEvents": String(printPageEvents),
-          "error": "native Print Page effect did not preserve page identity",
+          "backend": "swiftui", "status": "error", "sharePageAddress": address,
+          "sharePageTitle": title, "sharePageEvents": String(sharePageEvents),
+          "error": "native Share Page effect did not preserve page identity",
         ],
         to: markerPath)
       return
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-      self?.verifyPrintPage(
+      self?.verifySharePage(
         startURL: startURL, targetURL: targetURL, markerPath: markerPath,
         eventCount: eventCount, remaining: remaining - 1)
     }
@@ -1441,7 +1487,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func nativePageActionControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let identifiers = [
       "copy-address-button", "open-page-button", "save-page-button",
-      "print-page-button", "view-source-button",
+      "print-page-button", "share-page-button", "view-source-button",
     ]
     guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
     var visited = Set<ObjectIdentifier>()
@@ -1491,6 +1537,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     case "open-page-button": return ["New Window", "Open in New Window"]
     case "save-page-button": return ["Save", "Save Page"]
     case "print-page-button": return ["Print", "Print Page"]
+    case "share-page-button": return ["Share", "Share Page"]
     case "view-source-button": return ["Source", "View Source"]
     default: return []
     }

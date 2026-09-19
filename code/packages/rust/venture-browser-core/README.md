@@ -80,7 +80,8 @@ selects the committed history URL and emits a typed clipboard write, while
 Open in New Window selects the same URL and emits a `_blank` GET browsing
 context request with `noopener`. Save Page reuses that committed page URL to
 emit the existing typed download effect. Print Page snapshots the retained
-page's final address and normalized title into one typed print request. None of
+page's final address and normalized title into one typed print request, while
+Share Page snapshots the same identity into one typed share request. None of
 these commands reads the editable address draft or mutates the current session;
 native hosts only present the effect.
 

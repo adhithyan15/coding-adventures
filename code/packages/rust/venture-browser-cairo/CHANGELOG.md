@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Map the shared Share Page event and disabled state through one typed share
+  effect for Qt, Flutter, and Compose.
+
 - Map the shared Print Page event and disabled state through one typed print
   effect for Qt, Flutter, and Compose.
 

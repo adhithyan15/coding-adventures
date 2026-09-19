@@ -132,6 +132,12 @@ void main() {
       expect(host.lastPrintRequest?['title'], 'Flutter Start');
       debugPrint('flutter-live-stage=print-page');
 
+      await tester.tap(find.text('Share'));
+      await tester.pumpAndSettle();
+      expect(host.lastShareRequest?['address'], 'http://127.0.0.1:$port/start');
+      expect(host.lastShareRequest?['title'], 'Flutter Start');
+      debugPrint('flutter-live-stage=share-page');
+
       await tester.tap(find.text('Source'));
       await tester.pumpAndSettle();
       expect(host.lastAuxiliaryDocument?['kind'], 'view-source');

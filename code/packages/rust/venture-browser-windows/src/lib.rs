@@ -692,6 +692,11 @@ mod ffi {
                 json_string(&request.address),
                 json_string(&request.title),
             ),
+            BrowserHostEffect::Share(request) => format!(
+                "{{\"type\":\"share\",\"address\":{},\"title\":{}}}",
+                json_string(&request.address),
+                json_string(&request.title),
+            ),
             BrowserHostEffect::WriteClipboard(text) => format!(
                 "{{\"type\":\"write-clipboard\",\"text\":{}}}",
                 json_string(text),
@@ -712,7 +717,7 @@ mod ffi {
             .map(|message| format!(",\"error\":{}", json_string(message)))
             .unwrap_or_default();
         let value = format!(
-            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
+            "{{\"props\":{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"view-source-disabled\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":false}}{effect}{error}}}",
             json_string(&props.address),
             json_string(&props.page_title),
             json_string(&props.status_text),
@@ -724,6 +729,7 @@ mod ffi {
             props.open_page_disabled,
             props.save_page_disabled,
             props.print_page_disabled,
+            props.share_page_disabled,
             props.view_source_disabled,
             props.find_open,
             json_string(&props.find_query),
@@ -790,6 +796,7 @@ mod ffi {
             "onOpenPageInNewWindow" => Some(BrowserChromeEvent::OpenPageInNewWindow),
             "onSavePage" => Some(BrowserChromeEvent::SavePage),
             "onPrintPage" => Some(BrowserChromeEvent::PrintPage),
+            "onSharePage" => Some(BrowserChromeEvent::SharePage),
             "onViewSource" => Some(BrowserChromeEvent::ViewSource),
             "onFindOpen" => Some(BrowserChromeEvent::FindOpen),
             "onFindChange" => string_arg(value).map(BrowserChromeEvent::FindChange),

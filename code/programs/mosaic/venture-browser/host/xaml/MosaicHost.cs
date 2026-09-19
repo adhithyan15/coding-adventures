@@ -37,10 +37,12 @@ public static class MosaicHost
     public static JsonElement? LastBrowsingContextRequest { get; private set; }
     public static JsonElement? LastDownloadRequest { get; private set; }
     public static JsonElement? LastPrintRequest { get; private set; }
+    public static JsonElement? LastShareRequest { get; private set; }
     public static event Action<JsonElement>? AuxiliaryDocumentRequested;
     public static event Action<JsonElement>? BrowsingContextRequested;
     public static event Action<JsonElement>? DownloadRequested;
     public static event Action<JsonElement>? PrintRequested;
+    public static event Action<JsonElement>? ShareRequested;
     public static JsonElement? LastFilePickerRequest { get; private set; }
     public static event Action<JsonElement>? FilePickerRequested;
 
@@ -149,6 +151,12 @@ public static class MosaicHost
             LastPrintRequest = retained;
             PrintRequested?.Invoke(retained);
         }
+        else if (type.GetString() == "share")
+        {
+            var retained = effect.Clone();
+            LastShareRequest = retained;
+            ShareRequested?.Invoke(retained);
+        }
         else if (type.GetString() == "write-clipboard"
             && effect.TryGetProperty("text", out var text))
         {
@@ -198,6 +206,8 @@ public static class MosaicHost
                     component, "save-page-button");
                 var printPageButton = await FindAutomationElementAsync<Button>(
                     component, "print-page-button");
+                var sharePageButton = await FindAutomationElementAsync<Button>(
+                    component, "share-page-button");
                 var viewSourceButton = await FindAutomationElementAsync<Button>(
                     component, "view-source-button");
                 var goButton = await FindAutomationElementAsync<Button>(component, "go-button");
@@ -210,6 +220,7 @@ public static class MosaicHost
                     || openPageButton is null
                     || savePageButton is null
                     || printPageButton is null
+                    || sharePageButton is null
                     || viewSourceButton is null
                     || goButton is null)
                 {
@@ -377,6 +388,24 @@ public static class MosaicHost
                         backend = "xaml",
                         status = "error",
                         error = "native Print Page effect did not preserve page identity",
+                    });
+                    return;
+                }
+                var sharePageProvider = new ButtonAutomationPeer(sharePageButton)
+                    as IInvokeProvider;
+                sharePageProvider?.Invoke();
+                if (sharePageProvider is null
+                    || !await WaitForControlStateAsync(
+                        () => LastShareRequest is { } share
+                            && share.GetProperty("address").GetString() == targetUrl
+                            && share.GetProperty("title").GetString()
+                                == "Venture interaction acceptance"))
+                {
+                    WriteInteractionResult(markerPath, new
+                    {
+                        backend = "xaml",
+                        status = "error",
+                        error = "native Share Page effect did not preserve page identity",
                     });
                     return;
                 }

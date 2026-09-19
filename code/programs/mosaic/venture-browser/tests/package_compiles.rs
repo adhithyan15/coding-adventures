@@ -923,7 +923,10 @@ fn print_page_uses_one_typed_presenter_request_across_generated_hosts() {
         "BrowserHostEffect::Print",
         "Print dialog requested",
     ] {
-        assert!(core.contains(symbol), "shared print-page core omits {symbol}");
+        assert!(
+            core.contains(symbol),
+            "shared print-page core omits {symbol}"
+        );
     }
 
     for (name, path, presenter) in [
@@ -939,11 +942,7 @@ fn print_page_uses_one_typed_presenter_request_across_generated_hosts() {
             "host/flutter/mosaic_host.dart",
             "lastPrintRequest",
         ),
-        (
-            "Compose",
-            "host/compose/MosaicHost.kt",
-            "lastPrintRequest",
-        ),
+        ("Compose", "host/compose/MosaicHost.kt", "lastPrintRequest"),
     ] {
         let host = read_package_file(path);
         assert!(host.contains("print"), "{name} omits the shared effect");
@@ -989,6 +988,90 @@ fn print_page_uses_one_typed_presenter_request_across_generated_hosts() {
                 || acceptance.contains("printPage")
                 || acceptance.contains("lastPrintRequest"),
             "{path} omits Print Page acceptance"
+        );
+    }
+}
+
+#[test]
+fn share_page_uses_one_typed_presenter_request_across_generated_hosts() {
+    let interface = read_package_file("src/VentureChrome.mil");
+    let layout = read_package_file("src/VentureChrome.mll");
+    assert!(interface.contains("slot share-page-disabled"));
+    assert!(interface.contains("emit onSharePage"));
+    assert!(layout.contains("HostButton [ share-page-button ]"));
+
+    let core = read_package_file("../../../packages/rust/venture-browser-core/src/lib.rs");
+    for symbol in [
+        "BrowserChromeAction::SharePage",
+        "BrowserHostEffect::Share",
+        "BrowserShareRequest",
+        "Share sheet requested",
+    ] {
+        assert!(
+            core.contains(symbol),
+            "shared share-page core omits {symbol}"
+        );
+    }
+
+    for (name, path, presenter) in [
+        (
+            "SwiftUI",
+            "host/swiftui/MosaicHost.swift",
+            "VentureShareRequested",
+        ),
+        ("XAML", "host/xaml/MosaicHost.cs", "ShareRequested"),
+        ("Qt", "host/qt/MosaicHost.cpp", "shareRequested"),
+        (
+            "Flutter",
+            "host/flutter/mosaic_host.dart",
+            "lastShareRequest",
+        ),
+        ("Compose", "host/compose/MosaicHost.kt", "lastShareRequest"),
+    ] {
+        let host = read_package_file(path);
+        assert!(host.contains("share"), "{name} omits the shared effect");
+        assert!(host.contains(presenter), "{name} omits its presenter seam");
+    }
+
+    for (name, path) in [
+        (
+            "Cairo",
+            "../../../packages/rust/venture-browser-cairo/src/lib.rs",
+        ),
+        (
+            "macOS",
+            "../../../packages/rust/venture-browser-macos/src/lib.rs",
+        ),
+        (
+            "Windows",
+            "../../../packages/rust/venture-browser-windows/src/lib.rs",
+        ),
+    ] {
+        let bridge = read_package_file(path);
+        assert!(bridge.contains("onSharePage"), "{name} omits the event");
+        assert!(
+            bridge.contains("\\\"type\\\":\\\"share\\\""),
+            "{name} omits effect serialization"
+        );
+    }
+
+    for path in [
+        "host/compose/VentureChromeInteractionTest.kt",
+        "host/flutter/venture_chrome_interaction_test.dart",
+        "host/qt/tst_venture_chrome.qml",
+        "host/react/VentureChromeInteraction.test.tsx",
+        "host/swiftui/MosaicHost.swift",
+        "host/web/VentureChromeInteraction.test.js",
+        "host/xaml/MosaicHost.cs",
+    ] {
+        let acceptance = read_package_file(path);
+        assert!(
+            acceptance.contains("share-page-button")
+                || acceptance.contains("Share Page")
+                || acceptance.contains("onSharePage")
+                || acceptance.contains("sharePage")
+                || acceptance.contains("lastShareRequest"),
+            "{path} omits Share Page acceptance"
         );
     }
 }
