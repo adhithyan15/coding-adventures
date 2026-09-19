@@ -36,6 +36,7 @@ MosaicVM  (drives MosaicRenderer callbacks)
 | `Icon`   | `<span className="icon">`                                |
 | `Grid`   | `<table>` with `.map()` header and row rendering         |
 | `HostSlider` | native `<input type="range">` with numeric change/commit dispatch |
+| `HostNavigationSplit` | flex wrapper with named `<nav>` pane and `<section>` detail region |
 
 ## Slot → prop mapping
 
