@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Recalculate an edited formula in dependency order with its consumers so SUM ranges and cross-sheet chains see its new value immediately (#15519).
+
 - Expose a sparse whole-workbook content query that includes authored formulas,
   even before calculation, without confusing a blank viewport with an empty file.
 

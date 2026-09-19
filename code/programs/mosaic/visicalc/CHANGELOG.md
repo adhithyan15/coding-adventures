@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix stale totals after formula edits through the shared spreadsheet engine; cover the generated React root and real Rust WASM lifecycle (#15519).
+
 ### Added -- versioned web preview artifacts (#15515)
 
 Package the production web app and compiled Rust runtime into a versioned ZIP
