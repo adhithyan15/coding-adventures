@@ -1,4 +1,4 @@
-# 0.281.0 - 2026-09-19 - Nested compound recurrence siblings
+## Unreleased - 2026-09-19 - Nested compound recurrence siblings
 
 - Flatten unlabeled nested compound statements while proving bounded finite-step,
   while, and controlled-scalar recurrences, so nested grouping of the already
