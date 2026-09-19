@@ -38,12 +38,14 @@
 //! | `h_padding`     | 24      | Horizontal text padding inside a node    |
 //! | `char_width`    | 8       | Approximate width per character (px)     |
 
-pub const VERSION: &str = "0.18.0";
+pub const VERSION: &str = "0.21.0";
+
+use std::collections::BTreeMap;
 
 use diagram_ir::{
-    DiagramDirection, DiagramShape, GraphDiagram, LayoutedGraphDiagram, LayoutedGraphEdge,
-    LayoutedGraphGroup, LayoutedGraphNode, Point, ResolvedDiagramStyle, resolve_style,
-    resolve_style_with_base,
+    DiagramDirection, DiagramShape, DiagramStyle, GraphDiagram, LayoutedGraphDiagram,
+    LayoutedGraphEdge, LayoutedGraphGroup, LayoutedGraphNode, Point, ResolvedDiagramStyle,
+    resolve_style, resolve_style_with_base,
 };
 use directed_graph::Graph;
 use layout_ir::{FontSpec, TextMeasurer};
@@ -66,6 +68,8 @@ pub struct GraphLayoutOptions {
     pub node_height:     Option<f64>,
     pub h_padding:       Option<f64>,
     pub char_width:      Option<f64>,
+    /// Integrator-supplied visual styles keyed by semantic class name.
+    pub class_styles:    BTreeMap<String, DiagramStyle>,
 }
 
 struct Opts {
@@ -77,6 +81,7 @@ struct Opts {
     node_height:    f64,
     h_padding:      f64,
     char_width:     f64,
+    class_styles:   BTreeMap<String, DiagramStyle>,
 }
 
 impl Opts {
@@ -91,8 +96,19 @@ impl Opts {
             node_height:    o.node_height.unwrap_or(52.0),
             h_padding:      o.h_padding.unwrap_or(24.0),
             char_width:     o.char_width.unwrap_or(8.0),
+            class_styles:   o.class_styles,
         }
     }
+}
+
+fn resolved_node_style(
+    node: &diagram_ir::GraphNode,
+    opts: &Opts,
+) -> ResolvedDiagramStyle {
+    node.classes.iter().fold(
+        resolve_style(node.style.as_ref()),
+        |base, class_name| resolve_style_with_base(opts.class_styles.get(class_name), base),
+    )
 }
 
 // ============================================================================
@@ -145,7 +161,7 @@ fn node_dimensions(
     opts: &Opts,
     measurer: Option<&dyn TextMeasurer>,
 ) -> (f64, f64) {
-    let resolved_style = resolve_style(node.style.as_ref());
+    let resolved_style = resolved_node_style(node, opts);
     let font_size = resolved_style.font_size;
     let font_weight = resolved_style.font_weight;
     let font_italic = resolved_style.font_italic;
@@ -346,7 +362,7 @@ fn place_nodes(
                 }
             };
 
-            let style = resolve_style(node.style.as_ref());
+            let style = resolved_node_style(node, opts);
 
             nodes.push(LayoutedGraphNode {
                 id:     node_id.clone(),
@@ -936,7 +952,43 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.18.0");
+        assert_eq!(VERSION, "0.21.0");
+    }
+
+    #[test]
+    fn semantic_classes_resolve_in_source_order() {
+        let mut diagram = two_node_diagram(DiagramDirection::Tb);
+        diagram.nodes[0].classes = vec!["pipeline".into(), "emphasis".into()];
+        let options = GraphLayoutOptions {
+            class_styles: BTreeMap::from([
+                (
+                    "pipeline".into(),
+                    DiagramStyle {
+                        fill: Some("#dbeafe".into()),
+                        stroke: Some("#1d4ed8".into()),
+                        font_size: Some(28.0),
+                        ..DiagramStyle::default()
+                    },
+                ),
+                (
+                    "emphasis".into(),
+                    DiagramStyle {
+                        fill: Some("#dcfce7".into()),
+                        font_weight: Some(700),
+                        ..DiagramStyle::default()
+                    },
+                ),
+            ]),
+            ..GraphLayoutOptions::default()
+        };
+
+        let layout = layout_graph_diagram(&diagram, Some(&options), None);
+        let node = &layout.nodes[0];
+        assert_eq!(node.style.fill, "#dcfce7");
+        assert_eq!(node.style.stroke, "#1d4ed8");
+        assert_eq!(node.style.font_size, 28.0);
+        assert_eq!(node.style.font_weight, 700);
+        assert!(node.height > layout.nodes[1].height);
     }
 
     #[test]
