@@ -108,6 +108,15 @@
             <button data-on-click="onAddSchematicSavedOutputCurrent" style="background: #f5f3ff; color: #5b21b6; border-width: 1px; border-color: #c4b5fd; border-radius: 3px; padding: 6px">{{source}}</button>
           <!-- /mosaic-for -->
         </div>
+        <span style="font-size: 12px; color: #475569">{{schematicSavedOutputDifferentialLabel}}</span>
+        <span style="font-size: 12px; color: #475569">{{schematicSavedOutputDifferentialPositiveLabel}}</span>
+        <!-- emit "onSchematicSavedOutputDifferentialPositiveChange" dropped: HTML is static -->
+        <input type="text" value="{{schematicSavedOutputDifferentialPositive}}" data-disabled="{{schematicSavedOutputDifferentialDisabled}}" data-on-change="onSchematicSavedOutputDifferentialPositiveChange" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px; font-family: monospace">
+        <span style="font-size: 12px; color: #475569">{{schematicSavedOutputDifferentialNegativeLabel}}</span>
+        <!-- emit "onSchematicSavedOutputDifferentialNegativeChange" dropped: HTML is static -->
+        <input type="text" value="{{schematicSavedOutputDifferentialNegative}}" data-disabled="{{schematicSavedOutputDifferentialDisabled}}" data-on-change="onSchematicSavedOutputDifferentialNegativeChange" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px; font-family: monospace">
+        <!-- emit "onAddSchematicSavedOutputDifferential" dropped: HTML is static -->
+        <button data-disabled="{{schematicSavedOutputDifferentialDisabled}}" data-on-click="onAddSchematicSavedOutputDifferential" style="background: #ecfeff; color: #155e75; border-width: 1px; border-color: #67e8f9; border-radius: 3px; padding: 6px">{{schematicSavedOutputDifferentialAddLabel}}</button>
         <div style="display: flex; flex-direction: row; gap: 6px">
           <!-- mosaic-for each="schematicSavedOutputRows" as="probe" index="probe-index" -->
             <!-- emit "onRemoveSchematicSavedOutput" dropped: HTML is static -->
@@ -131,6 +140,15 @@
             <button data-on-click="onAddSchematicScopedOutputCurrent" style="background: #f5f3ff; color: #5b21b6; border-width: 1px; border-color: #c4b5fd; border-radius: 3px; padding: 6px">{{source}}</button>
           <!-- /mosaic-for -->
         </div>
+        <span style="font-size: 12px; color: #475569">{{schematicScopedOutputDifferentialLabel}}</span>
+        <span style="font-size: 12px; color: #475569">{{schematicScopedOutputDifferentialPositiveLabel}}</span>
+        <!-- emit "onSchematicScopedOutputDifferentialPositiveChange" dropped: HTML is static -->
+        <input type="text" value="{{schematicScopedOutputDifferentialPositive}}" data-disabled="{{schematicScopedOutputDifferentialDisabled}}" data-on-change="onSchematicScopedOutputDifferentialPositiveChange" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px; font-family: monospace">
+        <span style="font-size: 12px; color: #475569">{{schematicScopedOutputDifferentialNegativeLabel}}</span>
+        <!-- emit "onSchematicScopedOutputDifferentialNegativeChange" dropped: HTML is static -->
+        <input type="text" value="{{schematicScopedOutputDifferentialNegative}}" data-disabled="{{schematicScopedOutputDifferentialDisabled}}" data-on-change="onSchematicScopedOutputDifferentialNegativeChange" style="background: #ffffff; color: #0f172a; border-width: 1px; border-color: #cbd5e1; border-radius: 3px; padding: 6px; font-family: monospace">
+        <!-- emit "onAddSchematicScopedOutputDifferential" dropped: HTML is static -->
+        <button data-disabled="{{schematicScopedOutputDifferentialDisabled}}" data-on-click="onAddSchematicScopedOutputDifferential" style="background: #ecfeff; color: #155e75; border-width: 1px; border-color: #67e8f9; border-radius: 3px; padding: 6px">{{schematicScopedOutputDifferentialAddLabel}}</button>
         <div style="display: flex; flex-direction: row; gap: 6px">
           <!-- mosaic-for each="schematicScopedOutputRows" as="probe" index="probe-index" -->
             <!-- emit "onRemoveSchematicScopedOutput" dropped: HTML is static -->

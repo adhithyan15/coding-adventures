@@ -68,12 +68,26 @@ const fallbackProps = {
   "schematicRows": [],
   "schematicSavedOutputCurrentLabel": "Sample SchematicSavedOutputCurrentLabel",
   "schematicSavedOutputCurrentOptions": [],
+  "schematicSavedOutputDifferentialAddLabel": "Sample SchematicSavedOutputDifferentialAddLabel",
+  "schematicSavedOutputDifferentialDisabled": false,
+  "schematicSavedOutputDifferentialLabel": "Sample SchematicSavedOutputDifferentialLabel",
+  "schematicSavedOutputDifferentialNegative": "Sample SchematicSavedOutputDifferentialNegative",
+  "schematicSavedOutputDifferentialNegativeLabel": "Sample SchematicSavedOutputDifferentialNegativeLabel",
+  "schematicSavedOutputDifferentialPositive": "Sample SchematicSavedOutputDifferentialPositive",
+  "schematicSavedOutputDifferentialPositiveLabel": "Sample SchematicSavedOutputDifferentialPositiveLabel",
   "schematicSavedOutputLabel": "Sample SchematicSavedOutputLabel",
   "schematicSavedOutputRows": [],
   "schematicSavedOutputVoltageLabel": "Sample SchematicSavedOutputVoltageLabel",
   "schematicSavedOutputVoltageOptions": [],
   "schematicScopedOutputCurrentLabel": "Sample SchematicScopedOutputCurrentLabel",
   "schematicScopedOutputCurrentOptions": [],
+  "schematicScopedOutputDifferentialAddLabel": "Sample SchematicScopedOutputDifferentialAddLabel",
+  "schematicScopedOutputDifferentialDisabled": false,
+  "schematicScopedOutputDifferentialLabel": "Sample SchematicScopedOutputDifferentialLabel",
+  "schematicScopedOutputDifferentialNegative": "Sample SchematicScopedOutputDifferentialNegative",
+  "schematicScopedOutputDifferentialNegativeLabel": "Sample SchematicScopedOutputDifferentialNegativeLabel",
+  "schematicScopedOutputDifferentialPositive": "Sample SchematicScopedOutputDifferentialPositive",
+  "schematicScopedOutputDifferentialPositiveLabel": "Sample SchematicScopedOutputDifferentialPositiveLabel",
   "schematicScopedOutputLabel": "Sample SchematicScopedOutputLabel",
   "schematicScopedOutputRows": [],
   "schematicScopedOutputVoltageLabel": "Sample SchematicScopedOutputVoltageLabel",
@@ -122,6 +136,7 @@ const emitPayloads = {
       "type": "text"
     }
   ],
+  "onAddSchematicSavedOutputDifferential": [],
   "onAddSchematicSavedOutputVoltage": [
     {
       "name": "output",
@@ -134,6 +149,7 @@ const emitPayloads = {
       "type": "text"
     }
   ],
+  "onAddSchematicScopedOutputDifferential": [],
   "onAddSchematicScopedOutputVoltage": [
     {
       "name": "output",
@@ -210,6 +226,30 @@ const emitPayloads = {
     }
   ],
   "onSchematicReferenceChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
+  "onSchematicSavedOutputDifferentialNegativeChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
+  "onSchematicSavedOutputDifferentialPositiveChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
+  "onSchematicScopedOutputDifferentialNegativeChange": [
+    {
+      "name": "value",
+      "type": "text"
+    }
+  ],
+  "onSchematicScopedOutputDifferentialPositiveChange": [
     {
       "name": "value",
       "type": "text"
