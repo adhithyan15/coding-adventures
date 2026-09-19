@@ -1,5 +1,15 @@
 ## HL-C399 — nothing checks that a Wrap-up Recall's answer is taught by its own lesson
 
+**Status: CLOSED (2026-09-19) for the observed regression.** The Malayalam
+corpus suite now pins all three parts of the chapter-93 repair: the answer names
+only the respectful *you*, it does not reintroduce *we*, and the recall metadata
+does not assess the unavailable `ML-LEX-NJAANGAL-01` atom. A corpus-wide prose
+inference rule was deliberately not added: bold recall answers include ordinary
+English explanations, derived forms, and earlier-walk knowledge, so equating
+every emphasized span with a headword would produce thousands of false
+positives. The existing block-knowledge closure remains the general structural
+gate; the semantic incident now has direct regression coverage.
+
 Found in Malayalam chapter 93, by a **security reviewer**, after the full suite,
 `validate` and all twelve gates had passed the file.
 
