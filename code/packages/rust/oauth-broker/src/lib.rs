@@ -476,6 +476,15 @@ pub trait OAuthTokenTransport {
     ) -> Result<TokenEndpointResponse, TokenTransportError>;
 }
 
+/// Authorized provider-neutral transport for one public-client code exchange.
+pub trait OAuthTokenExchangeTransport {
+    /// Send one already validated zeroizing authorization-code exchange.
+    fn send_exchange(
+        &mut self,
+        request: &TokenExchangeRequest,
+    ) -> Result<TokenEndpointResponse, TokenTransportError>;
+}
+
 /// Authorized provider-neutral transport for one public-client RFC 7009 request.
 pub trait OAuthTokenRevocationTransport {
     /// Send one already validated zeroizing public-client revocation request.
@@ -961,6 +970,8 @@ pub enum BrokerAuditAction {
     CredentialCreate,
     /// Refresh and atomically rotate one account credential.
     Refresh,
+    /// Send and decode one public-client authorization-code exchange.
+    PublicExchange,
     /// Authenticate and send one client-secret refresh request.
     ClientSecretRefresh,
     /// Sign, send, and decode one private-key-JWT-authenticated refresh request.
@@ -987,6 +998,8 @@ pub enum BrokerAuditAction {
     PrivateKeyJwtRevocationCredentialDelete,
     /// Exchange and persist one client-secret-authenticated credential response.
     ClientSecretExchangeCredentialCreate,
+    /// Exchange and persist one public-client credential response.
+    PublicExchangeCredentialCreate,
     /// Verify exchange identity and persist under its derived opaque account key.
     ClientSecretExchangeVerifiedCredentialCreate,
     /// Load static identity policy, verify exchange identity, and persist by opaque key.
@@ -2575,6 +2588,42 @@ impl<S: CredentialStore> OAuthBroker<S> {
         )
     }
 
+    /// Send and decode one prepared public-client token exchange.
+    ///
+    /// The request has already consumed and validated the authorization
+    /// transaction. The registered provider's exact client ID, token endpoint,
+    /// and retained public `none` profile are checked before the injected
+    /// transport is invoked. The broker audit-brackets that effect and releases
+    /// only an OAuth-audited bounded token response.
+    pub fn send_public_exchange<T, A>(
+        &self,
+        request: TokenExchangeRequest,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<TokenResponse, BrokerError>
+    where
+        T: OAuthTokenExchangeTransport,
+        A: BrokerAuditSink + OAuthAuditSink,
+    {
+        let provider = request.provider().clone();
+        let trace = request.trace();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::PublicExchange,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = self.send_public_exchange_inner(request, transport, audit);
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::PublicExchange,
+            result,
+        )
+    }
+
     /// Authenticate, send, and decode one prepared client-secret token exchange.
     ///
     /// The request has already consumed and validated the authorization
@@ -3119,6 +3168,52 @@ impl<S: CredentialStore> OAuthBroker<S> {
             &provider_id,
             trace,
             BrokerAuditAction::PrivateKeyJwtRevocationCredentialDelete,
+            result,
+        )
+    }
+
+    /// Exchange and persist one public-client credential response.
+    ///
+    /// The caller-selected opaque account key must name the request provider
+    /// before registered public policy, transport, clock, or credential custody
+    /// is accessed. The zeroizing PKCE request remains inside the injected
+    /// transport boundary; its bounded response crosses the OAuth credential
+    /// release gate directly into audited credential creation. Only the opaque
+    /// storage revision is released.
+    pub fn exchange_public_and_store_credentials<C, T, A>(
+        &self,
+        key: &CredentialKey,
+        request: TokenExchangeRequest,
+        clock: &mut C,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<CredentialRevision, BrokerError>
+    where
+        C: BrokerClock,
+        T: OAuthTokenExchangeTransport,
+        A: OAuthBrokerAuditSink,
+    {
+        let provider = request.provider().clone();
+        let trace = request.trace();
+        publish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::PublicExchangeCredentialCreate,
+            BrokerAuditOutcome::Attempted,
+        )?;
+        let result = (|| {
+            if key.provider() != &provider {
+                return Err(BrokerError::BindingMismatch);
+            }
+            let response = self.send_public_exchange(request, transport, audit)?;
+            self.store_initial_response(key, response, trace, clock, audit)
+        })();
+        finish_broker(
+            audit,
+            &provider,
+            trace,
+            BrokerAuditAction::PublicExchangeCredentialCreate,
             result,
         )
     }
@@ -4487,6 +4582,31 @@ impl<S: CredentialStore> OAuthBroker<S> {
             .map_err(map_oauth_error)
     }
 
+    fn send_public_exchange_inner<T, A>(
+        &self,
+        request: TokenExchangeRequest,
+        transport: &mut T,
+        audit: &mut A,
+    ) -> Result<TokenResponse, BrokerError>
+    where
+        T: OAuthTokenExchangeTransport,
+        A: BrokerAuditSink + OAuthAuditSink,
+    {
+        let provider = self.registered_provider(request.provider())?;
+        if provider.confidential_authentication_method().is_some()
+            || request.client_id() != provider.config().client_id()
+            || request.endpoint() != provider.config().token_endpoint()
+        {
+            return Err(BrokerError::BindingMismatch);
+        }
+        let context = request.response_context();
+        let wire_response = send_public_exchange_audited(transport, &request, audit)?;
+        let (status, body) = wire_response.into_parts();
+        decode_token_response(context, status, provider.response_format(), body)
+            .publish_then_release(audit)
+            .map_err(map_oauth_error)
+    }
+
     fn send_client_secret_exchange_inner<SS, T, A>(
         &self,
         authentication: &ClientSecretAuthentication,
@@ -4805,6 +4925,30 @@ fn send_private_key_jwt_revocation_audited<
     )
 }
 
+fn send_public_exchange_audited<T: OAuthTokenExchangeTransport, A: BrokerAuditSink>(
+    transport: &mut T,
+    request: &TokenExchangeRequest,
+    audit: &mut A,
+) -> Result<TokenEndpointResponse, BrokerError> {
+    publish_broker(
+        audit,
+        request.provider(),
+        request.trace(),
+        BrokerAuditAction::TokenTransport,
+        BrokerAuditOutcome::Attempted,
+    )?;
+    let result = transport
+        .send_exchange(request)
+        .map_err(|_| BrokerError::Transport);
+    finish_broker(
+        audit,
+        request.provider(),
+        request.trace(),
+        BrokerAuditAction::TokenTransport,
+        result,
+    )
+}
+
 fn send_client_secret_exchange_audited<
     T: OAuthClientSecretTokenExchangeTransport,
     A: BrokerAuditSink,
@@ -5102,6 +5246,15 @@ mod tests {
                     (BrokerAuditAction::ClientSecretRefresh, BrokerAuditOutcome::Failed(_)) => {
                         "refresh-failed"
                     }
+                    (BrokerAuditAction::PublicExchange, BrokerAuditOutcome::Attempted) => {
+                        "public-exchange-attempted"
+                    }
+                    (BrokerAuditAction::PublicExchange, BrokerAuditOutcome::Succeeded) => {
+                        "public-exchange-succeeded"
+                    }
+                    (BrokerAuditAction::PublicExchange, BrokerAuditOutcome::Failed(_)) => {
+                        "public-exchange-failed"
+                    }
                     (BrokerAuditAction::PrivateKeyJwtRefresh, BrokerAuditOutcome::Attempted) => {
                         "private-key-refresh-attempted"
                     }
@@ -5228,6 +5381,18 @@ mod tests {
                         BrokerAuditAction::ClientSecretExchangeCredentialCreate,
                         BrokerAuditOutcome::Failed(_),
                     ) => "exchange-store-failed",
+                    (
+                        BrokerAuditAction::PublicExchangeCredentialCreate,
+                        BrokerAuditOutcome::Attempted,
+                    ) => "public-exchange-store-attempted",
+                    (
+                        BrokerAuditAction::PublicExchangeCredentialCreate,
+                        BrokerAuditOutcome::Succeeded,
+                    ) => "public-exchange-store-succeeded",
+                    (
+                        BrokerAuditAction::PublicExchangeCredentialCreate,
+                        BrokerAuditOutcome::Failed(_),
+                    ) => "public-exchange-store-failed",
                     (
                         BrokerAuditAction::ClientSecretExchangeVerifiedCredentialCreate,
                         BrokerAuditOutcome::Attempted,
@@ -5607,6 +5772,43 @@ mod tests {
                 .form_body()
                 .contains(&format!("refresh_token={}", self.expected_refresh)));
             self.responses.pop_front().ok_or(TokenTransportError)
+        }
+    }
+
+    struct MockPublicExchangeTransport {
+        response: Option<Result<TokenEndpointResponse, TokenTransportError>>,
+        expected_provider: &'static str,
+        calls: usize,
+        order: Rc<RefCell<Vec<&'static str>>>,
+    }
+
+    impl OAuthTokenExchangeTransport for MockPublicExchangeTransport {
+        fn send_exchange(
+            &mut self,
+            request: &TokenExchangeRequest,
+        ) -> Result<TokenEndpointResponse, TokenTransportError> {
+            self.calls += 1;
+            self.order.borrow_mut().push("transport-effect");
+            assert_eq!(request.provider().as_str(), self.expected_provider);
+            assert_eq!(
+                request.endpoint(),
+                format!("https://token.{}.example/token", self.expected_provider)
+            );
+            assert_eq!(
+                request.client_id(),
+                format!("{}-public-client", self.expected_provider)
+            );
+            assert!(request
+                .form_body()
+                .contains("grant_type=authorization_code"));
+            assert!(request.form_body().contains("code=code-value"));
+            assert!(request.form_body().contains(&format!(
+                "client_id={}-public-client",
+                self.expected_provider
+            )));
+            assert!(!request.form_body().contains("client_secret="));
+            assert!(!request.form_body().contains("client_assertion="));
+            self.response.take().unwrap_or(Err(TokenTransportError))
         }
     }
 
@@ -9849,6 +10051,300 @@ mod tests {
                 .custody
                 .with_access_token(&key, trace(64), &mut audit, |_| ()),
             Err(CustodyError::NotFound)
+        );
+    }
+
+    #[test]
+    fn public_exchange_transport_audits_gate_effect_and_response() {
+        let provider_config = config("fixture");
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let mut setup_audit = RecordingAudit::default();
+        broker
+            .register_provider(policy("fixture", 300), trace(102), &mut setup_audit)
+            .unwrap();
+        let request = prepared_exchange(&provider_config, trace(103), &mut setup_audit);
+        let mut transport = MockPublicExchangeTransport {
+            response: None,
+            expected_provider: "fixture",
+            calls: 0,
+            order: Rc::new(RefCell::new(Vec::new())),
+        };
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(2),
+            ..RecordingAudit::default()
+        };
+
+        assert!(matches!(
+            broker.send_public_exchange(request, &mut transport, &mut audit),
+            Err(BrokerError::Audit)
+        ));
+        assert_eq!(transport.calls, 0);
+        assert!(audit.oauth.is_empty());
+
+        let request = prepared_exchange(&provider_config, trace(103), &mut setup_audit);
+        let mut transport = MockPublicExchangeTransport {
+            response: Some(Ok(TokenEndpointResponse::new(
+                200,
+                Zeroizing::new(br#"{"access_token":"withheld","token_type":"Bearer"}"#.to_vec()),
+            )
+            .unwrap())),
+            expected_provider: "fixture",
+            calls: 0,
+            order: Rc::new(RefCell::new(Vec::new())),
+        };
+        let mut audit = RecordingAudit {
+            fail_broker_on: Some(3),
+            ..RecordingAudit::default()
+        };
+
+        assert!(matches!(
+            broker.send_public_exchange(request, &mut transport, &mut audit),
+            Err(BrokerError::Audit)
+        ));
+        assert_eq!(transport.calls, 1);
+        assert!(audit.oauth.is_empty());
+    }
+
+    #[test]
+    fn public_exchange_persists_without_releasing_credentials() {
+        let provider_config = config("fixture");
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(policy("fixture", 300), trace(104), &mut audit)
+            .unwrap();
+        let request = prepared_exchange(&provider_config, trace(105), &mut audit);
+        let credential_key = key("fixture");
+        let oauth_events_before = audit.oauth.len();
+        let custody_events_before = audit.custody.len();
+        order.borrow_mut().clear();
+        let mut transport = MockPublicExchangeTransport {
+            response: Some(Ok(TokenEndpointResponse::new(
+                200,
+                Zeroizing::new(
+                    br#"{"access_token":"public-access","refresh_token":"public-refresh","token_type":"Bearer","expires_in":3600}"#.to_vec(),
+                ),
+            )
+            .unwrap())),
+            expected_provider: "fixture",
+            calls: 0,
+            order: order.clone(),
+        };
+        let mut clock = CountingClock {
+            now: 1_000,
+            calls: 0,
+        };
+
+        let revision = broker
+            .exchange_public_and_store_credentials(
+                &credential_key,
+                request,
+                &mut clock,
+                &mut transport,
+                &mut audit,
+            )
+            .unwrap();
+
+        assert_eq!(transport.calls, 1);
+        assert_eq!(clock.calls, 1);
+        assert!(!format!("{revision:?}").contains("public-access"));
+        assert_eq!(
+            audit.oauth[oauth_events_before..]
+                .iter()
+                .map(OAuthAuditEvent::action)
+                .collect::<Vec<_>>(),
+            vec![
+                OAuthAuditAction::TokenResponseDecode,
+                OAuthAuditAction::TokenCredentialRelease,
+            ]
+        );
+        assert_eq!(
+            audit.custody[custody_events_before..]
+                .iter()
+                .map(CredentialAuditEvent::action)
+                .collect::<Vec<_>>(),
+            vec![CredentialAuditAction::Create, CredentialAuditAction::Create]
+        );
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "public-exchange-store-attempted",
+                "public-exchange-attempted",
+                "transport-attempted",
+                "transport-effect",
+                "transport-succeeded",
+                "public-exchange-succeeded",
+                "credential-create-attempted",
+                "credential-store-attempted",
+                "credential-store-succeeded",
+                "credential-create-succeeded",
+                "public-exchange-store-succeeded",
+            ]
+        );
+
+        let access = broker
+            .custody
+            .with_access_token(
+                &credential_key,
+                trace(105),
+                &mut RecordingAudit::default(),
+                str::to_owned,
+            )
+            .unwrap();
+        assert_eq!(access, "public-access");
+    }
+
+    #[test]
+    fn public_exchange_rejects_wrong_key_before_all_effects() {
+        let provider_config = config("fixture");
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(policy("fixture", 300), trace(106), &mut audit)
+            .unwrap();
+        let request = prepared_exchange(&provider_config, trace(107), &mut audit);
+        let custody_events_before = audit.custody.len();
+        order.borrow_mut().clear();
+        let mut transport = MockPublicExchangeTransport {
+            response: None,
+            expected_provider: "fixture",
+            calls: 0,
+            order: order.clone(),
+        };
+        let mut clock = CountingClock { now: 0, calls: 0 };
+
+        assert!(matches!(
+            broker.exchange_public_and_store_credentials(
+                &key("other-provider"),
+                request,
+                &mut clock,
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(transport.calls, 0);
+        assert_eq!(clock.calls, 0);
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "public-exchange-store-attempted",
+                "public-exchange-store-failed"
+            ]
+        );
+    }
+
+    #[test]
+    fn public_exchange_rejects_confidential_registration_before_all_effects() {
+        let provider_config = config("fixture-confidential");
+        let provider = BrokerProvider::new_confidential(
+            provider_config.clone(),
+            TokenResponseFormat::Json,
+            300,
+            ConfidentialClientAuthenticationMethod::ClientSecretBasic,
+            Vec::new(),
+        )
+        .unwrap();
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(provider, trace(108), &mut audit)
+            .unwrap();
+        let request = prepared_exchange(&provider_config, trace(109), &mut audit);
+        let custody_events_before = audit.custody.len();
+        order.borrow_mut().clear();
+        let mut transport = MockPublicExchangeTransport {
+            response: None,
+            expected_provider: "fixture-confidential",
+            calls: 0,
+            order: order.clone(),
+        };
+        let mut clock = CountingClock { now: 0, calls: 0 };
+
+        assert!(matches!(
+            broker.exchange_public_and_store_credentials(
+                &key("fixture-confidential"),
+                request,
+                &mut clock,
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::BindingMismatch)
+        ));
+        assert_eq!(transport.calls, 0);
+        assert_eq!(clock.calls, 0);
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "public-exchange-store-attempted",
+                "public-exchange-attempted",
+                "public-exchange-failed",
+                "public-exchange-store-failed",
+            ]
+        );
+    }
+
+    #[test]
+    fn public_exchange_transport_failure_reaches_no_clock_or_storage() {
+        let provider_config = config("fixture");
+        let mut broker = OAuthBroker::new(CredentialCustody::new(InMemoryCredentialStore::new()));
+        let order = Rc::new(RefCell::new(Vec::new()));
+        let mut audit = RecordingAudit {
+            order: Some(order.clone()),
+            ..RecordingAudit::default()
+        };
+        broker
+            .register_provider(policy("fixture", 300), trace(110), &mut audit)
+            .unwrap();
+        let request = prepared_exchange(&provider_config, trace(111), &mut audit);
+        let custody_events_before = audit.custody.len();
+        order.borrow_mut().clear();
+        let mut transport = MockPublicExchangeTransport {
+            response: Some(Err(TokenTransportError)),
+            expected_provider: "fixture",
+            calls: 0,
+            order: order.clone(),
+        };
+        let mut clock = CountingClock { now: 0, calls: 0 };
+
+        assert_eq!(
+            broker.exchange_public_and_store_credentials(
+                &key("fixture"),
+                request,
+                &mut clock,
+                &mut transport,
+                &mut audit,
+            ),
+            Err(BrokerError::Transport)
+        );
+        assert_eq!(transport.calls, 1);
+        assert_eq!(clock.calls, 0);
+        assert_eq!(audit.custody.len(), custody_events_before);
+        assert_eq!(
+            order.borrow().as_slice(),
+            [
+                "public-exchange-store-attempted",
+                "public-exchange-attempted",
+                "transport-attempted",
+                "transport-effect",
+                "transport-failed",
+                "public-exchange-failed",
+                "public-exchange-store-failed",
+            ]
         );
     }
 
