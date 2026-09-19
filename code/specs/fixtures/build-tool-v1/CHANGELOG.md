@@ -2,6 +2,10 @@
 
 ## 2026-09-19
 
+- Defined canonical graph edge ordering and added unsorted-edge,
+  package-prefix, and forced-package closure cases. These cases make both diff
+  source modes and forced changed-set seeding load-bearing without adding host
+  authority. The corpus now has 157 cases and retains 285 staged files.
 - Added a process-free CI-gate character-class case that distinguishes the
   neutral Python `fnmatchcase` grammar from host-native glob grammars: leading
   `!` negation, literal `^`, leading `]`, leading/trailing hyphens, ascending
