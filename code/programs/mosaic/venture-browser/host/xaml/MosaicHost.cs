@@ -850,6 +850,7 @@ public static class MosaicHost
                 value => component.BookmarkLabel = value);
             component.BookmarkDisabled = props.GetProperty("bookmark-disabled").GetBoolean();
             component.ViewSourceDisabled = props.GetProperty("view-source-disabled").GetBoolean();
+            component.FindOpen = props.GetProperty("find-open").GetBoolean();
             SetIfChanged(component.FindQuery, props.GetProperty("find-query").GetString(),
                 value => component.FindQuery = value);
             SetIfChanged(component.FindResultLabel, props.GetProperty("find-result-label").GetString(),

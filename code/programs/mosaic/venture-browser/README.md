@@ -35,8 +35,9 @@ recreating the surrounding chrome in backend-specific UI code.
   chord and forward one character through their matching `access_key` ABI.
 - Find-in-page retains one bounded query and result sequence in core. Visible
   text matching, wrap state, automatic reveal, result labels, diagnostics, and
-  backend-neutral paint highlights are shared; generated hosts only forward
-  query, next, previous, and close events from the Mosaic-authored find bar.
+  backend-neutral paint highlights are shared. The same retained state owns
+  whether the conditionally rendered Mosaic bar is open; generated hosts only
+  forward open, query, next, previous, and close events.
 - View Source never refetches the page. The core escapes the exact retained
   response text into a synthetic `<pre>` HTML document and emits one typed
   `open-auxiliary-document` effect. SwiftUI, WinUI, Qt, Flutter, and Compose
