@@ -732,12 +732,16 @@ changed, plus everything downstream of those.
 
 On each run:
 
-1. **Sources** rerun unconditionally (they observe external state).
+1. **Sources** publish an external-state revision. An unchanged source may
+   restore a validated whole-instance checkpoint; a source without that
+   observation contract reruns.
 2. For every other instance, compare its current input revisions
    against the stored set.
 3. If any input revision differs → re-execute.
-4. If every input revision matches → reuse cached output, mark as
-   `cacheHits++`.
+4. If every input revision matches → reuse a validated cached output. For a
+   capability-bearing stage, reuse is allowed only when it implements
+   `Stage.replay`; the scheduler calls the hook before marking the instance
+   skipped.
 
 ### 6.3 Partial DAG re-execution
 
@@ -746,6 +750,15 @@ inputs changed plus the transitive downstream closure. Only these run.
 Untouched downstream instances pull their cached outputs, which
 preserves byte-stability of the build artifact between runs that
 modify only a subset.
+
+Effectful stages are a deliberate boundary. A capability-free instance can be
+restored directly. A capability-bearing instance can be restored only when it
+opts into `Stage.replay` and its materialized output completely describes its
+effects. Replay receives the normal capability-gated `StageContext`. If the
+checkpoint is absent, corrupt, has the wrong output revision, cannot be
+decoded, or the replay hook rejects it, the scheduler fails open by executing
+`run` normally and refreshing the checkpoint after success. A replay failure
+is logged as a warning rather than reported as a failed pipeline attempt.
 
 This is the same algorithm used by the existing
 `code/programs/go/build-tool/` package's affected-package detection,
@@ -1161,6 +1174,9 @@ Unit tests:
   re-execute.
 - Incremental: affected-set is exactly the changed-and-downstream
   set.
+- Side-effect replay: an unchanged replay-capable sink restores a deleted
+  output tree without rerunning untouched producers; corrupt checkpoints and
+  replay failures execute the sink normally.
 - Watch: changes coalesce per `debounceMs`; unsubscribe stops watcher.
 - Errors: fail-fast halts and disposes; best-effort continues and
   reports.

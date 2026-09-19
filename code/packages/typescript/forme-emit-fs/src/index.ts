@@ -56,9 +56,9 @@
  * @module index
  */
 
-import { mkdir, writeFile } from "node:fs/promises";
-import { dirname, relative as relPath } from "node:path";
-import { createHash } from "node:crypto";
+import { lstat, mkdir, realpath, rename, unlink, writeFile } from "node:fs/promises";
+import { isAbsolute, relative as relPath, resolve, sep } from "node:path";
+import { createHash, randomUUID } from "node:crypto";
 import {
   Kinds,
   streamOf,
@@ -68,7 +68,7 @@ import {
   type DeployManifest,
   type JsonValue,
 } from "@coding-adventures/forme-types";
-import { defineStage } from "@coding-adventures/forme-stage";
+import { defineStage, type StageContext } from "@coding-adventures/forme-stage";
 import { computeRevisionId } from "@coding-adventures/forme-identity";
 import { routeToOutPath } from "./path-utils.js";
 
@@ -78,6 +78,155 @@ export interface EmitFsConfig {
 }
 
 const encoder = new TextEncoder();
+
+function validateConfig(rawConfig: unknown): EmitFsConfig {
+  const config = rawConfig as EmitFsConfig;
+  if (typeof config?.outDir !== "string" || config.outDir.length === 0) {
+    throw new Error("forme-emit-fs: config.outDir must be a non-empty string");
+  }
+  return config;
+}
+
+async function materializeFiles(
+  artifact: DeployArtifact,
+  config: EmitFsConfig,
+  ctx: StageContext,
+): Promise<number> {
+  if (artifact?.variant?.kind !== "dist-tree" || !isPlainObject(artifact.files)) {
+    throw new Error("forme-emit-fs: replay requires a dist-tree DeployArtifact");
+  }
+  const files = Object.entries(artifact.files)
+    .sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0)
+    .map(([path, bytes]) => {
+      if (!(bytes instanceof Uint8Array)) {
+        throw new Error(`forme-emit-fs: replay file ${JSON.stringify(path)} is not bytes`);
+      }
+      return {
+        absPath: routeToOutPath(config.outDir, `/${validatedArtifactPath(path)}`),
+        bytes,
+      };
+    });
+  for (const { absPath, bytes } of files) {
+    ctx.cancellation.throwIfCancelled();
+    await writeContainedFile(config.outDir, absPath, bytes);
+  }
+  return files.length;
+}
+
+async function writeContainedFile(
+  outDir: string,
+  absolutePath: string,
+  bytes: Uint8Array,
+): Promise<void> {
+  // Lexical route validation is not enough: a pre-existing directory symlink
+  // could redirect `mkdir`/`writeFile` outside outDir. Walk every existing or
+  // newly-created parent with lstat + realpath, then publish through an
+  // exclusive sibling temp file. Rename replaces final symlinks/hard links
+  // instead of following them and never exposes a partially written file.
+  const root = resolve(outDir);
+  await mkdir(root, { recursive: true });
+  await requireRealDirectory(root, "output root");
+  const canonicalRoot = await realpath(root);
+  const relative = relPath(root, absolutePath);
+  const segments = relative.split(/[/\\]/);
+  let parent = root;
+  for (const segment of segments.slice(0, -1)) {
+    parent = resolve(parent, segment);
+    requireLexicalContainment(root, parent);
+    try {
+      await mkdir(parent);
+    } catch (error) {
+      if (!isAlreadyExists(error)) throw error;
+    }
+    await requireRealDirectory(parent, "output path component");
+    requireCanonicalContainment(canonicalRoot, await realpath(parent));
+  }
+
+  await rejectExistingLinkOrNonFile(absolutePath);
+  requireCanonicalContainment(canonicalRoot, await realpath(parent));
+  const temporaryPath = resolve(parent, `.forme-${randomUUID()}.tmp`);
+  try {
+    await writeFile(temporaryPath, bytes, { flag: "wx" });
+    await rename(temporaryPath, absolutePath);
+  } finally {
+    try {
+      await unlink(temporaryPath);
+    } catch (error) {
+      if (!isNotFound(error)) throw error;
+    }
+  }
+}
+
+async function requireRealDirectory(path: string, label: string): Promise<void> {
+  const stats = await lstat(path);
+  if (stats.isSymbolicLink() || !stats.isDirectory()) {
+    throw new Error(`forme-emit-fs: ${label} ${JSON.stringify(path)} must be a real directory`);
+  }
+}
+
+async function rejectExistingLinkOrNonFile(path: string): Promise<void> {
+  try {
+    const stats = await lstat(path);
+    if (stats.isSymbolicLink() || !stats.isFile()) {
+      throw new Error(
+        `forme-emit-fs: output file ${JSON.stringify(path)} must not be a symbolic link or directory`,
+      );
+    }
+  } catch (error) {
+    if (!isNotFound(error)) throw error;
+  }
+}
+
+function requireCanonicalContainment(root: string, candidate: string): void {
+  const relative = relPath(root, candidate);
+  if (
+    relative === "" ||
+    (relative !== ".." && !relative.startsWith(`..${sep}`) && !isAbsolute(relative))
+  ) {
+    return;
+  }
+  throw new Error(`forme-emit-fs: resolved output path would escape outDir`);
+}
+
+function isAlreadyExists(error: unknown): boolean {
+  return typeof error === "object" && error !== null && "code" in error
+    && (error as { code?: unknown }).code === "EEXIST";
+}
+
+function isNotFound(error: unknown): boolean {
+  return typeof error === "object" && error !== null && "code" in error
+    && (error as { code?: unknown }).code === "ENOENT";
+}
+
+function validatedArtifactPath(path: string): string {
+  if (
+    path.length === 0 || path.includes("\\") || path.includes("\0") ||
+    path.startsWith("/") || path.includes(":") ||
+    path.split("/").some(segment => segment.length === 0 || segment === "." || segment === "..")
+  ) {
+    throw new Error(
+      `forme-emit-fs: replay path ${JSON.stringify(path)} is not a normalized portable relative path`,
+    );
+  }
+  return path;
+}
+
+function requireLexicalContainment(root: string, candidate: string): void {
+  const relative = relPath(root, candidate);
+  if (
+    relative === "" ||
+    (relative !== ".." && !relative.startsWith(`..${sep}`) && !isAbsolute(relative))
+  ) {
+    return;
+  }
+  throw new Error("forme-emit-fs: output path would escape outDir");
+}
+
+function isPlainObject(value: unknown): value is Readonly<Record<string, Uint8Array>> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
 
 /**
  * SHA-256 a buffer to hex.  Used inside the build-id derivation; we
@@ -92,7 +241,7 @@ function sha256Hex(bytes: Uint8Array): string {
 
 const emitFs = defineStage({
   name: "@coding-adventures/forme-emit-fs",
-  version: "0.1.0",
+  version: "0.2.0",
   apiVersion: 1,
   description: "Write each RenderedPage to disk under outDir; emit one DeployArtifact summarising the result.",
   consumes: streamOf(Kinds.RenderedPage),
@@ -106,10 +255,7 @@ const emitFs = defineStage({
     },
   },
   async run(rawInput, rawConfig, ctx) {
-    const config = rawConfig as EmitFsConfig;
-    if (typeof config?.outDir !== "string" || config.outDir.length === 0) {
-      throw new Error("forme-emit-fs: config.outDir must be a non-empty string");
-    }
+    const config = validateConfig(rawConfig);
     const stream = rawInput as AsyncIterable<RenderedPage>;
 
     // Collect file contents and per-route metadata as we go.  Using a
@@ -125,8 +271,7 @@ const emitFs = defineStage({
       const absPath = routeToOutPath(config.outDir, page.route);
       const bytes = encoder.encode(page.html);
 
-      await mkdir(dirname(absPath), { recursive: true });
-      await writeFile(absPath, bytes);
+      await writeContainedFile(config.outDir, absPath, bytes);
       writtenCount++;
 
       // Record the route in the manifest using the OS-relative path
@@ -177,6 +322,15 @@ const emitFs = defineStage({
       buildId,
     });
     return artifact as never;
+  },
+  async replay(artifact, rawConfig, ctx) {
+    const config = validateConfig(rawConfig);
+    const count = await materializeFiles(artifact, config, ctx);
+    ctx.logger.info("forme-emit-fs: replayed pages", {
+      count,
+      outDir: config.outDir,
+      buildId: artifact.manifest.buildId,
+    });
   },
 });
 

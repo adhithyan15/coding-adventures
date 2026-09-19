@@ -1,5 +1,16 @@
 # Changelog — @coding-adventures/forme-emit-fs
 
+## 0.2.0 — 2026-09-19
+
+### Added
+
+- `Stage.replay` rematerializes all bytes from a validated `DeployArtifact`
+  checkpoint after an output tree is removed.
+- Replay requires a static `dist-tree`, byte-valued files, and normalized
+  portable paths contained beneath `outDir`.
+- Normal writes and replay reject symlinked path components/final files, verify
+  canonical parent containment, and publish through exclusive temporary files.
+
 ## 0.1.0 — 2026-05-15
 
 Initial release. Fifth (and final) Forme stage of the blog v0 effort.

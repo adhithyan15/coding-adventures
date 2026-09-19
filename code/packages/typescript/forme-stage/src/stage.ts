@@ -140,6 +140,20 @@ export interface Stage<
   ): StageOutput<Out>;
 
   /**
+   * Reapply the externally visible effects represented by a validated,
+   * materialized output from an earlier successful run.
+   *
+   * Implementing this hook opts an effectful stage into whole-instance
+   * checkpoint reuse. The output must completely describe the effects, and
+   * replay must be idempotent and enforce the same safety checks as `run`.
+   */
+  replay?(
+    output: KindPayload<Out>,
+    config: unknown,
+    ctx: StageContext,
+  ): void | Promise<void>;
+
+  /**
    * Observe the external objects a source will read during `run`.
    *
    * Only source stages (`consumes: Void`) may implement this hook. The

@@ -270,11 +270,12 @@ Product sites and focused demos prove the composition model:
 
 The headless build path and general build/check/clean/watch CLI work, including
 loopback preview, live reload, last-good-output behavior, and deterministic
-cross-process reuse of unchanged pure stage invocations through a configured
-project cache. Forme is not yet a turnkey site generator: the remaining product
-layer includes external-state affected-set scheduling, bounded concurrent
-streaming, a reconciled specification map, the plugin host and OS
-sandboxes, interactivity, the authoring shell, and the deploy runner.
+cross-process affected-stage scheduling through a configured project cache.
+Filesystem emitters can replay validated artifacts to reconstruct a deleted
+output tree without rerunning unrelated pure stages. Forme is not yet a turnkey
+site generator: the remaining product layer includes bounded concurrent
+streaming, the deploy runner, a reconciled specification map, the plugin host
+and OS sandboxes, interactivity, and the authoring shell.
 The checked-in [completion roadmap](./code/specs/FM00-forme-completion-roadmap.md)
 tracks that path and the gaps discovered while dogfooding both live sites.
 
