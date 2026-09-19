@@ -30,13 +30,9 @@
 //! `native_complete` by design — some drops are accepted platform limits — and
 //! this package currently has none, so the strictest assertion is the true one.
 //!
-//! **Narrower than it looks, and the first draft of this comment overstated
-//! it.** Only XAML, SwiftUI and Compose populate `style_degradations`; Qt and
-//! Flutter fall through the analyzer's `_ => {}`, whose own comment says an
-//! empty list there means "nobody looked" rather than "nothing was lost"
-//! (#12022). So this half covers three of the five. The capability assertion
-//! above covers all five, because `collect_native_degradations` is
-//! backend-generic.
+//! The style-drop half covers all five native backends: XAML, SwiftUI, Compose,
+//! Qt and Flutter each populate `style_degradations`. The capability assertion
+//! above is independently backend-generic.
 
 use mosaic_package_artifact_builder::{
     analyze_package_degradations, Backend, BuildOptions, BuildProfile,
@@ -57,12 +53,10 @@ const NATIVE_BACKENDS: &[Backend] = &[
     Backend::Xaml,
 ];
 
-/// Deliberately empty, and that is an assertion rather than an omission.
-///
-/// This package drops nothing on the three backends that report style drops.
-/// An entry here would mean a property was lost, so the empty list is the gate:
-/// an empty allowlist tolerates nothing, rather than checking nothing.
-const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[    // ---- Qt (#15245) ----
+/// Style properties this package is currently known to lose, by backend.
+/// Every entry is measured and the inverse-ratchet test rejects stale pins.
+const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
+    // ---- Qt (#15245) ----
     //
     // These became visible the moment Qt started reporting its drops in
     // #15245. They are PRE-EXISTING gaps, not regressions: this package has
@@ -79,6 +73,18 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[    // ---- Qt (#15245) ----
     // #15247 -- `qml_padding` reads ONE value and fans it to all four
     // edges, so any longhand beyond the one it picks is lost.
     (Backend::Qt, "padding-bottom"),
+    // ---- Flutter (#12022) ----
+    // These pre-existing losses became measurable when Flutter gained drop
+    // reporting. Each pin is checked below and must disappear with its gap.
+    (Backend::Flutter, "background"),
+    (Backend::Flutter, "border-color"),
+    (Backend::Flutter, "border-radius"),
+    (Backend::Flutter, "border-width"),
+    (Backend::Flutter, "color"),
+    (Backend::Flutter, "font-size"),
+    (Backend::Flutter, "font-weight"),
+    (Backend::Flutter, "padding"),
+    (Backend::Flutter, "padding-bottom"),
 ];
 
 fn package_root() -> PathBuf {

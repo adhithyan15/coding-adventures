@@ -26,7 +26,7 @@ refusal also does not imply the complete driver refuses that feature.
 |---|---:|---:|---|
 | Twig | 49 | 392 | All 49 of those cells are BEAM (VM-041 + this follow-up: `match`/`union` fusion fix); dedicated heap/closure/string/union tests |
 | Nib | 26 | 208 | All eight columns including real BEAM u4/u8 and BCD storage |
-| Brainfuck | 6 | 45 | Dedicated WASM/JVM/CLR and JIT execution; 3 of 6 rows also real BEAM (VM-042) |
+| Brainfuck | 6 | 48 | All eight columns; BEAM09 proves byte input, all 256 byte values and repeated EOF on real Erlang |
 | Dartmouth BASIC | 51 | 408 | All 51 of those cells are BEAM (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins + 4 arrays/DATA + 2 string arrays + 5 `INPUT` rows + `RND`, BEAM03/VM-LOOP-24/BEAM04/BEAM06/BEAM07/BEAM08); random differential suite and frontend JIT tests |
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
 | ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
@@ -35,22 +35,15 @@ refusal also does not imply the complete driver refuses that feature.
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone therefore declares 210 programs and 1677
-declared cells (sum of the non-ALGOL rows above, updated for BEAM07's nine
-newly-promoted cells — 5 Dartmouth BASIC `INPUT` rows + 4 FLOW-MATIC
-`READ-ITEM`/EOF rows, each gaining one new Beam cell — and BEAM08's one
-newly-promoted cell, Dartmouth BASIC's `RND` row). **BEAM08 closes the
-LAST undeclared non-ALGOL BEAM cell in this entire table**: Dartmouth
-BASIC now declares all 51/51 rows on `Beam`, and every non-ALGOL frontend
-in this table now declares BEAM on every row it is ever going to (Twig
-49/49, Nib 26/26, Oct 12/12, COBOL-60 58/58, FLOW-MATIC 8/8, Dartmouth
-BASIC 51/51, and Brainfuck 3/6 — the other 3 need real stdin-as-tape host
-support, a separate, still-unscoped item unrelated to `RND`/VM-018). See
-`code/specs/BEAM08-rnd-beam-support.md` and
-`LANG-VM-NON-ALGOL-BACKLOG.md`'s "BEAM08" section for the full research
-and fix (issue #15332's `global_store`/`gc_bif2` bug was RND's sole
-blocker — no new IIR op, no new BEAM opcode, and no frontend change was
-needed). At VM-061 this matched a
+The normal non-ALGOL capstone declares 210 programs and 1680 cells. Every
+existing non-ALGOL corpus row now declares all eight backends. BEAM09 adds
+Brainfuck's three input cells after real Erlang execution and separately proves
+all 256 byte values, repeated EOF and tape state across input calls. This does
+not establish full language semantics or full Oct/Nib historical CPU fidelity.
+The earlier BEAM08 result covered BASIC RND; BEAM09 closes the remaining byte
+input gap. See `BEAM09-brainfuck-byte-input.md` for scope and validation.
+
+At VM-061 the previous declaration count matched a
 fresh `non_algol_matrix_every_proven_cell_agrees` run exactly: 1338 cells
 exercised plus 210 skipped (missing local `ilasm`) = 1548. VM-042 then added
 three real Beam cells to Brainfuck (42 → 45 declared), so a fresh run on a

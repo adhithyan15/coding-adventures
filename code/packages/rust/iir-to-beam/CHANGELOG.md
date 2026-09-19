@@ -966,3 +966,7 @@ regression exercises all six comparisons with less/equal/greater values and
 three literal/register combinations, including positive and negative literal
 moves (54 executions). Eight of 58 COBOL rows now declare BEAM, for 414 cells.
 Remaining COBOL features still require individual execution proofs.
+
+## 0.18.0 — BEAM09 byte input (2026-09-19)
+
+Lower `getchar` with `io:get_chars/2`, EOF zero and imported-call liveness. Byte-oriented hosts must launch Erlang with `-kernel standard_io_encoding latin1`; text-language hosts retain their encoding.

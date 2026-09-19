@@ -155,7 +155,7 @@ non-input programs:
 | WASM    | ✅     | `i32.load8_u` / `i32.store8` + `env.putchar` / `env.getchar` host imports | `tests/wasm_e2e.rs` |
 | JVM     | ✅     | `baload` / `bastore` + `invokestatic env/BFRuntime.{put,get}char`         | `tests/jvm_e2e.rs`  |
 | CLR     | ✅     | `ldelem.u1` / `stelem.i1` + `call env.BFRuntime::{put,get}char`           | `tests/clr_e2e.rs`  |
-| BEAM    | ⚠️     | tape mutation + `.` ✅ (`:atomics`); `,` ❌ (no `getchar` builtin yet)     | `lang-aot`'s `lang_matrix.rs` (`portable_text_stdout_brainfuck_beam_corpus`) |
+| BEAM    | ✅     | tape mutation, byte input/output and EOF zero; host uses latin1 (BEAM09) | `lang-aot` byte/corpus tests on real Erlang |
 
 ### Why BEAM only handles the non-input half (VM-042/VM-D031)
 
@@ -177,14 +177,11 @@ rows already execute correctly and byte-identically to every other backend,
 using this crate's ordinary IIR output — no Brainfuck-specific BEAM code
 exists or was needed.
 
-What genuinely does NOT work is `,` (read): `iir-to-beam` has no `getchar`
-builtin, so a program using it is refused explicitly at validation — a clean
-compile-time error naming the missing builtin, not a silent miscompile or a
-crash (`iir-to-beam`'s `call_builtin_getchar_rejected_but_putchar_accepted`
-pins this). That is a real, separately-scoped gap in host input support
-(shared with every other frontend's BEAM input rows — the FLOW-MATIC,
-Oct, Nib and COBOL BEAM columns are all missing the same builtin family),
-tracked as VM-060b, not a Brainfuck- or tape-specific limitation.
+BEAM09 adds `getchar` lowering through `io:get_chars/2` with EOF returning zero.
+All six existing Brainfuck matrix rows now execute on BEAM. Configure the Erlang
+host with `-kernel standard_io_encoding latin1` for byte-preserving input/output;
+modern OTP defaults to Unicode. Separate real-runtime probes compare raw stdout
+for all 256 byte values, repeated EOF and tape state across input calls.
 
 ## Running tests
 

@@ -149,6 +149,12 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
                 "ocaml/setup-ocaml@v3",
             ),
             self.mutate(
+                "GIT_CONFIG_VALUE_0: 'false'", "GIT_CONFIG_VALUE_0: 'true'"
+            ),
+            self.mutate_last(
+                "GIT_CONFIG_VALUE_0: 'false'", "GIT_CONFIG_VALUE_0: 'true'"
+            ),
+            self.mutate(
                 "matrix.sharded != true || contains(matrix.languages, 'ocaml')",
                 "matrix.sharded != true",
             ),
@@ -596,6 +602,9 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
             self.workflow.replace("actions/checkout@", "attacker/checkout@", 1),
             self.workflow.replace("persist-credentials: false", "other: false", 1),
             self.workflow.replace("ocaml/setup-ocaml@", "attacker/setup-ocaml@", 1),
+            self.workflow.replace(
+                "GIT_CONFIG_VALUE_0: 'false'", "GIT_CONFIG_VALUE_0: 'true'", 1
+            ),
             self.workflow.replace(
                 "github-token: ${{ github.token }}", "github-token: token", 1
             ),

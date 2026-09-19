@@ -4593,7 +4593,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bf",
         src: ",+.",
         expect: Expect::Stdout("B"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Brainfuck — multi-byte STDIN echo (LANG-FULL B1-stdin). `,.,.` reads a byte and prints
     // it, twice; with input "Hi" it echoes "Hi". Proves *repeated* reads advance through the
@@ -4604,7 +4604,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bf",
         src: ",.,.",
         expect: Expect::Stdout("Hi"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Brainfuck — the canonical `cat` (LANG-FULL B1-eof). `,[.,]` reads a byte and, while
     // it is non-zero, prints it and reads the next — echoing stdin until end-of-input. The
@@ -4620,7 +4620,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "bf",
         src: ",[.,]",
         expect: Expect::Stdout("Hi"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. BA7-1b makes even the
     // integer-spelled literal a scalar `f64`, so this baseline cell now runs through
@@ -8327,6 +8327,10 @@ fn run_beam(p: &Prog) -> Option<RunResult> {
         .arg(format!(
             "io:format(\"<<R>>~w<</R>>~n\",[{module}:main()]),halt(0)."
         ));
+    // Brainfuck's I/O is bytes, including 128..255, not Unicode characters.
+    if p.lang == Language::Brainfuck {
+        cmd.args(["-kernel", "standard_io_encoding", "latin1"]);
+    }
     // BEAM07 (host input): pipe the program's declared stdin bytes through to
     // the real `erl` process, exactly like `output_with_stdin` already does
     // for native/LLVM/JVM/CLR. Before this, `run_beam` never wired stdin at
@@ -9543,9 +9547,9 @@ fn matrix_every_proven_cell_agrees() {
 /// `code/specs/BEAM08-rnd-beam-support.md` for the full research writeup.
 /// **Dartmouth BASIC is now 51/51 on `Beam`, and — combined with Twig
 /// (49/49), Nib (26/26), Oct (12/12), COBOL-60 (58/58), FLOW-MATIC (8/8),
-/// and Brainfuck (3/6, intentionally: the other 3 need real stdin-as-tape
-/// host support, a separate unscoped item) — this closes EVERY non-ALGOL
-/// BEAM gap in this entire multi-month backlog.**
+/// and Brainfuck (now 6/6 after BEAM09 byte input) — all existing non-ALGOL
+/// corpus rows now declare all eight backends. This is a corpus boundary,
+/// not a claim of complete language or historical CPU semantics.
 #[test]
 fn feature_coverage_doc_counts_match_programs_source() {
     fn rows_and_cells(lang: Language) -> (usize, usize) {
@@ -9560,7 +9564,7 @@ fn feature_coverage_doc_counts_match_programs_source() {
     let expected = [
         (Language::Twig, 49, 392),
         (Language::Nib, 26, 208),
-        (Language::Brainfuck, 6, 45),
+        (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 51, 408),
         (Language::Oct, 12, 96),
         (Language::FlowMatic, 8, 64),
@@ -15657,8 +15661,8 @@ fn portable_text_stdout_flow_matic_beam_read_item_and_eof() {
 /// long-standing "BEAM tape support is intentionally not supported" claim (written
 /// 2026-05-22) was stale from the moment PR #11343 (2026-08-13) added that generic
 /// mutable-memory lowering "unblocking Brainfuck" and nobody re-probed it since.
-/// The three STDIN rows are deliberately excluded here (`getchar` is unimplemented,
-/// VM-060b); see `brainfuck_beam_stdin_rows_refuse_at_backend_not_frontend` below.
+/// The three STDIN rows have a separate BEAM09 input probe (`getchar`),
+/// see `portable_text_stdout_brainfuck_beam_input` below.
 #[test]
 fn portable_text_stdout_brainfuck_beam_corpus() {
     if !erl_ok() {
@@ -15676,33 +15680,52 @@ fn portable_text_stdout_brainfuck_beam_corpus() {
     eprintln!("Brainfuck BEAM corpus: {executed} programs executed");
 }
 
-/// VM-042/VM-D031: the three STDIN Brainfuck rows must refuse at the BEAM BACKEND
-/// (no `getchar` builtin), not at the Brainfuck FRONTEND — the exact "distinguish
-/// supported frontend compilation from backend refusal" VM-042 always asked for,
-/// now correctly scoped to input rather than the tape mutation the stale README
-/// blamed. `compile_source_to_iir` (frontend + shared IIR passes) must succeed for
-/// all three; only `compile_source_to_beam` (which additionally runs `iir-to-beam`
-/// validation) may fail, and only by naming `getchar` — not a panic, not a silent
-/// wrong answer.
+/// BEAM09: probe the three input rows before promoting their matrix cells.
 #[test]
-fn brainfuck_beam_stdin_rows_refuse_at_backend_not_frontend() {
-    let mut checked = 0;
+fn portable_text_stdout_brainfuck_beam_input() {
+    if !erl_ok() {
+        eprintln!("SKIP Brainfuck BEAM input: erl unavailable");
+        return;
+    }
+    let mut executed = 0;
     for program in PROGRAMS.iter().filter(|p|
         p.lang == Language::Brainfuck && p.src.contains(',')) {
-        lang_aot::compile_source_to_iir(program.lang, program.src, "bfstdin")
-            .unwrap_or_else(|e| panic!(
-                "Brainfuck frontend must compile a `,` program to IIR without error: {e:?}"
-            ));
-        let err = lang_aot::compile_source_to_beam(program.lang, program.src, "bfstdin")
-            .expect_err("a `,` program must be refused by the BEAM backend, not silently compiled");
-        let msg = format!("{err:?}");
-        assert!(
-            msg.contains("getchar"),
-            "refusal must name the missing `getchar` builtin, not some other cause: {msg}"
-        );
-        checked += 1;
+        let result = run_beam(program).expect("detected erl must execute Brainfuck");
+        assert_cell(Beam, program, result);
+        executed += 1;
     }
-    assert_eq!(checked, 3, "exactly the three STDIN Brainfuck rows must be checked");
+    assert_eq!(executed, 3);
+    eprintln!("Brainfuck BEAM input: {executed} programs executed");
+}
+
+/// Text decoding would hide byte corruption; compare the subprocess bytes.
+/// Fixed-length reads make NUL data rather than the cat loop's terminator.
+#[test]
+fn portable_text_stdout_brainfuck_beam_raw_bytes() {
+    if !erl_ok() {
+        eprintln!("SKIP Brainfuck BEAM raw bytes: erl unavailable");
+        return;
+    }
+    let all_bytes: Vec<u8> = (0..=255).collect();
+    for (source, input, expected) in [
+        ("-[>,.<-]>,.", all_bytes.clone(), all_bytes),
+        (",.,.,.", vec![], vec![0, 0, 0]),
+        // Keep two tape cells live across reads, then revisit both.
+        (",>,.<.", b"Hi".to_vec(), b"iH".to_vec()),
+    ] {
+        let bytes = lang_aot::compile_source_to_beam(Language::Brainfuck, source, "bfbytes")
+            .expect("Brainfuck byte probe must compile");
+        let dir = tempfile::tempdir().unwrap();
+        std::fs::write(dir.path().join("bfbytes.beam"), bytes).unwrap();
+        let mut cmd = Command::new("erl");
+        cmd.current_dir(dir.path()).args(["-noshell", "-kernel", "standard_io_encoding", "latin1"])
+            .arg("-pa").arg(dir.path())
+            .args(["-eval", "bfbytes:main(),halt(0)."]);
+        let out = output_with_stdin(cmd, &input).expect("detected erl must spawn");
+        assert!(out.status.success(), "{out:?}");
+        assert_eq!(out.stdout, expected);
+    }
+    eprintln!("Brainfuck BEAM raw bytes: 3 programs executed (all 256 byte values and EOF)");
 }
 
 #[test]

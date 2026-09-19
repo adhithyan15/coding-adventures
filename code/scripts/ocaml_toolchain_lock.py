@@ -37,6 +37,11 @@ ACTIONS = {
     "setup_ocaml": "15d660006c1d3110d77c34b7faa3bddefe8b82f0",
     "upload_artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
 }
+GIT_MAINTENANCE_ENVIRONMENT = {
+    "GIT_CONFIG_COUNT": "1",
+    "GIT_CONFIG_KEY_0": "maintenance.auto",
+    "GIT_CONFIG_VALUE_0": "false",
+}
 OPAM_REPOSITORY_COMMIT = "ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff"
 TARGETS = {
     "linux-x64": {
@@ -712,10 +717,15 @@ def _validate_setup_step(
     label: str,
     phase: str,
 ) -> None:
-    _require_workflow_keys(step, {"name", "uses", "with"}, label)
+    _require_workflow_keys(step, {"name", "uses", "env", "with"}, label)
     expected_action = f"ocaml/setup-ocaml@{manifest['actions']['setup_ocaml']}"
     if step["uses"] != expected_action:
         raise ContractError(f"workflow {label} must use {expected_action}")
+    environment = _workflow_mapping(step["env"], f"{label}.env")
+    if environment != GIT_MAINTENANCE_ENVIRONMENT:
+        raise ContractError(
+            f"workflow {label} must disable automatic Git maintenance"
+        )
     inputs = _workflow_mapping(step["with"], f"{label}.with")
     expected_inputs = {
         "ocaml-compiler": (
@@ -1148,6 +1158,21 @@ def validate_generic_ci_workflow_text(
             f"{GENERIC_MATRIX_PLAN_RUN_SHA256}, found {actual_plan_digest}"
         )
 
+    capability_gate = _extract_workflow_job(workflow_text, "ocaml-capability-gate")
+    capability_steps = _steps_by_name(capability_gate, "ocaml-capability-gate")
+    capability_setup = _workflow_mapping(
+        capability_steps.get("Set up reviewed OCaml compiler and repository"),
+        "jobs.ocaml-capability-gate.setup-ocaml",
+    )
+    capability_environment = _workflow_mapping(
+        capability_setup.get("env"),
+        "jobs.ocaml-capability-gate.setup-ocaml.env",
+    )
+    if capability_environment != GIT_MAINTENANCE_ENVIRONMENT:
+        raise ContractError(
+            "generic CI OCaml capability setup must disable automatic Git maintenance"
+        )
+
     build = _extract_workflow_job(workflow_text, "build")
     build_steps = _steps_by_name(build, "build")
     checkout = _workflow_mapping(build_steps.get("Checkout"), "jobs.build.checkout")
@@ -1177,6 +1202,7 @@ def validate_generic_ci_workflow_text(
         "id": "setup-ocaml",
         "if": expected_guard,
         "uses": f"ocaml/setup-ocaml@{manifest['actions']['setup_ocaml']}",
+        "env": GIT_MAINTENANCE_ENVIRONMENT,
         "with": {
             "ocaml-compiler": (
                 f"ocaml-base-compiler.{manifest['direct_versions']['ocaml']}"
