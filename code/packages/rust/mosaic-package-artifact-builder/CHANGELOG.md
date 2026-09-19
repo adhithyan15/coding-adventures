@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Recognize Flutter HostTable numeric typography now that header/cell/editor
+  propagation is implemented and exercised in generated widgets (#15602).
+
 - Recognize Flutter numeric typography on text, buttons and inputs; continue
   reporting unsupported HostTable font-size bindings (#15598).
 

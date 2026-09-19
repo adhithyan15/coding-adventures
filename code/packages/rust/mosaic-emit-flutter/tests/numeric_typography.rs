@@ -49,8 +49,11 @@ fn generate_numeric_typography_fixture() {
         std::fs::write(path.join("lib/typography.dart"), output).unwrap();
         // Match the production Flutter lint that caught the controller callback
         // regression in TaskApp's generated release, not just Dart type errors.
-        std::fs::write(path.join("analysis_options.yaml"),
-            "linter:\n  rules:\n    no_leading_underscores_for_local_identifiers: true\n").unwrap();
+        std::fs::write(
+            path.join("analysis_options.yaml"),
+            "linter:\n  rules:\n    no_leading_underscores_for_local_identifiers: true\n",
+        )
+        .unwrap();
         std::fs::write(path.join("pubspec.yaml"), "name: mosaic_typography\nenvironment:\n  sdk: '>=3.5.0 <4.0.0'\ndependencies:\n  flutter:\n    sdk: flutter\ndev_dependencies:\n  flutter_test:\n    sdk: flutter\n").unwrap();
         std::fs::write(
             path.join("test/typography_test.dart"),
@@ -58,11 +61,90 @@ fn generate_numeric_typography_fixture() {
         )
         .unwrap();
         std::fs::write(path.join("lib/editors.dart"), editor_fixture()).unwrap();
+        for (name, native) in [("NativeSheet", true), ("FallbackSheet", false)] {
+            std::fs::write(
+                path.join(format!("lib/{name}.dart")),
+                table_fixture(name, native),
+            )
+            .unwrap();
+        }
+        std::fs::write(
+            path.join("test/table_typography_test.dart"),
+            include_str!("fixtures/table_typography_test.dart"),
+        )
+        .unwrap();
         std::fs::write(
             path.join("test/input_lifecycle_test.dart"),
             include_str!("fixtures/input_lifecycle_test.dart"),
         )
         .unwrap();
+    }
+}
+
+fn table_fixture(name: &str, native: bool) -> String {
+    let model = mosmodel_compiler::compile(&format!("component {name} {{ slot text-size : number ; slot headers : list<text> ; slot rows : list<list<text>> ; }}")).unwrap();
+    let body = if native {
+        r#"
+        HostTableHead { Row { For (each: slot: headers, as: textSize) {
+            Box [ header-cell ] { Text (content: (textSize)) }
+        } } }
+        HostTableBody { For (each: slot: rows, as: row, index: ri) { Row {
+            For (each: row, as: cell) {
+                Box [ cell ] { HostInput [ editor ] (value: (cell)) }
+            }
+        } } }
+    "#
+    } else {
+        r#"
+        Text (content: "Cell")
+        HostInput [ editor ] (value: "Editor")
+        Text [ own ] (content: "Own")
+        HostInput [ own-input ] (value: "Own input")
+        Box [ fixed ] { Column {
+            Text (content: "Fixed")
+            HostInput [ fixed-editor ] (value: "Fixed input")
+        } }
+        Text (content: "Explicit", font-size: 25)
+    "#
+    };
+    let layout = moslayout_compiler::compile(
+        &format!(
+            r#"layout {name} {{ Column {{
+        HostTable [ sheet ] (font-size: slot: text-size) {{ {body} }}
+        Text (content: "Outside")
+    }} }}"#
+        ),
+        Some(&model.descriptor_json),
+    )
+    .unwrap();
+    let style = mosstyle_compiler::compile(
+        &format!(
+            r#"style {name} {{
+        part sheet {{ font-size: 14; font-family: monospace; }}
+        part cell {{ width: 160; }}
+        part header-cell {{ width: 160; }}
+        part editor {{ font: inherit; padding: 0; border: none; }}
+        part own {{ font-size: 21; }}
+        part own-input {{ font-size: 21; }}
+        part fixed-editor {{ font: inherit; padding: 0; border: none; }}
+        part fixed {{ font-size: 22; font-family: serif; }}
+    }}"#
+        ),
+        None,
+    )
+    .unwrap();
+    from_pipeline(&model.component, &layout.def, &style.def)
+        .unwrap()
+        .output
+}
+
+#[test]
+fn tables_lower_numeric_typography_in_both_shapes() {
+    for (name, native) in [("NativeSheet", true), ("FallbackSheet", false)] {
+        let output = table_fixture(name, native);
+        assert_eq!(output.contains("DataTable("), native);
+        assert!(output.contains("_mosaicFontSize(this.textSize)"));
+        assert!(output.contains("fontFamily: \"monospace\""));
     }
 }
 

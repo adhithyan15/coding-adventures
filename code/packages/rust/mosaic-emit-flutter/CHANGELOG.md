@@ -5,6 +5,11 @@ this file.
 
 ## [Unreleased]
 
+- Propagate numeric HostTable font sizes through native DataTable and structural
+  table headers, text and editors (#15602). Preserve static child/container
+  overrides, font families and authored fallback for invalid live sizes. The
+  generated Flutter fixture exercises both table shapes, updates and new rows.
+
 - Keep Input/HostInput controllers alive across prop updates and dispose them
   when the generated field unmounts (#15601). Presentation changes and echoed
   edits retain caret, selection and IME composition; external text changes clamp

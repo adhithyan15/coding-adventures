@@ -8944,10 +8944,9 @@ layout AccessibleText {
                         | Backend::Qt
                         | Backend::SwiftUI
                         | Backend::Xaml
+                        | Backend::Flutter
                 ) {
                     0
-                } else if backend == Backend::Flutter {
-                    1 // HostTable remains explicitly degraded.
                 } else {
                     4
                 },
