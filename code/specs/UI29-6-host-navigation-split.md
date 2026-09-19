@@ -119,9 +119,10 @@ the collapsed state, it arrives through UI48's environment, not through here.
 ### 4.3 What each backend does not have, recorded
 
 - **Qt** has no adaptive collapse: `SplitView` is static. `collapse: auto`
-  therefore reports `interaction.navigation-split-collapse-static`.
+  therefore reports `interaction.navigation-split-collapse-static` in the
+  non-gating `behaviorDegradations` inventory.
 - **Flutter** has no core adaptive split container; the lowering above is a
-  composition and reports the same code.
+  composition and reports the same code in `behaviorDegradations`.
 - **The web backends** can carry the landmark structure but not the collapse,
   which needs a viewport signal (UI48). They are not native-complete targets,
   so this is stated here rather than reported.
@@ -137,12 +138,24 @@ the collapsed state, it arrives through UI48's environment, not through here.
   `PaneDisplayMode="Left"` plus `IsPaneToggleButtonVisible="False"`, so the
   toggle cannot undo by hand what the author pinned.
 
+The two report axes are deliberately different. A
+`primitive.navigation-split-unimplemented` entry is a gating capability gap:
+the backend has not lowered the primitive at all. An
+`interaction.navigation-split-collapse-static` entry is an honest record of a
+platform limitation after a real lowering exists. It is written to
+`behaviorDegradations`, stays outside `degradations` and `nativeComplete`, and
+therefore needs no consumer allowlist. `collapse: never` requests the static
+shape and produces no behaviour entry.
+
 ## 5. Consumers, and the order they must land in
 
 The eleven `native_complete_gate.rs` files allow **no** capability allowlist:
 *"the assertion is zero and an allowlist would only be somewhere for a
 regression to hide."* So a package rewritten onto this primitive turns its gate
-red until **every** native backend lowers it. The order is forced:
+red until **every** native backend lowers it. Qt and Flutter's permanent
+collapse limitation remains visible in `behaviorDegradations` after their
+capability entries clear; it is not smuggled through an allowlist and does not
+make the consumers permanently impossible to build. The order is forced:
 
 1. the spec (this file) and the issue;
 2. registration plus the unconditional degradation, together;
@@ -162,7 +175,9 @@ red until **every** native backend lowers it. The order is forced:
   from what is emitted (UI84 §3).
 - Every native lowering is checked against the real toolchain, as UI86's were:
   a fixture package per backend, generated native-complete with zero
-  degradations and built by that platform's compiler in CI.
+  capability degradations and built by that platform's compiler in CI. Qt and
+  Flutter additionally pin their expected `behaviorDegradations` entry for
+  `collapse: auto` and its absence for `collapse: never`.
 - Collapse behaviour is asserted by resizing a running window, not by reading
   the markup back — but **not in the emitter fixtures**, which cannot do it.
   A fixture component has no engine behind it, so its executable fail-fasts at
@@ -175,7 +190,9 @@ red until **every** native backend lowers it. The order is forced:
   including the `collapse: never` contrast case that is what actually
   distinguishes `Auto` from `Left`.
 - The four consumers keep their current appearance: the same pane width, the
-  same separator, and no new degradation in any package gate.
+  same separator, and no new gating degradation in any package gate. Expected
+  permanent platform limitations remain machine-readable in
+  `behaviorDegradations`.
 
 ## 7. Implementation slices
 
