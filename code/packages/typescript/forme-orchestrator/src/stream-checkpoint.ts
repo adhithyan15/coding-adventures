@@ -171,6 +171,7 @@ export async function commitStreamCheckpoint(
   checkpointKey: string,
   manifest: StreamCheckpointManifest,
 ): Promise<void> {
+  assertCacheKey(checkpointKey, "checkpoint");
   validateManifestShape(manifest);
   await backend.put(checkpointKey, makeEntry(encodeCacheValue(manifest)));
 }
@@ -190,6 +191,10 @@ export async function loadStreamCheckpoint(
   cancellation: CancellationToken,
   logger: Logger,
 ): Promise<LoadedStreamCheckpoint | null> {
+  // This is caller-controlled addressing, not cached data. Reject it before
+  // entering the fail-open block so a path-shaped key can never reach a
+  // filesystem backend's get/invalidate operations.
+  assertCacheKey(checkpointKey, "checkpoint");
   try {
     cancellation.throwIfCancelled();
     const entry = await backend.get(checkpointKey);
@@ -460,6 +465,12 @@ function isSafePositiveCount(value: unknown): value is number {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function assertCacheKey(value: string, label: string): void {
+  if (!CACHE_KEY_PATTERN.test(value)) {
+    throw new Error(`${label} key must be a 64-character lowercase hexadecimal digest`);
+  }
 }
 
 class InvalidStreamCheckpoint extends Error {

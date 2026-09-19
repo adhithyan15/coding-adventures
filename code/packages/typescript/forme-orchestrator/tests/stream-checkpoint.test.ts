@@ -24,7 +24,7 @@ import {
   type StreamCheckpointManifest,
 } from "../src/stream-checkpoint.js";
 
-const CHECKPOINT_KEY = "bounded-stream-checkpoint-test";
+const CHECKPOINT_KEY = "ab".repeat(32);
 
 describe("bounded stream checkpoints", () => {
   it.each([0, 1, 2, 3, 63, 64, 65, 257])(
@@ -344,6 +344,32 @@ describe("bounded stream checkpoints", () => {
   it("validates public revision arguments", () => {
     expect(() => streamCheckpointRevision(null, -1)).toThrow("non-negative safe integer");
     expect(() => streamCheckpointRevision("bad", 1)).toThrow("root key is malformed");
+  });
+
+  it("rejects path-shaped manifest keys before any backend operation", async () => {
+    const backend = {
+      get: vi.fn(),
+      put: vi.fn(),
+      invalidate: vi.fn(),
+      gc: vi.fn(),
+      dispose: vi.fn(),
+    } as unknown as CacheBackend;
+    const writerCache = memoryCache();
+    const manifest = await writeRange(writerCache, 0);
+
+    await expect(commitStreamCheckpoint(backend, "../escape", manifest))
+      .rejects.toThrow("64-character lowercase hexadecimal digest");
+    await expect(loadStreamCheckpoint(
+      backend,
+      "../escape",
+      manifest.outputRevision,
+      neverCancelledToken(),
+      silentLogger(),
+    )).rejects.toThrow("64-character lowercase hexadecimal digest");
+    expect(backend.get).not.toHaveBeenCalled();
+    expect(backend.put).not.toHaveBeenCalled();
+    expect(backend.invalidate).not.toHaveBeenCalled();
+    await writerCache.dispose();
   });
 
   it("propagates cancellation without invalidating a valid manifest", async () => {
