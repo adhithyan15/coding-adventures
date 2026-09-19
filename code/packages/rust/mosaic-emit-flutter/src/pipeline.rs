@@ -2154,6 +2154,8 @@ struct TableCtx<'a> {
     sheet_text_color: Option<&'a str>,
     sheet_font_family: Option<&'a str>,
     sheet_font_size: Option<&'a str>,
+    /// Numeric table typography, scoped through containers and For bodies.
+    table_font_size: Option<&'a str>,
     /// True only while emitting a widget that is a direct child of a
     /// `Row`. Flutter text fields require a finite horizontal constraint,
     /// so direct row inputs lower through `Expanded`.
@@ -2549,6 +2551,33 @@ fn emit_widget_tree(
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let _style_scope = StyleNodeScope::enter(node, part_styles);
+    // An explicitly sized descendant container wins over inherited table data.
+    // Keep this in the shared walk so Row/Column/Stack and Box agree.
+    let container_size = if ctx.table_font_size.is_some()
+        && matches!(
+            node.tag.as_str(),
+            "Box" | "Row" | "Column" | "Stack" | "HostTable"
+        ) {
+        authored_font_size(node, part_styles)
+    } else {
+        None
+    };
+    let container_family = if ctx.table_font_size.is_some()
+        && matches!(node.tag.as_str(), "Box" | "Row" | "Column" | "Stack")
+    {
+        node.part_name
+            .as_deref()
+            .and_then(|part| part_styles.get(part))
+            .and_then(|style| style_prop(&parse_style_props(style), "font-family").cloned())
+    } else {
+        None
+    };
+    let ctx = TableCtx {
+        sheet_font_family: container_family.as_deref().or(ctx.sheet_font_family),
+        table_font_size: container_size.as_deref().or(ctx.table_font_size),
+        ..ctx
+    };
+
     let mut out = emit_widget_tree_inner(node, indent, part_styles, component, emits, ctx)?;
     let pad = " ".repeat(indent);
 
@@ -2758,7 +2787,7 @@ fn emit_widget_tree_inner(
         return emit_host_number_input(node, indent, component);
     }
     if node.tag == "Text" {
-        return emit_text(node, indent, part_styles);
+        return emit_text(node, indent, part_styles, ctx);
     }
     if node.tag == "Image" {
         return Ok(emit_image(node, indent));
@@ -4748,6 +4777,54 @@ fn emit_styled_box(
 // Text + Image leaves
 // =====================================================================
 
+fn authored_font_size(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<String> {
+    let props = parse_style_props(part_styles.get(node.part_name.as_deref()?)?);
+    style_prop(&props, "font-size")
+        .and_then(|s| strict_pixel_length(s))
+        .map(|s| s.to_string())
+}
+
+fn effective_font_size(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, String>,
+    ctx: TableCtx,
+) -> Result<Option<String>, PipelineEmitError> {
+    Ok(font_size_expression(node)?.or_else(|| {
+        if authored_font_size(node, part_styles).is_some() {
+            None
+        } else {
+            ctx.table_font_size.map(str::to_string)
+        }
+    }))
+}
+
+/// Unlike Text, TextField does not inherit DefaultTextStyle. Carry the same
+/// table fallback to both leaves without replacing their own authored styles.
+fn table_text_style(base: Option<String>, ctx: TableCtx) -> Option<String> {
+    if ctx.table_font_size.is_none() {
+        return base;
+    }
+    let mut fields = Vec::new();
+    if let Some(size) = ctx.sheet_font_size.and_then(strict_pixel_length) {
+        fields.push(format!("fontSize: {size}"));
+    }
+    if let Some(family) = ctx.sheet_font_family {
+        fields.push(format!("fontFamily: \"{}\"", escape_dart_string(family)));
+    }
+    if let Some(color) = ctx.sheet_text_color {
+        fields.push(format!("color: {color}"));
+    }
+    let fallback = format!("TextStyle({})", fields.join(", "));
+    let fallback = match ctx.inherited_text_style {
+        Some(style) => format!("{fallback}.merge(TextStyle({style}))"),
+        None => fallback,
+    };
+    Some(match base {
+        Some(base) => format!("{fallback}.merge({base})"),
+        None => fallback,
+    })
+}
+
 /// UI36 numeric typography. Unsupported placements remain visible in the
 /// artifact report; supported text controls reject invalid authored values.
 fn font_size_expression(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
@@ -4773,14 +4850,14 @@ fn font_size_expression(node: &LayoutNode) -> Result<Option<String>, PipelineEmi
 pub fn has_native_font_size(node: &LayoutNode) -> bool {
     matches!(
         node.tag.as_str(),
-        "Text" | "HostButton" | "HostInput" | "Input"
+        "Text" | "HostButton" | "HostInput" | "Input" | "HostTable"
     ) && matches!(font_size_expression(node), Ok(Some(_)))
 }
 
 fn validate_font_sizes(node: &LayoutNode, slots: &[SlotDecl]) -> Result<(), PipelineEmitError> {
     if matches!(
         node.tag.as_str(),
-        "Text" | "HostButton" | "HostInput" | "Input"
+        "Text" | "HostButton" | "HostInput" | "Input" | "HostTable"
     ) {
         font_size_expression(node)?;
         if let Some(LayoutPropValue::SlotRef(name)) = find_prop_value(node, "font-size") {
@@ -4809,6 +4886,7 @@ fn emit_text(
     node: &LayoutNode,
     indent: usize,
     part_styles: &HashMap<String, String>,
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let text = if let Some(s) = find_string_prop(node, "content") {
@@ -4832,13 +4910,15 @@ fn emit_text(
         "const Text(\"\")".to_string()
     };
 
-    let text = if let Some(size) = font_size_expression(node)? {
-        let base = host_input_text_style_arg(node, part_styles)
+    let size = effective_font_size(node, part_styles, ctx)?;
+    let text = if size.is_some() || ctx.table_font_size.is_some() {
+        let base = table_text_style(host_input_text_style_arg(node, part_styles), ctx)
             .unwrap_or_else(|| "const TextStyle()".into());
-        // Text merges a partial style with its actual enclosing DefaultTextStyle.
-        // copyWith(null) keeps the authored fallback when a live value is invalid.
+        let style = size
+            .map(|size| format!("({base}).copyWith(fontSize: {size})"))
+            .unwrap_or(base);
         format!(
-            "{}, style: ({base}).copyWith(fontSize: {size}))",
+            "{}, style: {style})",
             text.trim_start_matches("const ").strip_suffix(')').unwrap()
         )
     } else {
@@ -5040,7 +5120,8 @@ fn emit_host_input(
             .flatten()
             .map(|inherited| format!("TextStyle({inherited})"))
     });
-    if let Some(size) = font_size_expression(node)? {
+    let text_style = table_text_style(text_style, ctx);
+    if let Some(size) = effective_font_size(node, part_styles, ctx)? {
         let base = text_style.unwrap_or_else(|| "const TextStyle()".into());
         writeln!(
             out,
@@ -6937,6 +7018,7 @@ fn emit_host_table(
     let sheet_text_color = style_prop(&sheet_style, "color").and_then(|v| css_color_to_dart(v));
     let sheet_font_family = style_prop(&sheet_style, "font-family").cloned();
     let sheet_font_size = style_prop(&sheet_style, "font-size").map(|v| parse_pixel_value(v));
+    let table_font_size = font_size_expression(node)?;
 
     let ctx = TableCtx {
         column_widths_slot: column_widths_slot.as_deref(),
@@ -6947,6 +7029,7 @@ fn emit_host_table(
         sheet_text_color: sheet_text_color.as_deref(),
         sheet_font_family: sheet_font_family.as_deref(),
         sheet_font_size: sheet_font_size.as_deref(),
+        table_font_size: table_font_size.as_deref().or(parent_ctx.table_font_size),
         direct_row_child: false,
         direct_row_accepts_flex: false,
         // The root gets the window's width.
