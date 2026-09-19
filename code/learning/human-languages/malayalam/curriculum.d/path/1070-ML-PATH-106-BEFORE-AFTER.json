@@ -1,0 +1,15 @@
+{
+  "id": "ML-PATH-106-BEFORE-AFTER",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "lessons": [
+    "ML-C106-munpu",
+    "ML-C106-shesham",
+    "ML-C106-ordering",
+    "ML-R106-before-after-recall"
+  ],
+  "before": [],
+  "inline": [
+    "ML-EXT-106-BEFORE-AFTER"
+  ],
+  "after": []
+}

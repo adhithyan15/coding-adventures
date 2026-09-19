@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C106-munpu",
+    "language": "malayalam",
+    "chapter": 106,
+    "sequence": 3860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f80725cb3ae4848e"
+  },
+  "findings": []
+}

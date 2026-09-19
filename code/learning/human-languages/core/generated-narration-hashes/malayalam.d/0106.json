@@ -1,0 +1,18 @@
+{
+  "language": "malayalam",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:f2a9024c786104eb",
+  "lessonIds": [
+    "ML-C106-munpu",
+    "ML-C106-shesham",
+    "ML-C106-ordering",
+    "ML-R106-before-after-recall"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "malayalam/narration/ch106.txt",
+  "json": "malayalam/narration/ch106.json",
+  "textHash": "fnv1a64:9d38f480d8692c77",
+  "jsonHash": "fnv1a64:5114d57604585fb1",
+  "findings": []
+}

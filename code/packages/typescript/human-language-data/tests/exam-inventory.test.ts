@@ -2596,8 +2596,29 @@ describe("the committed Malayalam A1 inventory", () => {
     // ONE INVENTED EXAMPLE WAS CAUGHT BEFORE THE FIRST VALIDATE: the draft wrote
     // "indya oru raajyaM", and oru is taught NOWHERE -- it is the open point
     // ML-A1-ART-02, which this corpus has been using untaught in six lessons.
-    expect(coverage.covered).toBe(212);
-    expect(coverage.unmapped).toBe(31);
+    // 212 -> 213: ML-A1-TIME-09, before and after. THE PERCENTAGE MOVES, 87 -> 88
+    // (213/243 is 87.7); recomputed, not carried.
+    // THE NOTE SURVIVED ALL FOUR STALENESS MODES -- the first one this run that
+    // has. "munpu and shesham are not taught" is exactly true; "pinne ('then') is
+    // the nearest and it sequences TURNS rather than EVENTS" anticipates the
+    // domain check and is right. aadyaM (ML-C68-at-first, 2350) and pinne
+    // (ML-C64-then, 2090) are the two the domain holds, both named by the note's
+    // own sentence, and no BEFORE/AFTER concept_tag existed to collide with. A
+    // note CAN be trustworthy; this is what one looks like.
+    // NO NEW GRAMMAR, AND THE EXAMPLES CHAIN OFF CHAPTER 102. Both words are
+    // postpositions leaning on the dative, so raNTu maNikku munpu reuses the very
+    // form ML-C102-manikku built, and uuNinu shEshaM shows the dative's OTHER
+    // shape on a word owned since 930. One ending, four jobs: "to/for" from
+    // chapter 6, "at" from 102, and now a seat for each of these two.
+    // shEshaM LANDS ON KNOWN SCRIPT DEBT AND NOTHING CAN BE DONE ABOUT IT HERE.
+    // It needs U+0D36, which has no script lesson -- SCR-12's "sha", 12 distinct
+    // tokens across 15 headword fields. It does NOT trip neverTaughtGlyphs,
+    // because U+0D36 appears inside other letter lessons' examples. A script
+    // lesson placed HERE would not help: closure is read in ORDER and shari needs
+    // that letter in chapter 1, so the fix belongs at the start of the book, not
+    // at 3870. Recorded against HL-C407 rather than half-fixed.
+    expect(coverage.covered).toBe(213);
+    expect(coverage.unmapped).toBe(30);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -2644,7 +2665,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 212/243 points covered (87%)",
+      "malayalam A1 (partial inventory): 213/243 points covered (88%)",
     );
   }, 60_000);
 });
