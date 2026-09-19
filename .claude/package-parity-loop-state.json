@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 15615,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/15615",
+    "branch": "codex/parity-neutral-graph-diff-hardening-20260919",
+    "implementation_revision": "f4ef396e166572ad831fc273af3a861115c4c5d2",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-09-19T16:23:41Z",
-    "pr_number": 15596,
-    "status": "merged",
-    "notes": "Every required check on ready-for-review PR #15596 completed acceptably at head 312dae533c63b444daf774ea241f6ae770f5becd, GitHub reported the branch conflict-free, guarded squash auto-merge was enabled, and GitHub merged the PR as 303b42df197296adbff58c4c93e4dff7cb8e89c6."
+    "observed_at": "2026-09-19T17:03:02Z",
+    "pr_number": 15615,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #15615 is open after a normal push from exact rebased origin/main 252899ba632f52a1e6a81de282fdf6bd6745b8a4. GitHub reports the branch mergeable with no conflict, while the initial CI, Kotlin application, CodeQL detection, and human-language detection checks are queued. Auto-merge remains disabled until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "252899ba632f52a1e6a81de282fdf6bd6745b8a4",
@@ -9306,17 +9312,21 @@
     {
       "id": "build-tool-neutral-graph-diff-adversarial-corpus-hardening",
       "title": "Harden neutral graph and diff-selection adversarial coverage",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-jvm-process-free-graph-diff-core"],
       "branch": "codex/parity-neutral-graph-diff-hardening-20260919",
-      "pr_number": null,
+      "pr_number": 15615,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/15615",
+      "opened_at": "2026-09-19T17:02:42Z",
+      "opened_revision": "b97cd49a6c0ba6c742e67d1b4fc54ff069c85034",
       "selected_at": "2026-09-19T16:24:00Z",
       "selection_revision": "6174c8c1ffeb2a82a15b635c0142098ba03ce146",
       "selection_notes": "Selected after guarded auto-merge of PR #15596 and a collision-checked exact-main refresh. Read-only fixture audits found that the 14-case neutral roster omits an empty graph, partial-cycle no-output behavior, strict character-class glob evidence, known-but-unselected near-BUILD paths, and exact BUILD-front matching. The last gap exposes a concrete Go overmatch of arbitrary BUILD_* names. This five-case process-free tranche is the smallest dependency-shaped prerequisite for Dart and later neutral consumers, while adding no filesystem, process, network, credential, environment, or execution authority.",
       "notes": "Raise the neutral corpus from 157 to 162 cases and the graph/diff roster from 14 to 19 with graph/empty, graph/partial-cycle-no-output, diff-selection/strict-glob-character-classes, diff-selection/known-unmatched-near-build, and diff-selection/exact-build-fronts. Tighten the independent oracle and repair Go's BUILD_* overmatch to the exact five BUILD basenames. Update Go, Java, and Kotlin consumers and make the strengthened corpus a prerequisite of subsequent Dart, JVM, Haskell, and Swift closures.",
       "implementation_revision": "f4ef396e166572ad831fc273af3a861115c4c5d2",
       "validation_revision": "f4ef396e166572ad831fc273af3a861115c4c5d2",
-      "validation_notes": "Specification-first hardening adds five language-neutral adversarial cases, raising the corpus from 157 to 162 cases while retaining 285 validated files, and expands the graph/diff roster from 14 to 19. Tests-first evidence reproduced Go's arbitrary BUILD_* overmatch before the production repair narrowed matching to exactly BUILD, BUILD_windows, BUILD_mac, BUILD_linux, and BUILD_mac_and_linux. The independent Python oracle now requires exactly one GRAPH_CYCLE diagnostic for every cyclic graph, including a partial cycle with no output; strict portable-glob evidence covers negation, caret literal handling, ascending ranges, leading right bracket, leading and trailing hyphen, and unmatched left bracket. Full Go test, vet, and trimpath build pass; Java and Kotlin clean checks, tests, and JaCoCo coverage gates pass; the neutral corpus validates; all 25 schema tests and all 85 semantic runner tests pass after the conflict-free rebase onto 252899ba632f52a1e6a81de282fdf6bd6745b8a4. CI-gate, capability-taxonomy, package-parity collision, Ruff, medium/high Bandit, JSON/state-DAG, and diff-hygiene checks pass. Independent correctness, state/roadmap, and security reviews report no concrete blocker. A real repository dry plan was attempted after rebase but remains blocked by unrelated existing BUILD metadata validation failures and stale absolute grammar lookup warnings outside this 24-file slice; the focused and full native validation paths for every touched implementation are green. The exact-main schema-3 inventory remains collision-clean and numerically unchanged at 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five OCaml packages, and zero unknown buckets."
+      "validation_notes": "Specification-first hardening adds five language-neutral adversarial cases, raising the corpus from 157 to 162 cases while retaining 285 validated files, and expands the graph/diff roster from 14 to 19. Tests-first evidence reproduced Go's arbitrary BUILD_* overmatch before the production repair narrowed matching to exactly BUILD, BUILD_windows, BUILD_mac, BUILD_linux, and BUILD_mac_and_linux. The independent Python oracle now requires exactly one GRAPH_CYCLE diagnostic for every cyclic graph, including a partial cycle with no output; strict portable-glob evidence covers negation, caret literal handling, ascending ranges, leading right bracket, leading and trailing hyphen, and unmatched left bracket. Full Go test, vet, and trimpath build pass; Java and Kotlin clean checks, tests, and JaCoCo coverage gates pass; the neutral corpus validates; all 25 schema tests and all 85 semantic runner tests pass after the conflict-free rebase onto 252899ba632f52a1e6a81de282fdf6bd6745b8a4. CI-gate, capability-taxonomy, package-parity collision, Ruff, medium/high Bandit, JSON/state-DAG, and diff-hygiene checks pass. Independent correctness, state/roadmap, and security reviews report no concrete blocker. A real repository dry plan was attempted after rebase but remains blocked by unrelated existing BUILD metadata validation failures and stale absolute grammar lookup warnings outside this 24-file slice; the focused and full native validation paths for every touched implementation are green. The exact-main schema-3 inventory remains collision-clean and numerically unchanged at 15 established lanes, 1,441 implementation identities, 4,666 slots, 1,481 all-reported identities, 782 Rust singletons, five OCaml packages, and zero unknown buckets.",
+      "publication_notes": "Opened ready-for-review PR #15615 after a normal first push from exact rebased origin/main 252899ba632f52a1e6a81de282fdf6bd6745b8a4. Immediately before publication, the worktree was clean, no other parity PR or prior same-branch PR existed, the 24-file slice had passed its focused and full native validation, and GitHub reported the branch mergeable with no conflict. Initial required checks are queued, so auto-merge remains disabled."
     },
     {
       "id": "build-tool-dart-process-free-graph-diff-core",
